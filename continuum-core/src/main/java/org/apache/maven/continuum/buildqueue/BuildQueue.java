@@ -22,7 +22,7 @@ package org.apache.maven.continuum.buildqueue;
  * <it>A <code>BuildQueue</code> implementation MUST be thread safe.</it>
  *
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id: BuildQueue.java,v 1.1.1.1 2005/03/29 20:42:01 trygvis Exp $
+ * @version $Id$
  */
 public interface BuildQueue
 {

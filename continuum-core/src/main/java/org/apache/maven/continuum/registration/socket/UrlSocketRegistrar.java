@@ -33,7 +33,7 @@ import org.apache.maven.continuum.socket.SimpleSocket;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- * @version $Id: UrlSocketRegistrar.java,v 1.1.1.1 2005/03/29 20:42:02 trygvis Exp $
+ * @version $Id$
  */
 public class UrlSocketRegistrar
     extends AbstractContinuumRegistrar

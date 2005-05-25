@@ -23,7 +23,7 @@ import org.apache.maven.continuum.project.ContinuumProject;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id:$
+ * @version $Id$
  */
 public class ContinuumProjectBuildingResult
 {

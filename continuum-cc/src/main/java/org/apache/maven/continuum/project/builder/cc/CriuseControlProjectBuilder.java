@@ -35,7 +35,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id:$
+ * @version $Id$
  */
 public class CriuseControlProjectBuilder
     extends AbstractContinuumProjectBuilder

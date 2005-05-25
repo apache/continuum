@@ -22,7 +22,7 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id:$
+ * @version $Id$
  */
 public class DefaultContinuumTest
     extends PlexusTestCase

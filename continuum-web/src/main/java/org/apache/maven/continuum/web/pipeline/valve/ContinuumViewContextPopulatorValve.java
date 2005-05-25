@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id: ContinuumViewContextPopulatorValve.java,v 1.1 2005/04/04 14:05:38 jvanzyl Exp $
+ * @version $Id$
  */
 public class ContinuumViewContextPopulatorValve
     extends CreateViewContextValve

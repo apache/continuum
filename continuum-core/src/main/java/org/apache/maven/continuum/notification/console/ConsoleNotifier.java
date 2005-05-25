@@ -31,7 +31,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id: ConsoleNotifier.java,v 1.1.1.1 2005/03/29 20:42:01 trygvis Exp $
+ * @version $Id$
  */
 public class ConsoleNotifier
     extends AbstractLogEnabled

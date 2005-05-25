@@ -37,7 +37,7 @@ import org.codehaus.plexus.util.CollectionUtils;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id: MailContinuumNotifierTest.java,v 1.4 2005/04/07 23:27:40 trygvis Exp $
+ * @version $Id$
  */
 public class MailContinuumNotifierTest
     extends PlexusTestCase

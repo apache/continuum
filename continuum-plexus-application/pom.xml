@@ -3,20 +3,21 @@
   <parent>
     <groupId>org.apache.maven.continuum</groupId>
     <artifactId>continuum-parent</artifactId>
-    <version>1.0-alpha-2-SNAPSHOT</version>
+    <version>1.0-alpha-2</version>
   </parent>
   <artifactId>continuum-plexus-application</artifactId>
   <name>Continuum Plexus Application</name>
+  <version>1.0-alpha-2</version>
   <dependencies>
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-web</artifactId>
-      <version>1.0-alpha-2-SNAPSHOT</version>
+      <version>1.0-alpha-2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-xmlrpc</artifactId>
-      <version>1.0-alpha-2-SNAPSHOT</version>
+      <version>1.0-alpha-2</version>
     </dependency>
     <!-- Version overrides -->
     <dependency>
@@ -33,19 +34,30 @@
 
     <!--
      |
+     | Plexus appserver
+     |
+     |-->
+    <dependency>
+      <groupId>plexus</groupId>
+      <artifactId>plexus-appserver</artifactId>
+      <version>1.0-alpha-2</version>
+    </dependency>
+    
+    <!--
+     |
      | Plexus services
      |
      |-->
     <dependency>
       <groupId>plexus</groupId>
       <artifactId>plexus-service-jetty</artifactId>
-      <version>1.0-alpha-1-SNAPSHOT</version>
+      <version>1.0-alpha-1</version>
       <type>plexus-service</type>
     </dependency>
     <dependency>
       <groupId>plexus</groupId>
       <artifactId>plexus-service-xmlrpc</artifactId>
-      <version>1.0-alpha-1-SNAPSHOT</version>
+      <version>1.0-alpha-2</version>
       <type>plexus-service</type>
     </dependency>
 
@@ -89,7 +101,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-plexus-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.1-alpha-2</version>
         <goals>
           <goal>
             <id>app</id>
@@ -116,7 +128,7 @@
         <version>2.0-alpha-1</version>
         <configuration>
           <descriptor>src/assembly/bin.xml</descriptor>
-          <finalName>continuum-1.0-alpha-2-SNAPSHOT</finalName>
+          <finalName>continuum-1.0-alpha-2</finalName>
         </configuration>
       </plugin>
     </plugins>

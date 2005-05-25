@@ -31,7 +31,7 @@ import org.codehaus.plexus.notification.NotificationException;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id: DefaultContinuumNotificationDispatcher.java,v 1.2 2005/04/01 22:55:52 trygvis Exp $
+ * @version $Id$
  */
 public class DefaultContinuumNotificationDispatcher
     extends AbstractLogEnabled

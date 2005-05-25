@@ -1,10 +1,12 @@
 <project name="Apache Maven Continuum">
   <bannerLeft>
     <name>Apache Maven</name>
+    <src>http://maven.apache.org/images/apache-maven-project.png</src>
     <href>http://maven.apache.org</href>
   </bannerLeft>
   <bannerRight>
     <name>Apache Maven Continuum</name>
+    <src>images/continuum.png</src>
     <href>http://maven.apache.org/continuum</href>
   </bannerRight>
   <body>
@@ -21,9 +23,13 @@
     <menu name="User's Guide">
       <item name="Getting Started" href="getting-started.html"/>
       <item name="Configuration" href="configuration.html"/>
+      <!--
+      <item name="CruiseControl Support" href="cc-support.html"/>
+      -->
     </menu>
     <menu name="Developer's Guide">
       <item name="Building" href="dev/building.html"/>
+      <item name="Change Log" href="change-log.html"/>
     </menu>
   </body>
 </project>

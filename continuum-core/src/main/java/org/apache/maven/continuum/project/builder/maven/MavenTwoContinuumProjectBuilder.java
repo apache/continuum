@@ -34,7 +34,7 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id:$
+ * @version $Id$
  */
 public class MavenTwoContinuumProjectBuilder
     extends AbstractContinuumProjectBuilder

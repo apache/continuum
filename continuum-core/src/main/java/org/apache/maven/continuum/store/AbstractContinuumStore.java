@@ -23,7 +23,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id: AbstractContinuumStore.java,v 1.1.1.1 2005/03/29 20:42:02 trygvis Exp $
+ * @version $Id$
  */
 public abstract class AbstractContinuumStore
     extends AbstractLogEnabled

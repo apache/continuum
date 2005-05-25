@@ -47,7 +47,7 @@ import org.codehaus.plexus.velocity.VelocityComponent;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
- * @version $Id: MailContinuumNotifier.java,v 1.3 2005/04/02 21:40:04 trygvis Exp $
+ * @version $Id$
  */
 public class MailContinuumNotifier
     extends AbstractLogEnabled

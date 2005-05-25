@@ -24,7 +24,7 @@ import junit.framework.Assert;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id: TestUtils.java,v 1.2 2005/04/04 15:24:03 trygvis Exp $
+ * @version $Id$
  */
 public class TestUtils
 {
