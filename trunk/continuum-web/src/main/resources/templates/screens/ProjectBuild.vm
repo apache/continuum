@@ -1,0 +1,114 @@
+$page.setTitle( "Continuum - ${project.name} Build at $date.format('medium',$build.startTime)" )
+
+#if ( $data.user )
+  #set ( $c1user = $continuum.getUser( $data.user.userId ) )
+#else
+  #set ( $c1user = $continuum.security.getGuestUser() )
+#end
+
+<div class="app">
+
+  #if ( $continuum.security.isAuthorized( $c1user, "showProject" ) )
+  <div>
+    <p style="border-top: 1px solid transparent; border-bottom: 1px solid black;">
+      #set ( $infoLink = $link.setPage('View.vm').addPathInfo('fid', "$!{project.executorId}Project").addPathInfo('id', $project.id) )
+      <a style="border: 1px solid black; padding-left: 1em; padding-right: 1em; text-decoration:none;" href="$infoLink">Info</a>
+      <b style="border: 1px solid black; padding-left: 1em; padding-right: 1em;">Builds</b>
+      #set ( $workingCopy = $link.setPage('WorkingCopy.vm').addPathInfo('view', "WorkingCopy").addPathInfo('id', $project.id) )
+      <a style="border: 1px solid black; padding-left: 1em; padding-right: 1em; text-decoration:none;" href="$workingCopy">Working&nbsp;Copy</a>
+    </p>
+  </div>
+  #end
+
+  <h3>Build result for $project.name</h3>
+  <p>
+    <table border="1" cellspacing="2" cellpadding="3" width="100%">
+      <tr class="a">
+        <th>Start Time</th>
+        <td>$date.format('medium',$build.startTime)</td>
+      </tr>
+      <tr class="a">
+        <th>End Time</th>
+        <td>$date.format('medium',$build.endTime)</td>
+      </tr>
+      <tr class="a">
+        <th>Build Trigger</th>
+        <td>$trigger.generate($build)</td>
+      </tr>
+      <tr class="a">
+        <th>State</th>
+        <td>$state.generate($build)</td>
+      </tr>
+      <tr class="a">
+        <th>Build#</th>
+        <td>$build.buildNumber</td>
+      </tr>
+    </table>
+  </p>
+
+  #if ( $build.scmResult )
+  <h4>Changes</h4>
+  <p>
+    #if ( $build.scmResult.changes.size() == 0 )
+    <b>No files changed</b>
+    #else
+    <table border="1" cellspacing="2" cellpadding="3" width="100%">
+      #foreach ( $changeSet in $build.scmResult.changes )
+      <tr class="a">
+        #if ($changeSet.author) <td>$changeSet.author</td> #end
+        #if ($changeSet.date > 0) <td>$date.format('medium',$changeSet.date)</td> #end
+        #if ($changeSet.comment) <td>$changeSet.comment</td> #end
+        <td>
+          #foreach ( $file in $changeSet.files )
+            <code>$!file.name</code><br/>
+          #end
+        </td>
+      </tr>
+      #end
+    </table>
+    #end
+  </p>
+  #end
+
+  #set ( $changeSets = $continuum.getChangesSinceLastSuccess( $id, $build.id ) )
+  #if ( $changeSets )
+  <h4>Other Changes Since Last Success</h4>
+  <p>
+    <table border="1" cellspacing="2" cellpadding="3" width="100%">
+      #foreach ( $changeSet in $changeSets )
+      <tr class="a">
+        #if ($changeSet.author) <td>$changeSet.author</td> #end
+        #if ($changeSet.date > 0) <td>$date.format('medium',$changeSet.date)</td> #end
+        #if ($changeSet.comment) <td>$changeSet.comment</td> #end
+        <td>
+          #foreach ( $file in $changeSet.files )
+            <code>$!file.name</code><br/>
+          #end
+        </td>
+      </tr>
+      #end
+    </table>
+  </p>
+  #end
+
+#if ( $build.state == 4 )
+  <h4>Build Error</h4>
+  <p>
+    <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
+    <code><pre>$build.error</pre></code>
+    </div>
+  </p>
+#else
+  <h4>Output</h4>
+  <p>
+#if ( $output && $output != "" )
+    <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
+    <code><pre>$output</pre></code>
+    </div>
+#else
+No output.
+#end
+  </p>
+#end
+
+</div>

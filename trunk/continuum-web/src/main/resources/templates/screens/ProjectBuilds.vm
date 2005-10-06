@@ -1,0 +1,44 @@
+$page.setTitle( "Continuum - ${project.name} Builds" )
+
+#if ( $data.user )
+  #set ( $c1user = $continuum.getUser( $data.user.userId ) )
+#else
+  #set ( $c1user = $continuum.security.getGuestUser() )
+#end
+
+<div class="app">
+
+  #if ( $continuum.security.isAuthorized( $c1user, "showProject" ) )
+  <div>
+    <p style="border-top: 1px solid transparent; border-bottom: 1px solid black;">
+      #set ( $infoLink = $link.setPage('View.vm').addPathInfo('fid', "$!{project.executorId}Project").addPathInfo('id', $project.id) )
+      <a style="border: 1px solid black; padding-left: 1em; padding-right: 1em; text-decoration:none;" href="$infoLink">Info</a>
+      <b style="border: 1px solid black; padding-left: 1em; padding-right: 1em;">Builds</b>
+      #set ( $workingCopy = $link.setPage('WorkingCopy.vm').addPathInfo('view', "WorkingCopy").addPathInfo('id', $project.id) )
+      <a style="border: 1px solid black; padding-left: 1em; padding-right: 1em; text-decoration:none;" href="$workingCopy">Working&nbsp;Copy</a>
+    </p>
+  </div>
+  #end
+
+  <h3>Build results for $project.name</h3>
+  <p>
+    <table border="1" cellspacing="2" cellpadding="3" width="100%">
+      <tr>
+        <th>Build #</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>State</th>
+        <th></th>
+      </tr>
+      #foreach ( $build in $builds )
+      <tr class="$css.nextClass">
+        <td>$build.buildNumber</td>
+        <td>$date.format('medium',$build.startTime)</td>
+        <td>$date.format('medium',$build.endTime)</td>
+        <td>$state.generate($build)</td>
+        <td><a href="$link.setPage('ProjectBuild.vm').addQueryData('view','ProjectBuild').addQueryData('buildId',$build.id).addQueryData('id',$project.id)">Result</a></td>
+      </tr>
+      #end
+    </table>
+  </p>
+</div>

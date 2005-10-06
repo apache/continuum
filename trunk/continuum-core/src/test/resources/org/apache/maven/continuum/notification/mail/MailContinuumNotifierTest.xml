@@ -1,0 +1,43 @@
+<plexus>
+  <components>
+
+    <component>
+      <role>org.codehaus.plexus.mailsender.MailSender</role>
+      <implementation>org.codehaus.plexus.mailsender.test.MockMailSender</implementation>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.notification.RecipientSource</role>
+      <implementation>org.apache.maven.continuum.notification.ContinuumRecipientSource</implementation>
+      <configuration>
+        <toOverride>nobody@localhost</toOverride>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.notification.notifier.Notifier</role>
+      <role-hint>mail</role-hint>
+      <implementation>org.apache.maven.continuum.notification.mail.MailContinuumNotifier</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.velocity.VelocityComponent</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.mailsender.MailSender</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <fromMailbox>continuum@localhost</fromMailbox>
+        <fromName>Continuum</fromName>
+        <timestampFormat>EEE, d MMM yyyy HH:mm:ss Z</timestampFormat>
+        <includeBuildResult>true</includeBuildResult>
+      </configuration>
+    </component>
+  </components>
+</plexus>

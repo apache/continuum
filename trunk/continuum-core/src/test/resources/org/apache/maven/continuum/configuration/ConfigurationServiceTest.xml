@@ -1,0 +1,16 @@
+<plexus>
+  <components>
+    <component>
+      <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+      <implementation>org.apache.maven.continuum.configuration.DefaultConfigurationService</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <application-home>${basedir}/target/continuum</application-home>
+      </configuration>
+    </component>
+  </components>
+</plexus>

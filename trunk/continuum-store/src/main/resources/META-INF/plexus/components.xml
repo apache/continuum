@@ -1,0 +1,14 @@
+<component-set>
+  <components>
+    <component>
+      <role>org.apache.maven.continuum.store.ContinuumStore</role>
+      <role-hint>jdo</role-hint>
+      <implementation>org.apache.maven.continuum.store.JdoContinuumStore</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.jdo.JdoFactory</role>
+        </requirement>
+      </requirements>
+    </component>
+  </components>
+</component-set>

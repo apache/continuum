@@ -1,0 +1,57 @@
+$page.setTitle( $i18n.getString( "project.title.buildDefinition.update" ) )
+
+<div class="app">
+  <div id="axial" class="h3">
+    <h3>$i18n.getString( "project.title.buildDefinition.update" )</h3>
+    <form method="post" action="$link">
+      #hidden ( "action" "cam" )
+      #hidden ( "cid" "updateBuildDefinition" )
+      #hidden ( "view" "View.vm" )
+      #hidden ( "fid" "$!{project.executorId}Project" )
+      #hidden ( "id" $project.id )
+      #hidden ( "buildDefinitionId" $buildDefinition.id )
+      <div class="axial">
+        <table border="1" cellspacing="2" cellpadding="3" width="100%">
+          <tr>
+            <th>$i18n.getString( "buildDefinition.buildFile.label" )</th>
+            <td>
+              <input type="text" name="buildFile" value="$buildDefinition.buildFile" size="40"/>
+                  <p>
+                    $i18n.getString( "buildDefinition.buildFile.message" ) <font color="red"><b></b></font>
+                  </p>
+            </td>
+          </tr>
+          <tr>
+            <th>$i18n.getString( "buildDefinition.goals.label" )</th>
+            <td>
+              <input type="text" name="goals" value="$buildDefinition.goals" size="40"/>
+                  <p>
+                    $i18n.getString( "buildDefinition.goals.message" ) <font color="red"><b></b></font>
+                  </p>
+            </td>
+          </tr>
+          <tr>
+            <th>$i18n.getString( "buildDefinition.arguments.label" )</th>
+            <td>
+              <input type="text" name="arguments" value="$buildDefinition.arguments" size="40"/>
+                  <p>
+                    $i18n.getString( "buildDefinition.arguments.message" ) <font color="red"><b></b></font>
+                  </p>
+            </td>
+          </tr>
+          <tr>
+            <th>$i18n.getString( "buildDefinition.schedule.label" )</th>
+            <td>
+              <select name="schedule">
+                #foreach ( $schedule in $continuum.getSchedules() )
+                  <option value="$schedule.id" #if ( $schedule.id == $buildDefinition.schedule.id ) selected="selected" #end>$schedule.name</option>
+                #end
+              </select>
+            </td>
+          </tr>
+        </table>
+        #submitBar( "Submit" )
+      </div>
+    </form>
+  </div>
+</div>

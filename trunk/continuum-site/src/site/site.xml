@@ -1,0 +1,37 @@
+<project name="Apache Maven Continuum">
+  <bannerLeft>
+    <name>Apache Maven</name>
+    <src>http://maven.apache.org/images/apache-maven-project.png</src>
+    <href>http://maven.apache.org</href>
+  </bannerLeft>
+  <bannerRight>
+    <name>Apache Maven Continuum</name>
+    <src>images/continuum.png</src>
+    <href>http://maven.apache.org/continuum</href>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="Maven 1" href="http://maven.apache.org"/>
+      <item name="Maven 2" href="http://maven.apache.org/maven2"/>
+    </links>
+    <menu name="Continuum">
+      <item name="Introduction" href="index.html"/>
+      <item name="Download" href="download.html"/>
+      <item name="General Information" href="about.html"/>
+      <item name="Planned Features" href="planned-features.html"/>
+    </menu>
+    <menu name="User's Guide">
+      <item name="Getting Started" href="getting-started.html"/>
+      <item name="Configuration" href="configuration.html"/>
+      <item name="SOAP API" href="soap-api.html"/>
+      <!--
+      <item name="CruiseControl Support" href="cc-support.html"/>
+      -->
+    </menu>
+    <menu name="Developer's Guide">
+      <item name="Building" href="dev/building.html"/>
+      <item name="Change Log" href="change-log.html"/>
+    </menu>
+    ${reports}
+  </body>
+</project>
