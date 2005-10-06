@@ -1,0 +1,54 @@
+$page.setTitle( "Continuum - User Management" )
+
+#if ( $data.user )
+  #set ( $c1user = $continuum.getUser( $data.user.userId ) )
+#else
+  #set ( $c1user = $continuum.security.getGuestUser() )
+#end
+
+#set ( $items = $continuum.users )
+
+<div class="app">
+  <div id="h3">
+    <h3>User Management</h3>
+    <table border="1" cellspacing="2" cellpadding="3" width="100%">
+      <tr>
+        <th width="10%">$i18n.getString( "user.username.label" )</th>
+        <th width="10%">$i18n.getString( "user.fullName.label" )</th>
+        <th width="10%">$i18n.getString( "user.email.label" )</th>
+        <th width="10%">$i18n.getString( "user.groupName.label" )</th>
+        <th width="10%">&nbsp;</th>
+      </tr>
+      #foreach ( $user in $items )
+      <tr class="b">
+        <td>$user.username</td>
+        <td>$user.fullName</td>
+        <td>#if ( $user.email ) $user.email #end</td>
+        <td>$user.group.name</td>
+        <td>
+          #if ( $continuum.security.isAuthorized( $c1user, "manageUsers" ) )
+            #if ( "guest" != $user.username )
+            <a href="$link.setPage('EditUser.vm').addPathInfo( 'fid', 'users').addPathInfo('id', $user.accountId)">Edit</a>
+            | <a href="$link.setPage('DeleteUser.vm').addPathInfo('fid', "users").addPathInfo('id', $user.accountId)">Delete</a></td>
+            #end
+          #end
+        </td>
+      </tr>
+      #end
+    </table>
+    #if ( $continuum.security.isAuthorized( $c1user, "manageUsers" ) )
+    <div class="functnbar3">
+      <table>
+        <tr>
+          <td>
+            <form method="post" action="$link.setPage('AddUser.vm').addPathInfo( 'fid', 'users')">
+              <input type="submit" name="add-user" value="Add"/>
+            </form>
+          </td>
+        </tr>
+      </table>
+    </div>
+    #end
+  </div>
+</div>
+

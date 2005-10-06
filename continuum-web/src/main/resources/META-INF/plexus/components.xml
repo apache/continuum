@@ -314,6 +314,34 @@
               </scalar>
             </scalars>
           </view>
+          <!--
+           |
+           | User Group
+           |
+           -->
+          <view>
+            <id>UserGroup</id>
+            <scalars>
+              <scalar>
+                <id>userGroup</id>
+                <expression>getUserGroup(#id)</expression>
+              </scalar>
+            </scalars>
+          </view>
+          <!--
+           |
+           | User
+           |
+           -->
+          <view>
+            <id>User</id>
+            <scalars>
+              <scalar>
+                <id>user</id>
+                <expression>getUser(#id)</expression>
+              </scalar>
+            </scalars>
+          </view>
         </views>
       </configuration>
     </component>
@@ -418,6 +446,12 @@
 
     <component>
       <role>org.codehaus.plexus.action.Action</role>
+      <role-hint>logout</role-hint>
+      <implementation>org.apache.maven.continuum.web.action.Logout</implementation>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.action.Action</role>
       <role-hint>addMavenTwoProject</role-hint>
       <implementation>org.apache.maven.continuum.web.action.AddMavenTwoProject</implementation>
       <requirements>
@@ -486,6 +520,49 @@
           <call>
             <cid>updateBuildDefinition</cid>
             <expression>updateBuildDefinition(#id,#buildDefinitionId,#parameters)</expression>
+          </call>
+          <!--
+           |
+           | User Group
+           |
+           -->
+          <call>
+            <cid>addUserGroup</cid>
+            <expression>addUserGroup(#parameters)</expression>
+          </call>
+          <call>
+            <cid>deleteUserGroup</cid>
+            <expression>removeUserGroup(#id)</expression>
+          </call>
+          <call>
+            <cid>updateUserGroup</cid>
+            <expression>updateUserGroup(#id,#parameters)</expression>
+          </call>
+          <!--
+           |
+           | User
+           |
+           -->
+          <call>
+            <cid>addUser</cid>
+            <expression>addUser(#parameters)</expression>
+          </call>
+          <call>
+            <cid>deleteUser</cid>
+            <expression>removeUser(#id)</expression>
+          </call>
+          <call>
+            <cid>updateUser</cid>
+            <expression>updateUser(#id,#parameters)</expression>
+          </call>
+          <!--
+           |
+           | Configuration
+           |
+           -->
+          <call>
+            <cid>updateConfiguration</cid>
+            <expression>updateConfiguration(#parameters)</expression>
           </call>
         </calls>
       </configuration>

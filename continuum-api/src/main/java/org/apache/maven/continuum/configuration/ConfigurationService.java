@@ -31,23 +31,7 @@ public interface ConfigurationService
     //
     // ----------------------------------------------------------------------
 
-    String CONFIGURATION = "configuration";
-
-    String CONFIGURATION_URL = "url";
-
-    String CONFIGURATION_BUILD_OUTPUT_DIRECTORY = "build-output-directory";
-
-    String CONFIGURATION_WORKING_DIRECTORY = "working-directory";
-
-    String CONFIGURATION_COMPANY_LOGO = "company-logo";
-
-    String CONFIGURATION_COMPANY_NAME = "company-name";
-
-    String CONFIGURATION_COMPANY_URL = "company-url";
-
-    // ----------------------------------------------------------------------
-    //
-    // ----------------------------------------------------------------------
+    File getApplicationHome();
 
     boolean isInitialized();
 
@@ -66,10 +50,6 @@ public interface ConfigurationService
     void setWorkingDirectory( File workingDirectory );
 
     void setJdks( Map jdks );
-
-    void setInMemoryMode( boolean inMemoryMode );
-
-    boolean inMemoryMode();
 
     String getCompanyLogo();
 

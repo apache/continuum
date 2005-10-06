@@ -1,4 +1,4 @@
-$page.setTitle( "Add Project" )
+$page.setTitle( $i18n.getString( $form.add.titleKey ) )
 
 <div class="app">
   <div id="axial" class="h3">
@@ -7,7 +7,9 @@ $page.setTitle( "Add Project" )
       #hidden ( "fid" $form.id )
       #hidden ( "action" $form.add.action )
       #hidden ( "view" $form.add.view )
+      #if ( $id )
       #hidden ( "id" $id )
+      #end
       <div class="axial">
         <table border="1" cellspacing="2" cellpadding="3" width="100%">
           #foreach ( $element in $form.elements )
