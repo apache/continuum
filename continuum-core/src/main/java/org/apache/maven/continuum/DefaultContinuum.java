@@ -799,6 +799,11 @@ public class DefaultContinuum
             }
         }
 
+        if ( buildDefinition == null )
+        {
+            throw new ContinuumException( "Project requires a build definition." );
+        }
+
         return buildDefinition;
     }
 
