@@ -3,9 +3,9 @@
 <project>
 
   <pomVersion>3</pomVersion>
-  <id>gbuild</id>
-  <name>gbuild</name>
-  <currentVersion>1.0</currentVersion>
+  <groupId>org.apache.geronimo.gbuild</groupId>
+  <artifactId>gbuild</artifactId>
+  <currentVersion>1.0-SNAPSHOT</currentVersion>
   <shortDescription>gbuild</shortDescription>
   <description>gbuild</description>
   <url></url>
@@ -133,11 +133,16 @@
       <version>2.6.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.4</version>
+    </dependency>
 <!--
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-core</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0</version>
     </dependency>
 -->
   </dependencies>
@@ -146,22 +151,17 @@
     <unitTestSourceDirectory>src/test/java</unitTestSourceDirectory>
     <nagEmailAddress>scm@geronimo.apache.org</nagEmailAddress>
 
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+      </resource>
+    </resources>
+
     <unitTest>
       <includes>
         <include>**/*Test.java</include>
       </includes>
     </unitTest>
-
-    <resources>
-<!--
-      <resource>
-        <directory>.</directory>
-        <includes>
-          <include>*</include>
-        </includes>
-      </resource>
--->
-    </resources>
   </build>
 
 </project>

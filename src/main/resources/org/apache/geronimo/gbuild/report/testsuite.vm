@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Geronimo : $testSuite.name</title>
+
+    <style type="text/css" media="all">
+      @import url("${rootDir}/resources/maven-base.css");
+      @import url("${rootDir}/resources/maven-stylus.css");
+    </style>
+    <link rel="stylesheet" href="${rootDir}/resources/print.css" type="text/css" media="print"></link>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  </head>
+
+  <body>
+    <div class="section">
+      <a name="$summary.name"></a>
+      <h2>Geronimo : $testSuite.name</h2>
+      #summaryLine( $rootDir $testSuite )
+    </div>
+
+    <div class="section">
+      <table class="bodyTable">
+#set( $rowStyle = "a" )
+#foreach( $testCase in $testSuite.testCases )
+        <tr class="$rowStyle">
+          <td style="width:20px">
+            #testImage( $rootDir $testCase )
+            <img width="15" height="15" src="$image" alt="Success"></img>
+          </td>
+          <td style="width:98%">
+            #if ( ${testCase.reportFile} )
+            <a href="${reportDir}/${testCase.reportFile}">
+            #end
+            $testCase.name
+            #if ( ${testCase.reportFile} )
+            </a>
+            #end
+          <td style="width:60px">$testCase.timeString</td>
+        </tr>
+#setRowStyle()
+#end
+      </table>
+
+    </div>
+    <div class="section">
+      #summaryLine( $rootDir $testSuite )
+    </div>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Geronimo : $summary.name</title>
+
+    <style type="text/css" media="all">
+      @import url("${rootDir}/resources/maven-base.css");
+      @import url("${rootDir}/resources/maven-stylus.css");
+    </style>
+    <link rel="stylesheet" href="${rootDir}/resources/print.css" type="text/css" media="print"></link>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  </head>
+
+  <body>
+    <div class="section">
+      <a name="$summary.name"></a>
+      <h2>Geronimo : $summary.name</h2>
+      #summaryLine( $rootDir $summary )
+    </div>
+
+    <div class="section">
+      #resultTable( $rootDir $summary )
+    </div>
+    <div class="section">
+      #summaryLine( $rootDir $summary )
+      <p>
+        * Note: Statistics are not computed recursively, they only sum up all of its testsuites numbers.
+      </p>
+    </div>
+  </body>
+</html>
