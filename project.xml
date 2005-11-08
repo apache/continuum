@@ -15,6 +15,16 @@
   </repository>
   <dependencies>
       <dependency>
+         <groupId>geronimo-spec</groupId>
+         <artifactId>geronimo-spec-j2ee</artifactId>
+         <version>1.4-rc4</version>
+      </dependency>
+      <dependency>
+         <groupId>concurrent</groupId>
+         <artifactId>concurrent</artifactId>
+         <version>1.3.4</version>
+      </dependency>
+      <dependency>
         <groupId>activemq</groupId>
         <artifactId>activemq-core</artifactId>
         <version>3.2</version>
@@ -31,7 +41,13 @@
         <artifactId>activeio</artifactId>
         <version>1.1</version>
       </dependency>      
-
+<!--
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-command-line</artifactId>
+      <version>1.0-alpha-2</version>
+    </dependency>
+-->
 <!--
     <dependency>
       <groupId>activemq</groupId>
@@ -45,6 +61,11 @@
       <version>3.2</version>
     </dependency>
 -->
+    <dependency>
+       <groupId>commons-logging</groupId>
+       <artifactId>commons-logging</artifactId>
+       <version>1.0.4</version>
+    </dependency>
 
     <!-- used to support optional transport configuration via URI query strings -->
     <dependency>
@@ -112,12 +133,13 @@
       <version>2.6.2</version>
     </dependency>
 
+<!--
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-core</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
-
+-->
   </dependencies>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
