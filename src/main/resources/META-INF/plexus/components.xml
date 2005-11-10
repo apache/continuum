@@ -1,0 +1,23 @@
+<component-set>
+    <components>
+        <component>
+            <role>org.codehaus.plexus.action.Action</role>
+            <role-hint>execute-builder</role-hint>
+            <implementation>org.apache.maven.continuum.core.action.ExecuteBuilderContinuumAction</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+                </requirement>
+                <requirement>
+                    <role>org.apache.maven.continuum.execution.manager.BuildExecutorManager</role>
+                </requirement>
+                <requirement>
+                    <role>org.apache.maven.continuum.notification.ContinuumNotificationDispatcher</role>
+                </requirement>
+                <requirement>
+                    <role>org.apache.maven.continuum.store.ContinuumStore</role>
+                </requirement>
+            </requirements>
+        </component>
+    </components>
+</component-set>

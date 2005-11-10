@@ -9,11 +9,42 @@
   <shortDescription>gbuild</shortDescription>
   <description>gbuild</description>
   <url></url>
-  <repository>
-    <connection>scm:cvs:ext:${maven.username}@wibdio.net:/cvs/wibdio/pente:pente</connection>
-    <developerConnection>scm:cvs:ext:${maven.username}@wibdio.net:/cvs/wibdio/pente:pente</developerConnection>
-  </repository>
   <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-api</artifactId>
+      <version>1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-core</artifactId>
+      <version>1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-model</artifactId>
+      <version>1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-command-line</artifactId>
+      <version>1.0-alpha-2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-container-default</artifactId>
+      <version>1.0-alpha-8</version>
+    </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-utils</artifactId>
+        <version>1.0.4</version>
+	</dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-action</artifactId>
+        <version>1.0-alpha-6</version>
+      </dependency>
       <dependency>
          <groupId>geronimo-spec</groupId>
          <artifactId>geronimo-spec-j2ee</artifactId>

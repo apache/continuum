@@ -17,39 +17,17 @@ import javax.jms.TextMessage;
  * Hello world!
  */
 public class App {
+    public static final String SUBJECT = "GBUILD.CTEST.OUT";
 
     public static void main(String[] args) throws Exception {
         thread(new HelloWorldBroker(args), true);
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        Thread.sleep(1000);
         thread(new HelloWorldConsumer(), false);
         thread(new HelloWorldProducer(), false);
         thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        Thread.sleep(1000);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldProducer(), false);
-        Thread.sleep(1000);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
     }
 
     public static void thread(Runnable runnable, boolean daemon) {
@@ -71,6 +49,7 @@ public class App {
     }
 
     public static class HelloWorldProducer implements Runnable {
+
         public void run() {
             try {
                 // Create a ConnectionFactory
@@ -84,7 +63,7 @@ public class App {
                 Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
                 // Create the destination (Topic or Queue)
-                Destination destination = session.createQueue("TEST.FOO");
+                Destination destination = session.createQueue(SUBJECT);
 
                 // Create a MessageProducer from the Session to the Topic or Queue
                 MessageProducer producer = session.createProducer(destination);
@@ -125,13 +104,13 @@ public class App {
                 Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
                 // Create the destination (Topic or Queue)
-                Destination destination = session.createQueue("TEST.FOO");
+                Destination destination = session.createQueue(SUBJECT);
 
                 // Create a MessageConsumer from the Session to the Topic or Queue
                 MessageConsumer consumer = session.createConsumer(destination);
 
                 // Wait for a message
-                Message message = consumer.receive(1000);
+                Message message = consumer.receive(10000);
 
                 if (message instanceof TextMessage) {
                     TextMessage textMessage = (TextMessage) message;
@@ -154,4 +133,5 @@ public class App {
             System.out.println("JMS Exception occured.  Shutting down client.");
         }
     }
+
 }
