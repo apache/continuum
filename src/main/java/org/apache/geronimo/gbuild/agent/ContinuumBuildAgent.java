@@ -17,37 +17,78 @@
 package org.apache.geronimo.gbuild.agent;
 
 import org.activemq.ActiveMQConnectionFactory;
-import org.apache.maven.continuum.utils.shell.ShellCommandHelper;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.buildcontroller.BuildController;
 
 import javax.jms.Connection;
-import javax.jms.Destination;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import java.util.HashMap;
+import javax.jms.MapMessage;
+import javax.jms.Queue;
+import javax.jms.MessageProducer;
+import javax.jms.DeliveryMode;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
 
+    // ----------------------------------------------------------------------
+    // Keys for the values that can be in the context
+    // ----------------------------------------------------------------------
+
+    public static final String KEY_STORE = "store";
+
+    public static final String KEY_PROJECT_ID = "projectId";
+
+    public static final String KEY_BUILD_DEFINITION_ID = "buildDefinitionId";
+
+    public static final String KEY_TRIGGER = "trigger";
+
+    public static final String KEY_HOST_NAME = "hostName";
+
+    public static final String KEY_HOST_ADDRESS = "hostAddress";
+
+    public static final String KEY_CONTRIBUTOR = "contributor";
+
+    public static final String KEY_ADMIN_ADDRESS = "adminAddress";
+
     /**
      * @plexus.requirement
      */
-    private ShellCommandHelper shellCommandHelper;
+    private BuildController controller;
 
     /**
      * @plexus.configuration
      */
-    private String subject;
+    private String contributor;
+
+    /**
+     * @plexus.configuration
+     */
+    private String adminAddress;
 
     /**
      * @plexus.configuration
      */
     private String url;
+
+    /**
+     * @plexus.configuration
+     */
+    private String buildQueueSubject;
+
+    /**
+     * @plexus.configuration
+     */
+    private String buildResultsSubject;
 
     private boolean run;
 
@@ -60,6 +101,7 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
 
             // Create a Connection
             Connection connection = connectionFactory.createConnection();
+
             connection.start();
 
             connection.setExceptionListener(this);
@@ -67,32 +109,136 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
             // Create a Session
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            // Create the destination (Topic or Queue)
-            Destination destination = session.createQueue(subject);
+            MessageConsumer buildConsumer = createQueueConsumer(session, buildQueueSubject);
 
-            // Create a MessageConsumer from the Session to the Topic or Queue
-            MessageConsumer consumer = session.createConsumer(destination);
+            MessageProducer resultsProducer = createTopicProducer(session, buildResultsSubject);
 
             while (run) {
                 // Wait for a message
-                Message message = consumer.receive();
+                Message message = buildConsumer.receive();
 
-                if (message instanceof ObjectMessage) {
-                    ObjectMessage objectMessage = (ObjectMessage) message;
-                    HashMap map = (HashMap) objectMessage.getObject();
+                if (message instanceof MapMessage) {
+
+                    MapMessage mapMessage = (MapMessage) message;
+
+                    ContinuumStore store = getContinuumStore(mapMessage);
+
+                    ContinuumStoreContext.setStore(store);
+
+                    int projectId = getProjectId(mapMessage);
+
+                    int buildDefinitionId = getBuildDefinitionId(mapMessage);
+
+                    int trigger = getTrigger(mapMessage);
+
+                    controller.build(projectId, buildDefinitionId, trigger);
+
+                    MapMessage results = session.createMapMessage();
+
+                    setStore(results, store);
+
+                    setProjectId(results, projectId);
+
+                    setBuildDefinitionId(results, buildDefinitionId);
+
+                    setTrigger(results, trigger);
+
+                    setSystemProperty(results, "os.version");
+
+                    setSystemProperty(results, "os.name");
+
+                    setSystemProperty(results, "java.version");
+
+                    setSystemProperty(results, "java.vendor");
+
+                    setHostInformation(results);
+
+                    setContributor(results);
+
+                    setAdminAddress(results);
+
+                    resultsProducer.send(results);
 
                 } else {
                     System.out.println("Incorect message type: " + message.getClass().getName());
                 }
             }
 
-            consumer.close();
+            buildConsumer.close();
             session.close();
             connection.close();
         } catch (Exception e) {
             System.out.println("Caught: " + e);
             e.printStackTrace();
         }
+    }
+
+    private void setAdminAddress(MapMessage results) throws JMSException {
+        results.setString(KEY_ADMIN_ADDRESS, adminAddress);
+    }
+
+    private void setContributor(MapMessage results) throws JMSException {
+        results.setString(KEY_CONTRIBUTOR, contributor);
+    }
+
+    private void setHostInformation(MapMessage results) throws UnknownHostException, JMSException {
+        InetAddress localHost = InetAddress.getLocalHost();
+        results.setString(KEY_HOST_NAME, localHost.getHostName());
+        results.setString(KEY_HOST_ADDRESS, localHost.getHostAddress());
+    }
+
+    private void setSystemProperty(MapMessage results, String name) throws JMSException {
+        results.setString(name, System.getProperty(name));
+    }
+
+    private void setStore(MapMessage results, ContinuumStore store) throws JMSException {
+        results.setObject(KEY_STORE, store);
+    }
+
+    private void setBuildDefinitionId(MapMessage results, int buildDefinitionId) throws JMSException {
+        results.setInt(KEY_BUILD_DEFINITION_ID, buildDefinitionId);
+    }
+
+    private void setTrigger(MapMessage results, int trigger) throws JMSException {
+        results.setInt(KEY_TRIGGER, trigger);
+    }
+
+    private void setProjectId(MapMessage results, int projectId) throws JMSException {
+        results.setInt(KEY_PROJECT_ID, projectId);
+    }
+
+    private int getTrigger(MapMessage mapMessage) throws JMSException {
+        return mapMessage.getIntProperty(KEY_TRIGGER);
+    }
+
+    private int getBuildDefinitionId(MapMessage mapMessage) throws JMSException {
+        return mapMessage.getIntProperty(KEY_BUILD_DEFINITION_ID);
+    }
+
+    private int getProjectId(MapMessage mapMessage) throws JMSException {
+        return mapMessage.getIntProperty(KEY_PROJECT_ID);
+    }
+
+    private ContinuumStore getContinuumStore(MapMessage mapMessage) throws JMSException {
+        return (ContinuumStore) mapMessage.getObject(KEY_STORE);
+    }
+
+    private MessageConsumer createQueueConsumer(Session session, String subject) throws JMSException {
+        Queue queue = session.createQueue(subject);
+
+        MessageConsumer consumer = session.createConsumer(queue);
+
+        return consumer;
+    }
+
+    private MessageProducer createTopicProducer(Session session, String subject) throws JMSException {
+        Topic topic = session.createTopic(subject);
+
+        MessageProducer producer = session.createProducer(topic);
+
+        producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+
+        return producer;
     }
 
     public synchronized boolean isRunning() {
@@ -102,7 +248,7 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
     public synchronized void stop() {
         run = false;
     }
-    
+
     public synchronized void onException(JMSException ex) {
         System.out.println("JMS Exception occured.  Shutting down client.");
     }

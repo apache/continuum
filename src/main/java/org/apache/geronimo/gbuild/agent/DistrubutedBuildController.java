@@ -40,6 +40,8 @@ import java.util.Map;
  */
 public class DistrubutedBuildController extends AbstractLogEnabled {
 
+    public String ROLE = DistrubutedBuildController.class.getName(); 
+
     /**
      * @plexus.requirement
      */
