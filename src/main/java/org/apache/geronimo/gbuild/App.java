@@ -26,8 +26,22 @@ public class App {
 
         thread(new HelloWorldProducer(), false);
         thread(new HelloWorldConsumer(), false);
+        Thread.sleep(2000);
         thread(new HelloWorldProducer(), false);
         thread(new HelloWorldConsumer(), false);
+        Thread.sleep(2000);
+        thread(new HelloWorldProducer(), false);
+        thread(new HelloWorldConsumer(), false);
+        Thread.sleep(2000);
+        thread(new HelloWorldProducer(), false);
+        thread(new HelloWorldConsumer(), false);
+        Thread.sleep(2000);
+        thread(new HelloWorldProducer(), false);
+        thread(new HelloWorldConsumer(), false);
+        thread(new HelloWorldProducer(), false);
+        Thread.sleep(2000);
+        thread(new HelloWorldConsumer(), false);
+        Thread.sleep(2000);
     }
 
     public static void thread(Runnable runnable, boolean daemon) {
