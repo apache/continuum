@@ -48,7 +48,13 @@ $page.setTitle( "Continuum" )
       <tr class="$css.nextClass">
         <td>
           #if ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
-            $state.generate( $item )
+            #set ( $latestBuild = $continuum.getLatestBuildResultForProject( $item.id ) )
+            #set ( $generatedState = $state.generate( $item ) )
+            #if ( $latestBuild && $generatedState != "New" )
+              <a href="$link.setPage('ProjectBuild.vm').addQueryData('view','ProjectBuild').addQueryData('buildId',$latestBuild.id).addQueryData('id',$item.id)">$generatedState</a></td>
+            #else
+              $generatedState
+            #end
           #else
             &nbsp;
           #end
@@ -56,10 +62,15 @@ $page.setTitle( "Continuum" )
         <td><a href="$link.setPage('View.vm').addPathInfo('fid', "$!{item.executorId}Project").addPathInfo('id', $item.id)">$!item.name</a></td>
         <td>$!item.version</td>
         <td>
-          #if ( $continuum.isInBuildingQueue( $item.id ) )
+          #if ( $continuum.isInBuildingQueue( $item.id ) || $continuum.isInCheckoutQueue( $item.id ) )
             <b>In&nbsp;queue</b>
           #elseif ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
-            $item.buildNumber
+            #if ( $item.buildNumber != 0 )
+              #set ( $build = $continuum.getBuildResultByBuildNumber( $item.id, $item.buildNumber ) )
+              <a href="$link.setPage('ProjectBuild.vm').addQueryData('view','ProjectBuild').addQueryData('buildId',$build.id).addQueryData('id',$item.id)">$item.buildNumber</a>
+            #else
+              $item.buildNumber
+            #end
           #else
             <b>In&nbsp;progress</b>
           #end
@@ -69,7 +80,7 @@ $page.setTitle( "Continuum" )
         ## Operations
 
         #if ( $continuum.security.isAuthorized( $c1user, "buildProject" ) )
-          #if ( $continuum.isInBuildingQueue( $item.id ) )
+          #if ( $continuum.isInBuildingQueue( $item.id ) || $continuum.isInCheckoutQueue( $item.id ) )
           <td>Build</td>
           #elseif ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
           <td><a href="$link.addPathInfo('action', 'cam').addPathInfo('cid','buildProject').addPathInfo('id', $item.id)">Build&nbsp;Now</a></td>
@@ -106,9 +117,9 @@ $page.setTitle( "Continuum" )
     #if ( $continuum.security.isAuthorized( $c1user, "buildProject" ) )
     <div class="functnbar3">
       <form method="post" action="$link">
-        <img src="/continuum/images/icon_success_sml.gif" alt="Success"/> $success
-        <img src="/continuum/images/icon_warning_sml.gif" alt="Failed"/> $failures
-        <img src="/continuum/images/icon_error_sml.gif" alt="Error"/> $errors
+        <img src="/continuum/images/icon_success_sml.gif" alt="Success" title="Success"/> $success
+        <img src="/continuum/images/icon_warning_sml.gif" alt="Failed" title="Failed"/> $failures
+        <img src="/continuum/images/icon_error_sml.gif" alt="Error" title="Error"/> $errors
         #if ( $items && $items.size() > 0 )
         #hidden ( "action" "cam" )
         #hidden ( "cid" "buildAllProjects" )

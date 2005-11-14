@@ -35,6 +35,7 @@ import org.apache.maven.scm.repository.ScmRepository;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,9 +77,15 @@ public class DefaultContinuumScm
 
         String tagMessage = "";
 
-        if ( tag != null )
+        if ( tag != null && !StringUtils.isEmpty( tag.trim() ) )
         {
             tagMessage = " with branch/tag " + tag;
+
+            tag = tag.trim();
+        }
+        else
+        {
+            tag = null;
         }
 
         try
@@ -179,9 +186,15 @@ public class DefaultContinuumScm
 
         String tagMessage = "";
 
-        if ( tag != null )
+        if ( tag != null && !StringUtils.isEmpty( tag.trim() ) )
         {
             tagMessage = " with branch/tag " + tag;
+
+            tag = tag.trim();
+        }
+        else
+        {
+            tag = null;
         }
 
         try
@@ -388,7 +401,7 @@ public class DefaultContinuumScm
     {
         String cmd = commandLine;
         
-        if ( cmd.startsWith( "svn" ) )
+        if ( cmd != null && cmd.startsWith( "svn" ) )
         {
             String pwdString = "--password";
 

@@ -73,6 +73,8 @@ public interface Continuum
     boolean isInBuildingQueue( int projectId )
         throws ContinuumException;
 
+    boolean isInCheckoutQueue( int projectId )
+        throws ContinuumException;
     // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
@@ -103,6 +105,9 @@ public interface Continuum
     // ----------------------------------------------------------------------
 
     BuildResult getBuildResult( int buildId )
+        throws ContinuumException;
+
+    BuildResult getBuildResultByBuildNumber( int projectId, int buildNumber )
         throws ContinuumException;
 
     String getBuildOutput( int projectId, int buildId )

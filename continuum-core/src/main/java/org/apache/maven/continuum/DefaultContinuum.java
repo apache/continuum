@@ -41,6 +41,7 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.maven.MavenOneContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
+import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
@@ -123,6 +124,11 @@ public class DefaultContinuum
     private TaskQueue buildQueue;
 
     /**
+     * @plexus.requirement
+     */
+    private TaskQueue checkoutQueue;
+
+    /**
      * @plexus.configuration
      */
     private String workingDirectory;
@@ -155,6 +161,39 @@ public class DefaultContinuum
         }
     }
 
+    public BuildResult getBuildResultByBuildNumber( int projectId, int buildNumber )
+        throws ContinuumException
+    {
+        //TODO : Get build result with a store request
+
+        List buildResults;
+
+        try
+        {
+            buildResults = new ArrayList( store.getProjectWithBuilds( projectId ).getBuildResults() );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw logAndCreateException( "Exception while getting build results for project.", e );
+        }
+
+        Collections.reverse( buildResults );
+
+        Iterator buildResultsIterator = buildResults.iterator();
+
+        for ( Iterator i = buildResults.iterator(); i.hasNext(); )
+        {
+            BuildResult br = (BuildResult) i.next();
+
+            if ( br.getBuildNumber() == buildNumber )
+            {
+                return br;
+            }
+        }
+
+        return null;
+    }
+
     // ----------------------------------------------------------------------
     // Queues
     // ----------------------------------------------------------------------
@@ -170,12 +209,39 @@ public class DefaultContinuum
         }
         catch ( TaskQueueException e )
         {
-            throw new ContinuumException( "Error while getting the queue snapshot.", e );
+            throw new ContinuumException( "Error while getting the building queue.", e );
         }
 
         for ( Iterator it = queue.iterator(); it.hasNext(); )
         {
             BuildProjectTask task = (BuildProjectTask) it.next();
+
+            if ( task.getProjectId() == projectId )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isInCheckoutQueue( int projectId )
+        throws ContinuumException
+    {
+        List queue;
+
+        try
+        {
+            queue = checkoutQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumException( "Error while getting the checkout queue.", e );
+        }
+
+        for ( Iterator it = queue.iterator(); it.hasNext(); )
+        {
+            CheckOutTask task = (CheckOutTask) it.next();
 
             if ( task.getProjectId() == projectId )
             {
@@ -339,7 +405,7 @@ public class DefaultContinuum
         buildProject( projectId, buildDef.getId(), trigger );
     }
 
-    public void buildProject( int projectId, int buildDefinitionId, int trigger )
+    public synchronized void buildProject( int projectId, int buildDefinitionId, int trigger )
         throws ContinuumException
     {
         if ( isInBuildingQueue( projectId ) )
@@ -1054,7 +1120,35 @@ public class DefaultContinuum
     public void updateSchedule( Schedule schedule )
         throws ContinuumException
     {
+        updateSchedule( schedule, true );
+    }
+
+    private void updateSchedule( Schedule schedule, boolean updateScheduler )
+        throws ContinuumException
+    {
         storeSchedule( schedule );
+
+        if ( updateScheduler )
+        {
+            try
+            {
+                if ( schedule.isActive() )
+                {
+                    // I unactivate it before if it's already active
+                    schedulesActivator.unactivateSchedule( schedule, this );
+
+                    schedulesActivator.activateSchedule( schedule, this );
+                }
+                else
+                {
+                    schedulesActivator.unactivateSchedule( schedule, this );
+                }
+            }
+            catch ( SchedulesActivationException e )
+            {
+                getLogger().error( "Can't unactivate schedule. You need to restart Continuum.", e );
+            }
+        }
     }
 
     public void updateSchedule( int scheduleId, Map configuration )
@@ -1072,7 +1166,7 @@ public class DefaultContinuum
 
         schedule.setActive( new Boolean( (String) configuration.get( "schedule.active" ) ).booleanValue() );
 
-        storeSchedule( schedule );
+        updateSchedule( schedule, true );
     }
 
     public void removeSchedule( int scheduleId )
@@ -1080,12 +1174,15 @@ public class DefaultContinuum
     {
         Schedule schedule = getSchedule( scheduleId );
 
-        removeSchedule( schedule );
-    }
+        try
+        {
+            schedulesActivator.unactivateSchedule( schedule, this );
+        }
+        catch ( SchedulesActivationException e )
+        {
+            getLogger().error( "Can't unactivate schedule. You need to restart Continuum.", e );
+        }
 
-    private void removeSchedule( Schedule schedule )
-        throws ContinuumException
-    {
         store.removeSchedule( schedule );
     }
 

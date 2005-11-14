@@ -21,6 +21,7 @@ import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.notification.notifier.AbstractNotifier;
 
 public abstract class AbstractContinuumNotifier
@@ -42,13 +43,16 @@ public abstract class AbstractContinuumNotifier
 
             StringBuffer buf = new StringBuffer( configurationService.getUrl() );
 
-            if ( !buf.toString().endsWith( "/" ) )
+            if ( project != null && build != null )
             {
-                buf.append( "/" );
-            }
+                if ( !buf.toString().endsWith( "/" ) )
+                {
+                    buf.append( "/" );
+                }
 
-            buf.append( "target/ProjectBuild.vm/view/ProjectBuild/id/" ).append( project.getId() ).append(
-                "/buildId/" ).append( build.getId() );
+                buf.append( "target/ProjectBuild.vm/view/ProjectBuild/id/" ).append( project.getId() ).append(
+                    "/buildId/" ).append( build.getId() );
+            }
 
             return buf.toString();
         }
@@ -56,5 +60,38 @@ public abstract class AbstractContinuumNotifier
         {
             throw new ContinuumException( "Can't obtain the base url from configuration.", e );
         }
+    }
+
+    public boolean shouldNotify( BuildResult build, BuildResult previousBuild )
+    {
+        if ( build == null )
+        {
+            return true;
+        }
+
+        // Always send if the project failed
+        if ( build.getState() == ContinuumProjectState.FAILED || build.getState() == ContinuumProjectState.ERROR )
+        {
+            return true;
+        }
+
+        // Send if this is the first build
+        if ( previousBuild == null )
+        {
+            return true;
+        }
+
+        // Send if the state has changed
+        getLogger().info(
+            "Current build state: " + build.getState() + ", previous build state: " + previousBuild.getState() );
+
+        if ( build.getState() != previousBuild.getState() )
+        {
+            return true;
+        }
+
+        getLogger().info( "Same state, not sending message." );
+
+        return false;
     }
 }
