@@ -113,7 +113,6 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
 
     public void run() {
         try {
-            init();
             run = true;
 
             Connection connection = null;
@@ -134,9 +133,13 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
 
             while (run) {
                 // Wait for a message
-                Message message = buildConsumer.receive();
+                Message message = buildConsumer.receive(1000);
 
-                if (message instanceof ObjectMessage) {
+                if (message == null){
+
+                    continue;
+
+                } else if (message instanceof ObjectMessage) {
 
                     ObjectMessage objectMessage = (ObjectMessage) message;
 
@@ -145,6 +148,8 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
                     ContinuumStore store = getContinuumStore(mapMessage);
 
                     ThreadContextContinuumStore.setStore(store);
+
+                    init();
 
                     int projectId = getProjectId(mapMessage);
 
@@ -221,53 +226,53 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
         return connection;
     }
 
-    private void setAdminAddress(Map results) throws JMSException {
+    public void setAdminAddress(Map results) throws JMSException {
         results.put(KEY_ADMIN_ADDRESS, adminAddress);
     }
 
-    private void setContributor(Map results) throws JMSException {
+    public void setContributor(Map results) throws JMSException {
         results.put(KEY_CONTRIBUTOR, contributor);
     }
 
-    private void setHostInformation(Map results) throws UnknownHostException, JMSException {
+    public static void setHostInformation(Map results) throws UnknownHostException, JMSException {
         InetAddress localHost = InetAddress.getLocalHost();
         results.put(KEY_HOST_NAME, localHost.getHostName());
         results.put(KEY_HOST_ADDRESS, localHost.getHostAddress());
     }
 
-    private void setSystemProperty(Map results, String name) throws JMSException {
+    public static void setSystemProperty(Map results, String name) throws JMSException {
         results.put(name, System.getProperty(name));
     }
 
-    private void setStore(Map results, ContinuumStore store) throws JMSException {
+    public static void setStore(Map results, ContinuumStore store) throws JMSException {
         results.put(KEY_STORE, store);
     }
 
-    private void setBuildDefinitionId(Map results, int buildDefinitionId) throws JMSException {
+    public static void setBuildDefinitionId(Map results, int buildDefinitionId) throws JMSException {
         results.put(KEY_BUILD_DEFINITION_ID, new Integer(buildDefinitionId));
     }
 
-    private void setTrigger(Map results, int trigger) throws JMSException {
+    public static void setTrigger(Map results, int trigger) throws JMSException {
         results.put(KEY_TRIGGER, new Integer(trigger));
     }
 
-    private void setProjectId(Map results, int projectId) throws JMSException {
+    public static void setProjectId(Map results, int projectId) throws JMSException {
         results.put(KEY_PROJECT_ID, new Integer(projectId));
     }
 
-    private int getTrigger(Map mapMessage) throws JMSException {
+    public static int getTrigger(Map mapMessage) throws JMSException {
         return ((Integer)mapMessage.get(KEY_TRIGGER)).intValue();
     }
 
-    private int getBuildDefinitionId(Map mapMessage) throws JMSException {
+    public static int getBuildDefinitionId(Map mapMessage) throws JMSException {
         return ((Integer)mapMessage.get(KEY_BUILD_DEFINITION_ID)).intValue();
     }
 
-    private int getProjectId(Map mapMessage) throws JMSException {
+    public static int getProjectId(Map mapMessage) throws JMSException {
         return ((Integer)mapMessage.get(KEY_PROJECT_ID)).intValue();
     }
 
-    private ContinuumStore getContinuumStore(Map mapMessage) throws JMSException {
+    public static ContinuumStore getContinuumStore(Map mapMessage) throws JMSException {
         return (ContinuumStore) mapMessage.get(KEY_STORE);
     }
 
