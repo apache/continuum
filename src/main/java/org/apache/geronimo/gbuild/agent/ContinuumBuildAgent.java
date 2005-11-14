@@ -17,23 +17,27 @@
 package org.apache.geronimo.gbuild.agent;
 
 import org.activemq.ActiveMQConnectionFactory;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.buildcontroller.BuildController;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 
 import javax.jms.Connection;
+import javax.jms.DeliveryMode;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.Session;
-import javax.jms.MapMessage;
-import javax.jms.Queue;
 import javax.jms.MessageProducer;
-import javax.jms.DeliveryMode;
-import javax.jms.TextMessage;
+import javax.jms.Queue;
+import javax.jms.Session;
 import javax.jms.Topic;
+import javax.jms.ObjectMessage;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.io.File;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @version $Rev$ $Date$
@@ -66,6 +70,11 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
     private BuildController controller;
 
     /**
+     * @plexus.requirement
+     */
+    private ConfigurationService configurationService;
+
+    /**
      * @plexus.configuration
      */
     private String contributor;
@@ -78,52 +87,64 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
     /**
      * @plexus.configuration
      */
-    private String url;
+    private String coordinatorUrl;
 
     /**
      * @plexus.configuration
      */
-    private String buildQueueSubject;
+    private String buildTaskQueue;
 
     /**
      * @plexus.configuration
      */
-    private String buildResultsSubject;
+    private String buildResultsTopic;
+
+    /**
+     * @plexus.configuration
+     */
+    private String workingDirectory;
+
+    /**
+     * @plexus.configuration
+     */
+    private String buildOutputDirectory;
 
     private boolean run;
 
     public void run() {
         try {
+            init();
             run = true;
 
-            // Create a ConnectionFactory
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
-
-            // Create a Connection
-            Connection connection = connectionFactory.createConnection();
-
-            connection.start();
-
-            connection.setExceptionListener(this);
+            Connection connection = null;
+            try {
+                connection = createConnection(coordinatorUrl);
+            } catch (Throwable e) {
+                System.out.println("Could not create connection to: "+coordinatorUrl);
+                e.printStackTrace();
+                return;
+            }
 
             // Create a Session
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            MessageConsumer buildConsumer = createQueueConsumer(session, buildQueueSubject);
+            MessageConsumer buildConsumer = createQueueConsumer(session, buildTaskQueue);
 
-            MessageProducer resultsProducer = createTopicProducer(session, buildResultsSubject);
+            MessageProducer resultsProducer = createTopicProducer(session, buildResultsTopic);
 
             while (run) {
                 // Wait for a message
                 Message message = buildConsumer.receive();
 
-                if (message instanceof MapMessage) {
+                if (message instanceof ObjectMessage) {
 
-                    MapMessage mapMessage = (MapMessage) message;
+                    ObjectMessage objectMessage = (ObjectMessage) message;
+
+                    Map mapMessage = (Map) objectMessage.getObject();
 
                     ContinuumStore store = getContinuumStore(mapMessage);
 
-                    ContinuumStoreContext.setStore(store);
+                    ThreadContextContinuumStore.setStore(store);
 
                     int projectId = getProjectId(mapMessage);
 
@@ -131,9 +152,9 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
 
                     int trigger = getTrigger(mapMessage);
 
-                    controller.build(projectId, buildDefinitionId, trigger);
+                    build(projectId, buildDefinitionId, trigger);
 
-                    MapMessage results = session.createMapMessage();
+                    HashMap results = new HashMap();
 
                     setStore(results, store);
 
@@ -157,7 +178,9 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
 
                     setAdminAddress(results);
 
-                    resultsProducer.send(results);
+                    ObjectMessage resultMessage = session.createObjectMessage(results);
+
+                    resultsProducer.send(resultMessage);
 
                 } else {
                     System.out.println("Incorect message type: " + message.getClass().getName());
@@ -170,65 +193,88 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
         } catch (Exception e) {
             System.out.println("Caught: " + e);
             e.printStackTrace();
+            System.out.println("ContinuumBuildAgent.run");
         }
     }
 
-    private void setAdminAddress(MapMessage results) throws JMSException {
-        results.setString(KEY_ADMIN_ADDRESS, adminAddress);
+    public void init() throws ConfigurationLoadingException {
+        configurationService.load();
+        configurationService.setWorkingDirectory(new File(workingDirectory));
+        configurationService.setBuildOutputDirectory(new File(buildOutputDirectory));
     }
 
-    private void setContributor(MapMessage results) throws JMSException {
-        results.setString(KEY_CONTRIBUTOR, contributor);
+    public void build(int projectId, int buildDefinitionId, int trigger) {
+        controller.build(projectId, buildDefinitionId, trigger);
     }
 
-    private void setHostInformation(MapMessage results) throws UnknownHostException, JMSException {
+    private Connection createConnection(String coordinatorUrl) throws JMSException {
+        // Create a ConnectionFactory
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(coordinatorUrl);
+
+        // Create a Connection
+        Connection connection = connectionFactory.createConnection();
+
+        connection.start();
+
+        connection.setExceptionListener(this);
+
+        return connection;
+    }
+
+    private void setAdminAddress(Map results) throws JMSException {
+        results.put(KEY_ADMIN_ADDRESS, adminAddress);
+    }
+
+    private void setContributor(Map results) throws JMSException {
+        results.put(KEY_CONTRIBUTOR, contributor);
+    }
+
+    private void setHostInformation(Map results) throws UnknownHostException, JMSException {
         InetAddress localHost = InetAddress.getLocalHost();
-        results.setString(KEY_HOST_NAME, localHost.getHostName());
-        results.setString(KEY_HOST_ADDRESS, localHost.getHostAddress());
+        results.put(KEY_HOST_NAME, localHost.getHostName());
+        results.put(KEY_HOST_ADDRESS, localHost.getHostAddress());
     }
 
-    private void setSystemProperty(MapMessage results, String name) throws JMSException {
-        results.setString(name, System.getProperty(name));
+    private void setSystemProperty(Map results, String name) throws JMSException {
+        results.put(name, System.getProperty(name));
     }
 
-    private void setStore(MapMessage results, ContinuumStore store) throws JMSException {
-        results.setObject(KEY_STORE, store);
+    private void setStore(Map results, ContinuumStore store) throws JMSException {
+        results.put(KEY_STORE, store);
     }
 
-    private void setBuildDefinitionId(MapMessage results, int buildDefinitionId) throws JMSException {
-        results.setInt(KEY_BUILD_DEFINITION_ID, buildDefinitionId);
+    private void setBuildDefinitionId(Map results, int buildDefinitionId) throws JMSException {
+        results.put(KEY_BUILD_DEFINITION_ID, new Integer(buildDefinitionId));
     }
 
-    private void setTrigger(MapMessage results, int trigger) throws JMSException {
-        results.setInt(KEY_TRIGGER, trigger);
+    private void setTrigger(Map results, int trigger) throws JMSException {
+        results.put(KEY_TRIGGER, new Integer(trigger));
     }
 
-    private void setProjectId(MapMessage results, int projectId) throws JMSException {
-        results.setInt(KEY_PROJECT_ID, projectId);
+    private void setProjectId(Map results, int projectId) throws JMSException {
+        results.put(KEY_PROJECT_ID, new Integer(projectId));
     }
 
-    private int getTrigger(MapMessage mapMessage) throws JMSException {
-        return mapMessage.getIntProperty(KEY_TRIGGER);
+    private int getTrigger(Map mapMessage) throws JMSException {
+        return ((Integer)mapMessage.get(KEY_TRIGGER)).intValue();
     }
 
-    private int getBuildDefinitionId(MapMessage mapMessage) throws JMSException {
-        return mapMessage.getIntProperty(KEY_BUILD_DEFINITION_ID);
+    private int getBuildDefinitionId(Map mapMessage) throws JMSException {
+        return ((Integer)mapMessage.get(KEY_BUILD_DEFINITION_ID)).intValue();
     }
 
-    private int getProjectId(MapMessage mapMessage) throws JMSException {
-        return mapMessage.getIntProperty(KEY_PROJECT_ID);
+    private int getProjectId(Map mapMessage) throws JMSException {
+        return ((Integer)mapMessage.get(KEY_PROJECT_ID)).intValue();
     }
 
-    private ContinuumStore getContinuumStore(MapMessage mapMessage) throws JMSException {
-        return (ContinuumStore) mapMessage.getObject(KEY_STORE);
+    private ContinuumStore getContinuumStore(Map mapMessage) throws JMSException {
+        return (ContinuumStore) mapMessage.get(KEY_STORE);
     }
 
     private MessageConsumer createQueueConsumer(Session session, String subject) throws JMSException {
         Queue queue = session.createQueue(subject);
 
-        MessageConsumer consumer = session.createConsumer(queue);
-
-        return consumer;
+        return session.createConsumer(queue);
     }
 
     private MessageProducer createTopicProducer(Session session, String subject) throws JMSException {

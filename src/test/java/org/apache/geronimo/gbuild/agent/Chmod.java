@@ -16,21 +16,16 @@
  */
 package org.apache.geronimo.gbuild.agent;
 
-import org.codehaus.plexus.embed.Embedder;
+import org.codehaus.plexus.util.cli.CommandLineException;
+
+import java.io.File;
 
 /**
  * @version $Rev$ $Date$
  */
-public class Main {
+public class Chmod extends SystemExecutable {
+    public static void exec(File root, String opts, File script) throws CommandLineException {
+        system( root, "chmod", opts +" " + script.getAbsolutePath() );
 
-    public static void main(String[] args) throws Exception {
-        Embedder embedder = new Embedder();
-        embedder.start();
-        BuildAgent buildAgent = (BuildAgent) embedder.lookup(BuildAgent.ROLE);
-
-        Thread agentThread = new Thread(buildAgent);
-        agentThread.setDaemon(false);
-        agentThread.start();
     }
-
 }

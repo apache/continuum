@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * @version $Rev$ $Date$
  */
-public class ContinuumStoreContext implements ContinuumStore {
+public class ThreadContextContinuumStore implements ContinuumStore {
 
     private static ThreadLocal stores = new ThreadLocal();
 

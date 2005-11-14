@@ -16,14 +16,16 @@
  */
 package org.apache.geronimo.gbuild.agent;
 
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.Serializable;
 
 /**
  * @version $Rev$ $Date$
@@ -53,11 +55,34 @@ public class MapContinuumStore extends MockContinuumStore implements Serializabl
     }
 
     public void addBuildResult(Project project, BuildResult build) throws ContinuumStoreException, ContinuumObjectNotFoundException {
+        updateObject(build, build.getId());
+
         project.setLatestBuildId(build.getId());
 
         project.setState(build.getState());
 
         project.addBuildResult(build);
+    }
+
+    public BuildDefinition getBuildDefinition(int buildDefinitionId)
+            throws ContinuumStoreException, ContinuumObjectNotFoundException {
+        return (BuildDefinition) getObjectById(BuildDefinition.class, buildDefinitionId);
+    }
+
+    public BuildDefinition storeBuildDefinition(BuildDefinition buildDefinition)
+            throws ContinuumStoreException {
+        updateObject(buildDefinition, buildDefinition.getId());
+
+        return buildDefinition;
+    }
+
+    public SystemConfiguration getSystemConfiguration() throws ContinuumStoreException {
+        return (SystemConfiguration) getMap(SystemConfiguration.class).get(new Integer(0));
+    }
+
+    public SystemConfiguration addSystemConfiguration(SystemConfiguration systemConf) {
+        updateObject(systemConf, 0);
+        return systemConf;
     }
 
     private void updateObject(Object object, int id) {

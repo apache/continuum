@@ -27,6 +27,8 @@ import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.utils.ContinuumUtils;
+import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 
 import java.io.File;
 import java.util.Date;
@@ -35,13 +37,12 @@ import java.util.Map;
 /**
  * @version $Rev$ $Date$
  */
-public class ExecuteDistributedBuilderContinuumAction extends AbstractDistributedContinuumAction {
+public class ExecuteDistributedBuilderContinuumAction extends AbstractContinuumAction {
 
-    // ----------------------------------------------------------------------
-    // Keys for the values that can be in the context
-    // ----------------------------------------------------------------------
-
-    public static final String KEY_BUILD_OUTPUT_FILE = "build-output-file";
+    /**
+     * @plexus.requirement
+     */
+    private ConfigurationService configurationService;
 
     /**
      * @plexus.requirement
@@ -65,13 +66,13 @@ public class ExecuteDistributedBuilderContinuumAction extends AbstractDistribute
         // Get parameters from the context
         // ----------------------------------------------------------------------
 
-        Project project = getProject(context);
+        Project project = store.getProjectWithBuildDetails( getProjectId( context ) );
 
-        int trigger = getTrigger(context);
+        int trigger = getTrigger( context );
 
-        ScmResult scmResult = getUpdateScmResult(context);
+        ScmResult scmResult = getUpdateScmResult( context );
 
-        ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor(project.getExecutorId());
+        ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
 
         // ----------------------------------------------------------------------
         // Make the build
@@ -85,7 +86,7 @@ public class ExecuteDistributedBuilderContinuumAction extends AbstractDistribute
 
         build.setTrigger(trigger);
 
-        BuildDefinition buildDefinition = getBuildDefinition(context);
+        BuildDefinition buildDefinition = store.getBuildDefinition( getBuildDefinitionId( context ) );
 
         build.setScmResult(scmResult);
 
@@ -98,7 +99,7 @@ public class ExecuteDistributedBuilderContinuumAction extends AbstractDistribute
         try {
             notifier.runningGoals(project, build);
 
-            File buildOutputFile = getBuildOutputFile( context );
+            File buildOutputFile = configurationService.getBuildOutputFile( build.getId(), project.getId() );
 
             ContinuumBuildExecutionResult result = buildExecutor.build(project, buildDefinition, buildOutputFile);
 
@@ -118,6 +119,8 @@ public class ExecuteDistributedBuilderContinuumAction extends AbstractDistribute
 
             if (build.getState() == ContinuumProjectState.OK) {
                 project.setBuildNumber(project.getBuildNumber() + 1);
+
+                project.setState(ContinuumProjectState.OK);
             }
 
             project.setLatestBuildId(build.getId());
@@ -140,13 +143,6 @@ public class ExecuteDistributedBuilderContinuumAction extends AbstractDistribute
 
             notifier.goalsCompleted(project, build);
         }
-    }
-
-    private File getBuildOutputFile(Map context) {
-
-        String fileName = getString( context, KEY_BUILD_OUTPUT_FILE );
-
-        return new File( fileName );
     }
 
 }
