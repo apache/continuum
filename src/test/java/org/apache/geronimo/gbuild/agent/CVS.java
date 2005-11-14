@@ -17,9 +17,12 @@
 package org.apache.geronimo.gbuild.agent;
 
 import org.codehaus.plexus.util.cli.CommandLineException;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+
+import junit.framework.Assert;
 
 /**
  * @version $Rev$ $Date$
@@ -45,7 +48,11 @@ public class CVS extends SystemExecutable {
     }
 
     public void init() throws IOException, CommandLineException {
-        MainTest.deleteAndCreateDirectory(cvsroot);
+        if (cvsroot.isDirectory()) {
+            FileUtils.deleteDirectory(cvsroot);
+        }
+
+        Assert.assertTrue("Could not make directory " + cvsroot, cvsroot.mkdirs());
 
         system(cvsroot, cmd, " -d " + cvsroot.getAbsolutePath() + " init");
     }

@@ -37,7 +37,7 @@ public class ContinuumBuildAgentTest extends TestCase {
 
     protected void setUp() throws Exception {
 
-        File root = new File("/Users/dblevins/work/gbuild/trunk/target/it").getCanonicalFile();
+        File root = new File("target/it").getCanonicalFile();
         File cvsroot = new File(root, "cvs-root");
         File module = new File(root, "shell");
 
@@ -112,7 +112,7 @@ public class ContinuumBuildAgentTest extends TestCase {
     }
 
     // need to throw in a Broker
-    public void _testBuildQueue() throws Exception {
+    public void testBuildQueue() throws Exception {
 
         Thread broker = new Thread(new TestBroker(new String[]{}));
         broker.setDaemon(true);

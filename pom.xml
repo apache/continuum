@@ -44,6 +44,16 @@
     </pluginRepository>
   </pluginRepositories>
   <dependencies>
+
+    <!-- need this till my activemq-core-3.2.pom patch is applied -->
+    <!-- http://jira.codehaus.org/browse/MEV-193 -->
+    <dependency>
+      <groupId>concurrent</groupId>
+      <artifactId>concurrent</artifactId>
+      <version>1.3.4</version>
+    </dependency>
+
+
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-api</artifactId>
