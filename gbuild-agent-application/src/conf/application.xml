@@ -1,0 +1,108 @@
+<application>
+
+  <load-on-start>
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+    </component>
+  </load-on-start>
+
+  <resources>
+    <jar-repository>${plexus.home}/lib</jar-repository>
+  </resources>
+
+  <components>
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <implementation>org.apache.geronimo.gbuild.agent.ContinuumBuildAgent</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.BuildAgentExtentionManager</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.buildcontroller.BuildController</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <contributor>Unknown</contributor>
+        <admin-address>scm@geronimo.apache.org</admin-address>
+        <coordinator-url>tcp://localhost:61616</coordinator-url>
+        <build-task-queue>BUILD.TASKS</build-task-queue>
+        <build-results-topic>BUILD.RESULTS</build-results-topic>
+        <working-directory>target/agent/work</working-directory>
+        <build-output-directory>target/agent/output</build-output-directory>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role-hint>work-properties</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.FileIncludeExtention</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <file-name-key>work-properties</file-name-key>
+      </configuration>
+    </component>
+
+    <!--
+    | Logger manager
+    -->
+    <component>
+      <role>org.codehaus.plexus.logging.LoggerManager</role>
+      <implementation>org.codehaus.plexus.logging.log4j.Log4JLoggerManager</implementation>
+      <lifecycle-handler>basic</lifecycle-handler>
+
+      <configuration>
+        <threshold>DEBUG</threshold>
+        <default-appender>console,rolling</default-appender>
+        <appenders>
+          <appender>
+            <id>console</id>
+            <threshold>DEBUG</threshold>
+            <type>org.apache.log4j.ConsoleAppender</type>
+            <conversion-pattern>%d [%t] %-5p %-30c{1} - %m%n</conversion-pattern>
+          </appender>
+
+          <appender>
+            <id>rolling</id>
+            <threshold>DEBUG</threshold>
+            <type>org.apache.log4j.RollingFileAppender</type>
+            <conversion-pattern>%-4r [%t] %-5p %c %x - %m%n</conversion-pattern>
+
+            <properties>
+              <property>
+                <name>file</name>
+                <value>${plexus.home}/logs/gbuild-agent.log</value>
+              </property>
+              <property>
+                <name>append</name>
+                <value>true</value>
+              </property>
+              <property>
+                <name>maxBackupIndex</name>
+                <value>10</value>
+              </property>
+              <property>
+                <name>maxFileSize</name>
+                <value>100KB</value>
+              </property>
+            </properties>
+          </appender>
+        </appenders>
+        <levels>
+          <!--<level>-->
+            <!--<hierarchy>org.codehaus.plexus.velocity</hierarchy>-->
+            <!--<level>WARN</level>-->
+          <!--</level>-->
+        </levels>
+      </configuration>
+    </component>
+  </components>
+
+</application>
