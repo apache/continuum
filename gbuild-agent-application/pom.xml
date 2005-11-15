@@ -1,12 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project>
+  <parent>
+    <artifactId>gbuild-parent</artifactId>
+    <groupId>org.apache.geronimo.gbuild</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.geronimo.gbuild</groupId>
   <artifactId>gbuild-agent-application</artifactId>
-  <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <packaging>plexus-application</packaging>
   <name>GBuild Agent Application</name>
-  <url>http://maven.apache.org</url>
+  <version>1.0-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>
@@ -20,7 +22,7 @@
         </executions>
         <configuration>
           <descriptor>src/assembly/bin.xml</descriptor>
-          <finalName>gbuild-agent-1.1-SNAPSHOT</finalName>
+          <finalName>gbuild-agent-1.0-SNAPSHOT</finalName>
         </configuration>
       </plugin>
       <plugin>
@@ -79,82 +81,47 @@
       <url>http://cvs.apache.org/repository</url>
       <layout>legacy</layout>
     </repository>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <id>snapshots</id>
-      <name>Maven Snapshot Development Repository</name>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-    </repository>
   </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <id>snapshots</id>
-      <name>Maven Central Plugins Development Repository</name>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-    </pluginRepository>
-  </pluginRepositories>
   <dependencies>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-container-default</artifactId>
-      <version>1.0-alpha-8</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.geronimo.gbuild</groupId>
       <artifactId>gbuild-agent</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>concurrent</groupId>
-      <artifactId>concurrent</artifactId>
-      <version>1.3.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-api</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-core</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-model</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.8</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-command-line</artifactId>
-      <version>1.0-alpha-2</version>
+      <artifactId>plexus-log4j-logging</artifactId>
+      <version>1.1-alpha-1</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-cvs</artifactId>
-      <version>1.0-beta-1-SNAPSHOT</version>
+      <groupId>plexus</groupId>
+      <artifactId>plexus-container-artifact</artifactId>
+      <version>1.0-alpha-3</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>plexus-container-default</artifactId>
+          <groupId>plexus</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.apache.maven</groupId>-->
+      <!--<artifactId>maven-artifact</artifactId>-->
+      <!--<scope>runtime</scope>-->
+    <!--</dependency>-->
     <dependency>
-      <groupId>geronimo-spec</groupId>
-      <artifactId>geronimo-spec-j2ee</artifactId>
-      <version>1.4-rc4</version>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-appserver</artifactId>
+      <version>1.0-alpha-5</version>
     </dependency>
-    <dependency>
-      <groupId>activemq</groupId>
-      <artifactId>activemq-core</artifactId>
-      <version>3.2</version>
-    </dependency>
-   
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.codehaus.plexus</groupId>-->
+      <!--<artifactId>plexus-utils</artifactId>-->
+    <!--</dependency>-->
   </dependencies>
 </project>

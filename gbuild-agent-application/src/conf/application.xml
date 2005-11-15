@@ -50,6 +50,18 @@
       </configuration>
     </component>
 
+    <component>
+      <role>org.apache.maven.continuum.store.ContinuumStore</role>
+      <role-hint>agent-store</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.ThreadContextContinuumStore</implementation>
+    </component>
+
+    <component>
+      <role>org.apache.maven.continuum.notification.ContinuumNotificationDispatcher</role>
+      <!--<role-hint>agent-notifier</role-hint>-->
+      <implementation>org.apache.geronimo.gbuild.agent.MockContinuumNotificationDispatcher</implementation>
+    </component>
+    
     <!--
     | Logger manager
     -->

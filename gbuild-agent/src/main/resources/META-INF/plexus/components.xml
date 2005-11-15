@@ -64,7 +64,7 @@
 
     <component>
       <role>org.apache.maven.continuum.notification.ContinuumNotificationDispatcher</role>
-      <role-hint>agent-notifier</role-hint>
+      <!--<role-hint>agent-notifier</role-hint>-->
       <implementation>org.apache.geronimo.gbuild.agent.MockContinuumNotificationDispatcher</implementation>
     </component>
 
@@ -79,19 +79,6 @@
       </requirements>
     </component>
 
-    <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
-      <role-hint>work-properties</role-hint>
-      <implementation>org.apache.geronimo.gbuild.agent.FileIncludeExtention</implementation>
-      <requirements>
-        <requirement>
-          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
-        </requirement>
-      </requirements>
-      <configuration>
-        <file-name-key>work-properties</file-name-key>
-      </configuration>
-    </component>
 
   </components>
 </component-set>

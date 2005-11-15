@@ -22,6 +22,9 @@ import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
@@ -44,7 +47,7 @@ import java.util.Iterator;
 /**
  * @version $Rev$ $Date$
  */
-public class ContinuumBuildAgent extends AbstractLogEnabled implements BuildAgent, ExceptionListener {
+public class ContinuumBuildAgent extends AbstractLogEnabled implements BuildAgent, ExceptionListener, Startable {
 
     // ----------------------------------------------------------------------
     // Keys for the values that can be in the context
@@ -329,7 +332,14 @@ public class ContinuumBuildAgent extends AbstractLogEnabled implements BuildAgen
         return run;
     }
 
-    public synchronized void stop() {
+    public synchronized void start() throws StartingException {
+        run = true;
+        Thread agentThread = new Thread(this);
+        agentThread.setDaemon(false);
+        agentThread.start();
+    }
+
+    public synchronized void stop() throws StoppingException {
         run = false;
     }
 

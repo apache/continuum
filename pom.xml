@@ -24,16 +24,16 @@
   <inceptionYear>2005</inceptionYear>
   <mailingLists>
     <mailingList>
-      <name>Continuum Dev List</name>
-      <subscribe>continuum-dev-subscribe@maven.apache.org</subscribe>
-      <unsubscribe>continuum-dev-unsubscribe@maven.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/maven-continuum-dev/</archive>
+      <name>GBuild Dev List</name>
+      <subscribe>dev-subscribe@geronimo.apache.org</subscribe>
+      <unsubscribe>dev-unsubscribe@geronimo.apache.org</unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/geronimo-dev/</archive>
     </mailingList>
     <mailingList>
-      <name>Continuum User List</name>
-      <subscribe>continuum-users-subscribe@maven.apache.org</subscribe>
-      <unsubscribe>continuum-users-unsubscribe@maven.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/maven-continuum-users/</archive>
+      <name>GBuild User List</name>
+      <subscribe>users-subscribe@maven.apache.org</subscribe>
+      <unsubscribe>users-unsubscribe@maven.apache.org</unsubscribe>
+      <archive>http://mail-archives.apache.org/mod_mbox/geronimo-users/</archive>
     </mailingList>
     <mailingList>
       <name>Apache Announce List</name>
@@ -83,9 +83,22 @@
     <name>Apache</name>
     <url>http://www.apache.org/</url>
   </organization>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+	  <groupId>org.codehaus.plexus</groupId>
+	  <artifactId>plexus-maven-plugin</artifactId>
+	  <version>1.1.1</version>
+	  <extensions>true</extensions>
+	</plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
   <modules>
     <module>gbuild-agent</module>
     <module>gbuild-report</module>
+    <module>gbuild-agent-application</module>
   </modules>
   <repositories>
     <repository>
