@@ -1,0 +1,19 @@
+<total time='$sectionManager.totalTimeString' tests='$sectionManager.testCount' errors='$sectionManager.errorCount' failures='$sectionManager.failureCount'>
+#foreach( $section in $sectionManager.sections )
+    <section name="$section.name" time='$section.totalTimeString' tests='$section.testCount' errors='$section.errorCount' failures='$section.failureCount'>
+#foreach( $testSuite in $section.testSuites )
+        <testsuite name='$testSuite.name'  time='$testSuite.totalTimeString' tests='$testSuite.testCount' errors='$testSuite.errorCount' failures='$testSuite.failureCount' >
+#foreach( $testCase in $testSuite.testcases )
+            <testCase name='$testCase.name' time='$testCase.time'>
+#if( $testCase.failed )
+                <failure message='$testCase.msg' type=''/>
+#elseif( $testCase.error )
+                <error message='$testCase.msg' type=''/>
+#end
+            </testCase>
+#end
+        </testsuite>
+#end
+    </section>
+#end
+</total>
