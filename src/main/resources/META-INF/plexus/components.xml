@@ -37,17 +37,6 @@
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtentionManager</role>
-      <implementation>org.apache.geronimo.gbuild.agent.DefaultBuildAgentExtentionManager</implementation>
-      <requirements>
-        <requirement>
-          <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
-          <field-name>extentions</field-name>
-        </requirement>
-      </requirements>
-    </component>
-
-    <component>
       <role>org.codehaus.plexus.action.Action</role>
       <role-hint>execute-builder</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.ExecuteDistributedBuilderContinuumAction</implementation>
@@ -79,6 +68,30 @@
       <implementation>org.apache.geronimo.gbuild.agent.MockContinuumNotificationDispatcher</implementation>
     </component>
 
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtentionManager</role>
+      <implementation>org.apache.geronimo.gbuild.agent.DefaultBuildAgentExtentionManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+          <field-name>extentions</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role-hint>work-properties</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.FileIncludeExtention</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <file-name-key>work-properties</file-name-key>
+      </configuration>
+    </component>
 
   </components>
 </component-set>

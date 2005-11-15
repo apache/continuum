@@ -21,6 +21,7 @@ import org.apache.maven.continuum.buildcontroller.BuildController;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
@@ -38,11 +39,12 @@ import java.net.UnknownHostException;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
+public class ContinuumBuildAgent extends AbstractLogEnabled implements BuildAgent, ExceptionListener {
 
     // ----------------------------------------------------------------------
     // Keys for the values that can be in the context
@@ -63,6 +65,11 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
     public static final String KEY_CONTRIBUTOR = "contributor";
 
     public static final String KEY_ADMIN_ADDRESS = "adminAddress";
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentExtentionManager extentionManager;
 
     /**
      * @plexus.requirement
@@ -113,14 +120,22 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
 
     public void run() {
         try {
+            getLogger().info("Continuum Build Agent starting.");
+            getLogger().info("coordinatorUrl "+coordinatorUrl);
+            getLogger().info("buildTaskQueue "+buildTaskQueue);
+            getLogger().info("buildResultsTopic "+buildResultsTopic);
+            getLogger().info("workingDirectory "+workingDirectory);
+            getLogger().info("buildOutputDirectory "+buildOutputDirectory);
+            getLogger().info("adminAddress "+adminAddress);
+            getLogger().info("contributor "+contributor);
+
             run = true;
 
             Connection connection = null;
             try {
                 connection = createConnection(coordinatorUrl);
             } catch (Throwable e) {
-                System.out.println("Could not create connection to: "+coordinatorUrl);
-                e.printStackTrace();
+                getLogger().error("Could not create connection to: "+coordinatorUrl, e);
                 return;
             }
 
@@ -130,6 +145,8 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
             MessageConsumer buildConsumer = createQueueConsumer(session, buildTaskQueue);
 
             MessageProducer resultsProducer = createTopicProducer(session, buildResultsTopic);
+
+            getLogger().info("Continuum Build Agent started and waiting for work.");
 
             while (run) {
                 // Wait for a message
@@ -141,54 +158,64 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
 
                 } else if (message instanceof ObjectMessage) {
 
-                    ObjectMessage objectMessage = (ObjectMessage) message;
+                    try {
+                        getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ connection.getClientID()+":"+buildTaskQueue);
 
-                    Map mapMessage = (Map) objectMessage.getObject();
+                        ObjectMessage objectMessage = (ObjectMessage) message;
 
-                    ContinuumStore store = getContinuumStore(mapMessage);
+                        Map buildTask = getMap(objectMessage, message);
 
-                    ThreadContextContinuumStore.setStore(store);
+                        ContinuumStore store = getContinuumStore(buildTask);
 
-                    init();
+                        ThreadContextContinuumStore.setStore(store);
 
-                    int projectId = getProjectId(mapMessage);
+                        init();
 
-                    int buildDefinitionId = getBuildDefinitionId(mapMessage);
+                        int projectId = getProjectId(buildTask);
 
-                    int trigger = getTrigger(mapMessage);
+                        int buildDefinitionId = getBuildDefinitionId(buildTask);
 
-                    build(projectId, buildDefinitionId, trigger);
+                        int trigger = getTrigger(buildTask);
 
-                    HashMap results = new HashMap();
+                        extentionManager.preProcess(buildTask);
 
-                    setStore(results, store);
+                        build(projectId, buildDefinitionId, trigger);
 
-                    setProjectId(results, projectId);
+                        HashMap results = new HashMap();
 
-                    setBuildDefinitionId(results, buildDefinitionId);
+                        setStore(results, store);
 
-                    setTrigger(results, trigger);
+                        setProjectId(results, projectId);
 
-                    setSystemProperty(results, "os.version");
+                        setBuildDefinitionId(results, buildDefinitionId);
 
-                    setSystemProperty(results, "os.name");
+                        setTrigger(results, trigger);
 
-                    setSystemProperty(results, "java.version");
+                        setSystemProperty(results, "os.version");
 
-                    setSystemProperty(results, "java.vendor");
+                        setSystemProperty(results, "os.name");
 
-                    setHostInformation(results);
+                        setSystemProperty(results, "java.version");
 
-                    setContributor(results);
+                        setSystemProperty(results, "java.vendor");
 
-                    setAdminAddress(results);
+                        setHostInformation(results);
 
-                    ObjectMessage resultMessage = session.createObjectMessage(results);
+                        setContributor(results);
 
-                    resultsProducer.send(resultMessage);
+                        setAdminAddress(results);
+
+                        extentionManager.postProcess(buildTask, results);
+
+                        ObjectMessage resultMessage = session.createObjectMessage(results);
+
+                        resultsProducer.send(resultMessage);
+                    } catch (Exception e) {
+                        getLogger().error("Failed Processing message "+message.getJMSMessageID());
+                    }
 
                 } else {
-                    System.out.println("Incorect message type: " + message.getClass().getName());
+                    getLogger().warn("Agent received incorrect message type: "+message.getClass().getName());
                 }
             }
 
@@ -196,9 +223,15 @@ public class ContinuumBuildAgent implements BuildAgent, ExceptionListener {
             session.close();
             connection.close();
         } catch (Exception e) {
-            System.out.println("Caught: " + e);
-            e.printStackTrace();
-            System.out.println("ContinuumBuildAgent.run");
+            getLogger().error("Agent failed.", e);
+        }
+    }
+
+    private Map getMap(ObjectMessage objectMessage, Message message) throws JMSException, BuildAgentException {
+        try {
+            return (Map) objectMessage.getObject();
+        } catch (Exception e) {
+            throw new BuildAgentException("Message.getObject failed on "+ message.getJMSMessageID(), e);
         }
     }
 
