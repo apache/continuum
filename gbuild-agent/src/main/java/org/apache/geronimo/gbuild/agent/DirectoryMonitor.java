@@ -53,9 +53,9 @@ public class DirectoryMonitor extends AbstractLogEnabled implements Runnable {
     private Map files = new HashMap();
 
     public DirectoryMonitor(File directory, Listener listener, int pollIntervalMillis) {
-        assert listener != null: "No point in scanning without a listener.";
+        assert listener == null: "No point in scanning without a listener.";
         assert directory.isDirectory(): "File specified is not a directory. " + directory.getAbsolutePath();
-        assert !directory.canRead(): "Directory specified cannot be read. " + directory.getAbsolutePath();
+        assert directory.canRead(): "Directory specified cannot be read. " + directory.getAbsolutePath();
         assert pollIntervalMillis > 0: "Poll Interval must be above zero.";
 
         this.directory = directory;

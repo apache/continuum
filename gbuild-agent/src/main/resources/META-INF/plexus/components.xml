@@ -13,6 +13,7 @@
     -->
     <component>
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-executor</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.ContinuumBuildAgent</implementation>
       <requirements>
         <requirement>
@@ -31,8 +32,8 @@
         <coordinator-url>tcp://localhost:61616</coordinator-url>
         <build-task-queue>BUILD.TASKS</build-task-queue>
         <build-results-topic>BUILD.RESULTS</build-results-topic>
-        <working-directory>target/agent/work</working-directory>
-        <build-output-directory>target/agent/output</build-output-directory>
+        <working-directory>agent/work</working-directory>
+        <build-output-directory>agent/output</build-output-directory>
       </configuration>
     </component>
 
@@ -79,6 +80,81 @@
       </requirements>
     </component>
 
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role-hint>file-include</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.FileIncludeExtention</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <pattern>^include\.</pattern>
+      </configuration>
+    </component>
 
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role-hint>general-headers</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.HeaderIncludeExtention</implementation>
+      <configuration>
+        <pattern>^(project|build|header)\.</pattern>
+      </configuration>
+    </component>
+
+
+    <!--
+    | Build Producer
+    -->
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-producer</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.PropertiesBuildTaskProducer</implementation>
+      <configuration>
+        <coordinator-url>tcp://localhost:61616</coordinator-url>
+        <build-task-queue>BUILD.TASKS</build-task-queue>
+        <include-prefix>include.</include-prefix>
+        <header-prefix>header.</header-prefix>
+        <watch-directory>tasks</watch-directory>
+        <poll-interval>10000</poll-interval>
+      </configuration>
+    </component>
+
+    <!--
+    | Build Results
+    -->
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-results</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.BuildResultsContinuumAgent</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.BuildResultsExtentionManager</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <coordinator-url>tcp://localhost:61616</coordinator-url>
+        <build-results-topic>BUILD.RESULTS</build-results-topic>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtention</role>
+      <role-hint>write-include-file</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtention</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <include-pattern>^include\.</include-pattern>
+        <file-extention>.properties</file-extention>
+        <results-directory>results</results-directory>
+        <use-header>project.name</use-header>
+        <date-format></date-format>
+      </configuration>
+    </component>
   </components>
 </component-set>

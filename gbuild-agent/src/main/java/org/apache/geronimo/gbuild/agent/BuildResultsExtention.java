@@ -16,19 +16,13 @@
  */
 package org.apache.geronimo.gbuild.agent;
 
-import java.util.Map;
-import java.util.HashMap;
-
 /**
  * @version $Rev$ $Date$
  */
-public interface BuildAgentExtentionManager {
+public interface BuildResultsExtention {
 
-    String ROLE = BuildAgentExtentionManager.class.getName();
+    String ROLE = BuildResultsExtention.class.getName(); 
 
-    BuildAgentExtention getBuildAgentExtention(String id) throws NoSuchExtentionException;
+    void execute(java.util.Map context) throws java.lang.Exception;
 
-    void postProcess(Map build, HashMap results);
-
-    void preProcess(Map build);
 }

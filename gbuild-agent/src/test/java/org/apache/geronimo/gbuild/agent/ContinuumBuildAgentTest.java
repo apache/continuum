@@ -18,7 +18,6 @@ import org.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
 import javax.jms.Session;
-import javax.jms.Destination;
 import javax.jms.MessageProducer;
 import javax.jms.DeliveryMode;
 import javax.jms.Topic;
@@ -51,7 +50,7 @@ public class ContinuumBuildAgentTest extends TestCase {
 
     }
 
-    public void testBuild() throws Exception {
+    public void _testBuild() throws Exception {
 
         Project project = new Project();
         project.setId(10);
@@ -151,10 +150,10 @@ public class ContinuumBuildAgentTest extends TestCase {
 
             HashMap map = new HashMap();
 
-            ContinuumBuildAgent.setStore(map, store);
-            ContinuumBuildAgent.setProjectId(map, project.getId());
-            ContinuumBuildAgent.setBuildDefinitionId(map, bd.getId());
-            ContinuumBuildAgent.setTrigger(map, 0);
+            map.put(AbstractContinuumAgentAction.KEY_STORE, store);
+            map.put(AbstractContinuumAgentAction.KEY_PROJECT_ID, new Integer(project.getId()));
+            map.put(AbstractContinuumAgentAction.KEY_BUILD_DEFINITION_ID, new Integer(bd.getId()));
+            map.put(AbstractContinuumAgentAction.KEY_TRIGGER, new Integer(0));
 
             producer.send(session.createObjectMessage(map));
         }

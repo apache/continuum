@@ -16,13 +16,17 @@
  */
 package org.apache.geronimo.gbuild.agent;
 
+import java.util.Map;
+
 /**
  * @version $Rev$ $Date$
  */
-public class NoSuchBuildAgentExtentionException extends Exception {
+public interface BuildResultsExtentionManager {
 
-    public NoSuchBuildAgentExtentionException(String id) {
-        super(id);
-    }
+    String ROLE = BuildResultsExtentionManager.class.getName();
+
+    BuildResultsExtention getBuildResultsExtention(String id) throws NoSuchExtentionException;
+
+    void execute(Map results) throws Exception;
 
 }

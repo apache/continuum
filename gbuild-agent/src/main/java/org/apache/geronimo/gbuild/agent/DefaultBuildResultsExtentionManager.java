@@ -25,16 +25,15 @@ import java.util.Iterator;
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultBuildAgentExtentionManager extends AbstractLogEnabled implements BuildAgentExtentionManager {
+public class DefaultBuildResultsExtentionManager extends AbstractLogEnabled implements BuildResultsExtentionManager {
 
     /**
      * @plexus.requirement
      */
     private Map extentions;
 
-    public BuildAgentExtention getBuildAgentExtention(String id) throws NoSuchExtentionException {
-
-        BuildAgentExtention agentExtention = (BuildAgentExtention) extentions.get(id);
+    public BuildResultsExtention getBuildResultsExtention(String id) throws NoSuchExtentionException {
+        BuildResultsExtention agentExtention = (BuildResultsExtention) extentions.get(id);
 
         if (agentExtention == null){
             throw new NoSuchExtentionException(id);
@@ -42,21 +41,20 @@ public class DefaultBuildAgentExtentionManager extends AbstractLogEnabled implem
         return agentExtention;
     }
 
-    public void postProcess(Map build, HashMap results) {
-
+    public void execute(Map results) throws Exception {
         for (Iterator iterator = extentions.entrySet().iterator(); iterator.hasNext();) {
 
             Map.Entry entry = (Map.Entry) iterator.next();
 
             String name = (String) entry.getKey();
 
-            BuildAgentExtention extention = (BuildAgentExtention) entry.getValue();
+            BuildResultsExtention extention = (BuildResultsExtention) entry.getValue();
 
-            getLogger().info("Executing extention "+name +" post process");
+            getLogger().info("Executing extention "+name);
 
             try {
 
-                extention.postProcess(build, results);
+                extention.execute(results);
 
             } catch (Exception e) {
 
@@ -65,29 +63,4 @@ public class DefaultBuildAgentExtentionManager extends AbstractLogEnabled implem
             }
         }
     }
-
-    public void preProcess(Map build) {
-
-        for (Iterator iterator = extentions.entrySet().iterator(); iterator.hasNext();) {
-
-            Map.Entry entry = (Map.Entry) iterator.next();
-
-            String name = (String) entry.getKey();
-
-            BuildAgentExtention extention = (BuildAgentExtention) entry.getValue();
-
-            getLogger().info("Executing extention "+name +" pre process");
-
-            try {
-
-                extention.preProcess(build);
-
-            } catch (Exception e) {
-
-                getLogger().warn("Extention Failed: "+name, e);
-
-            }
-        }
-    }
-
 }

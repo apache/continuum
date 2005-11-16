@@ -19,7 +19,10 @@ package org.apache.geronimo.gbuild.agent;
 /**
  * @version $Rev$ $Date$
  */
-public interface BuildTaskProducer extends Runnable {
+public class NoSuchExtentionException extends Exception {
 
-    String ROLE = BuildTaskProducer.class.getName();
+    public NoSuchExtentionException(String id) {
+        super(id);
+    }
+
 }

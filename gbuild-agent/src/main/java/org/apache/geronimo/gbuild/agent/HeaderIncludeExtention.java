@@ -29,7 +29,7 @@ public class HeaderIncludeExtention extends AbstractLogEnabled implements BuildA
     /**
      * @plexus.configuration
      */
-    private String prefix;
+    private String pattern;
 
 
     public void preProcess(Map build) {
@@ -42,7 +42,7 @@ public class HeaderIncludeExtention extends AbstractLogEnabled implements BuildA
 
             String key = (String) keys.next();
 
-            if (key.startsWith(prefix)){
+            if (key.matches(pattern)){
 
                 include(key, build, results);
 

@@ -21,7 +21,6 @@ import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
@@ -42,12 +41,7 @@ import java.io.IOException;
 /**
  * @version $Rev$ $Date$
  */
-public class PropertiesBuildTaskProducer extends AbstractLogEnabled implements Startable, DirectoryMonitor.Listener {
-
-    /**
-     * @plexus.configuration
-     */
-    private String coordinatorUrl;
+public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent implements DirectoryMonitor.Listener {
 
     /**
      * @plexus.configuration
@@ -84,13 +78,16 @@ public class PropertiesBuildTaskProducer extends AbstractLogEnabled implements S
     public synchronized void start() throws StartingException {
         File dir = new File(watchDirectory);
         scanner = new DirectoryMonitor(dir, this, pollInterval);
-        Thread thread = new Thread(scanner);
-        thread.setDaemon(false);
-        thread.start();
+        super.start();
     }
 
     public synchronized void stop() throws StoppingException {
         scanner.stop();
+        super.stop();
+    }
+
+    public void run() {
+        scanner.run();
     }
 
     public boolean fileAdded(File file) {
@@ -103,7 +100,8 @@ public class PropertiesBuildTaskProducer extends AbstractLogEnabled implements S
             getLogger().error("Unable to load properties file: "+file.getAbsolutePath(), e);
         }
         try {
-            queueBuildTasks(properties);
+            // TODO: Improve this so you can have ${my-property} parts to property values
+            execute(properties);
         } catch (Exception e) {
             getLogger().error("Unable to process file: "+file.getAbsolutePath(), e);
         }
@@ -118,12 +116,8 @@ public class PropertiesBuildTaskProducer extends AbstractLogEnabled implements S
     }
 
 
-    // TODO: Improve this so you can have ${my-property} parts to property values
-    private void queueBuildTasks(Properties def) throws Exception {
+    public void execute(Map def) throws Exception {
 
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(coordinatorUrl);
-        Connection connection = connectionFactory.createConnection();
-        connection.start();
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
         Queue buildQueue = session.createQueue(buildTaskQueue);
@@ -183,10 +177,13 @@ public class PropertiesBuildTaskProducer extends AbstractLogEnabled implements S
 
             map.put(key, value);
 
-            ContinuumBuildAgent.setStore(map, store);
-            ContinuumBuildAgent.setProjectId(map, project.getId());
-            ContinuumBuildAgent.setBuildDefinitionId(map, bd.getId());
-            ContinuumBuildAgent.setTrigger(map, ContinuumProjectState.TRIGGER_FORCED);
+            map.put(KEY_STORE, store);
+
+            map.put(KEY_PROJECT_ID, new Integer(project.getId()));
+
+            map.put(KEY_BUILD_DEFINITION_ID, new Integer(bd.getId()));
+
+            map.put(KEY_TRIGGER, new Integer(ContinuumProjectState.TRIGGER_FORCED));
 
             addProperties("project.", def, map);
             addProperties(headerPrefix, def, map);
@@ -196,10 +193,9 @@ public class PropertiesBuildTaskProducer extends AbstractLogEnabled implements S
         }
 
         session.close();
-        connection.close();
     }
 
-    private void addProperties(String prefix, Properties def, HashMap map) {
+    private void addProperties(String prefix, Map def, HashMap map) {
         for (Iterator iterator = def.entrySet().iterator(); iterator.hasNext();) {
 
             Map.Entry entry = (Map.Entry) iterator.next();
@@ -211,45 +207,4 @@ public class PropertiesBuildTaskProducer extends AbstractLogEnabled implements S
             }
         }
     }
-
-    protected static String getString(Map context, String key) {
-        return (String) getObject(context, key);
-    }
-
-    protected static String getString(Map context, String key, String defaultValue) {
-        return (String) getObject(context, key, defaultValue);
-    }
-
-    public static boolean getBoolean(Map context, String key) {
-        return ((Boolean) getObject(context, key)).booleanValue();
-    }
-
-    protected static int getInteger(Map context, String key) {
-        return ((Integer) getObject(context, key, null)).intValue();
-    }
-
-    protected static Object getObject(Map context, String key) {
-        if (!context.containsKey(key)) {
-            throw new RuntimeException("Missing key '" + key + "'.");
-        }
-
-        Object value = context.get(key);
-
-        if (value == null) {
-            throw new RuntimeException("Missing value for key '" + key + "'.");
-        }
-
-        return value;
-    }
-
-    protected static Object getObject(Map context, String key, Object defaultValue) {
-        Object value = context.get(key);
-
-        if (value == null) {
-            return defaultValue;
-        }
-
-        return value;
-    }
-
 }

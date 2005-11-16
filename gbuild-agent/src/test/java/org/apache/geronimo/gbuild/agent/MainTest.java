@@ -8,6 +8,7 @@ import org.activemq.ActiveMQConnectionFactory;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
@@ -17,6 +18,7 @@ import javax.jms.Destination;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.Message;
+import javax.jms.Queue;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -191,6 +193,53 @@ public class MainTest extends TestCase {
 
     }
 
+    public static class BuildTaskProducer {
+        public static void main(String[] args) throws Exception {
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:41616");
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Queue buildQueue = session.createQueue("BUILD.TASKS");
+            MessageProducer producer = session.createProducer(buildQueue);
+            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+
+            MapContinuumStore store = new MapContinuumStore();
+
+            Project project = new Project();
+            project.setId(14);
+            project.setScmUrl("scm:svn:https://svn.apache.org/repos/asf/geronimo/trunk");
+//            project.setScmUrl("scm:cvs:pserver:anonymous@cvs.openejb.codehaus.org:/home/projects/openejb/scm:openejb1");
+            project.setName("OpenEJB");
+            project.setVersion("1.0-SNAPSHOT");
+            project.setExecutorId(ShellBuildExecutor.ID);
+            project.setState(ContinuumProjectState.OK);
+            store.updateProject(project);
+
+            String[] goals = new String[]{"clean", "default"};
+
+            for (int i = 0; i < goals.length; i++) {
+                String goal = goals[i];
+                BuildDefinition bd = new BuildDefinition();
+                bd.setId(i);
+                bd.setBuildFile("/usr/local/maven/bin/maven");
+                bd.setArguments(goal);
+                project.addBuildDefinition(bd);
+                store.storeBuildDefinition(bd);
+
+                HashMap map = new HashMap();
+
+                map.put(AbstractContinuumAgentAction.KEY_STORE, store);
+                map.put(AbstractContinuumAgentAction.KEY_PROJECT_ID, new Integer(project.getId()));
+                map.put(AbstractContinuumAgentAction.KEY_BUILD_DEFINITION_ID, new Integer(bd.getId()));
+                map.put(AbstractContinuumAgentAction.KEY_TRIGGER, new Integer(ContinuumProjectState.TRIGGER_FORCED));
+
+                producer.send(session.createObjectMessage(map));
+            }
+
+            connection.close();
+            session.close();
+        }
+    }
 
 
     public static void deleteAndCreateDirectory(File directory)
