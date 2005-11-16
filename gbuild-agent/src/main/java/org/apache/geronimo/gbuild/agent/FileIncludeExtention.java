@@ -23,6 +23,8 @@ import org.codehaus.plexus.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @version $Rev$ $Date$
@@ -37,15 +39,24 @@ public class FileIncludeExtention extends AbstractLogEnabled implements BuildAge
     /**
      * @plexus.configuration
      */
-    private String fileNameKey;
+    private String prefix;
 
 
     public void preProcess(Map build) {
     }
 
-    // TODO: Maybe allow for the file contents to be compressed
     public void postProcess(Map build, Map results) {
+        Iterator keys = build.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            if (key.startsWith(prefix)){
+                include(key, build, results);
+            }
+        }
+    }
 
+    // TODO: Maybe allow for the file contents to be compressed
+    private void include(String fileNameKey, Map build, Map results) {
         getLogger().debug("Looking for " + fileNameKey);
 
         String fileName = (String) build.get(fileNameKey);
