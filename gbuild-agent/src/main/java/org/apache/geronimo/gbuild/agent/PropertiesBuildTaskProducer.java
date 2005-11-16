@@ -21,6 +21,10 @@ import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
@@ -28,14 +32,17 @@ import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Iterator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class PropertiesBuildTaskProducer implements BuildTaskProducer {
+public class PropertiesBuildTaskProducer extends AbstractLogEnabled implements Startable, DirectoryMonitor.Listener {
 
     /**
      * @plexus.configuration
@@ -62,15 +69,56 @@ public class PropertiesBuildTaskProducer implements BuildTaskProducer {
      */
     private String headerPrefix = "header.";
 
+    /**
+     * @plexus.configuration
+     */
+    private String watchDirectory;
 
-    public void run() {
-        try {
-            queueBuildTasks(new Properties());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    /**
+     * @plexus.configuration
+     */
+    private int pollInterval;
+
+    private DirectoryMonitor scanner;
+
+    public synchronized void start() throws StartingException {
+        File dir = new File(watchDirectory);
+        scanner = new DirectoryMonitor(dir, this, pollInterval);
+        Thread thread = new Thread(scanner);
+        thread.setDaemon(false);
+        thread.start();
     }
 
+    public synchronized void stop() throws StoppingException {
+        scanner.stop();
+    }
+
+    public boolean fileAdded(File file) {
+        Properties properties = null;
+        try {
+            FileInputStream in = new FileInputStream(file);
+            properties = new Properties();
+            properties.load(in);
+        } catch (IOException e) {
+            getLogger().error("Unable to load properties file: "+file.getAbsolutePath(), e);
+        }
+        try {
+            queueBuildTasks(properties);
+        } catch (Exception e) {
+            getLogger().error("Unable to process file: "+file.getAbsolutePath(), e);
+        }
+        return true;
+    }
+
+    public boolean fileRemoved(File file) {
+        return true;
+    }
+
+    public void fileUpdated(File file) {
+    }
+
+
+    // TODO: Improve this so you can have ${my-property} parts to property values
     private void queueBuildTasks(Properties def) throws Exception {
 
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(coordinatorUrl);
@@ -94,6 +142,7 @@ public class PropertiesBuildTaskProducer implements BuildTaskProducer {
 
         String buildFile = getString(def, "project.buildFile");
 
+        getLogger().info("Project - " + id + " - " + name + " " + version);
 
         String executor = ShellBuildExecutor.ID;
 
@@ -119,6 +168,8 @@ public class PropertiesBuildTaskProducer implements BuildTaskProducer {
             if (!key.startsWith(buildPrefix)) {
                 continue;
             }
+
+            getLogger().info("Build - " + buildIds + " - " + key + " " + value);
 
             BuildDefinition bd = new BuildDefinition();
             bd.setId(buildIds++);
