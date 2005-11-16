@@ -210,9 +210,14 @@ public class ContinuumBuildAgent extends AbstractLogEnabled implements BuildAgen
 
                         extentionManager.postProcess(buildTask, results);
 
+                        getLogger().info("Finished processing "+ message.getJMSMessageID());
+
                         ObjectMessage resultMessage = session.createObjectMessage(results);
 
                         resultsProducer.send(resultMessage);
+
+                        getLogger().info("Results sent to "+ buildResultsTopic );
+
                     } catch (Exception e) {
                         getLogger().error("Failed Processing message "+message.getJMSMessageID());
                     }
