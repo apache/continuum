@@ -47,10 +47,15 @@ public class FileIncludeExtention extends AbstractLogEnabled implements BuildAge
 
     public void postProcess(Map build, Map results) {
         Iterator keys = build.keySet().iterator();
+
         while (keys.hasNext()) {
+
             String key = (String) keys.next();
+
             if (key.startsWith(prefix)){
+
                 include(key, build, results);
+
             }
         }
     }
