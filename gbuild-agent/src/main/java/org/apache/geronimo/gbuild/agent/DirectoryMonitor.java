@@ -17,13 +17,14 @@
 package org.apache.geronimo.gbuild.agent;
 
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.logging.Logger;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Iterator;
 
 /**
  * @version $Rev$ $Date$
@@ -52,7 +53,7 @@ public class DirectoryMonitor extends AbstractLogEnabled implements Runnable {
     private Listener listener;
     private Map files = new HashMap();
 
-    public DirectoryMonitor(File directory, Listener listener, int pollIntervalMillis) {
+    public DirectoryMonitor(File directory, Listener listener, int pollIntervalMillis, Logger logger) {
         assert listener == null: "No point in scanning without a listener.";
         assert directory.isDirectory(): "File specified is not a directory. " + directory.getAbsolutePath();
         assert directory.canRead(): "Directory specified cannot be read. " + directory.getAbsolutePath();
@@ -61,6 +62,7 @@ public class DirectoryMonitor extends AbstractLogEnabled implements Runnable {
         this.directory = directory;
         this.listener = listener;
         this.pollIntervalMillis = pollIntervalMillis;
+        enableLogging(logger);
     }
 
     public int getPollIntervalMillis() {
@@ -83,9 +85,11 @@ public class DirectoryMonitor extends AbstractLogEnabled implements Runnable {
         this.run = false;
     }
 
+
     public void run() {
         run = true;
         initialize();
+        getLogger().debug("Scanner running.  Polling every "+pollIntervalMillis+ " milliseconds.");
         while (run) {
             try {
                 scanDirectory();
@@ -101,9 +105,11 @@ public class DirectoryMonitor extends AbstractLogEnabled implements Runnable {
     }
 
     public void initialize() {
+        getLogger().debug("Doing initial scan of "+directory.getAbsolutePath());
         File parent = directory;
         File[] children = parent.listFiles();
-        for (int i = 0; i < children.length; i++) {
+
+        for (int i = 0; children != null && i < children.length; i++) {
             File child = children[i];
 
             if (!child.canRead()) {
@@ -112,110 +118,82 @@ public class DirectoryMonitor extends AbstractLogEnabled implements Runnable {
 
             FileInfo now = newInfo(child);
             now.setChanging(false);
-            updateInfo(now);
         }
     }
 
     private FileInfo newInfo(File child) {
-        return child.isDirectory() ? new DirectoryInfo(child) : new FileInfo(child);
+        FileInfo fileInfo = child.isDirectory() ? new DirectoryInfo(child) : new FileInfo(child);
+        files.put(fileInfo.getPath(), fileInfo);
+        return fileInfo;
     }
 
     /**
      * Looks for changes to the immediate contents of the directory we're watching.
      */
-    private void scanDirectory() {
+    public void scanDirectory() {
         File parent = directory;
         File[] children = parent.listFiles();
 
-        HashSet oldList = new HashSet(files.keySet());
+        HashSet missingFilesList = new HashSet(files.keySet());
 
-        for (int i = 0; i < children.length; i++) {
-
+        for (int i = 0; children != null && i < children.length; i++) {
             File child = children[i];
 
+            missingFilesList.remove(child.getAbsolutePath());
+
             if (!child.canRead()) {
+                getLogger().debug("not readable "+ child.getName());
                 continue;
             }
 
-            FileInfo newStatus = newInfo(child);
             FileInfo oldStatus = oldInfo(child);
+            FileInfo newStatus = newInfo(child);
+
+            newStatus.diff(oldStatus);
 
             if ( oldStatus == null ) {
 
-                getLogger().debug("File Discovered: " + newStatus);
-
                 // Brand new, but assume it's changing and
                 // wait a bit to make sure it's not still changing
-                newStatus.setNewFile(true);
-                newStatus.setChanging(true);
-                updateInfo(newStatus);
+                getLogger().debug("File Discovered: " + newStatus);
 
-            } else if ( !newStatus.isSame(oldStatus) ) {
-
-                getLogger().debug("File Changing: " + newStatus);
+            } else if ( newStatus.isChanging() ) {
 
                 // The two records are different -- record the latest as a file that's changing
                 // and later when it stops changing we'll do the add or update as appropriate.
-                newStatus.setChanging(true);
-                newStatus.setNewFile(oldStatus.isNewFile());
-                updateInfo(newStatus);
+                getLogger().debug("File Changing: " + newStatus);
 
-                oldList.remove(oldStatus.getPath());
+            } else if (oldStatus.isNewFile()){
+
+                // Used to be changing, now in (hopefully) its final state
+                getLogger().info("New File: " + newStatus);
+                newStatus.setNewFile(!listener.fileAdded(child));
 
             } else if ( oldStatus.isChanging() ){
 
-                // Used to be changing, now in (hopefully) its final state
-                oldStatus.setChanging(false);
+                getLogger().info("Updated File: " + newStatus);
+                listener.fileUpdated(child);
 
-                if (oldStatus.isNewFile()) {
-
-                    getLogger().debug("New File: " + newStatus);
-                    oldStatus.setNewFile(!listener.fileAdded(child));
-
-                } else {
-
-                    getLogger().debug("Updated File: " + newStatus);
-                    listener.fileUpdated(child);
-
-                }
-
-                oldList.remove(oldStatus.getPath());
+                missingFilesList.remove(oldStatus.getPath());
 
             }// else it's just totally unchanged and we ignore it this pass
         }
 
         // Look for any files we used to know about but didn't find in this pass
-        for (Iterator it = oldList.iterator(); it.hasNext();) {
-            String path = (String) it.next();
-
-            getLogger().debug("File removed: " + path);
-
-            FileInfo info = oldInfo(path);
-
-            if (info.isNewFile() || listener.fileRemoved(new File(path))) {
-                removeInfo(path);
+        for (Iterator iterator = missingFilesList.iterator(); iterator.hasNext();) {
+            String path = (String) iterator.next();
+            getLogger().info("File removed: " + path);
+            if (listener.fileRemoved(new File(path))){
+                files.remove(path);
             }
         }
     }
 
-    private void removeInfo(String path) {
-        files.remove(path);
-    }
-
-    private void updateInfo(FileInfo newStatus) {
-        files.put(newStatus.getPath(), newStatus);
-    }
-
     private FileInfo oldInfo(File file) {
-        return oldInfo(file.getAbsolutePath());
-    }
-
-    private FileInfo oldInfo(String path) {
-        return (FileInfo) files.get(path);
+        return (FileInfo) files.get(file.getAbsolutePath());
     }
 
     private static class DirectoryInfo extends FileInfo {
-
         /**
          * We don't pay attention to the size of the directory or files in the
          * directory, only the highest last modified time of anything in the
@@ -262,7 +240,7 @@ public class DirectoryMonitor extends AbstractLogEnabled implements Runnable {
             this.path = path;
             this.size = size;
             this.modified = modified;
-            this.newFile = false;
+            this.newFile = true;
             this.changing = true;
         }
 
@@ -312,6 +290,13 @@ public class DirectoryMonitor extends AbstractLogEnabled implements Runnable {
 
         public String toString() {
             return path;
+        }
+
+        public void diff(FileInfo old) {
+            if (old != null){
+                this.changing = !isSame(old);
+                this.newFile = old.newFile;
+            }
         }
     }
 
