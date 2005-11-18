@@ -46,10 +46,12 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
     private boolean run;
 
     private Connection connection;
+    private Client client;
 
     public synchronized void start() throws StartingException {
         try {
-            connection = createConnection(coordinatorUrl);
+            client = new Client(coordinatorUrl);
+            connection = client.getConnection();
         } catch (Throwable e) {
             getLogger().error("Could not create connection to: "+coordinatorUrl, e);
             throw new StartingException("Could not create connection to: "+coordinatorUrl);
@@ -64,16 +66,16 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
     public synchronized void stop() throws StoppingException {
         run = false;
         try {
-            connection.close();
+            client.close();
         } catch (JMSException e) {
             getLogger().error("Could not close connection to: "+coordinatorUrl, e);
             throw new StoppingException("Could not close connection to: "+coordinatorUrl);
         }
     }
 
-    public synchronized void onException(JMSException ex) {
+    public void onException(JMSException ex) {
         getLogger().fatalError("JMS Exception occured.  Shutting down client.", ex);
-        run = false;
+        setRun(false);
     }
 
     public synchronized boolean isRunning() {
@@ -100,7 +102,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         return session.createConsumer(queue);
     }
 
-    protected MessageProducer createTopicProducer(Session session, String subject) throws JMSException {
+    protected static MessageProducer createTopicProducer(Session session, String subject) throws JMSException {
         Topic topic = session.createTopic(subject);
 
         MessageProducer producer = session.createProducer(topic);
@@ -110,7 +112,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         return producer;
     }
 
-    protected MessageConsumer createConsumer(Session session, String subject) throws JMSException {
+    protected static MessageConsumer createConsumer(Session session, String subject) throws JMSException {
         Topic topic = session.createTopic(subject);
         return session.createConsumer(topic);
     }
@@ -123,15 +125,83 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         }
     }
 
-    public void setRun(boolean run) {
+    public synchronized void setRun(boolean run) {
         this.run = run;
     }
 
-    public Connection getConnection() {
-        return connection;
+    public synchronized Connection getConnection() throws JMSException {
+        return client.getConnection();
     }
 
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    public synchronized Session getSession() throws JMSException {
+        return client.getSession();
+    }
+
+    public static class Client {
+        private final String brokerUrl;
+        private final Connection connection;
+        private final Session session;
+
+        private Client(String brokerUrl, Connection connection, Session session) {
+            this.brokerUrl = brokerUrl;
+            this.connection = connection;
+            this.session = session;
+        }
+
+        public Client(String brokerUrl) throws JMSException {
+            this.brokerUrl = brokerUrl;
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
+            connection = connectionFactory.createConnection();
+//            connection.setExceptionListener(this);
+            connection.start();
+            this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        }
+
+        public String getBrokerUrl() {
+            return brokerUrl;
+        }
+
+        public Connection getConnection() {
+            return connection;
+        }
+
+        public Session getSession() {
+            return session;
+        }
+
+        public synchronized Client reconnect() throws JMSException {
+            Connection connection = connect();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            return new Client(brokerUrl, connection, session);
+        }
+
+        public synchronized void close() throws JMSException {
+            session.close();
+            connection.close();
+        }
+
+        private Connection connect() throws JMSException {
+            return connect(5);
+        }
+
+        private Connection connect(int tries) throws JMSException {
+            try {
+                ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
+                Connection connection = connectionFactory.createConnection();
+//            connection.setExceptionListener(this);
+                connection.start();
+                return connection;
+            } catch (JMSException e) {
+                if (tries <= 0) {
+                    throw e;
+                } else {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException dontCare) {
+                    }
+                    return connect(--tries);
+                }
+            }
+        }
     }
 }

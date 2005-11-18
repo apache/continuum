@@ -105,7 +105,7 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
             getLogger().debug("contributor "+contributor);
 
             // Create a Session
-            Session session = getConnection().createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Session session = getSession();
 
             MessageConsumer buildConsumer = createQueueConsumer(session, buildTaskQueue);
 

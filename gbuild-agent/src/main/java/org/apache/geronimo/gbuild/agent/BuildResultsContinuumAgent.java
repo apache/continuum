@@ -45,7 +45,7 @@ public class BuildResultsContinuumAgent extends AbstractContinuumBuildAgent {
             getLogger().debug("buildResultsTopic " + buildResultsTopic);
 
             // Create a Session
-            Session session = getConnection().createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Session session = getSession();
 
             MessageConsumer resultsConsumer = createConsumer(session, buildResultsTopic);
 

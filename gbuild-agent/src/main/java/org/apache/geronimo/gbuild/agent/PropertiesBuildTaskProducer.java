@@ -123,7 +123,7 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
 
     public void execute(Map def) throws Exception {
 
-        Session session = getConnection().createSession(false, Session.AUTO_ACKNOWLEDGE);
+        Session session = getSession();
 
         Queue buildQueue = session.createQueue(buildTaskQueue);
 
