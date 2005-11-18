@@ -31,6 +31,7 @@ import javax.jms.Topic;
 import javax.jms.ObjectMessage;
 import javax.jms.Message;
 import javax.jms.DeliveryMode;
+import javax.jms.TextMessage;
 import java.net.SocketException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -50,7 +51,11 @@ public class MessagingClient implements ExceptionListener {
     private Connection connection;
     private boolean failed;
     private int maxAttempts = 10;
+    private JMSException exception;
 
+    public MessagingClient(String transportUrl, Logger logger) throws JMSException {
+        this(transportUrl, logger, new NullListener());
+    }
     public MessagingClient(String transportUrl, Logger logger, ExceptionListener listener) throws JMSException {
         this.transportUrl = transportUrl;
         this.logger = logger;
@@ -58,6 +63,11 @@ public class MessagingClient implements ExceptionListener {
         this.listener = listener;
         connection = connect();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+    }
+
+    public static class NullListener implements ExceptionListener {
+        public void onException(JMSException jmsException) {
+        }
     }
 
     public Logger getLogger() {
@@ -122,8 +132,11 @@ public class MessagingClient implements ExceptionListener {
     }
 
 
-    private Destination getDestination(String subject) {
+    private Destination getDestination(String subject) throws JMSException {
         synchronized (destinations) {
+            if (failed) {
+                throw exception;
+            }
             return (Destination) destinations.get(subject);
         }
     }
@@ -138,8 +151,8 @@ public class MessagingClient implements ExceptionListener {
         try {
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(transportUrl);
             Connection connection = connectionFactory.createConnection();
-            connection.start();
             connection.setExceptionListener(this);
+            connection.start();
             return connection;
         } catch (JMSException e) {
             if (tries >= maxAttempts){
@@ -156,17 +169,17 @@ public class MessagingClient implements ExceptionListener {
 
     public void onException(JMSException jmsException) {
         getLogger().error(jmsException.getMessage());
-        Throwable cause = jmsException.getCause();
-        if (!failed && cause instanceof SocketException) {
+        if (failed) {
+            listener.onException(jmsException);
+        } else {
             try {
                 reset();
             } catch (JMSException e) {
                 getLogger().error("Unable to restablish a connection to "+transportUrl);
                 failed = true;
+                exception = jmsException;
                 listener.onException(jmsException);
             }
-        } else {
-            listener.onException(jmsException);
         }
     }
 }
