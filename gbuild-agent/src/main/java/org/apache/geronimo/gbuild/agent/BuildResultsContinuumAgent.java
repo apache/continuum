@@ -40,9 +40,9 @@ public class BuildResultsContinuumAgent extends AbstractContinuumBuildAgent {
 
     public void run() {
         try {
-            getLogger().info("Continuum Build Agent starting.");
-            getLogger().info("coordinatorUrl "+coordinatorUrl);
-            getLogger().info("buildResultsTopic "+buildResultsTopic);
+            getLogger().info("Results Agent starting. ("+coordinatorUrl+")");
+            getLogger().debug("coordinatorUrl " + coordinatorUrl);
+            getLogger().debug("buildResultsTopic " + buildResultsTopic);
 
             // Create a Session
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);

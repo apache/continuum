@@ -5,19 +5,46 @@ package org.apache.geronimo.gbuild.agent;
 
 import junit.framework.TestCase;
 import org.activemq.broker.impl.BrokerContainerImpl;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.BasicConfigurator;
 
-import javax.jms.JMSException;
 import javax.jms.ExceptionListener;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
 public class MessagingClientTest extends TestCase {
     private TestLogger logger;
 
-    public void testSend() throws Exception {
+    public void __testSend() throws Exception {
+        final String url = "tcp://localhost:44668";
+
+        BusyBee[] bees = new BusyBee[1];
+        for (int i = 0; i < bees.length; i++) {
+            bees[i] = new BusyBee("bee" + i, url);
+        }
+
+        Runnable worker = new Runnable(){
+            public void run() {
+                String[] args = new String[]{url};
+                org.activemq.broker.impl.Main.main(args);
+            }
+        };
+        runAndCrash(worker);
+        runAndCrash(worker);
+        runAndCrash(worker);
+
+    }
+
+    public void testNothing(){
+        
+    }
+    private void runAndCrash(Runnable worker) throws InterruptedException {
+        Thread thread = new Thread(worker);
+        thread.start();
+        Thread.sleep(30000);
+        thread.stop();
+    }
+
+    public void _testSend() throws Exception {
 
         logger = new TestLogger("hive");
         String hiveLocation = "tcp://localhost:44668";
@@ -25,51 +52,57 @@ public class MessagingClientTest extends TestCase {
         BrokerContainerImpl behive = new BrokerContainerImpl();
         behive.addConnector(hiveLocation);
 
-        logger.debug("STARTING...");
+        logger.debug("1. STARTING...");
         behive.start();
-        logger.debug("STARED");
+        logger.debug("1. STARTED");
 
-        BusyBee[] bees = new BusyBee[3];
+        BusyBee[] bees = new BusyBee[2];
         for (int i = 0; i < bees.length; i++) {
-            bees[i] = new BusyBee("bee"+i, hiveLocation);
+            bees[i] = new BusyBee("bee" + i, hiveLocation);
         }
 
-        work(10000);
+        work(30000);
 
-        logger.debug("STOPPING...");
+        logger.debug("1. STOPPING...");
         behive.stop();
-        logger.debug("STOPPED");
+        logger.debug("1. STOPPED");
 
-        rest(1000);
+        rest(10000);
+        behive = new BrokerContainerImpl();
+        behive.addConnector(hiveLocation);
 
-        logger.debug("STARTING...");
+        logger.debug("2. STARTING...");
         behive.start();
-        logger.debug("STARED");
+        logger.debug("2. STARTED");
 
-        work(10000);
+        work(30000);
 
-        logger.debug("STOPPING...");
+        logger.debug("2. STOPPING...");
         behive.stop();
-        logger.debug("STOPPED");
+        logger.debug("2. STOPPED");
 
-        rest(1000);
+        rest(10000);
 
-        logger.debug("STARTING...");
+        behive = new BrokerContainerImpl();
+        behive.addConnector(hiveLocation);
+        logger.debug("3. STARTING...");
         behive.start();
-        logger.debug("STARED");
+        logger.debug("3. STARTED");
 
-        work(10000);
+        work(30000);
 
         for (int i = 0; i < bees.length; i++) {
             BusyBee bee = bees[i];
             assertTrue("alive", bee.isRunning());
-            assertNotNull("fatality", bee.fatality);
-            bee.die();
+            assertNull("fatality", bee.getFatality());
+            bee.stop();
         }
 
-        logger.debug("STOPPING...");
+        work(10000);
+
+        logger.debug("3. STOPPING...");
         behive.stop();
-        logger.debug("STOPPED");
+        logger.debug("3. STOPPED");
         logger.debug("DONE");
     }
 
@@ -93,42 +126,69 @@ public class MessagingClientTest extends TestCase {
             this.logger = new TestLogger(name);
             this.client = new MessagingClient(url, logger, this);
             this.name = name;
+            this.run = true;
             Thread thread = new Thread(this);
             thread.setDaemon(true);
             thread.start();
         }
 
         public void run() {
-            run = true;
+            String subject = "flowers";
+            int i = 1;
 
             try {
-                String subject = "flowers";
                 client.addQueue(subject);
-
-                while (run) {
-                    client.send(subject, name + " collecting pollen");
-                    ObjectMessage message = (ObjectMessage) client.receive(subject, 30000);
-                    logger.debug("Buzzzz ... "+message.getObject());
-                }
-            } catch (JMSException e) {
-                logger.error("Hive Destroyed!!! ("+e.getMessage()+")");
-                fatality = e;
-                run = false;
+            } catch (JMSException exception) {
+                die(exception);
             }
+
+            while (isRunning()) {
+                try {
+                    client.send(subject, name + " collecting pollen" + (i++));
+                    client.send(subject, name + " collecting pollen" + (i++));
+                    client.send(subject, name + " collecting pollen" + (i++));
+                    printMessage(client.receive(subject, 5000));
+                    printMessage(client.receive(subject, 5000));
+                    printMessage(client.receive(subject, 5000));
+                } catch (JMSException e) {
+                    logger.debug("Hickup - " + e.getMessage());
+                }
+            }
+        }
+
+        private void printMessage(Message messagee) throws JMSException {
+            ObjectMessage message = (ObjectMessage) messagee;
+            if (message == null) {
+                logger.debug("timeout");
+                return;
+            }
+            logger.debug("Buzzzz ... " + message.getObject());
+        }
+
+        public synchronized Exception getFatality() {
+            return fatality;
+        }
+
+        public synchronized void setFatality(Exception fatality) {
+            this.fatality = fatality;
         }
 
         public synchronized boolean isRunning() {
             return run;
         }
 
-        public synchronized void die(){
+        public synchronized void die(Exception e) {
+            run = false;
+            fatality = e;
+        }
+
+        public synchronized void stop() {
             run = false;
         }
 
         public void onException(JMSException jmsException) {
-            logger.error("Can't Find Hive!!! ("+jmsException.getMessage()+")");
-            fatality = jmsException;
-            run = false;
+            logger.error("Can't Find Hive!!! (" + jmsException.getMessage() + ")");
+            die(jmsException);
         }
     }
 }

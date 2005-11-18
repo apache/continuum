@@ -1,2 +1,6 @@
 #!/bin/bash
-mvn clean:clean plexus:app plexus:bundle-application assembly:assembly "$@"
+
+ENV=test
+#ENV=production
+
+mvn -Denv=$ENV clean:clean plexus:app plexus:bundle-application assembly:assembly "$@"

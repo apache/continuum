@@ -95,14 +95,14 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
 
     public void run() {
         try {
-            getLogger().info("Continuum Build Agent starting.");
-            getLogger().info("coordinatorUrl "+coordinatorUrl);
-            getLogger().info("buildTaskQueue "+buildTaskQueue);
-            getLogger().info("buildResultsTopic "+buildResultsTopic);
-            getLogger().info("workingDirectory "+workingDirectory);
-            getLogger().info("buildOutputDirectory "+buildOutputDirectory);
-            getLogger().info("adminAddress "+adminAddress);
-            getLogger().info("contributor "+contributor);
+            getLogger().info("Continuum Build Agent starting. ("+coordinatorUrl+")");
+            getLogger().debug("coordinatorUrl "+coordinatorUrl);
+            getLogger().debug("buildTaskQueue "+buildTaskQueue);
+            getLogger().debug("buildResultsTopic "+buildResultsTopic);
+            getLogger().debug("workingDirectory "+workingDirectory);
+            getLogger().debug("buildOutputDirectory "+buildOutputDirectory);
+            getLogger().debug("adminAddress "+adminAddress);
+            getLogger().debug("contributor "+contributor);
 
             // Create a Session
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);

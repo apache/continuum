@@ -3,6 +3,15 @@
   <load-on-start>
     <component>
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-executor</role-hint>
+    </component>
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-producer</role-hint>
+    </component>
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-results</role-hint>
     </component>
   </load-on-start>
 
@@ -13,6 +22,7 @@
   <components>
     <component>
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-executor</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.ContinuumBuildAgent</implementation>
       <requirements>
         <requirement>
@@ -28,11 +38,11 @@
       <configuration>
         <contributor>Unknown</contributor>
         <admin-address>scm@geronimo.apache.org</admin-address>
-        <coordinator-url>tcp://localhost:61616</coordinator-url>
+        <coordinator-url>tcp://ci.gbuild.org:6161</coordinator-url>
         <build-task-queue>BUILD.TASKS</build-task-queue>
         <build-results-topic>BUILD.RESULTS</build-results-topic>
-        <working-directory>target/agent/work</working-directory>
-        <build-output-directory>target/agent/output</build-output-directory>
+        <working-directory>${plexus.home}/agent/work</working-directory>
+        <build-output-directory>${plexus.home}/agent/output</build-output-directory>
       </configuration>
     </component>
 
@@ -46,6 +56,54 @@
       <role>org.apache.maven.continuum.notification.ContinuumNotificationDispatcher</role>
       <!--<role-hint>agent-notifier</role-hint>-->
       <implementation>org.apache.geronimo.gbuild.agent.MockContinuumNotificationDispatcher</implementation>
+    </component>
+
+    <!--
+    | Build Producer
+    -->
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-producer</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.PropertiesBuildTaskProducer</implementation>
+      <configuration>
+        <coordinator-url>tcp://ci.gbuild.org:6161</coordinator-url>
+        <build-task-queue>BUILD.TASKS</build-task-queue>
+        <include-prefix>include.</include-prefix>
+        <header-prefix>header.</header-prefix>
+        <watch-directory>${plexus.home}/tasks</watch-directory>
+        <poll-interval>10000</poll-interval>
+      </configuration>
+    </component>
+
+    <!--
+    | Build Results
+    -->
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-results</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.BuildResultsContinuumAgent</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.BuildResultsExtentionManager</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <coordinator-url>tcp://ci.gbuild.org:6161</coordinator-url>
+        <build-results-topic>BUILD.RESULTS</build-results-topic>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtention</role>
+      <role-hint>write-include-file</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtention</implementation>
+      <configuration>
+        <include-pattern>^include\.</include-pattern>
+        <file-extention>.properties</file-extention>
+        <results-directory>${plexus.home}/results</results-directory>
+        <use-header>project.name</use-header>
+        <date-format>yyyy-MM-dd</date-format>
+      </configuration>
     </component>
 
     <!--

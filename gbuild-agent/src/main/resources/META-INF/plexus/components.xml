@@ -140,20 +140,26 @@
     </component>
 
     <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtentionManager</role>
+      <implementation>org.apache.geronimo.gbuild.agent.DefaultBuildResultsExtentionManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.BuildResultsExtention</role>
+          <field-name>extentions</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
       <role>org.apache.geronimo.gbuild.agent.BuildResultsExtention</role>
       <role-hint>write-include-file</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtention</implementation>
-      <requirements>
-        <requirement>
-          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
-        </requirement>
-      </requirements>
       <configuration>
         <include-pattern>^include\.</include-pattern>
         <file-extention>.properties</file-extention>
         <results-directory>results</results-directory>
         <use-header>project.name</use-header>
-        <date-format></date-format>
+        <date-format>yyyy-MM-dd</date-format>
       </configuration>
     </component>
   </components>

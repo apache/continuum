@@ -3,27 +3,27 @@ package org.apache.geronimo.gbuild.agent;
  * @version $Rev$ $Date$
  */
 
-import junit.framework.*;
-import org.apache.geronimo.gbuild.agent.ContinuumBuildAgent;
-import org.apache.maven.continuum.model.project.Project;
+import junit.framework.TestCase;
+import org.activemq.ActiveMQConnectionFactory;
+import org.activemq.broker.impl.BrokerContainerImpl;
+import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStore;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.embed.Embedder;
-import org.activemq.ActiveMQConnectionFactory;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.cli.CommandLineException;
 
 import javax.jms.Connection;
-import javax.jms.Session;
-import javax.jms.MessageProducer;
 import javax.jms.DeliveryMode;
-import javax.jms.Topic;
-import javax.jms.Queue;
 import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
+import javax.jms.Queue;
+import javax.jms.Session;
+import javax.jms.Topic;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,6 +33,7 @@ public class ContinuumBuildAgentTest extends TestCase {
 
     private CVS cvs;
     private File shellScript;
+    private BrokerContainerImpl broker;
 
     protected void setUp() throws Exception {
 
@@ -40,14 +41,20 @@ public class ContinuumBuildAgentTest extends TestCase {
         File cvsroot = new File(root, "cvs-root");
         File module = new File(root, "shell");
 
-        deleteAndCreateDirectory( module );
+        deleteAndCreateDirectory(module);
 
         shellScript = createScript(module);
 
         cvs = new CVS(cvsroot);
         cvs.init();
         cvs._import(module, "shell");
+        broker = new BrokerContainerImpl();
+        broker.addConnector("tcp://localhost:61616");
+        broker.start();
+    }
 
+    protected void tearDown() throws Exception {
+        broker.stop();
     }
 
     public void _testBuild() throws Exception {
@@ -84,39 +91,17 @@ public class ContinuumBuildAgentTest extends TestCase {
         int latestBuildId = project.getLatestBuildId();
         BuildResult buildResult = store.getBuildResult(latestBuildId);
 
-        assertNotNull("buildResult",buildResult);
-        assertEquals("buildResult.getState",ContinuumProjectState.OK, buildResult.getState());
-        assertEquals("project.getState",ContinuumProjectState.OK, project.getState());
+        assertNotNull("buildResult", buildResult);
+        assertEquals("buildResult.getState", ContinuumProjectState.OK, buildResult.getState());
+        assertEquals("project.getState", ContinuumProjectState.OK, project.getState());
 
         embedder.stop();
         ThreadContextContinuumStore.setStore(null);
     }
 
 
-    public static class TestBroker implements Runnable {
-        private final String[] args;
-
-        public TestBroker(String[] args) {
-            this.args = args;
-        }
-
-        public void run() {
-            org.activemq.broker.impl.Main.main(args);
-        }
-
-        public static void main(String[] args) {
-            org.apache.log4j.BasicConfigurator.configure();
-            new TestBroker(args).run();
-        }
-    }
-
     // need to throw in a Broker
     public void testBuildQueue() throws Exception {
-
-        Thread broker = new Thread(new TestBroker(new String[]{}));
-        broker.setDaemon(true);
-        broker.start();
-        Thread.sleep(5000);
 
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         Connection connection = connectionFactory.createConnection();
@@ -155,6 +140,7 @@ public class ContinuumBuildAgentTest extends TestCase {
             map.put(AbstractContinuumAgentAction.KEY_BUILD_DEFINITION_ID, new Integer(bd.getId()));
             map.put(AbstractContinuumAgentAction.KEY_TRIGGER, new Integer(0));
 
+            System.out.println("Sending " + goal);
             producer.send(session.createObjectMessage(map));
         }
 
@@ -181,9 +167,9 @@ public class ContinuumBuildAgentTest extends TestCase {
             int latestBuildId = project2.getLatestBuildId();
             BuildResult buildResult = store2.getBuildResult(latestBuildId);
 
-            System.out.println("[RESULT] "+ project2.getName() +" : "+goals[buildDefinitionId]+" : "+buildResult.getBuildNumber());
+            System.out.println("[RESULT] " + project2.getName() + " : " + goals[buildDefinitionId] + " : " + buildResult.getBuildNumber());
 
-            assertNotNull("buildResult",buildResult);
+            assertNotNull("buildResult", buildResult);
             assertEquals("buildResult.getState", ContinuumProjectState.OK, buildResult.getState());
             assertEquals("project.getState", ContinuumProjectState.OK, project.getState());
         }
@@ -208,30 +194,30 @@ public class ContinuumBuildAgentTest extends TestCase {
     private File createScript(File module) throws IOException, CommandLineException {
         File script;
 
-        String EOL = System.getProperty( "line.separator" );
+        String EOL = System.getProperty("line.separator");
 
         boolean isWindows = System.getProperty("os.name").startsWith("Windows");
 
         boolean isCygwin = "true".equals(System.getProperty("cygwin"));
 
-        if ( isWindows && !isCygwin ) {
+        if (isWindows && !isCygwin) {
 
-            script = new File( module, "script.bat" );
+            script = new File(module, "script.bat");
 
             String content = "@ECHO OFF" + EOL
                     + "IF \"%*\" == \"\" GOTO end" + EOL
                     + "FOR %%a IN (%*) DO ECHO %%a" + EOL
                     + ":end" + EOL;
 
-            FileUtils.fileWrite( script.getAbsolutePath(), content );
+            FileUtils.fileWrite(script.getAbsolutePath(), content);
 
         } else {
 
-            script = new File( module, "script.sh" );
+            script = new File(module, "script.sh");
 
-            String content = "#!/bin/bash" + EOL + "for arg in \"$@\"; do echo $arg ; done"+EOL;
+            String content = "#!/bin/bash" + EOL + "for arg in \"$@\"; do echo $arg ; done" + EOL;
 
-            FileUtils.fileWrite( script.getAbsolutePath(), content );
+            FileUtils.fileWrite(script.getAbsolutePath(), content);
 
             Chmod.exec(module, "+x", script);
         }

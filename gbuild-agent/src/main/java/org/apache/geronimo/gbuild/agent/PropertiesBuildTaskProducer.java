@@ -76,8 +76,12 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
     private DirectoryMonitor scanner;
 
     public synchronized void start() throws StartingException {
+        getLogger().info("Task Producer Agent starting. ("+coordinatorUrl+")");
+        getLogger().debug("coordinatorUrl "+coordinatorUrl);
+        getLogger().debug("buildTaskQueue "+buildTaskQueue);
+
         File dir = new File(watchDirectory);
-        scanner = new DirectoryMonitor(dir, this, pollInterval);
+        scanner = new DirectoryMonitor(dir, this, pollInterval, getLogger().getChildLogger("scanner"));
         super.start();
     }
 
@@ -101,6 +105,7 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
         }
         try {
             // TODO: Improve this so you can have ${my-property} parts to property values
+            getLogger().info("Processing "+file.getAbsolutePath());
             execute(properties);
         } catch (Exception e) {
             getLogger().error("Unable to process file: "+file.getAbsolutePath(), e);

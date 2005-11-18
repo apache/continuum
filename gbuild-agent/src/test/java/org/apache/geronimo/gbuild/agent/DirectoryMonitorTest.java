@@ -4,7 +4,6 @@ package org.apache.geronimo.gbuild.agent;
  */
 
 import junit.framework.TestCase;
-import org.codehaus.plexus.logging.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -137,86 +136,6 @@ public class DirectoryMonitorTest extends TestCase {
         public void reset() {
             state = null;
             file = null;
-        }
-    }
-
-    public static class TestLogger implements org.codehaus.plexus.logging.Logger {
-
-        public void debug(String string) {
-            System.out.println("[debug] " + string);
-        }
-
-        public void debug(String string, Throwable throwable) {
-            System.out.println("[debug] " + string);
-            throwable.printStackTrace();
-        }
-
-        public boolean isDebugEnabled() {
-            return false;
-        }
-
-        public void info(String string) {
-            System.out.println("[info] " + string);
-        }
-
-        public void info(String string, Throwable throwable) {
-            System.out.println("[info] " + string);
-            throwable.printStackTrace();
-        }
-
-        public boolean isInfoEnabled() {
-            return false;
-        }
-
-        public void warn(String string) {
-            System.out.println("[warn] " + string);
-        }
-
-        public void warn(String string, Throwable throwable) {
-            System.out.println("[warn] " + string);
-            throwable.printStackTrace();
-        }
-
-        public boolean isWarnEnabled() {
-            return false;
-        }
-
-        public void error(String string) {
-            System.out.println("[error] " + string);
-        }
-
-        public void error(String string, Throwable throwable) {
-            System.out.println("[error] " + string);
-            throwable.printStackTrace();
-        }
-
-        public boolean isErrorEnabled() {
-            return false;
-        }
-
-        public void fatalError(String string) {
-            System.out.println("[fatalError] " + string);
-        }
-
-        public void fatalError(String string, Throwable throwable) {
-            System.out.println("[fatalError] " + string);
-            throwable.printStackTrace();
-        }
-
-        public boolean isFatalErrorEnabled() {
-            return false;
-        }
-
-        public Logger getChildLogger(String string) {
-            return null;
-        }
-
-        public int getThreshold() {
-            return 0;
-        }
-
-        public String getName() {
-            return null;
         }
     }
 
