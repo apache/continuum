@@ -16,30 +16,20 @@
  */
 package org.apache.geronimo.gbuild.agent;
 
-import org.activemq.ActiveMQConnectionFactory;
 import org.apache.maven.continuum.buildcontroller.BuildController;
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
+import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.store.ContinuumStore;
 
-import javax.jms.Connection;
-import javax.jms.DeliveryMode;
-import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.Topic;
 import javax.jms.ObjectMessage;
-import java.net.InetAddress;
 import java.io.File;
-import java.util.Map;
+import java.net.InetAddress;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @version $Rev$ $Date$
@@ -95,66 +85,70 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
 
     public void run() {
         try {
-            getLogger().info("Continuum Build Agent starting. ("+coordinatorUrl+")");
-            getLogger().debug("coordinatorUrl "+coordinatorUrl);
-            getLogger().debug("buildTaskQueue "+buildTaskQueue);
-            getLogger().debug("buildResultsTopic "+buildResultsTopic);
-            getLogger().debug("workingDirectory "+workingDirectory);
-            getLogger().debug("buildOutputDirectory "+buildOutputDirectory);
-            getLogger().debug("adminAddress "+adminAddress);
-            getLogger().debug("contributor "+contributor);
+            getLogger().info("Continuum Build Agent starting. (" + coordinatorUrl + ")");
+            getLogger().debug("coordinatorUrl " + coordinatorUrl);
+            getLogger().debug("buildTaskQueue " + buildTaskQueue);
+            getLogger().debug("buildResultsTopic " + buildResultsTopic);
+            getLogger().debug("workingDirectory " + workingDirectory);
+            getLogger().debug("buildOutputDirectory " + buildOutputDirectory);
+            getLogger().debug("adminAddress " + adminAddress);
+            getLogger().debug("contributor " + contributor);
 
-            // Create a Session
-            Session session = getSession();
-
-            MessageConsumer buildConsumer = createQueueConsumer(session, buildTaskQueue);
-
-            MessageProducer resultsProducer = createTopicProducer(session, buildResultsTopic);
 
             getLogger().info("Continuum Build Agent started and waiting for work.");
 
             while (isRunning()) {
-                // Wait for a message
-                Message message = buildConsumer.receive(1000);
+                Client client = getClient();
 
-                if (message == null){
-
-                    continue;
-
-                } else if (message instanceof ObjectMessage) {
-
-                    try {
-                        getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ getConnection().getClientID()+":"+buildTaskQueue);
-
-                        ObjectMessage objectMessage = (ObjectMessage) message;
-
-                        Map build = getMap(objectMessage, message);
-
-                        execute(build);
-
-                        HashMap results = getBuildResults(build);
-
-                        ObjectMessage resultMessage = session.createObjectMessage(results);
-
-                        getLogger().info("Finished processing "+ message.getJMSMessageID());
-
-                        resultsProducer.send(resultMessage);
-
-                        getLogger().info("Results sent to "+ buildResultsTopic );
-
-                    } catch (Exception e) {
-                        getLogger().error("Failed Processing message "+message.getJMSMessageID());
-                    }
-
-                } else {
-                    getLogger().warn("Agent received incorrect message type: "+message.getClass().getName());
+                try {
+                    processMessages(client);
+                } catch (JMSException e) {
+                    onException(e);
                 }
             }
 
-            buildConsumer.close();
-            session.close();
         } catch (Exception e) {
             getLogger().error("Agent failed.", e);
+        }
+    }
+
+    private void processMessages(Client client) throws JMSException {
+        MessageConsumer buildConsumer = client.createQueueConsumer(buildTaskQueue);
+        MessageProducer resultsProducer = client.createTopicProducer(buildResultsTopic);
+
+        while (isRunning()) {
+            Message message = buildConsumer.receive(1000);
+            if (message instanceof ObjectMessage) {
+                processMessage(message, client, resultsProducer);
+            }
+        }
+    }
+
+    private void processMessage(Message message, Client client, MessageProducer resultsProducer) throws JMSException {
+        try {
+            getLogger().info("Message Received " + message.getJMSMessageID() + " on " + client.getConnection().getClientID() + ":" + buildTaskQueue);
+
+            ObjectMessage objectMessage = (ObjectMessage) message;
+
+            Map build = getMap(objectMessage, message);
+
+            execute(build);
+
+            HashMap results = getBuildResults(build);
+
+            ObjectMessage resultMessage = client.getSession().createObjectMessage(results);
+
+            getLogger().info("Finished processing " + message.getJMSMessageID());
+
+            resultsProducer.send(resultMessage);
+
+            getLogger().info("Results sent to " + buildResultsTopic);
+
+        } catch (Exception e) {
+            getLogger().error("Failed Processing message " + message.getJMSMessageID(), e);
+            if (e instanceof JMSException){
+                throw (JMSException) e;
+            }
         }
     }
 

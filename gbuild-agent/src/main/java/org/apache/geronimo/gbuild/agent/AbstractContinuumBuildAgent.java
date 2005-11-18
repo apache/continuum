@@ -178,6 +178,23 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
             return session;
         }
 
+        public MessageConsumer createQueueConsumer(String subject) throws JMSException {
+            Queue queue = session.createQueue(subject);
+            return session.createConsumer(queue);
+        }
+
+        public MessageConsumer createTopicConsumer(String subject) throws JMSException {
+            Topic topic = session.createTopic(subject);
+            return session.createConsumer(topic);
+        }
+
+        public MessageProducer createTopicProducer(String subject) throws JMSException {
+            Topic topic = session.createTopic(subject);
+            MessageProducer producer = session.createProducer(topic);
+            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+            return producer;
+        }
+
         public synchronized Client reconnect() throws JMSException {
             Connection connection = connect();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
