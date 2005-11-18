@@ -48,10 +48,11 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
     private Connection connection;
     private Client client;
 
+
     public synchronized void start() throws StartingException {
         try {
-            client = new Client(coordinatorUrl);
-            connection = client.getConnection();
+            setClient(new Client(coordinatorUrl));
+            connection = getClient().getConnection();
         } catch (Throwable e) {
             getLogger().error("Could not create connection to: "+coordinatorUrl, e);
             throw new StartingException("Could not create connection to: "+coordinatorUrl);
@@ -66,7 +67,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
     public synchronized void stop() throws StoppingException {
         run = false;
         try {
-            client.close();
+            getClient().close();
         } catch (JMSException e) {
             getLogger().error("Could not close connection to: "+coordinatorUrl, e);
             throw new StoppingException("Could not close connection to: "+coordinatorUrl);
@@ -130,11 +131,19 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
     }
 
     public synchronized Connection getConnection() throws JMSException {
-        return client.getConnection();
+        return getClient().getConnection();
     }
 
     public synchronized Session getSession() throws JMSException {
-        return client.getSession();
+        return getClient().getSession();
+    }
+
+    public synchronized Client getClient() {
+        return client;
+    }
+
+    public synchronized void setClient(Client client) {
+        this.client = client;
     }
 
     public static class Client {
