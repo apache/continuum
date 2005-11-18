@@ -57,7 +57,7 @@ public class ContinuumBuildAgentTest extends TestCase {
         broker.stop();
     }
 
-    public void _testBuild() throws Exception {
+    public void testBuild() throws Exception {
 
         Project project = new Project();
         project.setId(10);
@@ -140,7 +140,6 @@ public class ContinuumBuildAgentTest extends TestCase {
             map.put(AbstractContinuumAgentAction.KEY_BUILD_DEFINITION_ID, new Integer(bd.getId()));
             map.put(AbstractContinuumAgentAction.KEY_TRIGGER, new Integer(0));
 
-            System.out.println("Sending " + goal);
             producer.send(session.createObjectMessage(map));
         }
 

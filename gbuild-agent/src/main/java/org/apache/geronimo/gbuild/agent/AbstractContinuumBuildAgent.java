@@ -43,9 +43,9 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
      */
     protected String coordinatorUrl;
 
-    protected boolean run;
+    private boolean run;
 
-    protected Connection connection;
+    private Connection connection;
 
     public synchronized void start() throws StartingException {
         try {
@@ -121,5 +121,17 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         } catch (Exception e) {
             throw new BuildAgentException("Message.getObject failed on "+ message.getJMSMessageID(), e);
         }
+    }
+
+    public void setRun(boolean run) {
+        this.run = run;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 }

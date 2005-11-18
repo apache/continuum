@@ -105,7 +105,7 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
             getLogger().debug("contributor "+contributor);
 
             // Create a Session
-            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Session session = getConnection().createSession(false, Session.AUTO_ACKNOWLEDGE);
 
             MessageConsumer buildConsumer = createQueueConsumer(session, buildTaskQueue);
 
@@ -113,7 +113,7 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
 
             getLogger().info("Continuum Build Agent started and waiting for work.");
 
-            while (run) {
+            while (isRunning()) {
                 // Wait for a message
                 Message message = buildConsumer.receive(1000);
 
@@ -124,7 +124,7 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
                 } else if (message instanceof ObjectMessage) {
 
                     try {
-                        getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ connection.getClientID()+":"+buildTaskQueue);
+                        getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ getConnection().getClientID()+":"+buildTaskQueue);
 
                         ObjectMessage objectMessage = (ObjectMessage) message;
 
