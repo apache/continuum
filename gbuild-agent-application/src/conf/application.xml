@@ -38,7 +38,7 @@
       <configuration>
         <contributor>Unknown</contributor>
         <admin-address>scm@geronimo.apache.org</admin-address>
-        <coordinator-url>tcp://ci.gbuild.org:6161</coordinator-url>
+        <coordinator-url>tcp://ci.gbuild.org:16161</coordinator-url>
         <build-task-queue>BUILD.TASKS</build-task-queue>
         <build-results-topic>BUILD.RESULTS</build-results-topic>
         <working-directory>${plexus.home}/agent/work</working-directory>
@@ -90,7 +90,7 @@
       <role-hint>build-producer</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.PropertiesBuildTaskProducer</implementation>
       <configuration>
-        <coordinator-url>tcp://ci.gbuild.org:6161</coordinator-url>
+        <coordinator-url>tcp://ci.gbuild.org:16161</coordinator-url>
         <build-task-queue>BUILD.TASKS</build-task-queue>
         <include-prefix>include.</include-prefix>
         <header-prefix>header.</header-prefix>
@@ -112,7 +112,7 @@
         </requirement>
       </requirements>
       <configuration>
-        <coordinator-url>tcp://ci.gbuild.org:6161</coordinator-url>
+        <coordinator-url>tcp://ci.gbuild.org:16161</coordinator-url>
         <build-results-topic>BUILD.RESULTS</build-results-topic>
       </configuration>
     </component>
