@@ -58,6 +58,30 @@
       <implementation>org.apache.geronimo.gbuild.agent.MockContinuumNotificationDispatcher</implementation>
     </component>
 
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role-hint>file-include</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.FileIncludeExtention</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <pattern>^include.*</pattern>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role-hint>general-headers</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.HeaderIncludeExtention</implementation>
+      <configuration>
+        <pattern>^(project|build|header).*</pattern>
+      </configuration>
+    </component>
+
+
     <!--
     | Build Producer
     -->
@@ -98,10 +122,10 @@
       <role-hint>write-include-file</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtention</implementation>
       <configuration>
-        <include-pattern>^include\.</include-pattern>
+        <include-pattern>^include.*</include-pattern>
         <file-extention>.properties</file-extention>
         <results-directory>${plexus.home}/results</results-directory>
-        <use-header>project.name</use-header>
+        <use-header>build.name</use-header>
         <date-format>yyyy-MM-dd</date-format>
       </configuration>
     </component>
@@ -152,6 +176,55 @@
           </appender>
         </appenders>
         <levels>
+          <level>
+            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtention:file-include</hierarchy>
+            <level>INFO</level>
+          </level>
+          <level>
+            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtention:general-headers</hierarchy>
+            <level>INFO</level>
+          </level>
+          <level>
+            <hierarchy>org.apache.geronimo.gbuild.agent.BuildResultsExtention:write-include-file</hierarchy>
+            <level>INFO</level>
+          </level>
+          <level>
+            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtention:file-include</hierarchy>
+            <level>INFO</level>
+          </level>
+
+            <!--There was no such logger 'org.apache.maven.continuum.configuration.ConfigurationService' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper' 8918836.-->
+            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildResultsExtentionManager' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.execution.ContinuumBuildExecutor:shell' 8918836.-->
+            <!--There was no such logger 'org.codehaus.plexus.action.Action:checkout-project' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.buildcontroller.BuildController' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.scm.ContinuumScm' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.settings.MavenSettingsBuilder' 8918836.-->
+            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildResultsExtention:write-include-file' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.utils.WorkingDirectoryService' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.artifact.resolver.ArtifactResolver' 8918836.-->
+            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgentExtentionManager' 8918836.-->
+            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgent:build-producer' 8918836.-->
+            <!--There was no such logger 'org.codehaus.plexus.action.ActionManager' 8918836.-->
+            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgent:build-results' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.execution.ContinuumBuildExecutor:maven2' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.project.interpolation.ModelInterpolator' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.execution.manager.BuildExecutorManager' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.utils.shell.ShellCommandHelper' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.execution.ContinuumBuildExecutor:maven-1' 8918836.-->
+            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgentExtention:file-include' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper' 8918836.-->
+            <!--There was no such logger 'org.codehaus.plexus.action.Action:execute-builder' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.artifact.repository.metadata.RepositoryMetadataManager' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.artifact.transform.ArtifactTransformation:release' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.project.MavenProjectBuilder' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.artifact.transform.ArtifactTransformation:snapshot' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.scm.manager.ScmManager' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.artifact.manager.WagonManager' 8918836.-->
+            <!--There was no such logger 'org.codehaus.plexus.action.Action:update-project-from-working-directory' 8918836.-->
+            <!--There was no such logger 'org.codehaus.plexus.action.Action:check-working-directory' 8918836.-->
+            <!--There was no such logger 'org.apache.maven.artifact.transform.ArtifactTransformation:latest' 8918836.-->
           <!--<level>-->
             <!--<hierarchy>org.codehaus.plexus.velocity</hierarchy>-->
             <!--<level>WARN</level>-->

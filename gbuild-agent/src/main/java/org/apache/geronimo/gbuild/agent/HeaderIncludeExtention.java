@@ -36,6 +36,8 @@ public class HeaderIncludeExtention extends AbstractLogEnabled implements BuildA
     }
 
     public void postProcess(Map build, Map results) {
+        getLogger().debug("Pattern '"+pattern+"'");
+
         Iterator keys = build.keySet().iterator();
 
         while (keys.hasNext()) {
@@ -43,9 +45,10 @@ public class HeaderIncludeExtention extends AbstractLogEnabled implements BuildA
             String key = (String) keys.next();
 
             if (key.matches(pattern)){
-
+                getLogger().debug("Match '"+key+"'");
                 include(key, build, results);
-
+            } else {
+                getLogger().debug("No Match '"+key+"'");
             }
         }
     }

@@ -64,10 +64,12 @@ public class WriteIncludeFileExtention extends AbstractContinuumAgentAction impl
 
     public void start() throws StartingException {
         directory = new File(resultsDirectory);
+        directory.mkdirs();
         assert directory.exists(): "File specified does not exist. " + directory.getAbsolutePath();
         assert directory.isDirectory(): "File specified is not a directory. " + directory.getAbsolutePath();
         assert directory.canWrite(): "Directory specified is not writable. " + directory.getAbsolutePath();
 
+        getLogger().info("Include files will be written to "+directory.getAbsolutePath());
         dateFormatter = new SimpleDateFormat(dateFormat);
     }
 
@@ -75,33 +77,42 @@ public class WriteIncludeFileExtention extends AbstractContinuumAgentAction impl
     }
 
     public void execute(Map context) throws Exception {
+        getLogger().debug("Pattern "+includePattern);
+        try {
+            String header = (String) context.get(useHeader);
 
-        String header = (String) context.get(useHeader);
+            for (Iterator iterator = context.entrySet().iterator(); iterator.hasNext();) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                String key = (String) entry.getKey();
+                Object value = entry.getValue();
 
-        for (Iterator iterator = context.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            String key = (String) entry.getKey();
-            Object value = entry.getValue();
+                if (key.matches(includePattern)){
+                    getLogger().info("Found include pattern "+key);
+                    String fileName = header;
+                    fileName += key.replaceFirst(includePattern, "");
+                    fileName += "-"+ dateFormatter.format(new Date());
+                    fileName += fileExtention;
 
-            if (key.startsWith(includePattern)){
-
-                String fileName = header;
-                fileName += key.replaceFirst(includePattern, "");
-                fileName += "-"+ dateFormatter.format(new Date());
-                fileName += fileExtention;
-
-                write(fileName, (String)value);
+                    write(fileName, (String)value);
+                } else {
+                    getLogger().debug("No Match "+key);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void write(String fileName, String content) {
+        File outputFile = new File(directory, fileName);
         try {
-            FileOutputStream file = new FileOutputStream(fileName);
+            getLogger().info("Writing "+content.length()+" characters to "+outputFile.getAbsolutePath());
+            FileOutputStream file = new FileOutputStream(outputFile);
             file.write(content.getBytes());
+            file.flush();
             file.close();
         } catch (IOException e) {
-            getLogger().error("Could not write to file "+fileName, e);
+            getLogger().error("Could not write to file "+outputFile.getAbsolutePath(), e);
         }
     }
 }

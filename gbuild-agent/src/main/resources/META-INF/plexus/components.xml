@@ -90,7 +90,7 @@
         </requirement>
       </requirements>
       <configuration>
-        <pattern>^include\.</pattern>
+        <pattern>^include</pattern>
       </configuration>
     </component>
 
@@ -99,7 +99,7 @@
       <role-hint>general-headers</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.HeaderIncludeExtention</implementation>
       <configuration>
-        <pattern>^(project|build|header)\.</pattern>
+        <pattern>^(project|build|header).*</pattern>
       </configuration>
     </component>
 
@@ -155,7 +155,7 @@
       <role-hint>write-include-file</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtention</implementation>
       <configuration>
-        <include-pattern>^include\.</include-pattern>
+        <include-pattern>^include.*</include-pattern>
         <file-extention>.properties</file-extention>
         <results-directory>results</results-directory>
         <use-header>project.name</use-header>

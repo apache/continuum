@@ -81,7 +81,10 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
         getLogger().debug("buildTaskQueue "+buildTaskQueue);
 
         File dir = new File(watchDirectory);
-        scanner = new DirectoryMonitor(dir, this, pollInterval, getLogger().getChildLogger("scanner"));
+        dir.mkdirs();
+        scanner = new DirectoryMonitor(dir, this, pollInterval, getLogger());
+
+        getLogger().info("Watching "+dir.getAbsolutePath());
         super.start();
     }
 
@@ -131,7 +134,7 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
 
         producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-        int id = getInteger(def, "project.id");
+        int id = Integer.parseInt(getString(def, "project.id"));
 
         String scmUrl = getString(def, "project.scmUrl");
 
@@ -182,6 +185,8 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
 
             map.put(key, value);
 
+            map.put("build.name", key.replaceFirst("build.",""));
+            
             map.put(KEY_STORE, store);
 
             map.put(KEY_PROJECT_ID, new Integer(project.getId()));

@@ -103,7 +103,7 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
                 try {
                     processMessages(client);
                 } catch (JMSException e) {
-                    onException(e);
+//                    onException(e);
                 }
             }
 
@@ -116,7 +116,7 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
         MessageConsumer buildConsumer = client.createQueueConsumer(buildTaskQueue);
         MessageProducer resultsProducer = client.createTopicProducer(buildResultsTopic);
 
-        while (isRunning()) {
+        while (isRunning() && client.isConnected()) {
             Message message = buildConsumer.receive(1000);
             if (message instanceof ObjectMessage) {
                 processMessage(message, client, resultsProducer);

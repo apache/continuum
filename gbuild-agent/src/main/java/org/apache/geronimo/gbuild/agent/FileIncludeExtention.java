@@ -46,6 +46,8 @@ public class FileIncludeExtention extends AbstractLogEnabled implements BuildAge
     }
 
     public void postProcess(Map build, Map results) {
+        getLogger().debug("Pattern '"+pattern+"'");
+
         Iterator keys = build.keySet().iterator();
 
         while (keys.hasNext()) {
@@ -53,9 +55,10 @@ public class FileIncludeExtention extends AbstractLogEnabled implements BuildAge
             String key = (String) keys.next();
 
             if (key.matches(pattern)){
-
+                getLogger().debug("Match '"+key+"'");
                 include(key, build, results);
-
+            } else {
+                getLogger().debug("No Match '"+key+"'");
             }
         }
     }
@@ -70,11 +73,15 @@ public class FileIncludeExtention extends AbstractLogEnabled implements BuildAge
             return;
         }
 
-        getLogger().info("Found entry " + fileNameKey + " = " + fileName);
+        getLogger().debug("Found entry " + fileNameKey + " = " + fileName);
 
-        File workingDirectory = configurationService.getWorkingDirectory();
+        File dir = configurationService.getWorkingDirectory();
 
-        File file = new File(workingDirectory, fileName);
+        int projectId = ContinuumBuildAgent.getProjectId(build);
+
+        dir = new File(dir, Integer.toString(projectId));
+
+        File file = new File(dir, fileName);
 
         if (!file.exists()) {
 
@@ -85,8 +92,11 @@ public class FileIncludeExtention extends AbstractLogEnabled implements BuildAge
 
         try {
 
+            getLogger().debug("Reading "+file.getAbsolutePath());
+
             String content = FileUtils.fileRead(file.getAbsolutePath());
 
+            getLogger().debug("Including "+content.length()+" - "+file.getAbsolutePath());
             results.put(fileNameKey, content);
 
         }
