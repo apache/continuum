@@ -186,7 +186,7 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
             map.put(key, value);
 
             map.put("build.name", key.replaceFirst("build.",""));
-            
+
             map.put(KEY_STORE, store);
 
             map.put(KEY_PROJECT_ID, new Integer(project.getId()));
@@ -202,7 +202,6 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
             producer.send(session.createObjectMessage(map));
         }
 
-        session.close();
     }
 
     private void addProperties(String prefix, Map def, HashMap map) {
