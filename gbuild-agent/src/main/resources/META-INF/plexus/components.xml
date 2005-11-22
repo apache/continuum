@@ -162,5 +162,19 @@
         <date-format>yyyy-MM-dd</date-format>
       </configuration>
     </component>
+
+
+    <!--
+    | Ping monitor
+    -->
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>ping-monitor</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.PingMonitorAgent</implementation>
+      <configuration>
+        <coordinator-url>tcp://localhost:61616</coordinator-url>
+      </configuration>
+    </component>
+
   </components>
 </component-set>

@@ -14,7 +14,11 @@
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>build-results</role-hint>
     </component>
--->    
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>ping-monitor</role-hint>
+    </component>
+-->
   </load-on-start>
 
   <resources>
