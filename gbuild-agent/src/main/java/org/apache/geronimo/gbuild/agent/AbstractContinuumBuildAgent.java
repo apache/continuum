@@ -184,7 +184,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
             this.listener = listener;
             this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             this.logger = logger;
-            this.ping = new Ping(session);
+            this.ping = new Ping(session, logger);
             ping.start();
         }
 
@@ -232,7 +232,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
 
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            Ping ping = new Ping(session);
+            Ping ping = new Ping(session, getLogger());
             ping.start();
 
             return new Client(this, connection, session, ping);
@@ -245,7 +245,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         }
 
         private Connection connect() throws JMSException {
-            return connect(5);
+            return connect(10);
         }
 
         private Connection connect(int tries) throws JMSException {
@@ -293,6 +293,19 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         private boolean run;
         private final Session session;
         private final MessageProducer producer;
+        private final Logger logger;
+
+        public Ping(Session session, Logger logger) throws JMSException {
+            this.session = session;
+            Topic topic = session.createTopic("BUILD.PING");
+            producer = session.createProducer(topic);
+            this.logger = logger;
+            run = true;
+        }
+
+        public Logger getLogger() {
+            return logger;
+        }
 
         public void start() {
             Thread thread = new Thread(this);
@@ -302,12 +315,6 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
 
         public void stop(){
             setRun(false);
-        }
-
-        public Ping(Session session) throws JMSException {
-            this.session = session;
-            Topic topic = session.createTopic("BUILD.PING");
-            producer = session.createProducer(topic);
         }
 
         public synchronized boolean isRunning() {
@@ -323,7 +330,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
                 try {
                     ping();
                 } catch (JMSException e) {
-                    e.printStackTrace();
+                    getLogger().warn("Ping thread killed ("+e.getMessage()+")");
                 }
                 try {
                     Thread.sleep(60000);
@@ -335,6 +342,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         private void ping() throws JMSException {
             TextMessage message = session.createTextMessage(Long.toString(System.currentTimeMillis()));
             producer.send(message);
+//            getLogger().debug("ping sent");
         }
     }
 }

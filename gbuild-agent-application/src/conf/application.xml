@@ -137,6 +137,18 @@
     </component>
 
     <!--
+    | Ping monitor
+    -->
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>ping-monitor</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.PingMonitorAgent</implementation>
+      <configuration>
+        <coordinator-url>tcp://ci.gbuild.org:16161</coordinator-url>
+      </configuration>
+    </component>
+
+    <!--
     | Logger manager
     -->
     <component>
