@@ -33,6 +33,7 @@ import javax.jms.Topic;
 import javax.jms.DeliveryMode;
 import javax.jms.ObjectMessage;
 import javax.jms.Message;
+import javax.jms.TextMessage;
 import java.util.Map;
 
 /**
@@ -163,13 +164,15 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         private final ExceptionListener listener;
         private final Logger logger;
         private boolean connected = true;
+        private final Ping ping;
 
-        private Client(Client old, Connection connection, Session session) {
+        private Client(Client old, Connection connection, Session session, Ping ping) {
             this.brokerUrl = old.brokerUrl;
             this.connection = connection;
             this.session = session;
             this.listener = old.listener;
             this.logger = old.logger;
+            this.ping = ping;
         }
 
         public Client(String brokerUrl, ExceptionListener listener, Logger logger) throws JMSException {
@@ -181,6 +184,8 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
             this.listener = listener;
             this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             this.logger = logger;
+            this.ping = new Ping(session);
+            ping.start();
         }
 
         public synchronized boolean isConnected() {
@@ -222,12 +227,19 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
 
         public synchronized Client reconnect() throws JMSException {
             failed();
+
             Connection connection = connect();
+
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            return new Client(this, connection, session);
+
+            Ping ping = new Ping(session);
+            ping.start();
+
+            return new Client(this, connection, session, ping);
         }
 
         public synchronized void close() throws JMSException {
+            ping.stop();
             session.close();
             connection.close();
         }
@@ -274,6 +286,55 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         public void onException(JMSException jmsException) {
             getLogger().info("JMSException "+this.hashCode());
             this.listener.onException(jmsException);
+        }
+    }
+
+    public static class Ping implements Runnable {
+        private boolean run;
+        private final Session session;
+        private final MessageProducer producer;
+
+        public void start() {
+            Thread thread = new Thread(this);
+            thread.setDaemon(true);
+            thread.start();
+        }
+
+        public void stop(){
+            setRun(false);
+        }
+
+        public Ping(Session session) throws JMSException {
+            this.session = session;
+            Topic topic = session.createTopic("BUILD.PING");
+            producer = session.createProducer(topic);
+        }
+
+        public synchronized boolean isRunning() {
+            return run;
+        }
+
+        public synchronized void setRun(boolean run) {
+            this.run = run;
+        }
+
+        public void run() {
+            while (isRunning()){
+                try {
+                    ping();
+                } catch (JMSException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Thread.sleep(60000);
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+
+        private void ping() throws JMSException {
+            TextMessage message = session.createTextMessage(Long.toString(System.currentTimeMillis()));
+            producer.send(message);
         }
     }
 }
