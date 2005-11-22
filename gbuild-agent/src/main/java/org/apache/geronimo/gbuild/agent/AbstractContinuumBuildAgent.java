@@ -294,6 +294,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         private final Session session;
         private final MessageProducer producer;
         private final Logger logger;
+        private int pingInterval = 1000*60*5; // five minutes
 
         public Ping(Session session, Logger logger) throws JMSException {
             this.session = session;
@@ -333,7 +334,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
                     getLogger().warn("Ping thread killed ("+e.getMessage()+")");
                 }
                 try {
-                    Thread.sleep(60000);
+                    Thread.sleep(pingInterval);
                 } catch (InterruptedException e) {
                 }
             }

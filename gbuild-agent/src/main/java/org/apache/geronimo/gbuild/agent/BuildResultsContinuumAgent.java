@@ -20,6 +20,7 @@ import javax.jms.Session;
 import javax.jms.MessageConsumer;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
+import javax.jms.JMSException;
 import java.util.Map;
 
 /**
@@ -44,47 +45,55 @@ public class BuildResultsContinuumAgent extends AbstractContinuumBuildAgent {
             getLogger().debug("coordinatorUrl " + coordinatorUrl);
             getLogger().debug("buildResultsTopic " + buildResultsTopic);
 
-            // Create a Session
-            Session session = getSession();
-
-            MessageConsumer resultsConsumer = createConsumer(session, buildResultsTopic);
-
-            getLogger().info("Continuum Build Agent started and waiting for work.");
-
             while (isRunning()) {
-                // Wait for a message
-                Message message = resultsConsumer.receive(1000);
+                // Create a Session
+                Client client = getClient();
 
-                if (message == null){
+                Session session = client.getSession();
 
-                    continue;
+                MessageConsumer resultsConsumer = createConsumer(session, buildResultsTopic);
 
-                } else if (message instanceof ObjectMessage) {
-
-                    try {
-                        getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ getConnection().getClientID()+":"+buildResultsTopic);
-
-                        ObjectMessage objectMessage = (ObjectMessage) message;
-
-                        Map context = getMap(objectMessage, message);
-
-                        execute(context);
-
-                        getLogger().info("Finished processing "+ message.getJMSMessageID());
-
-                    } catch (Exception e) {
-                        getLogger().error("Failed Processing message "+message.getJMSMessageID());
-                    }
-
-                } else {
-                    getLogger().warn("Agent received incorrect message type: "+message.getClass().getName());
+                try {
+                    consumeMessages(client, resultsConsumer);
+                } catch (JMSException e) {
+                    getLogger().error("Agent recieved JMS Exception. ("+e.getMessage()+")");
                 }
             }
 
-            resultsConsumer.close();
-            session.close();
         } catch (Exception e) {
             getLogger().error("Agent failed.", e);
+        }
+    }
+
+    private void consumeMessages(Client client, MessageConsumer resultsConsumer) throws JMSException {
+        while (client.isConnected() && isRunning()) {
+            // Wait for a message
+            Message message = resultsConsumer.receive(1000);
+
+            if (message == null){
+
+                continue;
+
+            } else if (message instanceof ObjectMessage) {
+
+                try {
+                    getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ getConnection().getClientID()+":"+buildResultsTopic);
+
+                    ObjectMessage objectMessage = (ObjectMessage) message;
+
+                    Map context = getMap(objectMessage, message);
+
+                    execute(context);
+
+                    getLogger().info("Finished processing "+ message.getJMSMessageID());
+
+                } catch (Exception e) {
+                    getLogger().error("Failed Processing message "+message.getJMSMessageID());
+                }
+
+            } else {
+                getLogger().warn("Agent received incorrect message type: "+message.getClass().getName());
+            }
         }
     }
 

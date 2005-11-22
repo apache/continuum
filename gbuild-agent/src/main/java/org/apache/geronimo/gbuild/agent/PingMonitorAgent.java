@@ -54,7 +54,7 @@ public class PingMonitorAgent extends AbstractContinuumBuildAgent {
                             continue;
                         } else if (message instanceof TextMessage) {
                             TextMessage textMessage = (TextMessage) message;
-                            getLogger().info("Ping "+ message.getJMSMessageID() +" : "+ textMessage.getText());
+                            getLogger().debug("Ping "+ message.getJMSMessageID() +" : "+ textMessage.getText());
                         } else {
                             getLogger().warn("Agent received incorrect message type: "+message.getClass().getName());
                         }
