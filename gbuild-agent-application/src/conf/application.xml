@@ -192,6 +192,10 @@
             <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtention:file-include</hierarchy>
             <level>INFO</level>
           </level>
+          <level>
+            <hierarchy>org.activemq</hierarchy>
+            <level>WARN</level>
+          </level>
 
             <!--There was no such logger 'org.apache.maven.continuum.configuration.ConfigurationService' 8918836.-->
             <!--There was no such logger 'org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper' 8918836.-->
