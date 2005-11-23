@@ -23,6 +23,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Date;
+import java.util.HashMap;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,17 +42,14 @@ public class WriteIncludeFileExtention extends AbstractContinuumAgentAction impl
     /**
      * @plexus.configuration
      */
-    private String fileExtention;
+    private String fileNameTemplate;
+
+    private StringTemplate template;
 
     /**
      * @plexus.configuration
      */
     private String resultsDirectory;
-
-    /**
-     * @plexus.configuration
-     */
-    private String useHeader;
 
     /**
      * @plexus.configuration
@@ -62,7 +60,15 @@ public class WriteIncludeFileExtention extends AbstractContinuumAgentAction impl
     private File directory;
     private SimpleDateFormat dateFormatter;
 
+    public WriteIncludeFileExtention(String includePattern, String fileNameTemplate, String resultsDirectory, String dateFormat) {
+        this.includePattern = includePattern;
+        this.fileNameTemplate = fileNameTemplate;
+        this.resultsDirectory = resultsDirectory;
+        this.dateFormat = dateFormat;
+    }
+
     public void start() throws StartingException {
+        template = new StringTemplate(fileNameTemplate);
         directory = new File(resultsDirectory);
         directory.mkdirs();
         assert directory.exists(): "File specified does not exist. " + directory.getAbsolutePath();
@@ -78,41 +84,40 @@ public class WriteIncludeFileExtention extends AbstractContinuumAgentAction impl
 
     public void execute(Map context) throws Exception {
         getLogger().debug("Pattern "+includePattern);
-        try {
-            String header = (String) context.get(useHeader);
+        Map map = new HashMap();
+        map.putAll(context);
+        map.put("date", dateFormatter.format(new Date()));
 
-            for (Iterator iterator = context.entrySet().iterator(); iterator.hasNext();) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                String key = (String) entry.getKey();
-                Object value = entry.getValue();
+        for (Iterator iterator = context.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            String key = (String) entry.getKey();
+            Object value = entry.getValue();
 
-                if (key.matches(includePattern)){
-                    getLogger().info("Found include pattern "+key);
-                    String fileName = header;
-                    fileName += key.replaceFirst(includePattern, "");
-                    fileName += "-"+ dateFormatter.format(new Date());
-                    fileName += fileExtention;
-
-                    write(fileName, (String)value);
-                } else {
-                    getLogger().debug("No Match "+key);
+            if (key.matches(includePattern)){
+                try {
+                    getLogger().debug("Found include pattern "+key);
+                    String fileName = template.apply(map);
+                    File file = new File(directory, fileName);
+                    File parent = file.getParentFile();
+                    parent.mkdirs();
+                    write(file, (String)value);
+                } catch (Exception e) {
+                    getLogger().warn("Abnormal failure on header "+key, e);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
-    private void write(String fileName, String content) {
-        File outputFile = new File(directory, fileName);
+    private void write(File file, String content) {
         try {
-            getLogger().info("Writing "+content.length()+" characters to "+outputFile.getAbsolutePath());
-            FileOutputStream file = new FileOutputStream(outputFile);
-            file.write(content.getBytes());
-            file.flush();
-            file.close();
+            getLogger().info("Writing "+content.length()+" characters to "+file.getAbsolutePath());
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(content.getBytes());
+            out.flush();
+            out.close();
         } catch (IOException e) {
-            getLogger().error("Could not write to file "+outputFile.getAbsolutePath(), e);
+            getLogger().error("Could not write to file "+file.getAbsolutePath(), e);
         }
     }
 }
