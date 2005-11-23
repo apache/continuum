@@ -203,7 +203,7 @@
           </level>
           <level>
             <hierarchy>org.apache.geronimo.gbuild.agent.BuildResultsExtention:write-include-file</hierarchy>
-            <level>DEBUG</level>
+            <level>INFO</level>
           </level>
           <level>
             <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtention:file-include</hierarchy>
