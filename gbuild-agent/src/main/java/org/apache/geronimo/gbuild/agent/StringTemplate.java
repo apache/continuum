@@ -54,7 +54,10 @@ public class StringTemplate {
             synchronized (context) {
                 for (int i = 0; i < tokens.length; i++) {
                     Matcher matcher = patterns[i].matcher(data);
-                    data = matcher.replaceAll((String) context.get(tokens[i]));
+                    Object object = context.get(tokens[i]);
+                    if (object != null){
+                        data = matcher.replaceAll(object.toString());
+                    }
                 }
             }
         } catch (Exception e) {
