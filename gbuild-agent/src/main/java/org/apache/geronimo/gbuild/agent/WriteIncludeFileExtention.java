@@ -60,6 +60,12 @@ public class WriteIncludeFileExtention extends AbstractContinuumAgentAction impl
     private File directory;
     private SimpleDateFormat dateFormatter;
 
+    /**
+     * required for plexus
+     */
+    public WriteIncludeFileExtention() {
+    }
+
     public WriteIncludeFileExtention(String includePattern, String fileNameTemplate, String resultsDirectory, String dateFormat) {
         this.includePattern = includePattern;
         this.fileNameTemplate = fileNameTemplate;
