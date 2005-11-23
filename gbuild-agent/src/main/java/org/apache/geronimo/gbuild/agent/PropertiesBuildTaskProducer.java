@@ -192,6 +192,7 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
             map.put(KEY_PROJECT_ID, new Integer(project.getId()));
 
             map.put(KEY_BUILD_DEFINITION_ID, new Integer(bd.getId()));
+            map.put("build.id", new Integer(bd.getId()));
 
             map.put(KEY_TRIGGER, new Integer(ContinuumProjectState.TRIGGER_FORCED));
 
