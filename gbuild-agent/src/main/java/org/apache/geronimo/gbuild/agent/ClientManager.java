@@ -19,6 +19,7 @@ package org.apache.geronimo.gbuild.agent;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
@@ -26,7 +27,7 @@ import javax.jms.JMSException;
 /**
  * @version $Rev$ $Date$
  */
-public class ClientManager extends AbstractLogEnabled implements ExceptionListener {
+public class ClientManager extends AbstractLogEnabled implements ExceptionListener, Startable {
 
     /**
      * @plexus.configuration
@@ -50,11 +51,17 @@ public class ClientManager extends AbstractLogEnabled implements ExceptionListen
 
     private Client client;
 
+    public ClientManager() {}
+
     public ClientManager(String brokerUrl, int pingInterval, int reconnectAttempts, int reconnectDelay) {
         this.brokerUrl = brokerUrl;
         this.pingInterval = pingInterval;
         this.reconnectAttempts = reconnectAttempts;
         this.reconnectDelay = reconnectDelay;
+    }
+
+    public String getBrokerUrl() {
+        return brokerUrl;
     }
 
     public synchronized void start() throws StartingException {
@@ -64,6 +71,7 @@ public class ClientManager extends AbstractLogEnabled implements ExceptionListen
             getLogger().error("Could not create connection to: " + brokerUrl, e);
             throw new StartingException("Could not create connection to: " + brokerUrl);
         }
+        getLogger().info("Client connected: " + brokerUrl);
     }
 
     public synchronized void stop() throws StoppingException {
@@ -92,7 +100,7 @@ public class ClientManager extends AbstractLogEnabled implements ExceptionListen
         return client;
     }
 
-    public synchronized void setClient(Client client) {
+    private synchronized void setClient(Client client) {
         this.client = client;
     }
 }

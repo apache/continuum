@@ -27,10 +27,24 @@
 
   <components>
     <component>
+      <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
+      <implementation>org.apache.geronimo.gbuild.agent.ClientManager</implementation>
+      <configuration>
+        <broker-url>tcp://ci.gbuild.org:16161</broker-url>
+        <ping-interval>10000</ping-interval>
+        <reconnect-attempts>10</reconnect-attempts>
+        <reconnect-delay>600000</reconnect-delay>
+      </configuration>
+    </component>
+
+    <component>
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>build-executor</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.ContinuumBuildAgent</implementation>
       <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
+        </requirement>
         <requirement>
           <role>org.apache.geronimo.gbuild.agent.BuildAgentExtentionManager</role>
         </requirement>
@@ -44,7 +58,6 @@
       <configuration>
         <contributor>Unknown</contributor>
         <admin-address>scm@geronimo.apache.org</admin-address>
-        <coordinator-url>tcp://ci.gbuild.org:16161</coordinator-url>
         <build-task-queue>BUILD.TASKS</build-task-queue>
         <build-results-topic>BUILD.RESULTS</build-results-topic>
         <working-directory>${plexus.home}/agent/work</working-directory>
@@ -95,8 +108,12 @@
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>build-producer</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.PropertiesBuildTaskProducer</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
+        </requirement>
+      </requirements>
       <configuration>
-        <coordinator-url>tcp://ci.gbuild.org:16161</coordinator-url>
         <build-task-queue>BUILD.TASKS</build-task-queue>
         <include-prefix>include.</include-prefix>
         <header-prefix>header.</header-prefix>
@@ -114,11 +131,13 @@
       <implementation>org.apache.geronimo.gbuild.agent.BuildResultsContinuumAgent</implementation>
       <requirements>
         <requirement>
+          <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
+        </requirement>
+        <requirement>
           <role>org.apache.geronimo.gbuild.agent.BuildResultsExtentionManager</role>
         </requirement>
       </requirements>
       <configuration>
-        <coordinator-url>tcp://ci.gbuild.org:16161</coordinator-url>
         <build-results-topic>BUILD.RESULTS</build-results-topic>
       </configuration>
     </component>
@@ -142,9 +161,11 @@
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>ping-monitor</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.PingMonitorAgent</implementation>
-      <configuration>
-        <coordinator-url>tcp://ci.gbuild.org:16161</coordinator-url>
-      </configuration>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
+        </requirement>
+      </requirements>
     </component>
 
     <!--

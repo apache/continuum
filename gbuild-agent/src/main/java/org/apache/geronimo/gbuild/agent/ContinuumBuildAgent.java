@@ -85,8 +85,7 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
 
     public void run() {
         try {
-            getLogger().info("Continuum Build Agent starting. (" + coordinatorUrl + ")");
-            getLogger().debug("coordinatorUrl " + coordinatorUrl);
+            getLogger().info("Continuum Build Agent starting.");
             getLogger().debug("buildTaskQueue " + buildTaskQueue);
             getLogger().debug("buildResultsTopic " + buildResultsTopic);
             getLogger().debug("workingDirectory " + workingDirectory);

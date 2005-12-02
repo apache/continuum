@@ -35,20 +35,15 @@ import java.util.Map;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgentAction implements BuildAgent, Startable {
-    /**
-     * @plexus.configuration
-     */
-    protected String coordinatorUrl;
 
     private boolean run;
 
+    /**
+     * @plexus.requirement
+     */
     private ClientManager clientManager;
 
     public synchronized void start() throws StartingException {
-        clientManager = new ClientManager(coordinatorUrl, 600000, 10, 10000);
-        clientManager.enableLogging(getLogger());
-        clientManager.start();
-
         run = true;
         Thread agentThread = new Thread(this);
         agentThread.setDaemon(false);
@@ -57,12 +52,6 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
 
     public synchronized void stop() throws StoppingException {
         run = false;
-        try {
-            getClient().close();
-        } catch (JMSException e) {
-            getLogger().error("Could not close connection to: "+coordinatorUrl, e);
-            throw new StoppingException("Could not close connection to: "+coordinatorUrl);
-        }
     }
 
     public synchronized boolean isRunning() {

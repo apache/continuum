@@ -35,8 +35,7 @@ public class PingMonitorAgent extends AbstractContinuumBuildAgent {
 
     public void run() {
         try {
-            getLogger().info("Ping Agent starting. ("+coordinatorUrl+")");
-            getLogger().debug("coordinatorUrl " + coordinatorUrl);
+            getLogger().info("Ping Agent starting.");
 
             while (isRunning()){
                 Client client = getClient();

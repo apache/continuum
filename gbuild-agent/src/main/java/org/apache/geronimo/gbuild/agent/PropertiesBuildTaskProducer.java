@@ -73,8 +73,7 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
     private DirectoryMonitor scanner;
 
     public synchronized void start() throws StartingException {
-        getLogger().info("Task Producer Agent starting. ("+coordinatorUrl+")");
-        getLogger().debug("coordinatorUrl "+coordinatorUrl);
+        getLogger().info("Task Producer Agent starting.");
         getLogger().debug("buildTaskQueue "+buildTaskQueue);
 
         File dir = new File(watchDirectory);

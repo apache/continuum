@@ -42,8 +42,7 @@ public class BuildResultsContinuumAgent extends AbstractContinuumBuildAgent {
 
     public void run() {
         try {
-            getLogger().info("Results Agent starting. ("+coordinatorUrl+")");
-            getLogger().debug("coordinatorUrl " + coordinatorUrl);
+            getLogger().info("Results Agent starting.");
             getLogger().debug("buildResultsTopic " + buildResultsTopic);
 
             while (isRunning()) {
