@@ -19,11 +19,7 @@ package org.apache.geronimo.gbuild.agent;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
-import org.codehaus.plexus.logging.Logger;
-import org.activemq.ActiveMQConnectionFactory;
 
-import javax.jms.ExceptionListener;
-import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
@@ -33,13 +29,12 @@ import javax.jms.Topic;
 import javax.jms.DeliveryMode;
 import javax.jms.ObjectMessage;
 import javax.jms.Message;
-import javax.jms.TextMessage;
 import java.util.Map;
 
 /**
  * @version $Rev$ $Date$
  */
-public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgentAction implements BuildAgent, ExceptionListener, Startable {
+public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgentAction implements BuildAgent, Startable {
     /**
      * @plexus.configuration
      */
@@ -47,18 +42,12 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
 
     private boolean run;
 
-    private Connection connection;
-    private Client client;
-
+    private ClientManager clientManager;
 
     public synchronized void start() throws StartingException {
-        try {
-            setClient(new Client(coordinatorUrl, this, getLogger()));
-            connection = getClient().getConnection();
-        } catch (Throwable e) {
-            getLogger().error("Could not create connection to: "+coordinatorUrl, e);
-            throw new StartingException("Could not create connection to: "+coordinatorUrl);
-        }
+        clientManager = new ClientManager(coordinatorUrl, 600000, 10, 10000);
+        clientManager.enableLogging(getLogger());
+        clientManager.start();
 
         run = true;
         Thread agentThread = new Thread(this);
@@ -76,39 +65,11 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         }
     }
 
-    public void onException(JMSException ex) {
-        getLogger().fatalError("JMS Exception occured.  Attempting reconnect.", ex);
-        try {
-            reconnect();
-        } catch (JMSException e) {
-            getLogger().error("Reconnect failed.", e);
-        }
-//        setRun(false);
-    }
-
-    public synchronized void reconnect() throws JMSException {
-        this.client = client.reconnect();
-    }
-
     public synchronized boolean isRunning() {
         return run;
     }
 
-    protected Connection createConnection(String coordinatorUrl) throws JMSException {
-        // Create a ConnectionFactory
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(coordinatorUrl);
-
-        // Create a Connection
-        Connection connection = connectionFactory.createConnection();
-
-        connection.start();
-
-        connection.setExceptionListener(this);
-
-        return connection;
-    }
-
-    protected MessageConsumer createQueueConsumer(Session session, String subject) throws JMSException {
+    protected static MessageConsumer createQueueConsumer(Session session, String subject) throws JMSException {
         Queue queue = session.createQueue(subject);
 
         return session.createConsumer(queue);
@@ -129,7 +90,7 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         return session.createConsumer(topic);
     }
 
-    protected Map getMap(ObjectMessage objectMessage, Message message) throws JMSException, BuildAgentException {
+    public static Map getMap(ObjectMessage objectMessage, Message message) throws JMSException, BuildAgentException {
         try {
             return (Map) objectMessage.getObject();
         } catch (Exception e) {
@@ -141,209 +102,8 @@ public abstract class AbstractContinuumBuildAgent extends AbstractContinuumAgent
         this.run = run;
     }
 
-    public synchronized Connection getConnection() throws JMSException {
-        return getClient().getConnection();
-    }
-
-    public synchronized Session getSession() throws JMSException {
-        return getClient().getSession();
-    }
-
     public synchronized Client getClient() {
-        return client;
+        return clientManager.getClient();
     }
 
-    public synchronized void setClient(Client client) {
-        this.client = client;
-    }
-
-    public static class Client implements ExceptionListener {
-        private final String brokerUrl;
-        private final Connection connection;
-        private final Session session;
-        private final ExceptionListener listener;
-        private final Logger logger;
-        private boolean connected = true;
-        private final Ping ping;
-
-        private Client(Client old, Connection connection, Session session, Ping ping) {
-            this.brokerUrl = old.brokerUrl;
-            this.connection = connection;
-            this.session = session;
-            this.listener = old.listener;
-            this.logger = old.logger;
-            this.ping = ping;
-        }
-
-        public Client(String brokerUrl, ExceptionListener listener, Logger logger) throws JMSException {
-            this.brokerUrl = brokerUrl;
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
-            connection = connectionFactory.createConnection();
-            connection.setExceptionListener(this);
-            connection.start();
-            this.listener = listener;
-            this.session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            this.logger = logger;
-            this.ping = new Ping(session, logger);
-            ping.start();
-        }
-
-        public synchronized boolean isConnected() {
-            return connected;
-        }
-
-        private Logger getLogger() {
-            return logger;
-        }
-
-        public String getBrokerUrl() {
-            return brokerUrl;
-        }
-
-        public Connection getConnection() {
-            return connection;
-        }
-
-        public Session getSession() {
-            return session;
-        }
-
-        public MessageConsumer createQueueConsumer(String subject) throws JMSException {
-            Queue queue = session.createQueue(subject);
-            return session.createConsumer(queue);
-        }
-
-        public MessageConsumer createTopicConsumer(String subject) throws JMSException {
-            Topic topic = session.createTopic(subject);
-            return session.createConsumer(topic);
-        }
-
-        public MessageProducer createTopicProducer(String subject) throws JMSException {
-            Topic topic = session.createTopic(subject);
-            MessageProducer producer = session.createProducer(topic);
-            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
-            return producer;
-        }
-
-        public synchronized Client reconnect() throws JMSException {
-            failed();
-
-            Connection connection = connect();
-
-            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
-            Ping ping = new Ping(session, getLogger());
-            ping.start();
-
-            return new Client(this, connection, session, ping);
-        }
-
-        public synchronized void close() throws JMSException {
-            ping.stop();
-            session.close();
-            connection.close();
-        }
-
-        private Connection connect() throws JMSException {
-            return connect(10);
-        }
-
-        private Connection connect(int tries) throws JMSException {
-
-            try {
-                ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
-                Connection connection = connectionFactory.createConnection();
-                connection.setExceptionListener(this);
-                connection.start();
-                getLogger().info("Client reconnect successful.");
-                return connection;
-            } catch (JMSException e) {
-                if (tries <= 0) {
-                    getLogger().info("Client reconnect failed.  Giving up.", e);
-                    throw e;
-                } else {
-                    try {
-                        int delay = 5000;
-                        getLogger().info("Client reconnect failed.  Trying again in "+delay+" milliseconds. ("+ e.getMessage()+")");
-                        Thread.sleep(delay);
-                    } catch (InterruptedException dontCare) {
-                    }
-                    return connect(--tries);
-                }
-            }
-        }
-
-        /**
-         * Marks this client as failed and returns its previous state
-         * @return false if the client was not previously in a failed state
-         */
-        private synchronized boolean failed() {
-            boolean failed = !connected;
-            connected = false;
-            return failed;
-        }
-
-        public void onException(JMSException jmsException) {
-            getLogger().info("JMSException "+this.hashCode());
-            this.listener.onException(jmsException);
-        }
-    }
-
-    public static class Ping implements Runnable {
-        private boolean run;
-        private final Session session;
-        private final MessageProducer producer;
-        private final Logger logger;
-        private int pingInterval = 1000*60*5; // five minutes
-
-        public Ping(Session session, Logger logger) throws JMSException {
-            this.session = session;
-            Topic topic = session.createTopic("BUILD.PING");
-            producer = session.createProducer(topic);
-            this.logger = logger;
-            run = true;
-        }
-
-        public Logger getLogger() {
-            return logger;
-        }
-
-        public void start() {
-            Thread thread = new Thread(this);
-            thread.setDaemon(true);
-            thread.start();
-        }
-
-        public void stop(){
-            setRun(false);
-        }
-
-        public synchronized boolean isRunning() {
-            return run;
-        }
-
-        public synchronized void setRun(boolean run) {
-            this.run = run;
-        }
-
-        public void run() {
-            while (isRunning()){
-                try {
-                    ping();
-                } catch (JMSException e) {
-                    getLogger().warn("Ping thread killed ("+e.getMessage()+")");
-                }
-                try {
-                    Thread.sleep(pingInterval);
-                } catch (InterruptedException e) {
-                }
-            }
-        }
-
-        private void ping() throws JMSException {
-            TextMessage message = session.createTextMessage(Long.toString(System.currentTimeMillis()));
-            producer.send(message);
-//            getLogger().debug("ping sent");
-        }
-    }
 }

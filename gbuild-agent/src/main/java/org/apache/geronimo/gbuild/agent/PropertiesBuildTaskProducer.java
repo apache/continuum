@@ -16,16 +16,13 @@
  */
 package org.apache.geronimo.gbuild.agent;
 
-import org.activemq.ActiveMQConnectionFactory;
 import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 
-import javax.jms.Connection;
 import javax.jms.DeliveryMode;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
@@ -126,7 +123,11 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
 
     public void execute(Map def) throws Exception {
 
-        Session session = getSession();
+        Session result;
+        synchronized ((AbstractContinuumBuildAgent)this) {
+            result = getClient().getSession();
+        }
+        Session session = result;
 
         Queue buildQueue = session.createQueue(buildTaskQueue);
 

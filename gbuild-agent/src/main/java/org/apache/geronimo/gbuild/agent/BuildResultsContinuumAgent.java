@@ -21,6 +21,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.JMSException;
+import javax.jms.Connection;
 import java.util.Map;
 
 /**
@@ -77,7 +78,11 @@ public class BuildResultsContinuumAgent extends AbstractContinuumBuildAgent {
             } else if (message instanceof ObjectMessage) {
 
                 try {
-                    getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ getConnection().getClientID()+":"+buildResultsTopic);
+                    Connection result;
+                    synchronized ((AbstractContinuumBuildAgent)this) {
+                        result = getClient().getConnection();
+                    }
+                    getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ result.getClientID()+":"+buildResultsTopic);
 
                     ObjectMessage objectMessage = (ObjectMessage) message;
 

@@ -19,7 +19,6 @@ package org.apache.geronimo.gbuild.agent;
 import javax.jms.Session;
 import javax.jms.MessageConsumer;
 import javax.jms.Message;
-import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 import javax.jms.JMSException;
 import java.util.Map;
