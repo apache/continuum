@@ -89,7 +89,7 @@ public class BuildActivityMonitor extends AbstractContinuumBuildAgent {
 
                 try {
                     Connection connection = client.getConnection();
-                    getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ connection.getClientID()+":"+buildActivityTopic);
+                    getLogger().debug("Message Received "+ message.getJMSMessageID() +" on "+ connection.getClientID()+":"+buildActivityTopic);
 
                     ObjectMessage objectMessage = (ObjectMessage) message;
 
@@ -97,7 +97,7 @@ public class BuildActivityMonitor extends AbstractContinuumBuildAgent {
 
                     execute(context);
 
-                    getLogger().info("Finished processing "+ message.getJMSMessageID());
+                    getLogger().debug("Finished processing "+ message.getJMSMessageID());
 
                 } catch (Exception e) {
                     getLogger().error("Failed Processing message "+message.getJMSMessageID());
