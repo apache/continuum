@@ -5,6 +5,7 @@
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>build-executor</role-hint>
     </component>
+    <!--
     <component>
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>build-producer</role-hint>
@@ -17,12 +18,11 @@
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>ping-monitor</role-hint>
     </component>
-<!--
--->
     <component>
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>build-activity</role-hint>
     </component>
+    -->
   </load-on-start>
 
   <resources>
