@@ -77,11 +77,8 @@ public class BuildResultsContinuumAgent extends AbstractContinuumBuildAgent {
             } else if (message instanceof ObjectMessage) {
 
                 try {
-                    Connection result;
-                    synchronized ((AbstractContinuumBuildAgent)this) {
-                        result = getClient().getConnection();
-                    }
-                    getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ result.getClientID()+":"+buildResultsTopic);
+                    Connection connection = client.getConnection();
+                    getLogger().info("Message Received "+ message.getJMSMessageID() +" on "+ connection.getClientID()+":"+buildResultsTopic);
 
                     ObjectMessage objectMessage = (ObjectMessage) message;
 
