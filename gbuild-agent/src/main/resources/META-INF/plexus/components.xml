@@ -1,22 +1,12 @@
 <component-set>
   <components>
-    <!--
-    <component>
-      <role>org.apache.geronimo.gbuild.Main</role>
-      <implementation>org.apache.geronimo.gbuild.Main</implementation>
-      <requirements>
-        <requirement>
-          <role>org.apache.geronimo.gbuild.BuildAgent</role>
-        </requirement>
-      </requirements>
-    </component>
-    -->
+
     <component>
       <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
       <implementation>org.apache.geronimo.gbuild.agent.ClientManager</implementation>
       <configuration>
         <broker-url>tcp://localhost:61616</broker-url>
-        <ping-interval>10000</ping-interval>
+        <ping-interval>300000</ping-interval>
         <reconnect-attempts>10</reconnect-attempts>
         <reconnect-delay>600000</reconnect-delay>
       </configuration>
@@ -191,6 +181,63 @@
           <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
         </requirement>
       </requirements>
+    </component>
+
+    <!--
+    | Build Activity
+    -->
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-activity</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.BuildActivityMonitor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <log-format>[{host-name}:{host-address}] {project.name}-{project.version} - {build.name} {build.id} - {notification}</log-format>
+        <build-activity-topic>BUILD.ACTIVITY</build-activity-topic>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildActivityNotifier</role>
+      <role-hint>ping-monitor</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.BuildActivityNotifier</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <build-activity-topic>BUILD.ACTIVITY</build-activity-topic>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role-hint>report-activity</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.ReportActivityExtension</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.BuildActivityNotifier</role>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role-hint>clean-dead-processes</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.KillProcessesExtension</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.BuildActivityNotifier</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <regex>.*geronimo-tck.*</regex>
+      </configuration>
     </component>
 
   </components>

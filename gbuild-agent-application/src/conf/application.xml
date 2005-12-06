@@ -5,7 +5,6 @@
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>build-executor</role-hint>
     </component>
-<!--
     <component>
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>build-producer</role-hint>
@@ -18,7 +17,12 @@
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>ping-monitor</role-hint>
     </component>
+<!--
 -->
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
+      <role-hint>build-activity</role-hint>
+    </component>
   </load-on-start>
 
   <resources>
@@ -31,7 +35,7 @@
       <implementation>org.apache.geronimo.gbuild.agent.ClientManager</implementation>
       <configuration>
         <broker-url>tcp://ci.gbuild.org:16161</broker-url>
-        <ping-interval>10000</ping-interval>
+        <ping-interval>300000</ping-interval>
         <reconnect-attempts>10</reconnect-attempts>
         <reconnect-delay>600000</reconnect-delay>
       </configuration>

@@ -42,13 +42,13 @@ public abstract class AbstractContinuumAgentAction extends AbstractContinuumActi
 
     public static final String KEY_TRIGGER = "trigger";
 
-    public static final String KEY_HOST_NAME = "hostName";
+    public static final String KEY_HOST_NAME = "host-name";
 
-    public static final String KEY_HOST_ADDRESS = "hostAddress";
+    public static final String KEY_HOST_ADDRESS = "host-address";
 
     public static final String KEY_CONTRIBUTOR = "contributor";
 
-    public static final String KEY_ADMIN_ADDRESS = "adminAddress";
+    public static final String KEY_ADMIN_ADDRESS = "admin-address";
 
     public static final String KEY_OS_VERSION = "os.version";
 
