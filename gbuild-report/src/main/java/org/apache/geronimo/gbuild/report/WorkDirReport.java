@@ -20,8 +20,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * @version $Rev$ $Date$
