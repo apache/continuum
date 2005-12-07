@@ -219,6 +219,10 @@
         </appenders>
         <levels>
           <level>
+            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgent:build-activity</hierarchy>
+            <level>INFO</level>
+          </level>
+          <level>
             <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtension:file-include</hierarchy>
             <level>INFO</level>
           </level>
