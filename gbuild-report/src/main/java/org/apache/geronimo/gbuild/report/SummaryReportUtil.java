@@ -39,8 +39,11 @@ public class SummaryReportUtil {
             Map.Entry entry = (Map.Entry) caseIterator.next();
             String storeName = (String) entry.getKey();
             String storeValue = (String) entry.getValue();
+
             TestCase testCase = createTestcase(storeName, storeValue, newResult, reportFileLocator);
-            testcases.add(testCase);
+            if (testCase != null) {
+                testcases.add(testCase);
+            }
         }
         return testcases;
     }
@@ -55,37 +58,42 @@ public class SummaryReportUtil {
     }
 
     private static TestCase createTestcase(String storeName, String storeValue, boolean newResult, ReportFileLocator reportFileLocator) {
-        int index = storeName.lastIndexOf('#');
-        String name = storeName.substring(index + 1);
-        String classname = storeName.substring(0, index);
-        String reportFile = reportFileLocator.getReportFile(classname, name);
+        try {
+            int index = storeName.lastIndexOf('#');
+            String name = storeName.substring(index + 1);
+            String classname = storeName.substring(0, index);
+            String reportFile = reportFileLocator.getReportFile(classname, name);
 
-        char flag = storeValue.charAt(0);
-        index = storeValue.indexOf(')');
-        long time = Long.parseLong(storeValue.substring(3, index));
-        boolean failed;
-        boolean error;
-        String msg;
-        if (flag == 'P') {
-            failed = false;
-            error = false;
-            msg = "";
-        } else {
-            if (flag == 'F') {
-                failed = true;
-                error = false;
-            } else {
+            char flag = storeValue.charAt(0);
+            index = storeValue.indexOf(')');
+            long time = Long.parseLong(storeValue.substring(3, index));
+            boolean failed;
+            boolean error;
+            String msg;
+            if (flag == 'P') {
                 failed = false;
-                error = true;
-            }
-            if (storeValue.length() >= index + 2) {
-                msg = storeValue.substring(index + 2);
-            } else {
+                error = false;
                 msg = "";
+            } else {
+                if (flag == 'F') {
+                    failed = true;
+                    error = false;
+                } else {
+                    failed = false;
+                    error = true;
+                }
+                if (storeValue.length() >= index + 2) {
+                    msg = storeValue.substring(index + 2);
+                } else {
+                    msg = "";
+                }
             }
-        }
 
-        return new TestCase(name, classname, reportFile, time, failed, error, msg, newResult);
+            return new TestCase(name, classname, reportFile, time, failed, error, msg, newResult);
+        } catch (NumberFormatException e) {
+            System.out.println("FAILED TO PARSE - "+storeName +" = "+storeValue);
+            return null;
+        }
     }
 
     private static String getStoreName(TestCase testCase) {
