@@ -21,9 +21,9 @@ import java.util.Map;
 /**
  * @version $Rev$ $Date$
  */
-public interface BuildAgentExtention {
+public interface BuildAgentExtension {
 
-    String ROLE = BuildAgentExtention.class.getName();
+    String ROLE = BuildAgentExtension.class.getName();
 
     public void preProcess(Map build);
 

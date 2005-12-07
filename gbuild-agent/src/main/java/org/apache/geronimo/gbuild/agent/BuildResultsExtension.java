@@ -19,9 +19,9 @@ package org.apache.geronimo.gbuild.agent;
 /**
  * @version $Rev$ $Date$
  */
-public interface BuildResultsExtention {
+public interface BuildResultsExtension {
 
-    String ROLE = BuildResultsExtention.class.getName(); 
+    String ROLE = BuildResultsExtension.class.getName();
 
     void execute(java.util.Map context) throws java.lang.Exception;
 

@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * @version $Rev$ $Date$
  */
-public class WriteIncludeFileExtention extends AbstractContinuumAgentAction implements BuildResultsExtention, Startable {
+public class WriteIncludeFileExtension extends AbstractContinuumAgentAction implements BuildResultsExtension, Startable {
 
     /**
      * @plexus.configuration
@@ -63,10 +63,10 @@ public class WriteIncludeFileExtention extends AbstractContinuumAgentAction impl
     /**
      * required for plexus
      */
-    public WriteIncludeFileExtention() {
+    public WriteIncludeFileExtension() {
     }
 
-    public WriteIncludeFileExtention(String includePattern, String fileNameTemplate, String resultsDirectory, String dateFormat) {
+    public WriteIncludeFileExtension(String includePattern, String fileNameTemplate, String resultsDirectory, String dateFormat) {
         this.includePattern = includePattern;
         this.fileNameTemplate = fileNameTemplate;
         this.resultsDirectory = resultsDirectory;

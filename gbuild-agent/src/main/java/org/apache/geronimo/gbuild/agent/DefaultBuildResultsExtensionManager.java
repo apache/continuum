@@ -19,26 +19,25 @@ package org.apache.geronimo.gbuild.agent;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Iterator;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultBuildResultsExtentionManager extends AbstractLogEnabled implements BuildResultsExtentionManager {
+public class DefaultBuildResultsExtensionManager extends AbstractLogEnabled implements BuildResultsExtensionManager {
 
     /**
      * @plexus.requirement
      */
     private Map extentions;
 
-    public BuildResultsExtention getBuildResultsExtention(String id) throws NoSuchExtentionException {
-        BuildResultsExtention agentExtention = (BuildResultsExtention) extentions.get(id);
+    public BuildResultsExtension getBuildResultsExtention(String id) throws NoSuchExtentionException {
+        BuildResultsExtension agentExtension = (BuildResultsExtension) extentions.get(id);
 
-        if (agentExtention == null){
+        if (agentExtension == null){
             throw new NoSuchExtentionException(id);
         }
-        return agentExtention;
+        return agentExtension;
     }
 
     public void execute(Map results) throws Exception {
@@ -48,13 +47,13 @@ public class DefaultBuildResultsExtentionManager extends AbstractLogEnabled impl
 
             String name = (String) entry.getKey();
 
-            BuildResultsExtention extention = (BuildResultsExtention) entry.getValue();
+            BuildResultsExtension extension = (BuildResultsExtension) entry.getValue();
 
             getLogger().info("Executing extention "+name);
 
             try {
 
-                extention.execute(results);
+                extension.execute(results);
 
             } catch (Exception e) {
 

@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * @version $Rev$ $Date$
  */
-public class ReportActivityExtension extends AbstractLogEnabled implements BuildAgentExtention {
+public class ReportActivityExtension extends AbstractLogEnabled implements BuildAgentExtension {
 
     /**
      * @plexus.requirement

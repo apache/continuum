@@ -32,7 +32,7 @@ public class BuildResultsContinuumAgent extends AbstractContinuumBuildAgent {
     /**
      * @plexus.requirement
      */
-    private BuildResultsExtentionManager extentionManager;
+    private BuildResultsExtensionManager extentionManager;
 
     /**
      * @plexus.configuration

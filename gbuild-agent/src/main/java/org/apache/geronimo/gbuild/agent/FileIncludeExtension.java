@@ -24,12 +24,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * @version $Rev$ $Date$
  */
-public class FileIncludeExtention extends AbstractLogEnabled implements BuildAgentExtention {
+public class FileIncludeExtension extends AbstractLogEnabled implements BuildAgentExtension {
 
     /**
      * @plexus.requirement

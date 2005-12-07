@@ -29,7 +29,7 @@ import java.util.ArrayList;
 /**
  * @version $Rev$ $Date$
  */
-public class KillProcessesExtension extends AbstractLogEnabled implements BuildAgentExtention {
+public class KillProcessesExtension extends AbstractLogEnabled implements BuildAgentExtension {
 
     /**
      * @plexus.requirement

@@ -25,21 +25,21 @@ import java.util.Iterator;
 /**
  * @version $Rev$ $Date$
  */
-public class DefaultBuildAgentExtentionManager extends AbstractLogEnabled implements BuildAgentExtentionManager {
+public class DefaultBuildAgentExtensionManager extends AbstractLogEnabled implements BuildAgentExtentionManager {
 
     /**
      * @plexus.requirement
      */
     private Map extentions;
 
-    public BuildAgentExtention getBuildAgentExtention(String id) throws NoSuchExtentionException {
+    public BuildAgentExtension getBuildAgentExtention(String id) throws NoSuchExtentionException {
 
-        BuildAgentExtention agentExtention = (BuildAgentExtention) extentions.get(id);
+        BuildAgentExtension agentExtension = (BuildAgentExtension) extentions.get(id);
 
-        if (agentExtention == null){
+        if (agentExtension == null){
             throw new NoSuchExtentionException(id);
         }
-        return agentExtention;
+        return agentExtension;
     }
 
     public void postProcess(Map build, HashMap results) {
@@ -50,13 +50,13 @@ public class DefaultBuildAgentExtentionManager extends AbstractLogEnabled implem
 
             String name = (String) entry.getKey();
 
-            BuildAgentExtention extention = (BuildAgentExtention) entry.getValue();
+            BuildAgentExtension extension = (BuildAgentExtension) entry.getValue();
 
             getLogger().info("Executing extention "+name +" post process");
 
             try {
 
-                extention.postProcess(build, results);
+                extension.postProcess(build, results);
 
             } catch (Exception e) {
 
@@ -74,13 +74,13 @@ public class DefaultBuildAgentExtentionManager extends AbstractLogEnabled implem
 
             String name = (String) entry.getKey();
 
-            BuildAgentExtention extention = (BuildAgentExtention) entry.getValue();
+            BuildAgentExtension extension = (BuildAgentExtension) entry.getValue();
 
             getLogger().info("Executing extention "+name +" pre process");
 
             try {
 
-                extention.preProcess(build);
+                extension.preProcess(build);
 
             } catch (Exception e) {
 

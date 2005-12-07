@@ -26,7 +26,7 @@ public interface BuildAgentExtentionManager {
 
     String ROLE = BuildAgentExtentionManager.class.getName();
 
-    BuildAgentExtention getBuildAgentExtention(String id) throws NoSuchExtentionException;
+    BuildAgentExtension getBuildAgentExtention(String id) throws NoSuchExtentionException;
 
     void postProcess(Map build, HashMap results);
 

@@ -21,11 +21,11 @@ import java.util.Map;
 /**
  * @version $Rev$ $Date$
  */
-public interface BuildResultsExtentionManager {
+public interface BuildResultsExtensionManager {
 
-    String ROLE = BuildResultsExtentionManager.class.getName();
+    String ROLE = BuildResultsExtensionManager.class.getName();
 
-    BuildResultsExtention getBuildResultsExtention(String id) throws NoSuchExtentionException;
+    BuildResultsExtension getBuildResultsExtention(String id) throws NoSuchExtentionException;
 
     void execute(Map results) throws Exception;
 

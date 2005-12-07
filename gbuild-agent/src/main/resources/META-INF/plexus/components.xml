@@ -74,19 +74,19 @@
 
     <component>
       <role>org.apache.geronimo.gbuild.agent.BuildAgentExtentionManager</role>
-      <implementation>org.apache.geronimo.gbuild.agent.DefaultBuildAgentExtentionManager</implementation>
+      <implementation>org.apache.geronimo.gbuild.agent.DefaultBuildAgentExtensionManager</implementation>
       <requirements>
         <requirement>
-          <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+          <role>org.apache.geronimo.gbuild.agent.BuildAgentExtension</role>
           <field-name>extentions</field-name>
         </requirement>
       </requirements>
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtension</role>
       <role-hint>file-include</role-hint>
-      <implementation>org.apache.geronimo.gbuild.agent.FileIncludeExtention</implementation>
+      <implementation>org.apache.geronimo.gbuild.agent.FileIncludeExtension</implementation>
       <requirements>
         <requirement>
           <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
@@ -98,9 +98,9 @@
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtension</role>
       <role-hint>general-headers</role-hint>
-      <implementation>org.apache.geronimo.gbuild.agent.HeaderIncludeExtention</implementation>
+      <implementation>org.apache.geronimo.gbuild.agent.HeaderIncludeExtension</implementation>
       <configuration>
         <pattern>^(project|build|header).*</pattern>
       </configuration>
@@ -137,7 +137,7 @@
       <implementation>org.apache.geronimo.gbuild.agent.BuildResultsContinuumAgent</implementation>
       <requirements>
         <requirement>
-          <role>org.apache.geronimo.gbuild.agent.BuildResultsExtentionManager</role>
+          <role>org.apache.geronimo.gbuild.agent.BuildResultsExtensionManager</role>
         </requirement>
       </requirements>
       <configuration>
@@ -146,20 +146,20 @@
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtentionManager</role>
-      <implementation>org.apache.geronimo.gbuild.agent.DefaultBuildResultsExtentionManager</implementation>
+      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtensionManager</role>
+      <implementation>org.apache.geronimo.gbuild.agent.DefaultBuildResultsExtensionManager</implementation>
       <requirements>
         <requirement>
-          <role>org.apache.geronimo.gbuild.agent.BuildResultsExtention</role>
+          <role>org.apache.geronimo.gbuild.agent.BuildResultsExtension</role>
           <field-name>extentions</field-name>
         </requirement>
       </requirements>
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtention</role>
+      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtension</role>
       <role-hint>write-include-file</role-hint>
-      <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtention</implementation>
+      <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtension</implementation>
       <configuration>
         <include-pattern>^include.*</include-pattern>
         <results-directory>results</results-directory>
@@ -216,7 +216,7 @@
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtension</role>
       <role-hint>report-activity</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.ReportActivityExtension</implementation>
       <requirements>
@@ -227,7 +227,7 @@
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtension</role>
       <role-hint>clean-dead-processes</role-hint>
       <implementation>org.apache.geronimo.gbuild.agent.KillProcessesExtension</implementation>
       <requirements>

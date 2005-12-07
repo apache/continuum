@@ -24,7 +24,7 @@ import java.util.Iterator;
 /**
  * @version $Rev$ $Date$
  */
-public class HeaderIncludeExtention extends AbstractLogEnabled implements BuildAgentExtention {
+public class HeaderIncludeExtension extends AbstractLogEnabled implements BuildAgentExtension {
 
     /**
      * @plexus.configuration

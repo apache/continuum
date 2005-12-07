@@ -13,7 +13,7 @@ import java.util.Properties;
 public class WriteIncludeFileExtentionTest extends TestCase {
 
     public void testExecute() throws Exception {
-        WriteIncludeFileExtention extention = new WriteIncludeFileExtention("^include.*", "{foo}/{name}.properties", "target", "yyyy");
+        WriteIncludeFileExtension extention = new WriteIncludeFileExtension("^include.*", "{foo}/{name}.properties", "target", "yyyy");
         extention.enableLogging(new TestLogger("include-writer"));
         extention.start();
 

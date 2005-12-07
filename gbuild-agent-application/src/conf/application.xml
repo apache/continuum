@@ -82,9 +82,9 @@
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtension</role>
       <role-hint>file-include</role-hint>
-      <implementation>org.apache.geronimo.gbuild.agent.FileIncludeExtention</implementation>
+      <implementation>org.apache.geronimo.gbuild.agent.FileIncludeExtension</implementation>
       <requirements>
         <requirement>
           <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
@@ -96,9 +96,9 @@
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtention</role>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtension</role>
       <role-hint>general-headers</role-hint>
-      <implementation>org.apache.geronimo.gbuild.agent.HeaderIncludeExtention</implementation>
+      <implementation>org.apache.geronimo.gbuild.agent.HeaderIncludeExtension</implementation>
       <configuration>
         <pattern>^(project|build|header).*</pattern>
       </configuration>
@@ -138,7 +138,7 @@
           <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
         </requirement>
         <requirement>
-          <role>org.apache.geronimo.gbuild.agent.BuildResultsExtentionManager</role>
+          <role>org.apache.geronimo.gbuild.agent.BuildResultsExtensionManager</role>
         </requirement>
       </requirements>
       <configuration>
@@ -147,9 +147,9 @@
     </component>
 
     <component>
-      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtention</role>
+      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtension</role>
       <role-hint>write-include-file</role-hint>
-      <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtention</implementation>
+      <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtension</implementation>
       <configuration>
         <include-pattern>^include.*</include-pattern>
         <results-directory>results</results-directory>
@@ -219,19 +219,19 @@
         </appenders>
         <levels>
           <level>
-            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtention:file-include</hierarchy>
+            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtension:file-include</hierarchy>
             <level>INFO</level>
           </level>
           <level>
-            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtention:general-headers</hierarchy>
+            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtension:general-headers</hierarchy>
             <level>INFO</level>
           </level>
           <level>
-            <hierarchy>org.apache.geronimo.gbuild.agent.BuildResultsExtention:write-include-file</hierarchy>
+            <hierarchy>org.apache.geronimo.gbuild.agent.BuildResultsExtension:write-include-file</hierarchy>
             <level>INFO</level>
           </level>
           <level>
-            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtention:file-include</hierarchy>
+            <hierarchy>org.apache.geronimo.gbuild.agent.BuildAgentExtension:file-include</hierarchy>
             <level>INFO</level>
           </level>
           <level>
@@ -241,13 +241,13 @@
 
             <!--There was no such logger 'org.apache.maven.continuum.configuration.ConfigurationService' 8918836.-->
             <!--There was no such logger 'org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper' 8918836.-->
-            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildResultsExtentionManager' 8918836.-->
+            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildResultsExtensionManager' 8918836.-->
             <!--There was no such logger 'org.apache.maven.continuum.execution.ContinuumBuildExecutor:shell' 8918836.-->
             <!--There was no such logger 'org.codehaus.plexus.action.Action:checkout-project' 8918836.-->
             <!--There was no such logger 'org.apache.maven.continuum.buildcontroller.BuildController' 8918836.-->
             <!--There was no such logger 'org.apache.maven.continuum.scm.ContinuumScm' 8918836.-->
             <!--There was no such logger 'org.apache.maven.settings.MavenSettingsBuilder' 8918836.-->
-            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildResultsExtention:write-include-file' 8918836.-->
+            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildResultsExtension:write-include-file' 8918836.-->
             <!--There was no such logger 'org.apache.maven.continuum.utils.WorkingDirectoryService' 8918836.-->
             <!--There was no such logger 'org.apache.maven.artifact.resolver.ArtifactResolver' 8918836.-->
             <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgentExtentionManager' 8918836.-->
@@ -259,7 +259,7 @@
             <!--There was no such logger 'org.apache.maven.continuum.execution.manager.BuildExecutorManager' 8918836.-->
             <!--There was no such logger 'org.apache.maven.continuum.utils.shell.ShellCommandHelper' 8918836.-->
             <!--There was no such logger 'org.apache.maven.continuum.execution.ContinuumBuildExecutor:maven-1' 8918836.-->
-            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgentExtention:file-include' 8918836.-->
+            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgentExtension:file-include' 8918836.-->
             <!--There was no such logger 'org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper' 8918836.-->
             <!--There was no such logger 'org.codehaus.plexus.action.Action:execute-builder' 8918836.-->
             <!--There was no such logger 'org.apache.maven.artifact.repository.metadata.RepositoryMetadataManager' 8918836.-->
