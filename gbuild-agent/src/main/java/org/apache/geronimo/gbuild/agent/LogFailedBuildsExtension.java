@@ -23,6 +23,7 @@ import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import java.util.Map;
 /**
  * @version $Rev$ $Date$
  */
-public class LogFailedBuildsExtension extends AbstractContinuumAgentAction implements BuildResultsExtension, Startable {
+public class LogFailedBuildsExtension extends AbstractLogEnabled implements BuildResultsExtension, Startable {
 
     /**
      * @plexus.configuration
@@ -80,6 +81,7 @@ public class LogFailedBuildsExtension extends AbstractContinuumAgentAction imple
     }
 
     public void execute(Map context) throws Exception {
+
         ContinuumStore store = AbstractContinuumAgentAction.getContinuumStore(context);
 
         int projectId = AbstractContinuumAction.getProjectId(context);
@@ -89,6 +91,8 @@ public class LogFailedBuildsExtension extends AbstractContinuumAgentAction imple
         BuildResult buildResult = store.getBuildResult(project.getLatestBuildId());
 
         int exitCode = buildResult.getExitCode();
+
+        getLogger().debug(context.get("build.name") + " " + context.get("build.id") + " - exit code (" + exitCode + ")");
 
         if (exitCode == 0) {
             return;
@@ -118,10 +122,13 @@ public class LogFailedBuildsExtension extends AbstractContinuumAgentAction imple
 
         parent.mkdirs();
 
+
         try {
             GZipUtils.fileWrite(file, bytes);
         } catch (IOException e) {
             getLogger().error("Could not write to file " + file.getAbsolutePath(), e);
         }
+
+        getLogger().info("Wrote build ouput (" + file.length() + " bytes) to " + file.getAbsolutePath());
     }
 }
