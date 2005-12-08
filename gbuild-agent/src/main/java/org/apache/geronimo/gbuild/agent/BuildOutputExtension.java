@@ -84,7 +84,7 @@ public class BuildOutputExtension extends AbstractLogEnabled implements BuildAge
 
             byte[] bytes = GZipUtils.fileRead(file);
 
-            getLogger().debug("Including " + bytes.length + " - " + file.getAbsolutePath());
+            getLogger().info("Including " + bytes.length + " - " + file.getAbsolutePath());
 
             results.put("build.output-file.gz", bytes);
 
