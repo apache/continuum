@@ -24,6 +24,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.net.InetAddress;
 
 /**
  * @version $Rev$ $Date$
@@ -55,6 +57,7 @@ public class LogFailedBuildsExtension extends AbstractLogEnabled implements Buil
     private String dateFormat;
     private SimpleDateFormat dateFormatter;
 
+    private StringTemplate header = new StringTemplate("#   Date: {date}\n#   Project: {project.name}-{project.version}\n#   OS: {os.name} - {os.version}\n#   Java: {java.version} - {java.vendor}\n#   Host: {host-name} {host-address}\n#   Contributor: {contributor} {admin-address}\n");
 
     public void start() throws StartingException {
         template = new StringTemplate(fileNameTemplate);
@@ -122,9 +125,12 @@ public class LogFailedBuildsExtension extends AbstractLogEnabled implements Buil
 
         parent.mkdirs();
 
-
         try {
-            GZipUtils.fileWrite(file, bytes);
+
+            FileUtils.fileWrite(file.getAbsolutePath(), header.apply(map));
+
+            GZipUtils.fileAppend(file, bytes);
+
         } catch (IOException e) {
             getLogger().error("Could not write to file " + file.getAbsolutePath(), e);
         }

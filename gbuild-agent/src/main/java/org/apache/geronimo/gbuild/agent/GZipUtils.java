@@ -89,4 +89,32 @@ public class GZipUtils {
             IOUtil.close(in);
         }
     }
+
+    /**
+     * Writes data to a file. The file will be created if it does not exist.
+     *
+     * @param file  The name of the file to write.
+     * @param bytes The GZipped content to write to the file.
+     */
+    public static void fileAppend(File file, byte[] bytes) throws IOException {
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+
+        GZIPInputStream in = new GZIPInputStream(bais);
+
+        FileOutputStream out = null;
+
+        try {
+            out = new FileOutputStream(file, true);
+            int count;
+            byte[] b = new byte[512];
+            while ((count = in.read(b)) > 0) {
+                out.write(b, 0, count);
+            }
+        }
+        finally {
+            IOUtil.close(out);
+            IOUtil.close(in);
+        }
+    }
 }
