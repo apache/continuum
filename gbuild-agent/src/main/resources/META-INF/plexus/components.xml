@@ -266,7 +266,7 @@
       <configuration>
         <results-directory>${plexus.home}/failed</results-directory>
         <date-format>yyyy-MM-dd-HHmm</date-format>
-        <file-name-template>{project.name}-{project.version}/{date}-{build.name}-{build.id}.txt</file-name-template>
+        <file-name-template>{project.name}-{project.version}/{date}-{host-name}-{build.name}-{build.id}.txt</file-name-template>
       </configuration>
     </component>
 
