@@ -44,14 +44,14 @@ public class WorkDirReport {
         }
 
         // work directory
-        File workDir = new File(args[1]);
+        File workDir = new File(args[0]);
         if (workDir.exists() && !workDir.isDirectory()) {
             System.out.println("workDir is not a directory: " + workDir.getAbsolutePath());
             return;
         }
 
         // output directory
-        File outputDir = new File(args[3]);
+        File outputDir = new File(args[1]);
         if (!outputDir.exists()) {
             if (!outputDir.mkdirs()) {
                 System.out.println("Could not create outputDir: " + outputDir.getAbsolutePath());
