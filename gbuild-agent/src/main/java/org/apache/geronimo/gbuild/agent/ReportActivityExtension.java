@@ -62,7 +62,7 @@ public class ReportActivityExtension extends AbstractLogEnabled implements Build
 
         int exitCode = buildResult.getExitCode();
 
-        if (buildResult.isSuccess()) {
+        if (exitCode == 0) {
 
             notifier.sendNotification(build, "Completed: " + minutes + " minutes: Successful");
 
