@@ -18,7 +18,9 @@ package org.apache.geronimo.gbuild.agent;
 
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.util.Map;
@@ -47,7 +49,14 @@ public class ReportActivityExtension extends AbstractLogEnabled implements Build
 
         int projectId = AbstractContinuumAction.getProjectId(build);
 
-        BuildResult buildResult = store.getLatestBuildResultForProject(projectId);
+        BuildResult buildResult = null;
+        try {
+            Project project = store.getProject(projectId);
+
+            buildResult = store.getBuildResult(project.getLatestBuildId());
+        } catch (ContinuumStoreException e) {
+            getLogger().error("Unable to read data from ContinuumStore.", e);
+        }
 
         long minutes = (buildResult.getEndTime() - buildResult.getStartTime()) / 60000;
 

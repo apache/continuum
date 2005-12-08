@@ -221,6 +221,9 @@
       <implementation>org.apache.geronimo.gbuild.agent.ReportActivityExtension</implementation>
       <requirements>
         <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+        </requirement>
+        <requirement>
           <role>org.apache.geronimo.gbuild.agent.BuildActivityNotifier</role>
         </requirement>
       </requirements>
@@ -237,6 +240,33 @@
       </requirements>
       <configuration>
         <regex>.*geronimo-tck.*</regex>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildAgentExtension</role>
+      <role-hint>build-output</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.BuildOutputExtension</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+        </requirement>
+      </requirements>
+      <configuration>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildResultsExtension</role>
+      <role-hint>log-failed-build-file</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.LogFailedBuildsExtension</implementation>
+      <configuration>
+        <results-directory>${plexus.home}/failed</results-directory>
+        <date-format>yyyy-MM-dd-HHmm</date-format>
+        <file-name-template>{project.name}-{project.version}/{date}-{build.name}-{build.id}.txt</file-name-template>
       </configuration>
     </component>
 

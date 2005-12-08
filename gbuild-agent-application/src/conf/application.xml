@@ -152,7 +152,7 @@
       <implementation>org.apache.geronimo.gbuild.agent.WriteIncludeFileExtension</implementation>
       <configuration>
         <include-pattern>^include.*</include-pattern>
-        <results-directory>results</results-directory>
+        <results-directory>${plexus.home}/results</results-directory>
         <date-format>yyyy-MM</date-format>
         <file-name-template>{date}/{project.name}/{project.version}/{build.name}-{build.id}.properties</file-name-template>
       </configuration>
