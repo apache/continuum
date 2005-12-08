@@ -16,6 +16,9 @@
  */
 package org.apache.geronimo.gbuild.agent;
 
+import org.apache.maven.continuum.core.action.AbstractContinuumAction;
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.util.Map;
@@ -24,6 +27,12 @@ import java.util.Map;
  * @version $Rev$ $Date$
  */
 public class ReportActivityExtension extends AbstractLogEnabled implements BuildAgentExtension {
+
+
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumStore store;
 
     /**
      * @plexus.requirement
@@ -35,6 +44,23 @@ public class ReportActivityExtension extends AbstractLogEnabled implements Build
     }
 
     public void postProcess(Map build, Map results) {
-        notifier.sendNotification(build, "Completed");
+
+        int projectId = AbstractContinuumAction.getProjectId(build);
+
+        BuildResult buildResult = store.getLatestBuildResultForProject(projectId);
+
+        long minutes = (buildResult.getEndTime() - buildResult.getStartTime()) / 60000;
+
+        int exitCode = buildResult.getExitCode();
+
+        if (buildResult.isSuccess()) {
+
+            notifier.sendNotification(build, "Completed: " + minutes + " minutes: Successful");
+
+        } else {
+
+            notifier.sendNotification(build, "Completed: " + minutes + " minutes: Failed (exit " + exitCode + ") ");
+        }
+
     }
 }
