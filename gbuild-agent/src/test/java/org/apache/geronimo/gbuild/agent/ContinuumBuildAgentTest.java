@@ -12,6 +12,7 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.codehaus.plexus.embed.Embedder;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
@@ -137,6 +138,7 @@ public class ContinuumBuildAgentTest extends TestCase {
 
             map.put(AbstractContinuumAgentAction.KEY_STORE, store);
             map.put(AbstractContinuumAgentAction.KEY_PROJECT_ID, new Integer(project.getId()));
+            map.put(AbstractContinuumAction.KEY_PROJECT_ID, new Integer(project.getId()));
             map.put(AbstractContinuumAgentAction.KEY_BUILD_DEFINITION_ID, new Integer(bd.getId()));
             map.put(AbstractContinuumAgentAction.KEY_TRIGGER, new Integer(0));
 

@@ -20,6 +20,7 @@ import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 
@@ -189,15 +190,28 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
 
             map.put(KEY_STORE, store);
 
-            map.put(KEY_PROJECT_ID, new Integer(project.getId()));
+            Integer projectId = new Integer(project.getId());
 
-            map.put(KEY_BUILD_DEFINITION_ID, new Integer(bd.getId()));
-            map.put("build.id", new Integer(bd.getId()));
+            map.put(KEY_PROJECT_ID, projectId);
+
+            map.put(AbstractContinuumAction.KEY_PROJECT_ID, projectId);
+
+            Integer buildId = new Integer(bd.getId());
+
+            map.put(KEY_BUILD_DEFINITION_ID, buildId);
+
+            map.put(AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, projectId);
+
+            map.put("build.id", buildId);
+
+            map.put(AbstractContinuumAction.KEY_BUILD_ID, projectId);
 
             map.put(KEY_TRIGGER, new Integer(ContinuumProjectState.TRIGGER_FORCED));
 
             addProperties("project.", def, map);
+
             addProperties(headerPrefix, def, map);
+
             addProperties(includePrefix, def, map);
 
             producer.send(session.createObjectMessage(map));
