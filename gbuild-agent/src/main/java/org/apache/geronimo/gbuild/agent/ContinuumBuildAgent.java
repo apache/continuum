@@ -112,13 +112,17 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
     }
 
     private void processMessages(Client client) throws JMSException {
+//        MessageConsumer buildConsumer = client.createQueueConsumer(buildTaskQueue, "stan is null");
         MessageConsumer buildConsumer = client.createQueueConsumer(buildTaskQueue);
         MessageProducer resultsProducer = client.createTopicProducer(buildResultsTopic);
+        getLogger().debug("Processing messages.");
 
         while (isRunning() && client.isConnected()) {
             Message message = buildConsumer.receive(1000);
             if (message instanceof ObjectMessage) {
                 processMessage(message, client, resultsProducer);
+            } else if (message == null){
+                getLogger().debug("time-out");
             }
         }
     }
