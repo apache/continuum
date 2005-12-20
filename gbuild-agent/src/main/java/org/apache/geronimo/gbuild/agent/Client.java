@@ -98,6 +98,11 @@ public class Client implements ExceptionListener {
         return session.createConsumer(queue);
     }
 
+    public MessageConsumer createQueueConsumer(String subject, String selector) throws JMSException {
+        Queue queue = session.createQueue(subject);
+        return session.createConsumer(queue, selector);
+    }
+
     public MessageConsumer createTopicConsumer(String subject) throws JMSException {
         Topic topic = session.createTopic(subject);
         return session.createConsumer(topic);
