@@ -38,8 +38,6 @@ public class KillProcessesExtension extends AbstractLogEnabled implements BuildA
 
     private String regex;
 
-    public static final String GREP_FOR_PROCESS_IDS = "ps ax | grep 'java.*geronimo-' | perl -pe 's/^ *([0-9]+) .*/$1/g'";
-
     public void preProcess(Map build) {
     }
 
