@@ -121,8 +121,6 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
             Message message = buildConsumer.receive(1000);
             if (message instanceof ObjectMessage) {
                 processMessage(message, client, resultsProducer);
-            } else if (message == null){
-                getLogger().debug("time-out");
             }
         }
     }
