@@ -118,6 +118,7 @@ public class PropertiesBuildTaskProducer extends AbstractContinuumBuildAgent imp
     }
 
     public void fileUpdated(File file) {
+        fileAdded(file);
     }
 
 
