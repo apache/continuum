@@ -97,6 +97,7 @@
   </build>
   <modules>
     <module>gbuild-agent</module>
+    <module>gbuild-agent-web</module>
     <module>gbuild-report</module>
     <module>gbuild-agent-application</module>
   </modules>
@@ -153,11 +154,6 @@
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-cvs</artifactId>
       <version>1.0-beta-1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>geronimo-spec</groupId>
-      <artifactId>geronimo-spec-j2ee</artifactId>
-      <version>1.4-rc4</version>
     </dependency>
     <dependency>
       <groupId>activemq</groupId>

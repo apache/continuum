@@ -22,12 +22,43 @@
       <role>org.apache.geronimo.gbuild.agent.BuildAgent</role>
       <role-hint>build-activity</role-hint>
     </component>
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildQueueReloader</role>
+      <role-hint>build-producer</role-hint>
+    </component>
     -->
   </load-on-start>
 
   <resources>
     <jar-repository>${plexus.home}/lib</jar-repository>
   </resources>
+
+  <services>
+    <service>
+      <id>jetty</id>
+      <configuration>
+        <webapps>
+          <webapp>
+            <file>${plexus.home}/lib/gbuild-agent-web-1.0-SNAPSHOT.jar</file>
+            <context>/gbuild</context>
+            <extraction-path>${plexus.home}/webapp</extraction-path>
+            <listeners>
+              <http-listener>
+                <port>17171</port>
+              </http-listener>
+              <!--
+              <proxy-http-listener>
+                <port>8090</port>
+                <proxy-host>localhost</proxy-host>
+                <proxy-port>80</proxy-port>
+              </proxy-http-listener>
+              -->
+            </listeners>
+          </webapp>
+        </webapps>
+      </configuration>
+    </service>
+  </services>
 
   <components>
     <component>
@@ -77,7 +108,6 @@
 
     <component>
       <role>org.apache.maven.continuum.notification.ContinuumNotificationDispatcher</role>
-      <!--<role-hint>agent-notifier</role-hint>-->
       <implementation>org.apache.geronimo.gbuild.agent.MockContinuumNotificationDispatcher</implementation>
     </component>
 
@@ -242,43 +272,6 @@
             <hierarchy>org.activemq</hierarchy>
             <level>WARN</level>
           </level>
-
-            <!--There was no such logger 'org.apache.maven.continuum.configuration.ConfigurationService' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper' 8918836.-->
-            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildResultsExtensionManager' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.execution.ContinuumBuildExecutor:shell' 8918836.-->
-            <!--There was no such logger 'org.codehaus.plexus.action.Action:checkout-project' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.buildcontroller.BuildController' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.scm.ContinuumScm' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.settings.MavenSettingsBuilder' 8918836.-->
-            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildResultsExtension:write-include-file' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.utils.WorkingDirectoryService' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.artifact.resolver.ArtifactResolver' 8918836.-->
-            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgentExtentionManager' 8918836.-->
-            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgent:build-producer' 8918836.-->
-            <!--There was no such logger 'org.codehaus.plexus.action.ActionManager' 8918836.-->
-            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgent:build-results' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.execution.ContinuumBuildExecutor:maven2' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.project.interpolation.ModelInterpolator' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.execution.manager.BuildExecutorManager' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.utils.shell.ShellCommandHelper' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.execution.ContinuumBuildExecutor:maven-1' 8918836.-->
-            <!--There was no such logger 'org.apache.geronimo.gbuild.agent.BuildAgentExtension:file-include' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper' 8918836.-->
-            <!--There was no such logger 'org.codehaus.plexus.action.Action:execute-builder' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.artifact.repository.metadata.RepositoryMetadataManager' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.artifact.transform.ArtifactTransformation:release' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.project.MavenProjectBuilder' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.artifact.transform.ArtifactTransformation:snapshot' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.scm.manager.ScmManager' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.artifact.manager.WagonManager' 8918836.-->
-            <!--There was no such logger 'org.codehaus.plexus.action.Action:update-project-from-working-directory' 8918836.-->
-            <!--There was no such logger 'org.codehaus.plexus.action.Action:check-working-directory' 8918836.-->
-            <!--There was no such logger 'org.apache.maven.artifact.transform.ArtifactTransformation:latest' 8918836.-->
-          <!--<level>-->
-            <!--<hierarchy>org.codehaus.plexus.velocity</hierarchy>-->
-            <!--<level>WARN</level>-->
-          <!--</level>-->
         </levels>
       </configuration>
     </component>

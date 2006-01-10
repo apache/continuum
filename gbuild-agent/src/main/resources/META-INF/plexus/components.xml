@@ -128,6 +128,26 @@
       </configuration>
     </component>
 
+
+    <!--
+    | Build Producer
+    -->
+    <component>
+      <role>org.apache.geronimo.gbuild.agent.BuildQueueReloader</role>
+      <role-hint>build-producer</role-hint>
+      <implementation>org.apache.geronimo.gbuild.agent.BuildQueueReloader</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <build-task-queue>BUILD.TASKS</build-task-queue>
+        <tasks-directory>tasks</tasks-directory>
+        <poll-interval>30</poll-interval>
+      </configuration>
+    </component>
+
     <!--
     | Build Results
     -->
