@@ -184,7 +184,7 @@
         <include-pattern>^include.*</include-pattern>
         <results-directory>${plexus.home}/results</results-directory>
         <date-format>yyyy-MM</date-format>
-        <file-name-template>{date}/{project.name}/{project.version}/{build.name}-{build.id}.properties</file-name-template>
+        <file-name-template>{project.name}-{project.version}/{build.name}-{build.id}.properties</file-name-template>
       </configuration>
     </component>
 
