@@ -57,7 +57,7 @@ public class GenerateReport {
     public static void main(String[] args) throws Exception {
         long processStart = System.currentTimeMillis();
 
-        if (args.length != 4 || args.length != 5) {
+        if (args.length != 4 && args.length != 5) {
             System.out.println("Usage:");
             System.out.println("    java org.apache.geronimo.gbuild.report.ProcessResults sectionsFile workDir reportsDir outputDir [forceHtml]");
             System.out.println(Arrays.asList(args));
