@@ -44,13 +44,14 @@ public class GenerateReport {
     private final File workDir;
     private final File reportsDir;
     private final File outputDir;
-    private final boolean forceHtml = false;
+    private final boolean forceHtml;
 
-    public GenerateReport(File sectionsFile, File workDir, File reportsDir, File outputDir) {
+    public GenerateReport(File sectionsFile, File workDir, File reportsDir, File outputDir, boolean forceHtml) {
         this.sectionsFile = sectionsFile;
         this.workDir = workDir;
         this.reportsDir = reportsDir;
         this.outputDir = outputDir;
+        this.forceHtml = forceHtml;
     }
 
     public static void main(String[] args) throws Exception {
@@ -92,12 +93,18 @@ public class GenerateReport {
                 return;
             }
         }
+
+        boolean forceHtml = false;
+        if (args.length > 4) {
+            forceHtml = args[4].equalsIgnoreCase("true");
+        }
+
         if (!outputDir.isDirectory()) {
             System.out.println("outputDir is not a directory: " + outputDir.getAbsolutePath());
             return;
         }
 
-        new GenerateReport(sectionsFile, workDir, reportsDir, outputDir).execute();
+        new GenerateReport(sectionsFile, workDir, reportsDir, outputDir, forceHtml).execute();
         System.out.println("Elapsed time: " + (System.currentTimeMillis() - processStart) / 1000 + " sec");
     }
 
