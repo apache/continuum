@@ -18,6 +18,7 @@ package org.apache.geronimo.gbuild.agent;
 
 import org.codehaus.plexus.logging.Logger;
 import org.activemq.ActiveMQConnectionFactory;
+import org.activemq.ActiveMQPrefetchPolicy;
 
 import javax.jms.ExceptionListener;
 import javax.jms.Connection;
@@ -60,8 +61,7 @@ public class Client implements ExceptionListener {
 
     public Client(String brokerUrl, ExceptionListener listener, Logger logger, int reconnectDelay, int reconnectTries, int pingInterval) throws JMSException {
         this.brokerUrl = brokerUrl;
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
-        connection = connectionFactory.createConnection();
+        connection = createConnection(brokerUrl);
         connection.setExceptionListener(this);
         connection.start();
         this.listener = listener;
@@ -138,8 +138,7 @@ public class Client implements ExceptionListener {
     private Connection connect(int tries) throws JMSException {
 
         try {
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
-            Connection connection = connectionFactory.createConnection();
+            Connection connection = createConnection(brokerUrl);
             connection.setExceptionListener(this);
             connection.start();
             getLogger().info("Client reconnect successful.");
@@ -158,6 +157,13 @@ public class Client implements ExceptionListener {
                 return connect(--tries);
             }
         }
+    }
+
+    private Connection createConnection(String brokerUrl) throws JMSException {
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(brokerUrl);
+        ActiveMQPrefetchPolicy prefetchPolicy = connectionFactory.getPrefetchPolicy();
+        prefetchPolicy.setQueuePrefetch(1);
+        return connectionFactory.createConnection();
     }
 
     /**
