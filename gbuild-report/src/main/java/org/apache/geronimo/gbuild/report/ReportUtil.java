@@ -191,8 +191,7 @@ public class ReportUtil {
     }
 
     public static File normalizeFile(File targetFile) {
-        //return new File(targetFile.getAbsoluteFile().toURI().normalize()).getAbsoluteFile();
-        return targetFile;
+        return new File(targetFile.getAbsoluteFile().toURI().normalize()).getAbsoluteFile();
     }
 
     public static void createDirectory(File dir) throws IOException {
