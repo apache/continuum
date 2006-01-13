@@ -1,55 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project>
+  <parent>
+    <artifactId>gbuild-parent</artifactId>
+    <groupId>org.apache.geronimo.gbuild</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.geronimo.gbuild</groupId>
   <artifactId>gbuild-agent</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>GBuild Agent</name>
-  <url>http://maven.apache.org</url>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.4</source>
-          <target>1.4</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-maven-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>descriptor</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <id>snapshots</id>
-      <name>Maven Snapshot Development Repository</name>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <id>snapshots</id>
-      <name>Maven Central Plugins Development Repository</name>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-    </pluginRepository>
-  </pluginRepositories>
+  <url>http://geronimo.apache.org</url>
   <dependencies>
 
     <!-- need this till my activemq-core-3.2.pom patch is applied -->
