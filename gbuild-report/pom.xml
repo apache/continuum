@@ -15,22 +15,22 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
-	<executions>
-	  <execution>
-	    <phase>process-classes</phase>
-	    <goals>
-	      <goal>run</goal>
-	    </goals>
-	    <configuration>
-	      <tasks>
-		<mkdir dir="${basedir}/target/classes/META-INF/org/apache/geronimo/gbuild/report"/>
-		<zip destfile="${basedir}/target/classes/META-INF/org/apache/geronimo/gbuild/report/resources.zip">
-		  <fileset dir="${basedir}/src/main/report-resources"/>
-		</zip>
-	      </tasks>
-	    </configuration>
-	  </execution>
-	</executions>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <mkdir dir="${basedir}/target/classes/META-INF/org/apache/geronimo/gbuild/report"/>
+                <zip destfile="${basedir}/target/classes/META-INF/org/apache/geronimo/gbuild/report/resources.zip">
+                  <fileset dir="${basedir}/src/main/report-resources"/>
+                </zip>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.geronimo.gbuild</groupId>
   <artifactId>gbuild-parent</artifactId>
@@ -43,7 +43,7 @@
       <archive>mail-archives.apache.org/mod_mbox/www-announce/</archive>
     </mailingList>
   </mailingLists>
-   <licenses>
+  <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
@@ -108,11 +108,11 @@
     <pluginManagement>
       <plugins>
         <plugin>
-	  <groupId>org.codehaus.plexus</groupId>
-	  <artifactId>plexus-maven-plugin</artifactId>
-	  <version>1.1.1</version>
-	  <extensions>true</extensions>
-	</plugin>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-maven-plugin</artifactId>
+          <version>1.1.1</version>
+          <extensions>true</extensions>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
