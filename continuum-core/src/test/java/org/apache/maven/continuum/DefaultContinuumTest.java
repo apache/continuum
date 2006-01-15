@@ -127,6 +127,6 @@ public class DefaultContinuumTest
 
         continuum.updateProject( project );
 
-        project = continuum.getProject( project.getId() );
+        continuum.getProject( project.getId() );
     }
 }

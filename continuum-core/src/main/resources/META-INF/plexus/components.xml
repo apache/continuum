@@ -17,6 +17,9 @@
           <role>org.apache.maven.continuum.security.ContinuumSecurity</role>
         </requirement>
         <requirement>
+          <role>org.apache.maven.continuum.core.workflow.ContinuumWorkflowEngine</role>
+        </requirement>
+        <requirement>
           <role>org.apache.maven.continuum.initialization.ContinuumInitializer</role>
         </requirement>
         <requirement>
@@ -61,6 +64,16 @@
       <requirements>
         <requirement>
           <role>org.apache.maven.continuum.store.ContinuumStore</role>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.apache.maven.continuum.core.workflow.ContinuumWorkflowEngine</role>
+      <implementation>org.apache.maven.continuum.core.workflow.DefaultContinuumWorkflowEngine</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.osworkflow.PlexusOSWorkflow</role>
         </requirement>
       </requirements>
     </component>

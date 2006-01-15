@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE workflow PUBLIC "-//OpenSymphony Group//DTD OSWorkflow 2.8//EN" "http://www.opensymphony.com/osworkflow/workflow_2_8.dtd">
+<workflow>
+  <meta name="lastModified">Sun Jan 08 00:39:25 CET 2006</meta>
+  <meta name="generator">OSWOrkflow Designer</meta>
+  <registers>
+    <register type="class" variable-name="log">
+      <arg name="class.name">com.opensymphony.workflow.util.LogRegister</arg>
+      <arg name="addInstanceId">true</arg>
+    </register>
+  </registers>
+  <initial-actions>
+    <action id="1" name="Start Workflow">
+      <pre-functions>
+        <function type="beanshell">
+          <arg name="script"><![CDATA[
+            System.out.println( "Transient vars:" );
+            System.out.println( transientVars );
+            System.out.println( "Property set:" );
+            System.out.println( propertySet );
+          ]]></arg>
+        </function>
+      </pre-functions>
+      <results>
+        <unconditional-result id="4" old-status="Finished" status="Started" step="1"/>
+      </results>
+    </action>
+  </initial-actions>
+  <steps>
+    <step id="1" name="Create Projects From Metadata">
+      <actions>
+        <action id="1" name="Start" auto="true">
+          <pre-functions>
+            <function type="class">
+              <arg name="class.name">org.codehaus.plexus.osworkflow.PlexusActionFunctionProvider</arg>
+              <arg name="action.name">create-projects-from-metadata</arg>
+            </function>
+          </pre-functions>
+          <results>
+            <result id="3" old-status="Creating Projects" status="Got warnings while downloading, waiting for user input" step="2">
+              <conditions>
+                <condition type="beanshell">
+                  <arg name="script"><![CDATA[
+                    userInteractive = propertySet.getBoolean( "userInteractive" );
+                    projectBuildingResult = propertySet.getObject( "projectBuildingResult" );
+                    return userInteractive && projectBuildingResult.getWarnings().size() > 0;
+                  ]]></arg>
+                </condition>
+              </conditions>
+            </result>
+            <unconditional-result id="1" old-status="Created" status="Finished" step="1000"/>
+          </results>
+          <post-functions>
+            <function type="beanshell">
+              <arg name="script"><![CDATA[
+                projectBuildingResult = propertySet.getObject( "projectBuildingResult" );
+                System.err.println( "Created " + projectBuildingResult.getProjects().size() + " projects." );
+                System.err.println( "Created " + projectBuildingResult.getProjectGroups().size() + " project groups." );
+                System.err.println( "Got " + projectBuildingResult.getWarnings().size() + " warnings." );
+              ]]></arg>
+            </function>
+          </post-functions>
+        </action>
+      </actions>
+    </step>
+    <step id="2" name="Wait For Project Verification">
+      <actions>
+        <action id="2" name="Start">
+          <pre-functions>
+            <function type="beanshell">
+              <arg name="script"><![CDATA[
+                System.out.println( "Step Wait For Project Verification" );
+              ]]></arg>
+            </function>
+          </pre-functions>
+          <results>
+            <unconditional-result id="2" old-status="Created" status="Finished" step="1000"/>
+          </results>
+        </action>
+      </actions>
+    </step>
+<!--
+    <step id="1001" name="Validate Project">
+      <actions>
+        <action id="1005" name="Validate Projects">
+          <results>
+            <unconditional-result id="1012" old-status="Finished" status="Queued" step="1002"/>
+          </results>
+        </action>
+      </actions>
+    </step>
+    <step id="1002" name="Store Project">
+      <actions>
+        <action id="1009" name="Store Project">
+          <results>
+            <unconditional-result id="1004" old-status="Finished" status="Queued" step="1000"/>
+          </results>
+        </action>
+      </actions>
+    </step>
+-->
+    <step id="1000" name="Finished">
+      <pre-functions>
+        <function type="beanshell">
+          <arg name="script"><![CDATA[
+            System.out.println( "Workflow done." );
+          ]]></arg>
+        </function>
+      </pre-functions>
+    </step>
+  </steps>
+</workflow>

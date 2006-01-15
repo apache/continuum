@@ -383,6 +383,16 @@
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-security</artifactId>
+        <version>1.0-alpha-2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-osworkflow</artifactId>
+        <version>1.0-alpha-1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-security-api</artifactId>
         <version>1.0-alpha-3-SNAPSHOT</version>
       </dependency>

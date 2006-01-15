@@ -171,12 +171,11 @@ public class JdoContinuumStore
 
             if ( result != null && !result.isEmpty() )
             {
-                getLogger().info( "nb result : " + result.size() );
                 for ( Iterator i = result.iterator(); i.hasNext(); )
                 {
                     Object[] obj = (Object[]) i.next();
 
-                    projects.put( (Integer) obj[0], (Integer) obj[1] );
+                    projects.put( obj[0], obj[1] );
                 }
 
                 return projects;
@@ -439,7 +438,7 @@ public class JdoContinuumStore
                 {
                     Object[] obj = (Object[]) i.next();
 
-                    builds.put( (Integer) obj[0], (Integer) obj[1] );
+                    builds.put( obj[0], obj[1] );
                 }
 
                 return builds;
@@ -1030,11 +1029,6 @@ public class JdoContinuumStore
     private List getAllObjectsDetached( Class clazz )
     {
         return getAllObjectsDetached( clazz, null );
-    }
-
-    private List getAllObjectsDetached( Class clazz, String fetchGroup )
-    {
-        return getAllObjectsDetached( clazz, null, fetchGroup );
     }
 
     private List getAllObjectsDetached( Class clazz, String ordering, String fetchGroup )

@@ -19,14 +19,15 @@ package org.apache.maven.continuum;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
-import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.core.action.AddProjectToCheckOutQueueAction;
 import org.apache.maven.continuum.core.action.CreateProjectsFromMetadata;
 import org.apache.maven.continuum.core.action.StoreProjectAction;
+import org.apache.maven.continuum.core.workflow.ContinuumWorkflowEngine;
 import org.apache.maven.continuum.initialization.ContinuumInitializationException;
 import org.apache.maven.continuum.initialization.ContinuumInitializer;
 import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
@@ -115,9 +116,10 @@ public class DefaultContinuum
      */
     private ContinuumSecurity security;
 
-    // ----------------------------------------------------------------------
-    // Moved from core
-    // ----------------------------------------------------------------------
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumWorkflowEngine workflowEngine;
 
     /**
      * @plexus.requirement
@@ -579,7 +581,23 @@ public class DefaultContinuum
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl )
         throws ContinuumException
     {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID );
+        // old way
+//        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID );
+
+        // new way - this should replace executeAddProjectsFromMetadataActivity()
+        // once it's fully working.
+
+        String username = null;
+
+        long workflowId = workflowEngine.addProjectsFromMetadata( username, MavenTwoContinuumProjectBuilder.ID,
+                                                                  metadataUrl, getWorkingDirectory(), false );
+
+        workflowEngine.waitForWorkflow( workflowId );
+
+        Map context = workflowEngine.getContext( workflowId );
+
+        return (ContinuumProjectBuildingResult)
+            context.get( CreateProjectsFromMetadata.KEY_PROJECT_BUILDING_RESULT );
     }
 
     // ----------------------------------------------------------------------
@@ -609,7 +627,7 @@ public class DefaultContinuum
 
                 bd.setSchedule( schedule );
 
-                project.addBuildDefinition( bd );       
+                project.addBuildDefinition( bd );
             }
             catch ( ContinuumStoreException e )
             {
@@ -673,17 +691,11 @@ public class DefaultContinuum
 
         executeAction( "create-projects-from-metadata", context );
 
-        ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context.get(
-            CreateProjectsFromMetadata.KEY_PROJECT_BUILDING_RESULT );
+        ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult)
+            context.get( CreateProjectsFromMetadata.KEY_PROJECT_BUILDING_RESULT );
 
-        if ( result.getProjects() != null )
-        {
-            getLogger().info( "Created " + result.getProjects().size() + " projects." );
-        }
-        if ( result.getProjectGroups() != null )
-        {
-            getLogger().info( "Created " + result.getProjectGroups().size() + " project groups." );
-        }
+        getLogger().info( "Created " + result.getProjects().size() + " projects." );
+        getLogger().info( "Created " + result.getProjectGroups().size() + " project groups." );
         getLogger().info( result.getWarnings().size() + " warnings." );
 
         // ----------------------------------------------------------------------
@@ -1018,7 +1030,7 @@ public class DefaultContinuum
         if ( buildDefinition.isDefaultForProject() && !bd.isDefaultForProject() )
         {
             bd.setDefaultForProject( true );
-            
+
             BuildDefinition defaultBd = getDefaultBuildDefinition( projectId );
 
             if ( defaultBd != null )
@@ -1778,7 +1790,7 @@ public class DefaultContinuum
                     throw new InitializationException( "Database is corrupted.", e );
                 }
             }
-            
+
             getLogger().info( " " + project.getId() + ":" + project.getName() + ":" + project.getExecutorId() );
         }
     }
@@ -2035,14 +2047,9 @@ public class DefaultContinuum
 
     private boolean convertBoolean( String value )
     {
-        if ( "true".equalsIgnoreCase( value ) || "on".equalsIgnoreCase( value ) || "yes".equalsIgnoreCase( value ) )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return "true".equalsIgnoreCase( value ) ||
+               "on".equalsIgnoreCase( value ) ||
+               "yes".equalsIgnoreCase( value );
     }
 
     private void startMessage()

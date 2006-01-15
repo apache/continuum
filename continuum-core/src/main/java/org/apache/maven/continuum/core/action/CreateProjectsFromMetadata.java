@@ -34,6 +34,8 @@ public class CreateProjectsFromMetadata
     public void execute( Map context )
         throws ContinuumException, ContinuumProjectBuilderManagerException, ContinuumProjectBuilderException
     {
+        System.err.println( context.keySet().toString().replace( ',', '\n' ) );
+
         String projectBuilderId = getString( context, KEY_PROJECT_BUILDER_ID );
 
         String u = getString( context, KEY_URL );
@@ -76,5 +78,7 @@ public class CreateProjectsFromMetadata
         }
 
         context.put( KEY_PROJECT_BUILDING_RESULT, result );
+
+        System.err.println( "DONE BUILDING PROJECTS!" );
     }
 }

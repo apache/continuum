@@ -31,6 +31,11 @@
       <artifactId>jpox</artifactId>
     </dependency>
     <dependency>
+      <groupId>bsh</groupId>
+      <artifactId>bsh</artifactId>
+      <version>1.3.0</version>
+    </dependency>
+    <dependency>
       <groupId>postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>7.4</version>
@@ -44,6 +49,10 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-security-osuser</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-osworkflow</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
