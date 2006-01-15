@@ -17,8 +17,8 @@
 package org.apache.geronimo.gbuild.agent;
 
 import org.codehaus.plexus.logging.Logger;
-import org.activemq.ActiveMQConnectionFactory;
-import org.activemq.ActiveMQPrefetchPolicy;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQPrefetchPolicy;
 
 import javax.jms.ExceptionListener;
 import javax.jms.Connection;

@@ -4,8 +4,8 @@ package org.apache.geronimo.gbuild.agent;
  */
 
 import junit.framework.TestCase;
-import org.activemq.ActiveMQConnectionFactory;
-import org.activemq.broker.impl.BrokerContainerImpl;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.broker.BrokerService;
 import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -34,7 +34,7 @@ public class ContinuumBuildAgentTest extends TestCase {
 
     private CVS cvs;
     private File shellScript;
-    private BrokerContainerImpl broker;
+    private BrokerService broker;
 
     protected void setUp() throws Exception {
 
@@ -49,7 +49,7 @@ public class ContinuumBuildAgentTest extends TestCase {
         cvs = new CVS(cvsroot);
         cvs.init();
         cvs._import(module, "shell");
-        broker = new BrokerContainerImpl();
+        broker = new BrokerService();
         broker.addConnector("tcp://localhost:61616");
         broker.start();
     }
