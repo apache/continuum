@@ -130,6 +130,12 @@
       <layout>legacy</layout>
     </repository>
     <repository>
+      <id>dblevins</id>
+      <name>Apche Repository</name>
+      <url>http://people.apache.org/~dblevins/maven</url>
+      <layout>legacy</layout>
+    </repository>
+    <repository>
       <releases>
         <enabled>false</enabled>
       </releases>
@@ -184,7 +190,7 @@
       <dependency>
         <groupId>incubator-activemq</groupId>
         <artifactId>activemq-core</artifactId>
-        <version>4.0-20060114.225444</version>
+        <version>4.0-M4</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
