@@ -34,6 +34,7 @@ import org.apache.maven.continuum.model.system.UserGroup;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @version $Rev$ $Date$
@@ -60,6 +61,14 @@ public class ThreadContextContinuumStore implements ContinuumStore {
 
     public ProjectNotifier storeNotifier(ProjectNotifier notifier) throws ContinuumStoreException {
         return getStore().storeNotifier(notifier);
+    }
+
+    public Map getDefaultBuildDefinitions() {
+        return getStore().getDefaultBuildDefinitions();
+    }
+
+    public BuildDefinition getDefaultBuildDefinition(int projectId) {
+        return getStore().getDefaultBuildDefinition(projectId);
     }
 
     public BuildDefinition getBuildDefinition(int buildDefinitionId) throws ContinuumStoreException, ContinuumObjectNotFoundException {
@@ -134,6 +143,10 @@ public class ThreadContextContinuumStore implements ContinuumStore {
         return getStore().getProject(projectId);
     }
 
+    public Map getProjectIdsAndBuildDefinitionIdsBySchedule(int scheduleId) throws ContinuumStoreException {
+        return getStore().getProjectIdsAndBuildDefinitionIdsBySchedule(scheduleId);
+    }
+
     public void updateProject(Project project) throws ContinuumStoreException {
         getStore().updateProject(project);
     }
@@ -202,8 +215,20 @@ public class ThreadContextContinuumStore implements ContinuumStore {
         return getStore().getProjectGroupByGroupId(groupId);
     }
 
-    public BuildResult getLatestBuildResultForProject(int projectId) throws ContinuumStoreException {
+    public BuildResult getLatestBuildResultForProject(int projectId) {
         return getStore().getLatestBuildResultForProject(projectId);
+    }
+
+    public Map getLatestBuildResults() {
+        return getStore().getLatestBuildResults();
+    }
+
+    public List getBuildResultByBuildNumber(int projectId, int buildNumber) {
+        return getStore().getBuildResultByBuildNumber(projectId, buildNumber);
+    }
+
+    public Map getBuildResultsInSuccess() {
+        return getStore().getBuildResultsInSuccess();
     }
 
     public void addBuildResult(Project project, BuildResult build) throws ContinuumStoreException, ContinuumObjectNotFoundException {

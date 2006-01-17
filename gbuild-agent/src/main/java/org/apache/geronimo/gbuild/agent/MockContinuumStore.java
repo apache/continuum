@@ -34,6 +34,7 @@ import org.apache.maven.continuum.model.system.UserGroup;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @version $Rev$ $Date$
@@ -192,7 +193,7 @@ public class MockContinuumStore implements ContinuumStore {
         throw new UnsupportedOperationException("Method getProjectGroupByGroupId not implemented");
     }
 
-    public BuildResult getLatestBuildResultForProject(int projectId) throws ContinuumStoreException {
+    public BuildResult getLatestBuildResultForProject(int projectId) {
         throw new UnsupportedOperationException("Method getLatestBuildResultForProject not implemented");
     }
 
@@ -286,5 +287,29 @@ public class MockContinuumStore implements ContinuumStore {
 
     public void removeUserGroup(UserGroup group) {
         throw new UnsupportedOperationException("Method removeUserGroup not implemented");
+    }
+
+    public Map getDefaultBuildDefinitions() {
+        throw new UnsupportedOperationException("Method getDefaultBuildDefinitions not implemented");
+    }
+
+    public BuildDefinition getDefaultBuildDefinition(int projectId) {
+        throw new UnsupportedOperationException("Method getDefaultBuildDefinition not implemented");
+    }
+
+    public Map getProjectIdsAndBuildDefinitionIdsBySchedule(int scheduleId) throws ContinuumStoreException {
+        throw new UnsupportedOperationException("Method getProjectIdsAndBuildDefinitionIdsBySchedule not implemented");
+    }
+
+    public Map getLatestBuildResults() {
+        throw new UnsupportedOperationException("Method getLatestBuildResults not implemented");
+    }
+
+    public List getBuildResultByBuildNumber(int projectId, int buildNumber) {
+        throw new UnsupportedOperationException("Method getBuildResultByBuildNumber not implemented");
+    }
+
+    public Map getBuildResultsInSuccess() {
+        throw new UnsupportedOperationException("Method getBuildResultsInSuccess not implemented");
     }
 }
