@@ -29,16 +29,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.net.URL;
 
 public class ContinuumBuildAgentTest extends TestCase {
 
     private CVS cvs;
     private File shellScript;
     private BrokerService broker;
+    private SVN svn;
 
     protected void setUp() throws Exception {
 
         File root = new File("target/it").getCanonicalFile();
+        deleteAndCreateDirectory(root);
+
         File cvsroot = new File(root, "cvs-root");
         File module = new File(root, "shell");
 
@@ -49,6 +53,15 @@ public class ContinuumBuildAgentTest extends TestCase {
         cvs = new CVS(cvsroot);
         cvs.init();
         cvs._import(module, "shell");
+
+
+        File svnroot = new File(root, "svn-root");
+
+        SVN.create(svnroot);
+        File svnpath = new File(svnroot, "shell");
+        svn = new SVN("file://"+svnpath.getAbsolutePath());
+        svn._import(module);
+
         broker = new BrokerService();
         broker.addConnector("tcp://localhost:61616");
         broker.start();
@@ -58,11 +71,53 @@ public class ContinuumBuildAgentTest extends TestCase {
         broker.stop();
     }
 
-    public void testBuild() throws Exception {
+    public void testBuildCvs() throws Exception {
 
         Project project = new Project();
         project.setId(10);
         project.setScmUrl("scm|cvs|local|" + cvs.getCvsroot().getAbsolutePath() + "|shell");
+        project.setName("Shell Project");
+        project.setVersion("3.0");
+        project.setExecutorId(ShellBuildExecutor.ID);
+        project.setState(ContinuumProjectState.OK);
+
+        BuildDefinition bd = new BuildDefinition();
+        bd.setId(20);
+        bd.setBuildFile(shellScript.getAbsolutePath());
+        bd.setArguments("");
+
+        project.addBuildDefinition(bd);
+
+        MapContinuumStore store = new MapContinuumStore();
+
+        store.updateProject(project);
+        store.storeBuildDefinition(bd);
+
+        ThreadContextContinuumStore.setStore(store);
+
+        Embedder embedder = new Embedder();
+        embedder.start();
+        ContinuumBuildAgent buildAgent = (ContinuumBuildAgent) embedder.lookup(BuildAgent.ROLE);
+
+        buildAgent.init();
+        buildAgent.build(project.getId(), bd.getId(), 1);
+
+        int latestBuildId = project.getLatestBuildId();
+        BuildResult buildResult = store.getBuildResult(latestBuildId);
+
+        assertNotNull("buildResult", buildResult);
+        assertEquals("buildResult.getState", ContinuumProjectState.OK, buildResult.getState());
+        assertEquals("project.getState", ContinuumProjectState.OK, project.getState());
+
+        embedder.stop();
+        ThreadContextContinuumStore.setStore(null);
+    }
+
+    public void testBuildSvn() throws Exception {
+
+        Project project = new Project();
+        project.setId(11);
+        project.setScmUrl("scm|svn|" + svn.getSvnUrl());
         project.setName("Shell Project");
         project.setVersion("3.0");
         project.setExecutorId(ShellBuildExecutor.ID);
@@ -176,8 +231,8 @@ public class ContinuumBuildAgentTest extends TestCase {
         }
 
 
-        buildAgent.stop();
-
+//        buildAgent.stop();
+        embedder.stop();
         session.close();
         connection.close();
     }
