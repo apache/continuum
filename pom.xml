@@ -185,7 +185,7 @@
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-cvs</artifactId>
-        <version>1.0-beta-1-SNAPSHOT</version>
+        <version>1.0-beta-2</version>
       </dependency>
       <dependency>
         <groupId>incubator-activemq</groupId>
