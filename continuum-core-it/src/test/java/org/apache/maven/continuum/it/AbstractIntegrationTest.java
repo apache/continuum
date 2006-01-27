@@ -120,6 +120,10 @@ public abstract class AbstractIntegrationTest
         if ( !plexusHome.isDirectory() )
         {
             assertTrue( plexusHome.mkdirs() );
+
+            File plexusHomeLib = new File( plexusHome, "lib" );
+
+            assertTrue( plexusHomeLib.mkdirs() );
         }
 
         context.put( "plexus.home", plexusHome.getAbsolutePath() );

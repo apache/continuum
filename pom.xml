@@ -4,7 +4,7 @@
   <artifactId>continuum-parent</artifactId>
   <packaging>pom</packaging>
   <name>Continuum Parent Project</name>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <url>http://maven.apache.org/continuum/</url>
   <issueManagement>
     <system>jira</system>
@@ -97,9 +97,9 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/tags/continuum-1.0.2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/tags/continuum-1.0.2</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/continuum/tags/continuum-1.0.2</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.0.x</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.0.x</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/continuum/branches/continuum-1.0.x</url>
   </scm>
   <organization>
     <name>Apache</name>
@@ -160,7 +160,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-container-default</artifactId>
-      <version>1.0-alpha-8</version>
+      <version>1.0-alpha-9</version>
     </dependency>
   </dependencies>
   <dependencyManagement>
@@ -193,112 +193,112 @@
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-api</artifactId>
-        <version>1.0-beta-2</version>
+        <version>1.0-beta-3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-manager-plexus</artifactId>
-        <version>1.0-beta-2</version>
+        <version>1.0-beta-3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-clearcase</artifactId>
-        <version>1.0-beta-2</version>
+        <version>1.0-beta-3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-cvs</artifactId>
-        <version>1.0-beta-2</version>
+        <version>1.0-beta-3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-local</artifactId>
-        <version>1.0-beta-2</version>
+        <version>1.0-beta-3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-perforce</artifactId>
-        <version>1.0-beta-2</version>
+        <version>1.0-beta-3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-starteam</artifactId>
-        <version>1.0-beta-2</version>
+        <version>1.0-beta-3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-svn</artifactId>
-        <version>1.0-beta-2</version>
+        <version>1.0-beta-3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-provider-api</artifactId>
-        <version>1.0-alpha-5</version>
+        <version>1.0-alpha-6</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-http-lightweight</artifactId>
-        <version>1.0-alpha-5</version>
+        <version>1.0-alpha-6</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-model</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-api</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-store</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-core</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-test</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-web</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-xmlrpc</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-plexus-application</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-notifier-api</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-notifier-irc</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-notifier-jabber</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-notifier-msn</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>jpox</groupId>
@@ -327,7 +327,7 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
-        <version>1.0.5</version>
+        <version>1.1</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>

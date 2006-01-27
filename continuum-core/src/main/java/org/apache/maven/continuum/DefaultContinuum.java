@@ -1,7 +1,7 @@
 package org.apache.maven.continuum;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,11 +47,17 @@ import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.continuum.utils.PlexusContainerManager;
 import org.apache.maven.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.action.Action;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -83,7 +89,7 @@ import java.util.Properties;
  */
 public class DefaultContinuum
     extends AbstractLogEnabled
-    implements Continuum, Initializable, Startable
+    implements Continuum, Contextualizable, Initializable, Startable
 {
     /**
      * @plexus.requirement
@@ -308,7 +314,7 @@ public class DefaultContinuum
     public void buildProjects( int trigger )
         throws ContinuumException
     {
-        Collection projectsList = null;
+        Collection projectsList;
 
         try
         {
@@ -341,7 +347,7 @@ public class DefaultContinuum
     public void buildProjects( Schedule schedule )
         throws ContinuumException
     {
-        Collection projectsList = null;
+        Collection projectsList;
         Map projectsMap = null;
 
         try
@@ -365,12 +371,12 @@ public class DefaultContinuum
         {
             Project p = (Project) projectIterator.next();
 
-            int buildDefId = ( (Integer) projectsMap.get( new Integer( p.getId() ) ) ).intValue();
+            Integer buildDefId = ( (Integer) projectsMap.get( new Integer( p.getId() ) ) );
 
-            if ( !isInBuildingQueue( p.getId() ) && !isInCheckoutQueue( p.getId() ) )
+            if ( buildDefId != null && !isInBuildingQueue( p.getId() ) && !isInCheckoutQueue( p.getId() ) )
             {
                 //TODO: Fix trigger name
-                buildProject( p.getId(), buildDefId, ContinuumProjectState.TRIGGER_UNKNOWN, false );
+                buildProject( p.getId(), buildDefId.intValue(), ContinuumProjectState.TRIGGER_UNKNOWN, false );
             }
         }
     }
@@ -478,7 +484,7 @@ public class DefaultContinuum
     public List getChangesSinceLastSuccess( int projectId, int buildResultId )
         throws ContinuumException
     {
-        ArrayList buildResults = null;
+        ArrayList buildResults;
 
         try
         {
@@ -552,7 +558,7 @@ public class DefaultContinuum
     }
 
     private List getProjectsInBuildOrder( Collection projects )
-        throws CycleDetectedException, ContinuumException
+        throws CycleDetectedException
     {
         if ( projects == null || projects.isEmpty() )
         {
@@ -817,6 +823,21 @@ public class DefaultContinuum
         return notifier;
     }
 
+    public void updateNotifier( int projectId, ProjectNotifier notifier )
+        throws ContinuumException
+    {
+        Project project = getProjectWithAllDetails( projectId );
+
+        ProjectNotifier notif = getNotifier( projectId, notifier.getId() );
+
+        // I remove notifier then add it instead of update it due to a ClassCastException in jpox
+        project.removeNotifier( notif );
+
+        updateProject( project );
+
+        addNotifier( projectId, notifier );
+    }
+
     public void updateNotifier( int projectId, int notifierId, Map configuration )
         throws ContinuumException
     {
@@ -863,6 +884,32 @@ public class DefaultContinuum
         return notifierProperties;
     }
 
+    public void addNotifier( int projectId, ProjectNotifier notifier )
+        throws ContinuumException
+    {
+        ProjectNotifier notif = new ProjectNotifier();
+
+        notif.setSendOnSuccess( notifier.isSendOnSuccess() );
+
+        notif.setSendOnFailure( notifier.isSendOnFailure() );
+
+        notif.setSendOnError( notifier.isSendOnError() );
+
+        notif.setSendOnWarning( notifier.isSendOnWarning() );
+
+        notif.setConfiguration( notifier.getConfiguration() );
+
+        notif.setType( notifier.getType() );
+
+        notifier.setFrom( ProjectNotifier.FROM_USER );
+
+        Project project = getProjectWithAllDetails( projectId );
+
+        project.addNotifier( notif );
+
+        updateProject( project );
+    }
+
     public void addNotifier( int projectId, String notifierType, Map configuration )
         throws ContinuumException
     {
@@ -894,13 +941,7 @@ public class DefaultContinuum
 
         notifier.setConfiguration( notifierProperties );
 
-        notifier.setFrom( ProjectNotifier.FROM_USER );
-
-        Project project = getProjectWithAllDetails( projectId );
-
-        project.addNotifier( notifier );
-
-        updateProject( project );
+        addNotifier( projectId, notifier );
     }
 
     public void removeNotifier( int projectId, int notifierId )
@@ -965,6 +1006,38 @@ public class DefaultContinuum
         return buildDefinition;
     }
 
+    public void updateBuildDefinition( BuildDefinition buildDefinition, int projectId )
+        throws ContinuumException
+    {
+        BuildDefinition bd = getBuildDefinition( projectId, buildDefinition.getId() );
+
+        bd.setBuildFile( buildDefinition.getBuildFile() );
+
+        bd.setGoals( buildDefinition.getGoals() );
+
+        bd.setArguments( buildDefinition.getArguments() );
+
+        Schedule schedule = getSchedule( buildDefinition.getSchedule().getId() );
+
+        bd.setSchedule( schedule );
+
+        if ( buildDefinition.isDefaultForProject() && !bd.isDefaultForProject() )
+        {
+            bd.setDefaultForProject( true );
+            
+            BuildDefinition defaultBd = getDefaultBuildDefinition( projectId );
+
+            if ( defaultBd != null )
+            {
+                defaultBd.setDefaultForProject( false );
+
+                storeBuildDefinition( defaultBd );
+            }
+        }
+
+        storeBuildDefinition( bd );
+    }
+
     public void updateBuildDefinition( int projectId, int buildDefinitionId, Map configuration )
         throws ContinuumException
     {
@@ -976,25 +1049,13 @@ public class DefaultContinuum
 
         buildDefinition.setArguments( (String) configuration.get( "arguments" ) );
 
-        Schedule schedule = getSchedule( new Integer( (String) configuration.get( "schedule" ) ).intValue() );
+        Schedule schedule = getSchedule( Integer.parseInt( (String) configuration.get( "schedule" ) ) );
 
         buildDefinition.setSchedule( schedule );
 
-        if ( convertBoolean( (String) configuration.get( "defaultForProject" ) ) && !buildDefinition.isDefaultForProject() )
-        {
-            buildDefinition.setDefaultForProject( true );
-            
-            BuildDefinition bd = getDefaultBuildDefinition( projectId );
+        buildDefinition.setDefaultForProject( true );
 
-            if ( bd != null )
-            {
-                bd.setDefaultForProject( false );
-
-                storeBuildDefinition( bd );
-            }
-        }
-
-        storeBuildDefinition( buildDefinition );
+        updateBuildDefinition( buildDefinition, projectId );
     }
 
     public BuildDefinition storeBuildDefinition( BuildDefinition buildDefinition )
@@ -1010,6 +1071,28 @@ public class DefaultContinuum
         }
     }
 
+    public void addBuildDefinition( int projectId, BuildDefinition buildDefinition )
+        throws ContinuumException
+    {
+        if ( buildDefinition.isDefaultForProject() )
+        {
+            BuildDefinition bd = getDefaultBuildDefinition( projectId );
+
+            if ( bd != null )
+            {
+                bd.setDefaultForProject( false );
+
+                storeBuildDefinition( bd );
+            }
+        }
+
+        Project project = getProjectWithAllDetails( projectId );
+
+        project.addBuildDefinition( buildDefinition );
+
+        updateProject( project );
+    }
+
     public void addBuildDefinition( int projectId, Map configuration )
         throws ContinuumException
     {
@@ -1021,29 +1104,16 @@ public class DefaultContinuum
 
         buildDefinition.setArguments( (String) configuration.get( "arguments" ) );
 
-        Schedule schedule = getSchedule( new Integer( (String) configuration.get( "schedule" ) ).intValue() );
+        Schedule schedule = getSchedule( Integer.parseInt( (String) configuration.get( "schedule" ) ) );
+
+        buildDefinition.setSchedule( schedule );
 
         if ( convertBoolean( (String) configuration.get( "defaultForProject" ) ) )
         {
             buildDefinition.setDefaultForProject( true );
-            
-            BuildDefinition bd = getDefaultBuildDefinition( projectId );
-
-            if ( bd != null )
-            {
-                bd.setDefaultForProject( false );
-
-                storeBuildDefinition( bd );
-            }
         }
 
-        buildDefinition.setSchedule( schedule );
-
-        Project project = getProjectWithAllDetails( projectId );
-
-        project.addBuildDefinition( buildDefinition );
-
-        updateProject( project );
+        addBuildDefinition( projectId, buildDefinition );
     }
 
     public void removeBuildDefinition( int projectId, int buildDefinitionId )
@@ -1100,32 +1170,31 @@ public class DefaultContinuum
     public void addSchedule( Schedule schedule )
         throws ContinuumException
     {
-        Schedule s = null;
+        Schedule s;
 
         try
         {
             s = store.getScheduleByName( schedule.getName() );
+
+            if ( s != null )
+            {
+                throw logAndCreateException( "Can't create schedule. A schedule with the same name already exists.", null );
+            }
+
+            s = store.addSchedule( schedule );
         }
         catch ( ContinuumStoreException e )
         {
+            throw logAndCreateException( "Error while accessing the store.", e );
         }
 
-        if ( s == null )
+        try
         {
-            s = store.addSchedule( schedule );
-
-            try
-            {
-                schedulesActivator.activateSchedule( s, this );
-            }
-            catch ( SchedulesActivationException e )
-            {
-                throw new ContinuumException( "Error activating schedule " + s.getName() + ".", e );
-            }
+            schedulesActivator.activateSchedule( s, this );
         }
-        else
+        catch ( SchedulesActivationException e )
         {
-            throw logAndCreateException( "Can't create schedule. A schedule with the same name already exists.", null );
+            throw new ContinuumException( "Error activating schedule " + s.getName() + ".", e );
         }
     }
 
@@ -1174,9 +1243,9 @@ public class DefaultContinuum
 
         schedule.setCronExpression( (String) configuration.get( "schedule.cronExpression" ) );
 
-        schedule.setDelay( new Integer( (String) configuration.get( "schedule.delay" ) ).intValue() );
+        schedule.setDelay( Integer.parseInt( (String) configuration.get( "schedule.delay" ) ) );
 
-        schedule.setActive( new Boolean( (String) configuration.get( "schedule.active" ) ).booleanValue() );
+        schedule.setActive( Boolean.valueOf( (String) configuration.get( "schedule.active" ) ).booleanValue() );
 
         updateSchedule( schedule, true );
     }
@@ -1259,11 +1328,11 @@ public class DefaultContinuum
     {
         List dirs = new ArrayList();
 
-        File workingDirectory = null;
+        File workingDirectory;
 
         if ( currentSubDirectory != null )
         {
-            workingDirectory = new File( baseDirectory, currentSubDirectory);
+            workingDirectory = new File( baseDirectory, currentSubDirectory );
         }
         else
         {
@@ -1276,17 +1345,17 @@ public class DefaultContinuum
         {
             for ( int i = 0; i < files.length; i++ )
             {
-                File current = new File( workingDirectory, files[i] );
+                File current = new File( workingDirectory, files[ i ] );
 
-                String currentFile = null;
+                String currentFile;
 
                 if ( currentSubDirectory == null )
                 {
-                    currentFile = files[i];
+                    currentFile = files[ i ];
                 }
                 else
                 {
-                    currentFile = currentSubDirectory + "/" + files[i];
+                    currentFile = currentSubDirectory + "/" + files[ i ];
                 }
 
                 if ( userDirectory != null && current.isDirectory() && userDirectory.startsWith( currentFile ) )
@@ -1426,7 +1495,7 @@ public class DefaultContinuum
 
         user.setEmail( (String) configuration.get( "user.email" ) );
 
-        user.setGroup( getUserGroup( new Integer( (String) configuration.get( "user.group" ) ).intValue() ) );
+        user.setGroup( getUserGroup( Integer.parseInt( (String) configuration.get( "user.group" ) ) ) );
 
         addUser( user );
     }
@@ -1457,7 +1526,7 @@ public class DefaultContinuum
 
         user.setEmail( (String) configuration.get( "user.email" ) );
 
-        user.setGroup( getUserGroup( new Integer( (String) configuration.get( "user.group" ) ).intValue() ) );
+        user.setGroup( getUserGroup( Integer.parseInt( (String) configuration.get( "user.group" ) ) ) );
 
         updateUser( user );
     }
@@ -1663,18 +1732,6 @@ public class DefaultContinuum
         store.removeUserGroup( group );
     }
 
-    private boolean convertBoolean( String value )
-    {
-        if ( "true".equalsIgnoreCase( value ) || "on".equalsIgnoreCase( value ) || "yes".equalsIgnoreCase( value ) )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     // ----------------------------------------------------------------------
     // Lifecycle Management
     // ----------------------------------------------------------------------
@@ -1732,6 +1789,14 @@ public class DefaultContinuum
         }
     }
 
+    public void contextualize( Context context )
+        throws ContextException
+    {
+        PlexusContainer container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
+
+        PlexusContainerManager.getInstance().setContainer( container );
+    }
+
     public void start()
         throws StartingException
     {
@@ -1742,16 +1807,6 @@ public class DefaultContinuum
             initializer.initialize();
 
             configurationService.load();
-
-            // ----------------------------------------------------------------------
-            // Activate all the Build settings in the system
-            // ----------------------------------------------------------------------
-
-            schedulesActivator.activateSchedules( this );
-        }
-        catch ( SchedulesActivationException e )
-        {
-            throw new StartingException( "Error activating schedules.", e );
         }
         catch ( ConfigurationLoadingException e )
         {
@@ -1760,6 +1815,19 @@ public class DefaultContinuum
         catch ( ContinuumInitializationException e )
         {
             throw new StartingException( "Cannot initializing Continuum for the first time.", e );
+        }
+
+        try
+        {
+            // ----------------------------------------------------------------------
+            // Activate all the schedules in the system
+            // ----------------------------------------------------------------------
+            schedulesActivator.activateSchedules( this );
+        }
+        catch ( SchedulesActivationException e )
+        {
+            // We don't throw an exception here, so users will can modify schedules in interface instead of database
+            getLogger().error( "Error activating schedules.", e );
         }
     }
 
@@ -1922,61 +1990,6 @@ public class DefaultContinuum
         return workingDirectory;
     }
 
-    private void startMessage()
-    {
-        getLogger().info( "Starting Continuum." );
-
-        // ----------------------------------------------------------------------
-        //
-        // ----------------------------------------------------------------------
-
-        String banner = StringUtils.repeat( "-", getVersion().length() );
-
-        getLogger().info( "" );
-        getLogger().info( "" );
-        getLogger().info( "< Continuum " + getVersion() + " started! >" );
-        getLogger().info( "-----------------------" + banner );
-        getLogger().info( "       \\   ^__^" );
-        getLogger().info( "        \\  (oo)\\_______" );
-        getLogger().info( "           (__)\\       )\\/\\" );
-        getLogger().info( "               ||----w |" );
-        getLogger().info( "               ||     ||" );
-        getLogger().info( "" );
-        getLogger().info( "" );
-    }
-
-    private void stopMessage()
-    {
-        getLogger().info( "Stopping Continuum." );
-
-        getLogger().info( "Continuum stopped." );
-    }
-
-    private String getVersion()
-    {
-        try
-        {
-            Properties properties = new Properties();
-
-            String name = "META-INF/maven/org.apache.maven.continuum/continuum-core/pom.properties";
-
-            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream( name );
-
-            if ( resourceAsStream == null )
-            {
-                return "unknown";
-            }
-
-            properties.load( resourceAsStream );
-
-            return properties.getProperty( "version", "unknown" );
-        }
-        catch ( IOException e )
-        {
-            return "unknown";
-        }
-    }
-
     public Project getProjectWithCheckoutResult( int projectId )
         throws ContinuumException
     {
@@ -2030,6 +2043,70 @@ public class DefaultContinuum
         catch ( ContinuumStoreException e )
         {
             throw new ContinuumException( "Error retrieving the requested project", e );
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Private Utilities
+    // ----------------------------------------------------------------------
+
+    private boolean convertBoolean( String value )
+    {
+        return "true".equalsIgnoreCase( value ) || "on".equalsIgnoreCase( value ) || "yes".equalsIgnoreCase( value );
+    }
+
+    private void startMessage()
+    {
+        getLogger().info( "Starting Continuum." );
+
+        // ----------------------------------------------------------------------
+        //
+        // ----------------------------------------------------------------------
+
+        String banner = StringUtils.repeat( "-", getVersion().length() );
+
+        getLogger().info( "" );
+        getLogger().info( "" );
+        getLogger().info( "< Continuum " + getVersion() + " started! >" );
+        getLogger().info( "-----------------------" + banner );
+        getLogger().info( "       \\   ^__^" );
+        getLogger().info( "        \\  (oo)\\_______" );
+        getLogger().info( "           (__)\\       )\\/\\" );
+        getLogger().info( "               ||----w |" );
+        getLogger().info( "               ||     ||" );
+        getLogger().info( "" );
+        getLogger().info( "" );
+    }
+
+    private void stopMessage()
+    {
+        getLogger().info( "Stopping Continuum." );
+
+        getLogger().info( "Continuum stopped." );
+    }
+
+    private String getVersion()
+    {
+        try
+        {
+            Properties properties = new Properties();
+
+            String name = "META-INF/maven/org.apache.maven.continuum/continuum-core/pom.properties";
+
+            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream( name );
+
+            if ( resourceAsStream == null )
+            {
+                return "unknown";
+            }
+
+            properties.load( resourceAsStream );
+
+            return properties.getProperty( "version", "unknown" );
+        }
+        catch ( IOException e )
+        {
+            return "unknown";
         }
     }
 }

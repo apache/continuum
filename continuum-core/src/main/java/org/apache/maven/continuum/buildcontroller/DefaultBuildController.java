@@ -19,6 +19,8 @@ package org.apache.maven.continuum.buildcontroller;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ChangeFile;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -32,6 +34,8 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -166,6 +170,63 @@ public class DefaultBuildController
 
                 scmResult = (ScmResult) actionContext.get( AbstractContinuumAction.KEY_UPDATE_SCM_RESULT );
 
+                List changes = scmResult.getChanges();
+
+                Iterator iterChanges = changes.iterator();
+
+                ChangeSet changeSet;
+
+                List changeFiles;
+
+                Iterator iterFiles;
+
+                ChangeFile changeFile;
+
+                boolean allChangesUnknown = true;
+
+                while ( iterChanges.hasNext() )
+                {
+
+                    changeSet = (ChangeSet) iterChanges.next();
+
+                    changeFiles = changeSet.getFiles();
+
+                    iterFiles = changeFiles.iterator();
+
+                    while ( iterFiles.hasNext() )
+                    {
+                        changeFile = (ChangeFile) iterFiles.next();
+
+                        if ( !"unknown".equalsIgnoreCase( changeFile.getStatus() ) )
+                        {
+                            allChangesUnknown = false;
+                            break;
+                        }
+                    }
+
+                    if ( !allChangesUnknown )
+                    {
+                        break;
+                    }
+                }
+
+                if ( allChangesUnknown && project.getOldState() != ContinuumProjectState.NEW &&
+                    trigger != ContinuumProjectState.TRIGGER_FORCED &&
+                    project.getState() != ContinuumProjectState.NEW )
+                {
+
+                    getLogger().info( "The project was not built because all changes are unknown." );
+
+                    project.setState( project.getOldState() );
+
+                    project.setOldState( 0 );
+
+                    store.updateProject( project );
+
+                    return;
+
+                }
+
                 actionManager.lookup( "update-project-from-working-directory" ).execute( actionContext );
 
                 actionManager.lookup( "execute-builder" ).execute( actionContext );
@@ -261,10 +322,9 @@ public class DefaultBuildController
                 getLogger().error( "Internal error while building the project.", ex );
             }
 
-            if ( project.getState() != ContinuumProjectState.NEW &&
-                 project.getState() != ContinuumProjectState.OK &&
-                 project.getState() != ContinuumProjectState.FAILED &&
-                 project.getState() != ContinuumProjectState.ERROR )
+            if ( project.getState() != ContinuumProjectState.NEW && project.getState() != ContinuumProjectState.OK &&
+                project.getState() != ContinuumProjectState.FAILED &&
+                project.getState() != ContinuumProjectState.ERROR )
             {
                 try
                 {

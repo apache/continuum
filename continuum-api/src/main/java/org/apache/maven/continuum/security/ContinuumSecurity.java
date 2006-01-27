@@ -17,7 +17,6 @@ package org.apache.maven.continuum.security;
  */
 
 import org.apache.maven.continuum.model.system.ContinuumUser;
-import org.apache.maven.continuum.model.system.Permission;
 import org.apache.maven.continuum.model.system.UserGroup;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public interface ContinuumSecurity
     static final String ADMIN_GROUP_NAME = "Continuum admin";
 
     static final String GUEST_GROUP_NAME = "Continuum guest";
-    
+
     List getPermissions( ContinuumUser user )
         throws ContinuumSecurityException;
 

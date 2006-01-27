@@ -148,6 +148,12 @@ public interface Continuum
     void updateNotifier( int projectId, int notifierId, Map configuration )
         throws ContinuumException;
 
+    void updateNotifier( int projectId, ProjectNotifier notifier )
+        throws ContinuumException;
+
+    void addNotifier( int projectId, ProjectNotifier notifier )
+        throws ContinuumException;
+
     void addNotifier( int projectId, String notifierType, Map configuration )
         throws ContinuumException;
 
@@ -176,7 +182,13 @@ public interface Continuum
     BuildDefinition getBuildDefinition( int projectId, int buildDefinitionId )
         throws ContinuumException;
 
+    void updateBuildDefinition( BuildDefinition buildDefinition, int projectId )
+        throws ContinuumException;
+
     void updateBuildDefinition( int projectId, int buildDefinitionId, Map configuration )
+        throws ContinuumException;
+
+    void addBuildDefinition( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
     void addBuildDefinition( int projectId, Map configuration )

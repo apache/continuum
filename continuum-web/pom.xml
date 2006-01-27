@@ -2,12 +2,12 @@
   <parent>
     <artifactId>continuum-parent</artifactId>
     <groupId>org.apache.maven.continuum</groupId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-web</artifactId>
   <name>Continuum Web</name>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <build>
     <resources>
       <resource>
@@ -29,11 +29,6 @@
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-model</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-security</artifactId>
-      <version>1.0-alpha-2</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
@@ -85,5 +80,10 @@
       <artifactId>plexus-formica-web</artifactId>
       <version>1.0-beta-1</version>
     </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-security-summit</artifactId>
+        <version>1.0-alpha-3-SNAPSHOT</version>
+      </dependency>
   </dependencies>
 </project>
