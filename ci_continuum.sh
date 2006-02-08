@@ -18,7 +18,7 @@ if [ ! -z "$RUNNING" ]; then
   if [ "$CMD" = "checkout" ]; then
     echo "From: $FROM" > running_log
     echo "To: $TO" >> running_log
-    echo "Subject: [continuum build - SKIPPED - $CMD] $DATE" >>running_log
+    echo "Subject: [continuum build branches/continuum-1.0.x- SKIPPED - $CMD] $DATE" >>running_log
     echo "" >> running_log
     echo "ci_continuum.sh already running... exiting" >>running_log
     echo "$RUNNING" >>running_log
@@ -28,14 +28,14 @@ if [ ! -z "$RUNNING" ]; then
 fi
 
 HOME_DIR=$HOME
-DIR=$HOME_DIR/checkouts
+DIR=$HOME_DIR/checkouts-1.0.x
 SUNREPO=$HOME_DIR/sunrepo
 REPO=$HOME_DIR/maven-repo-local
 SCM_LOG=$HOME_DIR/scm.log
 TIMESTAMP=`date +%Y%m%d.%H%M%S`
 WWW=$HOME/public_html
-DEPLOY_DIR=$WWW/builds
-DEPLOY_SITE=http://maven.zones.apache.org/~continuum/builds
+DEPLOY_DIR=$WWW/builds/branches/continuum-1.0.x
+DEPLOY_SITE=http://maven.zones.apache.org/~continuum/builds/branches/continuum-1.0.x
 DIST=continuum-${TIMESTAMP}.tar.gz
 SVN=svn
 
@@ -88,7 +88,7 @@ fi
     (
       cd $DIR
 
-      $SVN co http://svn.apache.org/repos/asf/maven/continuum/trunk continuum > $SCM_LOG 2>&1
+      $SVN co http://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.0.x continuum > $SCM_LOG 2>&1
 
       echo "true" > $HOME_DIR/build_required
     )
@@ -179,9 +179,9 @@ then
   if [ $ret != 0 ]; then
     echo "Subject: [continuum build - FAILED - $CMD] $DATE" >> log
   elif [ $fatal_error != 1 ]; then
-    echo "Subject: [continuum build - FAILED - $CMD] $DATE" >> log
+    echo "Subject: [continuum build branches/continuum-1.0.x - FAILED - $CMD] $DATE" >> log
   else
-    echo "Subject: [continuum build - SUCCESS - $CMD] $DATE" >> log
+    echo "Subject: [continuum build branches/continuum-1.0.x - SUCCESS - $CMD] $DATE" >> log
     echo "" >> log
     echo "Distribution:" >> log
     echo "${DEPLOY_SITE}/${DIST}" >>log
@@ -189,7 +189,7 @@ then
   fi
   echo "" >> log
   echo "Log:" >> log
-  echo "http://maven.zones.apache.org/~continuum/logs/${MESSAGE_NAME}" >> log
+  echo "http://maven.zones.apache.org/~continuum/logs/branches/continuum-1.0.x/${MESSAGE_NAME}" >> log
 
   /usr/sbin/sendmail -t < log
 fi
