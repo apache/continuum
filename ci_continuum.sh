@@ -44,7 +44,7 @@ export M2_HOME
 PATH=$PATH:$JAVA_HOME/bin:$M2_HOME/bin
 export PATH
 
-MESSAGE_DIR=$WWW/logs
+MESSAGE_DIR=$WWW/logs/branches/continuum-1.0.x
 MESSAGE_NAME=continuum-build-log-${TIMESTAMP}.txt
 MESSAGE=${MESSAGE_DIR}/${MESSAGE_NAME}
 
