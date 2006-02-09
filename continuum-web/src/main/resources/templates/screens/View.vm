@@ -50,6 +50,10 @@ $page.setTitle( "Continuum - Project View: ${item.name}" )
               <form method="post" action="$link.setPage('Edit.vm').addPathInfo('fid', "$!{item.executorId}Project").addPathInfo('id', $item.id)">
                 <input type="submit" name="edit-project" value="Edit"/>
               </form>
+              &nbsp;
+              <form method="post" action="$link.addPathInfo('action', 'cam').addPathInfo('cid','buildProject').addPathInfo('id', $item.id)">
+                <input type="submit" name="build-project" value="Build Now"/>
+              </form>
             </td>
           </tr>
         </table>
