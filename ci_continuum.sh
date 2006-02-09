@@ -177,7 +177,7 @@ then
   echo "From: $FROM" > log
   echo "To: $TO" >> log
   if [ $ret != 0 ]; then
-    echo "Subject: [continuum build - FAILED - $CMD] $DATE" >> log
+    echo "Subject: [continuum build branches/continuum-1.0.x - FAILED - $CMD] $DATE" >> log
   elif [ $fatal_error != 1 ]; then
     echo "Subject: [continuum build branches/continuum-1.0.x - FAILED - $CMD] $DATE" >> log
   else
