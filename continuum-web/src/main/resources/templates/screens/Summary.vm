@@ -130,6 +130,13 @@ $page.setTitle( "Continuum" )
         #end
       </form>
     </div>
+    #else
+    <div class="functnbar3">
+        <img src="/continuum/images/icon_success_sml.gif" alt="Success" title="Success"/> $success
+        <img src="/continuum/images/icon_warning_sml.gif" alt="Failed" title="Failed"/> $failures
+        <img src="/continuum/images/icon_error_sml.gif" alt="Error" title="Error"/> $errors
+      </form>
+    </div>
     #end
   </div>
 </div>
