@@ -406,9 +406,9 @@
         <version>1.7.3.3</version>
       </dependency>
       <dependency>
-        <groupId>quartz</groupId>
-        <artifactId>quartz</artifactId>
-        <version>1.4.5</version>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-quartz</artifactId>
+        <version>1.0-alpha-2-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>

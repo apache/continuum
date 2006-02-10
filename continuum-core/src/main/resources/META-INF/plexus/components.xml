@@ -83,7 +83,7 @@
           <role>org.apache.maven.continuum.store.ContinuumStore</role>
         </requirement>
         <requirement>
-          <role>org.apache.maven.continuum.scheduler.ContinuumScheduler</role>
+          <role>org.codehaus.plexus.scheduler.Scheduler</role>
         </requirement>
       </requirements>
     </component>
@@ -750,8 +750,8 @@
      -->
 
     <component>
-      <role>org.apache.maven.continuum.scheduler.ContinuumScheduler</role>
-      <implementation>org.apache.maven.continuum.scheduler.DefaultContinuumScheduler</implementation>
+      <role>org.codehaus.plexus.scheduler.Scheduler</role>
+      <implementation>org.codehaus.plexus.scheduler.DefaultScheduler</implementation>
       <configuration>
         <properties>
           <property>

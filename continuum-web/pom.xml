@@ -48,8 +48,8 @@
       <artifactId>plexus-formica</artifactId>
     </dependency>
     <dependency>
-      <groupId>quartz</groupId>
-      <artifactId>quartz</artifactId>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-quartz</artifactId>
     </dependency>
     <dependency>
       <groupId>servletapi</groupId>
