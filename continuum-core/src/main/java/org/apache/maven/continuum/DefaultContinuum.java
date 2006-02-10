@@ -19,9 +19,9 @@ package org.apache.maven.continuum;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
-import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.core.action.AddProjectToCheckOutQueueAction;
@@ -50,15 +50,15 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.PlexusContainerManager;
 import org.apache.maven.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
-import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.action.Action;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
@@ -337,7 +337,8 @@ public class DefaultContinuum
 
             if ( buildDefId == null )
             {
-                throw new ContinuumException( "Project (id=" + project.getId() + " doens't have a default build definition." );
+                throw new ContinuumException(
+                    "Project (id=" + project.getId() + " doens't have a default build definition." );
             }
 
             buildProject( project.getId(), buildDefId.intValue(), trigger );
@@ -432,10 +433,9 @@ public class DefaultContinuum
         {
             Project project = store.getProject( projectId );
 
-            if ( project.getState() != ContinuumProjectState.NEW &&
-                 project.getState() != ContinuumProjectState.OK &&
-                 project.getState() != ContinuumProjectState.FAILED &&
-                 project.getState() != ContinuumProjectState.ERROR )
+            if ( project.getState() != ContinuumProjectState.NEW && project.getState() != ContinuumProjectState.OK &&
+                project.getState() != ContinuumProjectState.FAILED &&
+                project.getState() != ContinuumProjectState.ERROR )
             {
                 // project is building
                 return;
@@ -447,7 +447,8 @@ public class DefaultContinuum
 
             store.updateProject( project );
 
-            getLogger().info( "Enqueuing '" + project.getName() + "' (Build definition id=" + buildDefinitionId + ")." );
+            getLogger().info(
+                "Enqueuing '" + project.getName() + "' (Build definition id=" + buildDefinitionId + ")." );
 
             buildQueue.put( new BuildProjectTask( projectId, buildDefinitionId, trigger ) );
         }
@@ -507,7 +508,7 @@ public class DefaultContinuum
 
         boolean stop = false;
 
-        while( !stop )
+        while ( !stop )
         {
             if ( buildResultsIterator.hasNext() )
             {
@@ -533,7 +534,7 @@ public class DefaultContinuum
 
         List changes = null;
 
-        while (  buildResult.getState() != ContinuumProjectState.OK )
+        while ( buildResult.getState() != ContinuumProjectState.OK )
         {
             if ( changes == null )
             {
@@ -621,7 +622,7 @@ public class DefaultContinuum
 
                 bd.setSchedule( schedule );
 
-                project.addBuildDefinition( bd );       
+                project.addBuildDefinition( bd );
             }
             catch ( ContinuumStoreException e )
             {
@@ -685,8 +686,8 @@ public class DefaultContinuum
 
         executeAction( "create-projects-from-metadata", context );
 
-        ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context.get(
-            CreateProjectsFromMetadata.KEY_PROJECT_BUILDING_RESULT );
+        ContinuumProjectBuildingResult result =
+            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadata.KEY_PROJECT_BUILDING_RESULT );
 
         if ( result.getProjects() != null )
         {
@@ -874,10 +875,8 @@ public class DefaultContinuum
             if ( value instanceof String )
             {
                 String val = (String) value;
-                if ( !"sendOnSuccess".equals( val ) &&
-                     !"sendOnFailure".equals( val ) &&
-                     !"sendOnError".equals( val ) &&
-                     !"sendOnWarning".equals( val ) )
+                if ( !"sendOnSuccess".equals( val ) && !"sendOnFailure".equals( val ) && !"sendOnError".equals( val ) &&
+                    !"sendOnWarning".equals( val ) )
                 {
                     if ( !StringUtils.isEmpty( val ) )
                     {
@@ -1030,7 +1029,7 @@ public class DefaultContinuum
         if ( buildDefinition.isDefaultForProject() && !bd.isDefaultForProject() )
         {
             bd.setDefaultForProject( true );
-            
+
             BuildDefinition defaultBd = getDefaultBuildDefinition( projectId );
 
             if ( defaultBd != null )
@@ -1184,7 +1183,8 @@ public class DefaultContinuum
 
             if ( s != null )
             {
-                throw logAndCreateException( "Can't create schedule. A schedule with the same name already exists.", null );
+                throw logAndCreateException( "Can't create schedule. A schedule with the same name already exists.",
+                                             null );
             }
 
             s = store.addSchedule( schedule );
@@ -1297,7 +1297,7 @@ public class DefaultContinuum
         {
             return workingDirectoryService.getWorkingDirectory( store.getProject( projectId ) );
         }
-        catch( ContinuumStoreException e )
+        catch ( ContinuumStoreException e )
         {
             throw new ContinuumException( "Can't get files list.", e );
         }
@@ -1316,7 +1316,7 @@ public class DefaultContinuum
         {
             return FileUtils.fileRead( userFile );
         }
-        catch( IOException e )
+        catch ( IOException e )
         {
             throw new ContinuumException( "Can't read file " + filename, e );
         }
@@ -1351,17 +1351,17 @@ public class DefaultContinuum
         {
             for ( int i = 0; i < files.length; i++ )
             {
-                File current = new File( workingDirectory, files[ i ] );
+                File current = new File( workingDirectory, files[i] );
 
                 String currentFile;
 
                 if ( currentSubDirectory == null )
                 {
-                    currentFile = files[ i ];
+                    currentFile = files[i];
                 }
                 else
                 {
-                    currentFile = currentSubDirectory + "/" + files[ i ];
+                    currentFile = currentSubDirectory + "/" + files[i];
                 }
 
                 if ( userDirectory != null && current.isDirectory() && userDirectory.startsWith( currentFile ) )
@@ -1405,7 +1405,8 @@ public class DefaultContinuum
 
             if ( configuration.get( "conf.workingDirectory" ) != null )
             {
-                configurationService.setWorkingDirectory( configurationService.getFile( (String) configuration.get( "conf.workingDirectory" ) ) );
+                configurationService.setWorkingDirectory(
+                    configurationService.getFile( (String) configuration.get( "conf.workingDirectory" ) ) );
             }
             else
             {
@@ -1414,7 +1415,8 @@ public class DefaultContinuum
 
             if ( configuration.get( "conf.buildOutputDirectory" ) != null )
             {
-                configurationService.setBuildOutputDirectory( configurationService.getFile( (String) configuration.get( "conf.buildOutputDirectory" ) ) );
+                configurationService.setBuildOutputDirectory(
+                    configurationService.getFile( (String) configuration.get( "conf.buildOutputDirectory" ) ) );
             }
             else
             {
@@ -1451,7 +1453,7 @@ public class DefaultContinuum
         {
             configurationService.load();
         }
-        catch( ConfigurationLoadingException e )
+        catch ( ConfigurationLoadingException e )
         {
             throw new ContinuumException( "Can't reload configuration.", e );
         }
@@ -1484,7 +1486,12 @@ public class DefaultContinuum
     }
 
     public void addUser( ContinuumUser user )
+        throws ContinuumException
     {
+        if ( StringUtils.isEmpty( user.getHashedPassword() ) )
+        {
+            throw new ContinuumException( "Password can't be null" );
+        }
         store.addUser( user );
     }
 
@@ -1509,6 +1516,13 @@ public class DefaultContinuum
     public void updateUser( ContinuumUser user )
         throws ContinuumException
     {
+        if ( StringUtils.isEmpty( user.getHashedPassword() ) )
+        {
+            ContinuumUser u = getUser( user.getAccountId() );
+
+            user.setHashedPassword( u.getHashedPassword() );
+        }
+
         try
         {
             store.updateUser( user );
@@ -1542,7 +1556,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getUser( userId);
+            return store.getUser( userId );
         }
         catch ( Exception ex )
         {
@@ -1722,7 +1736,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getUserGroup( userGroupId);
+            return store.getUserGroup( userGroupId );
         }
         catch ( Exception ex )
         {
@@ -1772,10 +1786,9 @@ public class DefaultContinuum
         {
             Project project = (Project) it.next();
 
-            if ( project.getState() != ContinuumProjectState.NEW &&
-                 project.getState() != ContinuumProjectState.OK &&
-                 project.getState() != ContinuumProjectState.FAILED &&
-                 project.getState() != ContinuumProjectState.ERROR )
+            if ( project.getState() != ContinuumProjectState.NEW && project.getState() != ContinuumProjectState.OK &&
+                project.getState() != ContinuumProjectState.FAILED &&
+                project.getState() != ContinuumProjectState.ERROR )
             {
                 project.setState( project.getOldState() );
 
@@ -1785,12 +1798,12 @@ public class DefaultContinuum
                 {
                     store.updateProject( project );
                 }
-                catch( ContinuumStoreException e )
+                catch ( ContinuumStoreException e )
                 {
                     throw new InitializationException( "Database is corrupted.", e );
                 }
             }
-            
+
             getLogger().info( " " + project.getId() + ":" + project.getName() + ":" + project.getExecutorId() );
         }
     }

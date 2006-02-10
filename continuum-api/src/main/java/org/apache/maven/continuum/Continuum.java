@@ -24,8 +24,8 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.UserGroup;
-import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 import java.io.File;
@@ -254,7 +254,8 @@ public interface Continuum
     // User
     // ----------------------------------------------------------------------
 
-    void addUser( ContinuumUser user );
+    void addUser( ContinuumUser user )
+        throws ContinuumException;
 
     void addUser( Map configuration )
         throws ContinuumException;
