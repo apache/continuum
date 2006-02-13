@@ -214,7 +214,6 @@ public class DefaultBuildController
                     trigger != ContinuumProjectState.TRIGGER_FORCED &&
                     project.getState() != ContinuumProjectState.NEW )
                 {
-
                     getLogger().info( "The project was not built because all changes are unknown." );
 
                     project.setState( project.getOldState() );
@@ -224,7 +223,6 @@ public class DefaultBuildController
                     store.updateProject( project );
 
                     return;
-
                 }
 
                 actionManager.lookup( "update-project-from-working-directory" ).execute( actionContext );

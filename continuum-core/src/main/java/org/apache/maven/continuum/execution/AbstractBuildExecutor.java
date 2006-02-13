@@ -188,7 +188,7 @@ public abstract class AbstractBuildExecutor
         try
         {
             ExecutionResult result = shellCommandHelper.executeShellCommand( workingDirectory, actualExecutable,
-                                                                             arguments, output );
+                                                                             arguments, output, project.getId() );
 
             getLogger().info( "Exit code: " + result.getExitCode() );
 
@@ -199,6 +199,16 @@ public abstract class AbstractBuildExecutor
             throw new ContinuumBuildExecutorException( "Error while executing shell command. " +
                 "The most common error is that '" + executable + "' " + "is not in your path.", e );
         }
+    }
+
+    public boolean isBuilding( Project project )
+    {
+        return shellCommandHelper.isRunning( project.getId() );
+    }
+
+    public void killProcess( Project project )
+    {
+        shellCommandHelper.killProcess( project.getId() );
     }
 
     public File getWorkingDirectory( Project project )

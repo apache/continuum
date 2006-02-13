@@ -34,4 +34,8 @@ public interface ContinuumBuildExecutor
 
     void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException;
+
+    boolean isBuilding( Project project );
+
+    void killProcess( Project project );
 }

@@ -114,7 +114,15 @@ public class DefaultMavenBuilderHelper
     public void mapMavenProjectToContinuumProject( MavenProject mavenProject, Project continuumProject )
         throws MavenBuilderHelperException
     {
+        // ----------------------------------------------------------------------
+        // Name
+        // ----------------------------------------------------------------------
+
         continuumProject.setName( getProjectName( mavenProject ) );
+
+        // ----------------------------------------------------------------------
+        // SCM Url
+        // ----------------------------------------------------------------------
 
         continuumProject.setScmUrl( getScmUrl( mavenProject ) );
 
@@ -232,7 +240,7 @@ public class DefaultMavenBuilderHelper
         }
 
         // ----------------------------------------------------------------------
-        //
+        // Notifiers
         // ----------------------------------------------------------------------
 
         List userNotifiers = new ArrayList();

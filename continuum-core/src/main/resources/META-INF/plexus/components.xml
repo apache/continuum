@@ -36,6 +36,9 @@
         <requirement>
           <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.execution.manager.BuildExecutorManager</role>
+        </requirement>
       </requirements>
       <configuration>
         <working-directory>${plexus.home}/temp</working-directory>

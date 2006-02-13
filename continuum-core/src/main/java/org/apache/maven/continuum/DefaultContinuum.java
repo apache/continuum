@@ -27,6 +27,8 @@ import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.core.action.AddProjectToCheckOutQueueAction;
 import org.apache.maven.continuum.core.action.CreateProjectsFromMetadata;
 import org.apache.maven.continuum.core.action.StoreProjectAction;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.initialization.ContinuumInitializationException;
 import org.apache.maven.continuum.initialization.ContinuumInitializer;
 import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
@@ -144,6 +146,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private WorkingDirectoryService workingDirectoryService;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildExecutorManager executorManager;
 
     // ----------------------------------------------------------------------
     // Projects
@@ -437,8 +444,21 @@ public class DefaultContinuum
                 project.getState() != ContinuumProjectState.FAILED &&
                 project.getState() != ContinuumProjectState.ERROR )
             {
-                // project is building
-                return;
+                ContinuumBuildExecutor executor = executorManager.getBuildExecutor( project.getExecutorId() );
+                if ( executor.isBuilding( project ) )
+                {
+                    // project is building
+                    getLogger().info( "Project '" + project.getName() + "' always running.");
+                    return;
+                }
+                else
+                {
+                    project.setState( ContinuumProjectState.ERROR );
+
+                    store.updateProject( project );
+
+                    project = store.getProject( projectId );
+                }
             }
 
             project.setOldState( project.getState() );
