@@ -69,7 +69,7 @@ public class ContinuumProjectState
     public static final int TRIGGER_FORCED = 1;
 
     // TODO: remove
-    public static final int TRIGGER_UNKNOWN = 0;
+    public static final int TRIGGER_SCHEDULED = 0;
 
     protected ContinuumProjectState( String name )
     {

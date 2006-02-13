@@ -67,7 +67,7 @@ public class FormatterTool
 
     public String formatTrigger( int trigger )
     {
-        if ( trigger == ContinuumProjectState.TRIGGER_UNKNOWN )
+        if ( trigger == ContinuumProjectState.TRIGGER_SCHEDULED )
         {
             // TODO: fix this
             return "Schedule";

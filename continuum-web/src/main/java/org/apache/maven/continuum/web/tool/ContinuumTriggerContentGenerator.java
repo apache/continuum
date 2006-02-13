@@ -37,7 +37,7 @@ public class ContinuumTriggerContentGenerator
         BuildResult result = (BuildResult) item;
         trigger = result.getTrigger();
 
-        if ( trigger == ContinuumProjectState.TRIGGER_UNKNOWN )
+        if ( trigger == ContinuumProjectState.TRIGGER_SCHEDULED )
         {
             return "Scheduled";
         }

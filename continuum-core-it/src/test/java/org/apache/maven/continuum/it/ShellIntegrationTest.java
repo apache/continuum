@@ -71,7 +71,7 @@ public class ShellIntegrationTest
         Project project = continuum.getProject( projectId );
         assertProject( projectId, "Shell Project", "3.0", "", "shell", project );
         progress( "Building Shell project" );
-        int buildId = buildProject( projectId, ContinuumProjectState.TRIGGER_UNKNOWN ).getId();
+        int buildId = buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED ).getId();
         assertSuccessfulShellBuild( buildId, projectId, "" );
 
         // Test project reconfiguration
@@ -97,7 +97,7 @@ public class ShellIntegrationTest
         bd = (BuildDefinition) shellProject.getBuildDefinitions().iterator().next();
         assertEquals( "Updated command line arguments doesn't match", "a b", bd.getArguments() );
 
-        buildId = buildProject( projectId, ContinuumProjectState.TRIGGER_UNKNOWN ).getId();
+        buildId = buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED ).getId();
         assertSuccessfulShellBuild( buildId, projectId, "a" + EOL + "b" + EOL );
 
         removeProject( projectId );

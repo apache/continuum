@@ -211,8 +211,7 @@ public class DefaultBuildController
                 }
 
                 if ( allChangesUnknown && project.getOldState() != ContinuumProjectState.NEW &&
-                    trigger != ContinuumProjectState.TRIGGER_FORCED &&
-                    project.getState() != ContinuumProjectState.NEW )
+                    trigger != ContinuumProjectState.TRIGGER_FORCED && project.getState() != ContinuumProjectState.NEW )
                 {
                     getLogger().info( "The project was not built because all changes are unknown." );
 

@@ -389,8 +389,7 @@ public class DefaultContinuum
 
             if ( buildDefId != null && !isInBuildingQueue( p.getId() ) && !isInCheckoutQueue( p.getId() ) )
             {
-                //TODO: Fix trigger name
-                buildProject( p.getId(), buildDefId.intValue(), ContinuumProjectState.TRIGGER_UNKNOWN, false );
+                buildProject( p.getId(), buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
             }
         }
     }

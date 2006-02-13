@@ -77,7 +77,7 @@ public class MavenTwoIntegrationTest
         project = continuum.getProjectWithBuilds( projectId );
         int originalSize = project.getBuildResults().size();
 
-        int buildId = buildProject( projectId, ContinuumProjectState.TRIGGER_UNKNOWN ).getId();
+        int buildId = buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED ).getId();
 
         assertSuccessfulMaven2Build( buildId, projectId );
 
@@ -88,7 +88,7 @@ public class MavenTwoIntegrationTest
 
         assertEquals( "build list was not updated", originalSize + 1, expectedSize );
 
-        continuum.buildProject( projectId, ContinuumProjectState.TRIGGER_UNKNOWN );
+        continuum.buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED );
 
         Thread.sleep( 3000 );
 

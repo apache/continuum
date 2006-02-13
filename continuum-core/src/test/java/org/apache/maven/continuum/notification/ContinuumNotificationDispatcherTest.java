@@ -45,7 +45,7 @@ public class ContinuumNotificationDispatcherTest
  
         build.setState( ContinuumProjectState.BUILDING );
  
-        build.setTrigger( ContinuumProjectState.TRIGGER_UNKNOWN );
+        build.setTrigger( ContinuumProjectState.TRIGGER_SCHEDULED );
 
         store.addBuildResult( project, build );
 
