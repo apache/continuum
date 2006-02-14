@@ -71,6 +71,8 @@ public class ContinuumProjectState
     // TODO: remove
     public static final int TRIGGER_SCHEDULED = 0;
 
+    public static final int TRIGGER_UNKNOWN = TRIGGER_SCHEDULED;
+
     protected ContinuumProjectState( String name )
     {
         this.name = name;
