@@ -105,6 +105,18 @@ public class MavenTwoIntegrationTest
 
         assertEquals( "The 'build forced' flag wasn't true", ContinuumProjectState.TRIGGER_FORCED, build.getTrigger() );
 
+        progress( "Test that a forced build with a pom deleted executes the executor" );
+
+        File pom = new File(getContinuum().getWorkingDirectory( projectId), "pom.xml");
+
+        assertTrue( pom.delete() );
+
+        buildId = buildProject( projectId, ContinuumProjectState.TRIGGER_FORCED ).getId();
+
+        build = assertSuccessfulMaven2Build( buildId, projectId );
+
+        assertEquals( "The 'build forced' flag wasn't true", ContinuumProjectState.TRIGGER_FORCED, build.getTrigger() );
+
         removeProject( projectId );
     }
 
