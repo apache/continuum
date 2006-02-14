@@ -199,6 +199,12 @@ public class DefaultContinuum
     public boolean isInBuildingQueue( int projectId )
         throws ContinuumException
     {
+        return isInBuildingQueue( projectId, -1 );
+    }
+
+    public boolean isInBuildingQueue( int projectId, int buildDefinitionId )
+        throws ContinuumException
+    {
         List queue;
 
         try
@@ -214,9 +220,19 @@ public class DefaultContinuum
         {
             BuildProjectTask task = (BuildProjectTask) it.next();
 
-            if ( task.getProjectId() == projectId )
+            if ( buildDefinitionId < 0 )
             {
-                return true;
+                if ( task.getProjectId() == projectId )
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if ( task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+                {
+                    return true;
+                }
             }
         }
 
@@ -387,7 +403,8 @@ public class DefaultContinuum
 
             Integer buildDefId = ( (Integer) projectsMap.get( new Integer( p.getId() ) ) );
 
-            if ( buildDefId != null && !isInBuildingQueue( p.getId() ) && !isInCheckoutQueue( p.getId() ) )
+            if ( buildDefId != null && !isInBuildingQueue( p.getId(), buildDefId.intValue() ) &&
+                !isInCheckoutQueue( p.getId() ) )
             {
                 buildProject( p.getId(), buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
             }
@@ -429,7 +446,7 @@ public class DefaultContinuum
     {
         if ( checkQueues )
         {
-            if ( isInBuildingQueue( projectId ) || isInCheckoutQueue( projectId ) )
+            if ( isInBuildingQueue( projectId, buildDefinitionId ) || isInCheckoutQueue( projectId ) )
             {
                 return;
             }
@@ -447,7 +464,7 @@ public class DefaultContinuum
                 if ( executor.isBuilding( project ) )
                 {
                     // project is building
-                    getLogger().info( "Project '" + project.getName() + "' always running.");
+                    getLogger().info( "Project '" + project.getName() + "' always running." );
                     return;
                 }
                 else
