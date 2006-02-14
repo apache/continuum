@@ -562,7 +562,7 @@
            -->
           <call>
             <cid>addBuildDefinition</cid>
-            <expression>addBuildDefinition(#id,#parameters)</expression>
+            <expression>addBuildDefinitionFromParams(#id,#parameters)</expression>
           </call>
           <call>
             <cid>deleteBuildDefinition</cid>

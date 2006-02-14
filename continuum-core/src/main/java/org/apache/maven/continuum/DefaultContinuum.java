@@ -1077,7 +1077,10 @@ public class DefaultContinuum
 
         buildDefinition.setSchedule( schedule );
 
-        buildDefinition.setDefaultForProject( true );
+        if ( convertBoolean( (String) configuration.get( "defaultForProject" ) ) )
+        {
+            buildDefinition.setDefaultForProject( true );
+        }
 
         updateBuildDefinition( buildDefinition, projectId );
     }
@@ -1117,7 +1120,7 @@ public class DefaultContinuum
         updateProject( project );
     }
 
-    public void addBuildDefinition( int projectId, Map configuration )
+    public void addBuildDefinitionFromParams( int projectId, Map configuration )
         throws ContinuumException
     {
         BuildDefinition buildDefinition = new BuildDefinition();

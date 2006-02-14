@@ -191,7 +191,7 @@ public interface Continuum
     void addBuildDefinition( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
-    void addBuildDefinition( int projectId, Map configuration )
+    void addBuildDefinitionFromParams( int projectId, Map configuration )
         throws ContinuumException;
 
     void removeBuildDefinition( int projectId, int buildDefinitionId )
