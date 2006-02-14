@@ -41,6 +41,10 @@ SVN=svn
 
 M2_HOME=$HOME_DIR/maven-2.0
 export M2_HOME
+
+MAVEN_OPTS="-Xms512M -Xmx512M"
+export MAVEN_OPTS
+
 PATH=$PATH:$JAVA_HOME/bin:$M2_HOME/bin
 export PATH
 

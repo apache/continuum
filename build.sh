@@ -14,8 +14,6 @@ case "`uname`" in
   ;;
 esac
 
-  MAVEN_OPTS="-Xms256M -Xmx256M"
-  export MAVEN_OPTS
   mvn -Denv=test clean:clean install "$@"
   ret=$?; if [ $ret != 0 ]; then exit $ret; fi
 ) 2>&1 | tee result.log
