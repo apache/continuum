@@ -317,7 +317,7 @@ public abstract class AbstractIntegrationTest
         }
     }
 
-    private void line()
+    protected void line()
     {
         System.err.println( "-------------------------------------------------------------------------------" );
     }
@@ -403,17 +403,30 @@ public abstract class AbstractIntegrationTest
         return ( (Project) projects.get( 0 ) ).getId();
     }
 
+    public BuildResult buildProject( int projectId, int trigger )
+        throws Exception
+    {
+        return buildProject( projectId, -1, trigger );
+    }
+
     /**
      * @todo use a notify mechanism rather than polling. That's what queues are for. Really, buildProject should create the build result with a WAITING state, return the ID, and let the queue take it from there
      */
-    public BuildResult buildProject( int projectId, int trigger )
+    public BuildResult buildProject( int projectId, int buildDefinitionId, int trigger )
         throws Exception
     {
         int timeout = 60 * 1000;
 
         BuildResult previousBuild = getContinuum().getLatestBuildResultForProject( projectId );
 
-        getContinuum().buildProject( projectId, trigger );
+        if ( buildDefinitionId <= 0 )
+        {
+            getContinuum().buildProject( projectId, trigger );
+        }
+        else
+        {
+            getContinuum().buildProject( projectId, buildDefinitionId, trigger );
+        }
 
         long start = System.currentTimeMillis();
 

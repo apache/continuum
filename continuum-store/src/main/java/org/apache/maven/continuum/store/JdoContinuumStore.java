@@ -32,12 +32,6 @@ import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import javax.jdo.Extent;
 import javax.jdo.JDOException;
 import javax.jdo.JDOHelper;
@@ -47,6 +41,11 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -159,7 +158,7 @@ public class JdoContinuumStore
 
             query.declareImports( "import org.apache.maven.continuum.model.project.BuildDefinition" );
 
-            query.declareVariables ("BuildDefinition buildDef");
+            query.declareVariables( "BuildDefinition buildDef" );
 
             query.setFilter( "buildDefinitions.contains(buildDef) && buildDef.schedule.id == scheduleId" );
 
@@ -377,9 +376,10 @@ public class JdoContinuumStore
 
             query.declareParameters( "int projectId" );
 
-            query.declareVariables ("BuildDefinition buildDef");
+            query.declareVariables( "BuildDefinition buildDef" );
 
-            query.setFilter( "this.buildDefinitions.contains(buildDef) && buildDef.defaultForProject == true && this.id == projectId" );
+            query.setFilter(
+                "this.buildDefinitions.contains(buildDef) && buildDef.defaultForProject == true && this.id == projectId" );
 
             query.setResult( "buildDef" );
 
@@ -392,7 +392,8 @@ public class JdoContinuumStore
             if ( result != null && !result.isEmpty() )
             {
                 BuildDefinition bd = (BuildDefinition) result.get( 0 );
-                getLogger().info( "nb bd for project " + projectId + " : " + result.size() + " - bd id : " + bd.getId() );
+                getLogger().info(
+                    "nb bd for project " + projectId + " : " + result.size() + " - bd id : " + bd.getId() );
                 return bd;
             }
         }
@@ -423,7 +424,7 @@ public class JdoContinuumStore
 
             query.setFilter( "this.buildDefinitions.contains(buildDef) && buildDef.defaultForProject == true" );
 
-            query.declareVariables ("BuildDefinition buildDef");
+            query.declareVariables( "BuildDefinition buildDef" );
 
             query.setResult( "this.id, buildDef.id" );
 
@@ -912,6 +913,40 @@ public class JdoContinuumStore
         }
     }
 
+    public List getBuildResultsForProject( int projectId, long fromDate )
+    {
+        PersistenceManager pm = pmf.getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId, long fromDate" );
+
+            query.setFilter( "this.project.id == projectId && this.startTime > fromDate" );
+
+            List result = (List) query.execute( new Integer( projectId ), new Long( fromDate ) );
+
+            result = (List) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
     public Map getBuildResultsInSuccess()
     {
         PersistenceManager pm = pmf.getPersistenceManager();
@@ -1157,7 +1192,8 @@ public class JdoContinuumStore
         }
         else if ( systemConfs.size() > 1 )
         {
-            throw new ContinuumStoreException( "Database is corrupted. There are more than one systemConfiguration object." );
+            throw new ContinuumStoreException(
+                "Database is corrupted. There are more than one systemConfiguration object." );
         }
         else
         {
@@ -1326,7 +1362,7 @@ public class JdoContinuumStore
         return (Permission) addObject( perm );
     }
 
-    public UserGroup addUserGroup( UserGroup group)
+    public UserGroup addUserGroup( UserGroup group )
     {
         return (UserGroup) addObject( group );
     }

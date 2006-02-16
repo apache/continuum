@@ -17,6 +17,7 @@ package org.apache.maven.continuum.buildcontroller;
  */
 
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeFile;
@@ -86,17 +87,39 @@ public class DefaultBuildController
 
         Project project;
 
+        BuildDefinition buildDefinition;
+
+        BuildResult oldBuildResult = null;
+
         BuildResult build = null;
 
         try
         {
             project = store.getProject( projectId );
+
+            buildDefinition = store.getBuildDefinition( buildDefinitionId );
         }
         catch ( ContinuumStoreException ex )
         {
             getLogger().error( "Internal error while building the project.", ex );
 
             return;
+        }
+
+        try
+        {
+            oldBuildResult = store.getBuildResult( buildDefinition.getLatestBuildId() );
+        }
+        catch ( ContinuumStoreException ex )
+        {
+            // Nothing to do
+        }
+
+        ScmResult oldScmResult = null;
+
+        if ( oldBuildResult != null )
+        {
+            oldScmResult = getOldScmResult( project, oldBuildResult.getEndTime() );
         }
 
         // ----------------------------------------------------------------------
@@ -166,6 +189,9 @@ public class DefaultBuildController
                     return;
                 }
 
+                // Merge scm results so we'll have all changes since last execution of current build definition
+                scmResult = mergeScmResults( oldScmResult, scmResult );
+
                 actionContext.put( AbstractContinuumAction.KEY_UPDATE_SCM_RESULT, scmResult );
 
                 scmResult = (ScmResult) actionContext.get( AbstractContinuumAction.KEY_UPDATE_SCM_RESULT );
@@ -186,7 +212,6 @@ public class DefaultBuildController
 
                 while ( iterChanges.hasNext() )
                 {
-
                     changeSet = (ChangeSet) iterChanges.next();
 
                     changeFiles = changeSet.getFiles();
@@ -403,5 +428,66 @@ public class DefaultBuildController
         store.addBuildResult( project, build );
 
         return store.getBuildResult( build.getId() );
+    }
+
+    private ScmResult getOldScmResult( Project project, long fromDate )
+    {
+        List results = store.getBuildResultsForProject( project.getId(), fromDate );
+
+        ScmResult res = new ScmResult();
+
+        if ( results != null )
+        {
+            for ( Iterator i = results.iterator(); i.hasNext(); )
+            {
+                BuildResult result = (BuildResult) i.next();
+
+                ScmResult scmResult = result.getScmResult();
+
+                if ( scmResult != null )
+                {
+                    List changes = scmResult.getChanges();
+
+                    if ( changes != null )
+                    {
+                        for ( Iterator j = changes.iterator(); j.hasNext(); )
+                        {
+                            ChangeSet changeSet = (ChangeSet) j.next();
+
+                            if ( !res.getChanges().contains( changeSet ) )
+                            {
+                                res.addChange( changeSet );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private ScmResult mergeScmResults( ScmResult oldScmResult, ScmResult newScmResult )
+    {
+        if ( oldScmResult != null )
+        {
+            List oldChanges = oldScmResult.getChanges();
+
+            List newChanges = newScmResult.getChanges();
+
+            for ( Iterator i = newChanges.iterator(); i.hasNext(); )
+            {
+                ChangeSet change = (ChangeSet) i.next();
+
+                if ( !oldChanges.contains( change ) )
+                {
+                    oldChanges.add( change );
+                }
+            }
+
+            newScmResult.setChanges( oldChanges );
+        }
+
+        return newScmResult;
     }
 }

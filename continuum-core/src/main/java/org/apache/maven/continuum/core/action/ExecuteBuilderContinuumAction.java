@@ -79,8 +79,8 @@ public class ExecuteBuilderContinuumAction
         // This is really a precondition for this action to execute
         // ----------------------------------------------------------------------
 
-        if ( project.getOldState() != ContinuumProjectState.NEW && scmResult.getChanges().size() == 0
-            && trigger != ContinuumProjectState.TRIGGER_FORCED && !isNew( project ) )
+        if ( project.getOldState() != ContinuumProjectState.NEW && scmResult.getChanges().size() == 0 &&
+            trigger != ContinuumProjectState.TRIGGER_FORCED && !isNew( project ) )
         {
             getLogger().info( "No files updated, not building. Project id '" + project.getId() + "'." );
 
@@ -146,10 +146,12 @@ public class ExecuteBuilderContinuumAction
 
             project.setLatestBuildId( build.getId() );
 
+            buildDefinition.setLatestBuildId( build.getId() );
+
             build.setBuildNumber( project.getBuildNumber() );
 
-            if ( build.getState() != ContinuumProjectState.OK && build.getState() != ContinuumProjectState.FAILED
-                && build.getState() != ContinuumProjectState.ERROR )
+            if ( build.getState() != ContinuumProjectState.OK && build.getState() != ContinuumProjectState.FAILED &&
+                build.getState() != ContinuumProjectState.ERROR )
             {
                 build.setState( ContinuumProjectState.ERROR );
             }
@@ -161,6 +163,8 @@ public class ExecuteBuilderContinuumAction
             store.updateBuildResult( build );
 
             build = store.getBuildResult( build.getId() );
+
+            store.storeBuildDefinition( buildDefinition );
 
             store.updateProject( project );
 
