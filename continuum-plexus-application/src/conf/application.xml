@@ -257,6 +257,22 @@
             <value>true</value>
           </property>
           <property>
+            <name>org.jpox.autoCreateColumns</name>
+            <value>true</value>
+          </property>
+          <property>
+            <name>org.jpox.validateTables</name>
+            <value>true</value>
+          </property>
+          <property>
+            <name>org.jpox.validateColumns</name>
+            <value>true</value>
+          </property>
+          <property>
+            <name>org.jpox.validateConstraints</name>
+            <value>true</value>
+          </property>
+          <property>
             <name>org.jpox.autoStartMechanism</name>
             <value>SchemaTable</value>
           </property>

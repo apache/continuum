@@ -656,10 +656,11 @@
             <type>Profile</type>
           </association>
         </field>
-        <field>
+        <field jpox.nullValue="default">
           <name>latestBuildId</name>
           <version>1.0.0</version>
           <type>int</type>
+          <defaultValue>0</defaultValue>
         </field>
       </fields>
     </class>
