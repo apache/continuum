@@ -793,8 +793,13 @@ public class DateTool
         }
         if (obj instanceof Number) 
         {
+            long value = ((Number)obj).longValue();
+            if ( value == 0 )
+            {
+                return null;
+            }
             Date d = new Date();
-            d.setTime(((Number)obj).longValue());
+            d.setTime( value );
             return d;
         }
         try
