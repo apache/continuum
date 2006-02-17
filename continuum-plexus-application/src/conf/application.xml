@@ -510,7 +510,7 @@
         </appenders>
         <levels>
           <level>
-            <hierarchy>org.apache.maven.continuum.execution.maven.m2.DefaultMavenBuilderHelper</hierarchy>
+            <hierarchy>org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper</hierarchy>
             <level>INFO</level>
           </level>
           <level>
