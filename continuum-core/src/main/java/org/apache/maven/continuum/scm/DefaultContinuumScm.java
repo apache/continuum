@@ -272,13 +272,13 @@ public class DefaultContinuumScm
     {
         ScmRepository repository = scmManager.makeScmRepository( project.getScmUrl() );
 
-        if ( project.getScmUsername() != null )
+        repository.getProviderRepository().setPersistCheckout( true );
+
+        if ( !StringUtils.isEmpty( project.getScmUsername() ) )
         {
             repository.getProviderRepository().setUser( project.getScmUsername() );
 
-            repository.getProviderRepository().setPersistCheckout( true );
-
-            if ( project.getScmPassword() != null )
+            if ( !StringUtils.isEmpty( project.getScmPassword() ) )
             {
                 repository.getProviderRepository().setPassword( project.getScmPassword() );
             }
