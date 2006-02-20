@@ -33,8 +33,10 @@ import org.apache.maven.model.Scm;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.profiles.DefaultProfileManager;
 import org.apache.maven.profiles.ProfileManager;
+import org.apache.maven.project.InvalidProjectModelException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.validation.ModelValidationResult;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Proxy;
@@ -306,7 +308,25 @@ public class DefaultMavenBuilderHelper
         }
         catch ( Exception e )
         {
-            String msg = "Cannot build maven project from " + file + " (" + e.getMessage() + ").";
+            StringBuffer messages = new StringBuffer();
+
+            if ( e instanceof InvalidProjectModelException )
+            {
+                InvalidProjectModelException ex = (InvalidProjectModelException) e;
+
+                ModelValidationResult validationResult = ex.getValidationResult();
+
+                if ( validationResult != null && validationResult.getMessageCount() > 0 )
+                {
+                    for ( Iterator i = validationResult.getMessages().iterator(); i.hasNext(); )
+                    {
+                        messages.append( (String) i.next() );
+                        messages.append( "\n" );
+                    }
+                }
+            }
+
+            String msg = "Cannot build maven project from " + file + " (" + e.getMessage() + ").\n" + messages;
 
             getLogger().error( msg, e );
 
