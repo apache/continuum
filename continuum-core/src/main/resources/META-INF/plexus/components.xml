@@ -368,7 +368,7 @@
       <configuration>
         <excludedPackagingTypes>
           <!--
-          <packaging implementation="java.lang.String">pom</packaging>
+          <packaging>pom</packaging>
           -->
         </excludedPackagingTypes>
       </configuration>

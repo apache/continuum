@@ -442,10 +442,10 @@
       <implementation>org.codehaus.plexus.formica.validation.UrlValidator</implementation>
       <configuration>
         <allowedSchemes>
-          <allowedScheme implementation="java.lang.String">http</allowedScheme>
-          <allowedScheme implementation="java.lang.String">https</allowedScheme>
-          <allowedScheme implementation="java.lang.String">ftp</allowedScheme>
-          <!-- <allowedScheme implementation="java.lang.String">file</allowedScheme> -->
+          <allowedScheme>http</allowedScheme>
+          <allowedScheme>https</allowedScheme>
+          <allowedScheme>ftp</allowedScheme>
+          <!-- <allowedScheme>file</allowedScheme> -->
         </allowedSchemes>
       </configuration>
     </component>
