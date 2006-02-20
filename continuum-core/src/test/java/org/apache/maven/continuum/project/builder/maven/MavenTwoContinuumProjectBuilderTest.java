@@ -41,8 +41,8 @@ public class MavenTwoContinuumProjectBuilderTest
     public void testGetEmailAddressWhenTypeIsSetToEmail()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder =
+            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
 
         File pom = getTestFile( "src/test/repository/maven-builder-helper-1.xml" );
 
@@ -72,8 +72,8 @@ public class MavenTwoContinuumProjectBuilderTest
     public void testGetEmailAddressWhenTypeIsntSet()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder =
+            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
 
         File pom = getTestFile( "src/test/repository/maven-builder-helper-2.xml" );
 
@@ -103,8 +103,8 @@ public class MavenTwoContinuumProjectBuilderTest
     public void testCreateProjectsWithModules()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenTwoContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder =
+            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
 
         String url = getTestFile( "src/test/resources/projects/continuum/pom.xml" ).toURL().toExternalForm();
 
