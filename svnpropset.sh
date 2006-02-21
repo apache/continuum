@@ -222,6 +222,13 @@ svn propset svn:eol-style native $n
 svn propset svn:keywords 'Date Author Id Revision HeadURL' $n
 done
 
+find . -name "*.vsl" | grep -v '\.svn' | while read n
+do
+svn propset svn:mime-type 'text/plain' $n
+svn propset svn:eol-style native $n
+svn propset svn:keywords 'Date Author Id Revision HeadURL' $n
+done
+
 find . -name "*.wsdl" | grep -v '\.svn' | while read n
 do
 svn propset svn:mime-type 'text/xml' $n
