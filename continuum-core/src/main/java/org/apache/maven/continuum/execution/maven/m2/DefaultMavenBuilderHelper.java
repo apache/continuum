@@ -293,9 +293,7 @@ public class DefaultMavenBuilderHelper
                 writeSettings( settings );
             }
 
-            ProfileManager profileManager = new DefaultProfileManager( container );
-
-            loadSettingsProfiles( profileManager, settings );
+            ProfileManager profileManager = new DefaultProfileManager( container, settings );
 
             project = projectBuilder.build( file, getRepository( settings ), profileManager, false );
 
@@ -465,27 +463,6 @@ public class DefaultMavenBuilderHelper
 
         return artifactRepositoryFactory.createArtifactRepository( "local", "file://" + localRepo, repositoryLayout,
                                                                    null, null );
-    }
-
-    private void loadSettingsProfiles( ProfileManager profileManager, Settings settings )
-    {
-        List settingsProfiles = settings.getProfiles();
-
-        if ( settingsProfiles != null && !settingsProfiles.isEmpty() )
-        {
-            List settingsActiveProfileIds = settings.getActiveProfiles();
-
-            profileManager.explicitlyActivate( settingsActiveProfileIds );
-
-            for ( Iterator it = settings.getProfiles().iterator(); it.hasNext(); )
-            {
-                org.apache.maven.settings.Profile rawProfile = (org.apache.maven.settings.Profile) it.next();
-
-                Profile profile = SettingsUtils.convertFromSettingsProfile( rawProfile );
-
-                profileManager.addProfile( profile );
-            }
-        }
     }
 
     private void writeSettings( Settings settings )
