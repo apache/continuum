@@ -22,15 +22,15 @@ $page.setTitle( "Continuum" )
 <div class="app">
   <div id="h3">
     <h3>Continuum Projects</h3>
-    <table border="1" cellspacing="2" cellpadding="3" width="100%" id="projectSummaryTable">
+    <table border="1" cellspacing="1" cellpadding="0" width="100%" bordercolor="#666666" id="projectSummaryTable">
 
       <!-- i18n -->
       <tbody><tr>
-        <th>&nbsp;</th>
-        <th width="100%">Name</th>
-        <th>Version</th>
-        <th>Build</th>
-        <th>Group</th>
+        <th width="1%"><div align="center"></div></th>
+        <th width="48%" class="tablehead">Name</th>
+        <th width="13%" class="tablehead">Version</th>
+        <th width="5%"><div align="center" class="tablehead">Build</div></th>
+        <th width="13%"><div align="center" class="tablehead">Group</div></th>
         <th colspan="7"></th>
       </tr>
 
@@ -48,7 +48,8 @@ $page.setTitle( "Continuum" )
       #end
 
       <tr class="$css.nextClass">
-        <td>
+        <td bordercolor="#999999">
+          <div align="center">
           #if ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
             #set ( $latestBuild = $buildResults.get( $item.id ) )
             #set ( $generatedState = $state.generate( $item ) )
@@ -60,12 +61,14 @@ $page.setTitle( "Continuum" )
           #else
             &nbsp;
           #end
+          </div>
         </td>
         <td><a href="$link.setPage('View.vm').addPathInfo('fid', "$!{item.executorId}Project").addPathInfo('id', $item.id)">$!item.name</a></td>
         <td>$!item.version</td>
         <td>
+          <div align="center">
           #if ( $continuum.isInBuildingQueue( $item.id ) || $continuum.isInCheckoutQueue( $item.id ) )
-            <b>In&nbsp;queue</b>
+            <b><img src="/continuum/images/inqueue.gif" alt="In Queue" title="In Queue" width="16" height="16"></b>
           #elseif ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
             #if ( $item.buildNumber != 0 )
               #set ( $build = $buildResultsInSuccess.get( $item.id ) )
@@ -74,41 +77,50 @@ $page.setTitle( "Continuum" )
               $item.buildNumber
             #end
           #else
-            <b>In&nbsp;progress</b>
+            <b><img src="/continuum/images/inqueue.gif" alt="In Queue" title="In Queue" width="16" height="16"></b>
           #end
+          </div>
         </td>
-        <td>$item.projectGroup.name</td>
+        <td><div align="center">$item.projectGroup.name</div></td>
 
         ## Operations
 
         #if ( $continuum.security.isAuthorized( $c1user, "buildProject" ) )
+          <td width="1%">
           #if ( $continuum.isInBuildingQueue( $item.id ) || $continuum.isInCheckoutQueue( $item.id ) )
-          <td>Build</td>
+            Build
           #elseif ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
-          <td><a href="$link.addPathInfo('action', 'cam').addPathInfo('cid','buildProject').addPathInfo('id', $item.id)">Build&nbsp;Now</a></td>
+            <a href="$link.addPathInfo('action', 'cam').addPathInfo('cid','buildProject').addPathInfo('id', $item.id)"><img src="/continuum/images/buildnow.gif" alt="Build Now" title="Build Now" width="16" height="16" border="0"></a>
           #else
-          <td>Build</td>
+            &nbsp;
           #end
+          </td>
         #end
 
+        <td width="1%">
         #if ( $item.latestBuildId > 0 )
-        <td><a href="$link.setPage('ProjectBuilds.vm').addPathInfo('view', "ProjectBuilds").addPathInfo('id', $item.id)">Build&nbsp;History</a></td>
+          <a href="$link.setPage('ProjectBuilds.vm').addPathInfo('view', "ProjectBuilds").addPathInfo('id', $item.id)"><img src="/continuum/images/buildhistory.gif" alt="Build History" title="Build History" width="16" height="16" border="0"></a>
         #else
-        <td>All&nbsp;Results</td>
+          &nbsp;
         #end
+        </td>
 
+        <td width="1%">
         #if ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 || $item.state == 6 )
-        <td><a href="$link.setPage('WorkingCopy.vm').addPathInfo('view', "WorkingCopy").addPathInfo('id', $item.id)">Working&nbsp;Copy</a></td>
+          <a href="$link.setPage('WorkingCopy.vm').addPathInfo('view', "WorkingCopy").addPathInfo('id', $item.id)"><img src="/continuum/images/workingcopy.gif" alt="Working Copy" title="Working Copy" width="16" height="16" border="0"></a>
         #else
-        <td>Working&nbsp;Copy</td>
+          &nbsp;
         #end
+        </td>
 
         #if ( $continuum.security.isAuthorized( $c1user, "deleteProject" ) )
+          <td width="1%">
           #if ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
-          <td><a href="$link.setPage('Delete.vm').addPathInfo('fid', "$!{item.executorId}Project").addPathInfo('id', $item.id)">Delete</a></td>
+          <a href="$link.setPage('Delete.vm').addPathInfo('fid', "$!{item.executorId}Project").addPathInfo('id', $item.id)"><img src="/continuum/images/delete.gif" alt="Delete" title="Delete" width="16" height="16" border="0"></a>
           #else
-          <td>Delete</td>
+          &nbsp;
           #end
+          </td>
         #end
 
       </tr>

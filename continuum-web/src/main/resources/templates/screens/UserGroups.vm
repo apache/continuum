@@ -11,24 +11,25 @@ $page.setTitle( $i18n.getString( "group.management.label" ) )
 <div class="app">
   <div id="h3">
     <h3>$i18n.getString( "group.management.label" )</h3>
-    <table border="1" cellspacing="2" cellpadding="3" width="100%">
+    <table border="1" cellpadding="3" cellspacing="2" width="100%">
+      <tbody>
       <tr>
-        <th width="10%">$i18n.getString( "group.name.label" )</th>
-        <th>$i18n.getString( "group.permission.addProject.label" )</th>
-        <th>$i18n.getString( "group.permission.editProject.label" )</th>
-        <th>$i18n.getString( "group.permission.deleteProject.label" )</th>
-        <th>$i18n.getString( "group.permission.buildProject.label" )</th>
-        <th>$i18n.getString( "group.permission.showProject.label" )</th>
-        <th>$i18n.getString( "group.permission.addBuildDefinition.label" )</th>
-        <th>$i18n.getString( "group.permission.editBuildDefinition.label" )</th>
-        <th>$i18n.getString( "group.permission.deleteBuildDefinition.label" )</th>
-        <th>$i18n.getString( "group.permission.addNotifier.label" )</th>
-        <th>$i18n.getString( "group.permission.editNotifier.label" )</th>
-        <th>$i18n.getString( "group.permission.deleteNotifier.label" )</th>
-        <th>$i18n.getString( "group.permission.manageConfiguration.label" )</th>
-        <th>$i18n.getString( "group.permission.manageSchedule.label" )</th>
-        <th>$i18n.getString( "group.permission.manageUsers.label" )</th>
-        <th width="10%">&nbsp;</th>
+        <th width="10%" class="tablehead">$i18n.getString( "group.name.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.addProject.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.editProject.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.deleteProject.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.buildProject.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.showProject.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.addBuildDefinition.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.editBuildDefinition.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.deleteBuildDefinition.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.addNotifier.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.editNotifier.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.deleteNotifier.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.manageConfiguration.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.manageSchedule.label" )</th>
+        <th class="tablehead">$i18n.getString( "group.permission.manageUsers.label" )</th>
+        <th width="10%" class="tablehead">&nbsp;</th>
       </tr>
       #foreach ( $group in $items )
       <tr class="$css.nextClass">
@@ -139,6 +140,7 @@ $page.setTitle( $i18n.getString( "group.management.label" ) )
         </td>
       </tr>
       #end
+      </tbody>
     </table>
     #if ( $continuum.security.isAuthorized( $c1user, "manageUsers" ) )
     <div class="functnbar3">

@@ -11,13 +11,14 @@ $page.setTitle( "Continuum" )
 <div class="app">
   <div id="h3">
     <h3>Schedules</h3>
-    <table border="1" cellspacing="2" cellpadding="3" width="100%">
+    <table border="1" cellpadding="3" cellspacing="2" width="100%">
+      <tbody>
       <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Cron</th>
-        <th>Quiet Period (seconds)</th>
-        <th width="10%">&nbsp;</th>
+        <th class="tablehead">Name</th>
+        <th class="tablehead">Description</th>
+        <th class="tablehead">Cron</th>
+        <th class="tablehead">Quiet Period (seconds)</th>
+        <th width="10%" class="tablehead">&nbsp;</th>
       </tr>
       #foreach ( $schedule in $items )
         <tr class="$css.nextClass" #if ( !$schedule.active ) style="color: silver;" #end>
@@ -37,6 +38,7 @@ $page.setTitle( "Continuum" )
             #end
         </tr>
       #end
+      </tbody>
     </table>
     #if ( $continuum.security.isAuthorized( $c1user, "manageSchedule" ) )
     <div class="functnbar3">

@@ -9,8 +9,6 @@ body {
 }
 
 .app h3, .app h4, .tabs td, .tabs th, .functnbar {
-	background-image: url(../images/nw_maj_rond.gif);
-	background-repeat: no-repeat;
 }
 
 .functnbar, .functnbar2 {
@@ -25,16 +23,16 @@ body {
 }
 
 .functnbar3 {
-	background-color: #ddd;
+	background-color: #bbb;
 	background-image: url(../images/sw_med_rond.gif);
 }
 
 .functnbar, .functnbar2, .functnbar3 {
-	color: #000;
+	color: #333;
 }
 
 .functnbar a, .functnbar2 a, .functnbar3 a {
-	color: #000;
+	color: #333;
 	text-decoration: underline;
 }
 
@@ -48,8 +46,10 @@ body {
 	background-image: none;
 }
 
+
+
 a:link, #navcolumn a:visited, .app a:visited, .tasknav a:visited {
-	color: blue;
+	color: #333;
 }
 
 a:link.selfref, a:visited.selfref {
@@ -58,24 +58,50 @@ a:link.selfref, a:visited.selfref {
 }
 
 a:active, a:hover, #leftcol a:active, #leftcol a:hover {
-	color: #f30 !important;
+	color: #f30;
+	
 }
 
-#leftcol a, #breadcrumbs a {
+#leftcol a  {
 	text-decoration: none;
+	
 }
+
+#breadcrumbs a:link{
+	text-decoration: none;
+
+}
+
+#breadcrumbs a:visited{
+	text-decoration: none;
+	color: #333
+
+}
+
+#breadcrumbs a:hover {
+	text-decoration: none;
+	color:white
+}
+
 
 .app h3, .app h4 {
-	color: #fff;
+	color: #333;
+  
 }
 
 .app h3 {
-	background-color: #333;
+	background-image: url(../images/arrow.gif);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	padding-bottom: 15px;
 }
+/* dagdag ko ung nasa itaas */
+
+
 
 .app h3 a:link, .app h3 a:visited, .app h4 a:link, .app h4 a:visited {
 	color: #fff !important;
-	text-decoration: underline;
+	/*text-decoration: underline;*/
 }
 
 .app h4 {
@@ -87,7 +113,7 @@ a:active, a:hover, #leftcol a:active, #leftcol a:hover {
 }
 
 .b td {
-	background: #efefef;
+	background: #eee;
 }
 
 .warning td {
@@ -107,7 +133,7 @@ div.colbar {
 	border-color: #999 #EEE #EEE #999;
 	border-width: 1px;
 	border-style: solid;
-}
+/*}
 
 .toolgroup {
 	background: #efefef;
@@ -117,17 +143,12 @@ div.colbar {
 	border-bottom: 1px solid #666;
 	border-right: 1px solid #666;
 	background: #ddd;
-	color: #555;
-}
-
-.toolgroup .body {
-	border-right: 1px solid #aaa;
-	border-bottom: 1px solid #aaa;
+	color: #555; */
 }
 
 #breadcrumbs {
 	border-top: 1px solid #fff;
-	background-color: #ccc;
+	background-color: #F3B455;
 }
 
 #main {
@@ -155,7 +176,7 @@ body.docs {
 }
 
 .docs h3, .docs h4 {
-	border-top: solid 1px #000;
+	border-top: solid 1px #333;
 }
 
 #apphead h2 em {
@@ -198,7 +219,7 @@ body.docs {
 
 .axial th {
 	background-color: #ddd;
-	color: black;
+	color: #555;
 }
 
 .alert {
@@ -268,8 +289,13 @@ body .grid td {
 }
 
 .warningmessage {
-	background-image: url(../images/icon_warning_lrg.gif);
-	border-color: #c60;
+	background-image: url(../images/bg_warning.gif);
+	height: 48px;
+	background-position: 0px 0px;
+	background-color: white;
+	border: 0px 0px 0px 0px;
+	border-color: white;
+	color: #333;
 }
 
 .donemessage {
@@ -423,6 +449,8 @@ body, th, td, input, select {
 	font-family: Verdana, Helvetica, Arial, sans-serif;
 }
 
+th  {color:white}
+
 code, pre {
 	font-family: 'Andale Mono', Courier, monospace;
 }
@@ -432,6 +460,7 @@ body, .app h3, .app h4, #rightcol h3, pre, code, #apphead h2 small {
 	voice-family: "\"}\"";
 	voice-family: inherit;
 	font-size: small;
+
 }
 
 small, div#footer, div#login, div.tabs th, div.tabs td, input, select, .paginate, .functnbar, .functnbar2, .functnbar3, #breadcrumbs, .courtesylinks, #rightcol div.help, .colbar, .tasknav, body.docs div#toc, #leftcol, .legend, .bars {
@@ -487,6 +516,7 @@ form {
 	voice-family: "\"}\"";
 	voice-family: inherit;
 	width: auto;
+	
 }
 
 html>body #bodycol {
@@ -506,10 +536,16 @@ ol ol ol {
 }
 
 .app h3, .app h4 {
-	padding: 5px;
-	margin-right: 2px;
-	margin-left: 2px;
+
 }
+
+.app h3		{
+
+	border-bottom: 1px solid #DFDEDE; 
+	padding: 0px 0px 1px 23px;
+  	margin-bottom: 7px;
+}
+/* dagdag ko ung nasa itaas */
 
 .app td, .app th {
 	padding: 2px 3px;
@@ -637,16 +673,98 @@ dd {
 }
 
 .toolgroup {
-	margin-bottom: 6px;
+padding: 6px 0px 0px 2px;
+	
 }
 
-.toolgroup .body {
-	padding: 4px 4px 4px 0;
+#legend {
+	/*height: 25px;
+	width: 161px;	
+	overflow: hidden;*/
+	background: url(../images/legendbg.gif) 8px 0 no-repeat;
+	display: block;
+}
+
+#litem1 {background: url(../images/buildnow.gif) 134px 5px no-repeat; padding-bottom: 8px;}
+#litem2 {background: url(../images/buildhistory.gif) 134px 5px no-repeat;}
+#litem3 {background: url(../images/building.gif) 134px 5px no-repeat;}
+#litem4 {background: url(../images/checkingout.gif) 134px 5px no-repeat;}
+#litem5 {background: url(../images/inqueue.gif) 134px 5px no-repeat; padding-bottom: 8px;}
+#litem6 {background: url(../images/delete.gif) 134px 5px no-repeat}
+#litem7 {background: url(../images/edit.gif) 134px 5px no-repeat; padding-bottom: 8px;}
+#litem8 {background: url(../images/icon_success_sml.gif) 134px 5px no-repeat;}
+#litem9 {background: url(../images/icon_warning_sml.gif) 134px 5px no-repeat;}
+#litem10 {background: url(../images/icon_error_sml.gif) 134px 5px no-repeat;}
+
+#legend .body {
+	font-size: 9px;
+	text-indent: 19px;
+	line-height:24px;
+	height: 25px;
+	width: 161px;	
+	display: block;
+}
+
+
+.toolgroup .body {font-size: 9px;
+	text-indent: 19px;
+	line-height:24px;
+	height: 25px;
+	width: 161px;	
+	overflow: hidden;
+	background: url(../images/super.gif) 0 0 no-repeat;
+	display: block;
+}
+
+.toolgroup .body a:link{
+	height: 25px;
+	width: 161px;	
+	overflow: hidden;
+	background: url(../images/super.gif) 0 0 no-repeat;
+	display: block;
+}
+		
+.toolgroup .body a:hover {
+	font-size: 9px;
+	text-indent: 19px;
+	line-height:24px;
+	color: #fff !important;
+	height: 25px;
+	width: 161px;
+	overflow: hidden;
+	background: url(../images/super.gif) 0 -25px no-repeat;
+	display: block;
+}
+
+.toolgroup .body a:active {
+	font-size: 9px;
+	text-indent: 19px;
+	line-height:24px;
+	color: #fff !important;
+	height: 25px;
+	width: 161px;
+	overflow: hidden;
+	background: url(../images/super.gif) 0 -50px no-repeat;
+	display: block;
+}
+
+.toolgroup .body a:visited {
+	font-size: 9px;
+	text-indent: 19px;
+	line-height:24px;
+	color:#666;
+	height: 25px;
+	width: 161px;
+	display: block;
 }
 
 .toolgroup .label {
-	padding: 4px;
+    color:gray;
+	font-weight:bold;
+	font-size: 11px;
+	padding: 0px 0px 1px 19px;
 }
+/* inedit ko */
 
 .toolgroup .body div {
 	padding-bottom: .3em;
@@ -764,7 +882,7 @@ td.filebrowse h3 {
 }
 
 #leftcol {
-	width: 14em;
+	width: 16em;
 }
 
 .axial th, .axial th .strut, #leftcol .strut {
@@ -799,3 +917,8 @@ td.filebrowse h3 {
 #projectdocumentlist td.filebrowse-alt {
 	padding-right: .75em;
 }
+
+.tablehead {color: #FFFFFF;
+}
+
+#footer {background: url(../images/footerborder.gif) 0 5px; padding: 10px 0px 8px 0px;}

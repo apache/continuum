@@ -10,7 +10,8 @@ $page.setTitle( "Edit Continuum Configuration" )
       #hidden ( "cid" "updateConfiguration" )
       #hidden ( "view" "ConfigureContinuum.vm" )
       <div class="axial">
-        <table border="1" cellspacing="2" cellpadding="3" width="100%">
+        <table border="1" cellpadding="3" cellspacing="2" width="100%">
+        <tbody>
         <tr class="b">
           <th>Guests</th>
           <td>
@@ -41,6 +42,7 @@ $page.setTitle( "Edit Continuum Configuration" )
           <th>Company URL</th>
           <td><input type="text" name="conf.companyUrl" #if ( $continuum.configuration.companyUrl ) value="$continuum.configuration.companyUrl" #end size="100"/></td>
         </tr>
+        </tbody>
         </table>
         #submitBar( "Submit" )
       </div>
