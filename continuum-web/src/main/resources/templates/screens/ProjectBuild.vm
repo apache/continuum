@@ -1,4 +1,4 @@
-$page.setTitle( "Continuum - ${project.name} Build at $date.format('medium',$build.startTime)" )
+$page.setTitle( "Continuum - Continuum Web Build at $date.format('medium',$build.startTime)" )
 
 #if ( $data.user )
   #set ( $c1user = $continuum.getUser( $data.user.userId ) )
@@ -68,7 +68,7 @@ $page.setTitle( "Continuum - ${project.name} Build at $date.format('medium',$bui
       #foreach ( $changeSet in $build.scmResult.changes )
       <tr class="a">
         <td>#if ($changeSet.author) $changeSet.author #end</td>
-        <td>#if ($changeSet.date > 0) $date.format('medium',$changeSet.date) #end</td>
+        <td>#if ($changeSet.dateAsDate) $date.format('medium',$changeSet.dateAsDate) #end</td>
         <td>#if ($changeSet.comment) $changeSet.comment #end</td>
         <td>
           #foreach ( $file in $changeSet.files )

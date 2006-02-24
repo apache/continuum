@@ -559,6 +559,16 @@
 
                 return false;
             }
+
+            public java.util.Date getDateAsDate()
+            {
+                if ( date > 0 )
+                {
+                    return new java.util.Date( date );
+                }
+
+                return null;
+            }
           ]]></code>
         </codeSegment>
       </codeSegments>
