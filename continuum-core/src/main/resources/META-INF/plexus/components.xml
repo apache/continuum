@@ -166,6 +166,15 @@
           <role>org.apache.maven.continuum.store.ContinuumStore</role>
         </requirement>
       </requirements>
+      <configuration>
+        <updateProperties>
+          <property>
+            <name>maven.scm.starteam.deleteLocal</name>
+            <value>true</value>
+          </property>
+        </updateProperties>
+      </configuration>
+      
     </component>
 
     <component>

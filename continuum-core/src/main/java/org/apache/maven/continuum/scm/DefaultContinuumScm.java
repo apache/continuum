@@ -39,8 +39,10 @@ import org.codehaus.plexus.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -65,6 +67,12 @@ public class DefaultContinuumScm
      */
     private ContinuumStore store;
 
+    /**
+     * @plexus.configuration
+     */
+    private Properties updateProperties;
+
+    
     // ----------------------------------------------------------------------
     // ContinuumScm implementation
     // ----------------------------------------------------------------------
@@ -207,6 +215,19 @@ public class DefaultContinuumScm
                     workingDirectory.getAbsolutePath() + ")." );
             }
 
+            //Some SCM provider requires additional system properties during update
+            if ( updateProperties != null )
+            {
+                Enumeration propertyKeys = updateProperties.propertyNames();
+
+                while ( propertyKeys.hasMoreElements() )
+                {
+                    String key = (String) propertyKeys.nextElement();
+
+                    System.setProperty( key, updateProperties.getProperty( key ) );
+                }
+            }
+            
             ScmRepository repository = getScmRepositorty( project );
 
             ScmResult result;

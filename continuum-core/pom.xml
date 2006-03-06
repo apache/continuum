@@ -24,13 +24,6 @@
       <artifactId>jpox</artifactId>
     </dependency>
     <dependency>
-      <groupId>postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>7.4</version>
-      <classifier>jdbc3</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-mail-sender-api</artifactId>
     </dependency>
