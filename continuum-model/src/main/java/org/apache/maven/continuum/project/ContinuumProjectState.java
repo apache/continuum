@@ -63,6 +63,8 @@ public class ContinuumProjectState
 
     public final static int UPDATING = 8;
 
+    public final static int WARNING = 9;
+
     private String name;
 
     // TODO: maybe move these to another class

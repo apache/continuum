@@ -185,7 +185,7 @@ public class JabberContinuumNotifier
 
         BuildResult previousBuild = getPreviousBuild( project, build );
 
-        if ( !shouldNotify( build, previousBuild ) )
+        if ( !shouldNotify( build, previousBuild, configuration ) )
         {
             return;
         }

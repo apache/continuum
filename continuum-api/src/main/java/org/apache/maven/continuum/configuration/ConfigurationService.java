@@ -83,6 +83,8 @@ public interface ConfigurationService
     //
     // ----------------------------------------------------------------------
 
+    boolean isLoaded();
+
     void load()
         throws ConfigurationLoadingException;
 

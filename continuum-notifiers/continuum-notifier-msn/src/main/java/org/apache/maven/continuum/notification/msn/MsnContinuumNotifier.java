@@ -150,9 +150,9 @@ public class MsnContinuumNotifier
         }
         else
         {
-            getLogger().warn( "Unknown build state " + build.getState() + " for project " + project.getId() );
+            getLogger().warn( "Unknown build state " + state + " for project " + project.getId() );
 
-            message = "ERROR: Unknown build state " + build.getState() + " for " + project.getName() + " project";
+            message = "ERROR: Unknown build state " + state + " for " + project.getName() + " project";
         }
 
         return message + " " + getReportUrl( project, build, configurationService );
@@ -169,7 +169,7 @@ public class MsnContinuumNotifier
 
         BuildResult previousBuild = getPreviousBuild( project, build );
 
-        if ( !shouldNotify( build, previousBuild ) )
+        if ( !shouldNotify( build, previousBuild, configuration ) )
         {
             return;
         }

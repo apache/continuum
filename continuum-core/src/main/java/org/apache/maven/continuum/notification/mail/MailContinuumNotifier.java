@@ -200,7 +200,7 @@ public class MailContinuumNotifier
     }
 
     private void buildComplete( Project project, BuildResult build, String buildOutput, String source, Set recipients,
-                               Map configuration )
+                                Map configuration )
         throws NotificationException
     {
         // ----------------------------------------------------------------------
@@ -209,7 +209,7 @@ public class MailContinuumNotifier
 
         BuildResult previousBuild = getPreviousBuild( project, build );
 
-        if ( !shouldNotify( build, previousBuild ) )
+        if ( !shouldNotify( build, previousBuild, configuration ) )
         {
             return;
         }
@@ -267,8 +267,8 @@ public class MailContinuumNotifier
 
                 context.put( "osName", osName );
 
-                context.put( "javaVersion", System.getProperty( "java.version" ) + "("
-                    + System.getProperty( "java.vendor" ) + ")" );
+                context.put( "javaVersion",
+                             System.getProperty( "java.version" ) + "(" + System.getProperty( "java.vendor" ) + ")" );
 
                 // ----------------------------------------------------------------------
                 // Generate
@@ -354,9 +354,8 @@ public class MailContinuumNotifier
         if ( fromMailbox == null )
         {
             getLogger()
-                .warn(
-                       project.getName()
-                           + ": Project is missing nag email and global from mailbox is missing, not sending mail." );
+                .warn( project.getName() +
+                    ": Project is missing nag email and global from mailbox is missing, not sending mail." );
 
             return;
         }
@@ -449,8 +448,8 @@ public class MailContinuumNotifier
 
         if ( currentBuild != null && build.getId() != currentBuild.getId() )
         {
-            throw new NotificationException( "INTERNAL ERROR: The current build wasn't the first in the build list. "
-                + "Current build: '" + currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
+            throw new NotificationException( "INTERNAL ERROR: The current build wasn't the first in the build list. " +
+                "Current build: '" + currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
         }
 
         return (BuildResult) builds.get( builds.size() - 2 );

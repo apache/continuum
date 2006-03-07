@@ -95,6 +95,7 @@
         <from-name>@mail.override.from.name@</from-name>
         <timestamp-format>EEE, d MMM yyyy HH:mm:ss Z</timestamp-format>
         <includeBuildResult>true</includeBuildResult>
+        <alwaysSend>false</alwaysSend>
       </configuration>
     </component>
 
@@ -144,6 +145,9 @@
           <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
         </requirement>
       </requirements>
+      <configuration>
+        <alwaysSend>false</alwaysSend>
+      </configuration>
     </component>
 
     <component>
@@ -169,13 +173,14 @@
           <role>org.apache.maven.continuum.store.ContinuumStore</role>
         </requirement>
       </requirements>
-      <!-- configuration>
-        <from-address/>
+      <configuration>
+        <alwaysSend>false</alwaysSend>
+        <!-- from-address/>
         <from-password/>
         <host/>
         <port/>
-        <sslConnection>true</sslConnection>
-      </configuration -->
+        <sslConnection>true</sslConnection -->
+      </configuration>
     </component>
 
     <component>
@@ -201,10 +206,11 @@
           <role>org.apache.maven.continuum.store.ContinuumStore</role>
         </requirement>
       </requirements>
-      <!-- configuration>
-        <from-address/>
-        <from-password/>
-      </configuration -->
+      <configuration>
+        <alwaysSend>false</alwaysSend>
+        <!-- from-address/>
+        <from-password/ -->
+      </configuration>
     </component>
 
     <component>

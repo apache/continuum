@@ -50,13 +50,13 @@ public class DefaultConfigurationService
 
     private SystemConfiguration systemConf;
 
+    private boolean loaded = false;
+
     // ----------------------------------------------------------------------
     // Continuum specifics we'll refactor out later
     // ----------------------------------------------------------------------
 
     private Map jdks;
-
-    private static final String LS = System.getProperty( "line.separator" );
 
     // ----------------------------------------------------------------------
     //
@@ -136,7 +136,7 @@ public class DefaultConfigurationService
 
     public void setCompanyName( String companyName )
     {
-        systemConf.setCompanyName(  companyName );
+        systemConf.setCompanyName( companyName );
     }
 
     public String getCompanyUrl()
@@ -221,6 +221,11 @@ public class DefaultConfigurationService
     // Load and Store
     // ----------------------------------------------------------------------
 
+    public boolean isLoaded()
+    {
+        return loaded;
+    }
+
     public void load()
         throws ConfigurationLoadingException
     {
@@ -234,6 +239,8 @@ public class DefaultConfigurationService
 
                 systemConf = store.addSystemConfiguration( systemConf );
             }
+
+            loaded = true;
         }
         catch ( ContinuumStoreException e )
         {
