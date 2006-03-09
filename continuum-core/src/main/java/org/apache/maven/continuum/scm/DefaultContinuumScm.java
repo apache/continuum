@@ -233,12 +233,15 @@ public class DefaultContinuumScm
 
             ScmResult result;
 
+            UpdateScmResult scmResult;
+
             ScmFileSet fileSet = new ScmFileSet( workingDirectory );
 
             synchronized ( this )
             {
-                result = convertScmResult( scmManager.getProviderByRepository( repository )
-                    .update( repository, fileSet, tag, getLatestUpdateDate( project ) ) );
+                scmResult = scmManager.getProviderByRepository( repository )
+                    .update( repository, fileSet, tag, getLatestUpdateDate( project ) );
+                result = convertScmResult( scmResult );
             }
 
             if ( !result.isSuccess() )
@@ -251,8 +254,10 @@ public class DefaultContinuumScm
                 getLogger().warn( "Provider message: " + result.getProviderMessage() );
             }
 
-            // TODO: total the number of files in the changesets
-//            getLogger().info( "Updated " + result.getFiles().size() + " files." );
+            if ( scmResult.getUpdatedFiles() != null && scmResult.getUpdatedFiles().size() > 0 )
+            {
+                getLogger().info( "Updated " + scmResult.getUpdatedFiles().size() + " files." );
+            }
 
             return result;
         }
