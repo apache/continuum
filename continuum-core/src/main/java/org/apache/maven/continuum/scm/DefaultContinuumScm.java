@@ -394,14 +394,7 @@ public class DefaultContinuumScm
 
         result.setProviderMessage( scmResult.getProviderMessage() );
 
-        // TODO: is this valid?
-        ChangeSet changeSet = convertScmFileSetToChangeSet( scmResult.getUpdatedFiles() );
-        if ( changeSet != null )
-        {
-            result.addChange( changeSet );
-        }
-
-        if ( scmResult.getChanges() != null )
+        if ( scmResult.getChanges() != null && !scmResult.getChanges().isEmpty() )
         {
             for ( Iterator it = scmResult.getChanges().iterator(); it.hasNext(); )
             {
@@ -433,6 +426,18 @@ public class DefaultContinuumScm
 
                 result.addChange( change );
             }
+        }
+        else
+        {
+            //We don't have a changes information probably because provider doesn't have a changelog command
+            //so we use the updated list that contains only the updated files list
+            ChangeSet changeSet = convertScmFileSetToChangeSet( scmResult.getUpdatedFiles() );
+
+            if ( changeSet != null )
+            {
+                result.addChange( changeSet );
+            }
+
         }
 
         return result;
