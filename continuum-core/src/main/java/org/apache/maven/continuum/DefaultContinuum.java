@@ -942,7 +942,7 @@ public class DefaultContinuum
 
         notif.setType( notifier.getType() );
 
-        notifier.setFrom( ProjectNotifier.FROM_USER );
+        notif.setFrom( ProjectNotifier.FROM_USER );
 
         Project project = getProjectWithAllDetails( projectId );
 
