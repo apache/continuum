@@ -72,7 +72,6 @@ public class DefaultContinuumScm
      */
     private Properties updateProperties;
 
-    
     // ----------------------------------------------------------------------
     // ContinuumScm implementation
     // ----------------------------------------------------------------------
@@ -152,7 +151,9 @@ public class DefaultContinuumScm
         }
         catch ( ScmRepositoryException e )
         {
-            throw new ContinuumScmException( "Cannot checkout sources.", e );
+            String message = getValidationMessages( e );
+
+            throw new ContinuumScmException( "Cannot checkout sources." + message, e );
         }
         catch ( ScmException e )
         {
@@ -227,7 +228,7 @@ public class DefaultContinuumScm
                     System.setProperty( key, updateProperties.getProperty( key ) );
                 }
             }
-            
+
             ScmRepository repository = getScmRepositorty( project );
 
             ScmResult result;
@@ -236,8 +237,8 @@ public class DefaultContinuumScm
 
             synchronized ( this )
             {
-                result = convertScmResult(
-                    scmManager.getProviderByRepository( repository ).update( repository, fileSet, tag, getLatestUpdateDate( project ) ) );
+                result = convertScmResult( scmManager.getProviderByRepository( repository )
+                    .update( repository, fileSet, tag, getLatestUpdateDate( project ) ) );
             }
 
             if ( !result.isSuccess() )
@@ -255,18 +256,41 @@ public class DefaultContinuumScm
 
             return result;
         }
-        catch ( ScmRepositoryException ex )
+        catch ( ScmRepositoryException e )
         {
-            throw new ContinuumScmException( "Error while update sources.", ex );
+            String message = getValidationMessages( e );
+
+            throw new ContinuumScmException( "Error while update sources." + message, e );
         }
-        catch ( ScmException ex )
+        catch ( ScmException e )
         {
-            throw new ContinuumScmException( "Error while update sources.", ex );
+            throw new ContinuumScmException( "Error while update sources.", e );
         }
         catch ( Exception e )
         {
             throw new ContinuumScmException( "Cannot checkout sources.", e );
         }
+    }
+
+    private String getValidationMessages( ScmRepositoryException ex )
+    {
+        List messages = ex.getValidationMessages();
+
+        StringBuffer message = new StringBuffer();
+
+        if ( !messages.isEmpty() )
+        {
+            for ( Iterator i = messages.iterator(); i.hasNext(); )
+            {
+                message.append( (String) i.next() );
+
+                if ( i.hasNext() )
+                {
+                    message.append( System.getProperty( "line.separator" ) );
+                }
+            }
+        }
+        return message.toString();
     }
 
     // ----------------------------------------------------------------------
@@ -350,7 +374,7 @@ public class DefaultContinuumScm
 
                 // TODO: revision?
 
-                file.setStatus(scmFile.getStatus().toString());
+                file.setStatus( scmFile.getStatus().toString() );
 
                 changeSet.addFile( file );
             }
@@ -420,7 +444,7 @@ public class DefaultContinuumScm
     private String writeCommandLine( String commandLine )
     {
         String cmd = commandLine;
-        
+
         if ( cmd != null && cmd.startsWith( "svn" ) )
         {
             String pwdString = "--password";
