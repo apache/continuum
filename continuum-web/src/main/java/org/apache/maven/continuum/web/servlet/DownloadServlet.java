@@ -337,7 +337,7 @@ public class DownloadServlet
         }
         else
         {
-            return htmlContent.substring( 0, endA + 1 ) +
+            return htmlContent.substring( 0, endA ) +
                 rewriteHrefInHtml( req, tagName, htmlContent.substring( endA ), fileNameParam );
         }
     }

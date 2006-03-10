@@ -25,12 +25,4 @@ $page.setTitle( "Continuum - Working Copy of ${project.name}" )
   #set ( $files = $continuum.getFiles( $project.id, $data.getParameters().getString( "userDirectory" ) ) )
   #set ( $baseUrl = $link.setPage('WorkingCopy.vm').addPathInfo('view', "WorkingCopy").addPathInfo('id', $project.id) )
   $workingCopy.generate( $files, $baseUrl.toString(), $continuum.getWorkingDirectory( $project.id ) )
-
-  #if ( $data.getParameters().getString( "file" ) )
-    #set( $filename = $data.getParameters().getString( "file" ) )
-    <br />
-    <form>
-      <textarea rows="50" cols="100">$continuum.getFileContent( $project.id, $data.getParameters().getString( "userDirectory" ), $filename )</textarea>
-    </form>
-  #end
 </div>
