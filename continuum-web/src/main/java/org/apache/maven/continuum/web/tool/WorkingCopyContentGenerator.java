@@ -124,11 +124,9 @@ public class WorkingCopyContentGenerator
 
     private String getFileUrl( String directory, String fileName )
     {
-        String dir = directory;
-
         String filePath;
 
-        if ( StringUtils.isEmpty( dir ) || "/".equals( dir ) )
+        if ( StringUtils.isEmpty( directory ) || "/".equals( directory ) )
         {
             filePath = basedir.getName() + "/" + fileName;
         }
