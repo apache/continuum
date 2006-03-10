@@ -63,6 +63,13 @@
         </requirement>
       </requirements>
     </component>
+
+    <component>
+      <role>requestUtil</role>
+      <implementation>org.apache.maven.continuum.web.tool.RequestUtil</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
+    </component>
+
     <!--
     |
     | Customized PullTools Service
@@ -74,6 +81,11 @@
       <implementation>org.codehaus.plexus.summit.pull.DefaultPullService</implementation>
       <configuration>
         <tools>
+          <tool>
+            <name>requestUtil</name>
+            <role>requestUtil</role>
+            <scope>request</scope>
+          </tool>
           <tool>
             <name>link</name>
             <role>linktool</role>

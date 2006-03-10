@@ -117,6 +117,8 @@ $page.setTitle( "Continuum - Continuum Web Build at $date.format('medium',$build
   <h3>Output</h3>
   <div class="axial">
   #if ( $output && $output != "" )
+    <a href="$requestUtil.getContextPath()/servlet/browse?file=$requestUtil.getParameter('id')/${requestUtil.getParameter('buildId')}.log.txt">Download as text</a>
+    <br><br>
     <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
       <code><pre>$output</pre></code>
     </div>
