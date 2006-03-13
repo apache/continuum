@@ -22,6 +22,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -98,6 +99,45 @@ public class MavenTwoContinuumProjectBuilderTest
         assertEquals( "mail", notifier.getType() );
 
         assertEquals( "foo@bar", notifier.getConfiguration().get( "address" ) );
+    }
+
+    public void testGetScmUrlWithParams()
+        throws Exception
+    {
+        ContinuumProjectBuilder projectBuilder =
+            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
+
+        File pom = getTestFile( "src/test/repository/maven-builder-helper-3.xml" );
+
+        ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( pom.toURL(), null, null );
+
+        assertNotNull( result.getWarnings() );
+
+        assertEquals( 0, result.getWarnings().size() );
+
+        assertNotNull( result.getProjects() );
+
+        assertEquals( 1, result.getProjects().size() );
+
+        Project project = (Project) result.getProjects().get( 0 );
+
+        assertNotNull( project.getNotifiers() );
+
+        assertEquals( 1, project.getNotifiers().size() );
+
+        ProjectNotifier notifier = (ProjectNotifier) project.getNotifiers().get( 0 );
+
+        assertEquals( "mail", notifier.getType() );
+
+        assertEquals( "foo@bar", notifier.getConfiguration().get( "address" ) );
+
+        String username = System.getProperty( "user.name" );
+
+        String scmUrl = "scm:cvs:ext:${user.name}@company.org:/home/company/cvs:project";
+
+        scmUrl = StringUtils.replace( scmUrl, "${user.name}", username );
+
+        assertEquals( scmUrl, project.getScmUrl() );
     }
 
     public void testCreateProjectsWithModules()
