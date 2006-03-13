@@ -30,10 +30,13 @@
           If you use maven or ant, you need to add at the end of maven.bat and ant.bat, the following line :
         </p>
         <source>
-if "%MAVEN_TERMINATE_CMD%" == "on" exit %ERROR_CODE%
+if "%MAVEN_TERMINATE_CMD%" == "on" exit %ERRORLEVEL%
         </source>
         <p>
         If your bat file contains at the end an exit /B, this line must be copy before it.
+        </p>
+        <p>
+        <b>This part is for Continuum &lt; 1.0.2</b>
         You must add too, at the begin of $CONTINUUM/bin/win32/run.bat, the following lines if you run Continuum from command line :
         </p>
         <source>
