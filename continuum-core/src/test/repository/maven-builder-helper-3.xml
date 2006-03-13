@@ -13,8 +13,8 @@
     </notifiers>
   </ciManagement>
   <scm>
-    <connection>scm:cvs:ext:${user.name}@company.org:/home/company/cvs:${moduleName}</connection>
-    <developerConnection>scm:cvs:ext:${user.name}@company.org:/home/company/cvs:${moduleName}</developerConnection>
+    <connection>scm:cvs:ext:${user.name}@company.org:/home/company/cvs:${moduleName}/${pom.artifactId}</connection>
+    <developerConnection>scm:cvs:ext:${user.name}@company.org:/home/company/cvs:${moduleName}/${pom.artifactId}</developerConnection>
   </scm>
   <properties>
     <moduleName>project</moduleName>

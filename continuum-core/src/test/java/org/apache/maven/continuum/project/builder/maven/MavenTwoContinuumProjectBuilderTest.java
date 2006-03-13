@@ -133,7 +133,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         String username = System.getProperty( "user.name" );
 
-        String scmUrl = "scm:cvs:ext:${user.name}@company.org:/home/company/cvs:project";
+        String scmUrl = "scm:cvs:ext:${user.name}@company.org:/home/company/cvs:project/foo";
 
         scmUrl = StringUtils.replace( scmUrl, "${user.name}", username );
 
