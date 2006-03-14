@@ -21,6 +21,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.formica.web.ContentGenerator;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.summit.pull.RequestTool;
+import org.codehaus.plexus.summit.rundata.RunData;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -28,8 +30,10 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  */
 public class ContinuumStateContentGenerator
     extends AbstractLogEnabled
-    implements ContentGenerator
+    implements ContentGenerator, RequestTool
 {
+    private RunData data;
+
     public String generate( Object item )
     {
         int state;
@@ -51,15 +55,15 @@ public class ContinuumStateContentGenerator
         }
         else if ( state == ContinuumProjectState.OK )
         {
-            return "<img src=\"/continuum/images/icon_success_sml.gif\" alt=\"Success\" title=\"Success\" border=\"0\" />";
+            return "<img src=\"" + data.getContextPath() + "/images/icon_success_sml.gif\" alt=\"Success\" title=\"Success\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.FAILED )
         {
-            return "<img src=\"/continuum/images/icon_warning_sml.gif\" alt=\"Failed\" title=\"Failed\" border=\"0\" />";
+            return "<img src=\"" + data.getContextPath() + "/images/icon_warning_sml.gif\" alt=\"Failed\" title=\"Failed\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.ERROR )
         {
-            return "<img src=\"/continuum/images/icon_error_sml.gif\" alt=\"Error\" title=\"Error\" border=\"0\" />";
+            return "<img src=\"" + data.getContextPath() + "/images/icon_error_sml.gif\" alt=\"Error\" title=\"Error\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.BUILDING )
         {
@@ -79,5 +83,15 @@ public class ContinuumStateContentGenerator
 
             return "Unknown";
         }
+    }
+
+    public void setRunData( RunData data )
+    {
+        this.data = data;
+    }
+
+    public void refresh()
+    {
+        // empty
     }
 }
