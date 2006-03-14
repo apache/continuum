@@ -99,13 +99,17 @@ $page.setTitle( "Continuum - Project View: ${item.name}" )
         </td>
         <td>Project</td>
         <td>
+          #if ( $continuum.security.isAuthorized( $c1user, "buildProject" ) )
+            #set ( $buildNowLink = $link.addPathInfo('action', 'cam').addPathInfo('cid','buildProjectWithBuildDefinition').addPathInfo('id', $item.id).addPathInfo('buildDefinitionId', $buildDefinition.id) )
+            <a href="$buildNowLink">Build Now</a> |
+          #end
           #if ( $continuum.security.isAuthorized( $c1user, "editBuildDefinition" ) )
-          #set ( $buildDefinitionLink = $link.setPage('BuildDefinition.vm').addPathInfo('view','BuildDefinition').addPathInfo('buildDefinitionId', $buildDefinition.id).addPathInfo('id', $item.id) )
-          <a href="$buildDefinitionLink">Edit</a> |
+            #set ( $buildDefinitionLink = $link.setPage('BuildDefinition.vm').addPathInfo('view','BuildDefinition').addPathInfo('buildDefinitionId', $buildDefinition.id).addPathInfo('id', $item.id) )
+            <a href="$buildDefinitionLink">Edit</a> |
           #end
           #if ( $continuum.security.isAuthorized( $c1user, "deleteBuildDefinition" ) )
-          #set ( $deleteBuildDefinitionLink = $link.setPage('DeleteBuildDefinition.vm').addPathInfo('buildDefinitionId', $buildDefinition.id).addPathInfo('id', $item.id).addPathInfo('executorId', $item.executorId) )
-          <a href="$deleteBuildDefinitionLink">Delete</a>
+            #set ( $deleteBuildDefinitionLink = $link.setPage('DeleteBuildDefinition.vm').addPathInfo('buildDefinitionId', $buildDefinition.id).addPathInfo('id', $item.id).addPathInfo('executorId', $item.executorId) )
+            <a href="$deleteBuildDefinitionLink">Delete</a>
           #end
         </td>
       </tr>

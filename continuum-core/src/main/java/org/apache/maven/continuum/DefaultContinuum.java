@@ -417,19 +417,26 @@ public class DefaultContinuum
         buildProject( projectId, ContinuumProjectState.TRIGGER_FORCED );
     }
 
+    public void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId )
+        throws ContinuumException
+    {
+        buildProject( projectId, buildDefinitionId, ContinuumProjectState.TRIGGER_FORCED );
+    }
+
+
     public void buildProject( int projectId, int trigger )
         throws ContinuumException
     {
-        if ( isInBuildingQueue( projectId ) || isInCheckoutQueue( projectId ) )
-        {
-            return;
-        }
-
         BuildDefinition buildDef = getDefaultBuildDefinition( projectId );
 
         if ( buildDef == null )
         {
             throw new ContinuumException( "Project (id=" + projectId + " doens't have a default build definition." );
+        }
+
+        if ( isInBuildingQueue( projectId, buildDef.getId() ) || isInCheckoutQueue( projectId ) )
+        {
+            return;
         }
 
         buildProject( projectId, buildDef.getId(), trigger, false );

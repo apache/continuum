@@ -547,6 +547,10 @@
             <expression>buildProject(#id)</expression>
           </call>
           <call>
+            <cid>buildProjectWithBuildDefinition</cid>
+            <expression>buildProjectWithBuildDefinition(#id, #buildDefinitionId)</expression>
+          </call>
+          <call>
             <cid>buildAllProjects</cid>
             <expression>buildProjects()</expression>
           </call>
