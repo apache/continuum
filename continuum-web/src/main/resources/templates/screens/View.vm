@@ -1,4 +1,4 @@
-$page.setTitle( "Continuum - Project View: ${item.name}" )
+$page.setTitle( "Continuum - Project View: Continuum Web" )
 
 #if ( $data.user )
   #set ( $c1user = $continuum.getUser( $data.user.userId ) )
@@ -76,7 +76,7 @@ $page.setTitle( "Continuum - Project View: ${item.name}" )
         <th class="tablehead">Profile</th>
         <th class="tablehead">Schedule</th>
         <th class="tablehead">From</th>
-        <th width="10%" class="tablehead">&nbsp;</th>
+        <th colspan="3" class="tablehead">&nbsp;</th>
       </tr>
       #foreach ( $buildDefinition in $project.buildDefinitions )
       <tr class="$css.nextClass">
@@ -98,20 +98,24 @@ $page.setTitle( "Continuum - Project View: ${item.name}" )
           #end
         </td>
         <td>Project</td>
-        <td>
-          #if ( $continuum.security.isAuthorized( $c1user, "buildProject" ) )
+        #if ( $continuum.security.isAuthorized( $c1user, "buildProject" ) )
+          <td width="1%">
             #set ( $buildNowLink = $link.addPathInfo('action', 'cam').addPathInfo('cid','buildProjectWithBuildDefinition').addPathInfo('id', $item.id).addPathInfo('buildDefinitionId', $buildDefinition.id) )
-            <a href="$buildNowLink">Build Now</a> |
-          #end
-          #if ( $continuum.security.isAuthorized( $c1user, "editBuildDefinition" ) )
+            <a href="$buildNowLink"><img src="/continuum/images/buildnow.gif" alt="Build Now" title="Build Now" width="16" height="16" border="0"></a>
+          </td>
+        #end
+        #if ( $continuum.security.isAuthorized( $c1user, "editBuildDefinition" ) )
+          <td width="1%">
             #set ( $buildDefinitionLink = $link.setPage('BuildDefinition.vm').addPathInfo('view','BuildDefinition').addPathInfo('buildDefinitionId', $buildDefinition.id).addPathInfo('id', $item.id) )
-            <a href="$buildDefinitionLink">Edit</a> |
-          #end
-          #if ( $continuum.security.isAuthorized( $c1user, "deleteBuildDefinition" ) )
+            <a href="$buildDefinitionLink"><img src="/continuum/images/edit.gif" alt="Edit" title="Edit" width="16" height="16" border="0"></a>
+          </td>
+        #end
+        #if ( $continuum.security.isAuthorized( $c1user, "deleteBuildDefinition" ) )
+          <td width="1%">
             #set ( $deleteBuildDefinitionLink = $link.setPage('DeleteBuildDefinition.vm').addPathInfo('buildDefinitionId', $buildDefinition.id).addPathInfo('id', $item.id).addPathInfo('executorId', $item.executorId) )
-            <a href="$deleteBuildDefinitionLink">Delete</a>
-          #end
-        </td>
+            <a href="$deleteBuildDefinitionLink"><img src="/continuum/images/delete.gif" alt="Delete" title="Delete" width="16" height="16" border="0"></a>
+          </td>
+        #end
       </tr>
       #end
       </tbody>
@@ -141,7 +145,7 @@ $page.setTitle( "Continuum - Project View: ${item.name}" )
         <th class="tablehead">Recipient</th>
         <th class="tablehead">Events</th>
         <th class="tablehead">From</th>
-        <th width="10%" class="tablehead">&nbsp;</th>
+        <th colspan="2" class="tablehead">&nbsp;</th>
       </tr>
       #foreach ( $notifier in $project.notifiers )
         <tr class="$css.nextClass" #if ( !$notifier.isEnabled() ) style="color: silver;" #end>
@@ -185,29 +189,33 @@ $page.setTitle( "Continuum - Project View: ${item.name}" )
               User
             #end
           </td>
-          <td>
-            #if ( $notifier.isFromUser() )
-              #if ( $continuum.security.isAuthorized( $c1user, "editNotifier" ) )
+          #if ( $notifier.isFromUser() )
+            #if ( $continuum.security.isAuthorized( $c1user, "editNotifier" ) )
+              <td width="1%">
                 #if ( $notifier.type == "irc" )
                   #set ( $editNotifierLink = $link.setPage('EditIrcNotifier.vm').addPathInfo('view','EditIrcNotifier').addPathInfo('notifierId', $notifier.id).addPathInfo('id', $item.id).addPathInfo('executorId', $item.executorId) )
-                  <a href="$editNotifierLink">Edit</a>
+                  <a href="$editNotifierLink"><img src="/continuum/images/edit.gif" alt="Edit" title="Edit" width="16" height="16" border="0"></a>
                 #elseif ( $notifier.type == "mail" )
                   #set ( $editNotifierLink = $link.setPage('EditMailNotifier.vm').addPathInfo('view','EditMailNotifier').addPathInfo('notifierId', $notifier.id).addPathInfo('id', $item.id).addPathInfo('executorId', $item.executorId) )
-                  <a href="$editNotifierLink">Edit</a>
+                  <a href="$editNotifierLink"><img src="/continuum/images/edit.gif" alt="Edit" title="Edit" width="16" height="16" border="0"></a>
                 #elseif ( $notifier.type == "msn" )
                   #set ( $editNotifierLink = $link.setPage('EditMsnNotifier.vm').addPathInfo('view','EditMsnNotifier').addPathInfo('notifierId', $notifier.id).addPathInfo('id', $item.id).addPathInfo('executorId', $item.executorId) )
-                  <a href="$editNotifierLink">Edit</a>
+                  <a href="$editNotifierLink"><img src="/continuum/images/edit.gif" alt="Edit" title="Edit" width="16" height="16" border="0"></a>
                 #elseif ( $notifier.type == "jabber" )
                   #set ( $editNotifierLink = $link.setPage('EditJabberNotifier.vm').addPathInfo('view','EditJabberNotifier').addPathInfo('notifierId', $notifier.id).addPathInfo('id', $item.id).addPathInfo('executorId', $item.executorId) )
-                  <a href="$editNotifierLink">Edit</a>
+                  <a href="$editNotifierLink"><img src="/continuum/images/edit.gif" alt="Edit" title="Edit" width="16" height="16" border="0"></a>
                 #end
-              #end
-              #if ( $continuum.security.isAuthorized( $c1user, "deleteNotifier" ) )
-                #set ( $deleteNotifierLink = $link.setPage('DeleteNotifier.vm').addPathInfo('notifierId', $notifier.id).addPathInfo('id', $item.id).addPathInfo('executorId', $item.executorId) )
-              | <a href="$deleteNotifierLink">Delete</a>
-              #end
+              </td>
             #end
-          </td>
+            #if ( $continuum.security.isAuthorized( $c1user, "deleteNotifier" ) )
+              <td width="1%">
+                #set ( $deleteNotifierLink = $link.setPage('DeleteNotifier.vm').addPathInfo('notifierId', $notifier.id).addPathInfo('id', $item.id).addPathInfo('executorId', $item.executorId) )
+                <a href="$deleteNotifierLink"><img src="/continuum/images/delete.gif" alt="Delete" title="Delete" width="16" height="16" border="0"></a>
+              </td>
+            #end
+          #else
+            <td width="2%" colspan="2">&nbsp;</td>
+          #end
         </tr>
       #end
       </tbody>
