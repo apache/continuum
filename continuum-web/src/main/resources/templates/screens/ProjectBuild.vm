@@ -31,11 +31,11 @@ $page.setTitle( "Continuum - Continuum Web Build at $date.format('medium',$build
       <tbody>
       <tr class="b">
         <th>Start Time</th>
-        <td>$date.format('medium',$build.startTime)</td>
+        <td>$!{date.format('medium',$build.startTime)}</td>
       </tr>
       <tr class="b">
         <th>End Time</th>
-        <td>$date.format('medium',$build.endTime)</td>
+        <td>$!{date.format('medium',$build.endTime)}</td>
       </tr>
       <tr class="b">
         <th>Build Trigger</th>
