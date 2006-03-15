@@ -14,7 +14,7 @@ $page.setTitle( "Continuum - ${project.name} Builds" )
       #set ( $infoLink = $link.setPage('View.vm').addPathInfo('fid', "$!{project.executorId}Project").addPathInfo('id', $project.id) )
       <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="$infoLink">Info</a>
       <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;">Builds</b>
-        #if ( $item.state == 10 || $item.state == 2 || $item.state == 3 || $item.state == 4 || $item.state == 6 )
+      #if ( $project.state == 10 || $project.state == 2 || $project.state == 3 || $project.state == 4 || $project.state == 6 )
         #set ( $workingCopy = $link.setPage('WorkingCopy.vm').addPathInfo('view', "WorkingCopy").addPathInfo('id', $project.id) )
         <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="$workingCopy">Working&nbsp;Copy</a>
       #end
