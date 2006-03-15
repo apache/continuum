@@ -29,7 +29,7 @@ $page.setTitle( $i18n.getString( "group.management.label" ) )
         <th class="tablehead">$i18n.getString( "group.permission.manageConfiguration.label" )</th>
         <th class="tablehead">$i18n.getString( "group.permission.manageSchedule.label" )</th>
         <th class="tablehead">$i18n.getString( "group.permission.manageUsers.label" )</th>
-        <th width="10%" class="tablehead">&nbsp;</th>
+        <th colspan="2" class="tablehead">&nbsp;</th>
       </tr>
       #foreach ( $group in $items )
       <tr class="$css.nextClass">
@@ -132,10 +132,14 @@ $page.setTitle( $i18n.getString( "group.management.label" ) )
             <img src="$requestUtil.getContextPath()/images/icon_error_sml.gif" alt="Unauthorized" title="Unauthorized"/>
           #end
         </td>
-        <td>
+        <td width="1%">
           #if ( $continuum.security.isAuthorized( $c1user, "manageUsers" ) )
-          <a href="$link.setPage('EditUserGroup.vm').addPathInfo( 'fid', 'userGroups').addPathInfo('id', $group.id)">Edit</a>
-          | <a href="$link.setPage('DeleteUserGroup.vm').addPathInfo('fid', "userGroups").addPathInfo('id', $group.id)">Delete</a></td>
+          <a href="$link.setPage('EditUserGroup.vm').addPathInfo( 'fid', 'userGroups').addPathInfo('id', $group.id)"><img src="$requestUtil.getContextPath()/images/edit.gif" alt="Edit" title="Edit" width="16" height="16" border="0"></a>
+          #end
+        </td>
+        <td width="1%">
+          #if ( $continuum.security.isAuthorized( $c1user, "manageUsers" ) )
+          <a href="$link.setPage('DeleteUserGroup.vm').addPathInfo('fid', "userGroups").addPathInfo('id', $group.id)"><img src="$requestUtil.getContextPath()/images/delete.gif" alt="Delete" title="Delete" width="16" height="16" border="0"></a>
           #end
         </td>
       </tr>

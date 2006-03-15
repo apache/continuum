@@ -18,7 +18,7 @@ $page.setTitle( "Continuum" )
         <th class="tablehead">Description</th>
         <th class="tablehead">Cron</th>
         <th class="tablehead">Quiet Period (seconds)</th>
-        <th width="10%" class="tablehead">&nbsp;</th>
+        <th colspan="2" class="tablehead">&nbsp;</th>
       </tr>
       #foreach ( $schedule in $items )
         <tr class="$css.nextClass" #if ( !$schedule.active ) style="color: silver;" #end>
@@ -29,13 +29,18 @@ $page.setTitle( "Continuum" )
             #end</td>
           <td>$schedule.cronExpression</td>
           <td>$schedule.delay</td>
-          <td width="10%">
+          <td width="1%">
             #if ( $continuum.security.isAuthorized( $c1user, "manageSchedule" ) )
-              <a href="$link.setPage('Edit.vm').addPathInfo( 'fid', 'schedules').addPathInfo('id', $schedule.id)">Edit</a>
+              <a href="$link.setPage('Edit.vm').addPathInfo( 'fid', 'schedules').addPathInfo('id', $schedule.id)"><img src="$requestUtil.getContextPath()/images/edit.gif" alt="Edit" title="Edit" width="16" height="16" border="0"></a>
+            #end
+          </td>
+          <td width="1%">
+            #if ( $continuum.security.isAuthorized( $c1user, "manageSchedule" ) )
               #if ( $schedule.name != "DEFAULT_SCHEDULE" )
-                | <a href="$link.setPage('DeleteSchedule.vm').addPathInfo('fid', "schedules").addPathInfo('id', $schedule.id)">Delete</a></td>
+                <a href="$link.setPage('DeleteSchedule.vm').addPathInfo('fid', "schedules").addPathInfo('id', $schedule.id)"><img src="$requestUtil.getContextPath()/images/delete.gif" alt="Delete" title="Delete" width="16" height="16" border="0"></a>
               #end
             #end
+          </td>
         </tr>
       #end
       </tbody>
