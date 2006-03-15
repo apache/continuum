@@ -253,6 +253,8 @@ public class DefaultBuildController
 
                 actionManager.lookup( "execute-builder" ).execute( actionContext );
 
+                actionManager.lookup( "deploy-artifact" ).execute( actionContext );
+
                 String s = (String) actionContext.get( AbstractContinuumAction.KEY_BUILD_ID );
 
                 if ( s != null )

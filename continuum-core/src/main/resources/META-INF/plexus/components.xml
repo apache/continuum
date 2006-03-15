@@ -657,6 +657,34 @@
     </component>
     <component>
       <role>org.codehaus.plexus.action.Action</role>
+      <role-hint>deploy-artifact</role-hint>
+      <implementation>org.apache.maven.continuum.core.action.DeployArtifactContinuumAction</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.execution.manager.BuildExecutorManager</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.artifact.deployer.ArtifactDeployer</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.artifact.repository.ArtifactRepositoryFactory</role>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>org.codehaus.plexus.action.Action</role>
       <role-hint>store-checkout-scm-result</role-hint>
       <implementation>org.apache.maven.continuum.core.action.StoreCheckOutScmResultAction</implementation>
       <requirements>

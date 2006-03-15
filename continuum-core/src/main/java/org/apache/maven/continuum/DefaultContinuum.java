@@ -1469,6 +1469,12 @@ public class DefaultContinuum
                 throw new ContinuumException( "build output directory can't be null" );
             }
 
+            if ( configuration.get( "conf.deploymentRepositoryDirectory" ) != null )
+            {
+                configurationService.setDeploymentRepositoryDirectory(
+                    configurationService.getFile( (String) configuration.get( "conf.deploymentRepositoryDirectory" ) ) );
+            }
+
             if ( configuration.get( "conf.url" ) != null )
             {
                 configurationService.setUrl( (String) configuration.get( "conf.url" ) );

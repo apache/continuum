@@ -33,6 +33,16 @@ $page.setTitle( "Configure Continuum" )
           <td>$continuum.configuration.buildOutputDirectory</td>
         </tr>
         <tr class="b">
+          <th>Deployment Repository Directory</th>
+          <td>
+          #if ($continuum.configuration.deploymentRepositoryDirectory )
+           $continuum.configuration.deploymentRepositoryDirectory
+          #else
+           -
+          #end
+          </td>
+        </tr>
+        <tr class="b">
           <th>Base URL</th>
           <td>$continuum.configuration.url</td>
         </tr>

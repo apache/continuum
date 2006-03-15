@@ -17,6 +17,7 @@ package org.apache.maven.continuum.execution;
  */
 
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.continuum.utils.shell.ExecutionResult;
 import org.apache.maven.continuum.utils.shell.ShellCommandHelper;
@@ -29,6 +30,7 @@ import org.codehaus.plexus.util.StringUtils;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -209,6 +211,13 @@ public abstract class AbstractBuildExecutor
     public void killProcess( Project project )
     {
         shellCommandHelper.killProcess( project.getId() );
+    }
+
+    public List getDeployableArtifacts( File workingDirectory, BuildDefinition buildDefinition )
+        throws ContinuumBuildExecutorException
+    {
+        // Not supported by this builder
+        return Collections.EMPTY_LIST;
     }
 
     public File getWorkingDirectory( Project project )

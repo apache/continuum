@@ -11,6 +11,11 @@
     <load-on-startup>6</load-on-startup>
   </servlet>
   <servlet>
+    <servlet-name>repository</servlet-name>
+    <servlet-class>org.apache.maven.continuum.web.servlet.RepositoryBrowseServlet</servlet-class>
+    <load-on-startup>7</load-on-startup>
+  </servlet>
+  <servlet>
     <servlet-name>continuum</servlet-name>
     <servlet-class>org.codehaus.plexus.summit.Summit</servlet-class>
     <load-on-startup>5</load-on-startup>
@@ -27,6 +32,10 @@
   <servlet-mapping>
     <servlet-name>browse</servlet-name>
     <url-pattern>/continuum/browse</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>repository</servlet-name>
+    <url-pattern>/repository/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>continuum</servlet-name>

@@ -114,6 +114,17 @@ public class DefaultConfigurationService
         systemConf.setWorkingDirectory( workingDirectory.getAbsolutePath() );
     }
 
+    public File getDeploymentRepositoryDirectory()
+    {
+        return getFile( systemConf.getDeploymentRepositoryDirectory() );
+    }
+
+    public void setDeploymentRepositoryDirectory( File deploymentRepositoryDirectory )
+    {
+        systemConf.setDeploymentRepositoryDirectory(
+            deploymentRepositoryDirectory != null ? deploymentRepositoryDirectory.getAbsolutePath() : null );
+    }
+
     public void setJdks( Map jdks )
     {
         this.jdks = jdks;
@@ -207,11 +218,16 @@ public class DefaultConfigurationService
 
     public File getFile( String filename )
     {
-        File f = new File( filename );
+        File f = null;
 
-        if ( !f.isAbsolute() )
+        if ( filename != null && filename.length() != 0 )
         {
-            f = new File( applicationHome, filename );
+            f = new File( filename );
+
+            if ( !f.isAbsolute() )
+            {
+                f = new File( applicationHome, filename );
+            }
         }
 
         return f;

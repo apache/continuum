@@ -49,6 +49,10 @@ public interface ConfigurationService
 
     void setWorkingDirectory( File workingDirectory );
 
+    File getDeploymentRepositoryDirectory();
+
+    void setDeploymentRepositoryDirectory( File deploymentRepositoryDirectory );
+
     void setJdks( Map jdks );
 
     String getCompanyLogo();

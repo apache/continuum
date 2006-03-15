@@ -830,6 +830,11 @@
           <defaultValue>build-output-directory</defaultValue>
         </field>
         <field>
+          <name>deploymentRepositoryDirectory</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
           <name>baseUrl</name>
           <version>1.0.0+</version>
           <type>String</type>

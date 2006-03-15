@@ -45,6 +45,10 @@ $page.setTitle( "Configure Continuum" )
           <th>Build Output Directory</th>
           <td><input type="text" name="buildOutputDirectory" value="build-output-directory" size="100"><br>If you define a relative path, it will be relative to $continuum.configuration.applicationHome</td>
         </tr>
+        <tr>
+          <th>Deployment Repository Directory</th>
+          <td><input type="text" name="deploymentRepositoryDirectory" size="100"><br><strong>Optional.</strong> If you define a relative path, it will be relative to $continuum.configuration.applicationHome</td>
+        </tr>
         </tbody>
       </table>
       </div>

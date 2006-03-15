@@ -295,7 +295,7 @@ public class DefaultMavenBuilderHelper
 
             ProfileManager profileManager = new DefaultProfileManager( container, settings );
 
-            project = projectBuilder.build( file, getRepository( settings ), profileManager, false );
+            project = projectBuilder.build( file, getLocalRepository(), profileManager, false );
 
             if ( getLogger().isDebugEnabled() )
             {
@@ -353,6 +353,11 @@ public class DefaultMavenBuilderHelper
         }
 
         return project;
+    }
+
+    public ArtifactRepository getLocalRepository()
+    {
+        return getRepository( settings );
     }
 
     // ----------------------------------------------------------------------
