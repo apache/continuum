@@ -76,6 +76,12 @@ $page.setTitle( "Continuum" )
             #else
               $item.buildNumber
             #end
+          #elseif ( $item.state == 6 )
+            <b><img src="$requestUtil.getContextPath()/images/building.gif" alt="Building" title="Building" width="16" height="16"></b>
+          #elseif ( $item.state == 7 )
+            <b><img src="$requestUtil.getContextPath()/images/checkingout.gif" alt="Checking Out sources" title="Checking Out sources" width="16" height="16"></b>
+          #elseif ( $item.state == 8 )
+            <b><img src="$requestUtil.getContextPath()/images/checkingout.gif" alt="Updating sources" title="Updating sources" width="16" height="16"></b>
           #else
             <b><img src="$requestUtil.getContextPath()/images/inqueue.gif" alt="In Queue" title="In Queue" width="16" height="16"></b>
           #end
@@ -88,7 +94,7 @@ $page.setTitle( "Continuum" )
         #if ( $continuum.security.isAuthorized( $c1user, "buildProject" ) )
           <td width="1%">
           #if ( $continuum.isInBuildingQueue( $item.id ) || $continuum.isInCheckoutQueue( $item.id ) )
-            Build
+            &nbsp;
           #elseif ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
             <a href="$link.addPathInfo('action', 'cam').addPathInfo('cid','buildProject').addPathInfo('id', $item.id)"><img src="$requestUtil.getContextPath()/images/buildnow.gif" alt="Build Now" title="Build Now" width="16" height="16" border="0"></a>
           #else
