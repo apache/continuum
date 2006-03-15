@@ -14,8 +14,10 @@ $page.setTitle( "Continuum - Project View: Continuum Web" )
       <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;">Info</b>
       #set ( $buildsLink = $link.setPage('ProjectBuilds.vm').addPathInfo('view', "ProjectBuilds").addPathInfo('id', $item.id) )
       <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="$buildsLink">Builds</a>
-      #set ( $workingCopy = $link.setPage('WorkingCopy.vm').addPathInfo('view', "WorkingCopy").addPathInfo('id', $item.id) )
-      <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="$workingCopy">Working&nbsp;Copy</a>
+        #if ( $item.state == 10 || $item.state == 2 || $item.state == 3 || $item.state == 4 || $item.state == 6 )
+        #set ( $workingCopy = $link.setPage('WorkingCopy.vm').addPathInfo('view', "WorkingCopy").addPathInfo('id', $item.id) )
+        <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="$workingCopy">Working&nbsp;Copy</a>
+      #end
     </p>
   </div>
   #end

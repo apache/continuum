@@ -56,7 +56,6 @@ public class ContinuumProjectState
     /**
      * This state indicates that a project is currently beeing build.
      */
-//    public final static ContinuumProjectState BUILDING = new ContinuumProjectState( "building" );
     public final static int BUILDING = 6;
 
     public final static int CHECKING_OUT = 7;
@@ -64,6 +63,11 @@ public class ContinuumProjectState
     public final static int UPDATING = 8;
 
     public final static int WARNING = 9;
+
+    /**
+     * This state indicates that sources are checkouted.
+     */
+    public final static int CHECKOUTED = 10;
 
     private String name;
 

@@ -44,8 +44,6 @@ public class CheckoutProjectContinuumAction
     {
         Project project = store.getProject( getProjectId( context ) );
 
-        int state = project.getState();
-
         project.setState( ContinuumProjectState.CHECKING_OUT );
 
         store.updateProject( project );
@@ -92,7 +90,7 @@ public class CheckoutProjectContinuumAction
         }
         finally
         {
-            project.setState( state );
+            project.setState( ContinuumProjectState.CHECKOUTED );
 
             store.updateProject( project );
         }

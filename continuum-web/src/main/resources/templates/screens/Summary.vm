@@ -50,7 +50,7 @@ $page.setTitle( "Continuum" )
       <tr class="$css.nextClass">
         <td bordercolor="#999999">
           <div align="center">
-          #if ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
+          #if ( $item.state == 1 || $item.state == 10 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
             #set ( $latestBuild = $buildResults.get( $item.id ) )
             #set ( $generatedState = $state.generate( $item ) )
             #if ( $latestBuild && $generatedState != "New" )
@@ -69,7 +69,7 @@ $page.setTitle( "Continuum" )
           <div align="center">
           #if ( $continuum.isInBuildingQueue( $item.id ) || $continuum.isInCheckoutQueue( $item.id ) )
             <b><img src="$requestUtil.getContextPath()/images/inqueue.gif" alt="In Queue" title="In Queue" width="16" height="16"></b>
-          #elseif ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
+          #elseif ( $item.state == 1 || $item.state == 10 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
             #if ( $item.buildNumber != 0 )
               #set ( $build = $buildResultsInSuccess.get( $item.id ) )
               <a href="$link.setPage('ProjectBuild.vm').addQueryData('view','ProjectBuild').addQueryData('buildId',$build.id).addQueryData('id',$item.id)">$item.buildNumber</a>
@@ -95,7 +95,7 @@ $page.setTitle( "Continuum" )
           <td width="1%">
           #if ( $continuum.isInBuildingQueue( $item.id ) || $continuum.isInCheckoutQueue( $item.id ) )
             &nbsp;
-          #elseif ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
+          #elseif ( $item.state == 1 || $item.state == 10 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
             <a href="$link.addPathInfo('action', 'cam').addPathInfo('cid','buildProject').addPathInfo('id', $item.id)"><img src="$requestUtil.getContextPath()/images/buildnow.gif" alt="Build Now" title="Build Now" width="16" height="16" border="0"></a>
           #else
             &nbsp;
@@ -112,7 +112,7 @@ $page.setTitle( "Continuum" )
         </td>
 
         <td width="1%">
-        #if ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 || $item.state == 6 )
+        #if ( $item.state == 10 || $item.state == 2 || $item.state == 3 || $item.state == 4 || $item.state == 6 )
           <a href="$link.setPage('WorkingCopy.vm').addPathInfo('view', "WorkingCopy").addPathInfo('id', $item.id)"><img src="$requestUtil.getContextPath()/images/workingcopy.gif" alt="Working Copy" title="Working Copy" width="16" height="16" border="0"></a>
         #else
           &nbsp;
@@ -121,7 +121,7 @@ $page.setTitle( "Continuum" )
 
         #if ( $continuum.security.isAuthorized( $c1user, "deleteProject" ) )
           <td width="1%">
-          #if ( $item.state == 1 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
+          #if ( $item.state == 1 || $item.state == 10 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
           <a href="$link.setPage('Delete.vm').addPathInfo('fid', "$!{item.executorId}Project").addPathInfo('id', $item.id)"><img src="$requestUtil.getContextPath()/images/delete.gif" alt="Delete" title="Delete" width="16" height="16" border="0"></a>
           #else
           &nbsp;

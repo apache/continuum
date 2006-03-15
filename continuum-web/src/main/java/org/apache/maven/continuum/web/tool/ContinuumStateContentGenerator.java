@@ -49,7 +49,7 @@ public class ContinuumStateContentGenerator
             state = buildResult.getState();
         }
 
-        if ( state == ContinuumProjectState.NEW )
+        if ( state == ContinuumProjectState.NEW || state == ContinuumProjectState.CHECKOUTED )
         {
             return "New";
         }

@@ -463,8 +463,9 @@ public class DefaultContinuum
         {
             Project project = store.getProject( projectId );
 
-            if ( project.getState() != ContinuumProjectState.NEW && project.getState() != ContinuumProjectState.OK &&
-                project.getState() != ContinuumProjectState.FAILED &&
+            if ( project.getState() != ContinuumProjectState.NEW &&
+                project.getState() != ContinuumProjectState.CHECKOUTED &&
+                project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
                 project.getState() != ContinuumProjectState.ERROR )
             {
                 ContinuumBuildExecutor executor = executorManager.getBuildExecutor( project.getExecutorId() );
@@ -1471,8 +1472,8 @@ public class DefaultContinuum
 
             if ( configuration.get( "conf.deploymentRepositoryDirectory" ) != null )
             {
-                configurationService.setDeploymentRepositoryDirectory(
-                    configurationService.getFile( (String) configuration.get( "conf.deploymentRepositoryDirectory" ) ) );
+                configurationService.setDeploymentRepositoryDirectory( configurationService.getFile(
+                    (String) configuration.get( "conf.deploymentRepositoryDirectory" ) ) );
             }
 
             if ( configuration.get( "conf.url" ) != null )
@@ -1838,8 +1839,9 @@ public class DefaultContinuum
         {
             Project project = (Project) it.next();
 
-            if ( project.getState() != ContinuumProjectState.NEW && project.getState() != ContinuumProjectState.OK &&
-                project.getState() != ContinuumProjectState.FAILED &&
+            if ( project.getState() != ContinuumProjectState.NEW &&
+                project.getState() != ContinuumProjectState.CHECKOUTED &&
+                project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
                 project.getState() != ContinuumProjectState.ERROR )
             {
                 project.setState( project.getOldState() );
