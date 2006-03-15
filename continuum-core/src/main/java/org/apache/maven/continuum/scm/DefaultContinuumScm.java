@@ -320,7 +320,7 @@ public class DefaultContinuumScm
     private ScmRepository getScmRepositorty( Project project )
         throws ScmRepositoryException, NoSuchScmProviderException
     {
-        ScmRepository repository = scmManager.makeScmRepository( project.getScmUrl() );
+        ScmRepository repository = scmManager.makeScmRepository( project.getScmUrl().trim() );
 
         repository.getProviderRepository().setPersistCheckout( true );
 
