@@ -21,6 +21,7 @@ import org.apache.maven.continuum.utils.PlexusContainerManager;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.StringUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -76,7 +77,12 @@ public class RepositoryBrowseServlet
 
     private File getFile( HttpServletRequest req )
     {
-        String path = req.getPathInfo().substring( 1 );
+        String path = "";
+
+        if ( StringUtils.isNotEmpty( req.getPathInfo() ) )
+        {
+            path = req.getPathInfo().substring( 1 );
+        }
 
         //Clean url, so url like ../../../../a_file and /path/to_file like /etc/passwd won't be allow
         String fileName = cleanUrl( path );
