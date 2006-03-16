@@ -95,7 +95,7 @@ $page.setTitle( "Continuum" )
           #end
           </div>
         </td>
-        <td><div align="center">$item.projectGroup.name</div></td>
+        <td>$item.projectGroup.name</td>
 
         ## Operations
 
