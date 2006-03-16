@@ -58,6 +58,14 @@ $page.setTitle( "Continuum" )
             #else
               $generatedState
             #end
+          #elseif ( $continuum.isInBuildingQueue( $item.id ) )
+            #set ( $latestBuild = $buildResults.get( $item.id ) )
+            #if ( $latestBuild )
+              #set ( $generatedState = $state.generate( $latestBuild ) )
+              <a href="$link.setPage('ProjectBuild.vm').addQueryData('view','ProjectBuild').addQueryData('buildId',$latestBuild.id).addQueryData('id',$item.id)">$generatedState</a></td>
+            #else
+              &nbsp;
+            #end
           #else
             &nbsp;
           #end
