@@ -464,7 +464,7 @@ public class DefaultContinuum
             Project project = store.getProject( projectId );
 
             if ( project.getState() != ContinuumProjectState.NEW &&
-                project.getState() != ContinuumProjectState.CHECKOUTED &&
+                project.getState() != ContinuumProjectState.CHECKEDOUT &&
                 project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
                 project.getState() != ContinuumProjectState.ERROR )
             {
@@ -1840,7 +1840,7 @@ public class DefaultContinuum
             Project project = (Project) it.next();
 
             if ( project.getState() != ContinuumProjectState.NEW &&
-                project.getState() != ContinuumProjectState.CHECKOUTED &&
+                project.getState() != ContinuumProjectState.CHECKEDOUT &&
                 project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
                 project.getState() != ContinuumProjectState.ERROR )
             {

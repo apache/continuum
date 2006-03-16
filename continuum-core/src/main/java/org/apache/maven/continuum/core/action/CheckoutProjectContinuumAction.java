@@ -90,7 +90,7 @@ public class CheckoutProjectContinuumAction
         }
         finally
         {
-            project.setState( ContinuumProjectState.CHECKOUTED );
+            project.setState( ContinuumProjectState.CHECKEDOUT );
 
             store.updateProject( project );
         }

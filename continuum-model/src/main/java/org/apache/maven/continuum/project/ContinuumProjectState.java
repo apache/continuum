@@ -67,7 +67,7 @@ public class ContinuumProjectState
     /**
      * This state indicates that sources are checkouted.
      */
-    public final static int CHECKOUTED = 10;
+    public final static int CHECKEDOUT = 10;
 
     private String name;
 

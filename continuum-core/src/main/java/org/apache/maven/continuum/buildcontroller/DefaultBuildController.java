@@ -236,10 +236,10 @@ public class DefaultBuildController
                 }
 
                 if ( allChangesUnknown && project.getOldState() != ContinuumProjectState.NEW &&
-                    project.getOldState() != ContinuumProjectState.CHECKOUTED &&
+                    project.getOldState() != ContinuumProjectState.CHECKEDOUT &&
                     trigger != ContinuumProjectState.TRIGGER_FORCED &&
                     project.getState() != ContinuumProjectState.NEW &&
-                    project.getState() != ContinuumProjectState.CHECKOUTED )
+                    project.getState() != ContinuumProjectState.CHECKEDOUT )
                 {
                     getLogger().info( "The project was not built because all changes are unknown." );
 
@@ -350,7 +350,7 @@ public class DefaultBuildController
             }
 
             if ( project.getState() != ContinuumProjectState.NEW &&
-                project.getState() != ContinuumProjectState.CHECKOUTED &&
+                project.getState() != ContinuumProjectState.CHECKEDOUT &&
                 project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
                 project.getState() != ContinuumProjectState.ERROR )
             {

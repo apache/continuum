@@ -39,7 +39,7 @@ public class FormatterTool
     // TODO: Add i18n
     public String formatProjectState( int state )
     {
-        if ( state == ContinuumProjectState.NEW || state == ContinuumProjectState.CHECKOUTED )
+        if ( state == ContinuumProjectState.NEW || state == ContinuumProjectState.CHECKEDOUT )
         {
             return "New";
         }
