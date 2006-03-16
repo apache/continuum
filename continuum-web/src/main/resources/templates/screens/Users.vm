@@ -29,15 +29,23 @@ $page.setTitle( "Continuum - User Management" )
         <td width="1%">
           #if ( $continuum.security.isAuthorized( $c1user, "manageUsers" ) )
             #if ( "guest" != $user.username )
-            <a href="$link.setPage('EditUser.vm').addPathInfo( 'fid', 'users').addPathInfo('id', $user.accountId)"><img src="$requestUtil.getContextPath()/images/edit.gif" alt="Edit" title="Edit" width="16" height="16" border="0"></a>
+              <a href="$link.setPage('EditUser.vm').addPathInfo( 'fid', 'users').addPathInfo('id', $user.accountId)"><img src="$requestUtil.getContextPath()/images/edit.gif" alt="Edit" title="Edit" width="16" height="16" border="0"></a>
+            #else
+              <img src="$requestUtil.getContextPath()/images/edit_disabled.gif" alt="Edit" title="Edit" width="16" height="16" border="0">
             #end
+          #else
+            <img src="$requestUtil.getContextPath()/images/edit_disabled.gif" alt="Edit" title="Edit" width="16" height="16" border="0">
           #end
         </td>
         <td width="1%">
           #if ( $continuum.security.isAuthorized( $c1user, "manageUsers" ) )
             #if ( "guest" != $user.username )
-            <a href="$link.setPage('DeleteUser.vm').addPathInfo('fid', "users").addPathInfo('id', $user.accountId)"><img src="$requestUtil.getContextPath()/images/delete.gif" alt="Delete" title="Delete" width="16" height="16" border="0"></a>
+              <a href="$link.setPage('DeleteUser.vm').addPathInfo('fid', "users").addPathInfo('id', $user.accountId)"><img src="$requestUtil.getContextPath()/images/delete.gif" alt="Delete" title="Delete" width="16" height="16" border="0"></a>
+            #else
+              <img src="$requestUtil.getContextPath()/images/delete_disabled.gif" alt="Delete" title="Delete" width="16" height="16" border="0">
             #end
+          #else
+            <img src="$requestUtil.getContextPath()/images/delete_disabled.gif" alt="Delete" title="Delete" width="16" height="16" border="0">
           #end
         </td>
       </tr>
