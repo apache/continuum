@@ -165,12 +165,6 @@ body.docs div.docs {
 	border-top: 1px solid #ddd;
 }
 
-#helptext .label {
-	background-image: url(../images/icon_help_sml.gif);
-	background-repeat: no-repeat;
-	background-position: 97%;
-}
-
 body.docs {
 	background: #eee url(../images/help_logo.gif) top right no-repeat !important;
 }
@@ -226,14 +220,6 @@ body.docs {
 	background-color: #ff9;
 }
 
-.expandedwaste {
-	background: url(../images/icon_arrowwaste2_sml.gif) no-repeat;
-}
-
-.collapsedwaste {
-	background: url(../images/icon_arrowwaste1_sml.gif) no-repeat;
-}
-
 .filebrowse .expanded, .filebrowse-alt .expanded {
 	background-image: url(../images/icon_arrowfolderopen2_sml.gif);
 	background-repeat: no-repeat;
@@ -262,10 +248,6 @@ body.docs {
 	background: url(../images/icon_sortdown.gif) no-repeat;
 }
 
-.collapsedwaste {
-	background: url(../images/icon_arrowwaste1_sml.gif) no-repeat;
-}
-
 body .grid td {
 	border-top: 1px solid #ccc;
 	border-left: 1px solid #ccc;
@@ -280,7 +262,7 @@ body .grid td {
 	color: #069;
 }
 
-.errormessage, .warningmessage, .donemessage, .infomessage {
+.errormessage, .warningmessage {
 	border-top: 5px solid #900;
 	border-left: 1px solid #900;
 	background-image: url(../images/icon_error_lrg.gif);
@@ -298,33 +280,7 @@ body .grid td {
 	color: #333;
 }
 
-.donemessage {
-	background-image: url(../images/icon_success_lrg.gif);
-	border-color: #090;
-}
-
-.infomessage {
-	background-image: url(../images/icon_info_lrg.gif);
-	border-color: #069;
-}
-
-.docinfo {
-	background: url(../images/icon_doc_lrg.gif) no-repeat;
-}
-
-.dirinfo {
-	background: url(../images/icon_folder_lrg.gif) no-repeat;
-}
-
-.memberinfo {
-	background: url(../images/icon_members_lrg.gif) no-repeat;
-}
-
-.usergroupinfo {
-	background: url(../images/icon_usergroups_lrg.gif) no-repeat;
-}
-
-.errormark, .warningmark, .donemark, .infomark {
+.errormark, .warningmark, .donemark {
 	background: url(../images/icon_error_sml.gif) no-repeat;
 }
 
@@ -334,10 +290,6 @@ body .grid td {
 
 .donemark {
 	background-image: url(../images/icon_success_sml.gif);
-}
-
-.infomark {
-	background-image: url(../images/icon_info_sml.gif);
 }
 
 .cvsdiff, .cvsblame {
@@ -436,7 +388,7 @@ li.selection ul a {
 	background-color: #FCC;
 }
 
-.app .helplink, #helptext .helplink {
+.app .helplink {
 	cursor: help;
 }
 
@@ -828,7 +780,7 @@ padding: 6px 0px 0px 2px;
 	padding-left: 34px;
 }
 
-.filebrowse-alt .expanded, .filebrowse-alt .collapsed, .filebrowse-alt .leaf, .filebrowse-alt .leafnode, .expandedwaste, .collapsedwaste, .sortup, .sortdown {
+.filebrowse-alt .expanded, .filebrowse-alt .collapsed, .filebrowse-alt .leaf, .filebrowse-alt .leafnode, .sortup, .sortdown {
 	/* hide from macie5\*/
 	float: left;
 	/* resume */
@@ -862,13 +814,13 @@ td.filebrowse h3 {
 	margin-top: 0;
 }
 
-.errormessage, .warningmessage, .donemessage, .infomessage, .docinfo, .dirinfo, .memberinfo, .usergroupinfo {
+.errormessage, .warningmessage {
 	margin: .67em 0;
 	padding: .33em 0 .67em 42px;
 	min-height: 32px;
 }
 
-.errormark, .warningmark, .donemark, .infomark {
+.errormark, .warningmark, .donemark {
 	padding-left: 20px;
 	min-height: 15px;
 }
