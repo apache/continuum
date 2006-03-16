@@ -67,15 +67,15 @@ public class ContinuumStateContentGenerator
         }
         else if ( state == ContinuumProjectState.BUILDING )
         {
-            return "Building";
+            return "<img src=\"" + data.getContextPath() + "/images/building.gif\" alt=\"Building\" title=\"Building\" border=\"0\">";
         }
         else if ( state == ContinuumProjectState.UPDATING )
         {
-            return "Updating";
+            return "<img src=\"" + data.getContextPath() + "/images/checkingout.gif\" alt=\"Checking Out sources\" title=\"Checking Out sources\" border=\"0\">";
         }
         else if ( state == ContinuumProjectState.CHECKING_OUT )
         {
-            return "Checking Out";
+            return "<img src=\"" + data.getContextPath() + "/images/checkingout.gif\" alt=\"Updating sources\" title=\"Updating sources\" border=\"0\">";
         }
         else
         {
