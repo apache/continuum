@@ -1,4 +1,4 @@
-$page.setTitle( "Continuum - ${project.name} Builds" )
+$page.setTitle( "Continuum - Continuum Web Builds" )
 
 #if ( $data.user )
   #set ( $c1user = $continuum.getUser( $data.user.userId ) )
@@ -30,14 +30,27 @@ $page.setTitle( "Continuum - ${project.name} Builds" )
         <th class="tablehead">Build #</th>
         <th class="tablehead">Start Time</th>
         <th class="tablehead">End Time</th>
+        <th class="tablehead">&nbsp;</th>
         <th class="tablehead">State</th>
-        <th class="tablehead"></th>
+        <th class="tablehead">&nbsp;</th>
       </tr>
       #foreach ( $build in $builds )
       <tr class="$css.nextClass">
         <td>#if ( $build.state == 2 ) $build.buildNumber #end</td>
         <td>$!{date.format('medium',$build.startTime)}</td>
         <td>$!{date.format('medium',$build.endTime)}</td>
+        <td>
+          #if ( $build.endTime )
+            #set ( $endTime = $build.endTime )
+          #else
+            #set ( $endTime = 0 );
+          #end
+          #if ( $endTime.toString() != "0" )
+            Duration : $!{date.getTimeDifference($build.startTime, $build.endTime)}
+          #else
+            Started since : $!{date.getElapsedTime($build.startTime)}
+          #end
+        </td>
         <td>$state.generate($build)</td>
         <td><a href="$link.setPage('ProjectBuild.vm').addQueryData('view','ProjectBuild').addQueryData('buildId',$build.id).addQueryData('id',$project.id)">Result</a></td>
       </tr>

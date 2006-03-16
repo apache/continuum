@@ -38,6 +38,21 @@ $page.setTitle( "Continuum - Continuum Web Build at $date.format('medium',$build
         <td>$!{date.format('medium',$build.endTime)}</td>
       </tr>
       <tr class="b">
+        <th>Duration</th>
+        <td>
+          #if ( $build.endTime )
+            #set ( $endTime = $build.endTime )
+          #else
+            #set ( $endTime = 0 );
+          #end
+          #if ( $endTime.toString() != "0" )
+            $!{date.getTimeDifference($build.startTime, $build.endTime)}
+          #else
+            Started since : $!{date.getElapsedTime($build.startTime)}
+          #end
+        </td>
+      </tr>
+      <tr class="b">
         <th>Build Trigger</th>
         <td>$trigger.generate($build)</td>
       </tr>
