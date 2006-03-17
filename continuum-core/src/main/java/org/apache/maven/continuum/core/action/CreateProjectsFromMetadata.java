@@ -9,12 +9,11 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderExcepti
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.manager.ContinuumProjectBuilderManager;
 import org.apache.maven.continuum.project.builder.manager.ContinuumProjectBuilderManagerException;
+import org.codehaus.plexus.formica.util.MungedHttpsURL;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-
-import org.codehaus.plexus.formica.util.MungedHttpsURL;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -42,7 +41,7 @@ public class CreateProjectsFromMetadata
 
         ContinuumProjectBuilder projectBuilder = projectBuilderManager.getProjectBuilder( projectBuilderId );
 
-        ContinuumProjectBuildingResult result = null;
+        ContinuumProjectBuildingResult result;
 
         try
         {
