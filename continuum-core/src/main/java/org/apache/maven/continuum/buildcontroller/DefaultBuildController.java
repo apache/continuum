@@ -241,7 +241,14 @@ public class DefaultBuildController
                     project.getState() != ContinuumProjectState.NEW &&
                     project.getState() != ContinuumProjectState.CHECKEDOUT )
                 {
-                    getLogger().info( "The project was not built because all changes are unknown." );
+                    if ( changes.size() > 0 )
+                    {
+                        getLogger().info( "The project was not built because all changes are unknown." );
+                    }
+                    else
+                    {
+                        getLogger().info( "The project was not built because there are no changes." );
+                    }
 
                     project.setState( project.getOldState() );
 
