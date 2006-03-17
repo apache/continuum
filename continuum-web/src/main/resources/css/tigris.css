@@ -671,6 +671,7 @@ padding: 6px 0px 0px 2px;
 .toolgroup .body a:link{
 	height: 25px;
 	width: 161px;	
+	color:#666;
 	overflow: hidden;
 	background: url(../images/super.gif) 0 0 no-repeat;
 	display: block;
