@@ -423,9 +423,6 @@
         <requirement>
           <role>org.apache.maven.continuum.buildcontroller.BuildController</role>
         </requirement>
-        <requirement>
-          <role>org.apache.maven.continuum.store.ContinuumStore</role>
-        </requirement>
       </requirements>
     </component>
 
