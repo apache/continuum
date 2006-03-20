@@ -51,7 +51,9 @@ $page.setTitle( "Continuum" )
         <td bordercolor="#999999">
           <div align="center">
           #if ( $item.state == 1 || $item.state == 10 || $item.state == 2 || $item.state == 3 || $item.state == 4 )
-            #set ( $latestBuild = $buildResults.get( $item.id ) )
+            #if ( $buildResults.get( $item.id ) )
+              #set ( $latestBuild = $buildResults.get( $item.id ) )
+            #end
             #set ( $generatedState = $state.generate( $item ) )
             #if ( $latestBuild && $generatedState != "New" )
               <a href="$link.setPage('ProjectBuild.vm').addQueryData('view','ProjectBuild').addQueryData('buildId',$latestBuild.id).addQueryData('id',$item.id)">$generatedState</a></td>
@@ -59,7 +61,9 @@ $page.setTitle( "Continuum" )
               $generatedState
             #end
           #elseif ( $continuum.isInBuildingQueue( $item.id ) )
-            #set ( $latestBuild = $buildResults.get( $item.id ) )
+            #if ( $buildResults.get( $item.id ) )
+              #set ( $latestBuild = $buildResults.get( $item.id ) )
+            #end
             #if ( $latestBuild )
               #set ( $generatedState = $state.generate( $latestBuild ) )
               <a href="$link.setPage('ProjectBuild.vm').addQueryData('view','ProjectBuild').addQueryData('buildId',$latestBuild.id).addQueryData('id',$item.id)">$generatedState</a></td>
