@@ -67,7 +67,6 @@ public class WorkingCopyContentGenerator
         if ( obj instanceof File )
         {
             File f = (File) obj;
-            ;
 
             if ( !f.isDirectory() )
             {
@@ -90,8 +89,9 @@ public class WorkingCopyContentGenerator
 
                     userDirectory = StringUtils.replace( userDirectory, "\\", "/" );
 
-                    buf.append( indent ).append( "&nbsp;&nbsp;&nbsp;<a target=\"blank\" href=\"" +
-                        getFileUrl( userDirectory, fileName ) + "\">" + fileName + "</a><br />" );
+                    buf.append( indent ).append( "&nbsp;&nbsp;&nbsp;<a target=\"blank\" href=\"" ).append(
+                        getFileUrl( userDirectory, fileName ) ).append( "\">" ).append( fileName ).append(
+                        "</a><br />" );
                 }
             }
             else
