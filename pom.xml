@@ -72,6 +72,16 @@
       <url>http://snapshots.maven.codehaus.org/maven2</url>
     </repository>
   </repositories>
+  <pluginsRepositories>
+    <pluginsRepository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <id>snapshots</id>
+      <name>Maven Central Development Repository</name>
+      <url>http://snapshots.maven.codehaus.org/maven2</url>
+    </pluginsRepository>
+  </pluginsRepositories>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
