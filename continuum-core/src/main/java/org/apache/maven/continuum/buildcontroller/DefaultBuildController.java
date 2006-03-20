@@ -95,13 +95,13 @@ public class DefaultBuildController
 
         try
         {
-            project = store.getProject( projectId );
+            project = store.getProjectWithBuildDetails( projectId );
 
             buildDefinition = store.getBuildDefinition( buildDefinitionId );
         }
         catch ( ContinuumStoreException ex )
         {
-            getLogger().error( "Internal error while building the project.", ex );
+            getLogger().error( "Internal error while getting the project.", ex );
 
             return;
         }
@@ -136,7 +136,11 @@ public class DefaultBuildController
 
             actionContext.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
 
+            actionContext.put( AbstractContinuumAction.KEY_PROJECT, project );
+
             actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, new Integer( buildDefinitionId ) );
+
+            actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
 
             actionContext.put( AbstractContinuumAction.KEY_TRIGGER, new Integer( trigger ) );
 
@@ -193,8 +197,6 @@ public class DefaultBuildController
                 scmResult = mergeScmResults( oldScmResult, scmResult );
 
                 actionContext.put( AbstractContinuumAction.KEY_UPDATE_SCM_RESULT, scmResult );
-
-                scmResult = (ScmResult) actionContext.get( AbstractContinuumAction.KEY_UPDATE_SCM_RESULT );
 
                 List changes = scmResult.getChanges();
 
@@ -347,15 +349,6 @@ public class DefaultBuildController
         }
         finally
         {
-            try
-            {
-                project = store.getProject( projectId );
-            }
-            catch ( ContinuumStoreException ex )
-            {
-                getLogger().error( "Internal error while building the project.", ex );
-            }
-
             if ( project.getState() != ContinuumProjectState.NEW &&
                 project.getState() != ContinuumProjectState.CHECKEDOUT &&
                 project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&

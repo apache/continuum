@@ -67,7 +67,7 @@ public class ExecuteBuilderContinuumAction
         // Get parameters from the context
         // ----------------------------------------------------------------------
 
-        Project project = store.getProjectWithBuildDetails( getProjectId( context ) );
+        Project project = getProject( context );
 
         int trigger = getTrigger( context );
 
@@ -156,6 +156,8 @@ public class ExecuteBuilderContinuumAction
             {
                 build.setState( ContinuumProjectState.ERROR );
             }
+
+            project.setState( build.getState() );
 
             // ----------------------------------------------------------------------
             // Copy over the build result

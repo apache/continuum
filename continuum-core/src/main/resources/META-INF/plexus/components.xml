@@ -462,6 +462,9 @@
         <requirement>
           <role>org.codehaus.plexus.action.ActionManager</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+        </requirement>
       </requirements>
     </component>
 
@@ -659,9 +662,6 @@
         </requirement>
         <requirement>
           <role>org.apache.maven.continuum.execution.manager.BuildExecutorManager</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.maven.continuum.store.ContinuumStore</role>
         </requirement>
         <requirement>
           <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>

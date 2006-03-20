@@ -112,12 +112,6 @@ public class DefaultContinuumNotificationDispatcher
 
         try
         {
-            // TODO: remove re-reading?
-            // Here we need to get all the project details
-            //  - builds are used to detect if the state has changed (TODO: maybe previousState field is better)
-            //  - notifiers are used to send the notification
-            project = store.getProjectWithAllDetails( project.getId() );
-
             context.put( CONTEXT_PROJECT, project );
 
             if ( build != null )
@@ -132,12 +126,6 @@ public class DefaultContinuumNotificationDispatcher
 
                 context.put( CONTEXT_UPDATE_SCM_RESULT, build.getScmResult() );
             }
-        }
-        catch ( ContinuumStoreException e )
-        {
-            getLogger().error( "Error while population the notification context.", e );
-
-            return;
         }
         catch ( ConfigurationException e )
         {
@@ -163,7 +151,7 @@ public class DefaultContinuumNotificationDispatcher
 
             try
             {
-                configuration.put( AbstractContinuumNotifier.PROJECT_NOTIFIER_KEY, projectNotifier );
+                context.put( CONTEXT_PROJECT_NOTIFIER, projectNotifier );
 
                 Notifier notifier = notifierManager.getNotifier( notifierType );
 

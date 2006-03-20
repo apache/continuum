@@ -164,12 +164,26 @@ public class DefaultContinuum
 
     public Map getLatestBuildResults()
     {
-        return store.getLatestBuildResults();
+        Map result = store.getLatestBuildResults();
+
+        if ( result == null )
+        {
+            result = new HashMap();
+        }
+
+        return result;
     }
 
     public Map getBuildResultsInSuccess()
     {
-        return store.getBuildResultsInSuccess();
+        Map result = store.getBuildResultsInSuccess();
+
+        if ( result == null )
+        {
+            result = new HashMap();
+        }
+
+        return result;
     }
 
     public BuildResult getLatestBuildResultForProject( int projectId )
@@ -354,6 +368,8 @@ public class DefaultContinuum
 
         for ( Iterator i = projectsList.iterator(); i.hasNext(); )
         {
+            long start = System.currentTimeMillis();
+
             Project project = (Project) i.next();
 
             Integer buildDefId = (Integer) buildDefinitionsIds.get( new Integer( project.getId() ) );
@@ -364,7 +380,9 @@ public class DefaultContinuum
                     "Project (id=" + project.getId() + " doens't have a default build definition." );
             }
 
-            buildProject( project.getId(), buildDefId.intValue(), trigger );
+            buildProject( project, buildDefId.intValue(), trigger );
+
+            getLogger().debug( "Add " + project.getName() + " in " + ( System.currentTimeMillis() - start ) + "ms" );
         }
     }
 
@@ -372,6 +390,7 @@ public class DefaultContinuum
         throws ContinuumException
     {
         Collection projectsList;
+
         Map projectsMap = null;
 
         try
@@ -399,14 +418,14 @@ public class DefaultContinuum
 
         for ( Iterator projectIterator = projectsList.iterator(); projectIterator.hasNext(); )
         {
-            Project p = (Project) projectIterator.next();
+            Project project = (Project) projectIterator.next();
 
-            Integer buildDefId = ( (Integer) projectsMap.get( new Integer( p.getId() ) ) );
+            Integer buildDefId = ( (Integer) projectsMap.get( new Integer( project.getId() ) ) );
 
-            if ( buildDefId != null && !isInBuildingQueue( p.getId(), buildDefId.intValue() ) &&
-                !isInCheckoutQueue( p.getId() ) )
+            if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
+                !isInCheckoutQueue( project.getId() ) )
             {
-                buildProject( p.getId(), buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
+                buildProject( project, buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
             }
         }
     }
@@ -448,12 +467,35 @@ public class DefaultContinuum
         buildProject( projectId, buildDefinitionId, trigger, true );
     }
 
-    private synchronized void buildProject( int projectId, int buildDefinitionId, int trigger, boolean checkQueues )
+    public void buildProject( Project project, int buildDefinitionId, int trigger )
+        throws ContinuumException
+    {
+        buildProject( project, buildDefinitionId, trigger, true );
+    }
+
+    private void buildProject( int projectId, int buildDefinitionId, int trigger, boolean checkQueues )
+        throws ContinuumException
+    {
+        Project project;
+
+        try
+        {
+            project = store.getProject( projectId );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw logAndCreateException( "Error while getting project " + projectId + ".", e );
+        }
+
+        buildProject( project, buildDefinitionId, trigger, checkQueues );
+    }
+
+    private synchronized void buildProject( Project project, int buildDefinitionId, int trigger, boolean checkQueues )
         throws ContinuumException
     {
         if ( checkQueues )
         {
-            if ( isInBuildingQueue( projectId, buildDefinitionId ) || isInCheckoutQueue( projectId ) )
+            if ( isInBuildingQueue( project.getId(), buildDefinitionId ) || isInCheckoutQueue( project.getId() ) )
             {
                 return;
             }
@@ -461,18 +503,18 @@ public class DefaultContinuum
 
         try
         {
-            Project project = store.getProject( projectId );
-
             if ( project.getState() != ContinuumProjectState.NEW &&
                 project.getState() != ContinuumProjectState.CHECKEDOUT &&
                 project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
                 project.getState() != ContinuumProjectState.ERROR )
             {
                 ContinuumBuildExecutor executor = executorManager.getBuildExecutor( project.getExecutorId() );
+
                 if ( executor.isBuilding( project ) )
                 {
                     // project is building
                     getLogger().info( "Project '" + project.getName() + "' always running." );
+
                     return;
                 }
                 else
@@ -481,7 +523,7 @@ public class DefaultContinuum
 
                     store.updateProject( project );
 
-                    project = store.getProject( projectId );
+                    project = store.getProject( project.getId() );
                 }
             }
 
@@ -494,7 +536,7 @@ public class DefaultContinuum
             getLogger().info(
                 "Enqueuing '" + project.getName() + "' (Build definition id=" + buildDefinitionId + ")." );
 
-            buildQueue.put( new BuildProjectTask( projectId, buildDefinitionId, trigger ) );
+            buildQueue.put( new BuildProjectTask( project.getId(), buildDefinitionId, trigger ) );
         }
         catch ( ContinuumStoreException e )
         {
@@ -593,6 +635,11 @@ public class DefaultContinuum
             }
 
             buildResult = (BuildResult) buildResultsIterator.next();
+        }
+
+        if ( changes == null )
+        {
+            changes = Collections.EMPTY_LIST;
         }
 
         return changes;

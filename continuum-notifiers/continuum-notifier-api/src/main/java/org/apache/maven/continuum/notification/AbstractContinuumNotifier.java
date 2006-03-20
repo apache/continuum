@@ -30,8 +30,6 @@ import java.util.Map;
 public abstract class AbstractContinuumNotifier
     extends AbstractNotifier
 {
-    public static final String PROJECT_NOTIFIER_KEY = "projectNotifier";
-
     /**
      * @plexus.configuration
      */
@@ -92,16 +90,14 @@ public abstract class AbstractContinuumNotifier
      *
      * @param build         The current build result
      * @param previousBuild The previous build result
-     * @param configuration The project notifier configuration
+     * @param projectNotifier The project notifier
      * @return True if a message must be sent
      */
-    public boolean shouldNotify( BuildResult build, BuildResult previousBuild, Map configuration )
+    public boolean shouldNotify( BuildResult build, BuildResult previousBuild, ProjectNotifier projectNotifier )
     {
-        ProjectNotifier projectNotifier = new ProjectNotifier();
-
-        if ( configuration != null && configuration.get( PROJECT_NOTIFIER_KEY ) != null )
+        if ( projectNotifier == null )
         {
-            projectNotifier = (ProjectNotifier) configuration.get( PROJECT_NOTIFIER_KEY );
+            projectNotifier = new ProjectNotifier();
         }
 
         if ( build == null )

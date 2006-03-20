@@ -29,7 +29,6 @@ import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
 import java.io.File;
@@ -53,11 +52,6 @@ public class DeployArtifactContinuumAction
      * @plexus.requirement
      */
     private BuildExecutorManager buildExecutorManager;
-
-    /**
-     * @plexus.requirement
-     */
-    private ContinuumStore store;
 
     /**
      * @plexus.requirement
@@ -90,7 +84,7 @@ public class DeployArtifactContinuumAction
 
         if ( deploymentRepositoryDirectory != null )
         {
-            Project project = store.getProjectWithBuildDetails( getProjectId( context ) );
+            Project project = getProject( context );
 
             ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
 
@@ -100,7 +94,7 @@ public class DeployArtifactContinuumAction
 
             if ( project.getState() == ContinuumProjectState.OK )
             {
-                BuildDefinition buildDefinition = store.getBuildDefinition( getBuildDefinitionId( context ) );
+                BuildDefinition buildDefinition = getBuildDefinition( context );
 
                 List artifacts = buildExecutor.getDeployableArtifacts(
                     workingDirectoryService.getWorkingDirectory( project ), buildDefinition );
@@ -119,6 +113,7 @@ public class DeployArtifactContinuumAction
                     }
 
                     String location = deploymentRepositoryDirectory.toURL().toExternalForm();
+
                     ArtifactRepository deploymentRepository =
                         artifactRepositoryFactory.createDeploymentArtifactRepository( "deployment-repository", location,
                                                                                       repositoryLayout, true );
