@@ -238,5 +238,10 @@
       <artifactId>maven-scm-provider-svnexe</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>jpox</groupId>
+      <artifactId>jpox-dbcp</artifactId>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
 </project>
