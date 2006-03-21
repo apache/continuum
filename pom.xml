@@ -255,7 +255,7 @@
       <dependency>
         <groupId>jpox</groupId>
         <artifactId>jpox</artifactId>
-        <version>1.1.0-beta-4</version>
+        <version>1.1.0-rc-1</version>
         <exclusions>
           <exclusion>
             <artifactId>ant</artifactId>
@@ -274,7 +274,7 @@
       <dependency>
         <groupId>jpox</groupId>
         <artifactId>jpox-enhancer</artifactId>
-        <version>1.1.0-beta-4</version>
+        <version>1.1.0-rc-1</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
@@ -284,7 +284,7 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-jdo2</artifactId>
-        <version>1.0-alpha-3</version>
+        <version>1.0-alpha-4-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>

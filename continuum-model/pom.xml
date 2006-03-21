@@ -30,8 +30,8 @@
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>maven-jpox-plugin</artifactId>
-        <version>1.0.1</version>
+        <artifactId>jpox-maven-plugin</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
         <executions>
           <execution>
             <goals>
