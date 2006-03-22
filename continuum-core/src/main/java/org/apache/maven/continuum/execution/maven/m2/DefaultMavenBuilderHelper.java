@@ -42,7 +42,6 @@ import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
-import org.apache.maven.settings.SettingsUtils;
 import org.apache.maven.settings.io.xpp3.SettingsXpp3Writer;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -259,9 +258,21 @@ public class DefaultMavenBuilderHelper
 
                     userNotifier.setType( notifier.getType() );
 
+                    userNotifier.setEnabled( notifier.isEnabled() );
+
                     userNotifier.setConfiguration( notifier.getConfiguration() );
 
                     userNotifier.setFrom( notifier.getFrom() );
+
+                    userNotifier.setRecipientType( notifier.getRecipientType() );
+
+                    userNotifier.setSendOnError( notifier.isSendOnError() );
+
+                    userNotifier.setSendOnFailure( notifier.isSendOnFailure() );
+
+                    userNotifier.setSendOnSuccess( notifier.isSendOnSuccess() );
+
+                    userNotifier.setSendOnWarning( notifier.isSendOnWarning() );
 
                     userNotifiers.add( userNotifier );
                 }

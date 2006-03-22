@@ -162,7 +162,8 @@ public class DefaultMavenOneMetadataHelper
 
             if ( StringUtils.isEmpty( scmConnection ) )
             {
-                throw new MavenOneMetadataHelperException( "Missing both anonymous and developer SCM connection URLs." );
+                throw new MavenOneMetadataHelperException(
+                    "Missing both anonymous and developer SCM connection URLs." );
             }
         }
 
@@ -290,9 +291,21 @@ public class DefaultMavenOneMetadataHelper
 
                     userNotifier.setType( notif.getType() );
 
+                    userNotifier.setEnabled( notifier.isEnabled() );
+
                     userNotifier.setConfiguration( notif.getConfiguration() );
 
                     userNotifier.setFrom( notif.getFrom() );
+
+                    userNotifier.setRecipientType( notif.getRecipientType() );
+
+                    userNotifier.setSendOnError( notif.isSendOnError() );
+
+                    userNotifier.setSendOnFailure( notif.isSendOnFailure() );
+
+                    userNotifier.setSendOnSuccess( notif.isSendOnSuccess() );
+
+                    userNotifier.setSendOnWarning( notif.isSendOnWarning() );
 
                     notifiers.add( userNotifier );
                 }
