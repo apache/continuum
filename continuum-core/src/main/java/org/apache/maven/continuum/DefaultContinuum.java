@@ -527,12 +527,6 @@ public class DefaultContinuum
                 }
             }
 
-            project.setOldState( project.getState() );
-
-            project.setState( ContinuumProjectState.BUILDING );
-
-            store.updateProject( project );
-
             getLogger().info(
                 "Enqueuing '" + project.getName() + "' (Build definition id=" + buildDefinitionId + ")." );
 
@@ -1905,7 +1899,7 @@ public class DefaultContinuum
                 }
             }
 
-            getLogger().info( " " + project.getId() + ":" + project.getName() + ":" + project.getExecutorId() );
+            getLogger().info( " " + project.getId() + ":" + project.getName() + ":" + project.getVersion() + ":" + project.getExecutorId() );
         }
     }
 

@@ -130,6 +130,12 @@ public class DefaultBuildController
 
         try
         {
+            project.setOldState( project.getState() );
+
+            project.setState( ContinuumProjectState.BUILDING );
+
+            store.updateProject( project );
+
             notifierDispatcher.buildStarted( project );
 
             Map actionContext = new HashMap();
