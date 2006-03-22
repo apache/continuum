@@ -49,6 +49,8 @@ public class UpdateProjectFromWorkingDirectoryContinuumAction
     {
         Project project = getProject( context );
 
+        project = store.getProjectWithAllDetails( project.getId() );
+
         getLogger().info( "Updating project '" + project.getName() + "' from checkout." );
 
         BuildDefinition buildDefinition = store.getBuildDefinition( getBuildDefinitionId( context ) );

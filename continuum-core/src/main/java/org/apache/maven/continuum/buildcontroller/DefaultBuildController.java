@@ -95,7 +95,7 @@ public class DefaultBuildController
 
         try
         {
-            project = store.getProjectWithBuildDetails( projectId );
+            project = store.getProject( projectId );
 
             buildDefinition = store.getBuildDefinition( buildDefinitionId );
         }
