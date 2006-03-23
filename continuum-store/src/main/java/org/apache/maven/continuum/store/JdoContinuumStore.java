@@ -171,7 +171,6 @@ public class JdoContinuumStore
 
             if ( result != null && !result.isEmpty() )
             {
-                getLogger().info( "nb result : " + result.size() );
                 for ( Iterator i = result.iterator(); i.hasNext(); )
                 {
                     Object[] obj = (Object[]) i.next();
