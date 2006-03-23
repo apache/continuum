@@ -395,7 +395,7 @@ public class DefaultContinuum
 
         try
         {
-            projectsMap = store.getProjectIdsAndBuildDefinitionIdsBySchedule( schedule.getId() );
+            projectsMap = store.getProjectIdsAndBuildDefinitionsIdsBySchedule( schedule.getId() );
 
             if ( projectsMap == null )
             {
@@ -420,12 +420,17 @@ public class DefaultContinuum
         {
             Project project = (Project) projectIterator.next();
 
-            Integer buildDefId = ( (Integer) projectsMap.get( new Integer( project.getId() ) ) );
+            List buildDefIds = (List) projectsMap.get( new Integer( project.getId() ) );
 
-            if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
-                !isInCheckoutQueue( project.getId() ) )
+            for ( Iterator buildDefinitionIterator = buildDefIds.iterator(); buildDefinitionIterator.hasNext(); )
             {
-                buildProject( project, buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
+                Integer buildDefId = (Integer) buildDefinitionIterator.next();
+
+                if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
+                    !isInCheckoutQueue( project.getId() ) )
+                {
+                    buildProject( project, buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
+                }
             }
         }
     }

@@ -41,6 +41,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -139,7 +140,7 @@ public class JdoContinuumStore
         }
     }
 
-    public Map getProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+    public Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -175,7 +176,20 @@ public class JdoContinuumStore
                 {
                     Object[] obj = (Object[]) i.next();
 
-                    projects.put( (Integer) obj[0], (Integer) obj[1] );
+                    List buildDefinitions;
+
+                    if ( projects.get( obj[0] ) != null )
+                    {
+                        buildDefinitions = (List) projects.get( obj[0] );
+                    }
+                    else
+                    {
+                        buildDefinitions = new ArrayList();
+                    }
+
+                    buildDefinitions.add( obj[1] );
+
+                    projects.put( obj[0], buildDefinitions );
                 }
 
                 return projects;

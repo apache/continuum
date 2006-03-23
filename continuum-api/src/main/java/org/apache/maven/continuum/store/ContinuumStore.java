@@ -101,7 +101,7 @@ public interface ContinuumStore
     Project getProject( int projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
-    Map getProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+    Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException;
 
     void updateProject( Project project )
