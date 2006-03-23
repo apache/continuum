@@ -25,6 +25,7 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -56,6 +57,11 @@ public class MavenTwoBuildExecutor
      * @plexus.requirement
      */
     private MavenBuilderHelper builderHelper;
+
+    /**
+     * @plexus.requirement
+     */
+    private MavenProjectHelper projectHelper;
 
     // ----------------------------------------------------------------------
     //
@@ -163,7 +169,9 @@ public class MavenTwoBuildExecutor
 
         Artifact artifact = project.getArtifact();
 
-        boolean isPomArtifact = "pom".equals( project.getPackaging() );
+        String projectPackaging = project.getPackaging();
+
+        boolean isPomArtifact = "pom".equals( projectPackaging );
 
         if ( isPomArtifact )
         {
@@ -176,9 +184,47 @@ public class MavenTwoBuildExecutor
 
             artifact.addMetadata( metadata );
 
-            String filename = project.getBuild().getFinalName() + "." + artifact.getArtifactHandler().getExtension();
+            String finalName = project.getBuild().getFinalName();
 
-            artifact.setFile( new File( project.getBuild().getDirectory(), filename ) );
+            String filename = finalName + "." + artifact.getArtifactHandler().getExtension();
+
+            String buildDirectory = project.getBuild().getDirectory();
+
+            File artifactFile = new File( buildDirectory, filename );
+
+            artifact.setFile( artifactFile );
+
+            // sources jar
+            File sourcesFile = new File( buildDirectory, finalName + "-sources.jar" );
+
+            if ( sourcesFile.exists() )
+            {
+                projectHelper.attachArtifact( project, "java-source", "sources", sourcesFile );
+            }
+
+            // javadoc jar
+            File javadocFile = new File( buildDirectory, finalName + "-javadoc.jar" );
+
+            if ( javadocFile.exists() )
+            {
+                projectHelper.attachArtifact( project, "javadoc", "javadoc", javadocFile );
+            }
+
+            // client jar
+            File clientFile = new File( buildDirectory, finalName + "-client.jar" );
+
+            if ( clientFile.exists() )
+            {
+                projectHelper.attachArtifact( project, projectPackaging + "-client", "client", clientFile );
+            }
+
+            // Tests jar
+            File testsFile = new File( buildDirectory, finalName + "-tests.jar" );
+
+            if ( testsFile.exists() )
+            {
+                projectHelper.attachArtifact( project, "jar", "tests", testsFile );
+            }
         }
 
         if ( artifact.getFile().exists() )

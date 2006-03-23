@@ -243,6 +243,9 @@
         <requirement>
           <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.project.MavenProjectHelper</role>
+        </requirement>
       </requirements>
     </component>
 
