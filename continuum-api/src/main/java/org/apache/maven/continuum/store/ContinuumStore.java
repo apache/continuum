@@ -76,6 +76,8 @@ public interface ContinuumStore
 
     List getAllProjectsByName();
 
+    List getAllProjectsByNameWithBuildDetails();
+
     List getAllSchedulesByName();
 
     Schedule addSchedule( Schedule schedule );

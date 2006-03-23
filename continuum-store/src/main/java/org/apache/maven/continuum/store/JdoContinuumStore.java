@@ -747,6 +747,11 @@ public class JdoContinuumStore
         return getAllObjectsDetached( Project.class, "name ascending", null );
     }
 
+    public List getAllProjectsByNameWithBuildDetails()
+    {
+        return getAllObjectsDetached( Project.class, "name ascending", PROJECT_BUILD_DETAILS_FETCH_GROUP );
+    }
+
     public List getAllSchedulesByName()
     {
         return getAllObjectsDetached( Schedule.class, "name ascending", null );

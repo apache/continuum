@@ -1876,9 +1876,26 @@ public class DefaultContinuum
 
         getLogger().info( "Showing all projects: " );
 
-        for ( Iterator it = store.getAllProjectsByName().iterator(); it.hasNext(); )
+        for ( Iterator it = store.getAllProjectsByNameWithBuildDetails().iterator(); it.hasNext(); )
         {
             Project project = (Project) it.next();
+
+            for ( Iterator notifierIt = project.getNotifiers().iterator(); notifierIt.hasNext(); )
+            {
+                ProjectNotifier notifier = (ProjectNotifier) notifierIt.next();
+
+                if ( StringUtils.isEmpty( notifier.getType() ) )
+                {
+                    try
+                    {
+                        removeNotifier( project.getId(), notifier.getId() );
+                    }
+                    catch ( ContinuumException e )
+                    {
+                        throw new InitializationException( "Database is corrupted.", e );
+                    }
+                }
+            }
 
             if ( project.getState() != ContinuumProjectState.NEW &&
                 project.getState() != ContinuumProjectState.CHECKEDOUT &&
@@ -1899,7 +1916,8 @@ public class DefaultContinuum
                 }
             }
 
-            getLogger().info( " " + project.getId() + ":" + project.getName() + ":" + project.getVersion() + ":" + project.getExecutorId() );
+            getLogger().info( " " + project.getId() + ":" + project.getName() + ":" + project.getVersion() + ":" +
+                project.getExecutorId() );
         }
     }
 
