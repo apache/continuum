@@ -17,6 +17,7 @@ package org.apache.maven.continuum.execution.maven.m2;
  */
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -24,6 +25,7 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -143,6 +145,7 @@ public class MavenTwoBuildExecutor
         }
 
         MavenProject project;
+
         try
         {
             project = builderHelper.getMavenProject( f );
@@ -157,16 +160,32 @@ public class MavenTwoBuildExecutor
 
         // Maven could help us out a lot more here by knowing how to get the deployment artifacts from a project.
         // TODO: this is currently quite lame
-        if ( !"pom".equals( project.getPackaging() ) )
+
+        Artifact artifact = project.getArtifact();
+
+        boolean isPomArtifact = "pom".equals( project.getPackaging() );
+
+        if ( isPomArtifact )
         {
-            Artifact artifact = project.getArtifact();
-            String filename = project.getBuild().getFinalName() + "." + artifact.getArtifactHandler().getExtension();
-            artifact.setFile( new File( project.getBuild().getDirectory(), filename ) );
-            if ( artifact.getFile().exists() )
-            {
-                artifacts.add( artifact );
-            }
+            artifact.setFile( project.getFile() );
         }
+        else
+        {
+            // Attach pom
+            ArtifactMetadata metadata = new ProjectArtifactMetadata( artifact, project.getFile() );
+
+            artifact.addMetadata( metadata );
+
+            String filename = project.getBuild().getFinalName() + "." + artifact.getArtifactHandler().getExtension();
+
+            artifact.setFile( new File( project.getBuild().getDirectory(), filename ) );
+        }
+
+        if ( artifact.getFile().exists() )
+        {
+            artifacts.add( artifact );
+        }
+
         return artifacts;
     }
 }
