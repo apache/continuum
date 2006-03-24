@@ -187,7 +187,7 @@ public class MavenTwoIntegrationTest
         }
         line();
 
-        assertEquals( "Changes list must be empty.", 2, build.getScmResult().getChanges().size() );
+        assertEquals( "Changes list must be empty.", 1, build.getScmResult().getChanges().size() );
 
         Thread.sleep( 3000 );
 
