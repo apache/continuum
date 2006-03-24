@@ -63,6 +63,8 @@ public abstract class AbstractContinuumAction
 
     public static final String KEY_TRIGGER = "trigger";
 
+    public static final String KEY_FIRST_RUN = "first-run";
+
     // ----------------------------------------------------------------------
     // Utils
     // ----------------------------------------------------------------------

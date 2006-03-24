@@ -150,6 +150,8 @@ public class DefaultBuildController
 
             actionContext.put( AbstractContinuumAction.KEY_TRIGGER, new Integer( trigger ) );
 
+            actionContext.put( AbstractContinuumAction.KEY_FIRST_RUN, Boolean.valueOf( oldBuildResult == null ) );
+
             ScmResult scmResult = null;
 
             try
@@ -179,6 +181,9 @@ public class DefaultBuildController
                 // Check to see if there was a error while checking out/updating the project
                 // ----------------------------------------------------------------------
 
+                // Merge scm results so we'll have all changes since last execution of current build definition
+                scmResult = mergeScmResults( oldScmResult, scmResult );
+
                 if ( scmResult == null || !scmResult.isSuccess() )
                 {
                     // scmResult must be converted before sotring it because jpox modify value of all fields to null
@@ -198,9 +203,6 @@ public class DefaultBuildController
 
                     return;
                 }
-
-                // Merge scm results so we'll have all changes since last execution of current build definition
-                scmResult = mergeScmResults( oldScmResult, scmResult );
 
                 actionContext.put( AbstractContinuumAction.KEY_UPDATE_SCM_RESULT, scmResult );
 
@@ -243,7 +245,8 @@ public class DefaultBuildController
                     }
                 }
 
-                if ( allChangesUnknown && project.getOldState() != ContinuumProjectState.NEW &&
+                if ( oldBuildResult != null && allChangesUnknown &&
+                    project.getOldState() != ContinuumProjectState.NEW &&
                     project.getOldState() != ContinuumProjectState.CHECKEDOUT &&
                     trigger != ContinuumProjectState.TRIGGER_FORCED &&
                     project.getState() != ContinuumProjectState.NEW &&
@@ -466,6 +469,11 @@ public class DefaultBuildController
                         {
                             ChangeSet changeSet = (ChangeSet) j.next();
 
+                            if ( changeSet.getDate() < fromDate )
+                            {
+                                continue;
+                            }
+
                             if ( !res.getChanges().contains( changeSet ) )
                             {
                                 res.addChange( changeSet );
@@ -483,6 +491,11 @@ public class DefaultBuildController
     {
         if ( oldScmResult != null )
         {
+            if ( newScmResult == null )
+            {
+                return oldScmResult;
+            }
+
             List oldChanges = oldScmResult.getChanges();
 
             List newChanges = newScmResult.getChanges();

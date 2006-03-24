@@ -69,9 +69,13 @@ public class ExecuteBuilderContinuumAction
 
         Project project = getProject( context );
 
+        BuildDefinition buildDefinition = getBuildDefinition( context );
+
         int trigger = getTrigger( context );
 
         ScmResult scmResult = getUpdateScmResult( context );
+
+        boolean isFirstRun = ( (Boolean) context.get( AbstractContinuumAction.KEY_FIRST_RUN ) ).booleanValue();
 
         ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
 
@@ -79,7 +83,7 @@ public class ExecuteBuilderContinuumAction
         // This is really a precondition for this action to execute
         // ----------------------------------------------------------------------
 
-        if ( project.getOldState() != ContinuumProjectState.NEW &&
+        if ( !isFirstRun && project.getOldState() != ContinuumProjectState.NEW &&
             project.getOldState() != ContinuumProjectState.CHECKEDOUT && scmResult.getChanges().size() == 0 &&
             trigger != ContinuumProjectState.TRIGGER_FORCED && !isNew( project ) )
         {
@@ -105,8 +109,6 @@ public class ExecuteBuilderContinuumAction
         build.setState( ContinuumProjectState.BUILDING );
 
         build.setTrigger( trigger );
-
-        BuildDefinition buildDefinition = store.getBuildDefinition( getBuildDefinitionId( context ) );
 
         build.setScmResult( scmResult );
 
