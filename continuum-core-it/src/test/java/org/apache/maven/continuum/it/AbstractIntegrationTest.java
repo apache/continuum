@@ -95,15 +95,7 @@ public abstract class AbstractIntegrationTest
     protected InputStream getConfiguration()
         throws Exception
     {
-        Reader reader = new FileReader( getTestFile( "../continuum-plexus-application/src/conf/application.xml" ) );
-
-        Properties properties = new Properties();
-
-        properties.load( new FileInputStream( getTestFile( "../continuum-plexus-application/test.properties" ) ) );
-
-        String s = IOUtil.toString( new InterpolationFilterReader( reader, properties, "@", "@" ) );
-
-        return new ByteArrayInputStream( s.getBytes() );
+        return getClass().getResourceAsStream( "/conf/application.xml" );
     }
 
     protected void customizeContext( Context context )
