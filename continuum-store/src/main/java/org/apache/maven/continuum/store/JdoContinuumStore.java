@@ -30,13 +30,13 @@ import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.model.system.UserGroup;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
+import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
+import org.codehaus.plexus.jdo.PlexusStoreException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import javax.jdo.Extent;
-import javax.jdo.JDOException;
 import javax.jdo.JDOHelper;
-import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -516,88 +516,29 @@ public class JdoContinuumStore
 
     private Object makePersistent( PersistenceManager pm, Object object, boolean detach )
     {
-        pm.makePersistent( object );
-
-        Object id = pm.getObjectId( object );
-
-        Object persistentObject = pm.getObjectById( id );
-
-        if ( detach )
-        {
-            persistentObject = pm.detachCopy( persistentObject );
-        }
-
-        return persistentObject;
+        return PlexusJdoUtils.makePersistent( pm, object, detach );
     }
 
     private Object getObjectFromQuery( Class clazz, String idField, String id, String fetchGroup )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
         try
         {
-            tx.begin();
-
-            Extent extent = pm.getExtent( clazz, true );
-
-            Query query = pm.newQuery( extent );
-
-            query.declareImports( "import java.lang.String" );
-
-            query.declareParameters( "String " + idField );
-
-            query.setFilter( "this." + idField + " == " + idField );
-
-            Collection result = (Collection) query.execute( id );
-
-            if ( result.size() == 0 )
-            {
-                throw new ContinuumObjectNotFoundException( clazz.getName(), id );
-            }
-
-            if ( result.size() > 1 )
-            {
-                throw new ContinuumStoreException( "A query for object of " + "type " + clazz.getName() + " on the " +
-                    "field '" + idField + "' returned more than one object." );
-            }
-
-            pm.getFetchPlan().addGroup( fetchGroup );
-
-            Object object = pm.detachCopy( result.iterator().next() );
-
-            tx.commit();
-
-            return object;
+            return PlexusJdoUtils.getObjectFromQuery( getPersistenceManager(), clazz, idField, id, fetchGroup );
         }
-        finally
+        catch ( PlexusObjectNotFoundException e )
         {
-            rollback( tx );
+            throw new ContinuumObjectNotFoundException( e.getMessage() );
+        }
+        catch ( PlexusStoreException e )
+        {
+            throw new ContinuumStoreException( e.getMessage(), e );
         }
     }
 
     private void attachAndDelete( Object object )
     {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            pm.makePersistent( object );
-
-            pm.deletePersistent( object );
-
-            tx.commit();
-        }
-        finally
-        {
-            rollback( tx );
-        }
+        PlexusJdoUtils.attachAndDelete( getPersistenceManager(), object );
     }
 
     // ----------------------------------------------------------------------
@@ -624,40 +565,17 @@ public class JdoContinuumStore
     private Object getObjectById( Class clazz, int id, String fetchGroup )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
         try
         {
-            tx.begin();
-
-            if ( fetchGroup != null )
-            {
-                pm.getFetchPlan().addGroup( fetchGroup );
-            }
-
-            Object objectId = pm.newObjectIdInstance( clazz, new Integer( id ) );
-
-            Object object = pm.getObjectById( objectId );
-
-            object = pm.detachCopy( object );
-
-            tx.commit();
-
-            return object;
+            return PlexusJdoUtils.getObjectById( getPersistenceManager(), clazz, id, fetchGroup );
         }
-        catch ( JDOObjectNotFoundException e )
+        catch ( PlexusObjectNotFoundException e )
         {
-            throw new ContinuumObjectNotFoundException( clazz.getName(), Integer.toString( id ) );
+            throw new ContinuumObjectNotFoundException( e.getMessage() );
         }
-        catch ( JDOException e )
+        catch ( PlexusStoreException e )
         {
-            throw new ContinuumStoreException( "Error handling JDO", e );
-        }
-        finally
-        {
-            rollback( tx );
+            throw new ContinuumStoreException( e.getMessage(), e );
         }
     }
 
@@ -670,34 +588,13 @@ public class JdoContinuumStore
     private void updateObject( Object object )
         throws ContinuumStoreException
     {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
         try
         {
-            tx.begin();
-
-            if ( !JDOHelper.isDetached( object ) )
-            {
-                throw new ContinuumStoreException( "Not detached: " + object );
-            }
-
-            try
-            {
-                pm.makePersistent( object );
-            }
-            catch ( Exception e )
-            {
-                //We retry if we obtain an exceptio like a dead lock
-                pm.makePersistent( object );
-            }
-
-            tx.commit();
+            PlexusJdoUtils.updateObject( getPersistenceManager(), object );
         }
-        finally
+        catch ( PlexusStoreException e )
         {
-            rollback( tx );
+            throw new ContinuumStoreException( e.getMessage(), e );
         }
     }
 
@@ -1065,24 +962,7 @@ public class JdoContinuumStore
 
     private void removeObject( Object o )
     {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            o = pm.getObjectById( pm.getObjectId( o ) );
-
-            pm.deletePersistent( o );
-
-            tx.commit();
-        }
-        finally
-        {
-            rollback( tx );
-        }
+        PlexusJdoUtils.removeObject( getPersistenceManager(), o );
     }
 
     private List getAllObjectsDetached( Class clazz )
@@ -1097,40 +977,7 @@ public class JdoContinuumStore
 
     private List getAllObjectsDetached( Class clazz, String ordering, String fetchGroup )
     {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            Extent extent = pm.getExtent( clazz, true );
-
-            Query query = pm.newQuery( extent );
-
-            if ( ordering != null )
-            {
-                query.setOrdering( ordering );
-            }
-
-            if ( fetchGroup != null )
-            {
-                pm.getFetchPlan().addGroup( fetchGroup );
-            }
-
-            List result = (List) query.execute();
-
-            result = (List) pm.detachCopyAll( result );
-
-            tx.commit();
-
-            return result;
-        }
-        finally
-        {
-            rollback( tx );
-        }
+        return PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), clazz, ordering, fetchGroup );
     }
 
     public ProjectGroup addProjectGroup( ProjectGroup group )
@@ -1140,26 +987,7 @@ public class JdoContinuumStore
 
     private Object addObject( Object object )
     {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            pm.makePersistent( object );
-
-            object = pm.detachCopy( object );
-
-            tx.commit();
-
-            return object;
-        }
-        finally
-        {
-            rollback( tx );
-        }
+        return PlexusJdoUtils.addObject( getPersistenceManager(), object );
     }
 
     public ProjectGroup getProjectGroupByGroupId( String groupId )
@@ -1178,6 +1006,7 @@ public class JdoContinuumStore
         throws ContinuumStoreException
     {
         ProjectGroup group;
+
         try
         {
             group = (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", DEFAULT_GROUP_ID, null );
