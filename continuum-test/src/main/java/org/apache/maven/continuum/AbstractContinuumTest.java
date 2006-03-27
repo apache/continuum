@@ -129,9 +129,7 @@ public abstract class AbstractContinuumTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        File file = getTestFile( "../continuum-model/target/classes/META-INF/package.jdo" );
-
-        SchemaTool.createSchemaTables( new URL[]{file.toURL()}, false );
+        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/META-INF/package.jdo" )}, false );
 
         // ----------------------------------------------------------------------
         // Check the configuration

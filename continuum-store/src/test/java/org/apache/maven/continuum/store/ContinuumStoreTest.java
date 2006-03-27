@@ -1785,11 +1785,7 @@ public class ContinuumStoreTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        File file = File.createTempFile( "continuum-jdo", ".tmp" );
-        file.deleteOnExit();
-        IOUtil.copy( getClass().getResourceAsStream( "/META-INF/package.jdo" ), new FileOutputStream( file ) );
-
-        SchemaTool.createSchemaTables( new URL[]{file.toURL()}, false );
+        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/META-INF/package.jdo" )}, false );
 
         PersistenceManagerFactory pmf = jdoFactory.getPersistenceManagerFactory();
 
