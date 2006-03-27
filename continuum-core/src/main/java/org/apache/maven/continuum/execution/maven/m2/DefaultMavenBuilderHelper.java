@@ -218,27 +218,24 @@ public class DefaultMavenBuilderHelper
         // Dependencies
         // ----------------------------------------------------------------------
 
-        if ( mavenProject.getDependencies() != null )
+        List dependencies = new ArrayList();
+
+        for ( Iterator i = mavenProject.getDependencies().iterator(); i.hasNext(); )
         {
-            List dependencies = new ArrayList();
+            Dependency dependency = (Dependency) i.next();
 
-            for ( Iterator i = mavenProject.getDependencies().iterator(); i.hasNext(); )
-            {
-                Dependency dependency = (Dependency) i.next();
+            ProjectDependency cd = new ProjectDependency();
 
-                ProjectDependency cd = new ProjectDependency();
+            cd.setGroupId( dependency.getGroupId() );
 
-                cd.setGroupId( dependency.getGroupId() );
+            cd.setArtifactId( dependency.getArtifactId() );
 
-                cd.setArtifactId( dependency.getArtifactId() );
+            cd.setVersion( dependency.getVersion() );
 
-                cd.setVersion( dependency.getVersion() );
-
-                dependencies.add( cd );
-            }
-
-            continuumProject.setDependencies( dependencies );
+            dependencies.add( cd );
         }
+
+        continuumProject.setDependencies( dependencies );
 
         // ----------------------------------------------------------------------
         // Notifiers
