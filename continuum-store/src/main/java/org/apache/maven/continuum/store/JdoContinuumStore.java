@@ -29,6 +29,7 @@ import org.apache.maven.continuum.model.system.Permission;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.model.system.UserGroup;
 import org.codehaus.plexus.jdo.JdoFactory;
+import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -36,7 +37,6 @@ import javax.jdo.Extent;
 import javax.jdo.JDOException;
 import javax.jdo.JDOHelper;
 import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.JDOUserException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -606,31 +606,7 @@ public class JdoContinuumStore
 
     private void rollback( Transaction tx )
     {
-        PersistenceManager pm = tx.getPersistenceManager();
-
-        try
-        {
-            if ( tx.isActive() )
-            {
-                tx.rollback();
-            }
-        }
-        finally
-        {
-            closePersistenceManager( pm );
-        }
-    }
-
-    private void closePersistenceManager( PersistenceManager pm )
-    {
-        try
-        {
-            pm.close();
-        }
-        catch ( JDOUserException e )
-        {
-            getLogger().warn( "Error while closing the persistence manager.", e );
-        }
+        PlexusJdoUtils.rollbackIfActive( tx );
     }
 
     public ProjectGroup getProjectGroup( int projectGroupId )
