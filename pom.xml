@@ -32,7 +32,7 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.0.x</connection>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.0.x</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.0.x</developerConnection>
     <url>http://svn.apache.org/viewcvs.cgi/maven/continuum/branches/continuum-1.0.x</url>
   </scm>
