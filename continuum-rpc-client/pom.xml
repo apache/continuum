@@ -31,9 +31,27 @@
       <artifactId>commons-logging</artifactId>
       <version>1.0.2</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-model</artifactId>
-    </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.modello</groupId>
+        <artifactId>modello-maven-plugin</artifactId>
+        <version>1.0-alpha-9-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <version>1.0.0</version>
+          <packageWithVersion>false</packageWithVersion>
+          <model>../continuum-model/src/main/mdo/continuum.mdo</model>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
