@@ -244,13 +244,15 @@ public class DefaultMavenOneMetadataHelper
 
         List notifiers = null;
 
-        ProjectNotifier notifier = new ProjectNotifier();
+        ProjectNotifier notifier = null;
 
         if ( build == null )
         {
             if ( project.getNotifiers() != null && !project.getNotifiers().isEmpty() )
             {
-                notifiers = project.getNotifiers();
+                notifiers = new ArrayList();
+
+                notifiers.addAll( project.getNotifiers() );
             }
         }
         else
@@ -263,22 +265,25 @@ public class DefaultMavenOneMetadataHelper
 
                 props.put( ContinuumRecipientSource.ADDRESS_FIELD, nagEmailAddress );
 
+                notifier = new ProjectNotifier();
+
                 notifier.setConfiguration( props );
 
                 notifier.setFrom( ProjectNotifier.FROM_PROJECT );
             }
         }
 
-        if ( notifier == null && ( notifiers == null || notifiers.isEmpty() ) )
-        {
-        }
-        else
+        if ( ( notifiers != null && !notifiers.isEmpty() ) || notifier != null )
         {
             if ( notifiers == null )
             {
                 notifiers = new ArrayList();
             }
-            notifiers.add( notifier );
+
+            if ( notifier != null )
+            {
+                notifiers.add( notifier );
+            }
 
             // Add notifier defined by user
             for ( Iterator i = project.getNotifiers().iterator(); i.hasNext(); )
@@ -291,7 +296,7 @@ public class DefaultMavenOneMetadataHelper
 
                     userNotifier.setType( notif.getType() );
 
-                    userNotifier.setEnabled( notifier.isEnabled() );
+                    userNotifier.setEnabled( notif.isEnabled() );
 
                     userNotifier.setConfiguration( notif.getConfiguration() );
 
