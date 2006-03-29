@@ -422,14 +422,17 @@ public class DefaultContinuum
 
             List buildDefIds = (List) projectsMap.get( new Integer( project.getId() ) );
 
-            for ( Iterator buildDefinitionIterator = buildDefIds.iterator(); buildDefinitionIterator.hasNext(); )
+            if ( buildDefIds != null && !buildDefIds.isEmpty() )
             {
-                Integer buildDefId = (Integer) buildDefinitionIterator.next();
-
-                if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
-                    !isInCheckoutQueue( project.getId() ) )
+                for ( Iterator buildDefinitionIterator = buildDefIds.iterator(); buildDefinitionIterator.hasNext(); )
                 {
-                    buildProject( project, buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
+                    Integer buildDefId = (Integer) buildDefinitionIterator.next();
+
+                    if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
+                        !isInCheckoutQueue( project.getId() ) )
+                    {
+                        buildProject( project, buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
+                    }
                 }
             }
         }
