@@ -202,6 +202,14 @@ public class MavenTwoBuildExecutor
                 projectHelper.attachArtifact( project, "java-source", "sources", sourcesFile );
             }
 
+            // tests sources jar
+            File testsSourcesFile = new File( buildDirectory, finalName + "-test-sources.jar" );
+
+            if ( testsSourcesFile.exists() )
+            {
+                projectHelper.attachArtifact( project, "java-source", "test-sources", testsSourcesFile );
+            }
+
             // javadoc jar
             File javadocFile = new File( buildDirectory, finalName + "-javadoc.jar" );
 
