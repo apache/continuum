@@ -20,6 +20,7 @@ import org.codehaus.plexus.formica.util.MungedHttpsURL;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -79,6 +80,9 @@ public abstract class AbstractContinuumProjectBuilder
 
             fileName = path;
         }
+
+        // Little hack for URLs that contains '*' like "http://svn.codehaus.org/*checkout*/trunk/pom.xml?root=plexus"
+        baseDirectory = StringUtils.replace( baseDirectory, "*", "" );
 
         File continuumTmpDir = new File( System.getProperty( "java.io.tmpdir" ), "continuum" );
 
