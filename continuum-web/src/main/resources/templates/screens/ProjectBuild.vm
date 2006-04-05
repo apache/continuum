@@ -108,9 +108,9 @@ $page.setTitle( "Continuum - Continuum Web Build at $date.format('medium',$build
       <tbody>
       #foreach ( $changeSet in $changeSets )
       <tr class="a">
-        #if ($changeSet.author) <td>$changeSet.author</td> #end
-        #if ($changeSet.date > 0) <td>$date.format('medium',$changeSet.date)</td> #end
-        #if ($changeSet.comment) <td>$changeSet.comment</td> #end
+        <td>#if ($changeSet.author) $changeSet.author #end</td>
+        <td>#if ($changeSet.date > 0) $date.format('medium',$changeSet.date) #end</td>
+        <td>#if ($changeSet.comment) $changeSet.comment> #end</td>
         <td>
           #foreach ( $file in $changeSet.files )
             <code>$!file.name</code><br/>
