@@ -97,7 +97,15 @@ public class DefaultBuildController
         {
             project = store.getProject( projectId );
 
+            project.setOldState( project.getState() );
+
+            project.setState( ContinuumProjectState.BUILDING );
+
+            store.updateProject( project );
+
             buildDefinition = store.getBuildDefinition( buildDefinitionId );
+
+            notifierDispatcher.buildStarted( project );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -130,14 +138,6 @@ public class DefaultBuildController
 
         try
         {
-            project.setOldState( project.getState() );
-
-            project.setState( ContinuumProjectState.BUILDING );
-
-            store.updateProject( project );
-
-            notifierDispatcher.buildStarted( project );
-
             Map actionContext = new HashMap();
 
             actionContext.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );

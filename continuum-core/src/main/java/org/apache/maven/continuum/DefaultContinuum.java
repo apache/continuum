@@ -368,8 +368,6 @@ public class DefaultContinuum
 
         for ( Iterator i = projectsList.iterator(); i.hasNext(); )
         {
-            long start = System.currentTimeMillis();
-
             Project project = (Project) i.next();
 
             Integer buildDefId = (Integer) buildDefinitionsIds.get( new Integer( project.getId() ) );
@@ -381,8 +379,6 @@ public class DefaultContinuum
             }
 
             buildProject( project, buildDefId.intValue(), trigger );
-
-            getLogger().debug( "Add " + project.getName() + " in " + ( System.currentTimeMillis() - start ) + "ms" );
         }
     }
 
