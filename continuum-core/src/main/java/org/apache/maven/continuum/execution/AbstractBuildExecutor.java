@@ -181,12 +181,6 @@ public abstract class AbstractBuildExecutor
         // Execute the build
         // ----------------------------------------------------------------------
 
-        getLogger().warn( "Executable '" + actualExecutable + "'." );
-
-        getLogger().info( "Arguments: " + arguments );
-
-        getLogger().info( "Working directory: " + workingDirectory.getAbsolutePath() );
-
         try
         {
             ExecutionResult result = shellCommandHelper.executeShellCommand( workingDirectory, actualExecutable,
