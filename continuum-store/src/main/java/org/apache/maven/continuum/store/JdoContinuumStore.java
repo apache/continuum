@@ -82,6 +82,8 @@ public class JdoContinuumStore
 
     private static final String PROJECT_ALL_DETAILS_FETCH_GROUP = "project-all-details";
 
+    private static final String PROJECT_DEPENDENCIES_FETCH_GROUP = "project-dependencies";
+
     private static final String DEFAULT_GROUP_ID = "default";
 
     // ----------------------------------------------------------------------
@@ -631,6 +633,11 @@ public class JdoContinuumStore
     public List getAllProjectsByName()
     {
         return getAllObjectsDetached( Project.class, "name ascending", null );
+    }
+
+    public List getAllProjectsByNameWithDependencies()
+    {
+        return getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
     }
 
     public List getAllProjectsByNameWithBuildDetails()

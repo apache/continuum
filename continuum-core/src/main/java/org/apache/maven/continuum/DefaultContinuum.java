@@ -162,6 +162,12 @@ public class DefaultContinuum
         return store.getAllProjectsByName();
     }
 
+    public Collection getProjectsWithDependencies()
+        throws ContinuumException
+    {
+        return store.getAllProjectsByNameWithDependencies();
+    }
+
     public Map getLatestBuildResults()
     {
         Map result = store.getLatestBuildResults();
@@ -650,7 +656,7 @@ public class DefaultContinuum
     public List getProjectsInBuildOrder()
         throws CycleDetectedException, ContinuumException
     {
-        return getProjectsInBuildOrder( getProjects() );
+        return getProjectsInBuildOrder( getProjectsWithDependencies() );
     }
 
     private List getProjectsInBuildOrder( Collection projects )

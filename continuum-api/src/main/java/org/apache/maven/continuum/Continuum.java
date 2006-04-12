@@ -63,6 +63,9 @@ public interface Continuum
     Collection getProjects()
         throws ContinuumException;
 
+    Collection getProjectsWithDependencies()
+        throws ContinuumException;
+
     BuildResult getLatestBuildResultForProject( int projectId );
 
     Map getLatestBuildResults();

@@ -76,6 +76,8 @@ public interface ContinuumStore
 
     List getAllProjectsByName();
 
+    List getAllProjectsByNameWithDependencies();
+
     List getAllProjectsByNameWithBuildDetails();
 
     List getAllSchedulesByName();

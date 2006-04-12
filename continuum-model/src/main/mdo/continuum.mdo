@@ -184,17 +184,17 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
-        <field jpox.fetchGroupNames="project-all-details">
+        <field jpox.fetchGroupNames="project-all-details project-dependencies">
           <name>parent</name>
           <version>1.0.0+</version>
-          <association stash.part="true" jpox.join="false">
+          <association jpox.join="false">
             <type>ProjectDependency</type>
           </association>
         </field>
-        <field jpox.fetchGroupNames="project-all-details">
+        <field jpox.fetchGroupNames="project-all-details project-dependencies">
           <name>dependencies</name>
           <version>1.0.0+</version>
-          <association stash.part="true" jpox.join="false">
+          <association jpox.join="false">
             <type>ProjectDependency</type>
             <multiplicity>*</multiplicity>
           </association>
