@@ -824,7 +824,7 @@ public class DefaultContinuum
         {
             try
             {
-                projectGroup = store.getProjectGroupByGroupId( projectGroup.getGroupId() );
+                projectGroup = store.getProjectGroupByGroupIdWithProjects( projectGroup.getGroupId() );
 
                 getLogger().info(
                     "Using existing project group with the group id: '" + projectGroup.getGroupId() + "'." );
@@ -845,7 +845,7 @@ public class DefaultContinuum
 
                 int projectGroupId = AbstractContinuumAction.getProjectGroupId( pgContext );
 
-                projectGroup = store.getProjectGroup( projectGroupId );
+                projectGroup = store.getProjectGroupWithProjects( projectGroupId );
             }
         }
         catch ( ContinuumStoreException e )

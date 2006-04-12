@@ -135,6 +135,9 @@ public interface ContinuumStore
     ProjectGroup getProjectGroupWithBuildDetails( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
+    ProjectGroup getProjectGroupWithProjects( int projectGroupId )
+        throws ContinuumObjectNotFoundException, ContinuumStoreException;
+
     List getAllProjectGroupsWithBuildDetails();
 
     List getAllProjectsWithAllDetails();
@@ -149,6 +152,9 @@ public interface ContinuumStore
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     ProjectGroup getProjectGroupByGroupId( String groupId )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
+
+    ProjectGroup getProjectGroupByGroupIdWithProjects( String groupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     BuildResult getLatestBuildResultForProject( int projectId );

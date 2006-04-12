@@ -39,10 +39,10 @@
           <version>1.0.0+</version>
           <type>String</type>
         </field>
-        <field jpox.mappedBy="projectGroup">
+        <field jpox.mappedBy="projectGroup" jpox.fetchGroupNames="projectgroup-projects project-build-details">
           <name>projects</name>
           <version>1.0.0+</version>
-          <association stash.part="true" jpox.join="false">
+          <association jpox.join="false">
             <type>Project</type>
             <multiplicity>*</multiplicity>
           </association>

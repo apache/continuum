@@ -33,14 +33,11 @@ import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.jdo.ConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
-import org.codehaus.plexus.util.IOUtil;
 import org.jpox.SchemaTool;
 
 import javax.jdo.JDODetachedFieldAccessException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -344,7 +341,7 @@ public class ContinuumStoreTest
     public void testGetProjectGroup()
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
-        ProjectGroup retrievedGroup = store.getProjectGroup( defaultProjectGroup.getId() );
+        ProjectGroup retrievedGroup = store.getProjectGroupWithProjects( defaultProjectGroup.getId() );
         assertProjectGroupEquals( retrievedGroup, defaultProjectGroup );
 
         List projects = retrievedGroup.getProjects();
@@ -705,7 +702,7 @@ public class ContinuumStoreTest
 
         store.removeProject( project );
 
-        ProjectGroup projectGroup = store.getProjectGroup( defaultProjectGroup.getId() );
+        ProjectGroup projectGroup = store.getProjectGroupWithProjects( defaultProjectGroup.getId() );
         assertEquals( "check size is now 1", 1, projectGroup.getProjects().size() );
         assertProjectEquals( (Project) projectGroup.getProjects().get( 0 ), testProject2 );
 
