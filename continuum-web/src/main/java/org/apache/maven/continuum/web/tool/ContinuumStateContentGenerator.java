@@ -46,6 +46,7 @@ public class ContinuumStateContentGenerator
         else
         {
             BuildResult buildResult = (BuildResult) item;
+
             state = buildResult.getState();
         }
 
