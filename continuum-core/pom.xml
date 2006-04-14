@@ -20,7 +20,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>jpox</groupId>
+      <groupId>org.apache.maven.continuum.jpox</groupId>
       <artifactId>jpox</artifactId>
     </dependency>
     <dependency>

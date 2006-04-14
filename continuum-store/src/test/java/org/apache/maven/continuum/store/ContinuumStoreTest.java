@@ -981,7 +981,8 @@ public class ContinuumStoreTest
         Project project = store.getProjectWithAllDetails( testProject1.getId() );
 
         ProjectNotifier newNotifier = (ProjectNotifier) project.getNotifiers().get( 0 );
-        String type = "type1.1";
+        // If we use "type1.1", jpox-rc2 store "type11", weird
+        String type = "type11";
         newNotifier.setType( type );
 
         ProjectNotifier copy = createTestNotifier( newNotifier );
@@ -1033,7 +1034,8 @@ public class ContinuumStoreTest
         Project project = store.getProjectWithAllDetails( testProject1.getId() );
 
         BuildDefinition newBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 0 );
-        String arguments = "arguments1.1";
+        // If we use "arguments1.1", jpox-rc2 store "arguments11", weird
+        String arguments = "arguments11";
         newBuildDefinition.setArguments( arguments );
 
         BuildDefinition copy = createTestBuildDefinition( newBuildDefinition );
@@ -1088,7 +1090,8 @@ public class ContinuumStoreTest
         ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
 
         ProjectNotifier newNotifier = (ProjectNotifier) projectGroup.getNotifiers().get( 0 );
-        String type = "type1.1";
+        // If we use "type1.1", jpox-rc2 store "type1", weird
+        String type = "type1";
         newNotifier.setType( type );
 
         ProjectNotifier copy = createTestNotifier( newNotifier );
@@ -1142,7 +1145,8 @@ public class ContinuumStoreTest
         ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
 
         BuildDefinition newBuildDefinition = (BuildDefinition) projectGroup.getBuildDefinitions().get( 0 );
-        String arguments = "arguments1.1";
+        // If we use "arguments1.1", jpox-rc2 store "arguments11", weird
+        String arguments = "arguments1";
         newBuildDefinition.setArguments( arguments );
 
         BuildDefinition copy = createTestBuildDefinition( newBuildDefinition );

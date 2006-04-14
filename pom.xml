@@ -253,9 +253,9 @@
         <version>1.0.3-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>jpox</groupId>
+        <groupId>org.apache.maven.continuum.jpox</groupId>
         <artifactId>jpox</artifactId>
-        <version>1.1.0-rc-1</version>
+        <version>1.1.0-20060413</version>
         <exclusions>
           <exclusion>
             <artifactId>ant</artifactId>
@@ -280,14 +280,20 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>jpox</groupId>
+        <groupId>org.apache.maven.continuum.jpox</groupId>
         <artifactId>jpox-enhancer</artifactId>
-        <version>1.1.0-rc-1</version>
+        <version>1.1.0-20060413</version>
       </dependency>
       <dependency>
         <groupId>jpox</groupId>
         <artifactId>jpox-dbcp</artifactId>
         <version>1.1.0-rc-1</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>jpox</artifactId>
+            <groupId>jpox</groupId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
