@@ -1,132 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id$ -->
+
 <project>
-  <modelVersion>4.0.0</modelVersion>
-  
-  <parent>
-    <artifactId>gbuild-parent</artifactId>
-    <groupId>org.apache.geronimo.gbuild</groupId>
-    <version>1.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
-  
-  <artifactId>gbuild-agent-application</artifactId>
-  <name>GBuild Agent Application</name>
-  <packaging>plexus-application</packaging>
-  
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>assembly</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <descriptor>src/assembly/bin.xml</descriptor>
-          <finalName>gbuild-agent-${pom.version}</finalName>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>runtime</goal>
-              <goal>add-app</goal>
-              <goal>add-services</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <applicationConfiguration>src/conf/application.xml</applicationConfiguration>
-          <configurationsDirectory>src/conf</configurationsDirectory>
-          <configurationProperties>${appProperties}</configurationProperties>
-          <applicationName>gbuild-agent</applicationName>
-          <runtimeConfiguration>src/test/conf/test-runtime-configuration.xml</runtimeConfiguration>
-          <runtimeConfigurationProperties>${appProperties}</runtimeConfigurationProperties>
-          <runtimePath>target/plexus-test-runtime</runtimePath>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  
-  <profiles>
-    <profile>
-      <id>env-test</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>env</name>
-          <value>test</value>
-        </property>
-      </activation>
-      <properties>
-        <appProperties>test.properties</appProperties>
-      </properties>
-    </profile>
-    <profile>
-      <id>env-production</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>production</value>
-        </property>
-      </activation>
-      <properties>
-        <appProperties>app.properties</appProperties>
-      </properties>
-    </profile>
-  </profiles>
-  
-  <dependencies>
-    <dependency>
-      <groupId>${pom.groupId}</groupId>
-      <artifactId>gbuild-agent</artifactId>
-      <version>${pom.version}</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>${pom.groupId}</groupId>
-      <artifactId>gbuild-agent-web</artifactId>
-      <version>${pom.version}</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-log4j-logging</artifactId>
-      <version>1.1-alpha-1</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-appserver</artifactId>
-      <version>1.0-alpha-5</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>plexus</groupId>
-      <artifactId>plexus-container-artifact</artifactId>
-      <version>1.0-alpha-3</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>plexus-container-default</artifactId>
-          <groupId>plexus</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact</artifactId>
-      <version>2.0-1</version>
-    </dependency>
-  </dependencies>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>gbuild-parent</artifactId>
+        <groupId>org.apache.geronimo.gbuild</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>gbuild-agent-application</artifactId>
+    <name>GBuild Agent Application</name>
+    <packaging>plexus-application</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptor>src/assembly/bin.xml</descriptor>
+                    <finalName>gbuild-agent-${pom.version}</finalName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>runtime</goal>
+                            <goal>add-app</goal>
+                            <goal>add-services</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <applicationConfiguration>src/conf/application.xml</applicationConfiguration>
+                    <configurationsDirectory>src/conf</configurationsDirectory>
+                    <configurationProperties>${appProperties}</configurationProperties>
+                    <applicationName>gbuild-agent</applicationName>
+                    <runtimeConfiguration>src/test/conf/test-runtime-configuration.xml</runtimeConfiguration>
+                    <runtimeConfigurationProperties>${appProperties}</runtimeConfigurationProperties>
+                    <runtimePath>target/plexus-test-runtime</runtimePath>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>env-test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>env</name>
+                    <value>test</value>
+                </property>
+            </activation>
+            <properties>
+                <appProperties>test.properties</appProperties>
+            </properties>
+        </profile>
+        <profile>
+            <id>env-production</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>production</value>
+                </property>
+            </activation>
+            <properties>
+                <appProperties>app.properties</appProperties>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>gbuild-agent</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>gbuild-agent-web</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-log4j-logging</artifactId>
+            <version>1.1-alpha-1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-appserver</artifactId>
+            <version>1.0-alpha-5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>plexus</groupId>
+            <artifactId>plexus-container-artifact</artifactId>
+            <version>1.0-alpha-3</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>plexus-container-default</artifactId>
+                    <groupId>plexus</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+            <version>2.0-1</version>
+        </dependency>
+    </dependencies>
 </project>

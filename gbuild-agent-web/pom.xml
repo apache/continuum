@@ -1,71 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id$ -->
+
 <project>
-  <modelVersion>4.0.0</modelVersion>
-  
-  <parent>
-    <groupId>org.apache.geronimo.gbuild</groupId>
-    <artifactId>gbuild-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
-  
-  <artifactId>gbuild-agent-web</artifactId>
-  <name>GBuild Agent Webapp</name>
-  <packaging>jar</packaging>
-  <url>http://geronimo.apache.org</url>
-  
-  <dependencies>
-    <dependency>
-      <groupId>${pom.groupId}</groupId>
-      <artifactId>gbuild-agent</artifactId>
-      <version>${pom.version}</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-service-jetty</artifactId>
-      <version>1.0-alpha-3</version>
-      <type>plexus-service</type>
-      <exclusions>
-        <exclusion>
-          <artifactId>log4j</artifactId>
-          <groupId>log4j</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-api</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-core</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-model</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-command-line</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jms_1.1_spec</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-j2ee-management_1.0_spec</artifactId>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-servlet_2.4_spec</artifactId>
-    </dependency>
-  </dependencies>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.apache.geronimo.gbuild</groupId>
+        <artifactId>gbuild-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>gbuild-agent-web</artifactId>
+    <name>GBuild Agent Webapp</name>
+    <packaging>jar</packaging>
+    <url>http://geronimo.apache.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>gbuild-agent</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-service-jetty</artifactId>
+            <version>1.0-alpha-3</version>
+            <type>plexus-service</type>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.continuum</groupId>
+            <artifactId>continuum-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.continuum</groupId>
+            <artifactId>continuum-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.continuum</groupId>
+            <artifactId>continuum-model</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-command-line</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-j2ee-management_1.0_spec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-servlet_2.4_spec</artifactId>
+        </dependency>
+    </dependencies>
 </project>
