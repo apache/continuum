@@ -6,10 +6,12 @@
   <packaging>pom</packaging>
   <name>GBuild Parent Project</name>
   <version>1.0-SNAPSHOT</version>
+  
   <issueManagement>
     <system>jira</system>
     <url>http://issues.apache.org/jira/browse/GERONIMO</url>
   </issueManagement>
+  
   <ciManagement>
     <system>continuum</system>
     <url>http://ci.gbuild.org/continuum</url>
@@ -21,7 +23,9 @@
       </notifier>
     </notifiers>
   </ciManagement>
+  
   <inceptionYear>2005</inceptionYear>
+  
   <mailingLists>
     <mailingList>
       <name>GBuild Dev List</name>
@@ -43,6 +47,7 @@
       <archive>mail-archives.apache.org/mod_mbox/www-announce/</archive>
     </mailingList>
   </mailingLists>
+  
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -50,6 +55,7 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+  
   <developers>
     <developer>
       <id>dblevins</id>
@@ -74,6 +80,7 @@
       <timezone>-8</timezone>
     </developer>
   </developers>
+  
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/geronimo/gbuild/trunk/</connection>
     <developerConnection>scm:svn:http://svn.apache.org/repos/asf/geronimo/gbuild/trunk/</developerConnection>
@@ -83,7 +90,10 @@
     <name>Apache</name>
     <url>http://www.apache.org/</url>
   </organization>
+  
   <build>
+    <defaultGoal>install</defaultGoal>
+    
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -105,6 +115,7 @@
         </executions>
       </plugin>
     </plugins>
+    
     <pluginManagement>
       <plugins>
         <plugin>
@@ -113,15 +124,21 @@
           <version>1.1.1</version>
           <extensions>true</extensions>
         </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.1.3</version>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
+  
   <modules>
     <module>gbuild-agent</module>
     <module>gbuild-agent-web</module>
     <module>gbuild-report</module>
     <module>gbuild-agent-application</module>
   </modules>
+  
   <repositories>
     <repository>
       <id>apache</id>
@@ -154,9 +171,14 @@
       <url>http://snapshots.maven.codehaus.org/maven2</url>
     </pluginRepository>
   </pluginRepositories>
+  
   <dependencyManagement>
     <dependencies>
-
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.8</version>
+      </dependency>
       <dependency>
         <groupId>concurrent</groupId>
         <artifactId>concurrent</artifactId>
@@ -171,6 +193,16 @@
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-core</artifactId>
         <version>1.0.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.resource</groupId>
+            <artifactId>connector</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
@@ -193,6 +225,21 @@
         <version>4.0-M4</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-jms_1.1_spec</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-j2ee-management_1.0_spec</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.geronimo.specs</groupId>
+        <artifactId>geronimo-servlet_2.4_spec</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>3.8.1</version>
@@ -200,4 +247,12 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+  </dependencies>
+  
 </project>
