@@ -1117,7 +1117,23 @@ public class DefaultContinuum
 
         bd.setArguments( buildDefinition.getArguments() );
 
-        Schedule schedule = getSchedule( buildDefinition.getSchedule().getId() );
+        Schedule schedule;
+
+        if ( buildDefinition.getSchedule() == null )
+        {
+            try
+            {
+                schedule = store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( "Can't get default schedule.", e );
+            }
+        }
+        else
+        {
+            schedule = getSchedule( buildDefinition.getSchedule().getId() );
+        }
 
         bd.setSchedule( schedule );
 
