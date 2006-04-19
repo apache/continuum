@@ -42,7 +42,7 @@
         <plugin>
           <groupId>org.codehaus.plexus</groupId>
           <artifactId>plexus-maven-plugin</artifactId>
-          <version>1.2-SNAPSHOT</version>
+          <version>1.2</version>
           <extensions>true</extensions>
         </plugin>
       </plugins>
@@ -125,47 +125,47 @@
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-api</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-manager-plexus</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-bazaar</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-clearcase</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-cvsexe</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-local</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-perforce</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-starteam</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-svnexe</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.wagon</groupId>
@@ -298,12 +298,12 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-jdo2</artifactId>
-        <version>1.0-alpha-4-SNAPSHOT</version>
+        <version>1.0-alpha-4</version>
         <exclusions>
           <exclusion>
             <groupId>xerces</groupId>
@@ -318,7 +318,7 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-formica</artifactId>
-        <version>1.0-beta-10-SNAPSHOT</version>
+        <version>1.0-beta-10</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
@@ -374,17 +374,17 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-quartz</artifactId>
-        <version>1.0-alpha-2-SNAPSHOT</version>
+        <version>1.0-alpha-2</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-security-api</artifactId>
-        <version>1.0-alpha-3-SNAPSHOT</version>
+        <version>1.0-alpha-3</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-security-summit</artifactId>
-        <version>1.0-alpha-3-SNAPSHOT</version>
+        <version>1.0-alpha-3</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
