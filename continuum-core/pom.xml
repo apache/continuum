@@ -1,13 +1,13 @@
-<project>
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>continuum-parent</artifactId>
     <groupId>org.apache.maven.continuum</groupId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-core</artifactId>
   <name>Continuum Core</name>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.3</version>
   <dependencies>
     <dependency>
       <groupId>org.apache.derby</groupId>
@@ -20,21 +20,21 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum.jpox</groupId>
-      <artifactId>jpox</artifactId>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-quartz</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-mail-sender-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-security-api</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-test</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-security-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
@@ -73,6 +73,10 @@
       <artifactId>maven-model</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-svnexe</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-velocity</artifactId>
     </dependency>
@@ -107,10 +111,6 @@
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-quartz</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-jdo2</artifactId>
     </dependency>
     <dependency>
@@ -134,6 +134,10 @@
       <version>1.0-alpha-3</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.continuum.jpox</groupId>
+      <artifactId>jpox</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-store</artifactId>
     </dependency>
@@ -150,10 +154,6 @@
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-mail-sender-simple</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-svnexe</artifactId>
     </dependency>
   </dependencies>
 </project>
