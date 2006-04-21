@@ -10,7 +10,7 @@
   <artifactId>continuum-parent</artifactId>
   <packaging>pom</packaging>
   <name>Continuum Parent Project</name>
-  <version>1.0.3</version>
+  <version>1.0.4-SNAPSHOT</version>
   <url>http://maven.apache.org/continuum</url>
   <issueManagement>
     <system>jira</system>
@@ -32,9 +32,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/continuum/tags/continuum-1.0.3</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/tags/continuum-1.0.3</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/continuum/tags/continuum-1.0.3</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.0.x</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.0.x</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/continuum/branches/continuum-1.0.x</url>
   </scm>
   <build>
     <pluginManagement>
