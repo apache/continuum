@@ -1,14 +1,14 @@
-<project>
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>continuum-parent</artifactId>
     <groupId>org.apache.maven.continuum</groupId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-plexus-application</artifactId>
   <packaging>plexus-application</packaging>
   <name>Continuum Plexus Application</name>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.3</version>
   <build>
     <plugins>
       <plugin>
@@ -93,27 +93,9 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>plexus</groupId>
-      <artifactId>plexus-container-artifact</artifactId>
-      <version>1.0-alpha-3</version>
-      <exclusions>
-        <exclusion>
-          <groupId>plexus</groupId>
-          <artifactId>plexus-container-default</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.maven</groupId>
-          <artifactId>maven-artifact</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.maven.wagon</groupId>
-          <artifactId>wagon-provider-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-bazaar</artifactId>
+      <groupId>jpox</groupId>
+      <artifactId>jpox-dbcp</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
@@ -121,9 +103,63 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-provider-api</artifactId>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-mail-sender-api</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-service-xmlrpc</artifactId>
+      <version>1.0-alpha-3</version>
+      <type>plexus-service</type>
+      <exclusions>
+        <exclusion>
+          <artifactId>log4j</artifactId>
+          <groupId>log4j</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-local</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-ssh</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-cvsexe</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>plexus</groupId>
+      <artifactId>plexus-container-artifact</artifactId>
+      <version>1.0-alpha-3</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>plexus-container-default</artifactId>
+          <groupId>plexus</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>maven-artifact</artifactId>
+          <groupId>org.apache.maven</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>wagon-provider-api</artifactId>
+          <groupId>org.apache.maven.wagon</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
@@ -136,8 +172,8 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-ssh</artifactId>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-svnexe</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -150,18 +186,23 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-starteam</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-mail-sender-javamail</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-starteam</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-provider-api</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -182,11 +223,6 @@
       <version>1.2.8</version>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-mail-sender-api</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-notifier-msn</artifactId>
     </dependency>
@@ -195,8 +231,8 @@
       <artifactId>continuum-notifier-jabber</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-web</artifactId>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-bazaar</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
@@ -204,44 +240,8 @@
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-service-xmlrpc</artifactId>
-      <version>1.0-alpha-3</version>
-      <type>plexus-service</type>
-      <exclusions>
-        <exclusion>
-          <artifactId>log4j</artifactId>
-          <groupId>log4j</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-local</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-appserver</artifactId>
       <version>1.0-alpha-5</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-utils</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-cvsexe</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-svnexe</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>jpox</groupId>
-      <artifactId>jpox-dbcp</artifactId>
-      <scope>runtime</scope>
     </dependency>
   </dependencies>
 </project>

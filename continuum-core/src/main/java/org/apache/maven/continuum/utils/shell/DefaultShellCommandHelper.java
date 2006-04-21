@@ -78,6 +78,9 @@ public class DefaultShellCommandHelper
             cl.createArgument().setValue( argument );
         }
 
+        getLogger().info( "Executing: " + cl );
+        getLogger().info( "Working directory: " + cl.getWorkingDirectory().getAbsolutePath() );
+
         // ----------------------------------------------------------------------
         //
         // ----------------------------------------------------------------------

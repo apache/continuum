@@ -33,7 +33,7 @@ public class WorkingCopyContentGenerator
     extends AbstractLogEnabled
     implements RequestTool
 {
-    private RunData data;
+    private String contextPath;
 
     private File basedir;
 
@@ -119,7 +119,7 @@ public class WorkingCopyContentGenerator
 
     private String getBrowseServletPath()
     {
-        return data.getContextPath() + "/servlet/browse?file=";
+        return contextPath + "/servlet/browse?file=";
     }
 
     private String getFileUrl( String directory, String fileName )
@@ -140,7 +140,7 @@ public class WorkingCopyContentGenerator
 
     public void setRunData( RunData data )
     {
-        this.data = data;
+        contextPath = data.getContextPath();
     }
 
     public void refresh()

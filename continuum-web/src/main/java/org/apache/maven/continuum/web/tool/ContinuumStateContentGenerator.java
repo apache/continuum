@@ -32,7 +32,7 @@ public class ContinuumStateContentGenerator
     extends AbstractLogEnabled
     implements ContentGenerator, RequestTool
 {
-    private RunData data;
+    private String contextPath;
 
     public String generate( Object item )
     {
@@ -46,6 +46,7 @@ public class ContinuumStateContentGenerator
         else
         {
             BuildResult buildResult = (BuildResult) item;
+
             state = buildResult.getState();
         }
 
@@ -55,27 +56,33 @@ public class ContinuumStateContentGenerator
         }
         else if ( state == ContinuumProjectState.OK )
         {
-            return "<img src=\"" + data.getContextPath() + "/images/icon_success_sml.gif\" alt=\"Success\" title=\"Success\" border=\"0\" />";
+            return "<img src=\"" + contextPath +
+                "/images/icon_success_sml.gif\" alt=\"Success\" title=\"Success\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.FAILED )
         {
-            return "<img src=\"" + data.getContextPath() + "/images/icon_warning_sml.gif\" alt=\"Failed\" title=\"Failed\" border=\"0\" />";
+            return "<img src=\"" + contextPath +
+                "/images/icon_warning_sml.gif\" alt=\"Failed\" title=\"Failed\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.ERROR )
         {
-            return "<img src=\"" + data.getContextPath() + "/images/icon_error_sml.gif\" alt=\"Error\" title=\"Error\" border=\"0\" />";
+            return "<img src=\"" + contextPath +
+                "/images/icon_error_sml.gif\" alt=\"Error\" title=\"Error\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.BUILDING )
         {
-            return "<img src=\"" + data.getContextPath() + "/images/building.gif\" alt=\"Building\" title=\"Building\" border=\"0\">";
+            return "<img src=\"" + contextPath +
+                "/images/building.gif\" alt=\"Building\" title=\"Building\" border=\"0\">";
         }
         else if ( state == ContinuumProjectState.UPDATING )
         {
-            return "<img src=\"" + data.getContextPath() + "/images/checkingout.gif\" alt=\"Checking Out sources\" title=\"Checking Out sources\" border=\"0\">";
+            return "<img src=\"" + contextPath +
+                "/images/checkingout.gif\" alt=\"Checking Out sources\" title=\"Checking Out sources\" border=\"0\">";
         }
         else if ( state == ContinuumProjectState.CHECKING_OUT )
         {
-            return "<img src=\"" + data.getContextPath() + "/images/checkingout.gif\" alt=\"Updating sources\" title=\"Updating sources\" border=\"0\">";
+            return "<img src=\"" + contextPath +
+                "/images/checkingout.gif\" alt=\"Updating sources\" title=\"Updating sources\" border=\"0\">";
         }
         else
         {
@@ -87,7 +94,7 @@ public class ContinuumStateContentGenerator
 
     public void setRunData( RunData data )
     {
-        this.data = data;
+        contextPath = data.getContextPath();
     }
 
     public void refresh()

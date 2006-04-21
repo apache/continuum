@@ -152,6 +152,28 @@ public class DefaultContinuum
      */
     private BuildExecutorManager executorManager;
 
+    private boolean stopped = false;
+
+    public DefaultContinuum()
+    {
+        super();
+
+        Runtime.getRuntime().addShutdownHook( new Thread()
+        {
+            public void run()
+            {
+                try
+                {
+                    stopContinuum();
+                }
+                catch ( StoppingException e )
+                {
+                    e.printStackTrace();
+                }
+            }
+        } );
+    }
+
     // ----------------------------------------------------------------------
     // Projects
     // ----------------------------------------------------------------------
@@ -160,6 +182,12 @@ public class DefaultContinuum
         throws ContinuumException
     {
         return store.getAllProjectsByName();
+    }
+
+    public Collection getProjectsWithDependencies()
+        throws ContinuumException
+    {
+        return store.getAllProjectsByNameWithDependencies();
     }
 
     public Map getLatestBuildResults()
@@ -368,8 +396,6 @@ public class DefaultContinuum
 
         for ( Iterator i = projectsList.iterator(); i.hasNext(); )
         {
-            long start = System.currentTimeMillis();
-
             Project project = (Project) i.next();
 
             Integer buildDefId = (Integer) buildDefinitionsIds.get( new Integer( project.getId() ) );
@@ -381,8 +407,6 @@ public class DefaultContinuum
             }
 
             buildProject( project, buildDefId.intValue(), trigger );
-
-            getLogger().debug( "Add " + project.getName() + " in " + ( System.currentTimeMillis() - start ) + "ms" );
         }
     }
 
@@ -654,7 +678,7 @@ public class DefaultContinuum
     public List getProjectsInBuildOrder()
         throws CycleDetectedException, ContinuumException
     {
-        return getProjectsInBuildOrder( getProjects() );
+        return getProjectsInBuildOrder( getProjectsWithDependencies() );
     }
 
     private List getProjectsInBuildOrder( Collection projects )
@@ -822,7 +846,7 @@ public class DefaultContinuum
         {
             try
             {
-                projectGroup = store.getProjectGroupByGroupId( projectGroup.getGroupId() );
+                projectGroup = store.getProjectGroupByGroupIdWithProjects( projectGroup.getGroupId() );
 
                 getLogger().info(
                     "Using existing project group with the group id: '" + projectGroup.getGroupId() + "'." );
@@ -843,7 +867,7 @@ public class DefaultContinuum
 
                 int projectGroupId = AbstractContinuumAction.getProjectGroupId( pgContext );
 
-                projectGroup = store.getProjectGroup( projectGroupId );
+                projectGroup = store.getProjectGroupWithProjects( projectGroupId );
             }
         }
         catch ( ContinuumStoreException e )
@@ -1115,7 +1139,23 @@ public class DefaultContinuum
 
         bd.setArguments( buildDefinition.getArguments() );
 
-        Schedule schedule = getSchedule( buildDefinition.getSchedule().getId() );
+        Schedule schedule;
+
+        if ( buildDefinition.getSchedule() == null )
+        {
+            try
+            {
+                schedule = store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( "Can't get default schedule.", e );
+            }
+        }
+        else
+        {
+            schedule = getSchedule( buildDefinition.getSchedule().getId() );
+        }
 
         bd.setSchedule( schedule );
 
@@ -1910,13 +1950,25 @@ public class DefaultContinuum
                 project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
                 project.getState() != ContinuumProjectState.ERROR )
             {
+                int state = project.getState();
+
                 project.setState( project.getOldState() );
 
                 project.setOldState( 0 );
 
                 try
                 {
+                    getLogger().info( "Fix project state for project " + project.getId() + ":" + project.getName() +
+                        ":" + project.getVersion() );
+
                     store.updateProject( project );
+
+                    Project p = store.getProject( project.getId() );
+
+                    if ( state == p.getState() )
+                    {
+                        getLogger().info( "Can't fix the project state." );
+                    }
                 }
                 catch ( ContinuumStoreException e )
                 {
@@ -1971,9 +2023,25 @@ public class DefaultContinuum
         }
     }
 
+    private void closeStore()
+    {
+        store.closeStore();
+    }
+
     public void stop()
         throws StoppingException
     {
+        stopContinuum();
+    }
+
+    public void stopContinuum()
+        throws StoppingException
+    {
+        if ( stopped )
+        {
+            return;
+        }
+
         try
         {
             configurationService.store();
@@ -1983,7 +2051,11 @@ public class DefaultContinuum
             throw new StoppingException( "Error storing the Continuum configuration.", e );
         }
 
+        closeStore();
+
         stopMessage();
+
+        stopped = true;
     }
 
     public Collection getBuildResultsForProject( int projectId )

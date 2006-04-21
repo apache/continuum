@@ -37,6 +37,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
+import javax.jdo.JDOUserException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -81,6 +82,10 @@ public class JdoContinuumStore
     private static final String PROJECT_BUILD_DETAILS_FETCH_GROUP = "project-build-details";
 
     private static final String PROJECT_ALL_DETAILS_FETCH_GROUP = "project-all-details";
+
+    private static final String PROJECT_DEPENDENCIES_FETCH_GROUP = "project-dependencies";
+
+    private static final String PROJECTGROUP_PROJECTS_FETCH_GROUP = "projectgroup-projects";
 
     private static final String DEFAULT_GROUP_ID = "default";
 
@@ -600,37 +605,17 @@ public class JdoContinuumStore
 
     public Collection getAllProjectGroupsWithProjects()
     {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            Extent extent = pm.getExtent( ProjectGroup.class, true );
-
-            Query query = pm.newQuery( extent );
-
-            query.setOrdering( "name ascending" );
-
-            Collection result = (Collection) query.execute();
-
-            result = pm.detachCopyAll( result );
-
-            tx.commit();
-
-            return result;
-        }
-        finally
-        {
-            rollback( tx );
-        }
+        return getAllObjectsDetached( ProjectGroup.class, "name ascending", PROJECTGROUP_PROJECTS_FETCH_GROUP );
     }
 
     public List getAllProjectsByName()
     {
         return getAllObjectsDetached( Project.class, "name ascending", null );
+    }
+
+    public List getAllProjectsByNameWithDependencies()
+    {
+        return getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
     }
 
     public List getAllProjectsByNameWithBuildDetails()
@@ -918,12 +903,31 @@ public class JdoContinuumStore
 
     public void removeProjectGroup( ProjectGroup projectGroup )
     {
-        // TODO: why do we need to do this? if not - build results are not removed and a integrity constraint is violated. I assume its because of the fetch groups
-        for ( Iterator i = projectGroup.getProjects().iterator(); i.hasNext(); )
+        ProjectGroup pg = null;
+        try
         {
-            removeProject( (Project) i.next() );
+            pg = getProjectGroupWithProjects( projectGroup.getId() );
         }
-        removeObject( projectGroup );
+        catch ( Exception e )
+        {
+            //Do nothing
+        }
+
+        if ( pg != null )
+        {
+            // TODO: why do we need to do this? if not - build results are not removed and a integrity constraint is violated. I assume its because of the fetch groups
+            for ( Iterator i = pg.getProjects().iterator(); i.hasNext(); )
+            {
+                removeProject( (Project) i.next() );
+            }
+            removeObject( pg );
+        }
+    }
+
+    public ProjectGroup getProjectGroupWithProjects( int projectGroupId )
+        throws ContinuumObjectNotFoundException, ContinuumStoreException
+    {
+        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECTGROUP_PROJECTS_FETCH_GROUP );
     }
 
     public ProjectGroup getProjectGroupWithBuildDetails( int projectGroupId )
@@ -996,6 +1000,13 @@ public class JdoContinuumStore
         return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", groupId, null );
     }
 
+    public ProjectGroup getProjectGroupByGroupIdWithProjects( String groupId )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", groupId,
+                                                  PROJECTGROUP_PROJECTS_FETCH_GROUP );
+    }
+
     public Project getProjectWithBuildDetails( int projectId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
@@ -1009,7 +1020,8 @@ public class JdoContinuumStore
 
         try
         {
-            group = (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", DEFAULT_GROUP_ID, null );
+            group = (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", DEFAULT_GROUP_ID,
+                                                       PROJECTGROUP_PROJECTS_FETCH_GROUP );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -1290,5 +1302,53 @@ public class JdoContinuumStore
     public void removeUserGroup( UserGroup group )
     {
         removeObject( group );
+    }
+
+    public void closeStore()
+    {
+        closePersistenceManagerFactory( 1 );
+    }
+
+    /**
+     * Close the PersistenceManagerFactory.
+     *
+     * @param numTry The number of try. The maximum try is 5.
+     */
+    private void closePersistenceManagerFactory( int numTry )
+    {
+        if ( pmf != null )
+        {
+            if ( !pmf.isClosed() )
+            {
+                try
+                {
+                    pmf.close();
+                }
+                catch ( SecurityException e )
+                {
+                    throw e;
+                }
+                catch ( JDOUserException e )
+                {
+                    if ( numTry < 5 )
+                    {
+                        try
+                        {
+                            Thread.currentThread().wait( 1000 );
+                        }
+                        catch ( InterruptedException ie )
+                        {
+                            //nothing to do
+                        }
+
+                        closePersistenceManagerFactory( numTry + 1 );
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
+            }
+        }
     }
 }

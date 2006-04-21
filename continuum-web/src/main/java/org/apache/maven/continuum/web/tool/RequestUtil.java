@@ -28,7 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestUtil
     implements RequestTool
 {
-    private RunData data;
+    private String contextPath;
+
+    private HttpServletRequest request;
 
     public String getParameter( String paramName )
     {
@@ -37,17 +39,19 @@ public class RequestUtil
 
     public HttpServletRequest getRequest()
     {
-        return data.getRequest();
+        return request;
     }
 
     public String getContextPath()
     {
-        return data.getContextPath();
+        return contextPath;
     }
 
     public void setRunData( RunData data )
     {
-        this.data = data;
+        contextPath = data.getContextPath();
+
+        request = data.getRequest();
     }
 
     public void refresh()

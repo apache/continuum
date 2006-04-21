@@ -29,12 +29,12 @@ public class ContinuumTriggerContentGenerator
     extends AbstractLogEnabled
     implements ContentGenerator
 {
-
     public String generate( Object item )
     {
         int trigger;
 
         BuildResult result = (BuildResult) item;
+
         trigger = result.getTrigger();
 
         if ( trigger == ContinuumProjectState.TRIGGER_SCHEDULED )

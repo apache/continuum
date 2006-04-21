@@ -33,14 +33,11 @@ import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.jdo.ConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
-import org.codehaus.plexus.util.IOUtil;
 import org.jpox.SchemaTool;
 
 import javax.jdo.JDODetachedFieldAccessException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -344,7 +341,7 @@ public class ContinuumStoreTest
     public void testGetProjectGroup()
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
-        ProjectGroup retrievedGroup = store.getProjectGroup( defaultProjectGroup.getId() );
+        ProjectGroup retrievedGroup = store.getProjectGroupWithProjects( defaultProjectGroup.getId() );
         assertProjectGroupEquals( retrievedGroup, defaultProjectGroup );
 
         List projects = retrievedGroup.getProjects();
@@ -705,7 +702,7 @@ public class ContinuumStoreTest
 
         store.removeProject( project );
 
-        ProjectGroup projectGroup = store.getProjectGroup( defaultProjectGroup.getId() );
+        ProjectGroup projectGroup = store.getProjectGroupWithProjects( defaultProjectGroup.getId() );
         assertEquals( "check size is now 1", 1, projectGroup.getProjects().size() );
         assertProjectEquals( (Project) projectGroup.getProjects().get( 0 ), testProject2 );
 
@@ -984,7 +981,8 @@ public class ContinuumStoreTest
         Project project = store.getProjectWithAllDetails( testProject1.getId() );
 
         ProjectNotifier newNotifier = (ProjectNotifier) project.getNotifiers().get( 0 );
-        String type = "type1.1";
+        // If we use "type1.1", jpox-rc2 store "type11", weird
+        String type = "type11";
         newNotifier.setType( type );
 
         ProjectNotifier copy = createTestNotifier( newNotifier );
@@ -1036,7 +1034,8 @@ public class ContinuumStoreTest
         Project project = store.getProjectWithAllDetails( testProject1.getId() );
 
         BuildDefinition newBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 0 );
-        String arguments = "arguments1.1";
+        // If we use "arguments1.1", jpox-rc2 store "arguments11", weird
+        String arguments = "arguments11";
         newBuildDefinition.setArguments( arguments );
 
         BuildDefinition copy = createTestBuildDefinition( newBuildDefinition );
@@ -1091,7 +1090,8 @@ public class ContinuumStoreTest
         ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
 
         ProjectNotifier newNotifier = (ProjectNotifier) projectGroup.getNotifiers().get( 0 );
-        String type = "type1.1";
+        // If we use "type1.1", jpox-rc2 store "type1", weird
+        String type = "type1";
         newNotifier.setType( type );
 
         ProjectNotifier copy = createTestNotifier( newNotifier );
@@ -1145,7 +1145,8 @@ public class ContinuumStoreTest
         ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
 
         BuildDefinition newBuildDefinition = (BuildDefinition) projectGroup.getBuildDefinitions().get( 0 );
-        String arguments = "arguments1.1";
+        // If we use "arguments1.1", jpox-rc2 store "arguments11", weird
+        String arguments = "arguments1";
         newBuildDefinition.setArguments( arguments );
 
         BuildDefinition copy = createTestBuildDefinition( newBuildDefinition );
@@ -1479,10 +1480,11 @@ public class ContinuumStoreTest
             try
             {
                 project.getDependencies();
+
+                fail( "dependencies should be in the default fetch group" );
             }
             catch ( JDODetachedFieldAccessException expected )
             {
-                fail( "dependencies should be in the default fetch group" );
             }
         }
 

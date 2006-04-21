@@ -89,7 +89,7 @@ public class ShellIntegrationTest
         Project shellProject = continuum.getProjectWithAllDetails( projectId );
         bd = (BuildDefinition) shellProject.getBuildDefinitions().iterator().next();
         bd.setArguments( "a b" );
-        continuum.updateProject( shellProject );
+        continuum.updateBuildDefinition( bd, shellProject.getId() );
 
         // TODO: change all details to build details
         shellProject = continuum.getProjectWithAllDetails( projectId );

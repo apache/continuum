@@ -76,6 +76,11 @@ public class ProjectsReader
                 set.add( populateProject( proj, new Project() ) );
             }
         }
+        else if ( obj instanceof XmlRpcException )
+        {
+            throw (XmlRpcException) obj;
+        }
+
         return (Project[]) set.toArray( new Project[set.size()] );
     }
 
@@ -91,6 +96,10 @@ public class ProjectsReader
             Hashtable table = (Hashtable) obj;
             populateProject( (Hashtable) table.get( "project" ), proj );
         }
+        else if ( obj instanceof XmlRpcException )
+        {
+            throw (XmlRpcException) obj;
+        }
     }
 
     public void buildProject( Project proj )
@@ -102,6 +111,11 @@ public class ProjectsReader
         //trigger
         vect.add( new Integer( 1 ) );
         Object obj = client.execute( "continuum.buildProject", vect );
+
+        if ( obj instanceof XmlRpcException )
+        {
+            throw (XmlRpcException) obj;
+        }
     }
 
     public void editProject( Project proj )
@@ -119,6 +133,10 @@ public class ProjectsReader
                 throw new RuntimeException( "Edit failed" );
             }
         }
+        else if ( obj instanceof XmlRpcException )
+        {
+            throw (XmlRpcException) obj;
+        }
     }
 
     public void addProject( Project proj )
@@ -135,6 +153,10 @@ public class ProjectsReader
             {
                 throw new RuntimeException( "Edit failed" );
             }
+        }
+        else if ( obj instanceof XmlRpcException )
+        {
+            throw (XmlRpcException) obj;
         }
     }
 
