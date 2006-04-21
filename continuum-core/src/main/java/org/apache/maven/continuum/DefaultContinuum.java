@@ -152,6 +152,28 @@ public class DefaultContinuum
      */
     private BuildExecutorManager executorManager;
 
+    private boolean stopped = false;
+
+    public DefaultContinuum()
+    {
+        super();
+
+        Runtime.getRuntime().addShutdownHook( new Thread()
+        {
+            public void run()
+            {
+                try
+                {
+                    stopContinuum();
+                }
+                catch ( StoppingException e )
+                {
+                    e.printStackTrace();
+                }
+            }
+        } );
+    }
+
     // ----------------------------------------------------------------------
     // Projects
     // ----------------------------------------------------------------------
@@ -1928,13 +1950,25 @@ public class DefaultContinuum
                 project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
                 project.getState() != ContinuumProjectState.ERROR )
             {
+                int state = project.getState();
+
                 project.setState( project.getOldState() );
 
                 project.setOldState( 0 );
 
                 try
                 {
+                    getLogger().info( "Fix project state for project " + project.getId() + ":" + project.getName() +
+                        ":" + project.getVersion() );
+
                     store.updateProject( project );
+
+                    Project p = store.getProject( project.getId() );
+
+                    if ( state == p.getState() )
+                    {
+                        getLogger().info( "Can't fix the project state." );
+                    }
                 }
                 catch ( ContinuumStoreException e )
                 {
@@ -1989,9 +2023,25 @@ public class DefaultContinuum
         }
     }
 
+    private void closeStore()
+    {
+        store.closeStore();
+    }
+
     public void stop()
         throws StoppingException
     {
+        stopContinuum();
+    }
+
+    public void stopContinuum()
+        throws StoppingException
+    {
+        if ( stopped )
+        {
+            return;
+        }
+
         try
         {
             configurationService.store();
@@ -2001,7 +2051,11 @@ public class DefaultContinuum
             throw new StoppingException( "Error storing the Continuum configuration.", e );
         }
 
+        closeStore();
+
         stopMessage();
+
+        stopped = true;
     }
 
     public Collection getBuildResultsForProject( int projectId )

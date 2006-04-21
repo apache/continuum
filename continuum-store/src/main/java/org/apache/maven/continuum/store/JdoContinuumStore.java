@@ -37,6 +37,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
+import javax.jdo.JDOUserException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
@@ -1301,5 +1302,53 @@ public class JdoContinuumStore
     public void removeUserGroup( UserGroup group )
     {
         removeObject( group );
+    }
+
+    public void closeStore()
+    {
+        closePersistenceManagerFactory( 1 );
+    }
+
+    /**
+     * Close the PersistenceManagerFactory.
+     *
+     * @param numTry The number of try. The maximum try is 5.
+     */
+    private void closePersistenceManagerFactory( int numTry )
+    {
+        if ( pmf != null )
+        {
+            if ( !pmf.isClosed() )
+            {
+                try
+                {
+                    pmf.close();
+                }
+                catch ( SecurityException e )
+                {
+                    throw e;
+                }
+                catch ( JDOUserException e )
+                {
+                    if ( numTry < 5 )
+                    {
+                        try
+                        {
+                            Thread.currentThread().wait( 1000 );
+                        }
+                        catch ( InterruptedException ie )
+                        {
+                            //nothing to do
+                        }
+
+                        closePersistenceManagerFactory( numTry + 1 );
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
+            }
+        }
     }
 }

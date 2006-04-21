@@ -228,4 +228,6 @@ public interface ContinuumStore
     UserGroup getUserGroup( String name );
 
     void removeUserGroup( UserGroup group );
+
+    void closeStore();
 }
