@@ -22,8 +22,6 @@ Release Note
 
    * Added an internal maven repository for built projects
 
-   * Added a servlet browser to allow the navigation of all project files
-
    * Improved the project build for projects with multiple build definitions
 
    * Improved maven2 setings/profiles loading

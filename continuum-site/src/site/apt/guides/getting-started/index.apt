@@ -24,6 +24,21 @@ Installing Continuum
  When Continuum is running you can access it with your browser on
  {{http://localhost:8080/continuum/}} or by using the XMLRPC interface on port 8000.
 
+Installing Continuum as a service
+
+ If you want to install Continuum as a service in Windows, execute:
+ <<<bin/win32/InstallService.bat>>> after running <<<bin/win32/run.bat>>>. If
+ the window closes or there is no error, then the service was installed
+ successfully.
+
+ By default, the service logs on as the <Local System> account. Be sure to
+ change this to an account where you want the service to start upon login.
+
+ You can change this by going into Computer Management (right click <My Computer>
+ and select <Manage>), selecting <Services>, and double-clicking on <<<continuum>>>.
+ In the <Log On> tab, you can specify the account along with the credentials
+ required.
+
 Fixing Maven and ant scripts for Windows
 
  {{{../../faqs.html#how-does-continuum-detect-a-successful-build}How does Continuum detect a successful build?}}
@@ -37,8 +52,8 @@ Adding Projects to Continuum
 
  If there is a <<<<modules>>>> element inside the POM continuum will try to
  download the child projects by adding the module name to the end of the url.
- This makes it very easy to add a entire project to Continuum if you list all
- the child projects insode the POM.
+ This makes it very easy to add an entire project to Continuum if you list all
+ the child projects inside the POM.
 
  If you are using ViewCVS you can add your project with a url like this:
 
@@ -63,7 +78,7 @@ http://svn.codehaus.org/*checkout*/trunk/pom.xml?root=plexus
 
  []
 
- The notifiers is configured inside the <<<<ciManagement>>>> section of the POM
+ The notifiers are configured inside the <<<<ciManagement>>>> section of the POM
  like this:
 
 +--+
@@ -107,10 +122,10 @@ http://svn.codehaus.org/*checkout*/trunk/pom.xml?root=plexus
 
 * Adding Maven 1 Projects
 
- Adding a Maven 1 it pretty much like adding a Maven 2 project, pass it an URL
+ Adding a Maven 1 project is pretty much like adding a Maven 2 project, pass it a URL
  to a POM with SCM information and Continuum will add the projects.
 
- There are is a caveat though: The POM cannot extend a parent POM. When
+ There is a caveat though: The POM cannot extend a parent POM. When
  Continuum is downloading the POM it won't know how to find the parent POMs.
  The best way to use Continuum with Maven 1 projects is to give Continuum the
  root POM of your projects only and then have a special goal in the root
@@ -122,7 +137,7 @@ http://svn.codehaus.org/*checkout*/trunk/pom.xml?root=plexus
  When adding Ant projects you have to specify the project's name, SCM URL, 
  version and the targets to execute.
 
- <NOTE:> The SCM URL is a Maven SCM URL. Here's an example of what an
+ <NOTE:> The SCM URL is a {{{http://maven.apache.org/scm/scm-url-format.html}Maven SCM URL}}. Here's an example of what an
  SCM URL looks like:
  <<<scm:svn:http://svn.apache.org/repos/asf/maven/continuum/trunk>>>
 
@@ -135,6 +150,31 @@ http://svn.codehaus.org/*checkout*/trunk/pom.xml?root=plexus
  <NOTE:> The SCM URL is a Maven SCM URL. Here's an example of what an
  SCM URL looks like:
  <<<scm:svn:http://svn.apache.org/repos/asf/maven/continuum/trunk>>>
+
+ To specify the shell script to be executed, click on the shell project and
+ click "Add" under the "Build Definitions" section. This script should <<at
+ least>> be able to run Maven.
+
+ Here is a sample batch script that calls <<<mvn.bat>>> in a Windows environment:
+
++--+ 
+@echo off
+
+cmd /C mvn.bat MAVEN PARAMETERS HERE
+if ERRORLEVEL 1 goto error
+goto end
+
+:error
+exit 1
+
+:end
+exit 0
++--+
+
+ The script executes Maven and obtains the exit code from it.  You may add
+ post-build tasks to the <<<:error>>> and/or <<<:end>>> sections provided they
+ are placed before the <<<exit>>> statements.  Pre-build tasks should be added
+ before the call to <<<mvn.bat>>>.
 
 Building Projects
 
