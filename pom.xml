@@ -147,14 +147,8 @@
     <repositories>
         <repository>
             <id>apache</id>
-            <name>Apche Repository</name>
+            <name>Apache Repository</name>
             <url>http://cvs.apache.org/repository</url>
-            <layout>legacy</layout>
-        </repository>
-        <repository>
-            <id>dblevins</id>
-            <name>Apche Repository</name>
-            <url>http://people.apache.org/~dblevins/maven</url>
             <layout>legacy</layout>
         </repository>
         <repository>
@@ -164,6 +158,11 @@
             <id>snapshots</id>
             <name>Maven Snapshot Development Repository</name>
             <url>http://snapshots.maven.codehaus.org/maven2</url>
+        </repository>
+        <repository>
+            <id>codehaus</id>
+            <name>Codehaus Repository</name>
+            <url>http://repository.codehaus.org</url>
         </repository>
     </repositories>
     <pluginRepositories>

@@ -25,61 +25,8 @@ import java.util.regex.Pattern;
 /**
  * @version $Rev$ $Date$
  */
-public class StringTemplate {
-
-    private static final Pattern expr = Pattern.compile("\\{([^}]*)\\}");
-
-    private final String[] tokens;
-    private final String mask;
-    private final Pattern[] patterns;
-
-    public StringTemplate(String mask) {
-        this.mask = mask;
-        this.tokens = getTokens(mask);
-        this.patterns = getPatterns(tokens);
-    }
-
-    /**
-     * Pull tokens one at a time and replace
-     * them on the string (loop)
-     * <p/>
-     * Notice that when referenced data is pulled from the
-     * context, we don't apply a related StringTemplate.  This could
-     * cause a circular reference and is complicated to code.
-     * We are just skipping this feature for the moment.
-     */
-    public String apply(Map context) {
-        String data = mask;
-        try {
-            synchronized (context) {
-                for (int i = 0; i < tokens.length; i++) {
-                    Matcher matcher = patterns[i].matcher(data);
-                    Object object = context.get(tokens[i]);
-                    if (object != null){
-                        data = matcher.replaceAll(object.toString());
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
-
-    private String[] getTokens(String str) {
-        List tokens = new ArrayList();
-        Matcher matcher = expr.matcher(str);
-        while (matcher.find()) {
-            tokens.add(matcher.group(1));
-        }
-        return (String[]) tokens.toArray(new String[]{});
-    }
-
-    private Pattern[] getPatterns(String[] tokens) {
-        Pattern[] patterns = new Pattern[tokens.length];
-        for (int i = 0; i < patterns.length; i++) {
-            patterns[i] = Pattern.compile("\\{" + tokens[i] + "\\}");
-        }
-        return patterns;
+public class StringTemplate extends org.codehaus.swizzle.stream.StringTemplate {
+    public StringTemplate(String string) {
+        super(string);
     }
 }
