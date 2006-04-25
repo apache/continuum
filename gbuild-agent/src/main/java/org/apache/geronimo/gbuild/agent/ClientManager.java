@@ -23,6 +23,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @version $Rev$ $Date$
@@ -49,11 +51,39 @@ public class ClientManager extends AbstractLogEnabled implements ExceptionListen
      */
     private int reconnectDelay;
 
+    /**
+     * @plexus.configuration
+     */
+    private String reconnectDelayUnit = "seconds";
+
+    private Map timeUnits = new HashMap();
+
     private Client client;
 
-    public ClientManager() {}
+    public ClientManager() {
+        int unit = 1000;
+        timeUnits.put("seconds", new Integer(unit));
+        timeUnits.put("sec", new Integer(unit));
+        timeUnits.put("s", new Integer(unit));
+
+        unit *= 60;
+        timeUnits.put("minutes", new Integer(unit));
+        timeUnits.put("min", new Integer(unit));
+        timeUnits.put("m", new Integer(unit));
+
+        unit *= 60;
+        timeUnits.put("hours", new Integer(unit));
+        timeUnits.put("hour", new Integer(unit));
+        timeUnits.put("h", new Integer(unit));
+
+        unit *= 24;
+        timeUnits.put("days", new Integer(unit));
+        timeUnits.put("day", new Integer(unit));
+        timeUnits.put("d", new Integer(unit));
+    }
 
     public ClientManager(String brokerUrl, int pingInterval, int reconnectAttempts, int reconnectDelay) {
+        this();
         this.brokerUrl = brokerUrl;
         this.pingInterval = pingInterval;
         this.reconnectAttempts = reconnectAttempts;
@@ -65,8 +95,12 @@ public class ClientManager extends AbstractLogEnabled implements ExceptionListen
     }
 
     public synchronized void start() throws StartingException {
+        Integer unit = (Integer) timeUnits.get(reconnectDelayUnit);
+        if (unit == null){
+            unit = new Integer(1000); //seconds
+        }
         try {
-            setClient(new Client(brokerUrl, this, getLogger(), reconnectDelay, reconnectAttempts, pingInterval));
+            setClient(new Client(brokerUrl, this, getLogger(), reconnectDelay * unit.intValue(), reconnectAttempts, pingInterval));
         } catch (Throwable e) {
             getLogger().error("Could not create connection to: " + brokerUrl, e);
             throw new StartingException("Could not create connection to: " + brokerUrl);

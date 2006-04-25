@@ -132,7 +132,7 @@ public class Client implements ExceptionListener {
     }
 
     private Connection connect() throws JMSException {
-        return connect(10);
+        return connect(maxTries);
     }
 
     private Connection connect(int tries) throws JMSException {
@@ -149,7 +149,6 @@ public class Client implements ExceptionListener {
                 throw e;
             } else {
                 try {
-                    int delay = 5000;
                     getLogger().info("Client reconnect failed.  Trying again in "+delay+" milliseconds. ("+ e.getMessage()+")");
                     Thread.sleep(delay);
                 } catch (InterruptedException dontCare) {

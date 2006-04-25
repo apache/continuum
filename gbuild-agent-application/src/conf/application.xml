@@ -65,10 +65,11 @@
       <role>org.apache.geronimo.gbuild.agent.ClientManager</role>
       <implementation>org.apache.geronimo.gbuild.agent.ClientManager</implementation>
       <configuration>
-        <broker-url>tcp://ci.gbuild.org:16161</broker-url>
+        <broker-url>failover:(tcp://ci.gbuild.org:16161)?maxReconnectDelay=1800000</broker-url>
         <ping-interval>300000</ping-interval>
-        <reconnect-attempts>10</reconnect-attempts>
-        <reconnect-delay>600000</reconnect-delay>
+        <reconnect-attempts>48</reconnect-attempts>
+        <reconnect-delay>2</reconnect-delay>
+        <reconnect-delay-unit>hours</reconnect-delay-unit>
       </configuration>
     </component>
 

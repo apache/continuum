@@ -18,6 +18,7 @@ package org.apache.geronimo.gbuild.agent.web;
 
 import org.apache.geronimo.gbuild.agent.Client;
 import org.apache.geronimo.gbuild.agent.ClientManager;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
@@ -33,7 +34,7 @@ import java.util.HashMap;
 /**
  * @version $Rev$ $Date$
  */
-public class BuildQueueBrowser implements WebComponent {
+public class BuildQueueBrowser extends AbstractLogEnabled implements WebComponent{
 
     /**
      * @plexus.requirement
@@ -56,15 +57,17 @@ public class BuildQueueBrowser implements WebComponent {
     private int maxWidth;
 
     public void service(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        getLogger().info("Browsing: "+buildTaskQueue);
 
         Client client = clientManager.getClient();
-
         Session session = client.getSession();
         Queue queue = session.createQueue(buildTaskQueue);
         QueueBrowser browser = session.createBrowser(queue);
+        getLogger().info("Browser: "+browser);
 
         Enumeration enumeration = browser.getEnumeration();
-
+        getLogger().info("Enum: "+enumeration);
+    
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         out.println("<html><body><h1>Browsing "+buildTaskQueue+"</h1>");
@@ -81,8 +84,10 @@ public class BuildQueueBrowser implements WebComponent {
         }
         out.println("</tr>");
 
+        getLogger().info("Has elements: "+enumeration.hasMoreElements());
         while (enumeration.hasMoreElements()) {
             Message message = (Message) enumeration.nextElement();
+            getLogger().info("Message: "+message);
             if (message instanceof ObjectMessage) {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 Object object = objectMessage.getObject();
@@ -106,7 +111,9 @@ public class BuildQueueBrowser implements WebComponent {
                 }
             }
         }
+        browser.close();
         out.println("</table>");
         out.println("</body></html>");
+        out.close();
     }
 }
