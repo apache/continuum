@@ -63,6 +63,7 @@ public class ContinuumBuildAgentTest extends TestCase {
         svn._import(module);
 
         broker = new BrokerService();
+        broker.setPersistent(false);
         broker.addConnector("tcp://localhost:61616");
         broker.start();
     }
