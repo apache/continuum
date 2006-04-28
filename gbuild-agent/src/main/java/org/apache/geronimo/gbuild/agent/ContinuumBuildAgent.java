@@ -28,6 +28,7 @@ import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import java.io.File;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -112,8 +113,8 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
     }
 
     private void processMessages(Client client) throws JMSException {
-//        MessageConsumer buildConsumer = client.createQueueConsumer(buildTaskQueue, "stan is null");
-        MessageConsumer buildConsumer = client.createQueueConsumer(buildTaskQueue);
+
+        MessageConsumer buildConsumer = client.createQueueConsumer(buildTaskQueue, getHostName() + " is null");
         MessageProducer resultsProducer = client.createTopicProducer(buildResultsTopic);
         getLogger().debug("Processing messages.");
 
@@ -122,6 +123,15 @@ public class ContinuumBuildAgent extends AbstractContinuumBuildAgent {
             if (message instanceof ObjectMessage) {
                 processMessage(message, client, resultsProducer);
             }
+        }
+    }
+
+    private String getHostName() {
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            return localHost.getHostName();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException("Unable to get host name.", e);
         }
     }
 

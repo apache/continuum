@@ -141,6 +141,7 @@
         <module>gbuild-agent</module>
         <module>gbuild-agent-web</module>
         <module>gbuild-report</module>
+        <module>extensions</module>
         <module>gbuild-agent-application</module>
     </modules>
 
