@@ -40,10 +40,10 @@
         <configuration>
           <applicationConfiguration>src/conf/application.xml</applicationConfiguration>
           <configurationsDirectory>src/conf</configurationsDirectory>
-          <configurationProperties>${appProperties}</configurationProperties>
+          <configurationProperties>app.properties</configurationProperties>
           <applicationName>continuum</applicationName>
           <runtimeConfiguration>src/test/conf/test-runtime-configuration.xml</runtimeConfiguration>
-          <runtimeConfigurationProperties>${appProperties}</runtimeConfigurationProperties>
+          <runtimeConfigurationProperties>app.properties</runtimeConfigurationProperties>
           <runtimePath>target/plexus-test-runtime</runtimePath>
         </configuration>
       </plugin>
