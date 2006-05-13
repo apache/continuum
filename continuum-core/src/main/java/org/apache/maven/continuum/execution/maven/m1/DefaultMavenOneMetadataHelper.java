@@ -282,7 +282,29 @@ public class DefaultMavenOneMetadataHelper
 
             if ( notifier != null )
             {
-                notifiers.add( notifier );
+                boolean containsNotifier = false;
+
+                for ( Iterator i = notifiers.iterator(); i.hasNext(); )
+                {
+                    ProjectNotifier n = (ProjectNotifier) i.next();
+                    if ( n.getConfiguration() != null )
+                    {
+                        String address = (String) n.getConfiguration().get( ContinuumRecipientSource.ADDRESS_FIELD );
+
+                        if ( address != null )
+                        {
+                            if ( address.equals( notifier.getConfiguration().get( ContinuumRecipientSource.ADDRESS_FIELD ) ) )
+                            {
+                                containsNotifier = true;
+                            }
+                        }
+                    }
+                }
+
+                if ( !containsNotifier )
+                {
+                    notifiers.add( notifier );
+                }
             }
 
             // Add notifier defined by user
