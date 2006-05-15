@@ -242,20 +242,10 @@ public class DefaultMavenOneMetadataHelper
 
         Xpp3Dom build = mavenProject.getChild( "build" );
 
-        List notifiers = null;
+        List notifiers = new ArrayList();
 
-        ProjectNotifier notifier = null;
-
-        if ( build == null )
-        {
-            if ( project.getNotifiers() != null && !project.getNotifiers().isEmpty() )
-            {
-                notifiers = new ArrayList();
-
-                notifiers.addAll( project.getNotifiers() );
-            }
-        }
-        else
+        // Add project Notifier
+        if ( build != null )
         {
             String nagEmailAddress = getValue( build, "nagEmailAddress", null );
 
@@ -265,79 +255,28 @@ public class DefaultMavenOneMetadataHelper
 
                 props.put( ContinuumRecipientSource.ADDRESS_FIELD, nagEmailAddress );
 
-                notifier = new ProjectNotifier();
+                ProjectNotifier notifier = new ProjectNotifier();
 
                 notifier.setConfiguration( props );
 
                 notifier.setFrom( ProjectNotifier.FROM_PROJECT );
+
+                notifiers.add( notifier );
             }
         }
 
-        if ( ( notifiers != null && !notifiers.isEmpty() ) || notifier != null )
+        // Add all user notifiers
+        if ( project.getNotifiers() != null && !project.getNotifiers().isEmpty() )
         {
-            if ( notifiers == null )
-            {
-                notifiers = new ArrayList();
-            }
-
-            if ( notifier != null )
-            {
-                boolean containsNotifier = false;
-
-                for ( Iterator i = notifiers.iterator(); i.hasNext(); )
-                {
-                    ProjectNotifier n = (ProjectNotifier) i.next();
-                    if ( n.getConfiguration() != null )
-                    {
-                        String address = (String) n.getConfiguration().get( ContinuumRecipientSource.ADDRESS_FIELD );
-
-                        if ( address != null )
-                        {
-                            if ( address.equals( notifier.getConfiguration().get( ContinuumRecipientSource.ADDRESS_FIELD ) ) )
-                            {
-                                containsNotifier = true;
-                            }
-                        }
-                    }
-                }
-
-                if ( !containsNotifier )
-                {
-                    notifiers.add( notifier );
-                }
-            }
-
-            // Add notifier defined by user
             for ( Iterator i = project.getNotifiers().iterator(); i.hasNext(); )
             {
                 ProjectNotifier notif = (ProjectNotifier) i.next();
 
                 if ( notif.isFromUser() )
                 {
-                    ProjectNotifier userNotifier = new ProjectNotifier();
-
-                    userNotifier.setType( notif.getType() );
-
-                    userNotifier.setEnabled( notif.isEnabled() );
-
-                    userNotifier.setConfiguration( notif.getConfiguration() );
-
-                    userNotifier.setFrom( notif.getFrom() );
-
-                    userNotifier.setRecipientType( notif.getRecipientType() );
-
-                    userNotifier.setSendOnError( notif.isSendOnError() );
-
-                    userNotifier.setSendOnFailure( notif.isSendOnFailure() );
-
-                    userNotifier.setSendOnSuccess( notif.isSendOnSuccess() );
-
-                    userNotifier.setSendOnWarning( notif.isSendOnWarning() );
-
-                    notifiers.add( userNotifier );
+                    notifiers.add( notif );
                 }
             }
-
         }
 
         // ----------------------------------------------------------------------
