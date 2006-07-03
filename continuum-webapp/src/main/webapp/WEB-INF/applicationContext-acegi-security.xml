@@ -19,7 +19,7 @@
          <value>
             CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
             PATTERN_TYPE_APACHE_ANT
-            /**=httpSessionContextIntegrationFilter,authenticationProcessingFilter,securityEnforcementFilter
+            /**=httpSessionContextIntegrationFilter,authenticationProcessingFilter,securityEnforcementFilter,filterSecurityInterceptor
          </value>
       </property>
     </bean>
@@ -133,8 +133,7 @@
 
    <!-- ===================== HTTP REQUEST SECURITY ==================== -->
 
-   <bean id="securityEnforcementFilter" class="org.acegisecurity.intercept.web.SecurityEnforcementFilter">
-      <property name="filterSecurityInterceptor"><ref local="filterInvocationInterceptor"/></property>
+   <bean id="securityEnforcementFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
       <property name="authenticationEntryPoint"><ref local="authenticationProcessingFilterEntryPoint"/></property>
    </bean>
 
@@ -163,7 +162,7 @@
    <!-- Note the order that entries are placed against the objectDefinitionSource is critical.
         The FilterSecurityInterceptor will work from the top of the list down to the FIRST pattern that matches the request URL.
         Accordingly, you should place MOST SPECIFIC (ie a/b/c/d.*) expressions first, with LEAST SPECIFIC (ie a/.*) expressions last -->
-   <bean id="filterInvocationInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+   <bean id="filterSecurityInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
       <property name="authenticationManager"><ref bean="authenticationManager"/></property>
       <property name="accessDecisionManager"><ref local="httpRequestAccessDecisionManager"/></property>
       <property name="objectDefinitionSource">
