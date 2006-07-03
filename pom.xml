@@ -404,6 +404,12 @@
         <artifactId>plexus-security-summit</artifactId>
         <version>1.0-alpha-3</version>
       </dependency>
+      <dependency>
+        <groupId>org.acegisecurity</groupId>
+        <artifactId>acegi-security</artifactId>
+        <version>1.0.1</version>
+        <scope>runtime</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 </project>

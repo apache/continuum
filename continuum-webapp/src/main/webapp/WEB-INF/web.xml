@@ -6,7 +6,7 @@
 
 <web-app>
 
-  <display-name>Plexus and WebWork Test App</display-name>
+  <display-name>Continuum</display-name>
 
   <context-param>
     <param-name>extremecomponentsPreferencesLocation</param-name>
@@ -17,6 +17,26 @@
     <param-name>extremecomponentsMessagesLocation</param-name>
     <param-value>localization/Continuum</param-value>
   </context-param>
+
+  <!--
+    - Location of the XML file that defines the root application context
+    - Applied by ContextLoaderListener.
+    -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      /WEB-INF/applicationContext-acegi-security.xml
+    </param-value>
+  </context-param>
+
+  <filter>
+    <filter-name>Acegi Filter Chain Proxy</filter-name>
+    <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
+    <init-param>
+      <param-name>targetClass</param-name>
+      <param-value>org.acegisecurity.util.FilterChainProxy</param-value>
+    </init-param>
+  </filter>
 
   <!-- this should be before the webwork filter -->
   <filter>
@@ -39,6 +59,11 @@
     <filter-class>com.opensymphony.webwork.dispatcher.FilterDispatcher</filter-class>
   </filter>
 
+  <filter-mapping>
+    <filter-name>Acegi Filter Chain Proxy</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <!-- this should be before the webwork filter -->
   <filter-mapping>
     <filter-name>plexus</filter-name>
@@ -59,6 +84,15 @@
     <filter-name>webwork</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <!--
+    - Loads the root application context of this web app at startup.
+    - The application context is then available via 
+    - WebApplicationContextUtils.getWebApplicationContext(servletContext).
+    -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
 
   <listener>
     <listener-class>org.codehaus.plexus.xwork.PlexusLifecycleListener</listener-class>

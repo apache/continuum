@@ -1,4 +1,6 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+
 <ww:i18n name="localization.Continuum">
 <div id="banner">
   <table border="1" cellpadding="8" cellspacing="0" width="100%">
