@@ -150,5 +150,10 @@
       <artifactId>wagon-ssh</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.acegisecurity</groupId>
+      <artifactId>acegi-security</artifactId>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
 </project>
