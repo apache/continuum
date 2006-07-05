@@ -142,7 +142,7 @@ public class FilterToComponentProxy
         }
         catch ( ComponentLookupException e )
         {
-            throw new ServletException( "Component '" + componentName + "' not found in container" );
+            throw new ServletException( "Component '" + componentName + "' not found in container", e );
         }
 
         if ( object == null )
