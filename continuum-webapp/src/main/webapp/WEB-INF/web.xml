@@ -24,12 +24,51 @@
     <filter-class>org.codehaus.plexus.xwork.PlexusFilter</filter-class>
   </filter>
 
+<!--
+  Not integrated with plexus
   <filter>
     <filter-name>Acegi Filter Chain Proxy</filter-name>
     <filter-class>org.apache.maven.continuum.web.filter.FilterToComponentProxy</filter-class>
     <init-param>
       <param-name>component</param-name>
       <param-value>org.acegisecurity.util.FilterChainProxy</param-value>
+    </init-param>
+  </filter>
+-->
+
+  <filter>
+    <filter-name>Acegi HttpSessionContextIntegrationFilter</filter-name>
+    <filter-class>org.apache.maven.continuum.web.filter.FilterToComponentProxy</filter-class>
+    <init-param>
+      <param-name>component</param-name>
+      <param-value>org.acegisecurity.context.HttpSessionContextIntegrationFilter</param-value>
+    </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>Acegi AuthenticationProcessingFilter</filter-name>
+    <filter-class>org.apache.maven.continuum.web.filter.FilterToComponentProxy</filter-class>
+    <init-param>
+      <param-name>component</param-name>
+      <param-value>org.acegisecurity.ui.webapp.AuthenticationProcessingFilter</param-value>
+    </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>Acegi ExceptionTranslationFilter</filter-name>
+    <filter-class>org.apache.maven.continuum.web.filter.FilterToComponentProxy</filter-class>
+    <init-param>
+      <param-name>component</param-name>
+      <param-value>org.acegisecurity.ui.ExceptionTranslationFilter</param-value>
+    </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>Acegi FilterSecurityInterceptor</filter-name>
+    <filter-class>org.apache.maven.continuum.web.filter.FilterToComponentProxy</filter-class>
+    <init-param>
+      <param-name>component</param-name>
+      <param-value>org.acegisecurity.intercept.web.FilterSecurityInterceptor</param-value>
     </init-param>
   </filter>
 
@@ -54,8 +93,30 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+<!--
   <filter-mapping>
     <filter-name>Acegi Filter Chain Proxy</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+-->
+
+  <filter-mapping>
+    <filter-name>Acegi HttpSessionContextIntegrationFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Acegi AuthenticationProcessingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Acegi ExceptionTranslationFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Acegi FilterSecurityInterceptor</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 

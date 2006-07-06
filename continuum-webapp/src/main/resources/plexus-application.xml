@@ -281,17 +281,25 @@
     <!--
      | Acegi
      -->
+<!--
     <component>
       <role>org.acegisecurity.util.FilterChainProxy</role>
       <implementation>org.acegisecurity.util.FilterChainProxy</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.intercept.web.FilterInvocationDefinitionMap</role>
+          <field-name>filterInvocationDefinitionSource</field-name>
+        </requirement>
+      </requirements>
       <configuration>
         <filterInvocationDefinitionSource>
             CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
             PATTERN_TYPE_APACHE_ANT
-            /**=httpSessionContextIntegrationFilter,authenticationProcessingFilter,securityEnforcementFilter,filterSecurityInterceptor
+            /**=httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilter,filterSecurityInterceptor
         </filterInvocationDefinitionSource>
       </configuration>
     </component>
+-->
 
     <component>
       <role>org.acegisecurity.providers.ProviderManager</role>
@@ -309,9 +317,36 @@
       <implementation>org.acegisecurity.userdetails.memory.InMemoryDaoImpl</implementation>
       <configuration>
         <userMap>
-          <marissa>koala,ROLE_USER,ROLE_SUPERVISOR</marissa>
-          <dianne>emu,ROLE_USER</dianne>
-          <scott>wombat,ROLE_USER</scott>
+          <users>
+            <user>
+              <name>marissa</name>
+              <userAttribute>
+                <password>koala</password>
+                <authorities>
+                  <grantedAuthority>ROLE_USER</grantedAuthority>
+                  <grantedAuthority>ROLE_SUPERVISOR</grantedAuthority>
+                </authorities>
+              </userAttribute>
+            </user>
+            <user>
+              <name>dianne</name>
+              <userAttribute>
+                <password>emu</password>
+                <authorities>
+                  <grantedAuthority>ROLE_USER</grantedAuthority>
+                </authorities>
+              </userAttribute>
+            </user>
+            <user>
+              <name>scott</name>
+              <userAttribute>
+                <password>wombat</password>
+                <authorities>
+                  <grantedAuthority>ROLE_USER</grantedAuthority>
+                </authorities>
+              </userAttribute>
+            </user>
+          </users>
         </userMap>
       </configuration>
     </component>
@@ -401,10 +436,18 @@
         </requirement>
       </requirements>
       <configuration>
-        <objectDefinitionSource>
-          CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
-          PATTERN_TYPE_APACHE_ANT
-          /secure/**=ROLE_USER
+        <objectDefinitionSource implementation="org.acegisecurity.intercept.web.FilterInvocationDefinitionDecorator">
+          <decorated implementation="org.acegisecurity.intercept.web.PathBasedFilterInvocationDefinitionMap"/>
+          <convertUrlToLowercaseBeforeComparison>true</convertUrlToLowercaseBeforeComparison>
+          <mappings>
+            <filterInvocationDefinitionSourceMapping>
+              <url>/secure/**</url>
+              <configAttributes>
+                <configAttribute>ROLE_USER</configAttribute>
+                <configAttribute>ROLE_ADMIN</configAttribute>
+              </configAttributes>
+            </filterInvocationDefinitionSourceMapping>
+          </mappings>
         </objectDefinitionSource>
       </configuration>
     </component>
