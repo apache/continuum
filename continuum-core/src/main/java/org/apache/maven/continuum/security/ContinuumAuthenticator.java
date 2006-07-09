@@ -1,7 +1,7 @@
 package org.apache.maven.continuum.security;
 
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2005-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,11 @@ package org.apache.maven.continuum.security;
  *
  */
 
+import java.util.Map;
+
+import org.acegisecurity.userdetails.UserDetails;
+import org.acegisecurity.userdetails.UserDetailsService;
+import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -25,8 +30,8 @@ import org.codehaus.plexus.security.Authenticator;
 import org.codehaus.plexus.security.exception.AuthenticationException;
 import org.codehaus.plexus.security.exception.UnauthorizedException;
 import org.codehaus.plexus.security.exception.UnknownEntityException;
-
-import java.util.Map;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataAccessResourceFailureException;
 
 /**
  * TODO: Move this to o.a.m.c.security once plexus-security doesn't depend on plexus-summit.
@@ -35,7 +40,7 @@ import java.util.Map;
  * @version $Id$
  */
 public class ContinuumAuthenticator
-    implements Authenticator
+    implements Authenticator, UserDetailsService
 {
     /**
      * @plexus.requirement
@@ -71,6 +76,25 @@ public class ContinuumAuthenticator
         return null;
     }
 
+    public UserDetails loadUserByUsername( String username )
+        throws UsernameNotFoundException, DataAccessException
+    {
+        ContinuumUser user;
+        try
+        {
+            user = store.getUserByUsername( username );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new DataAccessResourceFailureException( e.getMessage(), e );
+        }
+        if ( user == null )
+        {
+            throw new UsernameNotFoundException( "Could not find user: " + username );
+        }
+        return getUserDetails( user );
+    }
+
     public Authentication getAnonymousEntity()
     {
         throw new RuntimeException( "Not implemented" );
@@ -91,5 +115,19 @@ public class ContinuumAuthenticator
         {
             throw new AuthenticationException( "Error while retreiving user.", e );
         }
+    }
+    
+    /**
+     * Convert a Continuum user into a Acegi user
+     * 
+     * @param user the continuum user loaded from DB
+     * @return the Acegi user
+     */
+    private UserDetails getUserDetails( ContinuumUser user )
+    {
+        UserDetails userDetails = null;
+        //TODO
+        //new User( user.getUsername(), user.getPassword(),...);
+        return userDetails;
     }
 }
