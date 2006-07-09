@@ -312,51 +312,41 @@
       </requirements>
     </component>
 
+    <!-- In memory database used only for testing -->
     <component>
-      <role>org.acegisecurity.userdetails.memory.InMemoryDaoImpl</role>
+      <role>org.acegisecurity.userdetails.UserDetailsService</role>
       <implementation>org.acegisecurity.userdetails.memory.InMemoryDaoImpl</implementation>
       <configuration>
-        <userMap>
-          <users>
-            <user>
-              <name>marissa</name>
-              <userAttribute>
-                <password>koala</password>
-                <authorities>
-                  <grantedAuthority>ROLE_USER</grantedAuthority>
-                  <grantedAuthority>ROLE_SUPERVISOR</grantedAuthority>
-                </authorities>
-              </userAttribute>
-            </user>
-            <user>
-              <name>dianne</name>
-              <userAttribute>
-                <password>emu</password>
-                <authorities>
-                  <grantedAuthority>ROLE_USER</grantedAuthority>
-                </authorities>
-              </userAttribute>
-            </user>
-            <user>
-              <name>scott</name>
-              <userAttribute>
-                <password>wombat</password>
-                <authorities>
-                  <grantedAuthority>ROLE_USER</grantedAuthority>
-                </authorities>
-              </userAttribute>
-            </user>
-          </users>
-        </userMap>
+        <userProperties>
+          <property>
+            <name>marissa</name>
+            <value>koala,ROLE_USER,ROLE_SUPERVISOR</value>
+          </property>
+          <property>
+            <name>dianne</name>
+            <value>emu,ROLE_USER</value>
+          </property>
+          <property>
+            <name>scott</name>
+            <value>wombat,ROLE_USER</value>
+          </property>
+        </userProperties>
       </configuration>
     </component>
+
+<!-- Bridge between Acegi and Continuum database
+    <component>
+      <role>org.acegisecurity.userdetails.UserDetailsService</role>
+      <implementation>org.apache.maven.continuum.security.ContinuumAuthenticator</implementation>
+    </component>
+-->
 
     <component>
       <role>org.acegisecurity.providers.dao.DaoAuthenticationProvider</role>
       <implementation>org.acegisecurity.providers.dao.DaoAuthenticationProvider</implementation>
       <requirements>
         <requirement>
-          <role>org.acegisecurity.userdetails.memory.InMemoryDaoImpl</role>
+          <role>org.acegisecurity.userdetails.UserDetailsService</role>
           <field-name>userDetailsService</field-name>
         </requirement>
       </requirements>
