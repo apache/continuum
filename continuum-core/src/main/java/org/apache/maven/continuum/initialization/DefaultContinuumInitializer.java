@@ -103,6 +103,8 @@ public class DefaultContinuumInitializer
             createGroups();
 
             createGuestUser();
+
+            createAdminUser();
         }
         catch ( ContinuumStoreException e )
         {
@@ -237,6 +239,25 @@ public class DefaultContinuumInitializer
             guest.setGuest( true );
 
             store.addUser( guest );
+        }
+    }
+
+    private void createAdminUser()
+        throws ContinuumStoreException
+    {
+        if ( store.getUserByUsername( "admin" ) == null )
+        {
+            ContinuumUser admin = new ContinuumUser();
+
+            admin.setUsername( "admin" );
+
+            admin.setFullName( "Administrator" );
+
+            admin.setGroup( store.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) );
+
+            admin.setPassword( "admin" );
+
+            store.addUser( admin );
         }
     }
 }
