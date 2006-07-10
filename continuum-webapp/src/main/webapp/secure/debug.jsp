@@ -1,3 +1,5 @@
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+
 <%@ page import="org.acegisecurity.context.SecurityContextHolder" %>
 <%@ page import="org.acegisecurity.Authentication" %>
 <%@ page import="org.acegisecurity.GrantedAuthority" %>
@@ -28,9 +30,7 @@
 %>
 
 
-<%-- other way to access the info using taglibs
+<%-- other way to access the info using taglibs --%>
 
   <c:set var="authentication" value="${sessionScope['ACEGI_SECURITY_AUTHENTICATION']}"/>
   user: ${authentication.principal}
-
---%>
