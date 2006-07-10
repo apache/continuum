@@ -1,5 +1,7 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="continuum" prefix="c1" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
@@ -9,13 +11,10 @@
       <div id="axial" class="h3">
         <h3><ww:text name="login.section.title"/></h3>
 
-        <%-- TODO check parameter login_error, when = 1 means that there was an error
-        This is how I did with JSTL
-
+        <%-- if login_error parameter is present authentication didn't succeed --%>
         <c:if test="${not empty param.login_error}">
-          login error
+          <ww:text name="login.bad_login_password"/>
         </c:if>
-        --%>
 
         <div class="axial">
         <ww:form action="j_acegi_security_check" method="post">
@@ -23,6 +22,7 @@
             <tbody>
               <ww:textfield label="%{getText('login.username')}" name="j_username" required="true"/>
               <ww:password label="%{getText('login.password')}" name="j_password" required="true"/>
+              <%-- TODO integrate remember me with Acegi --%>
               <ww:checkbox label="%{getText('login.rememberMe')}" name="rememberMe" value="rememberMe" fieldValue="true"/>
             </tbody>
           </table>
