@@ -313,6 +313,7 @@
     </component>
 
     <!-- In memory database used only for testing -->
+<!--
     <component>
       <role>org.acegisecurity.userdetails.UserDetailsService</role>
       <implementation>org.acegisecurity.userdetails.memory.InMemoryDaoImpl</implementation>
@@ -333,13 +334,17 @@
         </userProperties>
       </configuration>
     </component>
-
-<!-- Bridge between Acegi and Continuum database
+-->
+    <!-- Bridge between Acegi and Continuum database -->
     <component>
       <role>org.acegisecurity.userdetails.UserDetailsService</role>
       <implementation>org.apache.maven.continuum.security.ContinuumAuthenticator</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+        </requirement>
+      </requirements>
     </component>
--->
 
     <component>
       <role>org.acegisecurity.providers.dao.DaoAuthenticationProvider</role>
