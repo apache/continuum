@@ -17,12 +17,18 @@ package org.apache.maven.continuum.security;
  *
  */
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import org.acegisecurity.GrantedAuthority;
+import org.acegisecurity.GrantedAuthorityImpl;
+import org.acegisecurity.userdetails.User;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.maven.continuum.model.system.ContinuumUser;
+import org.apache.maven.continuum.model.system.Permission;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.security.Authentication;
@@ -125,9 +131,25 @@ public class ContinuumAuthenticator
      */
     private UserDetails getUserDetails( ContinuumUser user )
     {
-        UserDetails userDetails = null;
-        //TODO
-        //new User( user.getUsername(), user.getPassword(),...);
+        List permissions = user.getGroup().getPermissions();
+
+        GrantedAuthority[] grantedAuthorities = new GrantedAuthority[permissions.size()];
+        int i = 0;
+        Iterator it = permissions.iterator();
+        while ( it.hasNext() )
+        {
+            Permission permission = (Permission) it.next();
+            grantedAuthorities[i] = new GrantedAuthorityImpl( permission.getName() );
+            i++;
+        }
+        boolean enabled = true;
+        boolean accountNonExpired = true;
+        boolean credentialsNonExpired = true;
+        boolean accountNonLocked = true;
+
+        UserDetails userDetails = new User( user.getUsername(), user.getPassword(), enabled, accountNonExpired,
+                                            credentialsNonExpired, accountNonLocked, grantedAuthorities );
+
         return userDetails;
     }
 }
