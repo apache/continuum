@@ -1,5 +1,11 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://acegisecurity.org/authz" prefix="authz" %>
+
+<%-- Acegi configuration --%>
+<c:set var="authentication" value="${sessionScope['ACEGI_SECURITY_CONTEXT'].authentication}"/>
+<c:set var="user" value="${authentication.principal}" scope="session"/>
+
 
 <ww:i18n name="localization.Continuum">
 <div id="banner">
@@ -29,7 +35,17 @@
   </div>
 
   <div>
-      <b><font color="red">TODO</font></b>Welcome, <b>Guest</b> - <a href="<ww:url value="login!default.action"/>">Login</a>
+      <b><font color="red">TODO</font></b>Welcome,
+
+      <c:if test="${not empty user}">
+        <b><authz:authentication operation="username"/></b> -
+        <a href="<c:url value='/logoff.jsp'/>">Logoff</a>
+      </c:if>
+
+      <c:if test="${empty user}">
+        <a href="<ww:url value="login!default.action"/>">Login</a>
+      </c:if>
+
   </div>
 </div>
 </ww:i18n>

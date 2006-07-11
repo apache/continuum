@@ -1,4 +1,6 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="http://acegisecurity.org/authz" prefix="authz" %>
+
 <ww:i18n name="localization.Continuum">
 <div id="navcolum">
   <div id="projectmenu" class="toolgroup">
@@ -12,34 +14,41 @@
       </div>
     </div>
   </div>
-  <div id="projectmenu" class="toolgroup">
-    <div class="label"><ww:text name="menu.addProject"/></div>
-    <div>
-      <div class="body">
-        <a href="<ww:url value="addMavenTwoProject!default.action"/>"><ww:text name="menu.add.m2Project"/></a>
-      </div>
-      <div class="body">
-        <a href="<ww:url value="addMavenOneProject!default.action"/>"><ww:text name="menu.add.m1Project"/></a>
-      </div>
-      <div class="body">
-        <a href="<ww:url value="addProject!default.action"><ww:param name="projectType">ant</ww:param></ww:url>"><ww:text name="menu.add.antProject"/></a>
-      </div>
-      <div class="body">
-        <a href="<ww:url value="addProject!default.action"><ww:param name="projectType">shell</ww:param></ww:url>"><ww:text name="menu.add.shellProject"/></a>
-      </div>
-    </div>
-  </div>
-  <div id="projectmenu" class="toolgroup">
-    <div class="label"><ww:text name="menu.administration"/></div>
-    <div>
-      <div class="body">
-        <a href="<ww:url value="schedules.action"/>"><ww:text name="menu.administration.schedules"/></a>
-      </div>
-      <div class="body">
-        <a href="<ww:url value="configuration!default.action"/>"><ww:text name="menu.administration.configuration"/></a>
+
+  <authz:authorize ifAllGranted="ROLE_ADMIN">
+    <div id="projectmenu" class="toolgroup">
+      <div class="label"><ww:text name="menu.addProject"/></div>
+      <div>
+        <div class="body">
+          <a href="<ww:url value="addMavenTwoProject!default.action"/>"><ww:text name="menu.add.m2Project"/></a>
+        </div>
+        <div class="body">
+          <a href="<ww:url value="addMavenOneProject!default.action"/>"><ww:text name="menu.add.m1Project"/></a>
+        </div>
+        <div class="body">
+          <a href="<ww:url value="addProject!default.action"><ww:param name="projectType">ant</ww:param></ww:url>"><ww:text name="menu.add.antProject"/></a>
+        </div>
+        <div class="body">
+          <a href="<ww:url value="addProject!default.action"><ww:param name="projectType">shell</ww:param></ww:url>"><ww:text name="menu.add.shellProject"/></a>
+        </div>
       </div>
     </div>
-  </div>
+  </authz:authorize>      
+
+  <authz:authorize ifAllGranted="ROLE_ADMIN">
+    <div id="projectmenu" class="toolgroup">
+      <div class="label"><ww:text name="menu.administration"/></div>
+      <div>
+        <div class="body">
+          <a href="<ww:url value="schedules.action"/>"><ww:text name="menu.administration.schedules"/></a>
+        </div>
+        <div class="body">
+          <a href="<ww:url value="configuration!default.action"/>"><ww:text name="menu.administration.configuration"/></a>
+        </div>
+      </div>
+    </div>
+  </authz:authorize>      
+
   <div id="projectmenu" class="toolgroup">
     <div class="label">Legend</div>
     <div id="legend">

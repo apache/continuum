@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://acegisecurity.org/authz" prefix="authz" %>
 
 <%@ page import="org.acegisecurity.context.SecurityContextHolder" %>
 <%@ page import="org.acegisecurity.Authentication" %>
@@ -29,11 +30,12 @@
 <%		}
 %>
 
+<hr/>
 
 <%-- other way to access the info using taglibs --%>
 
   <c:set var="authentication" value="${sessionScope['ACEGI_SECURITY_CONTEXT'].authentication}"/>
-  <c:set var="user" value="${authentication.principal}"/>
+  <c:set var="user" value="${authentication.principal}" scope="session"/>
 
   user: <c:out value="${user.username}"/><br/>
   Roles: 
@@ -42,3 +44,9 @@
         <li><c:out value="${item.authority}"/></li>
       </c:forEach>
     </ul>
+
+<hr/>
+
+<%-- Yet another way to access the info using Acegi taglib --%>
+
+  User: <authz:authentication operation="username"/>

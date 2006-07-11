@@ -279,8 +279,11 @@
     </component>
 
     <!--
-     | Acegi
+     | ACEGI Configuration
      -->
+     
+    <!-- Authentication -->
+
 <!--
     <component>
       <role>org.acegisecurity.util.FilterChainProxy</role>
@@ -392,7 +395,7 @@
       </requirements>
       <configuration>
         <authenticationFailureUrl>/login!default.action?login_error=1</authenticationFailureUrl>
-        <defaultTargetUrl>/</defaultTargetUrl>
+        <defaultTargetUrl>/summary.action</defaultTargetUrl>
         <filterProcessesUrl>/j_acegi_security_check</filterProcessesUrl>
       </configuration>
     </component>
@@ -405,6 +408,9 @@
         <forceHttps>false</forceHttps>
       </configuration>
     </component>
+
+
+    <!-- authorization -->
 
     <component>
       <role>org.acegisecurity.vote.AffirmativeBased</role>
@@ -441,7 +447,24 @@
             <filterInvocationDefinitionSourceMapping>
               <url>/secure/**</url>
               <configAttributes>
-                <configAttribute>ROLE_USER</configAttribute>
+                <configAttribute>ROLE_ADMIN</configAttribute>
+              </configAttributes>
+            </filterInvocationDefinitionSourceMapping>
+            <filterInvocationDefinitionSourceMapping>
+              <url>/add*project*</url>
+              <configAttributes>
+                <configAttribute>ROLE_ADMIN</configAttribute>
+              </configAttributes>
+            </filterInvocationDefinitionSourceMapping>
+            <filterInvocationDefinitionSourceMapping>
+              <url>/schedules*</url>
+              <configAttributes>
+                <configAttribute>ROLE_ADMIN</configAttribute>
+              </configAttributes>
+            </filterInvocationDefinitionSourceMapping>
+            <filterInvocationDefinitionSourceMapping>
+              <url>/configuration*</url>
+              <configAttributes>
                 <configAttribute>ROLE_ADMIN</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
