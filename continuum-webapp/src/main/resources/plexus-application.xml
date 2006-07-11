@@ -447,25 +447,25 @@
             <filterInvocationDefinitionSourceMapping>
               <url>/secure/**</url>
               <configAttributes>
-                <configAttribute>ROLE_ADMIN</configAttribute>
+                <configAttribute>ROLE_user</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
             <filterInvocationDefinitionSourceMapping>
               <url>/add*project*</url>
               <configAttributes>
-                <configAttribute>ROLE_ADMIN</configAttribute>
+                <configAttribute>ROLE_addProject</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
             <filterInvocationDefinitionSourceMapping>
               <url>/schedules*</url>
               <configAttributes>
-                <configAttribute>ROLE_ADMIN</configAttribute>
+                <configAttribute>ROLE_manageSchedule</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
             <filterInvocationDefinitionSourceMapping>
               <url>/configuration*</url>
               <configAttributes>
-                <configAttribute>ROLE_ADMIN</configAttribute>
+                <configAttribute>ROLE_manageConfiguration</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
           </mappings>

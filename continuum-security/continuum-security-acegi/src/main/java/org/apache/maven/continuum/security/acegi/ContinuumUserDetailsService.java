@@ -102,7 +102,7 @@ public class ContinuumUserDetailsService
         while ( it.hasNext() )
         {
             Permission permission = (Permission) it.next();
-            grantedAuthorities[i] = new GrantedAuthorityImpl( permission.getName() );
+            grantedAuthorities[i] = new GrantedAuthorityImpl( "ROLE_" + permission.getName() );
             i++;
         }
         String username = user.getUsername();
