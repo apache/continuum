@@ -158,9 +158,5 @@
       <artifactId>plexus-mail-sender-simple</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.acegisecurity</groupId>
-      <artifactId>acegi-security</artifactId>
-    </dependency>
   </dependencies>
 </project>

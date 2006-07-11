@@ -152,5 +152,9 @@
       <artifactId>wagon-ssh</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-security-acegi</artifactId>
+    </dependency>
   </dependencies>
 </project>

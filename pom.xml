@@ -71,6 +71,7 @@
     <!-- module>continuum-web</module --> <!--Remove this when webapp will be ready and packaged as a plexus-application -->
     <module>continuum-webapp</module>
     <module>continuum-xmlrpc</module>
+    <module>continuum-security</module>
   </modules>
   <repositories>
     <repository>
@@ -271,6 +272,11 @@
         <version>1.1-SNAPSHOT</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>continuum-security-acegi</artifactId>
+        <version>1.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.maven.continuum.jpox</groupId>
         <artifactId>jpox</artifactId>
         <version>1.1.0-20060413</version>
@@ -413,11 +419,6 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-security-summit</artifactId>
         <version>1.0-alpha-3</version>
-      </dependency>
-      <dependency>
-        <groupId>org.acegisecurity</groupId>
-        <artifactId>acegi-security</artifactId>
-        <version>1.1-SNAPSHOT</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
