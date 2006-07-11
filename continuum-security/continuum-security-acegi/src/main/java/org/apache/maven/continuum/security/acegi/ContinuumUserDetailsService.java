@@ -52,13 +52,28 @@ public class ContinuumUserDetailsService
     {
     }
 
+    public void setStore( ContinuumStore store )
+    {
+        this.store = store;
+    }
+
+    /**
+     * {@link ContinuumStore} to load the user from.
+     * 
+     * @return the store
+     */
+    public ContinuumStore getStore()
+    {
+        return store;
+    }
+
     public UserDetails loadUserByUsername( String username )
         throws UsernameNotFoundException, DataAccessException
     {
         ContinuumUser user;
         try
         {
-            user = store.getUserByUsername( username );
+            user = getStore().getUserByUsername( username );
         }
         catch ( ContinuumStoreException e )
         {
@@ -77,7 +92,7 @@ public class ContinuumUserDetailsService
      * @param user the continuum user loaded from DB
      * @return the Acegi user
      */
-    private UserDetails getUserDetails( ContinuumUser user )
+    UserDetails getUserDetails( ContinuumUser user )
     {
         List permissions = user.getGroup().getPermissions();
 
@@ -90,19 +105,20 @@ public class ContinuumUserDetailsService
             grantedAuthorities[i] = new GrantedAuthorityImpl( permission.getName() );
             i++;
         }
+        String username = user.getUsername();
+        String password = user.getHashedPassword();
         boolean enabled = true;
         boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 
-        UserDetails userDetails = new User( user.getUsername(), user.getPassword(), enabled, accountNonExpired,
-                                            credentialsNonExpired, accountNonLocked, grantedAuthorities );
+        UserDetails userDetails = new User( username, password, enabled, accountNonExpired, credentialsNonExpired,
+                                            accountNonLocked, grantedAuthorities );
 
         return userDetails;
     }
 
     /**
-    *TODO: clean up ContinuumAuthenticator
-    *TODO: convert Acegi user into Continuum user?
-    */
+     * TODO: convert Acegi user into Continuum user?
+     */
 }

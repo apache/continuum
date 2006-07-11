@@ -162,6 +162,10 @@ public class DefaultContinuumInitializer
         createPermission( "manageSchedule", "Manage Schedules" );
 
         createPermission( "manageUsers", "Manage Users/Groups" );
+
+        createPermission( "ROLE_USER", "Authenticated User" );
+
+        createPermission( "ROLE_ADMIN", "Administrator" );
     }
 
     private Permission createPermission( String name, String description )

@@ -32,5 +32,13 @@
 
 <%-- other way to access the info using taglibs --%>
 
-  <c:set var="authentication" value="${sessionScope['ACEGI_SECURITY_AUTHENTICATION']}"/>
-  user: ${authentication.principal}
+  <c:set var="authentication" value="${sessionScope['ACEGI_SECURITY_CONTEXT'].authentication}"/>
+  <c:set var="user" value="${authentication.principal}"/>
+
+  user: <c:out value="${user.username}"/><br/>
+  Roles: 
+    <ul>
+      <c:forEach var="item" items="${user.authorities}">
+        <li><c:out value="${item.authority}"/></li>
+      </c:forEach>
+    </ul>

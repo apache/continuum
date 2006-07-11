@@ -338,7 +338,7 @@
     <!-- Bridge between Acegi and Continuum database -->
     <component>
       <role>org.acegisecurity.userdetails.UserDetailsService</role>
-      <implementation>org.apache.maven.continuum.security.ContinuumAuthenticator</implementation>
+      <implementation>org.apache.maven.continuum.security.acegi.ContinuumUserDetailsService</implementation>
       <requirements>
         <requirement>
           <role>org.apache.maven.continuum.store.ContinuumStore</role>
@@ -355,6 +355,9 @@
           <field-name>userDetailsService</field-name>
         </requirement>
       </requirements>
+      <configuration>
+        <passwordEncoder implementation="org.acegisecurity.providers.encoding.ShaPasswordEncoder"/>
+      </configuration>
     </component>
 
     <component>
