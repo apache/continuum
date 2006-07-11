@@ -16,6 +16,7 @@ package org.apache.maven.continuum.security.acegi;
  * limitations under the License.
  */
 
+import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.providers.encoding.ShaPasswordEncoder;
 import org.acegisecurity.userdetails.UserDetails;
 import org.apache.maven.continuum.model.system.ContinuumUser;
@@ -40,45 +41,51 @@ public class ContinuumUserDetailsServiceTest
         throws Exception
     {
         super.setUp();
+        userDetailsService = new ContinuumUserDetailsService();
     }
 
     public void testGetUserDetails()
     {
+        Permission p0 = new Permission();
+        p0.setName( "p0" );
         Permission p1 = new Permission();
         p1.setName( "p1" );
         Permission p2 = new Permission();
         p2.setName( "p2" );
-        Permission p3 = new Permission();
-        p3.setName( "p3" );
-        
+
         UserGroup group = new UserGroup();
+        group.addPermission( p0 );
         group.addPermission( p1 );
         group.addPermission( p2 );
-        group.addPermission( p3 );
-        
+
         ContinuumUser continuumUser = new ContinuumUser();
         continuumUser.setUsername( "username" );
         continuumUser.setPassword( "password" );
         continuumUser.setGroup( group );
-        
+
         ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
         String shaPassword = passwordEncoder.encodePassword( "password", null );
-        
+
         UserDetails userDetails = userDetailsService.getUserDetails( continuumUser );
-        
+
         assertEquals( userDetails.getUsername(), continuumUser.getUsername() );
         assertEquals( userDetails.getPassword(), shaPassword );
-        assertEquals( userDetails.getAuthorities(), continuumUser.getUsername() );
+
+        GrantedAuthority[] authorities = userDetails.getAuthorities();
+        for ( int i = 0; i < authorities.length; i++ )
+        {
+            assertEquals( "ROLE_p" + i, authorities[i].getAuthority() );
+        }
     }
 
     public void testPasswordEncoding()
     {
         ContinuumUser continuumUser = new ContinuumUser();
         continuumUser.setPassword( "admin" );
-        
+
         ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
         String shaPassword = passwordEncoder.encodePassword( "admin", null );
-        
+
         assertEquals( continuumUser.getHashedPassword(), shaPassword );
     }
 }
