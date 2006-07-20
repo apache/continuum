@@ -316,6 +316,7 @@
     </component>
 
     <!-- In memory database used only for testing -->
+    <!-- Remember to remove passwordEncoder from org.acegisecurity.providers.dao.DaoAuthenticationProvider -->
 <!--
     <component>
       <role>org.acegisecurity.userdetails.UserDetailsService</role>
