@@ -3,7 +3,7 @@
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="editUser.page.title"/></title>
+      <title><ww:text name="editUser.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
@@ -13,9 +13,10 @@
           <ww:form action="editUser.action" method="post">
             <table>
               <tbody>
-                <ww:hidden name="userId"/>
+                <ww:hidden name="addMode"/>
+                <ww:hidden name="accountId"/>
                 <ww:textfield label="%{getText('user.username')}" name="username" required="true"/>
-                <ww:textfield label="%{getText('user.password')}" name="password" required="true"/>
+                <ww:password label="%{getText('user.password')}" name="password" required="true"/>
                 <ww:textfield label="%{getText('user.email')}" name="email" required="true"/>
               </tbody>
             </table>

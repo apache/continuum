@@ -184,5 +184,19 @@
       <result name="success" type="chain">schedules</result>
     </action>
 
+    <action name="users" class="users">
+      <result name="success">users.jsp</result>
+    </action>
+
+    <action name="editUser" class="editUser">
+      <result name="input">editUser.jsp</result>
+      <result name="success" type="chain">users</result>
+    </action>
+
+    <action name="deleteUser" class="deleteUser">
+      <result name="delete">deleteUser.jsp</result>
+      <result name="success" type="chain">users</result>
+    </action>
+
   </package>
 </xwork>

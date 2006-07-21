@@ -3,7 +3,7 @@
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="deleteUser.page.title"/></title>
+      <title><ww:text name="deleteUser.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
@@ -12,15 +12,15 @@
         <div class="warningmessage">
           <p>
             <strong>
-                <ww:text name="deleteUser.confirmation.message">
-                    <ww:param><ww:property value="username"/></ww:param>
-                </ww:text>
+              <ww:text name="deleteUser.confirmation.message">
+                <ww:param><ww:property value="username"/></ww:param>
+              </ww:text>
             </strong>
           </p>
         </div>
         <div class="functnbar3">
           <ww:form action="deleteUser.action" method="post">
-            <ww:hidden name="userId"/>
+            <ww:hidden name="accountId"/>
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
           </ww:form>
         </div>
