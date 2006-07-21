@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
 <html>
@@ -19,9 +20,19 @@
             <ec:column property="username" title="user.username"/>
             <ec:column property="email" title="user.email"/>
             <ec:column property="actions" title="&nbsp;">
-              <a href="${pageContext.request.contextPath}/editUser!doEdit.action?accountId=${pageScope.user.accountId}"><ww:text name="edit"/></a>
-              &nbsp;
-              <a href="${pageContext.request.contextPath}/deleteUser!doDelete.action?accountId=${pageScope.user.accountId}&username=${pageScope.user.username}"><ww:text name="delete"/></a>
+
+              <c:url var="editUserUrl" value="/editUser!doEdit.action">
+                <c:param name="accountId" value="${user.accountId}"/>
+              </c:url>
+
+              <a href="<c:out value='${editUserUrl}'/>"><ww:text name="edit"/></a>
+
+              <c:url var="deleteUserUrl" value="/deleteUser!doDelete.action">
+                <c:param name="accountId" value="${user.accountId}"/>
+                <c:param name="username" value="${user.username}"/>
+              </c:url>
+
+              <a href="<c:out value='${deleteUserUrl}'/>"><ww:text name="delete"/></a>
             </ec:column>
           </ec:row>
         </ec:table>
