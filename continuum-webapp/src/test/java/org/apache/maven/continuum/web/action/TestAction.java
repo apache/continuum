@@ -1,7 +1,9 @@
 package org.apache.maven.continuum.web.action;
 
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
+
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +18,33 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
-
 /**
- * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
+ * TestAction:
  *
- * @plexus.component
- *   role="com.opensymphony.xwork.Action"
- *   role-hint="checkConfiguration"
+ * @author: jesse
+ * @date: Jul 13, 2006
+ * @version: $ID$
  */
-public class CheckConfigurationAction
+public class TestAction
     extends PlexusActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
+    private String testString;
 
     public String execute()
+        throws Exception
     {
-        if ( !continuum.getConfiguration().isInitialized() )
-        {
-            return INPUT;
-        }
+        getLogger().info( testString );
 
-        return SUCCESS;
+        return INPUT;
+    }
+
+    public String getTestString()
+    {
+        return testString;
+    }
+
+    public void setTestString( String testString )
+    {
+        this.testString = testString;
     }
 }

@@ -19,16 +19,22 @@ package org.apache.maven.continuum.web.action;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
-
-import com.opensymphony.xwork.ActionSupport;
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author Nick Gonzalez
  * @version $Id$
+ *
+ * @plexus.component
+ *   role="com.opensymphony.xwork.Action"
+ *   role-hint="addProject"
  */
 public class AddProjectAction
-    extends ActionSupport
+    extends PlexusActionSupport
 {
+    /**
+     * @plexus.requirement
+     */
     private Continuum continuum;
 
     private String projectName;

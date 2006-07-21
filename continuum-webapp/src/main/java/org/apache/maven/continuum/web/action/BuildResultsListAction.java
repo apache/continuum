@@ -18,18 +18,24 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
-
-import com.opensymphony.xwork.ActionSupport;
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import java.util.Collection;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ *
+ * @plexus.component
+ *   role="com.opensymphony.xwork.Action"
+ *   role-hint="buildResults"
  */
 public class BuildResultsListAction
-    extends ActionSupport
+    extends PlexusActionSupport
 {
+    /**
+     * @plexus.requirement
+     */
     private Continuum continuum;
 
     private Collection buildResults;

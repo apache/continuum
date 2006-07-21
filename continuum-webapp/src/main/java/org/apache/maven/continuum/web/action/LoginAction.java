@@ -1,5 +1,7 @@
 package org.apache.maven.continuum.web.action;
 
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
+
 /*
  * Copyright 2004-2005 The Apache Software Foundation.
  *
@@ -16,20 +18,16 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.xwork.ActionSupport;
-
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ *
+ * @plexus.component
+ *   role="com.opensymphony.xwork.Action"
+ *   role-hint="login"
  */
 public class LoginAction
-    extends ActionSupport
+    extends PlexusActionSupport
 {
     private String username = "";
 

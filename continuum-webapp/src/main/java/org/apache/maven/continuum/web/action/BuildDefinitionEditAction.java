@@ -21,21 +21,27 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.opensymphony.xwork.ActionSupport;
-
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ *
+ * @plexus.component
+ *   role="com.opensymphony.xwork.Action"
+ *   role-hint="buildDefinitionEdit"
  */
 public class BuildDefinitionEditAction
-    extends ActionSupport
+    extends PlexusActionSupport
 {
+    /**
+     * @plexus.requirement
+     */
     private Continuum continuum;
 
     private BuildDefinition bd;

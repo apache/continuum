@@ -16,20 +16,25 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import java.util.Collection;
-
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
-import com.opensymphony.xwork.ActionSupport;
+import java.util.Collection;
 
 /**
  * @author Nik Gonzalez
+ *
+ * @plexus.component
+ *   role="com.opensymphony.xwork.Action"
+ *   role-hint="schedules"
  */
 public class ScheduleAction
-    extends ActionSupport
+    extends PlexusActionSupport
 {
-
+    /**
+     * @plexus.requirement
+     */
     private Continuum continuum;
 
     private Collection schedules;

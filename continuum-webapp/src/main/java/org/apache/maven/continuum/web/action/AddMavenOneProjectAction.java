@@ -20,19 +20,25 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import java.io.File;
 import java.net.MalformedURLException;
 
-import com.opensymphony.xwork.ActionSupport;
-
 /**
  * @author Nick Gonzalez
  * @version $Id$
+ *
+ * @plexus.component
+ *   role="com.opensymphony.xwork.Action"
+ *   role-hint="addMavenOneProject"
  */
 public class AddMavenOneProjectAction
-    extends ActionSupport
+    extends PlexusActionSupport
 {
+    /**
+     * @plexus.requirement
+     */
     private Continuum continuum;
 
     private String m1PomUrl;

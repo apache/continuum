@@ -18,16 +18,22 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
-
-import com.opensymphony.xwork.ActionSupport;
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ *
+ * @plexus.component
+ *   role="com.opensymphony.xwork.Action"
+ *   role-hint="deleteBuildDefinition"
  */
 public class DeleteBuildDefinitionAction
-    extends ActionSupport
+    extends PlexusActionSupport
 {
+    /**
+     * @plexus.requirement
+     */
     private Continuum continuum;
 
     private int projectId;
