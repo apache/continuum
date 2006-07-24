@@ -31,10 +31,11 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import com.opensymphony.webwork.interceptor.ServletRequestAware;
 
-import org.codehaus.plexus.xwork.action.PlexusActionSupport
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author Henry Isidro
+ * @version $Id$
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"

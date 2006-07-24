@@ -21,10 +21,11 @@ import org.apache.maven.continuum.ContinuumException;
 
 import java.util.Collection;
 
-import org.codehaus.plexus.xwork.action.PlexusActionSupport
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author Henry Isidro
+ * @version $Id$
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"

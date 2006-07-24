@@ -24,10 +24,11 @@ import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.Permission;
 import org.apache.maven.continuum.store.ContinuumStore;
 
-import org.codehaus.plexus.xwork.action.PlexusActionSupport
+import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author Teody Cue
+ * @version $Id$
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"
