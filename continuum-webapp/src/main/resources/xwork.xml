@@ -190,6 +190,7 @@
 
     <action name="editUser" class="editUser">
       <result name="input">editUser.jsp</result>
+      <result name="permissions">addUserRole.jsp</result>
       <result name="success" type="chain">users</result>
     </action>
 
