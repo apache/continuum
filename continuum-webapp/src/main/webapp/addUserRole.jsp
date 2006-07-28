@@ -20,7 +20,10 @@
           <ec:row>
             <ec:column property="name" title="role.rolename"/>
             <ec:column property="actions" title="&nbsp;">
-              <input type="button" onclick="window.location.href='${pageContext.request.contextPath}/editUser!doAddPermission.action?permissionName=${pageScope.availablePermission.name}'" value=<ww:text name="add"/>>
+              <c:url var="editUserUrl" value="/editUser!doAddPermission.action">
+                <c:param name="permissionName" value="${availablePermission.name}"/>
+              </c:url>
+              <input type="button" onclick="window.location.href="c:out value='${editUserUrl}'/>" value=<ww:text name="add"/>>
             </ec:column>
           </ec:row>
         </ec:table>
