@@ -1,0 +1,134 @@
+<plexus>
+
+  <!-- load on start to inject values into the aspect -->
+  <load-on-start>
+    <component>
+      <role>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</role>
+    </component>
+  </load-on-start>
+
+  <components>
+
+    <component>
+      <role>org.apache.maven.continuum.Continuum</role>
+      <implementation>org.apache.maven.continuum.security.acegi.aspectj.ContinuumStub</implementation>
+      <requirements>
+      </requirements>
+    </component>
+
+    <!--
+     | ACEGI Configuration
+     -->
+     
+    <!-- Authentication -->
+
+    <component>
+      <role>org.acegisecurity.providers.ProviderManager</role>
+      <implementation>org.acegisecurity.providers.ProviderManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.providers.dao.DaoAuthenticationProvider</role>
+          <field-name>providers</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <!-- In memory database used only for testing -->
+    <component>
+      <role>org.acegisecurity.userdetails.UserDetailsService</role>
+      <implementation>org.acegisecurity.userdetails.memory.InMemoryDaoImpl</implementation>
+      <configuration>
+        <userProperties>
+          <property>
+            <name>marissa</name>
+            <value>koala,ROLE_USER,ROLE_SUPERVISOR</value>
+          </property>
+          <property>
+            <name>dianne</name>
+            <value>emu,ROLE_USER</value>
+          </property>
+          <property>
+            <name>scott</name>
+            <value>wombat,ROLE_USER</value>
+          </property>
+        </userProperties>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.providers.dao.DaoAuthenticationProvider</role>
+      <implementation>org.acegisecurity.providers.dao.DaoAuthenticationProvider</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.userdetails.UserDetailsService</role>
+          <field-name>userDetailsService</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <!-- authorization -->
+
+    <component>
+      <role>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</role>
+      <implementation>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
+          <field-name>securityInterceptor</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <aspectName>org.apache.maven.continuum.security.acegi.aspectj.MethodSecurityAspect</aspectName>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
+      <implementation>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.providers.ProviderManager</role>
+          <field-name>authenticationManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.acegisecurity.AccessDecisionManager</role>
+          <field-name>accessDecisionManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <objectDefinitionSource implementation="org.acegisecurity.intercept.method.MethodDefinitionMap">
+          <mappings>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.addProject</methodName>
+              <configAttributes>
+                <configAttribute>ROLE_ADMIN</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+          </mappings>
+        </objectDefinitionSource>
+      </configuration>
+    </component>
+
+    <!-- An access decision manager used by the business objects -->
+    <component>
+      <role>org.acegisecurity.AccessDecisionManager</role>
+      <implementation>org.acegisecurity.vote.AffirmativeBased</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.vote.RoleVoter</role>
+          <field-name>decisionVoters</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <allowIfAllAbstainDecisions>false</allowIfAllAbstainDecisions>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.vote.RoleVoter</role>
+      <implementation>org.acegisecurity.vote.RoleVoter</implementation>
+    </component>
+
+  </components>
+
+</plexus>
