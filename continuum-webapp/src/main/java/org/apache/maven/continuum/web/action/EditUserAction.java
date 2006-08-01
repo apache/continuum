@@ -46,8 +46,14 @@ public class EditUserAction
     implements ServletRequestAware
 {
 
+    /**
+     * @plexus.requirement
+     */
     private ContinuumStore store;
 
+    /**
+     * @plexus.requirement
+     */
     private Continuum continuum;
 
     private ContinuumUser user;

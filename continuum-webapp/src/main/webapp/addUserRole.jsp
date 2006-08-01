@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
 <html>
@@ -23,7 +24,7 @@
               <c:url var="editUserUrl" value="/editUser!doAddPermission.action">
                 <c:param name="permissionName" value="${availablePermission.name}"/>
               </c:url>
-              <input type="button" onclick="window.location.href="c:out value='${editUserUrl}'/>" value=<ww:text name="add"/>>
+              <input type="button" onclick="window.location.href='<c:out value='${editUserUrl}'/>'" value=<ww:text name="add"/>>
             </ec:column>
           </ec:row>
         </ec:table>

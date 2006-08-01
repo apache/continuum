@@ -34,6 +34,9 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 public class UsersAction
     extends PlexusActionSupport
 {
+    /**
+     * @plexus.requirement
+     */
     private Continuum continuum;
 
     private Collection users;

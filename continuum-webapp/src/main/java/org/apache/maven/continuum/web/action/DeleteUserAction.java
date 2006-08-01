@@ -32,6 +32,9 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 public class DeleteUserAction
     extends PlexusActionSupport
 {
+    /**
+     * @plexus.requirement
+     */
     private Continuum continuum;
 
     private int accountId;
