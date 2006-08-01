@@ -49,6 +49,11 @@
             <a href="<ww:url value="configuration!default.action"/>"><ww:text name="menu.administration.configuration"/></a>
           </div>
         </authz:authorize>      
+        <authz:authorize ifAllGranted="ROLE_manageUsers">
+          <div class="body">
+            <a href="<ww:url value="users.action"/>"><ww:text name="menu.administration.users"/></a>
+          </div>
+        </authz:authorize>
       </div>
     </div>
   </authz:authorize>      
