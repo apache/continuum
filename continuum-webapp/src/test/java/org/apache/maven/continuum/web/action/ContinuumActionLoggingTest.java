@@ -28,11 +28,10 @@ import java.io.PrintStream;
 /**
  * TestContinuumActionLogging:
  *
- * @author: jesse
- * @date: Jul 13, 2006
- * @version: $ID$
+ * @author jesse
+ * @version $Id$
  */
-public class TestContinuumActionLogging
+public class ContinuumActionLoggingTest
     extends PlexusTestCase
 {
 
@@ -56,21 +55,15 @@ public class TestContinuumActionLogging
 
 
     public void testActionLogging()
+        throws Exception
     {
-        try
-        {
-            TestAction testAction = (TestAction) lookup( "com.opensymphony.xwork.Action", "testAction" );
-            String testString = "action test string";
-            testAction.setTestString( testString );
+        ActionStub testAction = (ActionStub) lookup( "com.opensymphony.xwork.Action", "testAction" );
+        String testString = "action test string";
+        testAction.setTestString( testString );
 
-            testAction.execute();
+        testAction.execute();
 
-            assertTrue( testOutput.toString().indexOf( testString ) != -1 );
-        }
-        catch ( Exception e )
-        {
-            fail( e.getMessage() );
-        }
+        assertTrue( testOutput.toString().indexOf( testString ) != -1 );
     }
 
 

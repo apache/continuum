@@ -21,11 +21,10 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 /**
  * TestAction:
  *
- * @author: jesse
- * @date: Jul 13, 2006
- * @version: $ID$
+ * @author jesse
+ * @version $Id$
  */
-public class TestAction
+public class ActionStub
     extends PlexusActionSupport
 {
     private String testString;
