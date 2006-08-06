@@ -78,7 +78,7 @@
         </requirement>
       </requirements>
       <configuration>
-        <aspectName>org.apache.maven.continuum.security.acegi.aspectj.MethodSecurityAspect</aspectName>
+        <aspectName>org.apache.maven.continuum.security.acegi.aspectj.ContinuumSecurityAspect</aspectName>
       </configuration>
     </component>
 

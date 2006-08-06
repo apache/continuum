@@ -30,7 +30,7 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
 
 /**
- * Test for {@link MethodSecurityAspect}
+ * Test for {@link ContinuumSecurityAspect}
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
@@ -50,9 +50,9 @@ public abstract class AbstractMethodSecurityTest
         return continuum;
     }
 
-    public MethodSecurityAspect getAspect()
+    public ContinuumSecurityAspect getAspect()
     {
-        return MethodSecurityAspect.aspectOf();
+        return ContinuumSecurityAspect.aspectOf();
     }
 
     /**

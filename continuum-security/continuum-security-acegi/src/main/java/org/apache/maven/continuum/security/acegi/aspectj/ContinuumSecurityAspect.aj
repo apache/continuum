@@ -25,12 +25,12 @@ import org.codehaus.plexus.acegi.intercept.method.aspectj.SecurityAspect;
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id: ContinuumUserDetailsService.java 421005 2006-07-11 22:00:29Z carlos $
  */
-public aspect MethodSecurityAspect extends SecurityAspect
+public aspect ContinuumSecurityAspect extends SecurityAspect
 {
 
     protected pointcut securedExecution():
         target(Continuum) &&
         execution(public * *(..)) &&
-        !within(MethodSecurityAspect);
+        !within(ContinuumSecurityAspect);
 
 }

@@ -30,7 +30,7 @@ import org.apache.maven.continuum.Continuum;
 import org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper;
 
 /**
- * Test for {@link MethodSecurityAspect}
+ * Test for {@link ContinuumSecurityAspect}
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
@@ -61,9 +61,9 @@ public class MethodSecurityTest
 
         setContinuum( new ContinuumStub() );
         AspectJSecurityInterceptorHelper helper = new AspectJSecurityInterceptorHelper();
-        helper.setAspectName( "org.apache.maven.continuum.security.acegi.aspectj.MethodSecurityAspect" );
+        helper.setAspectName( "org.apache.maven.continuum.security.acegi.aspectj.ContinuumSecurityAspect" );
         helper.setSecurityInterceptor( si );
         helper.initialize();
-        //        aspect = MethodSecurityAspect.aspectOf();
+        //        aspect = ContinuumSecurityAspect.aspectOf();
     }
 }
