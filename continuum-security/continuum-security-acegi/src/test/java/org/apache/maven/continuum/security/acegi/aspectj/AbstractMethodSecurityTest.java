@@ -16,8 +16,6 @@ package org.apache.maven.continuum.security.acegi.aspectj;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
-
 import org.acegisecurity.AccessDecisionManager;
 import org.acegisecurity.AccessDeniedException;
 import org.acegisecurity.Authentication;
@@ -28,6 +26,7 @@ import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.TestingAuthenticationToken;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
+import org.codehaus.plexus.PlexusTestCase;
 
 /**
  * Test for {@link ContinuumSecurityAspect}
@@ -36,7 +35,7 @@ import org.apache.maven.continuum.model.project.Project;
  * @version $Id$
  */
 public abstract class AbstractMethodSecurityTest
-    extends TestCase
+    extends PlexusTestCase
 {
     private Continuum continuum;
 
