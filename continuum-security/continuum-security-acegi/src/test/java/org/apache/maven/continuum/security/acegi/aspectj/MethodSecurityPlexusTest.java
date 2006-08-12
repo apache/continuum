@@ -30,7 +30,7 @@ public class MethodSecurityPlexusTest
         throws Exception
     {
         super.setUp();
-        setContinuum( (Continuum) lookup( "org.apache.maven.continuum.Continuum" ) );
+        setContinuum( (Continuum) lookup( Continuum.ROLE ) );
     }
 
     protected Authentication getAuthentication( String role )
