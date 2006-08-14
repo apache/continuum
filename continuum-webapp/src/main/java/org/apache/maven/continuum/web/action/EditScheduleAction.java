@@ -19,7 +19,6 @@ package org.apache.maven.continuum.web.action;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Schedule;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author Nik Gonzalez
@@ -29,13 +28,8 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
  *   role-hint="editSchedule"
  */
 public class EditScheduleAction
-    extends PlexusActionSupport
-{
-
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
+    extends ContinuumActionSupport
+{   
 
     private Schedule schedule;
 
@@ -52,7 +46,7 @@ public class EditScheduleAction
     private String name;
 
     public String execute()
-        throws Exception
+        throws ContinuumException
     {
         try
         {
@@ -69,29 +63,15 @@ public class EditScheduleAction
         schedule.setDescription( description );
         schedule.setName( name );
 
-        try
-        {
-            continuum.updateSchedule( schedule );
-        }
-        catch ( ContinuumException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        continuum.updateSchedule( schedule );
+
         return SUCCESS;
     }
 
     public String doEdit()
-        throws Exception
+        throws ContinuumException
     {
-        try
-        {
-            schedule = continuum.getSchedule( id );
-        }
-        catch ( ContinuumException e )
-        {
-            e.printStackTrace();
-        }
+        schedule = continuum.getSchedule( id );
 
         active = schedule.isActive();
         cronExpression = schedule.getCronExpression();

@@ -16,11 +16,9 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.Schedule;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,12 +34,8 @@ import java.util.Map;
  *   role-hint="addBuildDefinition"
  */
 public class AddBuildDefinitionAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
 
     private Project project;
 
@@ -66,32 +60,11 @@ public class AddBuildDefinitionAction
     //    private Profile profile;
 
     public String execute()
+        throws ContinuumException
     {
-        try
-        {
-            project = continuum.getProject( projectId );
-        }
-        catch ( ContinuumException e )
-        {
-            addActionMessage( "Can't get project informations for project " + projectId + " : " + e.getMessage() );
+        project = continuum.getProject( projectId );
 
-            e.printStackTrace();
-
-            return ERROR;
-        }
-
-        try
-        {
-            initSchedulesMap();
-        }
-        catch ( ContinuumException e )
-        {
-            addActionMessage( "Can't get schedules list : " + e.getMessage() );
-
-            e.printStackTrace();
-
-            return ERROR;
-        }
+        initSchedulesMap();
 
         return INPUT;
     }
@@ -200,16 +173,11 @@ public class AddBuildDefinitionAction
     }
 
     public Map getSchedulesMap()
+        throws ContinuumException
     {
         if ( schedulesMap == null )
         {
-            try
-            {
-                initSchedulesMap();
-            }
-            catch ( ContinuumException e )
-            {
-            }
+            initSchedulesMap();
         }
         return schedulesMap;
     }

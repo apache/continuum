@@ -16,9 +16,7 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import java.util.Collection;
 
@@ -31,13 +29,8 @@ import java.util.Collection;
  *   role-hint="buildResults"
  */
 public class BuildResultsListAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
-
     private Collection buildResults;
 
     private int projectId;
@@ -45,19 +38,9 @@ public class BuildResultsListAction
     private String projectName;
 
     public String execute()
+        throws ContinuumException
     {
-        try
-        {
-            buildResults = continuum.getBuildResultsForProject( projectId );
-        }
-        catch ( ContinuumException e )
-        {
-            addActionError( "Can't get build results list for project (id=" + projectId + ") : " + e.getMessage() );
-
-            e.printStackTrace();
-
-            return ERROR;
-        }
+        buildResults = continuum.getBuildResultsForProject( projectId );
 
         return SUCCESS;
     }

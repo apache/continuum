@@ -6,7 +6,7 @@
 
 <web-app>
 
-  <display-name>Continuum</display-name>
+  <display-name>Continuum Webapp</display-name>
 
   <context-param>
     <param-name>extremecomponentsPreferencesLocation</param-name>

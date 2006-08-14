@@ -16,14 +16,13 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.Iterator;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
-
-import java.io.File;
-import java.net.MalformedURLException;
 
 /**
  * @author Nick Gonzalez
@@ -34,12 +33,8 @@ import java.net.MalformedURLException;
  *   role-hint="addMavenOneProject"
  */
 public class AddMavenOneProjectAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
 
     private String m1PomUrl;
 
@@ -48,6 +43,7 @@ public class AddMavenOneProjectAction
     private String m1Pom = null;
 
     public String execute()
+        throws ContinuumException
     {
         if ( !StringUtils.isEmpty( m1PomUrl ) )
         {
@@ -63,7 +59,8 @@ public class AddMavenOneProjectAction
                 }
                 catch ( MalformedURLException e )
                 {
-                    return INPUT;
+                    // if local file can't be converted to url it's an internal error
+                    throw new RuntimeException( e );
                 }
             }
             else
@@ -74,18 +71,16 @@ public class AddMavenOneProjectAction
 
         ContinuumProjectBuildingResult result = null;
 
-        try
-        {
-            result = continuum.addMavenOneProject( m1Pom );
-        }
-        catch ( ContinuumException e )
-        {
-            return INPUT;
-        }
+        result = continuum.addMavenOneProject( m1Pom );
 
-        if( result.getWarnings().size() > 0 )
+        if ( result.getErrors().size() > 0 )
         {
-            addActionMessage( result.getWarnings().toArray().toString() );
+            Iterator it = result.getErrors().iterator();
+
+            while ( it.hasNext() )
+            {
+                addActionError( (String) it.next() );
+            }
         }
 
         return SUCCESS;

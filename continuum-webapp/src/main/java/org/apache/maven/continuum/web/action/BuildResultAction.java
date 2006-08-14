@@ -16,10 +16,8 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import java.util.List;
 
@@ -32,13 +30,9 @@ import java.util.List;
  *   role-hint="buildResult"
  */
 public class BuildResultAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
 {
 
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
 
     private BuildResult buildResult;
 
@@ -51,22 +45,11 @@ public class BuildResultAction
     private List changeSet;
 
     public String execute()
+        throws ContinuumException
     {
-        try
-        {
-            buildResult = continuum.getBuildResult( buildId );
+        buildResult = continuum.getBuildResult( buildId );
 
-            changeSet = continuum.getChangesSinceLastSuccess( projectId, buildId );
-        }
-        catch ( ContinuumException e )
-        {
-            addActionError( "Can't get build result (id=" + buildId + ") for project (id=" + projectId + ") : "
-                + e.getMessage() );
-
-            e.printStackTrace();
-
-            return ERROR;
-        }
+        changeSet = continuum.getChangesSinceLastSuccess( projectId, buildId );
 
         return SUCCESS;
     }

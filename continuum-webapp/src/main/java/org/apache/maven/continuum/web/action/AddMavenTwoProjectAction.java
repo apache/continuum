@@ -16,14 +16,16 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
+import java.util.Iterator;
+
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
-
-import java.io.File;
-import java.net.MalformedURLException;
 
 /**
  * @author Nick Gonzalez
@@ -34,12 +36,8 @@ import java.net.MalformedURLException;
  *   role-hint="addMavenTwoProject"
  */
 public class AddMavenTwoProjectAction
-    extends PlexusActionSupport
-{
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
+    extends ContinuumActionSupport
+{    
 
     private String m2PomUrl;
 
@@ -48,6 +46,7 @@ public class AddMavenTwoProjectAction
     private String m2Pom = null;
 
     public String execute()
+        throws ContinuumException
     {
         if ( !StringUtils.isEmpty( m2PomUrl ) )
         {
@@ -63,29 +62,30 @@ public class AddMavenTwoProjectAction
                 }
                 catch ( MalformedURLException e )
                 {
-                    return INPUT;
+                    // if local file can't be converted to url it's an internal error
+                    throw new RuntimeException( e );
                 }
             }
             else
             {
+                // no url or file was filled
+                // TODO add action error, one must be filled in
                 return INPUT;
             }
         }
 
         ContinuumProjectBuildingResult result = null;
 
-        try
-        {
-            result = continuum.addMavenTwoProject( m2Pom );
-        }
-        catch ( ContinuumException e )
-        {
-            return INPUT;
-        }
+        result = continuum.addMavenTwoProject( m2Pom );
 
-        if ( result.getWarnings().size() > 0 )
+        if ( result.getErrors().size() > 0 )
         {
-            addActionMessage( result.getWarnings().toArray().toString() );
+            Iterator it = result.getErrors().iterator();
+
+            while ( it.hasNext() )
+            {
+                addActionError( (String) it.next() );
+            }
 
             return INPUT;
         }

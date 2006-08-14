@@ -37,6 +37,7 @@ import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 /**
  * Stub implementation of {@link Continuum} with empty implementations.
+ * Needs to be static to be weaved by AspectJ.
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
@@ -44,6 +45,18 @@ import org.codehaus.plexus.util.dag.CycleDetectedException;
 public class ContinuumStub
     implements Continuum
 {
+
+    private Collection mockProjects;
+
+    public void setMockProjects( Collection mockProjects )
+    {
+        this.mockProjects = mockProjects;
+    }
+
+    public Collection getMockProjects()
+    {
+        return mockProjects;
+    }
 
     public void addBuildDefinition( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException
@@ -145,7 +158,7 @@ public class ContinuumStub
     public Collection getAllProjects( int start, int end )
         throws ContinuumException
     {
-        return null;
+        return getMockProjects();
     }
 
     public List getAllProjectsWithAllDetails( int start, int end )
@@ -439,6 +452,17 @@ public class ContinuumStub
     public void updateUserGroup( int userGroupId, Map configuration )
         throws ContinuumException
     {
+    }
+
+    public Collection getAllProjectGroupsWithProjects()
+    {
+        return null;
+    }
+
+    public Collection getProjectsInGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        return null;
     }
 
 }

@@ -117,7 +117,6 @@ public class DefaultContinuumInitializer
     // ----------------------------------------------------------------------
 
     public Schedule createDefaultSchedule()
-        throws ContinuumInitializationException
     {
         Schedule schedule = new Schedule();
 

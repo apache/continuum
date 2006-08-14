@@ -16,9 +16,7 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -29,31 +27,16 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
  *   role-hint="deleteProject"
  */
 public class DeleteProjectAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
-
     private int projectId;
 
     private String projectName;
 
     public String execute()
+        throws ContinuumException
     {
-        try
-        {
-            continuum.removeProject( projectId );
-        }
-        catch ( ContinuumException e )
-        {
-            addActionMessage( "Can't delete project (id=" + projectId + ") : " + e.getMessage() );
-
-            e.printStackTrace();
-
-            return ERROR;
-        }
+        continuum.removeProject( projectId );
 
         return SUCCESS;
     }

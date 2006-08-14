@@ -16,9 +16,7 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -29,35 +27,21 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
  *   role-hint="buildProject"
  */
 public class BuildProjectAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
 
     private int projectId;
 
     public String execute()
+        throws ContinuumException
     {
-        try
+        if ( projectId > 0 )
         {
-            if ( projectId > 0 )
-            {
-                continuum.buildProject( projectId );
-            }
-            else
-            {
-                continuum.buildProjects();
-            }
+            continuum.buildProject( projectId );
         }
-        catch ( ContinuumException e )
+        else
         {
-            addActionMessage( "Can't build project (id=" + projectId + ") : " + e.getMessage() );
-
-            e.printStackTrace();
-
-            return ERROR;
+            continuum.buildProjects();
         }
 
         return SUCCESS;

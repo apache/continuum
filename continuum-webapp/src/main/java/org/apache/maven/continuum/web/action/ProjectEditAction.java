@@ -16,10 +16,8 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -30,12 +28,8 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
  *   role-hint="projectEdit"
  */
 public class ProjectEditAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
 
     private Project project;
 
@@ -54,19 +48,9 @@ public class ProjectEditAction
     private String scmTag;
 
     public String execute()
+        throws ContinuumException
     {
-        try
-        {
-            project = getProject( projectId );
-        }
-        catch ( ContinuumException e )
-        {
-            addActionMessage( "Can't get project informations (id=" + projectId + ") : " + e.getMessage() );
-
-            e.printStackTrace();
-
-            return ERROR;
-        }
+        project = getProject( projectId );
 
         project.setName( name );
 
@@ -80,36 +64,15 @@ public class ProjectEditAction
 
         project.setScmTag( scmTag );
 
-        try
-        {
-            continuum.updateProject( project );
-        }
-        catch ( ContinuumException e )
-        {
-            addActionMessage( "Can't update project (id=" + projectId + ") : " + e.getMessage() );
-
-            e.printStackTrace();
-
-            return ERROR;
-        }
+        continuum.updateProject( project );
 
         return SUCCESS;
     }
 
     public String doEdit()
+        throws ContinuumException
     {
-        try
-        {
-            project = getProject( projectId );
-        }
-        catch ( ContinuumException e )
-        {
-            addActionMessage( "Can't get project informations (id=" + projectId + ") : " + e.getMessage() );
-
-            e.printStackTrace();
-
-            return ERROR;
-        }
+        project = getProject( projectId );
 
         name = project.getName();
 
