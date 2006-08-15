@@ -26,11 +26,9 @@
 
     <global-results>
       <result name="internalError" type="redirect">/error.jsp</result>
-      <result name="continuumInitialization" type="redirect">/configuration!input.action</result>
     </global-results>
 
     <global-exception-mappings>
-      <exception-mapping exception="org.apache.maven.continuum.initialization.ContinuumInitializationException" result="continuumInitialization"/>
       <exception-mapping exception="java.lang.Exception" result="internalError"/>
     </global-exception-mappings>
 
