@@ -197,17 +197,17 @@
     </action>
 
     <action name="users" class="users">
-      <result name="success">users.jsp</result>
+      <result name="success">/user/users.jsp</result>
     </action>
 
     <action name="editUser" class="editUser">
-      <result name="input">editUser.jsp</result>
-      <result name="permissions">addUserRole.jsp</result>
+      <result name="input">/user/editUser.jsp</result>
+      <result name="permissions">/user/addUserRole.jsp</result>
       <result name="success" type="chain">users</result>
     </action>
 
     <action name="deleteUser" class="deleteUser">
-      <result name="delete">deleteUser.jsp</result>
+      <result name="delete">/user/deleteUser.jsp</result>
       <result name="success" type="chain">users</result>
     </action>
 
