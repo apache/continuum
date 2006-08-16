@@ -29,43 +29,14 @@ import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.PlexusTestCase;
 
 /**
- * Test for {@link ContinuumSecurityAspect}
+ * Test for {@link ContinuumSecurityAspect}, method level security
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
 public abstract class AbstractMethodSecurityTest
-    extends PlexusTestCase
+    extends AbstractContinuumSecurityAspectTest
 {
-    private Continuum continuum;
-
-    public void setContinuum( Continuum continuum )
-    {
-        this.continuum = continuum;
-    }
-
-    public Continuum getContinuum()
-    {
-        return continuum;
-    }
-
-    public ContinuumSecurityAspect getAspect()
-    {
-        return ContinuumSecurityAspect.aspectOf();
-    }
-
-    /**
-     * Get an {@link Authentication} with provided role object that can
-     * be used with the chosen {@link AccessDecisionManager} 
-     * 
-     * @param role eg. <code>ADMIN</code>, <code>USER</code>, ...
-     * @return
-     */
-    protected Authentication getAuthentication( String role )
-    {
-        return new TestingAuthenticationToken( "marissa", "koala",
-                                               new GrantedAuthority[] { new GrantedAuthorityImpl( "MOCK_" + role ) } );
-    }
 
     /**
      * Check that method call proceeds when user has the required role.
@@ -122,12 +93,5 @@ public abstract class AbstractMethodSecurityTest
         getAspect().setSecurityInterceptor( null );
 
         getContinuum().addProject( new Project(), "" );
-    }
-
-    protected void tearDown()
-        throws Exception
-    {
-        SecurityContextHolder.getContext().setAuthentication( null );
-        super.tearDown();
     }
 }

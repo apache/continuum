@@ -18,32 +18,21 @@ package org.apache.maven.continuum.security.acegi.aspectj;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.GrantedAuthorityImpl;
 import org.acegisecurity.MockAuthenticationManager;
 import org.acegisecurity.MockRunAsManager;
 import org.acegisecurity.acl.AclProvider;
 import org.acegisecurity.acl.AclProviderManager;
-import org.acegisecurity.acl.basic.AclObjectIdentity;
-import org.acegisecurity.acl.basic.BasicAclDao;
-import org.acegisecurity.acl.basic.BasicAclEntry;
 import org.acegisecurity.acl.basic.BasicAclProvider;
-import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
 import org.acegisecurity.acl.basic.SimpleAclEntry;
 import org.acegisecurity.afterinvocation.AfterInvocationProvider;
 import org.acegisecurity.afterinvocation.AfterInvocationProviderManager;
 import org.acegisecurity.afterinvocation.BasicAclEntryAfterInvocationCollectionFilteringProvider;
 import org.acegisecurity.afterinvocation.BasicAclEntryAfterInvocationProvider;
-import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.intercept.method.MethodDefinitionMap;
 import org.acegisecurity.intercept.method.MethodDefinitionSourceMapping;
 import org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor;
-import org.acegisecurity.providers.TestingAuthenticationToken;
 import org.acegisecurity.vote.AccessDecisionVoter;
 import org.acegisecurity.vote.AffirmativeBased;
 import org.acegisecurity.vote.BasicAclEntryVoter;
@@ -59,12 +48,8 @@ import org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterce
  * @version $Id$
  */
 public class ProjectSecurityTest
-    extends TestCase
+    extends AbstractProjectSecurityTest
 {
-
-    private static final String USERNAME = "marissa";
-
-    private ContinuumStub continuum;
 
     protected void setUp()
         throws Exception
@@ -81,7 +66,7 @@ public class ProjectSecurityTest
         //        aclDao.setDataSource( dataSource );
 
         BasicAclProvider basicAclProvider = new BasicAclProvider();
-        basicAclProvider.setBasicAclDao( new MockDao() );
+        basicAclProvider.setBasicAclDao( new BasicAclDaoMock() );
 
         AclProviderManager aclManager = new AclProviderManager();
         aclManager.setProviders( Arrays.asList( new AclProvider[] { basicAclProvider } ) );
@@ -131,76 +116,10 @@ public class ProjectSecurityTest
         si.setRunAsManager( new MockRunAsManager() );
         si.setAfterInvocationManager( afterInvocationProviderManager );
 
-        continuum = new ContinuumStub();
+        setContinuum( new ContinuumStub() );
         AspectJSecurityInterceptorHelper helper = new AspectJSecurityInterceptorHelper();
         helper.setAspectName( "org.apache.maven.continuum.security.acegi.aspectj.ContinuumSecurityAspect" );
         helper.setSecurityInterceptor( si );
         helper.initialize();
-    }
-
-    public void testGetAllProjects()
-        throws Exception
-    {
-        Project project1 = new Project();
-        project1.setId( 1 );
-
-        Project project2 = new Project();
-        project2.setId( 2 );
-
-        List mockProjects = new ArrayList();
-        mockProjects.add( project1 );
-        mockProjects.add( project2 );
-
-        continuum.setMockProjects( mockProjects );
-
-        TestingAuthenticationToken authentication = new TestingAuthenticationToken(
-                                                                                    USERNAME,
-                                                                                    "koala",
-                                                                                    new GrantedAuthority[] { new GrantedAuthorityImpl(
-                                                                                                                                       "ROLE_USER" ) } );
-        SecurityContextHolder.getContext().setAuthentication( authentication );
-
-        Collection allProjects = continuum.getAllProjects( 1, 1000 );
-
-        assertEquals( "Number of projects returned does not match", 1, allProjects.size() );
-        assertEquals( "The returned project is not the right one", 1, ( (Project) allProjects.iterator().next() )
-            .getId() );
-    }
-
-    /**
-     * {@link BasicAclDao} that will allow READ for {@link Project} with id 1.
-     * 
-     * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
-     * @version $Id$
-     */
-    private class MockDao
-        implements BasicAclDao
-    {
-        private SimpleAclEntry aclEntry1, aclEntryDefault;
-
-        public MockDao()
-        {
-            aclEntryDefault = new SimpleAclEntry();
-            aclEntryDefault.addPermission( SimpleAclEntry.NOTHING );
-            aclEntryDefault.setRecipient( USERNAME );
-
-            aclEntry1 = new SimpleAclEntry();
-            aclEntry1.addPermission( SimpleAclEntry.READ );
-            aclEntry1.setRecipient( USERNAME );
-        }
-
-        public BasicAclEntry[] getAcls( AclObjectIdentity aclObjectIdentity )
-        {
-            NamedEntityObjectIdentity objectIdentity = ( (NamedEntityObjectIdentity) aclObjectIdentity );
-
-            if ( objectIdentity.getId().equals( "1" ) )
-            {
-                return new BasicAclEntry[] { aclEntry1 };
-            }
-            else
-            {
-                return new BasicAclEntry[] { aclEntryDefault };
-            }
-        }
     }
 }

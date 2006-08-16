@@ -16,14 +16,10 @@ package org.apache.maven.continuum.security.acegi.aspectj;
  * limitations under the License.
  */
 
-import org.acegisecurity.Authentication;
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.GrantedAuthorityImpl;
-import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.apache.maven.continuum.Continuum;
 
-public class MethodSecurityPlexusTest
-    extends AbstractMethodSecurityTest
+public class ProjectSecurityPlexusTest
+    extends AbstractProjectSecurityTest
 {
 
     protected void setUp()
@@ -33,10 +29,4 @@ public class MethodSecurityPlexusTest
         setContinuum( (ContinuumStub) lookup( Continuum.ROLE ) );
     }
 
-    protected Authentication getAuthentication( String role )
-    {
-        return new UsernamePasswordAuthenticationToken( USERNAME, "koala",
-                                                        new GrantedAuthority[] { new GrantedAuthorityImpl( "ROLE_"
-                                                            + role ) } );
-    }
 }
