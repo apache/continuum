@@ -1,0 +1,29 @@
+<plexus>
+
+  <components>
+
+    <component>
+      <role>javax.sql.DataSource</role>
+      <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
+      <configuration>
+        <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
+        <url>jdbc:derby:${plexus.home}/database;create=true</url>
+        <username>sa</username>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.basic.BasicAclDao</role>
+      <implementation>org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl</implementation>
+      <component-composer>setter</component-composer>
+      <requirements>
+        <requirement>
+          <role>javax.sql.DataSource</role>
+          <field-name>dataSource</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+  </components>
+
+</plexus>
