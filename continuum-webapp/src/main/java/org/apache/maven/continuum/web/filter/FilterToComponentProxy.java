@@ -135,6 +135,11 @@ public class FilterToComponentProxy
 
         PlexusContainer container = getContainer( filterConfig );
 
+        if ( container == null )
+        {
+            throw new ServletException( "Plexus container not found" );
+        }
+
         Object object = null;
         try
         {
