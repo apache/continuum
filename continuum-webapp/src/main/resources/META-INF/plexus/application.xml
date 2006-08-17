@@ -11,6 +11,10 @@
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>check-out-project</role-hint>
     </component>
+    <!-- load on start to inject values into the aspect -->
+    <component>
+      <role>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</role>
+    </component>
   </load-on-start>
 
   <components>
@@ -414,20 +418,6 @@
     <!-- authorization -->
 
     <component>
-      <role>org.acegisecurity.vote.AffirmativeBased</role>
-      <implementation>org.acegisecurity.vote.AffirmativeBased</implementation>
-      <requirements>
-        <requirement>
-          <role>org.acegisecurity.vote.RoleVoter</role>
-          <field-name>decisionVoters</field-name>
-        </requirement>
-      </requirements>
-      <configuration>
-        <allowIfAllAbstainDecisions>false</allowIfAllAbstainDecisions>
-      </configuration>
-    </component>
-
-    <component>
       <role>org.acegisecurity.intercept.web.FilterSecurityInterceptor</role>
       <implementation>org.acegisecurity.intercept.web.FilterSecurityInterceptor</implementation>
       <requirements>
@@ -436,7 +426,7 @@
           <field-name>authenticationManager</field-name>
         </requirement>
         <requirement>
-          <role>org.acegisecurity.vote.AffirmativeBased</role>
+          <role>org.acegisecurity.AccessDecisionManager</role>
           <field-name>accessDecisionManager</field-name>
         </requirement>
       </requirements>
@@ -475,9 +465,189 @@
     </component>
 
     <component>
-      <role>org.acegisecurity.vote.RoleVoter</role>
+      <role>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</role>
+      <implementation>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
+          <field-name>securityInterceptor</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <aspectName>org.apache.maven.continuum.security.acegi.aspectj.ContinuumSecurityAspect</aspectName>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
+      <implementation>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.providers.ProviderManager</role>
+          <field-name>authenticationManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.acegisecurity.AccessDecisionManager</role>
+          <field-name>accessDecisionManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</role>
+          <field-name>afterInvocationManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <objectDefinitionSource implementation="org.acegisecurity.intercept.method.MethodDefinitionMap">
+          <mappings>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.addProject</methodName>
+              <configAttributes>
+                <configAttribute>ROLE_ADMIN</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getAllProjects</methodName>
+              <configAttributes>
+                <configAttribute>ROLE_USER</configAttribute>
+                <configAttribute>AFTER_ACL_COLLECTION_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+          </mappings>
+        </objectDefinitionSource>
+      </configuration>
+    </component>
+
+    <component>
+      <role>javax.sql.DataSource</role>
+      <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
+      <configuration>
+        <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
+        <url>jdbc:derby:${plexus.home}/database;create=true</url>
+        <username>sa</username>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.basic.BasicAclDao</role>
+      <implementation>org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl</implementation>
+      <component-composer>setter</component-composer>
+      <requirements>
+        <requirement>
+          <role>javax.sql.DataSource</role>
+          <field-name>dataSource</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.AclProvider</role>
+      <implementation>org.acegisecurity.acl.basic.BasicAclProvider</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.basic.BasicAclDao</role>
+          <field-name>basicAclDao</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.AclManager</role>
+      <implementation>org.acegisecurity.acl.AclProviderManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclProvider</role>
+          <field-name>providers</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+      <role-hint>roleVoter</role-hint>
       <implementation>org.acegisecurity.vote.RoleVoter</implementation>
     </component>
+
+    <component>
+      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+      <role-hint>aclProjectRead</role-hint>
+      <implementation>org.acegisecurity.vote.BasicAclEntryVoter</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <processConfigAttribute>ACL_PROJECT_READ</processConfigAttribute>
+        <processDomainObjectClass>org.apache.maven.continuum.model.project.Project</processDomainObjectClass>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>READ</permission>
+        </requirePermissionFromString>
+      </configuration>
+    </component>
+
+    <!-- An access decision manager used by the business objects -->
+    <component>
+      <role>org.acegisecurity.AccessDecisionManager</role>
+      <implementation>org.acegisecurity.vote.AffirmativeBased</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+          <field-name>decisionVoters</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <allowIfAllAbstainDecisions>false</allowIfAllAbstainDecisions>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
+      <role-hint>afterAclCollectionRead</role-hint>
+      <implementation>org.acegisecurity.afterinvocation.BasicAclEntryAfterInvocationCollectionFilteringProvider</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>READ</permission>
+        </requirePermissionFromString>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
+      <role-hint>afterAclRead</role-hint>
+      <implementation>org.acegisecurity.afterinvocation.BasicAclEntryAfterInvocationCollectionFilteringProvider</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>READ</permission>
+        </requirePermissionFromString>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</role>
+      <implementation>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
+          <field-name>providers</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
 
     <!--
      | Logger manager
