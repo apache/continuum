@@ -61,6 +61,26 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>sql-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.1.2.1</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <url>jdbc:derby:${basedir}/target/database;create=true</url>
+          <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
+          <username>sa</username>
+          <password></password>
+          <srcFiles>
+            <srcFile>src/main/resources/org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql</srcFile>
+          </srcFiles>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
