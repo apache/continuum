@@ -36,6 +36,7 @@ public class AclInitializer
     extends AbstractLogEnabled
     implements Initializable
 {
+    public static final String ROLE = AclInitializer.class.getName();
 
     private JdbcExtendedDaoImpl dao;
 
@@ -64,6 +65,12 @@ public class AclInitializer
     public void initialize()
         throws InitializationException
     {
+
+        if ( getSqlMojo().getPassword() == null )
+        {
+            getSqlMojo().setPassword( "" );
+        }
+
         try
         {
             getSqlMojo().execute();
@@ -78,6 +85,9 @@ public class AclInitializer
         {
             /* tables were created, insert default values */
             getLogger().info( "Initializing ACL database" );
+
+            /* execute Spring initialization callback */
+            getDao().afterPropertiesSet();
 
             /* admin can do anything with project number 1 */
             SimpleAclEntry aclEntry = new SimpleAclEntry();

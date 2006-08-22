@@ -20,48 +20,30 @@ import java.io.File;
 
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
 import org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.codehaus.mojo.sql.SqlExecMojo;
+import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 
 /**
- * Test for {@link AclInitializer}
+ * Test for {@link AclInitializer} using Plexus to inject dependencies
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
-public class AclInitializerTest
-    extends TestCase
+public class AclInitializerPlexusTest
+    extends PlexusTestCase
 {
 
     private AclInitializer initializer;
-    
-    private SqlExecMojo sqlMojo;
 
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        initializer = new AclInitializer();
-        initializer.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
-
-        sqlMojo = new SqlExecMojo();
-        sqlMojo.setUsername( "sa" );
-        sqlMojo.setPassword( "" );
-        sqlMojo.setDriver( "org.apache.derby.jdbc.EmbeddedDriver" );
-        sqlMojo.setUrl( "jdbc:derby:target/acl-initializer-database;create=true" );
-        sqlMojo.setSrcFiles( new File[] { new File( "src/main/resources/"
-            + "org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql" ) } );
-        sqlMojo.setOnError( SqlExecMojo.ON_ERROR_CONTINUE );
-        initializer.setSqlMojo( sqlMojo );
-
-        JdbcExtendedDaoImpl dao = new JdbcExtendedDaoImpl();
-        dao.setDataSource( getDataSource() );
-        initializer.setDao( dao );
+        initializer = (AclInitializer) super.lookup( AclInitializer.ROLE );
     }
 
     public void testInitialize()
@@ -69,14 +51,5 @@ public class AclInitializerTest
     {
         initializer.initialize();
         initializer.initialize();
-    }
-
-    private DataSource getDataSource()
-    {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName( sqlMojo.getDriver() );
-        dataSource.setUrl( sqlMojo.getUrl() );
-        dataSource.setUsername( sqlMojo.getUsername() );
-        return dataSource;
     }
 }

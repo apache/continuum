@@ -1,0 +1,59 @@
+<plexus>
+
+  <components>
+
+    <component>
+      <role>org.apache.maven.continuum.security.acegi.acl.AclInitializer</role>
+      <implementation>org.apache.maven.continuum.security.acegi.acl.AclInitializer</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.mojo.sql.SqlExecMojo</role>
+          <field-name>sqlMojo</field-name>
+        </requirement>
+        <requirement>
+          <role>org.acegisecurity.acl.basic.BasicAclDao</role>
+          <field-name>dao</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>javax.sql.DataSource</role>
+      <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
+      <configuration>
+        <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
+        <url>jdbc:derby:${plexus.home}/database;create=true</url>
+        <username>sa</username>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.basic.BasicAclDao</role>
+      <implementation>org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl</implementation>
+      <component-composer>setter</component-composer>
+      <requirements>
+        <requirement>
+          <role>javax.sql.DataSource</role>
+          <field-name>dataSource</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.codehaus.mojo.sql.SqlExecMojo</role>
+      <implementation>org.codehaus.mojo.sql.SqlExecMojo</implementation>
+      <configuration>
+        <username>sa</username>
+        <password></password>
+        <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
+        <url>jdbc:derby:${plexus.home}/database;create=true</url>
+        <onError>continue</onError>
+        <srcFiles>
+          <file>src/main/resources/org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql</file>
+        </srcFiles>
+      </configuration>
+    </component>
+
+  </components>
+
+</plexus>
