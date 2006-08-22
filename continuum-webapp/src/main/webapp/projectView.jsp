@@ -49,43 +49,13 @@
         </div>
 
         <h3><ww:text name="projectView.buildDefinitions"/></h3>
-        <ww:set name="buildDefinitions" value="project.buildDefinitions" scope="request"/>
-        <ec:table items="buildDefinitions"
-                  var="buildDefinition"
-                  showExports="false"
-                  showPagination="false"
-                  showStatusBar="false"
-                  filterable="false"
-                  sortable="false">
-          <ec:row>
-            <ec:column property="goals" title="projectView.buildDefinition.goals"/>
-            <ec:column property="arguments" title="projectView.buildDefinition.arguments"/>
-            <ec:column property="buildFile" title="projectView.buildDefinition.buildFile"/>
-            <ec:column property="profile" title="projectView.buildDefinition.profile"/>
-            <ec:column property="schedule" title="schedule">
-                ${pageScope.buildDefinition.schedule.name}
-            </ec:column>
-            <ec:column property="from" title="projectView.buildDefinition.from">
-                PROJECT
-            </ec:column>
-            <ec:column property="actions" title="&nbsp;">
-                <!-- TODO: REPLACE THIS WITH A NEW CELL CLASS -->
-                <c:url var="buildDefinitionEditUrl" value="/buildDefinitionEdit!default.action">
-                  <c:param name="projectId" value="project.id"/>
-                  <c:param name="buildDefinitionId" value="${buildDefinition.id}"/>
-                </c:url>
-                <a href="<c:out value='${buildDefinitionEditUrl}'/>"><ww:text name="edit"/></a>
-                &nbsp;
-                <c:url var="deleteBuildDefinitionUrl" value="/deleteBuildDefinition!default.action">
-                  <c:param name="projectId" value="project.id"/>
-                  <c:param name="buildDefinitionId" value="${buildDefinition.id}"/>
-                </c:url>
-                <a href="<c:out value='${deleteBuildDefinitionUrl}'/>"><ww:text name="delete"/></a>
-            </ec:column>
-          </ec:row>
-        </ec:table>
+
+        <ww:action name="buildDefinitionSummary" id="summary" namespace="component" executeResult="true">
+          <ww:param name="projectId" value="%{project.id}" />
+        </ww:action>
+
         <div class="functnbar3">
-          <ww:form action="addBuildDefinition.action" method="post">
+          <ww:form action="buildDefinition" method="post">
             <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
             <ww:submit value="%{getText('add')}"/>
           </ww:form>
@@ -107,23 +77,19 @@
             <ec:column property="from" title="projectView.notifier.from" cell="org.apache.maven.continuum.web.view.projectview.NotifierFromCell"/>
             <ec:column property="actions" title="&nbsp;">
                 <c:if test="${!pageScope.notifier.fromProject}">
-                    <c:url var="notifierEditUrl" value="${notifier.type}NotifierEdit!default.action">
-                      <c:param name="projectId" value="project.id"/>
-                      <c:param name="notifierId" value="${notifier.id}"/>
-                    </c:url>
-                    <c:url var="imgEditUrl" value="/images/edit.gif" />
-                    <a href="<c:out value='${notifierEditUrl}'/>">
-                      <img src="<c:out value='${imgEditUrl}'/>" alt="<ww:text name="edit"/>" title="<ww:text name="edit"/>" border="0">
+                    <a href='<ww:url value="${notifier.type}NotifierEdit!default.action">
+                      <ww:param name="projectId" value="project.id"/>
+                      <ww:param name="notifierId" value="${notifier.id}"/>
+                    </ww:url>'>
+                      <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
                     </a>
                     &nbsp;
-                    <c:url var="notifierDeleteUrl" value="/deleteNotifier!default.action">
-                      <c:param name="projectId" value="project.id"/>
-                      <c:param name="notifierId" value="${notifier.id}"/>
-                      <c:param name="notifierType" value="${notifier.type}"/>
-                    </c:url>
-                    <c:url var="imgDeleteUrl" value="/images/delete.gif" />
-                    <a href="<c:out value='${notifierDeleteUrl}'/>">
-                      <img src="<c:out value='${imgDeleteUrl}'/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
+                    <a href='<ww:url value="/deleteNotifier!default.action">
+                      <ww:param name="projectId" value="project.id"/>
+                      <ww:param name="notifierId" value="${notifier.id}"/>
+                      <ww:param name="notifierType" value="${notifier.type}"/>
+                    </ww:url>'>
+                      <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
                     </a>
                 </c:if>
             </ec:column>

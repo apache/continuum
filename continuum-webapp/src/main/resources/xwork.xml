@@ -25,6 +25,7 @@
     <default-interceptor-ref name="defaultContinuumStack"/>
 
     <global-results>
+      <result name="error">/error.jsp</result>
       <result name="internalError" type="redirect">/error.jsp</result>
     </global-results>
 
@@ -96,25 +97,62 @@
       <result name="success" type="chain">projectView</result>
     </action>
 
-    <action name="buildDefinitionEdit" class="buildDefinitionEdit">
-      <result name="input">buildDefinitionEdit.jsp</result>
-      <result name="success" type="chain">projectView</result>
-    </action>
-
-    <action name="buildDefinitionSave" class="buildDefinitionEdit">
-      <result name="input">buildDefinitionEdit.jsp</result>
-      <result name="success" type="chain">projectView</result>
-    </action>
-
-    <action name="deleteBuildDefinition" class="deleteBuildDefinition">
-      <result name="delete">deleteBuildDefinition.jsp</result>
-      <result name="success" type="chain">projectView</result>
-    </action>
-
-    <action name="addBuildDefinition" class="addBuildDefinition">
+    <!--
+    * build definition actions
+    -->
+    <action name="buildDefinition" class="buildDefinition">
       <result name="input">buildDefinitionEdit.jsp</result>
     </action>
 
+    <action name="saveProjectBuildDefinition" class="buildDefinition" method="saveToProject">
+      <result name="success" type="chain">projectView</result>
+    </action>
+
+    <action name="removeProjectBuildDefinition" class="buildDefinition" method="removeFromProject">
+      <result name="confirm">deleteBuildDefinition.jsp</result>
+      <result name="success" type="chain">projectView</result>
+    </action>
+
+    <action name="saveGroupBuildDefinition" class="buildDefinition" method="saveToGroup">
+      <result name="success" type="chain">projectGroupView</result>
+    </action>
+
+    <action name="removeGroupBuildDefinition" class="buildDefinition" method="removeFromGroup">
+      <result name="confirm">deleteBuildDefinition.jsp</result>
+      <result name="success" type="chain">projectGroupView</result>
+    </action>
+
+
+    <!--
+    * project group actions
+    -->
+    <action name="projectGroupMembers" class="projectGroup" method="members">
+      <result name="success">projectGroupMembers.jsp</result>
+    </action>
+
+    <action name="projectGroupSummary" class="projectGroup" method="summary">
+      <result name="success">projectGroupSummary.jsp</result>
+    </action>
+
+    <action name="projectGroupBuildDefinition" class="projectGroup" method="buildDefinitions">
+      <result name="success">projectGroupBuildDefinition.jsp</result>
+    </action>
+
+    <action name="projectGroupNotifier" class="projectGroup" method="notifiers">
+      <result name="success">projectGroupNotifier.jsp</result>
+    </action>
+
+    <action name="buildProjectGroup" class="projectGroup" method="build">
+      <result name="success" type="chain">projectGroupSummary</result>
+    </action>
+
+    <action name="removeProjectGroup" class="projectGroup" method="remove">
+      <result name="success" type="chain">groupSummary</result>
+    </action>
+
+    <!--
+    * notifier actions
+    -->
     <action name="deleteNotifier" class="deleteNotifier">
       <result name="delete">deleteNotifier.jsp</result>
       <result name="success" type="chain">projectView</result>
@@ -180,17 +218,18 @@
       <result name="success">workingCopy.jsp</result>
     </action>
 
-    <action name="schedules" class="schedules">
+    <!--
+    * schedule actions
+    -->
+    <action name="schedules" class="schedule" method="summary">
       <result name="success">schedules.jsp</result>
     </action>
 
-    <action name="addSchedule" class="addSchedule">
-      <result name="input">editSchedule.jsp</result>
-      <result name="success" type="chain">schedules</result>
+    <action name="schedule" class="schedule" method="input">
+      <result name="success">editSchedule.jsp</result>
     </action>
 
-    <action name="editSchedule" class="editSchedule">
-      <result name="input">editSchedule.jsp</result>
+    <action name="saveSchedule" class="schedule" method="save">
       <result name="success" type="chain">schedules</result>
     </action>
 
@@ -209,5 +248,25 @@
       <result name="success" type="chain">users</result>
     </action>
 
+  </package>
+
+  <package name="component" extends="default">
+    <!--
+    * component actions
+    -->
+    <action name="buildDefinitionSummary" class="buildDefinitionSummary" method="summarizeForProject">
+      <result name="success">/components/buildDefinitionSummaryComponent.jsp</result>
+      <result name="error">/components/failureComponent.jsp</result>
+    </action>
+
+    <action name="groupBuildDefinitionSummary" class="buildDefinitionSummary" method="summarizeForGroup">
+      <result name="success">/components/buildDefinitionGroupSummaryComponent.jsp</result>
+      <result name="error">/components/failureComponent.jsp</result>
+    </action>
+
+    <action name="projectSummary" class="summary">
+      <result name="success">/components/projectSummaryComponent.jsp</result>
+      <result name="error">/components/failureComponent.jsp</result>
+    </action>
   </package>
 </xwork>

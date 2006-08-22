@@ -1,7 +1,7 @@
 package org.apache.maven.continuum.web.action;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,15 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.net.UnknownHostException;
-import java.util.Iterator;
 
 import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
+ * Add a Maven 2 project to continuum.
+ * 
  * @author Nick Gonzalez
+ * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  *
  * @plexus.component
@@ -36,61 +33,13 @@ import org.codehaus.plexus.util.StringUtils;
  *   role-hint="addMavenTwoProject"
  */
 public class AddMavenTwoProjectAction
-    extends ContinuumActionSupport
-{    
+    extends AddMavenProjectAction
+{
 
-    private String m2PomUrl;
-
-    private File m2PomFile;
-
-    private String m2Pom = null;
-
-    public String execute()
+    protected ContinuumProjectBuildingResult doExecute( String pomUrl )
         throws ContinuumException
     {
-        if ( !StringUtils.isEmpty( m2PomUrl ) )
-        {
-            m2Pom = m2PomUrl;
-        }
-        else
-        {
-            if ( m2PomFile != null )
-            {
-                try
-                {
-                    m2Pom = m2PomFile.toURL().toString();
-                }
-                catch ( MalformedURLException e )
-                {
-                    // if local file can't be converted to url it's an internal error
-                    throw new RuntimeException( e );
-                }
-            }
-            else
-            {
-                // no url or file was filled
-                // TODO add action error, one must be filled in
-                return INPUT;
-            }
-        }
-
-        ContinuumProjectBuildingResult result = null;
-
-        result = continuum.addMavenTwoProject( m2Pom );
-
-        if ( result.getErrors().size() > 0 )
-        {
-            Iterator it = result.getErrors().iterator();
-
-            while ( it.hasNext() )
-            {
-                addActionError( (String) it.next() );
-            }
-
-            return INPUT;
-        }
-
-        return SUCCESS;
+        return continuum.addMavenTwoProject( pomUrl );
     }
 
     public String doDefault()
@@ -98,23 +47,35 @@ public class AddMavenTwoProjectAction
         return INPUT;
     }
 
+    /**
+     * @deprecated Use {@link #getPomFile()} instead
+     */
     public File getM2PomFile()
     {
-        return m2PomFile;
+        return getPomFile();
     }
 
+    /**
+     * @deprecated Use {@link #setPomFile(File)} instead
+     */
     public void setM2PomFile( File pomFile )
     {
-        m2PomFile = pomFile;
+        setPomFile( pomFile );
     }
 
+    /**
+     * @deprecated Use {@link #getPomUrl()} instead
+     */
     public String getM2PomUrl()
     {
-        return m2PomUrl;
+        return getPomUrl();
     }
 
+    /**
+     * @deprecated Use {@link #setPomUrl(String)} instead
+     */
     public void setM2PomUrl( String pomUrl )
     {
-        m2PomUrl = pomUrl;
+        setPomUrl( pomUrl );
     }
 }

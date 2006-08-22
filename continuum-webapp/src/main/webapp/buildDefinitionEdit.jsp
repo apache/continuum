@@ -1,4 +1,5 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
   <ww:i18n name="localization.Continuum">
@@ -10,34 +11,48 @@
         <h3><ww:text name="buildDefinition.section.title"/></h3>
 
         <div class="axial">
-          <ww:form action="buildDefinitionSave.action" method="post">
+
+
+
+          <ww:if test="${projectId != 0}">
+            <ww:url id="actionUrl" action="saveProjectBuildDefinition"/>
+          </ww:if>
+          <ww:else>
+            <ww:url id="actionUrl" action="saveGroupBuildDefinition"/>
+          </ww:else>
+
+
+
+          <ww:form action="%{actionUrl}" method="post" >
+
             <ww:hidden name="buildDefinitionId"/>
             <ww:hidden name="projectId"/>
+            <ww:hidden name="projectGroupId"/>
 
             <table>
               <tbody>
-                <ww:if test="project.executorId == 'ant'">
+                <ww:if test="executor == 'ant'">
                   <ww:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildFile"  required="true"/>
                 </ww:if>
-                <ww:elseif test="project.executorId == 'shell'">
+                <ww:elseif test="executor == 'shell'">
                   <ww:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildFile" required="true"/>
                 </ww:elseif>
                 <ww:else>
                   <ww:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildFile" required="true"/>
                 </ww:else>
 
-                <ww:if test="project.executorId == 'ant'">
+                <ww:if test="executor == 'ant'">
                   <ww:textfield label="%{getText('buildDefinition.goals.ant.label')}" name="goals"/>
                 </ww:if>
-                <ww:elseif test="project.executorId == 'shell'">
+                <ww:elseif test="executor == 'shell'">
                 </ww:elseif>
                 <ww:else>
                   <ww:textfield label="%{getText('buildDefinition.goals.maven.label')}" name="goals"/>
                 </ww:else>
 
                 <ww:textfield label="%{getText('buildDefinition.arguments.label')}" name="arguments"/>
-                <ww:checkbox label="%{getText('buildDefinition.defaultForProject.label')}"  name="defaultForProject" value="defaultForProject" fieldValue="true"/>
-                <ww:select label="%{getText('buildDefinition.schedule.label')}" name="scheduleId" list="schedulesMap"/>
+                <ww:checkbox label="%{getText('buildDefinition.defaultForProject.label')}"  name="defaultBuildDefinition" value="defaultBuildDefinition" fieldValue="true"/>
+                <ww:select label="%{getText('buildDefinition.schedule.label')}" name="scheduleId" list="schedules"/>
               </tbody>
             </table>
             <div class="functnbar3">

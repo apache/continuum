@@ -17,7 +17,6 @@ package org.apache.maven.continuum.project.builder.maven;
  */
 
 import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
-import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelperException;
 import org.apache.maven.continuum.execution.maven.m2.MavenTwoBuildExecutor;
 import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -30,13 +29,13 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderExcepti
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.apache.maven.continuum.utils.ContinuumUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -94,22 +93,24 @@ public class MavenTwoContinuumProjectBuilder
     {
         MavenProject mavenProject;
 
-        try
-        {
-            mavenProject = builderHelper.getMavenProject( createMetadataFile( url, username, password ) );
+        try {
+            mavenProject = builderHelper.getMavenProject( result, createMetadataFile( url, username, password ) );
+            
+            if( (result != null) && result.hasErrors())
+            {
+                return;
+            }
         }
-        catch ( MavenBuilderHelperException e )
+        catch (MalformedURLException e)
         {
-            // TODO add to result with error key
-            result.addWarning( e.getMessage() );
-
+            getLogger().debug( "Error adding project: Malformed URL " + url, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
             return;
         }
         catch ( IOException e )
         {
-            // TODO add to result with error key
-            result.addWarning( "Could not download " + url + ": " + e.getMessage() );
-
+            getLogger().debug( "Error adding project: Unknown error downloading from " + url, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
             return;
         }
 
@@ -117,8 +118,37 @@ public class MavenTwoContinuumProjectBuilder
         {
             ProjectGroup projectGroup = buildProjectGroup( mavenProject, result );
 
+            // project groups have the top lvl build definition which is the default build defintion for the sub projects
             if ( projectGroup != null )
             {
+                BuildDefinition bd = new BuildDefinition();
+
+                bd.setDefaultForProject( true );
+
+                bd.setArguments( "--batch-mode --non-recursive" );
+
+                bd.setGoals( "clean install" );
+
+                bd.setBuildFile( "pom.xml" );
+
+                try
+                {
+                    Schedule schedule = store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME );
+
+                    bd.setSchedule( schedule );
+                }
+                catch ( ContinuumStoreException e )
+                {
+                    getLogger().warn( "Can't get default schedule.", e );
+                }
+
+                // jdo complains that Collections.singletonList(bd) is a second class object and fails.
+                ArrayList arrayList = new ArrayList();
+
+                arrayList.add(bd);
+
+                projectGroup.setBuildDefinitions( arrayList );
+
                 result.addProjectGroup( projectGroup );
             }
         }
@@ -132,40 +162,9 @@ public class MavenTwoContinuumProjectBuilder
                 defaultGoal = mavenProject.getBuild().getDefaultGoal();
             }
 
-            Project continuumProject = new Project();
+            Project continuumProject = new Project();            
 
-            BuildDefinition bd = new BuildDefinition();
-
-            bd.setDefaultForProject( true );
-
-            bd.setArguments( "--batch-mode --non-recursive" );
-
-            bd.setGoals( defaultGoal );
-
-            bd.setBuildFile( "pom.xml" );
-
-            try
-            {
-                Schedule schedule = store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME );
-
-                bd.setSchedule( schedule );
-            }
-            catch ( ContinuumStoreException e )
-            {
-                getLogger().warn( "Can't get default schedule.", e );
-            }
-
-            continuumProject.addBuildDefinition( bd );
-
-            try
-            {
-                builderHelper.mapMavenProjectToContinuumProject( mavenProject, continuumProject );
-            }
-            catch ( MavenBuilderHelperException e )
-            {
-                // TODO add to result with error key
-                result.addError( ContinuumUtils.throwableToString( e ) );
-            }
+            builderHelper.mapMavenProjectToContinuumProject( result, mavenProject, continuumProject );
 
             result.addProject( continuumProject, MavenTwoBuildExecutor.ID );
         }
@@ -203,9 +202,8 @@ public class MavenTwoContinuumProjectBuilder
             }
             catch ( MalformedURLException e )
             {
-                // TODO add to result with error key
-                result.addError( "Could not download project from '" + urlString + "'." );
-
+                getLogger().debug( "Error adding project module: Malformed URL " + urlString, e );
+                result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL, urlString );
                 continue;
             }
 
@@ -223,8 +221,7 @@ public class MavenTwoContinuumProjectBuilder
 
         if ( StringUtils.isEmpty( mavenProject.getGroupId() ) )
         {
-            // TODO add to result with error key
-            result.addError( "groupId is null." );
+            result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_GROUPID );
 
             return null;
         }

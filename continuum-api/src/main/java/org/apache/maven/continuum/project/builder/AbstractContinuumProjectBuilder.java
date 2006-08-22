@@ -23,6 +23,7 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +39,9 @@ public abstract class AbstractContinuumProjectBuilder
     extends AbstractLogEnabled
     implements ContinuumProjectBuilder
 {
+    
+    private static final String TMP_DIR = System.getProperty( "java.io.tmpdir" );
+
     protected File createMetadataFile( URL metadata, String username, String password )
         throws IOException
     {
@@ -47,7 +51,7 @@ public abstract class AbstractContinuumProjectBuilder
 
         if ( metadata.getProtocol().startsWith( "http" ) )
         {
-            is = new MungedHttpsURL( metadata.toExternalForm(), username, password ).getURL().openStream();
+            is = new MungedHttpsURL( metadata.toExternalForm(), username, password ).getURLConnection().getInputStream();
         }
         else
         {
@@ -86,7 +90,7 @@ public abstract class AbstractContinuumProjectBuilder
         // Little hack for URLs that contains '*' like "http://svn.codehaus.org/*checkout*/trunk/pom.xml?root=plexus"
         baseDirectory = StringUtils.replace( baseDirectory, "*", "" );
 
-        File continuumTmpDir = new File( System.getProperty( "java.io.tmpdir" ), "continuum" );
+        File continuumTmpDir = new File( TMP_DIR, "continuum" );
 
         File uploadDirectory = new File( continuumTmpDir, baseDirectory );
 
@@ -124,6 +128,11 @@ public abstract class AbstractContinuumProjectBuilder
         try
         {
             return createMetadataFile( metadata, username, password );
+        }
+        catch ( FileNotFoundException e )
+        {
+            getLogger().info( "URL not found: " + metadata, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
         }
         catch ( MalformedURLException e )
         {

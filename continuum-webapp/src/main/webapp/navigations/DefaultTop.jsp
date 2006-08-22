@@ -6,7 +6,6 @@
 <c:set var="authentication" value="${sessionScope['ACEGI_SECURITY_CONTEXT'].authentication}"/>
 <c:set var="user" value="${authentication.principal}" scope="session"/>
 
-
 <ww:i18n name="localization.Continuum">
 <div id="banner">
   <table border="1" cellpadding="8" cellspacing="0" width="100%">

@@ -16,17 +16,13 @@ package org.apache.maven.continuum.security.acegi.aspectj;
  * limitations under the License.
  */
 
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.ContinuumUser;
@@ -34,6 +30,11 @@ import org.apache.maven.continuum.model.system.UserGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Stub implementation of {@link Continuum} with empty implementations.
@@ -465,4 +466,73 @@ public class ContinuumStub
         return null;
     }
 
+    public ProjectGroup getProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        return null;
+    }
+
+    public ProjectGroup getProjectGroupByProjectId( int projectId )
+        throws ContinuumException
+    {
+        return null;
+    }
+
+    public void removeProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+    }
+
+    public void buildProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+    }
+
+    public BuildDefinition getBuildDefinition( int buildDefinitionId )
+        throws ContinuumException
+    {
+        return null;
+    }
+
+    public void addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
+        throws ContinuumException
+    {
+    }
+
+    public void addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+        throws ContinuumException
+    {
+    }
+
+    public List getBuildDefinitionsForProject( int projectId )
+        throws ContinuumException
+    {
+        return null;
+    }
+
+    public List getBuildDefinitionsForProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        return null;
+    }
+
+    public void removeBuildDefinitionFromProject( int projectId, int buildDefinitionId )
+        throws ContinuumException
+    {
+    }
+
+    public void removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
+        throws ContinuumException
+    {
+    }
+
+    public void updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
+        throws ContinuumException
+    {
+    }
+
+    public void updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+        throws ContinuumException
+    {
+    }
 }
