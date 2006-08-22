@@ -44,7 +44,7 @@ public class MethodSecurityTest
     {
         super.setUp();
         MethodDefinitionSourceMapping mapping = new MethodDefinitionSourceMapping();
-        mapping.setMethodName( Continuum.class.getCanonicalName() + ".addProject" );
+        mapping.setMethodName( Continuum.class.getName() + ".addProject" );
         mapping.setConfigAttributes( Arrays.asList( new String[] { "MOCK_ADMIN" } ) );
 
         List mappings = new ArrayList();

@@ -100,7 +100,7 @@ public class ProjectSecurityTest
             afterAclRead } ) );
 
         MethodDefinitionSourceMapping mapping = new MethodDefinitionSourceMapping();
-        mapping.setMethodName( Continuum.class.getCanonicalName() + ".getAllProjects" );
+        mapping.setMethodName( Continuum.class.getName() + ".getAllProjects" );
         mapping.setConfigAttributes( Arrays.asList( new String[] { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" } ) );
 
         List mappings = new ArrayList();
