@@ -3,6 +3,11 @@
     <component>
       <role>org.apache.maven.continuum.Continuum</role>
     </component>
+<!-- uncomment when it supports classpath resources
+    <component>
+      <role>org.apache.maven.continuum.security.acegi.acl.AclInitializer</role>
+    </component>
+-->
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>build-project</role-hint>
@@ -172,6 +177,7 @@
       <implementation>org.apache.maven.continuum.web.util.WorkingCopyContentGenerator</implementation>
     </component>
 
+    <!-- TODO share db configuration between components -->
     <component>
       <role>org.codehaus.plexus.jdo.JdoFactory</role>
       <implementation>org.codehaus.plexus.jdo.DefaultJdoFactory</implementation>
@@ -417,6 +423,61 @@
 
     <!-- authorization -->
 
+    <!-- ACL database initialization -->
+    <component>
+      <role>org.apache.maven.continuum.security.acegi.acl.AclInitializer</role>
+      <implementation>org.apache.maven.continuum.security.acegi.acl.AclInitializer</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.mojo.sql.SqlExecMojo</role>
+          <field-name>sqlMojo</field-name>
+        </requirement>
+        <requirement>
+          <role>org.acegisecurity.acl.basic.BasicAclDao</role>
+          <field-name>dao</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    
+    <!-- TODO share db configuration between components -->
+    <component>
+      <role>org.codehaus.mojo.sql.SqlExecMojo</role>
+      <implementation>org.codehaus.mojo.sql.SqlExecMojo</implementation>
+      <configuration>
+        <username>sa</username>
+        <password></password>
+        <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
+        <url>jdbc:derby:${plexus.home}/database;create=true</url>
+        <onError>continue</onError>
+        <srcFiles>
+          <file>org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql</file>
+        </srcFiles>
+      </configuration>
+    </component>
+
+    <!-- TODO share db configuration between components -->
+    <component>
+      <role>javax.sql.DataSource</role>
+      <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
+      <configuration>
+        <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
+        <url>jdbc:derby:${plexus.home}/database;create=true</url>
+        <username>sa</username>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.basic.BasicAclDao</role>
+      <implementation>org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl</implementation>
+      <component-composer>setter</component-composer>
+      <requirements>
+        <requirement>
+          <role>javax.sql.DataSource</role>
+          <field-name>dataSource</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
     <component>
       <role>org.acegisecurity.intercept.web.FilterSecurityInterceptor</role>
       <implementation>org.acegisecurity.intercept.web.FilterSecurityInterceptor</implementation>
@@ -514,28 +575,6 @@
           </mappings>
         </objectDefinitionSource>
       </configuration>
-    </component>
-
-    <component>
-      <role>javax.sql.DataSource</role>
-      <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
-      <configuration>
-        <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
-        <url>jdbc:derby:${plexus.home}/database;create=true</url>
-        <username>sa</username>
-      </configuration>
-    </component>
-
-    <component>
-      <role>org.acegisecurity.acl.basic.BasicAclDao</role>
-      <implementation>org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl</implementation>
-      <component-composer>setter</component-composer>
-      <requirements>
-        <requirement>
-          <role>javax.sql.DataSource</role>
-          <field-name>dataSource</field-name>
-        </requirement>
-      </requirements>
     </component>
 
     <component>
