@@ -18,7 +18,6 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.Continuum;
-import org.apache.maven.continuum.initialization.ContinuumInitializationException;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import com.opensymphony.xwork.Preparable;
