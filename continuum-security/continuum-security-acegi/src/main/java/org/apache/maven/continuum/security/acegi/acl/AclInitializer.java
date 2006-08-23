@@ -76,7 +76,7 @@ public class AclInitializer
     /**
      * Classpath resource that contains the SQL to be executed.
      * 
-     * @return
+     * @return classpath path
      */
     public String getSqlClasspathResource()
     {
@@ -134,19 +134,19 @@ public class AclInitializer
             throw new InitializationException( e.getMessage(), e );
         }
 
+        /* execute Spring initialization callback */
+        getDao().afterPropertiesSet();
+
         /* poor check to see if this is the first time initializing the database */
         if ( getSqlMojo().getSuccessfulStatements() >= 2 )
         {
             /* tables were created, insert default values */
             getLogger().info( "Initializing ACL database" );
 
-            /* execute Spring initialization callback */
-            getDao().afterPropertiesSet();
-
             /* admin can do anything with project number 1 */
             SimpleAclEntry aclEntry = new SimpleAclEntry();
             aclEntry.setAclObjectIdentity( new NamedEntityObjectIdentity( Project.class.getName(), "1" ) );
-            aclEntry.setRecipient( "ROLE_ADMIN" );
+            aclEntry.setRecipient( "ROLE_admin" );
             aclEntry.addPermission( SimpleAclEntry.ADMINISTRATION );
             getDao().create( aclEntry );
         }
