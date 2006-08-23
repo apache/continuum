@@ -521,6 +521,7 @@
                 <configAttribute>ROLE_manageConfiguration</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
+            <!-- TODO protect other URLs -->
           </mappings>
         </objectDefinitionSource>
       </configuration>
@@ -570,19 +571,16 @@
             <methodDefinitionSourceMapping>
               <methodName>org.apache.maven.continuum.Continuum.getProjectsInGroup</methodName>
               <configAttributes>
-                <configAttribute>ROLE_admin</configAttribute>
-                <configAttribute>ROLE_user</configAttribute>
                 <configAttribute>AFTER_ACL_COLLECTION_READ</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
             <methodDefinitionSourceMapping>
               <methodName>org.apache.maven.continuum.Continuum.getAllProjectGroupsWithProjects</methodName>
               <configAttributes>
-                <configAttribute>ROLE_admin</configAttribute>
-                <configAttribute>ROLE_user</configAttribute>
                 <configAttribute>AFTER_ACL_COLLECTION_READ</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
+            <!-- TODO add configuration for all the other methods that need to be secured -->
           </mappings>
         </objectDefinitionSource>
       </configuration>
