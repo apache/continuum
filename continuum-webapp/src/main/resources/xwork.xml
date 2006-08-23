@@ -7,7 +7,7 @@
     <interceptors>
       <interceptor name="exception-logging" class="exceptionLogging"/>
       <interceptor-stack name="defaultContinuumStack">
-        <interceptor-ref name="exception-acegi"/>
+        <interceptor-ref name="exception-logging"/>
         <interceptor-ref name="prepare"/>
         <interceptor-ref name="servlet-config"/>
         <interceptor-ref name="chain"/>
@@ -26,11 +26,13 @@
 
     <global-results>
       <result name="login" type="redirect">/login.jsp</result>
-      <result name="error">/error.jsp</result>
+      <result name="error-internal">/error/error.jsp?id=500</result>
     </global-results>
 
     <global-exception-mappings>
-      <exception-mapping exception="java.lang.Exception" result="error"/>
+      <exception-mapping exception="java.lang.Exception" result="error-internal"/>
+      <!-- this will be handled by Acegi ExceptionTranslationFilter -->
+      <exception-mapping exception="org.acegisecurity.AcegiSecurityException" result="ignore"/>
     </global-exception-mappings>
 
     <action name="checkConfiguration" class="checkConfiguration">
