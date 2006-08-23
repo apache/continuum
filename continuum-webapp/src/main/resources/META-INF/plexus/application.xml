@@ -437,6 +437,9 @@
           <field-name>dao</field-name>
         </requirement>
       </requirements>
+      <configuration>
+        <sqlClasspathResource>org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql</sqlClasspathResource>
+      </configuration>
     </component>
     
     <!-- TODO share db configuration between components -->
@@ -449,9 +452,6 @@
         <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
         <url>jdbc:derby:${plexus.home}/database;create=true</url>
         <onError>continue</onError>
-        <srcFiles>
-          <file>org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql</file>
-        </srcFiles>
       </configuration>
     </component>
 
@@ -505,18 +505,21 @@
             <filterInvocationDefinitionSourceMapping>
               <url>/add*project*</url>
               <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
                 <configAttribute>ROLE_addProject</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
             <filterInvocationDefinitionSourceMapping>
               <url>/schedules*</url>
               <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
                 <configAttribute>ROLE_manageSchedule</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
             <filterInvocationDefinitionSourceMapping>
               <url>/configuration*</url>
               <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
                 <configAttribute>ROLE_manageConfiguration</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
@@ -562,13 +565,23 @@
             <methodDefinitionSourceMapping>
               <methodName>org.apache.maven.continuum.Continuum.addProject</methodName>
               <configAttributes>
-                <configAttribute>ROLE_ADMIN</configAttribute>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ROLE_addProject</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
             <methodDefinitionSourceMapping>
-              <methodName>org.apache.maven.continuum.Continuum.getAllProjects</methodName>
+              <methodName>org.apache.maven.continuum.Continuum.getProjectsInGroup</methodName>
               <configAttributes>
-                <configAttribute>ROLE_USER</configAttribute>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ROLE_user</configAttribute>
+                <configAttribute>AFTER_ACL_COLLECTION_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getAllProjectGroupsWithProjects</methodName>
+              <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ROLE_user</configAttribute>
                 <configAttribute>AFTER_ACL_COLLECTION_READ</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
@@ -774,6 +787,12 @@
             <hierarchy>org.extremecomponents</hierarchy>
             <level>INFO</level>
           </level>
+          <!-- this does not work, needs the log4j.xml or log4j.properties
+          <level>
+            <hierarchy>org.acegisecurity</hierarchy>
+            <level>DEBUG</level>
+          </level>
+          -->
         </levels>
       </configuration>
     </component>
