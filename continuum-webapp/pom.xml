@@ -97,7 +97,6 @@
     </plugins>
   </build>
   <dependencies>
-<!-- TODO currently broken
     <dependency>
       <groupId>org.apache.maven.shared.user</groupId>
       <artifactId>maven-user-webapp</artifactId>
@@ -109,7 +108,6 @@
       <artifactId>maven-user-controller</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
--->
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-xwork-integration</artifactId>
