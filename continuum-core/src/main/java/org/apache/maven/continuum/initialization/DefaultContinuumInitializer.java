@@ -163,6 +163,8 @@ public class DefaultContinuumInitializer
         createPermission( "manageUsers", "Manage Users/Groups" );
 
         createPermission( "user", "Authenticated User" );
+
+        createPermission( "admin", "Administrator" );
     }
 
     private Permission createPermission( String name, String description )
