@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <authz:authorize ifAllGranted="ROLE_addProject">
+  <authz:authorize ifAnyGranted="ROLE_admin,ROLE_addProject">
     <div id="projectmenu" class="toolgroup">
       <div class="label"><ww:text name="menu.addProject"/></div>
       <div>
@@ -35,21 +35,21 @@
     </div>
   </authz:authorize>      
 
-  <authz:authorize ifAnyGranted="ROLE_manageSchedule,ROLE_manageConfiguration">
+  <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageSchedule,ROLE_manageConfiguration">
     <div id="projectmenu" class="toolgroup">
       <div class="label"><ww:text name="menu.administration"/></div>
       <div>
-        <authz:authorize ifAllGranted="ROLE_manageSchedule">
+        <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageSchedule">
           <div class="body">
             <a href="<ww:url value="schedules.action"/>"><ww:text name="menu.administration.schedules"/></a>
           </div>
         </authz:authorize>      
-        <authz:authorize ifAllGranted="ROLE_manageConfiguration">
+        <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageConfiguration">
           <div class="body">
             <a href="<ww:url value="configuration!default.action"/>"><ww:text name="menu.administration.configuration"/></a>
           </div>
         </authz:authorize>      
-        <authz:authorize ifAllGranted="ROLE_manageUsers">
+        <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
           <div class="body">
             <a href="<ww:url value="users.action"/>"><ww:text name="menu.administration.users"/></a>
           </div>
