@@ -16,6 +16,9 @@ package org.apache.maven.continuum.security.acegi.acl;
  * limitations under the License.
  */
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
 import org.acegisecurity.acl.basic.SimpleAclEntry;
 import org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl;
@@ -25,6 +28,7 @@ import org.codehaus.mojo.sql.SqlExecMojo;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.util.IOUtil;
 
 /**
  * Initialize the ACL system with some default values.
@@ -41,6 +45,8 @@ public class AclInitializer
     private JdbcExtendedDaoImpl dao;
 
     private SqlExecMojo sqlMojo;
+
+    private String sqlClasspathResource;
 
     public void setDao( JdbcExtendedDaoImpl dao )
     {
@@ -62,9 +68,57 @@ public class AclInitializer
         return sqlMojo;
     }
 
+    public void setSqlClasspathResource( String sqlClasspathResource )
+    {
+        this.sqlClasspathResource = sqlClasspathResource;
+    }
+
+    /**
+     * Classpath resource that contains the SQL to be executed.
+     * 
+     * @return
+     */
+    public String getSqlClasspathResource()
+    {
+        return sqlClasspathResource;
+    }
+
     public void initialize()
         throws InitializationException
     {
+
+        InputStream is = null;
+        String sql = null;
+        try
+        {
+            is = this.getClass().getClassLoader().getResourceAsStream( getSqlClasspathResource() );
+            if ( is == null )
+            {
+                throw new InitializationException( getSqlClasspathResource() + " does not exist in the classpath" );
+            }
+            sql = IOUtil.toString( is );
+        }
+        catch ( IOException e )
+        {
+            throw new InitializationException( "Unable to read sql file from classpath: " + getSqlClasspathResource(),
+                                               e );
+        }
+        finally
+        {
+            if ( is != null )
+            {
+                try
+                {
+                    is.close();
+                }
+                catch ( IOException e )
+                {
+                    // nothing to do here
+                }
+            }
+        }
+
+        getSqlMojo().addText( sql );
 
         if ( getSqlMojo().getPassword() == null )
         {

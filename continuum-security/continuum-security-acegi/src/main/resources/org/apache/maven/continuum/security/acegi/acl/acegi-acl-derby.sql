@@ -18,12 +18,12 @@ CREATE TABLE acl_permission (
      FOREIGN KEY (acl_object_identity) REFERENCES acl_object_identity(id)
 );
 
---INSERT INTO acl_object_identity VALUES (1, 'org.apache.maven.continuum.model.project.Project:1', null, 'org.acegisecurity.acl.basic.SimpleAclEntry');
---INSERT INTO acl_object_identity VALUES (2, 'org.apache.maven.continuum.model.project.Project:2', 1, 'org.acegisecurity.acl.basic.SimpleAclEntry');
---INSERT INTO acl_object_identity VALUES (3, 'org.apache.maven.continuum.model.project.Project:3', 1, 'org.acegisecurity.acl.basic.SimpleAclEntry');
---INSERT INTO acl_object_identity VALUES (4, 'org.apache.maven.continuum.model.project.Project:4', 1, 'org.acegisecurity.acl.basic.SimpleAclEntry');
---INSERT INTO acl_object_identity VALUES (5, 'org.apache.maven.continuum.model.project.Project:5', 3, 'org.acegisecurity.acl.basic.SimpleAclEntry');
---INSERT INTO acl_object_identity VALUES (6, 'org.apache.maven.continuum.model.project.Project:6', 3, 'org.acegisecurity.acl.basic.SimpleAclEntry');
+--INSERT INTO acl_object_identity (object_identity, parent_object, acl_class) VALUES ('org.apache.maven.continuum.model.project.ProjectGroup:1', null, 'org.acegisecurity.acl.basic.SimpleAclEntry');
+--INSERT INTO acl_object_identity (object_identity, parent_object, acl_class) VALUES ('org.apache.maven.continuum.model.project.ProjectGroup:2', 1, 'org.acegisecurity.acl.basic.SimpleAclEntry');
+--INSERT INTO acl_object_identity (object_identity, parent_object, acl_class) VALUES ('org.apache.maven.continuum.model.project.ProjectGroup:3', 1, 'org.acegisecurity.acl.basic.SimpleAclEntry');
+--INSERT INTO acl_object_identity (object_identity, parent_object, acl_class) VALUES ('org.apache.maven.continuum.model.project.ProjectGroup:4', 1, 'org.acegisecurity.acl.basic.SimpleAclEntry');
+--INSERT INTO acl_object_identity (object_identity, parent_object, acl_class) VALUES ('org.apache.maven.continuum.model.project.ProjectGroup:5', 3, 'org.acegisecurity.acl.basic.SimpleAclEntry');
+--INSERT INTO acl_object_identity (object_identity, parent_object, acl_class) VALUES ('org.apache.maven.continuum.model.project.ProjectGroup:6', 3, 'org.acegisecurity.acl.basic.SimpleAclEntry');
 
 --INSERT INTO acl_permission (acl_object_identity, recipient, mask) VALUES (1, 'ROLE_ADMIN', 1);
 --INSERT INTO acl_permission (acl_object_identity, recipient, mask) VALUES (2, 'ROLE_ADMIN', 0);

@@ -16,8 +16,6 @@ package org.apache.maven.continuum.security.acegi.acl;
  * limitations under the License.
  */
 
-import java.io.File;
-
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
@@ -48,14 +46,13 @@ public class AclInitializerTest
         super.setUp();
         initializer = new AclInitializer();
         initializer.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
+        initializer.setSqlClasspathResource( "org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql" );
 
         sqlMojo = new SqlExecMojo();
         sqlMojo.setUsername( "sa" );
         sqlMojo.setPassword( "" );
         sqlMojo.setDriver( "org.apache.derby.jdbc.EmbeddedDriver" );
         sqlMojo.setUrl( "jdbc:derby:target/acl-initializer-database;create=true" );
-        sqlMojo.setSrcFiles( new File[] { new File( "src/main/resources/"
-            + "org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql" ) } );
         sqlMojo.setOnError( SqlExecMojo.ON_ERROR_CONTINUE );
         initializer.setSqlMojo( sqlMojo );
 

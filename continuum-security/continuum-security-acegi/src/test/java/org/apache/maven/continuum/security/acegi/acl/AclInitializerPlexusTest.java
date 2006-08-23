@@ -16,16 +16,7 @@ package org.apache.maven.continuum.security.acegi.acl;
  * limitations under the License.
  */
 
-import java.io.File;
-
-import javax.sql.DataSource;
-
-import org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl;
-import org.apache.commons.dbcp.BasicDataSource;
-import org.codehaus.mojo.sql.SqlExecMojo;
 import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 
 /**
  * Test for {@link AclInitializer} using Plexus to inject dependencies

@@ -15,6 +15,9 @@
           <field-name>dao</field-name>
         </requirement>
       </requirements>
+      <configuration>
+        <sqlClasspathResource>org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql</sqlClasspathResource>
+      </configuration>
     </component>
 
     <component>
@@ -48,9 +51,6 @@
         <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
         <url>jdbc:derby:${plexus.home}/database;create=true</url>
         <onError>continue</onError>
-        <srcFiles>
-          <file>src/main/resources/org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql</file>
-        </srcFiles>
       </configuration>
     </component>
 
