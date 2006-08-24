@@ -51,7 +51,7 @@
         </authz:authorize>      
         <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
           <div class="body">
-            <a href="<ww:url value="users.action"/>"><ww:text name="menu.administration.users"/></a>
+            <a href="<ww:url value="/user/list.action"/>"><ww:text name="menu.administration.users"/></a>
           </div>
         </authz:authorize>
       </div>

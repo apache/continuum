@@ -2,6 +2,8 @@
 
 <xwork>
   <include file="webwork-default.xml"/>
+  <include file="org/apache/maven/user/webapp/xwork.xml"/>
+
   <package name="default" extends="webwork-default">
 
     <interceptors>
@@ -234,22 +236,6 @@
     <action name="saveSchedule" class="schedule" method="save">
       <result name="success" type="chain">schedules</result>
     </action>
-
-    <action name="users" class="users">
-      <result name="success">/user/users.jsp</result>
-    </action>
-
-    <action name="editUser" class="editUser">
-      <result name="input">/user/editUser.jsp</result>
-      <result name="permissions">/user/addUserRole.jsp</result>
-      <result name="success" type="chain">users</result>
-    </action>
-
-    <action name="deleteUser" class="deleteUser">
-      <result name="delete">/user/deleteUser.jsp</result>
-      <result name="success" type="chain">users</result>
-    </action>
-
   </package>
 
   <package name="component" extends="default">
