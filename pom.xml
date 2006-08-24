@@ -75,7 +75,7 @@
   </modules>
   <repositories>
     <repository>
-      <id>codehaus-snapshots</id>
+      <id>codehaus.org</id>
       <name>Codehaus Snapshot Development Repository</name>
       <url>http://snapshots.repository.codehaus.org/</url>
       <releases>
@@ -83,7 +83,7 @@
       </releases>
     </repository>
     <repository>
-      <id>acegi-snapshot</id>
+      <id>acegisecurity.sourceforge.net</id>
       <name>Acegi snapshot repository</name>
       <url>http://acegisecurity.sourceforge.net/repository/snapshots</url>
       <releases>
