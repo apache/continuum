@@ -1,7 +1,7 @@
 package org.apache.maven.continuum.web.action;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,18 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import com.opensymphony.xwork.Preparable;
-import org.apache.maven.continuum.Continuum;
-import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.configuration.ConfigurationStoringException;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
-
 import java.io.File;
+import java.util.Collections;
+
+import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.configuration.ConfigurationStoringException;
+import org.apache.maven.continuum.model.system.ContinuumUser;
+import org.apache.maven.continuum.model.system.UserGroup;
+import org.apache.maven.continuum.security.ContinuumSecurity;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import com.opensymphony.xwork.Preparable;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -33,15 +38,26 @@ import java.io.File;
  *   role-hint="configuration"
  */
 public class ConfigurationAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
     implements Preparable
 {
+
     /**
      * @plexus.requirement
      */
-    private Continuum continuum;
+    private ContinuumStore store;
 
     private boolean guestAccountEnabled;
+
+    private String username;
+
+    private String password;
+
+    private String passwordTwo;
+
+    private String fullName;
+
+    private String email;
 
     private String workingDirectory;
 
@@ -57,40 +73,72 @@ public class ConfigurationAction
 
     public void prepare()
     {
-        guestAccountEnabled = continuum.getConfiguration().isGuestAccountEnabled();
+        ConfigurationService configuration = getContinuum().getConfiguration();
 
-        workingDirectory = continuum.getConfiguration().getWorkingDirectory().getAbsolutePath();
+        guestAccountEnabled = configuration.isGuestAccountEnabled();
 
-        buildOutputDirectory = continuum.getConfiguration().getBuildOutputDirectory().getAbsolutePath();
+        workingDirectory = configuration.getWorkingDirectory().getAbsolutePath();
 
-        baseUrl = continuum.getConfiguration().getUrl();
+        buildOutputDirectory = configuration.getBuildOutputDirectory().getAbsolutePath();
 
-        companyLogo = continuum.getConfiguration().getCompanyLogo();
+        baseUrl = configuration.getUrl();
 
-        companyName = continuum.getConfiguration().getCompanyName();
+        companyLogo = configuration.getCompanyLogo();
 
-        companyUrl = continuum.getConfiguration().getCompanyUrl();
+        companyName = configuration.getCompanyName();
+
+        companyUrl = configuration.getCompanyUrl();
     }
 
     public String execute()
-        throws ConfigurationStoringException
+        throws ConfigurationStoringException, ContinuumStoreException
     {
-        continuum.getConfiguration().setGuestAccountEnabled( guestAccountEnabled );
+        //todo switch this to validation
 
-        continuum.getConfiguration().setWorkingDirectory( new File( workingDirectory ) );
+        ContinuumUser adminUser = new ContinuumUser();
 
-        continuum.getConfiguration().setBuildOutputDirectory( new File( buildOutputDirectory ) );
+        adminUser.setUsername( username );
+        adminUser.setPassword( password );
+        adminUser.setEmail( email );
+        adminUser.setFullName( fullName );
+        adminUser.setGroup( store.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) );
 
-        continuum.getConfiguration().setUrl( baseUrl );
+        store.addUser( adminUser );
+        
+        ConfigurationService configuration = getContinuum().getConfiguration();
 
-        continuum.getConfiguration().setCompanyLogo( companyLogo );
+        if ( guestAccountEnabled )
+        {
+            configuration.setGuestAccountEnabled( guestAccountEnabled );
+        }
+        else
+        {
+            configuration.setGuestAccountEnabled( false );
 
-        continuum.getConfiguration().setCompanyName( companyName );
+            UserGroup guestGroup = store.getUserGroup( ContinuumSecurity.GUEST_GROUP_NAME );
 
-        continuum.getConfiguration().setCompanyUrl( companyUrl );
+            guestGroup.setPermissions( Collections.EMPTY_LIST );
 
-        continuum.getConfiguration().setInitialized( true );
-        continuum.getConfiguration().store();            
+            store.updateUserGroup( guestGroup );
+        }
+
+        configuration.setWorkingDirectory( new File( workingDirectory ) );
+
+        configuration.setWorkingDirectory( new File( workingDirectory ) );
+
+        configuration.setBuildOutputDirectory( new File( buildOutputDirectory ) );
+
+        configuration.setUrl( baseUrl );
+
+        configuration.setCompanyLogo( companyLogo );
+
+        configuration.setCompanyName( companyName );
+
+        configuration.setInitialized( true );
+        configuration.store();
+
+        configuration.setInitialized( true );
+        configuration.store();            
 
         return SUCCESS;
     }
@@ -115,6 +163,56 @@ public class ConfigurationAction
     public void setGuestAccountEnabled( boolean guestAccountEnabled )
     {
         this.guestAccountEnabled = guestAccountEnabled;
+    }
+
+    public String getUsername()
+    {
+        return username;
+    }
+
+    public void setUsername( String username )
+    {
+        this.username = username;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword( String password )
+    {
+        this.password = password;
+    }
+
+    public String getPasswordTwo()
+    {
+        return passwordTwo;
+    }
+
+    public void setPasswordTwo( String passwordTwo )
+    {
+        this.passwordTwo = passwordTwo;
+    }
+
+    public String getFullName()
+    {
+        return fullName;
+    }
+
+    public void setFullName( String fullName )
+    {
+        this.fullName = fullName;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail( String email )
+    {
+        this.email = email;
     }
 
     public String getWorkingDirectory()

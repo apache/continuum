@@ -17,10 +17,9 @@ package org.apache.maven.continuum.web.action;
  *
  */
 
+import com.opensymphony.xwork.Preparable;
 import org.apache.maven.continuum.Continuum;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
-
-import com.opensymphony.xwork.Preparable;
 
 /**
  * ContinuumActionSupport
@@ -32,11 +31,10 @@ public class ContinuumActionSupport
     extends PlexusActionSupport
     implements Preparable
 {
-
     /**
      * @plexus.requirement
      */
-    protected Continuum continuum;
+    private Continuum continuum;
 
     public void prepare()
         throws Exception

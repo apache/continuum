@@ -403,7 +403,7 @@
         </requirement>
       </requirements>
       <configuration>
-        <authenticationFailureUrl>/login!default.action?login_error=1</authenticationFailureUrl>
+        <authenticationFailureUrl>/login.jsp?login_error=1</authenticationFailureUrl>
         <defaultTargetUrl>/summary.action</defaultTargetUrl>
         <filterProcessesUrl>/j_acegi_security_check</filterProcessesUrl>
       </configuration>
@@ -413,7 +413,7 @@
       <role>org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint</role>
       <implementation>org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint</implementation>
       <configuration>
-        <loginFormUrl>/login!default.action</loginFormUrl>
+        <loginFormUrl>/login.jsp</loginFormUrl>
         <forceHttps>false</forceHttps>
       </configuration>
     </component>
@@ -777,7 +777,7 @@
           </level>
           <level>
             <hierarchy>com.opensymphony.webwork</hierarchy>
-            <level>INFO</level>
+            <level>DEBUG</level>
           </level>
           <level>
             <hierarchy>org.extremecomponents</hierarchy>
