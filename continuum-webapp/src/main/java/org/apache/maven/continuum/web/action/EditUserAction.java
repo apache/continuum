@@ -21,7 +21,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.Permission;
@@ -30,8 +29,6 @@ import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import com.opensymphony.webwork.interceptor.ServletRequestAware;
-
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author Henry Isidro
@@ -42,7 +39,7 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
  *   role-hint="editUser"
  */
 public class EditUserAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
     implements ServletRequestAware
 {
 
@@ -50,11 +47,6 @@ public class EditUserAction
      * @plexus.requirement
      */
     private ContinuumStore store;
-
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
 
     private ContinuumUser user;
 
@@ -110,7 +102,7 @@ public class EditUserAction
                 user.setPassword( password );
                 user.setEmail( email );
                 user.setGroup( userGroup );
-                continuum.addUser( user );
+                getContinuum().addUser( user );
             }
             catch ( ContinuumException e )
             {
@@ -124,7 +116,7 @@ public class EditUserAction
         {
             try
             {
-                user = continuum.getUser( accountId );
+                user = getContinuum().getUser( accountId );
                 user.setUsername( username );
                 user.setPassword( password );
                 user.setEmail( email );
@@ -140,7 +132,7 @@ public class EditUserAction
 
             try
             {
-                continuum.updateUser( user );
+                getContinuum().updateUser( user );
             }
             catch ( ContinuumException e )
             {
@@ -174,7 +166,7 @@ public class EditUserAction
         try
         {
             addMode = false;
-            user = continuum.getUser( accountId );
+            user = getContinuum().getUser( accountId );
             username = user.getUsername();
             password = user.getPassword();
             email = user.getEmail();

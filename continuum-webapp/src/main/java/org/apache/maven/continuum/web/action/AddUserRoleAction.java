@@ -18,13 +18,10 @@ package org.apache.maven.continuum.web.action;
 
 import java.util.List;
 
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.Permission;
 import org.apache.maven.continuum.store.ContinuumStore;
-
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * @author Teody Cue
@@ -35,10 +32,8 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
  *   role-hint="addUserRole"
  */
 public class AddUserRoleAction
-    extends PlexusActionSupport
+    extends ContinuumActionSupport
 {
-
-    private Continuum continuum;
 
     private ContinuumStore store;
 
@@ -57,7 +52,7 @@ public class AddUserRoleAction
     {
         try
         {
-            user = continuum.getUser( accountId );
+            user = getContinuum().getUser( accountId );
             permissions = store.getPermissions();
             int i;
             for ( i = 0; i < permissions.size(); i++ )
@@ -71,7 +66,7 @@ public class AddUserRoleAction
             if ( i < permissions.size() )
             {
                 user.getGroup().addPermission( permission );
-                continuum.updateUser( user );
+                getContinuum().updateUser( user );
             }
             else
             {
