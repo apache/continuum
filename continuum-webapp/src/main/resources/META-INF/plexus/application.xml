@@ -532,7 +532,7 @@
       <implementation>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</implementation>
       <requirements>
         <requirement>
-          <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
+      <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
           <field-name>securityInterceptor</field-name>
         </requirement>
       </requirements>

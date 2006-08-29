@@ -31,8 +31,9 @@ public class ContinuumActionSupport
     extends PlexusActionSupport
     implements Preparable
 {
+
     /**
-     * @plexus.requirement
+     * @plexus.requirement role-hint="default"
      */
     private Continuum continuum;
 

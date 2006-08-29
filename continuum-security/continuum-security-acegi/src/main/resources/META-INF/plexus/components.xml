@@ -1,0 +1,18 @@
+<component-set>
+  <components>
+
+    <component>
+      <role>org.apache.maven.continuum.Continuum</role>
+      <role-hint>acegi</role-hint>
+      <implementation>org.apache.maven.continuum.security.acegi.AcegiContinuum</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.Continuum</role>
+          <role-hint>default</role-hint>
+          <field-name>continuum</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+  </components>
+</component-set>

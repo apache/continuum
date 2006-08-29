@@ -11,6 +11,7 @@
 
     <component>
       <role>org.apache.maven.continuum.Continuum</role>
+      <role-hint>stub</role-hint>
       <implementation>org.apache.maven.continuum.security.acegi.aspectj.ContinuumStub</implementation>
       <requirements>
       </requirements>
