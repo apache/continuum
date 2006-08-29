@@ -13,14 +13,14 @@
     </layout>
   </appender>
 
-  <root>
-    <priority value="INFO"/>
-    <appender-ref ref="default"/>
-  </root>
-  
   <category name="org.acegisecurity.acl.basic.BasicAclProvider">
     <priority value="DEBUG"/>
     <appender-ref ref="default"/>
   </category>
+
+  <root>
+    <priority value="INFO"/>
+    <appender-ref ref="default"/>
+  </root>
 
 </log4j:configuration>
