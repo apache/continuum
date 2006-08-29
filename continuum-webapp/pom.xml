@@ -81,6 +81,29 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.1.1-20060724.192148-1</version>
+        <!-- This configuration is added to cleanup from war:inplace -->
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${basedir}/src/main/webapp</directory>
+              <includes>
+                <include>user</include>
+                <include>META-INF</include>
+                <include>WEB-INF/classes</include>
+                <include>WEB-INF/tld</include>
+                <include>WEB-INF/lib</include>
+                <include>WEB-INF/database</include>
+                <include>WEB-INF/logs</include>
+                <include>WEB-INF/temp</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
         <configuration>
