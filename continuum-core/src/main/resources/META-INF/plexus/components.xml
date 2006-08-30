@@ -2,6 +2,7 @@
   <components>
     <component>
       <role>org.apache.maven.continuum.Continuum</role>
+      <role-hint>default</role-hint>
       <implementation>org.apache.maven.continuum.DefaultContinuum</implementation>
       <requirements>
         <requirement>
