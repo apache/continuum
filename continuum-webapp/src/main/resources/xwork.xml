@@ -27,7 +27,6 @@
     <default-interceptor-ref name="defaultContinuumStack"/>
 
     <global-results>
-      <result name="login" type="redirect">/login.jsp</result>
       <result name="error-internal">/error/error.jsp?id=500</result>
     </global-results>
 
@@ -48,11 +47,6 @@
 
     <action name="companyInfo" class="configuration">
       <result name="success">/components/companyLogo.jsp</result>
-    </action>
-
-    <action name="login" class="login">
-      <result name="input">/login.jsp</result>
-      <result name="success" type="redirect">summary.action</result>
     </action>
 
     <action name="summary" class="summary">
