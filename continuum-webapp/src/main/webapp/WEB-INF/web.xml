@@ -44,6 +44,26 @@
     </init-param>
   </filter>
 
+<!--
+  <filter>
+    <filter-name>Acegi RememberMeProcessingFilter</filter-name>
+    <filter-class>org.apache.maven.continuum.web.filter.FilterToComponentProxy</filter-class>
+    <init-param>
+      <param-name>component</param-name>
+      <param-value>org.acegisecurity.ui.rememberme.RememberMeProcessingFilter</param-value>
+    </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>Acegi AnonymousProcessingFilter</filter-name>
+    <filter-class>org.apache.maven.continuum.web.filter.FilterToComponentProxy</filter-class>
+    <init-param>
+      <param-name>component</param-name>
+      <param-value>org.acegisecurity.providers.anonymous.AnonymousProcessingFilter</param-value>
+    </init-param>
+  </filter>
+-->
+
   <filter>
     <filter-name>Acegi ExceptionTranslationFilter</filter-name>
     <filter-class>org.apache.maven.continuum.web.filter.FilterToComponentProxy</filter-class>
@@ -93,6 +113,18 @@
     <filter-name>Acegi AuthenticationProcessingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+<!--
+  <filter-mapping>
+    <filter-name>Acegi RememberMeProcessingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Acegi AnonymousProcessingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+-->
 
   <filter-mapping>
     <filter-name>Acegi ExceptionTranslationFilter</filter-name>
