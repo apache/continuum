@@ -212,6 +212,10 @@
       <result name="success">buildResult.jsp</result>
     </action>
 
+    <action name="surefireReport" class="surefireReport">
+      <result name="success">surefireReport.jsp</result>
+    </action>
+
     <action name="workingCopy" class="workingCopy">
       <result name="success">workingCopy.jsp</result>
     </action>
@@ -230,6 +234,11 @@
     <action name="saveSchedule" class="schedule" method="save">
       <result name="success" type="chain">schedules</result>
     </action>
+    <action name="removeSchedule" class="schedule" method="remove">
+      <result name="success" type="chain">schedules</result>
+    </action>
+
+
   </package>
 
   <package name="component" extends="default">

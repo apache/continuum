@@ -3,7 +3,7 @@
 
     <component>
       <role>org.apache.maven.continuum.Continuum</role>
-      <role-hint>acegi</role-hint>
+      <!-- <role-hint>acegi</role-hint> -->
       <implementation>org.apache.maven.continuum.security.acegi.AcegiContinuum</implementation>
       <requirements>
         <requirement>
