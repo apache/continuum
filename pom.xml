@@ -86,6 +86,7 @@
     <!-- module>continuum-web</module --> <!--Remove this when webapp will be ready and packaged as a plexus-application -->
     <module>continuum-webapp</module>
     <module>continuum-xmlrpc</module>
+    <module>continuum-release</module>
   </modules>
   <repositories>
     <repository>
