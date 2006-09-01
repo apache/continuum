@@ -16,34 +16,38 @@ package org.apache.maven.continuum.release;
  * limitations under the License.
  */
 
-import org.apache.maven.plugins.release.ReleaseManager;
-import org.apache.maven.plugins.release.ReleaseExecutionException;
-import org.apache.maven.plugins.release.ReleaseFailureException;
-import org.apache.maven.plugins.release.config.ReleaseDescriptor;
-import org.apache.maven.profiles.DefaultProfileManager;
-import org.apache.maven.profiles.ProfileManager;
-import org.apache.maven.project.MavenProjectBuilder;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.settings.Settings;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
+import org.apache.maven.plugins.release.ReleaseExecutionException;
+import org.apache.maven.plugins.release.ReleaseFailureException;
+import org.apache.maven.plugins.release.ReleaseManager;
+import org.apache.maven.plugins.release.config.ReleaseDescriptor;
+import org.apache.maven.profiles.DefaultProfileManager;
+import org.apache.maven.profiles.ProfileManager;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.ProjectSorter;
+import org.apache.maven.project.DuplicateProjectException;
+import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 
-import java.util.Map;
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Jason van Zyl
+ * @author Edwin Punzalan
  */
 public class DefaultContinuumReleaseManager
     implements ContinuumReleaseManager, Contextualizable
@@ -138,18 +142,32 @@ public class DefaultContinuumReleaseManager
         {
             String moduleDir = modules.next().toString();
 
-            File pomFile = new File( project.getBasedir(), moduleDir );
+            File pomFile = new File( project.getBasedir(), moduleDir + "/pom.xml" );
 
             try
             {
-                projectBuilder.build( pomFile, getLocalRepository(), getProfileManager( settings ) );
+                MavenProject reactorProject = projectBuilder.build( pomFile, getLocalRepository(),
+                                                                    getProfileManager( settings ) );
 
-                reactorProjects.add( projectBuilder );
+                reactorProjects.add( reactorProject );
             }
             catch ( ProjectBuildingException e )
             {
                 throw new ContinuumReleaseException( "Failed to build project.", e );
             }
+        }
+
+        try
+        {
+            reactorProjects = new ProjectSorter( reactorProjects ).getSortedProjects();
+        }
+        catch ( CycleDetectedException e )
+        {
+            throw new ContinuumReleaseException( "Failed to sort projects.", e );
+        }
+        catch ( DuplicateProjectException e )
+        {
+            throw new ContinuumReleaseException( "Failed to sort projects.", e );
         }
 
         return reactorProjects;
