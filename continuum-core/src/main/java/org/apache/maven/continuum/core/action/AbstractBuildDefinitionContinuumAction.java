@@ -32,7 +32,7 @@ import java.util.List;
  * AbstractBuildDefinitionContinuumAction:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $ID:$
+ * @version: $Id$
  */
 public abstract class AbstractBuildDefinitionContinuumAction
     extends AbstractContinuumAction
