@@ -31,7 +31,7 @@ import java.util.Map;
  * BuildDefinitionAction:
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
- * @version $ID:$
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork.Action"
  * role-hint="buildDefinition"
  */
