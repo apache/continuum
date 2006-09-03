@@ -20,6 +20,7 @@ import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.apache.maven.settings.Settings;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * The Continuum Release Manager is responsible for performing releases based on a release descriptor
@@ -37,10 +38,26 @@ public interface ContinuumReleaseManager
     /**
      * Prepare a project for release which also updates the release descriptor
      *
+     * @param releaseId      Release Id to be used for the action. Will be used for perform afterwards.
      * @param descriptor
+     * @param settings
      * @throws ContinuumReleaseException
      */
-    void prepare( ReleaseDescriptor descriptor, Settings settings )
+    void prepare( String releaseId, ReleaseDescriptor descriptor, Settings settings )
+        throws ContinuumReleaseException;
+
+    /**
+     * Perform a release based on a given releaseId
+     *
+     * @param releaseId
+     * @param settings
+     * @param buildDirectory
+     * @param goals
+     * @param useReleaseProfile
+     * @throws ContinuumReleaseException
+     */
+    void perform( String releaseId, Settings settings, File buildDirectory,
+                  String goals, boolean useReleaseProfile )
         throws ContinuumReleaseException;
 
     /**
@@ -49,7 +66,11 @@ public interface ContinuumReleaseManager
      * @param descriptor
      * @throws ContinuumReleaseException
      */
-    void perform( ReleaseDescriptor descriptor, Settings settings, File buildDirectory,
+    void perform( String releaseId, ReleaseDescriptor descriptor, Settings settings, File buildDirectory,
                   String goals, boolean useReleaseProfile )
         throws ContinuumReleaseException;
+
+    void setPreparedReleases( Map preparedReleases );
+
+    Map getPreparedReleases();
 }
