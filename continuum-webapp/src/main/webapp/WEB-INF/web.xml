@@ -55,6 +55,7 @@
       <param-value>org.acegisecurity.ui.rememberme.RememberMeProcessingFilter</param-value>
     </init-param>
   </filter>
+-->
 
   <filter>
     <filter-name>Acegi AnonymousProcessingFilter</filter-name>
@@ -64,7 +65,6 @@
       <param-value>org.acegisecurity.providers.anonymous.AnonymousProcessingFilter</param-value>
     </init-param>
   </filter>
--->
 
   <filter>
     <filter-name>Acegi ExceptionTranslationFilter</filter-name>
@@ -121,12 +121,12 @@
     <filter-name>Acegi RememberMeProcessingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+-->
 
   <filter-mapping>
     <filter-name>Acegi AnonymousProcessingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
--->
 
   <filter-mapping>
     <filter-name>Acegi ExceptionTranslationFilter</filter-name>

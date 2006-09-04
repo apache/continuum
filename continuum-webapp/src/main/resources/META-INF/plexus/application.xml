@@ -447,6 +447,34 @@
       </configuration>
     </component>
 
+    <component>
+      <role>org.acegisecurity.providers.anonymous.AnonymousProcessingFilter</role>
+      <implementation>org.acegisecurity.providers.anonymous.AnonymousProcessingFilter</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.userdetails.memory.UserAttribute</role>
+          <role-hint>anonymous</role-hint>
+          <field-name>userAttribute</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <key>foobar</key>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.userdetails.memory.UserAttribute</role>
+      <role-hint>anonymous</role-hint>
+      <implementation>org.acegisecurity.userdetails.memory.UserAttribute</implementation>
+      <component-composer>setter</component-composer>
+      <configuration>
+        <password>anonymousUser</password>
+        <authoritiesAsString>
+          <role>ROLE_ANONYMOUS</role>
+        </authoritiesAsString>
+      </configuration>
+    </component>
+
 
     <!-- authorization -->
 
