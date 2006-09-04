@@ -50,6 +50,8 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.PlexusContainerManager;
 import org.apache.maven.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+import org.apache.maven.user.model.PasswordRuleViolationException;
+import org.apache.maven.user.model.UserManager;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.action.Action;
@@ -105,6 +107,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private ContinuumStore store;
+    
+    /**
+     * @plexus.requirement
+     */
+    private UserManager userManager;
 
     /**
      * @plexus.requirement
@@ -1791,24 +1798,35 @@ public class DefaultContinuum
     public List getUsers()
         throws ContinuumException
     {
-        try
-        {
-            return store.getUsers();
-        }
-        catch ( ContinuumStoreException ex )
-        {
-            throw logAndCreateException( "Error while getting users.", ex );
-        }
+//        try
+//        {
+            return userManager.getUsers();
+//        }
+//        catch ( EntityNotFoundException ex )
+//        {
+//            throw logAndCreateException( "Error while getting users.", ex );
+//        }
     }
 
     public void addUser( ContinuumUser user )
         throws ContinuumException
     {
-        if ( StringUtils.isEmpty( user.getHashedPassword() ) )
+        if ( StringUtils.isEmpty( user.getPassword() ) )
         {
             throw new ContinuumException( "Password can't be null" );
         }
-        store.addUser( user );
+        try
+        {
+            userManager.addUser( user );
+        }
+//        catch ( EntityExistsException eee )
+//        {
+//            throw new ContinuumException( "Error adding " + user.getUsername() + ", the user already exists.", eee );
+//        }
+        catch ( PasswordRuleViolationException pre )
+        {
+            throw new ContinuumException( "There was a password rule violation.", pre );
+        }
     }
 
     public void addUser( Map configuration )
@@ -1832,20 +1850,21 @@ public class DefaultContinuum
     public void updateUser( ContinuumUser user )
         throws ContinuumException
     {
-        if ( StringUtils.isEmpty( user.getHashedPassword() ) )
+        if ( StringUtils.isEmpty( user.getEncodedPassword() ) )
         {
             ContinuumUser u = getUser( user.getAccountId() );
 
-            user.setHashedPassword( u.getHashedPassword() );
+            user.setEncodedPassword( u.getEncodedPassword() );
         }
 
         try
         {
-            store.updateUser( user );
+            userManager.updateUser( user );
         }
-        catch ( ContinuumStoreException ex )
+        catch ( PasswordRuleViolationException pre )
+        // TODO this must be thrown
         {
-            throw logAndCreateException( "Error while storing user.", ex );
+            throw new ContinuumException( "There was a password rule violation.", pre );
         }
     }
 
@@ -1872,7 +1891,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getUser( userId );
+            return ( ContinuumUser ) userManager.getUser( userId );
         }
         catch ( Exception ex )
         {
@@ -1883,9 +1902,7 @@ public class DefaultContinuum
     public void removeUser( int userId )
         throws ContinuumException
     {
-        ContinuumUser user = getUser( userId );
-
-        store.removeUser( user );
+        userManager.removeUser( userId );
     }
 
     // ----------------------------------------------------------------------
@@ -1895,19 +1912,19 @@ public class DefaultContinuum
     public List getUserGroups()
         throws ContinuumException
     {
-        try
-        {
-            return store.getUserGroups();
-        }
-        catch ( ContinuumStoreException ex )
-        {
-            throw logAndCreateException( "Error while getting user groups.", ex );
-        }
+//        try
+//        {
+            return userManager.getUserGroups();
+//        }
+//        catch ( EntityNotFoundException ex )
+//        {
+//            throw logAndCreateException( "Error while getting user groups.", ex );
+//        }
     }
 
     public void addUserGroup( UserGroup userGroup )
     {
-        store.addUserGroup( userGroup );
+        userManager.addUserGroup( userGroup );
     }
 
     public void addUserGroup( Map configuration )
@@ -1963,72 +1980,72 @@ public class DefaultContinuum
 
         if ( convertBoolean( (String) configuration.get( "group.permission.addProject" ) ) )
         {
-            perms.add( store.getPermission( "addProject" ) );
+            perms.add( userManager.getPermission( "addProject" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.editProject" ) ) )
         {
-            perms.add( store.getPermission( "editProject" ) );
+            perms.add( userManager.getPermission( "editProject" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.deleteProject" ) ) )
         {
-            perms.add( store.getPermission( "deleteProject" ) );
+            perms.add( userManager.getPermission( "deleteProject" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.buildProject" ) ) )
         {
-            perms.add( store.getPermission( "buildProject" ) );
+            perms.add( userManager.getPermission( "buildProject" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.showProject" ) ) )
         {
-            perms.add( store.getPermission( "showProject" ) );
+            perms.add( userManager.getPermission( "showProject" ) );
         }
 
-        if ( convertBoolean( (String) configuration.get( "group.permission.addBuildDefinitionToProject" ) ) )
+        if ( convertBoolean( (String) configuration.get( "group.permission.addBuildDefinition" ) ) )
         {
-            perms.add( store.getPermission( "addBuildDefinitionToProject" ) );
+            perms.add( userManager.getPermission( "addBuildDefinition" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.editBuildDefinition" ) ) )
         {
-            perms.add( store.getPermission( "editBuildDefinition" ) );
+            perms.add( userManager.getPermission( "editBuildDefinition" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.deleteBuildDefinition" ) ) )
         {
-            perms.add( store.getPermission( "deleteBuildDefinition" ) );
+            perms.add( userManager.getPermission( "deleteBuildDefinition" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.addNotifier" ) ) )
         {
-            perms.add( store.getPermission( "addNotifier" ) );
+            perms.add( userManager.getPermission( "addNotifier" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.editNotifier" ) ) )
         {
-            perms.add( store.getPermission( "editNotifier" ) );
+            perms.add( userManager.getPermission( "editNotifier" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.deleteNotifier" ) ) )
         {
-            perms.add( store.getPermission( "deleteNotifier" ) );
+            perms.add( userManager.getPermission( "deleteNotifier" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.manageConfiguration" ) ) )
         {
-            perms.add( store.getPermission( "manageConfiguration" ) );
+            perms.add( userManager.getPermission( "manageConfiguration" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.manageSchedule" ) ) )
         {
-            perms.add( store.getPermission( "manageSchedule" ) );
+            perms.add( userManager.getPermission( "manageSchedule" ) );
         }
 
         if ( convertBoolean( (String) configuration.get( "group.permission.manageUsers" ) ) )
         {
-            perms.add( store.getPermission( "manageUsers" ) );
+            perms.add( userManager.getPermission( "manageUsers" ) );
         }
 
         return perms;
@@ -2037,35 +2054,33 @@ public class DefaultContinuum
     public void updateUserGroup( UserGroup userGroup )
         throws ContinuumException
     {
-        try
-        {
-            store.updateUserGroup( userGroup );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw logAndCreateException( "Error while storing user group.", e );
-        }
+//        try
+//        {
+            userManager.updateUserGroup( userGroup );
+//        }
+//        catch ( EntityNotFoundException e )
+//        {
+//            throw logAndCreateException( "Error while storing user group.", e );
+//        }
     }
 
     public UserGroup getUserGroup( int userGroupId )
         throws ContinuumException
     {
-        try
-        {
-            return store.getUserGroup( userGroupId );
-        }
-        catch ( Exception ex )
-        {
-            throw logAndCreateException( "Error while getting user group.", ex );
-        }
+//        try
+//        {
+            return ( UserGroup ) userManager.getUserGroup( userGroupId );
+//        }
+//        catch ( Exception ex )
+//        {
+//            throw logAndCreateException( "Error while getting user group.", ex );
+//        }
     }
 
     public void removeUserGroup( int userGroupId )
         throws ContinuumException
     {
-        UserGroup group = getUserGroup( userGroupId );
-
-        store.removeUserGroup( group );
+        userManager.removeUserGroup( userGroupId );
     }
 
     // ----------------------------------------------------------------------

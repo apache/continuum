@@ -20,8 +20,7 @@ package org.apache.maven.continuum.security;
 import java.util.Map;
 
 import org.apache.maven.continuum.model.system.ContinuumUser;
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.user.model.UserManager;
 import org.codehaus.plexus.security.Authentication;
 import org.codehaus.plexus.security.Authenticator;
 import org.codehaus.plexus.security.exception.AuthenticationException;
@@ -37,10 +36,11 @@ import org.codehaus.plexus.security.exception.UnknownEntityException;
 public class ContinuumAuthenticator
     implements Authenticator
 {
+    
     /**
      * @plexus.requirement
      */
-    private ContinuumStore store;
+    private UserManager userManager;
 
     // ----------------------------------------------------------------------
     // Authenticator Implementation
@@ -83,13 +83,6 @@ public class ContinuumAuthenticator
     private ContinuumUser getUser( String username )
         throws AuthenticationException
     {
-        try
-        {
-            return store.getUserByUsername( username );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new AuthenticationException( "Error while retreiving user.", e );
-        }
+        return ( ContinuumUser ) userManager.getUserByUsername( username );
     }
 }

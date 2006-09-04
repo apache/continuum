@@ -23,6 +23,10 @@
         <requirement>
           <role>org.apache.maven.continuum.build.settings.SchedulesActivator</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.user.model.UserManager</role>
+          <field-name>userManager</field-name>
+        </requirement>
         <!-- from core -->
         <requirement>
           <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
@@ -64,7 +68,7 @@
       <implementation>org.apache.maven.continuum.security.DefaultContinuumSecurity</implementation>
       <requirements>
         <requirement>
-          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+          <role>org.apache.maven.user.model.UserManager</role>
         </requirement>
       </requirements>
     </component>
@@ -75,6 +79,9 @@
       <requirements>
         <requirement>
           <role>org.apache.maven.continuum.store.ContinuumStore</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.user.model.UserManager</role>
         </requirement>
       </requirements>
     </component>

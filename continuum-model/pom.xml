@@ -21,7 +21,6 @@
           <execution>
             <goals>
               <goal>java</goal>
-              <goal>jpox-jdo-mapping</goal>
             </goals>
           </execution>
         </executions>
@@ -45,4 +44,10 @@
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.shared.user</groupId>
+      <artifactId>maven-user-model</artifactId>
+    </dependency>
+  </dependencies>
 </project>

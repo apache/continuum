@@ -17,6 +17,7 @@ package org.apache.maven.continuum.security.acegi;
  *
  */
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,42 +44,29 @@ import org.springframework.dao.DataAccessResourceFailureException;
 public class ContinuumUserDetailsService
     implements UserDetailsService
 {
-    /**
+    private static final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+   
+   /**
      * @plexus.requirement
      */
-    private ContinuumStore store;
+    private UserManager userManager;
+
+    /**
+     * @plexus.configuration default-value="60"
+     */
+    private int daysBeforeExpiration;
 
     public ContinuumUserDetailsService()
     {
-    }
-
-    public void setStore( ContinuumStore store )
-    {
-        this.store = store;
-    }
-
-    /**
-     * {@link ContinuumStore} to load the user from.
-     * 
-     * @return the store
-     */
-    public ContinuumStore getStore()
-    {
-        return store;
     }
 
     public UserDetails loadUserByUsername( String username )
         throws UsernameNotFoundException, DataAccessException
     {
         ContinuumUser user;
-        try
-        {
-            user = getStore().getUserByUsername( username );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new DataAccessResourceFailureException( e.getMessage(), e );
-        }
+
+        user = ( ContinuumUser ) userManager.getUser( username );
+
         if ( user == null )
         {
             throw new UsernameNotFoundException( "Could not find user: " + username );
@@ -106,9 +94,15 @@ public class ContinuumUserDetailsService
             i++;
         }
         String username = user.getUsername();
-        String password = user.getHashedPassword();
+        String password = user.getEncodedPassword();
         boolean enabled = true;
         boolean accountNonExpired = true;
+        
+        if( user.getLastPasswordChange() != null && daysBeforeExpiration > 0 )
+        {
+           accountNonExpired = user.getLastPasswordChange().getTime() + daysBeforeExpiration * MILLISECONDS_PER_DAY > new Date().getTime();
+        }
+        
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 
@@ -117,7 +111,12 @@ public class ContinuumUserDetailsService
 
         return userDetails;
     }
-
+    
+    protected void setDaysBeforeExpiration( int daysBeforeExpiration )
+    {
+       this.daysBeforeExpiration = daysBeforeExpiration;
+    }
+    
     /**
      * TODO: convert Acegi user into Continuum user?
      */

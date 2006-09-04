@@ -353,7 +353,8 @@
       <implementation>org.apache.maven.continuum.security.acegi.ContinuumUserDetailsService</implementation>
       <requirements>
         <requirement>
-          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+          <role>org.apache.maven.user.model.UserManager</role>
+          <field-name>userManager</field-name>
         </requirement>
       </requirements>
     </component>
@@ -791,6 +792,109 @@
           -->
         </levels>
       </configuration>
+    </component>
+    <component>
+      <role>org.apache.maven.user.model.UserManager</role>
+      <implementation>org.apache.maven.user.model.impl.DefaultUserManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.user.model.store.UserStore</role>
+          <field-name>userStore</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.user.model.UserSecurityPolicy</role>
+          <field-name>securityPolicy</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    
+    <component>
+      <role>org.apache.maven.user.model.store.UserStore</role>
+      <implementation>org.apache.maven.user.model.store.impl.DefaultUserStore</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.jdo.JdoFactory</role>
+          <field-name>jdoFactory</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    
+    <component>
+      <role>org.apache.maven.user.model.UserSecurityPolicy</role>
+      <implementation>org.apache.maven.user.model.impl.DefaultUserSecurityPolicy</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.user.model.PasswordEncoder</role>
+          <role-hint>sha256</role-hint>
+          <field-name>passwordEncoder</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <allowedLoginAttempts>3</allowedLoginAttempts>
+        <previousPasswordsCount>6</previousPasswordsCount>
+        <systemSalt>Step doog ekam Skravdraa</systemSalt>
+      </configuration>
+    </component>
+    
+    <component>
+      <role>com.opensymphony.xwork.Action</role>
+      <role-hint>users</role-hint>
+      <implementation>org.apache.maven.user.controller.action.UsersAction</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
+      <description></description>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.user.model.UserManager</role>
+          <field-name>userManager</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>com.opensymphony.xwork.Action</role>
+      <role-hint>editUser</role-hint>
+      <implementation>org.apache.maven.user.controller.action.EditUserAction</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
+      <description></description>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.user.model.UserManager</role>
+          <field-name>userManager</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>com.opensymphony.xwork.Action</role>
+      <role-hint>deleteUser</role-hint>
+      <implementation>org.apache.maven.user.controller.action.DeleteUserAction</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
+      <description></description>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.user.model.UserManager</role>
+          <field-name>userManager</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    
+    <component>
+      <role>org.apache.maven.continuum.initialization.ContinuumInitializer</role>
+      <implementation>org.apache.maven.continuum.initialization.DefaultContinuumInitializer</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+          <field-name>store</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.user.model.UserManager</role>
+          <field-name>userManager</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    
+    <component>
+      <role>org.apache.maven.user.model.PasswordEncoder</role>
+      <role-hint>sha256</role-hint>
+      <implementation>org.apache.maven.user.model.impl.SHA256PasswordEncoder</implementation>
     </component>
   </components>
 

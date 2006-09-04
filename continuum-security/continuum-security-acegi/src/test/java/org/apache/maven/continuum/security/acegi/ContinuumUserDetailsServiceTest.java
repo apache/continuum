@@ -16,6 +16,8 @@ package org.apache.maven.continuum.security.acegi;
  * limitations under the License.
  */
 
+import java.util.Date;
+
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.providers.encoding.ShaPasswordEncoder;
 import org.acegisecurity.userdetails.UserDetails;
@@ -46,6 +48,54 @@ public class ContinuumUserDetailsServiceTest
 
     public void testGetUserDetails()
     {
+        ContinuumUser continuumUser = createMockedUser();
+       
+        UserDetails userDetails = userDetailsService.getUserDetails( continuumUser );
+
+        assertEquals( userDetails.getUsername(), continuumUser.getUsername() );
+
+        GrantedAuthority[] authorities = userDetails.getAuthorities();
+        for ( int i = 0; i < authorities.length; i++ )
+        {
+            assertEquals( "ROLE_p" + i, authorities[i].getAuthority() );
+        }
+    }
+
+    public void testPasswordEncoding()
+    {
+        ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
+        String shaPassword = passwordEncoder.encodePassword( "admin", null );
+
+        ContinuumUser continuumUser = new ContinuumUser();
+        continuumUser.setEncodedPassword( shaPassword );
+
+        assertTrue( continuumUser.equalsPassword( "admin" ) );
+    }
+    
+    public void testAccountExpiration()
+    {
+        ContinuumUser continuumUser = createMockedUser();
+       
+        userDetailsService.setDaysBeforeExpiration( 0 );
+        UserDetails userDetails = userDetailsService.getUserDetails( continuumUser );
+        assertTrue(userDetails.isAccountNonExpired());
+        
+        userDetailsService.setDaysBeforeExpiration( -1 );
+        userDetails = userDetailsService.getUserDetails( continuumUser );
+        assertTrue(userDetails.isAccountNonExpired());
+        
+        userDetailsService.setDaysBeforeExpiration( 1 );
+        userDetails = userDetailsService.getUserDetails( continuumUser );
+        assertTrue(userDetails.isAccountNonExpired());
+        
+        Date twoDaysAgo = new Date( System.currentTimeMillis() - 2 * ContinuumUserDetailsService.MILLISECONDS_PER_DAY );
+        continuumUser.setLastPasswordChange( twoDaysAgo );
+        userDetails = userDetailsService.getUserDetails( continuumUser );
+        assertFalse(userDetails.isAccountNonExpired());
+    }
+
+    private ContinuumUser createMockedUser()
+    {
         Permission p0 = new Permission();
         p0.setName( "p0" );
         Permission p1 = new Permission();
@@ -58,34 +108,16 @@ public class ContinuumUserDetailsServiceTest
         group.addPermission( p1 );
         group.addPermission( p2 );
 
-        ContinuumUser continuumUser = new ContinuumUser();
-        continuumUser.setUsername( "username" );
-        continuumUser.setPassword( "password" );
-        continuumUser.setGroup( group );
-
         ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
         String shaPassword = passwordEncoder.encodePassword( "password", null );
 
-        UserDetails userDetails = userDetailsService.getUserDetails( continuumUser );
-
-        assertEquals( userDetails.getUsername(), continuumUser.getUsername() );
-        assertEquals( userDetails.getPassword(), shaPassword );
-
-        GrantedAuthority[] authorities = userDetails.getAuthorities();
-        for ( int i = 0; i < authorities.length; i++ )
-        {
-            assertEquals( "ROLE_p" + i, authorities[i].getAuthority() );
-        }
-    }
-
-    public void testPasswordEncoding()
-    {
         ContinuumUser continuumUser = new ContinuumUser();
-        continuumUser.setPassword( "admin" );
+        continuumUser.setUsername( "username" );
+        continuumUser.setEncodedPassword( shaPassword );
+        continuumUser.setGroup( group );
 
-        ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
-        String shaPassword = passwordEncoder.encodePassword( "admin", null );
+        continuumUser.setLastPasswordChange( new Date() );
 
-        assertEquals( continuumUser.getHashedPassword(), shaPassword );
+        return continuumUser;
     }
 }

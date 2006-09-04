@@ -60,23 +60,13 @@
         <version>1.0-alpha-8</version>
         <executions>
           <execution>
-            <id>web summary model classes</id>
+            <id>project summary model</id>
             <configuration>
               <model>src/main/mdo/view-models.mdo</model>
               <version>1.0.0</version>
             </configuration>
             <goals>
               <goal>java</goal>         
-            </goals>
-          </execution>
-          <execution>
-            <id>session model classes</id>
-            <configuration>
-              <model>src/main/mdo/session-models.mdo</model>
-              <version>1.0.0</version>
-            </configuration>
-            <goals>
-              <goal>java</goal>
             </goals>
           </execution>
         </executions>
@@ -264,6 +254,10 @@
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-security-acegi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared.user</groupId>
+      <artifactId>maven-user-controller</artifactId>
     </dependency>
   </dependencies>
 </project>

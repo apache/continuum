@@ -16,6 +16,9 @@ package org.apache.maven.continuum.initialization;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.Permission;
@@ -65,6 +68,11 @@ public class DefaultContinuumInitializer
      * @plexus.requirement
      */
     private ContinuumStore store;
+    
+    /**
+     * @plexus.requirement
+     */
+    private UserManager userManager;
 
     // ----------------------------------------------------------------------
     //
@@ -74,6 +82,20 @@ public class DefaultContinuumInitializer
         throws ContinuumInitializationException
     {
         getLogger().info( "Continuum initializer running ..." );
+        
+        if ( getLogger().isDebugEnabled() )
+        {
+            getLogger().info( "Dumping JPOX/JDO Schema Details ..." );
+            try
+            {
+                SchemaTool.outputDBInfo( null, true );
+                SchemaTool.outputSchemaInfo( null, true );
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace( System.err );
+            }
+        }
 
         try
         {
@@ -170,7 +192,7 @@ public class DefaultContinuumInitializer
     private Permission createPermission( String name, String description )
         throws ContinuumStoreException
     {
-        Permission perm = store.getPermission( name );
+        Permission perm = ( Permission ) userManager.getPermission( name );
 
         if ( perm == null )
         {
@@ -180,7 +202,7 @@ public class DefaultContinuumInitializer
 
             perm.setDescription( description );
 
-            perm = store.addPermission( perm );
+            perm = ( Permission ) userManager.addPermission( perm );
         }
 
         return perm;
@@ -190,9 +212,9 @@ public class DefaultContinuumInitializer
         throws ContinuumStoreException
     {
         // Continuum Administrator
-        if ( store.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) == null )
+        if ( userManager.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) == null )
         {
-            List adminPermissions = store.getPermissions();
+            List adminPermissions = userManager.getPermissions();
 
             UserGroup adminGroup = new UserGroup();
 
@@ -202,11 +224,11 @@ public class DefaultContinuumInitializer
 
             adminGroup.setPermissions( adminPermissions );
 
-            store.addUserGroup( adminGroup );
+            userManager.addUserGroup( adminGroup );
         }
 
         // Continuum Guest
-        if ( store.getUserGroup( ContinuumSecurity.GUEST_GROUP_NAME ) == null )
+        if ( userManager.getUserGroup( ContinuumSecurity.GUEST_GROUP_NAME ) == null )
         {
             UserGroup guestGroup = new UserGroup();
 
@@ -216,20 +238,20 @@ public class DefaultContinuumInitializer
 
             List guestPermissions = new ArrayList();
 
-            guestPermissions.add( store.getPermission( "buildProject" ) );
+            guestPermissions.add( userManager.getPermission( "buildProject" ) );
 
-            guestPermissions.add( store.getPermission( "showProject" ) );
+            guestPermissions.add( userManager.getPermission( "showProject" ) );
 
             guestGroup.setPermissions( guestPermissions );
 
-            store.addUserGroup( guestGroup );
+            userManager.addUserGroup( guestGroup );
         }
     }
 
     private void createGuestUser()
         throws ContinuumStoreException
     {
-        if ( store.getGuestUser() == null )
+        if ( userManager.getGuestUser() == null )
         {
             ContinuumUser guest = new ContinuumUser();
 
@@ -237,18 +259,30 @@ public class DefaultContinuumInitializer
 
             guest.setFullName( "Anonymous User" );
 
-            guest.setGroup( store.getUserGroup( ContinuumSecurity.GUEST_GROUP_NAME ) );
+            guest.setGroup( userManager.getUserGroup( ContinuumSecurity.GUEST_GROUP_NAME ) );
 
             guest.setGuest( true );
 
-            store.addUser( guest );
+            try
+            {
+                userManager.addUser( guest );
+            }
+// TODO
+//            catch ( EntityExistsException eee )
+//            {
+//                throw new ContinuumStoreException( "Error adding user, the user already exists.", eee );
+//            }
+            catch ( PasswordRuleViolationException pre )
+            {
+                throw new ContinuumStoreException( "There was a password rule violation.", pre );
+            }
         }
     }
 
     private void createAdminUser()
         throws ContinuumStoreException
     {
-        if ( store.getUserByUsername( "admin" ) == null )
+        if ( userManager.getUser( "admin" ) == null )
         {
             ContinuumUser admin = new ContinuumUser();
 
@@ -256,11 +290,23 @@ public class DefaultContinuumInitializer
 
             admin.setFullName( "Administrator" );
 
-            admin.setGroup( store.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) );
+            admin.setGroup( userManager.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) );
 
             admin.setPassword( "admin" );
 
-            store.addUser( admin );
+            try
+            {
+                userManager.addUser( admin );
+            }
+// TODO
+//            catch ( EntityExistsException eee )
+//            {
+//                throw new ContinuumStoreException( "The user already exists.", eee );
+//            }
+            catch ( PasswordRuleViolationException pre )
+            {
+                throw new ContinuumStoreException( "There was a password rule violation.", pre );
+            }
         }
     }
 }
