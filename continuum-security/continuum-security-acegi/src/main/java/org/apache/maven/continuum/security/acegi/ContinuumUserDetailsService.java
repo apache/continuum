@@ -43,8 +43,8 @@ public class ContinuumUserDetailsService
     implements UserDetailsService
 {
     private static final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
-   
-   /**
+
+    /**
      * @plexus.requirement
      */
     private UserManager userManager;
@@ -63,7 +63,7 @@ public class ContinuumUserDetailsService
     {
         ContinuumUser user;
 
-        user = ( ContinuumUser ) userManager.getUser( username );
+        user = (ContinuumUser) userManager.getUser( username );
 
         if ( user == null )
         {
@@ -95,12 +95,14 @@ public class ContinuumUserDetailsService
         String password = user.getEncodedPassword();
         boolean enabled = true;
         boolean accountNonExpired = true;
-        
-        if( user.getLastPasswordChange() != null && daysBeforeExpiration > 0 )
+
+        if ( user.getLastPasswordChange() != null && daysBeforeExpiration > 0 )
         {
-           accountNonExpired = user.getLastPasswordChange().getTime() + daysBeforeExpiration * MILLISECONDS_PER_DAY > new Date().getTime();
+            long lastPasswordChange = user.getLastPasswordChange().getTime();
+            long currentTime = new Date().getTime();
+            accountNonExpired = lastPasswordChange + daysBeforeExpiration * MILLISECONDS_PER_DAY > currentTime;
         }
-        
+
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 
@@ -109,12 +111,12 @@ public class ContinuumUserDetailsService
 
         return userDetails;
     }
-    
+
     protected void setDaysBeforeExpiration( int daysBeforeExpiration )
     {
-       this.daysBeforeExpiration = daysBeforeExpiration;
+        this.daysBeforeExpiration = daysBeforeExpiration;
     }
-    
+
     /**
      * TODO: convert Acegi user into Continuum user?
      */
