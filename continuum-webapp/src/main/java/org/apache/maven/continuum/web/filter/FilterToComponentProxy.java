@@ -147,6 +147,8 @@ public class FilterToComponentProxy
         }
         catch ( ComponentLookupException e )
         {
+            /* need to log as the web server doesn't print the cause */
+            log.error( "Component '" + componentName + "' not found in container", e );
             throw new ServletException( "Component '" + componentName + "' not found in container", e );
         }
 
