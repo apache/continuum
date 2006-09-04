@@ -390,6 +390,18 @@
     </component>
 
     <component>
+      <role>org.apache.maven.user.model.PasswordEncoder</role>
+      <role-hint>acegisha256</role-hint>
+      <implementation>org.apache.maven.user.acegi.AcegiPasswordEncoder</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.providers.encoding.PasswordEncoder</role>
+          <field-name>encoder</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
       <role>org.acegisecurity.event.authentication.LoggerListener</role>
       <implementation>org.acegisecurity.event.authentication.LoggerListener</implementation>
     </component>
@@ -906,18 +918,6 @@
       </requirements>
     </component>
     
-    <component>
-      <role>org.apache.maven.user.model.PasswordEncoder</role>
-      <role-hint>acegisha256</role-hint>
-      <implementation>org.apache.maven.user.acegi.AcegiPasswordEncoder</implementation>
-      <requirements>
-        <requirement>
-          <role>org.acegisecurity.providers.encoding.PasswordEncoder</role>
-          <field-name>encoder</field-name>
-        </requirement>
-      </requirements>
-    </component>
-
   </components>
 
 </plexus>
