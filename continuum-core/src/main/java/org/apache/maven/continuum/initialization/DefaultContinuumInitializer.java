@@ -27,10 +27,10 @@ import org.apache.maven.continuum.model.system.UserGroup;
 import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.user.model.PasswordRuleViolationException;
+import org.apache.maven.user.model.UserManager;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.jpox.SchemaTool;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
