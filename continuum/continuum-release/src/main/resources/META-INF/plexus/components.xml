@@ -6,12 +6,6 @@
       <implementation>org.apache.maven.continuum.release.DefaultContinuumReleaseManager</implementation>
       <requirements>
         <requirement>
-          <role>org.apache.maven.project.MavenProjectBuilder</role>          
-        </requirement>
-        <requirement>
-          <role>org.apache.maven.plugins.release.ReleaseManager</role>          
-        </requirement>
-        <requirement>
           <role>org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper</role>
         </requirement>
         <requirement>
@@ -25,9 +19,6 @@
           <field-name>performReleaseQueue</field-name>
         </requirement>
       </requirements>
-      <configuration>
-        <local-repository>${plexus.home}/local-repository</local-repository>
-      </configuration>
     </component>
   </components>
 
@@ -53,9 +44,26 @@
   </component>
 
   <component>
-    <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+    <role>org.apache.maven.continuum.release.executors.ReleaseTaskExecutor</role>
     <role-hint>prepare-release</role-hint>
     <implementation>org.apache.maven.continuum.release.executors.PrepareReleaseTaskExecutor</implementation>
+    <requirements>
+      <requirement>
+        <role>org.apache.maven.continuum.release.ContinuumReleaseManager</role>
+      </requirement>
+      <requirement>
+        <role>org.apache.maven.plugins.release.ReleaseManager</role>
+      </requirement>
+      <requirement>
+        <role>org.apache.maven.project.MavenProjectBuilder</role>
+      </requirement>
+      <requirement>
+        <role>org.apache.maven.settings.MavenSettingsBuilder</role>
+      </requirement>
+    </requirements>
+    <configuration>
+      <local-repository>${plexus.home}/local-repository</local-repository>
+    </configuration>
   </component>
 
   <component>
@@ -99,9 +107,26 @@
   </component>
 
   <component>
-    <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+    <role>org.apache.maven.continuum.release.executors.ReleaseTaskExecutor</role>
     <role-hint>perform-release</role-hint>
     <implementation>org.apache.maven.continuum.release.executors.PerformReleaseTaskExecutor</implementation>
+    <requirements>
+      <requirement>
+        <role>org.apache.maven.continuum.release.ContinuumReleaseManager</role>
+      </requirement>
+      <requirement>
+        <role>org.apache.maven.plugins.release.ReleaseManager</role>
+      </requirement>
+      <requirement>
+        <role>org.apache.maven.project.MavenProjectBuilder</role>
+      </requirement>
+      <requirement>
+        <role>org.apache.maven.settings.MavenSettingsBuilder</role>
+      </requirement>
+    </requirements>
+    <configuration>
+      <local-repository>${plexus.home}/local-repository</local-repository>
+    </configuration>
   </component>
 
   <component>

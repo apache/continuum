@@ -17,10 +17,7 @@ package org.apache.maven.continuum.release.tasks;
  */
 
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
-import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.taskqueue.Task;
-
-import java.util.List;
 
 /**
  * @author Edwin Punzalan
@@ -28,21 +25,14 @@ import java.util.List;
 public abstract class AbstractReleaseProjectTask
     implements Task
 {
-    private int projectId;
+    private String releaseId;
 
     private ReleaseDescriptor descriptor;
 
-    private Settings settings;
-
-    private List reactorProjects;
-
-    public AbstractReleaseProjectTask( int projectId, ReleaseDescriptor descriptor,
-                                       Settings settings, List reactorProjects )
+    public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor )
     {
-        this.projectId = projectId;
+        this.releaseId = releaseId;
         this.descriptor = descriptor;
-        this.settings = settings;
-        this.reactorProjects = reactorProjects;
     }
 
     public ReleaseDescriptor getDescriptor()
@@ -55,33 +45,13 @@ public abstract class AbstractReleaseProjectTask
         this.descriptor = descriptor;
     }
 
-    public int getProjectId()
+    public String getReleaseId()
     {
-        return projectId;
+        return releaseId;
     }
 
-    public void setProjectId( int projectId )
+    public void setReleaseId( String releaseId )
     {
-        this.projectId = projectId;
-    }
-
-    public Settings getSettings()
-    {
-        return settings;
-    }
-
-    public void setSettings( Settings settings )
-    {
-        this.settings = settings;
-    }
-
-    public List getReactorProjects()
-    {
-        return reactorProjects;
-    }
-
-    public void setReactorProjects( List reactorProjects )
-    {
-        this.reactorProjects = reactorProjects;
+        this.releaseId = releaseId;
     }
 }

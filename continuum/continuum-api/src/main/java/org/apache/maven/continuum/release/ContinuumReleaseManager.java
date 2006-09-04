@@ -16,8 +16,7 @@ package org.apache.maven.continuum.release;
  * limitations under the License.
  */
 
-import org.apache.maven.plugins.release.config.ReleaseDescriptor;
-import org.apache.maven.settings.Settings;
+import org.apache.maven.continuum.model.project.Project;
 
 import java.io.File;
 import java.util.Map;
@@ -28,45 +27,39 @@ import java.util.Map;
  *
  * @author Jason van Zyl
  */
-//TODO:JW You can probably test this in isolation and then we can add methods to the main Continuum API for
-//        releasing. The Core Continuum component would then have a dependency on this component and just delegate
-//        to this component for release management.
 public interface ContinuumReleaseManager
 {
     String ROLE = ContinuumReleaseManager.class.getName();
 
     /**
-     * Prepare a project for release which also updates the release descriptor
+     * Prepare a project for release
      *
-     * @param releaseId      Release Id to be used for the action. Will be used for perform afterwards.
-     * @param descriptor
-     * @param settings
+     * @param project      project / project group to be released
      * @throws ContinuumReleaseException
      */
-    void prepare( String releaseId, ReleaseDescriptor descriptor, Settings settings )
+    void prepare( Project project )
         throws ContinuumReleaseException;
 
     /**
      * Perform a release based on a given releaseId
      *
      * @param releaseId
-     * @param settings
      * @param buildDirectory
      * @param goals
      * @param useReleaseProfile
      * @throws ContinuumReleaseException
      */
-    void perform( String releaseId, Settings settings, File buildDirectory,
+    void perform( String releaseId, File buildDirectory,
                   String goals, boolean useReleaseProfile )
         throws ContinuumReleaseException;
 
     /**
      * Perform a release based on a release descriptor received by the Maven Release Plugin.
      *
-     * @param descriptor
+     * @param descriptorFile
      * @throws ContinuumReleaseException
      */
-    void perform( String releaseId, ReleaseDescriptor descriptor, Settings settings, File buildDirectory,
+    void perform( String releaseId, File descriptorFile, File buildDirectory,
                   String goals, boolean useReleaseProfile )
         throws ContinuumReleaseException;
 

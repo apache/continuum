@@ -16,19 +16,44 @@ package org.apache.maven.continuum.release.executors;
  * limitations under the License.
  */
 
-import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
-import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
+import org.apache.maven.continuum.release.ContinuumReleaseException;
+import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
+import org.apache.maven.plugins.release.ReleaseExecutionException;
+import org.apache.maven.plugins.release.ReleaseFailureException;
+import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.codehaus.plexus.taskqueue.Task;
+import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 
 /**
  * @author Edwin Punzalan
  */
 public class PrepareReleaseTaskExecutor
-    implements TaskExecutor
+    extends AbstractReleaseTaskExecutor
 {
     public void executeTask( Task task )
         throws TaskExecutionException
     {
+        try
+        {
+            PrepareReleaseProjectTask prepareTask = (PrepareReleaseProjectTask) task;
 
+            ReleaseDescriptor descriptor = prepareTask.getDescriptor();
+
+            releasePluginManager.prepare( descriptor, getSettings(), getReactorProjects( descriptor ) );
+
+            continuumReleaseManager.getPreparedReleases().put( prepareTask.getReleaseId(), descriptor );
+        }
+        catch ( ReleaseExecutionException e )
+        {
+            throw new TaskExecutionException( "Release Manager Execution error occurred.", e );
+        }
+        catch ( ReleaseFailureException e )
+        {
+            throw new TaskExecutionException( "Release Manager failure occurred.", e );
+        }
+        catch ( ContinuumReleaseException e )
+        {
+            throw new TaskExecutionException( "Failed to build reactor projects.", e );
+        }
     }
 }

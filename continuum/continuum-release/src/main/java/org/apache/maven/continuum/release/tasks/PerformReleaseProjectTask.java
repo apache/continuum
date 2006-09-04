@@ -17,9 +17,8 @@ package org.apache.maven.continuum.release.tasks;
  */
 
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
-import org.apache.maven.settings.Settings;
 
-import java.util.List;
+import java.io.File;
 
 /**
  * @author Edwin Punzalan
@@ -27,17 +26,19 @@ import java.util.List;
 public class PerformReleaseProjectTask
     extends AbstractReleaseProjectTask
 {
+    private File buildDirectory;
+
     private String goals;
 
     private boolean useReleaseProfile = true;
 
-    public PerformReleaseProjectTask( int projectId, ReleaseDescriptor descriptor,
-                                      Settings settings, List reactorProjects,
+    public PerformReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, File buildDirectory,
                                       String goals, boolean useReleaseProfile )
     {
-        super( projectId, descriptor, settings, reactorProjects );
-        this.goals = goals;
-        this.useReleaseProfile = useReleaseProfile;
+        super( releaseId, descriptor );
+        setBuildDirectory( buildDirectory );
+        setGoals( goals );
+        setUseReleaseProfile( useReleaseProfile );
     }
 
     public String getGoals()
@@ -58,5 +59,15 @@ public class PerformReleaseProjectTask
     public void setUseReleaseProfile( boolean useReleaseProfile )
     {
         this.useReleaseProfile = useReleaseProfile;
+    }
+
+    public File getBuildDirectory()
+    {
+        return buildDirectory;
+    }
+
+    public void setBuildDirectory( File buildDirectory )
+    {
+        this.buildDirectory = buildDirectory;
     }
 }

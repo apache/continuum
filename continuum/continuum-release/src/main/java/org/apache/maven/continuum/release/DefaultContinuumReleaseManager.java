@@ -16,33 +16,18 @@ package org.apache.maven.continuum.release;
  * limitations under the License.
  */
 
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.repository.DefaultArtifactRepository;
-import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
-import org.apache.maven.plugins.release.ReleaseExecutionException;
-import org.apache.maven.plugins.release.ReleaseFailureException;
-import org.apache.maven.plugins.release.ReleaseManager;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
+import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
-import org.apache.maven.profiles.DefaultProfileManager;
-import org.apache.maven.profiles.ProfileManager;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.MavenProjectBuilder;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.ProjectSorter;
-import org.apache.maven.project.DuplicateProjectException;
-import org.apache.maven.settings.Settings;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.apache.maven.plugins.release.config.io.xpp3.ReleaseDescriptorXpp3Reader;
 import org.codehaus.plexus.taskqueue.TaskQueue;
+import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -50,18 +35,8 @@ import java.util.Map;
  * @author Edwin Punzalan
  */
 public class DefaultContinuumReleaseManager
-    implements ContinuumReleaseManager, Contextualizable
+    implements ContinuumReleaseManager
 {
-    /**
-     * @plexus.requirement
-     */
-    private MavenProjectBuilder projectBuilder;
-
-    /**
-     * @plexus.requirement
-     */
-    private ReleaseManager releaseManager;
-
     /**
      * @plexus.requirement
      */
@@ -73,133 +48,78 @@ public class DefaultContinuumReleaseManager
     private TaskQueue performReleaseQueue;
 
     /**
-     * @plexus.configuration
-     */
-    private String localRepository;
-
-    private PlexusContainer container;
-
-    /**
      * contains previous release:prepare descriptors; one per project
      */
     private Map preparedReleases;
 
-    public void prepare( ReleaseDescriptor descriptor, Settings settings )
+    public void prepare( Project project )
         throws ContinuumReleaseException
     {
+        String releaseId = project.getGroupId() + ":" + project.getArtifactId();
+
         try
         {
-            releaseManager.prepare( descriptor, settings, getReactorProjects( descriptor, settings ) );
+            prepareReleaseQueue.put( new PrepareReleaseProjectTask( releaseId, new ReleaseDescriptor() ) );
         }
-        catch ( ReleaseExecutionException e )
+        catch ( TaskQueueException e )
         {
-            throw new ContinuumReleaseException( "Release Manager Execution error occurred.", e );
-        }
-        catch ( ReleaseFailureException e )
-        {
-            throw new ContinuumReleaseException( "Release Manager failure occurred.", e );
+            throw new ContinuumReleaseException( "Failed to add prepare release task in queue.", e );
         }
     }
 
-    public void perform( ReleaseDescriptor descriptor, Settings settings, File buildDirectory,
+    public void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile )
+        throws ContinuumReleaseException
+    {
+        ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
+        if ( descriptor != null )
+        {
+            perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile );
+        }
+    }
+
+    public void perform( String releaseId, File descriptorFile, File buildDirectory,
+                         String goals, boolean useReleaseProfile )
+        throws ContinuumReleaseException
+    {
+        ReleaseDescriptor descriptor;
+        try
+        {
+            descriptor = new ReleaseDescriptorXpp3Reader().read( new FileReader( descriptorFile ) );
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumReleaseException( "Failed to parse descriptor file.", e );
+        }
+        catch ( XmlPullParserException e )
+        {
+            throw new ContinuumReleaseException( "Failed to parse descriptor file.", e );
+        }
+
+        perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile );
+    }
+
+    private void perform( String releaseId, ReleaseDescriptor descriptor, File buildDirectory,
                          String goals, boolean useReleaseProfile )
         throws ContinuumReleaseException
     {
         try
         {
-            releaseManager.perform( descriptor, settings, getReactorProjects( descriptor, settings ),
-                                    new File( buildDirectory, "checkout" ), goals, useReleaseProfile );
+            performReleaseQueue.put( new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory,
+                                                                    goals, useReleaseProfile ) );
         }
-        catch ( ReleaseExecutionException e )
+        catch ( TaskQueueException e )
         {
-            throw new ContinuumReleaseException( "Release Manager Execution error occurred.", e );
-        }
-        catch ( ReleaseFailureException e )
-        {
-            throw new ContinuumReleaseException( "Release Manager failure occurred.", e );
+            throw new ContinuumReleaseException( "Failed to add perform release task in queue.", e );
         }
     }
 
-    private List getReactorProjects( ReleaseDescriptor descriptor, Settings settings )
-        throws ContinuumReleaseException
+    public Map getPreparedReleases()
     {
-        List reactorProjects = new ArrayList();
-
-        MavenProject project;
-        try
-        {
-            project = projectBuilder.build( getProjectDescriptorFile( descriptor ),
-                                            getLocalRepository(), getProfileManager( settings ) );
-
-            reactorProjects.add( project );
-        }
-        catch ( ProjectBuildingException e )
-        {
-            throw new ContinuumReleaseException( "Failed to build project.", e );
-        }
-
-        for( Iterator modules = project.getModules().iterator(); modules.hasNext(); )
-        {
-            String moduleDir = modules.next().toString();
-
-            File pomFile = new File( project.getBasedir(), moduleDir + "/pom.xml" );
-
-            try
-            {
-                MavenProject reactorProject = projectBuilder.build( pomFile, getLocalRepository(),
-                                                                    getProfileManager( settings ) );
-
-                reactorProjects.add( reactorProject );
-            }
-            catch ( ProjectBuildingException e )
-            {
-                throw new ContinuumReleaseException( "Failed to build project.", e );
-            }
-        }
-
-        try
-        {
-            reactorProjects = new ProjectSorter( reactorProjects ).getSortedProjects();
-        }
-        catch ( CycleDetectedException e )
-        {
-            throw new ContinuumReleaseException( "Failed to sort projects.", e );
-        }
-        catch ( DuplicateProjectException e )
-        {
-            throw new ContinuumReleaseException( "Failed to sort projects.", e );
-        }
-
-        return reactorProjects;
+        return preparedReleases;
     }
 
-    private File getProjectDescriptorFile( ReleaseDescriptor descriptor )
+    public void setPreparedReleases( Map preparedReleases )
     {
-        String parentPath = descriptor.getWorkingDirectory();
-
-        String pomFilename = descriptor.getPomFileName();
-        if ( pomFilename == null )
-        {
-            pomFilename = "pom.xml";
-        }
-
-        return new File( parentPath, pomFilename );
-    }
-
-    private ArtifactRepository getLocalRepository()
-    {
-        return new DefaultArtifactRepository( "local-repository", "file://" + localRepository,
-                                              new DefaultRepositoryLayout() );
-    }
-
-    private ProfileManager getProfileManager( Settings settings )
-    {
-        return new DefaultProfileManager( container, settings );
-    }
-
-    public void contextualize( Context context )
-        throws ContextException
-    {
-        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
+        this.preparedReleases = preparedReleases;
     }
 }

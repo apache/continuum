@@ -294,6 +294,17 @@
       <result name="success" type="chain">schedules</result>
     </action>
 
+    <!--
+    - continuum release
+    -->
+    <action name="prepareRelease" class="prepareRelease">
+      <result name="success">prepareRelease.jsp</result>
+    </action>
+
+    <action name="performRelease" class="performRelease">
+      <result name="success">performRelease.jsp</result>
+    </action>
+
   </package>
 
   <package name="component" extends="default">
