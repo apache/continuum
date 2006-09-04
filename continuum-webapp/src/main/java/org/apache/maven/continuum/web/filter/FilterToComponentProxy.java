@@ -31,21 +31,7 @@ package org.apache.maven.continuum.web.filter;
  * limitations under the License.
  */
 
-import java.io.IOException;
-
 import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.xwork.PlexusLifecycleListener;
 
 /**
  * <p>Delegates <code>Filter</code> requests to a Plexus component.</p>
@@ -70,141 +56,14 @@ import org.codehaus.plexus.xwork.PlexusLifecycleListener;
  * case, set the <code>lifecycle</code> initialization parameter to <code>servlet-container-managed</code>. If the
  * parameter is any other value, servlet container lifecycle methods will not be delegated through to the proxy.</p>
  * 
+ * @deprecated use {@link org.codehaus.plexus.xwork.filter.FilterToComponentProxy}
+ * 
  * @author Ben Alex
  * @author Emmanuel Venisse (evenisse at apache dot org)
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
 public class FilterToComponentProxy
-    implements Filter
+    extends org.codehaus.plexus.xwork.filter.FilterToComponentProxy
 {
-    private static final Log log = LogFactory.getLog( FilterToComponentProxy.class );
-
-    private ServletContext ctx;
-
-    private Filter delegate;
-
-    private FilterConfig filterConfig;
-
-    private boolean initialized = false;
-
-    private boolean servletContainerManaged = false;
-
-    public void init( FilterConfig filterConfig )
-        throws ServletException
-    {
-        this.filterConfig = filterConfig;
-
-        doInit();
-    }
-
-    /**
-     * Lookup the delegate {@link Filter} in Plexus container
-     * 
-     * @throws ServletException if this Filter or the delegate Filter are not correctly configured
-     */
-    private synchronized void doInit()
-        throws ServletException
-    {
-        if ( initialized )
-        {
-            // already initialized, so don't re-initialize
-            return;
-        }
-
-        String componentName = null;
-
-        String param = filterConfig.getInitParameter( "component" );
-
-        if ( ( param != null ) && !param.equals( "" ) )
-        {
-            componentName = param;
-        }
-
-        if ( componentName == null )
-        {
-            throw new ServletException( this.getClass().getName() + " require a \"component\" init-param." );
-        }
-
-        String lifecycle = filterConfig.getInitParameter( "lifecycle" );
-
-        if ( "servlet-container-managed".equals( lifecycle ) )
-        {
-            servletContainerManaged = true;
-        }
-
-        PlexusContainer container = getContainer( filterConfig );
-
-        if ( container == null )
-        {
-            throw new ServletException( "Plexus container not found" );
-        }
-
-        Object object = null;
-        try
-        {
-            object = container.lookup( componentName );
-        }
-        catch ( ComponentLookupException e )
-        {
-            /* need to log as the web server doesn't print the cause */
-            log.error( "Component '" + componentName + "' not found in container", e );
-            throw new ServletException( "Component '" + componentName + "' not found in container", e );
-        }
-
-        if ( object == null )
-        {
-            throw new ServletException( "Component '" + componentName + "' not found in container" );
-        }
-
-        if ( !( object instanceof Filter ) )
-        {
-            throw new ServletException( "Component '" + componentName + "' does not implement javax.servlet.Filter" );
-        }
-
-        delegate = (Filter) object;
-
-        if ( servletContainerManaged )
-        {
-            delegate.init( filterConfig );
-        }
-
-        // Set initialized to true at the end of the synchronized method, so
-        // that invocations of doFilter() before this method has completed will not
-        // cause NullPointerException
-        initialized = true;
-    }
-
-    public void doFilter( ServletRequest request, ServletResponse response, FilterChain chain )
-        throws IOException, ServletException
-    {
-        if ( !initialized )
-        {
-            doInit();
-        }
-
-        delegate.doFilter( request, response, chain );
-    }
-
-    public void destroy()
-    {
-        if ( ( delegate != null ) && servletContainerManaged )
-        {
-            delegate.destroy();
-        }
-    }
-
-    /**
-     * Allows test cases to override where container is obtained from.
-     *
-     * @param filterConfig which can be used to find the <code>ServletContext</code>
-     *
-     * @return the Plexus container
-     */
-    protected PlexusContainer getContainer( FilterConfig filterConfig )
-    {
-        ctx = filterConfig.getServletContext();
-
-        return (PlexusContainer) ctx.getAttribute( PlexusLifecycleListener.KEY );
-    }
 }
