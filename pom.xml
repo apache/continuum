@@ -422,6 +422,17 @@
         <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.maven.shared.user</groupId>
+        <artifactId>maven-user-acegi</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.shared.user</groupId>
+        <artifactId>maven-user-webapp</artifactId>
+        <type>war</type>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
         <groupId>commons-dbcp</groupId>
         <artifactId>commons-dbcp</artifactId>
         <version>1.2.1</version>

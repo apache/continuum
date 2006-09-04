@@ -367,9 +367,25 @@
           <role>org.acegisecurity.userdetails.UserDetailsService</role>
           <field-name>userDetailsService</field-name>
         </requirement>
+        <requirement>
+          <role>org.acegisecurity.providers.encoding.PasswordEncoder</role>
+          <field-name>passwordEncoder</field-name>
+        </requirement>
+        <!--
+        <requirement>
+          <role>org.acegisecurity.providers.dao.SaltSource</role>
+          <field-name>saltSource</field-name>
+        </requirement>
+        -->
       </requirements>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.providers.encoding.PasswordEncoder</role>
+      <implementation>org.acegisecurity.providers.encoding.ShaPasswordEncoder</implementation>
       <configuration>
-        <passwordEncoder implementation="org.acegisecurity.providers.encoding.ShaPasswordEncoder"/>
+        <!-- TODO sync with maven-user password encryptor -->
+        <algorithm>SHA-256</algorithm>
       </configuration>
     </component>
 
@@ -825,14 +841,13 @@
       <requirements>
         <requirement>
           <role>org.apache.maven.user.model.PasswordEncoder</role>
-          <role-hint>sha256</role-hint>
+          <role-hint>acegisha256</role-hint>
           <field-name>passwordEncoder</field-name>
         </requirement>
       </requirements>
       <configuration>
         <allowedLoginAttempts>3</allowedLoginAttempts>
         <previousPasswordsCount>6</previousPasswordsCount>
-        <systemSalt>Step doog ekam Skravdraa</systemSalt>
       </configuration>
     </component>
     
@@ -893,9 +908,16 @@
     
     <component>
       <role>org.apache.maven.user.model.PasswordEncoder</role>
-      <role-hint>sha256</role-hint>
-      <implementation>org.apache.maven.user.model.impl.SHA256PasswordEncoder</implementation>
+      <role-hint>acegisha256</role-hint>
+      <implementation>org.apache.maven.user.acegi.AcegiPasswordEncoder</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.providers.encoding.PasswordEncoder</role>
+          <field-name>encoder</field-name>
+        </requirement>
+      </requirements>
     </component>
+
   </components>
 
 </plexus>
