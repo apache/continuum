@@ -42,7 +42,7 @@ import org.springframework.dao.DataAccessException;
 public class ContinuumUserDetailsService
     implements UserDetailsService
 {
-    public static final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+    static final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 
     /**
      * @plexus.requirement
