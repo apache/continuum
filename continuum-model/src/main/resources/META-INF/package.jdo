@@ -7,7 +7,7 @@
 <jdo>
   <package name="org.apache.maven.continuum.model.project">
     <class name="ProjectGroup" detachable="true" identity-type="application" objectid-class="javax.jdo.identity.IntIdentity">
-      <field name="id" primary-key="true" value-strategy="native"/>
+      <field name="id" null-value="exception" primary-key="true" value-strategy="native"/>
       <field name="groupId"/>
       <field name="name"/>
       <field name="description">
