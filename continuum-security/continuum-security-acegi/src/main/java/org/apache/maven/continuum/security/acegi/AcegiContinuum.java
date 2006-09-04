@@ -48,7 +48,7 @@ public class AcegiContinuum
 {
 
     private Continuum continuum;
-    
+
     /**
      * Set the object to delegate to
      * 
@@ -1031,7 +1031,7 @@ public class AcegiContinuum
     public void buildProjectGroup( int projectGroupId )
         throws ContinuumException
     {
-        continuum.buildProjectGroup( projectGroupId );
+        getContinuum().buildProjectGroup( projectGroupId );
     }
 
     /**
@@ -1042,7 +1042,7 @@ public class AcegiContinuum
     public void removeProjectGroup( int projectGroupId )
         throws ContinuumException
     {
-        continuum.removeProjectGroup( projectGroupId );
+        getContinuum().removeProjectGroup( projectGroupId );
     }
 
 }
