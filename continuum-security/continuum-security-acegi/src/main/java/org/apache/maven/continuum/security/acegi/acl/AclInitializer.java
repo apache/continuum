@@ -19,10 +19,11 @@ package org.apache.maven.continuum.security.acegi.acl;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.acegisecurity.acl.basic.AclObjectIdentity;
 import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
 import org.acegisecurity.acl.basic.SimpleAclEntry;
 import org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl;
-import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.mojo.sql.SqlExecMojo;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -41,6 +42,9 @@ public class AclInitializer
     implements Initializable
 {
     public static final String ROLE = AclInitializer.class.getName();
+
+    public static final AclObjectIdentity PARENT_PROJECT_GROUP_ACL_ID =
+        new NamedEntityObjectIdentity( ProjectGroup.class.getName(), "0" );
 
     private JdbcExtendedDaoImpl dao;
 
@@ -145,7 +149,7 @@ public class AclInitializer
 
             /* admin can do anything with project number 1 */
             SimpleAclEntry aclEntry = new SimpleAclEntry();
-            aclEntry.setAclObjectIdentity( new NamedEntityObjectIdentity( Project.class.getName(), "1" ) );
+            aclEntry.setAclObjectIdentity( PARENT_PROJECT_GROUP_ACL_ID );
             aclEntry.setRecipient( "ROLE_admin" );
             aclEntry.addPermission( SimpleAclEntry.ADMINISTRATION );
             getDao().create( aclEntry );

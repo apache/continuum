@@ -18,14 +18,9 @@ package org.apache.maven.continuum.security.acegi;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.acegisecurity.acl.basic.BasicAclExtendedDao;
-import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
-import org.acegisecurity.acl.basic.SimpleAclEntry;
-import org.acegisecurity.context.SecurityContextHolder;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -54,7 +49,7 @@ public class AcegiContinuum
 
     private Continuum continuum;
 
-    private BasicAclExtendedDao aclDao;
+    private AclEventHandler aclEventHandler;
 
     /**
      * Set the object to delegate to
@@ -76,79 +71,14 @@ public class AcegiContinuum
         return continuum;
     }
 
-    public void setAclDao( BasicAclExtendedDao aclDao )
+    public void setAclEventHandler( AclEventHandler eventHandler )
     {
-        this.aclDao = aclDao;
+        this.aclEventHandler = eventHandler;
     }
 
-    public BasicAclExtendedDao getAclDao()
+    public AclEventHandler getAclEventHandler()
     {
-        return aclDao;
-    }
-
-    /**
-     * Project has same permissions as its project group.
-     * 
-     * @param project
-     * @return
-     */
-    private SimpleAclEntry getProjectAcl( Project project )
-    {
-        NamedEntityObjectIdentity projectGroupIdentity = new NamedEntityObjectIdentity( ProjectGroup.class.getName(),
-                                                                                        Integer.toString( project
-                                                                                            .getProjectGroup().getId() ) );
-        SimpleAclEntry aclEntry = new SimpleAclEntry();
-        //        aclEntry.setAclObjectIdentity( new NamedEntityObjectIdentity( Project.class.getName(), Integer
-        //            .toString( project.getId() ) ) );
-        aclEntry.setAclObjectParentIdentity( projectGroupIdentity );
-        return aclEntry;
-    }
-
-    /**
-     * Creator of {@link ProjectGroup} has {@link SimpleAclEntry#ADMINISTRATION} permissions.
-     * 
-     * @param projectGroup
-     * @return an ACL entry for the creator of the group
-     */
-    private SimpleAclEntry getProjectGroupAcl( ProjectGroup projectGroup )
-    {
-        Object username = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        SimpleAclEntry aclEntry = new SimpleAclEntry();
-        aclEntry.setAclObjectIdentity( new NamedEntityObjectIdentity( ProjectGroup.class.getName(), Integer
-            .toString( projectGroup.getId() ) ) );
-        aclEntry.setRecipient( username );
-        aclEntry.addPermission( SimpleAclEntry.ADMINISTRATION );
-        return aclEntry;
-    }
-
-    /**
-     * Call this method when new {@link ProjectGroup}s are created.
-     * 
-     * @param projectGroups
-     */
-    private void createNewProjectGroupsACLs( Collection projectGroups )
-    {
-        Iterator it = projectGroups.iterator();
-        while ( it.hasNext() )
-        {
-            ProjectGroup projectGroup = (ProjectGroup) it.next();
-            getAclDao().create( getProjectGroupAcl( projectGroup ) );
-        }
-    }
-
-    /**
-     * Call this method when new {@link Project}s are created.
-     * 
-     * @param projects
-     */
-    private void createNewProjectsACLs( Collection projects )
-    {
-        Iterator it = projects.iterator();
-        while ( it.hasNext() )
-        {
-            Project project = (Project) it.next();
-            getAclDao().create( getProjectAcl( project ) );
-        }
+        return aclEventHandler;
     }
 
     /**
@@ -185,8 +115,7 @@ public class AcegiContinuum
         throws ContinuumException
     {
         ContinuumProjectBuildingResult result = getContinuum().addMavenOneProject( metadataUrl );
-        createNewProjectGroupsACLs( result.getProjectGroups() );
-        createNewProjectsACLs( result.getProjects() );
+        getAclEventHandler().afterAddProject( result );
         return result;
     }
 
@@ -200,8 +129,7 @@ public class AcegiContinuum
         throws ContinuumException
     {
         ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject( metadataUrl );
-        createNewProjectGroupsACLs( result.getProjectGroups() );
-        createNewProjectsACLs( result.getProjects() );
+        getAclEventHandler().afterAddProject( result );
         return result;
     }
 

@@ -12,6 +12,17 @@
           <field-name>continuum</field-name>
         </requirement>
         <requirement>
+          <role>org.apache.maven.continuum.security.acegi.AclEventHandler</role>
+          <field-name>aclEventHandler</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.apache.maven.continuum.security.acegi.AclEventHandler</role>
+      <implementation>org.apache.maven.continuum.security.acegi.AclEventHandler</implementation>
+      <requirements>
+        <requirement>
           <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
           <field-name>aclDao</field-name>
         </requirement>
