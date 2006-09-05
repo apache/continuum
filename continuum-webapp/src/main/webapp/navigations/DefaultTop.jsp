@@ -34,16 +34,16 @@
   </div>
 
   <div>
-      <b><font color="red">TODO</font></b>Welcome,
+      Welcome,
 
-      <c:if test="${not empty user}">
+      <authz:authorize ifNotGranted="ROLE_ANONYMOUS">
         <b><authz:authentication operation="username"/></b> -
         <a href="<c:url value='/logoff.jsp'/>">Logoff</a>
-      </c:if>
+      </authz:authorize>
 
-      <c:if test="${empty user}">
-        <a href="<ww:url value="login!default.action"/>">Login</a>
-      </c:if>
+      <authz:authorize ifAllGranted="ROLE_ANONYMOUS">
+        <a href="<ww:url value="/login.jsp"/>">Login</a>
+      </authz:authorize>
 
   </div>
 </div>
