@@ -978,6 +978,10 @@ removeUserGroup( int userGroupId )
           <role>org.apache.maven.user.model.UserSecurityPolicy</role>
           <field-name>securityPolicy</field-name>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.user.acegi.AcegiUserHolder</role>
+          <field-name>userHolder</field-name>
+        </requirement>
       </requirements>
     </component>
     
