@@ -274,6 +274,7 @@ public class DefaultContinuumInitializer
 //            }
             catch ( PasswordRuleViolationException pre )
             {
+                // TODO this must not happen for the predefined users
                 throw new ContinuumStoreException( "There was a password rule violation.", pre );
             }
         }
@@ -305,6 +306,7 @@ public class DefaultContinuumInitializer
 //            }
             catch ( PasswordRuleViolationException pre )
             {
+                // TODO this must not happen for the predefined users
                 throw new ContinuumStoreException( "There was a password rule violation.", pre );
             }
         }
