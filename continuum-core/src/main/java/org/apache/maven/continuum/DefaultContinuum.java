@@ -1065,6 +1065,10 @@ public class DefaultContinuum
 
                 projectGroup = store.getProjectGroupWithProjects( projectGroupId );
             }
+
+            /* add the project group loaded from database, which has more info, like id */
+            result.getProjectGroups().remove( 0 );
+            result.getProjectGroups().add( projectGroup );
         }
         catch ( ContinuumStoreException e )
         {
