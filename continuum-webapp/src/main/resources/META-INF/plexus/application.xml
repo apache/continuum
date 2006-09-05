@@ -997,6 +997,10 @@ removeUserGroup( int userGroupId )
       <implementation>org.apache.maven.user.model.impl.DefaultUserSecurityPolicy</implementation>
       <requirements>
         <requirement>
+          <role>org.apache.maven.user.model.PasswordRule</role>
+          <field-name>rules</field-name>
+        </requirement>
+        <requirement>
           <role>org.apache.maven.user.model.PasswordEncoder</role>
           <role-hint>acegisha256</role-hint>
           <field-name>passwordEncoder</field-name>
@@ -1004,7 +1008,7 @@ removeUserGroup( int userGroupId )
       </requirements>
       <configuration>
         <allowedLoginAttempts>3</allowedLoginAttempts>
-        <previousPasswordsCount>6</previousPasswordsCount>
+        <previousPasswordsCount>7</previousPasswordsCount>
       </configuration>
     </component>
     
@@ -1047,7 +1051,44 @@ removeUserGroup( int userGroupId )
         </requirement>
       </requirements>
     </component>
-    
+
+    <!-- password rules -->
+    <component>
+      <role>org.apache.maven.user.model.PasswordRule</role>
+      <role-hint>must-have</role-hint>
+      <implementation>org.apache.maven.user.model.rules.MustHavePasswordRule</implementation>
+    </component>
+    <component>
+      <role>org.apache.maven.user.model.PasswordRule</role>
+      <role-hint>alpha-count</role-hint>
+      <implementation>org.apache.maven.user.model.rules.AlphaPasswordRule</implementation>
+      <configuration>
+        <minimumCount>1</minimumCount>
+      </configuration>
+    </component>
+    <component>
+      <role>org.apache.maven.user.model.PasswordRule</role>
+      <role-hint>character-length</role-hint>
+      <implementation>org.apache.maven.user.model.rules.CharacterLengthPasswordRule</implementation>
+      <configuration>
+        <minimumCharacters>7</minimumCharacters>
+        <maximumCharacters>30</maximumCharacters>
+      </configuration>
+    </component>
+    <component>
+      <role>org.apache.maven.user.model.PasswordRule</role>
+      <role-hint>numerical-count</role-hint>
+      <implementation>org.apache.maven.user.model.rules.NumericalPasswordRule</implementation>
+      <configuration>
+        <minimumCount>1</minimumCount>
+      </configuration>
+    </component>
+    <component>
+      <role>org.apache.maven.user.model.PasswordRule</role>
+      <role-hint>reuse</role-hint>
+      <implementation>org.apache.maven.user.model.rules.ReusePasswordRule</implementation>
+    </component>
+
     <component>
       <role>org.apache.maven.continuum.initialization.ContinuumInitializer</role>
       <implementation>org.apache.maven.continuum.initialization.DefaultContinuumInitializer</implementation>
