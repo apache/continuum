@@ -23,12 +23,11 @@ import java.util.List;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.GrantedAuthorityImpl;
-import org.acegisecurity.userdetails.User;
 import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
-import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.Permission;
+import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserManager;
 import org.springframework.dao.DataAccessException;
 
@@ -61,9 +60,7 @@ public class ContinuumUserDetailsService
     public UserDetails loadUserByUsername( String username )
         throws UsernameNotFoundException, DataAccessException
     {
-        ContinuumUser user;
-
-        user = (ContinuumUser) userManager.getUser( username );
+        User user = userManager.getUser( username );
 
         if ( user == null )
         {
@@ -78,7 +75,7 @@ public class ContinuumUserDetailsService
      * @param user the continuum user loaded from DB
      * @return the Acegi user
      */
-    UserDetails getUserDetails( ContinuumUser user )
+    UserDetails getUserDetails( User user )
     {
         List permissions = user.getGroup().getPermissions();
 
@@ -106,8 +103,9 @@ public class ContinuumUserDetailsService
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 
-        UserDetails userDetails = new User( username, password, enabled, accountNonExpired, credentialsNonExpired,
-                                            accountNonLocked, grantedAuthorities );
+        UserDetails userDetails = new org.acegisecurity.userdetails.User( username, password, enabled,
+                                                                          accountNonExpired, credentialsNonExpired,
+                                                                          accountNonLocked, grantedAuthorities );
 
         return userDetails;
     }
