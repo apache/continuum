@@ -37,6 +37,7 @@
     <!-- In memory database used only for testing -->
     <component>
       <role>org.acegisecurity.userdetails.UserDetailsService</role>
+      <role-hint>memory</role-hint>
       <implementation>org.acegisecurity.userdetails.memory.InMemoryDaoImpl</implementation>
       <configuration>
         <userProperties>
