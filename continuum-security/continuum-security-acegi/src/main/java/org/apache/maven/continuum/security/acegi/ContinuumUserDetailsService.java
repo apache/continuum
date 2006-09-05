@@ -17,6 +17,7 @@ package org.apache.maven.continuum.security.acegi;
  *
  */
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -79,15 +80,23 @@ public class ContinuumUserDetailsService
     {
         List permissions = user.getGroup().getPermissions();
 
-        GrantedAuthority[] grantedAuthorities = new GrantedAuthority[permissions.size()];
-        int i = 0;
+        List grantedAuthorities = new ArrayList( permissions.size() + 1 );
         Iterator it = permissions.iterator();
         while ( it.hasNext() )
         {
             Permission permission = (Permission) it.next();
-            grantedAuthorities[i] = new GrantedAuthorityImpl( "ROLE_" + permission.getName() );
-            i++;
+            grantedAuthorities.add( new GrantedAuthorityImpl( "ROLE_" + permission.getName() ) );
         }
+
+        if ( user.isGuest() )
+        {
+            // TODO externalize this String
+            grantedAuthorities.add( new GrantedAuthorityImpl( "ROLE_ANONYMOUS" ) );
+        }
+
+        GrantedAuthority[] grantedAuthoritiesAsArray = (GrantedAuthority[]) grantedAuthorities
+            .toArray( new GrantedAuthority[0] );
+
         String username = user.getUsername();
         String password = user.getEncodedPassword();
         boolean enabled = true;
@@ -105,7 +114,7 @@ public class ContinuumUserDetailsService
 
         UserDetails userDetails = new org.acegisecurity.userdetails.User( username, password, enabled,
                                                                           accountNonExpired, credentialsNonExpired,
-                                                                          accountNonLocked, grantedAuthorities );
+                                                                          accountNonLocked, grantedAuthoritiesAsArray );
 
         return userDetails;
     }
