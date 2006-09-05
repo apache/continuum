@@ -1011,46 +1011,6 @@ removeUserGroup( int userGroupId )
         <previousPasswordsCount>7</previousPasswordsCount>
       </configuration>
     </component>
-    
-    <component>
-      <role>com.opensymphony.xwork.Action</role>
-      <role-hint>users</role-hint>
-      <implementation>org.apache.maven.user.controller.action.UsersAction</implementation>
-      <instantiation-strategy>per-lookup</instantiation-strategy>
-      <description></description>
-      <requirements>
-        <requirement>
-          <role>org.apache.maven.user.model.UserManager</role>
-          <field-name>userManager</field-name>
-        </requirement>
-      </requirements>
-    </component>
-    <component>
-      <role>com.opensymphony.xwork.Action</role>
-      <role-hint>editUser</role-hint>
-      <implementation>org.apache.maven.user.controller.action.EditUserAction</implementation>
-      <instantiation-strategy>per-lookup</instantiation-strategy>
-      <description></description>
-      <requirements>
-        <requirement>
-          <role>org.apache.maven.user.model.UserManager</role>
-          <field-name>userManager</field-name>
-        </requirement>
-      </requirements>
-    </component>
-    <component>
-      <role>com.opensymphony.xwork.Action</role>
-      <role-hint>deleteUser</role-hint>
-      <implementation>org.apache.maven.user.controller.action.DeleteUserAction</implementation>
-      <instantiation-strategy>per-lookup</instantiation-strategy>
-      <description></description>
-      <requirements>
-        <requirement>
-          <role>org.apache.maven.user.model.UserManager</role>
-          <field-name>userManager</field-name>
-        </requirement>
-      </requirements>
-    </component>
 
     <!-- password rules -->
     <component>
