@@ -27,6 +27,10 @@
       <artifactId>continuum-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.shared.user</groupId>
+      <artifactId>maven-user-acegi</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
       <scope>test</scope>
