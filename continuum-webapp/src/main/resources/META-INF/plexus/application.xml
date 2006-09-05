@@ -329,6 +329,7 @@
     <component>
       <role>org.acegisecurity.userdetails.UserDetailsService</role>
       <implementation>org.acegisecurity.userdetails.memory.InMemoryDaoImpl</implementation>
+      <role-hint>memory</role-hint>
       <configuration>
         <userProperties>
           <property>
@@ -350,7 +351,8 @@
     <!-- Bridge between Acegi and Continuum database -->
     <component>
       <role>org.acegisecurity.userdetails.UserDetailsService</role>
-      <implementation>org.apache.maven.continuum.security.acegi.ContinuumUserDetailsService</implementation>
+      <role-hint>maven</role-hint>
+      <implementation>org.apache.maven.user.acegi.MavenUserDetailsService</implementation>
       <requirements>
         <requirement>
           <role>org.apache.maven.user.model.UserManager</role>
@@ -366,6 +368,7 @@
         <requirement>
           <role>org.acegisecurity.userdetails.UserDetailsService</role>
           <field-name>userDetailsService</field-name>
+          <role-hint>maven</role-hint>
         </requirement>
         <requirement>
           <role>org.acegisecurity.providers.encoding.PasswordEncoder</role>
@@ -979,7 +982,8 @@ removeUserGroup( int userGroupId )
           <field-name>securityPolicy</field-name>
         </requirement>
         <requirement>
-          <role>org.apache.maven.user.acegi.AcegiUserHolder</role>
+          <role>org.apache.maven.user.model.UserHolder</role>
+          <role-hint>acegi</role-hint>
           <field-name>userHolder</field-name>
         </requirement>
       </requirements>
