@@ -15,10 +15,6 @@
     <param-name>extremecomponentsMessagesLocation</param-name>
     <param-value>localization/Continuum</param-value>
   </context-param>
-  <context-param>
-    <param-name>extremecomponentsMessagesLocation</param-name>
-    <param-value>localization/MavenUser</param-value>
-  </context-param>
 
 <!--
   Not integrated with plexus
