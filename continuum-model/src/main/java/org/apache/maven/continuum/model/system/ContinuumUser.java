@@ -16,11 +16,11 @@ package org.apache.maven.continuum.model.system;
  * limitations under the License.
  */
 
-import java.util.Date;
-
 import org.apache.maven.user.model.User;
 
 /**
+ * @deprecated user {@link User} instead
+ * 
  * @author Henry Isidro
  * @version $Id$
  */

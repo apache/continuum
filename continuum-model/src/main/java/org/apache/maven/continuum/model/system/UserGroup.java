@@ -17,6 +17,8 @@ package org.apache.maven.continuum.model.system;
  */
 
 /**
+ * @deprecated user {@link org.apache.maven.user.model.UserGroup} instead
+ * 
  * @author Henry Isidro
  * @version $Id$
  */
