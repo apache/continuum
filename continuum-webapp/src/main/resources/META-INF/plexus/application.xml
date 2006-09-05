@@ -433,7 +433,7 @@
       </requirements>
       <configuration>
         <authenticationFailureUrl>/login.jsp?login_error=1</authenticationFailureUrl>
-        <defaultTargetUrl>/summary.action</defaultTargetUrl>
+        <defaultTargetUrl>/</defaultTargetUrl>
         <filterProcessesUrl>/j_acegi_security_check</filterProcessesUrl>
       </configuration>
     </component>

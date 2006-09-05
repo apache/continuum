@@ -5,5 +5,5 @@ session.invalidate();
 Cookie terminate = new Cookie(TokenBasedRememberMeServices.ACEGI_SECURITY_HASHED_REMEMBER_ME_COOKIE_KEY, null);
 terminate.setMaxAge(0);
 response.addCookie(terminate);
-response.sendRedirect("summary.action");
+response.sendRedirect( request.getContextPath() + "/" );
 %>
