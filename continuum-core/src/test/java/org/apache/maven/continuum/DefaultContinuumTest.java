@@ -227,7 +227,7 @@ public class DefaultContinuumTest
 
         Collection projectGroupList = continuum.getAllProjectGroupsWithProjects();
 
-        assertTrue ( "project group missing, should be one project group for now", projectGroupList.size() == 1 );
+        assertEquals( "Project group missing, should have two project groups", 1, projectGroupList.size() );
 
         ProjectGroup projectGroup = (ProjectGroup) projectGroupList.iterator().next();
 
@@ -237,6 +237,6 @@ public class DefaultContinuumTest
 
         projectGroupList = continuum.getAllProjectGroupsWithProjects();
 
-        assertTrue ( "remove project group failed", projectGroupList.size() == 0 );
+        assertEquals ( "Remove project group failed", 0, projectGroupList.size() );
     }
 }
