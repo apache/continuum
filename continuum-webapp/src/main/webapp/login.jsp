@@ -24,8 +24,9 @@
             <tbody>
               <ww:textfield label="%{getText('login.username')}" name="j_username" required="true"/>
               <ww:password label="%{getText('login.password')}" name="j_password" required="true"/>
-              <%-- TODO integrate remember me with Acegi --%>
+              <%-- TODO integrate remember me with Acegi 
               <ww:checkbox label="%{getText('login.rememberMe')}" name="rememberMe" value="rememberMe" fieldValue="true"/>
+              --%>
             </tbody>
           </table>
           <div class="functnbar3">
