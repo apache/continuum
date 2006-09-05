@@ -224,12 +224,18 @@ public class DefaultContinuumTest
         ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
 
         assertNotNull( result );
+        
+        assertEquals( 1, result.getProjectGroups().size() );
+        
+        ProjectGroup projectGroup = (ProjectGroup) result.getProjectGroups().get( 0 );
+
+        assertEquals( 1, projectGroup.getId() );
 
         Collection projectGroupList = continuum.getAllProjectGroupsWithProjects();
 
         assertEquals( "Project group missing, should have two project groups", 1, projectGroupList.size() );
 
-        ProjectGroup projectGroup = (ProjectGroup) projectGroupList.iterator().next();
+        projectGroup = (ProjectGroup) projectGroupList.iterator().next();
 
         assertNotNull( projectGroup );
 
