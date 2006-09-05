@@ -11,6 +11,10 @@
           <role-hint>default</role-hint>
           <field-name>continuum</field-name>
         </requirement>
+        <requirement>
+          <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
+          <field-name>aclDao</field-name>
+        </requirement>
       </requirements>
     </component>
 
