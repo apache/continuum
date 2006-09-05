@@ -33,7 +33,7 @@ public class ContinuumActionSupport
 {
 
     /**
-     * @plexus.requirement role-hint="default"
+     * @plexus.requirement role-hint="acegi"
      */
     private Continuum continuum;
 

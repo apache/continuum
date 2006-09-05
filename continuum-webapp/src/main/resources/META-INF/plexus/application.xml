@@ -702,7 +702,7 @@
         </requirement>
       </requirements>
       <configuration>
-        <allowIfAllAbstainDecisions>false</allowIfAllAbstainDecisions>
+        <allowIfAllAbstainDecisions>true</allowIfAllAbstainDecisions>
       </configuration>
     </component>
 
