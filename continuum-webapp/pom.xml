@@ -285,5 +285,11 @@
       <groupId>org.apache.maven.shared.user</groupId>
       <artifactId>maven-user-controller</artifactId>
     </dependency>
+    <!-- needed due to http://jira.opensymphony.com/browse/WW-291 -->
+    <dependency>
+      <groupId>org.acegisecurity</groupId>
+      <artifactId>acegi-security-webwork</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

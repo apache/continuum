@@ -96,7 +96,7 @@
 
   <filter>
     <filter-name>webwork</filter-name>
-    <filter-class>com.opensymphony.webwork.dispatcher.FilterDispatcher</filter-class>
+    <filter-class>org.acegisecurity.webwork.FilterDispatcher</filter-class>
   </filter>
 
 <!--
