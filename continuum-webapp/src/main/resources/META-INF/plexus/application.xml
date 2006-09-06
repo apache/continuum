@@ -678,7 +678,7 @@
             <methodDefinitionSourceMapping>
               <methodName>org.apache.maven.continuum.Continuum.getProjectGroup</methodName>
               <configAttributes>
-                <configAttribute>ACL_PROJECTGROUP_READ</configAttribute>
+                <configAttribute>AFTER_ACL_READ</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
             <methodDefinitionSourceMapping>
@@ -690,7 +690,7 @@
             <methodDefinitionSourceMapping>
               <methodName>org.apache.maven.continuum.Continuum.getProjectGroupByProjectId</methodName>
               <configAttributes>
-                <configAttribute>ACL_PROJECTGROUP_READ</configAttribute>
+                <configAttribute>AFTER_ACL_READ</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
             <methodDefinitionSourceMapping>
@@ -702,6 +702,7 @@
             <methodDefinitionSourceMapping>
               <methodName>org.apache.maven.continuum.Continuum.removeProjectGroup</methodName>
               <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
                 <configAttribute>ROLE_deleteProject</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
@@ -799,6 +800,8 @@ removeUserGroup( int userGroupId )
       </configuration>
     </component>
 
+    <!-- Processes ACL_PROJECT_READ configuration settings -->
+    <!-- not used yet
     <component>
       <role>org.acegisecurity.vote.AccessDecisionVoter</role>
       <role-hint>aclProjectRead</role-hint>
@@ -818,7 +821,10 @@ removeUserGroup( int userGroupId )
         </requirePermissionFromString>
       </configuration>
     </component>
+    -->
 
+    <!-- Processes ACL_PROJECTGROUP_READ configuration settings -->
+    <!-- not used yet
     <component>
       <role>org.acegisecurity.vote.AccessDecisionVoter</role>
       <role-hint>aclProjectGroupRead</role-hint>
@@ -838,7 +844,11 @@ removeUserGroup( int userGroupId )
         </requirePermissionFromString>
       </configuration>
     </component>
+    -->
 
+    <!-- ============== "AFTER INTERCEPTION" AUTHORIZATION DEFINITIONS =========== -->
+
+    <!-- Processes AFTER_ACL_COLLECTION_READ configuration settings -->
     <component>
       <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
       <role-hint>afterAclCollectionRead</role-hint>
@@ -857,10 +867,11 @@ removeUserGroup( int userGroupId )
       </configuration>
     </component>
 
+    <!-- Processes AFTER_ACL_READ configuration settings -->
     <component>
       <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
       <role-hint>afterAclRead</role-hint>
-      <implementation>org.acegisecurity.afterinvocation.BasicAclEntryAfterInvocationCollectionFilteringProvider</implementation>
+      <implementation>org.acegisecurity.afterinvocation.BasicAclEntryAfterInvocationProvider</implementation>
       <requirements>
         <requirement>
           <role>org.acegisecurity.acl.AclManager</role>
