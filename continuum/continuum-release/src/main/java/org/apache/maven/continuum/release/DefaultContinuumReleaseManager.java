@@ -30,6 +30,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
+import java.util.HashMap;
 
 /**
  * @author Jason van Zyl
@@ -118,6 +119,11 @@ public class DefaultContinuumReleaseManager
 
     public Map getPreparedReleases()
     {
+        if ( preparedReleases == null )
+        {
+            preparedReleases = new HashMap();
+        }
+
         return preparedReleases;
     }
 

@@ -52,12 +52,14 @@ public class PrepareReleaseTaskExecutorTest
     public void testRelease()
         throws Exception
     {
-        File testProjectDir = new File( getBasedir(), "target/test-classes/scm-src" );
+        File testProjectDir = new File( getBasedir(), "target/test-classes/scm-src/trunk" );
         File workDir = new File( getBasedir(), "target/test-classes/work-dir" );
         workDir.mkdirs();
 
         ReleaseDescriptor descriptor = new ReleaseDescriptor();
-        descriptor.setScmSourceUrl( "scm:svn:file://localhost/" + testProjectDir.getAbsolutePath() );
+        descriptor.setInteractive( false );
+        descriptor.setScmSourceUrl( "scm:svn:file://localhost/" +
+            testProjectDir.getAbsolutePath().replace( '\\', '/' ) );
         descriptor.setWorkingDirectory( workDir.getAbsolutePath() );
 
         ScmRepository repository = getScmRepositorty( descriptor.getScmSourceUrl() );
