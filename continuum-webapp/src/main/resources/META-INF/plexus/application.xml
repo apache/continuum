@@ -602,6 +602,60 @@
     </component>
 
     <component>
+      <role>org.acegisecurity.acl.AclProvider</role>
+      <implementation>org.acegisecurity.acl.basic.BasicAclProvider</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
+          <field-name>basicAclDao</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.AclManager</role>
+      <implementation>org.acegisecurity.acl.AclProviderManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclProvider</role>
+          <field-name>providers</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+      <role-hint>roleVoter</role-hint>
+      <implementation>org.acegisecurity.vote.RoleVoter</implementation>
+    </component>
+
+    <!-- An access decision manager used by the business objects -->
+    <component>
+      <role>org.acegisecurity.AccessDecisionManager</role>
+      <implementation>org.acegisecurity.vote.AffirmativeBased</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+          <field-name>decisionVoters</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <allowIfAllAbstainDecisions>true</allowIfAllAbstainDecisions>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</role>
+      <implementation>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
+          <field-name>providers</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
       <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
       <implementation>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</implementation>
       <requirements>
@@ -746,34 +800,6 @@ removeUserGroup( int userGroupId )
     </component>
 
     <component>
-      <role>org.acegisecurity.acl.AclProvider</role>
-      <implementation>org.acegisecurity.acl.basic.BasicAclProvider</implementation>
-      <requirements>
-        <requirement>
-          <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
-          <field-name>basicAclDao</field-name>
-        </requirement>
-      </requirements>
-    </component>
-
-    <component>
-      <role>org.acegisecurity.acl.AclManager</role>
-      <implementation>org.acegisecurity.acl.AclProviderManager</implementation>
-      <requirements>
-        <requirement>
-          <role>org.acegisecurity.acl.AclProvider</role>
-          <field-name>providers</field-name>
-        </requirement>
-      </requirements>
-    </component>
-
-    <component>
-      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
-      <role-hint>roleVoter</role-hint>
-      <implementation>org.acegisecurity.vote.RoleVoter</implementation>
-    </component>
-
-    <component>
       <role>org.acegisecurity.vote.AccessDecisionVoter</role>
       <role-hint>aclProjectRead</role-hint>
       <implementation>org.acegisecurity.vote.BasicAclEntryVoter</implementation>
@@ -813,21 +839,6 @@ removeUserGroup( int userGroupId )
       </configuration>
     </component>
 
-    <!-- An access decision manager used by the business objects -->
-    <component>
-      <role>org.acegisecurity.AccessDecisionManager</role>
-      <implementation>org.acegisecurity.vote.AffirmativeBased</implementation>
-      <requirements>
-        <requirement>
-          <role>org.acegisecurity.vote.AccessDecisionVoter</role>
-          <field-name>decisionVoters</field-name>
-        </requirement>
-      </requirements>
-      <configuration>
-        <allowIfAllAbstainDecisions>true</allowIfAllAbstainDecisions>
-      </configuration>
-    </component>
-
     <component>
       <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
       <role-hint>afterAclCollectionRead</role-hint>
@@ -862,17 +873,6 @@ removeUserGroup( int userGroupId )
           <permission>READ</permission>
         </requirePermissionFromString>
       </configuration>
-    </component>
-
-    <component>
-      <role>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</role>
-      <implementation>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</implementation>
-      <requirements>
-        <requirement>
-          <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
-          <field-name>providers</field-name>
-        </requirement>
-      </requirements>
     </component>
 
 
