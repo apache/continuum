@@ -29,6 +29,7 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Map projects to their new versions after release / into the next development cycle.
@@ -97,6 +98,14 @@ public class MapVersionsPhase
                         nextVersion = prompter.prompt( "What is the new development version for \"" +
                             project.getName() + "\"? (" + projectId + ")", nextVersion );
                     }
+                    else
+                    {
+                        Map devVersions = releaseDescriptor.getDevelopmentVersions();
+                        if ( devVersions.containsKey( projectId ) )
+                        {
+                            nextVersion = devVersions.remove( projectId ).toString();
+                        }
+                    }
 
                     releaseDescriptor.mapDevelopmentVersion( projectId, nextVersion );
                 }
@@ -113,6 +122,14 @@ public class MapVersionsPhase
                         nextVersion = prompter.prompt(
                             "What is the release version for \"" + project.getName() + "\"? (" + projectId + ")",
                             nextVersion );
+                    }
+                    else
+                    {
+                        Map relVersions = releaseDescriptor.getReleaseVersions();
+                        if ( relVersions.containsKey( projectId ) )
+                        {
+                            nextVersion = relVersions.remove( projectId ).toString();
+                        }
                     }
 
                     releaseDescriptor.mapReleaseVersion( projectId, nextVersion );
