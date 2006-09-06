@@ -435,7 +435,7 @@
         </requirement>
       </requirements>
       <configuration>
-        <authenticationFailureUrl>/login.jsp?login_error=1</authenticationFailureUrl>
+        <authenticationFailureUrl>/user/login.jsp?login_error=1</authenticationFailureUrl>
         <defaultTargetUrl>/</defaultTargetUrl>
         <filterProcessesUrl>/j_acegi_security_check</filterProcessesUrl>
       </configuration>
@@ -445,7 +445,7 @@
       <role>org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint</role>
       <implementation>org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint</implementation>
       <configuration>
-        <loginFormUrl>/login.jsp</loginFormUrl>
+        <loginFormUrl>/user/login.jsp</loginFormUrl>
         <forceHttps>false</forceHttps>
       </configuration>
     </component>

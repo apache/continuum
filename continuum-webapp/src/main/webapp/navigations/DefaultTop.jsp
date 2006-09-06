@@ -38,11 +38,11 @@
 
       <authz:authorize ifNotGranted="ROLE_ANONYMOUS">
         <b><authz:authentication operation="username"/></b> -
-        <a href="<c:url value='/logoff.jsp'/>">Logoff</a>
+        <a href="<c:url value='/user/logoff.jsp'/>">Logoff</a>
       </authz:authorize>
 
       <authz:authorize ifAllGranted="ROLE_ANONYMOUS">
-        <a href="<ww:url value="/login.jsp"/>">Login</a>
+        <a href="<ww:url value="/user/login.jsp"/>">Login</a>
       </authz:authorize>
 
   </div>
