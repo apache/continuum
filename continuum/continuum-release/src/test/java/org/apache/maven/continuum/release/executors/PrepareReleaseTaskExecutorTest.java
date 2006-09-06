@@ -52,7 +52,7 @@ public class PrepareReleaseTaskExecutorTest
     public void testRelease()
         throws Exception
     {
-        File testProjectDir = new File( getBasedir(), "src/test/scm" );
+        File testProjectDir = new File( getBasedir(), "target/test-classes/scm-src" );
         File workDir = new File( getBasedir(), "target/test-classes/work-dir" );
         workDir.mkdirs();
 
@@ -64,14 +64,14 @@ public class PrepareReleaseTaskExecutorTest
         ScmFileSet fileSet = new ScmFileSet( workDir );
         scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, null );
 
-//        taskExec.executeTask( getPrepareTask( "testRelease", descriptor ) );
+        taskExec.executeTask( getPrepareTask( "testRelease", descriptor ) );
     }
 
     protected Task getPrepareTask( String releaseId, ReleaseDescriptor descriptor )
     {
         Task task = new PrepareReleaseProjectTask( releaseId, descriptor );
 
-        
+
 
         return task;
     }
