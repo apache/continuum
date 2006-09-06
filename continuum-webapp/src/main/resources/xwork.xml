@@ -32,8 +32,8 @@
 
     <global-exception-mappings>
       <exception-mapping exception="java.lang.Exception" result="error-internal"/>
-      <!-- this will be handled by Acegi ExceptionTranslationFilter -->
-      <exception-mapping exception="org.acegisecurity.AcegiSecurityException" result="ignore"/>
+      <exception-mapping exception="org.acegisecurity.AuthenticationException" result="ignore"/>
+      <exception-mapping exception="org.acegisecurity.AccessDeniedException" result="ignore"/>
     </global-exception-mappings>
 
     <action name="checkConfiguration" class="checkConfiguration">
