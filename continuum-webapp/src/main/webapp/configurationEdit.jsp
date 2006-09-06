@@ -13,7 +13,6 @@
           <ww:form action="configuration.action" method="post">
             <table>
               <tbody>
-                <ww:checkbox label="%{getText('configuration.guest.label')}" name="guestAccountEnabled" value="guestAccountEnabled" fieldValue="true"/>
                 <ww:textfield label="%{getText('configuration.workingDirectory.label')}" name="workingDirectory" required="true"/>
                 <ww:textfield label="%{getText('configuration.buildOutputDirectory.label')}" name="buildOutputDirectory" required="true"/>
                 <ww:textfield label="%{getText('configuration.baseUrl.label')}" name="baseUrl" required="true"/>
