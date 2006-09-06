@@ -58,6 +58,17 @@
     </div>
   </authz:authorize>      
 
+  <authz:authorize ifNotGranted="ROLE_ANONYMOUS">
+    <div id="projectmenu" class="toolgroup">
+      <div class="label"><ww:text name="menu.account.options"/></div>
+      <div>
+        <div class="body">
+          <a href="<ww:url value="/user/edit!doEdit.action"/>"><ww:text name="user.edit.account"/></a>
+        </div>
+      </div>
+    </div>
+  </authz:authorize>
+
   <div id="projectmenu" class="toolgroup">
     <div class="label">Legend</div>
     <div id="legend">
