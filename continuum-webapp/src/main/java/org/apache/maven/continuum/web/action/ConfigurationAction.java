@@ -17,12 +17,10 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.io.File;
-import java.util.Collections;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.model.system.ContinuumUser;
-import org.apache.maven.continuum.model.system.UserGroup;
 import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -46,8 +44,6 @@ public class ConfigurationAction
      * @plexus.requirement
      */
     private ContinuumStore store;
-
-    private boolean guestAccountEnabled;
 
     private String username;
 
@@ -74,8 +70,6 @@ public class ConfigurationAction
     public void prepare()
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
-
-        guestAccountEnabled = configuration.isGuestAccountEnabled();
 
         workingDirectory = configuration.getWorkingDirectory().getAbsolutePath();
 
@@ -106,21 +100,6 @@ public class ConfigurationAction
         store.addUser( adminUser );
         
         ConfigurationService configuration = getContinuum().getConfiguration();
-
-        if ( guestAccountEnabled )
-        {
-            configuration.setGuestAccountEnabled( guestAccountEnabled );
-        }
-        else
-        {
-            configuration.setGuestAccountEnabled( false );
-
-            UserGroup guestGroup = store.getUserGroup( ContinuumSecurity.GUEST_GROUP_NAME );
-
-            guestGroup.setPermissions( Collections.EMPTY_LIST );
-
-            store.updateUserGroup( guestGroup );
-        }
 
         configuration.setWorkingDirectory( new File( workingDirectory ) );
 
@@ -153,16 +132,6 @@ public class ConfigurationAction
         throws Exception
     {
         return INPUT;
-    }
-
-    public boolean isGuestAccountEnabled()
-    {
-        return guestAccountEnabled;
-    }
-
-    public void setGuestAccountEnabled( boolean guestAccountEnabled )
-    {
-        this.guestAccountEnabled = guestAccountEnabled;
     }
 
     public String getUsername()
