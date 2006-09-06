@@ -18,9 +18,16 @@ package org.apache.maven.continuum.release.executors;
 
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
+import org.apache.maven.scm.manager.NoSuchScmProviderException;
+import org.apache.maven.scm.manager.ScmManager;
+import org.apache.maven.scm.repository.ScmRepository;
+import org.apache.maven.scm.repository.ScmRepositoryException;
+import org.apache.maven.scm.ScmFileSet;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
+
+import java.io.File;
 
 /**
  * @author Edwin Punzalan
@@ -28,6 +35,8 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 public class PrepareReleaseTaskExecutorTest
     extends PlexusTestCase
 {
+    private ScmManager scmManager;
+
     private TaskExecutor taskExec;
 
     protected void setUp()
@@ -35,21 +44,45 @@ public class PrepareReleaseTaskExecutorTest
     {
         super.setUp();
 
+        scmManager = (ScmManager) lookup( "org.apache.maven.scm.manager.ScmManager" );
+
         taskExec = (TaskExecutor) lookup( ReleaseTaskExecutor.ROLE, "prepare-release" );
     }
 
     public void testRelease()
         throws Exception
     {
-        ReleaseDescriptor descriptor = new ReleaseDescriptor();
+        File testProjectDir = new File( getBasedir(), "src/test/scm" );
+        File workDir = new File( getBasedir(), "target/test-classes/work-dir" );
+        workDir.mkdirs();
 
-        taskExec.executeTask( getPrepareTask( "testRelease", descriptor ) );
+        ReleaseDescriptor descriptor = new ReleaseDescriptor();
+        descriptor.setScmSourceUrl( "scm:svn:file://localhost/" + testProjectDir.getAbsolutePath() );
+        descriptor.setWorkingDirectory( workDir.getAbsolutePath() );
+
+        ScmRepository repository = getScmRepositorty( descriptor.getScmSourceUrl() );
+        ScmFileSet fileSet = new ScmFileSet( workDir );
+        scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, null );
+
+//        taskExec.executeTask( getPrepareTask( "testRelease", descriptor ) );
     }
 
     protected Task getPrepareTask( String releaseId, ReleaseDescriptor descriptor )
     {
         Task task = new PrepareReleaseProjectTask( releaseId, descriptor );
 
+        
+
         return task;
+    }
+
+    private ScmRepository getScmRepositorty( String scmUrl )
+        throws ScmRepositoryException, NoSuchScmProviderException
+    {
+        ScmRepository repository = scmManager.makeScmRepository( scmUrl.trim() );
+
+        repository.getProviderRepository().setPersistCheckout( true );
+
+        return repository;
     }
 }

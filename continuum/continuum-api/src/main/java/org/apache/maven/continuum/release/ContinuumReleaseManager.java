@@ -20,6 +20,7 @@ import org.apache.maven.continuum.model.project.Project;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * The Continuum Release Manager is responsible for performing releases based on a release descriptor
@@ -35,9 +36,10 @@ public interface ContinuumReleaseManager
      * Prepare a project for release
      *
      * @param project      project / project group to be released
+     * @param releaseProperties
      * @throws ContinuumReleaseException
      */
-    void prepare( Project project )
+    void prepare( Project project, Properties releaseProperties )
         throws ContinuumReleaseException;
 
     /**

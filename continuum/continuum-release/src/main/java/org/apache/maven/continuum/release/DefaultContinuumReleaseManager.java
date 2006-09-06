@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Jason van Zyl
@@ -52,14 +53,16 @@ public class DefaultContinuumReleaseManager
      */
     private Map preparedReleases;
 
-    public void prepare( Project project )
+    public void prepare( Project project, Properties releaseProperties )
         throws ContinuumReleaseException
     {
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
 
+        ReleaseDescriptor descriptor = getReleaseDescriptor( project, releaseProperties );
+
         try
         {
-            prepareReleaseQueue.put( new PrepareReleaseProjectTask( releaseId, new ReleaseDescriptor() ) );
+            prepareReleaseQueue.put( new PrepareReleaseProjectTask( releaseId, descriptor ) );
         }
         catch ( TaskQueueException e )
         {
@@ -99,7 +102,7 @@ public class DefaultContinuumReleaseManager
     }
 
     private void perform( String releaseId, ReleaseDescriptor descriptor, File buildDirectory,
-                         String goals, boolean useReleaseProfile )
+                          String goals, boolean useReleaseProfile )
         throws ContinuumReleaseException
     {
         try
@@ -121,5 +124,25 @@ public class DefaultContinuumReleaseManager
     public void setPreparedReleases( Map preparedReleases )
     {
         this.preparedReleases = preparedReleases;
+    }
+
+    private ReleaseDescriptor getReleaseDescriptor( Project project, Properties releaseProperties )
+    {
+        ReleaseDescriptor descriptor = new ReleaseDescriptor();
+
+        //release properties from the project
+        descriptor.setScmUsername( project.getScmUsername() );
+        descriptor.setScmPassword( project.getScmPassword() );
+        descriptor.setWorkingDirectory( project.getWorkingDirectory() );
+        descriptor.setScmSourceUrl( project.getScmUrl() );
+
+        //required properties
+        descriptor.setScmReleaseLabel( releaseProperties.getProperty( "tag" ) );
+        descriptor.setScmTagBase( releaseProperties.getProperty( "tagBase" ) );
+
+        //forced properties
+        descriptor.setInteractive( false );
+
+        return descriptor;
     }
 }

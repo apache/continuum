@@ -34,4 +34,12 @@
       <version>1.0-alpha-3</version>
     </dependency>
   </dependencies>
+  <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/scm</directory>
+        <targetPath>scm-src</targetPath>
+      </testResource>
+    </testResources>
+  </build>
 </project>
