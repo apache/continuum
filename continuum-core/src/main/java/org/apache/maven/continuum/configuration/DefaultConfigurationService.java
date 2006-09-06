@@ -154,14 +154,27 @@ public class DefaultConfigurationService
         systemConf.setCompanyUrl( companyUrl );
     }
 
+    /**
+     * Is the guest user account enabled?
+     * 
+     * @deprecated always returns <code>false</code>, use the new security framework for setting
+     *             guest user permissions
+     * @return <code>false</code> always
+     */
     public boolean isGuestAccountEnabled()
     {
-        return systemConf.isGuestAccountEnabled();
+        return false;
     }
 
+    /**
+     * Set if the guest user account is enabled or not
+     * 
+     * @deprecated value set is ignored, use the new security framework for setting
+     *             guest user permissions
+     */
     public void setGuestAccountEnabled( boolean enabled )
     {
-        systemConf.setGuestAccountEnabled( enabled );
+        // ignore
     }
 
     public String getBuildOutput( int buildId, int projectId )
