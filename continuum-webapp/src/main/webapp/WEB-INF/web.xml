@@ -11,6 +11,7 @@
     <param-value>/extremecomponents.properties</param-value>
   </context-param>
 
+  <!-- TODO: http://jira.codehaus.org/browse/CONTINUUM-846 -->
   <context-param>
     <param-name>extremecomponentsMessagesLocation</param-name>
     <param-value>localization/Continuum</param-value>
