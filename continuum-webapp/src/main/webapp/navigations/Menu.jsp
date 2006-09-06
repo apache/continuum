@@ -20,16 +20,16 @@
       <div class="label"><ww:text name="menu.addProject"/></div>
       <div>
         <div class="body">
-          <a href="<ww:url value="addMavenTwoProject!default.action"/>"><ww:text name="menu.add.m2Project"/></a>
+          <a href="<ww:url value="/addMavenTwoProject!default.action"/>"><ww:text name="menu.add.m2Project"/></a>
         </div>
         <div class="body">
-          <a href="<ww:url value="addMavenOneProject!default.action"/>"><ww:text name="menu.add.m1Project"/></a>
+          <a href="<ww:url value="/addMavenOneProject!default.action"/>"><ww:text name="menu.add.m1Project"/></a>
         </div>
         <div class="body">
-          <a href="<ww:url value="addProject!default.action"><ww:param name="projectType">ant</ww:param></ww:url>"><ww:text name="menu.add.antProject"/></a>
+          <a href="<ww:url value="/addProject!default.action"><ww:param name="projectType">ant</ww:param></ww:url>"><ww:text name="menu.add.antProject"/></a>
         </div>
         <div class="body">
-          <a href="<ww:url value="addProject!default.action"><ww:param name="projectType">shell</ww:param></ww:url>"><ww:text name="menu.add.shellProject"/></a>
+          <a href="<ww:url value="/addProject!default.action"><ww:param name="projectType">shell</ww:param></ww:url>"><ww:text name="menu.add.shellProject"/></a>
         </div>
       </div>
     </div>
@@ -41,12 +41,12 @@
       <div>
         <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageSchedule">
           <div class="body">
-            <a href="<ww:url value="schedules.action"/>"><ww:text name="menu.administration.schedules"/></a>
+            <a href="<ww:url value="/schedules.action"/>"><ww:text name="menu.administration.schedules"/></a>
           </div>
         </authz:authorize>      
         <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageConfiguration">
           <div class="body">
-            <a href="<ww:url value="configuration!default.action"/>"><ww:text name="menu.administration.configuration"/></a>
+            <a href="<ww:url value="/configuration!default.action"/>"><ww:text name="menu.administration.configuration"/></a>
           </div>
         </authz:authorize>      
         <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
