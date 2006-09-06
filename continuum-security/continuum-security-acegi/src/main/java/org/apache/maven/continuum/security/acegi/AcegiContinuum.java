@@ -1059,6 +1059,7 @@ public class AcegiContinuum
         throws ContinuumException
     {
         getContinuum().removeProjectGroup( projectGroupId );
+        getAclEventHandler().afterDeleteProjectGroup( projectGroupId );
     }
 
 }
