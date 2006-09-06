@@ -752,7 +752,14 @@ addNotifier( int projectId, ProjectNotifier notifier )
 addNotifier( int projectId, String notifierType, Map configuration )
 removeNotifier( int projectId, int notifierId )
 getProjectWithCheckoutResult( int projectId )
-getProjectWithAllDetails( int projectId )
+-->
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getProjectWithAllDetails</methodName>
+              <configAttributes>
+                <configAttribute>AFTER_ACL_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+<!--
 getProjectWithBuilds( int projectId )
 getBuildDefinitions( int projectId )
 getBuildDefinition( int projectId, int buildDefinitionId )
