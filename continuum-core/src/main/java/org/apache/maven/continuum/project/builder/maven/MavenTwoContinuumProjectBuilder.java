@@ -111,7 +111,7 @@ public class MavenTwoContinuumProjectBuilder
         }
         catch ( FileNotFoundException e )
         {
-            getLogger().info( "Error adding project: File not found " + url, e );
+            getLogger().debug( "Error adding project: File not found " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
             return;
         }
