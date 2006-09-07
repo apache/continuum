@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.security.acegi;
+package org.apache.maven.continuum.security.acegi.acl;
 
 /*
  * Copyright 2006 The Apache Software Foundation.
@@ -28,7 +28,6 @@ import org.acegisecurity.userdetails.User;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.apache.maven.continuum.security.acegi.acl.AclInitializer;
 
 /**
  * Utility class to handle ACL manipulation on Continuum events, like adding or
