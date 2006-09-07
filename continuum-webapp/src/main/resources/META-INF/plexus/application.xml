@@ -582,6 +582,29 @@
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
             <!-- TODO protect other URLs -->
+
+            <!-- user URLs -->
+            <filterInvocationDefinitionSourceMapping>
+              <url>/user/list*</url>
+              <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ROLE_manageUsers</configAttribute>
+              </configAttributes>
+            </filterInvocationDefinitionSourceMapping>
+            <filterInvocationDefinitionSourceMapping>
+              <url>/user/delete*</url>
+              <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ROLE_manageUsers</configAttribute>
+              </configAttributes>
+            </filterInvocationDefinitionSourceMapping>
+            <filterInvocationDefinitionSourceMapping>
+              <url>/user/addRole*</url>
+              <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ROLE_manageUsers</configAttribute>
+              </configAttributes>
+            </filterInvocationDefinitionSourceMapping>
           </mappings>
         </objectDefinitionSource>
       </configuration>
