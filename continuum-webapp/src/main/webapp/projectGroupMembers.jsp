@@ -25,11 +25,13 @@
           </table>
         </div>
     
+<%--
         <h3>Membership Actions</h3>
-    
+
         <div class="axial">
           Scan for new Projects? 
         </div>
+--%>
     
         <h3>Member Projects</h3>
     

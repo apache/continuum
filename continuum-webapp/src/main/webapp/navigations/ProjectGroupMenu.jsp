@@ -47,6 +47,7 @@
       </c:otherwise>
     </c:choose>
 
+<%--
     <c:choose>
       <c:when test="${param.tab == 'notifier'}">
         <b class="tabMenuDisabled">Notifiers</b>
@@ -55,6 +56,7 @@
         <ww:a cssClass="tabMenuEnabled" href="%{projectGroupNotifierUrl}">Notifiers</ww:a>
       </c:otherwise>
     </c:choose>
+--%>
 
     <c:choose>
       <c:when test="${param.tab == 'permissions'}">
