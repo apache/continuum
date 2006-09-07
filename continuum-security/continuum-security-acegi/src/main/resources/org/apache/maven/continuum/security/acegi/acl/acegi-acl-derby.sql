@@ -6,7 +6,7 @@ CREATE TABLE acl_object_identity (
      parent_object INTEGER,
      acl_class VARCHAR(250) NOT NULL,
      CONSTRAINT unique_object_identity UNIQUE(object_identity),
-     FOREIGN KEY (parent_object) REFERENCES acl_object_identity(id)
+     FOREIGN KEY (parent_object) REFERENCES acl_object_identity(id) ON DELETE CASCADE
 );
 
 CREATE TABLE acl_permission (
@@ -15,7 +15,7 @@ CREATE TABLE acl_permission (
      recipient VARCHAR(100) NOT NULL,
      mask INTEGER NOT NULL,
      CONSTRAINT unique_recipient UNIQUE(acl_object_identity, recipient),
-     FOREIGN KEY (acl_object_identity) REFERENCES acl_object_identity(id)
+     FOREIGN KEY (acl_object_identity) REFERENCES acl_object_identity(id) ON DELETE CASCADE
 );
 
 --INSERT INTO acl_object_identity (object_identity, parent_object, acl_class) VALUES ('org.apache.maven.continuum.model.project.ProjectGroup:1', null, 'org.acegisecurity.acl.basic.SimpleAclEntry');
