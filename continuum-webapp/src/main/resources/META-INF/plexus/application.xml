@@ -605,6 +605,19 @@
                 <configAttribute>ROLE_manageUsers</configAttribute>
               </configAttributes>
             </filterInvocationDefinitionSourceMapping>
+            <filterInvocationDefinitionSourceMapping>
+              <url>/user/edit*</url>
+              <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ROLE_manageUsers</configAttribute>
+              </configAttributes>
+            </filterInvocationDefinitionSourceMapping>
+            <filterInvocationDefinitionSourceMapping>
+              <url>/user/myAccount*</url>
+              <configAttributes>
+                <configAttribute>ROLE_user</configAttribute>
+              </configAttributes>
+            </filterInvocationDefinitionSourceMapping>
           </mappings>
         </objectDefinitionSource>
       </configuration>
