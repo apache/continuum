@@ -112,7 +112,7 @@
           <h4><ww:text name="buildResult.buildError"/></h4>
           <p>
             <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
-            <code><pre><ww:property value="buildResult.error"/></pre></code>
+            <pre><ww:property value="buildResult.error"/></pre>
             </div>
           </p>
         </ww:if>
