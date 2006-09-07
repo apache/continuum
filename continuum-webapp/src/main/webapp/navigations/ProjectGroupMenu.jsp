@@ -1,5 +1,6 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
+<%@ taglib uri="continuum" prefix="c1" %>
 
 <div>
   <p style="border-top: 1px solid transparent; border-bottom: 1px solid #DFDEDE;">
@@ -68,4 +69,14 @@
     </c:choose>
 
   </p>
+</div>
+
+<h3>Project Group Information</h3>
+            
+<div class="axial">
+  <table border="1" cellspacing="2" cellpadding="3" width="100%">
+    <c1:data label="%{getText('projectView.project.name')}" name="projectGroup.name"/>
+    <c1:data label="Group Id" name="projectGroup.groupId"/>
+    <c1:data label="Description" name="projectGroup.description"/>
+   </table>         
 </div>
