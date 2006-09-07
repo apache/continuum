@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
+
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
@@ -27,7 +28,7 @@
             <c1:data label="%{getText('projectView.project.group')}" name="project.projectGroup.name"/>
           </table>
           <!--
-            wrap this in security tag
+            TODO wrap this in security tag
           -->
           <div class="functnbar3">
             <table>
