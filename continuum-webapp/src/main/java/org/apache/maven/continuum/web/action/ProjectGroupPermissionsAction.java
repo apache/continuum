@@ -16,14 +16,11 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.ContinuumException;
-
-import org.apache.maven.user.model.UserManager;
-
 import java.util.List;
-import java.util.Map;
-import java.util.Iterator;
+
+import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.user.model.UserManager;
 
 /**
  * Action to see and edit project group permissions per user.
@@ -54,8 +51,8 @@ public class ProjectGroupPermissionsAction
         users = userManager.getUsersInstancePermissions();
 
         projectGroup = getContinuum().getProjectGroup( projectGroupId );
-        
-        getLogger().info("ProjectGroupName = " + projectGroup.getName() );
+
+        getLogger().info( "ProjectGroupName = " + projectGroup.getName() );
 
         return INPUT;
     }
@@ -63,8 +60,7 @@ public class ProjectGroupPermissionsAction
     public String save()
         throws ContinuumException
     {
-       return SUCCESS;
- 
+        return SUCCESS;
     }
 
     public int getProjectGroupId()
