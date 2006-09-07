@@ -22,7 +22,7 @@
             <ww:param name="projectGroupId" value="projectGroupId"/>
           </ww:url>
           <ww:url id="removeProjectGroupUrl" action="removeProjectGroup">
-            <ww:param name="projectGroupId" value="projectGroupId"/>
+            <ww:param name="projectGroupId" value="projectGroupId"/>           
             <ww:param name="confirmed" value="false"/>
           </ww:url>
           <ww:a href="%{buildProjectGroupUrl}">Build</ww:a>&nbsp;<ww:a href="%{removeProjectGroupUrl}">Remove</ww:a>

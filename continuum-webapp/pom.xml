@@ -150,6 +150,10 @@
       <artifactId>maven-user-webapp</artifactId>
       <type>war</type>
     </dependency>
+    <dependency> <!-- added since depMgt doesn't override imported dependencies -->
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.maven.shared.user</groupId>
       <artifactId>maven-user-controller</artifactId>

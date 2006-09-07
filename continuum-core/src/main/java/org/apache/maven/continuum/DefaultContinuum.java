@@ -2218,7 +2218,10 @@ public class DefaultContinuum
 
     private void closeStore()
     {
-        store.closeStore();
+        if ( store != null )
+        {
+            store.closeStore();
+        }
     }
 
     public void stop()
@@ -2237,7 +2240,10 @@ public class DefaultContinuum
 
         try
         {
-            configurationService.store();
+            if ( configurationService != null )
+            {
+                configurationService.store();
+            }
         }
         catch ( ConfigurationStoringException e )
         {
@@ -2531,9 +2537,13 @@ public class DefaultContinuum
 
     private void stopMessage()
     {
-        getLogger().info( "Stopping Continuum." );
+        // Yes dorothy, this can happen!
+        if ( getLogger() != null )
+        {
+            getLogger().info( "Stopping Continuum." );
 
-        getLogger().info( "Continuum stopped." );
+            getLogger().info( "Continuum stopped." );
+        }
     }
 
     private String getVersion()

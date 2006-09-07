@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
 
 import com.opensymphony.xwork.Preparable;
 import org.apache.maven.continuum.Continuum;
+import org.apache.maven.continuum.initialization.ContinuumInitializationException;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
@@ -32,6 +33,8 @@ public class ContinuumActionSupport
     implements Preparable
 {
 
+    public static final String CONFIRM = "confirm";
+
     /**
      * @plexus.requirement role-hint="acegi"
      */
@@ -40,7 +43,13 @@ public class ContinuumActionSupport
     public void prepare()
         throws Exception
     {
-        // do nothing
+        getLogger().info("checking the continuum configuration");
+
+        if ( !continuum.getConfiguration().isInitialized() )
+        {
+            throw new ContinuumInitializationException( "continuum not initialized" );
+        }
+
     }
 
     public Continuum getContinuum()
