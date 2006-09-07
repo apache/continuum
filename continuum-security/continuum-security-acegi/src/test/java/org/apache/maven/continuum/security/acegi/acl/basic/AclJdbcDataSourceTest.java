@@ -16,7 +16,7 @@ package org.apache.maven.continuum.security.acegi.acl.basic;
  * limitations under the License.
  */
 
-import org.acegisecurity.acl.basic.BasicAclDao;
+import org.acegisecurity.acl.basic.BasicAclExtendedDao;
 import org.codehaus.plexus.PlexusTestCase;
 
 public class AclJdbcDataSourceTest
@@ -26,7 +26,7 @@ public class AclJdbcDataSourceTest
     public void testLoadPlexus()
         throws Exception
     {
-        BasicAclDao dao = (BasicAclDao) lookup( "org.acegisecurity.acl.basic.BasicAclDao" );
+        BasicAclExtendedDao dao = (BasicAclExtendedDao) lookup( "org.acegisecurity.acl.basic.BasicAclExtendedDao" );
 
         assertNotNull( dao );
     }

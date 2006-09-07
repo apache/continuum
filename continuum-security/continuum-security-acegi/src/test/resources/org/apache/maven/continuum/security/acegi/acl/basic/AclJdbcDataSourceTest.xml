@@ -13,7 +13,7 @@
     </component>
 
     <component>
-      <role>org.acegisecurity.acl.basic.BasicAclDao</role>
+      <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
       <implementation>org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl</implementation>
       <component-composer>setter</component-composer>
       <requirements>
