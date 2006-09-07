@@ -32,6 +32,7 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -108,9 +109,15 @@ public class MavenTwoContinuumProjectBuilder
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
             return;
         }
+        catch ( FileNotFoundException e )
+        {
+            getLogger().info( "Error adding project: File not found " + url, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
+            return;
+        }
         catch ( IOException e )
         {
-            getLogger().debug( "Error adding project: Unknown error downloading from " + url, e );
+            getLogger().info( "Error adding project: Unknown error downloading from " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
             return;
         }
