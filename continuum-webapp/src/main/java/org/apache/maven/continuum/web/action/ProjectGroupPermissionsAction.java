@@ -16,7 +16,7 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.ContinuumException;
 
 import org.apache.maven.user.model.UserManager;
@@ -42,18 +42,20 @@ public class ProjectGroupPermissionsAction
      */
     private UserManager userManager;
 
-    private Project project;
+    private ProjectGroup projectGroup;
 
-    private int projectId;
+    private int projectGroupId;
 
-    private Map users;
+    private List users;
 
     public String execute()
         throws ContinuumException
     {
         users = userManager.getUsersInstancePermissions();
 
-        project = getProject( projectId );
+        projectGroup = getContinuum().getProjectGroup( projectGroupId );
+        
+        getLogger().info("ProjectGroupName = " + projectGroup.getName() );
 
         return INPUT;
     }
@@ -61,26 +63,21 @@ public class ProjectGroupPermissionsAction
     public String save()
         throws ContinuumException
     {
-        return SUCCESS;
+       return SUCCESS;
+ 
     }
 
-    private Project getProject( int projectId )
-        throws ContinuumException
+    public int getProjectGroupId()
     {
-        return getContinuum().getProject( projectId );
+        return projectGroupId;
     }
 
-    public int getProjectId()
+    public void setProjectGroupId( int projectGroupId )
     {
-        return projectId;
+        this.projectGroupId = projectGroupId;
     }
 
-    public void setProjectId( int projectId )
-    {
-        this.projectId = projectId;
-    }
-
-    public Map getUsers()
+    public List getUsers()
     {
         return users;
     }
