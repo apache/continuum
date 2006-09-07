@@ -13,7 +13,7 @@
       <div id="h3">
 
         <jsp:include page="/navigations/ProjectGroupMenu.jsp">
-          <jsp:param name="tab" value="summary"/>
+          <jsp:param name="tab" value="permissions"/>
         </jsp:include>
 
         <h3>Project Group Information</h3>

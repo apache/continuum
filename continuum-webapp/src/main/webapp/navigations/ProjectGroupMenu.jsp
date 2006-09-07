@@ -16,15 +16,54 @@
     <ww:url id="projectGroupNotifierUrl" action="projectGroupNotifier">
       <ww:param name="projectGroupId" value="projectGroupId"/>
     </ww:url>
-<%--
     <ww:url id="projectGroupPermissionsUrl" action="projectGroupPermissions">
       <ww:param name="projectGroupId" value="projectGroupId"/>
     </ww:url>
---%>
 
-    <ww:a cssClass="tabMenuEnabled" href="%{projectGroupSummaryUrl}">Summary</ww:a>
-    <ww:a cssClass="tabMenuEnabled" href="%{projectGroupManageUrl}">Manage</ww:a>
-    <b class="tabMenuDisabled">Build Definition</b>
-    <ww:a cssStyle="tabMenuEnabled" href="%{projectGroupNotifierUrl}">Notifier</ww:a>
+    <c:choose>
+      <c:when test="${param.tab == 'summary'}">
+        <b class="tabMenuDisabled">Summary</b>
+      </c:when>
+      <c:otherwise>
+        <ww:a cssClass="tabMenuEnabled" href="%{projectGroupSummaryUrl}">Summary</ww:a>
+      </c:otherwise>
+    </c:choose>
+
+    <c:choose>
+      <c:when test="${param.tab == 'members'}">
+        <b class="tabMenuDisabled">Members</b>
+      </c:when>
+      <c:otherwise>
+        <ww:a cssClass="tabMenuEnabled" href="%{projectGroupMembersUrl}">Members</ww:a>
+      </c:otherwise>
+    </c:choose>
+
+    <c:choose>
+      <c:when test="${param.tab == 'buildDefinition'}">
+        <b class="tabMenuDisabled">Build Definitions</b>
+      </c:when>
+      <c:otherwise>
+        <ww:a cssClass="tabMenuEnabled" href="%{projectGroupBuildDefinitionUrl}">Build Definitions</ww:a>
+      </c:otherwise>
+    </c:choose>
+
+    <c:choose>
+      <c:when test="${param.tab == 'notifier'}">
+        <b class="tabMenuDisabled">Notifiers</b>
+      </c:when>
+      <c:otherwise>
+        <ww:a cssClass="tabMenuEnabled" href="%{projectGroupNotifierUrl}">Notifiers</ww:a>
+      </c:otherwise>
+    </c:choose>
+
+    <c:choose>
+      <c:when test="${param.tab == 'permissions'}">
+        <b class="tabMenuDisabled">Permissions</b>
+      </c:when>
+      <c:otherwise>
+        <ww:a cssClass="tabMenuEnabled" href="%{projectGroupPermissionsUrl}">Permissions</ww:a>
+      </c:otherwise>
+    </c:choose>
+
   </p>
 </div>
