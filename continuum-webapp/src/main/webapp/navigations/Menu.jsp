@@ -7,10 +7,10 @@
     <div class="label">Continuum</div>
     <div>
       <div class="body">
-        <a href="<ww:url value="/about.jsp"/>"><ww:text name="menu.continuum.about"/></a>
+        <a href="<ww:url value="/about.jsp" includeParams="none"/>"><ww:text name="menu.continuum.about"/></a>
       </div>
       <div class="body">
-        <a href="<ww:url value="/groupSummary.action"/>"><ww:text name="menu.continuum.showProjectGroups"/></a>
+        <a href="<ww:url value="/groupSummary.action" includeParams="none"/>"><ww:text name="menu.continuum.showProjectGroups"/></a>
       </div>
     </div>
   </div>
@@ -20,16 +20,16 @@
       <div class="label"><ww:text name="menu.addProject"/></div>
       <div>
         <div class="body">
-          <a href="<ww:url value="/addMavenTwoProject!default.action"/>"><ww:text name="menu.add.m2Project"/></a>
+          <a href="<ww:url value="/addMavenTwoProject!default.action" includeParams="none"/>"><ww:text name="menu.add.m2Project"/></a>
         </div>
         <div class="body">
-          <a href="<ww:url value="/addMavenOneProject!default.action"/>"><ww:text name="menu.add.m1Project"/></a>
+          <a href="<ww:url value="/addMavenOneProject!default.action" includeParams="none"/>"><ww:text name="menu.add.m1Project"/></a>
         </div>
         <div class="body">
-          <a href="<ww:url value="/addProject!default.action"><ww:param name="projectType">ant</ww:param></ww:url>"><ww:text name="menu.add.antProject"/></a>
+          <a href="<ww:url value="/addProject!default.action" includeParams="none"><ww:param name="projectType">ant</ww:param></ww:url>"><ww:text name="menu.add.antProject"/></a>
         </div>
         <div class="body">
-          <a href="<ww:url value="/addProject!default.action"><ww:param name="projectType">shell</ww:param></ww:url>"><ww:text name="menu.add.shellProject"/></a>
+          <a href="<ww:url value="/addProject!default.action" includeParams="none"><ww:param name="projectType">shell</ww:param></ww:url>"><ww:text name="menu.add.shellProject"/></a>
         </div>
       </div>
     </div>
@@ -41,17 +41,17 @@
       <div>
         <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageSchedule">
           <div class="body">
-            <a href="<ww:url value="/schedules.action"/>"><ww:text name="menu.administration.schedules"/></a>
+            <a href="<ww:url value="/schedules.action" includeParams="none"/>"><ww:text name="menu.administration.schedules"/></a>
           </div>
         </authz:authorize>      
         <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageConfiguration">
           <div class="body">
-            <a href="<ww:url value="/configuration!default.action"/>"><ww:text name="menu.administration.configuration"/></a>
+            <a href="<ww:url value="/configuration!default.action" includeParams="none"/>"><ww:text name="menu.administration.configuration"/></a>
           </div>
         </authz:authorize>      
         <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
           <div class="body">
-            <a href="<ww:url value="/user/list.action"/>"><ww:text name="menu.administration.users"/></a>
+            <a href="<ww:url value="/user/list.action" includeParams="none"/>"><ww:text name="menu.administration.users"/></a>
           </div>
         </authz:authorize>
       </div>
@@ -63,7 +63,7 @@
       <div class="label"><ww:text name="menu.account.options"/></div>
       <div>
         <div class="body">
-          <a href="<ww:url value="/user/edit!doEdit.action"/>"><ww:text name="user.edit.account"/></a>
+          <a href="<ww:url value="/user/edit!doEdit.action" includeParams="none"/>"><ww:text name="user.edit.account"/></a>
         </div>
       </div>
     </div>
