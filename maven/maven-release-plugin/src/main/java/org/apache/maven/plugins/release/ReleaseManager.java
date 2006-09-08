@@ -83,4 +83,18 @@ public interface ReleaseManager
      * @param reactorProjects   the reactor projects
      */
     void clean( ReleaseDescriptor releaseDescriptor, List reactorProjects );
+
+    /**
+     * Add a progress listener
+     *
+     * @param listener
+     */
+    void addListener( ReleaseManagerListener listener );
+
+    /**
+     * Remove a progress listener
+     *
+     * @param listener
+     */
+    void removeListener( ReleaseManagerListener listener );
 }
