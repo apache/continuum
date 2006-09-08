@@ -356,6 +356,7 @@
       <requirements>
         <requirement>
           <role>org.apache.maven.user.model.UserManager</role>
+          <role-hint>default</role-hint>
           <field-name>userManager</field-name>
         </requirement>
       </requirements>
@@ -1025,6 +1026,7 @@ removeUserGroup( int userGroupId )
     </component>
     <component>
       <role>org.apache.maven.user.model.UserManager</role>
+      <role-hint>default</role-hint>
       <implementation>org.apache.maven.user.model.impl.DefaultUserManager</implementation>
       <requirements>
         <requirement>
@@ -1121,6 +1123,7 @@ removeUserGroup( int userGroupId )
         </requirement>
         <requirement>
           <role>org.apache.maven.user.model.UserManager</role>
+          <role-hint>default</role-hint>
           <field-name>userManager</field-name>
         </requirement>
       </requirements>
