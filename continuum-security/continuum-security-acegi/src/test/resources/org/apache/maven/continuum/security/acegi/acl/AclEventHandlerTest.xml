@@ -1,0 +1,29 @@
+<plexus>
+
+  <components>
+
+    <component>
+      <role>javax.sql.DataSource</role>
+      <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
+      <configuration>
+        <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
+        <url>jdbc:derby:${plexus.home}/database-acl-event-handler;create=true</url>
+        <username>sa</username>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.codehaus.mojo.sql.SqlExecMojo</role>
+      <implementation>org.codehaus.mojo.sql.SqlExecMojo</implementation>
+      <configuration>
+        <username>sa</username>
+        <password></password>
+        <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
+        <url>jdbc:derby:${plexus.home}/database-acl-event-handler;create=true</url>
+        <onError>continue</onError>
+      </configuration>
+    </component>
+
+  </components>
+
+</plexus>

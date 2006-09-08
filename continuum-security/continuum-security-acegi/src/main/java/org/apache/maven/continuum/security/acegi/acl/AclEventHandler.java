@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.acegisecurity.acl.basic.BasicAclExtendedDao;
+import org.acegisecurity.acl.basic.BasicAclEntry;
 import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
 import org.acegisecurity.acl.basic.SimpleAclEntry;
 import org.acegisecurity.context.SecurityContextHolder;
@@ -28,6 +28,7 @@ import org.acegisecurity.userdetails.User;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.user.acegi.AclManager;
 
 /**
  * Utility class to handle ACL manipulation on Continuum events, like adding or
@@ -37,19 +38,9 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
  * @version $Id$
  */
 public class AclEventHandler
+    extends AclManager
 {
-
-    private BasicAclExtendedDao aclDao;
-
-    public void setAclDao( BasicAclExtendedDao aclDao )
-    {
-        this.aclDao = aclDao;
-    }
-
-    public BasicAclExtendedDao getAclDao()
-    {
-        return aclDao;
-    }
+    public static final String ROLE = AclEventHandler.class.getName();
 
     /**
      * Create ACLs for new {@link ProjectGroup} and {@link Project}s
@@ -76,13 +67,11 @@ public class AclEventHandler
     /**
      * Delete {@link ProjectGroup} ACLs
      * 
-     * @TODO should this cascade delete all the children ACLs ?
-     * 
      * @param projectGroupId
      */
     public void afterDeleteProjectGroup( int projectGroupId )
     {
-        getAclDao().delete( createProjectGroupObjectIdentity( projectGroupId ) );
+        delete( ProjectGroup.class, projectGroupId );
     }
 
     /**
@@ -90,7 +79,7 @@ public class AclEventHandler
      * 
      * @param projectGroups
      */
-    private void createNewProjectGroupsACLs( Collection projectGroups )
+    protected void createNewProjectGroupsACLs( Collection projectGroups )
     {
         Iterator it = projectGroups.iterator();
         while ( it.hasNext() )
@@ -105,7 +94,7 @@ public class AclEventHandler
      * 
      * @param projectGroup
      */
-    private void createNewProjectGroupACL( ProjectGroup projectGroup )
+    protected void createNewProjectGroupACL( ProjectGroup projectGroup )
     {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         SimpleAclEntry aclEntry = new SimpleAclEntry();
@@ -113,7 +102,7 @@ public class AclEventHandler
         aclEntry.setRecipient( user.getUsername() );
         aclEntry.setAclObjectParentIdentity( AclInitializer.PARENT_PROJECT_GROUP_ACL_ID );
         aclEntry.addPermission( SimpleAclEntry.ADMINISTRATION );
-        getAclDao().create( aclEntry );
+        create( aclEntry );
     }
 
     /**
@@ -121,7 +110,7 @@ public class AclEventHandler
      * 
      * @param projects
      */
-    private void createNewProjectsACLs( Collection projects, ProjectGroup projectGroup )
+    protected void createNewProjectsACLs( Collection projects, ProjectGroup projectGroup )
     {
         Iterator it = projects.iterator();
         while ( it.hasNext() )
@@ -137,13 +126,24 @@ public class AclEventHandler
      * @param project
      * @param projectGroup group the projects belong to
      */
-    private void createNewProjectACL( Project project, ProjectGroup projectGroup )
+    protected void createNewProjectACL( Project project, ProjectGroup projectGroup )
     {
         NamedEntityObjectIdentity projectGroupIdentity = createProjectGroupObjectIdentity( projectGroup.getId() );
         SimpleAclEntry aclEntry = new SimpleAclEntry();
         aclEntry.setAclObjectIdentity( createProjectObjectIdentity( project.getId() ) );
         aclEntry.setAclObjectParentIdentity( projectGroupIdentity );
-        getAclDao().create( aclEntry );
+        create( aclEntry );
+    }
+
+    public void setProjectGroupPermissions( int projectGroupId, String userName, int permissions )
+    {
+        super.setPermissions( ProjectGroup.class, projectGroupId, userName, permissions,
+                              AclInitializer.PARENT_PROJECT_GROUP_ACL_ID );
+    }
+
+    public BasicAclEntry getProjectGroupAcl( int projectGroupId, String userName )
+    {
+        return getAcl( ProjectGroup.class, projectGroupId, userName );
     }
 
     private NamedEntityObjectIdentity createProjectObjectIdentity( int projectId )
@@ -156,8 +156,8 @@ public class AclEventHandler
         return createObjectIdentity( ProjectGroup.class, projectGroupId );
     }
 
-    private NamedEntityObjectIdentity createObjectIdentity( Class clazz, int id )
+    public BasicAclEntry[] getProjectGroupAcls( int projectGroupId )
     {
-        return new NamedEntityObjectIdentity( clazz.getName(), Integer.toString( id ) );
+        return getAcls( ProjectGroup.class, projectGroupId );
     }
 }
