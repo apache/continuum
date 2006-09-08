@@ -39,7 +39,7 @@ public class PrepareReleaseTaskExecutor
 
             ReleaseDescriptor descriptor = prepareTask.getDescriptor();
 
-            releasePluginManager.prepare( descriptor, getSettings(), getReactorProjects( descriptor ) );
+            releasePluginManager.prepare( descriptor, getSettings(), getReactorProjects( descriptor ), false, false );
 
             continuumReleaseManager.getPreparedReleases().put( prepareTask.getReleaseId(), descriptor );
         }

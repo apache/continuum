@@ -297,12 +297,18 @@
     <!--
     - continuum release
     -->
+    <action name="releaseProject" class="releaseProject">
+      <result name="prompt">releaseProject.jsp</result>
+      <result name="prepareRelease">prepareRelease.jsp</result>
+      <result name="performRelease">performRelease.jsp</result>
+    </action>
+
     <action name="prepareRelease" class="prepareRelease">
-      <result name="success">prepareRelease.jsp</result>
+      <result name="success">prepareReleaseProgress.jsp</result>
     </action>
 
     <action name="performRelease" class="performRelease">
-      <result name="success">performRelease.jsp</result>
+      <result name="success">performReleaseProgress.jsp</result>
     </action>
 
   </package>

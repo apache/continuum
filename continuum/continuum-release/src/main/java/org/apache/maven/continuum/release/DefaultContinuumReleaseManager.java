@@ -54,12 +54,12 @@ public class DefaultContinuumReleaseManager
      */
     private Map preparedReleases;
 
-    public void prepare( Project project, Properties releaseProperties )
+    public void prepare( Project project, Properties releaseProperties, Map relVersions, Map devVersions )
         throws ContinuumReleaseException
     {
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
 
-        ReleaseDescriptor descriptor = getReleaseDescriptor( project, releaseProperties );
+        ReleaseDescriptor descriptor = getReleaseDescriptor( project, releaseProperties, relVersions, devVersions );
 
         try
         {
@@ -132,7 +132,8 @@ public class DefaultContinuumReleaseManager
         this.preparedReleases = preparedReleases;
     }
 
-    private ReleaseDescriptor getReleaseDescriptor( Project project, Properties releaseProperties )
+    private ReleaseDescriptor getReleaseDescriptor( Project project, Properties releaseProperties,
+                                                    Map relVersions, Map devVersions )
     {
         ReleaseDescriptor descriptor = new ReleaseDescriptor();
 
@@ -145,6 +146,8 @@ public class DefaultContinuumReleaseManager
         //required properties
         descriptor.setScmReleaseLabel( releaseProperties.getProperty( "tag" ) );
         descriptor.setScmTagBase( releaseProperties.getProperty( "tagBase" ) );
+        descriptor.setReleaseVersions( relVersions );
+        descriptor.setDevelopmentVersions( devVersions );
 
         //forced properties
         descriptor.setInteractive( false );
