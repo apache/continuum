@@ -97,11 +97,6 @@
       <result name="success" type="chain">projectView</result>
     </action>
     
-    <action name="projectGroupPermissions" class="projectGroupPermissions">
-      <result name="input">projectGroupPermissions.jsp</result>
-      <result name="success" type="chain">projectGroupView</result>
-    </action>
-
     <!--
     * build definition actions
     -->
@@ -131,12 +126,12 @@
     <!--
     * project group actions
     -->
-    <action name="projectGroupMembers" class="projectGroup" method="members">
-      <result name="success">projectGroupMembers.jsp</result>
-    </action>
-
     <action name="projectGroupSummary" class="projectGroup" method="summary">
       <result name="success">projectGroupSummary.jsp</result>
+    </action>
+
+    <action name="projectGroupMembers" class="projectGroup" method="members">
+      <result name="success">projectGroupMembers.jsp</result>
     </action>
 
     <action name="projectGroupBuildDefinition" class="projectGroup" method="buildDefinitions">
@@ -145,6 +140,11 @@
 
     <action name="projectGroupNotifier" class="projectGroup" method="notifiers">
       <result name="success">projectGroupNotifier.jsp</result>
+    </action>
+
+    <action name="projectGroupPermissions" class="projectGroupPermissions">
+      <result name="input">projectGroupPermissions.jsp</result>
+      <result name="success" type="chain">projectGroupView</result>
     </action>
 
     <action name="buildProjectGroup" class="projectGroup" method="build">
