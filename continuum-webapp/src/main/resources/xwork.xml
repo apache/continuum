@@ -99,6 +99,7 @@
     
     <action name="projectGroupPermissions" class="projectGroupPermissions">
       <result name="input">projectGroupPermissions.jsp</result>
+      <result name="success" type="chain">projectGroupView</result>
     </action>
 
     <!--

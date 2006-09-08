@@ -16,7 +16,10 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -44,6 +47,8 @@ public class ProjectGroupPermissionsAction
     private int projectGroupId;
 
     private List users;
+    
+    private Map map = new HashMap();
 
     public String execute()
         throws ContinuumException
@@ -60,6 +65,22 @@ public class ProjectGroupPermissionsAction
     public String save()
         throws ContinuumException
     {
+        for(Iterator i = map.keySet().iterator(); i.hasNext(); ) {
+            String id = (String) i.next();
+            getLogger().info("key value == " + id);
+        }
+        for(Iterator i = map.values().iterator(); i.hasNext(); ) {
+            String[] id = (String[])i.next();
+            for (int y = 0; y < id.length; y++){
+                getLogger().info("class name == " + id[y].getClass().getSimpleName());
+                getLogger().info("value == " + id[y]);
+            }
+        }
+        // TODO - compare the values from the map to userManager.getUsersInstancePermissions() then save the differences
+        // NOTE: only the checkboxes that are checked are saved on the map.
+        //       each user has 4 possible checkboxes and all of them are saved into an array of String.
+        //       so to determine each checkbox(view) from the others(edit/delete/build), we need a special notation. see below...
+        // KEY FORMAT: username + view/edit/delete or build. sample would be adminbuild or guestview
         return SUCCESS;
     }
 
@@ -76,5 +97,13 @@ public class ProjectGroupPermissionsAction
     public List getUsers()
     {
         return users;
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
     }
 }
