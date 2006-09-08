@@ -28,9 +28,11 @@
 
     <global-results>
       <result name="error-internal">/error/error.jsp?id=500</result>
+      <result name="continuumInitialization" type="redirect">/configuration!input.action</result>
     </global-results>
 
     <global-exception-mappings>
+      <exception-mapping exception="org.apache.maven.continuum.initialization.ContinuumInitializationException" result="continuumInitialization"/>
       <exception-mapping exception="java.lang.Exception" result="error-internal"/>
       <exception-mapping exception="org.acegisecurity.AuthenticationException" result="ignore"/>
       <exception-mapping exception="org.acegisecurity.AccessDeniedException" result="ignore"/>
