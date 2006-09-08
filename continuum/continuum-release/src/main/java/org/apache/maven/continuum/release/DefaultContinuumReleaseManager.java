@@ -28,9 +28,9 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.HashMap;
 
 /**
  * @author Jason van Zyl
@@ -49,12 +49,15 @@ public class DefaultContinuumReleaseManager
      */
     private TaskQueue performReleaseQueue;
 
+    private Map listeners;
+
     /**
      * contains previous release:prepare descriptors; one per project
      */
     private Map preparedReleases;
 
-    public void prepare( Project project, Properties releaseProperties, Map relVersions, Map devVersions )
+    public void prepare( Project project, Properties releaseProperties, Map relVersions,
+                           Map devVersions, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
@@ -63,7 +66,9 @@ public class DefaultContinuumReleaseManager
 
         try
         {
-            prepareReleaseQueue.put( new PrepareReleaseProjectTask( releaseId, descriptor ) );
+            prepareReleaseQueue.put( new PrepareReleaseProjectTask( releaseId, descriptor, listener ) );
+
+            System.out.println( "Added to Prepare Queue" );
         }
         catch ( TaskQueueException e )
         {
@@ -108,8 +113,11 @@ public class DefaultContinuumReleaseManager
     {
         try
         {
+            DefaultReleaseManagerListener listener = new DefaultReleaseManagerListener();
+            listeners.put( releaseId, listener );
+
             performReleaseQueue.put( new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory,
-                                                                    goals, useReleaseProfile ) );
+                                                                    goals, useReleaseProfile, listener ) );
         }
         catch ( TaskQueueException e )
         {
@@ -138,8 +146,6 @@ public class DefaultContinuumReleaseManager
         ReleaseDescriptor descriptor = new ReleaseDescriptor();
 
         //release properties from the project
-        descriptor.setScmUsername( project.getScmUsername() );
-        descriptor.setScmPassword( project.getScmPassword() );
         descriptor.setWorkingDirectory( project.getWorkingDirectory() );
         descriptor.setScmSourceUrl( project.getScmUrl() );
 
@@ -149,9 +155,29 @@ public class DefaultContinuumReleaseManager
         descriptor.setReleaseVersions( relVersions );
         descriptor.setDevelopmentVersions( devVersions );
 
+        //other properties
+        if ( releaseProperties.containsKey( "username" ) )
+        {
+            descriptor.setScmUsername( releaseProperties.getProperty( "username" ) );
+        }
+        if ( releaseProperties.containsKey( "password" ) )
+        {
+            descriptor.setScmPassword( releaseProperties.getProperty( "password" ) );
+        }
+
         //forced properties
         descriptor.setInteractive( false );
 
         return descriptor;
+    }
+
+    public Map getListeners()
+    {
+        if ( listeners == null )
+        {
+            listeners = new HashMap();
+        }
+
+        return listeners;
     }
 }

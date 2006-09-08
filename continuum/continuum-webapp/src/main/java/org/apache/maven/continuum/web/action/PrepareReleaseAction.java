@@ -18,11 +18,21 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
+import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.model.Model;
+import org.apache.maven.plugins.release.versions.VersionInfo;
+import org.apache.maven.plugins.release.versions.DefaultVersionInfo;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.io.FileReader;
+import java.io.File;
 
 /**
  * @author Edwin Punzalan
@@ -36,6 +46,8 @@ public class PrepareReleaseAction
 {
     private int projectId;
 
+    private String name;
+
     private String scmUsername;
 
     private String scmPassword;
@@ -44,22 +56,89 @@ public class PrepareReleaseAction
 
     private String scmTagBase;
 
+    private List projects = new ArrayList();
+
     private List projectKeys;
 
     private List devVersions;
 
     private List relVersions;
 
+    private DefaultReleaseManagerListener listener;
+
     public String execute()
         throws Exception
     {
         Project project = getContinuum().getProject( projectId );
+        scmUsername = project.getScmUsername();
+        scmPassword = project.getScmPassword();
+        scmTag = project.getScmTag();
+        scmTagBase = "";
+
+        processProject( project.getWorkingDirectory(), "pom.xml" );
+
+        return "prepareRelease";
+    }
+
+    public String doPrepare()
+        throws Exception
+    {
+        listener = new DefaultReleaseManagerListener();
+
+        Project project = getContinuum().getProject( projectId );
+
+        name = project.getName();
 
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
-        releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap() );
+        releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), listener );
 
         return SUCCESS;
+    }
+
+    private void processProject( String workingDirectory, String pomFilename )
+        throws Exception
+    {
+        MavenXpp3Reader pomReader = new MavenXpp3Reader();
+        Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
+
+        if ( model.getGroupId() == null )
+        {
+            model.setGroupId( model.getParent().getGroupId() );
+        }
+
+        if ( model.getVersion() == null )
+        {
+            model.setVersion( model.getParent().getVersion() );
+        }
+
+        setProperties( model );
+
+        for( Iterator modules = model.getModules().iterator(); modules.hasNext(); )
+        {
+            processProject( workingDirectory + "/" + modules.next().toString(), "pom.xml" );
+        }
+    }
+
+    private void setProperties( Model model )
+        throws Exception
+    {
+        Map params = new HashMap();
+
+        params.put( "key", model.getGroupId() + ":" + model.getArtifactId() );
+
+        if ( model.getName() == null )
+        {
+            model.setName( model.getArtifactId() );
+        }
+        params.put( "name", model.getName() );
+
+        VersionInfo version = new DefaultVersionInfo( model.getVersion() );
+
+        params.put( "release", version.getReleaseVersionString() );
+        params.put( "dev", version.getNextVersion().getSnapshotVersionString() );
+
+        projects.add( params );
     }
 
     private Map getDevVersionMap()
@@ -90,6 +169,16 @@ public class PrepareReleaseAction
     private Properties getReleaseProperties()
     {
         Properties p = new Properties();
+
+        if ( StringUtils.isNotEmpty( scmUsername ) )
+        {
+            p.setProperty( "username", scmUsername );
+        }
+
+        if ( StringUtils.isNotEmpty( scmPassword ) )
+        {
+            p.setProperty( "password", scmPassword );
+        }
 
         p.setProperty( "tag", scmTag );
         p.setProperty( "tagBase", scmTagBase );
@@ -175,5 +264,35 @@ public class PrepareReleaseAction
     public void setScmTagBase( String scmTagBase )
     {
         this.scmTagBase = scmTagBase;
+    }
+
+    public List getProjects()
+    {
+        return projects;
+    }
+
+    public void setProjects( List projects )
+    {
+        this.projects = projects;
+    }
+
+    public DefaultReleaseManagerListener getListener()
+    {
+        return listener;
+    }
+
+    public void setListener( DefaultReleaseManagerListener listener )
+    {
+        this.listener = listener;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
     }
 }

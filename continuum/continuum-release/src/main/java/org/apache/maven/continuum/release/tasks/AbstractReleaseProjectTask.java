@@ -17,6 +17,7 @@ package org.apache.maven.continuum.release.tasks;
  */
 
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
+import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.codehaus.plexus.taskqueue.Task;
 
 /**
@@ -29,7 +30,10 @@ public abstract class AbstractReleaseProjectTask
 
     private ReleaseDescriptor descriptor;
 
-    public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor )
+    private ContinuumReleaseManagerListener listener;
+
+    public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor,
+                                       ContinuumReleaseManagerListener listener )
     {
         this.releaseId = releaseId;
         this.descriptor = descriptor;

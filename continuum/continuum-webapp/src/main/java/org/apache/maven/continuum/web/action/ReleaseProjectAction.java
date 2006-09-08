@@ -19,18 +19,9 @@ package org.apache.maven.continuum.web.action;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
-import org.apache.maven.plugins.release.versions.DefaultVersionInfo;
-import org.apache.maven.plugins.release.versions.VersionInfo;
+import org.codehaus.plexus.util.StringUtils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,17 +40,9 @@ public class ReleaseProjectAction
 
     private String goal;
 
+    private String scmUrl;
+
     private Project project;
-
-    private String scmUsername;
-
-    private String scmPassword;
-
-    private String scmTag;
-
-    private String scmTagBase;
-
-    private List projects = new ArrayList();
 
     public String promptReleaseGoal()
         throws Exception
@@ -75,7 +58,7 @@ public class ReleaseProjectAction
         {
             ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
 
-            preparedReleaseName = descriptor.getName();
+            preparedReleaseName = descriptor.getReleaseVersions().get( releaseId ).toString();
         }
 
         return "prompt";
@@ -86,81 +69,23 @@ public class ReleaseProjectAction
     {
         if ( "prepare".equals( goal ) )
         {
-            return doPrepare();
+            return "prepareRelease";
         }
         else if ( "perform".equals( goal ) )
         {
-            return doPerform();
+            if ( StringUtils.isNotEmpty( preparedReleaseName ) )
+            {
+                project = getContinuum().getProjectWithAllDetails( projectId );
+
+                scmUrl = project.getScmUrl();
+            }
+
+            return "performRelease";
         }
         else
         {
             return "prompt";
         }
-    }
-
-    public String doPrepare()
-        throws Exception
-    {
-        project = getContinuum().getProject( projectId );
-        scmUsername = project.getScmUsername();
-        scmPassword = project.getScmPassword();
-        scmTag = project.getScmTag();
-        scmTagBase = "";
-
-        processProject( project.getWorkingDirectory(), "pom.xml" );
-
-        return "prepareRelease";
-    }
-
-    public String doPerform()
-        throws Exception
-    {
-        return "performRelease";
-    }
-
-    private void processProject( String workingDirectory, String pomFilename )
-        throws Exception
-    {
-        MavenXpp3Reader pomReader = new MavenXpp3Reader();
-        Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
-
-        if ( model.getGroupId() == null )
-        {
-            model.setGroupId( model.getParent().getGroupId() );
-        }
-
-        if ( model.getVersion() == null )
-        {
-            model.setVersion( model.getParent().getVersion() );
-        }
-
-        setProperties( model );
-
-        for( Iterator modules = model.getModules().iterator(); modules.hasNext(); )
-        {
-            processProject( workingDirectory + "/" + modules.next().toString(), "pom.xml" );
-        }
-    }
-
-    private void setProperties( Model model )
-        throws Exception
-    {
-        Map params = new HashMap();
-
-        params.put( "key", model.getGroupId() + ":" + model.getArtifactId() );
-
-        if ( model.getName() == null )
-        {
-            model.setName( model.getArtifactId() );
-        }
-        params.put( "name", model.getName() );
-
-        VersionInfo version = new DefaultVersionInfo( project.getVersion() );
-
-        params.put( "release", version.getReleaseVersionString() );
-        params.put( "dev", version.getNextVersion().getSnapshotVersionString() );
-
-        projects.add( params );
     }
 
     public int getProjectId()
@@ -203,53 +128,13 @@ public class ReleaseProjectAction
         this.project = project;
     }
 
-    public List getProjects()
+    public String getScmUrl()
     {
-        return projects;
+        return scmUrl;
     }
 
-    public void setProjects( List projects )
+    public void setScmUrl( String scmUrl )
     {
-        this.projects = projects;
-    }
-
-    public String getScmUsername()
-    {
-        return scmUsername;
-    }
-
-    public void setScmUsername( String scmUsername )
-    {
-        this.scmUsername = scmUsername;
-    }
-
-    public String getScmPassword()
-    {
-        return scmPassword;
-    }
-
-    public void setScmPassword( String scmPassword )
-    {
-        this.scmPassword = scmPassword;
-    }
-
-    public String getScmTag()
-    {
-        return scmTag;
-    }
-
-    public void setScmTag( String scmTag )
-    {
-        this.scmTag = scmTag;
-    }
-
-    public String getScmTagBase()
-    {
-        return scmTagBase;
-    }
-
-    public void setScmTagBase( String scmTagBase )
-    {
-        this.scmTagBase = scmTagBase;
+        this.scmUrl = scmUrl;
     }
 }

@@ -32,11 +32,27 @@ public class PerformReleaseAction
 {
     private String releaseId;
 
+    private String scmUrl;
+
+    private String scmUsername;
+
+    private String scmPassword;
+
+    private String scmTag;
+
+    private String scmTagBase;
+
     private String goals;
 
     private boolean useReleaseProfile;
 
     public String execute()
+        throws Exception
+    {
+        return "prompt";
+    }
+
+    public String doPerform()
         throws Exception
     {
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();

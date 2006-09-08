@@ -39,7 +39,8 @@ public interface ContinuumReleaseManager
      * @param releaseProperties
      * @throws ContinuumReleaseException
      */
-    void prepare( Project project, Properties releaseProperties, Map releaseVersions, Map developmentVersions )
+    void prepare( Project project, Properties releaseProperties, Map releaseVersions,
+                    Map developmentVersions, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
     /**

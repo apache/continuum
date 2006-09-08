@@ -299,16 +299,33 @@
     -->
     <action name="releaseProject" class="releaseProject">
       <result name="prompt">releaseProject.jsp</result>
-      <result name="prepareRelease">prepareRelease.jsp</result>
-      <result name="performRelease">performRelease.jsp</result>
+      <result name="prepareRelease" type="redirect-action">
+        <param name="actionName">prepareRelease</param>
+        <param name="projectId">${projectId}</param>
+      </result>
+      <result name="performRelease">
+        <param name="actionName">performRelease</param>
+        <param name="projectId">${projectId}</param>
+      </result>
     </action>
 
     <action name="prepareRelease" class="prepareRelease">
-      <result name="success">prepareReleaseProgress.jsp</result>
+      <interceptor-ref name="execAndWait">
+        <param name="delay">5000</param>
+      </interceptor-ref>
+      <result name="wait">prepareReleaseProgress.jsp</result>
+      <result name="error">prepareReleaseFailure.jsp</result>
+      <result name="success">prepareReleaseFinished.jsp</result>
     </action>
 
     <action name="performRelease" class="performRelease">
-      <result name="success">performReleaseProgress.jsp</result>
+      <interceptor-ref name="execAndWait">
+        <param name="delay">5000</param>
+        <param name="scmUrl">${scmUrl}</param>
+      </interceptor-ref>
+      <result name="wait">performReleaseProgress.jsp</result>
+      <result name="error">performReleaseFailure.jsp</result>
+      <result name="success">performReleaseFinished.jsp</result>
     </action>
 
   </package>

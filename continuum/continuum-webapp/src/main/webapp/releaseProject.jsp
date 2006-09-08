@@ -16,13 +16,13 @@
           <input name="goal" type="radio" value="perform"/>Perform project release
           <br/>
           &nbsp;&nbsp;&nbsp;
-          <select name="performScript">
+          <select name="preparedReleaseName">
             <ww:if test="preparedReleaseName != null">
               <option selected value="<ww:property value="preparedReleaseName"/>">
                 <ww:property value="preparedReleaseName"/>
               </option>
             </ww:if>
-            <option value="">Provide release descriptor</option>
+            <option value="none">Provide release descriptor</option>
           </select>
           <br/>
         </p>

@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.release.tasks;
+package org.apache.maven.continuum.release;
 
 /*
  * Copyright 2006 The Apache Software Foundation.
@@ -16,18 +16,14 @@ package org.apache.maven.continuum.release.tasks;
  * limitations under the License.
  */
 
-import org.apache.maven.plugins.release.config.ReleaseDescriptor;
-import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
+import java.util.List;
 
 /**
  * @author Edwin Punzalan
  */
-public class PrepareReleaseProjectTask
-    extends AbstractReleaseProjectTask
+public interface ContinuumReleaseManagerListener
 {
-    public PrepareReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor,
-                                      ContinuumReleaseManagerListener listener )
-    {
-        super( releaseId, descriptor, listener );
-    }
+    List getCompletedPhases();
+
+    String getInProgress();
 }

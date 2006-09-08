@@ -17,6 +17,7 @@ package org.apache.maven.continuum.release.tasks;
  */
 
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
+import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 
 import java.io.File;
 
@@ -33,9 +34,9 @@ public class PerformReleaseProjectTask
     private boolean useReleaseProfile = true;
 
     public PerformReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, File buildDirectory,
-                                      String goals, boolean useReleaseProfile )
+                                      String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
     {
-        super( releaseId, descriptor );
+        super( releaseId, descriptor, listener );
         setBuildDirectory( buildDirectory );
         setGoals( goals );
         setUseReleaseProfile( useReleaseProfile );
