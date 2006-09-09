@@ -356,7 +356,7 @@
       <requirements>
         <requirement>
           <role>org.apache.maven.user.model.UserManager</role>
-          <role-hint>default</role-hint>
+          <role-hint>acegi</role-hint>
           <field-name>userManager</field-name>
         </requirement>
       </requirements>
@@ -1024,6 +1024,24 @@ removeUserGroup( int userGroupId )
         </levels>
       </configuration>
     </component>
+
+    <component>
+      <role>org.apache.maven.user.model.UserManager</role>
+      <role-hint>acegi</role-hint>
+      <implementation>org.apache.maven.user.acegi.AcegiUserManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.user.model.UserManager</role>
+          <role-hint>default</role-hint>
+          <field-name>userManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.security.acegi.acl.AclEventHandler</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
     <component>
       <role>org.apache.maven.user.model.UserManager</role>
       <role-hint>default</role-hint>
@@ -1123,7 +1141,7 @@ removeUserGroup( int userGroupId )
         </requirement>
         <requirement>
           <role>org.apache.maven.user.model.UserManager</role>
-          <role-hint>default</role-hint>
+          <role-hint>acegi</role-hint>
           <field-name>userManager</field-name>
         </requirement>
       </requirements>
