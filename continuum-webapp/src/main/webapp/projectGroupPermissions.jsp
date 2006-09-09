@@ -2,7 +2,6 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
- 
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
@@ -18,8 +17,11 @@
 
         <h3>Users</h3>
         <form action="projectGroupPermissions!save.action">
-          <ww:iterator value="users" id="user">
+
+          <ww:iterator value="userPermissions" id="permission">
+
             <ww:property value="user.username"/>
+
             <ww:set name="view" value="<ww:property value='view'/>"/>
             <ww:set name="edit" value="<ww:property value='edit'/>"/>
             <ww:set name="delete" value="<ww:property value='delete'/>"/>
@@ -50,6 +52,7 @@
             </ww:else>
             <br/>
           </ww:iterator>
+
           <input type="submit" value="Save"/>
         </form>
       </div>
