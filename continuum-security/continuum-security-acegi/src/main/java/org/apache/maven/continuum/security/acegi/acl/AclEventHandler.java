@@ -71,7 +71,7 @@ public class AclEventHandler
      */
     public void afterDeleteProjectGroup( int projectGroupId )
     {
-        delete( ProjectGroup.class, projectGroupId );
+        delete( ProjectGroup.class, new Integer( projectGroupId ) );
     }
 
     /**
@@ -137,27 +137,27 @@ public class AclEventHandler
 
     public void setProjectGroupPermissions( int projectGroupId, String userName, int permissions )
     {
-        super.setPermissions( ProjectGroup.class, projectGroupId, userName, permissions,
+        super.setPermissions( ProjectGroup.class, new Integer( projectGroupId ), userName, permissions,
                               AclInitializer.PARENT_PROJECT_GROUP_ACL_ID );
     }
 
     public BasicAclEntry getProjectGroupAcl( int projectGroupId, String userName )
     {
-        return getAcl( ProjectGroup.class, projectGroupId, userName );
+        return getAcl( ProjectGroup.class, new Integer( projectGroupId ), userName );
     }
 
     private NamedEntityObjectIdentity createProjectObjectIdentity( int projectId )
     {
-        return createObjectIdentity( Project.class, projectId );
+        return createObjectIdentity( Project.class, new Integer( projectId ) );
     }
 
     private NamedEntityObjectIdentity createProjectGroupObjectIdentity( int projectGroupId )
     {
-        return createObjectIdentity( ProjectGroup.class, projectGroupId );
+        return createObjectIdentity( ProjectGroup.class, new Integer( projectGroupId ) );
     }
 
     public BasicAclEntry[] getProjectGroupAcls( int projectGroupId )
     {
-        return getAcls( ProjectGroup.class, projectGroupId );
+        return getAcls( ProjectGroup.class, new Integer( projectGroupId ) );
     }
 }
