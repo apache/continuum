@@ -598,9 +598,11 @@ public class DefaultContinuum
                 buildFromDefinitionIds( buildDefinitionIds, project );
 
                 // iterate through the project build definitions and build
-                List buildDefIds = (List) projectsMap.get( new Integer( project.getId() ) );
-
-                buildFromDefinitionIds( buildDefIds, project );
+                if ( projectsMap != null )
+                {
+                    List buildDefIds = (List) projectsMap.get( new Integer( project.getId() ) );
+                    buildFromDefinitionIds( buildDefIds, project );
+                }
             }
         }
     }
