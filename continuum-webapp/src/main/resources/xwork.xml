@@ -144,7 +144,7 @@
 
     <action name="projectGroupPermissions" class="projectGroupPermissions">
       <result name="input">projectGroupPermissions.jsp</result>
-      <result name="success" type="chain">projectGroupView</result>
+      <result name="success" type="chain">groupSummary</result>
     </action>
 
     <action name="buildProjectGroup" class="projectGroup" method="build">
