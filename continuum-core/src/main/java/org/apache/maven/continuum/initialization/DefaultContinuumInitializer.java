@@ -87,7 +87,7 @@ public class DefaultContinuumInitializer
         
         if ( getLogger().isDebugEnabled() )
         {
-            getLogger().info( "Dumping JPOX/JDO Schema Details ..." );
+            getLogger().debug( "Dumping JPOX/JDO Schema Details ..." );
             try
             {
                 SchemaTool.outputDBInfo( null, true );
@@ -95,7 +95,7 @@ public class DefaultContinuumInitializer
             }
             catch ( Exception e )
             {
-                e.printStackTrace( System.err );
+                getLogger().debug( "Error while dumping the database schema", e );
             }
         }
 
@@ -144,6 +144,8 @@ public class DefaultContinuumInitializer
             {
             	createDefaultUsers();
             }
+
+            getLogger().info( "... Continuum initialized" );
         }
         catch ( ContinuumStoreException e )
         {
@@ -181,16 +183,6 @@ public class DefaultContinuumInitializer
         throws ContinuumStoreException
     {
         createPermission( "addProject", "Add Projects" );
-
-        createPermission( "editProject", "Edit Projects" );
-
-        createPermission( "deleteProject", "Delete Projects" );
-
-        createPermission( "buildProject", "Build Projects" );
-
-        createPermission( "showProject", "Show Projects" );
-
-        createPermission( "addBuildDefinitionToProject", "Add Build Definitions" );
 
         createPermission( "editBuildDefinition", "Edit Build Definitions" );
 

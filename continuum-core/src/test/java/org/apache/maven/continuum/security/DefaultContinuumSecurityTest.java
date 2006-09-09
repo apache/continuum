@@ -46,8 +46,6 @@ public class DefaultContinuumSecurityTest
 
         assertEquals( "guest", guest.getUsername() );
 
-        assertTrue( secu.isAuthorized( guest, "showProject") );
-
         assertFalse( secu.isAuthorized( guest, "addProject") );
 
         assertFalse( secu.isAuthorized( guest, "manageUsers") );
