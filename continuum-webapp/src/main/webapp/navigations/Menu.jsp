@@ -63,7 +63,7 @@
       <div class="label"><ww:text name="menu.account.options"/></div>
       <div>
         <div class="body">
-          <a href="<ww:url value='/user/myAccount!editMe.action'/> includeParams="none""><ww:text name="user.edit.account"/></a>
+          <a href="<ww:url value='/user/myAccount!editMe.action' includeParams='none'/>"><ww:text name="user.edit.account"/></a>
         </div>
       </div>
     </div>
