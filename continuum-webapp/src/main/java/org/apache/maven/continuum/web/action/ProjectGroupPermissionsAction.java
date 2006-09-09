@@ -23,12 +23,14 @@ import java.util.Map;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.user.model.InstancePermissions;
 import org.apache.maven.user.model.UserManager;
 
 /**
  * Action to see and edit project group permissions per user.
  *
  * @author <a href="mailto:hisidro@exist.com">Henry Isidro</a>
+ * @version $Id$
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"
@@ -46,42 +48,18 @@ public class ProjectGroupPermissionsAction
 
     private int projectGroupId;
 
-    private List users;
-    
+    private InstancePermissions[] userPermissions;
+
     private Map map = new HashMap();
 
-    public String execute()
-        throws ContinuumException
+    public void setProjectGroup( ProjectGroup projectGroup )
     {
-        users = userManager.getUsersInstancePermissions();
-
-        projectGroup = getContinuum().getProjectGroup( projectGroupId );
-
-        getLogger().info( "ProjectGroupName = " + projectGroup.getName() );
-
-        return INPUT;
+        this.projectGroup = projectGroup;
     }
 
-    public String save()
-        throws ContinuumException
+    public ProjectGroup getProjectGroup()
     {
-        for(Iterator i = map.keySet().iterator(); i.hasNext(); ) {
-            String id = (String) i.next();
-            getLogger().info("key value == " + id);
-        }
-        for(Iterator i = map.values().iterator(); i.hasNext(); ) {
-            String[] id = (String[])i.next();
-            for (int y = 0; y < id.length; y++){
-                getLogger().info("class name == " + id[y].getClass().getSimpleName());
-                getLogger().info("value == " + id[y]);
-            }
-        }
-        // TODO - compare the values from the map to userManager.getUsersInstancePermissions() then save the differences
-        // NOTE: only the checkboxes that are checked are saved on the map.
-        //       each user has 4 possible checkboxes and all of them are saved into an array of String.
-        //       so to determine each checkbox(view) from the others(edit/delete/build), we need a special notation. see below...
-        // KEY FORMAT: username + view/edit/delete or build. sample would be adminbuild or guestview
-        return SUCCESS;
+        return projectGroup;
     }
 
     public int getProjectGroupId()
@@ -94,16 +72,66 @@ public class ProjectGroupPermissionsAction
         this.projectGroupId = projectGroupId;
     }
 
-    public List getUsers()
+    public void setUserPermissions( InstancePermissions[] userPermissions )
     {
-        return users;
+        this.userPermissions = userPermissions;
     }
 
-    public Map getMap() {
+    public InstancePermissions[] getUserPermissions()
+    {
+        return userPermissions;
+    }
+
+    public Map getMap()
+    {
         return map;
     }
 
-    public void setMap(Map map) {
+    public void setMap( Map map )
+    {
         this.map = map;
+    }
+
+    public String execute()
+        throws ContinuumException
+    {
+        List userPermissionsAsList = userManager.getUsersInstancePermissions( ProjectGroup.class,
+                                                                              new Integer( projectGroupId ) );
+
+        setUserPermissions( (InstancePermissions[]) userPermissionsAsList.toArray( new InstancePermissions[0] ) );
+
+//        getUserPermissions()[0].setBuild( true );
+//        getUserPermissions()[1].setDelete( true );
+        
+        setProjectGroup( getContinuum().getProjectGroup( projectGroupId ) );
+
+        getLogger().info( "ProjectGroupName = " + getProjectGroup().getName() );
+
+        return INPUT;
+    }
+
+    public String save()
+        throws ContinuumException
+    {
+        for ( Iterator i = map.keySet().iterator(); i.hasNext(); )
+        {
+            String id = (String) i.next();
+            getLogger().info( "key value == " + id );
+        }
+        for ( Iterator i = map.values().iterator(); i.hasNext(); )
+        {
+            String[] id = (String[]) i.next();
+            for ( int y = 0; y < id.length; y++ )
+            {
+                getLogger().info( "class name == " + id[y].getClass().getSimpleName() );
+                getLogger().info( "value == " + id[y] );
+            }
+        }
+        // TODO - compare the values from the map to userManager.getUsersInstancePermissions() then save the differences
+        // NOTE: only the checkboxes that are checked are saved on the map.
+        //       each user has 4 possible checkboxes and all of them are saved into an array of String.
+        //       so to determine each checkbox(view) from the others(edit/delete/build), we need a special notation. see below...
+        // KEY FORMAT: username + view/edit/delete or build. sample would be adminbuild or guestview
+        return SUCCESS;
     }
 }
