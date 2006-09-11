@@ -16,14 +16,14 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.user.model.InstancePermissions;
+import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserManager;
 
 /**
@@ -50,7 +50,9 @@ public class ProjectGroupPermissionsAction
 
     private InstancePermissions[] userPermissions;
 
-    private Map map = new HashMap();
+    private String[] userNames;
+
+    private Map map;
 
     public void setProjectGroup( ProjectGroup projectGroup )
     {
@@ -92,6 +94,16 @@ public class ProjectGroupPermissionsAction
         this.map = map;
     }
 
+    public void setUserNames( String[] userNames )
+    {
+        this.userNames = userNames;
+    }
+
+    public String[] getUserNames()
+    {
+        return userNames;
+    }
+
     public String execute()
         throws ContinuumException
     {
@@ -100,12 +112,7 @@ public class ProjectGroupPermissionsAction
 
         setUserPermissions( (InstancePermissions[]) userPermissionsAsList.toArray( new InstancePermissions[0] ) );
 
-//        getUserPermissions()[0].setBuild( true );
-//        getUserPermissions()[1].setDelete( true );
-        
         setProjectGroup( getContinuum().getProjectGroup( projectGroupId ) );
-
-        getLogger().info( "ProjectGroupName = " + getProjectGroup().getName() );
 
         return INPUT;
     }
@@ -113,25 +120,48 @@ public class ProjectGroupPermissionsAction
     public String save()
         throws ContinuumException
     {
-        for ( Iterator i = map.keySet().iterator(); i.hasNext(); )
+        List instancePermissions = new ArrayList( userNames.length );
+        for ( int i = 0; i < userNames.length; i++ )
         {
-            String id = (String) i.next();
-            getLogger().info( "key value == " + id );
+            User u = new User();
+            u.setUsername( userNames[i] );
+
+            InstancePermissions p = parsePermissions( map, u.getUsername() );
+            p.setUser( u );
+            p.setId( new Integer( projectGroupId ) );
+            p.setInstanceClass( ProjectGroup.class );
+            instancePermissions.add( p );
+
+            // TODO validate that the permissions dont conflict each other, set the error msg if they do
         }
-        for ( Iterator i = map.values().iterator(); i.hasNext(); )
-        {
-            String[] id = (String[]) i.next();
-            for ( int y = 0; y < id.length; y++ )
-            {
-                getLogger().info( "class name == " + id[y].getClass().getSimpleName() );
-                getLogger().info( "value == " + id[y] );
-            }
-        }
-        // TODO - compare the values from the map to userManager.getUsersInstancePermissions() then save the differences
-        // NOTE: only the checkboxes that are checked are saved on the map.
-        //       each user has 4 possible checkboxes and all of them are saved into an array of String.
-        //       so to determine each checkbox(view) from the others(edit/delete/build), we need a special notation. see below...
-        // KEY FORMAT: username + view/edit/delete or build. sample would be adminbuild or guestview
+        userManager.setUsersInstancePermissions( instancePermissions );
+
         return SUCCESS;
+    }
+
+    private InstancePermissions parsePermissions( Map map, String username )
+    {
+        InstancePermissions p = new InstancePermissions();
+        if ( map.get( username + ".execute" ) != null )
+        {
+            p.setExecute( true );
+        }
+        if ( map.get( username + ".delete" ) != null )
+        {
+            p.setDelete( true );
+        }
+        if ( map.get( username + ".write" ) != null )
+        {
+            p.setWrite( true );
+        }
+        if ( map.get( username + ".read" ) != null )
+        {
+            p.setRead( true );
+        }
+        if ( map.get( username + ".administer" ) != null )
+        {
+            p.setAdminister( true );
+        }
+        return p;
     }
 }
