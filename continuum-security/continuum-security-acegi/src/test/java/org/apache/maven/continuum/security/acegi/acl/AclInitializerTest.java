@@ -46,7 +46,7 @@ public class AclInitializerTest
         super.setUp();
         initializer = new AclInitializer();
         initializer.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
-        initializer.setSqlClasspathResource( "org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql" );
+        initializer.setSqlClasspathResource( "org/apache/maven/user/acegi/acl/acegi-acl-derby.sql" );
 
         sqlMojo = new SqlExecMojo();
         sqlMojo.setUsername( "sa" );
