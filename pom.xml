@@ -61,6 +61,11 @@
             <dependentWarExcludes>WEB-INF/lib/**,WEB-INF/classes/**</dependentWarExcludes>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.modello</groupId>
+          <artifactId>modello-maven-plugin</artifactId>
+          <version>1.0-alpha-11-SNAPSHOT</version>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
