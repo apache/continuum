@@ -75,8 +75,6 @@ public class ConfigurationAction
 
         configuration.setWorkingDirectory( new File( workingDirectory ) );
 
-        configuration.setWorkingDirectory( new File( workingDirectory ) );
-
         configuration.setBuildOutputDirectory( new File( buildOutputDirectory ) );
 
         configuration.setUrl( baseUrl );
@@ -84,6 +82,8 @@ public class ConfigurationAction
         configuration.setCompanyLogo( companyLogo );
 
         configuration.setCompanyName( companyName );
+
+        configuration.setCompanyUrl( companyUrl );
 
         configuration.setInitialized( true );
         configuration.store();            
