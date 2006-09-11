@@ -20,15 +20,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.acegisecurity.acl.basic.BasicAclEntry;
-import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
-import org.acegisecurity.acl.basic.SimpleAclEntry;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.userdetails.User;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.user.acegi.AclManager;
+import org.apache.maven.user.model.InstancePermissions;
+import org.apache.maven.user.model.User;
 
 /**
  * Utility class to handle ACL manipulation on Continuum events, like adding or
@@ -90,19 +87,24 @@ public class AclEventHandler
     }
 
     /**
-     * Creator of {@link ProjectGroup} has {@link SimpleAclEntry#ADMINISTRATION} permissions.
+     * Creator of {@link ProjectGroup} has Administration permissions.
      * 
      * @param projectGroup
      */
     protected void createNewProjectGroupACL( ProjectGroup projectGroup )
     {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        SimpleAclEntry aclEntry = new SimpleAclEntry();
-        aclEntry.setAclObjectIdentity( createProjectGroupObjectIdentity( projectGroup.getId() ) );
-        aclEntry.setRecipient( user.getUsername() );
-        aclEntry.setAclObjectParentIdentity( AclInitializer.PARENT_PROJECT_GROUP_ACL_ID );
-        aclEntry.addPermission( SimpleAclEntry.ADMINISTRATION );
-        create( aclEntry );
+        InstancePermissions permission = new InstancePermissions();
+        User user = new User();
+        user.setUsername( getCurrentUserName() );
+        permission.setUser( user );
+        permission.setAdminister( true );
+
+        permission.setInstanceClass( ProjectGroup.class );
+        permission.setId( new Integer( projectGroup.getId() ) );
+        permission.setParentClass( ProjectGroup.class );
+        permission.setParentId( new Integer( AclInitializer.PARENT_PROJECT_GROUP_ACL_ID ) );
+
+        setUsersInstancePermission( permission );
     }
 
     /**
@@ -128,36 +130,13 @@ public class AclEventHandler
      */
     protected void createNewProjectACL( Project project, ProjectGroup projectGroup )
     {
-        NamedEntityObjectIdentity projectGroupIdentity = createProjectGroupObjectIdentity( projectGroup.getId() );
-        SimpleAclEntry aclEntry = new SimpleAclEntry();
-        aclEntry.setAclObjectIdentity( createProjectObjectIdentity( project.getId() ) );
-        aclEntry.setAclObjectParentIdentity( projectGroupIdentity );
-        create( aclEntry );
-    }
+        InstancePermissions permission = new InstancePermissions();
+        permission.setUser( null );
+        permission.setInstanceClass( Project.class );
+        permission.setId( new Integer( project.getId() ) );
+        permission.setParentClass( ProjectGroup.class );
+        permission.setParentId( new Integer( projectGroup.getId() ) );
 
-    public void setProjectGroupPermissions( int projectGroupId, String userName, int permissions )
-    {
-        super.setPermissions( ProjectGroup.class, new Integer( projectGroupId ), userName, permissions,
-                              AclInitializer.PARENT_PROJECT_GROUP_ACL_ID );
-    }
-
-    public BasicAclEntry getProjectGroupAcl( int projectGroupId, String userName )
-    {
-        return getAcl( ProjectGroup.class, new Integer( projectGroupId ), userName );
-    }
-
-    private NamedEntityObjectIdentity createProjectObjectIdentity( int projectId )
-    {
-        return createObjectIdentity( Project.class, new Integer( projectId ) );
-    }
-
-    private NamedEntityObjectIdentity createProjectGroupObjectIdentity( int projectGroupId )
-    {
-        return createObjectIdentity( ProjectGroup.class, new Integer( projectGroupId ) );
-    }
-
-    public BasicAclEntry[] getProjectGroupAcls( int projectGroupId )
-    {
-        return getAcls( ProjectGroup.class, new Integer( projectGroupId ) );
+        setUsersInstancePermission( permission );
     }
 }
