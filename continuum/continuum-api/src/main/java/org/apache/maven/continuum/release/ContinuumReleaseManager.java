@@ -39,7 +39,7 @@ public interface ContinuumReleaseManager
      * @param releaseProperties
      * @throws ContinuumReleaseException
      */
-    void prepare( Project project, Properties releaseProperties, Map releaseVersions,
+    String prepare( Project project, Properties releaseProperties, Map releaseVersions,
                     Map developmentVersions, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
@@ -53,7 +53,7 @@ public interface ContinuumReleaseManager
      * @throws ContinuumReleaseException
      */
     void perform( String releaseId, File buildDirectory,
-                  String goals, boolean useReleaseProfile )
+                  String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
     /**
@@ -63,10 +63,12 @@ public interface ContinuumReleaseManager
      * @throws ContinuumReleaseException
      */
     void perform( String releaseId, File descriptorFile, File buildDirectory,
-                  String goals, boolean useReleaseProfile )
+                  String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
     void setPreparedReleases( Map preparedReleases );
 
     Map getPreparedReleases();
+
+    Map getListeners();
 }

@@ -8,13 +8,13 @@
         <title><ww:text name="releaseProject.page.title"/></title>
     </head>
     <body>
-      <h2>Perform Project Release</h2>
-      <ww:form action="performRelease!doPerform.action" method="post">
+      <h2>Prepare Project Release</h2>
+      <ww:form action="prepareRelease!doPrepare.action" method="post">
         <h3>Release Parameters</h3>
         <input type="hidden" name="projectId" value="<ww:property value="projectId"/>"/>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <ww:textfield label="SCM Url" name="scmUsername"/>
+            <ww:textfield label="SCM Username" name="scmUsername"/>
             <ww:textfield label="SCM Password" name="scmPassword"/>
             <ww:textfield label="SCM Tag" name="scmTag"/>
             <ww:textfield label="SCM Tag Base" name="scmTagBase"/>

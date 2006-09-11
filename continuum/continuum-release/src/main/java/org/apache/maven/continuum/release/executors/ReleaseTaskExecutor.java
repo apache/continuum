@@ -16,10 +16,13 @@ package org.apache.maven.continuum.release.executors;
  * limitations under the License.
  */
 
+import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
+
 /**
  * @author Edwin Punzalan
  */
 public interface ReleaseTaskExecutor
+    extends TaskExecutor
 {
-    String ROLE = ReleaseTaskExecutor.class.getName();
+    String ROLE = TaskExecutor.class.getName();
 }

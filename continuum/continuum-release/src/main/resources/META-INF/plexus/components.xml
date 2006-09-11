@@ -40,7 +40,7 @@
     </component>
 
     <component>
-      <role>org.apache.maven.continuum.release.executors.ReleaseTaskExecutor</role>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
       <role-hint>prepare-release</role-hint>
       <implementation>org.apache.maven.continuum.release.executors.PrepareReleaseTaskExecutor</implementation>
       <requirements>
@@ -103,7 +103,7 @@
     </component>
 
     <component>
-      <role>org.apache.maven.continuum.release.executors.ReleaseTaskExecutor</role>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
       <role-hint>perform-release</role-hint>
       <implementation>org.apache.maven.continuum.release.executors.PerformReleaseTaskExecutor</implementation>
       <requirements>

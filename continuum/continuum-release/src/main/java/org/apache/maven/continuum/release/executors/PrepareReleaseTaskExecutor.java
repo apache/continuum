@@ -20,6 +20,7 @@ import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.plugins.release.ReleaseExecutionException;
 import org.apache.maven.plugins.release.ReleaseFailureException;
+import org.apache.maven.plugins.release.ReleaseManagerListener;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
@@ -39,7 +40,10 @@ public class PrepareReleaseTaskExecutor
 
             ReleaseDescriptor descriptor = prepareTask.getDescriptor();
 
-            releasePluginManager.prepare( descriptor, getSettings(), getReactorProjects( descriptor ), false, false );
+            ReleaseManagerListener listener = prepareTask.getListener();
+
+            releasePluginManager.prepare( descriptor, getSettings(), getReactorProjects( descriptor ),
+                                          false, false, listener );
 
             continuumReleaseManager.getPreparedReleases().put( prepareTask.getReleaseId(), descriptor );
         }

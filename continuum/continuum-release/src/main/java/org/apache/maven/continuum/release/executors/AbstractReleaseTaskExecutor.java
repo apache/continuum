@@ -19,6 +19,8 @@ package org.apache.maven.continuum.release.executors;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.plugins.release.ReleaseManager;
@@ -34,7 +36,6 @@ import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
@@ -51,7 +52,7 @@ import java.util.List;
  * @author Edwin Punzalan
  */
 public abstract class AbstractReleaseTaskExecutor
-    implements ReleaseTaskExecutor, TaskExecutor, Contextualizable
+    implements ReleaseTaskExecutor, Contextualizable
 {
     /**
      * @plexus.requirement
@@ -94,12 +95,20 @@ public abstract class AbstractReleaseTaskExecutor
         MavenProject project;
         try
         {
-            project = projectBuilder.build( getProjectDescriptorFile( descriptor ),
+            project = projectBuilder.buildWithDependencies( getProjectDescriptorFile( descriptor ),
                                             getLocalRepository(), getProfileManager( settings ) );
 
             reactorProjects.add( project );
         }
         catch ( ProjectBuildingException e )
+        {
+            throw new ContinuumReleaseException( "Failed to build project.", e );
+        }
+        catch ( ArtifactNotFoundException e )
+        {
+            throw new ContinuumReleaseException( "Failed to build project.", e );
+        }
+        catch ( ArtifactResolutionException e )
         {
             throw new ContinuumReleaseException( "Failed to build project.", e );
         }

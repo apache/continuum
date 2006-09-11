@@ -23,7 +23,17 @@ import java.util.List;
  */
 public interface ContinuumReleaseManagerListener
 {
+    int INITIALIZED = 0, LISTENING = 1, FINISHED = 3;
+
     List getCompletedPhases();
 
     String getInProgress();
+
+    String getGoalName();
+
+    List getPhases();
+
+    String getError();
+
+    int getState();
 }

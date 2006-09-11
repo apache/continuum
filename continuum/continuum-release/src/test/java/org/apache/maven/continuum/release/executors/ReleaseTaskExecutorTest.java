@@ -55,12 +55,12 @@ public class ReleaseTaskExecutorTest
 
         if ( prepareExec == null )
         {
-            prepareExec = (TaskExecutor) lookup( ReleaseTaskExecutor.ROLE, "prepare-release" );
+            prepareExec = (TaskExecutor) lookup( TaskExecutor.class.getName(), "prepare-release" );
         }
 
         if ( performExec == null )
         {
-            performExec = (TaskExecutor) lookup( ReleaseTaskExecutor.ROLE, "perform-release" );
+            performExec = (TaskExecutor) lookup( TaskExecutor.class.getName(), "perform-release" );
         }
     }
 
@@ -138,14 +138,14 @@ public class ReleaseTaskExecutorTest
 
     private Task getPrepareTask( String releaseId, ReleaseDescriptor descriptor )
     {
-        Task task = new PrepareReleaseProjectTask( releaseId, descriptor );
+        Task task = new PrepareReleaseProjectTask( releaseId, descriptor, null );
 
         return task;
     }
 
     private Task getPerformTask( String releaseId, ReleaseDescriptor descriptor, File buildDir )
     {
-        Task task = new PerformReleaseProjectTask( releaseId, descriptor, buildDir, "package", true );
+        Task task = new PerformReleaseProjectTask( releaseId, descriptor, buildDir, "package", true, null );
 
         return task;
     }

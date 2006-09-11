@@ -17,6 +17,10 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
+import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
+import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
+import org.apache.maven.plugins.release.config.ReleaseDescriptor;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 
@@ -46,19 +50,151 @@ public class PerformReleaseAction
 
     private boolean useReleaseProfile;
 
+    private ContinuumReleaseManagerListener listener;
+
     public String execute()
         throws Exception
     {
+        if ( StringUtils.isNotEmpty( releaseId ) )
+        {
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+            ReleaseDescriptor descriptor = (ReleaseDescriptor) releaseManager.getPreparedReleases().get( releaseId );
+            scmUrl = descriptor.getScmSourceUrl();
+        }
+
         return "prompt";
     }
 
     public String doPerform()
         throws Exception
     {
+        listener = new DefaultReleaseManagerListener();
+
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
-        releaseManager.perform( releaseId, File.createTempFile( "", "" ), goals, useReleaseProfile );
+        File performDirectory = new File( getContinuum().getConfiguration().getWorkingDirectory(),
+                                          "releases-" + System.currentTimeMillis() );
+        performDirectory.mkdirs();
 
-        return SUCCESS;
+        releaseManager.perform( releaseId, performDirectory, goals, useReleaseProfile, listener );
+
+        return "initialized";
+    }
+
+    public String checkProgress()
+        throws Exception
+    {
+        String status;
+
+        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+
+        listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
+
+        if ( listener.getState() == ContinuumReleaseManagerListener.INITIALIZED )
+        {
+            status = "initialized";
+        }
+        else if ( listener.getState() == ContinuumReleaseManagerListener.LISTENING )
+        {
+            status = "inProgress";
+        }
+        else
+        {
+            releaseManager.getListeners().remove( releaseId );
+
+            return "finished";
+        }
+
+        return status;
+    }
+
+    public String getReleaseId()
+    {
+        return releaseId;
+    }
+
+    public void setReleaseId( String releaseId )
+    {
+        this.releaseId = releaseId;
+    }
+
+    public String getScmUrl()
+    {
+        return scmUrl;
+    }
+
+    public void setScmUrl( String scmUrl )
+    {
+        this.scmUrl = scmUrl;
+    }
+
+    public String getScmUsername()
+    {
+        return scmUsername;
+    }
+
+    public void setScmUsername( String scmUsername )
+    {
+        this.scmUsername = scmUsername;
+    }
+
+    public String getScmPassword()
+    {
+        return scmPassword;
+    }
+
+    public void setScmPassword( String scmPassword )
+    {
+        this.scmPassword = scmPassword;
+    }
+
+    public String getScmTag()
+    {
+        return scmTag;
+    }
+
+    public void setScmTag( String scmTag )
+    {
+        this.scmTag = scmTag;
+    }
+
+    public String getScmTagBase()
+    {
+        return scmTagBase;
+    }
+
+    public void setScmTagBase( String scmTagBase )
+    {
+        this.scmTagBase = scmTagBase;
+    }
+
+    public String getGoals()
+    {
+        return goals;
+    }
+
+    public void setGoals( String goals )
+    {
+        this.goals = goals;
+    }
+
+    public boolean isUseReleaseProfile()
+    {
+        return useReleaseProfile;
+    }
+
+    public void setUseReleaseProfile( boolean useReleaseProfile )
+    {
+        this.useReleaseProfile = useReleaseProfile;
+    }
+
+    public ContinuumReleaseManagerListener getListener()
+    {
+        return listener;
+    }
+
+    public void setListener( ContinuumReleaseManagerListener listener )
+    {
+        this.listener = listener;
     }
 }

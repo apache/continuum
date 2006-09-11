@@ -21,6 +21,7 @@ import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.apache.maven.plugins.release.config.io.xpp3.ReleaseDescriptorXpp3Reader;
+import org.apache.maven.plugins.release.ReleaseManagerListener;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -31,6 +32,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Collections;
+import java.util.Hashtable;
 
 /**
  * @author Jason van Zyl
@@ -56,7 +59,7 @@ public class DefaultContinuumReleaseManager
      */
     private Map preparedReleases;
 
-    public void prepare( Project project, Properties releaseProperties, Map relVersions,
+    public String prepare( Project project, Properties releaseProperties, Map relVersions,
                            Map devVersions, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
@@ -64,30 +67,35 @@ public class DefaultContinuumReleaseManager
 
         ReleaseDescriptor descriptor = getReleaseDescriptor( project, releaseProperties, relVersions, devVersions );
 
+        getListeners().put( releaseId, listener );
+
         try
         {
-            prepareReleaseQueue.put( new PrepareReleaseProjectTask( releaseId, descriptor, listener ) );
+            prepareReleaseQueue.put( new PrepareReleaseProjectTask( releaseId, descriptor,
+                                                                    (ReleaseManagerListener) listener ) );
 
-            System.out.println( "Added to Prepare Queue" );
         }
         catch ( TaskQueueException e )
         {
             throw new ContinuumReleaseException( "Failed to add prepare release task in queue.", e );
         }
+
+        return releaseId;
     }
 
-    public void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile )
+    public void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
+                         ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
         ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
         if ( descriptor != null )
         {
-            perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile );
+            perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener );
         }
     }
 
     public void perform( String releaseId, File descriptorFile, File buildDirectory,
-                         String goals, boolean useReleaseProfile )
+                         String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
         ReleaseDescriptor descriptor;
@@ -104,20 +112,20 @@ public class DefaultContinuumReleaseManager
             throw new ContinuumReleaseException( "Failed to parse descriptor file.", e );
         }
 
-        perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile );
+        perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener );
     }
 
     private void perform( String releaseId, ReleaseDescriptor descriptor, File buildDirectory,
-                          String goals, boolean useReleaseProfile )
+                          String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
         try
         {
-            DefaultReleaseManagerListener listener = new DefaultReleaseManagerListener();
-            listeners.put( releaseId, listener );
+            getListeners().put( releaseId, listener );
 
             performReleaseQueue.put( new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory,
-                                                                    goals, useReleaseProfile, listener ) );
+                                                                    goals, useReleaseProfile,
+                                                                    (ReleaseManagerListener) listener ) );
         }
         catch ( TaskQueueException e )
         {
@@ -175,7 +183,7 @@ public class DefaultContinuumReleaseManager
     {
         if ( listeners == null )
         {
-            listeners = new HashMap();
+            listeners = Collections.synchronizedMap( new Hashtable() );
         }
 
         return listeners;

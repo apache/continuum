@@ -8,7 +8,7 @@
         <title><ww:text name="releaseProject.page.title"/></title>
     </head>
     <body>
-      <h2>Prepare Project Release</h2>
+      <h2>Perform Project Release</h2>
       <ww:form action="performRelease!doPerform.action" method="post">
         <h3>Common Release Parameters</h3>
         <input type="hidden" name="projectId" value="<ww:property value="projectId"/>"/>

@@ -10,8 +10,7 @@
     <body>
       <h2>Continuum Release</h2>
       <h3><ww:property value="name"/></h3>
-      <ww:form action="prepareRelease!checkProgress.action" method="post">
-        <ww:hidden name="projectId"/>
+      <ww:form action="performRelease!checkProgress.action" method="post">
         <ww:hidden name="releaseId"/>
         <div class="axial">
           <table width="100%">

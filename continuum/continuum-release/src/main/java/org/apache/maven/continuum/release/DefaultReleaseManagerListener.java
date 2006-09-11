@@ -28,46 +28,63 @@ import java.util.Collections;
 public class DefaultReleaseManagerListener
     implements ReleaseManagerListener, ContinuumReleaseManagerListener
 {
-    private List completed;
+    private String goalName;
+
+    private List completedPhases;
 
     private String inProgress;
 
     private List phases;
 
+    private String error;
+
+    private int state;
+
     public void goalStart( String name, List phases )
     {
+        System.out.println( "Goal started: " + name + "; phases: " + phases.size() );
+        state = LISTENING;
+        goalName = name;
         this.phases = phases;
-        completed = Collections.synchronizedList( new ArrayList() );
+        completedPhases = Collections.synchronizedList( new ArrayList() );
         inProgress = null;
     }
 
     public void phaseStart( String name )
     {
+        System.out.println( goalName + ":" + name + " started." );
         inProgress = name;
     }
 
     public void phaseEnd()
     {
-        completed.add( inProgress );
+        completedPhases.add( inProgress );
+
         inProgress = null;
     }
 
     public void phaseSkip( String name )
     {
-        completed.add( name );
+        System.out.println( goalName + ":" + name + " skipped." );
+        completedPhases.add( name );
     }
 
     public void goalEnd()
     {
+        state = FINISHED;
+        System.out.println( goalName + " finished." );
     }
 
     public void error( String message )
     {
+        System.out.println( goalName + " error occurred: " + message );
+        error = message;
+        goalEnd();
     }
 
     public List getCompletedPhases()
     {
-        return completed;
+        return completedPhases;
     }
 
     public String getInProgress()
@@ -80,8 +97,18 @@ public class DefaultReleaseManagerListener
         return phases;
     }
 
-    public void setPhases( List phases )
+    public String getGoalName()
     {
-        this.phases = phases;
+        return goalName;
+    }
+
+    public String getError()
+    {
+        return error;
+    }
+
+    public int getState()
+    {
+        return state;
     }
 }

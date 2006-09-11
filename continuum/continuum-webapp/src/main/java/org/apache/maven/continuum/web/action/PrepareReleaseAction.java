@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
+import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.release.versions.VersionInfo;
@@ -46,6 +47,8 @@ public class PrepareReleaseAction
 {
     private int projectId;
 
+    private String releaseId;
+
     private String name;
 
     private String scmUsername;
@@ -64,7 +67,7 @@ public class PrepareReleaseAction
 
     private List relVersions;
 
-    private DefaultReleaseManagerListener listener;
+    private ContinuumReleaseManagerListener listener;
 
     public String execute()
         throws Exception
@@ -77,7 +80,7 @@ public class PrepareReleaseAction
 
         processProject( project.getWorkingDirectory(), "pom.xml" );
 
-        return "prepareRelease";
+        return "prompt";
     }
 
     public String doPrepare()
@@ -88,12 +91,44 @@ public class PrepareReleaseAction
         Project project = getContinuum().getProject( projectId );
 
         name = project.getName();
+        if ( name == null )
+        {
+            name = project.getArtifactId();
+        }
 
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
-        releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), listener );
+        releaseId = releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(),
+                                            getDevVersionMap(), listener );
 
-        return SUCCESS;
+        return "initialized";
+    }
+
+    public String checkProgress()
+        throws Exception
+    {
+        String status;
+
+        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+
+        listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
+
+        if ( listener.getState() == ContinuumReleaseManagerListener.INITIALIZED )
+        {
+            status = "initialized";
+        }
+        else if ( listener.getState() == ContinuumReleaseManagerListener.LISTENING )
+        {
+            status = "inProgress";
+        }
+        else
+        {
+            releaseManager.getListeners().remove( releaseId );
+
+            return "finished";
+        }
+
+        return status;
     }
 
     private void processProject( String workingDirectory, String pomFilename )
@@ -276,7 +311,7 @@ public class PrepareReleaseAction
         this.projects = projects;
     }
 
-    public DefaultReleaseManagerListener getListener()
+    public ContinuumReleaseManagerListener getListener()
     {
         return listener;
     }
@@ -294,5 +329,15 @@ public class PrepareReleaseAction
     public void setName( String name )
     {
         this.name = name;
+    }
+
+    public String getReleaseId()
+    {
+        return releaseId;
+    }
+
+    public void setReleaseId( String releaseId )
+    {
+        this.releaseId = releaseId;
     }
 }

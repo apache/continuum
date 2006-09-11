@@ -16,8 +16,8 @@ package org.apache.maven.continuum.release.tasks;
  * limitations under the License.
  */
 
+import org.apache.maven.plugins.release.ReleaseManagerListener;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
-import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.codehaus.plexus.taskqueue.Task;
 
 /**
@@ -30,13 +30,14 @@ public abstract class AbstractReleaseProjectTask
 
     private ReleaseDescriptor descriptor;
 
-    private ContinuumReleaseManagerListener listener;
+    private ReleaseManagerListener listener;
 
     public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor,
-                                       ContinuumReleaseManagerListener listener )
+                                       ReleaseManagerListener listener )
     {
         this.releaseId = releaseId;
         this.descriptor = descriptor;
+        this.listener = listener;
     }
 
     public ReleaseDescriptor getDescriptor()
@@ -57,5 +58,15 @@ public abstract class AbstractReleaseProjectTask
     public void setReleaseId( String releaseId )
     {
         this.releaseId = releaseId;
+    }
+
+    public ReleaseManagerListener getListener()
+    {
+        return listener;
+    }
+
+    public void setListener( ReleaseManagerListener listener )
+    {
+        this.listener = listener;
     }
 }
