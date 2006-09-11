@@ -29,7 +29,6 @@ import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.user.model.PasswordRuleViolationException;
 import org.apache.maven.user.model.UserManager;
-import org.apache.maven.user.model.impl.DefaultUserManager;
 import org.apache.maven.user.model.UserSecurityPolicy;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.jpox.SchemaTool;
@@ -126,24 +125,17 @@ public class DefaultContinuumInitializer
 
             createGroups();
 
-            if( userManager instanceof DefaultUserManager )
-            {
-            	UserSecurityPolicy securityPolicy = ((DefaultUserManager) userManager).getSecurityPolicy();
+            UserSecurityPolicy securityPolicy = userManager.getSecurityPolicy();
 
-            	List rules = new ArrayList( securityPolicy.getPasswordRules() ); 
-            	
-				//lift all password restrictions temporarily
-				securityPolicy.getPasswordRules().clear();
-            	
-            	createDefaultUsers();
-                
-            	//put back password validation rules
-                securityPolicy.setPasswordRules( rules );
-            }
-            else
-            {
-            	createDefaultUsers();
-            }
+            List rules = new ArrayList( securityPolicy.getPasswordRules() );
+
+            //lift all password restrictions temporarily
+            securityPolicy.getPasswordRules().clear();
+
+            createDefaultUsers();
+
+            //put back password validation rules
+            securityPolicy.setPasswordRules( rules );
 
             getLogger().info( "... Continuum initialized" );
         }
