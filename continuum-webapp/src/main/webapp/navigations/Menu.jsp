@@ -35,7 +35,7 @@
     </div>
   </authz:authorize>      
 
-  <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageSchedule,ROLE_manageConfiguration">
+  <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers,ROLE_manageSchedule,ROLE_manageConfiguration">
     <div id="projectmenu" class="toolgroup">
       <div class="label"><ww:text name="menu.administration"/></div>
       <div>
