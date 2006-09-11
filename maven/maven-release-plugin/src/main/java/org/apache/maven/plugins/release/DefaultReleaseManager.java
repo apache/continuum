@@ -81,22 +81,26 @@ public class DefaultReleaseManager
      */
     private MavenExecutor mavenExecutor;
 
-    //todo tests
-    private List listenerList = new ArrayList();
-
     private final int phaseSkip = 0, phaseStart = 1, phaseEnd = 2, goalStart = 11, goalEnd = 12, error = 99;
 
     public void prepare( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
         throws ReleaseExecutionException, ReleaseFailureException
     {
-        prepare( releaseDescriptor, settings, reactorProjects, true, false );
+        prepare( releaseDescriptor, settings, reactorProjects, true, false, null );
     }
 
     public void prepare( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects, boolean resume,
                          boolean dryRun )
         throws ReleaseExecutionException, ReleaseFailureException
     {
-        reportToListeners( "prepare", goalStart );
+        prepare( releaseDescriptor, settings, reactorProjects, resume, dryRun, null );
+    }
+
+    public void prepare( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects, boolean resume,
+                         boolean dryRun, ReleaseManagerListener listener )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
+        updateListener( listener, "prepare", goalStart );
 
         ReleaseDescriptor config;
         if ( resume )
@@ -107,7 +111,7 @@ public class DefaultReleaseManager
             }
             catch ( ReleaseDescriptorStoreException e )
             {
-                reportToListeners( e.getMessage(), error );
+                updateListener( listener, e.getMessage(), error );
 
                 throw new ReleaseExecutionException( "Error reading stored configuration: " + e.getMessage(), e );
             }
@@ -123,9 +127,9 @@ public class DefaultReleaseManager
         String completedPhase = config.getCompletedPhase();
         int index = preparePhases.indexOf( completedPhase );
 
-        for ( int idx = 0; idx < preparePhases.size(); idx++ )
+        for ( int idx = 0; idx <= index; idx++ )
         {
-            reportToListeners( preparePhases.get( idx ).toString(), phaseSkip );
+            updateListener( listener, preparePhases.get( idx ).toString(), phaseSkip );
         }
 
         if ( index == preparePhases.size() - 1 )
@@ -149,20 +153,36 @@ public class DefaultReleaseManager
             {
                 String message = "Unable to find phase '" + name + "' to execute";
 
-                reportToListeners( message, error );
+                updateListener( listener, message, error );
 
                 throw new ReleaseExecutionException( message );
             }
 
-            reportToListeners( name, phaseStart );
+            updateListener( listener, name, phaseStart );
 
-            if ( dryRun )
+            //catch the exception before re-throwing for the listeners
+            try
             {
-                phase.simulate( config, settings, reactorProjects );
+                if ( dryRun )
+                {
+                    phase.simulate( config, settings, reactorProjects );
+                }
+                else
+                {
+                    phase.execute( config, settings, reactorProjects );
+                }
             }
-            else
+            catch ( ReleaseExecutionException e )
             {
-                phase.execute( config, settings, reactorProjects );
+                updateListener( listener, e.getMessage(), error );
+
+                throw e;
+            }
+            catch ( ReleaseFailureException e )
+            {
+                updateListener( listener, e.getMessage(), error );
+
+                throw e;
             }
 
             config.setCompletedPhase( name );
@@ -172,15 +192,15 @@ public class DefaultReleaseManager
             }
             catch ( ReleaseDescriptorStoreException e )
             {
-                reportToListeners( e.getMessage(), error );
+                updateListener( listener, e.getMessage(), error );
 
                 // TODO: rollback?
                 throw new ReleaseExecutionException( "Error writing release properties after completing phase", e );
             }
 
-            reportToListeners( name, phaseEnd );
+            updateListener( listener, name, phaseEnd );
 
-            reportToListeners( "prepare", goalEnd );
+            updateListener( listener, "prepare", goalEnd );
         }
     }
 
@@ -188,11 +208,19 @@ public class DefaultReleaseManager
                          File checkoutDirectory, String goals, boolean useReleaseProfile )
         throws ReleaseExecutionException, ReleaseFailureException
     {
-        reportToListeners( "perform", goalStart );
+        perform( releaseDescriptor, settings, reactorProjects, checkoutDirectory, goals, useReleaseProfile, null );
+    }
+
+    public void perform( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects,
+                         File checkoutDirectory, String goals, boolean useReleaseProfile,
+                         ReleaseManagerListener listener )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
+        updateListener( listener, "perform", goalStart );
 
         getLogger().info( "Checking out the project to perform the release ..." );
 
-        reportToListeners( "verify-release-configuration", phaseStart );
+        updateListener( listener, "verify-release-configuration", phaseStart );
 
         ReleaseDescriptor config;
         try
@@ -201,13 +229,13 @@ public class DefaultReleaseManager
         }
         catch ( ReleaseDescriptorStoreException e )
         {
-            reportToListeners( e.getMessage(), error );
+            updateListener( listener, e.getMessage(), error );
 
             throw new ReleaseExecutionException( "Error reading stored configuration: " + e.getMessage(), e );
         }
 
-        reportToListeners( "verify-release-configuration", phaseEnd );
-        reportToListeners( "verify-completed-prepare-phases", phaseStart );
+        updateListener( listener, "verify-release-configuration", phaseEnd );
+        updateListener( listener, "verify-completed-prepare-phases", phaseStart );
 
         // if we stopped mid-way through preparation - don't perform
         if ( config.getCompletedPhase() != null && !"end-release".equals( config.getCompletedPhase() ) )
@@ -215,7 +243,7 @@ public class DefaultReleaseManager
             String message = "Cannot perform release - the preparation step was stopped mid-way. Please re-run " +
                 "release:prepare to continue, or perform the release from an SCM tag.";
 
-            reportToListeners( message, error );
+            updateListener( listener, message, error );
 
             throw new ReleaseFailureException( message );
         }
@@ -224,13 +252,13 @@ public class DefaultReleaseManager
         {
             String message = "No SCM URL was provided to perform the release from";
 
-            reportToListeners( message, error );
+            updateListener( listener, message, error );
 
             throw new ReleaseFailureException( message );
         }
 
-        reportToListeners( "verify-completed-prepare-phases", phaseEnd );
-        reportToListeners( "configure-repositories", phaseStart );
+        updateListener( listener, "verify-completed-prepare-phases", phaseEnd );
+        updateListener( listener, "configure-repositories", phaseStart );
 
         ScmRepository repository;
         ScmProvider provider;
@@ -242,21 +270,21 @@ public class DefaultReleaseManager
         }
         catch ( ScmRepositoryException e )
         {
-            reportToListeners( e.getMessage(), error );
+            updateListener( listener, e.getMessage(), error );
 
             throw new ReleaseScmRepositoryException( e.getMessage(), e.getValidationMessages() );
         }
         catch ( NoSuchScmProviderException e )
         {
-            reportToListeners( e.getMessage(), error );
+            updateListener( listener, e.getMessage(), error );
 
             throw new ReleaseExecutionException( "Unable to configure SCM repository: " + e.getMessage(), e );
         }
 
         // TODO: sanity check that it is not . or .. or lower
 
-        reportToListeners( "configure-repositories", phaseEnd );
-        reportToListeners( "checkout-project-from-scm", phaseStart );
+        updateListener( listener, "configure-repositories", phaseEnd );
+        updateListener( listener, "checkout-project-from-scm", phaseStart );
 
         if ( checkoutDirectory.exists() )
         {
@@ -266,7 +294,7 @@ public class DefaultReleaseManager
             }
             catch ( IOException e )
             {
-                reportToListeners( e.getMessage(), error );
+                updateListener( listener, e.getMessage(), error );
 
                 throw new ReleaseExecutionException( "Unable to remove old checkout directory: " + e.getMessage(), e );
             }
@@ -280,19 +308,19 @@ public class DefaultReleaseManager
         }
         catch ( ScmException e )
         {
-            reportToListeners( e.getMessage(), error );
+            updateListener( listener, e.getMessage(), error );
 
             throw new ReleaseExecutionException( "An error is occurred in the checkout process: " + e.getMessage(), e );
         }
         if ( !result.isSuccess() )
         {
-            reportToListeners( result.getProviderMessage(), error );
+            updateListener( listener, result.getProviderMessage(), error );
 
             throw new ReleaseScmCommandException( "Unable to checkout from SCM", result );
         }
 
-        reportToListeners( "checkout-project-from-scm", phaseEnd );
-        reportToListeners( "build-project", phaseStart );
+        updateListener( listener, "checkout-project-from-scm", phaseEnd );
+        updateListener( listener, "build-project", phaseStart );
 
         String additionalArguments = config.getAdditionalArguments();
 
@@ -315,18 +343,18 @@ public class DefaultReleaseManager
         }
         catch ( MavenExecutorException e )
         {
-            reportToListeners( e.getMessage(), error );
+            updateListener( listener, e.getMessage(), error );
 
             throw new ReleaseExecutionException( "Error executing Maven: " + e.getMessage(), e );
         }
 
-        reportToListeners( "build-project", phaseEnd );
-        reportToListeners( "cleanup", phaseStart );
+        updateListener( listener, "build-project", phaseEnd );
+        updateListener( listener, "cleanup", phaseStart );
 
         clean( config, reactorProjects );
 
-        reportToListeners( "cleanup", phaseEnd );
-        reportToListeners( "perform", goalEnd );
+        updateListener( listener, "cleanup", phaseEnd );
+        updateListener( listener, "perform", goalEnd );
     }
 
     public void clean( ReleaseDescriptor releaseDescriptor, List reactorProjects )
@@ -355,12 +383,10 @@ public class DefaultReleaseManager
         this.mavenExecutor = mavenExecutor;
     }
 
-    void reportToListeners( String name, int state )
+    void updateListener( ReleaseManagerListener listener, String name, int state )
     {
-        for( Iterator listeners = listenerList.iterator(); listeners.hasNext(); )
+        if ( listener != null )
         {
-            ReleaseManagerListener listener = (ReleaseManagerListener) listeners.next();
-
             switch( state )
             {
                 case goalStart:
@@ -398,23 +424,5 @@ public class DefaultReleaseManager
         }
 
         return phases;
-    }
-
-    public void addListener( ReleaseManagerListener listener )
-    {
-        listenerList.add( listener );
-    }
-
-    public void removeListener( ReleaseManagerListener listener )
-    {
-        if ( listenerList.contains( listener ) )
-        {
-            listenerList.remove( listener );
-        }
-    }
-
-    List getListeners()
-    {
-        return listenerList;
     }
 }

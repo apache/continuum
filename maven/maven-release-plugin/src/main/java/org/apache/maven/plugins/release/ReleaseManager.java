@@ -84,17 +84,12 @@ public interface ReleaseManager
      */
     void clean( ReleaseDescriptor releaseDescriptor, List reactorProjects );
 
-    /**
-     * Add a progress listener
-     *
-     * @param listener
-     */
-    void addListener( ReleaseManagerListener listener );
+    void prepare( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects, boolean resume,
+                  boolean dryRun, ReleaseManagerListener listener )
+        throws ReleaseExecutionException, ReleaseFailureException;
 
-    /**
-     * Remove a progress listener
-     *
-     * @param listener
-     */
-    void removeListener( ReleaseManagerListener listener );
+    void perform( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects,
+                  File checkoutDirectory, String goals, boolean useReleaseProfile,
+                  ReleaseManagerListener listener )
+        throws ReleaseExecutionException, ReleaseFailureException;
 }
