@@ -236,6 +236,23 @@
           </property>
           -->
 
+          <!-- MySQL Configuration -->
+          <!-- see http://www.jpox.org/servlet/forum/printthread;jsessionid=FA3F0B304E4E7143F272E5C55DF4E3F1?thread=3396 -->
+          <!--
+          <property>
+            <name>javax.jdo.option.ConnectionDriverName</name>
+            <value>com.mysql.jdbc.Driver</value>
+          </property>
+          <property>
+            <name>javax.jdo.option.ConnectionURL</name>
+            <value>jdbc:mysql://localhost/test</value>
+          </property>
+          <property>
+            <name>org.jpox.rdbms.stringDefaultLength</name>
+            <value>255</value>
+          </property>
+          -->
+
           <!-- HSQLDB Configuration -->
           <!--
             NOTE: NO NOT USE THIS CONFIGURATION FOR A PRODUCTION SYSTEM.
@@ -497,7 +514,12 @@
         </requirement>
       </requirements>
       <configuration>
+      <!-- derby -->
         <sqlClasspathResource>org/apache/maven/user/acegi/acl/acegi-acl-derby.sql</sqlClasspathResource>
+      <!-- mysql -->
+      <!--
+        <sqlClasspathResource>org/apache/maven/user/acegi/acl/acegi-acl-mysql.sql</sqlClasspathResource>
+      -->
       </configuration>
     </component>
     
@@ -506,10 +528,19 @@
       <role>org.codehaus.mojo.sql.SqlExecMojo</role>
       <implementation>org.codehaus.mojo.sql.SqlExecMojo</implementation>
       <configuration>
-        <username>sa</username>
-        <password></password>
+      <!-- derby -->
         <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
         <url>jdbc:derby:${plexus.home}/database;create=true</url>
+        <username>sa</username>
+        <password></password>
+      <!-- mysql -->
+      <!--
+        <driver>com.mysql.jdbc.Driver</driver>
+        <url>jdbc:mysql://localhost/test</url>
+        <username></username>
+        <password></password>
+      -->
+
         <onError>continue</onError>
       </configuration>
     </component>
@@ -519,9 +550,15 @@
       <role>javax.sql.DataSource</role>
       <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
       <configuration>
+      <!-- derby -->
         <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
         <url>jdbc:derby:${plexus.home}/database;create=true</url>
         <username>sa</username>
+      <!-- mysql -->
+      <!--
+        <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+        <url>jdbc:mysql://localhost/test</url>
+      -->
       </configuration>
     </component>
 
