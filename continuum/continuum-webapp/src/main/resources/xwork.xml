@@ -326,6 +326,7 @@
       <result name="initialized" type="redirect-action">
         <param name="actionName">prepareRelease!checkProgress.action</param>
         <param name="releaseId">${releaseId}</param>
+      </result>
       <result name="inProgress">performReleaseProgress.jsp</result>
       <result name="finished">releaseFinished.jsp</result>
     </action>
