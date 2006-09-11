@@ -17,8 +17,8 @@ package org.apache.maven.continuum.security.acegi.acl;
  */
 
 import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
-import org.acegisecurity.acl.basic.SimpleAclEntry;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.user.acegi.acl.basic.ExtendedSimpleAclEntry;
 
 /**
  * Initialize the ACL system with a parent ACL for all {@link ProjectGroup}s.
@@ -34,11 +34,11 @@ public class AclInitializer
     protected void insertDefaultData()
     {
         /* admin can do anything with project number 1 */
-        SimpleAclEntry aclEntry = new SimpleAclEntry();
+        ExtendedSimpleAclEntry aclEntry = new ExtendedSimpleAclEntry();
         aclEntry.setAclObjectIdentity( new NamedEntityObjectIdentity( ProjectGroup.class.getName(), Integer
             .toString( PARENT_PROJECT_GROUP_ACL_ID ) ) );
         aclEntry.setRecipient( "ROLE_admin" );
-        aclEntry.addPermission( SimpleAclEntry.ADMINISTRATION );
+        aclEntry.addPermission( ExtendedSimpleAclEntry.ADMINISTRATION );
         getDao().create( aclEntry );
     }
 }
