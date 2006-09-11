@@ -20,9 +20,6 @@ import java.io.File;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
-import org.apache.maven.continuum.model.system.ContinuumUser;
-import org.apache.maven.continuum.security.ContinuumSecurity;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import com.opensymphony.xwork.Preparable;
@@ -39,21 +36,6 @@ public class ConfigurationAction
     extends ContinuumActionSupport
     implements Preparable
 {
-
-    /**
-     * @plexus.requirement
-     */
-    private ContinuumStore store;
-
-    private String username;
-
-    private String password;
-
-    private String passwordTwo;
-
-    private String fullName;
-
-    private String email;
 
     private String workingDirectory;
 
@@ -89,16 +71,6 @@ public class ConfigurationAction
     {
         //todo switch this to validation
 
-        ContinuumUser adminUser = new ContinuumUser();
-
-        adminUser.setUsername( username );
-        adminUser.setPassword( password );
-        adminUser.setEmail( email );
-        adminUser.setFullName( fullName );
-        adminUser.setGroup( store.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) );
-
-        store.addUser( adminUser );
-        
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         configuration.setWorkingDirectory( new File( workingDirectory ) );
@@ -112,9 +84,6 @@ public class ConfigurationAction
         configuration.setCompanyLogo( companyLogo );
 
         configuration.setCompanyName( companyName );
-
-        configuration.setInitialized( true );
-        configuration.store();
 
         configuration.setInitialized( true );
         configuration.store();            
@@ -132,56 +101,6 @@ public class ConfigurationAction
         throws Exception
     {
         return INPUT;
-    }
-
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public void setUsername( String username )
-    {
-        this.username = username;
-    }
-
-    public String getPassword()
-    {
-        return password;
-    }
-
-    public void setPassword( String password )
-    {
-        this.password = password;
-    }
-
-    public String getPasswordTwo()
-    {
-        return passwordTwo;
-    }
-
-    public void setPasswordTwo( String passwordTwo )
-    {
-        this.passwordTwo = passwordTwo;
-    }
-
-    public String getFullName()
-    {
-        return fullName;
-    }
-
-    public void setFullName( String fullName )
-    {
-        this.fullName = fullName;
-    }
-
-    public String getEmail()
-    {
-        return email;
-    }
-
-    public void setEmail( String email )
-    {
-        this.email = email;
     }
 
     public String getWorkingDirectory()
