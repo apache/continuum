@@ -23,6 +23,7 @@
           <ww:iterator value="userPermissions" id="permission">
 
             <ww:property value='user.username'/>
+            <ww:hidden name="projectGroupId" value="%{projectGroupId}"/>
             <ww:hidden name="userNames" value="%{user.username}"/>
 
             <ww:set name="read" value="<ww:property value='read'/>"/>
