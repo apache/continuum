@@ -16,144 +16,29 @@ package org.apache.maven.continuum.security.acegi.acl;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.acegisecurity.acl.basic.AclObjectIdentity;
 import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
 import org.acegisecurity.acl.basic.SimpleAclEntry;
-import org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.codehaus.mojo.sql.SqlExecMojo;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.codehaus.plexus.util.IOUtil;
 
 /**
- * Initialize the ACL system with some default values.
+ * Initialize the ACL system with a parent ACL for all {@link ProjectGroup}s.
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
 public class AclInitializer
-    extends AbstractLogEnabled
-    implements Initializable
+    extends org.apache.maven.user.acegi.acl.AclInitializer
 {
-    public static final String ROLE = AclInitializer.class.getName();
+    public static final int PARENT_PROJECT_GROUP_ACL_ID = 0;
 
-    public static final AclObjectIdentity PARENT_PROJECT_GROUP_ACL_ID =
-        new NamedEntityObjectIdentity( ProjectGroup.class.getName(), "0" );
-
-    private JdbcExtendedDaoImpl dao;
-
-    private SqlExecMojo sqlMojo;
-
-    private String sqlClasspathResource;
-
-    public void setDao( JdbcExtendedDaoImpl dao )
+    protected void insertDefaultData()
     {
-        this.dao = dao;
-    }
-
-    public JdbcExtendedDaoImpl getDao()
-    {
-        return dao;
-    }
-
-    public void setSqlMojo( SqlExecMojo sqlMojo )
-    {
-        this.sqlMojo = sqlMojo;
-    }
-
-    public SqlExecMojo getSqlMojo()
-    {
-        return sqlMojo;
-    }
-
-    public void setSqlClasspathResource( String sqlClasspathResource )
-    {
-        this.sqlClasspathResource = sqlClasspathResource;
-    }
-
-    /**
-     * Classpath resource that contains the SQL to be executed.
-     * 
-     * @return classpath path
-     */
-    public String getSqlClasspathResource()
-    {
-        return sqlClasspathResource;
-    }
-
-    public void initialize()
-        throws InitializationException
-    {
-
-        InputStream is = null;
-        String sql = null;
-        try
-        {
-            is = this.getClass().getClassLoader().getResourceAsStream( getSqlClasspathResource() );
-            if ( is == null )
-            {
-                throw new InitializationException( getSqlClasspathResource() + " does not exist in the classpath" );
-            }
-            sql = IOUtil.toString( is );
-        }
-        catch ( IOException e )
-        {
-            throw new InitializationException( "Unable to read sql file from classpath: " + getSqlClasspathResource(),
-                                               e );
-        }
-        finally
-        {
-            if ( is != null )
-            {
-                try
-                {
-                    is.close();
-                }
-                catch ( IOException e )
-                {
-                    // nothing to do here
-                }
-            }
-        }
-
-        getSqlMojo().addText( sql );
-
-        if ( getSqlMojo().getPassword() == null )
-        {
-            getSqlMojo().setPassword( "" );
-        }
-
-        try
-        {
-            getSqlMojo().execute();
-        }
-        catch ( MojoExecutionException e )
-        {
-            throw new InitializationException( e.getMessage(), e );
-        }
-
-        /* execute Spring initialization callback */
-        getDao().afterPropertiesSet();
-
-        /* poor check to see if this is the first time initializing the database */
-        if ( getSqlMojo().getSuccessfulStatements() >= 2 )
-        {
-            /* tables were created, insert default values */
-            getLogger().info( "Initializing ACL database" );
-
-            /* admin can do anything with project number 1 */
-            SimpleAclEntry aclEntry = new SimpleAclEntry();
-            aclEntry.setAclObjectIdentity( PARENT_PROJECT_GROUP_ACL_ID );
-            aclEntry.setRecipient( "ROLE_admin" );
-            aclEntry.addPermission( SimpleAclEntry.ADMINISTRATION );
-            getDao().create( aclEntry );
-        }
-
+        /* admin can do anything with project number 1 */
+        SimpleAclEntry aclEntry = new SimpleAclEntry();
+        aclEntry.setAclObjectIdentity( new NamedEntityObjectIdentity( ProjectGroup.class.getName(), Integer
+            .toString( PARENT_PROJECT_GROUP_ACL_ID ) ) );
+        aclEntry.setRecipient( "ROLE_admin" );
+        aclEntry.addPermission( SimpleAclEntry.ADMINISTRATION );
+        getDao().create( aclEntry );
     }
 }

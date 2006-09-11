@@ -30,7 +30,7 @@
     </component>
 
     <component>
-      <role>org.apache.maven.continuum.security.acegi.acl.AclInitializer</role>
+      <role>org.apache.maven.user.acegi.acl.AclInitializer</role>
       <implementation>org.apache.maven.continuum.security.acegi.acl.AclInitializer</implementation>
       <requirements>
         <requirement>
@@ -43,7 +43,7 @@
         </requirement>
       </requirements>
       <configuration>
-        <sqlClasspathResource>org/apache/maven/continuum/security/acegi/acl/acegi-acl-derby.sql</sqlClasspathResource>
+        <sqlClasspathResource>org/apache/maven/user/acegi/acl/acegi-acl-derby.sql</sqlClasspathResource>
       </configuration>
     </component>
 
