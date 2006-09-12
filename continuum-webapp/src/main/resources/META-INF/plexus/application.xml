@@ -337,7 +337,16 @@
           <role>org.acegisecurity.providers.dao.DaoAuthenticationProvider</role>
           <field-name>providers</field-name>
         </requirement>
+        <requirement>
+          <role>org.springframework.context.ApplicationEventPublisher</role>
+          <field-name>applicationEventPublisher</field-name>
+        </requirement>
       </requirements>
+    </component>
+
+    <component>
+      <role>org.springframework.context.ApplicationEventPublisher</role>
+      <implementation>org.apache.maven.user.acegi.event.authentication.UserEventPublisher</implementation>
     </component>
 
     <!-- In memory database used only for testing -->
