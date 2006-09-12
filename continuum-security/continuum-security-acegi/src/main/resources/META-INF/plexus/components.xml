@@ -41,6 +41,10 @@
           <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
           <field-name>dao</field-name>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+          <field-name>store</field-name>
+        </requirement>
       </requirements>
       <configuration>
         <sqlClasspathResource>org/apache/maven/user/acegi/acl/acegi-acl-derby.sql</sqlClasspathResource>
