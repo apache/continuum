@@ -40,8 +40,6 @@ import java.util.Map;
  */
 public interface ContinuumStore
 {
-    static final String DEFAULT_GROUP_ID = "default";
-
     String ROLE = ContinuumStore.class.getName();
 
     Project getProjectByName( String name )
@@ -219,9 +217,6 @@ public interface ContinuumStore
 
     Project getProjectWithBuildDetails( int projectId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
-
-    ProjectGroup getDefaultProjectGroup()
-        throws ContinuumStoreException;
 
     SystemConfiguration addSystemConfiguration( SystemConfiguration systemConf );
 

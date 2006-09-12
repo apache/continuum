@@ -48,6 +48,8 @@ public interface Continuum
     // Project Groups
     // ----------------------------------------------------------------------
 
+    public static final String DEFAULT_PROJECT_GROUP_GROUP_ID = "default";
+
     public ProjectGroup getProjectGroup( int projectGroupId )
         throws ContinuumException;
 
