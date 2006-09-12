@@ -86,6 +86,7 @@
 
     <component>
       <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
+      <role-hint>test</role-hint>
       <implementation>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</implementation>
       <requirements>
         <requirement>

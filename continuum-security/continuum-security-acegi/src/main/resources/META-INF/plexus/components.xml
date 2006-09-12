@@ -69,6 +69,78 @@
       </requirements>
     </component>
 
+
+    <!-- authorization -->
+
+    <component>
+      <role>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</role>
+      <implementation>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
+          <role-hint>continuum</role-hint>
+          <field-name>securityInterceptor</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <aspectName>org.apache.maven.continuum.security.acegi.aspectj.ContinuumSecurityAspect</aspectName>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.AclProvider</role>
+      <implementation>org.acegisecurity.acl.basic.BasicAclProvider</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
+          <field-name>basicAclDao</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.AclManager</role>
+      <implementation>org.acegisecurity.acl.AclProviderManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclProvider</role>
+          <field-name>providers</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+      <role-hint>roleVoter</role-hint>
+      <implementation>org.acegisecurity.vote.RoleVoter</implementation>
+    </component>
+
+    <!-- An access decision manager used by the business objects -->
+    <component>
+      <role>org.acegisecurity.AccessDecisionManager</role>
+      <implementation>org.acegisecurity.vote.AffirmativeBased</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+          <field-name>decisionVoters</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <allowIfAllAbstainDecisions>true</allowIfAllAbstainDecisions>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</role>
+      <implementation>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
+          <field-name>providers</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
     <component>
       <role>org.codehaus.mojo.sql.SqlExecMojo</role>
       <implementation>org.codehaus.mojo.sql.SqlExecMojo</implementation>
@@ -78,6 +150,250 @@
         <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
         <url>jdbc:derby:${plexus.home}/database;create=true</url>
         <onError>continue</onError>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</role>
+      <role-hint>continuum</role-hint>
+      <implementation>org.acegisecurity.intercept.method.aspectj.AspectJSecurityInterceptor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.providers.ProviderManager</role>
+          <field-name>authenticationManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.acegisecurity.AccessDecisionManager</role>
+          <field-name>accessDecisionManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.acegisecurity.afterinvocation.AfterInvocationProviderManager</role>
+          <field-name>afterInvocationManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <objectDefinitionSource implementation="org.acegisecurity.intercept.method.MethodDefinitionMap">
+          <mappings>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getProjectGroup</methodName>
+              <configAttributes>
+                <configAttribute>AFTER_ACL_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getAllProjectGroupsWithProjects</methodName>
+              <configAttributes>
+                <configAttribute>AFTER_ACL_COLLECTION_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getProjectGroupByProjectId</methodName>
+              <configAttributes>
+                <configAttribute>AFTER_ACL_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getProjectsInGroup</methodName>
+              <configAttributes>
+                <configAttribute>AFTER_ACL_COLLECTION_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.removeProjectGroup</methodName>
+              <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ROLE_deleteProject</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+<!--
+removeProject( int projectId )
+checkoutProject( int projectId )
+getProject( int projectId )
+getAllProjectsWithAllDetails( int start, int end );
+getAllProjects( int start, int end )
+getProjects()
+getProjectsWithDependencies()
+getLatestBuildResultForProject( int projectId );
+getLatestBuildResults();
+getBuildResultsInSuccess();
+isInBuildingQueue( int projectId )
+isInBuildingQueue( int projectId, int buildDefinitionId )
+isInCheckoutQueue( int projectId )
+getProjectsInBuildOrder()
+buildProjects()
+buildProjects( int trigger )
+buildProjects( Schedule schedule )
+buildProject( int projectId )
+buildProject( int projectId, int trigger )
+buildProject( int projectId, int buildDefinitionId, int trigger )
+buildProjectGroup( int projectGroupId )
+getBuildResult( int buildId )
+getBuildResultByBuildNumber( int projectId, int buildNumber )
+getBuildOutput( int projectId, int buildId )
+getBuildResultsForProject( int projectId )
+getChangesSinceLastSuccess( int projectId, int buildResultId )
+-->
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.addProject</methodName>
+              <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ROLE_addProject</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+<!--
+addMavenTwoProject( String metadataUrl )
+addMavenOneProject( String metadataUrl )
+updateProject( Project project )
+getNotifier( int projectId, int notifierId )
+updateNotifier( int projectId, int notifierId, Map configuration )
+updateNotifier( int projectId, ProjectNotifier notifier )
+addNotifier( int projectId, ProjectNotifier notifier )
+addNotifier( int projectId, String notifierType, Map configuration )
+removeNotifier( int projectId, int notifierId )
+getProjectWithCheckoutResult( int projectId )
+-->
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getProjectWithAllDetails</methodName>
+              <configAttributes>
+                <configAttribute>AFTER_ACL_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getProjectWithBuilds</methodName>
+              <configAttributes>
+                <configAttribute>AFTER_ACL_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+<!--
+getBuildDefinitions( int projectId )
+getBuildDefinition( int projectId, int buildDefinitionId )
+removeBuildDefinition( int projectId, int buildDefinitionId )
+getBuildDefinition( int buildDefinitionId )
+getDefaultBuildDefinition( int projectId )
+addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
+addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+getBuildDefinitionsForProject( int projectId )
+getBuildDefinitionsForProjectGroup( int projectGroupId )
+removeBuildDefinitionFromProject( int projectId, int buildDefinitionId )
+removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
+updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
+updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+getSchedule( int id )
+getSchedules()
+addSchedule( Schedule schedule )
+updateSchedule( Schedule schedule )
+updateSchedule( int scheduleId, Map configuration )
+removeSchedule( int scheduleId )
+getWorkingDirectory( int projectId )
+getFileContent( int projectId, String directory, String filename )
+getFiles( int projectId, String currentDirectory )
+getConfiguration();
+updateConfiguration( Map parameters )
+reloadConfiguration()
+getSecurity();
+addUser( ContinuumUser user )
+addUser( Map configuration )
+updateUser( ContinuumUser user )
+updateUser( int userId, Map configuration )
+getUsers()
+getUser( int userId )
+removeUser( int userId )
+addUserGroup( UserGroup userGroup );
+addUserGroup( Map configuration )
+updateUserGroup( UserGroup userGroup )
+updateUserGroup( int userGroupId, Map configuration )
+getUserGroups()
+getUserGroup( int userGroupId )
+removeUserGroup( int userGroupId )
+-->
+          </mappings>
+        </objectDefinitionSource>
+      </configuration>
+    </component>
+
+    <!-- Processes ACL_PROJECT_READ configuration settings -->
+    <!-- not used yet
+    <component>
+      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+      <role-hint>aclProjectRead</role-hint>
+      <implementation>org.acegisecurity.vote.BasicAclEntryVoter</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <processConfigAttribute>ACL_PROJECT_READ</processConfigAttribute>
+        <processDomainObjectClass>org.apache.maven.continuum.model.project.Project</processDomainObjectClass>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>READ</permission>
+        </requirePermissionFromString>
+      </configuration>
+    </component>
+    -->
+
+    <!-- Processes ACL_PROJECTGROUP_READ configuration settings -->
+    <!-- not used yet
+    <component>
+      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+      <role-hint>aclProjectGroupRead</role-hint>
+      <implementation>org.acegisecurity.vote.BasicAclEntryVoter</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <processConfigAttribute>ACL_PROJECTGROUP_READ</processConfigAttribute>
+        <processDomainObjectClass>org.apache.maven.continuum.model.project.ProjectGroup</processDomainObjectClass>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>READ</permission>
+        </requirePermissionFromString>
+      </configuration>
+    </component>
+    -->
+
+    <!-- ============== "AFTER INTERCEPTION" AUTHORIZATION DEFINITIONS =========== -->
+
+    <!-- Processes AFTER_ACL_COLLECTION_READ configuration settings -->
+    <component>
+      <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
+      <role-hint>afterAclCollectionRead</role-hint>
+      <implementation>org.acegisecurity.afterinvocation.BasicAclEntryAfterInvocationCollectionFilteringProvider</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>READ</permission>
+        </requirePermissionFromString>
+      </configuration>
+    </component>
+
+    <!-- Processes AFTER_ACL_READ configuration settings -->
+    <component>
+      <role>org.acegisecurity.afterinvocation.AfterInvocationProvider</role>
+      <role-hint>afterAclRead</role-hint>
+      <implementation>org.acegisecurity.afterinvocation.BasicAclEntryAfterInvocationProvider</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>READ</permission>
+        </requirePermissionFromString>
       </configuration>
     </component>
 
