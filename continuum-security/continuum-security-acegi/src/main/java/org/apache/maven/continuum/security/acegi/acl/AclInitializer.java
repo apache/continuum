@@ -17,6 +17,7 @@ package org.apache.maven.continuum.security.acegi.acl;
  */
 
 import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
+import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -56,7 +57,7 @@ public class AclInitializer
         ProjectGroup defaultProjectGroup;
         try
         {
-            defaultProjectGroup = store.getProjectGroupByGroupId( ContinuumStore.DEFAULT_GROUP_ID );
+            defaultProjectGroup = store.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
         }
         catch ( ContinuumStoreException e )
         {
