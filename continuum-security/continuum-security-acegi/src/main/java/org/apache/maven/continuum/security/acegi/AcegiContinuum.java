@@ -125,7 +125,10 @@ public class AcegiContinuum
     public int addProject( Project project, String executorId )
         throws ContinuumException
     {
-        return getContinuum().addProject( project, executorId );
+        int projectId = getContinuum().addProject( project, executorId );
+        Project addedProject = getContinuum().getProject( projectId );
+        getAclEventHandler().afterAddProject( addedProject, addedProject.getProjectGroup().getId() );
+        return projectId;
     }
 
     public void addSchedule( Schedule schedule )
