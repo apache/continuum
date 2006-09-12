@@ -489,7 +489,8 @@
       <implementation>org.acegisecurity.userdetails.memory.UserAttribute</implementation>
       <component-composer>setter</component-composer>
       <configuration>
-        <password>anonymousUser</password>
+        <!-- user name of anonymous user, needs to match the one created by continuum initializer so ACLs match -->
+        <password>guest</password>
         <authoritiesAsString>
           <role>ROLE_ANONYMOUS</role>
         </authoritiesAsString>
