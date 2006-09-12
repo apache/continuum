@@ -937,14 +937,7 @@ public class DefaultContinuum
 
         context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT, project );
 
-        try
-        {
-            context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, store.getDefaultProjectGroup() );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new ContinuumException( "Error getting the default project group to work with" );
-        }
+        context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, getDefaultProjectGroup() );
 
         executeAction( "validate-project", context );
 
@@ -2558,4 +2551,24 @@ public class DefaultContinuum
             return "unknown";
         }
     }
+
+    private ProjectGroup getDefaultProjectGroup()
+        throws ContinuumException
+    {
+        try
+        {
+            return store.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            throw new ContinuumException(
+                                          "Continuum is not properly initialized, default project group does not exist",
+                                          e );
+        }
+        catch ( ContinuumStoreException ex )
+        {
+            throw logAndCreateException( "Exception while getting default project group.", ex );
+        }
+    }
+
 }

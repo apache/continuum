@@ -19,6 +19,7 @@ package org.apache.maven.continuum.initialization;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.ContinuumUser;
@@ -319,7 +320,7 @@ public class DefaultContinuumInitializer
 
         group.setName( "Default Project Group" );
 
-        group.setGroupId( ContinuumStore.DEFAULT_GROUP_ID );
+        group.setGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
 
         group.setDescription( "Contains all projects that do not have a group of their own" );
 
