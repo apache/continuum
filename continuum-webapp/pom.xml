@@ -22,7 +22,7 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>**/*.properties</include>
-          <include>**/META-INF/plexus/components.xml</include>
+          <include>**/META-INF/plexus/application.xml</include>
         </includes>
       </resource>
       <resource>
