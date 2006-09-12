@@ -79,7 +79,7 @@ public abstract class AbstractContinuumTest
     protected ProjectGroup getDefaultProjectGroup()
         throws ContinuumStoreException
     {
-        return store.getDefaultProjectGroup();
+        return store.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
     }
 
     // ----------------------------------------------------------------------
