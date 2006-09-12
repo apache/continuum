@@ -18,6 +18,8 @@ package org.apache.maven.continuum.security.acegi.acl;
 
 import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.user.acegi.acl.basic.ExtendedSimpleAclEntry;
 
 /**
@@ -31,12 +33,38 @@ public class AclInitializer
 {
     public static final int PARENT_PROJECT_GROUP_ACL_ID = 0;
 
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumStore store;
+
     protected void insertDefaultData()
     {
-        /* admin can do anything with project number 1 */
+        /* 
+         * admin can do anything with project group number 0,
+         * which is just a placeholder that other project group ACLs must extend 
+         */
         ExtendedSimpleAclEntry aclEntry = new ExtendedSimpleAclEntry();
         aclEntry.setAclObjectIdentity( new NamedEntityObjectIdentity( ProjectGroup.class.getName(), Integer
             .toString( PARENT_PROJECT_GROUP_ACL_ID ) ) );
+        aclEntry.setRecipient( "ROLE_admin" );
+        aclEntry.addPermission( ExtendedSimpleAclEntry.ADMINISTRATION );
+        getDao().create( aclEntry );
+
+        /* add ACL for default project group */
+
+        ProjectGroup defaultProjectGroup;
+        try
+        {
+            defaultProjectGroup = store.getProjectGroupByGroupId( ContinuumStore.DEFAULT_GROUP_ID );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new RuntimeException( "Default project group was not found", e );
+        }
+        aclEntry = new ExtendedSimpleAclEntry();
+        aclEntry.setAclObjectIdentity( new NamedEntityObjectIdentity( ProjectGroup.class.getName(), Integer
+            .toString( defaultProjectGroup.getId() ) ) );
         aclEntry.setRecipient( "ROLE_admin" );
         aclEntry.addPermission( ExtendedSimpleAclEntry.ADMINISTRATION );
         getDao().create( aclEntry );
