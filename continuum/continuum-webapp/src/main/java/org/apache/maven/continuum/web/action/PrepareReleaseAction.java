@@ -113,9 +113,11 @@ public class PrepareReleaseAction
 
         listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
 
-        if ( listener.getState() == ContinuumReleaseManagerListener.INITIALIZED )
+        if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
         {
-            status = "initialized";
+            releaseManager.getListeners().remove( releaseId );
+
+            status = "finished";
         }
         else if ( listener.getState() == ContinuumReleaseManagerListener.LISTENING )
         {
@@ -123,9 +125,7 @@ public class PrepareReleaseAction
         }
         else
         {
-            releaseManager.getListeners().remove( releaseId );
-
-            return "finished";
+            status = "initialized";
         }
 
         return status;

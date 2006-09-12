@@ -42,7 +42,6 @@ public class DefaultReleaseManagerListener
 
     public void goalStart( String name, List phases )
     {
-        System.out.println( "Goal started: " + name + "; phases: " + phases.size() );
         state = LISTENING;
         goalName = name;
         this.phases = phases;
@@ -52,7 +51,6 @@ public class DefaultReleaseManagerListener
 
     public void phaseStart( String name )
     {
-        System.out.println( goalName + ":" + name + " started." );
         inProgress = name;
     }
 
@@ -65,19 +63,16 @@ public class DefaultReleaseManagerListener
 
     public void phaseSkip( String name )
     {
-        System.out.println( goalName + ":" + name + " skipped." );
         completedPhases.add( name );
     }
 
     public void goalEnd()
     {
         state = FINISHED;
-        System.out.println( goalName + " finished." );
     }
 
     public void error( String message )
     {
-        System.out.println( goalName + " error occurred: " + message );
         error = message;
         goalEnd();
     }

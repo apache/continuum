@@ -10,9 +10,7 @@
     <body>
       <h2>Continuum Release</h2>
       <h3><ww:property value="name"/></h3>
-      <ww:form action="performRelease!checkProgress.action" method="post">
-        <ww:hidden name="projectId"/>
-        <ww:hidden name="releaseId"/>
+      <ww:form action="groupSummary" method="post">
         <div class="axial">
           <table width="100%">
             <tr>
@@ -40,7 +38,7 @@
             </ww:iterator>
           </table>
         </div>
-        <ww:submit value="Refresh"/>
+        <ww:submit value="Done"/>
       </ww:form>
     </body>
   </ww:i18n>

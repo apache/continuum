@@ -54,8 +54,9 @@ public class DefaultContinuumReleaseManager
 
     /**
      * contains previous release:prepare descriptors; one per project
+     * @todo remove static when singleton strategy is working
      */
-    private Map preparedReleases;
+    private static Map preparedReleases;
 
     public String prepare( Project project, Properties releaseProperties, Map relVersions,
                            Map devVersions, ContinuumReleaseManagerListener listener )

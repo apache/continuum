@@ -20,9 +20,7 @@ import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
-import org.codehaus.plexus.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +37,8 @@ public class ReleaseProjectAction
     private int projectId;
 
     private String preparedReleaseName;
+
+    private String preparedReleaseId;
 
     private String goal;
 
@@ -57,14 +57,14 @@ public class ReleaseProjectAction
 
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
-        releaseList = new ArrayList( releaseManager.getPreparedReleases().values() );
-
         Map preparedReleases = releaseManager.getPreparedReleases();
         if ( preparedReleases.containsKey( releaseId ) )
         {
             ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
 
             preparedReleaseName = descriptor.getReleaseVersions().get( releaseId ).toString();
+
+            preparedReleaseId = releaseId;
         }
 
         return "prompt";
@@ -79,13 +79,6 @@ public class ReleaseProjectAction
         }
         else if ( "perform".equals( goal ) )
         {
-            if ( StringUtils.isNotEmpty( preparedReleaseName ) )
-            {
-                project = getContinuum().getProjectWithAllDetails( projectId );
-
-                scmUrl = project.getScmUrl();
-            }
-
             return "performRelease";
         }
         else
@@ -142,5 +135,25 @@ public class ReleaseProjectAction
     public void setScmUrl( String scmUrl )
     {
         this.scmUrl = scmUrl;
+    }
+
+    public List getReleaseList()
+    {
+        return releaseList;
+    }
+
+    public void setReleaseList( List releaseList )
+    {
+        this.releaseList = releaseList;
+    }
+
+    public String getPreparedReleaseId()
+    {
+        return preparedReleaseId;
+    }
+
+    public void setPreparedReleaseId( String preparedReleaseId )
+    {
+        this.preparedReleaseId = preparedReleaseId;
     }
 }

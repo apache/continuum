@@ -19,10 +19,12 @@ package org.apache.maven.continuum.web.action;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * @author Edwin Punzalan
@@ -34,6 +36,8 @@ import java.io.File;
 public class PerformReleaseAction
     extends ContinuumActionSupport
 {
+    private int projectId;
+
     private String releaseId;
 
     private String scmUrl;
@@ -55,11 +59,28 @@ public class PerformReleaseAction
     public String execute()
         throws Exception
     {
-        if ( StringUtils.isNotEmpty( releaseId ) )
+        if ( StringUtils.isNotEmpty( releaseId )  )
         {
             ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-            ReleaseDescriptor descriptor = (ReleaseDescriptor) releaseManager.getPreparedReleases().get( releaseId );
-            scmUrl = descriptor.getScmSourceUrl();
+
+            Map preparedReleases = releaseManager.getPreparedReleases();
+            if ( preparedReleases.containsKey( releaseId ) )
+            {
+                ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
+                scmUrl = descriptor.getScmSourceUrl();
+                scmUsername = descriptor.getScmUsername();
+                scmPassword = descriptor.getScmPassword();
+                scmTag = descriptor.getScmReleaseLabel();
+                scmTagBase = descriptor.getScmTagBase();
+            }
+            else
+            {
+                populateFromProject();
+            }
+        }
+        else
+        {
+            populateFromProject();
         }
 
         return "prompt";
@@ -72,6 +93,7 @@ public class PerformReleaseAction
 
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
+        //todo should be configurable
         File performDirectory = new File( getContinuum().getConfiguration().getWorkingDirectory(),
                                           "releases-" + System.currentTimeMillis() );
         performDirectory.mkdirs();
@@ -123,6 +145,18 @@ public class PerformReleaseAction
         }
 
         return status;
+    }
+
+    private void populateFromProject()
+        throws Exception
+    {
+        Project project = getContinuum().getProjectWithAllDetails( projectId );
+
+        scmUrl = project.getScmUrl();
+        scmUsername = project.getScmUsername();
+        scmPassword = project.getScmPassword();
+
+        releaseId = "";
     }
 
     public String getReleaseId()

@@ -16,18 +16,13 @@
           <input name="goal" type="radio" value="perform"/>Perform project release
           <br/>
           &nbsp;&nbsp;&nbsp;
-          <select name="preparedReleaseName">
-            <ww:iterator value="releaseList">
-              <option value="<ww:property/>">
-                <ww:property/>
-              </option>
-            </ww:iterator>
+          <select name="preparedReleaseId">
             <ww:if test="preparedReleaseName != null">
-              <option selected value="<ww:property value="preparedReleaseName"/>">
+              <option selected value="<ww:property value="preparedReleaseId"/>">
                 <ww:property value="preparedReleaseName"/>
               </option>
             </ww:if>
-            <option value="none">Provide release descriptor</option>
+            <option value="">Provide release descriptor</option>
           </select>
           <br/>
         </p>
