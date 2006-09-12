@@ -19,6 +19,7 @@ package org.apache.maven.continuum.initialization;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.Permission;
@@ -42,16 +43,6 @@ public class DefaultContinuumInitializer
     extends AbstractLogEnabled
     implements ContinuumInitializer
 {
-    // ----------------------------------------------------------------------
-    // Default values for the default project group
-    // ----------------------------------------------------------------------
-
-    public static final String DEFAULT_PROJECT_GROUP_NAME = "DEFAULT_PROJECT_GROUP";
-
-    public static final String DEFAULT_PROJECT_GROUP_ID = "DEFAULT";
-
-    public static final String DEFAULT_PROJECT_GROUP_DESCRIPTION = "Default Project Group";
-
     // ----------------------------------------------------------------------
     // Default values for the default schedule
     // ----------------------------------------------------------------------
@@ -133,6 +124,8 @@ public class DefaultContinuumInitializer
             securityPolicy.getPasswordRules().clear();
 
             createDefaultUsers();
+
+            createDefaultProjectGroup();
 
             //put back password validation rules
             securityPolicy.setPasswordRules( rules );
@@ -318,5 +311,18 @@ public class DefaultContinuumInitializer
                 throw new ContinuumStoreException( "There was a password rule violation.", pre );
             }
         }
+    }
+
+    private void createDefaultProjectGroup()
+    {
+        ProjectGroup group = new ProjectGroup();
+
+        group.setName( "Default Project Group" );
+
+        group.setGroupId( ContinuumStore.DEFAULT_GROUP_ID );
+
+        group.setDescription( "Contains all projects that do not have a group of their own" );
+
+        group = store.addProjectGroup( group );
     }
 }
