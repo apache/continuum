@@ -199,9 +199,9 @@ public class DefaultReleaseManager
             }
 
             updateListener( listener, name, phaseEnd );
-
-            updateListener( listener, "prepare", goalEnd );
         }
+
+        updateListener( listener, "prepare", goalEnd );
     }
 
     public void perform( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects,
