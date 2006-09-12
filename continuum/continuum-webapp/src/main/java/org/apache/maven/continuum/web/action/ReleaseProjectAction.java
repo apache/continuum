@@ -22,6 +22,8 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +46,8 @@ public class ReleaseProjectAction
 
     private Project project;
 
+    private List releaseList;
+
     public String promptReleaseGoal()
         throws Exception
     {
@@ -52,6 +56,8 @@ public class ReleaseProjectAction
         String releaseId = ArtifactUtils.versionlessKey( project.getGroupId(), project.getArtifactId() );
 
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+
+        releaseList = new ArrayList( releaseManager.getPreparedReleases().values() );
 
         Map preparedReleases = releaseManager.getPreparedReleases();
         if ( preparedReleases.containsKey( releaseId ) )

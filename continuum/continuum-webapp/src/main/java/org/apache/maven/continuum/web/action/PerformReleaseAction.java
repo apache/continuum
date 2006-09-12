@@ -76,6 +76,23 @@ public class PerformReleaseAction
                                           "releases-" + System.currentTimeMillis() );
         performDirectory.mkdirs();
 
+        if ( releaseId == null )
+        {
+            ReleaseDescriptor descriptor = new ReleaseDescriptor();
+            descriptor.setScmSourceUrl( scmUrl );
+            descriptor.setScmUsername( scmUsername );
+            descriptor.setScmReleaseLabel( scmTag );
+            descriptor.setScmTagBase( scmTagBase );
+
+            String releaseId;
+            do
+            {
+                releaseId = String.valueOf( System.currentTimeMillis() );
+            }while ( releaseManager.getPreparedReleases().containsKey( releaseId ) );
+
+            releaseManager.getPreparedReleases().put( releaseId, descriptor );
+        }
+
         releaseManager.perform( releaseId, performDirectory, goals, useReleaseProfile, listener );
 
         return "initialized";
@@ -102,7 +119,7 @@ public class PerformReleaseAction
         {
             releaseManager.getListeners().remove( releaseId );
 
-            return "finished";
+            status = "finished";
         }
 
         return status;

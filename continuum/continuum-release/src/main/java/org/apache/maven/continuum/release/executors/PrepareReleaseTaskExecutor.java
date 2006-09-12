@@ -46,6 +46,8 @@ public class PrepareReleaseTaskExecutor
                                           false, false, listener );
 
             continuumReleaseManager.getPreparedReleases().put( prepareTask.getReleaseId(), descriptor );
+
+            System.out.println( "========== new prepared release: " + prepareTask.getReleaseId() + "============" );
         }
         catch ( ReleaseExecutionException e )
         {

@@ -303,8 +303,9 @@
         <param name="actionName">prepareRelease</param>
         <param name="projectId">${projectId}</param>
       </result>
-      <result name="performRelease">
+      <result name="performRelease" type="redirect-action">
         <param name="actionName">performRelease</param>
+        <param name="projectId">${projectId}</param>
       </result>
     </action>
 

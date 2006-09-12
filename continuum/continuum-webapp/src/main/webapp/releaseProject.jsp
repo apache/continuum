@@ -17,6 +17,11 @@
           <br/>
           &nbsp;&nbsp;&nbsp;
           <select name="preparedReleaseName">
+            <ww:iterator value="releaseList">
+              <option value="<ww:property/>">
+                <ww:property/>
+              </option>
+            </ww:iterator>
             <ww:if test="preparedReleaseName != null">
               <option selected value="<ww:property value="preparedReleaseName"/>">
                 <ww:property value="preparedReleaseName"/>

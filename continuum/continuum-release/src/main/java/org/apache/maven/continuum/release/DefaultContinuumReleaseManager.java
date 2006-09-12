@@ -19,9 +19,9 @@ package org.apache.maven.continuum.release;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
+import org.apache.maven.plugins.release.ReleaseManagerListener;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.apache.maven.plugins.release.config.io.xpp3.ReleaseDescriptorXpp3Reader;
-import org.apache.maven.plugins.release.ReleaseManagerListener;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -29,11 +29,9 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Collections;
-import java.util.Hashtable;
 
 /**
  * @author Jason van Zyl
@@ -87,7 +85,7 @@ public class DefaultContinuumReleaseManager
                          ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
-        ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
+        ReleaseDescriptor descriptor = (ReleaseDescriptor) getPreparedReleases().get( releaseId );
         if ( descriptor != null )
         {
             perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener );
@@ -137,7 +135,7 @@ public class DefaultContinuumReleaseManager
     {
         if ( preparedReleases == null )
         {
-            preparedReleases = new HashMap();
+            preparedReleases = new Hashtable();
         }
 
         return preparedReleases;
@@ -183,7 +181,7 @@ public class DefaultContinuumReleaseManager
     {
         if ( listeners == null )
         {
-            listeners = Collections.synchronizedMap( new Hashtable() );
+            listeners = new Hashtable();
         }
 
         return listeners;

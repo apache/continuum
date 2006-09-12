@@ -25,22 +25,22 @@
           <h3><ww:property value="name"/></h3>
           <input type="hidden" name="projectKeys" value="<ww:property value="key"/>">
           <div class="axial">
-          <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <tr>
-              <th>Release Version*</th>
-              <td>
-                <input type=text name="relVersions"
-                       value="<ww:property value="release"/>" size="100">
-              </td>
-            </tr>
-            <tr>
-              <th>Next Development Version*</th>
-              <td>
-                <input type=text name="devVersions"
-                       value="<ww:property value="dev"/>" size="100">
-              </td>
-            </tr>
-           </table>
+            <table border="1" cellspacing="2" cellpadding="3" width="100%">
+              <tr>
+                <th>Release Version*</th>
+                <td>
+                  <input type=text name="relVersions"
+                         value="<ww:property value="release"/>" size="100">
+                </td>
+              </tr>
+              <tr>
+                <th>Next Development Version*</th>
+                <td>
+                  <input type=text name="devVersions"
+                         value="<ww:property value="dev"/>" size="100">
+                </td>
+              </tr>
+             </table>
            </div>
         </ww:iterator>
 
