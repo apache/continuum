@@ -60,7 +60,7 @@
         this address instead the address specified in the project
         configuration
         -->
-        <to-override></to-override>
+        <to-override>${mail.override.to.address}</to-override>
       </configuration>
     </component>
 
@@ -198,101 +198,40 @@
             <name>org.jpox.autoStartMechanismMode</name>
             <value>Ignored</value>
           </property>
-          <!-- Apache Derby Configuration -->
+
+          <!-- Database Configuration -->
           <property>
             <name>javax.jdo.option.ConnectionDriverName</name>
-            <value>org.apache.derby.jdbc.EmbeddedDriver</value>
+            <value>${db.driverName}</value>
           </property>
           <property>
             <name>javax.jdo.option.ConnectionURL</name>
-            <value>jdbc:derby:${plexus.home}/database;create=true</value>
+            <value>${db.url}</value>
           </property>
           <property>
             <name>javax.jdo.option.ConnectionUserName</name>
-            <value>sa</value>
+            <value>${db.userName}</value>
           </property>
           <property>
             <name>javax.jdo.option.ConnectionPassword</name>
-            <value></value>
+            <value>${db.password}</value>
           </property>
 
-          <!-- Postgresql Configuration -->
-          <!--
           <property>
-            <name>javax.jdo.option.ConnectionDriverName</name>
-            <value>org.postgresql.Driver</value>
+            <name>org.jpox.transactionIsolation</name>
+            <value>READ_UNCOMMITTED</value>
           </property>
           <property>
-            <name>javax.jdo.option.ConnectionURL</name>
-            <value>jdbc:postgresql://localhost/continuum</value>
+            <name>org.jpox.poid.transactionIsolation</name>
+            <value>READ_UNCOMMITTED</value>
           </property>
-          <property>
-            <name>javax.jdo.option.ConnectionUserName</name>
-            <value>trygvis</value>
-          </property>
-          <property>
-            <name>javax.jdo.option.ConnectionPassword</name>
-            <value></value>
-          </property>
-          -->
 
-          <!-- MySQL Configuration -->
-          <!-- see http://www.jpox.org/servlet/forum/printthread;jsessionid=FA3F0B304E4E7143F272E5C55DF4E3F1?thread=3396 -->
-          <!--
-          <property>
-            <name>javax.jdo.option.ConnectionDriverName</name>
-            <value>com.mysql.jdbc.Driver</value>
-          </property>
-          <property>
-            <name>javax.jdo.option.ConnectionURL</name>
-            <value>jdbc:mysql://localhost/test</value>
-          </property>
+          <!-- this is required for MySQL -->
           <property>
             <name>org.jpox.rdbms.stringDefaultLength</name>
             <value>255</value>
           </property>
-          -->
 
-          <!-- HSQLDB Configuration -->
-          <!--
-            NOTE: NO NOT USE THIS CONFIGURATION FOR A PRODUCTION SYSTEM.
-            HSQLDB keeps all data in memory at all times.
-          -->
-          <!--
-          <property>
-            <name>javax.jdo.option.ConnectionDriverName</name>
-            <value>org.hsqldb.jdbcDriver</value>
-          </property>
-          <property>
-            <name>javax.jdo.option.ConnectionURL</name>
-            <value>jdbc:hsqldb:${plexus.home}/database</value>
-          </property>
-          <property>
-            <name>javax.jdo.option.ConnectionUserName</name>
-            <value>sa</value>
-          </property>
-          <property>
-            <name>javax.jdo.option.ConnectionPassword</name>
-            <value></value>
-          </property>
-
-          <property>
-            <name>org.jpox.transactionIsolation</name>
-            <value>READ_UNCOMMITTED</value>
-          </property>
-          <property>
-            <name>org.jpox.poid.transactionIsolation</name>
-            <value>READ_UNCOMMITTED</value>
-          </property>
-          -->
-          <property>
-            <name>org.jpox.transactionIsolation</name>
-            <value>READ_UNCOMMITTED</value>
-          </property>
-          <property>
-            <name>org.jpox.poid.transactionIsolation</name>
-            <value>READ_UNCOMMITTED</value>
-          </property>
         </properties>
       </configuration>
     </component>
@@ -524,51 +463,30 @@
         </requirement>
       </requirements>
       <configuration>
-      <!-- derby -->
-        <sqlClasspathResource>org/apache/maven/user/acegi/acl/acegi-acl-derby.sql</sqlClasspathResource>
-      <!-- mysql -->
-      <!--
-        <sqlClasspathResource>org/apache/maven/user/acegi/acl/acegi-acl-mysql.sql</sqlClasspathResource>
-      -->
+        <sqlClasspathResource>${acl.sql}</sqlClasspathResource>
       </configuration>
     </component>
     
-    <!-- TODO share db configuration between components -->
     <component>
       <role>org.codehaus.mojo.sql.SqlExecMojo</role>
       <implementation>org.codehaus.mojo.sql.SqlExecMojo</implementation>
       <configuration>
-      <!-- derby -->
-        <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
-        <url>jdbc:derby:${plexus.home}/database;create=true</url>
-        <username>sa</username>
-        <password></password>
-      <!-- mysql -->
-      <!--
-        <driver>com.mysql.jdbc.Driver</driver>
-        <url>jdbc:mysql://localhost/test</url>
-        <username></username>
-        <password></password>
-      -->
-
+        <driver>${db.driverName}</driver>
+        <url>${db.url}</url>
+        <username>${db.userName}</username>
+        <password>${db.password}</password>
         <onError>continue</onError>
       </configuration>
     </component>
 
-    <!-- TODO share db configuration between components -->
     <component>
       <role>javax.sql.DataSource</role>
       <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
       <configuration>
-      <!-- derby -->
-        <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
-        <url>jdbc:derby:${plexus.home}/database;create=true</url>
-        <username>sa</username>
-      <!-- mysql -->
-      <!--
-        <driverClassName>com.mysql.jdbc.Driver</driverClassName>
-        <url>jdbc:mysql://localhost/test</url>
-      -->
+        <driverClassName>${db.driverName}</driverClassName>
+        <url>${db.url}</url>
+        <username>${db.userName}</username>
+        <password>${db.password}</password>
       </configuration>
     </component>
 
