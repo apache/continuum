@@ -40,6 +40,8 @@ import java.util.Map;
  */
 public interface ContinuumStore
 {
+    static final String DEFAULT_GROUP_ID = "default";
+
     String ROLE = ContinuumStore.class.getName();
 
     Project getProjectByName( String name )
