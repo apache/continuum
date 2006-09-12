@@ -16,23 +16,24 @@ package org.apache.maven.continuum;
  * limitations under the License.
  */
 
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
-import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.UserGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -50,6 +51,11 @@ public interface Continuum
     public ProjectGroup getProjectGroup( int projectGroupId )
         throws ContinuumException;
 
+    /**
+     * Get all {@link ProjectGroup}s and their {@link Project}s
+     * 
+     * @return {@link Collection} &lt;{@link ProjectGroup}>
+     */
     public Collection getAllProjectGroupsWithProjects();
 
     public ProjectGroup getProjectGroupByProjectId( int projectId )
@@ -154,6 +160,14 @@ public interface Continuum
     // Projects
     // ----------------------------------------------------------------------
 
+    /**
+     * Add a project to the list of building projects (ant, shell,...)
+     * 
+     * @param project the project to add
+     * @param executorId the id of an {@link ContinuumBuildExecutor}, eg. <code>ant</code> or <code>shell</code> 
+     * @return id of the project
+     * @throws ContinuumException
+     */
     int addProject( Project project, String executorId )
         throws ContinuumException;
 
