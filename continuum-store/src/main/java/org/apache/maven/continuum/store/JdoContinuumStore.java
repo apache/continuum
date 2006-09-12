@@ -1120,13 +1120,6 @@ public class JdoContinuumStore
     }
 
 
-    public ProjectGroup getDefaultProjectGroup()
-        throws ContinuumStoreException
-    {
-        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", DEFAULT_GROUP_ID,
-                                                  PROJECTGROUP_PROJECTS_FETCH_GROUP );
-    }
-
     public SystemConfiguration addSystemConfiguration( SystemConfiguration systemConf )
     {
         return (SystemConfiguration) addObject( systemConf );
