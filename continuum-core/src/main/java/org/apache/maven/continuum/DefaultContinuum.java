@@ -2557,7 +2557,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+            return store.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
         }
         catch ( ContinuumObjectNotFoundException e )
         {

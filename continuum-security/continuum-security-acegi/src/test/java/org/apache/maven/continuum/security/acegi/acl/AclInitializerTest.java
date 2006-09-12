@@ -18,13 +18,15 @@ package org.apache.maven.continuum.security.acegi.acl;
 
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
 import org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.mojo.sql.SqlExecMojo;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
+import org.jmock.Mock;
+import org.jmock.MockObjectTestCase;
 
 /**
  * Test for {@link AclInitializer}
@@ -33,12 +35,14 @@ import org.codehaus.plexus.logging.console.ConsoleLogger;
  * @version $Id$
  */
 public class AclInitializerTest
-    extends TestCase
+    extends MockObjectTestCase
 {
 
     private AclInitializer initializer;
-    
+
     private SqlExecMojo sqlMojo;
+
+    private Mock store;
 
     protected void setUp()
         throws Exception
@@ -59,11 +63,17 @@ public class AclInitializerTest
         JdbcExtendedDaoImpl dao = new JdbcExtendedDaoImpl();
         dao.setDataSource( getDataSource() );
         initializer.setDao( dao );
+
+        store = mock( ContinuumStore.class );
+        initializer.setStore( (ContinuumStore) store.proxy() );
     }
 
     public void testInitialize()
         throws Exception
     {
+        ProjectGroup parentGroup = new ProjectGroup();
+        parentGroup.setId( 1 );
+        store.expects( once() ).method( "getProjectGroupByGroupId" ).will( returnValue( parentGroup ) );
         initializer.initialize();
         initializer.initialize();
     }

@@ -16,6 +16,9 @@ package org.apache.maven.continuum.security.acegi.acl;
  * limitations under the License.
  */
 
+import org.apache.maven.continuum.Continuum;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.plexus.PlexusTestCase;
 
 /**
@@ -34,7 +37,14 @@ public class AclInitializerPlexusTest
         throws Exception
     {
         super.setUp();
+        ContinuumStore store = (ContinuumStore) super.lookup( ContinuumStore.ROLE );
+
+        ProjectGroup projectGroup = new ProjectGroup();
+        projectGroup.setGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        store.addProjectGroup( projectGroup );
+
         initializer = (AclInitializer) super.lookup( AclInitializer.ROLE );
+
     }
 
     public void testInitialize()

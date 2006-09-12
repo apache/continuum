@@ -39,6 +39,16 @@ public class AclInitializer
      */
     private ContinuumStore store;
 
+    public void setStore( ContinuumStore store )
+    {
+        this.store = store;
+    }
+
+    public ContinuumStore getStore()
+    {
+        return store;
+    }
+
     protected void insertDefaultData()
     {
         /* 
@@ -57,7 +67,7 @@ public class AclInitializer
         ProjectGroup defaultProjectGroup;
         try
         {
-            defaultProjectGroup = store.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+            defaultProjectGroup = getStore().getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
         }
         catch ( ContinuumStoreException e )
         {

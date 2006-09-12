@@ -27,6 +27,7 @@ import org.apache.maven.continuum.model.system.Permission;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.model.system.UserGroup;
 import org.apache.maven.continuum.security.ContinuumSecurity;
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.user.model.PasswordRuleViolationException;
@@ -315,15 +316,24 @@ public class DefaultContinuumInitializer
     }
 
     private void createDefaultProjectGroup()
+        throws ContinuumStoreException
     {
-        ProjectGroup group = new ProjectGroup();
+        ProjectGroup group;
+        try
+        {
+            group = store.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            group = new ProjectGroup();
 
-        group.setName( "Default Project Group" );
+            group.setName( "Default Project Group" );
 
-        group.setGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+            group.setGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
 
-        group.setDescription( "Contains all projects that do not have a group of their own" );
+            group.setDescription( "Contains all projects that do not have a group of their own" );
 
-        group = store.addProjectGroup( group );
+            group = store.addProjectGroup( group );
+        }
     }
 }
