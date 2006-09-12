@@ -57,7 +57,7 @@ public class AclEventHandler
                     + projectGroups );
             }
             ProjectGroup projectGroup = (ProjectGroup) projectGroups.iterator().next();
-            createNewProjectsACLs( result.getProjects(), projectGroup );
+            createNewProjectsACLs( result.getProjects(), projectGroup.getId() );
         }
     }
 
@@ -69,6 +69,21 @@ public class AclEventHandler
     public void afterDeleteProjectGroup( int projectGroupId )
     {
         delete( ProjectGroup.class, new Integer( projectGroupId ) );
+    }
+
+    /**
+     * Set {@link ProjectGroup} permissions in all objects
+     * 
+     * @param projectGroups
+     */
+    public void afterReturningProjectGroup( Collection projectGroups )
+    {
+        Iterator it = projectGroups.iterator();
+        while ( it.hasNext() )
+        {
+            ProjectGroup projectGroup = (ProjectGroup) it.next();
+            //            projectGroup.s
+        }
     }
 
     /**
@@ -112,30 +127,30 @@ public class AclEventHandler
      * 
      * @param projects
      */
-    protected void createNewProjectsACLs( Collection projects, ProjectGroup projectGroup )
+    protected void createNewProjectsACLs( Collection projects, int projectGroupId )
     {
         Iterator it = projects.iterator();
         while ( it.hasNext() )
         {
             Project project = (Project) it.next();
-            createNewProjectACL( project, projectGroup );
+            afterAddProject( project, projectGroupId );
         }
     }
 
     /**
-     * Project has same permissions as its project group.
+     * Create ACL for new {@link Project}, it has same permissions as its project group.
      * 
      * @param project
-     * @param projectGroup group the projects belong to
+     * @param projectGroupId group the projects belong to
      */
-    protected void createNewProjectACL( Project project, ProjectGroup projectGroup )
+    public void afterAddProject( Project project, int projectGroupId )
     {
         InstancePermissions permission = new InstancePermissions();
         permission.setUser( null );
         permission.setInstanceClass( Project.class );
         permission.setId( new Integer( project.getId() ) );
         permission.setParentClass( ProjectGroup.class );
-        permission.setParentId( new Integer( projectGroup.getId() ) );
+        permission.setParentId( new Integer( projectGroupId ) );
 
         setUsersInstancePermission( permission );
     }
