@@ -19,8 +19,12 @@
         <interceptor-ref name="static-params"/>
         <interceptor-ref name="params"/>
         <!-- interceptor-ref name="conversionError"/ -->
-        <interceptor-ref name="validation"/>
-        <interceptor-ref name="workflow"/>
+        <interceptor-ref name="validation">
+          <param name="excludeMethods">input,back,cancel,browse</param>
+        </interceptor-ref>
+        <interceptor-ref name="workflow">
+          <param name="excludeMethods">input,back,cancel,browse</param>
+        </interceptor-ref>
       </interceptor-stack>
     </interceptors>
 
