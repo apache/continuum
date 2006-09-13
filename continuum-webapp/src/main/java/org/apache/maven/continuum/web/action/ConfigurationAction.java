@@ -66,7 +66,7 @@ public class ConfigurationAction
         if ( StringUtils.isEmpty( baseUrl ) )
         {
             HttpServletRequest request = ServletActionContext.getRequest();
-            baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/"
+            baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
                 + request.getContextPath();
             getLogger().info( "baseUrl='" + baseUrl + "'" );
         }
