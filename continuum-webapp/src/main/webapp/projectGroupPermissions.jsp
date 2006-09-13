@@ -30,7 +30,12 @@
                 </tr>
               </thead>
               <tbody class="tableBody">
+
+              <ww:hidden name="projectGroupId" value="%{projectGroupId}"/>
+
               <ww:iterator value="userPermissions" id="permission" status="rowCounter">
+
+                <ww:hidden name="userNames" value="%{user.username}"/>
 
                 <ww:set name="view" value="<ww:property value='view'/>"/>
                 <ww:set name="edit" value="<ww:property value='edit'/>"/>
