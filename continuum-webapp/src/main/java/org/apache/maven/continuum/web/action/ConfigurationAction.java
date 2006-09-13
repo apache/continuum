@@ -18,10 +18,14 @@ package org.apache.maven.continuum.web.action;
 
 import java.io.File;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.util.StringUtils;
 
+import com.opensymphony.webwork.ServletActionContext;
 import com.opensymphony.xwork.Preparable;
 
 /**
@@ -59,6 +63,14 @@ public class ConfigurationAction
 
         baseUrl = configuration.getUrl();
 
+        if ( StringUtils.isEmpty( baseUrl ) )
+        {
+            HttpServletRequest request = ServletActionContext.getRequest();
+            baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/"
+                + request.getContextPath();
+            getLogger().info( "baseUrl='" + baseUrl + "'" );
+        }
+
         companyLogo = configuration.getCompanyLogo();
 
         companyName = configuration.getCompanyName();
@@ -86,7 +98,7 @@ public class ConfigurationAction
         configuration.setCompanyUrl( companyUrl );
 
         configuration.setInitialized( true );
-        configuration.store();            
+        configuration.store();
 
         return SUCCESS;
     }
