@@ -21,6 +21,7 @@ import org.apache.maven.continuum.model.system.Permission;
 import org.apache.maven.continuum.model.system.UserGroup;
 import org.apache.maven.user.model.UserManager;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,8 +46,16 @@ public class DefaultContinuumSecurity
         {
             u = getGuestUser();
         }
+        
+        List groups = u.getGroups();
+        Iterator it = groups.iterator();
+        List permissions = new ArrayList();
+        while( it.hasNext() )
+        {
+            permissions.addAll( getPermissions( (UserGroup) it.next() ) );
+        }
 
-        return getPermissions( ( UserGroup ) u.getGroup() );
+        return permissions;
     }
 
     public List getPermissions( UserGroup group )

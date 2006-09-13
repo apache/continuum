@@ -1827,7 +1827,7 @@ public class DefaultContinuum
 
         user.setEmail( (String) configuration.get( "user.email" ) );
 
-        user.setGroup( getUserGroup( Integer.parseInt( (String) configuration.get( "user.group" ) ) ) );
+        user.addGroup( getUserGroup( Integer.parseInt( (String) configuration.get( "user.group" ) ) ) );
 
         addUser( user );
     }
@@ -1866,7 +1866,7 @@ public class DefaultContinuum
 
         user.setEmail( (String) configuration.get( "user.email" ) );
 
-        user.setGroup( getUserGroup( Integer.parseInt( (String) configuration.get( "user.group" ) ) ) );
+        user.addGroup( getUserGroup( Integer.parseInt( (String) configuration.get( "user.group" ) ) ) );
 
         updateUser( user );
     }
