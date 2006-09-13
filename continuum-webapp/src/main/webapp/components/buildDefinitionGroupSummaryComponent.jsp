@@ -37,8 +37,8 @@
     </ec:row>
   </ec:table>
   <div class="functnbar3">
-    <ww:form action="buildDefinition" method="post">
-      <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupid"/>"/>
+    <ww:form action="buildDefinition!input.action" method="post" namespace="/">
+      <input type="hidden" name="projectGroupId" value="<ww:property value="${pageScope.buildDefinitionSummary.projectGroupId}"/>"/>
       <ww:submit value="%{getText('add')}"/>
     </ww:form>
   </div>

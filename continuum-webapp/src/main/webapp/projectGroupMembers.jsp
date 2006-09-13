@@ -34,7 +34,7 @@
           <ec:row highlightRow="true">
             <ec:column property="name" title="summary.projectTable.name" width="48%">
               <ww:url id="projectViewUrl" action="projectView">
-                <ww:param name="projectId" value="projectId"/>
+                <ww:param name="projectId" value="${pageScope.project.id}"/>
               </ww:url>
               <ww:a href="%{projectViewUrl}">${pageScope.project.name}</ww:a>
             </ec:column>
@@ -45,7 +45,7 @@
                       test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
                     <ww:url id="editProjectUrl" action="projectEdit">
                       <ww:param name="projectId" value="${pageScope.project.id}"/>
-                      <ww:param name="projectName" value="${project.name}"/>
+                      <ww:param name="projectName" value="${pageScope.project.name}"/>
                     </ww:url>
                     <ww:a href="%{editProjectUrl}">
                       <img src="<ww:url value='/images/edit.gif'/>" alt="Edit" title="Edit" border="0">
@@ -66,7 +66,7 @@
                       <ww:param name="projectId" value="${pageScope.project.id}"/>
                       <ww:param name="projectName" value="${pageScope.project.name}"/>
                     </ww:url>
-                    <ww:a href="%{removeProjectUrl">
+                    <ww:a href="%{removeProjectUrl}">
                       <img src="<ww:url value='/images/delete.gif'/>" alt="Delete" title="Delete" border="0">
                     </ww:a>
                   </c:when>
@@ -81,4 +81,5 @@
       </div>
     </body>
   </ww:i18n>
+
 </html>

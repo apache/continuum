@@ -8,7 +8,7 @@
       <div id="h3">
 
         <jsp:include page="/navigations/ProjectMenu.jsp">
-          <jsp:param name="tab" value="buildResults"/>
+          <jsp:param name="tab" value="workingCopy"/>
         </jsp:include>
 
         <h3>
