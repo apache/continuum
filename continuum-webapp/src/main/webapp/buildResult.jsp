@@ -31,11 +31,11 @@
             <c1:data label="%{getText('buildResult.endTime')}">
                 <ww:param name="after"><c1:date name="buildResult.endTime"/></ww:param>
             </c1:data>
-            <c1:data label="%{getText('buildResult.buildTrigger')}">
-                <ww:param name="after">TODO<ww:property value="buildResult.trigger"/></ww:param>
+            <c1:data label="%{getText('buildResult.trigger')}">
+                <ww:param name="after"><ww:text name="buildResult.trigger.%{buildResult.trigger}"/></ww:param>
             </c1:data>
             <c1:data label="%{getText('buildResult.state')}">
-                <ww:param name="after">TODO<ww:property value="buildResult.state"/></ww:param>
+                <ww:param name="after"><ww:text name="buildResult.state.%{buildResult.state}"/></ww:param>
             </c1:data>
             <c1:data label="%{getText('buildResult.buildNumber')}">
                 <ww:param name="after">
