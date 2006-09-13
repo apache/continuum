@@ -119,12 +119,12 @@
         <ww:else>
           <h4><ww:text name="buildResult.buildOutput"/></h4>
           <p>
-            <ww:if test="buildResult.output == ''">
+            <ww:if test="buildOutput == ''">
                 <ww:text name="buildResult.noOutput"/>
             </ww:if>
             <ww:else>
               <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
-                <code><pre>buildResult.output</pre></code>
+                <pre><ww:property value="buildOutput"/></pre>
               </div>
             </ww:else>
           </p>
