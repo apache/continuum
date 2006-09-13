@@ -271,7 +271,6 @@
     <component>
       <role>org.acegisecurity.userdetails.UserDetailsService</role>
       <implementation>org.acegisecurity.userdetails.memory.InMemoryDaoImpl</implementation>
-      <role-hint>memory</role-hint>
       <configuration>
         <userProperties>
           <property>
@@ -290,19 +289,6 @@
       </configuration>
     </component>
 -->
-    <!-- Bridge between Acegi and Continuum database -->
-    <component>
-      <role>org.acegisecurity.userdetails.UserDetailsService</role>
-      <role-hint>maven</role-hint>
-      <implementation>org.apache.maven.user.acegi.MavenUserDetailsService</implementation>
-      <requirements>
-        <requirement>
-          <role>org.apache.maven.user.model.UserManager</role>
-          <role-hint>acegi</role-hint>
-          <field-name>userManager</field-name>
-        </requirement>
-      </requirements>
-    </component>
 
     <component>
       <role>org.acegisecurity.providers.dao.DaoAuthenticationProvider</role>
@@ -311,7 +297,6 @@
         <requirement>
           <role>org.acegisecurity.userdetails.UserDetailsService</role>
           <field-name>userDetailsService</field-name>
-          <role-hint>maven</role-hint>
         </requirement>
         <requirement>
           <role>org.apache.maven.user.model.PasswordEncoder</role>
