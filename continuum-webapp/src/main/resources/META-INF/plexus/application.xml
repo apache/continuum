@@ -354,6 +354,12 @@
         <authenticationFailureUrl>/user/login.jsp?login_error=1</authenticationFailureUrl>
         <defaultTargetUrl>/</defaultTargetUrl>
         <filterProcessesUrl>/j_acegi_security_check</filterProcessesUrl>
+        <exceptionMappings>
+          <property>
+            <name>org.acegisecurity.CredentialsExpiredException</name>
+            <value>/user/expiredPassword.action</value>
+          </property>
+        </exceptionMappings>
       </configuration>
     </component>
 
@@ -704,6 +710,7 @@
       <configuration>
         <allowedLoginAttempts>3</allowedLoginAttempts>
         <previousPasswordsCount>7</previousPasswordsCount>
+        <daysBeforeExpiration>90</daysBeforeExpiration>
       </configuration>
     </component>
 
