@@ -265,11 +265,6 @@
       </requirements>
     </component>
 
-    <component>
-      <role>org.springframework.context.ApplicationEventPublisher</role>
-      <implementation>org.apache.maven.user.acegi.event.authentication.UserEventPublisher</implementation>
-    </component>
-
     <!-- In memory database used only for testing -->
     <!-- Remember to remove passwordEncoder from org.acegisecurity.providers.dao.DaoAuthenticationProvider -->
 <!--
