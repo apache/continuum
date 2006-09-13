@@ -54,7 +54,7 @@
             <a href="<ww:url value="/user/list.action" includeParams="none"/>"><ww:text name="menu.administration.users"/></a>
           </div>
           <div class="body">
-            <a href="<ww:url value="/user/groups/list.action" includeParams="none"/>"><ww:text name="menu.administration.userGroups"/></a>
+            <a href="<ww:url value="/user/group/list.action" includeParams="none"/>"><ww:text name="menu.administration.userGroups"/></a>
           </div>
         </authz:authorize>
       </div>
