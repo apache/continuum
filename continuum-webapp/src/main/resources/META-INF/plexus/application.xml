@@ -337,7 +337,7 @@
           <role-hint>maven</role-hint>
         </requirement>
         <requirement>
-          <role>org.acegisecurity.providers.encoding.PasswordEncoder</role>
+          <role>org.apache.maven.user.model.PasswordEncoder</role>
           <field-name>passwordEncoder</field-name>
         </requirement>
         <!--
@@ -350,24 +350,12 @@
     </component>
 
     <component>
-      <role>org.acegisecurity.providers.encoding.PasswordEncoder</role>
-      <implementation>org.acegisecurity.providers.encoding.ShaPasswordEncoder</implementation>
+      <role>org.apache.maven.user.model.PasswordEncoder</role>
+      <role-hint>SHA-256</role-hint>
+      <implementation>org.apache.maven.user.acegi.AcegiPasswordEncoder</implementation>
       <configuration>
-        <!-- TODO sync with maven-user password encryptor -->
         <algorithm>SHA-256</algorithm>
       </configuration>
-    </component>
-
-    <component>
-      <role>org.apache.maven.user.model.PasswordEncoder</role>
-      <role-hint>acegisha256</role-hint>
-      <implementation>org.apache.maven.user.acegi.AcegiPasswordEncoder</implementation>
-      <requirements>
-        <requirement>
-          <role>org.acegisecurity.providers.encoding.PasswordEncoder</role>
-          <field-name>encoder</field-name>
-        </requirement>
-      </requirements>
     </component>
 
     <component>
@@ -747,7 +735,7 @@
         </requirement>
         <requirement>
           <role>org.apache.maven.user.model.PasswordEncoder</role>
-          <role-hint>acegisha256</role-hint>
+          <role-hint>SHA-256</role-hint>
           <field-name>passwordEncoder</field-name>
         </requirement>
       </requirements>
