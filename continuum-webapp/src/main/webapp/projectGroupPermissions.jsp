@@ -16,58 +16,87 @@
         </jsp:include>
 
         <h3>Users</h3>
-        <form action="projectGroupPermissions!save.action">
+        <div class="eXtremeTable">
+          <form action="projectGroupPermissions!save.action">
+            <table id="ec_table" border="1" cellspacing="2" cellpadding="3" class="tableRegion" width="100%">
+              <thead>
+                <tr>
+                  <td class="tableHeader"><ww:text name="projectView.username"/></td>
+                  <td class="tableHeader"><center><ww:text name="projectView.role.view"/></center></td>
+                  <td class="tableHeader"><center><ww:text name="projectView.role.edit"/></center></td>
+                  <td class="tableHeader"><center><ww:text name="projectView.role.delete"/></center></td>
+                  <td class="tableHeader"><center><ww:text name="projectView.role.build"/></center></td>
+                  <td class="tableHeader"><center><ww:text name="projectView.role.administer"/></center></td>
+                </tr>
+              </thead>
+              <tbody class="tableBody">
+              <ww:iterator value="users" id="user" status="rowCounter">
 
-          username - view - edit - delete - build - admin<br/>
+                <ww:set name="view" value="<ww:property value='view'/>"/>
+                <ww:set name="edit" value="<ww:property value='edit'/>"/>
+                <ww:set name="delete" value="<ww:property value='delete'/>"/>
+                <ww:set name="build" value="<ww:property value='build'/>"/>
+                <ww:set name="administer" value="<ww:property value='administer'/>"/>
 
-          <ww:iterator value="userPermissions" id="permission">
-
-            <ww:property value='user.username'/>
-            <ww:hidden name="projectGroupId" value="%{projectGroupId}"/>
-            <ww:hidden name="userNames" value="%{user.username}"/>
-
-            <ww:set name="read" value="<ww:property value='read'/>"/>
-            <ww:set name="write" value="<ww:property value='write'/>"/>
-            <ww:set name="delete" value="<ww:property value='delete'/>"/>
-            <ww:set name="execute" value="<ww:property value='execute'/>"/>
-            <ww:set name="administer" value="<ww:property value='administer'/>"/>
-
-            <ww:if test="read == true">
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.read']" checked="true">
-            </ww:if>
-            <ww:else>
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.read']">
-            </ww:else>
-            <ww:if test="write == true">
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.write']" checked="true">
-            </ww:if>
-            <ww:else>
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.write']">
-            </ww:else>
-            <ww:if test="delete == true">
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.delete']" checked="true">
-            </ww:if>
-            <ww:else>
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.delete']">
-            </ww:else>
-            <ww:if test="execute == true">
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.execute']" checked="true">
-            </ww:if>
-            <ww:else>
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.execute']">
-            </ww:else>
-            <ww:if test="administer == true">
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.administer']" checked="true">
-            </ww:if>
-            <ww:else>
-              <input type="checkbox" name="map['<ww:property value="user.username"/>.administer']">
-            </ww:else>
-
-            <br/>
-          </ww:iterator>
-
-          <input type="submit" value="Save"/>
-        </form>
+                <tr class="<ww:if test="#rowCounter.odd == true">odd</ww:if><ww:else>even</ww:else>">
+                <td><ww:property value="user.username"/></td>
+                <td width=100>
+                  <center>
+                    <ww:if test="read == true">
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.read']" checked="true">
+                    </ww:if>
+                    <ww:else>
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.read']">
+                    </ww:else>
+                  </center>
+                </td>
+                <td width=100>
+                  <center>
+                    <ww:if test="write == true">
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.write']" checked="true">
+                    </ww:if>
+                    <ww:else>
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.write']">
+                    </ww:else>
+                  </center>
+                </td>
+                <td width=100>
+                  <center>
+                    <ww:if test="delete == true">
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.delete']" checked="true">
+                    </ww:if>
+                    <ww:else>
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.delete']">
+                    </ww:else>
+                  </center>
+                </td>
+                <td width=100>
+                  <center>
+                    <ww:if test="execute == true">
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.execute']" checked="true">
+                    </ww:if>
+                    <ww:else>
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.execute']">
+                    </ww:else>
+                  </center>
+                </td>
+                <td width=100>
+                  <center>
+                    <ww:if test="administer == true">
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.administer']" checked="true">
+                    </ww:if>
+                    <ww:else>
+                      <input type="checkbox" name="map['<ww:property value="user.username"/>.administer']">
+                    </ww:else>
+                  </center>
+                </td>
+                </tr>
+              </ww:iterator>
+              </tbody>
+            </table>
+            <input type="submit" value="Save"/>
+          </form>
+        </div>
       </div>
     </body> 
   </ww:i18n>
