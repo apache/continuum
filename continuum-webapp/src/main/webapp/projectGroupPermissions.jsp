@@ -30,7 +30,7 @@
                 </tr>
               </thead>
               <tbody class="tableBody">
-              <ww:iterator value="users" id="user" status="rowCounter">
+              <ww:iterator value="userPermissions" id="permission" status="rowCounter">
 
                 <ww:set name="view" value="<ww:property value='view'/>"/>
                 <ww:set name="edit" value="<ww:property value='edit'/>"/>
