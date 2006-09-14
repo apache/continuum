@@ -239,13 +239,7 @@ public class DefaultContinuumInitializer
 
             guestGroup.setDescription( "Continuum Guest Group" );
 
-            List guestPermissions = new ArrayList();
-
-            guestPermissions.add( userManager.getPermission( "buildProject" ) );
-
-            guestPermissions.add( userManager.getPermission( "showProject" ) );
-
-            guestGroup.setPermissions( guestPermissions );
+            guestGroup.setPermissions( new ArrayList() );
 
             userManager.addUserGroup( guestGroup );
         }
