@@ -62,8 +62,9 @@ public class StateCell
 
             case ContinuumProjectState.BUILDING:
             {
-                return StateGenerator.generate( project.getState(), tableModel.getContext().getContextPath() ) + " "
-                    + createActionLink( "cancelBuild", project, "(cancel)" );
+                return StateGenerator.generate( project.getState(), tableModel.getContext().getContextPath() );
+                // TODO enable cancel button
+                // + " " + createActionLink( "cancelBuild", project, "(cancel)" );
             }
 
             default:

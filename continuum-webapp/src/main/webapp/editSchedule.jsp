@@ -38,9 +38,11 @@
               </td>
             </tr>
 
+<%--
             <ww:textfield label="%{getText('schedule.maxJobExecutionTime.label')}" name="maxJobExecutionTime" required="true">
                 <ww:param name="desc"><p><ww:text name="schedule.maxJobExecutionTime.message"/></p></ww:param>
             </ww:textfield>
+--%>
             <ww:textfield label="%{getText('schedule.quietPeriod.label')}" name="delay">
                 <ww:param name="desc"><p><ww:text name="schedule.quietPeriod.message"/></p></ww:param>
             </ww:textfield>
