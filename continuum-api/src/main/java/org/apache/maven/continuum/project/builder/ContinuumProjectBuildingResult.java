@@ -64,6 +64,12 @@ public class ContinuumProjectBuildingResult
 
     public static final String ERROR_VALIDATION = "add.project.validation.error";
 
+    public static final String ERROR_UNAUTHORIZED = "add.project.unauthorized.error";
+
+    public static final String ERROR_ARTIFACT_NOT_FOUND = "add.project.artifact.not.found.error";
+
+    public static final String ERROR_PROJECT_BUILDING = "add.project.project.building.error";
+
     public static final String ERROR_UNKNOWN = "add.project.unknown.error";
 
     private List projects = new ArrayList();
