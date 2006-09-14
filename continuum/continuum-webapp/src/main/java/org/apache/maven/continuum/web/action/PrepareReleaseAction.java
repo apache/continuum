@@ -104,7 +104,13 @@ public class PrepareReleaseAction
         releaseId = releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(),
                                             getDevVersionMap(), listener );
 
-        return "initialized";
+        //wait for executor to finish, use the listener
+        while ( listener.getState() != ContinuumReleaseManagerListener.FINISHED )
+        {
+            Thread.sleep( 10 );
+        }
+
+        return "finished";
     }
 
     public String viewResult()
