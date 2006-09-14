@@ -14,9 +14,11 @@
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>check-out-project</role-hint>
     </component>
+    <!--
     <component>
       <role>org.apache.maven.continuum.web.xmlrpc.XmlRpcService</role>
     </component>
+    -->
     <!-- load on start to inject values into the aspect -->
     <component>
       <role>org.codehaus.plexus.acegi.intercept.method.aspectj.AspectJSecurityInterceptorHelper</role>
