@@ -20,6 +20,7 @@ import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectDeveloper;
@@ -37,6 +38,7 @@ import org.apache.maven.profiles.ProfileManager;
 import org.apache.maven.project.InvalidProjectModelException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.validation.ModelValidationResult;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Mirror;
@@ -335,6 +337,30 @@ public class DefaultMavenBuilderHelper
                 writeActiveProfileStatement( project );
             }
 
+        }
+        catch ( ProjectBuildingException e )
+        {
+            Throwable cause = e.getCause();
+
+            while ( ( cause.getCause() != null ) && ( cause instanceof ProjectBuildingException ) )
+            {
+                cause = cause.getCause();
+            }
+
+            if ( cause instanceof ArtifactNotFoundException )
+            {
+                result.addError( ContinuumProjectBuildingResult.ERROR_ARTIFACT_NOT_FOUND,
+                                 ( (ArtifactNotFoundException) cause ).toString() );
+                return null;
+            }
+
+            result.addError( ContinuumProjectBuildingResult.ERROR_PROJECT_BUILDING, e.getMessage() );
+
+            String msg = "Cannot build maven project from " + file + " (" + e.getMessage() + ").";
+
+            getLogger().error( msg, e );
+
+            return null;
         }
         catch ( Exception e )
         {
