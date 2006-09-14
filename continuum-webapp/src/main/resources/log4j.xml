@@ -13,10 +13,12 @@
     </layout>
   </appender>
 
+<!--
   <category name="org.acegisecurity.acl.basic.BasicAclProvider">
     <priority value="DEBUG"/>
     <appender-ref ref="default"/>
   </category>
+-->
 
   <root>
     <priority value="INFO"/>
