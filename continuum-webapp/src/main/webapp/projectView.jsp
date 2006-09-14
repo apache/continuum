@@ -16,7 +16,7 @@
         </jsp:include>
 
         <h3><ww:text name="projectView.section.title"/></h3>
-            
+
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <c1:data label="%{getText('projectView.project.name')}" name="project.name"/>

@@ -251,6 +251,9 @@
       <result name="success" type="chain">schedules</result>
     </action>
 
+    <action name="cancelBuild" class="cancelBuild">
+      <result name="success" type="chain">buildResults</result>
+    </action>
 
   </package>
 

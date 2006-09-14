@@ -23,8 +23,7 @@ import java.util.Collection;
 
 /**
  * @author Nik Gonzalez
- * @plexus.component role="com.opensymphony.xwork.Action"
- * role-hint="schedule"
+ * @plexus.component role="com.opensymphony.xwork.Action" role-hint="schedule"
  */
 public class ScheduleAction
     extends ContinuumActionSupport
@@ -32,8 +31,6 @@ public class ScheduleAction
     private int id;
 
     private boolean active = true;
-
-    private String cronExpression;
 
     private int delay;
 
@@ -46,6 +43,22 @@ public class ScheduleAction
     private Schedule schedule;
 
     private boolean confirmed;
+
+    private int maxJobExecutionTime;
+
+    private String second = "0";
+
+    private String minute = "0";
+
+    private String hour = "*";
+
+    private String dayOfMonth = "*";
+
+    private String month = "*";
+
+    private String dayOfWeek = "?";
+
+    private String year;
 
     public String summary()
         throws ContinuumException
@@ -63,10 +76,28 @@ public class ScheduleAction
             {
                 schedule = getContinuum().getSchedule( id );
                 active = schedule.isActive();
-                cronExpression= schedule.getCronExpression();
+
+                String[] cronEx = schedule.getCronExpression().split( " " );
+                int i = 0;
+                while ( i < cronEx.length )
+                {
+                    switch( i )
+                    {
+                        case 0 : second = cronEx[i]; break;
+                        case 1 : minute = cronEx[i]; break;
+                        case 2 : hour = cronEx[i]; break;
+                        case 3 : dayOfMonth = cronEx[i]; break;
+                        case 4 : month = cronEx[i]; break;
+                        case 5 : dayOfWeek = cronEx[i]; break;
+                        case 6 : year = cronEx[i]; break;
+                    }
+                    i++;
+                }
+
                 description = schedule.getDescription();
                 name = schedule.getName();
                 delay = schedule.getDelay();
+                maxJobExecutionTime = schedule.getMaxJobExecutionTime();
             }
             catch ( ContinuumException e )
             {
@@ -83,14 +114,7 @@ public class ScheduleAction
         {
             try
             {
-                Schedule schedule = new Schedule();
-                schedule.setActive( active );
-                schedule.setCronExpression( cronExpression );
-                schedule.setDelay( delay );
-                schedule.setDescription( description );
-                schedule.setName( name );
-
-                getContinuum().addSchedule( schedule );
+                getContinuum().addSchedule( setFields( new Schedule() ) );
             }
             catch ( ContinuumException e )
             {
@@ -101,19 +125,9 @@ public class ScheduleAction
         }
         else
         {
-
             try
             {
-                schedule = getContinuum().getSchedule( id );
-
-                schedule.setActive( active );
-                schedule.setCronExpression( cronExpression );
-                schedule.setDelay( delay );
-                schedule.setDescription( description );
-                schedule.setName( name );
-
-                getContinuum().updateSchedule( schedule );
-
+                getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
             }
             catch ( ContinuumException e )
             {
@@ -123,6 +137,18 @@ public class ScheduleAction
 
             return SUCCESS;
         }
+    }
+
+    private Schedule setFields( Schedule schedule )
+    {
+        schedule.setActive( active );
+        schedule.setCronExpression( getCronExpression() );
+        schedule.setDelay( delay );
+        schedule.setDescription( description );
+        schedule.setName( name );
+        schedule.setMaxJobExecutionTime( maxJobExecutionTime );
+
+        return schedule;
     }
 
     public String confirm()
@@ -174,16 +200,6 @@ public class ScheduleAction
         this.active = active;
     }
 
-    public String getCronExpression()
-    {
-        return cronExpression;
-    }
-
-    public void setCronExpression( String cronExpression )
-    {
-        this.cronExpression = cronExpression;
-    }
-
     public int getDelay()
     {
         return delay;
@@ -232,5 +248,91 @@ public class ScheduleAction
     public void setConfirmed( boolean confirmed )
     {
         this.confirmed = confirmed;
+    }
+
+    public int getMaxJobExecutionTime()
+    {
+        return maxJobExecutionTime;
+    }
+
+    public void setMaxJobExecutionTime( int maxJobExecutionTime )
+    {
+        this.maxJobExecutionTime = maxJobExecutionTime;
+    }
+
+    public String getSecond()
+    {
+        return second;
+    }
+
+    public void setSecond( String second )
+    {
+        this.second = second;
+    }
+
+    public String getMinute()
+    {
+        return minute;
+    }
+
+    public void setMinute( String minute )
+    {
+        this.minute = minute;
+    }
+
+    public String getHour()
+    {
+        return hour;
+    }
+
+    public void setHour( String hour )
+    {
+        this.hour = hour;
+    }
+
+    public String getDayOfMonth()
+    {
+        return dayOfMonth;
+    }
+
+    public void setDayOfMonth( String dayOfMonth )
+    {
+        this.dayOfMonth = dayOfMonth;
+    }
+
+    public String getYear()
+    {
+        return year;
+    }
+
+    public void setYear( String year )
+    {
+        this.year = year;
+    }
+
+    public String getMonth()
+    {
+        return month;
+    }
+
+    public void setMonth( String month )
+    {
+        this.month = month;
+    }
+
+    public String getDayOfWeek()
+    {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek( String dayOfWeek )
+    {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    private String getCronExpression()
+    {
+        return ( second + " " + minute + " " + hour + " " + dayOfMonth + " " +
+                    month + " " + dayOfWeek + " " + year ).trim();
     }
 }

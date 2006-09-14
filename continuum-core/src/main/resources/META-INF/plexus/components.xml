@@ -182,7 +182,7 @@
           </property>
         </updateProperties>
       </configuration>
-      
+
     </component>
 
     <component>
@@ -438,6 +438,7 @@
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>build-project</role-hint>
       <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <instantiation-strategy>singleton</instantiation-strategy>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
@@ -483,6 +484,7 @@
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>check-out-project</role-hint>
       <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <instantiation-strategy>singleton</instantiation-strategy>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>

@@ -36,6 +36,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import javax.jdo.Extent;
+import javax.jdo.FetchPlan;
 import javax.jdo.JDOHelper;
 import javax.jdo.JDOUserException;
 import javax.jdo.PersistenceManager;
@@ -1381,6 +1382,7 @@ public class JdoContinuumStore
         PersistenceManager pm = pmf.getPersistenceManager();
 
         pm.getFetchPlan().setMaxFetchDepth( -1 );
+        pm.getFetchPlan().setDetachmentOptions( FetchPlan.DETACH_LOAD_FIELDS );
 
         return pm;
     }
