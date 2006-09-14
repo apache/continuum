@@ -811,7 +811,7 @@
           </description>
           <version>1.0.0+</version>
           <type>int</type>
-          <defaultValue>3600</defaultValue>
+          <defaultValue>0</defaultValue>
         </field>
         <field>
           <name>cronExpression</name>
