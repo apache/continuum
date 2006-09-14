@@ -50,9 +50,9 @@ public class DefaultContinuumSecurity
         List groups = u.getGroups();
         Iterator it = groups.iterator();
         List permissions = new ArrayList();
-        while( it.hasNext() )
+        while ( it.hasNext() )
         {
-            permissions.addAll( getPermissions( (UserGroup) it.next() ) );
+            permissions.addAll( ( (org.apache.maven.user.model.UserGroup) it.next() ).getPermissions() );
         }
 
         return permissions;
