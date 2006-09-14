@@ -27,9 +27,9 @@
                   filterable="false"
                   sortable="false">
           <ec:row highlightRow="true">
-            <ec:column property="buildNumber" title="buildResults.buildNumber">
-                <c:if test="${!(pageScope.buildResult.state == 2)}">
-                    ${pageScope.buildResult.buildNumber}
+            <ec:column property="buildNumberIfNotZero" title="buildResults.buildNumber">
+                <c:if test="${pageScope.buildResult.state == 2}">
+                    <c:out value="${pageScope.buildResult.buildNumber}"/>
                 </c:if>
             </ec:column>
             <ec:column property="startTime" title="buildResults.startTime" cell="date"/>
