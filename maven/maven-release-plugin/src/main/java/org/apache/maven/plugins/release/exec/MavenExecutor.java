@@ -40,8 +40,8 @@ public interface MavenExecutor
      * @param pomFileName         the file name of the POM to execute on
      * @throws MavenExecutorException if an error occurred executing Maven
      */
-    void executeGoals( File workingDirectory, String goals, boolean interactive, String additionalArguments,
-                       String pomFileName )
+    void executeGoals( File workingDirectory, String goals, boolean interactive,
+                                      String additionalArguments, String pomFileName )
         throws MavenExecutorException;
 
     /**
@@ -53,6 +53,7 @@ public interface MavenExecutor
      * @param additionalArguments additional arguments to pass to the Maven command
      * @throws MavenExecutorException if an error occurred executing Maven
      */
-    void executeGoals( File workingDirectory, String goals, boolean interactive, String additionalArguments )
+    void executeGoals( File workingDirectory, String goals, boolean interactive,
+                                      String additionalArguments )
         throws MavenExecutorException;
 }

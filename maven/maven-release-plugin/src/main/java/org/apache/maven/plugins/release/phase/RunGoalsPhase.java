@@ -17,6 +17,7 @@ package org.apache.maven.plugins.release.phase;
  */
 
 import org.apache.maven.plugins.release.ReleaseExecutionException;
+import org.apache.maven.plugins.release.ReleaseResult;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.apache.maven.plugins.release.exec.MavenExecutor;
 import org.apache.maven.plugins.release.exec.MavenExecutorException;
@@ -39,15 +40,17 @@ public class RunGoalsPhase
      */
     private MavenExecutor mavenExecutor;
 
-    public void execute( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
+    public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
         throws ReleaseExecutionException
     {
+        ReleaseResult result = new ReleaseResult();
+
         try
         {
             String goals = releaseDescriptor.getPreparationGoals();
             if ( !StringUtils.isEmpty( goals ) )
             {
-                getLogger().info( "Executing preparation goals '" + goals + "'..." );
+                logInfo( result, "Executing preparation goals '" + goals + "'..." );
 
                 mavenExecutor.executeGoals( new File( releaseDescriptor.getWorkingDirectory() ), goals,
                                             releaseDescriptor.isInteractive(),
@@ -58,15 +61,23 @@ public class RunGoalsPhase
         {
             throw new ReleaseExecutionException( e.getMessage(), e );
         }
+
+        result.setResultCode( ReleaseResult.SUCCESS );
+
+        return result;
     }
 
-    public void simulate( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
+    public ReleaseResult simulate( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
         throws ReleaseExecutionException
     {
-        getLogger().info(
-            "Executing preparation goals - since this is simulation mode it is running against the original project, not the rewritten ones" );
+        ReleaseResult result = new ReleaseResult();
+
+        logInfo( result, "Executing preparation goals - since this is simulation mode it is running against the " +
+                         "original project, not the rewritten ones" );
 
         execute( releaseDescriptor, settings, reactorProjects );
+
+        return result;
     }
 
     public void setMavenExecutor( MavenExecutor mavenExecutor )

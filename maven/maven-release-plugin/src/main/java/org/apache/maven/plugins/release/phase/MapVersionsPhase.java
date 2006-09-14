@@ -18,6 +18,7 @@ package org.apache.maven.plugins.release.phase;
 
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.plugins.release.ReleaseExecutionException;
+import org.apache.maven.plugins.release.ReleaseResult;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.apache.maven.plugins.release.versions.DefaultVersionInfo;
 import org.apache.maven.plugins.release.versions.VersionInfo;
@@ -54,9 +55,11 @@ public class MapVersionsPhase
         this.prompter = prompter;
     }
 
-    public void execute( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
+    public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
         throws ReleaseExecutionException
     {
+        ReleaseResult result = new ReleaseResult();
+
         for ( Iterator i = reactorProjects.iterator(); i.hasNext(); )
         {
             MavenProject project = (MavenProject) i.next();
@@ -73,8 +76,8 @@ public class MapVersionsPhase
                 String msg = "Error parsing version, cannot determine next version: " + e.getMessage();
                 if ( releaseDescriptor.isInteractive() )
                 {
-                    getLogger().warn( msg );
-                    getLogger().debug( e.getMessage(), e );
+                    logWarn( result, msg );
+                    logDebug( result, e.getMessage(), e );
                 }
                 else
                 {
@@ -140,13 +143,23 @@ public class MapVersionsPhase
                 throw new ReleaseExecutionException( "Error reading version from input handler: " + e.getMessage(), e );
             }
         }
+
+        result.setResultCode( ReleaseResult.SUCCESS );
+
+        return result;
     }
 
-    public void simulate( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
+    public ReleaseResult simulate( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects )
         throws ReleaseExecutionException
     {
+        ReleaseResult result = new ReleaseResult();
+
         // It makes no modifications, so simulate is the same as execute
         execute( releaseDescriptor, settings, reactorProjects );
+
+        result.setResultCode( ReleaseResult.SUCCESS );
+
+        return result;
     }
 
 }

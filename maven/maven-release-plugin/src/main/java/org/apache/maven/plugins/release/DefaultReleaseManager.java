@@ -39,10 +39,10 @@ import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 /**
  * Implementation of the release manager.
@@ -96,8 +96,44 @@ public class DefaultReleaseManager
         prepare( releaseDescriptor, settings, reactorProjects, resume, dryRun, null );
     }
 
+    public ReleaseResult prepareWithResult( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects, boolean resume,
+                         boolean dryRun, ReleaseManagerListener listener )
+    {
+        ReleaseResult result = new ReleaseResult();
+
+        result.setStartTime( System.currentTimeMillis() );
+
+        try
+        {
+            prepare( releaseDescriptor, settings, reactorProjects, resume, dryRun, listener, result );
+
+            result.setResultCode( ReleaseResult.SUCCESS );
+        }
+        catch ( ReleaseExecutionException e )
+        {
+            captureException( result, listener, e );
+        }
+        catch ( ReleaseFailureException e )
+        {
+            captureException( result, listener, e );
+        }
+        finally
+        {
+            result.setEndTime( System.currentTimeMillis() );
+        }
+
+        return result;
+    }
+
     public void prepare( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects, boolean resume,
                          boolean dryRun, ReleaseManagerListener listener )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
+        prepare( releaseDescriptor, settings, reactorProjects, resume, dryRun, listener, null );
+    }
+
+    private void prepare( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects, boolean resume,
+                         boolean dryRun, ReleaseManagerListener listener, ReleaseResult result )
         throws ReleaseExecutionException, ReleaseFailureException
     {
         updateListener( listener, "prepare", goalStart );
@@ -111,8 +147,6 @@ public class DefaultReleaseManager
             }
             catch ( ReleaseDescriptorStoreException e )
             {
-                updateListener( listener, e.getMessage(), error );
-
                 throw new ReleaseExecutionException( "Error reading stored configuration: " + e.getMessage(), e );
             }
         }
@@ -134,12 +168,12 @@ public class DefaultReleaseManager
 
         if ( index == preparePhases.size() - 1 )
         {
-            getLogger().info(
-                "Release preparation already completed. You can now continue with release:perform, or start again using the -Dresume=false flag" );
+            logInfo( result, "Release preparation already completed. You can now continue with release:perform, " +
+                             "or start again using the -Dresume=false flag" );
         }
         else if ( index >= 0 )
         {
-            getLogger().info( "Resuming release from phase '" + preparePhases.get( index + 1 ) + "'" );
+            logInfo( result, "Resuming release from phase '" + preparePhases.get( index + 1 ) + "'" );
         }
 
         // start from next phase
@@ -151,38 +185,29 @@ public class DefaultReleaseManager
 
             if ( phase == null )
             {
-                String message = "Unable to find phase '" + name + "' to execute";
-
-                updateListener( listener, message, error );
-
-                throw new ReleaseExecutionException( message );
+                throw new ReleaseExecutionException( "Unable to find phase '" + name + "' to execute" );
             }
 
             updateListener( listener, name, phaseStart );
 
-            //catch the exception before re-throwing for the listeners
+            ReleaseResult phaseResult = null;
             try
             {
                 if ( dryRun )
                 {
-                    phase.simulate( config, settings, reactorProjects );
+                    phaseResult = phase.simulate( config, settings, reactorProjects );
                 }
                 else
                 {
-                    phase.execute( config, settings, reactorProjects );
+                    phaseResult = phase.execute( config, settings, reactorProjects );
                 }
             }
-            catch ( ReleaseExecutionException e )
+            finally
             {
-                updateListener( listener, e.getMessage(), error );
-
-                throw e;
-            }
-            catch ( ReleaseFailureException e )
-            {
-                updateListener( listener, e.getMessage(), error );
-
-                throw e;
+                if ( result != null && phaseResult != null )
+                {
+                    result.getOutputBuffer().append( phaseResult.getOutput() );
+                }
             }
 
             config.setCompletedPhase( name );
@@ -192,8 +217,6 @@ public class DefaultReleaseManager
             }
             catch ( ReleaseDescriptorStoreException e )
             {
-                updateListener( listener, e.getMessage(), error );
-
                 // TODO: rollback?
                 throw new ReleaseExecutionException( "Error writing release properties after completing phase", e );
             }
@@ -216,9 +239,49 @@ public class DefaultReleaseManager
                          ReleaseManagerListener listener )
         throws ReleaseExecutionException, ReleaseFailureException
     {
+        perform( releaseDescriptor, settings, reactorProjects, checkoutDirectory, goals,
+                 useReleaseProfile, listener, null );
+    }
+
+    public ReleaseResult performWithResult( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects,
+                                            File checkoutDirectory, String goals, boolean useReleaseProfile,
+                                            ReleaseManagerListener listener )
+    {
+        ReleaseResult result = new ReleaseResult();
+
+        try
+        {
+            result.setStartTime( System.currentTimeMillis() );
+
+            perform( releaseDescriptor, settings, reactorProjects, checkoutDirectory, goals,
+                     useReleaseProfile, listener, result );
+
+            result.setResultCode( ReleaseResult.SUCCESS );
+        }
+        catch ( ReleaseExecutionException e )
+        {
+            captureException( result, listener, e );
+        }
+        catch ( ReleaseFailureException e )
+        {
+            captureException( result, listener, e );
+        }
+        finally
+        {
+            result.setEndTime( System.currentTimeMillis() );
+        }
+
+        return result;
+    }
+
+    private void perform( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects,
+                         File checkoutDirectory, String goals, boolean useReleaseProfile,
+                         ReleaseManagerListener listener, ReleaseResult result )
+        throws ReleaseExecutionException, ReleaseFailureException
+    {
         updateListener( listener, "perform", goalStart );
 
-        getLogger().info( "Checking out the project to perform the release ..." );
+        logInfo( result, "Checking out the project to perform the release ..." );
 
         updateListener( listener, "verify-release-configuration", phaseStart );
 
@@ -301,10 +364,10 @@ public class DefaultReleaseManager
         }
         checkoutDirectory.mkdirs();
 
-        CheckOutScmResult result;
+        CheckOutScmResult scmResult;
         try
         {
-            result = provider.checkOut( repository, new ScmFileSet( checkoutDirectory ), config.getScmReleaseLabel() );
+            scmResult = provider.checkOut( repository, new ScmFileSet( checkoutDirectory ), config.getScmReleaseLabel() );
         }
         catch ( ScmException e )
         {
@@ -312,11 +375,11 @@ public class DefaultReleaseManager
 
             throw new ReleaseExecutionException( "An error is occurred in the checkout process: " + e.getMessage(), e );
         }
-        if ( !result.isSuccess() )
+        if ( !scmResult.isSuccess() )
         {
-            updateListener( listener, result.getProviderMessage(), error );
+            updateListener( listener, scmResult.getProviderMessage(), error );
 
-            throw new ReleaseScmCommandException( "Unable to checkout from SCM", result );
+            throw new ReleaseScmCommandException( "Unable to checkout from SCM", scmResult );
         }
 
         updateListener( listener, "checkout-project-from-scm", phaseEnd );
@@ -349,10 +412,8 @@ public class DefaultReleaseManager
         }
 
         updateListener( listener, "build-project", phaseEnd );
-        updateListener( listener, "cleanup", phaseStart );
 
         clean( config, reactorProjects );
-
         updateListener( listener, "cleanup", phaseEnd );
         updateListener( listener, "perform", goalEnd );
     }
@@ -424,5 +485,24 @@ public class DefaultReleaseManager
         }
 
         return phases;
+    }
+
+    private void logInfo( ReleaseResult result, String message )
+    {
+        if ( result != null )
+        {
+            result.appendInfo( message );
+        }
+
+        getLogger().info( message );
+    }
+
+    private void captureException( ReleaseResult result, ReleaseManagerListener listener, Exception e )
+    {
+        updateListener( listener, e.getMessage(), error );
+
+        result.appendError( e );
+
+        result.setResultCode( ReleaseResult.ERROR );
     }
 }
