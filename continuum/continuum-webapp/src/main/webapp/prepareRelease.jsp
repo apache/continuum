@@ -9,7 +9,7 @@
     </head>
     <body>
       <h2>Prepare Project Release</h2>
-      <ww:form action="doPrepare" method="post">
+      <ww:form action="prepareRelease!doPrepare.action" method="post">
         <h3>Release Parameters</h3>
         <input type="hidden" name="projectId" value="<ww:property value="projectId"/>"/>
         <div class="axial">
