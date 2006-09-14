@@ -637,8 +637,8 @@
             <level>INFO</level>
           </level>
           <level>
-            <hierarchy>org.acegisecurity.acl.basic</hierarchy>
-            <level>DEBUG</level>
+            <hierarchy>org.acegisecurity</hierarchy>
+            <level>INFO</level>
           </level>
         </levels>
       </configuration>
