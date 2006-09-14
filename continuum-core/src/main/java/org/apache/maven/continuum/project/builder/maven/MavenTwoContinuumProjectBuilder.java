@@ -117,6 +117,15 @@ public class MavenTwoContinuumProjectBuilder
         }
         catch ( IOException e )
         {
+            if ( e.getMessage() != null )
+            {
+                if ( e.getMessage().indexOf( "Server returned HTTP response code: 401" ) >= 0 )
+                {
+                    getLogger().debug( "Error adding project: Unauthorized " + url, e );
+                    result.addError( ContinuumProjectBuildingResult.ERROR_UNAUTHORIZED );
+                    return;
+                }
+            }
             getLogger().info( "Error adding project: Unknown error downloading from " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
             return;
