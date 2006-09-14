@@ -38,6 +38,14 @@
             </ww:iterator>
           </table>
         </div>
+
+        <p>
+          <ww:url id="viewReleaseResultUrl" action="viewReleaseResult" namespace="/">
+            <ww:param name="releaseId" value="releaseId"/>
+          </ww:url>
+          <ww:a href="%{viewReleaseResultUrl}">View Release Output</ww:a>
+        </p>
+
         <ww:submit value="Done"/>
       </ww:form>
     </body>

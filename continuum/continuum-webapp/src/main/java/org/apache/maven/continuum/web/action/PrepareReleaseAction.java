@@ -24,6 +24,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugins.release.versions.VersionInfo;
 import org.apache.maven.plugins.release.versions.DefaultVersionInfo;
+import org.apache.maven.plugins.release.ReleaseResult;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.HashMap;
@@ -67,6 +68,8 @@ public class PrepareReleaseAction
 
     private List relVersions;
 
+    private ReleaseResult result;
+
     private ContinuumReleaseManagerListener listener;
 
     public String execute()
@@ -104,6 +107,14 @@ public class PrepareReleaseAction
         return "initialized";
     }
 
+    public String viewResult()
+        throws Exception
+    {
+        result = (ReleaseResult) getContinuum().getReleaseManager().getReleaseResults().get( releaseId );
+
+        return "viewResult";
+    }
+
     public String checkProgress()
         throws Exception
     {
@@ -116,6 +127,8 @@ public class PrepareReleaseAction
         if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
         {
             releaseManager.getListeners().remove( releaseId );
+
+            result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
 
             status = "finished";
         }
@@ -339,5 +352,15 @@ public class PrepareReleaseAction
     public void setReleaseId( String releaseId )
     {
         this.releaseId = releaseId;
+    }
+
+    public ReleaseResult getResult()
+    {
+        return result;
+    }
+
+    public void setResult( ReleaseResult result )
+    {
+        this.result = result;
     }
 }

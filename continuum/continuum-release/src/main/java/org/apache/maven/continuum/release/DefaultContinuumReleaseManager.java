@@ -58,6 +58,12 @@ public class DefaultContinuumReleaseManager
      */
     private static Map preparedReleases;
 
+    /**
+     * contains results
+     * @todo remove static when singleton strategy is working
+     */
+    private static Map releaseResults;
+
     public String prepare( Project project, Properties releaseProperties, Map relVersions,
                            Map devVersions, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
@@ -142,9 +148,14 @@ public class DefaultContinuumReleaseManager
         return preparedReleases;
     }
 
-    public void setPreparedReleases( Map preparedReleases )
+    public Map getReleaseResults()
     {
-        this.preparedReleases = preparedReleases;
+        if ( releaseResults == null )
+        {
+            releaseResults = new Hashtable();
+        }
+
+        return releaseResults;
     }
 
     private ReleaseDescriptor getReleaseDescriptor( Project project, Properties releaseProperties,

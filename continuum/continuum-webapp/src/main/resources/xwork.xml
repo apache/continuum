@@ -333,6 +333,10 @@
       <result name="finished">performReleaseFinished.jsp</result>
     </action>
 
+    <action name="viewReleaseResult" class="viewReleaseResult">
+      <result name="success">viewReleaseResult.jsp</result>
+    </action>
+
   </package>
 
   <package name="component" extends="default">

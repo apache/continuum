@@ -66,9 +66,9 @@ public interface ContinuumReleaseManager
                   String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
-    void setPreparedReleases( Map preparedReleases );
-
     Map getPreparedReleases();
+
+    Map getReleaseResults();
 
     Map getListeners();
 }

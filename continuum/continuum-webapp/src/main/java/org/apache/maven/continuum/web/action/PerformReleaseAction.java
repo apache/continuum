@@ -21,6 +21,7 @@ import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
+import org.apache.maven.plugins.release.ReleaseResult;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -55,6 +56,8 @@ public class PerformReleaseAction
     private boolean useReleaseProfile;
 
     private ContinuumReleaseManagerListener listener;
+
+    private ReleaseResult result;
 
     public String execute()
         throws Exception
@@ -140,6 +143,8 @@ public class PerformReleaseAction
         else
         {
             releaseManager.getListeners().remove( releaseId );
+
+            result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
 
             status = "finished";
         }
@@ -247,5 +252,15 @@ public class PerformReleaseAction
     public void setListener( ContinuumReleaseManagerListener listener )
     {
         this.listener = listener;
+    }
+
+    public ReleaseResult getResult()
+    {
+        return result;
+    }
+
+    public void setResult( ReleaseResult result )
+    {
+        this.result = result;
     }
 }
