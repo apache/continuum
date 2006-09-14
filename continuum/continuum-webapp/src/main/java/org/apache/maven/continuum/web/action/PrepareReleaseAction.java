@@ -68,6 +68,8 @@ public class PrepareReleaseAction
 
     private List relVersions;
 
+    private String prepareGoals;
+
     private ReleaseResult result;
 
     private ContinuumReleaseManagerListener listener;
@@ -79,7 +81,18 @@ public class PrepareReleaseAction
         scmUsername = project.getScmUsername();
         scmPassword = project.getScmPassword();
         scmTag = project.getScmTag();
-        scmTagBase = "";
+        String scmUrl = project.getScmUrl();
+        if ( scmUrl.endsWith( "/trunk" ) )
+        {
+            //skip scm:provider in scm url
+            int idx = scmUrl.indexOf( ":", 4 ) + 1;
+            scmTagBase = scmUrl.substring( idx , scmUrl.lastIndexOf( "/trunk" ) ) + "/branches";
+        }
+        else
+        {
+            scmTagBase = scmUrl;
+        }
+        prepareGoals = "clean integration-test";
 
         processProject( project.getWorkingDirectory(), "pom.xml" );
 
@@ -230,6 +243,7 @@ public class PrepareReleaseAction
 
         p.setProperty( "tag", scmTag );
         p.setProperty( "tagBase", scmTagBase );
+        p.setProperty( "prepareGoals", prepareGoals );
 
         return p;
     }
@@ -362,5 +376,15 @@ public class PrepareReleaseAction
     public void setResult( ReleaseResult result )
     {
         this.result = result;
+    }
+
+    public String getPrepareGoals()
+    {
+        return prepareGoals;
+    }
+
+    public void setPrepareGoals( String prepareGoals )
+    {
+        this.prepareGoals = prepareGoals;
     }
 }

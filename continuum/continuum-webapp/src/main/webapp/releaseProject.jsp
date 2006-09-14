@@ -8,12 +8,16 @@
         <title><ww:text name="releaseProject.page.title"/></title>
     </head>
     <body>
-      <h3>Continuum Release</h3>
+      <h3>
+        <ww:text name="releaseProject.section.title">
+          <ww:param><ww:property value="projectName"/></ww:param>
+        </ww:text>
+      </h3>
       <ww:form action="releaseProject" method="post">
         <p>
-          <input name="goal" type="radio" value="prepare" checked/>Prepare project for release
+          <input name="goal" type="radio" value="prepare" checked/><ww:text name="releaseProject.prepareReleaseOption"/>
           <br/>
-          <input name="goal" type="radio" value="perform"/>Perform project release
+          <input name="goal" type="radio" value="perform"/><ww:text name="releaseProject.performReleaseOption"/>
           <br/>
           &nbsp;&nbsp;&nbsp;
           <select name="preparedReleaseId">
@@ -22,7 +26,7 @@
                 <ww:property value="preparedReleaseName"/>
               </option>
             </ww:if>
-            <option value="">Provide release descriptor</option>
+            <option value=""><ww:text name="releaseProject.provideReleaseParameters"/></option>
           </select>
           <br/>
         </p>

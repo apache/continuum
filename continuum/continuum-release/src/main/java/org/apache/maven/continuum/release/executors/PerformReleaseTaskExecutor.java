@@ -18,12 +18,14 @@ package org.apache.maven.continuum.release.executors;
 
 import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
-import org.apache.maven.plugins.release.ReleaseExecutionException;
-import org.apache.maven.plugins.release.ReleaseFailureException;
 import org.apache.maven.plugins.release.ReleaseManagerListener;
+import org.apache.maven.plugins.release.ReleaseResult;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
+import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
+
+import java.util.List;
 
 /**
  * @author Edwin Punzalan
@@ -34,31 +36,42 @@ public class PerformReleaseTaskExecutor
     public void executeTask( Task task )
         throws TaskExecutionException
     {
+        PerformReleaseProjectTask performTask = (PerformReleaseProjectTask) task;
+
+        ReleaseDescriptor descriptor = performTask.getDescriptor();
+
+        Settings settings;
         try
         {
-            PerformReleaseProjectTask performTask = (PerformReleaseProjectTask) task;
-
-            ReleaseDescriptor descriptor = performTask.getDescriptor();
-
-            ReleaseManagerListener listener = performTask.getListener();
-
-            releasePluginManager.perform( descriptor, getSettings(), getReactorProjects( descriptor ),
-                                          performTask.getBuildDirectory(), performTask.getGoals(),
-                                          performTask.isUseReleaseProfile(), listener );
-
-            continuumReleaseManager.getPreparedReleases().remove( performTask.getReleaseId() );
-        }
-        catch ( ReleaseExecutionException e )
-        {
-            throw new TaskExecutionException( "Release Manager Execution error occurred.", e );
-        }
-        catch ( ReleaseFailureException e )
-        {
-            throw new TaskExecutionException( "Release Manager failure occurred.", e );
+            settings = getSettings();
         }
         catch ( ContinuumReleaseException e )
         {
             throw new TaskExecutionException( "Failed to build reactor projects.", e );
+        }
+
+        List reactorProjects;
+        try
+        {
+            reactorProjects = getReactorProjects( descriptor );
+        }
+        catch ( ContinuumReleaseException e )
+        {
+            throw new TaskExecutionException( "Failed to build reactor projects.", e );
+        }
+
+        ReleaseManagerListener listener = performTask.getListener();
+
+        ReleaseResult result =
+            releasePluginManager.performWithResult( descriptor, settings, reactorProjects,
+                                                    performTask.getBuildDirectory(), performTask.getGoals(),
+                                                    performTask.isUseReleaseProfile(), listener );
+
+        if ( result.getResultCode() == ReleaseResult.SUCCESS )
+        {
+            continuumReleaseManager.getReleaseResults().put( performTask.getReleaseId(), result );
+
+            continuumReleaseManager.getPreparedReleases().remove( performTask.getReleaseId() );
         }
     }
 }

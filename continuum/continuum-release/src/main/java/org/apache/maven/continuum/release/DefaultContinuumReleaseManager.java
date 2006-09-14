@@ -172,6 +172,7 @@ public class DefaultContinuumReleaseManager
         descriptor.setScmTagBase( releaseProperties.getProperty( "tagBase" ) );
         descriptor.setReleaseVersions( relVersions );
         descriptor.setDevelopmentVersions( devVersions );
+        descriptor.setPreparationGoals( releaseProperties.getProperty( "prepareGoals" ) );
 
         //other properties
         if ( releaseProperties.containsKey( "username" ) )

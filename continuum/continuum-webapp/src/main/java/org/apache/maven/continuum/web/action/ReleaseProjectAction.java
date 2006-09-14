@@ -36,6 +36,8 @@ public class ReleaseProjectAction
 {
     private int projectId;
 
+    private String projectName;
+
     private String preparedReleaseName;
 
     private String preparedReleaseId;
@@ -66,6 +68,8 @@ public class ReleaseProjectAction
 
             preparedReleaseId = releaseId;
         }
+
+        projectName = project.getName();
 
         return "prompt";
     }
@@ -155,5 +159,15 @@ public class ReleaseProjectAction
     public void setPreparedReleaseId( String preparedReleaseId )
     {
         this.preparedReleaseId = preparedReleaseId;
+    }
+
+    public String getProjectName()
+    {
+        return projectName;
+    }
+
+    public void setProjectName( String projectName )
+    {
+        this.projectName = projectName;
     }
 }
