@@ -67,7 +67,7 @@
             </ww:a>
           </c:when>
           <c:otherwise>
-            <img src="<ww:url value='/images/releaseproject_failed.gif'/>" alt="Releasse Project"
+            <img src="<ww:url value='/images/releaseproject_disabled.gif'/>" alt="Release Project"
               title="Release Project" border="0"/>
           </c:otherwise>
         </c:choose>
