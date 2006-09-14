@@ -256,7 +256,7 @@ public class DefaultContinuumInitializer
 
             guest.setFullName( "Anonymous User" );
 
-            guest.addGroup( userManager.getUserGroup( ContinuumSecurity.GUEST_GROUP_NAME ) );
+            guest.addGroup( userManager.getGuestUserGroup() );
 
             guest.setGuest( true );
 
