@@ -288,6 +288,8 @@ public class DefaultContinuumInitializer
 
             admin.setFullName( "Administrator" );
 
+            admin.addGroup( userManager.getDefaultUserGroup() );
+
             admin.addGroup( userManager.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) );
 
             admin.setPassword( "admin" );
