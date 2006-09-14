@@ -118,6 +118,7 @@ public class BuildDefinitionAction
             goals = buildDefinition.getGoals();
             arguments = buildDefinition.getArguments();
             buildFile = buildDefinition.getBuildFile();
+            scheduleId = buildDefinition.getSchedule().getId();
             defaultBuildDefinition = buildDefinition.isDefaultForProject();
         }
 
