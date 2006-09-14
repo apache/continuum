@@ -35,7 +35,7 @@ public class ContinuumProjectBuildingResult
     public static final String ERROR_MALFORMED_URL = "add.project.malformed.url.error";
 
     public static final String ERROR_UNKNOWN_HOST = "add.project.unknown.host.error";
-    
+
     public static final String ERROR_XML_PARSE = "add.project.xml.parse.error";
 
     public static final String ERROR_EXTEND = "add.project.extend.error";
@@ -45,7 +45,7 @@ public class ContinuumProjectBuildingResult
     public static final String ERROR_MISSING_ARTIFACTID = "add.project.missing.artifactid.error";
 
     public static final String ERROR_POM_NOT_FOUND = "add.project.missing.pom.error";
-    
+
     public static final String ERROR_MISSING_VERSION = "add.project.missing.version.error";
 
     public static final String ERROR_MISSING_NAME = "add.project.missing.name.error";
@@ -53,17 +53,17 @@ public class ContinuumProjectBuildingResult
     public static final String ERROR_MISSING_REPOSITORY = "add.project.missing.repository.error";
 
     public static final String ERROR_MISSING_SCM = "add.project.missing.scm.error";
-    
+
     public static final String ERROR_MISSING_SCM_CONNECTION = "add.project.missing.scm.connection.error";
 
     public static final String ERROR_MISSING_NOTIFIER_TYPE = "add.project.missing.notifier.type.error";
 
     public static final String ERROR_MISSING_NOTIFIER_CONFIGURATION = "add.project.missing.notifier.configuration.error";
-    
+
     public static final String ERROR_METADATA_TRANSFER = "add.project.metadata.transfer.error";
-    
+
     public static final String ERROR_VALIDATION = "add.project.validation.error";
-    
+
     public static final String ERROR_UNKNOWN = "add.project.unknown.error";
 
     private List projects = new ArrayList();
@@ -119,7 +119,7 @@ public class ContinuumProjectBuildingResult
     {
         errors.add( errorKey );
     }
-    
+
     /**
      * Add an error that happened during adding the project to Continuum.
      * 
@@ -130,7 +130,7 @@ public class ContinuumProjectBuildingResult
         // TODO: store the parameters.
         errors.add( errorKey );
     }
-    
+
     /**
      * Add an error that happened during adding the project to Continuum.
      * 
@@ -141,7 +141,7 @@ public class ContinuumProjectBuildingResult
         // TODO: store the parameters.
         errors.add( errorKey );
     }
-    
+
     /**
      * Get the warnings that happened during adding the project to Continuum.
      * There is an entry with the warning key (so it can be internationalized later) for each warning.
