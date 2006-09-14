@@ -65,7 +65,10 @@ public class BuildResultAction
 
         File buildOutputFile = getContinuum().getConfiguration().getBuildOutputFile( getBuildId(), getProjectId() );
 
-        buildOutput = FileUtils.fileRead( buildOutputFile );
+        if ( buildOutputFile.exists() )
+        {
+            buildOutput = FileUtils.fileRead( buildOutputFile );
+        }
 
         return SUCCESS;
     }
