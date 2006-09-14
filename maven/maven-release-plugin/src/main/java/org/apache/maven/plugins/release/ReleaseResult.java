@@ -77,6 +77,11 @@ public class ReleaseResult
         stdOut.append( getStackTrace( e ) ).append( LS );
     }
 
+    public void appendOutput( String message )
+    {
+        stdOut.append( message );
+    }
+
     public String getOutput()
     {
         return stdOut.toString();

@@ -240,7 +240,7 @@ public class DefaultReleaseManager
         throws ReleaseExecutionException, ReleaseFailureException
     {
         perform( releaseDescriptor, settings, reactorProjects, checkoutDirectory, goals,
-                 useReleaseProfile, listener, null );
+                 useReleaseProfile, listener, new ReleaseResult() );
     }
 
     public ReleaseResult performWithResult( ReleaseDescriptor releaseDescriptor, Settings settings, List reactorProjects,
@@ -402,7 +402,7 @@ public class DefaultReleaseManager
         try
         {
             mavenExecutor.executeGoals( checkoutDirectory, goals, config.isInteractive(), additionalArguments,
-                                        config.getPomFileName() );
+                                        config.getPomFileName(), result );
         }
         catch ( MavenExecutorException e )
         {
@@ -413,8 +413,10 @@ public class DefaultReleaseManager
 
         updateListener( listener, "build-project", phaseEnd );
 
+        updateListener( listener, "cleanup", phaseStart );
         clean( config, reactorProjects );
         updateListener( listener, "cleanup", phaseEnd );
+        
         updateListener( listener, "perform", goalEnd );
     }
 

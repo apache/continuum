@@ -54,7 +54,7 @@ public class RunGoalsPhase
 
                 mavenExecutor.executeGoals( new File( releaseDescriptor.getWorkingDirectory() ), goals,
                                             releaseDescriptor.isInteractive(),
-                                            releaseDescriptor.getAdditionalArguments() );
+                                            releaseDescriptor.getAdditionalArguments(), result );
             }
         }
         catch ( MavenExecutorException e )
