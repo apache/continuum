@@ -771,18 +771,7 @@ public class DefaultContinuum
     {
         ArrayList buildResults;
 
-        try
-        {
-            buildResults = new ArrayList( store.getProjectWithBuilds( projectId ).getBuildResults() );
-        }
-        catch ( ContinuumObjectNotFoundException e )
-        {
-            return Collections.EMPTY_LIST;
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw logAndCreateException( "Exception while getting build results for project.", e );
-        }
+        buildResults = new ArrayList( store.getBuildResultsForProject( projectId, 0 ) );
 
         Collections.reverse( buildResults );
 
