@@ -33,10 +33,12 @@
         </ww:if>
         <ww:else>
           <ww:url id="editUrl" action="buildDefinition" method="input" namespace="/">
+            <ww:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</ww:param>
             <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
           <ww:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
+            <ww:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</ww:param>
             <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
             <ww:param name="confirmed" value="false"/>
