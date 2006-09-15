@@ -28,6 +28,7 @@ import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.UserGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 
@@ -534,5 +535,10 @@ public class ContinuumStub
     public void updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
+    }
+
+    public ContinuumReleaseManager getReleaseManager()
+    {
+        return null;
     }
 }
