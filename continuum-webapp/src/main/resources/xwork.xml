@@ -104,7 +104,7 @@
     <!--
     * build definition actions
     -->
-    <action name="buildDefinition" class="buildDefinition">
+    <action name="buildDefinition" class="buildDefinition" method="input">
       <result name="input">buildDefinitionEdit.jsp</result>
     </action>
 
