@@ -27,6 +27,9 @@
           <role>org.apache.maven.user.model.UserManager</role>
           <field-name>userManager</field-name>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.release.ContinuumReleaseManager</role>
+        </requirement>
         <!-- from core -->
         <requirement>
           <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
