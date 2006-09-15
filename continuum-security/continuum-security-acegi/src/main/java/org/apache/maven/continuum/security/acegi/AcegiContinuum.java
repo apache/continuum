@@ -33,6 +33,7 @@ import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.UserGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.apache.maven.continuum.security.acegi.acl.AclEventHandler;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
@@ -584,6 +585,11 @@ public class AcegiContinuum
     {
         getContinuum().removeProjectGroup( projectGroupId );
         getAclEventHandler().afterDeleteProjectGroup( projectGroupId );
+    }
+
+    public ContinuumReleaseManager getReleaseManager()
+    {
+        return continuum.getReleaseManager();
     }
 
 }
