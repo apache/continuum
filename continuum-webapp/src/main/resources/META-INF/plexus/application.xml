@@ -379,13 +379,17 @@
         </requirement>
       </requirements>
       <configuration>
-        <authenticationFailureUrl>/user/login.jsp?login_error=1</authenticationFailureUrl>
+        <authenticationFailureUrl>/user/login.jsp?login_error=login.bad_login_password</authenticationFailureUrl>
         <defaultTargetUrl>/</defaultTargetUrl>
         <filterProcessesUrl>/j_acegi_security_check</filterProcessesUrl>
         <exceptionMappings>
           <property>
             <name>org.acegisecurity.CredentialsExpiredException</name>
             <value>/user/expiredPassword.action</value>
+          </property>
+          <property>
+            <name>org.acegisecurity.LockedException</name>
+            <value>/user/login.jsp?login_error=login.account.locked</value>
           </property>
         </exceptionMappings>
       </configuration>
