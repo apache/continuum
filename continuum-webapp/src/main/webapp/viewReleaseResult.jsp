@@ -1,5 +1,5 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
-<%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
+<%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
@@ -39,7 +39,7 @@
         </ww:if>
         <ww:else>
           <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
-            <code><pre><ww:property value="result.output"/></pre></code>
+            <pre><ww:property value="result.output"/></pre>
           </div>
         </ww:else>
       </p>
