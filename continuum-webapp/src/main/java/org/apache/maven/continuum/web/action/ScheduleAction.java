@@ -76,16 +76,14 @@ public class ScheduleAction
             schedule = getContinuum().getSchedule( id );
             active = schedule.isActive();
 
-                String[] cronEx = schedule.getCronExpression().split( " " );
-                second = cronEx[0];
-                minute = cronEx[1];
-                hour = cronEx[2];
-                dayOfMonth = cronEx[3];
-                month = cronEx[4];
-                dayOfWeek = cronEx[5];
-                year = cronEx[6];
-                i++;
-            }
+            String[] cronEx = schedule.getCronExpression().split( " " );
+            second = cronEx[0];
+            minute = cronEx[1];
+            hour = cronEx[2];
+            dayOfMonth = cronEx[3];
+            month = cronEx[4];
+            dayOfWeek = cronEx[5];
+            year = cronEx[6];
 
             description = schedule.getDescription();
             name = schedule.getName();
