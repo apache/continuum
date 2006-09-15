@@ -121,7 +121,7 @@
       <result name="success" type="chain">projectGroupBuildDefinition</result>
     </action>
 
-    <action name="removeGroupBuildDefinition" class="buildDefinition" method="removeFromGroup">
+    <action name="removeGroupBuildDefinition" class="buildDefinition" method="removeFromProjectGroup">
       <result name="confirm">confirmBuildDefinitionRemoval.jsp</result>
       <result name="success" type="chain">projectGroupBuildDefinition</result>
     </action>

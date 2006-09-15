@@ -192,7 +192,7 @@ public class BuildDefinitionAction
     {
         if ( confirmed )
         {
-            getContinuum().removeBuildDefinitionFromProject( projectGroupId, buildDefinitionId );
+            getContinuum().removeBuildDefinitionFromProjectGroup( projectGroupId, buildDefinitionId );
 
             return SUCCESS;
         }
