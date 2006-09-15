@@ -5,9 +5,15 @@
 <div>
   <p style="border-top: 1px solid transparent; border-bottom: 1px solid #DFDEDE;">
 
-    <ww:url id="viewUrl" action="projectView"/>
-    <ww:url id="buildResultsUrl" action="buildResults"/>
-    <ww:url id="workingCopyUrl" action="workingCopy"/>
+    <ww:url id="viewUrl" action="projectView">
+    	<ww:param name="projectId" value="projectId"/>
+    </ww:url>
+    <ww:url id="buildResultsUrl" action="buildResults">
+    	<ww:param name="projectId" value="projectId"/>
+    </ww:url>
+    <ww:url id="workingCopyUrl" action="workingCopy">
+    	<ww:param name="projectId" value="projectId"/>
+    </ww:url>
 
     <c:choose>
       <c:when test="${param.tab == 'view'}">
