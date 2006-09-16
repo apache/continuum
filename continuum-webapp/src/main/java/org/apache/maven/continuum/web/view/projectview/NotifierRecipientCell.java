@@ -57,7 +57,14 @@ public class NotifierRecipientCell
         }
         else
         {
-            return notifier.getConfiguration().get( "address" ).toString();
+            if ( notifier.getConfiguration().get( "address" ) == null )
+            {
+                return "";
+            }
+            else
+            {
+                return notifier.getConfiguration().get( "address" ).toString();
+            }
         }
     }
 }
