@@ -29,6 +29,7 @@ import org.apache.maven.continuum.model.project.Project;
  */
 public class AddProjectAction
     extends ContinuumActionSupport
+    implements Validateable
 {
 
     private String projectName;
@@ -44,6 +45,38 @@ public class AddProjectAction
     private String projectScmTag;
 
     private String projectType;
+
+    public void validate()
+        throws ContinuumException
+    {
+        boolean projectNameAlreadyExist = false;
+        Iterator iterator;
+        Project project;
+
+        clearErrorsAndMessages();
+        try
+        {
+            iterator = getContinuum().getProjects().iterator();
+            while ( iterator.hasNext() )
+            {
+                project = (Project) iterator.next();
+                if ( project.getName().equalsIgnoreCase( projectName ) )
+                {
+                    projectNameAlreadyExist = true;
+                    break;
+                }
+            }
+            if ( projectNameAlreadyExist == true )
+            {
+                addActionError( "projectName.already.exist.error" );
+            }
+        }
+        catch ( ContinuumException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     public String execute()
         throws ContinuumException
