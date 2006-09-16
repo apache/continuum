@@ -83,7 +83,10 @@ public class ScheduleAction
             dayOfMonth = cronEx[3];
             month = cronEx[4];
             dayOfWeek = cronEx[5];
-            year = cronEx[6];
+            if ( cronEx.length > 6 )
+            {
+                year = cronEx[6];
+            }
 
             description = schedule.getDescription();
             name = schedule.getName();
