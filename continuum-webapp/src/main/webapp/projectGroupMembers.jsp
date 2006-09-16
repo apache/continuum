@@ -30,6 +30,7 @@
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"
+                  sortable="false"
                   filterable="false">
           <ec:row highlightRow="true">
             <ec:column property="name" title="summary.projectTable.name" width="48%">
@@ -38,7 +39,7 @@
               </ww:url>
               <ww:a href="%{projectViewUrl}">${pageScope.project.name}</ww:a>
             </ec:column>
-            <ec:column property="editAction" title="Edit" width="1%" sortable="false">
+            <ec:column property="editAction" title="Edit" width="1%">
               <center>
                 <c:choose>
                   <c:when
@@ -57,7 +58,7 @@
                 </c:choose>
               </center>
             </ec:column>
-            <ec:column property="deleteAction" title="Remove" width="1%" sortable="false">
+            <ec:column property="deleteAction" title="Remove" width="1%">
               <center>
                 <c:choose>
                   <c:when

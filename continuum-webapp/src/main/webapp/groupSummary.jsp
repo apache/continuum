@@ -24,6 +24,7 @@
               showExports="false"
               showPagination="false"
               showStatusBar="false"
+              sortable="false"
               filterable="false">
       <ec:row highlightRow="true">
         <ec:column property="name" title="Name" width="20%" style="white-space: nowrap">

@@ -53,12 +53,13 @@
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"
+                      sortable="false"
                       filterable="false">
               <ec:row>
                 <ec:column property="author" title="buildResult.changes.author"/>
                 <ec:column property="date" title="buildResult.changes.date" cell="date"/>
-                <ec:column property="comment" title="buildResult.changes.comment" sortable="false"/>
-                <ec:column property="files" title="buildResult.changes.files" sortable="false">
+                <ec:column property="comment" title="buildResult.changes.comment" />
+                <ec:column property="files" title="buildResult.changes.files">
                     <c:forEach var="scmFile" items="${pageScope.change.files}">
                         <c:out value="${scmFile.name}"/><br />
                     </c:forEach>
@@ -89,12 +90,13 @@
                       showExports="false"
                       showPagination="false"
                       showStatusBar="false"
+                      sortable="false"
                       filterable="false">
               <ec:row>
                 <ec:column property="author" title="buildResult.changes.author"/>
                 <ec:column property="date" title="buildResult.changes.date" cell="date"/>
-                <ec:column property="comment" title="buildResult.changes.comment" sortable="false"/>
-                <ec:column property="files" title="buildResult.changes.files" sortable="false">
+                <ec:column property="comment" title="buildResult.changes.comment" />
+                <ec:column property="files" title="buildResult.changes.files">
                     <c:forEach var="scmFile" items="${pageScope.change.files}">
                         <c:out value="${scmFile.name}"/><br />
                     </c:forEach>
