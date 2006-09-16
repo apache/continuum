@@ -99,15 +99,22 @@ public class ScheduleAction
     public String save()
         throws ContinuumException
     {
-        if ( id == 0 )
+        if ( ( "".equals( name ) ) || ( name == null ) ) 
         {
-            getContinuum().addSchedule( setFields( new Schedule() ) );
-            return SUCCESS;
+            return ERROR;
         }
         else
         {
-            getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
-            return SUCCESS;
+            if ( id == 0 )
+            {
+                getContinuum().addSchedule( setFields( new Schedule() ) );
+                return SUCCESS;
+            }
+            else
+            {
+                getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
+                return SUCCESS;
+            }   
         }
     }
 
