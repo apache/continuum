@@ -21,18 +21,22 @@
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isDefault" title="projectView.buildDefinition.default"/>
       <ec:column property="actions" title="&nbsp;">
+
+        <c:if test="${projectGroup.permissions.write}">
           <ww:url id="editUrl" action="buildDefinition" method="input" namespace="/">
             <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
+          <ww:a href="%{editUrl}"><ww:text name="edit"/></ww:a>
+          &nbsp;
           <ww:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
             <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
             <ww:param name="confirmed" value="false"/>
           </ww:url>
-        <ww:a href="%{editUrl}"><ww:text name="edit"/></ww:a>
-        &nbsp;
-        <ww:a href="%{removeUrl}"><ww:text name="delete"/></ww:a>
+          <ww:a href="%{removeUrl}"><ww:text name="delete"/></ww:a>
+        </c:if>
+
       </ec:column>
     </ec:row>
   </ec:table>
