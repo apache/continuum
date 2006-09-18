@@ -28,8 +28,9 @@
         <ec:column property="version" title="summary.projectTable.version" width="13%"/>
         <ec:column property="buildNumber" title="summary.projectTable.build" width="5%"
                    cell="org.apache.maven.continuum.web.view.BuildCell"/>
-        <ec:column property="buildNowAction" title="&nbsp;" width="16px"
-                   cell="org.apache.maven.continuum.web.view.BuildNowCell"/>
+        <ec:column property="buildNowAction" title="&nbsp;" width="16px">
+          <jsp:include page="/components/buildNowCell.jsp"/>
+        </ec:column>
         <ec:column property="buildHistoryAction" title="&nbsp;" width="16px">
           <c:choose>
             <c:when test="${pageScope.project.latestBuildId > 0}">
