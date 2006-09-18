@@ -59,6 +59,10 @@ public class AclInitializer
         aclEntry.setAclObjectIdentity( new NamedEntityObjectIdentity( ProjectGroup.class.getName(), Integer
             .toString( PARENT_PROJECT_GROUP_ACL_ID ) ) );
         aclEntry.setRecipient( "ROLE_admin" );
+        aclEntry.addPermission( ExtendedSimpleAclEntry.CREATE );
+        aclEntry.addPermission( ExtendedSimpleAclEntry.WRITE );
+        aclEntry.addPermission( ExtendedSimpleAclEntry.DELETE );
+        aclEntry.addPermission( ExtendedSimpleAclEntry.EXECUTE );
         aclEntry.addPermission( ExtendedSimpleAclEntry.ADMINISTRATION );
         getDao().create( aclEntry );
 
