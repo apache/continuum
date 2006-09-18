@@ -36,6 +36,8 @@ public class ContinuumProjectBuildingResult
 
     public static final String ERROR_UNKNOWN_HOST = "add.project.unknown.host.error";
 
+    public static final String ERROR_CONNECT = "add.project.connect.error";
+
     public static final String ERROR_XML_PARSE = "add.project.xml.parse.error";
 
     public static final String ERROR_EXTEND = "add.project.extend.error";
