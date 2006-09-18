@@ -411,7 +411,7 @@
         </requirement>
       </requirements>
       <configuration>
-        <authenticationFailureUrl>/user/login.jsp?login_error=login.bad_login_password</authenticationFailureUrl>
+        <authenticationFailureUrl>/user/login.jsp?login_error=login.bad.login.password</authenticationFailureUrl>
         <defaultTargetUrl>/</defaultTargetUrl>
         <filterProcessesUrl>/j_acegi_security_check</filterProcessesUrl>
         <exceptionMappings>
