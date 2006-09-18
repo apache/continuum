@@ -18,14 +18,20 @@
         <h3>Project Group Actions</h3>
 
         <div class="functnbar3">
-          <ww:url id="buildProjectGroupUrl" action="buildProjectGroup">
-            <ww:param name="projectGroupId" value="projectGroupId"/>
-          </ww:url>
-          <ww:url id="removeProjectGroupUrl" action="removeProjectGroup">
-            <ww:param name="projectGroupId" value="projectGroupId"/>           
-            <ww:param name="confirmed" value="false"/>
-          </ww:url>
-          <ww:a href="%{buildProjectGroupUrl}">Build</ww:a>&nbsp;<ww:a href="%{removeProjectGroupUrl}">Remove</ww:a>
+          <c:if test="${projectGroup.permissions.execute}">
+            <ww:url id="buildProjectGroupUrl" action="buildProjectGroup">
+              <ww:param name="projectGroupId" value="projectGroupId"/>
+            </ww:url>
+            <ww:a href="%{buildProjectGroupUrl}">Build</ww:a>
+          </c:if>
+          &nbsp;
+          <c:if test="${projectGroup.permissions.delete}">
+            <ww:url id="removeProjectGroupUrl" action="removeProjectGroup">
+              <ww:param name="projectGroupId" value="projectGroupId"/>           
+              <ww:param name="confirmed" value="false"/>
+            </ww:url>
+            <ww:a href="%{removeProjectGroupUrl}">Remove</ww:a>
+          </c:if>
         </div>
 
         <h3>Projects</h3>
