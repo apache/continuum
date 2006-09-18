@@ -19,6 +19,7 @@ package org.apache.maven.continuum.security.acegi;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -36,6 +37,7 @@ import org.apache.maven.continuum.security.acegi.acl.AclEventHandler;
  */
 public class AcegiContinuum
     extends ContinuumDelegate
+    implements Continuum
 {
 
     private AclEventHandler aclEventHandler;
