@@ -235,6 +235,20 @@
       <implementation>org.apache.maven.continuum.web.util.WorkingCopyContentGenerator</implementation>
     </component>
 
+    <component>
+      <role>org.codehaus.plexus.formica.validation.Validator</role>
+      <role-hint>url</role-hint>
+      <implementation>org.codehaus.plexus.formica.validation.UrlValidator</implementation>
+      <configuration>
+        <allowedSchemes>
+          <allowedScheme>http</allowedScheme>
+          <allowedScheme>https</allowedScheme>
+          <allowedScheme>ftp</allowedScheme>
+          <!-- <allowedScheme>file</allowedScheme> -->
+        </allowedSchemes>
+      </configuration>
+    </component>
+
     <!-- TODO share db configuration between components -->
     <component>
       <role>org.codehaus.plexus.jdo.JdoFactory</role>
