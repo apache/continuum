@@ -206,11 +206,17 @@
               <methodName>org.apache.maven.continuum.Continuum.removeProjectGroup</methodName>
               <configAttributes>
                 <configAttribute>ROLE_admin</configAttribute>
-                <configAttribute>ROLE_deleteProject</configAttribute>
+                <configAttribute>ACL_PROJECTGROUP_DELETE</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.removeProject</methodName>
+              <configAttributes>
+                <configAttribute>ROLE_admin</configAttribute>
+                <configAttribute>ACL_PROJECT_DELETE</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
 <!--
-removeProject( int projectId )
 checkoutProject( int projectId )
 getProject( int projectId )
 getAllProjectsWithAllDetails( int start, int end );
@@ -268,12 +274,20 @@ getProjectWithCheckoutResult( int projectId )
                 <configAttribute>AFTER_ACL_READ</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getBuildDefinitions</methodName>
+              <configAttributes>
+                <configAttribute>AFTER_ACL_COLLECTION_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.getBuildDefinition</methodName>
+              <configAttributes>
+                <configAttribute>AFTER_ACL_READ</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
 <!--
-getBuildDefinitions( int projectId )
-getBuildDefinition( int projectId, int buildDefinitionId )
 removeBuildDefinition( int projectId, int buildDefinitionId )
-getBuildDefinition( int buildDefinitionId )
-getDefaultBuildDefinition( int projectId )
 addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
 addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
 getBuildDefinitionsForProject( int projectId )
@@ -294,21 +308,6 @@ getFiles( int projectId, String currentDirectory )
 getConfiguration();
 updateConfiguration( Map parameters )
 reloadConfiguration()
-getSecurity();
-addUser( ContinuumUser user )
-addUser( Map configuration )
-updateUser( ContinuumUser user )
-updateUser( int userId, Map configuration )
-getUsers()
-getUser( int userId )
-removeUser( int userId )
-addUserGroup( UserGroup userGroup );
-addUserGroup( Map configuration )
-updateUserGroup( UserGroup userGroup )
-updateUserGroup( int userGroupId, Map configuration )
-getUserGroups()
-getUserGroup( int userGroupId )
-removeUserGroup( int userGroupId )
 -->
           </mappings>
         </objectDefinitionSource>
@@ -360,6 +359,46 @@ removeUserGroup( int userGroupId )
       </configuration>
     </component>
     -->
+
+    <!-- Processes deletion configuration settings -->
+    <component>
+      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+      <role-hint>aclProjectGroupDelete</role-hint>
+      <implementation>org.acegisecurity.vote.BasicAclEntryVoter</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <processConfigAttribute>ACL_PROJECTGROUP_DELETE</processConfigAttribute>
+        <processDomainObjectClass>org.apache.maven.continuum.model.project.ProjectGroup</processDomainObjectClass>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>DELETE</permission>
+        </requirePermissionFromString>
+      </configuration>
+    </component>
+    <component>
+      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+      <role-hint>aclProjectDelete</role-hint>
+      <implementation>org.acegisecurity.vote.BasicAclEntryVoter</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <processConfigAttribute>ACL_PROJECT_DELETE</processConfigAttribute>
+        <processDomainObjectClass>org.apache.maven.continuum.model.project.Project</processDomainObjectClass>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>DELETE</permission>
+        </requirePermissionFromString>
+      </configuration>
+    </component>
 
     <!-- ============== "AFTER INTERCEPTION" AUTHORIZATION DEFINITIONS =========== -->
 

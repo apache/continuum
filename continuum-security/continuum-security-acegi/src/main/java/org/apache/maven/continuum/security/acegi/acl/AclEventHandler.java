@@ -20,8 +20,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.user.acegi.AclManager;
 import org.apache.maven.user.model.InstancePermissions;
@@ -61,6 +63,26 @@ public class AclEventHandler
         }
     }
 
+    public void afterAddProjectBuildDefinition( BuildDefinition buildDefinition, int projectId )
+    {
+        afterAddProjectDependentObject( buildDefinition, buildDefinition.getId(), projectId );
+    }
+
+    public void afterAddProjectGroupBuildDefinition( BuildDefinition buildDefinition, int projectGroupId )
+    {
+        afterAddProjectGroupDependentObject( buildDefinition, buildDefinition.getId(), projectGroupId );
+    }
+
+    public void afterAddProjectNotifier( ProjectNotifier notifier, int projectId )
+    {
+        afterAddProjectGroupDependentObject( notifier, notifier.getId(), projectId );
+    }
+
+    public void afterAddProjectGroupNotifier( ProjectNotifier notifier, int projectGroupId )
+    {
+        afterAddProjectGroupDependentObject( notifier, notifier.getId(), projectGroupId );
+    }
+
     /**
      * Delete {@link ProjectGroup} ACLs
      * 
@@ -69,6 +91,11 @@ public class AclEventHandler
     public void afterDeleteProjectGroup( int projectGroupId )
     {
         delete( ProjectGroup.class, new Integer( projectGroupId ) );
+    }
+
+    public void afterDeleteProject( int projectId )
+    {
+        delete( Project.class, new Integer( projectId ) );
     }
 
     /**
@@ -145,12 +172,41 @@ public class AclEventHandler
      */
     public void afterAddProject( Project project, int projectGroupId )
     {
+        afterAddProjectGroupDependentObject( project, project.getId(), projectGroupId );
+    }
+
+    /**
+     * Create an ACL that inherits from a {@link ProjectGroup} ACL
+     *
+     * @param object object to protect
+     * @param id identifier of the object to protect
+     * @param projectGroupId id of the group that provides the ACLs for this object
+     */
+    private void afterAddProjectGroupDependentObject( Object object, int id, int projectGroupId )
+    {
+        afterAddDependentObject( object, id, ProjectGroup.class, projectGroupId );
+    }
+
+    /**
+     * Create an ACL that inherits from a {@link Project} ACL
+     *
+     * @param object object to protect
+     * @param id identifier of the object to protect
+     * @param projectId id of the group that provides the ACLs for this object
+     */
+    private void afterAddProjectDependentObject( Object object, int id, int projectId )
+    {
+        afterAddDependentObject( object, id, Project.class, projectId );
+    }
+
+    private void afterAddDependentObject( Object object, int id, Class dependentClass, int dependentId )
+    {
         InstancePermissions permission = new InstancePermissions();
         permission.setUser( null );
-        permission.setInstanceClass( Project.class );
-        permission.setId( new Integer( project.getId() ) );
-        permission.setParentClass( ProjectGroup.class );
-        permission.setParentId( new Integer( projectGroupId ) );
+        permission.setInstanceClass( object.getClass() );
+        permission.setId( new Integer( id ) );
+        permission.setParentClass( dependentClass );
+        permission.setParentId( new Integer( dependentId ) );
 
         setUsersInstancePermission( permission );
     }
