@@ -114,6 +114,13 @@ public class AcegiContinuum
         return groups;
     }
 
+    public ProjectGroup getProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        ProjectGroup projectGroup = getContinuum().getProjectGroup( projectGroupId );
+        return getAclEventHandler().setPermissions( projectGroup );
+    }
+
     public void removeProject( int projectId )
         throws ContinuumException
     {

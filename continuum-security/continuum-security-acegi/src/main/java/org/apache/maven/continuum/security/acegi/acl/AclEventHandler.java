@@ -210,4 +210,18 @@ public class AclEventHandler
 
         setUsersInstancePermission( permission );
     }
+
+    /**
+     * Set project group permissions.
+     * 
+     * @param projectGroup
+     * @return the projectGroup argument where the permissions are set
+     */
+    public ProjectGroup setPermissions( ProjectGroup projectGroup )
+    {
+        InstancePermissions permissions = getUserInstancePermissions( projectGroup.getClass(),
+                                                                      new Integer( projectGroup.getId() ) );
+        projectGroup.setPermissions( permissions );
+        return projectGroup;
+    }
 }
