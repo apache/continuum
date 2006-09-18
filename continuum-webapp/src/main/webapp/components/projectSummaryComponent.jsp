@@ -58,21 +58,23 @@
         </c:choose>
       </ec:column>
       <ec:column property="releaseAction" title="&nbsp;" width="1%">
-        <c:choose>
-          <c:when test="${pageScope.project.state == 2}">
-            <ww:url id="releaseProjectUrl" action="releaseProject!promptReleaseGoal.action" namespace="/">
-              <ww:param name="projectId" value="${project.id}"/>
-            </ww:url>
-            <ww:a href="%{releaseProjectUrl}">
-              <img src="<ww:url value='/images/releaseproject.gif'/>" alt="Release Project" title="Release Project"
-                border="0"/>
-            </ww:a>
-          </c:when>
-          <c:otherwise>
-            <img src="<ww:url value='/images/releaseproject_disabled.gif'/>" alt="Release Project"
-              title="Release Project" border="0"/>
-          </c:otherwise>
-        </c:choose>
+        <c:if test="${pageScope.projectGroup.permissions.execute}">
+          <c:choose>
+            <c:when test="${pageScope.project.state == 2}">
+              <ww:url id="releaseProjectUrl" action="releaseProject!promptReleaseGoal.action" namespace="/">
+                <ww:param name="projectId" value="${project.id}"/>
+              </ww:url>
+              <ww:a href="%{releaseProjectUrl}">
+                <img src="<ww:url value='/images/releaseproject.gif'/>" alt="Release Project" title="Release Project"
+                  border="0"/>
+              </ww:a>
+            </c:when>
+            <c:otherwise>
+              <img src="<ww:url value='/images/releaseproject_disabled.gif'/>" alt="Release Project"
+                title="Release Project" border="0"/>
+            </c:otherwise>
+          </c:choose>
+        </c:if>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%">
         <c:if test="${pageScope.projectGroup.permissions.write}">

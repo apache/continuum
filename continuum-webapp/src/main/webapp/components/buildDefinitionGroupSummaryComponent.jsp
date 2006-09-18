@@ -40,11 +40,14 @@
       </ec:column>
     </ec:row>
   </ec:table>
+
   <div class="functnbar3">
-    <ww:form action="buildDefinition!input.action" method="post" namespace="/">
-      <input type="hidden" name="projectGroupId" value="<ww:property value="${pageScope.buildDefinitionSummary.projectGroupId}"/>"/>
-      <ww:submit value="%{getText('add')}"/>
-    </ww:form>
+    <c:if test="${projectGroup.permissions.write}">
+      <ww:form action="buildDefinition!input.action" method="post" namespace="/">
+        <input type="hidden" name="projectGroupId" value="<ww:property value="${pageScope.buildDefinitionSummary.projectGroupId}"/>"/>
+        <ww:submit value="%{getText('add')}"/>
+      </ww:form>
+    </c:if>
   </div>
 
   <h3>Project Build Definitions</h3>
@@ -66,18 +69,22 @@
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isDefault" title="projectView.buildDefinition.default"/>
       <ec:column property="actions" title="&nbsp;">
+
+        <c:if test="${projectGroup.permissions.write}">
           <ww:url id="editUrl" action="buildDefinition" method="input" namespace="/">
             <ww:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
+          <ww:a href="%{editUrl}"><ww:text name="edit"/></ww:a>
+          &nbsp;
           <ww:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
             <ww:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
             <ww:param name="confirmed" value="false"/>
           </ww:url>
-        <ww:a href="%{editUrl}"><ww:text name="edit"/></ww:a>
-        &nbsp;
-        <ww:a href="%{removeUrl}"><ww:text name="delete"/></ww:a>
+          <ww:a href="%{removeUrl}"><ww:text name="delete"/></ww:a>
+        </c:if>
+
       </ec:column>
     </ec:row>
   </ec:table>
