@@ -83,16 +83,20 @@ public class AcegiContinuum
         return aclEventHandler;
     }
 
-    public void addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
+    public BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
-        getContinuum().addBuildDefinitionToProject( projectId, buildDefinition );
+        BuildDefinition definition = getContinuum().addBuildDefinitionToProject( projectId, buildDefinition );
+        //getAclEventHandler().afterAddProjectBuildDefinition( definition, projectId );
+        return definition;
     }
 
-    public void addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
-        getContinuum().addBuildDefinitionToProjectGroup( projectGroupId, buildDefinition );
+        BuildDefinition definition = getContinuum().addBuildDefinitionToProjectGroup( projectGroupId, buildDefinition );
+        //getAclEventHandler().afterAddProjectGroupBuildDefinition( definition, projectGroupId );
+        return definition;
     }
 
     public ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl )
@@ -111,16 +115,20 @@ public class AcegiContinuum
         return result;
     }
 
-    public void addNotifier( int projectId, ProjectNotifier notifier )
+    public ProjectNotifier addNotifier( int projectId, ProjectNotifier notifier )
         throws ContinuumException
     {
-        getContinuum().addNotifier( projectId, notifier );
+        ProjectNotifier projectNotifier = getContinuum().addNotifier( projectId, notifier );
+        //getAclEventHandler().afterAddProjectNotifier( projectNotifier, projectId );
+        return projectNotifier;
     }
 
-    public void addNotifier( int projectId, String notifierType, Map configuration )
+    public ProjectNotifier addNotifier( int projectId, String notifierType, Map configuration )
         throws ContinuumException
     {
-        getContinuum().addNotifier( projectId, notifierType, configuration );
+        ProjectNotifier projectNotifier = getContinuum().addNotifier( projectId, notifierType, configuration );
+        //getAclEventHandler().afterAddProjectNotifier( projectNotifier, projectId );
+        return projectNotifier;
     }
 
     public int addProject( Project project, String executorId )
@@ -205,7 +213,9 @@ public class AcegiContinuum
 
     public Collection getAllProjectGroupsWithProjects()
     {
-        return getContinuum().getAllProjectGroupsWithProjects();
+        Collection groups = getContinuum().getAllProjectGroupsWithProjects();
+        //getAclEventHandler().afterReturningProjectGroup( groups );
+        return groups;
     }
 
     public Collection getAllProjects( int start, int end )
@@ -502,16 +512,16 @@ public class AcegiContinuum
         getContinuum().removeUserGroup( userGroupId );
     }
 
-    public void updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
+    public BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
-        getContinuum().updateBuildDefinitionForProject( projectId, buildDefinition );
+        return getContinuum().updateBuildDefinitionForProject( projectId, buildDefinition );
     }
 
-    public void updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    public BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
-        getContinuum().updateBuildDefinitionForProjectGroup( projectGroupId, buildDefinition );
+        return getContinuum().updateBuildDefinitionForProjectGroup( projectGroupId, buildDefinition );
     }
 
     public void updateConfiguration( Map parameters )
@@ -520,16 +530,16 @@ public class AcegiContinuum
         getContinuum().updateConfiguration( parameters );
     }
 
-    public void updateNotifier( int projectId, int notifierId, Map configuration )
+    public ProjectNotifier updateNotifier( int projectId, int notifierId, Map configuration )
         throws ContinuumException
     {
-        getContinuum().updateNotifier( projectId, notifierId, configuration );
+        return getContinuum().updateNotifier( projectId, notifierId, configuration );
     }
 
-    public void updateNotifier( int projectId, ProjectNotifier notifier )
+    public ProjectNotifier updateNotifier( int projectId, ProjectNotifier notifier )
         throws ContinuumException
     {
-        getContinuum().updateNotifier( projectId, notifier );
+        return getContinuum().updateNotifier( projectId, notifier );
     }
 
     public void updateProject( Project project )
