@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @deprecated since project groups where added, use {@link GroupSummaryAction} instead
+ * Used to render the list of projects in the project group page.
  * 
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
