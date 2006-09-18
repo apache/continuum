@@ -101,6 +101,8 @@ public class ScheduleAction
     {
         if ( ( "".equals( name ) ) || ( name == null ) ) 
         {
+            getLogger().error( "Can't create schedule. No schedule name was supplied." );
+            addActionError( "buildDefinition.noname.save.error.message");
             return ERROR;
         }
         else

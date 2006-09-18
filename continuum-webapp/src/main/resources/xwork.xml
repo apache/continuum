@@ -1,4 +1,4 @@
-  <!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 
 <xwork>
   <include file="webwork-default.xml"/>
@@ -244,7 +244,7 @@
 
     <action name="saveSchedule" class="schedule" method="save">
       <result name="success" type="chain">schedules</result>
-	    <result name="error">saveScheduleError.jsp</result>
+      <result name="error" type="chain">schedule</result>
     </action>
     <action name="removeSchedule" class="schedule" method="remove">
       <result name="confirm">confirmScheduleRemoval.jsp</result>
