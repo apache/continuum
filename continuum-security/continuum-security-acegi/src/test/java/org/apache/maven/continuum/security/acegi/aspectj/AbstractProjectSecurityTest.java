@@ -49,23 +49,22 @@ public abstract class AbstractProjectSecurityTest
     {
         Project project1 = new Project();
         project1.setId( 1 );
-    
+
         Project project2 = new Project();
         project2.setId( 2 );
-    
+
         List mockProjects = new ArrayList();
         mockProjects.add( project1 );
         mockProjects.add( project2 );
-    
+
         getContinuum().setMockProjects( mockProjects );
-    
+
         SecurityContextHolder.getContext().setAuthentication( getAuthentication( "USER" ) );
-    
+
         Collection allProjects = getContinuum().getAllProjects( 1, 1000 );
-    
+
         assertEquals( "Number of projects returned does not match", 1, allProjects.size() );
         assertEquals( "The returned project is not the right one", 1, ( (Project) allProjects.iterator().next() )
             .getId() );
     }
-
 }
