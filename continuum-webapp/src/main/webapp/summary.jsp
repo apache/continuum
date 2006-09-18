@@ -19,7 +19,7 @@
               sortable="false"
               filterable="false">
       <ec:row highlightRow="true">
-        <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
+        <ec:column property="state" title="&nbsp;" width="16px" cell="org.apache.maven.continuum.web.view.StateCell"/>
         <ec:column property="name" title="summary.projectTable.name" width="48%">
           <a href="<ww:url action="projectView">
                   <ww:param name="projectId" value="${project.id}"/>
@@ -28,9 +28,9 @@
         <ec:column property="version" title="summary.projectTable.version" width="13%"/>
         <ec:column property="buildNumber" title="summary.projectTable.build" width="5%"
                    cell="org.apache.maven.continuum.web.view.BuildCell"/>
-        <ec:column property="buildNowAction" title="&nbsp;" width="1%"
+        <ec:column property="buildNowAction" title="&nbsp;" width="16px"
                    cell="org.apache.maven.continuum.web.view.BuildNowCell"/>
-        <ec:column property="buildHistoryAction" title="&nbsp;" width="1%">
+        <ec:column property="buildHistoryAction" title="&nbsp;" width="16px">
           <c:choose>
             <c:when test="${pageScope.project.latestBuildId > 0}">
               <a href='<ww:url action="buildResults">
@@ -44,7 +44,7 @@
             </c:otherwise>
           </c:choose>
         </ec:column>
-        <ec:column property="workingCopyAction" title="&nbsp;" width="1%">
+        <ec:column property="workingCopyAction" title="&nbsp;" width="16px">
           <c:choose>
             <c:when
                 test="${pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4 || pageScope.project.state == 6}">

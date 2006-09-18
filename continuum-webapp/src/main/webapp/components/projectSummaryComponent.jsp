@@ -3,6 +3,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <ww:i18n name="localization.Continuum">
+
   <ec:table items="projects"
             var="project"
             showExports="false"
@@ -11,7 +12,7 @@
             sortable="false"
             filterable="false">
     <ec:row highlightRow="true">
-      <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
+      <ec:column property="state" title="&nbsp;" width="16px" cell="org.apache.maven.continuum.web.view.StateCell"/>
       <ec:column property="name" title="summary.projectTable.name" width="48%">
         <ww:url id="projectUrl" action="projectView" namespace="/">
           <ww:param name="projectId" value="${project.id}"/>
@@ -22,9 +23,9 @@
       <ec:column property="buildNumber" title="summary.projectTable.build" width="5%"
                  cell="org.apache.maven.continuum.web.view.BuildCell"/>
       <ec:column property="projectGroupName" title="summary.projectTable.group" width="13%"/>
-      <ec:column property="buildNowAction" title="&nbsp;" width="1%"
+      <ec:column property="buildNowAction" title="&nbsp;" width="16px"
                  cell="org.apache.maven.continuum.web.view.BuildNowCell"/>
-      <ec:column property="buildHistoryAction" title="&nbsp;" width="1%">
+      <ec:column property="buildHistoryAction" title="&nbsp;" width="16px">
         <c:choose>
           <c:when test="${pageScope.project.latestBuildId > 0}">
             <ww:url id="buildResultsUrl" action="buildResults" namespace="/">
@@ -40,7 +41,7 @@
           </c:otherwise>
         </c:choose>
       </ec:column>
-      <ec:column property="workingCopyAction" title="&nbsp;" width="1%">
+      <ec:column property="workingCopyAction" title="&nbsp;" width="16px">
         <c:choose>
           <c:when test="${pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4 || pageScope.project.state == 6}">
             <ww:url id="workingCopyUrl" action="workingCopy" namespace="/">
@@ -55,7 +56,7 @@
           </c:otherwise>
         </c:choose>
       </ec:column>
-      <ec:column property="releaseAction" title="&nbsp;" width="1%">
+      <ec:column property="releaseAction" title="&nbsp;" width="16px">
         <c:choose>
           <c:when test="${pageScope.project.state == 2}">
             <ww:url id="releaseProjectUrl" action="releaseProject!promptReleaseGoal.action" namespace="/">
@@ -72,7 +73,7 @@
           </c:otherwise>
         </c:choose>
       </ec:column>
-      <ec:column property="deleteAction" title="&nbsp;" width="1%">
+      <ec:column property="deleteAction" title="&nbsp;" width="16px">
         <c:choose>
           <c:when
               test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
