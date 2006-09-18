@@ -1118,7 +1118,7 @@ public class DefaultContinuum
         return notifier;
     }
 
-    public void updateNotifier( int projectId, ProjectNotifier notifier )
+    public ProjectNotifier updateNotifier( int projectId, ProjectNotifier notifier )
         throws ContinuumException
     {
         Project project = getProjectWithAllDetails( projectId );
@@ -1130,10 +1130,10 @@ public class DefaultContinuum
 
         updateProject( project );
 
-        addNotifier( projectId, notifier );
+        return addNotifier( projectId, notifier );
     }
 
-    public void updateNotifier( int projectId, int notifierId, Map configuration )
+    public ProjectNotifier updateNotifier( int projectId, int notifierId, Map configuration )
         throws ContinuumException
     {
         Project project = getProjectWithAllDetails( projectId );
@@ -1147,7 +1147,7 @@ public class DefaultContinuum
 
         updateProject( project );
 
-        addNotifier( projectId, notifierType, configuration );
+        return addNotifier( projectId, notifierType, configuration );
     }
 
     private Properties createNotifierProperties( Map configuration )
@@ -1177,7 +1177,7 @@ public class DefaultContinuum
         return notifierProperties;
     }
 
-    public void addNotifier( int projectId, ProjectNotifier notifier )
+    public ProjectNotifier addNotifier( int projectId, ProjectNotifier notifier )
         throws ContinuumException
     {
         ProjectNotifier notif = new ProjectNotifier();
@@ -1201,9 +1201,11 @@ public class DefaultContinuum
         project.addNotifier( notif );
 
         updateProject( project );
+
+        return notif;
     }
 
-    public void addNotifier( int projectId, String notifierType, Map configuration )
+    public ProjectNotifier addNotifier( int projectId, String notifierType, Map configuration )
         throws ContinuumException
     {
         ProjectNotifier notifier = new ProjectNotifier();
@@ -1234,7 +1236,7 @@ public class DefaultContinuum
 
         notifier.setConfiguration( notifierProperties );
 
-        addNotifier( projectId, notifier );
+        return addNotifier( projectId, notifier );
     }
 
     public void removeNotifier( int projectId, int notifierId )
@@ -1346,7 +1348,7 @@ public class DefaultContinuum
         return projectGroup.getBuildDefinitions();
     }
 
-    public void addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
+    public BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
         HashMap context = new HashMap();
@@ -1355,6 +1357,8 @@ public class DefaultContinuum
         context.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
 
         executeAction( "add-build-definition-to-project", context );
+
+        return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
     }
 
     public void removeBuildDefinitionFromProject( int projectId, int buildDefinitionId )
@@ -1368,7 +1372,7 @@ public class DefaultContinuum
         executeAction( "remove-build-definition-from-project", context );
     }
 
-    public void updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
+    public BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
         HashMap context = new HashMap();
@@ -1377,9 +1381,11 @@ public class DefaultContinuum
         context.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
 
         executeAction( "update-build-definition-from-project", context );
+
+        return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
     }
 
-    public void addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
         HashMap context = new HashMap();
@@ -1388,6 +1394,8 @@ public class DefaultContinuum
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroupId ) );
 
         executeAction( "add-build-definition-to-project-group", context );
+
+        return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
     }
 
     public void removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
@@ -1401,7 +1409,7 @@ public class DefaultContinuum
         executeAction( "remove-build-definition-from-project-group", context );
     }
 
-    public void updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    public BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
         HashMap context = new HashMap();
@@ -1410,6 +1418,8 @@ public class DefaultContinuum
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroupId ) );
 
         executeAction( "update-build-definition-from-project-group", context );
+
+        return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
     }
 
     public void removeBuildDefinition( int projectId, int buildDefinitionId )
