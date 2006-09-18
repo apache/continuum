@@ -17,6 +17,7 @@
     <class rootElement="true">
       <name>ProjectGroup</name>
       <version>1.0.0+</version>
+      <superClass>org.apache.maven.user.model.permissions.AbstractSecureObject</superClass>
       <fields>
         <field>
           <name>id</name>
@@ -69,6 +70,7 @@
     <class>
       <name>Project</name>
       <version>1.0.0+</version>
+      <superClass>org.apache.maven.user.model.permissions.AbstractSecureObject</superClass>
       <fields>
         <field>
           <name>id</name>
