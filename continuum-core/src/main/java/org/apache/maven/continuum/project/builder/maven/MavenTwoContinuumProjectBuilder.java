@@ -34,6 +34,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -113,6 +114,12 @@ public class MavenTwoContinuumProjectBuilder
         {
             getLogger().debug( "Error adding project: File not found " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
+            return;
+        }
+        catch ( ConnectException e )
+        {
+            getLogger().debug( "Error adding project: Unable to connect " + url, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_CONNECT );
             return;
         }
         catch ( IOException e )
