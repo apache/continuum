@@ -23,6 +23,9 @@ import org.extremecomponents.table.view.html.ColumnBuilder;
 
 /**
  * 
+ * @deprecated use of cells is discouraged due to lack of i18n and design in java code.
+ *             Use jsp:include instead.
+ * 
  * @author <a href="mailto:hisidro@exist.com">Henry Isidro</a>
  * @version $Id$
  */
