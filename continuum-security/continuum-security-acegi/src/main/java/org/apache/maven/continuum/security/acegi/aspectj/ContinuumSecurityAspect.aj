@@ -31,6 +31,7 @@ public aspect ContinuumSecurityAspect extends SecurityAspect
     protected pointcut securedExecution():
         target(Continuum) &&
         execution(public * *(..)) &&
+        !execution(public * remove*(int)) &&
         !within(ContinuumSecurityAspect);
 
 }

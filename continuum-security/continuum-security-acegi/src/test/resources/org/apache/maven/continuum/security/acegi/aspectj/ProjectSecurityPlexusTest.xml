@@ -116,6 +116,13 @@
                 <configAttribute>AFTER_ACL_COLLECTION_READ</configAttribute>
               </configAttributes>
             </methodDefinitionSourceMapping>
+            <methodDefinitionSourceMapping>
+              <methodName>org.apache.maven.continuum.Continuum.removeProject</methodName>
+              <configAttributes>
+                <configAttribute>ROLE_ADMIN</configAttribute>
+                <configAttribute>ACL_PROJECT_DELETE</configAttribute>
+              </configAttributes>
+            </methodDefinitionSourceMapping>
           </mappings>
         </objectDefinitionSource>
       </configuration>
@@ -178,6 +185,26 @@
         <requirePermissionFromString>
           <permission>ADMINISTRATION</permission>
           <permission>READ</permission>
+        </requirePermissionFromString>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.vote.AccessDecisionVoter</role>
+      <role-hint>aclProjectDelete</role-hint>
+      <implementation>org.acegisecurity.vote.BasicAclEntryVoter</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.AclManager</role>
+          <field-name>aclManager</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <processConfigAttribute>ACL_PROJECT_DELETE</processConfigAttribute>
+        <processDomainObjectClass>org.apache.maven.continuum.model.project.Project</processDomainObjectClass>
+        <requirePermissionFromString>
+          <permission>ADMINISTRATION</permission>
+          <permission>DELETE</permission>
         </requirePermissionFromString>
       </configuration>
     </component>

@@ -16,6 +16,7 @@ package org.apache.maven.continuum.security.acegi.aspectj;
  * limitations under the License.
  */
 
+import org.acegisecurity.context.SecurityContextHolder;
 import org.apache.maven.continuum.Continuum;
 
 public class ProjectSecurityPlexusTest
@@ -29,4 +30,10 @@ public class ProjectSecurityPlexusTest
         setContinuum( (ContinuumStub) lookup( Continuum.ROLE, "stub" ) );
     }
 
+    public void testRemoveProject()
+        throws Exception
+    {
+        SecurityContextHolder.getContext().setAuthentication( getAuthentication( "USER" ) );
+        getContinuum().removeProject( 1 );
+    }
 }
