@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.security.acegi.acl.AclEventHandler;
@@ -113,10 +114,42 @@ public class AcegiContinuum
         return groups;
     }
 
+    public void removeProject( int projectId )
+        throws ContinuumException
+    {
+        removeProject( getProject( projectId ) );
+    }
+
+    /**
+     * Required for Acegi ACL
+     * 
+     * @param project
+     * @throws ContinuumException
+     */
+    public void removeProject( Project project )
+        throws ContinuumException
+    {
+        getContinuum().removeProject( project.getId() );
+        getAclEventHandler().afterDeleteProject( project.getId() );
+    }
+
     public void removeProjectGroup( int projectGroupId )
         throws ContinuumException
     {
-        getContinuum().removeProjectGroup( projectGroupId );
-        getAclEventHandler().afterDeleteProjectGroup( projectGroupId );
+        removeProjectGroup( getProjectGroup( projectGroupId ) );
     }
+
+    /**
+     * Required for Acegi ACL
+     * 
+     * @param projectGroup
+     * @throws ContinuumException
+     */
+    public void removeProjectGroup( ProjectGroup projectGroup )
+        throws ContinuumException
+    {
+        getContinuum().removeProjectGroup( projectGroup.getId() );
+        getAclEventHandler().afterDeleteProjectGroup( projectGroup.getId() );
+    }
+
 }
