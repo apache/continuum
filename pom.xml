@@ -317,6 +317,11 @@
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>continuum-release</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-webapp</artifactId>
         <version>${pom.version}</version>
         <type>war</type>
@@ -408,6 +413,11 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-notification</artifactId>
         <version>1.0-alpha-5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-taskqueue</artifactId>
+        <version>1.0-alpha-4-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.apache.derby</groupId>

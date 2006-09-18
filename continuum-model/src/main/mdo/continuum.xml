@@ -22,6 +22,7 @@
         <field>
           <name>id</name>
           <version>1.0.0+</version>
+          <required>true</required>
           <type>int</type>
           <identifier>true</identifier>
         </field>
