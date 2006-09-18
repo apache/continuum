@@ -28,10 +28,24 @@ import org.codehaus.plexus.acegi.intercept.method.aspectj.SecurityAspect;
 public aspect ContinuumSecurityAspect extends SecurityAspect
 {
 
+    /**
+     * <p>
+     * We need to exclude remove*(int) as it conflicts with remove*( Object ).
+     * </p>
+     * <p>
+     * Some methods are excluded just for faster execution.
+     * <ul>
+     *   <li><code>getContinuum</code></li>
+     *   <li><code>getAclEventHandler</code></li>
+     * </ul>
+     * </p>
+     */
     protected pointcut securedExecution():
         target(Continuum) &&
         execution(public * *(..)) &&
         !execution(public * remove*(int)) &&
+        !execution(public * getContinuum(..)) &&
+        !execution(public * getAclEventHandler(..)) &&
         !within(ContinuumSecurityAspect);
 
 }
