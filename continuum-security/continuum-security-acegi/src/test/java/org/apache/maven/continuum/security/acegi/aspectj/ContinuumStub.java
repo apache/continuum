@@ -16,6 +16,11 @@ package org.apache.maven.continuum.security.acegi.aspectj;
  * limitations under the License.
  */
 
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -31,11 +36,6 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Stub implementation of {@link Continuum} with empty implementations.
@@ -82,14 +82,16 @@ public class ContinuumStub
         return null;
     }
 
-    public void addNotifier( int projectId, ProjectNotifier notifier )
+    public ProjectNotifier addNotifier( int projectId, ProjectNotifier notifier )
         throws ContinuumException
     {
+        return null;
     }
 
-    public void addNotifier( int projectId, String notifierType, Map configuration )
+    public ProjectNotifier addNotifier( int projectId, String notifierType, Map configuration )
         throws ContinuumException
     {
+        return null;
     }
 
     public int addProject( Project project, String executorId )
@@ -379,6 +381,14 @@ public class ContinuumStub
     public void removeProject( int projectId )
         throws ContinuumException
     {
+        Project project = new Project();
+        project.setId( projectId );
+        removeProject( project );
+    }
+
+    public void removeProject( Project project )
+        throws ContinuumException
+    {
     }
 
     public void removeSchedule( int scheduleId )
@@ -411,14 +421,16 @@ public class ContinuumStub
     {
     }
 
-    public void updateNotifier( int projectId, int notifierId, Map configuration )
+    public ProjectNotifier updateNotifier( int projectId, int notifierId, Map configuration )
         throws ContinuumException
     {
+        return null;
     }
 
-    public void updateNotifier( int projectId, ProjectNotifier notifier )
+    public ProjectNotifier updateNotifier( int projectId, ProjectNotifier notifier )
         throws ContinuumException
     {
+        return null;
     }
 
     public void updateProject( Project project )
@@ -482,6 +494,14 @@ public class ContinuumStub
     public void removeProjectGroup( int projectGroupId )
         throws ContinuumException
     {
+        ProjectGroup projectGroup = new ProjectGroup();
+        projectGroup.setId( projectGroupId );
+        removeProjectGroup( projectGroup );
+    }
+
+    public void removeProjectGroup( ProjectGroup projectGroup )
+        throws ContinuumException
+    {
     }
 
     public void buildProjectGroup( int projectGroupId )
@@ -495,14 +515,16 @@ public class ContinuumStub
         return null;
     }
 
-    public void addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
+    public BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
+        return null;
     }
 
-    public void addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
+        return null;
     }
 
     public List getBuildDefinitionsForProject( int projectId )
@@ -527,14 +549,16 @@ public class ContinuumStub
     {
     }
 
-    public void updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
+    public BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
+        return null;
     }
 
-    public void updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    public BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
+        return null;
     }
 
     public ContinuumReleaseManager getReleaseManager()
