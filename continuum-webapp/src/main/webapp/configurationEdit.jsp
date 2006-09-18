@@ -1,5 +1,6 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="continuum" prefix="c1" %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
@@ -22,7 +23,15 @@
               </tbody>
             </table>
             <div class="functnbar3">
-              <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+              <c:choose>
+                <c:when test="${param.isNew == true}">
+                  <ww:submit value="%{getText('save')}"/>
+                  <input type="button" value="<ww:text name="cancel"/>" onclick="location.href='/configuration!default.action'">
+                </c:when>
+                <c:otherwise>
+                  <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+                </c:otherwise>
+              </c:choose>
             </div>
           </ww:form>
         </div>

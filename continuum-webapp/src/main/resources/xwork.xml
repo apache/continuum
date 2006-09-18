@@ -32,7 +32,7 @@
 
     <global-results>
       <result name="error-internal">/error/error.jsp?id=500</result>
-      <result name="continuumInitialization" type="redirect">/configuration!input.action</result>
+      <result name="continuumInitialization" type="redirect">/configuration!input.action?isNew=true</result>
     </global-results>
 
     <global-exception-mappings>
