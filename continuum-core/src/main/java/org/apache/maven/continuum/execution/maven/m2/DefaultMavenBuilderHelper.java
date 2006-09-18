@@ -340,31 +340,17 @@ public class DefaultMavenBuilderHelper
         }
         catch ( ProjectBuildingException e )
         {
-            Throwable cause = e.getCause();
-
-            while ( ( cause.getCause() != null ) && ( cause instanceof ProjectBuildingException ) )
-            {
-                cause = cause.getCause();
-            }
-
-            if ( cause instanceof ArtifactNotFoundException )
-            {
-                result.addError( ContinuumProjectBuildingResult.ERROR_ARTIFACT_NOT_FOUND,
-                                 ( (ArtifactNotFoundException) cause ).toString() );
-                return null;
-            }
-
-            result.addError( ContinuumProjectBuildingResult.ERROR_PROJECT_BUILDING, e.getMessage() );
-
-            String msg = "Cannot build maven project from " + file + " (" + e.getMessage() + ").";
-
-            getLogger().error( msg, e );
-
-            return null;
-        }
-        catch ( Exception e )
-        {
             StringBuffer messages = new StringBuffer();
+
+            Throwable cause = e.getCause();
+            
+            if( cause != null )
+            {
+                while ( ( cause.getCause() != null ) && ( cause instanceof ProjectBuildingException ) )
+                {
+                    cause = cause.getCause();
+                }
+            }
 
             if ( e instanceof InvalidProjectModelException )
             {
@@ -384,9 +370,31 @@ public class DefaultMavenBuilderHelper
                 }
             }
 
-            String msg = "Cannot build maven project from " + file + " (" + e.getMessage() + ").\n" + messages;
+            if ( cause instanceof ArtifactNotFoundException )
+            {
+                result.addError( ContinuumProjectBuildingResult.ERROR_ARTIFACT_NOT_FOUND,
+                                 ( (ArtifactNotFoundException) cause ).toString() );
+                return null;
+            }
 
-            getLogger().error( msg, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_PROJECT_BUILDING, e.getMessage() );
+
+            String msg = "Cannot build maven project from " + file + " (" + e.getMessage() + ").\n" + messages;
+            
+            file.delete();
+
+            getLogger().error( msg );
+
+            return null;
+        }
+        // TODO catch all exceptions is bad
+        catch ( Exception e )
+        {
+            String msg = "Cannot build maven project from " + file + " (" + e.getMessage() + ").";
+
+            file.delete();
+            
+            getLogger().error( msg );
             
             return null;
         }
