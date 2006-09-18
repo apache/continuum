@@ -204,16 +204,16 @@ public interface Continuum
     ProjectNotifier getNotifier( int projectId, int notifierId )
         throws ContinuumException;
 
-    void updateNotifier( int projectId, int notifierId, Map configuration )
+    ProjectNotifier updateNotifier( int projectId, int notifierId, Map configuration )
         throws ContinuumException;
 
-    void updateNotifier( int projectId, ProjectNotifier notifier )
+    ProjectNotifier updateNotifier( int projectId, ProjectNotifier notifier )
         throws ContinuumException;
 
-    void addNotifier( int projectId, ProjectNotifier notifier )
+    ProjectNotifier addNotifier( int projectId, ProjectNotifier notifier )
         throws ContinuumException;
 
-    void addNotifier( int projectId, String notifierType, Map configuration )
+    ProjectNotifier addNotifier( int projectId, String notifierType, Map configuration )
         throws ContinuumException;
 
     void removeNotifier( int projectId, int notifierId )
@@ -272,10 +272,10 @@ public interface Continuum
     BuildDefinition getDefaultBuildDefinition( int projectId )
         throws ContinuumException;
 
-    void addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
+    BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
-    void addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException;    
 
     List getBuildDefinitionsForProject( int projectId )
@@ -290,10 +290,10 @@ public interface Continuum
     void removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
         throws ContinuumException;
 
-    void updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
+    BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
-    void updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
 
