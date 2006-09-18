@@ -107,11 +107,9 @@
 
         <ww:if test="buildResult.state == 4">
           <h4><ww:text name="buildResult.buildError"/></h4>
-          <p>
-            <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
+          <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
             <pre><ww:property value="buildResult.error"/></pre>
-            </div>
-          </p>
+          </div>
         </ww:if>
         <ww:else>
           <h4><ww:text name="buildResult.buildOutput"/></h4>
