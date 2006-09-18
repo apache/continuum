@@ -58,15 +58,16 @@
       </c:otherwise>
     </c:choose>
 --%>
-
-    <c:choose>
-      <c:when test="${param.tab == 'permissions'}">
-        <b class="tabMenuDisabled">Permissions</b>
-      </c:when>
-      <c:otherwise>
-        <ww:a cssClass="tabMenuEnabled" href="%{projectGroupPermissionsUrl}">Permissions</ww:a>
-      </c:otherwise>
-    </c:choose>
+    <c:if test="${projectGroup.permissions.administer}">
+      <c:choose>
+        <c:when test="${param.tab == 'permissions'}">
+          <b class="tabMenuDisabled">Permissions</b>
+        </c:when>
+        <c:otherwise>
+          <ww:a cssClass="tabMenuEnabled" href="%{projectGroupPermissionsUrl}">Permissions</ww:a>
+        </c:otherwise>
+      </c:choose>
+    </c:if>
 
   </p>
 </div>
