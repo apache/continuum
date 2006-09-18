@@ -26,7 +26,7 @@
         <configuration>
           <version>1.0.0</version>
           <packageWithVersion>false</packageWithVersion>
-          <model>../continuum-model/src/main/mdo/continuum.mdo</model>
+          <model>../continuum-model/src/main/mdo/continuum.xml</model>
         </configuration>
       </plugin>
     </plugins>
@@ -51,6 +51,10 @@
       <groupId>commons-httpclient</groupId>
       <artifactId>commons-httpclient</artifactId>
       <version>2.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared.user</groupId>
+      <artifactId>maven-user-model</artifactId>
     </dependency>
   </dependencies>
 </project>
