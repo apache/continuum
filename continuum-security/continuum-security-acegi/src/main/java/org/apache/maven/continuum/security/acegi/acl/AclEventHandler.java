@@ -140,6 +140,10 @@ public class AclEventHandler
         user.setUsername( getCurrentUserName() );
         permission.setUser( user );
         permission.setAdminister( true );
+        permission.setRead( true );
+        permission.setWrite( true );
+        permission.setDelete( true );
+        permission.setExecute( true );
 
         permission.setInstanceClass( ProjectGroup.class );
         permission.setId( new Integer( projectGroup.getId() ) );
