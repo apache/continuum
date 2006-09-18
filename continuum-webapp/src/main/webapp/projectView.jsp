@@ -32,16 +32,20 @@
               <tbody>
               <tr>
                 <td>
-                  <form action="projectEdit.action" method="post">
-                    <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
-                    <input type="submit" name="edit-project" value="<ww:text name="edit"/>"/>
-                  </form>
+                  <c:if test="${projectGroup.permissions.write}">
+                    <form action="projectEdit.action" method="post">
+                      <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
+                      <input type="submit" name="edit-project" value="<ww:text name="edit"/>"/>
+                    </form>
+                  </c:if>
                 </td>
                 <td>
-                  <form method="post" action="buildProject.action">
-                    <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
-                    <input type="submit" name="build-project" value="<ww:text name="summary.buildNow"/>"/>
-                  </form>
+                  <c:if test="${projectGroup.permissions.execute}">
+                    <form method="post" action="buildProject.action">
+                      <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
+                      <input type="submit" name="build-project" value="<ww:text name="summary.buildNow"/>"/>
+                    </form>
+                  </c:if>
                 </td>
               </tr>
               </tbody>
@@ -56,10 +60,12 @@
         </ww:action>
 
         <div class="functnbar3">
-          <ww:form action="buildDefinition" method="post">
-            <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
-            <ww:submit value="%{getText('add')}"/>
-          </ww:form>
+          <c:if test="${projectGroup.permissions.write}">
+            <ww:form action="buildDefinition" method="post">
+              <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
+              <ww:submit value="%{getText('add')}"/>
+            </ww:form>
+          </c:if>
         </div>
 
         <h3><ww:text name="projectView.notifiers"/></h3>
@@ -97,10 +103,12 @@
           </ec:row>
         </ec:table>
         <div class="functnbar3">
-          <ww:form action="addNotifier!default.action" method="post">
-            <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
-            <ww:submit value="%{getText('add')}"/>
-          </ww:form>
+          <c:if test="${projectGroup.permissions.write}">
+            <ww:form action="addNotifier!default.action" method="post">
+              <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
+              <ww:submit value="%{getText('add')}"/>
+            </ww:form>
+          </c:if>
         </div>
 
         <h3><ww:text name="projectView.dependencies"/></h3>

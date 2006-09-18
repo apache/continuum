@@ -75,21 +75,23 @@
         </c:choose>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%">
-        <c:choose>
-          <c:when
-              test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
-            <ww:url id="deleteProjectUrl" value="deleteProject!default.action" namespace="/">
-              <ww:param name="projectId" value="${project.id}"/>
-              <ww:param name="projectName">${project.name}</ww:param>
-            </ww:url>
-            <ww:a href="%{deleteProjectUrl}">
-              <img src="<ww:url value='/images/delete.gif'/>" alt="Delete" title="Delete" border="0">
-            </ww:a>
-          </c:when>
-          <c:otherwise>
-            <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
-          </c:otherwise>
-        </c:choose>
+        <c:if test="${pageScope.projectGroup.permissions.write}">
+          <c:choose>
+            <c:when
+                test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
+              <ww:url id="deleteProjectUrl" value="deleteProject!default.action" namespace="/">
+                <ww:param name="projectId" value="${project.id}"/>
+                <ww:param name="projectName">${project.name}</ww:param>
+              </ww:url>
+              <ww:a href="%{deleteProjectUrl}">
+                <img src="<ww:url value='/images/delete.gif'/>" alt="Delete" title="Delete" border="0">
+              </ww:a>
+            </c:when>
+            <c:otherwise>
+              <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
+            </c:otherwise>
+          </c:choose>
+        </c:if>
       </ec:column>
     </ec:row>
   </ec:table>
