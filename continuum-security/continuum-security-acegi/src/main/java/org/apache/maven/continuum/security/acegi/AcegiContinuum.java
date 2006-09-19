@@ -172,4 +172,10 @@ public class AcegiContinuum
         return project;
     }
 
+    public ProjectGroup getProjectGroupByProjectId( int projectId )
+        throws ContinuumException
+    {
+        ProjectGroup projectGroup = super.getProjectGroupByProjectId( projectId );
+        return getAclEventHandler().setPermissions( projectGroup );
+    }
 }
