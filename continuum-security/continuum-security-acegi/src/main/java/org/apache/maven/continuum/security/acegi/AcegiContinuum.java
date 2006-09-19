@@ -165,8 +165,10 @@ public class AcegiContinuum
         throws ContinuumException
     {
         Project project = super.getProjectWithAllDetails( projectId );
-        ProjectGroup projectGroup = project.getProjectGroup();
-        project.setProjectGroup( getAclEventHandler().setPermissions( projectGroup ) );
+        if ( ( project != null ) && ( project.getProjectGroup() != null ) )
+        {
+            project.setProjectGroup( getAclEventHandler().setPermissions( project.getProjectGroup() ) );
+        }
         return project;
     }
 
