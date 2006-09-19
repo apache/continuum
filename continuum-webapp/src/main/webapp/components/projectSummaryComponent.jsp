@@ -62,7 +62,7 @@
         </c:choose>
       </ec:column>
       <ec:column property="releaseAction" title="&nbsp;" width="1%">
-        <c:if test="${pageScope.projectGroup.permissions.execute}">
+        <c:if test="${requestScope.projectGroup.permissions.execute}">
           <c:choose>
             <c:when test="${pageScope.project.state == 2}">
               <ww:url id="releaseProjectUrl" action="releaseProject!promptReleaseGoal.action" namespace="/">
@@ -81,7 +81,7 @@
         </c:if>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%">
-        <c:if test="${pageScope.projectGroup.permissions.delete}">
+        <c:if test="${requestScope.projectGroup.permissions.delete}">
           <c:choose>
             <c:when
                 test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
