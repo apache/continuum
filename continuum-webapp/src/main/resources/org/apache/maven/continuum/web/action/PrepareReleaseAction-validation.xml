@@ -1,0 +1,31 @@
+<!DOCTYPE validators PUBLIC
+    "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+    "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+  <field name="scmUsername">
+    <field-validator type="requiredstring">
+      <message key="release.missing.scm.username"/>
+    </field-validator>
+  </field>
+  <field name="scmPassword">
+    <field-validator type="requiredstring">
+      <message key="release.missing.scm.password"/>
+    </field-validator>
+  </field>
+  <field name="scmTag">
+    <field-validator type="requiredstring">
+      <message key="release.missing.scm.tag"/>
+    </field-validator>
+  </field>
+  <field name="scmTagBase">
+    <field-validator type="requiredstring">
+      <message key="release.missing.scm.tagbase"/>
+    </field-validator>
+  </field>
+  <field name="prepareGoals">
+    <field-validator type="requiredstring">
+      <message key="release.missing.scm.prepare.goals"/>
+    </field-validator>
+  </field>
+</validators>
