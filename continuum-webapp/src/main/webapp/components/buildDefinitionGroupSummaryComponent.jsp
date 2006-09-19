@@ -28,7 +28,9 @@
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
           <ww:a href="%{editUrl}"><ww:text name="edit"/></ww:a>
+        </c:if>
           &nbsp;
+        <c:if test="${projectGroup.permissions.delete}">
           <ww:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
             <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
@@ -76,7 +78,9 @@
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
           <ww:a href="%{editUrl}"><ww:text name="edit"/></ww:a>
-          &nbsp;
+        </c:if>
+        &nbsp;
+        <c:if test="${projectGroup.permissions.delete}">
           <ww:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
             <ww:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>

@@ -77,7 +77,7 @@
         </c:if>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%">
-        <c:if test="${pageScope.projectGroup.permissions.write}">
+        <c:if test="${pageScope.projectGroup.permissions.delete}">
           <c:choose>
             <c:when
                 test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
