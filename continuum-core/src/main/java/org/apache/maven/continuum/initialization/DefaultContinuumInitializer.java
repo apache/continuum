@@ -171,16 +171,6 @@ public class DefaultContinuumInitializer
     {
         createPermission( "addProject", "Add Projects" );
 
-        createPermission( "editBuildDefinition", "Edit Build Definitions" );
-
-        createPermission( "deleteBuildDefinition", "Delete Build Definitions" );
-
-        createPermission( "addNotifier", "Add Notifiers" );
-
-        createPermission( "editNotifier", "Edit Notifiers" );
-
-        createPermission( "deleteNotifier", "Delete Notifiers" );
-
         createPermission( "manageConfiguration", "Manage Continuum Configuration" );
 
         createPermission( "manageSchedule", "Manage Schedules" );
