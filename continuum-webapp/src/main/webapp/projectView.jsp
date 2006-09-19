@@ -32,7 +32,7 @@
               <tbody>
               <tr>
                 <td>
-                  <c:if test="${projectGroup.permissions.write}">
+                  <c:if test="${project.projectGroup.permissions.write}">
                     <form action="projectEdit.action" method="post">
                       <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
                       <input type="submit" name="edit-project" value="<ww:text name="edit"/>"/>
@@ -40,7 +40,7 @@
                   </c:if>
                 </td>
                 <td>
-                  <c:if test="${projectGroup.permissions.execute}">
+                  <c:if test="${project.projectGroup.permissions.execute}">
                     <form method="post" action="buildProject.action">
                       <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
                       <input type="submit" name="build-project" value="<ww:text name="summary.buildNow"/>"/>
@@ -60,7 +60,7 @@
         </ww:action>
 
         <div class="functnbar3">
-          <c:if test="${projectGroup.permissions.write}">
+          <c:if test="${project.projectGroup.permissions.write}">
             <ww:form action="buildDefinition" method="post">
               <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
               <ww:submit value="%{getText('add')}"/>
@@ -83,27 +83,31 @@
             <ec:column property="events" title="projectView.notifier.events" cell="org.apache.maven.continuum.web.view.projectview.NotifierEventCell"/>
             <ec:column property="from" title="projectView.notifier.from" cell="org.apache.maven.continuum.web.view.projectview.NotifierFromCell"/>
             <ec:column property="actions" title="&nbsp;">
-                <c:if test="${!pageScope.notifier.fromProject}">
-                    <a href='<ww:url value="${notifier.type}NotifierEdit!default.action">
-                      <ww:param name="projectId" value="project.id"/>
-                      <ww:param name="notifierId" value="${notifier.id}"/>
+              <c:if test="${!pageScope.notifier.fromProject}">
+                <c:if test="${project.projectGroup.permissions.write}">
+                  <a href='<ww:url value="${notifier.type}NotifierEdit!default.action">
+                    <ww:param name="projectId" value="project.id"/>
+                    <ww:param name="notifierId" value="${notifier.id}"/>
                     </ww:url>'>
-                      <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
-                    </a>
-                    &nbsp;
-                    <a href='<ww:url value="/deleteNotifier!default.action">
-                      <ww:param name="projectId" value="project.id"/>
-                      <ww:param name="notifierId" value="${notifier.id}"/>
-                      <ww:param name="notifierType" value="${notifier.type}"/>
-                    </ww:url>'>
-                      <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
-                    </a>
+                    <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+                  </a>
                 </c:if>
+                &nbsp;
+                <c:if test="${project.projectGroup.permissions.delete}">
+                  <a href='<ww:url value="/deleteNotifier!default.action">
+                    <ww:param name="projectId" value="project.id"/>
+                    <ww:param name="notifierId" value="${notifier.id}"/>
+                    <ww:param name="notifierType" value="${notifier.type}"/>
+                    </ww:url>'>
+                    <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
+                  </a>
+                </c:if>
+              </c:if>
             </ec:column>
           </ec:row>
         </ec:table>
         <div class="functnbar3">
-          <c:if test="${projectGroup.permissions.write}">
+          <c:if test="${project.projectGroup.permissions.write}">
             <ww:form action="addNotifier!default.action" method="post">
               <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
               <ww:submit value="%{getText('add')}"/>
