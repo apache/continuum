@@ -186,7 +186,7 @@ public class PrepareReleaseAction
 
         listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
 
-        if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
+        if ( listener == null || ( listener.getState() == ContinuumReleaseManagerListener.FINISHED ) )
         {
             releaseManager.getListeners().remove( releaseId );
 
