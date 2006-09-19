@@ -161,4 +161,13 @@ public class AcegiContinuum
         getAclEventHandler().afterDeleteProjectGroup( projectGroup.getId() );
     }
 
+    public Project getProjectWithAllDetails( int projectId )
+        throws ContinuumException
+    {
+        Project project = super.getProjectWithAllDetails( projectId );
+        ProjectGroup projectGroup = project.getProjectGroup();
+        project.setProjectGroup( getAclEventHandler().setPermissions( projectGroup ) );
+        return project;
+    }
+
 }
