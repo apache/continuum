@@ -69,9 +69,9 @@ public class PerformReleaseTaskExecutor
 
         if ( result.getResultCode() == ReleaseResult.SUCCESS )
         {
-            continuumReleaseManager.getReleaseResults().put( performTask.getReleaseId(), result );
-
             continuumReleaseManager.getPreparedReleases().remove( performTask.getReleaseId() );
         }
+
+        continuumReleaseManager.getReleaseResults().put( performTask.getReleaseId(), result );
     }
 }
