@@ -7,7 +7,7 @@
   <c:if test="${projectGroup.permissions.execute}">
     <c:choose>
       <c:when test="${!project.inQueue and ( project.state gt 0 ) and ( project.state lt 5 )}">
-        <ww:url id="buildProjectUrl" action="buildProject">
+        <ww:url id="buildProjectUrl" action="buildProject" namespace="/">
           <ww:param name="projectId" value="${project.id}"/>
         </ww:url>
         <ww:a href="%{buildProjectUrl}">
