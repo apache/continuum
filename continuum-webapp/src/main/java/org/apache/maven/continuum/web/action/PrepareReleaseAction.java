@@ -84,15 +84,16 @@ public class PrepareReleaseAction
         scmPassword = project.getScmPassword();
         scmTag = project.getScmTag();
         String scmUrl = project.getScmUrl();
+
+        //skip scm:provider in scm url
+        int idx = scmUrl.indexOf( ":", 4 ) + 1;
         if ( scmUrl.endsWith( "/trunk" ) )
         {
-            //skip scm:provider in scm url
-            int idx = scmUrl.indexOf( ":", 4 ) + 1;
             scmTagBase = scmUrl.substring( idx , scmUrl.lastIndexOf( "/trunk" ) ) + "/branches";
         }
         else
         {
-            scmTagBase = scmUrl;
+            scmTagBase = scmUrl.substring( idx );
         }
         prepareGoals = "clean integration-test";
 
