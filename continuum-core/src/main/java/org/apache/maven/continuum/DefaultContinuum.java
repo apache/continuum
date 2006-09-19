@@ -36,6 +36,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.UserGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -813,7 +814,12 @@ public class DefaultContinuum
                 changes = new ArrayList();
             }
 
-            changes.addAll( buildResult.getScmResult().getChanges() );
+            ScmResult scmResult = buildResult.getScmResult();
+
+            if ( scmResult != null )
+            {
+                changes.addAll( scmResult.getChanges() );
+            }
 
             if ( !buildResultsIterator.hasNext() )
             {
