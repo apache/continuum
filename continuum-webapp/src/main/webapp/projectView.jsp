@@ -89,8 +89,7 @@
                     <ww:param name="projectId" value="project.id"/>
                     <ww:param name="notifierId" value="${notifier.id}"/>
                     </ww:url>'>
-                    <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
-                  </a>
+                    <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" /></a>
                 </c:if>
                 &nbsp;
                 <c:if test="${project.projectGroup.permissions.delete}">
