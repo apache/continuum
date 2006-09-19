@@ -44,11 +44,11 @@
             <ww:param name="confirmed" value="false"/>
           </ww:url>
         </ww:else>
-        <c:if test="${projectGroup.permissions.write}">
+        <c:if test="${requestScope.projectGroup.permissions.write}">
           <ww:a href="%{editUrl}"><ww:text name="edit"/></ww:a>
         </c:if>
         &nbsp;
-        <c:if test="${projectGroup.permissions.delete}">
+        <c:if test="${requestScope.projectGroup.permissions.delete}">
           <ww:a href="%{removeUrl}"><ww:text name="delete"/></ww:a>
         </c:if>
       </ec:column>
