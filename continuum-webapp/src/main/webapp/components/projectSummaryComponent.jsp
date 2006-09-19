@@ -12,6 +12,10 @@
             sortable="false"
             filterable="false">
     <ec:row highlightRow="true">
+
+      <%-- needed to access project in included pages --%>
+      <c:set var="project" value="${pageScope.project}" scope="request"/>
+
       <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
       <ec:column property="name" title="summary.projectTable.name" width="48%">
         <ww:url id="projectUrl" action="projectView" namespace="/">
