@@ -83,6 +83,12 @@ public class PrepareReleaseAction
         scmUsername = project.getScmUsername();
         scmPassword = project.getScmPassword();
         scmTag = project.getScmTag();
+
+        if ( StringUtils.isEmpty( scmTag ) )
+        {
+            scmTag = "myRelease";
+        }
+
         String scmUrl = project.getScmUrl();
 
         //skip scm:provider in scm url
