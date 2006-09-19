@@ -167,7 +167,7 @@ public class AcegiContinuum
         Project project = super.getProjectWithAllDetails( projectId );
         if ( ( project != null ) && ( project.getProjectGroup() != null ) )
         {
-            project.setProjectGroup( getAclEventHandler().setPermissions( project.getProjectGroup() ) );
+            getAclEventHandler().setPermissions( project.getProjectGroup() );
         }
         return project;
     }
