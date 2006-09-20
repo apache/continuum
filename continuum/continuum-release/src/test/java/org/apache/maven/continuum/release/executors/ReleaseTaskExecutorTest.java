@@ -77,7 +77,7 @@ public class ReleaseTaskExecutorTest
     public void testReleaseSimpleProject()
         throws Exception
     {
-        String scmPath = new File( getBasedir(), "target/test-classes/scm-src" ).getAbsolutePath().replace( '\\', '/' );
+        String scmPath = new File( getBasedir(), "target/scm-src" ).getAbsolutePath().replace( '\\', '/' );
         File workDir = new File( getBasedir(), "target/test-classes/work-dir" );
         FileUtils.deleteDirectory( workDir );
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
@@ -111,7 +111,7 @@ public class ReleaseTaskExecutorTest
     public void testReleaseSimpleProjectWithNextVersion()
         throws Exception
     {
-        String scmPath = new File( getBasedir(), "target/test-classes/scm-src" ).getAbsolutePath().replace( '\\', '/' );
+        String scmPath = new File( getBasedir(), "target/scm-src" ).getAbsolutePath().replace( '\\', '/' );
         File workDir = new File( getBasedir(), "target/test-classes/work-dir" );
         FileUtils.deleteDirectory( workDir );
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
