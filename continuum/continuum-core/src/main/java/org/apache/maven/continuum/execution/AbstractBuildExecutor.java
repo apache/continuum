@@ -27,7 +27,9 @@ import org.codehaus.plexus.commandline.ExecutableResolver;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.cli.CommandLineException;
 
 import java.io.File;
 import java.util.Iterator;
@@ -190,7 +192,21 @@ public abstract class AbstractBuildExecutor
 
             getLogger().info( "Exit code: " + result.getExitCode() );
 
-            return new ContinuumBuildExecutionResult( "", result.getExitCode() );
+            return new ContinuumBuildExecutionResult( FileUtils.fileRead( output ), result.getExitCode() );
+        }
+        catch ( CommandLineException e )
+        {
+            if ( e.getCause() instanceof InterruptedException )
+            {
+                throw new ContinuumBuildCancelledException( "The build was cancelled", e );
+            }
+            else
+            {
+                throw new ContinuumBuildExecutorException(
+                    "Error while executing shell command. The most common error is that '" + executable + "' "
+                        + "is not in your path.",
+                    e );
+            }
         }
         catch ( Exception e )
         {

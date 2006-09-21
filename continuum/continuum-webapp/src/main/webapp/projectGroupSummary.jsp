@@ -1,5 +1,5 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
-<%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
+<%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
@@ -47,7 +47,7 @@
             <ww:param name="projectGroupId" value="projectGroupId"/>
           </ww:url>
           <ww:url id="removeProjectGroupUrl" action="removeProjectGroup">
-            <ww:param name="projectGroupId" value="projectGroupId"/>
+            <ww:param name="projectGroupId" value="projectGroupId"/>           
             <ww:param name="confirmed" value="false"/>
           </ww:url>
           <ww:a href="%{buildProjectGroupUrl}">Build</ww:a>&nbsp;<ww:a href="%{removeProjectGroupUrl}">Remove</ww:a>

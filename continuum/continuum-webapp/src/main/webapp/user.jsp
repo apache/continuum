@@ -1,5 +1,5 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
-<%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
+<%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
@@ -21,8 +21,8 @@
           <ww:textfield label="Username" name="username"/>
           <ww:textfield label="Full Name" name="fullName"/>
           <ww:textfield label="Email" name="email"/>
-          <ww:textfield label="Password" name="password"/>
-          <ww:textfield label="Password(again)" name="passwordTwo"/>
+          <ww:password label="Password" name="password"/>
+          <ww:password label="Password(again)" name="passwordTwo"/>
           <ww:select list="userGroups" label="User Group" name="userGroupId"/>
         </table>
       </div>

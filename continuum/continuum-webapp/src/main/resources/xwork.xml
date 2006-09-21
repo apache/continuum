@@ -7,10 +7,8 @@
     <interceptors>
       <interceptor name="exception-logging" class="exceptionLogging"/>
       <interceptor name="user" class="userInterceptor"/>
-      <interceptor name="continuum" class="continuumInterceptor"/>
       <interceptor-stack name="defaultContinuumStack">
         <interceptor-ref name="user"/>
-        <interceptor-ref name="continuum"/>
         <interceptor-ref name="exception-logging"/>
         <!--<interceptor-ref name="defaultStack"/>-->
 
@@ -92,14 +90,13 @@
       <result name="success">projectView.jsp</result>
     </action>
 
-    <action name="projectEdit" class="projectEdit">
-      <result name="input">projectEdit.jsp</result>
-      <result name="success" type="chain">projectView</result>
+    <action name="projectEdit" class="projectEdit" method="edit">
+      <result name="success">projectEdit.jsp</result>
     </action>
 
-    <action name="projectSave" class="projectEdit">
-      <result name="input">projectEdit.jsp</result>
+    <action name="projectSave" class="projectEdit" method="save">
       <result name="success" type="chain">projectView</result>
+      <result name="input">projectEdit.jsp</result>
     </action>
 
     <!--
@@ -133,6 +130,7 @@
 
     <action name="removeUser" class="userManagement" method="remove">
       <result name="success" type="chain">users</result>
+      <result name="confirm">confirmation.jsp</result>
     </action>
 
     <!--
@@ -152,6 +150,7 @@
 
     <action name="removeUserGroup" class="userGroupManagement" method="remove">
       <result name="success" type="chain">userGroups</result>
+      <result name="confirm">confirmation.jsp</result>
     </action>
 
     <!--
@@ -175,8 +174,8 @@
     </action>
 
     <action name="removeGroupBuildDefinition" class="buildDefinition" method="removeFromGroup">
-      <result name="confirm">deleteBuildDefinition.jsp</result>
-      <result name="success" type="chain">projectGroupView</result>
+      <result name="confirm">confirmBuildDefinitionRemoval.jsp</result>
+      <result name="success" type="chain">projectGroupBuildDefinition</result>
     </action>
 
 
@@ -204,6 +203,7 @@
     </action>
 
     <action name="removeProjectGroup" class="projectGroup" method="remove">
+      <result name="confirm">confirmGroupRemoval.jsp</result>
       <result name="success" type="chain">groupSummary</result>
     </action>
 
@@ -223,42 +223,38 @@
       <result name="jabber_input">notifierJabber.jsp</result>
     </action>
 
-    <action name="mailNotifierEdit" class="mailNotifierEdit">
+    <action name="mailNotifierEdit" class="mailNotifierEdit" method="edit">
+      <result name="success">notifierMail.jsp</result>
+    </action>
+
+    <action name="mailNotifierSave" class="mailNotifierEdit" method="save">
       <result name="input">notifierMail.jsp</result>
       <result name="success" type="chain">projectView</result>
     </action>
 
-    <action name="mailNotifierSave" class="mailNotifierEdit">
-      <result name="input">notifierMail.jsp</result>
-      <result name="success" type="chain">projectView</result>
+    <action name="ircNotifierEdit" class="ircNotifierEdit" method="edit">
+      <result name="success">notifierIrc.jsp</result>
     </action>
 
-    <action name="ircNotifierEdit" class="ircNotifierEdit">
+    <action name="ircNotifierSave" class="ircNotifierEdit" method="save">
       <result name="input">notifierIrc.jsp</result>
       <result name="success" type="chain">projectView</result>
     </action>
 
-    <action name="ircNotifierSave" class="ircNotifierEdit">
-      <result name="input">notifierIrc.jsp</result>
-      <result name="success" type="chain">projectView</result>
+    <action name="jabberNotifierEdit" class="jabberNotifierEdit" method="edit">
+      <result name="success">notifierJabber.jsp</result>
     </action>
 
-    <action name="jabberNotifierEdit" class="jabberNotifierEdit">
+    <action name="jabberNotifierSave" class="jabberNotifierEdit" method="save">
       <result name="input">notifierJabber.jsp</result>
       <result name="success" type="chain">projectView</result>
     </action>
 
-    <action name="jabberNotifierSave" class="jabberNotifierEdit">
-      <result name="input">notifierJabber.jsp</result>
-      <result name="success" type="chain">projectView</result>
+    <action name="msnNotifierEdit" class="msnNotifierEdit" method="edit">
+      <result name="success">notifierMsn.jsp</result>
     </action>
 
-    <action name="msnNotifierEdit" class="msnNotifierEdit">
-      <result name="input">notifierMsn.jsp</result>
-      <result name="success" type="chain">projectView</result>
-    </action>
-
-    <action name="msnNotifierSave" class="msnNotifierEdit">
+    <action name="msnNotifierSave" class="msnNotifierEdit" method="save">
       <result name="input">notifierMsn.jsp</result>
       <result name="success" type="chain">projectView</result>
     </action>
@@ -292,6 +288,15 @@
 
     <action name="saveSchedule" class="schedule" method="save">
       <result name="success" type="chain">schedules</result>
+    </action>
+
+    <action name="removeSchedule" class="schedule" method="remove">
+      <result name="confirm">confirmation.jsp</result>
+      <result name="success" type="chain">schedules</result>
+    </action>
+
+    <action name="cancelBuild" class="cancelBuild">
+      <result name="success" type="chain">buildResults</result>
     </action>
 
     <!--

@@ -7,7 +7,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-model</artifactId>
   <name>Continuum Model</name>
-  <version>1.1-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>
@@ -25,13 +24,13 @@
         <configuration>
           <version>1.0.0</version>
           <packageWithVersion>false</packageWithVersion>
-          <model>src/main/mdo/continuum.mdo</model>
+          <model>src/main/mdo/continuum.xml</model>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jpox-maven-plugin</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
         <executions>
           <execution>
             <goals>

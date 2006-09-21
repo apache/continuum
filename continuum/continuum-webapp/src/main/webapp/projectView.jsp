@@ -1,5 +1,5 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
-<%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
+<%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
@@ -12,13 +12,13 @@
         <div>
           <p style="border-top: 1px solid transparent; border-bottom: 1px solid #DFDEDE;">
             <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><ww:text name="info"/></b>
-            <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="<ww:url value="/buildResults.action?projectId="/><ww:property value="project.id"/>&projectName=<ww:property value="project.name"/>"><ww:text name="builds"/></a>
-            <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="<ww:url value="/workingCopy.action?projectId="/><ww:property value="project.id"/>&projectName=<ww:property value="project.name"/>"><ww:text name="workingCopy"/></a>
+            <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href='<ww:url action="buildResults"/>'><ww:text name="builds"/></a>
+            <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href='<ww:url action="workingCopy"/>'><ww:text name="workingCopy"/></a>
           </p>
         </div>
 
         <h3><ww:text name="projectView.section.title"/></h3>
-            
+
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <c1:data label="%{getText('projectView.project.name')}" name="project.name"/>
@@ -34,7 +34,7 @@
               <tbody>
               <tr>
                 <td>
-                  <form action="projectEdit!edit.action" method="post">
+                  <form action="projectEdit.action" method="post">
                     <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
                     <input type="submit" name="edit-project" value="<ww:text name="edit"/>"/>
                   </form>
@@ -80,7 +80,7 @@
             <ec:column property="from" title="projectView.notifier.from" cell="org.apache.maven.continuum.web.view.projectview.NotifierFromCell"/>
             <ec:column property="actions" title="&nbsp;">
                 <c:if test="${!pageScope.notifier.fromProject}">
-                    <a href='<ww:url value="${notifier.type}NotifierEdit!default.action">
+                    <a href='<ww:url value="${notifier.type}NotifierEdit.action">
                       <ww:param name="projectId" value="project.id"/>
                       <ww:param name="notifierId" value="${notifier.id}"/>
                     </ww:url>'>

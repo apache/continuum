@@ -1,5 +1,5 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
-<%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
+<%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
@@ -31,6 +31,7 @@
                 </ww:url>
                 <ww:url id="removeUrl" action="removeUser">
                   <ww:param name="userId" value="${pageScope.user.accountId}"/>
+                  <ww:param name="username" value="%{'${pageScope.user.username}'}"/>                  
                 </ww:url>
                 <ww:a href="%{editUrl}">Edit</ww:a>
                 &nbsp;

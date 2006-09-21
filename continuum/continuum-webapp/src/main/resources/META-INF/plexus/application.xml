@@ -12,6 +12,9 @@
       <role-hint>check-out-project</role-hint>
     </component>
     <component>
+      <role>org.apache.maven.continuum.web.xmlrpc.XmlRpcService</role>
+    </component>
+    <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>prepare-release</role-hint>
     </component>
@@ -22,6 +25,29 @@
   </load-on-start>
 
   <components>
+    <!--
+    | The XML-RPC service
+    |-->
+    <component>
+      <role>org.apache.maven.continuum.web.xmlrpc.XmlRpcService</role>
+      <implementation>org.apache.maven.continuum.web.xmlrpc.DefaultXmlRpcService</implementation>
+      <description></description>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.xmlrpc.XmlRpcServer</role>
+          <field-name>xmlRpcServer</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.xmlrpc.ContinuumXmlRpc</role>
+          <field-name>handler</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <port>8000</port>
+        <handler-name>continuum</handler-name>
+      </configuration>
+    </component>
+
     <!--
     | The mail notifier
     |-->
@@ -171,9 +197,47 @@
       <implementation>org.codehaus.plexus.msn.DefaultMsnClient</implementation>
     </component>
 
+    <!--
+    | Velocity component used by the mail notifier
+    |-->
+    <component>
+      <role>org.codehaus.plexus.velocity.VelocityComponent</role>
+      <implementation>org.codehaus.plexus.velocity.DefaultVelocityComponent</implementation>
+      <configuration>
+        <properties>
+          <property>
+            <name>resource.loader</name>
+            <value>threadContext</value>
+          </property>
+          <property>
+            <name>threadContext.resource.loader.class</name>
+            <value>org.codehaus.plexus.velocity.ContextClassLoaderResourceLoader</value>
+          </property>
+          <property>
+            <name>velocimacro.library</name>
+            <value>org/apache/maven/continuum/notification/mail/templates/common.vm</value>
+          </property>
+        </properties>
+      </configuration>
+    </component>
+
     <component>
       <role>org.apache.maven.continuum.web.util.WorkingCopyContentGenerator</role>
       <implementation>org.apache.maven.continuum.web.util.WorkingCopyContentGenerator</implementation>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.formica.validation.Validator</role>
+      <role-hint>url</role-hint>
+      <implementation>org.codehaus.plexus.formica.validation.UrlValidator</implementation>
+      <configuration>
+        <allowedSchemes>
+          <allowedScheme>http</allowedScheme>
+          <allowedScheme>https</allowedScheme>
+          <allowedScheme>ftp</allowedScheme>
+          <!-- <allowedScheme>file</allowedScheme> -->
+        </allowedSchemes>
+      </configuration>
     </component>
 
     <component>
@@ -191,6 +255,20 @@
             <value>true</value>
           </property>
           <property>
+            <name>org.jpox.validateTables</name>
+            <value>false</value>
+          </property>
+          <property>
+            <name>org.jpox.validateColumns</name>
+            <value>false</value>
+          </property>
+          <property>
+            <name>org.jpox.validateConstraints</name>
+            <value>false</value>
+          </property>
+
+<!--
+          <property>
             <name>org.jpox.autoStartMechanism</name>
             <value>SchemaTable</value>
           </property>
@@ -198,6 +276,7 @@
             <name>org.jpox.autoStartMechanismMode</name>
             <value>Ignored</value>
           </property>
+-->
           <!-- Apache Derby Configuration -->
           <property>
             <name>javax.jdo.option.ConnectionDriverName</name>

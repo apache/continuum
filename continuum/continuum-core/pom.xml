@@ -7,7 +7,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-core</artifactId>
   <name>Continuum Core</name>
-  <version>1.1-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>org.apache.derby</groupId>
@@ -131,10 +130,9 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-taskqueue</artifactId>
-      <version>1.0-alpha-3</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum.jpox</groupId>
+      <groupId>jpox</groupId>
       <artifactId>jpox</artifactId>
     </dependency>
     <dependency>
@@ -158,7 +156,44 @@
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-release</artifactId>
-      <version>1.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.2</version>
+            <configuration>
+              <childDelegation>true</childDelegation>
+              <excludes>
+                <exclude>**/BuildProjectTaskExecutorTest.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>it</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.2</version>
+            <configuration>
+              <childDelegation>true</childDelegation>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
