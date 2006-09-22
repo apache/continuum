@@ -3,11 +3,14 @@
   <ww:i18n name="localization.Continuum">
     <head>
         <title><ww:text name="releaseProject.page.title"/></title>
+        <meta http-equiv="refresh" content="10;url=<ww:url includeParams="all" />"/>
     </head>
     <body>
-      <h2><ww:text name="performReleaseFinished.section.title"/></h2>
+      <h2><ww:text name="prepareReleaseProgress.section.title"/></h2>
       <h3><ww:property value="name"/></h3>
-      <ww:form action="groupSummary" method="post">
+      <ww:form action="releaseInProgress" method="get">
+        <ww:hidden name="projectId"/>
+        <ww:hidden name="releaseId"/>
         <div class="axial">
           <table width="100%">
             <tr>
@@ -41,15 +44,7 @@
             </ww:iterator>
           </table>
         </div>
-
-        <p>
-          <ww:url id="viewReleaseResultUrl" action="viewReleaseResult" namespace="/">
-            <ww:param name="releaseId" value="releaseId"/>
-          </ww:url>
-          <ww:a href="%{viewReleaseResultUrl}"><ww:text name="releaseProject.viewOutput"/></ww:a>
-        </p>
-
-        <ww:submit value="Done"/>
+        <ww:submit value="Refresh"/>
       </ww:form>
     </body>
   </ww:i18n>

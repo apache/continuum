@@ -16,25 +16,23 @@ package org.apache.maven.continuum.web.action;
  * limitations under the License.
  */
 
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 import org.apache.maven.plugins.release.ReleaseResult;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.plugins.release.config.ReleaseDescriptor;
 
 import java.io.File;
-import java.util.Map;
 
 /**
  * @author Edwin Punzalan
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"
- *   role-hint="performRelease"
+ *   role-hint="releasePerform"
  */
-public class PerformReleaseAction
+public class ReleasePerformAction
     extends ContinuumActionSupport
 {
     private int projectId;
@@ -59,37 +57,23 @@ public class PerformReleaseAction
 
     private ReleaseResult result;
 
-    public String execute()
+    public String inputFromScm()
         throws Exception
     {
-        if ( StringUtils.isNotEmpty( releaseId )  )
-        {
-            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+        populateFromProject();
 
-            Map preparedReleases = releaseManager.getPreparedReleases();
-            if ( preparedReleases.containsKey( releaseId ) )
-            {
-                ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
-                scmUrl = descriptor.getScmSourceUrl();
-                scmUsername = descriptor.getScmUsername();
-                scmPassword = descriptor.getScmPassword();
-                scmTag = descriptor.getScmReleaseLabel();
-                scmTagBase = descriptor.getScmTagBase();
-            }
-            else
-            {
-                populateFromProject();
-            }
-        }
-        else
-        {
-            populateFromProject();
-        }
+        releaseId = "";
 
-        return "prompt";
+        return SUCCESS;
     }
 
-    public String doPerform()
+    public String input()
+        throws Exception
+    {
+        return SUCCESS;
+    }
+
+    public String execute()
         throws Exception
     {
         listener = new DefaultReleaseManagerListener();
@@ -101,26 +85,31 @@ public class PerformReleaseAction
                                           "releases-" + System.currentTimeMillis() );
         performDirectory.mkdirs();
 
-        if ( releaseId == null )
-        {
-            ReleaseDescriptor descriptor = new ReleaseDescriptor();
-            descriptor.setScmSourceUrl( scmUrl );
-            descriptor.setScmUsername( scmUsername );
-            descriptor.setScmReleaseLabel( scmTag );
-            descriptor.setScmTagBase( scmTagBase );
-
-            String releaseId;
-            do
-            {
-                releaseId = String.valueOf( System.currentTimeMillis() );
-            }while ( releaseManager.getPreparedReleases().containsKey( releaseId ) );
-
-            releaseManager.getPreparedReleases().put( releaseId, descriptor );
-        }
-
         releaseManager.perform( releaseId, performDirectory, goals, useReleaseProfile, listener );
 
-        return "initialized";
+        return SUCCESS;
+    }
+
+    public String executeFromScm()
+        throws Exception
+    {
+        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+
+        ReleaseDescriptor descriptor = new ReleaseDescriptor();
+        descriptor.setScmSourceUrl( scmUrl );
+        descriptor.setScmUsername( scmUsername );
+        descriptor.setScmReleaseLabel( scmTag );
+        descriptor.setScmTagBase( scmTagBase );
+
+        String releaseId;
+        do
+        {
+            releaseId = String.valueOf( System.currentTimeMillis() );
+        }while ( releaseManager.getPreparedReleases().containsKey( releaseId ) );
+
+        releaseManager.getPreparedReleases().put( releaseId, descriptor );
+
+        return execute();
     }
 
     public String checkProgress()

@@ -58,7 +58,7 @@
       <ec:column property="releaseAction" title="&nbsp;" width="1%" sortable="false">
         <c:choose>
           <c:when test="${pageScope.project.state == 2}">
-            <ww:url id="releaseProjectUrl" action="releaseProject!promptReleaseGoal.action" namespace="/">
+            <ww:url id="releaseProjectUrl" action="releasePromptGoal" namespace="/">
               <ww:param name="projectId" value="${project.id}"/>
             </ww:url>
             <ww:a href="%{releaseProjectUrl}">

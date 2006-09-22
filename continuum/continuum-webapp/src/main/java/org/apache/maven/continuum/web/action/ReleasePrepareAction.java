@@ -43,9 +43,9 @@ import java.util.Properties;
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"
- *   role-hint="prepareRelease"
+ *   role-hint="releasePrepare"
  */
-public class PrepareReleaseAction
+public class ReleasePrepareAction
     extends ContinuumActionSupport
 {
     private int projectId;
@@ -76,7 +76,7 @@ public class PrepareReleaseAction
 
     private ContinuumReleaseManagerListener listener;
 
-    public String execute()
+    public String input()
         throws Exception
     {
         Project project = getContinuum().getProject( projectId );
@@ -103,7 +103,7 @@ public class PrepareReleaseAction
 
         processProject( project.getWorkingDirectory(), "pom.xml" );
 
-        return "prompt";
+        return SUCCESS;
     }
 
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
@@ -151,7 +151,7 @@ public class PrepareReleaseAction
         }
     }
 
-    public String doPrepare()
+    public String execute()
         throws Exception
     {
         listener = new DefaultReleaseManagerListener();
@@ -169,7 +169,7 @@ public class PrepareReleaseAction
         releaseId = releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(),
                                             getDevVersionMap(), listener );
 
-        return "initialized";
+        return SUCCESS;
     }
 
     public String viewResult()

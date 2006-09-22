@@ -6,20 +6,13 @@
     </head>
     <body>
       <h2>Perform Project Release</h2>
-      <ww:form action="performRelease!doPerform.action" method="post">
-        <h3>Common Release Parameters</h3>
+      <ww:form action="releasePerform" method="post" validate="true">
+        <h3>Release Perform Parameters</h3>
         <ww:hidden name="projectId"/>
         <ww:hidden name="releaseId"/>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <ww:if test="releaseId.equals(\"\")">
-              <ww:textfield label="SCM Connection URL" name="scmUrl"/>
-              <ww:textfield label="SCM Username" name="scmUsername"/>
-              <ww:textfield label="SCM Password" name="scmPassword"/>
-              <ww:textfield label="SCM Tag" name="scmTag"/>
-              <ww:textfield label="SCM Tag Base" name="scmTagBase"/>
-            </ww:if>
-            <ww:textfield label="Maven Arguments" name="goals"/>
+            <ww:textfield label="Maven Arguments" name="goals" value="clean deploy"/>
             <ww:checkbox label="Use Release Profile" name="useReleaseProfile" value="true"/>
           </table>
         </div>
