@@ -5,7 +5,7 @@
 <validators>
   <field name="goals">
     <field-validator type="requiredstring">
-      <message key="releasePrepareAction.prepareGoals.required"/>
+      <message key="releasePerformAction.goals.required"/>
     </field-validator>
   </field>
 </validators>

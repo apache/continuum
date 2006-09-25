@@ -5,7 +5,7 @@
         <title><ww:text name="releaseProject.page.title"/></title>
     </head>
     <body>
-      <h2><ww:text name="prepareReleaseFinished.section.title"/></h2>
+      <h2><ww:text name="releaseInProgress.section.title"/></h2>
       <h3><ww:property value="name"/></h3>
       <ww:form action="releaseCleanup" method="post">
         <ww:hidden name="projectId"/>
@@ -13,8 +13,8 @@
         <div class="axial">
           <table width="100%">
             <tr>
-              <th><ww:text name="releaseProject.status"/></th>
-              <th width="100%"><ww:text name="releaseProject.phase"/></th>
+              <th><ww:text name="releaseInProgress.status"/></th>
+              <th width="100%"><ww:text name="releaseInProgress.phase"/></th>
             </tr>
             <ww:iterator value="listener.phases">
               <tr>
@@ -48,7 +48,7 @@
           <ww:url id="releaseViewResultUrl" action="releaseViewResult" namespace="/">
             <ww:param name="releaseId" value="releaseId"/>
           </ww:url>
-          <ww:a href="%{releaseViewResultUrl}"><ww:text name="releaseProject.viewOutput"/></ww:a>
+          <ww:a href="%{releaseViewResultUrl}"><ww:text name="releaseInProgress.viewOutput"/></ww:a>
         </p>
 
         <ww:submit value="Done"/>

@@ -2,12 +2,12 @@
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="releaseProject.page.title"/></title>
+        <title><ww:text name="release.page.title"/></title>
     </head>
     <body>
-      <h2>Perform Project Release</h2>
+      <h2><ww:text name="releasePerform.section.title"/></h2>
       <ww:form action="releasePerform" method="post" validate="true">
-        <h3>Release Perform Parameters</h3>
+        <h3><ww:text name="releasePerform.parameters"/></h3>
         <ww:hidden name="projectId"/>
         <ww:hidden name="releaseId"/>
         <div class="axial">

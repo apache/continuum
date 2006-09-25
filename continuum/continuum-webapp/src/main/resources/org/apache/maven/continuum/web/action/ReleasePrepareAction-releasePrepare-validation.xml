@@ -18,11 +18,6 @@
       <message key="releasePrepareAction.scmTag.required"/>
     </field-validator>
   </field>
-  <field name="scmTagBase">
-    <field-validator type="requiredstring">
-      <message key="releasePrepareAction.scmTagBase.required"/>
-    </field-validator>
-  </field>
   <field name="prepareGoals">
     <field-validator type="requiredstring">
       <message key="releasePrepareAction.prepareGoals.required"/>

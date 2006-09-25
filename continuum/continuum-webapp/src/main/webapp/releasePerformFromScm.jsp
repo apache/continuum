@@ -3,7 +3,7 @@
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="releaseProject.page.title"/></title>
+        <title><ww:text name="release.page.title"/></title>
     </head>
     <body>
       <h2>Perform Project Release</h2>
@@ -16,7 +16,9 @@
             <ww:textfield label="SCM Username" name="scmUsername"/>
             <ww:textfield label="SCM Password" name="scmPassword"/>
             <ww:textfield label="SCM Tag" name="scmTag"/>
-            <ww:textfield label="SCM Tag Base" name="scmTagBase"/>
+            <c:if test="${!empty(scmTagBase)}">
+              <ww:textfield label="SCM Tag Base" name="scmTagBase"/>
+            </c:if>
             <ww:textfield label="Maven Arguments" name="goals" value="clean deploy"/>
             <ww:checkbox label="Use Release Profile" name="useReleaseProfile" value="true"/>
           </table>

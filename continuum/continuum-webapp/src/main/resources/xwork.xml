@@ -327,7 +327,7 @@
     </action>
 
     <action name="releasePrepare" class="releasePrepare">
-      <result name="input" type="chain">prepareReleaseInput</result>
+      <result name="input" type="chain">releasePrepareInput</result>
       <result name="success" type="redirect-action">
         <param name="actionName">releaseInProgress</param>
         <param name="releaseId">${releaseId}</param>

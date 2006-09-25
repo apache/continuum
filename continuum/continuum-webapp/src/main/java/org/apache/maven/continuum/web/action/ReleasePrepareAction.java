@@ -26,6 +26,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.plugins.release.ReleaseResult;
 import org.apache.maven.plugins.release.versions.DefaultVersionInfo;
 import org.apache.maven.plugins.release.versions.VersionInfo;
+import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
@@ -83,20 +84,17 @@ public class ReleasePrepareAction
         scmUsername = project.getScmUsername();
         scmPassword = project.getScmPassword();
         scmTag = project.getScmTag();
+
         String scmUrl = project.getScmUrl();
-
-        //skip scm:provider in scm url
-        int idx = scmUrl.indexOf( ":", 4 ) + 1;
-        scmUrl = scmUrl.substring( idx );
-
-        if ( scmUrl.endsWith( "/trunk" ) )
+        if ( scmUrl.startsWith( "scm:svn:" ) )
         {
-            scmTagBase = scmUrl.substring( 0 , scmUrl.lastIndexOf( "/trunk" ) ) + "/branches";
+            scmTagBase = new SvnScmProviderRepository( scmUrl, scmUsername, scmPassword ).getTagBase();
         }
         else
         {
-            scmTagBase = scmUrl.substring( idx );
+            scmTagBase = "";
         }
+
         prepareGoals = "clean integration-test";
 
         getReleasePluginParameters( project.getWorkingDirectory(), "pom.xml" );

@@ -6,7 +6,7 @@
         <meta http-equiv="refresh" content="10;url=<ww:url includeParams="all" />"/>
     </head>
     <body>
-      <h2><ww:text name="prepareReleaseProgress.section.title"/></h2>
+      <h2><ww:text name="releaseInProgress.section.title"/></h2>
       <h3><ww:property value="name"/></h3>
       <ww:form action="releaseInProgress" method="get">
         <ww:hidden name="projectId"/>
@@ -14,8 +14,8 @@
         <div class="axial">
           <table width="100%">
             <tr>
-              <th><ww:text name="releaseProject.status"/></th>
-              <th width="100%"><ww:text name="releaseProject.phase"/></th>
+              <th><ww:text name="releaseInProgress.status"/></th>
+              <th width="100%"><ww:text name="releaseInProgress.phase"/></th>
             </tr>
             <ww:iterator value="listener.phases">
               <tr>

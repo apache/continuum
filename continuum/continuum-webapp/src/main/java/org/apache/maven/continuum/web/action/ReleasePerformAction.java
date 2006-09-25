@@ -22,6 +22,7 @@ import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.plugins.release.ReleaseResult;
 import org.apache.maven.plugins.release.config.ReleaseDescriptor;
+import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 
 import java.io.File;
 
@@ -112,34 +113,6 @@ public class ReleasePerformAction
         return execute();
     }
 
-    public String checkProgress()
-        throws Exception
-    {
-        String status;
-
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-
-        listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
-
-        if ( listener != null )
-        {
-            if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
-            {
-                status = "finished";
-            }
-            else
-            {
-                status = "inProgress";
-            }
-        }
-        else
-        {
-            throw new Exception( "There is no release on-going or finished with id: " + releaseId );
-        }
-
-        return status;
-    }
-
     private void populateFromProject()
         throws Exception
     {
@@ -148,6 +121,15 @@ public class ReleasePerformAction
         scmUrl = project.getScmUrl();
         scmUsername = project.getScmUsername();
         scmPassword = project.getScmPassword();
+
+        if ( scmUrl.startsWith( "scm:svn:" ) )
+        {
+            scmTagBase = new SvnScmProviderRepository( scmUrl, scmUsername, scmPassword ).getTagBase();
+        }
+        else
+        {
+            scmTagBase = "";
+        }
 
         releaseId = "";
     }

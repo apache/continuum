@@ -5,32 +5,17 @@
 <validators>
   <field name="scmUrl">
     <field-validator type="requiredstring">
-      <message key="releasePrepareAction.scmUrl.required"/>
-    </field-validator>
-  </field>
-  <field name="scmUsername">
-    <field-validator type="requiredstring">
-      <message key="releasePrepareAction.scmUsername.required"/>
-    </field-validator>
-  </field>
-  <field name="scmPassword">
-    <field-validator type="requiredstring">
-      <message key="releasePrepareAction.scmPassword.required"/>
+      <message key="releasePerformAction.scmUrl.required"/>
     </field-validator>
   </field>
   <field name="scmTag">
     <field-validator type="requiredstring">
-      <message key="releasePrepareAction.scmTag.required"/>
-    </field-validator>
-  </field>
-  <field name="scmTagBase">
-    <field-validator type="requiredstring">
-      <message key="releasePrepareAction.scmTagBase.required"/>
+      <message key="releasePerformAction.scmTag.required"/>
     </field-validator>
   </field>
   <field name="goals">
     <field-validator type="requiredstring">
-      <message key="releasePrepareAction.prepareGoals.required"/>
+      <message key="releasePerformAction.goals.required"/>
     </field-validator>
   </field>
 </validators>
