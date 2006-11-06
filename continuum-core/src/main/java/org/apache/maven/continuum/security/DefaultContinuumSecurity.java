@@ -19,13 +19,15 @@ package org.apache.maven.continuum.security;
 import org.apache.maven.continuum.model.system.ContinuumUser;
 import org.apache.maven.continuum.model.system.Permission;
 import org.apache.maven.continuum.model.system.UserGroup;
-import org.apache.maven.user.model.UserManager;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
+ * @deprecated use Security framework instead
+ * 
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  */
@@ -35,7 +37,7 @@ public class DefaultContinuumSecurity
     /**
      * @plexus.requirement
      */
-    private UserManager userManager;
+    private ContinuumStore store;
 
     public List getPermissions( ContinuumUser user )
         throws ContinuumSecurityException
@@ -46,16 +48,8 @@ public class DefaultContinuumSecurity
         {
             u = getGuestUser();
         }
-        
-        List groups = u.getGroups();
-        Iterator it = groups.iterator();
-        List permissions = new ArrayList();
-        while ( it.hasNext() )
-        {
-            permissions.addAll( ( (org.apache.maven.user.model.UserGroup) it.next() ).getPermissions() );
-        }
 
-        return permissions;
+        return getPermissions( u.getGroup() );
     }
 
     public List getPermissions( UserGroup group )
@@ -106,6 +100,13 @@ public class DefaultContinuumSecurity
     public ContinuumUser getGuestUser()
         throws ContinuumSecurityException
     {
-        return ( ContinuumUser ) userManager.getGuestUser();
+        try
+        {
+            return store.getGuestUser();
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumSecurityException( "Can't obtain guest user.", e );
+        }
     }
 }

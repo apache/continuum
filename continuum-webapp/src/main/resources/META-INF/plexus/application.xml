@@ -831,7 +831,7 @@
 
     <component>
       <role>org.apache.maven.continuum.initialization.ContinuumInitializer</role>
-      <implementation>org.apache.maven.continuum.initialization.DefaultContinuumInitializer</implementation>
+      <implementation>org.apache.maven.continuum.security.acegi.initialization.SecurityContinuumInitializer</implementation>
       <requirements>
         <requirement>
           <role>org.apache.maven.continuum.store.ContinuumStore</role>

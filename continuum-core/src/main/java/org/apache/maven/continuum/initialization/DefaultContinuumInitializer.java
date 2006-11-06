@@ -16,23 +16,13 @@ package org.apache.maven.continuum.initialization;
  * limitations under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Schedule;
-import org.apache.maven.continuum.model.system.ContinuumUser;
-import org.apache.maven.continuum.model.system.Permission;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
-import org.apache.maven.continuum.model.system.UserGroup;
-import org.apache.maven.continuum.security.ContinuumSecurity;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.apache.maven.user.model.PasswordRuleViolationException;
-import org.apache.maven.user.model.UserManager;
-import org.apache.maven.user.model.UserSecurityPolicy;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.jpox.SchemaTool;
 
@@ -62,11 +52,6 @@ public class DefaultContinuumInitializer
      * @plexus.requirement
      */
     private ContinuumStore store;
-    
-    /**
-     * @plexus.requirement
-     */
-    private UserManager userManager;
 
     // ----------------------------------------------------------------------
     //
@@ -118,19 +103,7 @@ public class DefaultContinuumInitializer
 
             createGroups();
 
-            UserSecurityPolicy securityPolicy = userManager.getSecurityPolicy();
-
-            List rules = new ArrayList( securityPolicy.getPasswordRules() );
-
-            //lift all password restrictions temporarily
-            securityPolicy.getPasswordRules().clear();
-
-            createDefaultUsers();
-
-            createDefaultProjectGroup();
-
-            //put back password validation rules
-            securityPolicy.setPasswordRules( rules );
+            createUsers();
 
             getLogger().info( "... Continuum initialized" );
         }
@@ -138,13 +111,6 @@ public class DefaultContinuumInitializer
         {
             throw new ContinuumInitializationException( "Can't initialize default schedule.", e );
         }
-    }
-    
-    private void createDefaultUsers()
-    	throws ContinuumStoreException
-    {
-        createGuestUser();
-        createAdminUser();
     }
 
     // ----------------------------------------------------------------------
@@ -166,139 +132,20 @@ public class DefaultContinuumInitializer
         return schedule;
     }
 
-    private void createPermissions()
+    protected void createPermissions()
         throws ContinuumStoreException
     {
-        createPermission( "addProject", "Add Projects" );
-
-        createPermission( "manageConfiguration", "Manage Continuum Configuration" );
-
-        createPermission( "manageSchedule", "Manage Schedules" );
-
-        createPermission( "manageUsers", "Manage Users/Groups" );
-
-        createPermission( "user", "Authenticated User" );
-
-        createPermission( "admin", "Administrator" );
     }
 
-    private Permission createPermission( String name, String description )
+    protected void createGroups()
         throws ContinuumStoreException
     {
-        Permission perm = ( Permission ) userManager.getPermission( name );
-
-        if ( perm == null )
-        {
-            perm = new Permission();
-
-            perm.setName( name );
-
-            perm.setDescription( description );
-
-            perm = ( Permission ) userManager.addPermission( perm );
-        }
-
-        return perm;
+        createDefaultProjectGroup();
     }
 
-    private void createGroups()
+    protected void createUsers()
         throws ContinuumStoreException
     {
-        // Continuum Administrator
-        if ( userManager.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) == null )
-        {
-            List adminPermissions = userManager.getPermissions();
-
-            UserGroup adminGroup = new UserGroup();
-
-            adminGroup.setName( ContinuumSecurity.ADMIN_GROUP_NAME );
-
-            adminGroup.setDescription( "Continuum Admin Group" );
-
-            adminGroup.setPermissions( adminPermissions );
-
-            userManager.addUserGroup( adminGroup );
-        }
-
-        // Continuum Guest
-        if ( userManager.getUserGroup( ContinuumSecurity.GUEST_GROUP_NAME ) == null )
-        {
-            UserGroup guestGroup = new UserGroup();
-
-            guestGroup.setName( ContinuumSecurity.GUEST_GROUP_NAME );
-
-            guestGroup.setDescription( "Continuum Guest Group" );
-
-            guestGroup.setPermissions( new ArrayList() );
-
-            userManager.addUserGroup( guestGroup );
-        }
-    }
-
-    private void createGuestUser()
-        throws ContinuumStoreException
-    {
-        if ( userManager.getGuestUser() == null )
-        {
-            ContinuumUser guest = new ContinuumUser();
-
-            guest.setUsername( "guest" );
-
-            guest.setFullName( "Anonymous User" );
-
-            guest.addGroup( userManager.getGuestUserGroup() );
-
-            guest.setGuest( true );
-
-            try
-            {
-                userManager.addUser( guest );
-            }
-// TODO
-//            catch ( EntityExistsException eee )
-//            {
-//                throw new ContinuumStoreException( "Error adding user, the user already exists.", eee );
-//            }
-            catch ( PasswordRuleViolationException pre )
-            {
-                // TODO this must not happen for the predefined users
-                throw new ContinuumStoreException( "There was a password rule violation.", pre );
-            }
-        }
-    }
-
-    private void createAdminUser()
-        throws ContinuumStoreException
-    {
-        if ( userManager.getUser( "admin" ) == null )
-        {
-            ContinuumUser admin = new ContinuumUser();
-
-            admin.setUsername( "admin" );
-
-            admin.setFullName( "Administrator" );
-
-            admin.addGroup( userManager.getDefaultUserGroup() );
-
-            admin.addGroup( userManager.getUserGroup( ContinuumSecurity.ADMIN_GROUP_NAME ) );
-
-            admin.setPassword( "admin" );
-
-            try
-            {
-                userManager.addUser( admin );
-            }
-// TODO
-//            catch ( EntityExistsException eee )
-//            {
-//                throw new ContinuumStoreException( "The user already exists.", eee );
-//            }
-            catch ( PasswordRuleViolationException pre )
-            {
-                // TODO this must not happen for the predefined users
-                throw new ContinuumStoreException( "There was a password rule violation.", pre );
-            }
-        }
     }
 
     private void createDefaultProjectGroup()

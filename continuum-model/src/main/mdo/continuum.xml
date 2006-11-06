@@ -250,7 +250,7 @@
           <type>String</type>
           <description>The mechanism used to deliver notifications.</description>
         </field>
-        <field>
+        <field jpox.column="fromLocation">
           <name>from</name>
           <version>1.0.0+</version>
           <type>int</type>
@@ -480,7 +480,7 @@
           <version>1.0.0+</version>
           <type>String</type>
         </field>
-        <field stash.maxSize="8192">
+        <field stash.maxSize="8192" jpox.column="scmException">
           <name>exception</name>
           <version>1.0.0+</version>
           <type>String</type>
@@ -707,7 +707,7 @@
           <version>1.0.0+</version>
           <type>String</type>
         </field>
-        <field stash.maxSize="8192">
+        <field stash.maxSize="8192" jpox.column="testException">
           <name>exception</name>
           <version>1.0.0+</version>
           <type>String</type>
@@ -964,6 +964,201 @@
           <version>1.0.0+</version>
           <type>boolean</type>
           <defaultValue>false</defaultValue>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>UserGroup</name>
+      <packageName>org.apache.maven.continuum.model.system</packageName>
+      <superClass>org.apache.maven.user.model.UserGroup</superClass>
+      <version>1.0.0+</version>
+      <description>@deprecated use security framework instead</description>
+      <fields>
+        <field>
+          <name>id</name>
+          <identifier>true</identifier>
+          <version>1.0.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>permissions</name>
+          <version>1.0.0+</version>
+          <association stash.part="true" jpox.dependent="false">
+            <type>Permission</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>ContinuumUser</name>
+      <packageName>org.apache.maven.continuum.model.system</packageName>
+      <superClass>org.apache.maven.user.model.User</superClass>
+      <version>1.0.0+</version>
+      <description>@deprecated use security framework instead</description>
+      <fields>
+        <field>
+          <name>accountId</name>
+          <version>1.0.0+</version>
+          <type>int</type>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>username</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>guest</name>
+          <version>1.0.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+        </field>
+        <field>
+          <name>hashedPassword</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>fullName</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>email</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field jpox.column="userGroup">
+          <name>group</name>
+          <version>1.0.0+</version>
+          <association stash.part="true" jpox.dependent="false">
+            <type>UserGroup</type>
+          </association>
+        </field>
+        <field>
+          <name>notificationAddresses</name>
+          <version>1.0.0+</version>
+          <association stash.part="true" >
+            <type>NotificationAddress</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>1.0.0+</version>
+          <code><![CDATA[
+            public String getPassword()
+            {
+                return "";
+            }
+
+            public void setPassword( String password )
+            {
+                setHashedPassword( crypt( password ) );
+            }
+
+            public boolean equalsPassword( String password )
+            {
+                if ( hashedPassword == null && password == null )
+                {
+                    return true;
+                }
+
+                if ( ( hashedPassword == null && password != null ) || ( hashedPassword == null && password != null ) )
+                {
+                    return false;
+                }
+
+                return hashedPassword.equals( crypt( password ) );
+            }
+
+            private String crypt( String data )
+            {
+                try
+                {
+                    java.security.MessageDigest digester = java.security.MessageDigest.getInstance( "SHA-1" );
+                    digester.reset();
+                    digester.update( data.getBytes() );
+                    return encode( digester.digest() );
+                }
+                catch( Exception e )
+                {
+                    return data;
+                }
+            }
+
+            /**
+             * Encodes a 128 bit or 160-bit byte array into a String.
+             *
+             * @param binaryData Array containing the digest
+             * @return Encoded hex string, or null if encoding failed
+             */
+            private String encode( byte[] binaryData )
+            {
+                if ( binaryData.length != 16 && binaryData.length != 20 )
+                {
+                    int bitLength = binaryData.length * 8;
+                    throw new IllegalArgumentException( "Unrecognised length for binary data: " + bitLength + " bits" );
+                }
+
+                String retValue = "";
+
+                for ( int i = 0; i < binaryData.length; i++ )
+                {
+                    String t = Integer.toHexString( binaryData[i] & 0xff );
+
+                    if ( t.length() == 1 )
+                    {
+                        retValue += ( "0" + t );
+                    }
+                    else
+                    {
+                        retValue += t;
+                    }
+                }
+
+                return retValue.trim();
+            }
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+
+    <class>
+      <name>Permission</name>
+      <packageName>org.apache.maven.continuum.model.system</packageName>
+      <superClass>org.apache.maven.user.model.Permission</superClass>
+      <version>1.0.0+</version>
+      <description>@deprecated use security framework instead</description>
+      <fields>
+        <field>
+          <name>id</name>
+          <identifier>true</identifier>
+          <version>1.0.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.0.0+</version>
+          <type>String</type>
         </field>
       </fields>
     </class>

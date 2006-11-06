@@ -19,6 +19,7 @@
           <execution>
             <goals>
               <goal>java</goal>
+              <goal>jpox-jdo-mapping</goal>
             </goals>
           </execution>
         </executions>

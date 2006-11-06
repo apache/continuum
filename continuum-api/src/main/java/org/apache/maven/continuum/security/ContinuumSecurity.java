@@ -22,6 +22,8 @@ import org.apache.maven.continuum.model.system.UserGroup;
 import java.util.List;
 
 /**
+ * @deprecated use Security framework instead
+ * 
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  */

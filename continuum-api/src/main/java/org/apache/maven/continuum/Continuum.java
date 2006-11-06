@@ -348,30 +348,54 @@ public interface Continuum
     // Security
     // ----------------------------------------------------------------------
 
+    /**
+     * @deprecated use Security framework instead
+     */
     ContinuumSecurity getSecurity();
 
     // ----------------------------------------------------------------------
     // User
     // ----------------------------------------------------------------------
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void addUser( ContinuumUser user )
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void addUser( Map configuration )
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void updateUser( ContinuumUser user )
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void updateUser( int userId, Map configuration )
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     List getUsers()
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     ContinuumUser getUser( int userId )
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void removeUser( int userId )
         throws ContinuumException;
 
@@ -379,23 +403,44 @@ public interface Continuum
     // User Group
     // ----------------------------------------------------------------------
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void addUserGroup( UserGroup userGroup );
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void addUserGroup( Map configuration )
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void updateUserGroup( UserGroup userGroup )
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void updateUserGroup( int userGroupId, Map configuration )
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     List getUserGroups()
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     UserGroup getUserGroup( int userGroupId )
         throws ContinuumException;
 
+    /**
+     * @deprecated use Security framework instead
+     */
     void removeUserGroup( int userGroupId )
         throws ContinuumException;
 
