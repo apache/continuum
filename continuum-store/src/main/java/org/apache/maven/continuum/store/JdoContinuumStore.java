@@ -598,10 +598,10 @@ public class JdoContinuumStore
     }
 
 
-    public BuildDefinition getDefaultBuildDefinitionForProjectGroup( int projectGroupId )
+    public BuildDefinition getDefaultBuildDefinitionForProjectGroup( String groupKey )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
-        ProjectGroup projectGroup = getProjectGroupWithBuildDetails( projectGroupId );
+        ProjectGroup projectGroup = getProjectGroupWithBuildDetails( groupKey );
 
         for ( Iterator i = projectGroup.getBuildDefinitions().iterator(); i.hasNext(); )
         {
@@ -722,10 +722,10 @@ public class JdoContinuumStore
         PlexusJdoUtils.rollbackIfActive( tx );
     }
 
-    public ProjectGroup getProjectGroup( int projectGroupId )
+    public ProjectGroup getProjectGroup( String groupKey )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
-        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId );
+        return (ProjectGroup) getObjectById( ProjectGroup.class, groupKey );
     }
 
     private Object getObjectById( Class clazz, int id )
@@ -792,7 +792,7 @@ public class JdoContinuumStore
     }
 
     // todo get this natively supported in the store
-    public List getProjectsWithDependenciesByGroupId( int projectGroupId )
+    public List getProjectsWithDependenciesByGroupId( String groupKey )
     {
         List allProjects = getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
 
@@ -802,7 +802,7 @@ public class JdoContinuumStore
         {
             Project project = (Project) i.next();
 
-            if ( project.getProjectGroup().getId() == projectGroupId )
+            if ( project.getProjectGroup().getId() == groupKey )
             {
                 groupProjects.add( project );
             }

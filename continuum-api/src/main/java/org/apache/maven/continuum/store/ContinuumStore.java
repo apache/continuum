@@ -25,6 +25,7 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
+import org.apache.maven.continuum.key.GroupProjectKey;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,13 +54,13 @@ public interface ContinuumStore
      * <p/>
      * this should be the most common usage of the default build definition accessing methods
      *
-     * @param projectId
+     * @param groupProjectKey
      * @return
      * @throws ContinuumStoreException
      * @throws ContinuumObjectNotFoundException
      *
      */
-    BuildDefinition getDefaultBuildDefinition( int projectId )
+    BuildDefinition getDefaultBuildDefinition( GroupProjectKey groupProjectKey )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     /**
