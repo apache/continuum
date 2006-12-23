@@ -286,19 +286,6 @@
           </association>
         </field>
       </fields>
-      <codeSegments>
-        <codeSegment>
-          <version>1.1.0+</version>
-          <code><![CDATA[
-
-              public String getUniqueKey()
-              {
-                  return getGroupKey() + "/" + getKey();
-              }
-              
-          ]]></code>
-        </codeSegment>
-      </codeSegments>
     </class>
 
     <class>
@@ -1145,6 +1132,28 @@
            ]]></code>
         </codeSegment>
       </codeSegments>
+    </class>
+    <class jpox.enabled="false">
+      <name>CompositeKey</name>
+      <version>1.1.0+</version>
+      <packageName>org.apache.maven.continuum.model</packageName>
+      <description>
+        Contains the data necessary for distingishing a group or individual project.
+      </description>
+      <fields>
+        <field>
+          <name>groupKey</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>The group key for the X in question.</description>
+        </field>
+        <field>
+          <name>projectKey</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>The project key for the X in question.</description>
+        </field>
+      </fields>
     </class>
   </classes>
 </model>
