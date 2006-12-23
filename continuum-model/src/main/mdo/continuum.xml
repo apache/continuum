@@ -68,6 +68,12 @@
           <type>int</type>
           <identifier>true</identifier>
         </field>
+        <field jpox.column="groupKey">
+          <name>key</name>
+          <verison>1.1.0+</verison>
+          <required>true</required>
+          <type>String</type>
+        </field>
         <field>
           <name>groupId</name>
           <version>1.1.0+</version>
@@ -120,6 +126,18 @@
           <identifier>true</identifier>
           <version>1.1.0+</version>
           <type>int</type>
+        </field>
+        <field jpox.column="projectKey">
+          <name>key</name>
+          <verison>1.1.0+</verison>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>groupKey</name>
+          <verison>1.1.0+</verison>
+          <required>true</required>
+          <type>String</type>          
         </field>
         <field>
           <name>groupId</name>
@@ -268,6 +286,19 @@
           </association>
         </field>
       </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>1.1.0+</version>
+          <code><![CDATA[
+
+              public String getUniqueKey()
+              {
+                  return getGroupKey() + "::" + getKey();
+              }
+              
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
     </class>
 
     <class>
