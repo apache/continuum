@@ -293,7 +293,7 @@
 
               public String getUniqueKey()
               {
-                  return getGroupKey() + "::" + getKey();
+                  return getGroupKey() + "/" + getKey();
               }
               
           ]]></code>
