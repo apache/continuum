@@ -1,4 +1,8 @@
 package org.apache.maven.continuum.key;
+
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+
 /*
  * Copyright 2006 The Apache Software Foundation.
  *
@@ -16,34 +20,81 @@ package org.apache.maven.continuum.key;
  */
 
 /**
- * GroupProjectKey:
+ * Wraps up the data necessary for distinguishing a group or an
+ * individual project.
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
  * @version: $ID:$
  */
 public class GroupProjectKey
 {
+    /**
+     * String based unique key for a {@link ProjectGroup}. 
+     */
     private String groupKey;
 
+    /**
+     * String based unique key for a {@link Project} within a 
+     * {@link ProjectGroup}. 
+     */
     private String projectKey;
 
+    /**
+     * Returns the unique {@link ProjectGroup} key.
+     * @return unique {@link ProjectGroup} key.
+     */
     public String getGroupKey()
     {
         return groupKey;
     }
 
+    /**
+     * Sets the unique {@link ProjectGroup} key.
+     * @param groupKey key to set for the {@link ProjectGroup}.
+     */
     public void setGroupKey( String groupKey )
     {
         this.groupKey = groupKey;
     }
 
+    /**
+     * Returns {@link Project} key.
+     * @return Project key.
+     */
     public String getProjectKey()
     {
         return projectKey;
     }
 
+    /**
+     * Sets the {@link Project} key.
+     * @param projectKey key to set for the {@link Project}.
+     */
     public void setProjectKey( String projectKey )
     {
         this.projectKey = projectKey;
+    }
+
+    /**
+     * Determines if there was a group key set for a {@link ProjectGroup} or 
+     * not.
+     *  
+     * @return <code>true</code> if the {@link ProjectGroup} was set, else 
+     *          <code>false</code>.
+     */
+    public boolean hasGroupKey()
+    {
+        return ( null != groupKey && !groupKey.trim().equals( "" ) );
+    }
+
+    /**
+     * Determines if there was a project key set for a {@link Project} or not.
+     *  
+     * @return <code>true</code> if the {@link Project} was set, else 
+     *          <code>false</code>.
+     */
+    public boolean hasProjectKey()
+    {
+        return ( null != projectKey && !projectKey.trim().equals( "" ) );
     }
 }
