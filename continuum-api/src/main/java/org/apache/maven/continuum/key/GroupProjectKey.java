@@ -39,6 +39,21 @@ public class GroupProjectKey
      */
     private String projectKey;
 
+    public GroupProjectKey()
+    {
+        // do nothing.
+    }
+
+    /**
+     * @param groupKey {@link ProjectGroup}'s key.
+     * @param projectKey {@link Project}'s key.
+     */
+    public GroupProjectKey( String groupKey, String projectKey )
+    {
+        this.groupKey = groupKey;
+        this.projectKey = projectKey;
+    }
+
     /**
      * Returns the unique {@link ProjectGroup} key.
      * @return unique {@link ProjectGroup} key.
