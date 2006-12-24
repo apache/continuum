@@ -254,14 +254,14 @@ public interface ContinuumStore
     /**
      * TODO: document!
      * 
-     * @param groupProjectkey Composite key that identifies the target project 
+     * @param groupProjectKey Composite key that identifies the target project 
      *                          to be looked up.
      * @return {@link Project} instance that matches the specified 
      *         {@link GroupProjectKey}.
      * @throws ContinuumObjectNotFoundException
      * @throws ContinuumStoreException
      */
-    Project getProjectWithCheckoutResult( GroupProjectKey groupProjectkey )
+    Project getProjectWithCheckoutResult( GroupProjectKey groupProjectKey )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     BuildResult getBuildResult( int buildId )
