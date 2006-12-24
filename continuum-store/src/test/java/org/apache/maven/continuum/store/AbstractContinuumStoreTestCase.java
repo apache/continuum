@@ -435,8 +435,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertProjectGroupEquals( defaultProjectGroup, store.getProjectGroup( new GroupProjectKey(defaultProjectGroup.getKey(), null) ) );
         assertProjectGroupEquals( testProjectGroup2, store.getProjectGroup( new GroupProjectKey(testProjectGroup2.getKey() , null) ) );
 
-        assertProjectEquals( testProject1, store.getProject( new GroupProjectKey( null, testProject1.getKey() ) ) );
-        assertProjectEquals( testProject2, store.getProject( new GroupProjectKey( null, testProject2.getKey() ) ) );
+        assertProjectEquals( testProject1, store.getProject( new GroupProjectKey( testProject1.getProjectGroup().getKey(), testProject1.getKey() ) ) );
+        assertProjectEquals( testProject2, store.getProject( new GroupProjectKey( testProject2.getProjectGroup().getKey(), testProject2.getKey() ) ) );
 
         assertScheduleEquals( testSchedule1, store.getSchedule( testSchedule1.getId() ) );
         assertScheduleEquals( testSchedule2, store.getSchedule( testSchedule2.getId() ) );
