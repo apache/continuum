@@ -16,6 +16,7 @@ package org.apache.maven.continuum.store;
  * limitations under the License.
  */
 
+import org.apache.maven.continuum.key.GroupProjectKey;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Profile;
@@ -431,11 +432,11 @@ public abstract class AbstractContinuumStoreTestCase
     protected void assertBuildDatabase()
         throws ContinuumStoreException
     {
-        assertProjectGroupEquals( defaultProjectGroup, store.getProjectGroup( defaultProjectGroup.getId() ) );
-        assertProjectGroupEquals( testProjectGroup2, store.getProjectGroup( testProjectGroup2.getId() ) );
+        assertProjectGroupEquals( defaultProjectGroup, store.getProjectGroup( new GroupProjectKey(defaultProjectGroup.getKey(), null) ) );
+        assertProjectGroupEquals( testProjectGroup2, store.getProjectGroup( new GroupProjectKey(testProjectGroup2.getKey() , null) ) );
 
-        assertProjectEquals( testProject1, store.getProject( testProject1.getId() ) );
-        assertProjectEquals( testProject2, store.getProject( testProject2.getId() ) );
+        assertProjectEquals( testProject1, store.getProject( new GroupProjectKey( null, testProject1.getKey() ) ) );
+        assertProjectEquals( testProject2, store.getProject( new GroupProjectKey( null, testProject2.getKey() ) ) );
 
         assertScheduleEquals( testSchedule1, store.getSchedule( testSchedule1.getId() ) );
         assertScheduleEquals( testSchedule2, store.getSchedule( testSchedule2.getId() ) );

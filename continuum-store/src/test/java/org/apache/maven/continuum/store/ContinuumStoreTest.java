@@ -16,6 +16,7 @@ package org.apache.maven.continuum.store;
  * limitations under the License.
  */
 
+import org.apache.maven.continuum.key.GroupProjectKey;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Profile;
@@ -43,6 +44,11 @@ public class ContinuumStoreTest
     extends AbstractContinuumStoreTestCase
 {
 
+    private static final String INVALID_KEY = "invalidKey";
+    
+    /**
+     * @deprecated <em>To be removed</em>
+     */
     private static final int INVALID_ID = 15000;
 
     // ----------------------------------------------------------------------
@@ -65,14 +71,14 @@ public class ContinuumStoreTest
         store.addProjectGroup( group );
         copy.setId( group.getId() );
 
-        ProjectGroup retrievedGroup = store.getProjectGroup( group.getId() );
+        ProjectGroup retrievedGroup = store.getProjectGroup( new GroupProjectKey( group.getKey(), null ) );
         assertProjectGroupEquals( copy, retrievedGroup );
     }
 
     public void testGetProjectGroup()
         throws ContinuumStoreException
     {
-        ProjectGroup retrievedGroup = store.getProjectGroupWithProjects( defaultProjectGroup.getId() );
+        ProjectGroup retrievedGroup = store.getProjectGroupWithProjects( new GroupProjectKey( defaultProjectGroup.getKey(), null ) );
         assertProjectGroupEquals( defaultProjectGroup, retrievedGroup );
 
         List projects = retrievedGroup.getProjects();
@@ -99,8 +105,8 @@ public class ContinuumStoreTest
         throws ContinuumStoreException
     {
         try
-        {
-            store.getProjectGroup( INVALID_ID );
+        {   
+            store.getProject( new GroupProjectKey(INVALID_KEY, null) );
             fail( "Should not find group with invalid ID" );
         }
         catch ( ContinuumObjectNotFoundException expected )
@@ -112,7 +118,7 @@ public class ContinuumStoreTest
     public void testEditProjectGroup()
         throws ContinuumStoreException
     {
-        ProjectGroup newGroup = store.getProjectGroup( testProjectGroup2.getId() );
+        ProjectGroup newGroup = store.getProjectGroup( new GroupProjectKey( testProjectGroup2.getKey(), null ) );
 
         newGroup.setName( "testEditProjectGroup2" );
         newGroup.setDescription( "testEditProjectGroup updated description" );
@@ -122,7 +128,7 @@ public class ContinuumStoreTest
         copy.setId( newGroup.getId() );
         store.updateProjectGroup( newGroup );
 
-        ProjectGroup retrievedGroup = store.getProjectGroup( testProjectGroup2.getId() );
+        ProjectGroup retrievedGroup = store.getProjectGroup( new GroupProjectKey(testProjectGroup2.getKey(), null) );
         assertProjectGroupEquals( copy, retrievedGroup );
 
     }
@@ -164,7 +170,7 @@ public class ContinuumStoreTest
                 assertProjectGroupEquals( testProjectGroup2, group );
                 assertTrue( "check no projects", projects.isEmpty() );
             }
-            else if ( group.getId() == defaultProjectGroup.getId() )
+            else if ( group.getKey().equals( defaultProjectGroup.getKey()) )
             {
                 assertProjectGroupEquals( defaultProjectGroup, group );
                 assertEquals( "Check number of projects", 2, projects.size() );
@@ -183,7 +189,7 @@ public class ContinuumStoreTest
     public void testGetProject()
         throws ContinuumStoreException
     {
-        Project retrievedProject = store.getProject( testProject1.getId() );
+        Project retrievedProject = store.getProject( new GroupProjectKey( null, testProject1.getKey() ) );
         assertProjectEquals( testProject1, retrievedProject );
         checkProjectDefaultFetchGroup( retrievedProject );
     }
@@ -191,7 +197,7 @@ public class ContinuumStoreTest
     public void testGetProjectWithDetails()
         throws ContinuumStoreException
     {
-        Project retrievedProject = store.getProjectWithAllDetails( testProject1.getId() );
+        Project retrievedProject = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertProjectEquals( testProject1, retrievedProject );
         checkProjectFetchGroup( retrievedProject, false, false, true, true );
 
@@ -204,7 +210,7 @@ public class ContinuumStoreTest
     public void testGetProjectWithCheckoutResult()
         throws ContinuumStoreException
     {
-        Project retrievedProject = store.getProjectWithCheckoutResult( testProject1.getId() );
+        Project retrievedProject = store.getProjectWithCheckoutResult( new GroupProjectKey( null, testProject1.getKey() ) );
         assertProjectEquals( testProject1, retrievedProject );
         assertScmResultEquals( testCheckoutResult1, retrievedProject.getCheckoutResult()  );
         checkProjectFetchGroup( retrievedProject, true, false, false, false );
@@ -215,7 +221,7 @@ public class ContinuumStoreTest
     {
         try
         {
-            store.getProject( INVALID_ID );
+            store.getProject( new GroupProjectKey( null, INVALID_KEY ) );
             fail( "Should not find project with invalid ID" );
         }
         catch ( ContinuumObjectNotFoundException expected )
@@ -227,7 +233,7 @@ public class ContinuumStoreTest
     public void testEditProject()
         throws ContinuumStoreException
     {
-        Project newProject = store.getProject( testProject2.getId() );
+        Project newProject = store.getProject( new GroupProjectKey(null, testProject2.getKey()) );
 
         newProject.setName( "testEditProject2" );
         newProject.setDescription( "testEditProject updated description" );
@@ -237,7 +243,7 @@ public class ContinuumStoreTest
         copy.setId( newProject.getId() );
         store.updateProject( newProject );
 
-        Project retrievedProject = store.getProject( testProject2.getId() );
+        Project retrievedProject = store.getProject( new GroupProjectKey(null, testProject2.getKey()) );
         assertProjectEquals( copy, retrievedProject );
 
     }
@@ -415,11 +421,11 @@ public class ContinuumStoreTest
     public void testDeleteProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithBuilds( testProject1.getId() );
+        Project project = store.getProjectWithBuilds( new GroupProjectKey( null, testProject1.getKey() ) );
 
         store.removeProject( project );
 
-        ProjectGroup projectGroup = store.getProjectGroupWithProjects( defaultProjectGroup.getId() );
+        ProjectGroup projectGroup = store.getProjectGroupWithProjects( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         assertEquals( "check size is now 1", 1, projectGroup.getProjects().size() );
         assertProjectEquals( testProject2, (Project) projectGroup.getProjects().get( 0 ) );
 
@@ -429,11 +435,11 @@ public class ContinuumStoreTest
     public void testDeleteProjectGroup()
         throws ContinuumStoreException
     {
-        store.removeProjectGroup( store.getProjectGroup( defaultProjectGroup.getId() ) );
+        store.removeProjectGroup( store.getProjectGroup( new GroupProjectKey(defaultProjectGroup.getKey(), null ) ) );
 
         try
         {
-            store.getProjectGroup( defaultProjectGroup.getId() );
+            store.getProjectGroup( new GroupProjectKey( defaultProjectGroup.getKey(), null ) );
             fail( "Project group was not deleted" );
         }
         catch ( ContinuumObjectNotFoundException expected )
@@ -450,7 +456,7 @@ public class ContinuumStoreTest
     public void testDeleteBuildResult()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithBuilds( testProject1.getId() );
+        Project project = store.getProjectWithBuilds( new GroupProjectKey( null, testProject1.getKey() ) );
 
         for ( Iterator i = project.getBuildResults().iterator(); i.hasNext(); )
         {
@@ -462,11 +468,11 @@ public class ContinuumStoreTest
         }
         store.updateProject( project );
 
-        project = store.getProjectWithBuilds( testProject1.getId() );
+        project = store.getProjectWithBuilds( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check size is now 1", 1, project.getBuildResults().size() );
         assertBuildResultEquals( testBuildResult2, (BuildResult) project.getBuildResults().get( 0 ) );
 
-        List results = store.getAllBuildsForAProjectByDate( testProject1.getId() );
+        List results = store.getAllBuildsForAProjectByDate( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check item count", 1, results.size() );
         assertBuildResultEquals( testBuildResult2, (BuildResult) results.get( 0 ) );
 
@@ -492,7 +498,7 @@ public class ContinuumStoreTest
 
     public void testGetAllBuildsForAProject()
     {
-        List results = store.getAllBuildsForAProjectByDate( testProject1.getId() );
+        List results = store.getAllBuildsForAProjectByDate( new GroupProjectKey( null, testProject1.getKey() ) );
 
         assertEquals( "check item count", 2, results.size() );
 
@@ -520,7 +526,7 @@ public class ContinuumStoreTest
     public void testGetProjectGroupWithDetails()
         throws ContinuumStoreException
     {
-        ProjectGroup retrievedGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        ProjectGroup retrievedGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         assertProjectGroupEquals( defaultProjectGroup, retrievedGroup );
         assertNotifiersEqual( defaultProjectGroup.getNotifiers(), retrievedGroup.getNotifiers() );
         assertBuildDefinitionsEqual( retrievedGroup.getBuildDefinitions(), defaultProjectGroup.getBuildDefinitions() );
@@ -581,14 +587,14 @@ public class ContinuumStoreTest
     public void testAddDeveloperToProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
 
         ProjectDeveloper developer = createTestDeveloper( 11, "email TADTP", "name TADTP", "scmId TADTP" );
         ProjectDeveloper copy = createTestDeveloper( developer );
         project.addDeveloper( developer );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check # devs", 2, project.getDevelopers().size() );
         assertDeveloperEquals( copy, (ProjectDeveloper) project.getDevelopers().get( 1 ) );
     }
@@ -596,7 +602,7 @@ public class ContinuumStoreTest
     public void testEditDeveloper()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
 
         ProjectDeveloper newDeveloper = (ProjectDeveloper) project.getDevelopers().get( 0 );
         newDeveloper.setName( "name1.1" );
@@ -605,7 +611,7 @@ public class ContinuumStoreTest
         ProjectDeveloper copy = createTestDeveloper( newDeveloper );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check # devs", 1, project.getDevelopers().size() );
         assertDeveloperEquals( copy, (ProjectDeveloper) project.getDevelopers().get( 0 ) );
     }
@@ -613,11 +619,11 @@ public class ContinuumStoreTest
     public void testDeleteDeveloper()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         project.getDevelopers().remove( 0 );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check size is now 0", 0, project.getDevelopers().size() );
 
         // !! These actually aren't happening !!
@@ -627,14 +633,14 @@ public class ContinuumStoreTest
     public void testAddDependencyToProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
 
         ProjectDependency dependency = createTestDependency( "TADTP groupId", "TADTP artifactId", "TADTP version" );
         ProjectDependency copy = createTestDependency( dependency );
         project.addDependency( dependency );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check # deps", 3, project.getDependencies().size() );
         assertDependencyEquals( copy, (ProjectDependency) project.getDependencies().get( 2 ) );
     }
@@ -642,7 +648,7 @@ public class ContinuumStoreTest
     public void testEditDependency()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
 
         ProjectDependency newDependency = (ProjectDependency) project.getDependencies().get( 0 );
         newDependency.setGroupId( "groupId1.1" );
@@ -651,7 +657,7 @@ public class ContinuumStoreTest
         ProjectDependency copy = createTestDependency( newDependency );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check # deps", 2, project.getDependencies().size() );
         assertDependencyEquals( copy, (ProjectDependency) project.getDependencies().get( 0 ) );
     }
@@ -659,12 +665,12 @@ public class ContinuumStoreTest
     public void testDeleteDependency()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         ProjectDependency dependency = (ProjectDependency) project.getDependencies().get( 1 );
         project.getDependencies().remove( 0 );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check size is now 1", 1, project.getDependencies().size() );
         assertDependencyEquals( dependency, (ProjectDependency) project.getDependencies().get( 0 ) );
 
@@ -675,14 +681,14 @@ public class ContinuumStoreTest
     public void testAddNotifierToProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
 
         ProjectNotifier notifier = createTestNotifier( 13, true, false, true, "TADNTP type" );
         ProjectNotifier copy = createTestNotifier( notifier );
         project.addNotifier( notifier );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check # notifiers", 2, project.getNotifiers().size() );
         assertNotifierEquals( copy, (ProjectNotifier) project.getNotifiers().get( 1 ) );
     }
@@ -690,7 +696,7 @@ public class ContinuumStoreTest
     public void testEditNotifier()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
 
         ProjectNotifier newNotifier = (ProjectNotifier) project.getNotifiers().get( 0 );
         // If we use "type1.1", jpox-rc2 store "type11", weird
@@ -700,7 +706,7 @@ public class ContinuumStoreTest
         ProjectNotifier copy = createTestNotifier( newNotifier );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check # notifiers", 1, project.getNotifiers().size() );
         assertNotifierEquals( copy, (ProjectNotifier) project.getNotifiers().get( 0 ) );
     }
@@ -708,11 +714,11 @@ public class ContinuumStoreTest
     public void testDeleteNotifier()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         project.getNotifiers().remove( 0 );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check size is now 0", 0, project.getNotifiers().size() );
 
         // !! These actually aren't happening !!
@@ -722,7 +728,7 @@ public class ContinuumStoreTest
     public void testAddBuildDefinitionToProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
 
         Profile profile = store.getProfile( testProfile1.getId() );
         Schedule schedule = store.getSchedule( testSchedule1.getId() );
@@ -732,7 +738,7 @@ public class ContinuumStoreTest
         project.addBuildDefinition( buildDefinition );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check # build defs", 3, project.getBuildDefinitions().size() );
         BuildDefinition retrievedBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 2 );
         assertBuildDefinitionEquals( copy, retrievedBuildDefinition );
@@ -743,7 +749,7 @@ public class ContinuumStoreTest
     public void testEditBuildDefinition()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
 
         BuildDefinition newBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 0 );
         // If we use "arguments1.1", jpox-rc2 store "arguments11", weird
@@ -753,7 +759,7 @@ public class ContinuumStoreTest
         BuildDefinition copy = createTestBuildDefinition( newBuildDefinition );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check # build defs", 2, project.getBuildDefinitions().size() );
         BuildDefinition retrievedBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 0 );
         assertBuildDefinitionEquals( copy, retrievedBuildDefinition );
@@ -764,12 +770,12 @@ public class ContinuumStoreTest
     public void testDeleteBuildDefinition()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         BuildDefinition buildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 1 );
         project.getBuildDefinitions().remove( 0 );
         store.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = store.getProjectWithAllDetails( new GroupProjectKey( null, testProject1.getKey() ) );
         assertEquals( "check size is now 1", 1, project.getBuildDefinitions().size() );
         BuildDefinition retrievedBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 0 );
         assertBuildDefinitionEquals( buildDefinition, retrievedBuildDefinition );
@@ -784,14 +790,14 @@ public class ContinuumStoreTest
     public void testAddNotifierToProjectGroup()
         throws ContinuumStoreException
     {
-        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
 
         ProjectNotifier notifier = createTestNotifier( 14, true, false, true, "TADNTPG type" );
         ProjectNotifier copy = createTestNotifier( notifier );
         projectGroup.addNotifier( notifier );
         store.updateProjectGroup( projectGroup );
 
-        projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         assertEquals( "check # notifiers", 3, projectGroup.getNotifiers().size() );
         assertNotifierEquals( copy, (ProjectNotifier) projectGroup.getNotifiers().get( 2 ) );
     }
@@ -799,7 +805,7 @@ public class ContinuumStoreTest
     public void testEditGroupNotifier()
         throws ContinuumStoreException
     {
-        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
 
         ProjectNotifier newNotifier = (ProjectNotifier) projectGroup.getNotifiers().get( 0 );
         // If we use "type1.1", jpox-rc2 store "type1", weird
@@ -809,7 +815,7 @@ public class ContinuumStoreTest
         ProjectNotifier copy = createTestNotifier( newNotifier );
         store.updateProjectGroup( projectGroup );
 
-        projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         assertEquals( "check # notifiers", 2, projectGroup.getNotifiers().size() );
         assertNotifierEquals( copy, (ProjectNotifier) projectGroup.getNotifiers().get( 0 ) );
     }
@@ -817,12 +823,12 @@ public class ContinuumStoreTest
     public void testDeleteGroupNotifier()
         throws ContinuumStoreException
     {
-        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         ProjectNotifier notifier = (ProjectNotifier) projectGroup.getNotifiers().get( 1 );
         projectGroup.getNotifiers().remove( 0 );
         store.updateProjectGroup( projectGroup );
 
-        projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         assertEquals( "check size is now 1", 1, projectGroup.getNotifiers().size() );
         assertNotifierEquals( notifier, (ProjectNotifier) projectGroup.getNotifiers().get( 0 ) );
 
@@ -833,7 +839,7 @@ public class ContinuumStoreTest
     public void testAddBuildDefinitionToProjectGroup()
         throws ContinuumStoreException
     {
-        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
 
         Profile profile = store.getProfile( testProfile1.getId() );
         Schedule schedule = store.getSchedule( testSchedule1.getId() );
@@ -843,7 +849,7 @@ public class ContinuumStoreTest
         projectGroup.addBuildDefinition( buildDefinition );
         store.updateProjectGroup( projectGroup );
 
-        projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         assertEquals( "check # build defs", 2, projectGroup.getBuildDefinitions().size() );
         BuildDefinition retrievedBuildDefinition = (BuildDefinition) projectGroup.getBuildDefinitions().get( 1 );
         assertBuildDefinitionEquals( copy, retrievedBuildDefinition );
@@ -854,7 +860,7 @@ public class ContinuumStoreTest
     public void testEditGroupBuildDefinition()
         throws ContinuumStoreException
     {
-        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
 
         BuildDefinition newBuildDefinition = (BuildDefinition) projectGroup.getBuildDefinitions().get( 0 );
         // If we use "arguments1.1", jpox-rc2 store "arguments11", weird
@@ -864,7 +870,7 @@ public class ContinuumStoreTest
         BuildDefinition copy = createTestBuildDefinition( newBuildDefinition );
         store.updateProjectGroup( projectGroup );
 
-        projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         assertEquals( "check # build defs", 1, projectGroup.getBuildDefinitions().size() );
         BuildDefinition retrievedBuildDefinition = (BuildDefinition) projectGroup.getBuildDefinitions().get( 0 );
         assertBuildDefinitionEquals( copy, retrievedBuildDefinition );
@@ -875,11 +881,11 @@ public class ContinuumStoreTest
     public void testDeleteGroupBuildDefinition()
         throws ContinuumStoreException
     {
-        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         projectGroup.getBuildDefinitions().remove( 0 );
         store.updateProjectGroup( projectGroup );
 
-        projectGroup = store.getProjectGroupWithBuildDetails( defaultProjectGroup.getId() );
+        projectGroup = store.getProjectGroupWithBuildDetails( new GroupProjectKey(defaultProjectGroup.getKey(), null ) );
         assertEquals( "check size is now 0", 0, projectGroup.getBuildDefinitions().size() );
 
         // !! These actually aren't happening !!
@@ -896,7 +902,9 @@ public class ContinuumStoreTest
     {
         try
         {
-            store.getProject( project.getId() );
+            // TODO: Review! Since the Project key is unique only within a group
+            // shouldn't we specify the Group Key as well for deletion. 
+            store.getProject( new GroupProjectKey(null, project.getKey() ) );
             fail( "Project should no longer exist" );
         }
         catch ( ContinuumObjectNotFoundException expected )
