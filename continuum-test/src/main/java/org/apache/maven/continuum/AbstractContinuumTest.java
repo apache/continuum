@@ -18,6 +18,7 @@ package org.apache.maven.continuum;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.key.GroupProjectKey;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -111,7 +112,8 @@ public abstract class AbstractContinuumTest
     protected ProjectGroup getDefaultProjectGroup()
         throws ContinuumStoreException
     {
-        return store.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        //return store.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        return store.getProjectGroupByGroupIdWithProjects( new GroupProjectKey(Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID,null ));
     }
 
     // ----------------------------------------------------------------------
@@ -297,7 +299,7 @@ public abstract class AbstractContinuumTest
         defaultProjectGroup.addProject( project );
         store.updateProjectGroup( defaultProjectGroup );
 
-        project = store.getProject( project.getId() );
+        project = store.getProject( new GroupProjectKey( defaultProjectGroup.getKey(), project.getKey() ) );
         assertNotNull( "project group == null", project.getProjectGroup() );
 
         return project;
