@@ -29,6 +29,7 @@ import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
 
 import javax.jdo.JDODetachedFieldAccessException;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;

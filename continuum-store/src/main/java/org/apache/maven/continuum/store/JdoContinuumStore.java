@@ -622,10 +622,8 @@ public class JdoContinuumStore
 
     private BuildDefinition getDefaultBuildDefinitionForProjectGroup( String groupKey )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        GroupProjectKey key = new GroupProjectKey();
-        key.setGroupKey( groupKey );
-        ProjectGroup projectGroup = getProjectGroupWithBuildDetails( key );
+    {        
+        ProjectGroup projectGroup = getProjectGroupWithBuildDetails( new GroupProjectKey(groupKey, null) );
 
         for ( Iterator i = projectGroup.getBuildDefinitions().iterator(); i.hasNext(); )
         {
@@ -1171,9 +1169,7 @@ public class JdoContinuumStore
         ProjectGroup pg = null;
         try
         {
-            GroupProjectKey key = new GroupProjectKey();
-            key.setGroupKey( projectGroup.getKey() );
-            pg = getProjectGroupWithProjects( key );
+            pg = getProjectGroupWithProjects( new GroupProjectKey(projectGroup.getKey(), null));
         }
         catch ( Exception e )
         {
