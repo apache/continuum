@@ -126,16 +126,18 @@ public abstract class AbstractContinuumStoreTestCase
     {
         // Setting up test data
         defaultProjectGroup =
-            createTestProjectGroup( "Default Group", "The Default Group", "org.apache.maven.test.default" );
+            createTestProjectGroup( "Default Group", "The Default Group", "org.apache.maven.test.default", "DefaultGroup" );
 
-        testProjectGroup2 = createTestProjectGroup( "test group 2", "test group 2 desc", "test group 2 groupId" );
+        testProjectGroup2 = createTestProjectGroup( "test group 2", "test group 2 desc", "test group 2 groupId", "TestGroup2" );
 
         testProject1 = createTestProject( "artifactId1", 1, "description1", defaultProjectGroup.getGroupId(), "name1",
-                                          "scmUrl1", 1, "url1", "version1", "workingDirectory1" );
+                                          "scmUrl1", 1, "url1", "version1", "workingDirectory1", defaultProjectGroup.getKey(), "TestProject1" );
+        testProject1.setProjectGroup( defaultProjectGroup );
 
         // state must be 1 unless we setup a build in the correct state
         testProject2 = createTestProject( "artifactId2", 2, "description2", defaultProjectGroup.getGroupId(), "name2",
-                                          "scmUrl2", 1, "url2", "version2", "workingDirectory2" );
+                                          "scmUrl2", 1, "url2", "version2", "workingDirectory2", defaultProjectGroup.getKey(), "TestProject2" );
+        testProject2.setProjectGroup( testProjectGroup2 );
 
         testSchedule1 = createTestSchedule( "name1", "description1", 1, "cronExpression1", true );
         testSchedule2 = createTestSchedule( "name2", "description2", 2, "cronExpression2", true );
@@ -313,9 +315,11 @@ public abstract class AbstractContinuumStoreTestCase
         ProjectDependency projectDependency2 = createTestDependency( testDependency2 );
         project1.addDependency( projectDependency2 );
         testProject1.addDependency( testDependency2 );
+        
+        project1.setProjectGroup( group );
 
-        group.addProject( project1 );
-        defaultProjectGroup.addProject( project1 );
+        group.addProject( project1 );       // ?? Are these 2 calls not the same?
+        defaultProjectGroup.addProject( project1 );     // ??
         Project project2 = createTestProject( testProject2 );
         project2.addBuildResult( buildResult3 );
         ProjectNotifier notifier2 = createTestNotifier( testNotifier2 );
@@ -791,15 +795,16 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected static ProjectGroup createTestProjectGroup( ProjectGroup group )
     {
-        return createTestProjectGroup( group.getName(), group.getDescription(), group.getGroupId() );
+        return createTestProjectGroup( group.getName(), group.getDescription(), group.getGroupId(), group.getKey() );
     }
 
-    protected static ProjectGroup createTestProjectGroup( String name, String description, String groupId )
+    protected static ProjectGroup createTestProjectGroup( String name, String description, String groupId, String groupKey )
     {
         ProjectGroup group = new ProjectGroup();
         group.setName( name );
         group.setDescription( description );
         group.setGroupId( groupId );
+        group.setKey( groupKey );
         return group;
     }
 
@@ -807,12 +812,12 @@ public abstract class AbstractContinuumStoreTestCase
     {
         return createTestProject( project.getArtifactId(), project.getBuildNumber(), project.getDescription(),
                                   project.getGroupId(), project.getName(), project.getScmUrl(), project.getState(),
-                                  project.getUrl(), project.getVersion(), project.getWorkingDirectory() );
+                                  project.getUrl(), project.getVersion(), project.getWorkingDirectory(), project.getProjectGroup().getKey(), project.getKey() );
     }
 
     private static Project createTestProject( String artifactId, int buildNumber, String description, String groupId,
                                               String name, String scmUrl, int state, String url, String version,
-                                              String workingDirectory )
+                                              String workingDirectory, String groupKey, String projectKey )
     {
         Project project = new Project();
         project.setArtifactId( artifactId );
@@ -825,6 +830,9 @@ public abstract class AbstractContinuumStoreTestCase
         project.setUrl( url );
         project.setVersion( version );
         project.setWorkingDirectory( workingDirectory );
+        // assumes that a project will *always* have a group.
+        project.setGroupKey( groupKey );
+        project.setKey( projectKey );
         return project;
     }
 

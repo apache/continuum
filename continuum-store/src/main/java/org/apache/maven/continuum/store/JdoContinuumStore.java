@@ -75,14 +75,14 @@ public class JdoContinuumStore
      * <p>
      * @see Modello configuration for continuum-model. 
      */
-    private static final String LOOKUP_KEY_GROUP_KEY = "groupKey";
+    private static final String LOOKUP_KEY_GROUP_KEY = "key";
 
     /**
      * Column identifier under which the {@link Project} key values are stored.
      * <p>
      * @see Modello configuration for continuum-model. 
      */
-    private static final String LOOKUP_KEY_PROJECT_KEY = "projectKey";
+    private static final String LOOKUP_KEY_PROJECT_KEY = "key";
 
     /**
      * @plexus.requirement role-hint="continuum"
@@ -620,7 +620,7 @@ public class JdoContinuumStore
             + groupProjectKey );
     }
 
-    public BuildDefinition getDefaultBuildDefinitionForProjectGroup( String groupKey )
+    private BuildDefinition getDefaultBuildDefinitionForProjectGroup( String groupKey )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
         GroupProjectKey key = new GroupProjectKey();
@@ -761,7 +761,7 @@ public class JdoContinuumStore
         PlexusJdoUtils.rollbackIfActive( tx );
     }
 
-    public ProjectGroup getProjectGroup( String groupKey )
+    private ProjectGroup getProjectGroup( String groupKey )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
         //return (ProjectGroup) getObjectById( ProjectGroup.class, groupKey );        
@@ -832,7 +832,7 @@ public class JdoContinuumStore
     }
 
     // todo get this natively supported in the store
-    public List getProjectsWithDependenciesByGroupId( String groupKey )
+    private List getProjectsWithDependenciesByGroupId( String groupKey )
     {
         List allProjects = getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
 
@@ -1021,7 +1021,7 @@ public class JdoContinuumStore
     {
         // return (Project) getObjectById( Project.class, groupProjectkey, PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP );
         return (Project) getObjectFromQuery( Project.class, LOOKUP_KEY_PROJECT_KEY, groupProjectKey.getProjectKey(),
-                                             PROJECT_BUILD_DETAILS_FETCH_GROUP );
+                                             PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP );
     }
 
     public BuildResult getBuildResult( int buildId )
@@ -1513,9 +1513,8 @@ public class JdoContinuumStore
      */
     public BuildDefinition getDefaultBuildDefinitionForProjectGroup( GroupProjectKey groupProjectKey )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        // TODO Implement!
-        return null;
+    {   
+        return getDefaultBuildDefinitionForProjectGroup( groupProjectKey.getGroupKey() );
     }
 
     /**
@@ -1526,8 +1525,7 @@ public class JdoContinuumStore
     public ProjectGroup getProjectGroup( GroupProjectKey groupProjectKey )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
-        // TODO Implement!
-        return null;
+        return getProjectGroup( groupProjectKey.getGroupKey() );
     }
 
     /**
@@ -1537,8 +1535,7 @@ public class JdoContinuumStore
      */
     public List getProjectsWithDependenciesByGroupId( GroupProjectKey groupProjectKey )
     {
-        // TODO Implement!
-        return null;
+        return getProjectsWithDependenciesByGroupId( groupProjectKey.getGroupKey() );
     }
 
 }

@@ -61,18 +61,22 @@ public class ContinuumStoreTest
 
     public void testAddProjectGroup()
         throws ContinuumStoreException
-    {
+    {   
         String name = "testAddProjectGroup";
         String description = "testAddProjectGroup description";
         String groupId = "org.apache.maven.continuum.test";
-        ProjectGroup group = createTestProjectGroup( name, description, groupId );
-
+        String groupKey = "AddProjectGroupKey";
+        ProjectGroup group = createTestProjectGroup( name, description, groupId, groupKey);
+        
         ProjectGroup copy = createTestProjectGroup( group );
-        store.addProjectGroup( group );
+        assertNotNull( copy );
+        group = store.addProjectGroup( group );
+        assertNotNull( group );
         copy.setId( group.getId() );
 
         ProjectGroup retrievedGroup = store.getProjectGroup( new GroupProjectKey( group.getKey(), null ) );
-        assertProjectGroupEquals( copy, retrievedGroup );
+        assertNotNull( retrievedGroup );
+        assertProjectGroupEquals( copy, retrievedGroup );        
     }
 
     public void testGetProjectGroup()
@@ -210,7 +214,7 @@ public class ContinuumStoreTest
     public void testGetProjectWithCheckoutResult()
         throws ContinuumStoreException
     {
-        Project retrievedProject = store.getProjectWithCheckoutResult( new GroupProjectKey( testProject1.getProjectGroup().getKey(), testProject1.getKey() ) );
+        Project retrievedProject = store.getProjectWithCheckoutResult( new GroupProjectKey( testProject1.getProjectGroup().getKey(), testProject1.getKey() ) );        
         assertProjectEquals( testProject1, retrievedProject );
         assertScmResultEquals( testCheckoutResult1, retrievedProject.getCheckoutResult()  );
         checkProjectFetchGroup( retrievedProject, true, false, false, false );
