@@ -439,8 +439,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertProjectGroupEquals( defaultProjectGroup, store.getProjectGroup( new GroupProjectKey(defaultProjectGroup.getKey(), null) ) );
         assertProjectGroupEquals( testProjectGroup2, store.getProjectGroup( new GroupProjectKey(testProjectGroup2.getKey() , null) ) );
 
-        assertProjectEquals( testProject1, store.getProject( new GroupProjectKey( testProject1.getProjectGroup().getKey(), testProject1.getKey() ) ) );
-        assertProjectEquals( testProject2, store.getProject( new GroupProjectKey( testProject2.getProjectGroup().getKey(), testProject2.getKey() ) ) );
+        assertProjectEquals( testProject1, store.getProject( new GroupProjectKey( testProject1.getGroupKey(), testProject1.getKey() ) ) );
+        assertProjectEquals( testProject2, store.getProject( new GroupProjectKey( testProject2.getGroupKey(), testProject2.getKey() ) ) );
 
         assertScheduleEquals( testSchedule1, store.getSchedule( testSchedule1.getId() ) );
         assertScheduleEquals( testSchedule2, store.getSchedule( testSchedule2.getId() ) );
@@ -812,7 +812,7 @@ public abstract class AbstractContinuumStoreTestCase
     {
         return createTestProject( project.getArtifactId(), project.getBuildNumber(), project.getDescription(),
                                   project.getGroupId(), project.getName(), project.getScmUrl(), project.getState(),
-                                  project.getUrl(), project.getVersion(), project.getWorkingDirectory(), project.getProjectGroup().getKey(), project.getKey() );
+                                  project.getUrl(), project.getVersion(), project.getWorkingDirectory(), project.getGroupKey(), project.getKey() );
     }
 
     private static Project createTestProject( String artifactId, int buildNumber, String description, String groupId,
