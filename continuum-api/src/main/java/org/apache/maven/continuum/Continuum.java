@@ -18,12 +18,13 @@ package org.apache.maven.continuum;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.key.GroupProjectKey;
 import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
@@ -48,7 +49,7 @@ public interface Continuum
 
     public static final String DEFAULT_PROJECT_GROUP_GROUP_ID = "default";
 
-    public ProjectGroup getProjectGroup( int projectGroupId )
+    public ProjectGroup getProjectGroup( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
     /**
@@ -60,24 +61,36 @@ public interface Continuum
     
     public Collection getAllProjectGroups();
 
-    public ProjectGroup getProjectGroupByProjectId( int projectId )
+    public ProjectGroup getProjectGroupByProjectId( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    public Collection getProjectsInGroup( int projectGroupId )
+    public Collection getProjectsInGroup( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    public void removeProjectGroup( int projectGroupId )
+    public void removeProjectGroup( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
     public void addProjectGroup( ProjectGroup projectGroup )
         throws ContinuumException;
     
-    public ProjectGroup getProjectGroupWithProjects( int projectGroupId )
+    public ProjectGroup getProjectGroupWithProjects( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
+    /**
+     * @deprecated not in use
+     * @param groupId
+     * @return
+     * @throws ContinuumException
+     */
     public ProjectGroup getProjectGroupByGroupId( String groupId )
         throws ContinuumException;
-    
+
+    /**
+     * @deprecated not in use
+     * @param groupId
+     * @return
+     * @throws ContinuumException
+     */
     public ProjectGroup getProjectGroupByGroupIdWithBuildDetails( String groupId )
         throws ContinuumException;
     
@@ -85,20 +98,39 @@ public interface Continuum
     // Project
     // ----------------------------------------------------------------------
 
-    void removeProject( int projectId )
+    void removeProject( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
+    /**
+     * @deprecate not in use
+     * @param projectId
+     * @throws ContinuumException
+     */
     void checkoutProject( int projectId )
         throws ContinuumException;
 
-    Project getProject( int projectId )
+
+    Project getProject( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    Project getProjectWithBuildDetails( int projectId )
+    Project getProjectWithBuildDetails( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
+    /**
+     * @deprecated validate usage and refactor or remove based on keys
+     * @param start
+     * @param end
+     * @return
+     */
     List getAllProjectsWithAllDetails( int start, int end );
 
+    /**
+     * @deprecated validate usage and refactor or removed based on keys
+     * @param start
+     * @param end
+     * @return
+     * @throws ContinuumException
+     */
     Collection getAllProjects( int start, int end )
         throws ContinuumException;
 
@@ -108,7 +140,7 @@ public interface Continuum
     Collection getProjectsWithDependencies()
         throws ContinuumException;
 
-    BuildResult getLatestBuildResultForProject( int projectId );
+    BuildResult getLatestBuildResultForProject( GroupProjectKey groupProjectKey );
 
     Map getLatestBuildResults();
 
@@ -118,13 +150,13 @@ public interface Continuum
     // Queues
     // ----------------------------------------------------------------------
 
-    boolean isInBuildingQueue( int projectId )
+    boolean isInBuildingQueue( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    boolean isInBuildingQueue( int projectId, int buildDefinitionId )
+    boolean isInBuildingQueue( GroupProjectKey groupProjectKey, int buildDefinitionId )
         throws ContinuumException;
 
-    boolean isInCheckoutQueue( int projectId )
+    boolean isInCheckoutQueue( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
@@ -143,16 +175,16 @@ public interface Continuum
     void buildProjects( Schedule schedule )
         throws ContinuumException;
 
-    void buildProject( int projectId )
+    void buildProject( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    void buildProject( int projectId, int trigger )
+    void buildProject( GroupProjectKey groupProjectKey, int trigger )
         throws ContinuumException;
 
-    void buildProject( int projectId, int buildDefinitionId, int trigger )
+    void buildProject( GroupProjectKey groupProjectKey, int buildDefinitionId, int trigger )
         throws ContinuumException;
 
-    public void buildProjectGroup( int projectGroupId )
+    public void buildProjectGroup( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
@@ -162,16 +194,24 @@ public interface Continuum
     BuildResult getBuildResult( int buildId )
         throws ContinuumException;
 
+    /**
+     * @deprecated not in use
+     * @param projectId
+     * @param buildNumber
+     * @return
+     * @throws ContinuumException
+     */
     BuildResult getBuildResultByBuildNumber( int projectId, int buildNumber )
         throws ContinuumException;
 
-    String getBuildOutput( int projectId, int buildId )
+
+    String getBuildOutput( GroupProjectKey groupProjectKey, int buildId )
         throws ContinuumException;
 
-    Collection getBuildResultsForProject( int projectId )
+    Collection getBuildResultsForProject( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    List getChangesSinceLastSuccess( int projectId, int buildResultId )
+    List getChangesSinceLastSuccess( GroupProjectKey groupProjectKey, int buildResultId )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
@@ -180,7 +220,9 @@ public interface Continuum
 
     /**
      * Add a project to the list of building projects (ant, shell,...)
-     * 
+     *
+     * @TODO fix for key based project addition
+     *
      * @param project the project to add
      * @param executorId the id of an {@link ContinuumBuildExecutor}, eg. <code>ant</code> or <code>shell</code> 
      * @return id of the project
@@ -225,12 +267,11 @@ public interface Continuum
      * Add a Maven 2 project to the list of projects.
      *
      * @param metadataUrl url of the pom.xml
-     * @param projectGroupId id of the project group to use
-     * @param checkProtocol check if the protocol is allowed, use false if the pom is uploaded
-     * @return a holder with the projects, project groups and errors occurred during the project adding
+     * @param groupProjectKey
+     *@param checkProtocol check if the protocol is allowed, use false if the pom is uploaded @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
-    ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId, boolean checkProtocol )
+    ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, GroupProjectKey groupProjectKey, boolean checkProtocol )
         throws ContinuumException;
 
     /**
@@ -258,23 +299,22 @@ public interface Continuum
      * Add a Maven 1 project to the list of projects.
      *
      * @param metadataUrl url of the project.xml
-     * @param projectGroupId id of the project group to use
+     * @param groupProjectKey
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
-    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId )
+    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, GroupProjectKey groupProjectKey )
          throws ContinuumException;
 
     /**
      * Add a Maven 1 project to the list of projects.
      *
      * @param metadataUrl url of the project.xml
-     * @param projectGroupId id of the project group to use
-     * @param checkProtocol check if the protocol is allowed, use false if the pom is uploaded
-     * @return a holder with the projects, project groups and errors occurred during the project adding
+     * @param groupProjectKey
+     *@param checkProtocol check if the protocol is allowed, use false if the pom is uploaded @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
-    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId, boolean checkProtocol )
+    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, GroupProjectKey groupProjectKey, boolean checkProtocol )
          throws ContinuumException;
 
     void updateProject( Project project )
@@ -283,63 +323,113 @@ public interface Continuum
     void updateProjectGroup( ProjectGroup projectGroup )
         throws ContinuumException;
 
-    Project getProjectWithCheckoutResult( int projectId )
+    Project getProjectWithCheckoutResult( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    Project getProjectWithAllDetails( int projectId )
+    Project getProjectWithAllDetails( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    Project getProjectWithBuilds( int projectId )
+    Project getProjectWithBuilds( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
     // Notification
     // ----------------------------------------------------------------------
 
-    ProjectNotifier getNotifier( int projectId, int notifierId )
+    /**
+     * Get a particular notifier.
+     *
+     * @param groupProjectKey
+     * @param notifierId
+     * @return
+     * @throws ContinuumException
+     */
+    ProjectNotifier getNotifier( GroupProjectKey groupProjectKey, int notifierId )
         throws ContinuumException;
 
-    ProjectNotifier updateNotifier( int projectId, ProjectNotifier notifier )
+    /**
+     * update the notifier and return the updated notifier
+     *
+     * @param groupProjectKey
+     * @param notifier
+     * @return
+     * @throws ContinuumException
+     */
+    ProjectNotifier updateNotifier( GroupProjectKey groupProjectKey, ProjectNotifier notifier )
         throws ContinuumException;
 
-    ProjectNotifier addNotifier( int projectId, ProjectNotifier notifier )
+    /**
+     * Add a notifier.
+     *
+     * * if groupProjectKey has projectKey defined, add notifier to project
+     * * otherwise add to project group for child project inheritence
+     *
+     * @param groupProjectKey
+     * @param notifier
+     * @return
+     * @throws ContinuumException
+     */
+    ProjectNotifier addNotifier( GroupProjectKey groupProjectKey, ProjectNotifier notifier )
         throws ContinuumException;
 
-    void removeNotifier( int projectId, int notifierId )
+    /**
+     *
+     * @param groupProjectKey
+     * @param notifierId
+     * @throws ContinuumException
+     */
+    void removeNotifier( GroupProjectKey groupProjectKey, int notifierId )
         throws ContinuumException;
 
-    ProjectNotifier getGroupNotifier( int projectGroupId, int notifierId )
+    /*
+    ProjectNotifier getGroupNotifier( GroupProjectKey groupProjectKey, int notifierId )
         throws ContinuumException;
 
-    ProjectNotifier updateGroupNotifier( int projectGroupId, ProjectNotifier notifier )
+    ProjectNotifier updateGroupNotifier( GroupProjectKey groupProjectKey, ProjectNotifier notifier )
         throws ContinuumException;
 
-    ProjectNotifier addGroupNotifier( int projectGroupId, ProjectNotifier notifier )
+    ProjectNotifier addGroupNotifier( GroupProjectKey groupProjectKey, ProjectNotifier notifier )
         throws ContinuumException;
 
-    void removeGroupNotifier( int projectGroupId, int notifierId )
+    void removeGroupNotifier( GroupProjectKey groupProjectKey, int notifierId )
         throws ContinuumException;
-
+    */
     // ----------------------------------------------------------------------
     // Build Definition
     // ----------------------------------------------------------------------
 
+
     /**
-     * @deprecated
+     * Get the list of {@see BuildDefinitions} that are present based on the {@see GroupProjectKey}
+     * being passed in.  If the groupProjectKey has a project key specified then return the list of
+     * project level build definitions, otherwise return the project group lvl build definitions.
+     *
+     * @param groupProjectKey
+     * @return
+     * @throws ContinuumException
      */
-    List getBuildDefinitions( int projectId )
+    List getBuildDefinitions( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
     /**
-     * @deprecated
+     * Get a particular build definition from the group or project, context depending on contents of
+     * the groupProjectKey.
+     *
+     * @param groupProjectKey
+     * @param buildDefinitionId
+     * @return
+     * @throws ContinuumException
      */
-    BuildDefinition getBuildDefinition( int projectId, int buildDefinitionId )
+    BuildDefinition getBuildDefinition( GroupProjectKey groupProjectKey, int buildDefinitionId )
         throws ContinuumException;
 
     /**
-     * @deprecated
+     *
+     * @param groupProjectKey
+     * @param buildDefinitionId
+     * @throws ContinuumException
      */
-    void removeBuildDefinition( int projectId, int buildDefinitionId )
+    void removeBuildDefinition( GroupProjectKey groupProjectKey, int buildDefinitionId )
         throws ContinuumException;
 
     /**
@@ -357,26 +447,28 @@ public interface Continuum
      * 1) if project has default build definition, return that
      * 2) otherwise return default build definition for parent project group
      *
-     * @param projectId
-     * @return
+     * @param groupProjectKey
+     * @return default build definition for project or group
      * @throws ContinuumException
      */
-    BuildDefinition getDefaultBuildDefinition( int projectId )
+
+    BuildDefinition getDefaultBuildDefinition( GroupProjectKey groupProjectKey )
+        throws ContinuumException;
+    /*
+
+    BuildDefinition addBuildDefinitionToProject( GroupProjectKey groupProjectKey, BuildDefinition buildDefinition )
         throws ContinuumException;
 
-    BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
-        throws ContinuumException;
-
-    BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    BuildDefinition addBuildDefinitionToProjectGroup( GroupProjectKey groupProjectKey, BuildDefinition buildDefinition )
         throws ContinuumException;    
 
-    List getBuildDefinitionsForProject( int projectId )
+    List getBuildDefinitionsForProject( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    List getBuildDefinitionsForProjectGroup( int projectGroupId )
+    List getBuildDefinitionsForProjectGroup( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    void removeBuildDefinitionFromProject( int projectId, int buildDefinitionId )
+    void removeBuildDefinitionFromProject( GroupProjectKey groupProjectKey, int buildDefinitionId )
         throws ContinuumException;
 
     void removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
@@ -387,7 +479,7 @@ public interface Continuum
 
     BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException;
-
+    */
 
     // ----------------------------------------------------------------------
     // Schedule
@@ -415,13 +507,13 @@ public interface Continuum
     // Working copy
     // ----------------------------------------------------------------------
 
-    File getWorkingDirectory( int projectId )
+    File getWorkingDirectory( GroupProjectKey groupProjectKey )
         throws ContinuumException;
 
-    String getFileContent( int projectId, String directory, String filename )
+    String getFileContent( GroupProjectKey groupProjectKey, String directory, String filename )
         throws ContinuumException;
 
-    List getFiles( int projectId, String currentDirectory )
+    List getFiles( GroupProjectKey groupProjectKey, String currentDirectory )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------

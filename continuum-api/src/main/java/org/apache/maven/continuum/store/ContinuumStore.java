@@ -240,7 +240,7 @@ public interface ContinuumStore
      * @param groupProjectKey Composite key that identifies the target project 
      *                          to be looked up.
      * @return {@link Project} instance that matches the passed in 
-     *          {@link GroupProjectKey.
+     *          {@link GroupProjectKey}.
      * @throws ContinuumStoreException
      * @throws ContinuumObjectNotFoundException
      */
