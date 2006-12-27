@@ -18,8 +18,12 @@ package org.apache.maven.continuum.store;
 
 import org.apache.maven.continuum.key.GroupProjectKey;
 import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.model.project.Profile;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;
@@ -37,8 +41,11 @@ import java.util.List;
  * Store implementation that interacts with the underlying JDO-based store.
  * 
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
- * @version $Id$
+ * @version $Id: JdoRefactoredContinuumStore.java 490386 2006-12-26 22:05:15Z
+ *          rinku $
  * @since 1.1
+ * @plexus.component role="org.apache.maven.continuum.store.RefactoredContinuumStore"
+ *                   role-hint="jdo"
  */
 public class JdoRefactoredContinuumStore implements RefactoredContinuumStore
 {
@@ -150,6 +157,136 @@ public class JdoRefactoredContinuumStore implements RefactoredContinuumStore
         return group;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#deleteInstallation(org.apache.maven.continuum.model.system.Installation)
+     */
+    public void deleteInstallation( Installation installation ) throws ContinuumStoreException
+    {
+        // TODO: Any checks before installation should be deleted?
+        removeObject( installation );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#deleteProfile(org.apache.maven.continuum.model.project.Profile)
+     */
+    public void deleteProfile( Profile profile ) throws ContinuumStoreException
+    {
+        // TODO: Any checks before profile should be deleted?
+        removeObject( profile );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#deleteSchedule(org.apache.maven.continuum.model.project.Schedule)
+     */
+    public void deleteSchedule( Schedule schedule ) throws ContinuumStoreException
+    {
+        // TODO: Any checks before schedule should be deleted?
+        removeObject( schedule );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#deleteSystemConfiguration(org.apache.maven.continuum.model.system.SystemConfiguration)
+     */
+    public void deleteSystemConfiguration( SystemConfiguration systemConfiguration ) throws ContinuumStoreException
+    {
+        // TODO: Any checks before systemConfiguration should be deleted?
+        removeObject( systemConfiguration );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#lookupInstallation(long)
+     */
+    public Installation lookupInstallation( long id ) throws ContinuumObjectNotFoundException, ContinuumStoreException
+    {
+        return (Installation) getObjectById( Installation.class, id, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#lookupProfile(long)
+     */
+    public Profile lookupProfile( long id ) throws ContinuumObjectNotFoundException, ContinuumStoreException
+    {
+        return (Profile) getObjectById( Profile.class, id, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#lookupSchedule(long)
+     */
+    public Schedule lookupSchedule( long id ) throws ContinuumObjectNotFoundException, ContinuumStoreException
+    {
+        return (Schedule) getObjectById( Schedule.class, id, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#lookupSystemConfiguration(long)
+     */
+    public SystemConfiguration lookupSystemConfiguration( long id )
+        throws ContinuumObjectNotFoundException, ContinuumStoreException
+    {
+        return (SystemConfiguration) getObjectById( SystemConfiguration.class, id, null );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#saveInstallation(org.apache.maven.continuum.model.system.Installation)
+     */
+    public Installation saveInstallation( Installation installation ) throws ContinuumStoreException
+    {
+        updateObject( installation );
+        return installation;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#saveProfile(org.apache.maven.continuum.model.project.Profile)
+     */
+    public Profile saveProfile( Profile profile ) throws ContinuumStoreException
+    {
+        updateObject( profile );
+        return profile;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#saveSchedule(org.apache.maven.continuum.model.project.Schedule)
+     */
+    public Schedule saveSchedule( Schedule schedule ) throws ContinuumStoreException
+    {
+        updateObject( schedule );
+        return schedule;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.RefactoredContinuumStore#saveSystemConfiguration(org.apache.maven.continuum.model.system.SystemConfiguration)
+     */
+    public SystemConfiguration saveSystemConfiguration( SystemConfiguration systemConfiguration )
+        throws ContinuumStoreException
+    {
+        updateObject( systemConfiguration );
+        return systemConfiguration;
+    }
+
     // ------------------------------------------------------------------------
     // Service Methods
     // ------------------------------------------------------------------------
@@ -175,6 +312,24 @@ public class JdoRefactoredContinuumStore implements RefactoredContinuumStore
         try
         {
             return PlexusJdoUtils.getObjectFromQuery( getPersistenceManager(), clazz, idField, id, fetchGroup );
+        }
+        catch ( PlexusObjectNotFoundException e )
+        {
+            throw new ContinuumObjectNotFoundException( e.getMessage() );
+        }
+        catch ( PlexusStoreException e )
+        {
+            throw new ContinuumStoreException( e.getMessage(), e );
+        }
+    }
+
+    private Object getObjectById( Class clazz, long id, String fetchGroup )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        try
+        {
+            // TODO: Add method to PlexusJdoUtils to use long
+            return PlexusJdoUtils.getObjectById( getPersistenceManager(), clazz, (int) id, fetchGroup );
         }
         catch ( PlexusObjectNotFoundException e )
         {
