@@ -76,7 +76,7 @@ public interface RefactoredContinuumStore
      *             looked up.
      * @throws ContinuumStoreException
      */
-    public Schedule lookupSchedule( int id ) throws ContinuumObjectNotFoundException, ContinuumStoreException;
+    public Schedule lookupSchedule( long id ) throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     /**
      * Looks up the underlying store and returns a {@link Profile} instance that
@@ -88,7 +88,7 @@ public interface RefactoredContinuumStore
      *             looked up.
      * @throws ContinuumStoreException
      */
-    public Profile lookupProfile( int id ) throws ContinuumObjectNotFoundException, ContinuumStoreException;
+    public Profile lookupProfile( long id ) throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     /**
      * Looks up the underlying store and returns a {@link Installation} instance
@@ -100,7 +100,7 @@ public interface RefactoredContinuumStore
      *             looked up.
      * @throws ContinuumStoreException
      */
-    public Installation lookupInstallation( int id ) throws ContinuumObjectNotFoundException, ContinuumStoreException;
+    public Installation lookupInstallation( long id ) throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     /**
      * Looks up the underlying store and returns a {@link SystemConfiguration}
@@ -112,7 +112,7 @@ public interface RefactoredContinuumStore
      *             looked up.
      * @throws ContinuumStoreException
      */
-    public SystemConfiguration lookupSystemConfiguration( int id )
+    public SystemConfiguration lookupSystemConfiguration( long id )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     /**
