@@ -36,18 +36,23 @@ import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
-import org.codehaus.plexus.jdo.PlexusJdoUtils;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.jpox.SchemaTool;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -84,14 +89,20 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
     /**
      * JDBC URL to connect to the target test database instance.
      */
-    private final String URL_TEST_DATABASE = "jdbc:hsqldb:mem:" + getName();
+    private final String URL_TEST_DATABASE = "jdbc:hsqldb:mem:" + getName() + new Date().getTime();
 
     /**
      * DDL for Database creation.
      */
     private static final File SQL_DATABSE_SCHEMA = getTestFile( getBasedir(), "src/test/resources/schema.sql" );
 
+    /**
+     * Provides an interface to clients to execute queries on the underlying
+     * database.
+     */
     private PersistenceManager persistenceManager;
+
+    private DefaultConfigurableJdoFactory jdoFactory;
 
     /**
      * @see org.codehaus.plexus.PlexusTestCase#setUp()
@@ -100,17 +111,10 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
     {
         super.setUp();
 
-        DefaultConfigurableJdoFactory jdoFactory = (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE );
+        jdoFactory = createJdoFactory();
 
-        jdoFactory.setUrl( URL_TEST_DATABASE );
-
-        jdoFactory.setDriverName( DRIVER_TEST_DATABASE );
-
-        jdoFactory.setUserName( USERNAME_TEST_DATABASE );
-
-        jdoFactory.setPassword( PASSWORD_TEST_DATABASE );
-
-        persistenceManager = jdoFactory.getPersistenceManagerFactory().getPersistenceManager();
+        // persistenceManager =
+        // jdoFactory.getPersistenceManagerFactory().getPersistenceManager();
     }
 
     /**
@@ -131,6 +135,8 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
      */
     protected void createBuildDatabase() throws Exception
     {
+        if ( null == persistenceManager || persistenceManager.isClosed() )
+            persistenceManager = jdoFactory.getPersistenceManagerFactory().getPersistenceManager();
 
         Connection connection = (Connection) persistenceManager.getDataStoreConnection().getNativeConnection();
 
@@ -158,23 +164,81 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
      */
     protected void teardownBuildDatabase() throws Exception
     {
-        PlexusJdoUtils.removeAll( getPersistenceManager(), Project.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectGroup.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), Schedule.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), Profile.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), Installation.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), ScmResult.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildResult.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), TestResult.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), SuiteResult.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), TestCaseFailure.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), SystemConfiguration.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectNotifier.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectDeveloper.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectDependency.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), ChangeSet.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), ChangeFile.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinition.class );
+        if ( null == persistenceManager || persistenceManager.isClosed() )
+            persistenceManager = jdoFactory.getPersistenceManagerFactory().getPersistenceManager();
+
+        // deleteAllEntities( Project.class );
+        // deleteAllEntities( ProjectGroup.class );
+        // deleteAllEntities( Schedule.class );
+        // deleteAllEntities( Profile.class );
+        // deleteAllEntities( Installation.class );
+        // deleteAllEntities( ScmResult.class );
+        // deleteAllEntities( BuildResult.class );
+        // deleteAllEntities( TestResult.class );
+        // deleteAllEntities( SuiteResult.class );
+        // deleteAllEntities( TestCaseFailure.class );
+        // deleteAllEntities( SystemConfiguration.class );
+        // deleteAllEntities( ProjectNotifier.class );
+        // deleteAllEntities( ProjectDeveloper.class );
+        // deleteAllEntities( ProjectDependency.class );
+        // deleteAllEntities( ChangeSet.class );
+        // deleteAllEntities( ChangeFile.class );
+        // deleteAllEntities( BuildDefinition.class );
+
+        URL[] jdoFiles = new URL[] { this.getClass().getClassLoader().getResource( "META-INF/package.jdo" ) };
+
+        URL[] classFiles =
+            new URL[] { this.getClass().getClassLoader().getResource( Project.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( ProjectGroup.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( Schedule.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( Profile.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( Installation.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( ScmResult.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( BuildResult.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( TestResult.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( SuiteResult.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( TestCaseFailure.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( SystemConfiguration.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( ProjectNotifier.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( ProjectDeveloper.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( ProjectDependency.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( ChangeSet.class.getCanonicalName() ),
+                this.getClass().getClassLoader().getResource( BuildDefinition.class.getCanonicalName() ) };
+
+        // prepare System properties that the SchemaTool expects
+        System.setProperty( SchemaTool.JDO_DATASTORE_DRIVERNAME_PROPERTY, DRIVER_TEST_DATABASE );
+        System.setProperty( SchemaTool.JDO_DATASTORE_URL_PROPERTY, URL_TEST_DATABASE );
+        System.setProperty( SchemaTool.JDO_DATASTORE_USERNAME_PROPERTY, USERNAME_TEST_DATABASE );
+        System.setProperty( SchemaTool.JDO_DATASTORE_PASSWORD_PROPERTY, PASSWORD_TEST_DATABASE );
+        SchemaTool.deleteSchemaTables( jdoFiles, null, true );
+    }
+
+    /**
+     * Deletes records for a given entity.
+     * 
+     * @param klass Entity class for which the records are to be deleted.
+     * 
+     */
+    private void deleteAllEntities( Class klass )
+    {
+        Transaction tx = persistenceManager.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Query query = persistenceManager.newQuery( klass );
+            query.deletePersistentAll();
+
+            tx.commit();
+        }
+        finally
+        {
+            if ( tx.isActive() )
+            {
+                tx.rollback();
+            }
+        }
     }
 
     /**
@@ -185,6 +249,21 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
     protected PersistenceManager getPersistenceManager()
     {
         return persistenceManager;
+    }
+
+    /**
+     * Extensions are allowed to implement and return a list of SQL script
+     * {@link File} instances that are to be read and loaded into the target
+     * test database.
+     * 
+     * @return List of locations of SQL scripts
+     */
+    protected List getSQLScripts()
+    {
+        List list = new ArrayList();
+        // add default test data source.
+        list.add( getTestFile( getBasedir(), SQL_TEST_DATA ) );
+        return list;
     }
 
     /**
@@ -232,7 +311,7 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
         {
             String sql = (String) it.next();
 
-            System.out.println( sql );
+            // System.out.println( sql );
 
             try
             {
@@ -250,17 +329,22 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
     }
 
     /**
-     * Extensions are allowed to implement and return a list of SQL script
-     * {@link File} instances that are to be read and loaded into the target
-     * test database.
-     * 
-     * @return List of locations of SQL scripts
+     * @return
+     * @throws Exception
      */
-    protected List getSQLScripts()
+    private DefaultConfigurableJdoFactory createJdoFactory() throws Exception
     {
-        List list = new ArrayList();
-        // add default test data source.
-        list.add( getTestFile( getBasedir(), SQL_TEST_DATA ) );
-        return list;
+        DefaultConfigurableJdoFactory jdoFactory = (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE );
+
+        jdoFactory.setUrl( URL_TEST_DATABASE );
+
+        jdoFactory.setDriverName( DRIVER_TEST_DATABASE );
+
+        jdoFactory.setUserName( USERNAME_TEST_DATABASE );
+
+        jdoFactory.setPassword( PASSWORD_TEST_DATABASE );
+
+        jdoFactory.setProperty( "javax.jdo.option.NontransactionalRead", "true" );
+        return jdoFactory;
     }
 }

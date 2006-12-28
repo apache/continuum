@@ -31,7 +31,7 @@ public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
         assertNotNull( store );
     }
 
-    public void testVerifyDatabase() throws Exception
+    public void testGetAllProjectGroups() throws Exception
     {
         ProjectGroupStore store = (ProjectGroupStore) lookup( ProjectGroupStore.ROLE, "jdo" );
         List list = store.getAllProjectGroups();
