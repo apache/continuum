@@ -18,9 +18,6 @@ package org.apache.maven.continuum.store.jdo;
 
 import org.apache.maven.continuum.store.SystemStore;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
@@ -48,5 +45,4 @@ public class JdoSystemStoreTestCase extends AbstractJdoStoreTestCase
         assertNotNull( store );
     }
 
-   
 }

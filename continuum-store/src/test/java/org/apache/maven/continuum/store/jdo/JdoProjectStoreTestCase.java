@@ -46,5 +46,4 @@ public class JdoProjectStoreTestCase extends AbstractJdoStoreTestCase
         assertNotNull( store );
     }
 
-  
 }

@@ -16,10 +16,27 @@ package org.apache.maven.continuum.store.jdo;
  * limitations under the License.
  */
 
-import org.apache.maven.continuum.store.ProjectStore;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.model.project.Profile;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectDependency;
+import org.apache.maven.continuum.model.project.ProjectDeveloper;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.scm.ChangeFile;
+import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.apache.maven.continuum.model.scm.ScmResult;
+import org.apache.maven.continuum.model.scm.SuiteResult;
+import org.apache.maven.continuum.model.scm.TestCaseFailure;
+import org.apache.maven.continuum.model.scm.TestResult;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
+import org.codehaus.plexus.jdo.PlexusJdoUtils;
 
 import javax.jdo.PersistenceManager;
 
@@ -74,14 +91,15 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
      */
     private static final File SQL_DATABSE_SCHEMA = getTestFile( getBasedir(), "src/test/resources/schema.sql" );
 
+    private PersistenceManager persistenceManager;
+
     /**
-     * Creates an instance of Continuum Database for test purposes and loads up
-     * the test data from the specified schema and test data SQL scripts.
-     * 
-     * @throws Exception if there was an error with test database set up.
+     * @see org.codehaus.plexus.PlexusTestCase#setUp()
      */
-    protected void createBuildDatabase() throws Exception
+    protected void setUp() throws Exception
     {
+        super.setUp();
+
         DefaultConfigurableJdoFactory jdoFactory = (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE );
 
         jdoFactory.setUrl( URL_TEST_DATABASE );
@@ -92,9 +110,29 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
 
         jdoFactory.setPassword( PASSWORD_TEST_DATABASE );
 
-        PersistenceManager pm = jdoFactory.getPersistenceManagerFactory().getPersistenceManager();
+        persistenceManager = jdoFactory.getPersistenceManagerFactory().getPersistenceManager();
+    }
 
-        Connection connection = (Connection) pm.getDataStoreConnection().getNativeConnection();
+    /**
+     * @see org.codehaus.plexus.PlexusTestCase#tearDown()
+     */
+    protected void tearDown() throws Exception
+    {
+        super.tearDown();
+
+        teardownBuildDatabase();
+    }
+
+    /**
+     * Creates an instance of Continuum Database for test purposes and loads up
+     * the test data from the specified schema and test data SQL scripts.
+     * 
+     * @throws Exception if there was an error with test database set up.
+     */
+    protected void createBuildDatabase() throws Exception
+    {
+
+        Connection connection = (Connection) persistenceManager.getDataStoreConnection().getNativeConnection();
 
         loadSQL( SQL_DATABSE_SCHEMA, connection );
 
@@ -111,6 +149,42 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
             loadSQL( script, connection );
         }
 
+    }
+
+    /**
+     * Clean up the Continuum test database.
+     * 
+     * @throws Exception
+     */
+    protected void teardownBuildDatabase() throws Exception
+    {
+        PlexusJdoUtils.removeAll( getPersistenceManager(), Project.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectGroup.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), Schedule.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), Profile.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), Installation.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), ScmResult.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildResult.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), TestResult.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), SuiteResult.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), TestCaseFailure.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), SystemConfiguration.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectNotifier.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectDeveloper.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectDependency.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), ChangeSet.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), ChangeFile.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinition.class );
+    }
+
+    /**
+     * Returns {@link PersistenceManager} instance to interact with database
+     * 
+     * @return {@link PersistenceManager} instance to interact with database.
+     */
+    protected PersistenceManager getPersistenceManager()
+    {
+        return persistenceManager;
     }
 
     /**

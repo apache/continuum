@@ -2,7 +2,6 @@ package org.apache.maven.continuum.store.jdo;
 
 import org.apache.maven.continuum.store.ProjectGroupStore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,5 +31,12 @@ public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
         assertNotNull( store );
     }
 
-  
+    public void testVerifyDatabase() throws Exception
+    {
+        ProjectGroupStore store = (ProjectGroupStore) lookup( ProjectGroupStore.ROLE, "jdo" );
+        List list = store.getAllProjectGroups();
+        assertNotNull( list );
+        assertEquals( 2, list.size() );
+    }
+
 }
