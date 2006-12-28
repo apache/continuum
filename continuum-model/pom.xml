@@ -64,14 +64,14 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jpox-maven-plugin</artifactId>
-        <version>1.0.3</version>
+        <version>${jpox.plugin.version}</version>
         <executions>
           <execution>
             <goals>
-              <goal>enhance</goal>
-            </goals>
+              <goal>enhance</goal>              
+            </goals>            
           </execution>
-        </executions>
+        </executions>            
       </plugin>
     </plugins>
   </build>
@@ -93,4 +93,42 @@
       <version>1.0.1</version>
     </dependency>
   </dependencies>
+  
+  <profiles>    
+    <profile>
+      <id>ddl</id>
+      <dependencies>
+        <dependency>
+          <groupId>hsqldb</groupId>
+          <artifactId>hsqldb</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>jpox-maven-plugin</artifactId>
+            <version>${jpox.plugin.version}</version>
+            <executions>
+              <execution>
+                <goals>                
+                  <goal>schema</goal>
+                </goals>            
+              </execution>
+            </executions>
+            <configuration>
+              <driverName>org.hsqldb.jdbcDriver</driverName>
+              <dbUser>sa</dbUser>          
+              <dbUrl>jdbc:hsqldb:mem:continuum</dbUrl>  
+              <outputFile>${project.build.directory}/schema.sql</outputFile>
+            </configuration>        
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
+  <properties>
+    <jpox.plugin.version>1.0.4-SNAPSHOT</jpox.plugin.version>
+  </properties>
 </project>
