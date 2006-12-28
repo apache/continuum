@@ -97,7 +97,7 @@ public interface ContinuumStore
     BuildDefinition getDefaultBuildDefinitionForProjectGroup( GroupProjectKey groupProjectKey )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
-    BuildDefinition getBuildDefinition( int buildDefinitionId )
+    BuildDefinition getBuildDefinition( long buildDefinitionId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     void removeBuildDefinition( BuildDefinition buildDefinition )
@@ -215,13 +215,13 @@ public interface ContinuumStore
     Project getProjectByName( String name )
         throws ContinuumStoreException;
 
-    Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    Map getProjectIdsAndBuildDefinitionsIdsBySchedule( long scheduleId )
         throws ContinuumStoreException;
 
-    Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( long scheduleId )
         throws ContinuumStoreException;
 
-    public Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+    public Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( long scheduleId )
         throws ContinuumStoreException;
 
     void updateProject( Project project )
@@ -264,7 +264,7 @@ public interface ContinuumStore
     Project getProjectWithCheckoutResult( GroupProjectKey groupProjectKey )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    BuildResult getBuildResult( int buildId )
+    BuildResult getBuildResult( long buildId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     void removeProject( Project project );
@@ -334,10 +334,10 @@ public interface ContinuumStore
     Project getProjectWithAllDetails( GroupProjectKey groupProjectKey )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    Schedule getSchedule( int scheduleId )
+    Schedule getSchedule( long scheduleId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    Profile getProfile( int profileId )
+    Profile getProfile( long profileId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     /**
@@ -442,7 +442,7 @@ public interface ContinuumStore
      * @return List of all the {@link BuildResult} instances for the specified 
      *          project and a build number.
      */
-    List getBuildResultByBuildNumber( GroupProjectKey groupProjectKey, int buildNumber );
+    List getBuildResultByBuildNumber( GroupProjectKey groupProjectKey, long buildNumber );
 
     Map getBuildResultsInSuccess();
 
