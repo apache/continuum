@@ -26,15 +26,15 @@ import org.apache.maven.continuum.model.system.SystemConfiguration;
 
 /**
  * Defines the contract consisting of operations that can be performed on
- * system's entities.
+ * {@link Project} entity.
  * 
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
  * @since 1.1
  */
-public interface RefactoredContinuumStore
+public interface ProjectStore
 {
-    String ROLE = RefactoredContinuumStore.class.getName();
+    public static final String ROLE = ProjectStore.class.getName();
 
     /**
      * Looks up the underlying store and returns a {@link Project} instance that
