@@ -2,6 +2,9 @@ package org.apache.maven.continuum.store.jdo;
 
 import org.apache.maven.continuum.store.ProjectGroupStore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
@@ -9,6 +12,19 @@ import org.apache.maven.continuum.store.ProjectGroupStore;
  */
 public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
 {
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+        createBuildDatabase();
+    }
+
+    /**
+     * @see junit.framework.TestCase#getName()
+     */
+    public String getName()
+    {
+        return getClass().getName();
+    }
 
     public void testComponentLookup() throws Exception
     {
@@ -16,4 +32,5 @@ public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
         assertNotNull( store );
     }
 
+  
 }
