@@ -18,9 +18,12 @@ package org.apache.maven.continuum.store.jdo;
 
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import javax.jdo.FetchPlan;
 import javax.jdo.PersistenceManager;
@@ -37,14 +40,29 @@ import java.util.List;
  * @version $Id$
  * @since 1.1
  */
-public class AbstractJdoStore
+public class AbstractJdoStore implements Initializable
 {
+
+    /**
+     * @plexus.requirement role-hint="continuum"
+     */
+    private JdoFactory continuumJdoFactory;
 
     /**
      * Provides hook to obtainig a {@link PersistenceManager} instance for
      * invoking operations on the underlying store.
      */
-    private PersistenceManagerFactory continuumPmf;
+    private PersistenceManagerFactory persistenceManagerFactory;
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable#initialize()
+     */
+    public void initialize() throws InitializationException
+    {
+        persistenceManagerFactory = continuumJdoFactory.getPersistenceManagerFactory();
+    }
 
     /**
      * Lookup and return an Object instance from the underlying store.
@@ -114,7 +132,7 @@ public class AbstractJdoStore
      */
     protected PersistenceManager getPersistenceManager()
     {
-        PersistenceManager pm = continuumPmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         pm.getFetchPlan().setMaxFetchDepth( -1 );
         pm.getFetchPlan().setDetachmentOptions( FetchPlan.DETACH_LOAD_FIELDS );
