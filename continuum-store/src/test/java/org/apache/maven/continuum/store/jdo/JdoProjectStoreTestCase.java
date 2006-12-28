@@ -3,6 +3,8 @@
  */
 package org.apache.maven.continuum.store.jdo;
 
+import org.apache.maven.continuum.store.ProjectStore;
+
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
@@ -18,9 +20,10 @@ public class JdoProjectStoreTestCase extends AbstractJdoStoreTestCase
         createBuildDatabase();
     }
 
-    public void testBasic()
+    public void testComponentLookup() throws Exception
     {
-        // TODO: do something
+        ProjectStore store = (ProjectStore) lookup( ProjectStore.ROLE, "jdo" );
+        assertNotNull( store );
     }
 
 }
