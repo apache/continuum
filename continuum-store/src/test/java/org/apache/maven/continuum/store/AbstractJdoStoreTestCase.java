@@ -24,7 +24,7 @@ import java.util.List;
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * 
  */
-public class AbstractRefactoredContinuumStoreTestCase extends PlexusTestCase
+public class AbstractJdoStoreTestCase extends PlexusTestCase
 {
     protected ProjectStore store;
 
