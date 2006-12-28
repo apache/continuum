@@ -25,6 +25,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
  * @since 1.1
+ * @plexus.component role="org.apache.maven.continuum.store.ProjectGroupStore"
+ *                   role-hint="jdo"
  */
 public class JdoProjectGroupStore extends AbstractJdoStore implements ProjectGroupStore
 {

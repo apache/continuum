@@ -33,7 +33,7 @@ import java.util.List;
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
  * @since 1.1
- * @plexus.component role="org.apache.maven.continuum.store.RefactoredContinuumStore"
+ * @plexus.component role="org.apache.maven.continuum.store.ProjectStore"
  *                   role-hint="jdo"
  */
 public class JdoProjectStore extends AbstractJdoStore implements ProjectStore

@@ -27,6 +27,8 @@ import org.apache.maven.continuum.model.system.SystemConfiguration;
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
  * @since 1.1
+ * @plexus.component role="org.apache.maven.continuum.store.SystemStore"
+ *                   role-hint="jdo"
  */
 public class JdoSystemStore extends AbstractJdoStore implements SystemStore
 {
