@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.store;
+package org.apache.maven.continuum.store.jdo;
 
 /*
  * Copyright 2004-2005 The Apache Software Foundation.
@@ -16,6 +16,8 @@ package org.apache.maven.continuum.store;
  * the License.
  */
 
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;

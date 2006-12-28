@@ -20,7 +20,6 @@ import org.apache.maven.continuum.model.project.Profile;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
-import org.apache.maven.continuum.store.AbstractJdoStore;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.store.SystemStore;
