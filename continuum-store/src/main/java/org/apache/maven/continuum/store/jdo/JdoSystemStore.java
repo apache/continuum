@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.store;
+package org.apache.maven.continuum.store.jdo;
 
 /*
  * Copyright 2004-2005 The Apache Software Foundation.
@@ -20,6 +20,10 @@ import org.apache.maven.continuum.model.project.Profile;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
+import org.apache.maven.continuum.store.AbstractJdoStore;
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.continuum.store.SystemStore;
 
 /**
  * Concrete implementation for {@link SystemStore}.

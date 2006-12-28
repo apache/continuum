@@ -1,8 +1,9 @@
 /**
  * 
  */
-package org.apache.maven.continuum.store;
+package org.apache.maven.continuum.store.jdo;
 
+import org.apache.maven.continuum.store.ProjectStore;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;

@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.store;
+package org.apache.maven.continuum.store.jdo;
 
 /*
  * Copyright 2004-2005 The Apache Software Foundation.
@@ -19,6 +19,10 @@ package org.apache.maven.continuum.store;
 import org.apache.maven.continuum.key.GroupProjectKey;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.store.AbstractJdoStore;
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.continuum.store.ProjectStore;
 
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
