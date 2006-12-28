@@ -27,6 +27,8 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Transaction;
 
+import java.util.List;
+
 /**
  * Covenience base class that consolidates some common methods used by
  * extensions.
@@ -157,6 +159,20 @@ public class AbstractJdoStore
         {
             throw new ContinuumStoreException( e.getMessage(), e );
         }
+    }
+
+    /**
+     * TODO: Document!
+     * 
+     * @param clazz
+     * @param ordering
+     * @param fetchGroup
+     * 
+     * @return
+     */
+    protected List getAllObjectsDetached( Class clazz, String ordering, String fetchGroup )
+    {
+        return PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), clazz, ordering, fetchGroup );
     }
 
 }

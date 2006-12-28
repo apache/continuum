@@ -108,4 +108,15 @@ public class JdoProjectStore extends AbstractJdoStore implements ProjectStore
         updateObject( project );
         return project;
     }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.ProjectStore#getAllProjects()
+     */
+    public List getAllProjects() throws ContinuumStoreException
+    {
+        return getAllObjectsDetached( Project.class, "name ascending", null );
+    }
+
 }

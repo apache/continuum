@@ -22,6 +22,8 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.store.ProjectGroupStore;
 
+import java.util.List;
+
 /**
  * Concrete implementation for {@link ProjectGroupStore}.
  * 
@@ -54,7 +56,6 @@ public class JdoProjectGroupStore extends AbstractJdoStore implements ProjectGro
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
         return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "key", key.getProjectKey(), null );
-
     }
 
     /**
@@ -66,6 +67,16 @@ public class JdoProjectGroupStore extends AbstractJdoStore implements ProjectGro
     {
         updateObject( group );
         return group;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.ProjectGroupStore#getAllProjectGroups()
+     */
+    public List getAllProjectGroups() throws ContinuumStoreException
+    {
+        return getAllObjectsDetached( ProjectGroup.class, "name ascending", null );
     }
 
 }

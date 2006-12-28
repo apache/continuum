@@ -24,6 +24,8 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.store.SystemStore;
 
+import java.util.List;
+
 /**
  * Concrete implementation for {@link SystemStore}.
  * 
@@ -164,6 +166,46 @@ public class JdoSystemStore extends AbstractJdoStore implements SystemStore
     {
         updateObject( systemConfiguration );
         return systemConfiguration;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.SystemStore#getAllInstallations()
+     */
+    public List getAllInstallations() throws ContinuumStoreException
+    {
+        return getAllObjectsDetached( Installation.class, "name ascending", null );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.SystemStore#getAllProfiles()
+     */
+    public List getAllProfiles() throws ContinuumStoreException
+    {
+        return getAllObjectsDetached( Profile.class, "name ascending", null );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.SystemStore#getAllSchedules()
+     */
+    public List getAllSchedules() throws ContinuumStoreException
+    {
+        return getAllObjectsDetached( Schedule.class, "name ascending", null );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.SystemStore#getAllSystemConfigurations()
+     */
+    public List getAllSystemConfigurations() throws ContinuumStoreException
+    {
+        return getAllObjectsDetached( SystemConfiguration.class, "name ascending", null );
     }
 
 }
