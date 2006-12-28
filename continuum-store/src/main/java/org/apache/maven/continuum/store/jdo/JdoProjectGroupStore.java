@@ -55,7 +55,7 @@ public class JdoProjectGroupStore extends AbstractJdoStore implements ProjectGro
     public ProjectGroup lookupProjectGroup( GroupProjectKey key )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
-        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "key", key.getProjectKey(), null );
+        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "key", key.getGroupKey(), null );
     }
 
     /**

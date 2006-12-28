@@ -49,7 +49,7 @@ public class AbstractJdoStore implements Initializable
     private JdoFactory continuumJdoFactory;
 
     /**
-     * Provides hook to obtainig a {@link PersistenceManager} instance for
+     * Provides hook to obtaining a {@link PersistenceManager} instance for
      * invoking operations on the underlying store.
      */
     private PersistenceManagerFactory persistenceManagerFactory;

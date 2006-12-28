@@ -722,8 +722,17 @@ public abstract class AbstractContinuumStoreTestCase
                                       buildResult.getStartTime(), buildResult.getEndTime() );
     }
 
+    /**
+     * @deprecated Use {@link #createTestBuildResult(int,boolean,int,int,String,long,long,long)} instead
+     */
     private static BuildResult createTestBuildResult( int trigger, boolean success, int state, int exitCode,
                                                       String error, int buildNumber, long startTime, long endTime )
+    {
+        return createTestBuildResult( trigger, success, state, exitCode, error, (long) buildNumber, startTime, endTime );
+    }
+
+    private static BuildResult createTestBuildResult( int trigger, boolean success, int state, int exitCode,
+                                                      String error, long buildNumber, long startTime, long endTime )
     {
         BuildResult result = new BuildResult();
         result.setBuildNumber( buildNumber );
@@ -757,7 +766,16 @@ public abstract class AbstractContinuumStoreTestCase
                                    schedule.getCronExpression(), schedule.isActive() );
     }
 
+    /**
+     * @deprecated Use {@link #createTestSchedule(String,String,long,String,boolean)} instead
+     */
     protected static Schedule createTestSchedule( String name, String description, int delay, String cronExpression,
+                                                  boolean active )
+    {
+        return createTestSchedule( name, description, (long) delay, cronExpression, active );
+    }
+
+    protected static Schedule createTestSchedule( String name, String description, long delay, String cronExpression,
                                                   boolean active )
     {
         Schedule schedule = new Schedule();
@@ -815,7 +833,18 @@ public abstract class AbstractContinuumStoreTestCase
                                   project.getUrl(), project.getVersion(), project.getWorkingDirectory(), project.getGroupKey(), project.getKey() );
     }
 
+    /**
+     * @deprecated Use {@link #createTestProject(String,long,String,String,String,String,int,String,String,String,String,String)} instead
+     */
     private static Project createTestProject( String artifactId, int buildNumber, String description, String groupId,
+                                              String name, String scmUrl, int state, String url, String version,
+                                              String workingDirectory, String groupKey, String projectKey )
+    {
+        return createTestProject( artifactId, (long) buildNumber, description, groupId, name, scmUrl, state, url, version,
+                                  workingDirectory, groupKey, projectKey );
+    }
+
+    private static Project createTestProject( String artifactId, long buildNumber, String description, String groupId,
                                               String name, String scmUrl, int state, String url, String version,
                                               String workingDirectory, String groupKey, String projectKey )
     {
@@ -1045,7 +1074,15 @@ public abstract class AbstractContinuumStoreTestCase
         return dependency;
     }
 
+    /**
+     * @deprecated Use {@link #createTestDeveloper(long,String,String,String)} instead
+     */
     protected static ProjectDeveloper createTestDeveloper( int continuumId, String email, String name, String scmId )
+    {
+        return createTestDeveloper( (long) continuumId, email, name, scmId );
+    }
+
+    protected static ProjectDeveloper createTestDeveloper( long continuumId, String email, String name, String scmId )
     {
         ProjectDeveloper developer = new ProjectDeveloper();
         developer.setContinuumId( continuumId );

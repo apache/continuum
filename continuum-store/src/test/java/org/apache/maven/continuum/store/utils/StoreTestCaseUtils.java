@@ -278,7 +278,7 @@ public class StoreTestCaseUtils
     }
 
     private static BuildResult createTestBuildResult( int trigger, boolean success, int state, int exitCode,
-                                                      String error, int buildNumber, long startTime, long endTime )
+                                                      String error, long buildNumber, long startTime, long endTime )
     {
         BuildResult result = new BuildResult();
         result.setBuildNumber( buildNumber );
@@ -328,7 +328,7 @@ public class StoreTestCaseUtils
         return dependency;
     }
 
-    public static ProjectDeveloper createTestDeveloper( int continuumId, String email, String name, String scmId )
+    public static ProjectDeveloper createTestDeveloper( long continuumId, String email, String name, String scmId )
     {
         ProjectDeveloper developer = new ProjectDeveloper();
         developer.setContinuumId( continuumId );
@@ -413,7 +413,7 @@ public class StoreTestCaseUtils
                                   project.getGroupKey(), project.getKey() );
     }
 
-    private static Project createTestProject( String artifactId, int buildNumber, String description, String groupId,
+    private static Project createTestProject( String artifactId, long buildNumber, String description, String groupId,
                                               String name, String scmUrl, int state, String url, String version,
                                               String workingDirectory, String groupKey, String projectKey )
     {
@@ -455,7 +455,7 @@ public class StoreTestCaseUtils
                                    schedule.getCronExpression(), schedule.isActive() );
     }
 
-    public static Schedule createTestSchedule( String name, String description, int delay, String cronExpression,
+    public static Schedule createTestSchedule( String name, String description, long delay, String cronExpression,
                                                boolean active )
     {
         Schedule schedule = new Schedule();

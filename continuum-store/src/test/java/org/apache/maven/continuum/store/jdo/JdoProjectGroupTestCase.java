@@ -1,5 +1,7 @@
 package org.apache.maven.continuum.store.jdo;
 
+import org.apache.maven.continuum.key.GroupProjectKey;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ProjectGroupStore;
 
 import java.util.List;
@@ -37,6 +39,15 @@ public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
         List list = store.getAllProjectGroups();
         assertNotNull( list );
         assertEquals( 2, list.size() );
+    }
+
+    public void testLookupProjectGroup() throws Exception
+    {
+        ProjectGroupStore store = (ProjectGroupStore) lookup( ProjectGroupStore.ROLE, "jdo" );
+        GroupProjectKey key = new GroupProjectKey( "Default", null );
+        ProjectGroup group = store.lookupProjectGroup( key );
+        assertNotNull( group );
+        assertEquals( 1L, group.getId() );
     }
 
 }

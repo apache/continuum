@@ -18,6 +18,8 @@ package org.apache.maven.continuum.store.jdo;
 
 import org.apache.maven.continuum.store.ProjectStore;
 
+import java.util.List;
+
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
@@ -44,6 +46,14 @@ public class JdoProjectStoreTestCase extends AbstractJdoStoreTestCase
     {
         ProjectStore store = (ProjectStore) lookup( ProjectStore.ROLE, "jdo" );
         assertNotNull( store );
+    }
+
+    public void testGetAllProjects() throws Exception
+    {
+        ProjectStore store = (ProjectStore) lookup( ProjectStore.ROLE, "jdo" );       
+        List list = store.getAllProjects();
+        assertNotNull( list );
+        assertEquals( 3, list.size() );
     }
 
 }
