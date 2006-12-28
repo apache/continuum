@@ -18,9 +18,6 @@ package org.apache.maven.continuum.store.jdo;
 
 import org.apache.maven.continuum.store.ProjectStore;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$

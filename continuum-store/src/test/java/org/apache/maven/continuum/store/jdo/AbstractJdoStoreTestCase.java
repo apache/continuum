@@ -105,7 +105,8 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
         {
             File script = (File) it.next();
 
-            System.out.println( "Loading SQL data from script: " + script.getAbsolutePath() );
+            // System.out.println( "Loading SQL data from script: " +
+            // script.getAbsolutePath() );
 
             loadSQL( script, connection );
         }
