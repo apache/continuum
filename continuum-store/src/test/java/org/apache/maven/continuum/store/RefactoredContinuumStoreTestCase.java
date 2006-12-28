@@ -16,9 +16,9 @@ public class RefactoredContinuumStoreTestCase extends AbstractRefactoredContinuu
         createBuildDatabase();
     }
 
-    public void saveProjectGroup()
+    public void testBasic()
     {
-
+        // TODO: do something
     }
 
 }
