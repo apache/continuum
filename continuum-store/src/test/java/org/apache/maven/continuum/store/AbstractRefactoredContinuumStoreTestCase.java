@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class AbstractRefactoredContinuumStoreTestCase extends PlexusTestCase
 {
-    protected RefactoredContinuumStore store;
+    protected ProjectStore store;
 
     /**
      * DDL for Database creation.
@@ -43,7 +43,7 @@ public class AbstractRefactoredContinuumStoreTestCase extends PlexusTestCase
      * 
      * @todo push down to a Jdo specific test
      */
-    protected RefactoredContinuumStore createStore() throws Exception
+    protected ProjectStore createStore() throws Exception
     {
         DefaultConfigurableJdoFactory jdoFactory = (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE );
 
@@ -55,7 +55,7 @@ public class AbstractRefactoredContinuumStoreTestCase extends PlexusTestCase
 
         jdoFactory.setPassword( "" );
 
-        return (RefactoredContinuumStore) lookup( RefactoredContinuumStore.ROLE );
+        return (ProjectStore) lookup( ProjectStore.ROLE );
     }
 
     protected void createBuildDatabase() throws Exception
