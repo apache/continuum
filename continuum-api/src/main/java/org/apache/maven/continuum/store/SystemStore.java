@@ -1,12 +1,11 @@
-/**
- * 
- */
 package org.apache.maven.continuum.store;
 
 import org.apache.maven.continuum.model.project.Profile;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
+
+import java.util.List;
 
 /**
  * Defines the contract consisting of operations that can be performed on
@@ -167,5 +166,42 @@ public interface SystemStore
      */
     public SystemConfiguration saveSystemConfiguration( SystemConfiguration systemConfiguration )
         throws ContinuumStoreException;
+
+    /**
+     * Obtains and returns a {@link List} of <b>all</b> {@link Schedule}
+     * instances for the system, stored in the underlying store.
+     * 
+     * @return list of all {@link Schedule} instances stored.
+     * @throws ContinuumStoreException
+     */
+    public List getAllSchedules() throws ContinuumStoreException;
+
+    /**
+     * Obtains and returns a {@link List} of <b>all</b> {@link Profile}
+     * instances for the system, stored in the underlying store.
+     * 
+     * @return list of all {@link Profile} instances stored.
+     * @throws ContinuumStoreException
+     */
+    public List getAllProfiles() throws ContinuumStoreException;
+
+    /**
+     * Obtains and returns a {@link List} of <b>all</b> {@link Installation}
+     * instances for the system, stored in the underlying store.
+     * 
+     * @return list of all {@link Installation} instances stored.
+     * @throws ContinuumStoreException
+     */
+    public List getAllInstallations() throws ContinuumStoreException;
+
+    /**
+     * Obtains and returns a {@link List} of <b>all</b>
+     * {@link SystemConfiguration} instances for the system, stored in the
+     * underlying store.
+     * 
+     * @return list of all {@link SystemConfiguration} instances stored.
+     * @throws ContinuumStoreException
+     */
+    public List getAllSystemConfigurations() throws ContinuumStoreException;
 
 }

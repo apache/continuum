@@ -19,6 +19,8 @@ package org.apache.maven.continuum.store;
 import org.apache.maven.continuum.key.GroupProjectKey;
 import org.apache.maven.continuum.model.project.Project;
 
+import java.util.List;
+
 /**
  * Defines the contract consisting of operations that can be performed on
  * {@link Project} entity.
@@ -66,5 +68,14 @@ public interface ProjectStore
      *             entity.
      */
     public void deleteProject( Project project ) throws ContinuumStoreException;
+
+    /**
+     * Obtains and returns a {@link List} of <b>all</b> {@link Project}
+     * instances for the system, stored in the underlying store.
+     * 
+     * @return list of all {@link Project} instances stored.
+     * @throws ContinuumStoreException
+     */
+    public List getAllProjects() throws ContinuumStoreException;
 
 }
