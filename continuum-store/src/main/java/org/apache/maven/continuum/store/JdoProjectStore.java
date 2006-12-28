@@ -28,7 +28,7 @@ import javax.jdo.Transaction;
 import java.util.List;
 
 /**
- * Store implementation that interacts with the underlying JDO-based store.
+ * Concrete implementation for {@link ProjectStore}.
  * 
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
