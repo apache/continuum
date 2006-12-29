@@ -2,7 +2,9 @@ package org.apache.maven.continuum.store.jdo;
 
 import org.apache.maven.continuum.key.GroupProjectKey;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ProjectGroupStore;
+import org.apache.maven.continuum.store.utils.StoreTestUtils;
 
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
         ProjectGroupStore store = (ProjectGroupStore) lookup( ProjectGroupStore.ROLE, "jdo" );
         List list = store.getAllProjectGroups();
         assertNotNull( list );
-        assertEquals( 2, list.size() );
+        assertEquals( 3, list.size() );
     }
 
     public void testLookupProjectGroup() throws Exception
@@ -48,6 +50,50 @@ public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
         ProjectGroup group = store.lookupProjectGroup( key );
         assertNotNull( group );
         assertEquals( 1L, group.getId() );
+        assertEquals( "Default Group", group.getDescription() );
+        assertEquals( "default", group.getGroupId() );
+        assertEquals( "Default", group.getKey() );
+        assertEquals( "Default Group", group.getName() );
+    }
+
+    public void testDeleteProjectGroup() throws Exception
+    {
+        ProjectGroupStore store = (ProjectGroupStore) lookup( ProjectGroupStore.ROLE, "jdo" );
+        GroupProjectKey key = new GroupProjectKey( "DeleteableGroup", null );
+        ProjectGroup group = store.lookupProjectGroup( key );
+        assertNotNull( group );
+
+        store.deleteProjectGroup( group );
+
+        try
+        {
+            group = store.lookupProjectGroup( key );
+            fail( "Expected ContinuumObjectNotFoundException." );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            // expected
+        }
+
+    }
+
+    public void testSaveNewProjectGroup() throws Exception
+    {
+        ProjectGroupStore store = (ProjectGroupStore) lookup( ProjectGroupStore.ROLE, "jdo" );
+        ProjectGroup group =
+            StoreTestUtils.createTestProjectGroup( "New Group", "A new project group", "newGroupId", "newGroupKey" );
+
+        ProjectGroup copy = StoreTestUtils.createTestProjectGroup( group );
+        assertNotNull( copy );
+
+        group = store.saveProjectGroup( group );
+        assertNotNull( group );
+
+        copy.setId( group.getId() );
+
+        ProjectGroup retrievedGroup = store.lookupProjectGroup( new GroupProjectKey( group.getKey(), null ) );
+        assertNotNull( retrievedGroup );
+        StoreTestUtils.assertProjectGroupEquals( copy, retrievedGroup );
     }
 
 }

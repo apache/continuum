@@ -5,6 +5,8 @@ insert into PROJECTGROUP (ID, DESCRIPTION, GROUP_ID, GROUPKEY, NAME)
   values (1, 'Default Group' , 'default', 'Default' , 'Default Group');
 insert into PROJECTGROUP (ID, DESCRIPTION, GROUP_ID, GROUPKEY, NAME)
   values (2, 'Group 1' , 'org.apache.maven.continuum', 'Continuum' , 'Continuum Group');
+insert into PROJECTGROUP (ID, DESCRIPTION, GROUP_ID, GROUPKEY, NAME)
+  values (3, 'Deleteable Group' , 'org.group.deleteable', 'DeleteableGroup' , 'Deleteable Group');  
   
       
 # Set up projects

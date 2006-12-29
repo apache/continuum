@@ -46,7 +46,7 @@ import junit.framework.TestCase;
  * @version $Id$
  * @since 1.1
  */
-public class StoreTestCaseUtils
+public class StoreTestUtils
 {
 
     public static void assertBuildDefinitionEquals( BuildDefinition expectedBuildDefinition,
