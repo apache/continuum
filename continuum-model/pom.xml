@@ -108,14 +108,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>jpox-maven-plugin</artifactId>
-            <version>${jpox.plugin.version}</version>
-            <executions>
-              <execution>
-                <goals>                
-                  <goal>schema-create</goal>
-                </goals>            
-              </execution>
-            </executions>
+            <version>${jpox.plugin.version}</version>            
             <configuration>
               <driverName>org.hsqldb.jdbcDriver</driverName>
               <dbUser>sa</dbUser>          
