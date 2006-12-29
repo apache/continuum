@@ -406,7 +406,7 @@
         <field>
           <name>continuumId</name>
           <version>1.1.0+</version>
-          <type>long</type>
+          <type>int</type>
         </field>
       </fields>
     </class>
