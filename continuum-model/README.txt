@@ -20,4 +20,12 @@ Running JPOX tools on Continuum model
     
     2-2)  Run the following command
     
-          >  mvn jpox:schema -Pddl
+          >  mvn jpox:schema-create -Pddl
+          
+3) To validate DB schema
+
+    3-1)  Follow (1-1) and (1-2) above
+    
+    3-2)  Run the following command 
+    
+          >  mvn jpox:schema-validate -Pddl          
