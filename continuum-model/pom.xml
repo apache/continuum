@@ -109,12 +109,36 @@
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>jpox-maven-plugin</artifactId>
             <version>${jpox.plugin.version}</version>            
-            <configuration>
-              <driverName>org.hsqldb.jdbcDriver</driverName>
-              <dbUser>sa</dbUser>          
-              <dbUrl>jdbc:hsqldb:mem:continuum</dbUrl>  
+            <configuration>         
               <outputFile>${project.build.directory}/schema.sql</outputFile>
-            </configuration>        
+              <toolProperties>
+                <property>
+                  <name>javax.jdo.option.ConnectionDriverName</name>
+                  <value>org.hsqldb.jdbcDriver</value>
+                </property>
+                <property>
+                  <name>javax.jdo.option.ConnectionURL</name>
+                  <value>jdbc:hsqldb:mem:continuum</value>
+                </property>
+                <property>
+                  <name>javax.jdo.option.ConnectionUserName</name>
+                  <value>sa</value>
+                </property>                
+                <property>
+                  <name>javax.jdo.option.ConnectionPassword</name>
+                  <value></value>
+                </property>                
+                <property>
+                  <name>log4j.configuration</name>
+                  <value>file:${basedir}/src/main/resources/log4j.properties</value>
+                </property>
+                <!-- for auto creating schema -->        
+                <property>
+                  <name>org.jpox.autoCreateTables</name>
+                  <value>true</value>
+                </property>
+              </toolProperties>              
+            </configuration>            
           </plugin>
         </plugins>
       </build>
