@@ -77,7 +77,7 @@ public class JdoProjectStore extends AbstractJdoStore implements ProjectStore
 
             query.declareParameters( "String groupKey, String projectKey" );
 
-            query.setFilter( "this.project.groupKey = groupKey && this.project.key == projectKey" );
+            query.setFilter( "this.project.groupkey == groupKey && this.project.key == projectKey" );
 
             List result = (List) query.execute( key.getGroupKey(), key.getProjectKey() );
 

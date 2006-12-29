@@ -16,7 +16,13 @@ package org.apache.maven.continuum.store.jdo;
  * limitations under the License.
  */
 
+import org.apache.maven.continuum.key.GroupProjectKey;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
+import org.apache.maven.continuum.store.ProjectGroupStore;
 import org.apache.maven.continuum.store.ProjectStore;
+import org.apache.maven.continuum.store.utils.StoreTestUtils;
 
 import java.util.List;
 
@@ -50,10 +56,61 @@ public class JdoProjectStoreTestCase extends AbstractJdoStoreTestCase
 
     public void testGetAllProjects() throws Exception
     {
-        ProjectStore store = (ProjectStore) lookup( ProjectStore.ROLE, "jdo" );       
+        ProjectStore store = (ProjectStore) lookup( ProjectStore.ROLE, "jdo" );
         List list = store.getAllProjects();
         assertNotNull( list );
-        assertEquals( 3, list.size() );
+        assertEquals( 4, list.size() );
+    }
+
+    public void testLookupProject() throws Exception
+    {
+        ProjectStore store = (ProjectStore) lookup( ProjectStore.ROLE, "jdo" );
+        GroupProjectKey key = new GroupProjectKey( "Default", "project1" );
+
+        Project project = store.lookupProject( key );
+        assertNotNull( project );
+        ProjectGroup group = project.getProjectGroup();
+        assertNotNull( group );
+
+        // verify group properties
+        assertEquals( 1L, group.getId() );
+        assertEquals( "Default Group", group.getDescription() );
+        assertEquals( "default", group.getGroupId() );
+        assertEquals( "Default", group.getKey() );
+        assertEquals( "Default Group", group.getName() );
+
+        // verify project properties
+        assertEquals( 1L, project.getId() );
+        assertEquals( "Test Project 1", group.getDescription() );
+        assertEquals( "org.test.projects", group.getGroupId() );
+        assertEquals( "project1", group.getKey() );
+        assertEquals( "Project 1", group.getName() );
+    }
+
+    public void testDeleteProject() throws Exception
+    {
+        ProjectStore store = (ProjectStore) lookup( ProjectStore.ROLE, "jdo" );
+        GroupProjectKey key = new GroupProjectKey( "DeleteableGroup", "deleteableProject" );
+        Project project = store.lookupProject( key );
+        assertNotNull( project );
+
+        store.deleteProject( project );
+
+        try
+        {
+            project = store.lookupProject( key );
+            fail( "Expected ContinuumObjectNotFoundException." );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            // expected
+        }
+
+    }
+
+    public void testSaveNewProjectGroup() throws Exception
+    {
+        // TODO: Implement!
     }
 
 }
