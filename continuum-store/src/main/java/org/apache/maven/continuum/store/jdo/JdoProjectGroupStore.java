@@ -22,8 +22,6 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.store.ProjectGroupStore;
 
-import javax.jdo.Transaction;
-
 import java.util.List;
 
 /**
