@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * Covenience base class that consolidates some common methods used by
- * extensions.
+ * JDO specific extensions.
  * 
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
