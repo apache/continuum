@@ -33,6 +33,13 @@
       <artifactId>hsqldb</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- TODO: Should this be moved to dep mgmt in parent? -->
+    <dependency>
+      <groupId>dbunit</groupId>
+      <artifactId>dbunit</artifactId>
+      <version>2.1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>

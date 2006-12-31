@@ -1,35 +1,27 @@
-package org.apache.maven.continuum.store.jdo;
+package org.apache.maven.continuum.store.ibatis;
 
 /*
- * Copyright 2004-2006 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright 2004-2005 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
-import org.codehaus.plexus.jdo.JdoFactory;
-import org.jpox.SchemaTool;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,13 +30,11 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Provides some service methods for Store test case extensions.
- * 
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
  * @since 1.1
  */
-public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
+public abstract class AbstractIbatisStoreTestCase extends PlexusTestCase
 {
 
     /**
@@ -78,36 +68,6 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
     private static final File SQL_DATABSE_SCHEMA = getTestFile( getBasedir(), "src/test/resources/db/schema.sql" );
 
     /**
-     * Provides an interface to clients to execute queries on the underlying
-     * database.
-     */
-    private PersistenceManager persistenceManager;
-
-    private DefaultConfigurableJdoFactory jdoFactory;
-
-    /**
-     * @see org.codehaus.plexus.PlexusTestCase#setUp()
-     */
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-
-        jdoFactory = createJdoFactory();
-
-        persistenceManager = jdoFactory.getPersistenceManagerFactory().getPersistenceManager();
-    }
-
-    /**
-     * @see org.codehaus.plexus.PlexusTestCase#tearDown()
-     */
-    protected void tearDown() throws Exception
-    {
-        super.tearDown();
-
-        teardownBuildDatabase();
-    }
-
-    /**
      * Creates an instance of Continuum Database for test purposes and loads up
      * the test data from the specified schema and test data SQL scripts.
      * 
@@ -115,22 +75,6 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
      */
     protected void createBuildDatabase() throws Exception
     {
-        Connection connection = (Connection) persistenceManager.getDataStoreConnection().getNativeConnection();
-
-        loadSQL( SQL_DATABSE_SCHEMA, connection );
-
-        // load test data.
-        List scripts = getSQLScripts();
-
-        for ( Iterator it = scripts.iterator(); it.hasNext(); )
-        {
-            File script = (File) it.next();
-
-            // System.out.println( "Loading SQL data from script: " +
-            // script.getAbsolutePath() );
-
-            loadSQL( script, connection );
-        }
 
     }
 
@@ -141,55 +85,7 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
      */
     protected void teardownBuildDatabase() throws Exception
     {
-        persistenceManager = jdoFactory.getPersistenceManagerFactory().getPersistenceManager();
 
-        URL[] jdoFiles = new URL[] { this.getClass().getClassLoader().getResource( "META-INF/package.jdo" ) };
-
-        // prepare System properties that the SchemaTool expects
-        System.setProperty( SchemaTool.JDO_DATASTORE_DRIVERNAME_PROPERTY, DRIVER_TEST_DATABASE );
-        System.setProperty( SchemaTool.JDO_DATASTORE_URL_PROPERTY, URL_TEST_DATABASE );
-        System.setProperty( SchemaTool.JDO_DATASTORE_USERNAME_PROPERTY, USERNAME_TEST_DATABASE );
-        System.setProperty( SchemaTool.JDO_DATASTORE_PASSWORD_PROPERTY, PASSWORD_TEST_DATABASE );
-        //SchemaTool.deleteSchemaTables( jdoFiles, null, null, false ); // for version 1.1.3
-        SchemaTool.deleteSchemaTables( jdoFiles, null, false );
-    }
-
-    /**
-     * Deletes records for a given entity.
-     * 
-     * @param klass Entity class for which the records are to be deleted.
-     * 
-     */
-    private void deleteAllEntities( Class klass )
-    {
-        Transaction tx = persistenceManager.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            Query query = persistenceManager.newQuery( klass );
-            query.deletePersistentAll();
-
-            tx.commit();
-        }
-        finally
-        {
-            if ( tx.isActive() )
-            {
-                tx.rollback();
-            }
-        }
-    }
-
-    /**
-     * Returns {@link PersistenceManager} instance to interact with database
-     * 
-     * @return {@link PersistenceManager} instance to interact with database.
-     */
-    protected PersistenceManager getPersistenceManager()
-    {
-        return persistenceManager;
     }
 
     /**
@@ -269,22 +165,4 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
         // System.out.println( "Done!" );
     }
 
-    /**
-     * @return
-     * @throws Exception
-     */
-    private DefaultConfigurableJdoFactory createJdoFactory() throws Exception
-    {
-        DefaultConfigurableJdoFactory jdoFactory = (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE );
-
-        jdoFactory.setUrl( URL_TEST_DATABASE );
-
-        jdoFactory.setDriverName( DRIVER_TEST_DATABASE );
-
-        jdoFactory.setUserName( USERNAME_TEST_DATABASE );
-
-        jdoFactory.setPassword( PASSWORD_TEST_DATABASE );
-
-        return jdoFactory;
-    }
 }
