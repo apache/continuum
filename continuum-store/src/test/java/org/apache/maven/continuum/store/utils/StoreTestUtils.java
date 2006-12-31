@@ -328,7 +328,7 @@ public class StoreTestUtils
         return dependency;
     }
 
-    public static ProjectDeveloper createTestDeveloper( long continuumId, String email, String name, String scmId )
+    public static ProjectDeveloper createTestDeveloper( int continuumId, String email, String name, String scmId )
     {
         ProjectDeveloper developer = new ProjectDeveloper();
         developer.setContinuumId( continuumId );

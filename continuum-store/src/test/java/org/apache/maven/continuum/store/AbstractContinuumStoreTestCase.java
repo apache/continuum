@@ -1074,15 +1074,7 @@ public abstract class AbstractContinuumStoreTestCase
         return dependency;
     }
 
-    /**
-     * @deprecated Use {@link #createTestDeveloper(long,String,String,String)} instead
-     */
     protected static ProjectDeveloper createTestDeveloper( int continuumId, String email, String name, String scmId )
-    {
-        return createTestDeveloper( (long) continuumId, email, name, scmId );
-    }
-
-    protected static ProjectDeveloper createTestDeveloper( long continuumId, String email, String name, String scmId )
     {
         ProjectDeveloper developer = new ProjectDeveloper();
         developer.setContinuumId( continuumId );

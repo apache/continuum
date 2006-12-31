@@ -22,6 +22,8 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.store.ProjectGroupStore;
 
+import javax.jdo.Transaction;
+
 import java.util.List;
 
 /**
@@ -65,7 +67,34 @@ public class JdoProjectGroupStore extends AbstractJdoStore implements ProjectGro
      */
     public ProjectGroup saveProjectGroup( ProjectGroup group ) throws ContinuumStoreException
     {
-        updateObject( group );
+        if ( false )
+        {
+            Transaction tx = getPersistenceManager().currentTransaction();
+            try
+            {
+                tx.begin();
+
+                getPersistenceManager().makePersistent( group );
+
+                tx.commit();
+            }
+            catch ( Exception e )
+            {
+                // Handle the exception
+            }
+            finally
+            {
+                if ( tx.isActive() )
+                {
+                    tx.rollback();
+                }
+            }
+        }
+        else
+        {
+            updateObject( group );
+        }
+
         return group;
     }
 

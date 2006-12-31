@@ -71,7 +71,7 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
     /**
      * JDBC URL to connect to the target test database instance.
      */
-    private final String URL_TEST_DATABASE = "jdbc:hsqldb:mem:" + getName() + new Date().getTime();
+    private final String URL_TEST_DATABASE = "jdbc:hsqldb:mem:" + getName();
 
     /**
      * DDL for Database creation.
@@ -151,6 +151,7 @@ public abstract class AbstractJdoStoreTestCase extends PlexusTestCase
         System.setProperty( SchemaTool.JDO_DATASTORE_URL_PROPERTY, URL_TEST_DATABASE );
         System.setProperty( SchemaTool.JDO_DATASTORE_USERNAME_PROPERTY, USERNAME_TEST_DATABASE );
         System.setProperty( SchemaTool.JDO_DATASTORE_PASSWORD_PROPERTY, PASSWORD_TEST_DATABASE );
+        //SchemaTool.deleteSchemaTables( jdoFiles, null, null, false ); // for version 1.1.3
         SchemaTool.deleteSchemaTables( jdoFiles, null, false );
     }
 

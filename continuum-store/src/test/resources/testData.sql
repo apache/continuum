@@ -29,4 +29,4 @@ insert into PROJECT (ID, DESCRIPTION, ARTIFACT_ID, GROUP_ID, GROUP_KEY,
     PROJECTKEY, NAME, BUILD_NUMBER, LATEST_BUILD_ID, OLD_STATE, 
     PROJECT_GROUP_ID_OID, "STATE")
   values (999, 'Deleteable Project', 'deleteable-project', 'org.test.projects', 'DeleteableGroup',
-    'deleteableProject', 'Deleteable Project', 0, 0, 0, 999, 0);  
+    'deleteableProject', 'Deleteable Project', 0, 0, 0, 2, 0);  
