@@ -105,8 +105,29 @@ public class IbatisProjectGroupStore extends AbstractIbatisStore implements Proj
      */
     public List getAllProjectGroups() throws ContinuumStoreException
     {
-        // TODO Auto-generated method stub
-        return null;
+        try
+        {
+            getSqlMapClient().startTransaction();
+
+            return getSqlMapClient().queryForList( SQLMAP_GET_ALL_PROJECT_GROUPS, null );
+
+        }
+        catch ( SQLException e )
+        {
+            throw new ContinuumStoreException( "Unable to retrieve ProjectGroups.", e );
+        }
+        finally
+        {
+            try
+            {
+                getSqlMapClient().endTransaction();
+            }
+            catch ( SQLException e )
+            {
+                // log and forget
+                getLogger().warn( "Unable to end transaction.", e );
+            }
+        }
     }
 
     /**
@@ -126,9 +147,10 @@ public class IbatisProjectGroupStore extends AbstractIbatisStore implements Proj
      * 
      * @see org.apache.maven.continuum.store.ProjectGroupStore#saveProjectGroup(org.apache.maven.continuum.model.project.ProjectGroup)
      */
-    public ProjectGroup saveProjectGroup( ProjectGroup projectGroup ) throws ContinuumStoreException
+    public ProjectGroup saveProjectGroup( ProjectGroup group ) throws ContinuumStoreException
     {
         // TODO Auto-generated method stub
+
         return null;
     }
 

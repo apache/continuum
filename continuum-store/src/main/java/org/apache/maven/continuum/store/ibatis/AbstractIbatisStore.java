@@ -16,6 +16,7 @@ package org.apache.maven.continuum.store.ibatis;
  * the License.
  */
 
+import org.codehaus.plexus.ibatis.PlexusIbatisHelper;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -31,6 +32,11 @@ public abstract class AbstractIbatisStore extends AbstractLogEnabled implements 
 {
 
     /**
+     * @plexus.requirement role-hint="continuum-ibatis"
+     */
+    private PlexusIbatisHelper plexusIbatisHelper;
+
+    /**
      * Acts as a client to initiate operations on the underlying data store.
      */
     private SqlMapClient sqlMapClient;
@@ -42,7 +48,7 @@ public abstract class AbstractIbatisStore extends AbstractLogEnabled implements 
      */
     public void initialize() throws InitializationException
     {
-        // TODO: initialize SQL Map client.
+        this.sqlMapClient = this.plexusIbatisHelper.getSqlMapClient();
     }
 
     /**

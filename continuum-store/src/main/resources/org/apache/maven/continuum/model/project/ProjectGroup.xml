@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="continuum.model.project.ProjectGroup">
+
+  <resultMap id="RM.GetAllProjectGroups" class="org.apache.maven.continuum.model.project.ProjectGroup">
+    <result property="id" />
+    <result property="description" />
+    <result property="groupId" />
+    <result property="key" />
+    <result property="modelEncoding" nullValue="" />
+    <result property="name" />
+  </resultMap>
+
+  <select id="GetAllProjectGroups" resultMap="RM.GetAllProjectGroups">
+    select
+      id,
+      description, 
+      groupId,
+      key,
+      modelEncoding,
+      name
+    from
+      PROJECTGROUP    
+  </select>
+ 
+ 
+</sqlMap>

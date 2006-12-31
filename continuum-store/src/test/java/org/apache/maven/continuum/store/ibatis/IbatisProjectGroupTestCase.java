@@ -19,9 +19,12 @@ package org.apache.maven.continuum.store.ibatis;
 import org.apache.maven.continuum.store.ProjectGroupStore;
 import org.codehaus.plexus.PlexusTestCase;
 
+import java.util.List;
+
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
- * @version $Id$
+ * @version $Id: IbatisProjectGroupTestCase.java 491371 2006-12-31 03:00:05Z
+ *          rinku $
  */
 public class IbatisProjectGroupTestCase extends PlexusTestCase
 {
@@ -34,6 +37,9 @@ public class IbatisProjectGroupTestCase extends PlexusTestCase
 
     public void testLookupProjectGroup() throws Exception
     {
+        IbatisProjectGroupStore store = (IbatisProjectGroupStore) lookup( ProjectGroupStore.ROLE, "ibatis" );
+        List list = store.getAllProjectGroups();
+        assertNotNull( list );
 
     }
 

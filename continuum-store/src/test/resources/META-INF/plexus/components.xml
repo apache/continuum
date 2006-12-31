@@ -1,0 +1,30 @@
+<plexus>
+  <components>
+    <component>
+      <role>org.codehaus.plexus.ibatis.PlexusIbatisHelper</role>
+      <implementation>org.codehaus.plexus.ibatis.DefaultPlexusIbatisHelper</implementation>
+      <role-hint>continuum-ibatis</role-hint>
+      <configuration>
+        <resource>org/apache/maven/continuum/store/ibatis/ibatis-config.xml</resource>
+        <properties>
+          <property>
+            <name>jdbc.driver</name>
+            <value>org.hsqldb.jdbcDriver</value>
+          </property>
+          <property>
+            <name>jdbc.url</name>
+            <value>jdbc:hsqldb:mem:continuum</value>
+          </property>
+          <property>
+            <name>jdbc.username</name>
+            <value>sa</value>
+          </property>
+          <property>
+            <name>jdbc.password</name>
+            <value></value>
+          </property>
+        </properties>
+      </configuration>
+    </component>
+  </components>
+</plexus>
