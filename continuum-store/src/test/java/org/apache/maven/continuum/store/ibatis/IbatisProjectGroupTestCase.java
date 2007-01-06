@@ -17,7 +17,6 @@ package org.apache.maven.continuum.store.ibatis;
  */
 
 import org.apache.maven.continuum.store.ProjectGroupStore;
-import org.codehaus.plexus.PlexusTestCase;
 
 import java.util.List;
 
@@ -26,8 +25,28 @@ import java.util.List;
  * @version $Id: IbatisProjectGroupTestCase.java 491371 2006-12-31 03:00:05Z
  *          rinku $
  */
-public class IbatisProjectGroupTestCase extends PlexusTestCase
+public class IbatisProjectGroupTestCase extends AbstractIbatisStoreTestCase
 {
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.codehaus.plexus.PlexusTestCase#setUp()
+     */
+    protected void setUp() throws Exception
+    {
+        createBuildDatabase();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.codehaus.plexus.PlexusTestCase#tearDown()
+     */
+    protected void tearDown() throws Exception
+    {
+        teardownBuildDatabase();
+    }
 
     public void testLookup() throws Exception
     {

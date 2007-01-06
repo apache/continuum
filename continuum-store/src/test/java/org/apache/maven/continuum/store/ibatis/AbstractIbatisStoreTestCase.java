@@ -17,6 +17,11 @@ package org.apache.maven.continuum.store.ibatis;
  */
 
 import org.codehaus.plexus.PlexusTestCase;
+import org.dbunit.IDatabaseTester;
+import org.dbunit.JdbcDatabaseTester;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.xml.XmlDataSet;
+import org.dbunit.operation.DatabaseOperation;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,11 +36,14 @@ import java.util.List;
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
- * @version $Id$
+ * @version $Id: AbstractIbatisStoreTestCase.java 491397 2006-12-31 06:32:52Z
+ *          rinku $
  * @since 1.1
  */
 public abstract class AbstractIbatisStoreTestCase extends PlexusTestCase
 {
+
+    private static final String TEST_DATA_XML = "src/test/resources/db/test-data.xml";
 
     /**
      * Default location for SQL test data.
@@ -55,17 +63,22 @@ public abstract class AbstractIbatisStoreTestCase extends PlexusTestCase
     /**
      * Driver class to connect to the target database instance.
      */
-    private static final String DRIVER_TEST_DATABASE = "org.hsqldb.jdbcDriver";
+    // private static final String DRIVER_TEST_DATABASE =
+    // "org.hsqldb.jdbcDriver";
+    private static final String DRIVER_TEST_DATABASE = "org.apache.derby.jdbc.EmbeddedDriver";
 
     /**
      * JDBC URL to connect to the target test database instance.
      */
-    private final String URL_TEST_DATABASE = "jdbc:hsqldb:mem:" + getName();
+    // private final String URL_TEST_DATABASE = "jdbc:hsqldb:mem:" + getName();
+    private final String URL_TEST_DATABASE = "jdbc:derby:" + getName() + ";create=true";
 
     /**
      * DDL for Database creation.
      */
-    private static final File SQL_DATABSE_SCHEMA = getTestFile( getBasedir(), "src/test/resources/db/schema.sql" );
+    private static final String SQL_DATABSE_SCHEMA = "src/test/resources/db/schema.sql";
+
+    private IDatabaseTester dbTester;
 
     /**
      * Creates an instance of Continuum Database for test purposes and loads up
@@ -75,7 +88,19 @@ public abstract class AbstractIbatisStoreTestCase extends PlexusTestCase
      */
     protected void createBuildDatabase() throws Exception
     {
+        dbTester =
+            new JdbcDatabaseTester( DRIVER_TEST_DATABASE, URL_TEST_DATABASE, USERNAME_TEST_DATABASE,
+                                    PASSWORD_TEST_DATABASE );
+        File testFile = getTestFile( getBasedir(), TEST_DATA_XML );
+        assertTrue( testFile.exists() );
 
+        // dbTester.setSchema( getName() );
+
+        dbTester.setDataSet( new XmlDataSet( new FileInputStream( testFile ) ) );
+
+        dbTester.setSetUpOperation( DatabaseOperation.INSERT );
+
+        dbTester.onSetup();
     }
 
     /**
@@ -85,7 +110,8 @@ public abstract class AbstractIbatisStoreTestCase extends PlexusTestCase
      */
     protected void teardownBuildDatabase() throws Exception
     {
-
+        dbTester.setTearDownOperation( DatabaseOperation.DELETE );
+        dbTester.onTearDown();
     }
 
     /**
@@ -99,6 +125,7 @@ public abstract class AbstractIbatisStoreTestCase extends PlexusTestCase
     {
         List list = new ArrayList();
         // add default test data source.
+        list.add( getTestFile( getBasedir(), SQL_DATABSE_SCHEMA ) );
         list.add( getTestFile( getBasedir(), SQL_TEST_DATA ) );
         return list;
     }

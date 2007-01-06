@@ -86,19 +86,8 @@ public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
         String groupKey = "AddProjectGroupKey";
         ProjectGroup group = StoreTestUtils.createTestProjectGroup( name, description, groupId, groupKey );
 
-        ProjectGroup copy = StoreTestUtils.createTestProjectGroup( group );
-        assertNotNull( copy );
-        
-        
-        group = store.saveProjectGroup( group );        
+        group = store.saveProjectGroup( group );
         assertNotNull( group );
-        /*
-        copy.setId( group.getId() );
-
-        ProjectGroup retrievedGroup = store.lookupProjectGroup( new GroupProjectKey( group.getKey(), null ) );
-        assertNotNull( retrievedGroup );
-        StoreTestUtils.assertProjectGroupEquals( copy, retrievedGroup );
-        */
     }
 
 }

@@ -28,13 +28,14 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import javax.jdo.FetchPlan;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
 import javax.jdo.Transaction;
 
 import java.util.List;
 
 /**
- * Covenience base class that consolidates some common methods used by
- * JDO specific extensions.
+ * Covenience base class that consolidates some common methods used by JDO
+ * specific extensions.
  * 
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$

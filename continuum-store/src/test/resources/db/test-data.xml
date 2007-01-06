@@ -1,0 +1,126 @@
+<!DOCTYPE dataset SYSTEM "dataset.dtd">
+<dataset>
+  <table name="PROJECTGROUP">
+    <column>ID</column>
+    <column>DESCRIPTION</column>
+    <column>GROUP_ID</column>
+    <column>GROUP_KEY</column>
+    <column>GROUPKEY</column>
+    <column>MODEL_ENCODING</column>
+    <column>NAME</column>
+    <row>
+      <value>1</value>
+      <value>Default Group</value>
+      <value>default</value>
+      <value>Default</value>
+      <value>Default Group</value>
+    </row>
+    <row>
+      <value>2</value>
+      <value>Group for Maven Projects</value>
+      <value>org.apache.maven</value>
+      <value>MavenGroup</value>
+      <value>Maven Group</value>
+    </row>
+    <row>
+      <value>3</value>
+      <value>Group for Continuum Projects</value>
+      <value>org.apache.maven.continuum</value>
+      <value>ContinuumGroup</value>
+      <value>Continuum Group</value>
+    </row>
+    <row>
+      <value>999</value>
+      <value>Deleteable Group</value>
+      <value>org.group.deleteable</value>
+      <value>DeleteableGroup</value>
+      <value>Deleteable Group</value>
+    </row>
+  </table>
+ 
+  <table name="PROJECT">
+    <column>ID</column>
+    <column>DESCRIPTION</column>
+    <column>ARTIFACT_ID</column>
+    <column>GROUP_ID</column>
+    <column>GROUP_KEY</column>
+    <column>PROJECTKEY</column>
+    <column>NAME</column>
+    <column>BUILD_NUMBER</column>
+    <column>LATEST_BUILD_ID</column>
+    <column>OLD_STATE</column>
+    <column>PROJECT_GROUP_ID_OID</column>
+    <column>STATE</column>
+    <row>
+      <value>1</value>
+      <value>Test Project 1</value>
+      <value>project-1</value>
+      <value>org.test.projects</value>
+      <value>Default</value>
+      <value>project1</value>
+      <value>Project 1</value>
+      <value>0</value>
+      <value>0</value>
+      <value>0</value>
+      <value>1</value>
+      <value>0</value>
+    </row>
+    <row>
+      <value>2</value>
+      <value>Test Project 2</value>
+      <value>project-2</value>
+      <value>org.test.projects</value>
+      <value>Group1</value>
+      <value>project2</value>
+      <value>Project 2</value>
+      <value>0</value>
+      <value>0</value>
+      <value>0</value>
+      <value>2</value>
+      <value>0</value>
+    </row>
+    <row>
+      <value>3</value>
+      <value>Test Project 3</value>
+      <value>project-3</value>
+      <value>org.test.projects</value>
+      <value>MavenGroup</value>
+      <value>project3</value>
+      <value>Project 3</value>
+      <value>0</value>
+      <value>0</value>
+      <value>0</value>
+      <value>2</value>
+      <value>0</value>
+    </row>
+    <row>
+      <value>4</value>
+      <value>Test Project 4</value>
+      <value>project-4</value>
+      <value>org.test.projects</value>
+      <value>ContinuumGroup</value>
+      <value>project4</value>
+      <value>Project 4</value>
+      <value>0</value>
+      <value>0</value>
+      <value>0</value>
+      <value>3</value>
+      <value>0</value>
+    </row>
+    <row>
+      <value>5</value>
+      <value>Test Project 5</value>
+      <value>project-5</value>
+      <value>org.test.projects</value>
+      <value>ContinuumGroup</value>
+      <value>project5</value>
+      <value>Project 5</value>
+      <value>0</value>
+      <value>0</value>
+      <value>0</value>
+      <value>3</value>
+      <value>0</value>
+    </row>
+  </table>
+ 
+</dataset>

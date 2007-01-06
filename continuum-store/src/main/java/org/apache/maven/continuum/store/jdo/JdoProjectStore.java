@@ -22,6 +22,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.store.ProjectStore;
+import org.codehaus.plexus.jdo.PlexusJdoUtils;
+import org.codehaus.plexus.jdo.PlexusStoreException;
 
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
@@ -77,7 +79,7 @@ public class JdoProjectStore extends AbstractJdoStore implements ProjectStore
 
             query.declareParameters( "String groupKey, String projectKey" );
 
-            query.setFilter( "this.project.groupkey == groupKey && this.project.key == projectKey" );
+            query.setFilter( "this.project.groupKey == groupKey && this.project.key == projectKey" );
 
             List result = (List) query.execute( key.getGroupKey(), key.getProjectKey() );
 
@@ -105,7 +107,17 @@ public class JdoProjectStore extends AbstractJdoStore implements ProjectStore
      */
     public Project saveProject( Project project ) throws ContinuumStoreException
     {
-        updateObject( project );
+        try
+        {
+            if ( project.getId() > 0 )
+                PlexusJdoUtils.saveObject( getPersistenceManager(), project, new String[0] );
+            else
+                PlexusJdoUtils.addObject( getPersistenceManager(), project );
+        }
+        catch ( PlexusStoreException e )
+        {
+            throw new ContinuumStoreException( "Error saving Project.", e );
+        }
         return project;
     }
 
