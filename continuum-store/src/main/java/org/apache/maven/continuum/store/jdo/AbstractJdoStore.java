@@ -161,6 +161,11 @@ public class AbstractJdoStore implements Initializable
         PlexusJdoUtils.rollbackIfActive( tx );
     }
 
+    protected Object addObject( Object object )
+    {
+        return PlexusJdoUtils.addObject( getPersistenceManager(), object );
+    }
+
     /**
      * Updates the specified object's properties in the underlying store.
      * 

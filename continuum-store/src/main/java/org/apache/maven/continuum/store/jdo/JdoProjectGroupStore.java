@@ -67,17 +67,11 @@ public class JdoProjectGroupStore extends AbstractJdoStore implements ProjectGro
      */
     public ProjectGroup saveProjectGroup( ProjectGroup group ) throws ContinuumStoreException
     {
-        try
-        {
-            if ( group.getId() > 0 )
-                PlexusJdoUtils.saveObject( getPersistenceManager(), group, null );
-            else
-                PlexusJdoUtils.addObject( getPersistenceManager(), group, null );
-        }
-        catch ( PlexusStoreException e )
-        {
-            throw new ContinuumStoreException( "Error saving Project Group.", e );
-        }
+        if ( group.getId() > 0 )
+            updateObject( group );
+        else
+            addObject( group );
+
         return group;
     }
 

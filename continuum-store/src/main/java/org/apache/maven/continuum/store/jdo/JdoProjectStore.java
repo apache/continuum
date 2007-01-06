@@ -107,17 +107,11 @@ public class JdoProjectStore extends AbstractJdoStore implements ProjectStore
      */
     public Project saveProject( Project project ) throws ContinuumStoreException
     {
-        try
-        {
-            if ( project.getId() > 0 )
-                PlexusJdoUtils.saveObject( getPersistenceManager(), project, new String[0] );
-            else
-                PlexusJdoUtils.addObject( getPersistenceManager(), project );
-        }
-        catch ( PlexusStoreException e )
-        {
-            throw new ContinuumStoreException( "Error saving Project.", e );
-        }
+        if ( project.getId() > 0 )
+            updateObject( project );
+        else
+            addObject( project );
+
         return project;
     }
 
