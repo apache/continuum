@@ -17,7 +17,6 @@ package org.apache.maven.continuum.store.jdo;
  */
 
 import org.apache.maven.continuum.key.GroupProjectKey;
-import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -73,13 +72,14 @@ public class JdoProjectStore extends AbstractJdoStore implements ProjectStore
         {
             tx.begin();
 
-            Extent extent = pm.getExtent( BuildResult.class, true );
+            Extent extent = pm.getExtent( Project.class, true );
 
             Query query = pm.newQuery( extent );
 
             query.declareParameters( "String groupKey, String projectKey" );
 
-            query.setFilter( "this.project.groupKey == groupKey && this.project.key == projectKey" );
+            // XXX: Why do we have a 'groupKey' column set up in Project table?
+            query.setFilter( "this.projectGroup.key == groupKey && this.key == projectKey" );
 
             List result = (List) query.execute( key.getGroupKey(), key.getProjectKey() );
 

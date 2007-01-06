@@ -18,6 +18,21 @@
     <appender-ref ref="default"/>
   </category>
 
+  <category name="JPOX.JDO.QUERY">
+    <priority value="DEBUG"/>
+    <appender-ref ref="default"/>
+  </category>
+  
+  <category name="JPOX.RDBMS.DDL">
+    <priority value="ERROR"/>
+    <appender-ref ref="default"/>
+  </category>
+  
+  <category name="JPOX.RDBMS.SQL">
+    <priority value="DEBUG"/>
+    <appender-ref ref="default"/>
+  </category>
+  
   <root>
     <priority value="INFO"/>
     <appender-ref ref="default"/>

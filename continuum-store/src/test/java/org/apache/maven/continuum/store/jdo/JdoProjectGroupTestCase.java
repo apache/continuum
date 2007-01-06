@@ -49,8 +49,8 @@ public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
         GroupProjectKey key = new GroupProjectKey( "Default", null );
         ProjectGroup group = store.lookupProjectGroup( key );
         assertNotNull( group );
-        assertEquals( 1L, group.getId() );
-        assertEquals( "Default Group", group.getDescription() );
+        assertEquals( 100L, group.getId() );
+        assertEquals( "Default Group Desc.", group.getDescription() );
         assertEquals( "default", group.getGroupId() );
         assertEquals( "Default", group.getKey() );
         assertEquals( "Default Group", group.getName() );
@@ -88,6 +88,7 @@ public class JdoProjectGroupTestCase extends AbstractJdoStoreTestCase
 
         group = store.saveProjectGroup( group );
         assertNotNull( group );
+        assertTrue( group.getId() > 0 );
     }
 
 }
