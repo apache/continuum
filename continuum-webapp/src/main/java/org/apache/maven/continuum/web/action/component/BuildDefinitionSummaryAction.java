@@ -40,11 +40,11 @@ import java.util.List;
 public class BuildDefinitionSummaryAction
     extends ContinuumActionSupport
 {
-    private int projectGroupId;
+    private long projectGroupId;
 
     private String projectGroupName;
 
-    private int projectId;
+    private long projectId;
 
     private ProjectGroup projectGroup;
 
@@ -103,7 +103,7 @@ public class BuildDefinitionSummaryAction
         return SUCCESS;
     }
 
-    private List gatherProjectBuildDefinitionSummaries( int projectId )
+    private List gatherProjectBuildDefinitionSummaries( long projectId )
         throws ContinuumException
     {
         List summaryList = new ArrayList();
@@ -123,7 +123,7 @@ public class BuildDefinitionSummaryAction
     }
 
 
-    private List gatherGroupBuildDefinitionSummaries( int projectGroupId )
+    private List gatherGroupBuildDefinitionSummaries( long projectGroupId )
         throws ContinuumException
     {
         List summaryList = new ArrayList();
@@ -158,22 +158,22 @@ public class BuildDefinitionSummaryAction
         return bds;
     }
 
-    public int getProjectId()
+    public long getProjectId()
     {
         return projectId;
     }
 
-    public void setProjectId( int projectId )
+    public void setProjectId( long projectId )
     {
         this.projectId = projectId;
     }
 
-    public int getProjectGroupId()
+    public long getProjectGroupId()
     {
         return projectGroupId;
     }
 
-    public void setProjectGroupId( int projectGroupId )
+    public void setProjectGroupId( long projectGroupId )
     {
         this.projectGroupId = projectGroupId;
     }

@@ -36,11 +36,11 @@ public class ScheduleAction
     extends ContinuumConfirmAction
     implements SecureAction
 {
-    private int id;
+    private long id;
 
     private boolean active = false;
 
-    private int delay;
+    private long delay;
 
     private String description;
 
@@ -52,7 +52,7 @@ public class ScheduleAction
 
     private boolean confirmed;
 
-    private int maxJobExecutionTime;
+    private long maxJobExecutionTime;
 
     private String second = "0";
 
@@ -178,12 +178,12 @@ public class ScheduleAction
         return schedules;
     }
 
-    public int getId()
+    public long getId()
     {
         return id;
     }
 
-    public void setId( int id )
+    public void setId( long id )
     {
         this.id = id;
     }
@@ -198,12 +198,12 @@ public class ScheduleAction
         this.active = active;
     }
 
-    public int getDelay()
+    public long getDelay()
     {
         return delay;
     }
 
-    public void setDelay( int delay )
+    public void setDelay( long delay )
     {
         this.delay = delay;
     }
@@ -248,12 +248,12 @@ public class ScheduleAction
         this.confirmed = confirmed;
     }
 
-    public int getMaxJobExecutionTime()
+    public long getMaxJobExecutionTime()
     {
         return maxJobExecutionTime;
     }
 
-    public void setMaxJobExecutionTime( int maxJobExecutionTime )
+    public void setMaxJobExecutionTime( long maxJobExecutionTime )
     {
         this.maxJobExecutionTime = maxJobExecutionTime;
     }

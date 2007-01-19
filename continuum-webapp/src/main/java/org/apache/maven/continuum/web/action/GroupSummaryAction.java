@@ -145,7 +145,7 @@ public class GroupSummaryAction
                     if ( buildResultsInSuccess != null )
                     {
                         BuildResult buildInSuccess =
-                            (BuildResult) buildResultsInSuccess.get( new Integer( project.getId() ) );
+                            (BuildResult) buildResultsInSuccess.get( new Long( project.getId() ) );
 
                         if ( buildInSuccess != null )
                         {
@@ -155,7 +155,7 @@ public class GroupSummaryAction
 
                     if ( buildResults != null )
                     {
-                        BuildResult latestBuild = (BuildResult) buildResults.get( new Integer( project.getId() ) );
+                        BuildResult latestBuild = (BuildResult) buildResults.get( new Long( project.getId() ) );
 
                         if ( latestBuild != null )
                         {

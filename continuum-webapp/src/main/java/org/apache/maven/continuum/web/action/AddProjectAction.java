@@ -62,7 +62,7 @@ public class AddProjectAction
 
     private Collection projectGroups;
 
-    private int selectedProjectGroup;
+    private long selectedProjectGroup;
 
     public void validate()
     {
@@ -229,12 +229,12 @@ public class AddProjectAction
         this.projectGroups = projectGroups;
     }
 
-    public int getSelectedProjectGroup()
+    public long getSelectedProjectGroup()
     {
         return selectedProjectGroup;
     }
 
-    public void setSelectedProjectGroup( int selectedProjectGroup )
+    public void setSelectedProjectGroup( long selectedProjectGroup )
     {
         this.selectedProjectGroup = selectedProjectGroup;
     }

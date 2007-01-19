@@ -41,7 +41,7 @@ import java.util.Map;
 public class SummaryAction
     extends ContinuumActionSupport
 {
-    private int projectGroupId;
+    private long projectGroupId;
 
     private String projectGroupName;
 
@@ -118,7 +118,7 @@ public class SummaryAction
 
             if ( buildResultsInSuccess != null )
             {
-                BuildResult buildInSuccess = (BuildResult) buildResultsInSuccess.get( new Integer( project.getId() ) );
+                BuildResult buildInSuccess = (BuildResult) buildResultsInSuccess.get( new Long( project.getId() ) );
 
                 if ( buildInSuccess != null )
                 {
@@ -128,7 +128,7 @@ public class SummaryAction
 
             if ( buildResults != null )
             {
-                BuildResult latestBuild = (BuildResult) buildResults.get( new Integer( project.getId() ) );
+                BuildResult latestBuild = (BuildResult) buildResults.get( new Long( project.getId() ) );
 
                 if ( latestBuild != null )
                 {
@@ -167,12 +167,12 @@ public class SummaryAction
         this.projects = projects;
     }
 
-    public int getProjectGroupId()
+    public long getProjectGroupId()
     {
         return projectGroupId;
     }
 
-    public void setProjectGroupId( int projectGroupId )
+    public void setProjectGroupId( long projectGroupId )
     {
         this.projectGroupId = projectGroupId;
     }

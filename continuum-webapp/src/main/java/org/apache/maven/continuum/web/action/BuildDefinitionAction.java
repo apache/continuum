@@ -45,11 +45,11 @@ public class BuildDefinitionAction
 
     private int buildDefinitionId;
 
-    private int projectId;
+    private long projectId;
 
-    private int projectGroupId;
+    private long projectGroupId;
 
-    private int scheduleId;
+    private long scheduleId;
 
     private boolean defaultBuildDefinition;
 
@@ -86,7 +86,7 @@ public class BuildDefinitionAction
             {
                 Schedule schedule = (Schedule) i.next();
 
-                schedules.put( new Integer( schedule.getId() ), schedule.getName() );
+                schedules.put( new Long( schedule.getId() ), schedule.getName() );
             }
         }
 
@@ -300,27 +300,27 @@ public class BuildDefinitionAction
         this.buildDefinitionId = buildDefinitionId;
     }
 
-    public int getProjectId()
+    public long getProjectId()
     {
         return projectId;
     }
 
-    public void setProjectId( int projectId )
+    public void setProjectId( long projectId )
     {
         this.projectId = projectId;
     }
 
-    public int getProjectGroupId()
+    public long getProjectGroupId()
     {
         return projectGroupId;
     }
 
-    public void setProjectGroupId( int projectGroupId )
+    public void setProjectGroupId( long projectGroupId )
     {
         this.projectGroupId = projectGroupId;
     }
 
-    public int getScheduleId()
+    public long getScheduleId()
     {
         return scheduleId;
     }

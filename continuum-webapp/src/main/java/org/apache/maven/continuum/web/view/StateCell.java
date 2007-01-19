@@ -92,13 +92,13 @@ public class StateCell
     {
         HashMap params = new HashMap();
 
-        params.put( "projectId", new Integer( project.getId() ) );
+        params.put( "projectId", new Long( project.getId() ) );
 
         params.put( "projectName", project.getName() );
 
-        params.put( "buildId", new Integer( project.getLatestBuildId() ) );
+        params.put( "buildId", new Long( project.getLatestBuildId() ) );
 
-        params.put( "projectGroupId", new Integer( project.getProjectGroupId() ) );
+        params.put( "projectGroupId", new Long( project.getProjectGroupId() ) );
 
         String url = UrlHelper.buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
                                          ServletActionContext.getResponse(), params );

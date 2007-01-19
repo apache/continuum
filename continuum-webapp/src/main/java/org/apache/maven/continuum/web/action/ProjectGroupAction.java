@@ -182,7 +182,7 @@ public class ProjectGroupAction
                 {
                     projectInCOQueue = true;
                 }
-                projects.put( p, new Integer( p.getProjectGroup().getId() ) );
+                projects.put( p, new Long( p.getProjectGroup().getId() ) );
             }
         }
 
@@ -190,7 +190,7 @@ public class ProjectGroupAction
         while ( proj_group.hasNext() )
         {
             ProjectGroup pg = (ProjectGroup) proj_group.next();
-            projectGroups.put( new Integer( pg.getId() ), pg.getName() );
+            projectGroups.put( new Long( pg.getId() ), pg.getName() );
         }
 
         return SUCCESS;

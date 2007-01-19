@@ -55,7 +55,7 @@ public class BuildCell
         ProjectSummary project = (ProjectSummary) tableModel.getCurrentRowBean();
         String contextPath = tableModel.getContext().getContextPath();
 
-        int buildNumber = project.getBuildNumber();
+        long buildNumber = project.getBuildNumber();
 
         String result = "<div align=\"center\">";
 
@@ -78,13 +78,13 @@ public class BuildCell
                 {
                     HashMap params = new HashMap();
 
-                    params.put( "projectId", new Integer( project.getId() ) );
+                    params.put( "projectId", new Long( project.getId() ) );
 
                     params.put( "projectName", project.getName() );
 
-                    params.put( "buildId", new Integer( project.getBuildInSuccessId() ) );
+                    params.put( "buildId", new Long( project.getBuildInSuccessId() ) );
 
-                    params.put( "projectGroupId", new Integer( project.getProjectGroupId() ) );
+                    params.put( "projectGroupId", new Long( project.getProjectGroupId() ) );
 
                     PageContext pageContext = (PageContext) tableModel.getContext().getContextObject();
 

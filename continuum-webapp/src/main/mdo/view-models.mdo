@@ -63,7 +63,7 @@
           <version>1.0.0</version>
           <required>true</required>
           <description>project id of the project</description>
-          <type>int</type>
+          <type>long</type>
           <defaultValue>-1</defaultValue>
         </field>
         <field>
@@ -85,7 +85,7 @@
           <version>1.0.0</version>
           <required>true</required>
           <description>id of the project group this project is a member of</description>
-          <type>int</type>
+          <type>long</type>
           <defaultValue>-1</defaultValue>
         </field>
         <field>
@@ -100,7 +100,7 @@
           <version>1.0.0</version>
           <required>true</required>
           <description>latest build id of the project</description>
-          <type>int</type>
+          <type>long</type>
           <defaultValue>-1</defaultValue>
         </field>
         <field>
@@ -108,7 +108,7 @@
           <version>1.0.0</version>
           <required>true</required>
           <description></description>
-          <type>int</type>
+          <type>long</type>
           <defaultValue>-1</defaultValue>
         </field>
         <field>
@@ -116,7 +116,7 @@
           <version>1.0.0</version>
           <required>true</required>
           <description></description>
-          <type>int</type>
+          <type>long</type>
           <defaultValue>-1</defaultValue>
         </field>
         <field>
@@ -154,7 +154,7 @@
           <version>1.0.0</version>
           <required>true</required>
           <description>internal continuum group id</description>
-          <type>int</type>
+          <type>long</type>
           <defaultValue>-1</defaultValue>
         </field>
         <field>
@@ -251,21 +251,21 @@
           <version>1.0.0</version>
           <required>true</required>
           <description>id of the build definition</description>
-          <type>int</type>
+          <type>long</type>
         </field>
         <field>
           <name>projectId</name>
           <version>1.0.0</version>
           <required>false</required>
           <description>project id of the project containing the build definition</description>
-          <type>int</type>
+          <type>long</type>
         </field>
         <field>
           <name>projectGroupId</name>
           <version>1.0.0</version>
           <required>false</required>
           <description>project group id of the project group with the build definition</description>
-          <type>int</type>
+          <type>long</type>
         </field>
         <field>
           <name>goals</name>
@@ -305,7 +305,7 @@
           <version>1.0.0</version>
           <required>true</required>
           <description>id of the schedule for build definition</description>
-          <type>int</type>
+          <type>long</type>
         </field>
         <field>
           <name>scheduleName</name>
@@ -346,21 +346,21 @@
           <version>1.0.0</version>
           <required>true</required>
           <description>id of the build definition</description>
-          <type>int</type>
+          <type>long</type>
         </field>
         <field>
           <name>projectId</name>
           <version>1.0.0</version>
           <required>false</required>
           <description>project id of the project containing the build definition</description>
-          <type>int</type>
+          <type>long</type>
         </field>
         <field>
           <name>projectGroupId</name>
           <version>1.0.0</version>
           <required>false</required>
           <description>project group id of the project group with the build definition</description>
-          <type>int</type>
+          <type>long</type>
         </field>
         <field>
           <name>type</name>
