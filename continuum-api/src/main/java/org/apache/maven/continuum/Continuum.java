@@ -87,7 +87,7 @@ public interface Continuum
     // Project
     // ----------------------------------------------------------------------
 
-    void removeProject( int projectId )
+    void removeProject( long projectId )
         throws ContinuumException;
 
     void checkoutProject( int projectId )

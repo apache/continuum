@@ -86,7 +86,7 @@ public interface ContinuumStore
      * @throws ContinuumObjectNotFoundException
      *
      */
-    BuildDefinition getDefaultBuildDefinitionForProjectGroup( int projectGroupId )
+    BuildDefinition getDefaultBuildDefinitionForProjectGroup( long projectGroupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     BuildDefinition getBuildDefinition( int buildDefinitionId )
@@ -100,7 +100,7 @@ public interface ContinuumStore
 
     ProjectGroup addProjectGroup( ProjectGroup group );
 
-    ProjectGroup getProjectGroup( int projectGroupId )
+    ProjectGroup getProjectGroup( long projectGroupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     public ProjectGroup getProjectGroupByProjectId( int projectId )
@@ -139,9 +139,9 @@ public interface ContinuumStore
 
     List getAllInstallations();
 
-    List getAllBuildsForAProjectByDate( int projectId );
+    List getAllBuildsForAProjectByDate( long projectId );
 
-    Project getProject( int projectId )
+    Project getProject( long projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     Project getProject( String groupId, String artifactId, String version )
@@ -168,43 +168,43 @@ public interface ContinuumStore
     void updateSchedule( Schedule schedule )
         throws ContinuumStoreException;
 
-    Project getProjectWithBuilds( int projectId )
+    Project getProjectWithBuilds( long projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     void removeProfile( Profile profile );
 
     void removeSchedule( Schedule schedule );
 
-    Project getProjectWithCheckoutResult( int projectId )
+    Project getProjectWithCheckoutResult( long projectId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    BuildResult getBuildResult( int buildId )
+    BuildResult getBuildResult( long buildId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     void removeProject( Project project );
 
     void removeProjectGroup( ProjectGroup projectGroup );
 
-    ProjectGroup getProjectGroupWithBuildDetails( int projectGroupId )
+    ProjectGroup getProjectGroupWithBuildDetails( long projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     List getProjectsInGroup( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    ProjectGroup getProjectGroupWithProjects( int projectGroupId )
+    ProjectGroup getProjectGroupWithProjects( long projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     List getAllProjectGroupsWithBuildDetails();
 
     List getAllProjectsWithAllDetails();
 
-    Project getProjectWithAllDetails( int projectId )
+    Project getProjectWithAllDetails( long projectId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    Schedule getSchedule( int scheduleId )
+    Schedule getSchedule( long scheduleId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    Profile getProfile( int profileId )
+    Profile getProfile( long profileId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     ProjectGroup getProjectGroupByGroupId( String groupId )
