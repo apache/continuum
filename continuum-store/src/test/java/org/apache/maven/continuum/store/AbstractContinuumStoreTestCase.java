@@ -727,7 +727,7 @@ public abstract class AbstractContinuumStoreTestCase
     }
 
     private static BuildResult createTestBuildResult( int trigger, boolean success, int state, int exitCode,
-                                                      String error, int buildNumber, long startTime, long endTime )
+                                                      String error, long buildNumber, long startTime, long endTime )
     {
         BuildResult result = new BuildResult();
         result.setBuildNumber( buildNumber );
@@ -761,7 +761,7 @@ public abstract class AbstractContinuumStoreTestCase
                                    schedule.getCronExpression(), schedule.isActive() );
     }
 
-    protected static Schedule createTestSchedule( String name, String description, int delay, String cronExpression,
+    protected static Schedule createTestSchedule( String name, String description, long delay, String cronExpression,
                                                   boolean active )
     {
         Schedule schedule = new Schedule();
@@ -818,7 +818,7 @@ public abstract class AbstractContinuumStoreTestCase
                                   project.getUrl(), project.getVersion(), project.getWorkingDirectory() );
     }
 
-    private static Project createTestProject( String artifactId, int buildNumber, String description, String groupId,
+    private static Project createTestProject( String artifactId, long buildNumber, String description, String groupId,
                                               String name, String scmUrl, int state, String url, String version,
                                               String workingDirectory )
     {
