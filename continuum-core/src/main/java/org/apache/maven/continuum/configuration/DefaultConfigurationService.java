@@ -139,7 +139,7 @@ public class DefaultConfigurationService
             deploymentRepositoryDirectory != null ? deploymentRepositoryDirectory.getAbsolutePath() : null );
     }
 
-    public String getBuildOutput( int buildId, int projectId )
+    public String getBuildOutput( long buildId, long projectId )
         throws ConfigurationException
     {
         File file = getBuildOutputFile( buildId, projectId );
@@ -167,7 +167,7 @@ public class DefaultConfigurationService
     //
     // ----------------------------------------------------------------------
 
-    public File getBuildOutputFile( int buildId, int projectId )
+    public File getBuildOutputFile( long buildId, long projectId )
         throws ConfigurationException
     {
         File dir = new File( getBuildOutputDirectory(), Integer.toString( projectId ) );
