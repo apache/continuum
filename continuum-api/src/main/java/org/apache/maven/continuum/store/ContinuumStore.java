@@ -62,7 +62,7 @@ public interface ContinuumStore
      * @throws ContinuumObjectNotFoundException
      *
      */
-    BuildDefinition getDefaultBuildDefinition( int projectId )
+    BuildDefinition getDefaultBuildDefinition( long projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     /**
@@ -74,7 +74,7 @@ public interface ContinuumStore
      * @throws ContinuumObjectNotFoundException
      *
      */
-    BuildDefinition getDefaultBuildDefinitionForProject( int projectId )
+    BuildDefinition getDefaultBuildDefinitionForProject( long projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     /**
@@ -89,7 +89,7 @@ public interface ContinuumStore
     BuildDefinition getDefaultBuildDefinitionForProjectGroup( long projectGroupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
-    BuildDefinition getBuildDefinition( int buildDefinitionId )
+    BuildDefinition getBuildDefinition( long buildDefinitionId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     void removeBuildDefinition( BuildDefinition buildDefinition )
@@ -103,7 +103,7 @@ public interface ContinuumStore
     ProjectGroup getProjectGroup( long projectGroupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
-    public ProjectGroup getProjectGroupByProjectId( int projectId )
+    public ProjectGroup getProjectGroupByProjectId( long projectId )
         throws ContinuumObjectNotFoundException;
 
     void updateProjectGroup( ProjectGroup group )
@@ -117,7 +117,7 @@ public interface ContinuumStore
 
     List getAllProjectsByNameWithDependencies();
 
-    public List getProjectsWithDependenciesByGroupId( int projectGroupId );
+    public List getProjectsWithDependenciesByGroupId( long projectGroupId );
 
     List getAllProjectsByNameWithBuildDetails();
 
@@ -150,13 +150,13 @@ public interface ContinuumStore
     Project getProjectByName( String name )
         throws ContinuumStoreException;
 
-    Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    Map getProjectIdsAndBuildDefinitionsIdsBySchedule( long scheduleId )
         throws ContinuumStoreException;
 
-    Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( long scheduleId )
         throws ContinuumStoreException;
 
-    public Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+    public Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( long scheduleId )
         throws ContinuumStoreException;
 
     void updateProject( Project project )
@@ -188,7 +188,7 @@ public interface ContinuumStore
     ProjectGroup getProjectGroupWithBuildDetails( long projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    List getProjectsInGroup( int projectGroupId )
+    List getProjectsInGroup( long projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     ProjectGroup getProjectGroupWithProjects( long projectGroupId )
@@ -216,15 +216,15 @@ public interface ContinuumStore
     ProjectGroup getProjectGroupByGroupIdWithProjects( String groupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
-    BuildResult getLatestBuildResultForProject( int projectId );
+    BuildResult getLatestBuildResultForProject( long projectId );
 
-    List getBuildResultsInSuccessForProject( int projectId, long fromDate );
+    List getBuildResultsInSuccessForProject( long projectId, long fromDate );
 
-    List getBuildResultsForProject( int projectId, long fromDate );
+    List getBuildResultsForProject( long projectId, long fromDate );
 
     Map getLatestBuildResults();
 
-    List getBuildResultByBuildNumber( int projectId, int buildNumber );
+    List getBuildResultByBuildNumber( long projectId, long buildNumber );
 
     Map getBuildResultsInSuccess();
 
@@ -234,7 +234,7 @@ public interface ContinuumStore
     void updateBuildResult( BuildResult build )
         throws ContinuumStoreException;
 
-    Project getProjectWithBuildDetails( int projectId )
+    Project getProjectWithBuildDetails( long projectId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     SystemConfiguration addSystemConfiguration( SystemConfiguration systemConf );
