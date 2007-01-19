@@ -34,13 +34,13 @@ public class DefaultBuildControllerTest
 {
     private DefaultBuildController controller;
 
-    int projectId1;
+    long projectId1;
 
-    int projectId2;
+    long projectId2;
 
-    int buildDefinitionId1;
+    long buildDefinitionId1;
 
-    int buildDefinitionId2;
+    long buildDefinitionId2;
 
     public void setUp()
         throws Exception
