@@ -75,7 +75,7 @@ public class BuildProjectTaskViabilityEvaluator
         {
             BuildProjectTask task = (BuildProjectTask) it.next();
 
-            Integer key = new Integer( task.getProjectId() );
+            Long key = new Long( task.getProjectId() );
 
             List projectTasks = (List) projects.get( key );
 
