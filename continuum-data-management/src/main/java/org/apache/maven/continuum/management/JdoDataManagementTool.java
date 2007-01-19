@@ -141,7 +141,7 @@ public class JdoDataManagementTool
             Schedule schedule = (Schedule) i.next();
 
             schedule = (Schedule) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), schedule );
-            schedules.put( new Integer( schedule.getId() ), schedule );
+            schedules.put( new Long( schedule.getId() ), schedule );
         }
 
         Map installations = new HashMap();
@@ -169,7 +169,7 @@ public class JdoDataManagementTool
             }
 
             profile = (Profile) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), profile );
-            profiles.put( new Integer( profile.getId() ), profile );
+            profiles.put( new Long( profile.getId() ), profile );
         }
 
         for ( Iterator i = database.getProjectGroups().iterator(); i.hasNext(); )
@@ -198,12 +198,12 @@ public class JdoDataManagementTool
 
             if ( def.getSchedule() != null )
             {
-                def.setSchedule( (Schedule) schedules.get( new Integer( def.getSchedule().getId() ) ) );
+                def.setSchedule( (Schedule) schedules.get( new Long( def.getSchedule().getId() ) ) );
             }
 
             if ( def.getProfile() != null )
             {
-                def.setProfile( (Profile) profiles.get( new Integer( def.getProfile().getId() ) ) );
+                def.setProfile( (Profile) profiles.get( new Long( def.getProfile().getId() ) ) );
             }
         }
     }
