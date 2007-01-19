@@ -29,6 +29,6 @@ public interface BuildController
 {
     String ROLE = BuildController.class.getName();
 
-    void build( int projectId, int buildDefinitionId, int trigger )
+    void build( long projectId, long buildDefinitionId, int trigger )
         throws TaskExecutionException;
 }

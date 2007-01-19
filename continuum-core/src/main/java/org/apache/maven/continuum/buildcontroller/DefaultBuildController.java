@@ -85,7 +85,7 @@ public class DefaultBuildController
      * @param trigger
      * @throws TaskExecutionException
      */
-    public void build( int projectId, int buildDefinitionId, int trigger )
+    public void build( long projectId, long buildDefinitionId, int trigger )
         throws TaskExecutionException
     {
         getLogger().info( "Initializing build" );
@@ -306,7 +306,7 @@ public class DefaultBuildController
      * @return
      * @throws TaskExecutionException
      */
-    protected BuildContext initializeBuildContext( int projectId, int buildDefinitionId, int trigger )
+    protected BuildContext initializeBuildContext( long projectId, long buildDefinitionId, int trigger )
         throws TaskExecutionException
     {
         BuildContext context = new BuildContext();
@@ -339,11 +339,11 @@ public class DefaultBuildController
 
         Map actionContext = context.getActionContext();
 
-        actionContext.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
+        actionContext.put( AbstractContinuumAction.KEY_PROJECT_ID, new Long( projectId ) );
 
         actionContext.put( AbstractContinuumAction.KEY_PROJECT, context.getProject() );
 
-        actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, new Integer( buildDefinitionId ) );
+        actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, new Long( buildDefinitionId ) );
 
         actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, context.getBuildDefinition() );
 
@@ -689,7 +689,7 @@ public class DefaultBuildController
         }
     }
 
-    private ScmResult getOldScmResult( int projectId, long fromDate )
+    private ScmResult getOldScmResult( long projectId, long fromDate )
     {
         List results = store.getBuildResultsForProject( projectId, fromDate );
 
