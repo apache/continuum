@@ -170,7 +170,7 @@ public class DefaultConfigurationService
     public File getBuildOutputFile( long buildId, long projectId )
         throws ConfigurationException
     {
-        File dir = new File( getBuildOutputDirectory(), Integer.toString( projectId ) );
+        File dir = new File( getBuildOutputDirectory(), Long.toString( projectId ) );
 
         try
         {
