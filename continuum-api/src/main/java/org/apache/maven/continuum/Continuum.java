@@ -50,7 +50,7 @@ public interface Continuum
 
     public static final String DEFAULT_PROJECT_GROUP_GROUP_ID = "default";
 
-    public ProjectGroup getProjectGroup( int projectGroupId )
+    public ProjectGroup getProjectGroup( long projectGroupId )
         throws ContinuumException;
 
     /**
@@ -62,19 +62,19 @@ public interface Continuum
 
     public Collection getAllProjectGroups();
 
-    public ProjectGroup getProjectGroupByProjectId( int projectId )
+    public ProjectGroup getProjectGroupByProjectId( long projectId )
         throws ContinuumException;
 
-    public Collection getProjectsInGroup( int projectGroupId )
+    public Collection getProjectsInGroup( long projectGroupId )
         throws ContinuumException;
 
-    public void removeProjectGroup( int projectGroupId )
+    public void removeProjectGroup( long projectGroupId )
         throws ContinuumException;
 
     public void addProjectGroup( ProjectGroup projectGroup )
         throws ContinuumException;
 
-    public ProjectGroup getProjectGroupWithProjects( int projectGroupId )
+    public ProjectGroup getProjectGroupWithProjects( long projectGroupId )
         throws ContinuumException;
 
     public ProjectGroup getProjectGroupByGroupId( String groupId )
@@ -90,13 +90,13 @@ public interface Continuum
     void removeProject( long projectId )
         throws ContinuumException;
 
-    void checkoutProject( int projectId )
+    void checkoutProject( long projectId )
         throws ContinuumException;
 
-    Project getProject( int projectId )
+    Project getProject( long projectId )
         throws ContinuumException;
 
-    Project getProjectWithBuildDetails( int projectId )
+    Project getProjectWithBuildDetails( long projectId )
         throws ContinuumException;
 
     List getAllProjectsWithAllDetails( int start, int end );
@@ -110,7 +110,7 @@ public interface Continuum
     Collection getProjectsWithDependencies()
         throws ContinuumException;
 
-    BuildResult getLatestBuildResultForProject( int projectId );
+    BuildResult getLatestBuildResultForProject( long projectId );
 
     Map getLatestBuildResults();
 
@@ -120,13 +120,13 @@ public interface Continuum
     // Queues
     // ----------------------------------------------------------------------
 
-    boolean isInBuildingQueue( int projectId )
+    boolean isInBuildingQueue( long projectId )
         throws ContinuumException;
 
-    boolean isInBuildingQueue( int projectId, int buildDefinitionId )
+    boolean isInBuildingQueue( long projectId, long buildDefinitionId )
         throws ContinuumException;
 
-    boolean isInCheckoutQueue( int projectId )
+    boolean isInCheckoutQueue( long projectId )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
@@ -139,50 +139,50 @@ public interface Continuum
     void buildProjects()
         throws ContinuumException;
 
-    void buildProjectsWithBuildDefinition( int buildDefinitionId )
+    void buildProjectsWithBuildDefinition( long buildDefinitionId )
         throws ContinuumException;
 
     void buildProjects( int trigger )
         throws ContinuumException;
 
-    void buildProjects( int trigger, int buildDefinitionId )
+    void buildProjects( int trigger, long buildDefinitionId )
         throws ContinuumException;
 
     void buildProjects( Schedule schedule )
         throws ContinuumException;
 
-    void buildProject( int projectId )
+    void buildProject( long projectId )
         throws ContinuumException;
 
-    void buildProject( int projectId, int trigger )
+    void buildProject( long projectId, int trigger )
         throws ContinuumException;
 
-    void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId )
+    void buildProjectWithBuildDefinition( long projectId, long buildDefinitionId )
         throws ContinuumException;
 
-    void buildProject( int projectId, int buildDefinitionId, int trigger )
+    void buildProject( long projectId, long buildDefinitionId, int trigger )
         throws ContinuumException;
 
-    public void buildProjectGroup( int projectGroupId )
+    public void buildProjectGroup( long projectGroupId )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
     // Build information
     // ----------------------------------------------------------------------
 
-    BuildResult getBuildResult( int buildId )
+    BuildResult getBuildResult( long buildId )
         throws ContinuumException;
 
-    BuildResult getBuildResultByBuildNumber( int projectId, int buildNumber )
+    BuildResult getBuildResultByBuildNumber( long projectId, long buildNumber )
         throws ContinuumException;
 
-    String getBuildOutput( int projectId, int buildId )
+    String getBuildOutput( long projectId, long buildId )
         throws ContinuumException;
 
-    Collection getBuildResultsForProject( int projectId )
+    Collection getBuildResultsForProject( long projectId )
         throws ContinuumException;
 
-    List getChangesSinceLastSuccess( int projectId, int buildResultId )
+    List getChangesSinceLastSuccess( long projectId, long buildResultId )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
@@ -209,7 +209,7 @@ public interface Continuum
      * @return id of the project
      * @throws ContinuumException
      */
-    int addProject( Project project, String executorId, int projectGroupId )
+    int addProject( Project project, String executorId, long projectGroupId )
         throws ContinuumException;
 
     /**
@@ -241,7 +241,7 @@ public interface Continuum
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
-    ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId )
+    ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, long projectGroupId )
         throws ContinuumException;
 
     /**
@@ -253,7 +253,7 @@ public interface Continuum
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
-    ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId, boolean checkProtocol )
+    ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, long projectGroupId, boolean checkProtocol )
         throws ContinuumException;
 
     /**
@@ -285,7 +285,7 @@ public interface Continuum
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
-    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId )
+    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, long projectGroupId )
          throws ContinuumException;
 
     /**
@@ -297,7 +297,7 @@ public interface Continuum
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
-    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId, boolean checkProtocol )
+    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, long projectGroupId, boolean checkProtocol )
          throws ContinuumException;
 
     void updateProject( Project project )
@@ -306,41 +306,41 @@ public interface Continuum
     void updateProjectGroup( ProjectGroup projectGroup )
         throws ContinuumException;
 
-    Project getProjectWithCheckoutResult( int projectId )
+    Project getProjectWithCheckoutResult( long projectId )
         throws ContinuumException;
 
-    Project getProjectWithAllDetails( int projectId )
+    Project getProjectWithAllDetails( long projectId )
         throws ContinuumException;
 
-    Project getProjectWithBuilds( int projectId )
+    Project getProjectWithBuilds( long projectId )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
     // Notification
     // ----------------------------------------------------------------------
 
-    ProjectNotifier getNotifier( int projectId, int notifierId )
+    ProjectNotifier getNotifier( long projectId, long notifierId )
         throws ContinuumException;
 
-    ProjectNotifier updateNotifier( int projectId, ProjectNotifier notifier )
+    ProjectNotifier updateNotifier( long projectId, ProjectNotifier notifier )
         throws ContinuumException;
 
-    ProjectNotifier addNotifier( int projectId, ProjectNotifier notifier )
+    ProjectNotifier addNotifier( long projectId, ProjectNotifier notifier )
         throws ContinuumException;
 
-    void removeNotifier( int projectId, int notifierId )
+    void removeNotifier( long projectId, long notifierId )
         throws ContinuumException;
 
-    ProjectNotifier getGroupNotifier( int projectGroupId, int notifierId )
+    ProjectNotifier getGroupNotifier( long projectGroupId, long notifierId )
         throws ContinuumException;
 
-    ProjectNotifier updateGroupNotifier( int projectGroupId, ProjectNotifier notifier )
+    ProjectNotifier updateGroupNotifier( long projectGroupId, ProjectNotifier notifier )
         throws ContinuumException;
 
-    ProjectNotifier addGroupNotifier( int projectGroupId, ProjectNotifier notifier )
+    ProjectNotifier addGroupNotifier( long projectGroupId, ProjectNotifier notifier )
         throws ContinuumException;
 
-    void removeGroupNotifier( int projectGroupId, int notifierId )
+    void removeGroupNotifier( long projectGroupId, long notifierId )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
@@ -350,19 +350,19 @@ public interface Continuum
     /**
      * @deprecated
      */
-    List getBuildDefinitions( int projectId )
+    List getBuildDefinitions( long projectId )
         throws ContinuumException;
 
     /**
      * @deprecated
      */
-    BuildDefinition getBuildDefinition( int projectId, int buildDefinitionId )
+    BuildDefinition getBuildDefinition( long projectId, long buildDefinitionId )
         throws ContinuumException;
 
     /**
      * @deprecated
      */
-    void removeBuildDefinition( int projectId, int buildDefinitionId )
+    void removeBuildDefinition( long projectId, long buildDefinitionId )
         throws ContinuumException;
 
     /**
@@ -371,7 +371,7 @@ public interface Continuum
      * @param buildDefinitionId
      * @return
      */
-    BuildDefinition getBuildDefinition( int buildDefinitionId )
+    BuildDefinition getBuildDefinition( long buildDefinitionId )
         throws ContinuumException;
 
     /**
@@ -384,31 +384,31 @@ public interface Continuum
      * @return
      * @throws ContinuumException
      */
-    BuildDefinition getDefaultBuildDefinition( int projectId )
+    BuildDefinition getDefaultBuildDefinition( long projectId )
         throws ContinuumException;
 
-    BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
+    BuildDefinition addBuildDefinitionToProject( long projectId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
-    BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    BuildDefinition addBuildDefinitionToProjectGroup( long projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
-    List getBuildDefinitionsForProject( int projectId )
+    List getBuildDefinitionsForProject( long projectId )
         throws ContinuumException;
 
-    List getBuildDefinitionsForProjectGroup( int projectGroupId )
+    List getBuildDefinitionsForProjectGroup( long projectGroupId )
         throws ContinuumException;
 
-    void removeBuildDefinitionFromProject( int projectId, int buildDefinitionId )
+    void removeBuildDefinitionFromProject( long projectId, long buildDefinitionId )
         throws ContinuumException;
 
-    void removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
+    void removeBuildDefinitionFromProjectGroup( long projectGroupId, long buildDefinitionId )
         throws ContinuumException;
 
-    BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDefinition )
+    BuildDefinition updateBuildDefinitionForProject( long projectId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
-    BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    BuildDefinition updateBuildDefinitionForProjectGroup( long projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
 
@@ -416,7 +416,7 @@ public interface Continuum
     // Schedule
     // ----------------------------------------------------------------------
 
-    Schedule getSchedule( int id )
+    Schedule getSchedule( long id )
         throws ContinuumException;
 
     Collection getSchedules()
@@ -428,20 +428,20 @@ public interface Continuum
     void updateSchedule( Schedule schedule )
         throws ContinuumException;
 
-    void updateSchedule( int scheduleId, Map configuration )
+    void updateSchedule( long scheduleId, Map configuration )
         throws ContinuumException;
 
-    void removeSchedule( int scheduleId )
+    void removeSchedule( long scheduleId )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
     // Working copy
     // ----------------------------------------------------------------------
 
-    File getWorkingDirectory( int projectId )
+    File getWorkingDirectory( long projectId )
         throws ContinuumException;
 
-    String getFileContent( int projectId, String directory, String filename )
+    String getFileContent( long projectId, String directory, String filename )
         throws ContinuumException;
 
     List getFiles( int projectId, String currentDirectory )
