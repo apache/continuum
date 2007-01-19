@@ -55,10 +55,10 @@ public interface ConfigurationService
 
     void setDeploymentRepositoryDirectory( File deploymentRepositoryDirectory );
 
-    String getBuildOutput( int buildId, int projectId )
+    String getBuildOutput( long buildId, long projectId )
         throws ConfigurationException;
 
-    File getBuildOutputFile( int buildId, int projectId )
+    File getBuildOutputFile( long buildId, long projectId )
         throws ConfigurationException;
 
     // ----------------------------------------------------------------------
