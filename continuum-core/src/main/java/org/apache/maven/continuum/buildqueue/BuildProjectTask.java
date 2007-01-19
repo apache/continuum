@@ -28,9 +28,9 @@ import org.codehaus.plexus.taskqueue.Task;
 public class BuildProjectTask
     implements Task
 {
-    private int projectId;
+    private long projectId;
 
-    private int buildDefinitionId;
+    private long buildDefinitionId;
 
     private long timestamp;
 
@@ -38,7 +38,7 @@ public class BuildProjectTask
 
     private long maxExecutionTime;
 
-    public BuildProjectTask( int projectId, int buildDefinitionId, int trigger )
+    public BuildProjectTask( long projectId, long buildDefinitionId, int trigger )
     {
         this.projectId = projectId;
 
@@ -49,12 +49,12 @@ public class BuildProjectTask
         this.trigger = trigger;
     }
 
-    public int getProjectId()
+    public long getProjectId()
     {
         return projectId;
     }
 
-    public int getBuildDefinitionId()
+    public long getBuildDefinitionId()
     {
         return buildDefinitionId;
     }
