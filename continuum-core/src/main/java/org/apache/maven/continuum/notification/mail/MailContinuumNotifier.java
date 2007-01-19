@@ -380,7 +380,7 @@ public class MailContinuumNotifier
 
         message.addHeader( "X-Continuum-Build-Host", buildHost );
 
-        message.addHeader( "X-Continuum-Project-Id", Integer.toString( project.getId() ) );
+        message.addHeader( "X-Continuum-Project-Id", Long.toString( project.getId() ) );
 
         message.addHeader( "X-Continuum-Project-Name", project.getName() );
 

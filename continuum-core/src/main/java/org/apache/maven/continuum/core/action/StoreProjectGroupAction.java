@@ -53,6 +53,6 @@ public class StoreProjectGroupAction
 
         projectGroup = store.addProjectGroup( projectGroup );
 
-        context.put( KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
+        context.put( KEY_PROJECT_GROUP_ID, new Long( projectGroup.getId() ) );
     }
 }

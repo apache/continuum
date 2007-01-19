@@ -63,7 +63,7 @@ public class CheckOutTaskExecutor
     {
         CheckOutTask task = (CheckOutTask) t;
 
-        int projectId = task.getProjectId();
+        long projectId = task.getProjectId();
 
         Project project;
 
@@ -82,7 +82,7 @@ public class CheckOutTaskExecutor
 
         Map context = new HashMap();
 
-        context.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
+        context.put( AbstractContinuumAction.KEY_PROJECT_ID, new Long( projectId ) );
 
         context.put( AbstractContinuumAction.KEY_PROJECT, project );
 

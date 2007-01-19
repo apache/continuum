@@ -59,7 +59,7 @@ public class StoreProjectAction
 
         store.updateProjectGroup( projectGroup );
 
-        context.put( KEY_PROJECT_ID, new Integer( project.getId() ) );
+        context.put( KEY_PROJECT_ID, new Long( project.getId() ) );
 
         // ----------------------------------------------------------------------
         // Set the working directory

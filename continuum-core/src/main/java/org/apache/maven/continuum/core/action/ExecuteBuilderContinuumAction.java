@@ -127,7 +127,7 @@ public class ExecuteBuilderContinuumAction
 
         store.addBuildResult( project, buildResult );
 
-        context.put( KEY_BUILD_ID, Integer.toString( buildResult.getId() ) );
+        context.put( KEY_BUILD_ID, Long.toString( buildResult.getId() ) );
 
         buildResult = store.getBuildResult( buildResult.getId() );
 

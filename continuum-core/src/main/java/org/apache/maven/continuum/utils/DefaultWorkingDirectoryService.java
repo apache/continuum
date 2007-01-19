@@ -57,7 +57,7 @@ public class DefaultWorkingDirectoryService
         File workDir;
         if ( project.getWorkingDirectory() == null )
         {
-           workDir  = new File( configurationService.getWorkingDirectory(), Integer.toString( project.getId() ) );
+           workDir  = new File( configurationService.getWorkingDirectory(), Long.toString( project.getId() ) );
 
            project.setWorkingDirectory( workDir.getAbsolutePath() );
         }
