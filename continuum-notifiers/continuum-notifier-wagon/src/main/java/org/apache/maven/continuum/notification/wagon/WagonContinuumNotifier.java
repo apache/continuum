@@ -293,7 +293,7 @@ public class WagonContinuumNotifier
         throws ContinuumException
     {
         File projectWorkingDir =
-            new File( configurationService.getWorkingDirectory(), Integer.toString( project.getId() ) );
+            new File( configurationService.getWorkingDirectory(), Long.toString( project.getId() ) );
         File pomFile = new File( projectWorkingDir, buildDefinition.getBuildFile() );
 
         MavenProject mavenProject = null;

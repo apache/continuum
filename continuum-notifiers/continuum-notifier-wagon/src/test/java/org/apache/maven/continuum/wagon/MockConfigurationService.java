@@ -47,10 +47,10 @@ public class MockConfigurationService implements ConfigurationService
         return new File( basedir, "src/test/resources" + "/" + "build-output-directory" );
     }
     
-    public File getBuildOutputFile( int buildId, int projectId )
+    public File getBuildOutputFile( long buildId, long projectId )
         throws ConfigurationException
     {
-        File dir = new File( getBuildOutputDirectory(), Integer.toString( projectId ) );
+        File dir = new File( getBuildOutputDirectory(), Long.toString( projectId ) );
         
         if ( !dir.exists() && !dir.mkdirs() )
         {
@@ -145,7 +145,7 @@ public class MockConfigurationService implements ConfigurationService
     {
     }
 
-    public String getBuildOutput( int buildId, int projectId )
+    public String getBuildOutput( long buildId, long projectId )
         throws ConfigurationException
     {
         return null;
