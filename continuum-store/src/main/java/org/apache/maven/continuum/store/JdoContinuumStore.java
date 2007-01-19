@@ -210,7 +210,7 @@ public class JdoContinuumStore
      * @return
      * @throws ContinuumStoreException
      */
-    public Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+    public Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( long scheduleId )
         throws ContinuumStoreException
     {
         Map projectSource = getProjectIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
@@ -247,7 +247,7 @@ public class JdoContinuumStore
         return aggregate;
     }
 
-    public Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    public Map getProjectIdsAndBuildDefinitionsIdsBySchedule( long scheduleId )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -272,7 +272,7 @@ public class JdoContinuumStore
 
             query.setResult( "this.id, buildDef.id" );
 
-            List result = (List) query.execute( new Integer( scheduleId ) );
+            List result = (List) query.execute( new Long( scheduleId ) );
 
             Map projects = new HashMap();
 
@@ -315,7 +315,7 @@ public class JdoContinuumStore
         return null;
     }
 
-    public Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    public Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( long scheduleId )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -340,7 +340,7 @@ public class JdoContinuumStore
 
             query.setResult( "this.id, buildDef.id" );
 
-            List result = (List) query.execute( new Integer( scheduleId ) );
+            List result = (List) query.execute( new Long( scheduleId ) );
 
             Map projectGroups = new HashMap();
 
@@ -448,7 +448,7 @@ public class JdoContinuumStore
         }
     }
 
-    public BuildResult getLatestBuildResultForProject( int projectId )
+    public BuildResult getLatestBuildResultForProject( long projectId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -466,7 +466,7 @@ public class JdoContinuumStore
 
             query.setFilter( "this.project.id == projectId && this.project.latestBuildId == this.id" );
 
-            List result = (List) query.execute( new Integer( projectId ) );
+            List result = (List) query.execute( new Long( projectId ) );
 
             result = (List) pm.detachCopyAll( result );
 
@@ -542,7 +542,7 @@ public class JdoContinuumStore
         return notifier;
     }
 
-    public BuildDefinition getDefaultBuildDefinition( int projectId )
+    public BuildDefinition getDefaultBuildDefinition( long projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
 
@@ -569,7 +569,7 @@ public class JdoContinuumStore
         return bd;
     }
 
-    public BuildDefinition getDefaultBuildDefinitionForProject( int projectId )
+    public BuildDefinition getDefaultBuildDefinitionForProject( long projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
         Project project;
@@ -669,7 +669,7 @@ public class JdoContinuumStore
         return null;
     }
 
-    public BuildDefinition getBuildDefinition( int buildDefinitionId )
+    public BuildDefinition getBuildDefinition( long buildDefinitionId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
         return (BuildDefinition) getObjectById( BuildDefinition.class, buildDefinitionId );
@@ -795,7 +795,7 @@ public class JdoContinuumStore
     }
 
     // todo get this natively supported in the store
-    public List getProjectsWithDependenciesByGroupId( int projectGroupId )
+    public List getProjectsWithDependenciesByGroupId( long projectGroupId )
     {
         List allProjects = getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
 
@@ -987,7 +987,7 @@ public class JdoContinuumStore
         return (BuildResult) getObjectById( BuildResult.class, buildId, BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
     }
 
-    public List getBuildResultByBuildNumber( int projectId, int buildNumber )
+    public List getBuildResultByBuildNumber( long projectId, long buildNumber )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -1005,7 +1005,7 @@ public class JdoContinuumStore
 
             query.setFilter( "this.project.id == projectId && this.buildNumber == buildNumber" );
 
-            List result = (List) query.execute( new Integer( projectId ), new Integer( buildNumber ) );
+            List result = (List) query.execute( new Long( projectId ), new Long( buildNumber ) );
 
             result = (List) pm.detachCopyAll( result );
 
@@ -1019,7 +1019,7 @@ public class JdoContinuumStore
         }
     }
 
-    public List getBuildResultsForProject( int projectId, long fromDate )
+    public List getBuildResultsForProject( long projectId, long fromDate )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -1039,7 +1039,7 @@ public class JdoContinuumStore
 
             query.setFilter( "this.project.id == projectId && this.startTime > fromDate" );
 
-            List result = (List) query.execute( new Integer( projectId ), new Long( fromDate ) );
+            List result = (List) query.execute( new Long( projectId ), new Long( fromDate ) );
 
             result = (List) pm.detachCopyAll( result );
 
@@ -1053,7 +1053,7 @@ public class JdoContinuumStore
         }
     }
 
-    public List getBuildResultsInSuccessForProject( int projectId, long fromDate )
+    public List getBuildResultsInSuccessForProject( long projectId, long fromDate )
     {
         List buildResults = getBuildResultsForProject( projectId, fromDate );
 
@@ -1146,7 +1146,7 @@ public class JdoContinuumStore
         }
     }
 
-    public List getProjectsInGroup( int projectGroupId )
+    public List getProjectsInGroup( long projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -1289,13 +1289,13 @@ public class JdoContinuumStore
                                                   PROJECTGROUP_PROJECTS_FETCH_GROUP );
     }
 
-    public Project getProjectWithBuildDetails( int projectId )
+    public Project getProjectWithBuildDetails( long projectId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
         return (Project) getObjectById( Project.class, projectId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
     }
 
-    public ProjectGroup getProjectGroupByProjectId( int projectId )
+    public ProjectGroup getProjectGroupByProjectId( long projectId )
         throws ContinuumObjectNotFoundException
     {
         // todo this chunk should be optimized in the store by a good query
