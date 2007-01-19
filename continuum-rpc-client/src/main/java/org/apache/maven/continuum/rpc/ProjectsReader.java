@@ -92,7 +92,7 @@ public class ProjectsReader
     {
         XmlRpcClient client = new XmlRpcClient( server );
         Vector vect = new Vector();
-        vect.add( new Integer( proj.getId() ) );
+        vect.add( new Long( proj.getId() ) );
         Object obj = client.execute( "continuum.getProject", vect );
         if ( obj instanceof Hashtable )
         {
@@ -110,7 +110,7 @@ public class ProjectsReader
     {
         XmlRpcClient client = new XmlRpcClient( server );
         Vector vect = new Vector();
-        vect.add( new Integer( proj.getId() ) );
+        vect.add( new Long( proj.getId() ) );
         //trigger
         vect.add( new Integer( 1 ) );
         Object obj = client.execute( "continuum.buildProject", vect );
