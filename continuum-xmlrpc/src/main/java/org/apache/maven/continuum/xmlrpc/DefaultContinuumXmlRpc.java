@@ -64,7 +64,7 @@ public class DefaultContinuumXmlRpc
     // ContinuumXmlRpc Implementation
     // ----------------------------------------------------------------------
 
-    public Hashtable removeProject( int projectId )
+    public Hashtable removeProject( long projectId )
     {
         try
         {
@@ -78,7 +78,7 @@ public class DefaultContinuumXmlRpc
         }
     }
 
-    public Hashtable getProject( int projectId )
+    public Hashtable getProject( long projectId )
     {
         try
         {
@@ -167,7 +167,7 @@ public class DefaultContinuumXmlRpc
     // Build handling
     // ----------------------------------------------------------------------
 
-    public Hashtable buildProject( int projectId, int trigger )
+    public Hashtable buildProject( long projectId, int trigger )
     {
         try
         {
@@ -199,7 +199,7 @@ public class DefaultContinuumXmlRpc
             {
                 Project project = (Project) it.next();
 
-                projectIds.add( new Integer( project.getId() ) );
+                projectIds.add( new Long( project.getId() ) );
             }
 
             return makeHashtable( "projectIds", xmlRpcHelper.collectionToVector( projectIds, false ) );
@@ -270,7 +270,7 @@ public class DefaultContinuumXmlRpc
             {
                 Project project = (Project) it.next();
 
-                projectIds.add( new Integer( project.getId() ) );
+                projectIds.add( new Long( project.getId() ) );
             }
 
             return makeHashtable( "projectIds", xmlRpcHelper.collectionToVector( projectIds, false ) );

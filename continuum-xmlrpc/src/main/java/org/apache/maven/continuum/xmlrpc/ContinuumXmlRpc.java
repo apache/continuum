@@ -39,9 +39,9 @@ public interface ContinuumXmlRpc
     // Projects
     // ----------------------------------------------------------------------
 
-    Hashtable removeProject( int projectId );
+    Hashtable removeProject( long projectId );
 
-    Hashtable getProject( int projectId );
+    Hashtable getProject( long projectId );
 
     Hashtable getProjects();
 
@@ -49,7 +49,7 @@ public interface ContinuumXmlRpc
     // Building
     // ----------------------------------------------------------------------
 
-    Hashtable buildProject( int projectId, int trigger );
+    Hashtable buildProject( long projectId, int trigger );
 
     // ----------------------------------------------------------------------
     // Builds
