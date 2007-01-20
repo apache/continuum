@@ -43,7 +43,7 @@ public class AddBuildDefinitionToProjectAction
         throws Exception
     {
         BuildDefinition buildDefinition = getBuildDefinition( map );
-        int projectId = getProjectId( map );
+        long projectId = getProjectId( map );
 
         Project project = store.getProjectWithAllDetails( projectId );
 

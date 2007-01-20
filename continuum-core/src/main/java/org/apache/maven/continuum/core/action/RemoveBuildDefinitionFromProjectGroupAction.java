@@ -43,7 +43,7 @@ public class RemoveBuildDefinitionFromProjectGroupAction
         throws Exception
     {
         BuildDefinition buildDefinition = getBuildDefinition( map );
-        int projectGroupId =  getProjectGroupId( map );
+        long projectGroupId =  getProjectGroupId( map );
 
         ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( projectGroupId );
 

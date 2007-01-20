@@ -55,7 +55,7 @@ public class AddAssignableRolesAction
     public void execute( Map context )
         throws ContinuumException, ContinuumStoreException
     {
-        int projectGroupId =  getProjectGroupId( context );
+        long projectGroupId =  getProjectGroupId( context );
 
         ProjectGroup projectGroup = store.getProjectGroupWithBuildDetails( projectGroupId );
 

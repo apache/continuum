@@ -89,9 +89,9 @@ public abstract class AbstractContinuumAction
     //
     // ----------------------------------------------------------------------
 
-    public static int getProjectId( Map context )
+    public static long getProjectId( Map context )
     {
-        return getInteger( context, KEY_PROJECT_ID );
+        return getLong( context, KEY_PROJECT_ID );
     }
 
     public static Project getProject( Map context )
@@ -99,14 +99,14 @@ public abstract class AbstractContinuumAction
         return (Project) getObject( context, KEY_PROJECT );
     }
 
-    public static int getProjectGroupId( Map context )
+    public static long getProjectGroupId( Map context )
     {
-        return getInteger( context, KEY_PROJECT_GROUP_ID );
+        return getLong( context, KEY_PROJECT_GROUP_ID );
     }
 
-    public static int getBuildDefinitionId( Map context )
+    public static long getBuildDefinitionId( Map context )
     {
-        return getInteger( context, KEY_BUILD_DEFINITION_ID );
+        return getLong( context, KEY_BUILD_DEFINITION_ID );
     }
 
     public static BuildDefinition getBuildDefinition( Map context )
@@ -183,6 +183,17 @@ public abstract class AbstractContinuumAction
         return ( (Boolean) getObject( context, key ) ).booleanValue();
     }
 
+    protected static long getLong( Map context, String key )
+    {
+        return ( (Long) getObject( context, key, null ) ).longValue();
+    }
+
+    /**
+     * Being used selectively now.
+     * @param context
+     * @param key
+     * @return
+     */
     protected static int getInteger( Map context, String key )
     {
         return ( (Integer) getObject( context, key, null ) ).intValue();
