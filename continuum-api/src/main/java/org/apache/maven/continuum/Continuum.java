@@ -197,7 +197,7 @@ public interface Continuum
      * @return id of the project
      * @throws ContinuumException
      */
-    int addProject( Project project, String executorId )
+    long addProject( Project project, String executorId )
         throws ContinuumException;
 
     /**
@@ -209,7 +209,7 @@ public interface Continuum
      * @return id of the project
      * @throws ContinuumException
      */
-    int addProject( Project project, String executorId, long projectGroupId )
+    long addProject( Project project, String executorId, long projectGroupId )
         throws ContinuumException;
 
     /**
