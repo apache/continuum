@@ -782,7 +782,7 @@ public class DefaultContinuum
             {
                 for ( Iterator buildDefinitionIterator = buildDefIds.iterator(); buildDefinitionIterator.hasNext(); )
                 {
-                    Integer buildDefId = (Integer) buildDefinitionIterator.next();
+                    Long buildDefId = (Long) buildDefinitionIterator.next();
 
                     if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
                         !isInCheckoutQueue( project.getId() ) )
@@ -803,7 +803,7 @@ public class DefaultContinuum
             getLogger().info( "Processing " + buildDefinitionIds.size() + " build definitions for project " + project );
             for ( Iterator buildDefinitionIterator = buildDefinitionIds.iterator(); buildDefinitionIterator.hasNext(); )
             {
-                Integer buildDefId = (Integer) buildDefinitionIterator.next();
+                Long buildDefId = (Long) buildDefinitionIterator.next();
 
                 if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
                     !isInCheckoutQueue( project.getId() ) )
@@ -1183,7 +1183,7 @@ public class DefaultContinuum
 
         executeAction( "add-project-to-checkout-queue", context );
 
-        return ( (Integer) context.get( AbstractContinuumAction.KEY_PROJECT_ID ) ).intValue();
+        return ( (Long) context.get( AbstractContinuumAction.KEY_PROJECT_ID ) ).intValue();
     }
 
     /**
@@ -1947,7 +1947,7 @@ public class DefaultContinuum
 
         schedule.setCronExpression( (String) configuration.get( "schedule.cronExpression" ) );
 
-        schedule.setDelay( Integer.parseInt( (String) configuration.get( "schedule.delay" ) ) );
+        schedule.setDelay( Long.parseLong( (String) configuration.get( "schedule.delay" ) ) );
 
         schedule.setActive( Boolean.valueOf( (String) configuration.get( "schedule.active" ) ).booleanValue() );
 
