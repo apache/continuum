@@ -622,7 +622,7 @@ public class DefaultContinuum
                     " doens't have a default build definition, this should be impossible, parent should have default definition set." );
             }
 
-            buildProject( project, buildDefId.intValue(), trigger );
+            buildProject( project, buildDefId.longValue(), trigger );
         }
     }
 
@@ -784,10 +784,10 @@ public class DefaultContinuum
                 {
                     Long buildDefId = (Long) buildDefinitionIterator.next();
 
-                    if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
+                    if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.longValue() ) &&
                         !isInCheckoutQueue( project.getId() ) )
                     {
-                        buildProject( project, buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
+                        buildProject( project, buildDefId.longValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
                     }
                 }
             }
@@ -805,10 +805,10 @@ public class DefaultContinuum
             {
                 Long buildDefId = (Long) buildDefinitionIterator.next();
 
-                if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
+                if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.longValue() ) &&
                     !isInCheckoutQueue( project.getId() ) )
                 {
-                    buildProject( project, buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
+                    buildProject( project, buildDefId.longValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
                 }
             }
         }
@@ -1116,13 +1116,13 @@ public class DefaultContinuum
     // Shell projects
     // ----------------------------------------------------------------------
 
-    public int addProject( Project project, String executorId )
+    public long addProject( Project project, String executorId )
         throws ContinuumException
     {
         return addProject( project, executorId, getDefaultProjectGroup().getId() );
     }
 
-    public int addProject( Project project, String executorId, long groupId )
+    public long addProject( Project project, String executorId, long groupId )
         throws ContinuumException
     {
         project.setExecutorId( executorId );
@@ -1160,7 +1160,7 @@ public class DefaultContinuum
     // Activities. These should end up as workflows in werkflow
     // ----------------------------------------------------------------------
 
-    private int executeAddProjectFromScmActivity( Project project, long groupId )
+    private long executeAddProjectFromScmActivity( Project project, long groupId )
         throws ContinuumException
     {
         ProjectGroup projectGroup = getProjectGroupWithBuildDetails( groupId );
@@ -1183,7 +1183,7 @@ public class DefaultContinuum
 
         executeAction( "add-project-to-checkout-queue", context );
 
-        return ( (Long) context.get( AbstractContinuumAction.KEY_PROJECT_ID ) ).intValue();
+        return ( (Long) context.get( AbstractContinuumAction.KEY_PROJECT_ID ) ).longValue();
     }
 
     /**
