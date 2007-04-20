@@ -55,7 +55,7 @@
       </div>
 
       <p>
-        Continuum is a continous integration server for building Java based projects.
+        Continuum is a continuous integration server for building Java based projects.
         It supports a wide range of projects:
 
         <ul>
