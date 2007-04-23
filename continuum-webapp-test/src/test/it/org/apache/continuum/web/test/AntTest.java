@@ -75,6 +75,34 @@ public class AntTest
         assertTextPresent( "SCM Url is required" );
     }
 
+    public void testSubmitDoubleErrorMessages()
+    {
+        goToAddAntPage();
+        clickButtonWithValue( "Add", false );
+        clickButtonWithValue( "Add", false );
+        assertAddAntProjectPage();
+        if ( "Name is required".equals( getSelenium().getText( "//td/span" ) ) )
+        {
+            assertFalse( "Double Error Messages", "Name is required".equals( getSelenium().getText( "//tr[2]/td/span" ) ) );
+        }
+        if ( "Version is required".equals( getSelenium().getText( "//tr[4]/td/span" ) ) )
+        {
+            assertFalse( "Double Error Messages", "Version is required".equals( getSelenium().getText( "//tr[5]/td/span" ) ) );
+        }
+        if ( "SCM Url is required".equals( getSelenium().getText( "//tr[7]/td/span" ) ) )
+        {
+            assertFalse( "Double Error Messages", "SCM Url is required".equals( getSelenium().getText( "//tr[8]/td/span" ) ) );
+        }
+    }
+
+    public void testCancelButton()
+    {
+        goToAboutPage();
+        goToAddAntPage();
+        clickButtonWithValue( "Cancel" );
+        assertAboutPage();
+    }
+
     private void goToAddAntPage()
     {
         clickLinkWithText( "Ant Project" );
