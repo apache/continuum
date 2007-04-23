@@ -196,16 +196,37 @@ public class SchedulesPageTest
         assertEditSchedulePage();
 
         HashMap fields = new HashMap();
+        fields.put( FIELD_MAXJOBEXECUTIONTIME, "" );
         boolean valid = false;
         boolean wait = false;
 
-        // test saving without editing anything from the initial edit page
+        // test saving without editing anything from the initial edit page except for Max Job Execution Time
         inputSchedule( fields, wait, valid );
 
         assertTrue( "Name field not validated",
                     getSelenium().isElementPresent( "//tr/td[span='schedule.name.required']" ) );
         assertTrue( "Description field not validated",
                     getSelenium().isElementPresent( "//tr/td[span='schedule.version.required']" ) );
+        assertTrue( "Max Job Execution Time field not validated",
+                    getSelenium().isElementPresent( "//tr/td[span='schedule.maxJobExecutionTime.required']" ) );
+
+        // go back to the schedules page
+        clickLinkWithText( "Schedules" );
+
+        // start new schedule add session
+        clickButtonWithValue( "Add" );
+
+        // test saving using spaces for name and description
+        fields.put( FIELD_NAME, " " );
+        fields.put( FIELD_DESCRIPTION, " " );
+
+        inputSchedule( fields, wait, valid );
+
+        //TODO: Fix text validation, we need real text and not a property in the screen
+        assertTrue( "Name field not validated",
+                     getSelenium().isElementPresent( "//tr/td[span='schedule.name.required']" ) );
+        assertTrue( "Description field not validated",
+                     getSelenium().isElementPresent( "//tr/td[span='schedule.version.required']" ) );
 
         // go back to the schedules page
         clickLinkWithText( "Schedules" );
@@ -226,13 +247,62 @@ public class SchedulesPageTest
         assertFalse( "Name field improperly validated",
                      getSelenium().isElementPresent( "//tr/td[span='schedule.name.required']" ) );
         assertFalse( "Description field improperly validated",
-                     getSelenium().isElementPresent( "//tr/td[span='schedule.name.required']" ) );
+                     getSelenium().isElementPresent( "//tr/td[span='schedule.version.required']" ) );
+        assertFalse( "Max Job Execution Time field improperly validated",
+                    getSelenium().isElementPresent( "//tr/td[span='schedule.maxJobExecutionTime.required']" ) );
         assertTrue( "MaxJobExecutionTime not validated", isTextPresent( "schedule.maxJobExecutionTime.invalid" ) );
         assertTrue( "Delay not validated", isTextPresent( "schedule.delay.invalid" ) );
 
         assertEditSchedulePage();
     }
 
+
+    public void testScheduleAddEditPageDoubleErrorMessages()
+    {
+        clickButtonWithValue( "Add" );
+
+        assertEditSchedulePage();
+
+        HashMap fields = new HashMap();
+        boolean valid = false;
+        boolean wait = false;
+
+        // test double error messages issue of webworks
+        inputSchedule( fields, wait, valid );
+        clickButtonWithValue( "Save", false );
+
+        if ( "schedule.name.required".equals( getSelenium().getText( "//td/span" ) ) )
+        {
+            assertFalse( "Double Error Messages", "schedule.name.required".equals( getSelenium().getText( "//tr[2]/td/span" ) ) );
+        }
+        if ( "schedule.version.required".equals( getSelenium().getText( "//tr[4]/td/span" ) ) )
+        {
+            assertFalse( "Double Error Messages", "schedule.version.required".equals( getSelenium().getText( "//tr[5]/td/span" ) ) );
+        }
+
+        assertEditSchedulePage();
+    }
+
+    public void testCancelAddSchedule()
+    {
+        clickButtonWithValue( "Add" );
+        clickButtonWithValue( "Cancel" );
+        assertSchedulesPage();
+    }
+
+    public void testCancelEditSchedule()
+    {
+        clickLinkWithXPath( "//img[@alt='Edit']" );
+        clickButtonWithValue( "Cancel" );
+        assertSchedulesPage();
+    }
+
+    public void testCancelDeleteSchedule()
+    {
+        clickLinkWithXPath( "//img[@alt='Delete']" );
+        clickButtonWithValue( "Cancel" );
+        assertSchedulesPage();
+    }
 
     public void assertSchedulesPage()
     {

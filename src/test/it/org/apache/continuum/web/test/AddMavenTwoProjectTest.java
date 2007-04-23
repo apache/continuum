@@ -152,4 +152,15 @@ public class AddMavenTwoProjectTest
         submitAddMavenTwoProjectPage( pomUrl, false );
         assertTextPresent( "The specified resource isn't a file or the protocol used isn't allowed." );
     }
+
+    /**
+     * test cancel button
+     */
+    public void testCancelButton()
+    {
+        goToAboutPage();
+        goToAddMavenTwoProjectPage();
+        clickButtonWithValue( "Cancel" );
+        assertAboutPage();
+    }
 }
