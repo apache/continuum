@@ -140,7 +140,7 @@
         </executions>
         <configuration>
           <descriptor>src/main/assembly/bin.xml</descriptor>
-          <finalName>continuum</finalName>
+          <finalName>continuum-${version}</finalName>
         </configuration>
       </plugin>
       <plugin>
