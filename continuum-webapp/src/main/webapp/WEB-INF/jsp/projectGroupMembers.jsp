@@ -156,6 +156,7 @@
           </ww:form>
         </th>   
         <th>Full Name</th>
+        <th>Email</th>
         <th>Administrator</th>
         <th>Developer</th>
         <th>User</th>
@@ -169,6 +170,9 @@
           </td>
           <td>
             <ww:property value="userFullName"/>
+          </td>
+          <td>
+            <ww:property value="userEmail"/>
           </td>
           <td>
             <ww:if test="${administrator}">

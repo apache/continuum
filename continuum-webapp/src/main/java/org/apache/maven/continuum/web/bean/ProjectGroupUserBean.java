@@ -144,6 +144,11 @@ public class ProjectGroupUserBean
         return user.getFullName();
     }
     
+    public String getUserEmail()
+    {
+        return user.getEmail();
+    }
+
     public String toString()
     {
         return user.getUsername() + ": " + roles + ": "+(isAdministrator()?"A":"-") + (isDeveloper()?"D":"-") + (isUser()?"U":"-"); 
