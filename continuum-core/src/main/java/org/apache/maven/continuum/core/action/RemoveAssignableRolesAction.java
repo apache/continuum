@@ -23,8 +23,9 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.rbac.profile.RoleProfileException;
-import org.codehaus.plexus.rbac.profile.RoleProfileManager;
+import org.codehaus.plexus.redback.role.RoleManager;
+import org.codehaus.plexus.redback.role.RoleManagerException;
+
 
 import java.util.Map;
 
@@ -44,9 +45,9 @@ public class RemoveAssignableRolesAction
     private ContinuumStore store;
 
     /**
-     * @plexus.requirement role-hint="continuum"
+     * @plexus.requirement role-hint="default"
      */
-    private RoleProfileManager roleManager;
+    private RoleManager roleManager;
 
     public void execute( Map context )
         throws ContinuumException, ContinuumStoreException
@@ -57,16 +58,24 @@ public class RemoveAssignableRolesAction
 
         try
         {
-            roleManager.deleteDynamicRole( "continuum-group-project-administrator", projectGroup.getName() );
-
-            roleManager.deleteDynamicRole( "continuum-group-developer", projectGroup.getName() );
-
-            roleManager.deleteDynamicRole( "continuum-group-user", projectGroup.getName() );
+            if ( !roleManager.templatedRoleExists( "project-administrator", projectGroup.getName() ) )
+            {
+                roleManager.removeTemplatedRole( "project-administrator", projectGroup.getName() );
+            }
+            if ( !roleManager.templatedRoleExists( "project-developer", projectGroup.getName() ) )
+            {
+                roleManager.removeTemplatedRole( "project-developer", projectGroup.getName() );
+            }
+            
+            if ( !roleManager.templatedRoleExists( "project-user", projectGroup.getName() ) )
+            {
+                roleManager.removeTemplatedRole( "project-user", projectGroup.getName() );
+            }
         }
-        catch ( RoleProfileException rpe )
+        catch ( RoleManagerException e )
         {
-            rpe.printStackTrace();
-            throw new ContinuumException( "error removing dynamic role for project " + projectGroup.getName(), rpe );
+            e.printStackTrace();
+            throw new ContinuumException( "error removing tempalted role for project " + projectGroup.getName(), e );
         }
     }
 }

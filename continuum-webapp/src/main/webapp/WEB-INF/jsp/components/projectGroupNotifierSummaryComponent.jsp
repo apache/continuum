@@ -21,7 +21,7 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
-<%@ taglib uri="/plexusSecuritySystem" prefix="pss" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 <ww:i18n name="localization.Continuum">
 
   <h3>Project Group Notifiers of ${projectGroup.name} group</h3>
@@ -39,7 +39,7 @@
       <ec:column property="events" title="projectView.notifier.events"/>
       <!-- ec:column property="sender" title="projectView.notifier.sender"/ -->
       <ec:column property="editActions" title="&nbsp;" width="1%">
-        <pss:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
           <ww:url id="editUrl" action="editProjectGroupNotifier" namespace="/">
             <ww:param name="projectGroupId">${pageScope.projectGroupNotifierSummary.projectGroupId}</ww:param>
             <ww:param name="notifierId">${pageScope.projectGroupNotifierSummary.id}</ww:param>
@@ -48,13 +48,13 @@
           <ww:a href="%{editUrl}">
             <img src="<ww:url value='/images/edit.gif'/>" alt="Edit" title="Edit" border="0">
           </ww:a>
-        </pss:ifAuthorized>
-        <pss:elseAuthorized>
+        </redback:ifAuthorized>
+        <redback:elseAuthorized>
           <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
-        </pss:elseAuthorized>
+        </redback:elseAuthorized>
       </ec:column>    
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
-        <pss:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
           <ww:url id="removeUrl" action="deleteProjectGroupNotifier!default.action" namespace="/">
             <ww:param name="projectGroupId">${pageScope.projectGroupNotifierSummary.projectGroupId}</ww:param>
             <ww:param name="notifierId">${pageScope.projectGroupNotifierSummary.id}</ww:param>
@@ -64,16 +64,16 @@
         <ww:a href="%{removeUrl}">
           <img src="<ww:url value='/images/delete.gif'/>" alt="Delete" title="Delete" border="0">
         </ww:a>
-        </pss:ifAuthorized>
-        <pss:elseAuthorized>
+        </redback:ifAuthorized>
+        <redback:elseAuthorized>
           <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
-        </pss:elseAuthorized>
+        </redback:elseAuthorized>
       </ec:column>      
     </ec:row>
   </ec:table>
   </ww:if>
 
-  <pss:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+  <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
     <div class="functnbar3">
       <ww:url id="addUrl" action="addProjectGroupNotifier" namespace="/"  includeContext="false" includeParams="none" />
       <ww:form action="%{addUrl}" method="post">
@@ -81,7 +81,7 @@
         <ww:submit value="%{getText('add')}"/>
         </ww:form>
     </div>
-  </pss:ifAuthorized>
+  </redback:ifAuthorized>
 
   <ww:if test="${not empty projectNotifierSummaries}">
     <h3>Project Notifiers</h3>
@@ -104,7 +104,7 @@
         <ec:column property="events" title="projectView.notifier.events"/>
         <!-- ec:column property="sender" title="projectView.notifier.sender"/ -->
         <ec:column property="editActions" title="&nbsp;" width="1%">
-          <pss:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+          <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when test="${!pageScope.projectNotifierSummary.fromProject}">
                 <ww:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
@@ -122,13 +122,13 @@
                 <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
               </c:otherwise>
             </c:choose>
-          </pss:ifAuthorized>
-          <pss:elseAuthorized>
+          </redback:ifAuthorized>
+          <redback:elseAuthorized>
             <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
-          </pss:elseAuthorized>
+          </redback:elseAuthorized>
         </ec:column>
         <ec:column property="deleteActions" title="&nbsp;" width="1%">
-          <pss:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+          <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when test="${!pageScope.projectNotifierSummary.fromProject}">
                 <ww:url id="removeUrl" action="deleteProjectNotifier" namespace="/">
@@ -146,10 +146,10 @@
                 <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
               </c:otherwise>
             </c:choose>
-          </pss:ifAuthorized>
-          <pss:elseAuthorized>
+          </redback:ifAuthorized>
+          <redback:elseAuthorized>
             <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
-          </pss:elseAuthorized>
+          </redback:elseAuthorized>
         </ec:column>
       </ec:row>
     </ec:table>

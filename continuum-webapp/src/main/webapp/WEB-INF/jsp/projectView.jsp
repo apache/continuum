@@ -21,7 +21,7 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
-<%@ taglib uri="/plexusSecuritySystem" prefix="pss" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
   <ww:i18n name="localization.Continuum">
@@ -48,7 +48,7 @@
             <c1:data label="%{getText('projectView.project.group')}" name="project.projectGroup.name" valueLink="%{'${projectGroupSummaryUrl}'}"/>
           </table>
 
-          <pss:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+          <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -70,7 +70,7 @@
               </tbody>
             </table>
           </div>
-          </pss:ifAuthorized>
+          </redback:ifAuthorized>
         </div>
 
         <h3><ww:text name="projectView.buildDefinitions"/></h3>
@@ -81,13 +81,13 @@
         </ww:action>
 
         <div class="functnbar3">
-           <pss:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+           <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
           <ww:form action="buildDefinition" method="post">
             <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<ww:property value="project.projectGroup.id"/>"/>
             <ww:submit value="%{getText('add')}"/>
           </ww:form>
-          </pss:ifAuthorized>
+          </redback:ifAuthorized>
         </div>
 
         <h3><ww:text name="projectView.notifiers"/></h3>
@@ -106,7 +106,7 @@
               <ec:column property="events" title="projectView.notifier.events" cell="org.apache.maven.continuum.web.view.projectview.NotifierEventCell"/>
               <ec:column property="from" title="projectView.notifier.from" cell="org.apache.maven.continuum.web.view.projectview.NotifierFromCell"/>
               <ec:column property="editAction" title="&nbsp;" width="1%">
-                <pss:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+                <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
                       <a href='<ww:url value="${notifier.type}ProjectNotifierEdit.action">
@@ -121,13 +121,13 @@
                       <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
                     </c:otherwise>
                 </c:choose>
-                </pss:ifAuthorized>
-                <pss:elseAuthorized>
+                </redback:ifAuthorized>
+                <redback:elseAuthorized>
                   <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
-                </pss:elseAuthorized>
+                </redback:elseAuthorized>
               </ec:column>
               <ec:column property="deleteAction" title="&nbsp;" width="1%">
-                <pss:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+                <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
                       <a href='<ww:url value="/deleteProjectNotifier!default.action">
@@ -142,22 +142,22 @@
                       <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
                     </c:otherwise>
                   </c:choose>
-                </pss:ifAuthorized>
-                <pss:elseAuthorized>
+                </redback:ifAuthorized>
+                <redback:elseAuthorized>
                   <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
-                </pss:elseAuthorized>
+                </redback:elseAuthorized>
               </ec:column>
             </ec:row>
           </ec:table>
         </ww:if>
         <div class="functnbar3">
-           <pss:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
+           <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
           <ww:form action="addProjectNotifier!default.action" method="post">
             <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
             <input type="hidden" name="projectGroupId" value="<ww:property value="project.projectGroup.id"/>"/>
             <ww:submit value="%{getText('add')}"/>
           </ww:form>
-          </pss:ifAuthorized>
+          </redback:ifAuthorized>
         </div>
 
         <h3><ww:text name="projectView.dependencies"/></h3>

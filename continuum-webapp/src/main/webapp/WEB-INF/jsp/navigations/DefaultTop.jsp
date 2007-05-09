@@ -19,7 +19,7 @@
 
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="/plexusSecuritySystem" prefix="pss" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <ww:i18n name="localization.Continuum">
   <div id="banner">
@@ -44,6 +44,6 @@
       <a href="http://maven.apache.org/">Maven</a> |
       <a href="http://www.apache.org/">Apache</a>
     </div>
-    <%@ include file="/WEB-INF/jsp/pss/include/securityLinks.jsp" %>
+    <%@ include file="/WEB-INF/jsp/redback/include/securityLinks.jsp" %>
   </div>
 </ww:i18n>

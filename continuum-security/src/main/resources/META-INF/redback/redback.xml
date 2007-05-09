@@ -1,0 +1,407 @@
+<redback-role-model>
+  <version>1.0.0</version>
+  <application>Continuum</application>
+  <operations>
+    <operation>
+      <id>continuum-manage-schedules</id>
+      <name>continuum-manage-schedules</name>
+      <description>Manage Continuum Scheduling</description>
+    </operation>
+    <operation>
+      <id>continuum-manage-configuration</id>
+      <name>continuum-manage-configuration</name>
+      <description>Manage Continuum Configuration</description>
+    </operation>
+    <operation>
+      <id>continuum-manage-users</id>
+      <name>continuum-manage-users</name>
+      <description>Manage Continuum Users</description>
+    </operation>
+    <operation>
+      <id>continuum-guest</id>
+      <name>continuum-guest</name>
+      <description>Continuum Guest Operations</description>
+    </operation>
+    <operation>
+      <id>continuum-view-group</id>
+      <name>continuum-view-group</name>
+      <description>Continuum View Groups</description>
+    </operation>
+    <operation>
+      <id>continuum-add-group</id>
+      <name>continuum-add-group</name>
+      <description>Continuum Add Group</description>
+    </operation>
+    <operation>
+      <id>continuum-remove-group</id>
+      <name>continuum-remove-group</name>
+      <description>Continuum Remove Group</description>
+    </operation>
+    <operation>
+      <id>continuum-build-group</id>
+      <name>continuum-build-group</name>
+      <description>Continuum Build Group</description>
+    </operation>
+    <operation>
+      <id>continuum-modify-group</id>
+      <name>continuum-modify-group</name>
+      <description>Continuum Modify Group</description>
+    </operation>
+    <operation>
+      <id>continuum-add-project-to-group</id>
+      <name>continuum-add-project-to-group</name>
+      <description>Continuum Add Project to Group</description>
+    </operation>
+    <operation>
+      <id>continuum-remove-project-from-group</id>
+      <name>continuum-remove-project-from-group</name>
+      <description>Continuum Remove Project from Group</description>
+    </operation>
+    <operation>
+      <id>continuum-modify-project-in-group</id>
+      <name>continuum-modify-project-in-group</name>
+      <description>Continuum Modify Project in Group</description>
+    </operation>
+    <operation>
+      <id>continuum-build-project-in-group</id>
+      <name>continuum-build-project-in-group</name>
+      <description>Continuum Build Project in Group</description>
+    </operation>
+    <operation>
+      <id>continuum-add-group-build-definition</id>
+      <name>continuum-add-group-build-definition</name>
+      <description>Continuum Add Group Build Definition</description>
+    </operation>
+    <operation>
+      <id>continuum-remove-group-build-definition</id>
+      <name>continuum-remove-group-build-definition</name>
+      <description>Continuum Remove Group Build Definition</description>
+    </operation>
+    <operation>
+      <id>continuum-modify-group-build-definition</id>
+      <name>continuum-modify-group-build-definition</name>
+      <description>Continuum Modify Group Build Definition</description>
+    </operation>
+    <operation>
+      <id>continuum-add-group-notifier</id>
+      <name>continuum-add-group-notifier</name>
+      <description>Continuum Add Group Notifier</description>
+    </operation>
+    <operation>
+      <id>continuum-remove-group-notifier</id>
+      <name>continuum-remove-group-notifier</name>
+      <description>Continuum Remove Group Notifier</description>
+    </operation>
+    <operation>
+      <id>continuum-modify-group-notifier</id>
+      <name>continuum-modify-group-notifier</name>
+      <description>Continuum Modify Group Notifier</description>
+    </operation>
+    <operation>
+      <id>continuum-add-project-build-definition</id>
+      <name>continuum-add-project-build-definition</name>
+      <description>Continuum Add Project Build Definition</description>
+    </operation>
+    <operation>
+      <id>continuum-remove-project-build-definition</id>
+      <name>continuum-remove-project-build-definition</name>
+      <description>Continuum Remove Project Build Definition</description>
+    </operation>
+    <operation>
+      <id>continuum-modify-project-build-definition</id>
+      <name>continuum-modify-project-build-definition</name>
+      <description>Continuum Modify Project Build Definition</description>
+    </operation>
+    <operation>
+      <id>continuum-add-project-notifier</id>
+      <name>continuum-add-project-notifier</name>
+      <description>Continuum Add Project Notifier</description>
+    </operation>
+    <operation>
+      <id>continuum-remove-project-notifier</id>
+      <name>continuum-remove-project-notifier</name>
+      <description>Continuum Remove Project Notifier</description>
+    </operation>
+    <operation>
+      <id>continuum-modify-project-notifier</id>
+      <name>continuum-modify-project-notifier</name>
+      <description>Continuum Modify Project Notifier</description>
+    </operation>
+  </operations>
+  <roles>
+    <role>
+      <id>continuum-system-administrator</id>
+      <name>Continuum System Administrator</name>
+      <assignable>false</assignable>
+      <permanent>true</permanent>
+      <permissions>
+        <permission>
+          <id>continuum-manage-configuration</id>
+          <name>Manage Continuum Configuration</name>
+          <permanent>true</permanent>
+          <operation>continuum-manage-configuration</operation>
+          <resource>global</resource>
+        </permission>
+        <permission>
+          <id>continuum-manage-schedules</id>
+          <name>Manage Continuum Schedules</name>
+          <permanent>true</permanent>
+          <operation>continuum-manage-schedules</operation>
+          <resource>global</resource>
+        </permission>        
+      </permissions>
+      <parentRoles>
+        <parentRole>system-administrator</parentRole>
+      </parentRoles>
+      <childRoles>
+        <childRole>continuum-group-project-administrator</childRole>        
+      </childRoles>
+    </role>
+    <role>
+      <id>continuum-user-administrator</id>
+      <name>Continuum User Administrator</name>
+      <assignable>false</assignable>
+      <permanent>true</permanent>
+      <permissions>
+        <permission>
+          <id>continuum-manage-users</id>
+          <name>Manage Continuum Users</name>
+          <permanent>true</permanent>
+          <operation>continuum-manage-users</operation>
+          <resource>global</resource>
+        </permission>        
+      </permissions>
+      <parentRoles>
+        <parentRole>user-administrator</parentRole>
+      </parentRoles>
+    </role>
+    <role>
+      <id>continuum-group-project-administrator</id>
+      <name>Continuum Group Project Administrator</name>
+      <assignable>true</assignable>
+      <permanent>true</permanent>
+      <permissions>
+        <permission>
+          <id>continuum-add-group</id>
+          <name>Add Group to Continuum</name>
+          <permanent>true</permanent>
+          <operation>continuum-add-group</operation>
+          <resource>global</resource>
+        </permission> 
+        <permission>
+          <id>continuum-manage-schedules</id>
+          <name>Manage Continuum Schedules</name>
+          <permanent>true</permanent>
+          <operation>continuum-manage-schedules</operation>
+          <resource>global</resource>
+        </permission>        
+      </permissions>
+    </role>
+    <role>
+      <id>continuum-group-project-developer</id>
+      <name>Continuum Group Project Developer</name>
+      <assignable>true</assignable>
+      <permanent>true</permanent>
+    </role>
+    <role>
+      <id>continuum-group-project-user</id>
+      <name>Continuum Group Project User</name>
+      <assignable>true</assignable>
+      <permanent>true</permanent>
+    </role>
+    <role>
+      <id>continuum-guest</id>
+      <name>Continuum Guest</name>
+      <assignable>false</assignable>
+      <permanent>true</permanent>
+      <permissions>
+        <permission>
+          <id>continuum-guest</id>
+          <name>Continuum Guest Permissions</name>
+          <permanent>true</permanent>
+          <operation>continuum-guest</operation>
+          <resource>global</resource>
+        </permission>
+      </permissions>
+      <parentRoles>
+        <parentRole>guest</parentRole>
+      </parentRoles>
+    </role>
+  </roles>
+  <templates>
+  	<template>
+  	  <id>project-administrator</id>
+  	  <namePrefix>Project Administrator</namePrefix>
+  	  <assignable>true</assignable>
+  	  <permissions>
+  	    <permission>
+          <id>continuum-manage-users</id>
+          <name>Continuum Manage Users</name>
+          <operation>continuum-manage-users</operation>
+          <resource>global</resource>
+        </permission>
+        <permission>
+          <id>continuum-manage-users-roles</id>
+          <name>Continuum Manage User Roles</name>
+          <operation>user-management-user-role</operation>
+          <resource>global</resource>
+        </permission>
+        <permission>
+          <id>continuum-group-role-grant</id>
+          <name>Continuum Grant Group Roles</name>
+          <operation>user-management-role-grant</operation>
+          <resource>${resource}</resource>
+        </permission>
+  	  </permissions>
+  	  <childTemplates>
+  	  	<childTemplate>project-developer</childTemplate>
+  	  </childTemplates>
+  	  <parentRoles>
+  	    <parentRole>continuum-group-project-administrator</parentRole>
+  	  </parentRoles>
+  	</template>
+  	<template>
+  	  <id>project-developer</id>
+  	  <namePrefix>Project Developer</namePrefix>
+  	  <assignable>true</assignable>
+  	  <permissions>
+  	    <permission>
+          <id>continuum-build-group</id>
+          <name>Continuum Build Group</name>
+          <operation>continuum-build-group</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-remove-group</id>
+          <name>Continuum Remove Group</name>
+          <operation>continuum-remove-group</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-modify-group</id>
+          <name>Continuum Modify Group</name>
+          <operation>continuum-modify-group</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-add-group-build-definition</id>
+          <name>Continuum Add Group Build Definition</name>
+          <operation>continuum-add-group-build-definition</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-remove-group-build-definition</id>
+          <name>Continuum Remove Group Build Definition</name>
+          <operation>continuum-remove-group-build-definition</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-modify-group-build-definition</id>
+          <name>Continuum Modify Group Build Definition</name>
+          <operation>continuum-modify-group-build-definition</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-add-group-notifier</id>
+          <name>Continuum Add Group Notifier</name>
+          <operation>continuum-add-group-notifier</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-remove-group-notifier</id>
+          <name>Continuum Remove Group Notifier</name>
+          <operation>continuum-remove-group-notifier</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-modify-group-notifier</id>
+          <name>Continuum Modify Group Notifier</name>
+          <operation>continuum-modify-group-notifier</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-add-project-build-definition</id>
+          <name>Continuum Add Project Build Definition</name>
+          <operation>continuum-add-project-build-definition</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-remove-project-build-definition</id>
+          <name>Continuum Remove Project Build Definition</name>
+          <operation>continuum-remove-project-build-definition</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-modify-project-build-definition</id>
+          <name>Continuum Modify Project Build Definition</name>
+          <operation>continuum-modify-project-build-definition</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-add-project-notifier</id>
+          <name>Continuum Add Project Notifer</name>
+          <operation>continuum-add-project-notifier</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-remove-project-notifier</id>
+          <name>Continuum Remove Project Notifer</name>
+          <operation>continuum-remove-project-notifier</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-modify-project-notifier</id>
+          <name>Continuum Modify Project Notifer</name>
+          <operation>continuum-modify-project-notifier</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-build-project-in-group</id>
+          <name>Continuum Build Project in Group</name>
+          <operation>continuum-build-project-in-group</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-add-project-to-group</id>
+          <name>Continuum Add Project To Group</name>
+          <operation>continuum-add-project-to-group</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-remove-project-from-group</id>
+          <name>Continuum Remove Project from Group</name>
+          <operation>continuum-remove-project-from-group</operation>
+          <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-modify-project-in-group</id>
+          <name>Continuum Modify Project in Group</name>
+          <operation>continuum-modify-project-in-group</operation>
+          <resource>${resource}</resource>
+        </permission>
+  	  </permissions>
+  	  <childTemplates>
+  	  	<childTemplate>project-user</childTemplate>
+  	  </childTemplates>
+  	  <parentRoles>
+  	    <parentRole>continuum-group-project-developer</parentRole>
+  	  </parentRoles>
+  	</template>
+  	<template>
+  	  <id>project-user</id>
+  	  <namePrefix>Project User</namePrefix>
+  	  <assignable>true</assignable>
+  	  <permissions>
+  	    <permission>
+          <id>continuum-view-group</id>
+          <name>Continuum View Group</name>
+          <operation>continuum-view-group</operation>
+          <resource>${resource}</resource>
+        </permission>
+  	  </permissions>  	  
+  	  <parentRoles>
+  	    <parentRole>continuum-group-project-user</parentRole>
+  	  </parentRoles>
+  	</template>
+  </templates>
+</redback-role-model>

@@ -20,8 +20,9 @@ package org.apache.maven.continuum.web.bean;
  */
 
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.codehaus.plexus.security.user.User;
-import org.codehaus.plexus.security.rbac.Role;
+import org.codehaus.plexus.redback.rbac.Role;
+import org.codehaus.plexus.redback.users.User;
+
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -20,7 +20,7 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<%@ taglib uri="/plexusSecuritySystem" prefix="pss" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
 <ww:i18n name="localization.Continuum">
@@ -61,7 +61,7 @@
       </ec:row>
     </ec:table>
     </ww:if>
-    <pss:ifAuthorized permission="continuum-add-group">
+    <redback:ifAuthorized permission="continuum-add-group">
       <div class="functnbar3">
         <table>
           <tr>
@@ -73,7 +73,7 @@
           </tr>
         </table>
       </div>
-    </pss:ifAuthorized>
+    </redback:ifAuthorized>
   </div>
   </body>
 </ww:i18n>

@@ -21,7 +21,7 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
-<%@ taglib uri="/plexusSecuritySystem" prefix="pss" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <ww:i18n name="localization.Continuum">
 <ww:if test="${not empty projects}">
@@ -52,7 +52,7 @@
                  cell="org.apache.maven.continuum.web.view.BuildCell"/>
       <ec:column property="projectGroupName" title="summary.projectTable.group" width="13%"/> 
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
-        <pss:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
+        <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <c:choose>
             <c:when test="${!project.inBuildingQueue and !project.inCheckoutQueue and ( project.state gt 0 ) and ( project.state lt 5 )}">
               <ww:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
@@ -68,13 +68,13 @@
               <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="Build Now" title="Build Now" border="0">
             </c:otherwise>
           </c:choose>
-        </pss:ifAuthorized>
-        <pss:elseAuthorized>
+        </redback:ifAuthorized>
+        <redback:elseAuthorized>
           <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="Build Now" title="Build Now" border="0">
-        </pss:elseAuthorized>
+        </redback:elseAuthorized>
       </ec:column>
       <ec:column property="buildHistoryAction" title="&nbsp;" width="1%">
-        <pss:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
+        <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
         <c:choose>
           <c:when test="${pageScope.project.latestBuildId > 0}">
             <ww:url id="buildResultsUrl" action="buildResults" namespace="/">
@@ -89,14 +89,14 @@
                  border="0">
           </c:otherwise>
         </c:choose>
-        </pss:ifAuthorized>
-        <pss:elseAuthorized>
+        </redback:ifAuthorized>
+        <redback:elseAuthorized>
           <img src="<ww:url value='/images/buildhistory_disabled.gif'/>" alt="Build History" title="Build History"
                  border="0">
-        </pss:elseAuthorized>
+        </redback:elseAuthorized>
       </ec:column>
       <ec:column property="workingCopyAction" title="&nbsp;" width="1%">
-        <pss:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
+        <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
         <c:choose>
           <c:when test="${pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4 || pageScope.project.state == 6}">
             <ww:url id="workingCopyUrl" action="workingCopy" namespace="/">
@@ -110,14 +110,14 @@
                  border="0">
           </c:otherwise>
         </c:choose>
-        </pss:ifAuthorized>
-        <pss:elseAuthorized>
+        </redback:ifAuthorized>
+        <redback:elseAuthorized>
           <img src="<ww:url value='/images/workingcopy_disabled.gif'/>" alt="Working Copy" title="Working Copy"
                  border="0">
-        </pss:elseAuthorized>
+        </redback:elseAuthorized>
       </ec:column>
       <ec:column property="releaseAction" title="&nbsp;" width="1%" sortable="false">
-        <pss:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
+        <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
         <c:choose>
           <c:when test="${pageScope.project.state == 2}">
             <ww:url id="releaseProjectUrl" action="releasePromptGoal" namespace="/">
@@ -133,13 +133,13 @@
               title="Release Project" border="0"/>
           </c:otherwise>
         </c:choose>
-        </pss:ifAuthorized>
-        <pss:elseAuthorized>
+        </redback:ifAuthorized>
+        <redback:elseAuthorized>
           <img src="<ww:url value='/images/releaseproject_disabled.gif'/>" alt="Delete" title="Delete" border="0">
-        </pss:elseAuthorized>
+        </redback:elseAuthorized>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
-        <pss:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+        <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
         <c:choose>
           <c:when
               test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
@@ -154,10 +154,10 @@
             <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
           </c:otherwise>
         </c:choose>
-        </pss:ifAuthorized>
-        <pss:elseAuthorized>
+        </redback:ifAuthorized>
+        <redback:elseAuthorized>
           <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
-        </pss:elseAuthorized>
+        </redback:elseAuthorized>
       </ec:column>
     </ec:row>
   </ec:table>

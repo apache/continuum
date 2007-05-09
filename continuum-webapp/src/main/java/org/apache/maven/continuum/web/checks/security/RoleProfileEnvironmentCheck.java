@@ -19,10 +19,10 @@ package org.apache.maven.continuum.web.checks.security;
  * under the License.
  */
 
-import org.codehaus.plexus.security.system.check.EnvironmentCheck;
-import org.codehaus.plexus.rbac.profile.RoleProfileManager;
-import org.codehaus.plexus.rbac.profile.RoleProfileException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.redback.role.RoleManager;
+import org.codehaus.plexus.redback.role.RoleManagerException;
+import org.codehaus.plexus.redback.system.check.EnvironmentCheck;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.Continuum;
 
@@ -45,9 +45,9 @@ public class RoleProfileEnvironmentCheck
     implements EnvironmentCheck
 {
     /**
-     * @plexus.requirement role-hint="continuum"
+     * @plexus.requirement role-hint="default"
      */
-    private RoleProfileManager continuumRoleManager;
+    private RoleManager roleManager;
 
     /**
      * @plexus.requirement
@@ -58,11 +58,6 @@ public class RoleProfileEnvironmentCheck
     {
         try
         {
-            if ( !continuumRoleManager.isInitialized() )
-            {
-                continuumRoleManager.initialize();
-            }
-
             Collection projectGroups = continuum.getAllProjectGroups();
 
             for ( Iterator i = projectGroups.iterator(); i.hasNext(); )
@@ -71,17 +66,26 @@ public class RoleProfileEnvironmentCheck
 
                 // gets the role, making it if it doesn't exist
                 //TODO: use continuum.executeAction( "add-assignable-roles", context ); or something like that to avoid code duplication
-                continuumRoleManager.getDynamicRole( "continuum-group-project-administrator", group.getName() );
-                continuumRoleManager.getDynamicRole( "continuum-group-user", group.getName() );
-                continuumRoleManager.getDynamicRole( "continuum-group-developer", group.getName() );
-
+                if ( !roleManager.templatedRoleExists( "project-administrator", group.getName() ) )
+                {
+                    roleManager.createTemplatedRole( "project-administrator", group.getName() );
+                }
+                if ( !roleManager.templatedRoleExists( "project-developer", group.getName() ) )
+                {
+                    roleManager.createTemplatedRole( "project-developer", group.getName() );
+                }
+                
+                if ( !roleManager.templatedRoleExists( "project-user", group.getName() ) )
+                {
+                    roleManager.createTemplatedRole( "project-user", group.getName() );
+                }
             }
 
         }
-        catch ( RoleProfileException rpe )
+        catch ( RoleManagerException rpe )
         {
             rpe.printStackTrace();
-            list.add( "error inititalizing the continuum role manager" );
+            list.add( "error checking existence of roles for groups" );
         }
     }
 }

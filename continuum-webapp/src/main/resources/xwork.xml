@@ -31,20 +31,20 @@
     <interceptors>
       <interceptor name="exception-logging" class="exceptionLogging"/>
       <interceptor name="continuumConfigurationCheck" class="forceContinuumConfigurationInterceptor"/>
-      <interceptor name="pssForceAdminUser" class="pssForceAdminUserInterceptor"/>
-      <interceptor name="pssSecureActions" class="pssSecureActionInterceptor"/>
-      <interceptor name="pssAutoLogin" class="pssAutoLoginInterceptor"/>
-      <interceptor name="pssPolicyEnforcement" class="pssPolicyEnforcementInterceptor"/>
-      <interceptor name="pssEnvironmentChecker" class="pssEnvironmentCheckInterceptor"/>
+      <interceptor name="redbackForceAdminUser" class="redbackForceAdminUserInterceptor"/>
+      <interceptor name="redbackSecureActions" class="redbackSecureActionInterceptor"/>
+      <interceptor name="redbackAutoLogin" class="redbackAutoLoginInterceptor"/>
+      <interceptor name="redbackPolicyEnforcement" class="redbackPolicyEnforcementInterceptor"/>
+      <interceptor name="redbackEnvironmentChecker" class="redbackEnvironmentCheckInterceptor"/>
 
       <interceptor-stack name="configuredContinuumStack">
-        <interceptor-ref name="pssEnvironmentChecker"/>
-        <interceptor-ref name="pssForceAdminUser"/>
-        <interceptor-ref name="pssAutoLogin"/>
+        <interceptor-ref name="redbackEnvironmentChecker"/>
+        <interceptor-ref name="redbackForceAdminUser"/>
+        <interceptor-ref name="redbackAutoLogin"/>
         <interceptor-ref name="defaultStack"/>
         <interceptor-ref name="exception-logging"/>
-        <interceptor-ref name="pssSecureActions"/>
-        <interceptor-ref name="pssPolicyEnforcement"/>
+        <interceptor-ref name="redbackSecureActions"/>
+        <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="continuumConfigurationCheck"/>
         <interceptor-ref name="validation">
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
@@ -55,13 +55,13 @@
       </interceptor-stack>
 
       <interceptor-stack name="unconfiguredContinuumStack">
-        <interceptor-ref name="pssEnvironmentChecker"/>
-        <interceptor-ref name="pssForceAdminUser"/>
-        <interceptor-ref name="pssAutoLogin"/>
+        <interceptor-ref name="redbackEnvironmentChecker"/>
+        <interceptor-ref name="redbackForceAdminUser"/>
+        <interceptor-ref name="redbackAutoLogin"/>
         <interceptor-ref name="defaultStack"/>
         <interceptor-ref name="exception-logging"/>
-        <interceptor-ref name="pssPolicyEnforcement"/>
-        <interceptor-ref name="pssSecureActions"/>
+        <interceptor-ref name="redbackPolicyEnforcement"/>
+        <interceptor-ref name="redbackSecureActions"/>
         <interceptor-ref name="validation">
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
@@ -148,7 +148,7 @@
     <!-- This is the redirection facility for plexus-security,
              allowing plexus-security to call out from its own set of actions
              into the application webapp, using global result names. -->
-    <action name="pssRedirect" class="pss-redirect" method="redirect">
+    <action name="redbackRedirect" class="redback-redirect" method="redirect">
       <result type="redirect-action">groupSummary</result>
     </action>
 

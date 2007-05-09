@@ -21,7 +21,7 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
-<%@ taglib uri="/plexusSecuritySystem" prefix="pss" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
   <ww:i18n name="localization.Continuum">
@@ -59,7 +59,7 @@
         </ec:column>
         <ec:column property="editAction" title="&nbsp;" width="1%" sortable="false">
           <center>
-            <pss:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+            <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
@@ -75,15 +75,15 @@
                 <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
               </c:otherwise>
             </c:choose>
-            </pss:ifAuthorized>
-            <pss:elseAuthorized>
+            </redback:ifAuthorized>
+            <redback:elseAuthorized>
                 <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
-            </pss:elseAuthorized>
+            </redback:elseAuthorized>
           </center>
         </ec:column>
         <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
           <center>
-            <pss:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+            <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
@@ -99,16 +99,16 @@
                 <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
               </c:otherwise>
             </c:choose>
-            </pss:ifAuthorized>
-            <pss:elseAuthorized>
+            </redback:ifAuthorized>
+            <redback:elseAuthorized>
                 <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
-            </pss:elseAuthorized>
+            </redback:elseAuthorized>
           </center>
         </ec:column>
       </ec:row>
     </ec:table>
     
-  <pss:ifAuthorized permission="continuum-manage-users">
+  <redback:ifAuthorized permission="continuum-manage-users">
   <h3>Users</h3>
     
   <ww:form action="projectGroupMembers" theme="xhtml" method="post">
@@ -193,7 +193,7 @@
       </ww:iterator>
     </tbody>
   </table>
-  </pss:ifAuthorized>
+  </redback:ifAuthorized>
   
   </div>
   </body>

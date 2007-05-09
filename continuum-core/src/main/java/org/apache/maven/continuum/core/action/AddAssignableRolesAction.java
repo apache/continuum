@@ -23,9 +23,9 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.rbac.profile.RoleProfileException;
-import org.codehaus.plexus.rbac.profile.RoleProfileManager;
-import org.codehaus.plexus.security.rbac.Role;
+import org.codehaus.plexus.redback.role.RoleManager;
+import org.codehaus.plexus.redback.role.RoleManagerException;
+
 
 import java.util.Map;
 
@@ -45,9 +45,9 @@ public class AddAssignableRolesAction
     private ContinuumStore store;
 
     /**
-     * @plexus.requirement role-hint="continuum"
+     * @plexus.requirement role-hint="default"
      */
-    private RoleProfileManager roleManager;
+    private RoleManager roleManager;
 
     public void execute( Map context )
         throws ContinuumException, ContinuumStoreException
@@ -60,16 +60,24 @@ public class AddAssignableRolesAction
 
         try
         {
-            Role administrator = roleManager.getDynamicRole( "continuum-group-project-administrator", projectGroup.getName() );
-
-            Role developer = roleManager.getDynamicRole( "continuum-group-developer", projectGroup.getName() );
-
-            Role user = roleManager.getDynamicRole( "continuum-group-user", projectGroup.getName() );
+            if ( !roleManager.templatedRoleExists( "project-administrator", projectGroup.getName() ) )
+            {
+                roleManager.createTemplatedRole( "project-administrator", projectGroup.getName() );
+            }
+            if ( !roleManager.templatedRoleExists( "project-developer", projectGroup.getName() ) )
+            {
+                roleManager.createTemplatedRole( "project-developer", projectGroup.getName() );
+            }
+            
+            if ( !roleManager.templatedRoleExists( "project-user", projectGroup.getName() ) )
+            {
+                roleManager.createTemplatedRole( "project-user", projectGroup.getName() );
+            }
         }
-        catch ( RoleProfileException rpe )
+        catch ( RoleManagerException e )
         {
-            rpe.printStackTrace();
-            throw new ContinuumException( "error generating dynamic role for project " + projectGroup.getName(), rpe );
+            e.printStackTrace();
+            throw new ContinuumException( "error generating templated role for project " + projectGroup.getName(), e );
         }
     }
 }
