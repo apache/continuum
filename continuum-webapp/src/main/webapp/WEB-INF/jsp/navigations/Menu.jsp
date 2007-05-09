@@ -19,7 +19,7 @@
 
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
-<%@ taglib uri="/plexusSecuritySystem" prefix="pss" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <ww:i18n name="localization.Continuum">
 <div id="navcolumn">
@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  <pss:ifAuthorized permission="continuum-add-group">
+  <redback:ifAuthorized permission="continuum-add-group">
     <div id="projectmenu" class="toolgroup">
       <div class="label">
         <ww:text name="menu.addProject"/>
@@ -79,24 +79,24 @@
         </div>
       </div>
     </div>
-  </pss:ifAuthorized>
+  </redback:ifAuthorized>
 
 
-  <pss:ifAnyAuthorized permissions="continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users">
+  <redback:ifAnyAuthorized permissions="continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users">
     <div id="projectmenu" class="toolgroup">
       <div class="label">
         <ww:text name="menu.administration"/>
       </div>
       <div>
-        <pss:ifAuthorized permission="continuum-manage-schedules">
+        <redback:ifAuthorized permission="continuum-manage-schedules">
           <ww:url id="scheduleUrl" namespace="/" action="schedules" includeParams="none"/>
           <div class="body">
             <ww:a href="%{scheduleUrl}">
               <ww:text name="menu.administration.schedules"/>
             </ww:a>
           </div>
-        </pss:ifAuthorized>
-        <pss:ifAuthorized permission="continuum-manage-configuration">
+        </redback:ifAuthorized>
+        <redback:ifAuthorized permission="continuum-manage-configuration">
           <ww:url id="configurationUrl" action="configuration" namespace="/admin" method="input" includeParams="none"/>
           <div class="body">
             <ww:a href="%{configurationUrl}">
@@ -109,16 +109,16 @@
               <ww:text name="menu.administration.appearance"/>
             </ww:a>
           </div>
-        </pss:ifAuthorized>
-        <pss:ifAuthorized permission="continuum-manage-users">
+        </redback:ifAuthorized>
+        <redback:ifAuthorized permission="continuum-manage-users">
           <ww:url id="userListUrl" action="userlist" namespace="/security" includeParams="none"/>
           <div class="body">
             <ww:a href="%{userListUrl}">Users</ww:a>
           </div>
-        </pss:ifAuthorized>
+        </redback:ifAuthorized>
       </div>
     </div>
-  </pss:ifAnyAuthorized>
+  </redback:ifAnyAuthorized>
 
   <div id="projectmenu" class="toolgroup">
     <div class="label">Legend</div>

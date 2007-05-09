@@ -26,14 +26,14 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.bean.ProjectGroupUserBean;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.codehaus.plexus.rbac.profile.RoleProfileException;
-import org.codehaus.plexus.rbac.profile.RoleProfileManager;
-import org.codehaus.plexus.security.rbac.RBACManager;
-import org.codehaus.plexus.security.rbac.RbacManagerException;
-import org.codehaus.plexus.security.rbac.RbacObjectNotFoundException;
-import org.codehaus.plexus.security.rbac.Role;
-import org.codehaus.plexus.security.user.User;
-import org.codehaus.plexus.security.user.UserManager;
+import org.codehaus.plexus.redback.rbac.RBACManager;
+import org.codehaus.plexus.redback.rbac.RbacManagerException;
+import org.codehaus.plexus.redback.rbac.RbacObjectNotFoundException;
+import org.codehaus.plexus.redback.rbac.Role;
+import org.codehaus.plexus.redback.role.RoleManager;
+import org.codehaus.plexus.redback.role.RoleManagerException;
+import org.codehaus.plexus.redback.users.User;
+import org.codehaus.plexus.redback.users.UserManager;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
@@ -74,9 +74,9 @@ public class ProjectGroupAction
     private RBACManager rbac;
 
     /**
-     * @plexus.requirement role-hint="continuum"
+     * @plexus.requirement role-hint="default"
      */
-    private RoleProfileManager roleManager;
+    private RoleManager roleManager;
 
     private int projectGroupId;
 
@@ -259,13 +259,13 @@ public class ProjectGroupAction
         {
             try
             {
-            	roleManager.renameDynamicRole( "continuum-group-project-administrator", projectGroup.getName(), name );
-                roleManager.renameDynamicRole( "continuum-group-developer", projectGroup.getName(), name );
-                roleManager.renameDynamicRole( "continuum-group-user", projectGroup.getName(), name );
+            	roleManager.updateRole( "project-administrator", projectGroup.getName(), name );
+                roleManager.updateRole( "project-developer", projectGroup.getName(), name );
+                roleManager.updateRole( "project-user", projectGroup.getName(), name );
 
                 projectGroup.setName( name );
             }
-            catch ( RoleProfileException e )
+            catch ( RoleManagerException e )
             {
                 throw new ContinuumException( "unable to rename the project group", e );
             }
@@ -456,6 +456,7 @@ public class ProjectGroupAction
                 for ( Iterator j = effectiveRoles.iterator(); j.hasNext(); )
                 {
                     Role role = (Role) j.next();
+                    
                     if ( role.getName().indexOf( projectGroup.getName() ) > -1 )
                     {
                         pgUser.setRoles( effectiveRoles );

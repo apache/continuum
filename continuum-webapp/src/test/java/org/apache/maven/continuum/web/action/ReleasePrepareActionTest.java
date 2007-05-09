@@ -24,8 +24,6 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-import org.codehaus.plexus.security.system.SecuritySession;
-import org.codehaus.plexus.security.system.SecuritySystemConstants;
 
 import java.util.Map;
 import java.util.HashMap;

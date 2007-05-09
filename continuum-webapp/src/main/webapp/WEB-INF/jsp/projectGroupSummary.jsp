@@ -21,7 +21,7 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
-<%@ taglib uri="/plexusSecuritySystem" prefix="pss" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
 
@@ -78,7 +78,7 @@
       </table>
     </div>
 
-    <pss:ifAnyAuthorized permissions="continuum-build-group,continuum-remove-group" resource="${projectGroup.name}">
+    <redback:ifAnyAuthorized permissions="continuum-build-group,continuum-remove-group" resource="${projectGroup.name}">
       <h3>Project Group Actions</h3>
 
       <c:if test="${!empty actionErrors}">
@@ -93,38 +93,38 @@
         <table>
           <tr>
             <td>
-              <pss:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
+              <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
                 <form action="buildProjectGroup.action" method="post">
                     <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
                     <input type="submit" name="build" value="<ww:text name="build"/>"/>
                 </form>
-                </pss:ifAuthorized>
+                </redback:ifAuthorized>
             <td>
-                <pss:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+                <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
                 <form action="editProjectGroup.action" method="post">
                     <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
                     <input type="submit" name="edit" value="<ww:text name="edit"/>"/>
                 </form>
-                </pss:ifAuthorized>
+                </redback:ifAuthorized>
             </td>
             <td>
-              <pss:ifAuthorized permission="continuum-remove-group" resource="${projectGroup.name}">
+              <redback:ifAuthorized permission="continuum-remove-group" resource="${projectGroup.name}">
                 <form action="removeProjectGroup.action" method="post">
                     <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
                     <input type="submit" name="remove" value="<ww:text name="delete"/>"/>
                 </form>
-              </pss:ifAuthorized>
+              </redback:ifAuthorized>
             </td>
             <td>
-              <pss:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
+              <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
                 <form action="releaseProjectGroup.action" method="post">
                     <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
                     <input type="submit" name="release" value="<ww:text name="release"/>"/>
                 </form>
-              </pss:ifAuthorized>
+              </redback:ifAuthorized>
             </td>
             <td>
-              <pss:ifAnyAuthorized permissions="continuum-add-project-to-group" resource="${projectGroup.name}">
+              <redback:ifAnyAuthorized permissions="continuum-add-project-to-group" resource="${projectGroup.name}">
                 <ww:form name="addNewProject">
                   <ww:hidden name="disableGroupSelection" value="true"/>
                   <ww:hidden name="selectedProjectGroup" value="${projectGroup.id}"/>
@@ -145,12 +145,12 @@
                 </select>
 
                 <input type="button" value="Add" onclick="goToAddProject()"/>
-              </pss:ifAnyAuthorized>
+              </redback:ifAnyAuthorized>
             </td>
           </tr>
         </table>
       </div>
-    </pss:ifAnyAuthorized>
+    </redback:ifAnyAuthorized>
 
     <ww:action name="projectSummary" executeResult="true" namespace="component">
       <ww:param name="projectGroupId" value="%{projectGroupId}"/>
