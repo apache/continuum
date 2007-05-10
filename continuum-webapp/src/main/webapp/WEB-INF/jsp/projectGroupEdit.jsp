@@ -37,6 +37,13 @@
                     <p><ww:text name="%{getText('project.in.checkout.queue.error')}"/></p>
                             </div >
               </c:if>
+              <c:if test="${!empty actionErrors}">
+              <div class="errormessage">
+                <c:forEach items="${actionErrors}" var="actionError">
+                  <p><ww:text name="${actionError}"/></p>
+                </c:forEach>
+              </div>
+              </c:if>
             <table>
               <tbody>
                 <ww:hidden name="projectGroupId"/>

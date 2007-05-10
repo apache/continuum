@@ -250,6 +250,12 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
+        
+        if ( name != null && name.equals( "" ) )
+        {
+            addActionError( "projectGroup.error.name.required" );
+            return INPUT;
+        }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
 
