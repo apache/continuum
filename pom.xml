@@ -330,7 +330,17 @@
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
-        <artifactId>continuum-xmlrpc</artifactId>
+        <artifactId>continuum-xmlrpc-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>continuum-xmlrpc-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>continuum-xmlrpc-server</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
@@ -485,6 +495,11 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-quartz</artifactId>
         <version>1.0-alpha-3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-xwork-integration</artifactId>
+        <version>1.0-alpha-6</version>
       </dependency>
       <!--
         Plexus Redback Dependencies

@@ -69,6 +69,16 @@
     <listener-class>org.codehaus.plexus.xwork.PlexusLifecycleListener</listener-class>
   </listener>
 
+  <servlet>
+    <servlet-name>XmlRpcServlet</servlet-name>
+    <servlet-class>org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>XmlRpcServlet</servlet-name>
+    <url-pattern>/xmlrpc</url-pattern>
+  </servlet-mapping>
+
   <error-page>
     <error-code>403</error-code>
     <location>/WEB-INF/jsp/error/httpError.jsp?errorCode=403</location>
