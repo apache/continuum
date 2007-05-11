@@ -6,14 +6,22 @@
  ------
  MON April 24 2006
 
-Download Continuum 1.0.3
+Download Continuum 1.1 Alpha 1
 
- Continuum is distributed in several formats for your convenience.
+  Continuum 1.1 Alpha 1 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
+
+*-------------------------------+---------+----------+-----------+
+|                               | Download | Checksum | Signature |
+*-------------------------------+---------+----------+-----------+
+| Continuum 1.1-alpha-1 (tar.gz)| {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-1/continuum-plexus-runtime-1.1-alpha-1-bin.tar.gz} continuum-plexus-runtime-1.1-alpha-1-bin.tar.gz}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-1/continuum-plexus-runtime-1.1-alpha-1-bin.tar.gz.md5} continuum-1.1-alpha-1-bin.tar.gz.md5}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-1/continuum-plexus-runtime-1.1-alpha-1.tar.gz.asc} continuum-1.1-alpha-1-bin.tar.gz.asc}} |
+*-------------------------------+---------+----------+-----------+
+
+*Previous Releases
 
   You will be prompted for a mirror - if the file is not found on yours, please be patient, as it may take 24
   hours to reach all mirrors.
 
-  Continuum 1.0.3 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
+**Continuum 1.0.3
 
 *-------------------------------+---------+----------+-----------+
 |                               | Mirrors | Checksum | Signature |
@@ -24,9 +32,6 @@ Download Continuum 1.0.3
 *-------------------------------+---------+----------+-----------+
 | Continuum 1.0.3 (zip)         | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.3-bin.zip} continuum-1.0.3-bin.zip}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.3-bin.zip.md5} continuum-1.0.3-bin.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.3-bin.zip.asc} continuum-1.0.3-bin.zip.asc}} |
 *-------------------------------+---------+----------+-----------+
-
-
-*Previous Releases
 
 **Continuum 1.0.2
 
@@ -85,11 +90,10 @@ Download Continuum 1.0.3
 
 ** Windows 2000/XP
 
-  [[1]] Unzip <<<continuum-1.0.3-bin.zip>>> to the directory you wish to install Continuum 1.0.3. These instructions
-        assume you chose <<<C:\Program Files\Apache Software Foundation\continuum-1.0.3>>>
+  [[1]] Unzip the binary to the directory you wish to install Continuum. These instructions
+        assume you chose <<<C:\Program Files\Apache Software Foundation\continuum-x.x.x>>>
 
 ** Unix-based Operating Systems (Linux, Solaris and Mac OS X)
 
-  [[1]] Extract the distribution archive to the directory you wish to install Continuum 1.0.3. These instructions
-        assume you chose <<</usr/local/continuum-1.0.3>>>. The directory <<<continuum-1.0.3>>> will be created from
-        the archive.
+  [[1]] Extract the distribution archive to the directory you wish to install Continuum. These instructions
+        assume you chose <<</usr/local/continuum-x.x.x>>>.
