@@ -20,6 +20,7 @@ package org.apache.maven.continuum.xmlrpc.server;
  */
 
 import org.apache.xmlrpc.common.XmlRpcHttpRequestConfigImpl;
+import org.codehaus.plexus.redback.system.SecuritySession;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,6 +32,8 @@ public class ContinuumXmlRpcConfig
     extends XmlRpcHttpRequestConfigImpl
 {
     private HttpServletRequest httpServletRequest;
+    
+    private SecuritySession securitySession;
 
     public HttpServletRequest getHttpServletRequest()
     {
@@ -41,4 +44,16 @@ public class ContinuumXmlRpcConfig
     {
         this.httpServletRequest = httpServletRequest;
     }
+
+    public SecuritySession getSecuritySession()
+    {
+        return securitySession;
+    }
+
+    public void setSecuritySession( SecuritySession securitySession )
+    {
+        this.securitySession = securitySession;
+    }
+    
+    
 }

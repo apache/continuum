@@ -33,6 +33,11 @@ import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.redback.authentication.AuthenticationException;
+import org.codehaus.plexus.redback.authentication.PasswordBasedAuthenticationDataSource;
+import org.codehaus.plexus.redback.policy.AccountLockedException;
+import org.codehaus.plexus.redback.system.SecuritySystem;
+import org.codehaus.plexus.redback.users.UserNotFoundException;
 import org.codehaus.plexus.xwork.PlexusLifecycleListener;
 
 import javax.servlet.ServletConfig;
@@ -54,6 +59,8 @@ public class ContinuumXmlRpcServlet
 {
     private ContinuumXmlRpcServletServer server;
 
+    private SecuritySystem securitySystem;
+    
     public String getServletInfo()
     {
         return "Continuum XMLRPC Servlet";
@@ -92,6 +99,16 @@ public class ContinuumXmlRpcServlet
         throws ServletException
     {
         server = new ContinuumXmlRpcServletServer();
+        
+        try
+        {
+            securitySystem = (SecuritySystem)getPlexusContainer().lookup( SecuritySystem.ROLE );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ServletException( "Can't init the xml rpc server, unable to obtain security system", e );
+        }
+        
         try
         {
             XmlRpcServerConfigImpl cfg = (XmlRpcServerConfigImpl) server.getConfig();
@@ -116,18 +133,45 @@ public class ContinuumXmlRpcServlet
             new AbstractReflectiveHandlerMapping.AuthenticationHandler()
             {
                 public boolean isAuthorized( XmlRpcRequest pRequest )
-                {
-                    XmlRpcHttpRequestConfig config = (XmlRpcHttpRequestConfig) pRequest.getConfig();
-                    return isAuthenticated( config.getBasicUserName(), config.getBasicPassword() );
+                { 
+                    if ( pRequest.getConfig() instanceof ContinuumXmlRpcConfig )
+                    {
+                        ContinuumXmlRpcConfig config = (ContinuumXmlRpcConfig) pRequest.getConfig();
+                        
+                        PasswordBasedAuthenticationDataSource authdatasource = new PasswordBasedAuthenticationDataSource();
+                        authdatasource.setPrincipal( config.getBasicUserName() );
+                        authdatasource.setPassword( config.getBasicPassword() );
+                        
+                        try
+                        {
+                            config.setSecuritySession( securitySystem.authenticate( authdatasource ) );
+                        
+                            return config.getSecuritySession().isAuthenticated();                            
+                        }
+                        catch ( AuthenticationException e )
+                        {
+                            e.printStackTrace();
+                            return false;
+                        }
+                        catch ( AccountLockedException e )
+                        {                           
+                            e.printStackTrace();
+                            return false;
+                        }
+                        catch ( UserNotFoundException e )
+                        {                            
+                            e.printStackTrace();
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        System.out.println( "unknown xml rpc configiration object found..." );
+                        return false;
+                    }
                 }
             };
         return handler;
-    }
-
-    protected boolean isAuthenticated( String username, String password )
-    {
-        //TODO: Add authentication there.
-        return true;
     }
 
     public void doPost( HttpServletRequest pRequest, HttpServletResponse pResponse )
