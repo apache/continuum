@@ -19,17 +19,24 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>continuum-parent</artifactId>
     <groupId>org.apache.maven.continuum</groupId>
+    <artifactId>continuum-xmlrpc</artifactId>
     <version>1.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>continuum-xmlrpc</artifactId>
-  <name>Continuum XMLRPC :: Parent</name>
-  <packaging>pom</packaging>
-  <modules>
-    <module>continuum-xmlrpc-api</module>
-    <module>continuum-xmlrpc-client</module>
-    <module>continuum-xmlrpc-server</module>
-  </modules>
+  <artifactId>continuum-xmlrpc-client</artifactId>
+  <name>Continuum XMLRPC :: Client</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-xmlrpc-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-client</artifactId>
+      <version>3.0</version>
+    </dependency>
+  </dependencies>
 </project>
