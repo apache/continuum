@@ -33,6 +33,14 @@
       <artifactId>continuum-xmlrpc-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus.redback</groupId>
+      <artifactId>redback-system</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-xwork-integration</artifactId>
     </dependency>

@@ -32,6 +32,8 @@ import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.codehaus.plexus.redback.authorization.AuthorizationException;
+import org.codehaus.plexus.redback.system.SecuritySystem;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,8 +53,13 @@ public class ContinuumServiceImpl
      */
     private Continuum continuum;
 
+    /**
+     * @plexus.requirement role-hint="default"
+     */
+    private SecuritySystem securitySystem;
+    
     private ContinuumXmlRpcConfig config;
-
+    
     public void setConfig( ContinuumXmlRpcConfig config )
     {
         this.config = config;
@@ -204,8 +211,22 @@ public class ContinuumServiceImpl
     public AddingResult addMavenTwoProject( String url )
         throws ContinuumException
     {
-        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
-        return populateAddingResult( result );
+        try 
+        {
+            if ( securitySystem.isAuthorized( config.getSecuritySession(), "continuum-add-group" ) )
+            {
+                ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
+                return populateAddingResult( result );
+            }
+            else
+            {
+                throw new ContinuumException( "unauthorized add project request" ); 
+            }
+        }
+        catch (AuthorizationException e )
+        {
+            throw new ContinuumException( "error authorizing request", e );
+        }
     }
 
     public AddingResult addMavenTwoProject( String url, int projectGroupId )
