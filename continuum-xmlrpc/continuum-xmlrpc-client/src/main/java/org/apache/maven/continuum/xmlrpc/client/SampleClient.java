@@ -28,9 +28,11 @@ public class SampleClient
         }
         System.out.println( "Project Groups added." );
         System.out.println( "=====================" );
+        int projectGroupId = 0;
         for ( Iterator i = result.getProjectGroups().iterator(); i.hasNext(); )
         {
             ProjectGroupSummary pg = (ProjectGroupSummary) i.next();
+            projectGroupId = pg.getId();
             System.out.println( "Id: " + pg.getId() );
             System.out.println( "Group Id" + pg.getGroupId() );
             System.out.println( "Name: " + pg.getName() );
@@ -86,7 +88,7 @@ public class SampleClient
 
         System.out.println( "Projects list." );
         System.out.println( "=====================" );
-        List projects = client.getProjects();
+        List projects = client.getProjects( projectGroupId );
         for ( Iterator i = projects.iterator(); i.hasNext(); )
         {
             ps = (ProjectSummary) i.next();
