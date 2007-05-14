@@ -112,18 +112,26 @@ public class ContinuumServiceImpl
     // Projects Groups
     // ----------------------------------------------------------------------
 
-    public String getProjectGroupName( int projectGroupId )
+    protected String getProjectGroupName( int projectGroupId )
         throws ContinuumException
     {
-        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
-
-        ProjectGroupSummary pgs = getProjectGroupSummary( projectGroupId );
+        ProjectGroupSummary pgs = getPGSummary( projectGroupId );
         return pgs.getName();
+    }
+
+    private ProjectGroupSummary getPGSummary( int projectGroupId )
+        throws ContinuumException
+    {
+        org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
+            continuum.getProjectGroup( projectGroupId );
+        return populateProjectGroupSummary( projectGroup );
     }
 
     public ProjectGroupSummary getProjectGroupSummary( int projectGroupId )
         throws ContinuumException
     {
+        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
         org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
             continuum.getProjectGroup( projectGroupId );
         return populateProjectGroupSummary( projectGroup );
@@ -132,6 +140,8 @@ public class ContinuumServiceImpl
     public ProjectGroup getProjectGroupWithProjects( int projectGroupId )
         throws ContinuumException
     {
+        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
         org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
             continuum.getProjectGroupWithProjects( projectGroupId );
         return populateProjectGroupWithProjects( projectGroup );
@@ -140,6 +150,8 @@ public class ContinuumServiceImpl
     public int removeProjectGroup( int projectGroupId )
         throws ContinuumException
     {
+        checkRemoveProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
         continuum.removeProjectGroup( projectGroupId );
         return 0;
     }
@@ -151,6 +163,9 @@ public class ContinuumServiceImpl
     public int addProjectToBuildQueue( int projectId )
         throws ContinuumException
     {
+        ProjectSummary ps = getProjectSummary( projectId );
+        checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
+
         continuum.buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED );
         return 0;
     }
@@ -158,6 +173,9 @@ public class ContinuumServiceImpl
     public int addProjectToBuildQueue( int projectId, int buildDefinitionId )
         throws ContinuumException
     {
+        ProjectSummary ps = getProjectSummary( projectId );
+        checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
+
         continuum.buildProject( projectId, buildDefinitionId, ContinuumProjectState.TRIGGER_SCHEDULED );
         return 0;
     }
@@ -165,6 +183,9 @@ public class ContinuumServiceImpl
     public int buildProject( int projectId )
         throws ContinuumException
     {
+        ProjectSummary ps = getProjectSummary( projectId );
+        checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
+
         continuum.buildProject( projectId );
         return 0;
     }
@@ -172,6 +193,9 @@ public class ContinuumServiceImpl
     public int buildProject( int projectId, int buildDefintionId )
         throws ContinuumException
     {
+        ProjectSummary ps = getProjectSummary( projectId );
+        checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
+
         continuum.buildProject( projectId, buildDefintionId );
         return 0;
     }
@@ -183,12 +207,18 @@ public class ContinuumServiceImpl
     public BuildResult getBuildResult( int projectId, int buildId )
         throws ContinuumException
     {
+        ProjectSummary ps = getProjectSummary( projectId );
+        checkViewProjectGroupAuthorization( ps.getProjectGroup().getName() );
+
         return populateBuildResult( continuum.getBuildResult( buildId ) );
     }
 
     public List getBuildResultsForProject( int projectId )
         throws ContinuumException
     {
+        ProjectSummary ps = getProjectSummary( projectId );
+        checkViewProjectGroupAuthorization( ps.getProjectGroup().getName() );
+
         List result = new ArrayList();
         Collection buildResults = continuum.getBuildResultsForProject( projectId );
         if ( buildResults != null )
@@ -208,6 +238,9 @@ public class ContinuumServiceImpl
     public String getBuildOutput( int projectId, int buildId )
         throws ContinuumException
     {
+        ProjectSummary ps = getProjectSummary( projectId );
+        checkViewProjectGroupAuthorization( ps.getProjectGroup().getName() );
+
         return continuum.getBuildOutput( projectId, buildId );
     }
 
@@ -240,6 +273,8 @@ public class ContinuumServiceImpl
     public AddingResult addMavenOneProject( String url )
         throws ContinuumException
     {
+        checkAddProjectGroupAuthorization();
+
         ContinuumProjectBuildingResult result = continuum.addMavenOneProject( url );
         return populateAddingResult( result );
     }
@@ -247,6 +282,8 @@ public class ContinuumServiceImpl
     public AddingResult addMavenOneProject( String url, int projectGroupId )
         throws ContinuumException
     {
+        checkAddProjectToGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
         ContinuumProjectBuildingResult result = continuum.addMavenOneProject( url, projectGroupId );
         return populateAddingResult( result );
     }
@@ -258,6 +295,8 @@ public class ContinuumServiceImpl
     public ProjectSummary addAntProject( ProjectSummary project )
         throws ContinuumException
     {
+        checkAddProjectGroupAuthorization();
+
         int projectId = continuum.addProject( populateProject( project ), "ant" );
         return getProjectSummary( projectId );
     }
@@ -269,6 +308,8 @@ public class ContinuumServiceImpl
     public ProjectSummary addShellProject( ProjectSummary project )
         throws ContinuumException
     {
+        checkAddProjectGroupAuthorization();
+
         int projectId = continuum.addProject( populateProject( project ), "shell" );
         return getProjectSummary( projectId );
     }
