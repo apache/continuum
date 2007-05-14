@@ -23,7 +23,6 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.apache.maven.continuum.xmlrpc.ContinuumService;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
@@ -32,8 +31,6 @@ import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
-import org.codehaus.plexus.redback.authorization.AuthorizationException;
-import org.codehaus.plexus.redback.system.SecuritySystem;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,24 +43,12 @@ import java.util.List;
  * @plexus.component role="org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent" role-hint="org.apache.maven.continuum.xmlrpc.ContinuumService"
  */
 public class ContinuumServiceImpl
-    implements ContinuumService, ContinuumXmlRpcComponent
+    extends AbstractContinuumSecureService
 {
     /**
      * @plexus.requirement
      */
     private Continuum continuum;
-
-    /**
-     * @plexus.requirement role-hint="default"
-     */
-    private SecuritySystem securitySystem;
-    
-    private ContinuumXmlRpcConfig config;
-    
-    public void setConfig( ContinuumXmlRpcConfig config )
-    {
-        this.config = config;
-    }
 
     // ----------------------------------------------------------------------
     // Projects
@@ -211,27 +196,18 @@ public class ContinuumServiceImpl
     public AddingResult addMavenTwoProject( String url )
         throws ContinuumException
     {
-        try 
-        {
-            if ( securitySystem.isAuthorized( config.getSecuritySession(), "continuum-add-group" ) )
-            {
-                ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
-                return populateAddingResult( result );
-            }
-            else
-            {
-                throw new ContinuumException( "unauthorized add project request" ); 
-            }
-        }
-        catch (AuthorizationException e )
-        {
-            throw new ContinuumException( "error authorizing request", e );
-        }
+        checkAddProjectGroupAuthorization();
+
+        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
+        return populateAddingResult( result );
     }
 
     public AddingResult addMavenTwoProject( String url, int projectGroupId )
         throws ContinuumException
     {
+        ProjectGroupSummary pgs = getProjectGroupSummary( projectGroupId );
+        checkAddProjectToGroupAuthorization( pgs.getName() );
+
         ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url, projectGroupId );
         return populateAddingResult( result );
     }
