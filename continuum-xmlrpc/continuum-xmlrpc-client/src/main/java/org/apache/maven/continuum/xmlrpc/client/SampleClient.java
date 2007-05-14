@@ -84,6 +84,10 @@ public class SampleClient
         }
         System.out.println( "Build done with state=" + state + "." );
 
+        System.out.println( "Build output." );
+        System.out.println( "=====================" );
+        System.out.println( client.getBuildOutput( ps.getId(), ps.getLatestBuildId() ) );
+
         System.out.println();
 
         System.out.println( "Projects list." );
