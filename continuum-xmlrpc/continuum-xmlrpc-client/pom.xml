@@ -39,4 +39,27 @@
       <version>3.0</version>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>org.apache.maven.continuum.xmlrpc.continuum.SampleClient</mainClass>
+          <arguments>
+            <argument>http://localhost:9090/xmlrpc</argument>
+            <argument>${continuum.username}</argument>
+            <argument>${continuum.password}</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

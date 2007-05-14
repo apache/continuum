@@ -17,8 +17,7 @@ public class SampleClient
     public static void main( String[] args )
         throws Exception
     {
-        ContinuumXmlRpcClient client =
-            new ContinuumXmlRpcClient( new URL( "http://localhost:9090/xmlrpc" ), "admin", "admin1" );
+        ContinuumXmlRpcClient client = new ContinuumXmlRpcClient( new URL( args[0] ), args[1], args[2] );
 
         System.out.println( "Adding project..." );
         AddingResult result = client.addMavenTwoProject( "http://svn.codehaus.org/plexus/plexus-utils/trunk/pom.xml" );
@@ -48,15 +47,40 @@ public class SampleClient
             printProjectSummary( client.getProjectSummary( p.getId() ) );
         }
 
+        System.out.println();
+
+        System.out.println( "Waiting the end of the check out..." );
+
         ProjectSummary ps = (ProjectSummary) result.getProjects().get( 0 );
 
-        for ( int i = 0; i < 30; i++ )
+        while ( !"New".equals( client.getProjectStatusAsString( ps.getState() ) ) )
         {
-            ProjectSummary p = client.refreshProjectSummary( ps );
-            System.out.println(
-                "State of " + p.getName() + "(" + p.getId() + "): " + client.getProjectStatusAsString( p.getState() ) );
+            ps = client.refreshProjectSummary( ps );
+            System.out.println( "State of " + ps.getName() + "(" + ps.getId() + "): " +
+                client.getProjectStatusAsString( ps.getState() ) );
             Thread.sleep( 1000 );
         }
+
+        System.out.println();
+
+        System.out.println( "Add the project to the build queue." );
+        client.buildProject( ps.getId() );
+        while ( !"Building".equals( client.getProjectStatusAsString( ps.getState() ) ) )
+        {
+            ps = client.refreshProjectSummary( ps );
+            Thread.sleep( 1000 );
+        }
+
+        System.out.println( "Building..." );
+        String state = "unknown";
+        while ( "Building".equals( client.getProjectStatusAsString( ps.getState() ) ) )
+        {
+            ps = client.refreshProjectSummary( ps );
+            state = client.getProjectStatusAsString( ps.getState() );
+            System.out.println( "State of " + ps.getName() + "(" + ps.getId() + "): " + state );
+            Thread.sleep( 1000 );
+        }
+        System.out.println( "Build done with state=" + state + "." );
 
         System.out.println();
 
@@ -65,12 +89,10 @@ public class SampleClient
         List projects = client.getProjects();
         for ( Iterator i = projects.iterator(); i.hasNext(); )
         {
-            ProjectSummary p = (ProjectSummary) i.next();
-            printProjectSummary( p );
+            ps = (ProjectSummary) i.next();
+            printProjectSummary( ps );
             System.out.println();
         }
-
-        Thread.sleep( 60000 );
 
         System.out.println();
 
@@ -78,9 +100,10 @@ public class SampleClient
         System.out.println( "=====================" );
         for ( Iterator i = projects.iterator(); i.hasNext(); )
         {
-            ProjectSummary p = (ProjectSummary) i.next();
-            System.out.println( "Remove '" + p.getName() + "' - " + p.getVersion() + " (" + p.getId() + ")" );
-            client.removeProject( p.getId() );
+            ps = (ProjectSummary) i.next();
+            System.out.println( "Removing '" + ps.getName() + "' - " + ps.getVersion() + " (" + ps.getId() + ")..." );
+            client.removeProject( ps.getId() );
+            System.out.println( "Done." );
         }
     }
 
