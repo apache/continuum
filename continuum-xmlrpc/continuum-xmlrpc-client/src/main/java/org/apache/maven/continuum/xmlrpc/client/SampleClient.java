@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.xmlrpc.continuum;
+package org.apache.maven.continuum.xmlrpc.client;
 
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
