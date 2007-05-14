@@ -43,11 +43,12 @@ public interface ContinuumService
     /**
      * Get All projects.
      *
+     * @param projectGroupId The project group Id
      * @return List of {@link ProjectSummary}
      * @throws ContinuumException
      * @throws XmlRpcException
      */
-    List getProjects()
+    List getProjects( int projectGroupId )
         throws ContinuumException, XmlRpcException;
 
     /**

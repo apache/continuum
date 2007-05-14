@@ -54,9 +54,11 @@ public class ContinuumServiceImpl
     // Projects
     // ----------------------------------------------------------------------
 
-    public List getProjects()
+    public List getProjects( int projectGroupId )
         throws ContinuumException
     {
+        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
         List projectsList = new ArrayList();
 
         Collection projects = continuum.getProjects();
@@ -77,6 +79,9 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         org.apache.maven.continuum.model.project.Project project = continuum.getProject( projectId );
+
+        checkViewProjectGroupAuthorization( project.getProjectGroup().getName() );
+
         return populateProjectSummary( project );
     }
 
@@ -84,6 +89,9 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         org.apache.maven.continuum.model.project.Project project = continuum.getProjectWithAllDetails( projectId );
+
+        checkViewProjectGroupAuthorization( project.getProjectGroup().getName() );
+
         return populateProject( project );
     }
 
@@ -91,13 +99,27 @@ public class ContinuumServiceImpl
     public int removeProject( int projectId )
         throws ContinuumException
     {
+        ProjectSummary ps = getProjectSummary( projectId );
+
+        checkRemoveProjectFromGroupAuthorization( ps.getProjectGroup().getName() );
+
         continuum.removeProject( projectId );
+
         return 0;
     }
 
     // ----------------------------------------------------------------------
     // Projects Groups
     // ----------------------------------------------------------------------
+
+    public String getProjectGroupName( int projectGroupId )
+        throws ContinuumException
+    {
+        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
+        ProjectGroupSummary pgs = getProjectGroupSummary( projectGroupId );
+        return pgs.getName();
+    }
 
     public ProjectGroupSummary getProjectGroupSummary( int projectGroupId )
         throws ContinuumException
@@ -205,8 +227,7 @@ public class ContinuumServiceImpl
     public AddingResult addMavenTwoProject( String url, int projectGroupId )
         throws ContinuumException
     {
-        ProjectGroupSummary pgs = getProjectGroupSummary( projectGroupId );
-        checkAddProjectToGroupAuthorization( pgs.getName() );
+        checkAddProjectToGroupAuthorization( getProjectGroupName( projectGroupId ) );
 
         ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url, projectGroupId );
         return populateAddingResult( result );

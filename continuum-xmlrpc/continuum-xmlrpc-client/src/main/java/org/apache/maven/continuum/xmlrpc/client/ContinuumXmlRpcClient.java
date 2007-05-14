@@ -93,12 +93,12 @@ public class ContinuumXmlRpcClient
     // Projects
     // ----------------------------------------------------------------------
 
-    public List getProjects()
+    public List getProjects( int projectGroupId )
         throws ContinuumException
     {
         try
         {
-            return continuum.getProjects();
+            return continuum.getProjects( projectGroupId );
         }
         catch ( Exception e )
         {
