@@ -146,7 +146,10 @@ public class ContinuumXmlRpcServlet
                         {
                             config.setSecuritySession( securitySystem.authenticate( authdatasource ) );
                         
-                            return config.getSecuritySession().isAuthenticated();                            
+                            // xmlrpc will not continue processing if it gets a false response here, so we are going to return
+                            // true regardless so that guest authorization is taken into account.  Provided we don't throw 
+                            // an exception getting here, we'll return true then.
+                            return true;                           
                         }
                         catch ( AuthenticationException e )
                         {
