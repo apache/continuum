@@ -50,6 +50,12 @@ public class ContinuumServiceImpl
      */
     private Continuum continuum;
 
+    public boolean ping()
+        throws ContinuumException
+    {
+        return true;
+    }
+
     // ----------------------------------------------------------------------
     // Projects
     // ----------------------------------------------------------------------

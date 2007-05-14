@@ -89,6 +89,19 @@ public class ContinuumXmlRpcClient
         continuum = (ContinuumService) factory.newInstance( ContinuumService.class );
     }
 
+    public boolean ping()
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.ping();
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Projects
     // ----------------------------------------------------------------------
