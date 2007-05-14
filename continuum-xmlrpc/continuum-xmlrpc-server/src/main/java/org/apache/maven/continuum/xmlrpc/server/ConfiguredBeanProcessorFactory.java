@@ -22,6 +22,12 @@ package org.apache.maven.continuum.xmlrpc.server;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -35,10 +41,10 @@ import java.util.Map;
  * @plexus.component role="org.apache.xmlrpc.server.RequestProcessorFactoryFactory"
  */
 public class ConfiguredBeanProcessorFactory
-    implements RequestProcessorFactoryFactory, Initializable
+    implements RequestProcessorFactoryFactory, Initializable, Contextualizable
 {
     /**
-     * @plexus.requirement role="org.apache.maven.continuum.xmlrpc.ContinuumXmlRpcComponent"
+     * @plexus.requirement role="org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent"
      */
     private Map xmlrpcComponents;
 
@@ -48,6 +54,8 @@ public class ConfiguredBeanProcessorFactory
     private Listener listener;
 
     private Map componentsMapping = new HashMap();
+
+    PlexusContainer container;
 
     public void initialize()
         throws InitializationException
@@ -85,14 +93,22 @@ public class ConfiguredBeanProcessorFactory
     {
         listener.getLogger().debug( "Load '" + cls.getName() + "' handler." );
 
-        Object o = getComponent( cls );
+        Object obj = null;
+        try
+        {
+            obj = getComponent( cls );
+        }
+        catch ( ComponentLookupException e )
+        {
+            listener.getLogger().error( "Can't load component.", e );
+        }
 
-        if ( o == null )
+        if ( obj == null )
         {
             throw new XmlRpcException( "Handler bean not found for: " + cls );
         }
 
-        return o;
+        return obj;
     }
 
     private String getComponentKey( Class cls )
@@ -101,7 +117,16 @@ public class ConfiguredBeanProcessorFactory
     }
 
     private Object getComponent( Class cls )
+        throws ComponentLookupException
     {
-        return xmlrpcComponents.get( getComponentKey( cls ) );
+        String key = getComponentKey( cls );
+        listener.getLogger().debug( "load component:" );
+        return container.lookup( ContinuumXmlRpcComponent.class.getName(), key );
+    }
+
+    public void contextualize( Context context )
+        throws ContextException
+    {
+        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
 }

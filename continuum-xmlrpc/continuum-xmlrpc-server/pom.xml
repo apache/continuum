@@ -59,7 +59,7 @@
         <configuration>
           <roleDefaults>
             <roleDefault>
-              <role>org.apache.maven.continuum.xmlrpc.ContinuumXmlRpcComponent</role>
+              <role>org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent</role>
               <instantiation-strategy>per-lookup</instantiation-strategy>
             </roleDefault>
           </roleDefaults>

@@ -20,8 +20,16 @@ package org.apache.maven.continuum.xmlrpc.server;
  */
 
 import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.XmlRpcHandler;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
+import org.apache.xmlrpc.server.RequestProcessorFactoryFactory;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -32,9 +40,10 @@ import java.util.Map;
  */
 public class PropertiesHandlerMapping
     extends PropertyHandlerMapping
+    implements Contextualizable
 {
     /**
-     * @plexus.requirement role="org.apache.maven.continuum.xmlrpc.ContinuumXmlRpcComponent"
+     * @plexus.requirement role="org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent"
      */
     private Map xmlrpcComponents;
 
@@ -42,6 +51,8 @@ public class PropertiesHandlerMapping
      * @plexus.requirement
      */
     private Listener listener;
+
+    private PlexusContainer container;
 
     public void load()
         throws XmlRpcException
@@ -65,4 +76,20 @@ public class PropertiesHandlerMapping
         }
     }
 
+    protected XmlRpcHandler newXmlRpcHandler( final Class pClass, final Method[] pMethods )
+        throws XmlRpcException
+    {
+        String[][] sig = getSignature( pMethods );
+        String help = getMethodHelp( pClass, pMethods );
+        RequestProcessorFactoryFactory.RequestProcessorFactory factory =
+            getRequestProcessorFactoryFactory().getRequestProcessorFactory( pClass );
+        return new ContinuumXmlRpcMetaDataHandler( this, getTypeConverterFactory(), pClass, factory, pMethods, sig,
+                                                   help, container );
+    }
+
+    public void contextualize( Context context )
+        throws ContextException
+    {
+        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
+    }
 }
