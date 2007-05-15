@@ -36,6 +36,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.redback.authentication.AuthenticationException;
 import org.codehaus.plexus.redback.authentication.PasswordBasedAuthenticationDataSource;
 import org.codehaus.plexus.redback.policy.AccountLockedException;
+import org.codehaus.plexus.redback.system.DefaultSecuritySession;
 import org.codehaus.plexus.redback.system.SecuritySystem;
 import org.codehaus.plexus.redback.users.UserNotFoundException;
 import org.codehaus.plexus.xwork.PlexusLifecycleListener;
@@ -137,19 +138,29 @@ public class ContinuumXmlRpcServlet
                     if ( pRequest.getConfig() instanceof ContinuumXmlRpcConfig )
                     {
                         ContinuumXmlRpcConfig config = (ContinuumXmlRpcConfig) pRequest.getConfig();
-                        
-                        PasswordBasedAuthenticationDataSource authdatasource = new PasswordBasedAuthenticationDataSource();
-                        authdatasource.setPrincipal( config.getBasicUserName() );
-                        authdatasource.setPassword( config.getBasicPassword() );
-                        
+                                                                      
                         try
                         {
-                            config.setSecuritySession( securitySystem.authenticate( authdatasource ) );
-                        
-                            // xmlrpc will not continue processing if it gets a false response here, so we are going to return
-                            // true regardless so that guest authorization is taken into account.  Provided we don't throw 
-                            // an exception getting here, we'll return true then.
-                            return true;                           
+                            // if username is null, then treat this as a guest user with an empty security session
+                            if (config.getBasicUserName() == null )
+                            {
+                                config.setSecuritySession( new DefaultSecuritySession() );
+                                
+                                return true;
+                            }
+                            else
+                            {
+                                // otherwise treat this as an authn required session, and if the credentials are invalid
+                                // do not default to guest privileges 
+                                PasswordBasedAuthenticationDataSource authdatasource =
+                                    new PasswordBasedAuthenticationDataSource();
+                                authdatasource.setPrincipal( config.getBasicUserName() );
+                                authdatasource.setPassword( config.getBasicPassword() );
+
+                                config.setSecuritySession( securitySystem.authenticate( authdatasource ) );
+
+                                return config.getSecuritySession().isAuthenticated();
+                            }
                         }
                         catch ( AuthenticationException e )
                         {
