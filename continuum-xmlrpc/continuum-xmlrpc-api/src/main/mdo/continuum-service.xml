@@ -437,6 +437,16 @@
           <type>int</type>
         </field>
         <field>
+          <name>error</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>trigger</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
           <name>project</name>
           <version>1.1.0+</version>
           <required>true</required>
@@ -456,20 +466,33 @@
       ]]></description>
       <fields>
         <field>
-          <name>trigger</name>
-          <version>1.1.0+</version>
-          <type>int</type>
-        </field>
-        <field>
-          <name>error</name>
-          <version>1.1.0+</version>
-          <type>String</type>
-        </field>
-        <field>
           <name>scmResult</name>
           <version>1.1.0+</version>
           <association>
             <type>ScmResult</type>
+          </association>
+        </field>
+        <field>
+          <name>changesSinceLastSuccess</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ChangeSet</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>testResult</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>TestResult</type>
+          </association>
+        </field>
+        <field>
+          <name>modifiedDependencies</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectDependency</type>
+            <multiplicity>*</multiplicity>
           </association>
         </field>
       </fields>
