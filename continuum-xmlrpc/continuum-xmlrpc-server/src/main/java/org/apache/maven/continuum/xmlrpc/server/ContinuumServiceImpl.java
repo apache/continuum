@@ -28,14 +28,24 @@ import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
+import org.apache.maven.continuum.xmlrpc.project.ProjectDeveloper;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
+import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.maven.continuum.xmlrpc.scm.ChangeFile;
+import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
+import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
+import org.apache.maven.continuum.xmlrpc.test.SuiteResult;
+import org.apache.maven.continuum.xmlrpc.test.TestCaseFailure;
+import org.apache.maven.continuum.xmlrpc.test.TestResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -210,6 +220,18 @@ public class ContinuumServiceImpl
     // Build Results
     // ----------------------------------------------------------------------
 
+    public BuildResult getLatestBuildResult( int projectId )
+        throws ContinuumException
+    {
+        ProjectSummary ps = getProjectSummary( projectId );
+        checkViewProjectGroupAuthorization( ps.getProjectGroup().getName() );
+
+        org.apache.maven.continuum.model.project.BuildResult buildResult =
+            continuum.getLatestBuildResultForProject( projectId );
+
+        return getBuildResult( projectId, buildResult.getId() );
+    }
+
     public BuildResult getBuildResult( int projectId, int buildId )
         throws ContinuumException
     {
@@ -331,7 +353,7 @@ public class ContinuumServiceImpl
             return null;
         }
 
-        Project ps = new Project();
+        ProjectSummary ps = new Project();
         ps.setArtifactId( project.getArtifactId() );
         ps.setBuildNumber( project.getBuildNumber() );
         ps.setDescription( project.getDescription() );
@@ -375,11 +397,76 @@ public class ContinuumServiceImpl
             p.setDependencies( deps );
         }
 
-        //TODO
-        //p.setBuildDefinitions( );
-        //p.setDevelopers( );
-        //p.setNotifiers( );
+        //TODO: p.setBuildDefinitions( );
+
+        if ( project.getDevelopers() != null )
+        {
+            for ( Iterator i = project.getDevelopers().iterator(); i.hasNext(); )
+            {
+                org.apache.maven.continuum.model.project.ProjectDeveloper developer =
+                    (org.apache.maven.continuum.model.project.ProjectDeveloper) i.next();
+                p.addDeveloper( populateProjectDeveloper( developer ) );
+            }
+        }
+
+        if ( project.getNotifiers() != null )
+        {
+            for ( Iterator i = project.getNotifiers().iterator(); i.hasNext(); )
+            {
+                org.apache.maven.continuum.model.project.ProjectNotifier notifier =
+                    (org.apache.maven.continuum.model.project.ProjectNotifier) i.next();
+                p.addNotifier( populateProjectNotifier( notifier ) );
+            }
+        }
+
         return p;
+    }
+
+    private ProjectDeveloper populateProjectDeveloper(
+        org.apache.maven.continuum.model.project.ProjectDeveloper developer )
+    {
+        if ( developer == null )
+        {
+            return null;
+        }
+
+        ProjectDeveloper res = new ProjectDeveloper();
+        res.setContinuumId( developer.getContinuumId() );
+        res.setEmail( developer.getEmail() );
+        res.setName( developer.getName() );
+        res.setScmId( developer.getScmId() );
+        return res;
+    }
+
+    private ProjectNotifier populateProjectNotifier( org.apache.maven.continuum.model.project.ProjectNotifier notifier )
+    {
+        if ( notifier == null )
+        {
+            return null;
+        }
+
+        ProjectNotifier res = new ProjectNotifier();
+        res.setEnabled( notifier.isEnabled() );
+        res.setFrom( notifier.getFrom() );
+        res.setId( notifier.getId() );
+        res.setRecipientType( notifier.getRecipientType() );
+        res.setSendOnError( notifier.isSendOnError() );
+        res.setSendOnFailure( notifier.isSendOnFailure() );
+        res.setSendOnSuccess( notifier.isSendOnSuccess() );
+        res.setSendOnWarning( notifier.isSendOnWarning() );
+        res.setType( notifier.getType() );
+
+        if ( notifier.getConfiguration() != null )
+        {
+            Map conf = new HashMap();
+            for ( Iterator i = notifier.getConfiguration().keySet().iterator(); i.hasNext(); )
+            {
+                String key = (String) i.next();
+                conf.put( key, notifier.getConfiguration().get( key ) );
+            }
+            res.setConfiguration( conf );
+        }
+        return res;
     }
 
     private org.apache.maven.continuum.model.project.Project populateProject( ProjectSummary projectSummary )
@@ -399,7 +486,7 @@ public class ContinuumServiceImpl
         project.setId( projectSummary.getId() );
         project.setLatestBuildId( projectSummary.getLatestBuildId() );
         project.setName( projectSummary.getName() );
-        //project.setProjectGroup( populateProjectGroupSummary( projectSummary.getProjectGroup() ) );
+        //TODO: project.setProjectGroup( populateProjectGroupSummary( projectSummary.getProjectGroup() ) );
         project.setScmTag( projectSummary.getScmTag() );
         project.setScmUrl( projectSummary.getScmUrl() );
         project.setScmUseCache( projectSummary.isScmUseCache() );
@@ -434,7 +521,7 @@ public class ContinuumServiceImpl
             return null;
         }
 
-        ProjectGroup g = new ProjectGroup();
+        ProjectGroupSummary g = new ProjectGroup();
         g.setDescription( group.getDescription() );
         g.setGroupId( group.getGroupId() );
         g.setId( group.getId() );
@@ -472,7 +559,7 @@ public class ContinuumServiceImpl
         {
             return null;
         }
-        BuildResult br = new BuildResult();
+        BuildResultSummary br = new BuildResult();
         br.setBuildNumber( buildResult.getBuildNumber() );
         br.setEndTime( buildResult.getEndTime() );
         br.setError( buildResult.getError() );
@@ -482,32 +569,42 @@ public class ContinuumServiceImpl
         br.setState( buildResult.getState() );
         br.setSuccess( buildResult.isSuccess() );
         br.setTrigger( buildResult.getTrigger() );
+        br.setProject( populateProjectSummary( buildResult.getProject() ) );
         return br;
     }
 
     private BuildResult populateBuildResult( org.apache.maven.continuum.model.project.BuildResult buildResult )
+        throws ContinuumException
     {
         if ( buildResult == null )
         {
             return null;
         }
         BuildResult br = (BuildResult) populateBuildResultSummary( buildResult );
-        //TODO:
-        //br.setScmResult( populateScmResult(br.getScmResult()));
+
+        List changeSet = continuum.getChangesSinceLastSuccess( br.getProject().getId(), br.getId() );
+        if ( changeSet != null )
+        {
+            for ( Iterator i = changeSet.iterator(); i.hasNext(); )
+            {
+                br.addChangesSinceLastSucces(
+                    populateChangeSet( (org.apache.maven.continuum.model.scm.ChangeSet) i.next() ) );
+            }
+        }
+
+        br.setScmResult( populateScmResult( buildResult.getScmResult() ) );
+
         if ( buildResult.getModifiedDependencies() != null )
         {
-            List deps = new ArrayList();
             for ( Iterator i = buildResult.getModifiedDependencies().iterator(); i.hasNext(); )
             {
                 org.apache.maven.continuum.model.project.ProjectDependency dependency =
                     (org.apache.maven.continuum.model.project.ProjectDependency) i.next();
                 ProjectDependency dep = populateProjectDependency( dependency );
-                deps.add( dep );
+                br.addModifiedDependency( dep );
             }
-            //br.setModifiedDependencies( deps );
         }
-        //br.setProject( populateProjectSummary(buildResult.getProject() ) );
-        //br.setTestResult( populateTestResult( buildResult.getTestResult() ) );
+        br.setTestResult( populateTestResult( buildResult.getTestResult() ) );
         return br;
     }
 
@@ -548,6 +645,137 @@ public class ContinuumServiceImpl
             }
         }
 
+        return res;
+    }
+
+    private ScmResult populateScmResult( org.apache.maven.continuum.model.scm.ScmResult scmResult )
+    {
+        if ( scmResult == null )
+        {
+            return null;
+        }
+
+        ScmResult res = new ScmResult();
+
+        if ( scmResult.getChanges() != null )
+        {
+            for ( Iterator i = scmResult.getChanges().iterator(); i.hasNext(); )
+            {
+                org.apache.maven.continuum.model.scm.ChangeSet changeSet =
+                    (org.apache.maven.continuum.model.scm.ChangeSet) i.next();
+                res.addChange( populateChangeSet( changeSet ) );
+            }
+        }
+
+        res.setCommandLine( scmResult.getCommandLine() );
+        res.setCommandOutput( scmResult.getCommandOutput() );
+        res.setException( scmResult.getException() );
+        res.setProviderMessage( scmResult.getProviderMessage() );
+        res.setSuccess( scmResult.isSuccess() );
+        return res;
+    }
+
+    private ChangeSet populateChangeSet( org.apache.maven.continuum.model.scm.ChangeSet changeSet )
+    {
+        if ( changeSet == null )
+        {
+            return null;
+        }
+
+        ChangeSet res = new ChangeSet();
+        res.setAuthor( changeSet.getAuthor() );
+        res.setComment( changeSet.getComment() );
+        res.setDate( changeSet.getDate() );
+
+        if ( changeSet.getFiles() != null )
+        {
+            for ( Iterator i = changeSet.getFiles().iterator(); i.hasNext(); )
+            {
+                org.apache.maven.continuum.model.scm.ChangeFile changeFile =
+                    (org.apache.maven.continuum.model.scm.ChangeFile) i.next();
+                res.addFile( populateChangeFile( changeFile ) );
+            }
+        }
+
+        res.setId( changeSet.getId() );
+        return res;
+    }
+
+    private ChangeFile populateChangeFile( org.apache.maven.continuum.model.scm.ChangeFile changeFile )
+    {
+        if ( changeFile == null )
+        {
+            return null;
+        }
+
+        ChangeFile res = new ChangeFile();
+        res.setName( changeFile.getName() );
+        res.setRevision( changeFile.getRevision() );
+        res.setStatus( changeFile.getStatus() );
+        return res;
+    }
+
+    private TestResult populateTestResult( org.apache.maven.continuum.model.scm.TestResult testResult )
+    {
+        if ( testResult == null )
+        {
+            return null;
+        }
+
+        TestResult res = new TestResult();
+        res.setFailureCount( testResult.getFailureCount() );
+
+        if ( testResult.getSuiteResults() != null )
+        {
+            for ( Iterator i = testResult.getSuiteResults().iterator(); i.hasNext(); )
+            {
+                org.apache.maven.continuum.model.scm.SuiteResult suiteResult =
+                    (org.apache.maven.continuum.model.scm.SuiteResult) i.next();
+                res.addSuiteResult( populateSuiteResult( suiteResult ) );
+            }
+        }
+
+        res.setTestCount( testResult.getTestCount() );
+        res.setTotalTime( testResult.getTotalTime() );
+        return res;
+    }
+
+    private SuiteResult populateSuiteResult( org.apache.maven.continuum.model.scm.SuiteResult suiteresult )
+    {
+        if ( suiteresult == null )
+        {
+            return null;
+        }
+
+        SuiteResult res = new SuiteResult();
+        res.setFailureCount( suiteresult.getFailureCount() );
+
+        if ( suiteresult.getFailures() != null )
+        {
+            for ( Iterator i = suiteresult.getFailures().iterator(); i.hasNext(); )
+            {
+                org.apache.maven.continuum.model.scm.TestCaseFailure failure =
+                    (org.apache.maven.continuum.model.scm.TestCaseFailure) i.next();
+                res.addFailure( populateTestCaseFailure( failure ) );
+            }
+        }
+
+        res.setName( suiteresult.getName() );
+        res.setTestCount( suiteresult.getTestCount() );
+        res.setTotalTime( suiteresult.getTotalTime() );
+        return res;
+    }
+
+    private TestCaseFailure populateTestCaseFailure( org.apache.maven.continuum.model.scm.TestCaseFailure failure )
+    {
+        if ( failure == null )
+        {
+            return null;
+        }
+
+        TestCaseFailure res = new TestCaseFailure();
+        res.setException( failure.getException() );
+        res.setName( failure.getName() );
         return res;
     }
 }

@@ -303,6 +303,19 @@ public class ContinuumXmlRpcClient
     // Build Results
     // ----------------------------------------------------------------------
 
+    public BuildResult getLatestBuildResult( int projectId )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.getLatestBuildResult( projectId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
     public BuildResult getBuildResult( int projectId, int buildId )
         throws ContinuumException
     {

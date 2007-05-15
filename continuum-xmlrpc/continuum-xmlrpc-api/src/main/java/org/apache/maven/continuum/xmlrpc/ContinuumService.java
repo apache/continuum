@@ -170,6 +170,17 @@ public interface ContinuumService
     // ----------------------------------------------------------------------
 
     /**
+     * Returns the latest build result for the project.
+     *
+     * @param projectId The project id
+     * @return The build result
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    BuildResult getLatestBuildResult( int projectId )
+        throws ContinuumException, XmlRpcException;
+
+    /**
      * Returns the build result.
      *
      * @param projectId The project id
