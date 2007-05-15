@@ -436,6 +436,7 @@ public class ProjectGroupAction
 
         if ( StringUtils.isEmpty( filterKey ) )
         {
+            // REVIEW: for caching in the user manager
             users = manager.getUsers( ascending );
         }
         else
