@@ -329,6 +329,15 @@ public class ContinuumServiceImpl
         return getProjectSummary( projectId );
     }
 
+    public ProjectSummary addAntProject( ProjectSummary project, int projectGroupId )
+        throws ContinuumException
+    {
+        checkAddProjectGroupAuthorization();
+
+        int projectId = continuum.addProject( populateProject( project ), "ant", projectGroupId );
+        return getProjectSummary( projectId );
+    }
+
     // ----------------------------------------------------------------------
     // Maven Shell projects
     // ----------------------------------------------------------------------
@@ -339,6 +348,15 @@ public class ContinuumServiceImpl
         checkAddProjectGroupAuthorization();
 
         int projectId = continuum.addProject( populateProject( project ), "shell" );
+        return getProjectSummary( projectId );
+    }
+
+    public ProjectSummary addShellProject( ProjectSummary project, int projectGroupId )
+        throws ContinuumException
+    {
+        checkAddProjectGroupAuthorization();
+
+        int projectId = continuum.addProject( populateProject( project ), "shell", projectGroupId );
         return getProjectSummary( projectId );
     }
 

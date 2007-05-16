@@ -24,13 +24,13 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
- * Goal which add a Maven2 project.
+ * Goal which add a Maven1 project.
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @goal add-maven-two-project
+ * @goal add-maven-one-project
  */
-public class AddMavenTwoProject
+public class AddMavenOneProject
     extends AbstractContinuumMojo
 {
     /**
@@ -55,16 +55,16 @@ public class AddMavenTwoProject
         {
             if ( projectGroupId != null && projectGroupId.length() > 0 )
             {
-                getClient().addMavenTwoProject( projectUrl, Integer.parseInt( projectGroupId ) );
+                getClient().addMavenOneProject( projectUrl, Integer.parseInt( projectGroupId ) );
             }
             else
             {
-                getClient().addMavenTwoProject( projectUrl );
+                getClient().addMavenOneProject( projectUrl );
             }
         }
         catch ( ContinuumException e )
         {
-            throw new MojoExecutionException( "Can't add the Maven2 project from '" + projectUrl + "'.", e );
+            throw new MojoExecutionException( "Can't add the Maven1 project from '" + projectUrl + "'.", e );
         }
     }
 }
