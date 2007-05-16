@@ -432,6 +432,19 @@ public class ContinuumXmlRpcClient
         }
     }
 
+    public ProjectSummary addAntProject( ProjectSummary project, int projectGroupId )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.addAntProject( project, projectGroupId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Maven Shell projects
     // ----------------------------------------------------------------------
@@ -442,6 +455,19 @@ public class ContinuumXmlRpcClient
         try
         {
             return continuum.addShellProject( project );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public ProjectSummary addShellProject( ProjectSummary project, int projectGroupId )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.addShellProject( project, projectGroupId );
         }
         catch ( Exception e )
         {

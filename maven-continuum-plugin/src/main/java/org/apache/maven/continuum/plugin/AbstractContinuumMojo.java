@@ -37,6 +37,7 @@ public abstract class AbstractContinuumMojo
      * The Continuum XML-RPC server URL.
      *
      * @parameter expression="${url}"
+     * @required
      */
     private String url;
 

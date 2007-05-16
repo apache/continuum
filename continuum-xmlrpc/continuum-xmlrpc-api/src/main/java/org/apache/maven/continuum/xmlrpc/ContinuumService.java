@@ -276,12 +276,24 @@ public interface ContinuumService
     /**
      * Add an ANT project.
      *
-     * @param project The project to add. groupId, artifactId, version and scm informations are required
+     * @param project The project to add. name, version and scm informations are required
      * @return The project populated with the id.
      * @throws ContinuumException
      * @throws XmlRpcException
      */
     ProjectSummary addAntProject( ProjectSummary project )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Add an ANT project in the specified group.
+     *
+     * @param project        The project to add. name, version and scm informations are required
+     * @param projectGroupId The id of the group where projects will be stored
+     * @return The project populated with the id.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    ProjectSummary addAntProject( ProjectSummary project, int projectGroupId )
         throws ContinuumException, XmlRpcException;
 
     // ----------------------------------------------------------------------
@@ -291,12 +303,24 @@ public interface ContinuumService
     /**
      * Add an shell project.
      *
-     * @param project The project to add. groupId, artifactId, version and scm informations are required
+     * @param project The project to add. name, version and scm informations are required
      * @return The project populated with the id.
      * @throws ContinuumException
      * @throws XmlRpcException
      */
     ProjectSummary addShellProject( ProjectSummary project )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Add an shell project in the specified group.
+     *
+     * @param project        The project to add. name, version and scm informations are required
+     * @param projectGroupId The id of the group where projects will be stored
+     * @return The project populated with the id.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    ProjectSummary addShellProject( ProjectSummary project, int projectGroupId )
         throws ContinuumException, XmlRpcException;
 
     // ----------------------------------------------------------------------
