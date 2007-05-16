@@ -19,41 +19,37 @@ package org.apache.maven.continuum.release.executors;
  * under the License.
  */
 
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.repository.DefaultArtifactRepository;
+import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
+import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.ReleaseProjectTask;
-import org.apache.maven.continuum.release.ContinuumReleaseException;
-import org.apache.maven.shared.release.ReleaseManagerListener;
-import org.apache.maven.shared.release.ReleaseResult;
-import org.apache.maven.shared.release.config.ReleaseDescriptor;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.ProjectSorter;
+import org.apache.maven.profiles.DefaultProfileManager;
+import org.apache.maven.profiles.ProfileManager;
 import org.apache.maven.project.DuplicateProjectException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.repository.DefaultArtifactRepository;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
+import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.ProjectSorter;
 import org.apache.maven.settings.Settings;
-import org.apache.maven.profiles.DefaultProfileManager;
-import org.apache.maven.profiles.ProfileManager;
-import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
+import org.apache.maven.shared.release.ReleaseManagerListener;
+import org.apache.maven.shared.release.ReleaseResult;
+import org.apache.maven.shared.release.config.ReleaseDescriptor;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
+import org.codehaus.plexus.util.dag.CycleDetectedException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
- *
- *
  * @author Edwin Punzalan
  */
 public class PerformReleaseTaskExecutor
@@ -77,13 +73,13 @@ public class PerformReleaseTaskExecutor
         ReleaseManagerListener listener = performTask.getListener();
 
         ReleaseDescriptor descriptor = performTask.getDescriptor();
+        descriptor.setUseReleaseProfile( performTask.isUseReleaseProfile() );
+        descriptor.setPerformGoals( performTask.getGoals() );
+        descriptor.setCheckoutDirectory( performTask.getBuildDirectory().getAbsolutePath() );
 
         List reactorProjects = getReactorProjects( performTask );
 
-        ReleaseResult result =
-            releaseManager.performWithResult( descriptor, settings, reactorProjects,
-                                                    performTask.getBuildDirectory(), performTask.getGoals(),
-                                                    performTask.isUseReleaseProfile(), listener );
+        ReleaseResult result = releaseManager.performWithResult( descriptor, settings, reactorProjects, listener );
 
         //override to show the actual start time
         result.setStartTime( getStartTime() );
@@ -131,18 +127,18 @@ public class PerformReleaseTaskExecutor
         MavenProject project;
         try
         {
-            project = projectBuilder.build( getProjectDescriptorFile( descriptor ),
-                                            getLocalRepository(), getProfileManager( settings ) );
+            project = projectBuilder.build( getProjectDescriptorFile( descriptor ), getLocalRepository(),
+                                            getProfileManager( settings ) );
 
             reactorProjects.add( project );
-            
+
             addModules( reactorProjects, project );
         }
         catch ( ProjectBuildingException e )
         {
             throw new ContinuumReleaseException( "Failed to build project.", e );
         }
-        
+
         try
         {
             reactorProjects = new ProjectSorter( reactorProjects ).getSortedProjects();
@@ -162,20 +158,20 @@ public class PerformReleaseTaskExecutor
     private void addModules( List reactorProjects, MavenProject project )
         throws ContinuumReleaseException
     {
-        for( Iterator modules = project.getModules().iterator(); modules.hasNext(); )
+        for ( Iterator modules = project.getModules().iterator(); modules.hasNext(); )
         {
             String moduleDir = modules.next().toString();
 
             File pomFile = new File( project.getBasedir(), moduleDir + "/pom.xml" );
-            System.out.println( pomFile.getAbsolutePath());
+            System.out.println( pomFile.getAbsolutePath() );
 
             try
             {
-                MavenProject reactorProject = projectBuilder.build( pomFile, getLocalRepository(),
-                                                                    getProfileManager( settings ) );
+                MavenProject reactorProject =
+                    projectBuilder.build( pomFile, getLocalRepository(), getProfileManager( settings ) );
 
                 reactorProjects.add( reactorProject );
-                
+
                 addModules( reactorProjects, reactorProject );
             }
             catch ( ProjectBuildingException e )
@@ -201,7 +197,7 @@ public class PerformReleaseTaskExecutor
     private ArtifactRepository getLocalRepository()
     {
         return new DefaultArtifactRepository( "local-repository", "file://" + settings.getLocalRepository(),
-                                                                                   new DefaultRepositoryLayout() );
+                                              new DefaultRepositoryLayout() );
     }
 
     private ProfileManager getProfileManager( Settings settings )
