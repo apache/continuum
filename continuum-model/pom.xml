@@ -17,10 +17,18 @@
             <id>modello-continuum</id>
             <goals>
               <goal>java</goal>
-              <goal>jpox-jdo-mapping</goal>
               <goal>jpox-metadata-class</goal>
               <goal>stax-reader</goal>
               <goal>stax-writer</goal>
+            </goals>
+            <configuration>
+              <model>src/main/mdo/continuum.xml</model>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jpox-jdo-mapping</id>
+            <goals>
+              <goal>jpox-jdo-mapping</goal>
             </goals>
             <configuration>
               <model>src/main/mdo/continuum.xml</model>
