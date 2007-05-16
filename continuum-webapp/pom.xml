@@ -24,14 +24,14 @@
         </excludes>
       </resource>
     </resources>
-	<pluginManagement>
+    <pluginManagement>
       <plugins>
-      <plugin>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.0-alpha-3</version>
-      </plugin>
-</plugins>
-</pluginManagement>
+        <plugin>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.0-alpha-3</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -62,10 +62,10 @@
                 <include>WEB-INF/logs</include>
                 <!-- Log file location specified in application.xml -->
                 <include>redback</include>
-                <!-- plexus-security css and javascript -->
+                <!-- plexus-redback css and javascript -->
                 <include>css/redback</include>
                 <include>WEB-INF/jsp/redback</include>
-                <!-- plexus-security jsps -->
+                <!-- plexus-redback jsps -->
                 <include>WEB-INF/template/redback</include>
                 <!-- plexus-security xwork templates -->
                 <include>WEB-INF/build-output-directory</include>
