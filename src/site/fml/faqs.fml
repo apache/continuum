@@ -55,10 +55,11 @@ set.MAVEN_TERMINATE_CMD=on
       </answer>
     </faq>
     <faq id="can-i-use-file-protocol-in-add-project-view">
-      <question>Can i use file protocol in Add Project view?</question>
+      <question>Can I use file protocol in Add Project view?</question>
       <answer>
         <p>
-          File protocol is disabled by default for security reasons. You can allow it in <code>$CONTINUUM_HOME/apps/continuum/conf/application.xml</code>
+          File protocol is disabled by default for security reasons. In Continuum 1.1, you can allow it in
+          <code>$CONTINUUM_HOME/apps/continuum/webapp/WEB-INF/classes/META-INF/plexus/application.xml</code>
         </p>
         <p>
           Uncomment the following line :
