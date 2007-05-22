@@ -47,7 +47,10 @@ public class AddProjectGroupAction
         {
             addActionError( "projectGroup.error.name.required" );
         }
-        if ( name != null && !name.equals( "" ) )
+        else if ( name != null && name.trim().equals( "" ) ) {
+            addActionError( "projectGroup.error.name.cannot.be.spaces" );
+        }
+        else if ( name != null && !name.equals( "" ) )
         {
             Iterator iterator = getContinuum().getAllProjectGroups().iterator();
             while ( iterator.hasNext() )
