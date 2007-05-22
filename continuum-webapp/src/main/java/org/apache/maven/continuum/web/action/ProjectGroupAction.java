@@ -256,6 +256,11 @@ public class ProjectGroupAction
             addActionError( "projectGroup.error.name.required" );
             return INPUT;
         }
+        else if ( name != null && name.trim().equals( "" ) )
+        {
+            addActionError( "projectGroup.error.name.cannot.be.spaces" );
+            return INPUT;
+        }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
 
