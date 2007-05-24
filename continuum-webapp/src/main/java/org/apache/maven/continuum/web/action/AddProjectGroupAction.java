@@ -67,6 +67,10 @@ public class AddProjectGroupAction
         {
             addActionError( "projectGroup.error.groupId.required" );
         }
+        else if ( groupId != null && groupId.trim().equals( "" ) )
+        {
+            addActionError( "projectGroup.error.groupId.cannot.be.spaces" );
+        }
     }
 
     public String execute()
