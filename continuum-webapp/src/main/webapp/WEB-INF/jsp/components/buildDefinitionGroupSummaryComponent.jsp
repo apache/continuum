@@ -56,6 +56,7 @@
       <ec:column property="buildAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <ww:url id="buildUrl" action="buildProject" namespace="/">
+            <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
           <ww:a href="%{buildUrl}"><img src="<ww:url value='/images/buildnow.gif'/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0"></ww:a>
