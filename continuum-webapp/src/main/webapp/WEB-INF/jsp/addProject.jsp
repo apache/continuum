@@ -52,7 +52,6 @@
                             </c:forEach>
                           </div>
                         </c:if>
-                        <input type="hidden" name="projectType" value="<ww:property value="projectType"/>">
                         <table>
                           <tbody>
                             <ww:textfield label="%{getText('projectName.label')}" name="projectName" required="true">
@@ -84,6 +83,7 @@
                             </ww:else>
                           </tbody>
                         </table>
+                        <input type="hidden" name="projectType" value="<ww:property value="projectType"/>">
                         <div class="functnbar3">
                           <c1:submitcancel value="%{getText('add')}" cancel="%{getText('cancel')}"/>
                         </div>
