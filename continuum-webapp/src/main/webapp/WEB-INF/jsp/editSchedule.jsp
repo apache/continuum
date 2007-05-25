@@ -39,7 +39,7 @@
             </c:forEach>
           </div>
         </c:if>
-        <ww:hidden name="id"/>
+
           <table>
             <ww:textfield label="%{getText('schedule.name.label')}" name="name" required="true">
                 <ww:param name="desc"><p><ww:text name="schedule.name.message"/></p></ww:param>
@@ -75,7 +75,7 @@
                 <ww:param name="desc"><p><ww:text name="schedule.enabled.message"/></p></ww:param>
             </ww:checkbox>
           </table>
-
+          <ww:hidden name="id"/>
         <div class="functnbar3">
           <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
         </div>
