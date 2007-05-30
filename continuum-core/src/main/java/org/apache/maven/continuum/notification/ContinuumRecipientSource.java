@@ -1,34 +1,36 @@
 package org.apache.maven.continuum.notification;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.codehaus.plexus.notification.AbstractRecipientSource;
+import org.codehaus.plexus.notification.NotificationException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.maven.continuum.project.ContinuumNotifier;
-import org.apache.maven.continuum.project.ContinuumProject;
-
-import org.codehaus.plexus.notification.AbstractRecipientSource;
-import org.codehaus.plexus.notification.NotificationException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -40,7 +42,9 @@ public class ContinuumRecipientSource
 {
     public static String ADDRESS_FIELD = "address";
 
-    /** @plexus.configuration */
+    /**
+     * @plexus.configuration
+     */
     private String toOverride;
 
     // ----------------------------------------------------------------------
@@ -55,7 +59,8 @@ public class ContinuumRecipientSource
 
         if ( StringUtils.isEmpty( toOverride ) )
         {
-            getLogger().info( "To override address is not configured, will use the nag email address from the project." );
+            getLogger().info(
+                "To override address is not configured, will use the nag email address from the project." );
         }
         else
         {
@@ -67,10 +72,13 @@ public class ContinuumRecipientSource
     // RecipientSource Implementation
     // ----------------------------------------------------------------------
 
-    public Set getRecipients( String notifierType, String messageId, Map configuration, Map context )
+    public Set getRecipients( String notifierId, String messageId, Map configuration, Map context )
         throws NotificationException
     {
-        ContinuumProject project = (ContinuumProject) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT );
+        Project project = (Project) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT );
+
+        ProjectNotifier projectNotifier =
+            (ProjectNotifier) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT_NOTIFIER );
 
         if ( project == null )
         {
@@ -83,22 +91,20 @@ public class ContinuumRecipientSource
         {
             recipients.add( toOverride );
         }
+        else if ( projectNotifier != null )
+        {
+            addNotifierAdresses( projectNotifier, recipients );
+        }
         else if ( project.getNotifiers() != null && !project.getNotifiers().isEmpty() )
         {
             for ( Iterator notifierIterator = project.getNotifiers().iterator(); notifierIterator.hasNext(); )
             {
-                ContinuumNotifier notifier = (ContinuumNotifier) notifierIterator.next();
+                ProjectNotifier notifier = (ProjectNotifier) notifierIterator.next();
 
-                if ( notifier.getType().equals( notifierType ) && notifier.getConfiguration().containsKey( ADDRESS_FIELD ) )
+                if ( notifier.getId() == new Integer( notifierId ).intValue() &&
+                    notifier.getConfiguration().containsKey( ADDRESS_FIELD ) )
                 {
-                    String addressField = (String) notifier.getConfiguration().get( ADDRESS_FIELD );
-
-                    String[] addresses = StringUtils.split( addressField, "," );
-
-                    for ( int i = 0; i < addresses.length; i++ )
-                    {
-                        recipients.add( addresses[i].trim() );
-                    }
+                    addNotifierAdresses( notifier, recipients );
                 }
             }
         }
@@ -110,6 +116,24 @@ public class ContinuumRecipientSource
         else
         {
             return recipients;
+        }
+    }
+
+    private void addNotifierAdresses( ProjectNotifier notifier, Set recipients )
+    {
+        if ( notifier.getConfiguration() != null )
+        {
+            String addressField = (String) notifier.getConfiguration().get( ADDRESS_FIELD );
+
+            if ( StringUtils.isNotEmpty( addressField ) )
+            {
+                String[] addresses = StringUtils.split( addressField, "," );
+
+                for ( int i = 0; i < addresses.length; i++ )
+                {
+                    recipients.add( addresses[i].trim() );
+                }
+            }
         }
     }
 }

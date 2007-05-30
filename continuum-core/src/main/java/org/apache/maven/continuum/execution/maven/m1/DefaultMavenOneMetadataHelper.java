@@ -1,40 +1,52 @@
 package org.apache.maven.continuum.execution.maven.m1;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectDependency;
+import org.apache.maven.continuum.model.project.ProjectDeveloper;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.notification.ContinuumRecipientSource;
+import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.maven.continuum.notification.ContinuumRecipientSource;
-import org.apache.maven.continuum.project.ContinuumNotifier;
-import org.apache.maven.continuum.project.MavenOneProject;
-
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
+ *
+ * @plexus.component
+ *   role="org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper"
+ *   role-hint="default"
  */
 public class DefaultMavenOneMetadataHelper
     extends AbstractLogEnabled
@@ -44,7 +56,16 @@ public class DefaultMavenOneMetadataHelper
     // MavenOneMetadataHelper Implementation
     // ----------------------------------------------------------------------
 
-    public void mapMetadata( File metadata, MavenOneProject project )
+    /**
+     * @deprecated Use {@link #mapMetadata(ContinuumProjectBuildingResult,File,Project)} instead
+     */
+    public void mapMetadata( File metadata, Project project )
+        throws MavenOneMetadataHelperException
+    {
+        mapMetadata( new ContinuumProjectBuildingResult(), metadata, project );
+    }
+
+    public void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project )
         throws MavenOneMetadataHelperException
     {
         Xpp3Dom mavenProject;
@@ -53,27 +74,130 @@ public class DefaultMavenOneMetadataHelper
         {
             mavenProject = Xpp3DomBuilder.build( new FileReader( metadata ) );
         }
-        catch ( Exception e )
+        catch ( XmlPullParserException e )
         {
-            throw new MavenOneMetadataHelperException( "Error while reading maven POM.", e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_XML_PARSE );
+            
+            getLogger().info( "Error while reading maven POM (" + e.getMessage() + ").", e );
+            
+            return;
+        }
+        catch ( FileNotFoundException e )
+        {
+            result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
+
+            getLogger().info( "Error while reading maven POM (" + e.getMessage() + ").", e );
+
+            return;
+        }
+        catch ( IOException e )
+        {
+            result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
+            
+            getLogger().info( "Error while reading maven POM (" + e.getMessage() + ").", e );
+            
+            return;
         }
 
         // ----------------------------------------------------------------------
-        // Populating the descriptor
+        // We cannot deal with projects that use the <extend/> element because
+        // we don't have the whole source tree and we might be missing elements
+        // that are present in the parent.
         // ----------------------------------------------------------------------
 
-        // Name
+        String extend = getValue( mavenProject, "extend", null );
+
+        if ( extend != null )
+        {
+            result.addError( ContinuumProjectBuildingResult.ERROR_EXTEND );
+            
+            getLogger().info( "Cannot use a POM with an 'extend' element." );
+            
+            return;
+        }
+
+        // ----------------------------------------------------------------------
+        // Artifact and group id
+        // ----------------------------------------------------------------------
+
+        String groupId;
+
+        String artifactId;
+
+        String id = getValue( mavenProject, "id", null );
+
+        if ( !StringUtils.isEmpty( id ) )
+        {
+            groupId = id;
+
+            artifactId = id;
+        }
+        else
+        {
+            groupId = getValue( mavenProject, "groupId", project.getGroupId() );
+
+            if ( StringUtils.isEmpty( groupId ) )
+            {
+                result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_GROUPID );
+
+                getLogger().info( "Missing 'groupId' element in the POM." );
+
+                // Do not throw an exception or return here, gather up as many results as possible first.
+            }
+
+            artifactId = getValue( mavenProject, "artifactId", project.getArtifactId() );
+
+            if ( StringUtils.isEmpty( artifactId ) )
+            {
+                result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_ARTIFACTID );
+
+                getLogger().info( "Missing 'artifactId' element in the POM." );
+
+                // Do not throw an exception or return here, gather up as many results as possible first.
+            }
+        }
+
+        // ----------------------------------------------------------------------
+        // version
+        // ----------------------------------------------------------------------
+
+        String version = getValue( mavenProject, "currentVersion", project.getVersion() );
+
+        if ( StringUtils.isEmpty( project.getVersion() ) && StringUtils.isEmpty( version ) )
+        {
+            result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_VERSION );
+            
+            // Do not throw an exception or return here, gather up as many results as possible first.
+        }
+
+        // ----------------------------------------------------------------------
+        // name
+        // ----------------------------------------------------------------------
+
         String name = getValue( mavenProject, "name", project.getName() );
 
-        if ( StringUtils.isEmpty( name ) )
+        if ( StringUtils.isEmpty( project.getName() ) && StringUtils.isEmpty( name ) )
         {
-            throw new MavenOneMetadataHelperException( "Missing <name> from the project descriptor." );
+            result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_NAME );
+            
+            // Do not throw an exception or return here, gather up as many results as possible first.
         }
 
-        // Scm
+        // ----------------------------------------------------------------------
+        // description
+        // ----------------------------------------------------------------------
+
+        String shortDescription = getValue( mavenProject, "shortDescription", project.getDescription() );
+
+        String description = getValue( mavenProject, "description", project.getDescription() );
+
+        // ----------------------------------------------------------------------
+        // scm
+        // ----------------------------------------------------------------------
+
         Xpp3Dom repository = mavenProject.getChild( "repository" );
 
-        String scmConnection;
+        String scmConnection = null;
 
         if ( repository == null )
         {
@@ -83,7 +207,9 @@ public class DefaultMavenOneMetadataHelper
             }
             else
             {
-                throw new MavenOneMetadataHelperException( "The project descriptor is missing the SCM information." );
+                result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_REPOSITORY );
+
+                // Do not throw an exception or return here, gather up as many results as possible first.
             }
         }
         else
@@ -94,47 +220,93 @@ public class DefaultMavenOneMetadataHelper
 
             if ( StringUtils.isEmpty( scmConnection ) )
             {
-                throw new MavenOneMetadataHelperException( "Missing both anonymous and developer scm connection urls." );
+                result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM );
+                
+                // Do not throw an exception or return here, gather up as many results as possible first.
             }
         }
 
-        // Nag email address
+        // ----------------------------------------------------------------------
+        // Developers
+        // ----------------------------------------------------------------------
+
+        Xpp3Dom developers = mavenProject.getChild( "developers" );
+
+        if ( developers != null )
+        {
+            Xpp3Dom[] developersList = developers.getChildren();
+
+            List cds = new ArrayList();
+
+            for ( int i = 0; i < developersList.length; i++ )
+            {
+                Xpp3Dom developer = developersList[i];
+
+                ProjectDeveloper cd = new ProjectDeveloper();
+
+                cd.setScmId( getValue( developer, "id", null ) );
+
+                cd.setName( getValue( developer, "name", null ) );
+
+                cd.setEmail( getValue( developer, "email", null ) );
+
+                cds.add( cd );
+            }
+
+            project.setDevelopers( cds );
+        }
+
+        // ----------------------------------------------------------------------
+        // Dependencies
+        // ----------------------------------------------------------------------
+
+        Xpp3Dom dependencies = mavenProject.getChild( "dependencies" );
+
+        if ( dependencies != null )
+        {
+            Xpp3Dom[] dependenciesList = dependencies.getChildren();
+
+            List deps = new ArrayList();
+
+            for ( int i = 0; i < dependenciesList.length; i++ )
+            {
+                Xpp3Dom dependency = dependenciesList[i];
+
+                ProjectDependency cd = new ProjectDependency();
+
+                if ( getValue( dependency, "groupId", null ) != null )
+                {
+                    cd.setGroupId( getValue( dependency, "groupId", null ) );
+
+                    cd.setArtifactId( getValue( dependency, "artifactId", null ) );
+                }
+                else
+                {
+                    cd.setGroupId( getValue( dependency, "id", null ) );
+
+                    cd.setArtifactId( getValue( dependency, "id", null ) );
+                }
+
+                cd.setVersion( getValue( dependency, "version", null ) );
+
+                deps.add( cd );
+            }
+
+            project.setDependencies( deps );
+        }
+
+        // ----------------------------------------------------------------------
+        // notifiers
+        // ----------------------------------------------------------------------
+
         Xpp3Dom build = mavenProject.getChild( "build" );
 
-        List notifiers = null;
+        List notifiers = new ArrayList();
 
-        ContinuumNotifier notifier = new ContinuumNotifier();
-
-        if ( build == null )
+        // Add project Notifier
+        if ( build != null )
         {
-            if ( project.getNotifiers() != null && !project.getNotifiers().isEmpty() )
-            {
-                notifiers = project.getNotifiers();
-            }
-            else
-            {
-                throw new MavenOneMetadataHelperException( "Missing build section." );
-            }
-        }
-        else
-        {
-            String currentNagEmailAddress = null;
-
-            if ( project.getNotifiers() != null && !project.getNotifiers().isEmpty() )
-            {
-                for ( Iterator i = project.getNotifiers().iterator(); i.hasNext(); )
-                {
-                    ContinuumNotifier notif = (ContinuumNotifier) i.next();
-
-                    // Can we have an other type for maven 1 project?
-                    if ( "mail".equals( notif.getType() ) )
-                    {
-                        currentNagEmailAddress = (String) notif.getConfiguration().get( ContinuumRecipientSource.ADDRESS_FIELD );
-                    }
-                }
-            }
-
-            String nagEmailAddress = getValue( build, "nagEmailAddress", currentNagEmailAddress );
+            String nagEmailAddress = getValue( build, "nagEmailAddress", null );
 
             if ( nagEmailAddress != null )
             {
@@ -142,50 +314,64 @@ public class DefaultMavenOneMetadataHelper
 
                 props.put( ContinuumRecipientSource.ADDRESS_FIELD, nagEmailAddress );
 
+                ProjectNotifier notifier = new ProjectNotifier();
+
                 notifier.setConfiguration( props );
+
+                notifier.setFrom( ProjectNotifier.FROM_PROJECT );
+
+                notifiers.add( notifier );
             }
-
         }
 
-        if ( notifiers == null && notifier.getConfiguration().isEmpty() )
+        // Add all user notifiers
+        if ( project.getNotifiers() != null && !project.getNotifiers().isEmpty() )
         {
-            throw new MavenOneMetadataHelperException( "Missing nag email address from the project descriptor." );
-        }
-        else
-        {
-            if ( notifiers == null )
+            for ( Iterator i = project.getNotifiers().iterator(); i.hasNext(); )
             {
-                notifiers = new ArrayList();
+                ProjectNotifier notif = (ProjectNotifier) i.next();
+
+                if ( notif.isFromUser() )
+                {
+                    notifiers.add( notif );
+                }
             }
-
-            notifiers.add( notifier );
         }
-
-        // Version
-        String version = getValue( mavenProject, "currentVersion", project.getVersion() );
-
-        if ( StringUtils.isEmpty( version ) )
+        
+        // ----------------------------------------------------------------------
+        // Handle Errors / Results
+        // ----------------------------------------------------------------------
+        
+        if ( result.hasErrors() )
         {
-            throw new MavenOneMetadataHelperException( "Missing version from the project descriptor." );
-        }
-
-        // Goals
-        if ( StringUtils.isEmpty( project.getGoals() ) )
-        {
-            project.setGoals( "clean:clean jar:install" );
+            // prevent project creation if there are errors.
+            return;
         }
 
         // ----------------------------------------------------------------------
         // Make the project
         // ----------------------------------------------------------------------
 
+        project.setGroupId( groupId );
+
+        project.setArtifactId( artifactId );
+
+        project.setVersion( version );
+
         project.setName( name );
+
+        if ( StringUtils.isEmpty( shortDescription ) )
+        {
+            project.setDescription( description );
+        }
+        else
+        {
+            project.setDescription( shortDescription );
+        }
 
         project.setScmUrl( scmConnection );
 
         project.setNotifiers( notifiers );
-
-        project.setVersion( version );
     }
 
     // ----------------------------------------------------------------------

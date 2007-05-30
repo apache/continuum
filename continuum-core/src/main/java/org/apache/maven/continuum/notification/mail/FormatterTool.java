@@ -1,25 +1,28 @@
 package org.apache.maven.continuum.notification.mail;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
+import org.apache.maven.continuum.project.ContinuumProjectState;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.apache.maven.continuum.project.ContinuumProjectState;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -39,7 +42,7 @@ public class FormatterTool
     // TODO: Add i18n
     public String formatProjectState( int state )
     {
-        if ( state == ContinuumProjectState.NEW )
+        if ( state == ContinuumProjectState.NEW || state == ContinuumProjectState.CHECKEDOUT )
         {
             return "New";
         }
@@ -65,8 +68,28 @@ public class FormatterTool
         }
     }
 
+    public String formatTrigger( int trigger )
+    {
+        if ( trigger == ContinuumProjectState.TRIGGER_SCHEDULED )
+        {
+            // TODO: fix this
+            return "Schedule";
+        }
+        else if ( trigger == ContinuumProjectState.TRIGGER_FORCED )
+        {
+            return "Forced";
+        }
+        else
+        {
+            return "Unknown build trigger: '" + trigger + "'";
+        }
+    }
+
     public String formatTimestamp( long timestamp )
     {
+        if (timestamp <= 0) {
+            return null;
+        }
         return getSimpleDateFormat( timestampFormat, timestampFormatString ).format( new Date( timestamp ) );
     }
 
@@ -88,15 +111,12 @@ public class FormatterTool
 
         if ( hours > 0 )
         {
-            return Long.toString( hours ) + "h " +
-                   Long.toString( minutes ) + "m " +
-                   Long.toString( seconds ) + "s";
+            return Long.toString( hours ) + "h " + Long.toString( minutes ) + "m " + Long.toString( seconds ) + "s";
         }
 
         if ( minutes > 0 )
         {
-            return Long.toString( minutes ) + "m " +
-                   Long.toString( seconds ) + "s";
+            return Long.toString( minutes ) + "m " + Long.toString( seconds ) + "s";
         }
 
         return Long.toString( seconds ) + "s";
@@ -118,5 +138,12 @@ public class FormatterTool
         }
 
         return dateFormat;
+    }
+
+    public String trim(String str) {
+        if (str == null) {
+            return "";
+        }
+        return str.trim();
     }
 }

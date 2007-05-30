@@ -14,6 +14,7 @@
  * limitations under the License.
  *#
 #macro( shellBuildResult )
+Online report : $reportUrl
 Build statistics:
   State: $formatter.formatProjectState( $build.state )
 #if ( $previousBuild )
@@ -24,45 +25,134 @@ Build statistics:
   Started at: $formatter.formatTimestamp( $build.startTime )
   Finished at: $formatter.formatTimestamp( $build.endTime )
   Total time: $formatter.formatInterval( $build.startTime, $build.endTime )
-  Forced: $build.forced
+  Build Trigger: $formatter.formatTrigger( $build.trigger )
+  Build Number: $build.buildNumber
   Exit code: $build.exitCode
   Building machine hostname: $buildHost
+  Operating system : $osName
+  Java version : $javaVersion
 
-#if ( $build.updateScmResult )
-Changes
-#if ( $build.updateScmResult.updatedFiles.size() == 0 )
- No files changed
+#if ( $build.scmResult )
+****************************************************************************
+SCM Changes:
+****************************************************************************
+#if ( $build.scmResult.changes.size() == 0 )
+No files changed
+
 #else
- #foreach ( $file in $build.updateScmResult.updatedFiles )
- * $file.path
- #end
+#foreach ( $changeSet in $build.scmResult.changes )
+#if ($changeSet.author)
+#set($author = $changeSet.author)
+#else
+#set($author = "no author")
 #end
+#set($date = $formatter.formatTimestamp($changeSet.date))
+#if (!$date)
+#set($date = "no date")
+#end
+#if ($changeSet.comment)
+#set($comment = $formatter.trim($changeSet.comment))
+#else
+#set($comment = "no comment")
+#end
+Changed: $author @ $date
+Comment: $comment
+Files changed:
+#foreach ( $file in $changeSet.files )
+  $!file.name (#if ($file.revision) $file.revision #else no revision #end)
 #end
 
+#end
+#end
+#end
+#if ( $changesSinceLastSuccess )
+****************************************************************************
+SCM Changes since last success:
+****************************************************************************
+#if ( $changesSinceLastSuccess.changes.size() == 0 )
+No files changed
+
+#else
+#foreach ( $changeSet in $changesSinceLastSuccess )
+#if ($changeSet.author)
+#set($author = $changeSet.author)
+#else
+#set($author = "no author")
+#end
+#set($date = $formatter.formatTimestamp($changeSet.date))
+#if (!$date)
+#set($date = "no date")
+#end
+#if ($changeSet.comment)
+#set($comment = $formatter.trim($changeSet.comment))
+#else
+#set($comment = "no comment")
+#end
+Changed: $author @ $date
+Comment: $comment
+Files changed:
+#foreach ( $file in $changeSet.files )
+  $!file.name (#if ($file.revision) $file.revision #else no revision #end)
+#end
+
+#end
+#end
+#end
+#if ( $build.modifiedDependencies )
+****************************************************************************
+Dependencies Changes:
+****************************************************************************
+#if ( $build.modifiedDependencies.size() == 0 )
+No dependencies changed
+
+#else
+#foreach ( $dep in $build.modifiedDependencies )
+$dep.groupId:$dep.artifactId:$dep.version
+
+#end
+#end
+#end
+#if ( $build.testResult )
+****************************************************************************
+Test Summary:
+****************************************************************************
+Tests: $build.testResult.testCount
+Failures: $build.testResult.failureCount
+Total time: $build.testResult.totalTime
+
+#end
 #if ( $build.state == 4 )
 ****************************************************************************
 Build Error:
 ****************************************************************************
 $build.error
+
+#if ( $build.testResult && $build.testResult.failureCount > 0)
+****************************************************************************
+Test Failures:
+****************************************************************************
+
+#foreach( $suite in $build.testResult.suiteResults )
+#if ( $suite.failureCount > 0)
+$suite.name
+  #foreach( $failure in $suite.failures )
+  $failure.name
+  $failure.exception
+
+  #end
+#end
+#end
+#end
 #else
 ****************************************************************************
-Standard Output:
+Output:
 ****************************************************************************
-#if ( $build.standardOutput && $build.standardOutput != "" )
-$build.standardOutput
+#if ( $buildOutput && $buildOutput != "" )
+$buildOutput
 #else
-There was no content on standard output.
+There was no output.
 #end
 ****************************************************************************
 
-****************************************************************************
-Standard Error:
-****************************************************************************
-#if( $build.standardError && $build.standardError != "" )
-$build.standardError
-#else
-There was no content on standard error.
-#end
-****************************************************************************
 #end
 #end ## #macro( shellBuildResult )

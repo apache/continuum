@@ -1,36 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
 <project name="Apache Maven Continuum">
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-stylus-skin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </skin>
   <bannerLeft>
-    <name>Apache Maven</name>
-    <src>http://maven.apache.org/images/apache-maven-project.png</src>
-    <href>http://maven.apache.org</href>
+    <name>Maven</name>
+    <src>http://maven.apache.org/maven2/images/apache-maven-project-2.png</src>
+    <href>http://maven.apache.org/</href>
   </bannerLeft>
   <bannerRight>
     <name>Apache Maven Continuum</name>
-    <src>images/continuum.png</src>
+    <src>images/continuum_logo.jpg</src>
     <href>http://maven.apache.org/continuum</href>
   </bannerRight>
+  <publishDate format="dd MMM yyyy" />
   <body>
     <links>
-      <item name="Maven 1" href="http://maven.apache.org"/>
-      <item name="Maven 2" href="http://maven.apache.org/maven2"/>
+      <item name="Apache" href="http://www.apache.org/"/>
+      <item name="Maven 1.x" href="http://maven.apache.org/maven-1.x"/>
+      <item name="Maven 2.x" href="http://maven.apache.org/"/>
+      <item name="Continuum" href="http://maven.apache.org/continuum"/>
+      <item name="SCM" href="http://maven.apache.org/scm"/>
+      <item name="Wagon" href="http://maven.apache.org/wagon"/>
+      <item name="JXR" href="http://maven.apache.org/jxr"/>
+      <item name="DOXIA" href="http://maven.apache.org/doxia"/>
     </links>
-    <menu name="Continuum">
-      <item name="Introduction" href="index.html"/>
+
+    <menu name="Quick Links">
+      <item name="Features" href="continuum-features.html"/>
       <item name="Download" href="download.html"/>
+      <item name="Installation Instructions" href="download.html#installation"/>
+      <item name="Getting Started" href="/guides/getting-started/index.html"/>
+      <item name="Documentation" href="/guides/index.html"/>
+      <item name="Wiki" href="http://docs.codehaus.org/display/CONTINUUMUSER"/>
       <item name="General Information" href="about.html"/>
+      <item name="Faqs" href="faqs.html"/>
+      <item name="Upgrade" href="upgrade.html"/>
       <item name="Planned Features" href="planned-features.html"/>
-    </menu>
-    <menu name="User's Guide">
-      <item name="Getting Started" href="getting-started.html"/>
-      <item name="Configuration" href="configuration.html"/>
-      <item name="SOAP API" href="soap-api.html"/>
-      <!--
-      <item name="CruiseControl Support" href="cc-support.html"/>
-      -->
-    </menu>
-    <menu name="Developer's Guide">
-      <item name="Building" href="dev/building.html"/>
+      <item name="Netbeans Module" href="netbeans-module.html"/>
       <item name="Change Log" href="change-log.html"/>
     </menu>
+
+    ${reports}
+
   </body>
 </project>

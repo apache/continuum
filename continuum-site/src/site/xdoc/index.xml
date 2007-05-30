@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<document>
+  <properties>
+    <title>Welcome to Continuum</title>
+    <author email="evenisse@apache.org">Emmanuel Venisse</author>
+  </properties>
+  <body>
+    <section name="Welcome to Continuum">
+      <div id="downloadbox">
+        <h5>Get Continuum 1.1 Alpha 1</h5>
+        <p>
+          <a href="download.html">
+            <img valign="top" src="http://maven.apache.org/images/folder-open.gif" border="0" alt="" title="download"/>
+            Download
+          </a>
+          Continuum
+          <small>(25Mb)</small>
+        </p>
+        <ul>
+          <li>
+            <a href="download.html#requirements">System Requirements</a>
+          </li>
+          <li>
+            <a href="download.html#installation">Installation Instructions</a>
+          </li>
+          <li>
+            <a href="release-notes.html">Release Notes</a>
+          </li>                         
+          <li>
+            <a href="guides/getting-started/index.html">Getting Started</a>
+          </li>
+          <li>
+            <a href="guides/index.html">Documentation</a>
+          </li>          
+        </ul>
+      </div>
+
+      <p>
+        Continuum is a continuous integration server for building Java based projects.
+        It supports a wide range of projects:
+
+        <ul>
+          <li><a href="http://maven.apache.org/maven-1.x">Maven 1</a></li>
+          <li><a href="http://maven.apache.org">Maven 2</a></li>
+          <li><a href="http://ant.apache.org">Ant</a></li>
+          <li>Shell scripts</li>
+        </ul>
+      </p>
+      <p><img src="images/project-groups.png"/></p>
+      <subsection name="About Continuum">
+        <p>
+          <ul>
+            <li>
+              <a href="about.html#what-is-continuum">What is Continuum?</a>
+            </li>
+            <li>
+              <a href="continuum-features.html">What are the features of Continuum?</a>
+            </li>
+            <li>
+              <a href="about.html#get-involved">Can I get involved?</a>
+            </li>
+            <li>
+              <a href="about.html#get-help">Where do I get help with Continuum?</a>
+            </li>
+          </ul>
+        </p>
+      </subsection>
+    </section>
+    <section name="Latest News">
+      <p>
+        <ul>
+          <li>Continuum 1.1 Alpha 1 Release Available - April 23, 2007</li>
+          <li>Continuum 1.0.3 Final Release Available - April 25 2006</li>
+          <li>Continuum 1.0.2 Final Release Available - December 09 2005</li>
+          <li>Continuum 1.0.1 Final Release Available - November 16 2005</li>
+          <li>Continuum 1.0 Final Release Available - October 25 2005</li>
+          <li>Continuum 1.0 Beta 1 Release Available - October 07 2005</li>
+          <li>Continuum 1.0 Alpha 4 Release Available - September 20 2005</li>
+          <li>Continuum 1.0 Alpha 3 Release Available - July 10 2005</li>
+          <li>Continuum 1.0 Alpha 2 Release Available - May 25 2005</li>
+          <li>First Continuum Release Available - Apr 26 2005</li>
+        </ul>
+      </p>
+    </section>
+  </body>
+</document>

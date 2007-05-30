@@ -1,18 +1,22 @@
-<project>
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
+    <artifactId>continuum-notifiers</artifactId>
     <groupId>org.apache.maven.continuum</groupId>
-    <artifactId>continuum-parent-notifiers</artifactId>
-    <version>1.0-alpha-3-SNAPSHOT</version>
+    <version>1.1-alpha-2</version>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-notifier-irc</artifactId>
   <name>Continuum IRC Notifier</name>
-  <version>1.0-alpha-3-SNAPSHOT</version>
   <dependencies>
     <dependency>
-      <groupId>plexus</groupId>
+      <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-ircbot</artifactId>
-      <version>1.1-alpha-4-SNAPSHOT</version>
+      <version>1.1-alpha-6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-notifier-api</artifactId>
+      <version>${pom.version}</version>
     </dependency>
   </dependencies>
 </project>

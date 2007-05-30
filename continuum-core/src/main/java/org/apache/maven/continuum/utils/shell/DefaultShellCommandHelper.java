@@ -1,30 +1,41 @@
 package org.apache.maven.continuum.utils.shell;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-
-import java.io.File;
 
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
+import org.codehaus.plexus.util.cli.StreamConsumer;
+import org.codehaus.plexus.util.cli.WriterStreamConsumer;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
+ *
+ * @plexus.component
+ *   role="org.apache.maven.continuum.utils.shell.ShellCommandHelper"
+ *   role-hint="default"
  */
 public class DefaultShellCommandHelper
     extends AbstractLogEnabled
@@ -34,9 +45,8 @@ public class DefaultShellCommandHelper
     // ShellCommandHelper Implementation
     // ----------------------------------------------------------------------
 
-    public ExecutionResult executeShellCommand( File workingDirectory,
-                                                String executable,
-                                                String arguments )
+    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
+                                                long idCommand )
         throws Exception
     {
         Commandline cl = new Commandline();
@@ -45,14 +55,11 @@ public class DefaultShellCommandHelper
 
         argument.setLine( arguments );
 
-        return executeShellCommand( workingDirectory,
-                                    executable,
-                                    argument.getParts() );
+        return executeShellCommand( workingDirectory, executable, argument.getParts(), output, idCommand );
     }
 
-    public ExecutionResult executeShellCommand( File workingDirectory,
-                                                String executable,
-                                                String[] arguments )
+    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
+                                                File output, long idCommand )
         throws Exception
     {
         // ----------------------------------------------------------------------
@@ -61,37 +68,56 @@ public class DefaultShellCommandHelper
 
         Commandline cl = new Commandline();
 
+        cl.setPid( idCommand );
+
+        cl.addSystemEnvironment();
+
+        cl.addEnvironment( "MAVEN_TERMINATE_CMD", "on" );
+
         cl.setExecutable( executable );
 
         cl.setWorkingDirectory( workingDirectory.getAbsolutePath() );
 
         for ( int i = 0; i < arguments.length; i++ )
         {
-            String argument = arguments[ i ];
+            String argument = arguments[i];
 
             cl.createArgument().setValue( argument );
         }
 
-        // ----------------------------------------------------------------------
-        //
-        // ----------------------------------------------------------------------
-
-        CommandLineUtils.StringStreamConsumer stderr = new CommandLineUtils.StringStreamConsumer();
-
-        CommandLineUtils.StringStreamConsumer stdout = new CommandLineUtils.StringStreamConsumer();
-
-        int exitCode = CommandLineUtils.executeCommandLine( cl, stdout, stderr );
+        getLogger().info( "Executing: " + cl );
+        getLogger().info( "Working directory: " + cl.getWorkingDirectory().getAbsolutePath() );
 
         // ----------------------------------------------------------------------
         //
         // ----------------------------------------------------------------------
 
-        String out = stdout.getOutput();
+        //CommandLineUtils.StringStreamConsumer consumer = new CommandLineUtils.StringStreamConsumer();
 
-        String err = stderr.getOutput();
+        Writer writer = new FileWriter( output );
 
-        ExecutionResult result = new ExecutionResult( out, err, exitCode );
+        StreamConsumer consumer = new WriterStreamConsumer( writer );
 
-        return result;
+        int exitCode = CommandLineUtils.executeCommandLine( cl, consumer, consumer );
+
+        writer.flush();
+
+        writer.close();
+
+        // ----------------------------------------------------------------------
+        //
+        // ----------------------------------------------------------------------
+
+        return new ExecutionResult( exitCode );
+    }
+
+    public boolean isRunning( long idCommand )
+    {
+        return CommandLineUtils.isAlive( idCommand );
+    }
+
+    public void killProcess( long idCommand )
+    {
+        CommandLineUtils.killProcess( idCommand );
     }
 }

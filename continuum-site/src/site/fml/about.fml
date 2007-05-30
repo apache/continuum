@@ -46,29 +46,17 @@
 
       </answer>
     </faq>
-    <faq id="features">
-      <question>What are the features of Continuum?</question>
-      <answer>
-        <p>
-          Continuum has the following major features:
-        </p>
-        <ul>
-          <li>A easy to use web interface</li>
-          <li>A very easy way to add new projects, see the
-            <a href="getting-started.html#Adding_projects">adding projects</a> section page for
-              more information
-          </li>
-          <li>A XML-RPC interface for automation and remoting</li>
-          <li>Mail notification</li>
-        </ul>
-      </answer>
-    </faq>
     <faq id="get-help">
       <question>Where do I get help with Continuum?</question>
       <answer>
         <p>
           Help for Continuum can be obtained by subscribing and posting to the
-          <a href="contact.html">Continuum Users List</a>.
+          <a href="mail-lists.html">Continuum Users List</a>.
+        </p>
+        <p>
+         There are also user contributed docs available from the 
+         <a href="http://docs.codehaus.org/display/CONTINUUMUSER/Home">Continuum Wiki</a>. 
+          Feel free to leave comments or improve the documentation on the wiki.  
         </p>
         <p>
           You can also join us on IRC at <code>irc.codehaus.org</code> on the channel <code>#continuum</code>. This
@@ -77,7 +65,7 @@
           in the <i>Channel</i> box).
         </p>
         <p>
-          Please remember that is is a preview release, so please be patient with features that are not yet implemented,
+          Please remember that it is a preview release, so please be patient with features that are not yet implemented,
           and be prepared to do some research and to help out yourself wherever possible.
         </p>
       </answer>
@@ -96,7 +84,7 @@
         </p>
         <p>
           For more information, please see
-          <a href="http://maven.apache.org/contributing/help.html">How to Help</a>.
+          <a href="http://maven.apache.org/guides/development/guide-helping.html">How to Help</a>.
         </p>
       </answer>
     </faq>
@@ -110,23 +98,38 @@
         </p>
         <p>
           To checkout the continuum-site project from the ASF Subversion repository, download the Subversion client for
-          your platform and run: <code>svn co http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-site</code>
+          your platform and run:
+          <source>
+svn co https://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-site
+          </source>
         </p>
         <p>
           To build the continuum-site project you will need to use Maven 2.  You can download Maven 2 from the <a 
           href="http://maven.apache.org/maven2/download.html">Downloads page on the Maven 2 project site</a>.  Once you
           have installed Maven 2 and added it to your <code>PATH</code>, you can build the Continuum project site by
-          executing the <code>site:site</code> goal with the following command: <code>m2 site:site</code>.
+          executing the <code>site:site</code> goal with the following command:
+          <source>
+mvn site:site
+          </source>
           After executing the <code>site:site</code> goal, the Continuum site will be stored in the
           <code>target/site</code> directory.
         </p>
         <p>
-          Once you have updated the documentation, generate a patch by running <code>svn diff > site-patch.txt</code>.  Create a
+          If you receive an error resolving the artifact <code>continuum-parent</code>, download the parent pom.xml from <a 
+          href="http://svn.apache.org/repos/asf/maven/continuum/trunk/pom.xml">here</a> and place it in the directory above your
+          <code>continuum-site</code> directory.  Then try the build again.
+        </p>
+        <p>
+          Once you have updated the documentation, generate a patch by running
+          <source>
+svn diff > site-patch.txt
+          </source>
+          Create a
           new issue in the Continuum JIRA project, and attach your patch to this issue.  Before submitting the patch, make sure
           to build the Continuum site locally and proofread for any typos.
         </p>
         <p>
-          Note: If you haven't already read <a href="http://maven.apache.org/contributing/help.html">How to Help</a>, you should.
+          Note: If you haven't already read <a href="http://maven.apache.org/guides/development/guide-helping.html">How to Help</a>, you should.
           And, if you happen to use Emacs, don't forget to <code>(setq-default tab-width 4 indent-tabs-mode nil)</code>.
         </p>
       </answer>

@@ -1,44 +1,65 @@
 package org.apache.maven.continuum.core.action;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ScmResult;
+import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.continuum.scm.ContinuumScm;
+import org.apache.maven.continuum.scm.ContinuumScmException;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.utils.ContinuumUtils;
+import org.apache.maven.scm.manager.NoSuchScmProviderException;
 
 import java.io.File;
 import java.util.Map;
 
-import org.apache.maven.continuum.project.ContinuumProject;
-import org.apache.maven.continuum.scm.CheckOutScmResult;
-import org.apache.maven.continuum.scm.ContinuumScmException;
-import org.apache.maven.continuum.scm.ScmResult;
-import org.apache.maven.continuum.utils.ContinuumUtils;
-import org.apache.maven.scm.manager.NoSuchScmProviderException;
-
-import org.codehaus.plexus.util.StringUtils;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
+ *
+ * @plexus.component
+ *   role="org.codehaus.plexus.action.Action"
+ *   role-hint="checkout-project"
  */
 public class CheckoutProjectContinuumAction
     extends AbstractContinuumAction
 {
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumScm scm;
+
+    /**
+     * @plexus.requirement role-hint="jdo"
+     */
+    private ContinuumStore store;
+
     public void execute( Map context )
         throws Exception
     {
-        ContinuumProject project = getProject( context );
+        Project project = getProject( context );
+
+        project.setState( ContinuumProjectState.CHECKING_OUT );
+
+        store.updateProject( project );
 
         File workingDirectory = getWorkingDirectory( context );
 
@@ -46,67 +67,54 @@ public class CheckoutProjectContinuumAction
         // Check out the project
         // ----------------------------------------------------------------------
 
+        ScmResult result;
+
         try
         {
-            CheckOutScmResult result = getScm().checkOut( project, workingDirectory );
-
-            context.put( KEY_CHECKOUT_SCM_RESULT, result );
+            result = scm.checkOut( project, workingDirectory );
         }
-        catch ( Throwable e )
-        {
-            handleThrowable( e, context );
-        }
-    }
-
-    public static void handleThrowable( Throwable e, Map context )
-    {
-        String errorMessage;
-
-        Throwable exception;
-
-        if ( e instanceof ContinuumScmException )
+        catch ( ContinuumScmException e )
         {
             // TODO: Dissect the scm exception to be able to give better feedback
             Throwable cause = e.getCause();
 
             if ( cause instanceof NoSuchScmProviderException )
             {
-                errorMessage = cause.getMessage();
+                result = new ScmResult();
 
-                exception = null;
+                result.setSuccess( false );
+
+                result.setProviderMessage( cause.getMessage() );
+            }
+            else if ( e.getResult() != null )
+            {
+                result = e.getResult();
             }
             else
             {
-                ContinuumScmException ex = (ContinuumScmException) e;
+                result = new ScmResult();
 
-                ScmResult result = ex.getResult();
+                result.setSuccess( false );
 
-                if ( result != null )
-                {
-                    errorMessage = "";
-                    errorMessage += "Provider message: "  + StringUtils.clean( result.getProviderMessage() ) + System.getProperty( "line.separator" );
-                    errorMessage += "Command output: " + System.getProperty( "line.separator" );
-                    errorMessage += "-------------------------------------------------------------------------------" + System.getProperty( "line.separator" );
-                    errorMessage += StringUtils.clean( result.getCommandOutput() );
-                    errorMessage += "-------------------------------------------------------------------------------" + System.getProperty( "line.separator" );
-                }
-                else
-                {
-                    errorMessage = "";
-                }
-
-                exception = e;
+                result.setException( ContinuumUtils.throwableMessagesToString( e ) );
             }
         }
-        else
+        catch ( Throwable t )
         {
-            errorMessage = "Unknown exception, type: " + e.getClass().getName();
+            // TODO: do we want this here, or should it be to the logs?
+            result = new ScmResult();
 
-            exception = e;
+            result.setSuccess( false );
+
+            result.setException( ContinuumUtils.throwableMessagesToString( t ) );
+        }
+        finally
+        {
+            project.setState( ContinuumProjectState.CHECKEDOUT );
+
+            store.updateProject( project );
         }
 
-        context.put( KEY_CHECKOUT_ERROR_MESSAGE, errorMessage );
-
-        context.put( KEY_CHECKOUT_ERROR_EXCEPTION, ContinuumUtils.throwableToString( exception ) );
+        context.put( KEY_CHECKOUT_SCM_RESULT, result );
     }
 }

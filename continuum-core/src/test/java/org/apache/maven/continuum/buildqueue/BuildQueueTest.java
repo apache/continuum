@@ -1,25 +1,27 @@
 package org.apache.maven.continuum.buildqueue;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.store.ModelloJPoxContinuumStoreTest;
-
-import org.codehaus.plexus.PlexusTestCase;
+import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 
@@ -28,11 +30,9 @@ import org.codehaus.plexus.taskqueue.TaskQueue;
  * @version $Id$
  */
 public class BuildQueueTest
-    extends PlexusTestCase
+    extends AbstractContinuumTest
 {
     private TaskQueue buildQueue;
-
-    private ContinuumStore store;
 
     public void setUp()
         throws Exception
@@ -40,27 +40,27 @@ public class BuildQueueTest
         super.setUp();
 
         buildQueue = (TaskQueue) lookup( TaskQueue.ROLE, "build-project" );
-
-        store = (ContinuumStore) lookup( ContinuumStore.ROLE );
     }
 
     public void testTestTheQueueWithASingleProject()
         throws Exception
     {
-        String projectId = ModelloJPoxContinuumStoreTest.addMavenTwoProject( store, "Build Queue Project 1", "1" );
+        Project project = addProject( getStore(), "Build Queue Project 1" );
 
-        buildProject( projectId, false );
+        int projectId = project.getId();
+
+        buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED );
 
         assertNextBuildIs( projectId );
 
         assertNextBuildIsNull();
 
-        buildProject( projectId, false );
+        buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED );
 
-        buildProject( projectId, false );
-        buildProject( projectId, false );
-        buildProject( projectId, false );
-        buildProject( projectId, false );
+        buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED );
+        buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED );
+        buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED );
+        buildProject( projectId, ContinuumProjectState.TRIGGER_SCHEDULED );
 
         assertNextBuildIs( projectId );
 
@@ -70,13 +70,13 @@ public class BuildQueueTest
     public void testTheQueueWithMultipleProjects()
         throws Exception
     {
-        String projectId1 = ModelloJPoxContinuumStoreTest.addMavenTwoProject( store, "Build Queue Project 2", "foo" );
+        int projectId1 = addProject( getStore(), "Build Queue Project 2" ).getId();
 
-        String projectId2 = ModelloJPoxContinuumStoreTest.addMavenTwoProject( store, "Build Queue Project 3", "bar" );
+        int projectId2 = addProject( getStore(), "Build Queue Project 3" ).getId();
 
-        buildProject( projectId1, false );
+        buildProject( projectId1, ContinuumProjectState.TRIGGER_SCHEDULED );
 
-        buildProject( projectId2, false );
+        buildProject( projectId2, ContinuumProjectState.TRIGGER_SCHEDULED );
 
         assertNextBuildIs( projectId1 );
 
@@ -84,18 +84,11 @@ public class BuildQueueTest
 
         assertNextBuildIsNull();
 
-        buildProject( projectId1, false );
-
-        buildProject( projectId2, false );
-
-        buildProject( projectId1, false );
-        buildProject( projectId2, false );
-        buildProject( projectId1, false );
-        buildProject( projectId2, false );
-        buildProject( projectId1, false );
-        buildProject( projectId2, false );
-        buildProject( projectId1, false );
-        buildProject( projectId2, false );
+        for ( int i = 0; i < 5; i++ )
+        {
+            buildProject( projectId1, ContinuumProjectState.TRIGGER_SCHEDULED );
+            buildProject( projectId2, ContinuumProjectState.TRIGGER_SCHEDULED );
+        }
 
         assertNextBuildIs( projectId1 );
         assertNextBuildIs( projectId2 );
@@ -108,19 +101,18 @@ public class BuildQueueTest
     {
         String name = "Build Queue Project 4";
 
-        String projectId = ModelloJPoxContinuumStoreTest.addMavenTwoProject( store, name, "4" );
+        int projectId = addProject( getStore(), name ).getId();
 
-        buildProject( projectId, true );
+        buildProject( projectId, ContinuumProjectState.TRIGGER_FORCED );
 
         assertNextBuildIs( projectId );
 
         assertNextBuildIsNull();
 
-        buildProject( projectId, true );
-        buildProject( projectId, true );
-        buildProject( projectId, true );
-        buildProject( projectId, true );
-        buildProject( projectId, true );
+        for ( int i = 0; i < 5; i++ )
+        {
+            buildProject( projectId, ContinuumProjectState.TRIGGER_FORCED );
+        }
 
         assertNextBuildIs( projectId );
         assertNextBuildIs( projectId );
@@ -135,20 +127,20 @@ public class BuildQueueTest
     //
     // ----------------------------------------------------------------------
 
-    private void buildProject( String projectId, boolean force )
+    private void buildProject( int projectId, int trigger )
         throws Exception
     {
-        buildQueue.put( new BuildProjectTask( projectId, force ) );
+        buildQueue.put( new BuildProjectTask( projectId, 0, trigger ) );
     }
 
-    private void assertNextBuildIs( String expectedProjectId )
+    private void assertNextBuildIs( int expectedProjectId )
         throws Exception
     {
         Task task = buildQueue.take();
 
         assertEquals( BuildProjectTask.class.getName(), task.getClass().getName() );
 
-        BuildProjectTask buildProjectTask = ( BuildProjectTask ) task;
+        BuildProjectTask buildProjectTask = (BuildProjectTask) task;
 
         assertEquals( "Didn't get the expected project id.", expectedProjectId, buildProjectTask.getProjectId() );
     }

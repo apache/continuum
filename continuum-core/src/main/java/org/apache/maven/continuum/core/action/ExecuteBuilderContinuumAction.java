@@ -1,42 +1,72 @@
 package org.apache.maven.continuum.core.action;
 
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-
-import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.utils.ContinuumUtils;
-import org.apache.maven.continuum.buildcontroller.DefaultBuildController;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
-import org.apache.maven.continuum.project.ContinuumBuild;
-import org.apache.maven.continuum.project.ContinuumProject;
+import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ScmResult;
+import org.apache.maven.continuum.model.scm.TestResult;
+import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.scm.UpdateScmResult;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.utils.ContinuumUtils;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
+ * @plexus.component role="org.codehaus.plexus.action.Action"
+ * role-hint="execute-builder"
  */
 public class ExecuteBuilderContinuumAction
     extends AbstractContinuumAction
 {
+    /**
+     * @plexus.requirement
+     */
+    private ConfigurationService configurationService;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildExecutorManager buildExecutorManager;
+
+    /**
+     * @plexus.requirement role-hint="jdo"
+     */
+    private ContinuumStore store;
+
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumNotificationDispatcher notifier;
+
     public void execute( Map context )
         throws Exception
     {
@@ -44,93 +74,134 @@ public class ExecuteBuilderContinuumAction
         // Get parameters from the context
         // ----------------------------------------------------------------------
 
-        ContinuumProject project = getProject( context );
+        Project project = getProject( context );
 
-        boolean forced = isForced( context );
+        BuildDefinition buildDefinition = getBuildDefinition( context );
 
-        UpdateScmResult updateScmResult = getUpdateScmResult( context );
+        int trigger = getTrigger( context );
 
-        ContinuumBuildExecutor buildExecutor = getCore().getBuildExecutor( project.getExecutorId() );
+        ScmResult scmResult = getUpdateScmResult( context );
+
+        List updatedDependencies = getUpdatedDependencies( context );
+
+        boolean hasUpdatedDependencies = updatedDependencies != null && !updatedDependencies.isEmpty();
+
+        boolean isFirstRun = ( (Boolean) context.get( AbstractContinuumAction.KEY_FIRST_RUN ) ).booleanValue();
+
+        ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
 
         // ----------------------------------------------------------------------
         // This is really a precondition for this action to execute
         // ----------------------------------------------------------------------
 
-        if ( updateScmResult.getUpdatedFiles().size() == 0 &&
-             !forced &&
-             !isNew( project ) )
+        if ( !isFirstRun && project.getOldState() != ContinuumProjectState.NEW &&
+            project.getOldState() != ContinuumProjectState.CHECKEDOUT && scmResult.getChanges().size() == 0 &&
+            !hasUpdatedDependencies && trigger != ContinuumProjectState.TRIGGER_FORCED && !isNew( project ) )
         {
             getLogger().info( "No files updated, not building. Project id '" + project.getId() + "'." );
+
+            project.setState( project.getOldState() );
+
+            project.setOldState( 0 );
+
+            store.updateProject( project );
 
             return;
         }
 
         // ----------------------------------------------------------------------
-        // Make the build
+        // Make the buildResult
         // ----------------------------------------------------------------------
 
-        ContinuumBuild build = new ContinuumBuild();
+        BuildResult buildResult = new BuildResult();
 
-        build.setStartTime( new Date().getTime() );
+        buildResult.setStartTime( new Date().getTime() );
 
-        build.setState( ContinuumProjectState.BUILDING );
+        buildResult.setState( ContinuumProjectState.BUILDING );
 
-        build.setForced( forced );
+        buildResult.setTrigger( trigger );
 
-        build.setUpdateScmResult( updateScmResult );
+        buildResult.setScmResult( scmResult );
 
-        String buildId = getStore().addBuild( project.getId(), build );
+        buildResult.setModifiedDependencies( updatedDependencies );
 
-        context.put( KEY_BUILD_ID, buildId );
+        store.addBuildResult( project, buildResult );
 
-        // ----------------------------------------------------------------------
-        //
-        // ----------------------------------------------------------------------
+        context.put( KEY_BUILD_ID, Integer.toString( buildResult.getId() ) );
 
-        build = getStore().getBuild( buildId );
+        buildResult = store.getBuildResult( buildResult.getId() );
 
         try
         {
-            getNotifier().runningGoals( project, getBuild( context ) );
+            notifier.runningGoals( project, buildDefinition, buildResult );
 
-            ContinuumBuildExecutionResult result = buildExecutor.build( project );
+            File buildOutputFile = configurationService.getBuildOutputFile( buildResult.getId(), project.getId() );
 
-            if ( result.isSuccess() )
-            {
-                build.setState( ContinuumProjectState.OK );
-            }
-            else
-            {
-                build.setState( ContinuumProjectState.FAILED );
-            }
+            ContinuumBuildExecutionResult result = buildExecutor.build( project, buildDefinition, buildOutputFile );
 
-            build.setSuccess( result.isSuccess() );
+            buildResult.setState( result.getExitCode() == 0 ? ContinuumProjectState.OK : ContinuumProjectState.FAILED );
 
-            build.setStandardOutput( result.getStandardOutput() );
-
-            build.setStandardError( result.getStandardError() );
-
-            build.setExitCode( result.getExitCode() );
+            buildResult.setExitCode( result.getExitCode() );
         }
-        catch( Throwable e )
+        catch ( Throwable e )
         {
-            build.setState( ContinuumProjectState.ERROR );
+            getLogger().error( "Error running buildResult", e );
 
-            build.setSuccess( false );
+            buildResult.setState( ContinuumProjectState.ERROR );
 
-            build.setError( ContinuumUtils.throwableToString( e ) );
+            buildResult.setError( ContinuumUtils.throwableToString( e ) );
         }
         finally
         {
-            build.setEndTime( new Date().getTime() );
+            buildResult.setEndTime( new Date().getTime() );
+
+            if ( buildResult.getState() == ContinuumProjectState.OK )
+            {
+                project.setBuildNumber( project.getBuildNumber() + 1 );
+            }
+
+            project.setLatestBuildId( buildResult.getId() );
+
+            buildDefinition.setLatestBuildId( buildResult.getId() );
+
+            buildResult.setBuildNumber( project.getBuildNumber() );
+
+            if ( buildResult.getState() != ContinuumProjectState.OK &&
+                buildResult.getState() != ContinuumProjectState.FAILED &&
+                buildResult.getState() != ContinuumProjectState.ERROR )
+            {
+                buildResult.setState( ContinuumProjectState.ERROR );
+            }
+
+            project.setState( buildResult.getState() );
 
             // ----------------------------------------------------------------------
-            // Copy over the build result
+            // Set the test result
             // ----------------------------------------------------------------------
 
-            getStore().updateBuild( build );
+            try
+            {
+                TestResult testResult = buildExecutor.getTestResults( project );
+                buildResult.setTestResult( testResult );
+            }
+            catch ( Throwable t )
+            {
+                getLogger().error( "Error getting test results", t );
+            }
 
-            getNotifier().goalsCompleted( project, build );
+            // ----------------------------------------------------------------------
+            // Copy over the buildResult result
+            // ----------------------------------------------------------------------
+
+            store.updateBuildResult( buildResult );
+
+            buildResult = store.getBuildResult( buildResult.getId() );
+
+            store.storeBuildDefinition( buildDefinition );
+
+            store.updateProject( project );
+
+            notifier.goalsCompleted( project, buildDefinition, buildResult );
         }
     }
 
@@ -138,11 +209,9 @@ public class ExecuteBuilderContinuumAction
     //
     // ----------------------------------------------------------------------
 
-    private boolean isNew( ContinuumProject project )
-        throws ContinuumException
+    private boolean isNew( Project project )
     {
-        Collection builds = getCore().getBuildsForProject( project.getId() );
-
-        return builds.size() == 0;
+        return project.getState() == ContinuumProjectState.NEW ||
+            project.getState() == ContinuumProjectState.CHECKEDOUT;
     }
 }

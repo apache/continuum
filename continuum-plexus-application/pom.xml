@@ -1,192 +1,56 @@
-<project>
-  <modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <groupId>org.apache.maven.continuum</groupId>
     <artifactId>continuum-parent</artifactId>
-    <version>1.0</version>
+    <groupId>org.apache.maven.continuum</groupId>
+    <version>1.1-alpha-2</version>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-plexus-application</artifactId>
-  <name>Continuum Plexus Application</name>
-  <version>1.0-alpha-3-SNAPSHOT</version>
   <packaging>plexus-application</packaging>
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-xfire</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-xmlrpc</artifactId>
-    </dependency>
-    <!-- Version overrides -->
-    <dependency>
-      <groupId>classworlds</groupId>
-      <artifactId>classworlds</artifactId>
-      <version>1.1-alpha-1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>plexus</groupId>
-      <artifactId>plexus-velocity</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-    <!--
-     |
-     | Continuum notifiers
-     |
-     |-->
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-notifier-irc</artifactId>
-      <version>1.0-alpha-3-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-notifier-jabber</artifactId>
-      <version>1.0-alpha-3-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
-      <artifactId>continuum-notifier-msn</artifactId>
-      <version>1.0-alpha-3-SNAPSHOT</version>
-    </dependency>
-
-    <!--
-     |
-     | Plexus appserver
-     |
-     |-->
-    <dependency>
-      <groupId>plexus</groupId>
-      <artifactId>plexus-appserver</artifactId>
-      <version>1.0-alpha-3-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>plexus</groupId>
-      <artifactId>plexus-container-artifact</artifactId>
-      <version>1.0-alpha-3</version>
-    </dependency>
-    
-    <!--
-     |
-     | Plexus services
-     |
-     |-->
-    <dependency>
-      <groupId>plexus</groupId>
-      <artifactId>plexus-service-jetty</artifactId>
-      <version>1.0-alpha-2-SNAPSHOT</version>
-      <type>plexus-service</type>
-    </dependency>
-    <dependency>
-      <groupId>plexus</groupId>
-      <artifactId>plexus-service-xmlrpc</artifactId>
-      <version>1.0-alpha-2</version>
-      <type>plexus-service</type>
-    </dependency>
-
-    <!--
-     |
-     | Implementations of required services
-     |
-     |-->
-
-    <!-- Maven SCM Providers -->
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-cvs</artifactId>
-      <version>1.0-alpha-1</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-svn</artifactId>
-      <version>1.0-alpha-1</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-local</artifactId>
-      <version>1.0-alpha-1</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <!-- Maven Wagons -->
-    <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-http-lightweight</artifactId>
-      <version>1.0-alpha-3</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <!-- Misc -->
-    <dependency>
-      <groupId>plexus</groupId>
-      <artifactId>plexus-mail-sender-simple</artifactId>
-      <version>1.0-alpha-1</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>1.7.3.0</version>
-      <scope>runtime</scope>
-    </dependency>
-  </dependencies>
+  <name>Continuum Application</name>
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-plexus-plugin</artifactId>
-        <version>1.1-alpha-3-SNAPSHOT</version>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-appserver-maven-plugin</artifactId>
+        <version>2.0-alpha-8</version>
+        <extensions>true</extensions>
         <configuration>
           <applicationConfiguration>src/conf/application.xml</applicationConfiguration>
           <configurationsDirectory>src/conf</configurationsDirectory>
-          <configurationProperties>app.properties</configurationProperties>
+          <configurationProperties>src/plexus.properties</configurationProperties>
           <applicationName>continuum</applicationName>
-          <runtimeConfiguration>src/test/conf/test-runtime-configuration.xml</runtimeConfiguration>
-          <runtimeConfigurationProperties>app.properties</runtimeConfigurationProperties>
-          <runtimePath>target/plexus-test-runtime</runtimePath>
+          <runtimeConfiguration>src/conf/plexus.xml</runtimeConfiguration>
+          <runtimeConfigurationProperties>src/plexus.properties</runtimeConfigurationProperties>
+          <runtimePath>target/plexus-continuum-runtime</runtimePath>
         </configuration>
-        <executions>
-          <execution>
-            <id>test-runtime</id>
-            <goals>
-              <goal>runtime</goal>
-              <goal>add-app</goal>
-              <goal>add-services</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.0-alpha-2</version>
-        <configuration>
-          <descriptor>src/assembly/bin.xml</descriptor>
-          <!-- TODO: isn't this the default? if not, can we use the ${pom.} expression? -->
-          <finalName>continuum-1.0-alpha-3-SNAPSHOT</finalName>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>assembly</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-webapp</artifactId>
+      <type>war</type>
+    </dependency>
+  </dependencies>
 </project>

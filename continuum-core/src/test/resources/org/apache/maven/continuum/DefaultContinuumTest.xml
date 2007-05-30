@@ -1,3 +1,22 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
 <plexus>
   <components>
     <component>
@@ -7,20 +26,122 @@
         <toOverride>nobody@localhost</toOverride>
       </configuration>
     </component>
+    <component>
+      <role>org.codehaus.plexus.action.Action</role>
+      <role-hint>testAction</role-hint>
+      <implementation>org.apache.maven.continuum.TestAction</implementation>
+    </component>
     <!--
      |
      | These point to the flows that we use as part of the runtime.
      |
-     | TODO: these should probably be packaged in the core package but the plexus-workflow package would
+     | TODO: these should probably be packaged in the core package but the plexus-osworkflow package would
      | need to be modified in order to find them all packaged in the JAR.
      |
      -->
     <component>
-      <role>org.codehaus.plexus.workflow.WorkflowEngine</role>
-      <implementation>org.codehaus.plexus.workflow.DefaultWorkflowEngine</implementation>
+      <role>org.codehaus.plexus.osworkflow.WorkflowEngine</role>
+      <implementation>org.codehaus.plexus.osworkflow.DefaultWorkflowEngine</implementation>
       <configuration>
         <workflowDirectory>${basedir}/../continuum-plexus-application/src/conf/workflows</workflowDirectory>
       </configuration>
     </component>
+
+    <!--
+     |
+     | Validators
+     |
+    -->
+    <component>
+      <role>org.codehaus.plexus.formica.validation.Validator</role>
+      <role-hint>url</role-hint>
+      <implementation>org.codehaus.plexus.formica.validation.UrlValidator</implementation>
+      <configuration>
+        <allowedSchemes>
+          <allowedScheme>http</allowedScheme>
+          <allowedScheme>https</allowedScheme>
+          <allowedScheme>ftp</allowedScheme>
+          <allowedScheme>file</allowedScheme>
+        </allowedSchemes>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.redback.role.processor.RoleModelProcessor</role>
+      <role-hint>default</role-hint>
+      <implementation>org.codehaus.plexus.redback.role.processor.DefaultRoleModelProcessor</implementation>
+      <description>DefaultRoleModelProcessor: inserts the components of the model that can be populated into the rbac manager</description>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.redback.rbac.RBACManager</role>
+          <role-hint>memory</role-hint>
+          <field-name>rbacManager</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>org.codehaus.plexus.redback.role.merger.RoleModelMerger</role>
+      <role-hint>default</role-hint>
+      <implementation>org.codehaus.plexus.redback.role.merger.DefaultRoleModelMerger</implementation>
+      <description>DefaultRoleModelValidator: validates completeness of the model</description>
+    </component>
+    <component>
+      <role>org.codehaus.plexus.redback.role.validator.RoleModelValidator</role>
+      <role-hint>default</role-hint>
+      <implementation>org.codehaus.plexus.redback.role.validator.DefaultRoleModelValidator</implementation>
+      <description>DefaultRoleModelValidator: validates completeness of the model</description>
+    </component>
+    <component>
+      <role>org.codehaus.plexus.redback.role.template.RoleTemplateProcessor</role>
+      <role-hint>default</role-hint>
+      <implementation>org.codehaus.plexus.redback.role.template.DefaultRoleTemplateProcessor</implementation>
+      <description>DefaultRoleTemplateProcessor: inserts the components of a template into the rbac manager</description>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.redback.rbac.RBACManager</role>
+          <role-hint>memory</role-hint>
+          <field-name>rbacManager</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>org.codehaus.plexus.redback.role.RoleManager</role>
+      <role-hint>default</role-hint>
+      <implementation>org.codehaus.plexus.redback.role.DefaultRoleManager</implementation>
+      <instantiation-strategy>singleton</instantiation-strategy>
+      <description>RoleProfileManager:</description>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.redback.role.merger.RoleModelMerger</role>
+          <role-hint>default</role-hint>
+          <field-name>modelMerger</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.role.validator.RoleModelValidator</role>
+          <role-hint>default</role-hint>
+          <field-name>modelValidator</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.role.processor.RoleModelProcessor</role>
+          <role-hint>default</role-hint>
+          <field-name>modelProcessor</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.role.template.RoleTemplateProcessor</role>
+          <role-hint>default</role-hint>
+          <field-name>templateProcessor</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.rbac.RBACManager</role>
+          <role-hint>memory</role-hint>
+          <field-name>rbacManager</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.PlexusContainer</role>
+          <field-name>container</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
   </components>
 </plexus>
