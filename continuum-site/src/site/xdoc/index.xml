@@ -26,7 +26,7 @@
   <body>
     <section name="Welcome to Continuum">
       <div id="downloadbox">
-        <h5>Get Continuum 1.1 Alpha 1</h5>
+        <h5>Get Continuum 1.1 Alpha 2</h5>
         <p>
           <a href="download.html">
             <img valign="top" src="http://maven.apache.org/images/folder-open.gif" border="0" alt="" title="download"/>
@@ -65,6 +65,13 @@
           <li>Shell scripts</li>
         </ul>
       </p>
+      
+      <p>
+        We are currently working on releasing version 1.1 of continuum, if you would like to help out, download one of the alpha releases and give it a whirl.
+        
+        <ul/>
+      </p>
+      
       <p><img src="images/project-groups.png"/></p>
       <subsection name="About Continuum">
         <p>
@@ -88,6 +95,7 @@
     <section name="Latest News">
       <p>
         <ul>
+          <li>Continuum 1.1 Alpha 2 Release Available - June 3, 2007</li>
           <li>Continuum 1.1 Alpha 1 Release Available - April 23, 2007</li>
           <li>Continuum 1.0.3 Final Release Available - April 25 2006</li>
           <li>Continuum 1.0.2 Final Release Available - December 09 2005</li>
