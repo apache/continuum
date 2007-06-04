@@ -21,11 +21,8 @@ package org.apache.maven.continuum.management;
 
 import org.apache.maven.continuum.store.AbstractContinuumStoreTestCase;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
-import org.codehaus.plexus.jdo.JdoFactory;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
