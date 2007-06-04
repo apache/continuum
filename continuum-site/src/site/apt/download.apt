@@ -6,12 +6,14 @@
  ------
  MON April 24 2006
 
-Download Continuum 1.1 Alpha 1
+Download Continuum 1.1 Alpha 2
 
-  Continuum 1.1 Alpha 1 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
+  Continuum 1.1 Alpha 2 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
 
 *-------------------------------+---------+----------+-----------+
 |                               | Download | Checksum | Signature |
+*-------------------------------+---------+----------+-----------+
+| Continuum 1.1-alpha-2 (tar.gz)| {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-2/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-2/continuum-plexus-runtime-1.1-alpha-2-bin.tar.gz} continuum-plexus-runtime-1.1-alpha-2-bin.tar.gz}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-2/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-2/continuum-plexus-runtime-1.1-alpha-2-bin.tar.gz.md5} continuum-1.1-alpha-2-bin.tar.gz.md5}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-2/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-2/continuum-plexus-runtime-1.1-alpha-2.tar.gz.asc} continuum-1.1-alpha-2-bin.tar.gz.asc}} |
 *-------------------------------+---------+----------+-----------+
 | Continuum 1.1-alpha-1 (tar.gz)| {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-1/continuum-plexus-runtime-1.1-alpha-1-bin.tar.gz} continuum-plexus-runtime-1.1-alpha-1-bin.tar.gz}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-1/continuum-plexus-runtime-1.1-alpha-1-bin.tar.gz.md5} continuum-1.1-alpha-1-bin.tar.gz.md5}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-1/continuum-plexus-runtime-1.1-alpha-1.tar.gz.asc} continuum-1.1-alpha-1-bin.tar.gz.asc}} |
 *-------------------------------+---------+----------+-----------+
