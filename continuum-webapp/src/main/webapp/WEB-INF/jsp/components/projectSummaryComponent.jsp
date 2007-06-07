@@ -48,8 +48,27 @@
         <ww:a href="%{projectUrl}">${pageScope.project.name}</ww:a>
       </ec:column>
       <ec:column property="version" title="summary.projectTable.version" width="13%"/>
-      <ec:column property="buildNumber" title="summary.projectTable.build" width="5%"
-                 cell="org.apache.maven.continuum.web.view.BuildCell"/>
+      <ec:column property="buildNumber" title="summary.projectTable.build" width="5%">
+        <c:choose>
+          <c:when test="${project.buildNumber gt 0}">
+            <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
+              <ww:url id="buildResult" action="buildResult">
+                <ww:param name="projecGroupId" value="${project.projectGroupId}"/>
+                <ww:param name="projectId" value="${project.id}"/>
+                <ww:param name="projectName" value="${project.name}"/>
+                <ww:param name="buildId" value="${project.buildInSuccessId}"/>
+              </ww:url>
+              <ww:a href="%{buildResult}">${project.buildNumber}</ww:a>
+            </redback:ifAuthorized>
+            <redback:elseAuthorized>
+              ${project.buildNumber}
+            </redback:elseAuthorized>
+          </c:when>
+          <c:otherwise>
+            &nbsp;
+          </c:otherwise>
+        </c:choose>
+      </ec:column>
       <ec:column property="projectGroupName" title="summary.projectTable.group" width="13%"/> 
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
