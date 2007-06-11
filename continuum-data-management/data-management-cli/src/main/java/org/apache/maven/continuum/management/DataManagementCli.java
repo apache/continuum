@@ -127,11 +127,17 @@ public class DataManagementCli
                 String id = urlEF.substring( urlEF.lastIndexOf( '/', idEndIdx - 1 ) + 1, idEndIdx );
                 // continuum-legacy included because the IDE doesn't do the proper assembly of enhanced classes and JDO metadata
                 if ( !"data-management-api".equals( id ) && !"data-management-cli".equals( id ) &&
-                    !"continuum-legacy".equals( id ) )
+                    !"continuum-legacy".equals( id ) && !"continuum-model".equals( id ) )
                 {
                     exclusions.add( "org.apache.maven.continuum:" + id );
                     jars.add( new File( url.getPath() ) );
                 }
+            }
+
+            // Sometimes finds its way into the IDE. Make sure it is loaded in the extra classloader too
+            if ( urlEF.contains( "jpox-enhancer" ) )
+            {
+                jars.add( new File( url.getPath() ) );
             }
         }
         ArtifactFilter filter = new ExcludesArtifactFilter( exclusions );
