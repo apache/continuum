@@ -14,23 +14,13 @@
         <artifactId>modello-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>modello-continuum-metadata</id>
-            <goals>
-              <goal>jpox-metadata-class</goal>
-            </goals>
-          </execution>
-          <execution>
             <id>modello-continuum</id>
             <goals>
               <goal>java</goal>
               <goal>stax-reader</goal>
               <goal>stax-writer</goal>
+              <goal>jpox-metadata-class</goal>
             </goals>
-            <configuration>
-              <packagedVersions>
-                <packagedVersion>1.0.9</packagedVersion>
-              </packagedVersions>
-            </configuration>
           </execution>
           <execution>
             <id>jpox-jdo-mapping</id>
