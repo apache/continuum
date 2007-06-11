@@ -100,7 +100,7 @@
           </execution>
           <execution>
             <id>hack-resources</id>
-            <phase>process-resources</phase>
+            <phase>process-classes</phase>
             <configuration>
               <tasks>
                 <!-- Workaround for MODELLO-91 -->
@@ -111,10 +111,11 @@
                 <replace dir="target/classes/META-INF" token='name="changecomment"' value='name="comment"'/>
                 <replace dir="target/classes/META-INF" token='name="changedate"' value='name="date"'/>
                 <replace dir="target/classes/META-INF" token='name="scheduledelay"' value='name="delay"'/>
-                <!-- TODO: can we remove this? -->
                 <move file="target/classes/META-INF/package.jdorepl"
                       tofile="target/classes/META-INF/package.jdorepl109"/>
-                <copy file="target/classes/META-INF/package.jdo" tofile="target/classes/META-INF/package.jdo109"/>
+                <move file="target/classes/META-INF/package.jdo" tofile="target/classes/META-INF/package.jdo109"/>
+                <delete file="target/classes/package.jdo" />
+                <delete file="target/classes/package.jdorepl" />
               </tasks>
             </configuration>
             <goals>
