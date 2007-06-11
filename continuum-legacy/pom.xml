@@ -1,0 +1,146 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>continuum-data-upgrade</artifactId>
+    <groupId>org.apache.maven.continuum</groupId>
+    <version>1.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>continuum-legacy</artifactId>
+  <name>Continuum Legacy Model</name>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.modello</groupId>
+        <artifactId>modello-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>modello-continuum-metadata</id>
+            <goals>
+              <goal>jpox-metadata-class</goal>
+              <goal>java</goal>
+              <goal>stax-reader</goal>
+              <goal>stax-writer</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>jpox-jdo-mapping</id>
+            <goals>
+              <goal>jpox-jdo-mapping</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/classes/META-INF</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jpox-jdo-mapping-replication</id>
+            <goals>
+              <goal>jpox-jdo-mapping</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/classes/META-INF</outputDirectory>
+              <replicationParameters>true</replicationParameters>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <version>1.0.9</version>
+          <packageWithVersion>true</packageWithVersion>
+          <model>src/main/mdo/continuum.xml</model>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jpox-maven-plugin</artifactId>
+        <version>1.1.6</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>enhance</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>hack-sources</id>
+            <phase>process-sources</phase>
+            <configuration>
+              <tasks>
+                <!-- Workaround for MODELLO-89 -->
+                <replace
+                    file="target/generated-sources/modello/org/apache/maven/continuum/model/project/v1_0_9/ContinuumModelloMetadata.java"
+                    token="project;" value="project.v1_0_9;"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>hack-resources</id>
+            <phase>process-resources</phase>
+            <configuration>
+              <tasks>
+                <!-- Workaround for MODELLO-91 -->
+                <replace dir="target/classes/META-INF" token='name="notifiertype"' value='name="type"'/>
+                <replace dir="target/classes/META-INF" token='name="resultstate"' value='name="state"'/>
+                <replace dir="target/classes/META-INF" token='name="resulttrigger"' value='name="trigger"'/>
+                <replace dir="target/classes/META-INF" token='name="projectstate"' value='name="state"'/>
+                <replace dir="target/classes/META-INF" token='name="changecomment"' value='name="comment"'/>
+                <replace dir="target/classes/META-INF" token='name="changedate"' value='name="date"'/>
+                <replace dir="target/classes/META-INF" token='name="scheduledelay"' value='name="delay"'/>
+                <!-- TODO: can we remove this? -->
+                <move file="target/classes/META-INF/package.jdorepl"
+                      tofile="target/classes/META-INF/package.jdorepl109"/>
+                <copy file="target/classes/META-INF/package.jdo" tofile="target/classes/META-INF/package.jdo109"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>net.java.dev.stax-utils</groupId>
+      <artifactId>stax-utils</artifactId>
+      <version>20060502</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.bea.xml</groupId>
+          <artifactId>jsr173-ri</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>stax</groupId>
+      <artifactId>stax-api</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+  </dependencies>
+</project>
