@@ -19,6 +19,8 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
+import java.util.Properties;
+
 /**
  * Bean for storing database parameters.
  */
@@ -37,6 +39,8 @@ public class DatabaseParams
     private String username;
 
     private String password;
+
+    private final Properties properties = new Properties();
 
     DatabaseParams( String driverClass, String groupId, String artifactId, String version, String username,
                     String password )
@@ -109,5 +113,10 @@ public class DatabaseParams
     public void setUrl( String url )
     {
         this.url = url;
+    }
+
+    public Properties getProperties()
+    {
+        return properties;
     }
 }
