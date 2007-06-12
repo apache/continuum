@@ -104,6 +104,7 @@ public class DataManagementCli
 
         DatabaseParams params = new DatabaseParams( databaseType.defaultParams );
         params.setUrl( command.jdbcUrl );
+        params.getProperties().setProperty( "org.jpox.cache.level1.type", "SafeguardCache" );
 
         DefaultPlexusContainer container = new DefaultPlexusContainer();
         List<Artifact> artifacts = new ArrayList<Artifact>();
@@ -144,7 +145,14 @@ public class DataManagementCli
 
         for ( Artifact a : artifacts )
         {
-            if ( filter.include( a ) )
+            if ( "jpox".equals( a.getGroupId() ) && "jpox".equals( a.getArtifactId() ) )
+            {
+                if ( a.getVersion().equals( databaseFormat.getJpoxVersion() ) )
+                {
+                    jars.add( a.getFile() );
+                }
+            }
+            else if ( filter.include( a ) )
             {
                 jars.add( a.getFile() );
             }
