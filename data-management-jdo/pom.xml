@@ -66,7 +66,7 @@
       <groupId>jpox</groupId>
       <artifactId>jpox</artifactId>
       <version>1.1.6</version>
-      <!-- Temporary while we have the cache in there
+      <!-- Temporary while we have the OID patch in there
             <scope>test</scope>
       -->
     </dependency>
