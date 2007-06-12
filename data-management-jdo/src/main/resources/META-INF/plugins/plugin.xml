@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<plugin id="org.apache.maven.continuum.management.jpox.SafeguardCache" name="JPOX plug-ins" provider-name="Maven">
+  <extension point="org.jpox.cache_level1">
+    <cache name="SafeguardCache" class-name="org.apache.maven.continuum.management.jpox.SafeguardCache"/>
+  </extension>
+</plugin>
