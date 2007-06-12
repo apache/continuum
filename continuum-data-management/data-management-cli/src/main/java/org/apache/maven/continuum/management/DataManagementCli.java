@@ -104,7 +104,6 @@ public class DataManagementCli
 
         DatabaseParams params = new DatabaseParams( databaseType.defaultParams );
         params.setUrl( command.jdbcUrl );
-        params.getProperties().setProperty( "org.jpox.cache.level1.type", "SafeguardCache" );
 
         DefaultPlexusContainer container = new DefaultPlexusContainer();
         List<Artifact> artifacts = new ArrayList<Artifact>();
