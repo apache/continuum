@@ -107,11 +107,11 @@ public class DataManagementCli
 
         DefaultPlexusContainer container = new DefaultPlexusContainer();
         List<Artifact> artifacts = new ArrayList<Artifact>();
-        artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion() ) );
         artifacts.addAll(
             downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion() ) );
         artifacts.addAll(
             downloadArtifact( container, "org.apache.maven.continuum", "data-management-jdo", "1.1-SNAPSHOT" ) );
+        artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion() ) );
 
         List<File> jars = new ArrayList<File>();
 
