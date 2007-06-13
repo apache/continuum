@@ -20,6 +20,7 @@ package org.apache.maven.continuum.management.redback;
  */
 
 import org.apache.maven.continuum.management.DataManagementException;
+import org.apache.maven.continuum.management.DataManagementTool;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusStoreException;
@@ -68,7 +69,7 @@ import java.util.Map;
  * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="legacy-redback-jdo"
  */
 public class LegacyJdoDataManagementTool
-    extends AbstractDataManagementTool
+    implements DataManagementTool
 {
     private static final String USERS_XML_NAME = "users.xml";
 
@@ -238,7 +239,8 @@ public class LegacyJdoDataManagementTool
                 else if ( objectExists( permission ) )
                 {
                     permission = (JdoPermission) PlexusJdoUtils.getObjectById( getPersistenceManager(),
-                                                                            JdoPermission.class, permission.getName() );
+                                                                               JdoPermission.class,
+                                                                               permission.getName() );
                     permissionMap.put( permission.getName(), permission );
                 }
                 else
@@ -251,13 +253,15 @@ public class LegacyJdoDataManagementTool
                     else if ( objectExists( operation ) )
                     {
                         operation = (JdoOperation) PlexusJdoUtils.getObjectById( getPersistenceManager(),
-                                                                              JdoOperation.class, operation.getName() );
+                                                                                 JdoOperation.class,
+                                                                                 operation.getName() );
                         operations.put( operation.getName(), operation );
                     }
                     else
                     {
                         RBACObjectAssertions.assertValid( operation );
-                        operation = (JdoOperation) PlexusJdoUtils.saveObject( getPersistenceManager(), operation, null );
+                        operation =
+                            (JdoOperation) PlexusJdoUtils.saveObject( getPersistenceManager(), operation, null );
                         operations.put( operation.getName(), operation );
                     }
                     permission.setOperation( operation );
@@ -269,8 +273,9 @@ public class LegacyJdoDataManagementTool
                     }
                     else if ( objectExists( resource ) )
                     {
-                        resource = (JdoResource) PlexusJdoUtils.getObjectById( getPersistenceManager(), JdoResource.class,
-                                                                            resource.getIdentifier() );
+                        resource = (JdoResource) PlexusJdoUtils.getObjectById( getPersistenceManager(),
+                                                                               JdoResource.class,
+                                                                               resource.getIdentifier() );
                         resources.put( resource.getIdentifier(), resource );
                     }
                     else

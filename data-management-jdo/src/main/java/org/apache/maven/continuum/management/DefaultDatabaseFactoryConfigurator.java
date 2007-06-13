@@ -21,14 +21,15 @@ package org.apache.maven.continuum.management;
 
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 
-import java.util.Properties;
 import java.util.Iterator;
+import java.util.Properties;
 
-public abstract class AbstractDataManagementTool
-    implements DataManagementTool
+/**
+ * @plexus.component role="org.apache.maven.continuum.management.DatabaseFactoryConfigurator" role-hint="continuum"
+ */
+public class DefaultDatabaseFactoryConfigurator
+    implements DatabaseFactoryConfigurator
 {
-    protected static final String BUILDS_XML = "builds.xml";
-
     /**
      * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="continuum"
      */

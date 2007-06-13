@@ -27,8 +27,6 @@ import java.io.IOException;
  */
 public interface DataManagementTool
 {
-    void configure( DatabaseParams params );
-
     /**
      * Backup the database.
      *

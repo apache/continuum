@@ -126,20 +126,20 @@ public class DataManagementCli
         {
             LOGGER.info( "Processing Continuum database..." );
             processDatabase( databaseType, databaseFormat, mode, command.buildsJdbcUrl, command.directory,
-                             databaseFormat.getContinuumToolRoleHint(), "data-management-jdo" );
+                             databaseFormat.getContinuumToolRoleHint(), "data-management-jdo", "continuum" );
         }
 
         if ( command.usersJdbcUrl != null )
         {
             LOGGER.info( "Processing Redback database..." );
             processDatabase( databaseType, databaseFormat, mode, command.usersJdbcUrl, command.directory,
-                             databaseFormat.getRedbackToolRoleHint(), "data-management-redback-jdo" );
+                             databaseFormat.getRedbackToolRoleHint(), "data-management-redback-jdo", "redback" );
         }
     }
 
     private static void processDatabase( SupportedDatabase databaseType, DatabaseFormat databaseFormat,
                                          OperationMode mode, String jdbcUrl, File directory, String toolRoleHint,
-                                         String managementArtifactId )
+                                         String managementArtifactId, String configRoleHint )
         throws PlexusContainerException, ComponentLookupException, ArtifactNotFoundException,
         ArtifactResolutionException, IOException
     {
@@ -206,9 +206,12 @@ public class DataManagementCli
 
         ClassRealm oldRealm = container.setLookupRealm( realm );
 
+        DatabaseFactoryConfigurator configurator = (DatabaseFactoryConfigurator) container.lookup(
+            DatabaseFactoryConfigurator.class.getName(), configRoleHint, realm );
+        configurator.configure( params );
+
         DataManagementTool manager =
             (DataManagementTool) container.lookup( DataManagementTool.class.getName(), toolRoleHint, realm );
-        manager.configure( params );
 
         if ( mode == OperationMode.EXPORT )
         {

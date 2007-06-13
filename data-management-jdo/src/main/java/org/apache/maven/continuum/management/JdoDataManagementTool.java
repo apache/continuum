@@ -30,7 +30,7 @@ import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxWriter;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.jdo.ConfigurableJdoFactory;
+import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -59,12 +59,19 @@ import java.util.Properties;
  * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="continuum-jdo"
  */
 public class JdoDataManagementTool
-    extends AbstractDataManagementTool
+    implements DataManagementTool
 {
     /**
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
+
+    protected static final String BUILDS_XML = "builds.xml";
+
+    /**
+     * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="continuum"
+     */
+    protected DefaultConfigurableJdoFactory factory;
 
     public void backupDatabase( File backupDirectory )
         throws IOException
