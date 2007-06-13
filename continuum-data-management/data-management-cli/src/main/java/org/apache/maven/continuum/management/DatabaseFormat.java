@@ -29,7 +29,7 @@ public enum DatabaseFormat
      *
      * @todo this hasn't been completed/tested - the model needs to be annotated with 1.0.3 metadata and converters written.
      */
-    CONTINUUM_103( "1.1.1", "legacy-jdo" )
+    CONTINUUM_103( "1.1.1", "legacy-continuum-jdo" )
         {
             public boolean isConvertibleFrom( DatabaseFormat sourceFormat )
             {
@@ -38,9 +38,9 @@ public enum DatabaseFormat
         },
 
     /**
-     * Continuum pre-alpha build database.
+     * Continuum pre-alpha build database. Plexus Security 1.0-alpha-5.
      */
-    CONTINUUM_109( "1.1.1", "legacy-jdo" )
+    CONTINUUM_109( "1.1.1", "legacy-continuum-jdo", "legacy-redback-jdo" )
         {
             public boolean isConvertibleFrom( DatabaseFormat sourceFormat )
             {
@@ -51,7 +51,7 @@ public enum DatabaseFormat
     /**
      * Continuum 1.1+ build database.
      */
-    CONTINUUM_11( "1.1.6", "jdo" )
+    CONTINUUM_11( "1.1.6", "continuum-jdo", "redback-jdo" )
         {
             public boolean isConvertibleFrom( DatabaseFormat sourceFormat )
             {
@@ -59,15 +59,28 @@ public enum DatabaseFormat
             }
         };
 
-    private String jpoxVersion;
+    private final String jpoxVersion;
 
-    private String toolRoleHint;
+    private final String continuumToolRoleHint;
 
-    DatabaseFormat( String jpoxVersion, String toolRoleHint )
+    private final String redbackToolRoleHint;
+
+    DatabaseFormat( String jpoxVersion, String continuumToolRoleHint )
     {
         this.jpoxVersion = jpoxVersion;
 
-        this.toolRoleHint = toolRoleHint;
+        this.continuumToolRoleHint = continuumToolRoleHint;
+
+        this.redbackToolRoleHint = null;
+    }
+
+    DatabaseFormat( String jpoxVersion, String continuumToolRoleHint, String redbackToolRoleHint )
+    {
+        this.jpoxVersion = jpoxVersion;
+
+        this.continuumToolRoleHint = continuumToolRoleHint;
+
+        this.redbackToolRoleHint = redbackToolRoleHint;
     }
 
     /**
@@ -83,8 +96,13 @@ public enum DatabaseFormat
         return jpoxVersion;
     }
 
-    public String getToolRoleHint()
+    public String getContinuumToolRoleHint()
     {
-        return toolRoleHint;
+        return continuumToolRoleHint;
+    }
+
+    public String getRedbackToolRoleHint()
+    {
+        return redbackToolRoleHint;
     }
 }

@@ -43,12 +43,14 @@ public class DataManagementToolTest
 
     private File targetDirectory;
 
+    private static final String BUILDS_XML = "builds.xml";
+
     protected void setUp()
         throws Exception
     {
         super.setUp();
 
-        dataManagementTool = (DataManagementTool) lookup( DataManagementTool.ROLE, "jdo" );
+        dataManagementTool = (DataManagementTool) lookup( DataManagementTool.class.getName(), "continuum-jdo" );
 
         targetDirectory = createBackupDirectory();
     }
@@ -77,9 +79,9 @@ public class DataManagementToolTest
         // test sanity check
         assertBuildDatabase();
 
-        dataManagementTool.backupBuildDatabase( targetDirectory );
+        dataManagementTool.backupDatabase( targetDirectory );
 
-        File backupFile = new File( targetDirectory, DataManagementTool.BUILDS_XML );
+        File backupFile = new File( targetDirectory, BUILDS_XML );
 
         assertTrue( "Check database exists", backupFile.exists() );
 
@@ -96,7 +98,7 @@ public class DataManagementToolTest
     {
         createBuildDatabase();
 
-        dataManagementTool.eraseBuildDatabase();
+        dataManagementTool.eraseDatabase();
 
         assertEmpty();
     }
@@ -108,17 +110,17 @@ public class DataManagementToolTest
 
         assertEmpty();
 
-        File backupFile = new File( targetDirectory, DataManagementTool.BUILDS_XML );
+        File backupFile = new File( targetDirectory, BUILDS_XML );
 
         IOUtil.copy( getClass().getResourceAsStream( "/expected.xml" ), new FileWriter( backupFile ) );
 
-        dataManagementTool.restoreBuildDatabase( targetDirectory );
+        dataManagementTool.restoreDatabase( targetDirectory );
 
         // TODO: why is this wrong?
         assertBuildDatabase();
 
         // Test that it worked. Relies on BackupBuilds having worked
-        dataManagementTool.backupBuildDatabase( targetDirectory );
+        dataManagementTool.backupDatabase( targetDirectory );
 
         StringWriter sw = new StringWriter();
 
