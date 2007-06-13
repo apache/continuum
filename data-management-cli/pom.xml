@@ -46,6 +46,13 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>data-management-redback-jdo</artifactId>
+      <version>1.1-SNAPSHOT</version>
+      <!-- Ensures correct build order -->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.google.code.cli-parser</groupId>
       <artifactId>cli</artifactId>
       <version>7</version>
