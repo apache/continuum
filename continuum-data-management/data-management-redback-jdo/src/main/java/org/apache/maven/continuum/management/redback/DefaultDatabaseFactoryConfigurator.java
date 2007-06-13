@@ -1,5 +1,12 @@
 package org.apache.maven.continuum.management.redback;
 
+import org.apache.maven.continuum.management.DatabaseFactoryConfigurator;
+import org.apache.maven.continuum.management.DatabaseParams;
+import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
+
+import java.util.Iterator;
+import java.util.Properties;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,15 +26,11 @@ package org.apache.maven.continuum.management.redback;
  * under the License.
  */
 
-import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
-import org.apache.maven.continuum.management.DataManagementTool;
-import org.apache.maven.continuum.management.DatabaseParams;
-
-import java.util.Properties;
-import java.util.Iterator;
-
-public abstract class AbstractDataManagementTool
-    implements DataManagementTool
+/**
+ * @plexus.component role="org.apache.maven.continuum.management.DatabaseFactoryConfigurator" role-hint="redback"
+ */
+public class DefaultDatabaseFactoryConfigurator
+    implements DatabaseFactoryConfigurator
 {
     /**
      * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="users"
