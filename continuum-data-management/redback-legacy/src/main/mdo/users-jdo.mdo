@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<model>
+  <id>plexus-security-user-management-provider-jdo</id>
+  <name>UserManagement</name>
+  <version>0.9.0</version>
+  <description>Plexus Security User Management object model.</description>
+  <defaults>
+    <default>
+      <key>package</key>
+      <value>org.codehaus.plexus.security.user.jdo</value>
+    </default>
+  </defaults>
+
+  <classes>
+    <class stash.storable="false" rootElement="true">
+      <name>UserDatabase</name>
+      <version>0.9.0</version>
+      <fields>
+        <field>
+          <name>users</name>
+          <version>0.9.0</version>
+          <association>
+            <type>JdoUser</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
+    <class stash.storable="true" jpox.use-identifiers-as-primary-key="false">
+      <name>JdoUser</name>
+      <version>0.9.0</version>
+      <interfaces>
+        <interface>org.codehaus.plexus.security.user.User</interface>
+      </interfaces>
+      <description>
+        @plexus.component role="org.codehaus.plexus.security.user.User"
+        role-hint="jdo"
+      </description>
+      <fields>
+        <field jpox.primary-key="true" jpox.value-strategy="off" jpox.persistence-modifier="persistent">
+          <name>username</name>
+          <version>0.9.0</version>
+          <type>String</type>
+          <identifier>true</identifier>
+        </field>
+        <field jpox.column="USER_PASSWORD">
+          <name>password</name>
+          <version>0.9.0</version>
+          <type>String</type>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>encodedPassword</name>
+          <version>0.9.0</version>
+          <type>String</type>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>fullName</name>
+          <version>0.9.0</version>
+          <type>String</type>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>email</name>
+          <version>0.9.0</version>
+          <type>String</type>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>lastPasswordChange</name>
+          <version>0.9.0</version>
+          <type>Date</type>
+        </field>
+        <field>
+          <name>lastLoginDate</name>
+          <version>0.9.0</version>
+          <type>Date</type>
+        </field>
+        <field>
+          <name>countFailedLoginAttempts</name>
+          <version>0.9.0</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>locked</name>
+          <version>0.9.0</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>permanent</name>
+          <version>0.9.0</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>validated</name>
+          <version>0.9.0</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>passwordChangeRequired</name>
+          <version>0.9.0</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>previousEncodedPasswords</name>
+          <version>0.9.0</version>
+          <association stash.part="true">
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>accountCreationDate</name>
+          <version>0.9.0</version>
+          <type>Date</type>
+        </field>
+      </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>0.9.0</version>
+          <code><![CDATA[
+              public JdoUser()
+              {
+                 // Intentionally initialize List to avoid JPOX NullPointerException Issues.
+              	 previousEncodedPasswords = new java.util.ArrayList();
+              }
+
+              public Object getPrincipal()
+              {
+                 return username;
+              }
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+  </classes>
+</model>

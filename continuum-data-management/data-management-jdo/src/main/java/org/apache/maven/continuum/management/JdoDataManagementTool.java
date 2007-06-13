@@ -56,22 +56,17 @@ import java.util.Properties;
 /**
  * JDO implementation the database management tool API.
  *
- * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="jdo"
+ * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="continuum-jdo"
  */
 public class JdoDataManagementTool
-    implements DataManagementTool
+    extends AbstractDataManagementTool
 {
     /**
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
 
-    /**
-     * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="continuum"
-     */
-    private ConfigurableJdoFactory factory;
-
-    public void backupBuildDatabase( File backupDirectory )
+    public void backupDatabase( File backupDirectory )
         throws IOException
     {
         ContinuumDatabase database = new ContinuumDatabase();
@@ -113,12 +108,12 @@ public class JdoDataManagementTool
         }
     }
 
-    public void eraseBuildDatabase()
+    public void eraseDatabase()
     {
         store.eraseDatabase();
     }
 
-    public void restoreBuildDatabase( File backupDirectory )
+    public void restoreDatabase( File backupDirectory )
         throws IOException
     {
         ContinuumStaxReader reader = new ContinuumStaxReader();

@@ -39,10 +39,12 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ExcludesArtifactFilter;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -57,6 +59,8 @@ import java.util.List;
  */
 public class DataManagementCli
 {
+    private static final Logger LOGGER = Logger.getLogger( DataManagementCli.class );
+
     public static void main( String[] args )
         throws Exception
     {
@@ -95,22 +99,59 @@ public class DataManagementCli
             return;
         }
 
+        if ( command.buildsJdbcUrl == null && command.usersJdbcUrl == null )
+        {
+            System.err.println( "You must specify one of -buildsJdbcUrl and -usersJdbcUrl" );
+            return;
+        }
+
+        if ( command.usersJdbcUrl != null && databaseFormat == DatabaseFormat.CONTINUUM_103 )
+        {
+            System.err.println( "The -usersJdbcUrl option can not be used with Continuum 1.0.3 databases" );
+            return;
+        }
+
+        BasicConfigurator.configure();
         if ( command.debug )
         {
-            BasicConfigurator.configure();
             Logger.getRootLogger().setLevel( Level.DEBUG );
             Logger.getLogger( "JPOX" ).setLevel( Level.DEBUG );
         }
+        else
+        {
+            Logger.getRootLogger().setLevel( Level.INFO );
+        }
 
+        if ( command.buildsJdbcUrl != null )
+        {
+            LOGGER.info( "Processing Continuum database..." );
+            processDatabase( databaseType, databaseFormat, mode, command.buildsJdbcUrl, command.directory,
+                             databaseFormat.getContinuumToolRoleHint(), "data-management-jdo" );
+        }
+
+        if ( command.usersJdbcUrl != null )
+        {
+            LOGGER.info( "Processing Redback database..." );
+            processDatabase( databaseType, databaseFormat, mode, command.usersJdbcUrl, command.directory,
+                             databaseFormat.getRedbackToolRoleHint(), "data-management-redback-jdo" );
+        }
+    }
+
+    private static void processDatabase( SupportedDatabase databaseType, DatabaseFormat databaseFormat,
+                                         OperationMode mode, String jdbcUrl, File directory, String toolRoleHint,
+                                         String managementArtifactId )
+        throws PlexusContainerException, ComponentLookupException, ArtifactNotFoundException,
+        ArtifactResolutionException, IOException
+    {
         DatabaseParams params = new DatabaseParams( databaseType.defaultParams );
-        params.setUrl( command.jdbcUrl );
+        params.setUrl( jdbcUrl );
 
         DefaultPlexusContainer container = new DefaultPlexusContainer();
         List<Artifact> artifacts = new ArrayList<Artifact>();
         artifacts.addAll(
             downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion() ) );
         artifacts.addAll(
-            downloadArtifact( container, "org.apache.maven.continuum", "data-management-jdo", "1.1-SNAPSHOT" ) );
+            downloadArtifact( container, "org.apache.maven.continuum", managementArtifactId, "1.1-SNAPSHOT" ) );
         artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion() ) );
 
         List<File> jars = new ArrayList<File>();
@@ -127,7 +168,8 @@ public class DataManagementCli
                 String id = urlEF.substring( urlEF.lastIndexOf( '/', idEndIdx - 1 ) + 1, idEndIdx );
                 // continuum-legacy included because the IDE doesn't do the proper assembly of enhanced classes and JDO metadata
                 if ( !"data-management-api".equals( id ) && !"data-management-cli".equals( id ) &&
-                    !"continuum-legacy".equals( id ) && !"continuum-model".equals( id ) )
+                    !"continuum-legacy".equals( id ) && !"continuum-model".equals( id ) &&
+                    !"redback-legacy".equals( id ) )
                 {
                     exclusions.add( "org.apache.maven.continuum:" + id );
                     jars.add( new File( url.getPath() ) );
@@ -164,20 +206,18 @@ public class DataManagementCli
 
         ClassRealm oldRealm = container.setLookupRealm( realm );
 
-        DatabaseManager manager = (DatabaseManager) container.lookup( DatabaseManager.class.getName(), "jdo", realm );
+        DataManagementTool manager =
+            (DataManagementTool) container.lookup( DataManagementTool.class.getName(), toolRoleHint, realm );
         manager.configure( params );
-
-        DataManagementTool tool =
-            (DataManagementTool) container.lookup( DataManagementTool.ROLE, databaseFormat.getToolRoleHint(), realm );
 
         if ( mode == OperationMode.EXPORT )
         {
-            tool.backupBuildDatabase( command.directory );
+            manager.backupDatabase( directory );
         }
         else if ( mode == OperationMode.IMPORT )
         {
-            tool.eraseBuildDatabase();
-            tool.restoreBuildDatabase( command.directory );
+            manager.eraseDatabase();
+            manager.restoreDatabase( directory );
         }
 
         container.setLookupRealm( oldRealm );
@@ -215,8 +255,6 @@ public class DataManagementCli
         exclusions.add( "stax:stax-api" );
         exclusions.add( "log4j:log4j" );
 
-        Collection<File> jars = new ArrayList<File>();
-
         ArtifactFilter filter = new ExcludesArtifactFilter( exclusions );
 
         ArtifactMetadataSource source =
@@ -230,10 +268,15 @@ public class DataManagementCli
 
     private static class Commands
     {
-        @Argument(required = true,
-                  description = "The JDBC URL for the database that contains the data to convert, or to import the data into",
-                  value = "jdbcUrl")
-        private String jdbcUrl;
+        @Argument(
+            description = "The JDBC URL for the Continuum database that contains the data to convert, or to import the data into",
+            value = "buildsJdbcUrl")
+        private String buildsJdbcUrl;
+
+        @Argument(
+            description = "The JDBC URL for the Redback database that contains the data to convert, or to import the data into",
+            value = "usersJdbcUrl")
+        private String usersJdbcUrl;
 
         // TODO: ability to use the enum directly would be nice
         @Argument(
@@ -271,8 +314,6 @@ public class DataManagementCli
             value = "debug")
         private boolean debug;
     }
-
-    // TODO: add user database formats
 
     private enum OperationMode
     {

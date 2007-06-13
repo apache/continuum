@@ -67,17 +67,12 @@ import java.util.Properties;
 /**
  * JDO implementation the database management tool API.
  *
- * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="legacy-jdo"
+ * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="legacy-continuum-jdo"
  */
 public class LegacyJdoDataManagementTool
-    implements DataManagementTool
+    extends AbstractDataManagementTool
 {
-    /**
-     * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="continuum"
-     */
-    private ConfigurableJdoFactory factory;
-
-    public void backupBuildDatabase( File backupDirectory )
+    public void backupDatabase( File backupDirectory )
         throws IOException
     {
         PersistenceManagerFactory pmf = getPersistenceManagerFactory( "jdo109" );
@@ -156,7 +151,7 @@ public class LegacyJdoDataManagementTool
     }
 
     @SuppressWarnings({"OverlyCoupledMethod"})
-    public void eraseBuildDatabase()
+    public void eraseDatabase()
     {
         PersistenceManagerFactory pmf = getPersistenceManagerFactory( "jdo109" );
         PersistenceManager persistenceManager = getPersistenceManager( pmf );
@@ -187,7 +182,7 @@ public class LegacyJdoDataManagementTool
         return pm;
     }
 
-    public void restoreBuildDatabase( File backupDirectory )
+    public void restoreDatabase( File backupDirectory )
         throws IOException
     {
         ContinuumStaxReader reader = new ContinuumStaxReader();
