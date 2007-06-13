@@ -19,11 +19,12 @@ package org.apache.maven.continuum.management.redback;
  * under the License.
  */
 
+import org.apache.maven.continuum.management.DataManagementException;
+import org.apache.maven.continuum.management.DataManagementTool;
 import org.codehaus.plexus.redback.keys.KeyManager;
 import org.codehaus.plexus.redback.rbac.RBACManager;
 import org.codehaus.plexus.redback.rbac.RbacManagerException;
 import org.codehaus.plexus.redback.users.UserManager;
-import org.apache.maven.continuum.management.DataManagementException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -35,7 +36,7 @@ import java.io.IOException;
  * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="redback-jdo"
  */
 public class JdoDataManagementTool
-    extends AbstractDataManagementTool
+    implements DataManagementTool
 {
     /**
      * @plexus.requirement role-hint="jdo"
