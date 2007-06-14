@@ -32,6 +32,7 @@
   </parent>
   <packaging>pom</packaging>
   <artifactId>continuum-data-management</artifactId>
+  <name>Continuum :: Data Management :: Parent</name>
   <modules>
     <module>data-management-cli</module>
     <module>data-management-api</module>
