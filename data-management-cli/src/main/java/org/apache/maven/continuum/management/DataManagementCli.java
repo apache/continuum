@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * An application for performing database upgrades from old Continuum and Redback versions. A suitable tool until it
@@ -143,6 +144,8 @@ public class DataManagementCli
         throws PlexusContainerException, ComponentLookupException, ArtifactNotFoundException,
         ArtifactResolutionException, IOException
     {
+        String applicationVersion = getVersion();
+
         DatabaseParams params = new DatabaseParams( databaseType.defaultParams );
         params.setUrl( jdbcUrl );
 
@@ -151,7 +154,7 @@ public class DataManagementCli
         artifacts.addAll(
             downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion() ) );
         artifacts.addAll(
-            downloadArtifact( container, "org.apache.maven.continuum", managementArtifactId, "1.1-SNAPSHOT" ) );
+            downloadArtifact( container, "org.apache.maven.continuum", managementArtifactId, applicationVersion ) );
         artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion() ) );
 
         List<File> jars = new ArrayList<File>();
@@ -241,13 +244,18 @@ public class DataManagementCli
         ArtifactRepository localRepository =
             factory.createArtifactRepository( "local", file.toURL().toString(), layout, null, null );
 
-        List<ArtifactRepository> remoteRepositories = Collections.singletonList(
-            factory.createArtifactRepository( "central", "http://repo1.maven.org/maven2", layout, null, null ) );
+        List<ArtifactRepository> remoteRepositories = new ArrayList<ArtifactRepository>();
+        remoteRepositories.add( factory.createArtifactRepository( "central", "http://repo1.maven.org/maven2", layout, null, null ) );
 
         ArtifactFactory artifactFactory = (ArtifactFactory) container.lookup( ArtifactFactory.ROLE );
         Artifact artifact =
             artifactFactory.createArtifact( groupId, artifactId, version, Artifact.SCOPE_RUNTIME, "jar" );
         Artifact dummyArtifact = artifactFactory.createProjectArtifact( "dummy", "dummy", "1.0" );
+
+        if ( artifact.isSnapshot() )
+	{
+	    remoteRepositories.add( factory.createArtifactRepository( "apache.snapshots", "http://people.apache.org/repo/m2-snapshot-repository", layout, null, null ) );
+        }
 
         ArtifactResolver resolver = (ArtifactResolver) container.lookup( ArtifactResolver.ROLE );
 
@@ -267,6 +275,14 @@ public class DataManagementCli
                                                                         remoteRepositories, source, filter );
 
         return result.getArtifacts();
+    }
+
+    private static String getVersion()
+        throws IOException
+    {
+        Properties properties = new Properties();
+        properties.load( DataManagementCli.class.getResourceAsStream( "/META-INF/maven/org.apache.maven.continuum/data-management-api/pom.properties" ) );
+        return properties.getProperty( "version" );
     }
 
     private static class Commands
