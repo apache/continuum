@@ -84,6 +84,11 @@
       <version>1.4</version>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-contextualizer</artifactId>
+      <version>1.0-alpha-1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -124,6 +129,7 @@
             <additionalCoreArtifact>jpox:jpox</additionalCoreArtifact>
             <additionalCoreArtifact>javax.resource:connector</additionalCoreArtifact>
             <additionalCoreArtifact>javax.jdo:jdo2-api</additionalCoreArtifact>
+            <additionalCoreArtifact>org.codehaus.plexus:plexus-contextualizer</additionalCoreArtifact>
           </additionalCoreArtifacts>
         </configuration>
       </plugin>

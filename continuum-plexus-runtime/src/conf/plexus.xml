@@ -26,6 +26,10 @@
       <role>org.codehaus.plexus.naming.Naming</role>
       <role-hint>dataSources</role-hint>
     </component>
+    <component>
+      <role>org.codehaus.plexus.contextualizer.Contextualizer</role>
+      <role-hint>jettyConfiguration</role-hint>
+    </component>
   </load-on-start>
   <components>
     <component>
@@ -101,6 +105,24 @@
         </resources>
       </configuration>
     </component>
+    <component>
+      <role>org.codehaus.plexus.contextualizer.Contextualizer</role>
+      <role-hint>jettyConfiguration</role-hint>
+      <implementation>org.codehaus.plexus.contextualizer.DefaultContextualizer</implementation>
+      <configuration>
+        <contextValues>
+          <jetty.port>8080</jetty.port>
+        </contextValues>
+      </configuration>
+    </component>
+    <!--component>
+      <role>org.codehaus.plexus.logging.LoggerManager</role>
+      <implementation>org.codehaus.plexus.logging.console.ConsoleLoggerManager</implementation>
+      <lifecycle-handler>basic</lifecycle-handler>
+      <configuration>
+        <threshold>DEBUG</threshold>
+      </configuration>
+    </component-->    
   </components>
 </plexus>
 
