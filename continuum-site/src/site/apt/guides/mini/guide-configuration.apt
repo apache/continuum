@@ -8,10 +8,13 @@
 
 Configuring Continuum
 
- The configuration file for Continuum is inside the Plexus runtime under
+ One configuration file for Continuum is inside the Plexus runtime under
  <<<apps/continuum/conf/application.xml>>>. <NOTE>: You have to start and stop
- the application at least once before configuring Continuum. This is required
+ the application at least once before editing this file.  This is required
  because the application container has to unpack the application.
+
+ There is another configuration file in <<<conf/plexus.xml>>>. This file can be
+ edited before starting the application for the first time.
 
 * Mail Notification
 
@@ -75,12 +78,30 @@ Configuring Continuum
 
 ** Example Jetty Configuration
 
- This is a example configuration on how to configure Jetty with one normal HTTP
- listener and one proxy HTTP listener. With this configuration Jetty will
- listen on two ports; 8080 and 8090. Continuum can be used from either
- <<<http://localhost:8080/continuum>>> or <<<http://www.company.com/continuum>>>. Note that the
- proxying listener will make Continuum write out URLs with the configured proxy
- host and port.
+ By default, Continuum will start on port 8080. In Continuum 1.1-alpha-3 or
+ later, this port number can be pre-configured in <<<conf/plexus.xml>>> by
+ editing the following section:
+ 
++------------+
+    <component>
+      <role>org.codehaus.plexus.contextualizer.Contextualizer</role>
+      <role-hint>jettyConfiguration</role-hint>
+      <implementation>org.codehaus.plexus.contextualizer.DefaultContextualizer</implementation>
+      <configuration>
+        <contextValues>
+          <jetty.port>8080</jetty.port>
+        </contextValues>
+      </configuration>
+    </component>
++------------+
+
+ This is an example of how to configure Jetty with one normal HTTP listener and
+ one proxy HTTP listener. With this configuration in <<<application.xml>>>,
+ Jetty will listen on two ports: 8080 as configured above in <<<plexus.xml>>>
+ and 8090 as shown below. Continuum can be used from either
+ <<<http://localhost:8080/continuum>>> or
+ <<<http://www.company.com/continuum>>>. Note that the proxying listener will
+ make Continuum write out URLs with the configured proxy host and port.
 
 +----+
 <service>
@@ -88,12 +109,12 @@ Configuring Continuum
   <configuration>
     <webapps>
       <webapp>
-        <file>${plexus.home}/lib/continuum-web-1.0-alpha-3-SNAPSHOT.jar</file>
+        <file>${plexus.home}/lib/continuum-web-1.1-SNAPSHOT.jar</file>
         <context>/continuum</context>
         <extraction-path>${plexus.home}/webapp</extraction-path>
         <listeners>
           <http-listener>
-            <port>8080</port>
+            <port>${jetty.port}</port>
           </http-listener>
           <proxy-http-listener>
             <port>8090</port>
@@ -127,3 +148,4 @@ ProxyPassReverse /continuum http://localhost:8090/continuum/
 
  * <<<simple-socket-trigger-server>>>: This registrar will read project IDs off
    the wire and schedule a build for that project.
+
