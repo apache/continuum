@@ -478,18 +478,21 @@ public class DefaultContinuum
         {
             BuildProjectTask task = (BuildProjectTask) it.next();
 
-            if ( buildDefinitionId < 0 )
+            if ( task != null )
             {
-                if ( task.getProjectId() == projectId )
+                if ( buildDefinitionId < 0 )
                 {
-                    return true;
+                    if ( task.getProjectId() == projectId )
+                    {
+                        return true;
+                    }
                 }
-            }
-            else
-            {
-                if ( task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+                else
                 {
-                    return true;
+                    if ( task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -515,7 +518,7 @@ public class DefaultContinuum
         {
             CheckOutTask task = (CheckOutTask) it.next();
 
-            if ( task.getProjectId() == projectId )
+            if ( task != null && task.getProjectId() == projectId )
             {
                 return true;
             }
@@ -1418,7 +1421,7 @@ public class DefaultContinuum
         for ( Iterator i = projects.iterator(); i.hasNext(); )
         {
             Project project = (Project) i.next();
-            
+
             project.setScmUseCache( useCredentialsCache );
 
             projectGroup.addProject( project );
