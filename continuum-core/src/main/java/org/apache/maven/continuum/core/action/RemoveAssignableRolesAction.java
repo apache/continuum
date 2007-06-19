@@ -75,7 +75,7 @@ public class RemoveAssignableRolesAction
         catch ( RoleManagerException e )
         {
             e.printStackTrace();
-            throw new ContinuumException( "error removing tempalted role for project " + projectGroup.getName(), e );
+            throw new ContinuumException( "error removing templated role for project " + projectGroup.getName(), e );
         }
     }
 }
