@@ -69,8 +69,6 @@ public class AntBuildExecutor
     public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
         throws ContinuumBuildExecutorException
     {
-        // TODO: get from installation
-//        String executable = project.getExecutable();
         String executable = "ant";
 
         String arguments = "";
