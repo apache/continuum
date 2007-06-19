@@ -42,9 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author <a href="mailto:kenney@apache.org">Kenney Westerhof</a>
- *
  */
 public class BuildProjectTaskExecutorTest
     extends AbstractContinuumTest
@@ -64,8 +62,8 @@ public class BuildProjectTaskExecutorTest
     {
         super.setUp();
 
-        projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                           MavenTwoContinuumProjectBuilder.ID );
+        projectBuilder =
+            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
 
         buildQueue = (TaskQueue) lookup( TaskQueue.ROLE, "build-project" );
 
@@ -168,8 +166,7 @@ public class BuildProjectTaskExecutorTest
      * Runs the timeout test project through the build queue and return when the unit test in it has started. The
      * project contains a unit test that sleeps for 15 seconds.
      *
-     * @param maxRunTime
-     *            maximum time the build may run before it's auto cancelled; 0 means forever.
+     * @param maxRunTime maximum time the build may run before it's auto cancelled; 0 means forever.
      * @return
      * @throws Exception
      */

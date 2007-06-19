@@ -39,11 +39,11 @@ public interface MavenOneMetadataHelper
         throws MavenOneMetadataHelperException;
 
     /**
-     * 
-     * @param result contains errors that happened during the process
+     * @param result   contains errors that happened during the process
      * @param metadata
      * @param project
      * @throws MavenOneMetadataHelperException
+     *
      */
     void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project )
         throws MavenOneMetadataHelperException;

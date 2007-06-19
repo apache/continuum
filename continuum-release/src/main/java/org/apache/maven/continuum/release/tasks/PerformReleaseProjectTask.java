@@ -36,8 +36,8 @@ public class PerformReleaseProjectTask
 
     private boolean useReleaseProfile = true;
 
-    public PerformReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, File buildDirectory,
-                                      String goals, boolean useReleaseProfile, ReleaseManagerListener listener )
+    public PerformReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, File buildDirectory, String goals,
+                                      boolean useReleaseProfile, ReleaseManagerListener listener )
     {
         super( releaseId, descriptor, listener );
         setBuildDirectory( buildDirectory );

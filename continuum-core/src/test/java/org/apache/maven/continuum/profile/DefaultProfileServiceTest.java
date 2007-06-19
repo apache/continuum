@@ -1,11 +1,11 @@
 package org.apache.maven.continuum.profile;
 
-import java.util.List;
-
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+
+import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -28,8 +28,8 @@ import org.apache.maven.continuum.model.system.Profile;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @since 15 juin 07
  * @version $Id$
+ * @since 15 juin 07
  */
 public class DefaultProfileServiceTest
     extends AbstractContinuumTest

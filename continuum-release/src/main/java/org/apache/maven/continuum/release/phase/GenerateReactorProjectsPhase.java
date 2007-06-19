@@ -19,39 +19,39 @@ package org.apache.maven.continuum.release.phase;
  * under the License.
  */
 
-import org.apache.maven.shared.release.phase.AbstractReleasePhase;
-import org.apache.maven.shared.release.ReleaseResult;
-import org.apache.maven.shared.release.ReleaseExecutionException;
-import org.apache.maven.shared.release.ReleaseFailureException;
-import org.apache.maven.shared.release.config.ReleaseDescriptor;
-import org.apache.maven.settings.Settings;
-import org.apache.maven.settings.MavenSettingsBuilder;
-import org.apache.maven.continuum.release.ContinuumReleaseException;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.ProjectSorter;
-import org.apache.maven.project.DuplicateProjectException;
-import org.apache.maven.project.MavenProjectBuilder;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
-import org.apache.maven.profiles.ProfileManager;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.continuum.release.ContinuumReleaseException;
 import org.apache.maven.profiles.DefaultProfileManager;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.codehaus.plexus.PlexusContainer;
+import org.apache.maven.profiles.ProfileManager;
+import org.apache.maven.project.DuplicateProjectException;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.ProjectSorter;
+import org.apache.maven.settings.MavenSettingsBuilder;
+import org.apache.maven.settings.Settings;
+import org.apache.maven.shared.release.ReleaseExecutionException;
+import org.apache.maven.shared.release.ReleaseFailureException;
+import org.apache.maven.shared.release.ReleaseResult;
+import org.apache.maven.shared.release.config.ReleaseDescriptor;
+import org.apache.maven.shared.release.phase.AbstractReleasePhase;
 import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.codehaus.plexus.util.dag.CycleDetectedException;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Generate the reactor projects
@@ -102,10 +102,10 @@ public class GenerateReactorProjectsPhase
         try
         {
             project = projectBuilder.buildWithDependencies( getProjectDescriptorFile( descriptor ),
-                                            getLocalRepository(), getProfileManager( getSettings() ) );
+                                                            getLocalRepository(), getProfileManager( getSettings() ) );
 
             reactorProjects.add( project );
-            
+
             addModules( reactorProjects, project );
         }
         catch ( ProjectBuildingException e )
@@ -136,11 +136,11 @@ public class GenerateReactorProjectsPhase
 
         return reactorProjects;
     }
-    
+
     private void addModules( List reactorProjects, MavenProject project )
         throws ContinuumReleaseException
     {
-        for( Iterator modules = project.getModules().iterator(); modules.hasNext(); )
+        for ( Iterator modules = project.getModules().iterator(); modules.hasNext(); )
         {
             String moduleDir = modules.next().toString();
 
@@ -149,10 +149,11 @@ public class GenerateReactorProjectsPhase
             try
             {
                 MavenProject reactorProject = projectBuilder.buildWithDependencies( pomFile, getLocalRepository(),
-                                                                    getProfileManager( getSettings() ) );
+                                                                                    getProfileManager(
+                                                                                        getSettings() ) );
 
                 reactorProjects.add( reactorProject );
-                
+
                 addModules( reactorProjects, reactorProject );
             }
             catch ( ProjectBuildingException e )
@@ -187,7 +188,7 @@ public class GenerateReactorProjectsPhase
         throws ContinuumReleaseException
     {
         return new DefaultArtifactRepository( "local-repository", "file://" + getSettings().getLocalRepository(),
-                                                                                   new DefaultRepositoryLayout() );
+                                              new DefaultRepositoryLayout() );
     }
 
     private ProfileManager getProfileManager( Settings settings )

@@ -40,19 +40,17 @@ import java.util.Map;
 /**
  * Resolve the project url being passed in and gather authentication information
  * if the url is so configured, then create the projects
- *
+ * <p/>
  * Supports:
- *
+ * <p/>
  * - standard maven-scm url
  * - MungedUrl https://username:password@host
  * - maven settings based, server = host and scm info set to username and password
  *
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.codehaus.plexus.action.Action"
- *   role-hint="create-projects-from-metadata"
+ * @plexus.component role="org.codehaus.plexus.action.Action"
+ * role-hint="create-projects-from-metadata"
  */
 public class CreateProjectsFromMetadataAction
     extends AbstractContinuumAction
@@ -61,7 +59,7 @@ public class CreateProjectsFromMetadataAction
      * @plexus.requirement
      */
     private ContinuumProjectBuilderManager projectBuilderManager;
-    
+
     /**
      * @plexus.requirement
      */
@@ -98,7 +96,7 @@ public class CreateProjectsFromMetadataAction
             }
             else
             {
-                url = new URL ( curl );
+                url = new URL( curl );
                 String username = null;
                 String password = null;
 
@@ -122,7 +120,7 @@ public class CreateProjectsFromMetadataAction
                 }
 
                 MungedHttpsURL mungedURL;
-                
+
                 if ( username == null )
                 {
                     mungedURL = new MungedHttpsURL( curl );
@@ -131,7 +129,7 @@ public class CreateProjectsFromMetadataAction
                 }
                 else
                 {
-                   mungedURL = new MungedHttpsURL( curl, username, password );
+                    mungedURL = new MungedHttpsURL( curl, username, password );
                 }
 
                 mungedURL.setLogger( getLogger() );
@@ -157,7 +155,6 @@ public class CreateProjectsFromMetadataAction
             result = new ContinuumProjectBuildingResult();
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
         }
-
 
         context.put( KEY_PROJECT_BUILDING_RESULT, result );
     }

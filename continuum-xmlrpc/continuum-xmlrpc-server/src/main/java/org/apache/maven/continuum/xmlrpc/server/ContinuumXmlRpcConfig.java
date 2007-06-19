@@ -32,7 +32,7 @@ public class ContinuumXmlRpcConfig
     extends XmlRpcHttpRequestConfigImpl
 {
     private HttpServletRequest httpServletRequest;
-    
+
     private SecuritySession securitySession;
 
     public HttpServletRequest getHttpServletRequest()
@@ -54,6 +54,6 @@ public class ContinuumXmlRpcConfig
     {
         this.securitySession = securitySession;
     }
-    
-    
+
+
 }

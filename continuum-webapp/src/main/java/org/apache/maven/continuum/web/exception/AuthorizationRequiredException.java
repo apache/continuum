@@ -23,12 +23,11 @@ package org.apache.maven.continuum.web.exception;
  * Thrown when authorization check fails
  *
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @version
  */
 public class AuthorizationRequiredException
     extends Exception
 {
-     public AuthorizationRequiredException( String string )
+    public AuthorizationRequiredException( String string )
     {
         super( string );
     }
@@ -36,5 +35,5 @@ public class AuthorizationRequiredException
     public AuthorizationRequiredException( String string, Throwable throwable )
     {
         super( string, throwable );
-    }     
+    }
 }

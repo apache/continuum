@@ -19,7 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-public class ContinuumConfirmAction 
+public class ContinuumConfirmAction
     extends ContinuumActionSupport
 {
 
@@ -37,8 +37,8 @@ public class ContinuumConfirmAction
 
     protected String action;
 
-    protected void setConfirmationInfo( String title, String actionName, String displayString, 
-                                        String propertyName, String propertyValue )
+    protected void setConfirmationInfo( String title, String actionName, String displayString, String propertyName,
+                                        String propertyValue )
     {
         action = actionName;
         confirmationTitle = title;

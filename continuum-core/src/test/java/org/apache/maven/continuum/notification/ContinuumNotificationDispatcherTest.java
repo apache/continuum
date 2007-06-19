@@ -35,8 +35,8 @@ public class ContinuumNotificationDispatcherTest
     public void testNotificationDispatcher()
         throws Exception
     {
-        ContinuumNotificationDispatcher notificationDispatcher = (ContinuumNotificationDispatcher) lookup(
-            ContinuumNotificationDispatcher.ROLE );
+        ContinuumNotificationDispatcher notificationDispatcher =
+            (ContinuumNotificationDispatcher) lookup( ContinuumNotificationDispatcher.ROLE );
 
         ContinuumStore store = getStore();
 
@@ -47,9 +47,9 @@ public class ContinuumNotificationDispatcherTest
         BuildResult build = new BuildResult();
 
         build.setStartTime( System.currentTimeMillis() );
- 
+
         build.setState( ContinuumProjectState.BUILDING );
- 
+
         build.setTrigger( ContinuumProjectState.TRIGGER_SCHEDULED );
 
         store.addBuildResult( project, build );

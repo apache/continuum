@@ -46,8 +46,8 @@ public interface ContinuumReleaseManager
      * @return
      * @throws ContinuumReleaseException
      */
-    String prepare( Project project, Properties releaseProperties, Map releaseVersions,
-                    Map developmentVersions, ContinuumReleaseManagerListener listener )
+    String prepare( Project project, Properties releaseProperties, Map releaseVersions, Map developmentVersions,
+                    ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
     /**
@@ -59,8 +59,8 @@ public interface ContinuumReleaseManager
      * @param useReleaseProfile
      * @throws ContinuumReleaseException
      */
-    void perform( String releaseId, File buildDirectory,
-                  String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
+    void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
+                  ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
     /**
@@ -74,8 +74,8 @@ public interface ContinuumReleaseManager
      * @param listener
      * @throws ContinuumReleaseException
      */
-    void perform( String releaseId, String workingDirectory, File buildDirectory,
-                  String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
+    void perform( String releaseId, String workingDirectory, File buildDirectory, String goals,
+                  boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
     /**

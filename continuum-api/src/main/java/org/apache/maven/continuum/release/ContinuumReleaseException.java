@@ -30,8 +30,7 @@ public class ContinuumReleaseException
         super( id );
     }
 
-    public ContinuumReleaseException( String id,
-                                      Throwable throwable )
+    public ContinuumReleaseException( String id, Throwable throwable )
     {
         super( id, throwable );
     }

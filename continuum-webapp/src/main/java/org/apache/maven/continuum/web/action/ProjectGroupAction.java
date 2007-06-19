@@ -250,7 +250,7 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-        
+
         if ( name != null && name.equals( "" ) )
         {
             addActionError( "projectGroup.error.name.required" );
@@ -270,7 +270,7 @@ public class ProjectGroupAction
         {
             try
             {
-            	roleManager.updateRole( "project-administrator", projectGroup.getName(), name );
+                roleManager.updateRole( "project-administrator", projectGroup.getName(), name );
                 roleManager.updateRole( "project-developer", projectGroup.getName(), name );
                 roleManager.updateRole( "project-user", projectGroup.getName(), name );
 
@@ -468,7 +468,7 @@ public class ProjectGroupAction
                 for ( Iterator j = effectiveRoles.iterator(); j.hasNext(); )
                 {
                     Role role = (Role) j.next();
-                    
+
                     if ( role.getName().indexOf( projectGroup.getName() ) > -1 )
                     {
                         pgUser.setRoles( effectiveRoles );

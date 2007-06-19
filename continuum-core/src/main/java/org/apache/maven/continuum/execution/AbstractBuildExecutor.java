@@ -20,8 +20,8 @@ package org.apache.maven.continuum.execution;
  */
 
 import org.apache.maven.continuum.installation.InstallationService;
-import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.TestResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
@@ -37,10 +37,10 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -112,9 +112,8 @@ public abstract class AbstractBuildExecutor
         {
             if ( StringUtils.isEmpty( defaultExecutable ) )
             {
-                getLogger().warn(
-                                  "The default executable for build executor '" + id + "' is not set. "
-                                      + "This will cause a problem unless the project has a executable configured." );
+                getLogger().warn( "The default executable for build executor '" + id + "' is not set. " +
+                    "This will cause a problem unless the project has a executable configured." );
             }
             else
             {
@@ -123,14 +122,12 @@ public abstract class AbstractBuildExecutor
                 if ( resolvedExecutable == null )
                 {
                     getLogger().warn(
-                                      "Could not find the executable '" + defaultExecutable + "' in the " + "path '"
-                                          + path + "'." );
+                        "Could not find the executable '" + defaultExecutable + "' in the " + "path '" + path + "'." );
                 }
                 else
                 {
-                    getLogger().info(
-                                      "Resolved the executable '" + defaultExecutable + "' to " + "'"
-                                          + resolvedExecutable.getAbsolutePath() + "'." );
+                    getLogger().info( "Resolved the executable '" + defaultExecutable + "' to " + "'" +
+                        resolvedExecutable.getAbsolutePath() + "'." );
                 }
             }
         }
@@ -219,14 +216,14 @@ public abstract class AbstractBuildExecutor
             else
             {
                 throw new ContinuumBuildExecutorException(
-                                                           "Error while executing shell command. The most common error is that '"
-                                                               + executable + "' " + "is not in your path.", e );
+                    "Error while executing shell command. The most common error is that '" + executable + "' " +
+                        "is not in your path.", e );
             }
         }
         catch ( Exception e )
         {
-            throw new ContinuumBuildExecutorException( "Error while executing shell command. "
-                + "The most common error is that '" + executable + "' " + "is not in your path.", e );
+            throw new ContinuumBuildExecutorException( "Error while executing shell command. " +
+                "The most common error is that '" + executable + "' " + "is not in your path.", e );
         }
     }
 

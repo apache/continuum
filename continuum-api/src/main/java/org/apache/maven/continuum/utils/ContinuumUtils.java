@@ -19,8 +19,8 @@ package org.apache.maven.continuum.utils;
  * under the License.
  */
 
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>

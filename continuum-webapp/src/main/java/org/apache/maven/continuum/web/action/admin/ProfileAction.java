@@ -1,17 +1,16 @@
 package org.apache.maven.continuum.web.action.admin;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
-import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -33,9 +32,9 @@ import org.codehaus.plexus.util.StringUtils;
  */
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @since 7 juin 07
  * @version $Id$
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="profileAdministration"
+ * @since 7 juin 07
  */
 public class ProfileAction
     extends ContinuumActionSupport
@@ -123,9 +122,9 @@ public class ProfileAction
         {
             profileService.setJdkInProfile( profile, installation );
         }
-        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() )
-            || InstallationService.MAVEN2_TYPE.equals( installation.getType() )
-            || InstallationService.ANT_TYPE.equals( installation.getType() ) )
+        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() ) ||
+            InstallationService.MAVEN2_TYPE.equals( installation.getType() ) ||
+            InstallationService.ANT_TYPE.equals( installation.getType() ) )
         {
             profileService.setBuilderInProfile( profile, installation );
         }
@@ -147,9 +146,9 @@ public class ProfileAction
         {
             stored.setJdk( null );
         }
-        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() )
-            || InstallationService.MAVEN2_TYPE.equals( installation.getType() )
-            || InstallationService.ANT_TYPE.equals( installation.getType() ) )
+        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() ) ||
+            InstallationService.MAVEN2_TYPE.equals( installation.getType() ) ||
+            InstallationService.ANT_TYPE.equals( installation.getType() ) )
         {
             stored.setBuilder( null );
         }
@@ -215,25 +214,26 @@ public class ProfileAction
 
     public List<Installation> getProfileInstallations()
     {
-        if (this.profile != null)
+        if ( this.profile != null )
         {
-        if ( this.profileInstallations == null )
-        {
-            this.profileInstallations = new ArrayList<Installation>();
-            if ( this.profile.getJdk() != null )
+            if ( this.profileInstallations == null )
             {
-                this.profileInstallations.add( this.profile.getJdk() );
+                this.profileInstallations = new ArrayList<Installation>();
+                if ( this.profile.getJdk() != null )
+                {
+                    this.profileInstallations.add( this.profile.getJdk() );
+                }
+                if ( this.profile.getBuilder() != null )
+                {
+                    this.profileInstallations.add( this.profile.getBuilder() );
+                }
+                if ( this.profile.getEnvironmentVariables() != null &&
+                    !this.profile.getEnvironmentVariables().isEmpty() )
+                {
+                    this.profileInstallations.addAll( this.profile.getEnvironmentVariables() );
+                }
             }
-            if ( this.profile.getBuilder() != null )
-            {
-                this.profileInstallations.add( this.profile.getBuilder() );
-            }
-            if ( this.profile.getEnvironmentVariables() != null && !this.profile.getEnvironmentVariables().isEmpty() )
-            {
-                this.profileInstallations.addAll( this.profile.getEnvironmentVariables() );
-            }
-        }
-        return profileInstallations;
+            return profileInstallations;
         }
         return Collections.EMPTY_LIST;
     }

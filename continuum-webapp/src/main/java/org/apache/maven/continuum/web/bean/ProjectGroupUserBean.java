@@ -23,46 +23,44 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.codehaus.plexus.redback.rbac.Role;
 import org.codehaus.plexus.redback.users.User;
 
-
 import java.util.Collection;
 import java.util.Iterator;
 
 public class ProjectGroupUserBean
 {
     public static final String ROLE_ADMINISTRATOR = "Group Project Administrator";
-    
+
     public static final String ROLE_DEVELOPER = "Project Developer";
-    
+
     public static final String ROLE_USER = "Project User";
-    
+
     private User user;
-    
+
     private ProjectGroup projectGroup;
-    
+
     private Collection roles;
 
     /*
      * these booleans should be set on the addition of roles to this bean, see setRoles and addRole 
-     */
-    boolean isAdministrator = false;
+     */ boolean isAdministrator = false;
 
     boolean isDeveloper = false;
 
     boolean isUser = false;
-    
+
     public boolean isAdministrator()
     {
-       return isAdministrator;
+        return isAdministrator;
     }
 
     public boolean isDeveloper()
     {
-       return isDeveloper;
+        return isDeveloper;
     }
 
     public boolean isUser()
     {
-       return isUser;
+        return isUser;
     }
 
     public ProjectGroup getProjectGroup()
@@ -92,9 +90,9 @@ public class ProjectGroupUserBean
         if ( role.indexOf( ROLE_USER ) != -1 )
         {
             isUser = true;
-        }        
+        }
     }
-    
+
     public Collection getRoles()
     {
         return roles;
@@ -106,7 +104,7 @@ public class ProjectGroupUserBean
 
         for ( Iterator i = roles.iterator(); i.hasNext(); )
         {
-            Role role = (Role)i.next();
+            Role role = (Role) i.next();
 
             if ( role.getName().indexOf( ROLE_ADMINISTRATOR ) != -1 )
             {
@@ -134,17 +132,17 @@ public class ProjectGroupUserBean
     {
         this.user = user;
     }
-    
+
     public String getUsername()
     {
         return user.getUsername();
     }
-    
+
     public String getUserFullName()
     {
         return user.getFullName();
     }
-    
+
     public String getUserEmail()
     {
         return user.getEmail();
@@ -152,7 +150,8 @@ public class ProjectGroupUserBean
 
     public String toString()
     {
-        return user.getUsername() + ": " + roles + ": "+(isAdministrator()?"A":"-") + (isDeveloper()?"D":"-") + (isUser()?"U":"-"); 
+        return user.getUsername() + ": " + roles + ": " + ( isAdministrator() ? "A" : "-" ) +
+            ( isDeveloper() ? "D" : "-" ) + ( isUser() ? "U" : "-" );
     }
 
 }

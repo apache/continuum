@@ -19,16 +19,15 @@ package org.apache.maven.continuum.web.validator;
  * under the License.
  */
 
-import com.opensymphony.xwork.validator.validators.ValidatorSupport;
 import com.opensymphony.xwork.validator.ValidationException;
+import com.opensymphony.xwork.validator.validators.ValidatorSupport;
 
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
- *
  * Validator class for Wagon URLs
- * 
+ *
  * @author <a href="mailto:hisidro@exist.com">Henry Isidro</a>
  */
 public class WagonUrlValidator
@@ -38,24 +37,24 @@ public class WagonUrlValidator
     public void validate( Object object )
         throws ValidationException
     {
-        String url = ( String ) getFieldValue( "url", object);
+        String url = (String) getFieldValue( "url", object );
 
         if ( ( url == null ) || ( url.length() == 0 ) )
         {
             return;
         }
-        
+
         if ( url.startsWith( "dav:" ) )
         {
             url = url.substring( 4 );
         }
-        
+
         if ( ( url.startsWith( "scp://" ) ) || ( url.startsWith( "sftp://" ) ) )
         {
             // URL doesn't understand these protocols, hack it
-            url = "http://" + url.substring( url.indexOf( "://" ) + 3 ) ;
+            url = "http://" + url.substring( url.indexOf( "://" ) + 3 );
         }
-        
+
         try
         {
             new URL( url );

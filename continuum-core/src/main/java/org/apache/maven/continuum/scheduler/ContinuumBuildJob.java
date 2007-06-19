@@ -77,7 +77,7 @@ public class ContinuumBuildJob
                 Thread.sleep( schedule.getDelay() * 1000 );
             }
         }
-        catch( InterruptedException e )
+        catch ( InterruptedException e )
         {
         }
     }

@@ -21,7 +21,6 @@ package org.apache.maven.continuum.xmlrpc.server;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
-import org.apache.xmlrpc.common.XmlRpcHttpRequestConfig;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory;
@@ -61,7 +60,7 @@ public class ContinuumXmlRpcServlet
     private ContinuumXmlRpcServletServer server;
 
     private SecuritySystem securitySystem;
-    
+
     public String getServletInfo()
     {
         return "Continuum XMLRPC Servlet";
@@ -100,16 +99,16 @@ public class ContinuumXmlRpcServlet
         throws ServletException
     {
         server = new ContinuumXmlRpcServletServer();
-        
+
         try
         {
-            securitySystem = (SecuritySystem)getPlexusContainer().lookup( SecuritySystem.ROLE );
+            securitySystem = (SecuritySystem) getPlexusContainer().lookup( SecuritySystem.ROLE );
         }
         catch ( ComponentLookupException e )
         {
             throw new ServletException( "Can't init the xml rpc server, unable to obtain security system", e );
         }
-        
+
         try
         {
             XmlRpcServerConfigImpl cfg = (XmlRpcServerConfigImpl) server.getConfig();
@@ -134,18 +133,18 @@ public class ContinuumXmlRpcServlet
             new AbstractReflectiveHandlerMapping.AuthenticationHandler()
             {
                 public boolean isAuthorized( XmlRpcRequest pRequest )
-                { 
+                {
                     if ( pRequest.getConfig() instanceof ContinuumXmlRpcConfig )
                     {
                         ContinuumXmlRpcConfig config = (ContinuumXmlRpcConfig) pRequest.getConfig();
-                                                                      
+
                         try
                         {
                             // if username is null, then treat this as a guest user with an empty security session
-                            if (config.getBasicUserName() == null )
+                            if ( config.getBasicUserName() == null )
                             {
                                 config.setSecuritySession( new DefaultSecuritySession() );
-                                
+
                                 return true;
                             }
                             else
@@ -168,12 +167,12 @@ public class ContinuumXmlRpcServlet
                             return false;
                         }
                         catch ( AccountLockedException e )
-                        {                           
+                        {
                             e.printStackTrace();
                             return false;
                         }
                         catch ( UserNotFoundException e )
-                        {                            
+                        {
                             e.printStackTrace();
                             return false;
                         }

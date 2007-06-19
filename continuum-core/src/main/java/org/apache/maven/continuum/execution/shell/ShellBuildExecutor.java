@@ -19,11 +19,6 @@ package org.apache.maven.continuum.execution.shell;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -33,6 +28,11 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>

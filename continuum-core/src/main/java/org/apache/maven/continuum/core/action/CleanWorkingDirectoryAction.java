@@ -19,27 +19,25 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import org.apache.maven.continuum.utils.WorkingDirectoryService;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.util.FileUtils;
 
-import java.util.Map;
 import java.io.File;
+import java.util.Map;
 
 /**
  * @author Jesse McConnell <jmcconnell@apache.org>
  * @version $Id:$
- *
- * @plexus.component
- *   role="org.codehaus.plexus.action.Action"
- *   role-hint="clean-working-directory"
+ * @plexus.component role="org.codehaus.plexus.action.Action"
+ * role-hint="clean-working-directory"
  */
 public class CleanWorkingDirectoryAction
     extends AbstractContinuumAction
 {
     /**
-     * @plexus.requirement 
+     * @plexus.requirement
      */
     private WorkingDirectoryService workingDirectoryService;
 

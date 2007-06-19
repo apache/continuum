@@ -90,7 +90,7 @@ public class ConfigurationAction
             getLogger().info( "baseUrl='" + baseUrl + "'" );
         }
     }
-    
+
     public String input()
     {
         return INPUT;
@@ -167,5 +167,5 @@ public class ConfigurationAction
         bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_CONFIGURATION, Resource.GLOBAL );
 
         return bundle;
-     }
+    }
 }

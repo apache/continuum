@@ -25,8 +25,8 @@ import org.apache.maven.continuum.store.ContinuumStore;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @since 4 juin 07
  * @version $Id$
+ * @since 4 juin 07
  */
 public class DefaultContinuumInitializerTest
     extends AbstractContinuumTest
@@ -36,7 +36,8 @@ public class DefaultContinuumInitializerTest
         throws Exception
     {
         super.setUp();
-        ContinuumInitializer continuumInitializer = (ContinuumInitializer) lookup( ContinuumInitializer.ROLE, "default" );
+        ContinuumInitializer continuumInitializer =
+            (ContinuumInitializer) lookup( ContinuumInitializer.ROLE, "default" );
         continuumInitializer.initialize();
     }
 

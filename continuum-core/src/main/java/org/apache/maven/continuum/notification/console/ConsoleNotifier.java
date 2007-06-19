@@ -33,10 +33,8 @@ import java.util.Set;
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.codehaus.plexus.notification.notifier.Notifier"
- *   role-hint="console"
+ * @plexus.component role="org.codehaus.plexus.notification.notifier.Notifier"
+ * role-hint="console"
  */
 public class ConsoleNotifier
     extends AbstractNotifier
@@ -141,7 +139,7 @@ public class ConsoleNotifier
     }
 
     /**
-     * @see org.codehaus.plexus.notification.notifier.Notifier#sendNotification(java.lang.String, java.util.Set, java.util.Properties)
+     * @see org.codehaus.plexus.notification.notifier.Notifier#sendNotification(java.lang.String,java.util.Set,java.util.Properties)
      */
     public void sendNotification( String arg0, Set arg1, Properties arg2 )
         throws NotificationException

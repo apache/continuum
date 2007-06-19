@@ -81,8 +81,8 @@ public class MavenOneBuildExecutor
             arguments = "-p " + buildFile + " ";
         }
 
-        arguments += StringUtils.clean( buildDefinition.getArguments() ) + " " +
-            StringUtils.clean( buildDefinition.getGoals() );
+        arguments +=
+            StringUtils.clean( buildDefinition.getArguments() ) + " " + StringUtils.clean( buildDefinition.getGoals() );
 
         return executeShellCommand( project, executable, arguments, buildOutput, getEnvironments( buildDefinition ) );
     }
@@ -109,7 +109,7 @@ public class MavenOneBuildExecutor
         return envVars;
 
     }
-    
+
     public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException
     {

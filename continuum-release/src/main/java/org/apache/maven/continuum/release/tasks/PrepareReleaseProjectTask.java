@@ -28,8 +28,7 @@ import org.apache.maven.shared.release.config.ReleaseDescriptor;
 public class PrepareReleaseProjectTask
     extends AbstractReleaseProjectTask
 {
-    public PrepareReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor,
-                                      ReleaseManagerListener listener )
+    public PrepareReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener )
     {
         super( releaseId, descriptor, listener );
     }

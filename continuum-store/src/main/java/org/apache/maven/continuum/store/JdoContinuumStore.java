@@ -19,23 +19,6 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.jdo.Extent;
-import javax.jdo.FetchPlan;
-import javax.jdo.JDOHelper;
-import javax.jdo.JDOUserException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -62,12 +45,28 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
 
+import javax.jdo.Extent;
+import javax.jdo.FetchPlan;
+import javax.jdo.JDOHelper;
+import javax.jdo.JDOUserException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.store.ContinuumStore"
- *                   role-hint="jdo"
+ * role-hint="jdo"
  */
 public class JdoContinuumStore
     extends AbstractContinuumStore
@@ -208,7 +207,7 @@ public class JdoContinuumStore
     /**
      * get the combined list of projectId and build definitions, including the
      * ones inherited by their project group
-     * 
+     *
      * @param scheduleId
      * @return
      * @throws ContinuumStoreException
@@ -1058,8 +1057,9 @@ public class JdoContinuumStore
                 {
                     Profile profile = iterator.next();
                     List newEnvironmentVariables = new ArrayList<Installation>();
-                    for ( Iterator<Installation> iteInstallation = profile.getEnvironmentVariables().iterator(); iteInstallation
-                        .hasNext(); )
+                    for ( Iterator<Installation> iteInstallation = profile.getEnvironmentVariables().iterator();
+                          iteInstallation
+                              .hasNext(); )
                     {
                         Installation current = iteInstallation.next();
                         if ( !StringUtils.equals( current.getName(), installation.getName() ) )
@@ -1141,8 +1141,8 @@ public class JdoContinuumStore
         {
             tx.begin();
 
-            Query query = pm.newQuery( "SELECT FROM " + BuildResult.class.getName()
-                + " WHERE project.id == projectId PARAMETERS int projectId ORDER BY endTime DESC" );
+            Query query = pm.newQuery( "SELECT FROM " + BuildResult.class.getName() +
+                " WHERE project.id == projectId PARAMETERS int projectId ORDER BY endTime DESC" );
 
             query.declareImports( "import java.lang.Integer" );
 
@@ -1562,8 +1562,8 @@ public class JdoContinuumStore
         }
         catch ( ContinuumStoreException e )
         {
-            throw new ContinuumObjectNotFoundException( "unable to find project group containing project with id: "
-                + projectId );
+            throw new ContinuumObjectNotFoundException(
+                "unable to find project group containing project with id: " + projectId );
 
         }
     }
@@ -1591,7 +1591,7 @@ public class JdoContinuumStore
         else if ( systemConfs.size() > 1 )
         {
             throw new ContinuumStoreException(
-                                               "Database is corrupted. There are more than one systemConfiguration object." );
+                "Database is corrupted. There are more than one systemConfiguration object." );
         }
         else
         {
@@ -1621,13 +1621,10 @@ public class JdoContinuumStore
 
     public Collection getAllProjectGroupsWithTheLot()
     {
-        List fetchGroups = Arrays.asList( new String[] {
-            PROJECT_WITH_BUILDS_FETCH_GROUP,
-            PROJECTGROUP_PROJECTS_FETCH_GROUP,
-            BUILD_RESULT_WITH_DETAILS_FETCH_GROUP,
-            PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP,
-            PROJECT_ALL_DETAILS_FETCH_GROUP,
-            PROJECT_BUILD_DETAILS_FETCH_GROUP } );
+        List fetchGroups = Arrays.asList( new String[]{PROJECT_WITH_BUILDS_FETCH_GROUP,
+            PROJECTGROUP_PROJECTS_FETCH_GROUP, BUILD_RESULT_WITH_DETAILS_FETCH_GROUP,
+            PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP, PROJECT_ALL_DETAILS_FETCH_GROUP,
+            PROJECT_BUILD_DETAILS_FETCH_GROUP} );
         return PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), ProjectGroup.class, "name ascending",
                                                      fetchGroups );
     }
@@ -1655,9 +1652,8 @@ public class JdoContinuumStore
 
     /**
      * Close the PersistenceManagerFactory.
-     * 
-     * @param numTry
-     *            The number of try. The maximum try is 5.
+     *
+     * @param numTry The number of try. The maximum try is 5.
      */
     private void closePersistenceManagerFactory( PersistenceManagerFactory pmf, int numTry )
     {

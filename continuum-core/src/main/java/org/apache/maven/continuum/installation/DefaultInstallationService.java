@@ -19,15 +19,6 @@ package org.apache.maven.continuum.installation;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -39,12 +30,21 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @since 13 juin 07
  * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.installation.InstallationService"
  * TODO use some cache mechanism to prevent always reading from store ?
+ * @since 13 juin 07
  */
 public class DefaultInstallationService
     implements InstallationService, Initializable
@@ -73,7 +73,7 @@ public class DefaultInstallationService
         this.typesValues.put( InstallationService.MAVEN2_TYPE, "M2_HOME" );
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#add(org.apache.maven.continuum.model.system.Installation)
      */
     public Installation add( Installation installation )
@@ -95,7 +95,7 @@ public class DefaultInstallationService
         }
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#delete(org.apache.maven.continuum.model.system.Installation)
      */
     public void delete( Installation installation )
@@ -113,7 +113,7 @@ public class DefaultInstallationService
 
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#getAllInstallations()
      */
     public List<Installation> getAllInstallations()
@@ -130,7 +130,7 @@ public class DefaultInstallationService
         }
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#getInstallation(java.lang.String)
      */
     public Installation getInstallation( String name )
@@ -146,7 +146,7 @@ public class DefaultInstallationService
         }
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#update(org.apache.maven.continuum.model.system.Installation)
      */
     public void update( Installation installation )
@@ -182,7 +182,7 @@ public class DefaultInstallationService
 
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#getTypeEnvVar(java.lang.String)
      */
     public String getEnvVar( String type )
@@ -194,7 +194,7 @@ public class DefaultInstallationService
     // versions informations on jdk and builders (mvn, maven, ant )
     // -------------------------------------------------------------
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#getDefaultJdkInformations()
      */
     public List<String> getDefaultJdkInformations()
@@ -217,7 +217,7 @@ public class DefaultInstallationService
         }
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#getJdkInformations(org.apache.maven.continuum.model.system.Installation)
      */
     public List<String> getJdkInformations( Installation installation )
@@ -254,7 +254,7 @@ public class DefaultInstallationService
         }
         */
         commandline.setExecutable( executable );
-        commandline.addArguments( new String[] { "-version" } );
+        commandline.addArguments( new String[]{"-version"} );
         final List<String> cliOutput = new ArrayList<String>();
         //TODO ShellCommandHelper ?
         int result = CommandLineUtils.executeCommandLine( commandline, new StreamConsumer()

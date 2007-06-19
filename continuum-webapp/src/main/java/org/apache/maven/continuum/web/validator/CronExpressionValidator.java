@@ -19,15 +19,11 @@ package org.apache.maven.continuum.web.validator;
  * under the License.
  */
 
-import com.opensymphony.xwork.validator.validators.ValidatorSupport;
 import com.opensymphony.xwork.validator.ValidationException;
 import com.opensymphony.xwork.validator.ValidatorContext;
-import org.quartz.CronTrigger;
-
-import java.text.ParseException;
+import com.opensymphony.xwork.validator.validators.ValidatorSupport;
 
 /**
- *
  * Validator class for the cron expression in the continuum schedules.
  */
 public class CronExpressionValidator
@@ -37,16 +33,16 @@ public class CronExpressionValidator
     public void validate( Object object )
         throws ValidationException
     {
-        String second = ( String ) getFieldValue( "second", object);
-        String minute = ( String ) getFieldValue( "minute", object );
-        String hour = ( String ) getFieldValue( "hour", object );
-        String dayOfMonth = ( String ) getFieldValue( "dayOfMonth", object );
-        String month = ( String ) getFieldValue( "month", object );
-        String dayOfWeek = ( String ) getFieldValue( "dayOfWeek", object );
-        String year = ( String ) getFieldValue( "year", object );
+        String second = (String) getFieldValue( "second", object );
+        String minute = (String) getFieldValue( "minute", object );
+        String hour = (String) getFieldValue( "hour", object );
+        String dayOfMonth = (String) getFieldValue( "dayOfMonth", object );
+        String month = (String) getFieldValue( "month", object );
+        String dayOfWeek = (String) getFieldValue( "dayOfWeek", object );
+        String year = (String) getFieldValue( "year", object );
 
-        String cronExpression = ( second + " " + minute + " " + hour + " " + dayOfMonth + " " +
-            month + " " + dayOfWeek + " " + year ).trim();
+        String cronExpression = ( second + " " + minute + " " + hour + " " + dayOfMonth + " " + month + " " +
+            dayOfWeek + " " + year ).trim();
 
         org.codehaus.plexus.scheduler.CronExpressionValidator validator =
             new org.codehaus.plexus.scheduler.CronExpressionValidator();

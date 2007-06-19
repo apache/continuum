@@ -27,11 +27,10 @@ import org.extremecomponents.table.core.TableModel;
 /**
  * Used in Project view
  *
- * @deprecated use of cells is discouraged due to lack of i18n and design in java code.
- *             Use jsp:include instead.
- *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ * @deprecated use of cells is discouraged due to lack of i18n and design in java code.
+ *             Use jsp:include instead.
  */
 public class NotifierRecipientCell
     extends DisplayCell
@@ -65,9 +64,9 @@ public class NotifierRecipientCell
         {
             if ( "wagon".equals( notifier.getType() ) )
             {
-                return notifier.getConfiguration().get( "url" ).toString(); 
+                return notifier.getConfiguration().get( "url" ).toString();
             }
-            
+
             if ( notifier.getConfiguration().get( "address" ) == null )
             {
                 return "";

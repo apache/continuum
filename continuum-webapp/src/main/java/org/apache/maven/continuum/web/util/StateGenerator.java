@@ -28,9 +28,13 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 public class StateGenerator
 {
     public static final String NEW = "NEW";
+
     public static final String BUILDING = "Building";
+
     public static final String UPDATING = "Updating";
+
     public static final String CHECKING_OUT = "Checking Out";
+
     public static final String UNKNOWN = "Unknown";
 
     public static String generate( int state, String contextPath )
@@ -41,19 +45,23 @@ public class StateGenerator
         }
         else if ( state == ContinuumProjectState.OK )
         {
-            return "<img src=\"" + contextPath + "/images/icon_success_sml.gif\" alt=\"Success\" title=\"Success\" border=\"0\" />";
+            return "<img src=\"" + contextPath +
+                "/images/icon_success_sml.gif\" alt=\"Success\" title=\"Success\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.FAILED )
         {
-            return "<img src=\"" + contextPath + "/images/icon_warning_sml.gif\" alt=\"Failed\" title=\"Failed\" border=\"0\" />";
+            return "<img src=\"" + contextPath +
+                "/images/icon_warning_sml.gif\" alt=\"Failed\" title=\"Failed\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.ERROR )
         {
-            return "<img src=\"" + contextPath + "/images/icon_error_sml.gif\" alt=\"Error\" title=\"Error\" border=\"0\" />";
+            return "<img src=\"" + contextPath +
+                "/images/icon_error_sml.gif\" alt=\"Error\" title=\"Error\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.BUILDING )
         {
-            return "<img src=\"" + contextPath + "/images/building.gif\" alt=\"Building\" title=\"Building\" border=\"0\" />";
+            return "<img src=\"" + contextPath +
+                "/images/building.gif\" alt=\"Building\" title=\"Building\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.UPDATING )
         {

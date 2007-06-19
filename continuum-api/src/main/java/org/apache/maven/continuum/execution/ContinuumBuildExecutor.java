@@ -47,6 +47,6 @@ public interface ContinuumBuildExecutor
     List getDeployableArtifacts( File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException;
 
-    TestResult getTestResults(Project project)
+    TestResult getTestResults( Project project )
         throws ContinuumBuildExecutorException;
 }

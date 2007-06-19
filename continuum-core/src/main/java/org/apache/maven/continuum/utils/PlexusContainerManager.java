@@ -34,6 +34,7 @@ public class PlexusContainerManager
     private PlexusContainerManager()
     {
     }
+
     public static synchronized PlexusContainerManager getInstance()
     {
         if ( instance == null )

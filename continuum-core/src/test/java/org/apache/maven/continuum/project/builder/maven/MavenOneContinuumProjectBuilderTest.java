@@ -37,8 +37,8 @@ public class MavenOneContinuumProjectBuilderTest
     public void testBuildingAProjectFromMetadataWithACompleteMaven1Pom()
         throws Exception
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
-                                                                                   MavenOneContinuumProjectBuilder.ID );
+        ContinuumProjectBuilder projectBuilder =
+            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenOneContinuumProjectBuilder.ID );
 
         ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata(
             getTestFile( "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null );

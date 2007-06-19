@@ -19,15 +19,6 @@ package org.apache.maven.continuum.notification.mail;
  * under the License.
  */
 
-import java.io.StringWriter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationException;
@@ -51,6 +42,15 @@ import org.codehaus.plexus.notification.NotificationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.velocity.VelocityComponent;
+
+import java.io.StringWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -222,9 +222,8 @@ public class MailContinuumNotifier
         }
     }
 
-    private void buildComplete( Project project, ProjectNotifier projectNotifier, BuildResult build,
-                                String buildOutput, String source, Set recipients, Map configuration,
-                                BuildDefinition buildDefinition )
+    private void buildComplete( Project project, ProjectNotifier projectNotifier, BuildResult build, String buildOutput,
+                                String source, Set recipients, Map configuration, BuildDefinition buildDefinition )
         throws NotificationException
     {
 
@@ -295,12 +294,12 @@ public class MailContinuumNotifier
 
                 context.put( "osName", osName );
 
-                context.put( "javaVersion", System.getProperty( "java.version" ) + "("
-                    + System.getProperty( "java.vendor" ) + ")" );
+                context.put( "javaVersion",
+                             System.getProperty( "java.version" ) + "(" + System.getProperty( "java.vendor" ) + ")" );
 
                 // TODO only in case of a java project ?
                 context.put( "javaHomeInformations", getJavaHomeInformations( buildDefinition ) );
-                
+
                 // TODO add other informations on profile : builder version other envVars used
 
                 // ----------------------------------------------------------------------
@@ -402,9 +401,8 @@ public class MailContinuumNotifier
         if ( fromMailbox == null )
         {
             getLogger()
-                .warn(
-                       project.getName()
-                           + ": Project is missing nag email and global from mailbox is missing, not sending mail." );
+                .warn( project.getName() +
+                    ": Project is missing nag email and global from mailbox is missing, not sending mail." );
 
             return;
         }
@@ -497,8 +495,8 @@ public class MailContinuumNotifier
 
         if ( currentBuild != null && build.getId() != currentBuild.getId() )
         {
-            throw new NotificationException( "INTERNAL ERROR: The current build wasn't the first in the build list. "
-                + "Current build: '" + currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
+            throw new NotificationException( "INTERNAL ERROR: The current build wasn't the first in the build list. " +
+                "Current build: '" + currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
         }
 
         return (BuildResult) builds.get( builds.size() - 2 );

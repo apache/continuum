@@ -89,8 +89,8 @@ public abstract class AbstractContinuumNotifier
     /**
      * Determine if message must be sent
      *
-     * @param build         The current build result
-     * @param previousBuild The previous build result
+     * @param build           The current build result
+     * @param previousBuild   The previous build result
      * @param projectNotifier The project notifier
      * @return True if a message must be sent
      */

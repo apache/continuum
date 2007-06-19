@@ -24,10 +24,8 @@ package org.apache.maven.continuum.web.action;
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
  * @version: $ID:$
- *
- * @plexus.component
- *   role="com.opensymphony.xwork.Action"
- *   role-hint="about"
+ * @plexus.component role="com.opensymphony.xwork.Action"
+ * role-hint="about"
  */
 public class AboutAction
     extends ContinuumActionSupport

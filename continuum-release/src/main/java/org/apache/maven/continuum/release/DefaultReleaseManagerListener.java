@@ -21,9 +21,9 @@ package org.apache.maven.continuum.release;
 
 import org.apache.maven.shared.release.ReleaseManagerListener;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Edwin Punzalan

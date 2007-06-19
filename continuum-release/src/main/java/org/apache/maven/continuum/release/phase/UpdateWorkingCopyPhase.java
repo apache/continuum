@@ -19,26 +19,26 @@ package org.apache.maven.continuum.release.phase;
  * under the License.
  */
 
-import org.apache.maven.shared.release.ReleaseResult;
-import org.apache.maven.shared.release.ReleaseExecutionException;
-import org.apache.maven.shared.release.ReleaseFailureException;
-import org.apache.maven.shared.release.phase.AbstractReleasePhase;
-import org.apache.maven.shared.release.scm.ScmRepositoryConfigurator;
-import org.apache.maven.shared.release.scm.ReleaseScmRepositoryException;
-import org.apache.maven.shared.release.scm.ReleaseScmCommandException;
-import org.apache.maven.shared.release.config.ReleaseDescriptor;
-import org.apache.maven.settings.Settings;
-import org.apache.maven.scm.repository.ScmRepository;
-import org.apache.maven.scm.repository.ScmRepositoryException;
-import org.apache.maven.scm.provider.ScmProvider;
-import org.apache.maven.scm.manager.NoSuchScmProviderException;
-import org.apache.maven.scm.ScmFileSet;
 import org.apache.maven.scm.ScmException;
+import org.apache.maven.scm.ScmFileSet;
 import org.apache.maven.scm.ScmVersion;
 import org.apache.maven.scm.command.update.UpdateScmResult;
+import org.apache.maven.scm.manager.NoSuchScmProviderException;
+import org.apache.maven.scm.provider.ScmProvider;
+import org.apache.maven.scm.repository.ScmRepository;
+import org.apache.maven.scm.repository.ScmRepositoryException;
+import org.apache.maven.settings.Settings;
+import org.apache.maven.shared.release.ReleaseExecutionException;
+import org.apache.maven.shared.release.ReleaseFailureException;
+import org.apache.maven.shared.release.ReleaseResult;
+import org.apache.maven.shared.release.config.ReleaseDescriptor;
+import org.apache.maven.shared.release.phase.AbstractReleasePhase;
+import org.apache.maven.shared.release.scm.ReleaseScmCommandException;
+import org.apache.maven.shared.release.scm.ReleaseScmRepositoryException;
+import org.apache.maven.shared.release.scm.ScmRepositoryConfigurator;
 
-import java.util.List;
 import java.io.File;
+import java.util.List;
 
 /**
  * Update working copy
@@ -83,13 +83,13 @@ public class UpdateWorkingCopyPhase
         UpdateScmResult result;
         try
         {
-            result = provider.update(
-                repository, new ScmFileSet( new File( releaseDescriptor.getWorkingDirectory() ) ), (ScmVersion)null );
+            result = provider.update( repository, new ScmFileSet( new File( releaseDescriptor.getWorkingDirectory() ) ),
+                                      (ScmVersion) null );
         }
         catch ( ScmException e )
         {
-            throw new ReleaseExecutionException( "An error occurred while updating your local copy: "
-                + e.getMessage(), e );
+            throw new ReleaseExecutionException( "An error occurred while updating your local copy: " + e.getMessage(),
+                                                 e );
         }
 
         if ( !result.isSuccess() )

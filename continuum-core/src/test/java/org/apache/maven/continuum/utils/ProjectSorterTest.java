@@ -19,14 +19,13 @@ package org.apache.maven.continuum.utils;
  * under the License.
  */
 
+import junit.framework.TestCase;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-
-import junit.framework.TestCase;
+import java.util.List;
 
 /**
  * @author <a href="mailto:jmcconnell@apache.org">Jesse McConnell</a>
@@ -62,11 +61,11 @@ public class ProjectSorterTest
 
         assertNotNull( sortedList );
 
-        Project p1 = (Project)sortedList.get( 0 );
+        Project p1 = (Project) sortedList.get( 0 );
         assertEquals( top.getArtifactId(), p1.getArtifactId() );
-        Project p2 = (Project)sortedList.get( 1 );
+        Project p2 = (Project) sortedList.get( 1 );
         assertEquals( c1.getArtifactId(), p2.getArtifactId() );
-        Project p3 = (Project)sortedList.get( 2 );
+        Project p3 = (Project) sortedList.get( 2 );
         assertEquals( c2.getArtifactId(), p3.getArtifactId() );
     }
 
@@ -97,11 +96,11 @@ public class ProjectSorterTest
 
         assertNotNull( sortedList );
 
-        Project p1 = (Project)sortedList.get( 0 );
+        Project p1 = (Project) sortedList.get( 0 );
         assertEquals( top.getArtifactId(), p1.getArtifactId() );
-        Project p2 = (Project)sortedList.get( 1 );
+        Project p2 = (Project) sortedList.get( 1 );
         assertEquals( c1.getArtifactId(), p2.getArtifactId() );
-        Project p3 = (Project)sortedList.get( 2 );
+        Project p3 = (Project) sortedList.get( 2 );
         assertEquals( c2.getArtifactId(), p3.getArtifactId() );
 
     }

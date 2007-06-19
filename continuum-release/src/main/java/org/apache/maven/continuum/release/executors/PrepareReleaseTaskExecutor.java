@@ -40,8 +40,8 @@ public class PrepareReleaseTaskExecutor
 
         ReleaseDescriptor descriptor = prepareTask.getDescriptor();
 
-        ReleaseResult result = releaseManager.prepareWithResult( descriptor, settings, new ArrayList(),
-                                                                 false, false, prepareTask.getListener() );
+        ReleaseResult result = releaseManager.prepareWithResult( descriptor, settings, new ArrayList(), false, false,
+                                                                 prepareTask.getListener() );
 
         //override to show the actual start time
         result.setStartTime( getStartTime() );

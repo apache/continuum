@@ -34,10 +34,8 @@ public class ContinuumUtilsTest
 
         Throwable b = new Exception( "foo", a );
 
-        assertEquals( "bar",
-                      ContinuumUtils.throwableMessagesToString( a ) );
+        assertEquals( "bar", ContinuumUtils.throwableMessagesToString( a ) );
 
-        assertEquals( "foo" + ContinuumUtils.EOL + "bar",
-                      ContinuumUtils.throwableMessagesToString( b ) );
+        assertEquals( "foo" + ContinuumUtils.EOL + "bar", ContinuumUtils.throwableMessagesToString( b ) );
     }
 }

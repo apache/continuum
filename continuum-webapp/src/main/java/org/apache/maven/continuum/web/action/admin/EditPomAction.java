@@ -24,10 +24,8 @@ import org.apache.maven.artifact.installer.ArtifactInstallationException;
 import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
 import org.apache.maven.continuum.execution.maven.m2.SettingsConfigurationException;
-import org.apache.maven.continuum.web.action.ContinuumActionSupport;
-import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
-import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
+import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.shared.app.company.CompanyPomHandler;
@@ -132,5 +130,5 @@ public class EditPomAction
         bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_CONFIGURATION, Resource.GLOBAL );
 
         return bundle;
-     }
+    }
 }

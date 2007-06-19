@@ -65,15 +65,15 @@ public abstract class AbstractContinuumTest
         getStore();
 
         setUpConfigurationService( (ConfigurationService) lookup( ConfigurationService.ROLE ) );
-        
+
         Collection projectGroups = store.getAllProjectGroupsWithProjects();
 
         assertEquals( 0, projectGroups.size() );
 
         createDefaultProjectGroup();
-        
+
         projectGroups = store.getAllProjectGroupsWithProjects();
-        
+
         assertEquals( 1, projectGroups.size() );
     }
 
@@ -164,7 +164,8 @@ public abstract class AbstractContinuumTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/META-INF/package.jdo" )}, new URL[] {}, null, false, null );
+        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/META-INF/package.jdo" )}, new URL[]{}, null,
+                                       false, null );
 
         // ----------------------------------------------------------------------
         // Check the configuration

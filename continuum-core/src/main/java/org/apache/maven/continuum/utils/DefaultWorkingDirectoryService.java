@@ -28,10 +28,8 @@ import java.io.File;
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.apache.maven.continuum.utils.WorkingDirectoryService"
- *   role-hint="default"
+ * @plexus.component role="org.apache.maven.continuum.utils.WorkingDirectoryService"
+ * role-hint="default"
  */
 public class DefaultWorkingDirectoryService
     extends AbstractLogEnabled
@@ -57,9 +55,9 @@ public class DefaultWorkingDirectoryService
         File workDir;
         if ( project.getWorkingDirectory() == null )
         {
-           workDir  = new File( configurationService.getWorkingDirectory(), Integer.toString( project.getId() ) );
+            workDir = new File( configurationService.getWorkingDirectory(), Integer.toString( project.getId() ) );
 
-           project.setWorkingDirectory( workDir.getAbsolutePath() );
+            project.setWorkingDirectory( workDir.getAbsolutePath() );
         }
         else
         {

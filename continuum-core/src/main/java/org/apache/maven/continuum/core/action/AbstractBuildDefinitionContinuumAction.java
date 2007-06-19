@@ -177,7 +177,7 @@ public abstract class AbstractBuildDefinitionContinuumAction
                 }
 
                 storedDefinition.setSchedule( schedule );
-                
+
                 storedDefinition.setProfile( buildDefinition.getProfile() );
 
                 store.storeBuildDefinition( storedDefinition );

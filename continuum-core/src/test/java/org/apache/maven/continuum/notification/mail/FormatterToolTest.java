@@ -39,9 +39,9 @@ public class FormatterToolTest
 
         assertEquals( "1m 10s", tool.formatInterval( 0, makeTime( 0, 1, 10 ) ) );
 
-        assertEquals( "1h 0m 0s", tool.formatInterval( 0, makeTime( 1, 0, 0) ) );
+        assertEquals( "1h 0m 0s", tool.formatInterval( 0, makeTime( 1, 0, 0 ) ) );
 
-        assertEquals( "1h 10m 0s", tool.formatInterval( 0, makeTime( 1, 10, 0) ) );
+        assertEquals( "1h 10m 0s", tool.formatInterval( 0, makeTime( 1, 10, 0 ) ) );
 
         assertEquals( "1h 1m 10s", tool.formatInterval( 0, makeTime( 1, 1, 10 ) ) );
 

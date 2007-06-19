@@ -34,10 +34,8 @@ import org.jpox.SchemaTool;
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @version $Id$
  * @todo use this, reintroduce default project group
- *
- * @plexus.component
- *   role="org.apache.maven.continuum.initialization.ContinuumInitializer"
- *   role-hint="default"
+ * @plexus.component role="org.apache.maven.continuum.initialization.ContinuumInitializer"
+ * role-hint="default"
  */
 public class DefaultContinuumInitializer
     extends AbstractLogEnabled
@@ -48,6 +46,7 @@ public class DefaultContinuumInitializer
     // ----------------------------------------------------------------------
 
     //TODO: move this to an other place
+
     public static final String DEFAULT_SCHEDULE_NAME = "DEFAULT_SCHEDULE";
 
     private SystemConfiguration systemConf;
@@ -69,7 +68,7 @@ public class DefaultContinuumInitializer
         throws ContinuumInitializationException
     {
         getLogger().info( "Continuum initializer running ..." );
-        
+
         if ( getLogger().isDebugEnabled() )
         {
             getLogger().debug( "Dumping JPOX/JDO Schema Details ..." );
@@ -133,21 +132,21 @@ public class DefaultContinuumInitializer
         return schedule;
     }
 
-    private BuildDefinition getDefaultBuildDefinition() 
+    private BuildDefinition getDefaultBuildDefinition()
         throws ContinuumStoreException
     {
         BuildDefinition bd = new BuildDefinition();
-        
+
         bd.setDefaultForProject( true );
-    
+
         bd.setGoals( "clean install" );
-    
+
         bd.setArguments( "--batch-mode --non-recursive" );
-    
+
         bd.setBuildFile( "pom.xml" );
-    
+
         bd.setSchedule( store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME ) );
-        
+
         return bd;
     }
 
@@ -168,7 +167,7 @@ public class DefaultContinuumInitializer
             group.setGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
 
             group.setDescription( "Contains all projects that do not have a group of their own" );
-            
+
             group.getBuildDefinitions().add( getDefaultBuildDefinition() );
 
             group = store.addProjectGroup( group );

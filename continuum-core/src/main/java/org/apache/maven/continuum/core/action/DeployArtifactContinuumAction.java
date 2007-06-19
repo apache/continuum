@@ -42,10 +42,8 @@ import java.util.Map;
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.codehaus.plexus.action.Action"
- *   role-hint="deploy-artifact"
+ * @plexus.component role="org.codehaus.plexus.action.Action"
+ * role-hint="deploy-artifact"
  */
 public class DeployArtifactContinuumAction
     extends AbstractContinuumAction
