@@ -84,7 +84,15 @@ public class MavenOneBuildExecutor
         arguments +=
             StringUtils.clean( buildDefinition.getArguments() ) + " " + StringUtils.clean( buildDefinition.getGoals() );
 
-        return executeShellCommand( project, executable, arguments, buildOutput, getEnvironments( buildDefinition ) );
+        Map<String, String> environments = getEnvironments( buildDefinition );
+        String m1Home = environments.get( getInstallationService().getEnvVar( InstallationService.MAVEN1_TYPE ) );
+        if ( StringUtils.isNotEmpty( m1Home ) )
+        {
+            executable = m1Home + File.separator + "bin" + File.separator + executable;
+            setResolveExecutable( false );
+        }
+
+        return executeShellCommand( project, executable, arguments, buildOutput, environments );
     }
 
     protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )
