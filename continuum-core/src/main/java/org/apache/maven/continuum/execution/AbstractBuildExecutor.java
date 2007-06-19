@@ -244,7 +244,7 @@ public abstract class AbstractBuildExecutor
         return jdk.getVarValue();
     }
 
-    protected Map<String, String> getEnvironmentVariable( BuildDefinition buildDefinition )
+    protected Map<String, String> getEnvironmentVariables( BuildDefinition buildDefinition )
     {
         Profile profile = buildDefinition.getProfile();
         Map<String, String> envVars = new HashMap<String, String>();
