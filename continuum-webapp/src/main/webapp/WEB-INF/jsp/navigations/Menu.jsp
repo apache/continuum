@@ -109,6 +109,18 @@
               <ww:text name="menu.administration.appearance"/>
             </ww:a>
           </div>
+          <ww:url id="configurationUrl" action="profilesList" namespace="/admin" method="list" includeParams="none"/>
+          <div class="body">
+            <ww:a href="%{configurationUrl}">
+              <ww:text name="menu.administration.profile"/>
+            </ww:a>
+          </div>     
+          <ww:url id="configurationUrl" action="installationsList" namespace="/admin" method="list" includeParams="none"/>
+          <div class="body">
+            <ww:a href="%{configurationUrl}">
+              <ww:text name="menu.administration.installations"/>
+            </ww:a>
+          </div>               
         </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-users">
           <ww:url id="userListUrl" action="userlist" namespace="/security" includeParams="none"/>

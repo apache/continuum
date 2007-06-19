@@ -457,7 +457,7 @@
     <action name="configureAppearance" class="configureAppearance" method="input">
       <result name="input">/WEB-INF/jsp/admin/appearance.jsp</result>
     </action>
-
+	  
     <action name="editAppearance" class="configureAppearance" method="input">
       <result name="input">/WEB-INF/jsp/admin/editAppearance.jsp</result>
     </action>
@@ -481,6 +481,69 @@
         <param name="namespace">/admin</param>
       </result>
     </action>
+      
+    <!--
+       Profile actions 
+    -->      
+      
+    <action name="profilesList" class="profileAdministration" method="list">
+      <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
+    </action>   
+      
+    <action name="addProfile" class="profileAdministration">
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>   
+    </action>
+        
+    <action name="editProfile" class="profileAdministration">
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
+    </action>
+      
+    <action name="deleteProfile" class="profileAdministration" method="delete">
+      <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
+    </action>        
+      
+    <action name="saveProfile" class="profileAdministration" method="save">
+      <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
+    </action>
+      
+    <action name="addInstallationProfile" class="profileAdministration" method="addInstallation">
+      <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>        
+    </action>  
+    
+    <action name="removeProfileInstallation" class="profileAdministration" method="removeInstallation">
+      <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>        
+    </action>
+      
+    <!--
+       Installation actions 
+    -->  
+    <action name="installationsList" class="installation" method="list">
+      <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
+    </action>   
+      
+    <action name="addInstallation" class="installation" method="add">
+      <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
+    </action>       
+      
+    <action name="editInstallation" class="installation" method="edit">
+      <result name="success">/WEB-INF/jsp/admin/editInstallation.jsp</result>
+        <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>    
+    </action>
+      
+    <action name="saveInstallation" class="installation" method="save">
+      <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
+    </action> 
+    <action name="deleteInstallation" class="installation" method="delete">
+      <result name="input">/WEB-INF/jsp/admin/installationsList.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
+    </action>             
+      
   </package>
 
   <package name="component" extends="default">

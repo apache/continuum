@@ -23,11 +23,17 @@ import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -66,19 +72,43 @@ public class AntBuildExecutor
         // TODO: get from installation
 //        String executable = project.getExecutable();
         String executable = "ant";
-        
+
         String arguments = "";
-        
+
         String buildFile = buildDefinition.getBuildFile();
 
-        if (!StringUtils.isEmpty(buildFile)) {
+        if ( !StringUtils.isEmpty( buildFile ) )
+        {
             arguments = "-f " + buildFile + " ";
         }
 
-        arguments += StringUtils.clean( buildDefinition.getArguments() ) + " " +
-            StringUtils.clean( buildDefinition.getGoals() );
+        arguments += StringUtils.clean( buildDefinition.getArguments() ) + " "
+            + StringUtils.clean( buildDefinition.getGoals() );
 
-        return executeShellCommand( project, executable, arguments, buildOutput );
+        return executeShellCommand( project, executable, arguments, buildOutput, getEnvironments( buildDefinition ) );
+    }
+
+    protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )
+    {
+        Profile profile = buildDefinition.getProfile();
+        if ( profile == null )
+        {
+            return Collections.EMPTY_MAP;
+        }
+        Map<String, String> envVars = new HashMap<String, String>();
+        String javaHome = getJavaHomeValue( buildDefinition );
+        if ( !StringUtils.isEmpty( javaHome ) )
+        {
+            envVars.put( getInstallationService().getEnvVar( InstallationService.JDK_TYPE ), javaHome );
+        }
+        Installation builder = profile.getBuilder();
+        if ( builder != null )
+        {
+            envVars.put( getInstallationService().getEnvVar( InstallationService.ANT_TYPE ), builder.getVarValue() );
+        }
+        envVars.putAll( getEnvironmentVariable( buildDefinition ) );
+        return envVars;
+
     }
 
     public void updateProjectFromCheckOut( File workingDirectory, Project p, BuildDefinition buildDefinition )

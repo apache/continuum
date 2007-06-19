@@ -42,7 +42,7 @@
 
       <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
       <ec:column property="name" title="summary.projectTable.name" width="48%">
-        <ww:url id="projectUrl" action="projectView" namespace="/">
+        <ww:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
           <ww:param name="projectId" value="${project.id}"/>
         </ww:url>
         <ww:a href="%{projectUrl}">${pageScope.project.name}</ww:a>

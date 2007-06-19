@@ -19,17 +19,31 @@ package org.apache.maven.continuum.execution.maven.m2;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.SuiteResult;
 import org.apache.maven.continuum.model.scm.TestCaseFailure;
 import org.apache.maven.continuum.model.scm.TestResult;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
@@ -39,14 +53,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.MXParser;
 import org.codehaus.plexus.util.xml.pull.XmlPullParser;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -107,10 +113,12 @@ public class MavenTwoBuildExecutor
             arguments = "-f " + buildFile + " ";
         }
 
-        arguments +=
-            StringUtils.clean( buildDefinition.getArguments() ) + " " + StringUtils.clean( buildDefinition.getGoals() );
+        arguments += StringUtils.clean( buildDefinition.getArguments() ) + " "
+            + StringUtils.clean( buildDefinition.getGoals() );
+        Map<String, String> environments = new HashMap<String, String>();
+        Profile profile = buildDefinition.getProfile();
 
-        return executeShellCommand( project, executable, arguments, buildOutput );
+        return executeShellCommand( project, executable, arguments, buildOutput, getEnvironments( buildDefinition ) );
     }
 
     public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
@@ -173,8 +181,8 @@ public class MavenTwoBuildExecutor
 
         if ( result.hasErrors() )
         {
-            throw new ContinuumBuildExecutorException(
-                "Unable to read the Maven project descriptor '" + f + "': " + result.getErrorsAsString() );
+            throw new ContinuumBuildExecutorException( "Unable to read the Maven project descriptor '" + f + "': "
+                + result.getErrorsAsString() );
         }
 
         // Maven could help us out a lot more here by knowing how to get the deployment artifacts from a project.
@@ -277,8 +285,9 @@ public class MavenTwoBuildExecutor
     {
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir( workingDir );
-        scanner.setIncludes(
-            new String[]{"**/target/surefire-reports/TEST-*.xml", "**/target/surefire-it-reports/TEST-*.xml"} );
+        scanner.setIncludes( new String[] {
+            "**/target/surefire-reports/TEST-*.xml",
+            "**/target/surefire-it-reports/TEST-*.xml" } );
         scanner.scan();
 
         TestResult testResult = new TestResult();
@@ -301,8 +310,8 @@ public class MavenTwoBuildExecutor
 
                 suite.setName( parser.getAttributeValue( null, "name" ) );
 
-                int suiteFailureCount = Integer.parseInt( parser.getAttributeValue( null, "errors" ) ) +
-                    Integer.parseInt( parser.getAttributeValue( null, "failures" ) );
+                int suiteFailureCount = Integer.parseInt( parser.getAttributeValue( null, "errors" ) )
+                    + Integer.parseInt( parser.getAttributeValue( null, "failures" ) );
 
                 long suiteTotalTime = (long) ( 1000 * Double.parseDouble( parser.getAttributeValue( null, "time" ) ) );
 
@@ -319,10 +328,10 @@ public class MavenTwoBuildExecutor
                         {
                             parser.next();
                         }
-                        while ( parser.getEventType() != XmlPullParser.START_TAG &&
-                            parser.getEventType() != XmlPullParser.END_TAG );
-                        if ( parser.getEventType() == XmlPullParser.START_TAG &&
-                            ( "error".equals( parser.getName() ) || "failure".equals( parser.getName() ) ) )
+                        while ( parser.getEventType() != XmlPullParser.START_TAG
+                            && parser.getEventType() != XmlPullParser.END_TAG );
+                        if ( parser.getEventType() == XmlPullParser.START_TAG
+                            && ( "error".equals( parser.getName() ) || "failure".equals( parser.getName() ) ) )
                         {
                             TestCaseFailure failure = new TestCaseFailure();
                             failure.setName( name );
@@ -363,5 +372,28 @@ public class MavenTwoBuildExecutor
         testResult.setTotalTime( totalTime );
 
         return testResult;
+    }
+
+    protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )
+    {
+        Profile profile = buildDefinition.getProfile();
+        if ( profile == null )
+        {
+            return Collections.EMPTY_MAP;
+        }
+        Map<String, String> envVars = new HashMap<String, String>();
+        String javaHome = getJavaHomeValue( buildDefinition );
+        if ( !StringUtils.isEmpty( javaHome ) )
+        {
+            envVars.put( getInstallationService().getEnvVar( InstallationService.JDK_TYPE ), javaHome );
+        }
+        Installation builder = profile.getBuilder();
+        if ( builder != null )
+        {
+            envVars.put( getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ), builder.getVarValue() );
+        }
+        envVars.putAll( getEnvironmentVariable( buildDefinition ) );
+        return envVars;
+
     }
 }

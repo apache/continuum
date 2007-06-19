@@ -35,7 +35,6 @@
       <ec:column property="goals" title="projectView.buildDefinition.goals"/>
       <ec:column property="arguments" title="projectView.buildDefinition.arguments"/>
       <ec:column property="buildFile" title="projectView.buildDefinition.buildFile"/>
-      <ec:column property="profile" title="projectView.buildDefinition.profile"/>
       <ec:column property="scheduleName" title="projectView.buildDefinition.schedule">
         <redback:ifAuthorized permission="continuum-manage-schedules">
           <ww:url id="scheduleUrl" action="schedule" namespace="/" includeParams="none">
@@ -47,6 +46,7 @@
           ${pageScope.buildDefinitionSummary.scheduleName}
         </redback:elseAuthorized>
       </ec:column>
+      <ec:column property="profileName" title="projectView.buildDefinition.profile"/>
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isBuildFresh" title="projectView.buildDefinition.buildFresh"/>
       <ec:column property="isDefault" title="projectView.buildDefinition.default"/>

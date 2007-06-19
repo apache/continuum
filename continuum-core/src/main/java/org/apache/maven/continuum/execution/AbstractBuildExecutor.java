@@ -19,9 +19,12 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.scm.TestResult;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.continuum.utils.shell.ExecutionResult;
 import org.apache.maven.continuum.utils.shell.ShellCommandHelper;
@@ -34,9 +37,11 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -64,6 +69,11 @@ public abstract class AbstractBuildExecutor
      * @plexus.requirement
      */
     private WorkingDirectoryService workingDirectoryService;
+
+    /**
+     * @plexus.requirement
+     */
+    private InstallationService installationService;
 
     /**
      * @plexus.configuration
@@ -102,8 +112,9 @@ public abstract class AbstractBuildExecutor
         {
             if ( StringUtils.isEmpty( defaultExecutable ) )
             {
-                getLogger().warn( "The default executable for build executor '" + id + "' is not set. " +
-                    "This will cause a problem unless the project has a executable configured." );
+                getLogger().warn(
+                                  "The default executable for build executor '" + id + "' is not set. "
+                                      + "This will cause a problem unless the project has a executable configured." );
             }
             else
             {
@@ -112,12 +123,14 @@ public abstract class AbstractBuildExecutor
                 if ( resolvedExecutable == null )
                 {
                     getLogger().warn(
-                        "Could not find the executable '" + defaultExecutable + "' in the " + "path '" + path + "'." );
+                                      "Could not find the executable '" + defaultExecutable + "' in the " + "path '"
+                                          + path + "'." );
                 }
                 else
                 {
-                    getLogger().info( "Resolved the executable '" + defaultExecutable + "' to " + "'" +
-                        resolvedExecutable.getAbsolutePath() + "'." );
+                    getLogger().info(
+                                      "Resolved the executable '" + defaultExecutable + "' to " + "'"
+                                          + resolvedExecutable.getAbsolutePath() + "'." );
                 }
             }
         }
@@ -128,7 +141,7 @@ public abstract class AbstractBuildExecutor
     // ----------------------------------------------------------------------
 
     protected ContinuumBuildExecutionResult executeShellCommand( Project project, String executable, String arguments,
-                                                                 File output )
+                                                                 File output, Map<String, String> environments )
         throws ContinuumBuildExecutorException
     {
         // ----------------------------------------------------------------------
@@ -190,7 +203,8 @@ public abstract class AbstractBuildExecutor
         try
         {
             ExecutionResult result = shellCommandHelper.executeShellCommand( workingDirectory, actualExecutable,
-                                                                             arguments, output, project.getId() );
+                                                                             arguments, output, project.getId(),
+                                                                             environments );
 
             getLogger().info( "Exit code: " + result.getExitCode() );
 
@@ -205,16 +219,53 @@ public abstract class AbstractBuildExecutor
             else
             {
                 throw new ContinuumBuildExecutorException(
-                    "Error while executing shell command. The most common error is that '" + executable + "' "
-                        + "is not in your path.",
-                    e );
+                                                           "Error while executing shell command. The most common error is that '"
+                                                               + executable + "' " + "is not in your path.", e );
             }
         }
         catch ( Exception e )
         {
-            throw new ContinuumBuildExecutorException( "Error while executing shell command. " +
-                "The most common error is that '" + executable + "' " + "is not in your path.", e );
+            throw new ContinuumBuildExecutorException( "Error while executing shell command. "
+                + "The most common error is that '" + executable + "' " + "is not in your path.", e );
         }
+    }
+
+    protected abstract Map<String, String> getEnvironments( BuildDefinition buildDefinition );
+
+    protected String getJavaHomeValue( BuildDefinition buildDefinition )
+    {
+        Profile profile = buildDefinition.getProfile();
+        if ( profile == null )
+        {
+            return null;
+        }
+        Installation jdk = profile.getJdk();
+        if ( jdk == null )
+        {
+            return null;
+        }
+        return jdk.getVarValue();
+    }
+
+    protected Map<String, String> getEnvironmentVariable( BuildDefinition buildDefinition )
+    {
+        Profile profile = buildDefinition.getProfile();
+        Map<String, String> envVars = new HashMap<String, String>();
+        if ( profile == null )
+        {
+            return envVars;
+        }
+        List<Installation> environmentVariables = profile.getEnvironmentVariables();
+        if ( environmentVariables.isEmpty() )
+        {
+            return envVars;
+        }
+        for ( Iterator<Installation> iterator = environmentVariables.iterator(); iterator.hasNext(); )
+        {
+            Installation installation = iterator.next();
+            envVars.put( installation.getVarName(), installation.getVarValue() );
+        }
+        return envVars;
     }
 
     public boolean isBuilding( Project project )
@@ -239,8 +290,19 @@ public abstract class AbstractBuildExecutor
         return workingDirectoryService.getWorkingDirectory( project );
     }
 
-    public TestResult getTestResults(Project project)
-            throws ContinuumBuildExecutorException {
+    public TestResult getTestResults( Project project )
+        throws ContinuumBuildExecutorException
+    {
         return null;
+    }
+
+    public InstallationService getInstallationService()
+    {
+        return installationService;
+    }
+
+    public void setInstallationService( InstallationService installationService )
+    {
+        this.installationService = installationService;
     }
 }

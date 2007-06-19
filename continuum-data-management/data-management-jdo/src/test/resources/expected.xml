@@ -404,18 +404,18 @@
   </systemConfiguration>
   <installations>
     <installation>
-      <version>1.3</version>
-      <path>/usr/local/java-1.3</path>
+      <varValue>/usr/local/java-1.3</varValue>
+      <varName>JAVA_HOME</varName>
       <name>JDK 1.3</name>
     </installation>
     <installation>
-      <version>1.4</version>
-      <path>/usr/local/java-1.4</path>
+      <varValue>/usr/local/java-1.4</varValue>
+      <varName>JAVA_HOME</varName>
       <name>JDK 1.4</name>
     </installation>
     <installation>
-      <version>2.0-alpha-3</version>
-      <path>/usr/local/maven-2.0-alpha-3</path>
+      <varValue>/usr/local/maven-2.0-alpha-3</varValue>    
+      <varName>M2_HOME</varName>
       <name>Maven 2.0 alpha 3</name>
     </installation>
   </installations>

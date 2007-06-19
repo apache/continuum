@@ -73,7 +73,8 @@
                               <ww:textfield label="%{getText('add.m2.project.projectGroup')}" name="projectGroupName" disabled="true"/>
                             </ww:if>
                             <ww:else>
-                              <ww:select label="%{getText('add.m2.project.projectGroup')}" name="selectedProjectGroup" list="projectGroups" listKey="id" listValue="name"/>
+                              <ww:select label="%{getText('add.m2.project.projectGroup')}" name="selectedProjectGroup" 
+                                         list="projectGroups" listKey="id" listValue="name"/>
                             </ww:else>
                           </tbody>
                         </table>

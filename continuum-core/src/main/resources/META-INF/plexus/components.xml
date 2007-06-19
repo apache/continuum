@@ -100,6 +100,9 @@
         <requirement>
           <role>org.apache.maven.project.MavenProjectHelper</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.installation.InstallationService</role>  
+        </requirement>
       </requirements>
     </component>
 
@@ -124,6 +127,9 @@
         <requirement>
           <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.installation.InstallationService</role>  
+        </requirement>          
       </requirements>
     </component>
 
@@ -142,6 +148,9 @@
         <requirement>
           <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.installation.InstallationService</role>  
+        </requirement>          
       </requirements>
       <configuration>
         <default-executable>ant</default-executable>
@@ -162,6 +171,9 @@
         <requirement>
           <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.installation.InstallationService</role>  
+        </requirement>          
       </requirements>
     </component>
 

@@ -19,19 +19,19 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.model.project.Profile;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -51,40 +51,42 @@ public interface ContinuumStore
     Map getDefaultBuildDefinitions();
 
     /**
-     * returns the default build definition of the project, if the project doesn't have on declared the default
-     * of the project group will be returned
-     * <p/>
-     * this should be the most common usage of the default build definition accessing methods
-     *
+     * returns the default build definition of the project, if the project
+     * doesn't have on declared the default of the project group will be
+     * returned <p/> this should be the most common usage of the default build
+     * definition accessing methods
+     * 
      * @param projectId
      * @return
      * @throws ContinuumStoreException
      * @throws ContinuumObjectNotFoundException
-     *
+     * 
      */
     BuildDefinition getDefaultBuildDefinition( int projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     /**
-     * returns the default build definition for the project without consulting the project group
-     *
+     * returns the default build definition for the project without consulting
+     * the project group
+     * 
      * @param projectId
      * @return
      * @throws ContinuumStoreException
      * @throws ContinuumObjectNotFoundException
-     *
+     * 
      */
     BuildDefinition getDefaultBuildDefinitionForProject( int projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     /**
-     * returns the default build definition for the project group and there should always be one declared
-     *
+     * returns the default build definition for the project group and there
+     * should always be one declared
+     * 
      * @param projectGroupId
      * @return
      * @throws ContinuumStoreException
      * @throws ContinuumObjectNotFoundException
-     *
+     * 
      */
     BuildDefinition getDefaultBuildDefinitionForProjectGroup( int projectGroupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
@@ -131,13 +133,39 @@ public interface ContinuumStore
     Schedule storeSchedule( Schedule schedule )
         throws ContinuumStoreException;
 
+    // ----------------------------------------------------------------
+    // Profile
+    // ----------------------------------------------------------------    
     List getAllProfilesByName();
 
     Profile addProfile( Profile profile );
 
-    Installation addInstallation( Installation installation );
+    Installation addInstallation( Installation installation )
+        throws ContinuumStoreException;
 
-    List getAllInstallations();
+    Profile getProfile( int profileId )
+        throws ContinuumObjectNotFoundException, ContinuumStoreException;
+
+    void updateProfile( Profile profile )
+        throws ContinuumStoreException;
+
+    void removeProfile( Profile profile );
+
+    // ----------------------------------------------------------------
+    // Installation
+    // ----------------------------------------------------------------  
+
+    List getAllInstallations()
+        throws ContinuumStoreException;
+
+    void removeInstallation( Installation installation )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
+
+    void updateInstallation( Installation installation )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
+
+    Installation getInstallationByName( String installationName )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     List getAllBuildsForAProjectByDate( int projectId );
 
@@ -162,16 +190,11 @@ public interface ContinuumStore
     void updateProject( Project project )
         throws ContinuumStoreException;
 
-    void updateProfile( Profile profile )
-        throws ContinuumStoreException;
-
     void updateSchedule( Schedule schedule )
         throws ContinuumStoreException;
 
     Project getProjectWithBuilds( int projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
-
-    void removeProfile( Profile profile );
 
     void removeSchedule( Schedule schedule );
 
@@ -205,9 +228,6 @@ public interface ContinuumStore
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     Schedule getSchedule( int scheduleId )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException;
-
-    Profile getProfile( int profileId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     ProjectGroup getProjectGroupByGroupId( String groupId )

@@ -19,18 +19,20 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.Schedule;
-import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.continuum.web.exception.ContinuumActionException;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.ProfileException;
+import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.continuum.web.exception.ContinuumActionException;
 
 /**
  * BuildDefinitionAction:
@@ -66,11 +68,13 @@ public class BuildDefinitionAction
 
     private Map schedules;
 
-    private Map profiles;
+    private List profiles;
 
     private boolean groupBuildDefinition = false;
 
     private String projectGroupName = "";
+
+    private int profileId;
 
     public void prepare()
         throws Exception
@@ -94,7 +98,7 @@ public class BuildDefinitionAction
         // todo: missing from continuum, investigate
         if ( profiles == null )
         {
-            profiles = new HashMap();
+            profiles = this.getContinuum().getProfileService().getAllProfiles();
         }
 
     }
@@ -145,6 +149,11 @@ public class BuildDefinitionAction
                 buildFresh = buildDefinition.isBuildFresh();
                 scheduleId = buildDefinition.getSchedule().getId();
                 defaultBuildDefinition = buildDefinition.isDefaultForProject();
+                Profile profile = buildDefinition.getProfile();
+                if ( profile != null )
+                {
+                    profileId = profile.getId();
+                }
             }
             else
             {
@@ -180,7 +189,7 @@ public class BuildDefinitionAction
     }
 
     public String saveBuildDefinition()
-        throws ContinuumException
+        throws ContinuumException, ProfileException
     {
         if ( projectId != 0 && !groupBuildDefinition )
         {
@@ -193,7 +202,7 @@ public class BuildDefinitionAction
     }
 
     public String saveToProject()
-        throws ContinuumException
+        throws ContinuumException, ProfileException
     {
 
         try
@@ -226,7 +235,7 @@ public class BuildDefinitionAction
     }
 
     public String saveToGroup()
-        throws ContinuumException
+        throws ContinuumException, ProfileException
     {
         try
         {
@@ -322,7 +331,7 @@ public class BuildDefinitionAction
     }
 
     private BuildDefinition getBuildDefinitionFromInput()
-        throws ContinuumActionException
+        throws ContinuumActionException, ProfileException
     {
 
         Schedule schedule;
@@ -349,7 +358,14 @@ public class BuildDefinitionAction
         buildDefinition.setBuildFresh( buildFresh );
         buildDefinition.setDefaultForProject( defaultBuildDefinition );
         buildDefinition.setSchedule( schedule );
-
+        if ( profileId != -1 )
+        {
+            Profile profile = getContinuum().getProfileService().getProfile( profileId );
+            if ( profile != null )
+            {
+                buildDefinition.setProfile( profile );
+            }
+        }
         return buildDefinition;
     }
 
@@ -473,12 +489,12 @@ public class BuildDefinitionAction
         this.schedules = schedules;
     }
 
-    public Map getProfiles()
+    public List getProfiles()
     {
         return profiles;
     }
 
-    public void setProfiles( Map profiles )
+    public void setProfiles( List profiles )
     {
         this.profiles = profiles;
     }
@@ -509,5 +525,15 @@ public class BuildDefinitionAction
         }
 
         return projectGroupName;
+    }
+
+    public int getProfileId()
+    {
+        return profileId;
+    }
+
+    public void setProfileId( int profileId )
+    {
+        this.profileId = profileId;
     }
 }

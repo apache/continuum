@@ -19,9 +19,17 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.jdo.JDODetachedFieldAccessException;
+
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.model.project.Profile;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectDeveloper;
@@ -29,12 +37,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
-
-import javax.jdo.JDODetachedFieldAccessException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import org.apache.maven.continuum.model.system.Profile;
+import org.codehaus.plexus.logging.LoggerManager;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -270,7 +274,7 @@ public class ContinuumStoreTest
     public void testGetAllProjects()
     {
         List projects = store.getAllProjectsByName();
-        assertEquals( "check items", Arrays.asList( new Project[]{testProject1, testProject2} ), projects );
+        assertEquals( "check items", Arrays.asList( new Project[] { testProject1, testProject2 } ), projects );
 
         Project project = (Project) projects.get( 1 );
         assertProjectEquals( testProject2, project );
@@ -334,11 +338,12 @@ public class ContinuumStoreTest
     }
 
     public void testAddProfile()
+        throws Exception
     {
         List installations = store.getAllInstallations();
         Profile newProfile = createTestProfile( "testAddProfile", "testAddProfile desc", 5, false, false,
-                                                (Installation) installations.get( 1 ),
-                                                (Installation) installations.get( 2 ) );
+                                                (Installation) installations.get( 1 ), (Installation) installations
+                                                    .get( 2 ) );
         Profile copy = createTestProfile( newProfile );
         store.addProfile( newProfile );
         copy.setId( newProfile.getId() );
@@ -402,7 +407,16 @@ public class ContinuumStoreTest
         assertInstallationEquals( testProfile3.getJdk(), profile.getJdk() );
     }
 
+/*
+    public void testGetgetProfileByName()
+        throws ContinuumStoreException
+    {
+        Profile profile = store.getProfileByName( "name1" );
+        assertNotNull( profile );
+    }
+*/
     public void testGetAllInstallations()
+        throws Exception
     {
         List installations = store.getAllInstallations();
 
@@ -415,6 +429,158 @@ public class ContinuumStoreTest
         assertInstallationEquals( testInstallationJava14, installation );
         installation = (Installation) installations.get( 2 );
         assertInstallationEquals( testInstallationMaven20a3, installation );
+    }
+
+    public void testUpdateInstallation()
+        throws Exception
+    {
+        String name = "installationTest";
+        Installation testOne = createTestInstallation( name, InstallationService.JDK_TYPE, "varName", "varValue" );
+        testOne = store.addInstallation( testOne );
+
+        Installation fromStore = store.getInstallationByName( name );
+        assertInstallationEquals( testOne, fromStore );
+
+        fromStore.setVarName( "JAVA_HOME" );
+        fromStore.setVarValue( "/usr/local/jdk1.5.0_08" );
+        store.updateInstallation( fromStore );
+
+        Installation updatedFromStore = store.getInstallationByName( name );
+
+        assertInstallationEquals( fromStore, updatedFromStore );
+    }
+
+    public void testRemoveInstallation()
+        throws Exception
+    {
+        String name = "installationTestRemove";
+        Installation testOne = createTestInstallation( name, InstallationService.JDK_TYPE, "varName", "varValue" );
+        testOne = store.addInstallation( testOne );
+
+        store.removeInstallation( testOne );
+        Installation fromStore = store.getInstallationByName( name );
+        assertNull( fromStore );
+    }
+
+    public void testRemoveLinkedInstallations()
+        throws Exception
+    {
+        String nameFirstInst = "linkedFirstInstallationTestRemove";
+        String nameSecondInst = "linkedSecondInstallationTestRemove";
+        String nameFirstEnvVar = "firstEnvVar";
+        String nameSecondEnvVar = "secondEnvVar";
+
+        Installation testOne = createTestInstallation( nameFirstInst, InstallationService.JDK_TYPE, "varName",
+                                                       "varValue" );
+
+        Installation testTwo = createTestInstallation( nameSecondInst, InstallationService.MAVEN2_TYPE, "varName",
+                                                       "varValue" );
+
+        Installation firstEnvVar = createTestInstallation( nameFirstEnvVar, InstallationService.MAVEN2_TYPE, "varName",
+                                                           "varValue" );
+
+        Installation secondEnvVar = createTestInstallation( nameSecondEnvVar, InstallationService.MAVEN2_TYPE,
+                                                            "varName", "varValue" );
+
+        testOne = store.addInstallation( testOne );
+        testTwo = store.addInstallation( testTwo );
+
+        firstEnvVar = store.addInstallation( firstEnvVar );
+        secondEnvVar = store.addInstallation( secondEnvVar );
+
+        List envVars = new ArrayList<Installation>( 2 );
+        envVars.add( firstEnvVar );
+        envVars.add( secondEnvVar );
+
+        Profile firstProfile = createTestProfile( "first", "", 1, true, true, testOne, testTwo, envVars );
+
+        Profile secondProfile = createTestProfile( "first", "", 1, true, true, testOne, testTwo, envVars );
+
+        firstProfile = store.addProfile( firstProfile );
+        secondProfile = store.addProfile( secondProfile );
+
+        Profile firstGetted = store.getProfile( firstProfile.getId() );
+        Profile secondGetted = store.getProfile( secondProfile.getId() );
+
+        assertNotNull( firstGetted );
+        assertNotNull( firstGetted.getJdk() );
+        assertEquals( nameFirstInst, firstGetted.getJdk().getName() );
+
+        assertNotNull( secondGetted );
+        assertNotNull( secondGetted.getJdk() );
+        assertEquals( nameFirstInst, secondGetted.getJdk().getName() );
+
+        assertNotNull( firstGetted.getBuilder() );
+        assertEquals( nameSecondInst, firstGetted.getBuilder().getName() );
+        assertEquals( 2, firstGetted.getEnvironmentVariables().size() );
+
+        assertNotNull( secondGetted.getBuilder() );
+        assertEquals( nameSecondInst, secondGetted.getBuilder().getName() );
+        assertEquals( 2, secondGetted.getEnvironmentVariables().size() );
+
+        store.removeInstallation( testOne );
+
+        Installation fromStore = store.getInstallationByName( nameFirstInst );
+        assertNull( fromStore );
+
+        firstGetted = store.getProfile( firstProfile.getId() );
+        secondGetted = store.getProfile( secondProfile.getId() );
+        assertNotNull( firstGetted );
+        assertNull( firstGetted.getJdk() );
+        assertNotNull( firstGetted.getBuilder() );
+        assertEquals( 2, firstGetted.getEnvironmentVariables().size() );
+        assertNotNull( secondGetted );
+        assertNull( secondGetted.getJdk() );
+        assertNotNull( secondGetted.getBuilder() );
+        assertEquals( 2, secondGetted.getEnvironmentVariables().size() );
+        // removing builder
+        store.removeInstallation( testTwo );
+
+        firstGetted = store.getProfile( firstProfile.getId() );
+        secondGetted = store.getProfile( secondProfile.getId() );
+
+        assertNotNull( firstGetted );
+        assertNull( firstGetted.getJdk() );
+        assertNull( firstGetted.getBuilder() );
+        assertEquals( 2, firstGetted.getEnvironmentVariables().size() );
+
+        assertNotNull( secondGetted );
+        assertNull( secondGetted.getJdk() );
+        assertNull( secondGetted.getBuilder() );
+        assertEquals( 2, secondGetted.getEnvironmentVariables().size() );
+
+        // removing firstEnvVar
+        store.removeInstallation( firstEnvVar );
+        firstGetted = store.getProfile( firstProfile.getId() );
+        secondGetted = store.getProfile( secondProfile.getId() );
+        assertNotNull( firstGetted );
+        assertNull( firstGetted.getJdk() );
+        assertNull( firstGetted.getBuilder() );
+        assertEquals( 1, firstGetted.getEnvironmentVariables().size() );
+        Installation env = (Installation) firstGetted.getEnvironmentVariables().get( 0 );
+        assertEquals( nameSecondEnvVar, env.getName() );
+        
+        assertNotNull( secondGetted );
+        assertNull( secondGetted.getJdk() );
+        assertNull( secondGetted.getBuilder() );
+        assertEquals( 1, secondGetted.getEnvironmentVariables().size() );
+        env = (Installation) secondGetted.getEnvironmentVariables().get( 0 );
+        assertEquals( nameSecondEnvVar, env.getName() );
+        
+        // removing secondEnvVar
+        store.removeInstallation( secondEnvVar );
+        firstGetted = store.getProfile( firstProfile.getId() );
+        secondGetted = store.getProfile( secondProfile.getId() );
+        assertNotNull( firstGetted );
+        assertNull( firstGetted.getJdk() );
+        assertNull( firstGetted.getBuilder() );
+        assertEquals( 0, firstGetted.getEnvironmentVariables().size() );
+
+        
+        assertNotNull( secondGetted );
+        assertNull( secondGetted.getJdk() );
+        assertNull( secondGetted.getBuilder() );
+        assertEquals( 0, secondGetted.getEnvironmentVariables().size() );
     }
 
     public void testDeleteProject()
@@ -525,7 +691,8 @@ public class ContinuumStoreTest
     public void testGetProjectGroupWithDetails()
         throws ContinuumStoreException
     {
-        ProjectGroup retrievedGroup = store.getProjectGroupWithBuildDetailsByProjectGroupId( defaultProjectGroup.getId() );
+        ProjectGroup retrievedGroup = store.getProjectGroupWithBuildDetailsByProjectGroupId( defaultProjectGroup
+            .getId() );
         assertProjectGroupEquals( defaultProjectGroup, retrievedGroup );
         assertNotifiersEqual( defaultProjectGroup.getNotifiers(), retrievedGroup.getNotifiers() );
         assertBuildDefinitionsEqual( retrievedGroup.getBuildDefinitions(), defaultProjectGroup.getBuildDefinitions() );

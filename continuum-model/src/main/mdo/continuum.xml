@@ -959,6 +959,7 @@
 
     <class jpox.table="profiles">
       <name>Profile</name>
+      <packageName>org.apache.maven.continuum.model.system</packageName>
       <version>1.1.0+</version>
       <fields>
         <field>
@@ -1006,6 +1007,15 @@
             <type>Installation</type>
           </association>
         </field>
+        <field>
+          <name>environmentVariables</name>
+          <version>1.1.1+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>Installation</type>
+            <!-- org.apache.maven.continuum.model.system. -->
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>          
       </fields>
     </class>
 
@@ -1014,16 +1024,21 @@
       <packageName>org.apache.maven.continuum.model.system</packageName>
       <version>1.1.0+</version>
       <fields>
-        <field>
-          <name>version</name>
-          <version>1.1.0+</version>
+        <field jpox.column="installationtype">
+          <name>type</name>
+          <version>1.1.1+</version>
           <type>String</type>
         </field>
-        <field jpox.column="installpath">
-          <name>path</name>
-          <version>1.1.0+</version>
+        <field jpox.column="varvalue">
+          <name>varValue</name>
+          <version>1.1.1+</version>
           <type>String</type>
         </field>
+        <field jpox.column="varname">
+          <name>varName</name>
+          <version>1.1.1+</version>
+          <type>String</type>
+        </field>          
         <field jpox.primary-key="true" jpox.value-strategy="off">
           <name>name</name>
           <version>1.1.0+</version>

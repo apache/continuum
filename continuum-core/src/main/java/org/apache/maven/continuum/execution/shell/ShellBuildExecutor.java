@@ -19,14 +19,20 @@ package org.apache.maven.continuum.execution.shell;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
-
-import java.io.File;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -64,7 +70,31 @@ public class ShellBuildExecutor
         // TODO: this should be validated earlier?
         String executable = buildDefinition.getBuildFile();
 
-        return executeShellCommand( project, executable, buildDefinition.getArguments(), buildOutput );
+        return executeShellCommand( project, executable, buildDefinition.getArguments(), buildOutput,
+                                    getEnvironments( buildDefinition ) );
+    }
+
+    protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )
+    {
+        Profile profile = buildDefinition.getProfile();
+        if ( profile == null )
+        {
+            return Collections.EMPTY_MAP;
+        }
+        Map<String, String> envVars = new HashMap<String, String>();
+        String javaHome = getJavaHomeValue( buildDefinition );
+        if ( !StringUtils.isEmpty( javaHome ) )
+        {
+            // TODO what todo with this ?
+        }
+        Installation builder = profile.getBuilder();
+        if ( builder != null )
+        {
+            // TODO what todo with this ?
+        }
+        envVars.putAll( getEnvironmentVariable( buildDefinition ) );
+        return envVars;
+
     }
 
     public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
