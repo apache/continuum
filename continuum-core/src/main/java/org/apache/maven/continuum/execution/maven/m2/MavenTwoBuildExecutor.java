@@ -391,7 +391,7 @@ public class MavenTwoBuildExecutor
         {
             envVars.put( getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ), builder.getVarValue() );
         }
-        envVars.putAll( getEnvironmentVariable( buildDefinition ) );
+        envVars.putAll( getEnvironmentVariables( buildDefinition ) );
         return envVars;
 
     }

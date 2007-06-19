@@ -92,7 +92,7 @@ public class ShellBuildExecutor
         {
             // TODO what todo with this ?
         }
-        envVars.putAll( getEnvironmentVariable( buildDefinition ) );
+        envVars.putAll( getEnvironmentVariables( buildDefinition ) );
         return envVars;
 
     }

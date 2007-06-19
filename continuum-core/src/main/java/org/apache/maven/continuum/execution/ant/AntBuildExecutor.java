@@ -106,7 +106,7 @@ public class AntBuildExecutor
         {
             envVars.put( getInstallationService().getEnvVar( InstallationService.ANT_TYPE ), builder.getVarValue() );
         }
-        envVars.putAll( getEnvironmentVariable( buildDefinition ) );
+        envVars.putAll( getEnvironmentVariables( buildDefinition ) );
         return envVars;
 
     }
