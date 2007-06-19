@@ -183,7 +183,7 @@ public class DefaultInstallationService
     }
 
     /**
-     * @see org.apache.maven.continuum.installation.InstallationService#getTypeEnvVar(java.lang.String)
+     * @see org.apache.maven.continuum.installation.InstallationService#getEnvVar(java.lang.String)
      */
     public String getEnvVar( String type )
     {
