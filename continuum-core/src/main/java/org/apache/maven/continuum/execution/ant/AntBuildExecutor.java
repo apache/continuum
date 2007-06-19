@@ -85,7 +85,15 @@ public class AntBuildExecutor
         arguments +=
             StringUtils.clean( buildDefinition.getArguments() ) + " " + StringUtils.clean( buildDefinition.getGoals() );
 
-        return executeShellCommand( project, executable, arguments, buildOutput, getEnvironments( buildDefinition ) );
+        Map<String, String> environments = getEnvironments( buildDefinition );
+        String antHome = environments.get( getInstallationService().getEnvVar( InstallationService.ANT_TYPE ) );
+        if ( StringUtils.isNotEmpty( antHome ) )
+        {
+            executable = antHome + File.separator + "bin" + File.separator + executable;
+            setResolveExecutable( false );
+        }
+
+        return executeShellCommand( project, executable, arguments, buildOutput, environments );
     }
 
     protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )

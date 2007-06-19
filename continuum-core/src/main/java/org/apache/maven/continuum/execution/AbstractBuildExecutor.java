@@ -302,4 +302,14 @@ public abstract class AbstractBuildExecutor
     {
         this.installationService = installationService;
     }
+
+    public boolean isResolveExecutable()
+    {
+        return resolveExecutable;
+    }
+
+    public void setResolveExecutable( boolean resolveExecutable )
+    {
+        this.resolveExecutable = resolveExecutable;
+    }
 }

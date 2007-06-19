@@ -115,10 +115,15 @@ public class MavenTwoBuildExecutor
 
         arguments +=
             StringUtils.clean( buildDefinition.getArguments() ) + " " + StringUtils.clean( buildDefinition.getGoals() );
-        Map<String, String> environments = new HashMap<String, String>();
-        Profile profile = buildDefinition.getProfile();
+        Map<String, String> environments = getEnvironments( buildDefinition );
+        String m2Home = environments.get( getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ) );
+        if ( StringUtils.isNotEmpty( m2Home ) )
+        {
+            executable = m2Home + File.separator + "bin" + File.separator + executable;
+            setResolveExecutable( false );
+        }
 
-        return executeShellCommand( project, executable, arguments, buildOutput, getEnvironments( buildDefinition ) );
+        return executeShellCommand( project, executable, arguments, buildOutput, environments );
     }
 
     public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
