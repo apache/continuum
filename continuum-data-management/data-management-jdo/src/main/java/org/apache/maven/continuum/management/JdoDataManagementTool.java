@@ -19,24 +19,6 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.model.project.ContinuumDatabase;
-import org.apache.maven.continuum.model.project.Profile;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.model.project.Schedule;
-import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxReader;
-import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxWriter;
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
-import org.codehaus.plexus.jdo.PlexusJdoUtils;
-import org.codehaus.plexus.util.IOUtil;
-
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManagerFactory;
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -52,6 +34,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManagerFactory;
+import javax.xml.stream.XMLStreamException;
+
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.ContinuumDatabase;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxReader;
+import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxWriter;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
+import org.codehaus.plexus.jdo.PlexusJdoUtils;
+import org.codehaus.plexus.util.IOUtil;
 
 /**
  * JDO implementation the database management tool API.
@@ -89,8 +90,14 @@ public class JdoDataManagementTool
         // TODO: need these to lazy load to conserve memory while we stream out the model
         Collection projectGroups = store.getAllProjectGroupsWithTheLot();
         database.setProjectGroups( new ArrayList( projectGroups ) );
-
-        database.setInstallations( store.getAllInstallations() );
+        try
+        {
+            database.setInstallations( store.getAllInstallations() );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new DataManagementException( e );
+        }
         database.setSchedules( store.getAllSchedulesByName() );
         database.setProfiles( store.getAllProfilesByName() );
 

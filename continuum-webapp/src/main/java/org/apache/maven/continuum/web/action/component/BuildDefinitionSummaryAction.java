@@ -54,6 +54,8 @@ public class BuildDefinitionSummaryAction
     private List groupBuildDefinitionSummaries = new ArrayList();
 
     private List allBuildDefinitionSummaries = new ArrayList();
+    
+    //profileName
 
     public String summarizeForProject()
     {
@@ -138,7 +140,6 @@ public class BuildDefinitionSummaryAction
         return summaryList;
     }
 
-
     private List gatherGroupBuildDefinitionSummaries( int projectGroupId )
         throws ContinuumException
     {
@@ -170,7 +171,10 @@ public class BuildDefinitionSummaryAction
         bds.setScheduleName( bd.getSchedule().getName() );
         bds.setIsDefault( bd.isDefaultForProject() );
         bds.setIsBuildFresh( bd.isBuildFresh() );
-
+        if ( bd.getProfile() != null )
+        {
+            bds.setProfileName( bd.getProfile().getName() );
+        }
         return bds;
     }
 

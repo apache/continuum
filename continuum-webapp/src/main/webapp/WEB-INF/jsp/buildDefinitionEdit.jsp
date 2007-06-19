@@ -30,7 +30,7 @@
         <h3><ww:text name="buildDefinition.section.title"/></h3>
 
         <div class="axial">
-          <ww:form action="saveBuildDefinition" method="post" validate="true">
+          <ww:form action="saveBuildDefinition" method="get" validate="true">
             <c:choose>
             
               <c:when test="${!empty actionErrors}">
@@ -73,6 +73,8 @@
                       <ww:checkbox label="%{getText('buildDefinition.defaultForProject.label')}"  name="defaultBuildDefinition" value="defaultBuildDefinition" fieldValue="true"/>
                     </ww:else>
                     <ww:select label="%{getText('buildDefinition.schedule.label')}" name="scheduleId" list="schedules"/>
+                    <ww:select label="%{getText('buildDefinition.profile.label')}" name="profileId" list="profiles" listValue="name" 
+                               listKey="id" headerKey="-1" headerValue=""/>
                   </tbody>
                 </table>
                 <div class="functnbar3">

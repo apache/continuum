@@ -1,37 +1,40 @@
 package org.apache.maven.continuum.management;
 
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.apache.maven.continuum.store.AbstractContinuumStoreTestCase;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import org.custommonkey.xmlunit.Diff;
+import org.jdom.Document;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 /**
  * Test the database management tool.
@@ -72,7 +75,7 @@ public class DataManagementToolTest
 */
 
     public void testBackupBuilds()
-        throws IOException, ContinuumStoreException, XMLStreamException
+        throws IOException, ContinuumStoreException, XMLStreamException, Exception
     {
         createBuildDatabase();
 
@@ -89,8 +92,10 @@ public class DataManagementToolTest
 
         IOUtil.copy( getClass().getResourceAsStream( "/expected.xml" ), sw );
 
-        assertEquals( "Check database content", removeTimestampVariance( sw.toString() ),
-                      removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );
+        //assertEquals( "Check database content", removeTimestampVariance( sw.toString() ),
+        //              removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );
+        assertXmlIdentical( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils
+            .fileRead( backupFile ) ) );
     }
 
     public void testEraseBuilds()
@@ -126,8 +131,10 @@ public class DataManagementToolTest
 
         IOUtil.copy( getClass().getResourceAsStream( "/expected.xml" ), sw );
 
-        assertEquals( "Check database content", removeTimestampVariance( sw.toString() ),
-                      removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );
+        //assertEquals( "Check database content", removeTimestampVariance( sw.toString() ),
+        //              removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );
+        assertXmlIdentical( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils
+            .fileRead( backupFile ) ) );
     }
 
     private static File createBackupDirectory()
@@ -142,24 +149,49 @@ public class DataManagementToolTest
 
     private static String removeTimestampVariance( String content )
     {
-        return fixXmlQuotes( removeTagContent(
-            removeTagContent( removeTagContent( removeTagContent( content, "startTime" ), "endTime" ), "date" ),
-            "id" ) );
+        /*return fixXmlQuotes( removeTagContent( removeTagContent( removeTagContent( removeTagContent( content,
+                                                                                                     "startTime" ),
+                                                                                   "endTime" ), "date" ), "id" ) );*/
+
+        return removeTagContent( removeTagContent( removeTagContent( removeTagContent( content, "startTime" ),
+                                                                     "endTime" ), "date" ), "id" );
     }
 
-    private static String fixXmlQuotes( String s )
+    public void assertXmlIdentical( String expected, String test )
+        throws Exception
     {
-        if ( s.startsWith( "<?xml version='1.0' encoding='UTF-8'?>" ) )
-        {
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                s.substring( "<?xml version='1.0' encoding='UTF-8'?>".length() );
-        }
-        return cleanLineEndings( s );
+        String expectedXml = prettyXmlPrint( expected );
+        String testXml = prettyXmlPrint( test );
+        Diff diff = new Diff( expectedXml, testXml );
+        StringBuffer diffMessage = new StringBuffer();
+        assertTrue( " xml diff not identical " + diff.appendMessage( diffMessage ).toString(), diff.identical() );
     }
 
-    private static String cleanLineEndings( String s )
+/*
+    public void assertXmlSimilar( String expected, String test )
+        throws Exception
     {
-        return s.replaceAll( "\r\n", "\n" );
+        String expectedXml = XMLOutputHelper.prettyXmlPrint( expected );
+        String testXml = XMLOutputHelper.prettyXmlPrint( test );
+        Diff diff = new Diff( expectedXml, testXml );
+        StringBuffer diffMessage = new StringBuffer();
+        assertTrue( " xml diff not similar " + diff.appendMessage( diffMessage ).toString(), diff.similar() );
+    }
+*/
+    public String prettyXmlPrint( String xml )
+        throws Exception
+    {
+        SAXBuilder saxBuilder = new SAXBuilder();
+        Document document = saxBuilder.build( new StringReader( xml ) );
+        XMLOutputter outp = new XMLOutputter();
+
+        outp.setFormat( Format.getPrettyFormat() );
+
+        StringWriter sw = new StringWriter();
+
+        outp.output( document, sw );
+        return sw.getBuffer().toString();
+
     }
 
     private static String removeTagContent( String content, String field )

@@ -33,6 +33,7 @@ import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.initialization.ContinuumInitializationException;
 import org.apache.maven.continuum.initialization.ContinuumInitializer;
 import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -40,6 +41,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.scm.ScmResult;
+import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.maven.MavenOneContinuumProjectBuilder;
@@ -120,6 +122,16 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private SchedulesActivator schedulesActivator;
+    
+    /**
+     * @plexus.requirement
+     */
+    private InstallationService installationService;
+    
+    /**
+     * @plexus.requirement
+     */
+    private ProfileService profileService;
 
     // ----------------------------------------------------------------------
     // Moved from core
@@ -2765,6 +2777,16 @@ public class DefaultContinuum
         {
             throw logAndCreateException( "Exception while getting default project group.", ex );
         }
+    }
+
+    public InstallationService getInstallationService()
+    {
+        return installationService;
+    }
+
+    public ProfileService getProfileService()
+    {
+        return profileService;
     }
 
 }

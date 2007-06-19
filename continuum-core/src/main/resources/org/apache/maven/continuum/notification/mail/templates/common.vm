@@ -30,7 +30,10 @@ Build statistics:
   Exit code: $build.exitCode
   Building machine hostname: $buildHost
   Operating system : $osName
-  Java version : $javaVersion
+  Java Home version : 
+    #foreach ( $javaHomeInformation in $javaHomeInformations )
+      $javaHomeInformation
+    #end     
 
 #if ( $build.scmResult )
 ****************************************************************************

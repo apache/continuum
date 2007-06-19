@@ -231,6 +231,16 @@
               <excludes>
                 <exclude>**/BuildProjectTaskExecutorTest.java</exclude>
               </excludes>
+              <systemProperties>
+                <property>
+                  <name>JAVA_HOME</name>
+                  <value>${JAVA_HOME}</value>    
+                </property>
+                <property>
+                  <name>M2_HOME</name>
+                  <value>${M2_HOME}</value>    
+                </property>                      
+              </systemProperties>
             </configuration>
           </plugin>
         </plugins>

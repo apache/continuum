@@ -19,9 +19,25 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.jdo.Extent;
+import javax.jdo.FetchPlan;
+import javax.jdo.JDOHelper;
+import javax.jdo.JDOUserException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.model.project.Profile;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectDeveloper;
@@ -35,6 +51,7 @@ import org.apache.maven.continuum.model.scm.SuiteResult;
 import org.apache.maven.continuum.model.scm.TestCaseFailure;
 import org.apache.maven.continuum.model.scm.TestResult;
 import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.jdo.JdoFactory;
@@ -43,28 +60,14 @@ import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-
-import javax.jdo.Extent;
-import javax.jdo.FetchPlan;
-import javax.jdo.JDOHelper;
-import javax.jdo.JDOUserException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.store.ContinuumStore" role-hint="jdo"
+ * @plexus.component role="org.apache.maven.continuum.store.ContinuumStore"
+ *                   role-hint="jdo"
  */
 public class JdoContinuumStore
     extends AbstractContinuumStore
@@ -203,9 +206,9 @@ public class JdoContinuumStore
     }
 
     /**
-     * get the combined list of projectId and build definitions, including the ones
-     * inherited by their project group
-     *
+     * get the combined list of projectId and build definitions, including the
+     * ones inherited by their project group
+     * 
      * @param scheduleId
      * @return
      * @throws ContinuumStoreException
@@ -224,7 +227,8 @@ public class JdoContinuumStore
             aggregate.putAll( projectSource );
         }
 
-        // iterate through the project groups and make sure we are not walking over projects that
+        // iterate through the project groups and make sure we are not walking
+        // over projects that
         // might define their own build definitions
         if ( projectGroupSource != null )
         {
@@ -432,7 +436,8 @@ public class JdoContinuumStore
 
             build = (BuildResult) makePersistent( pm, build, false );
 
-            // TODO: these are in the wrong spot - set them on success (though currently some depend on latest build being the one in progress)
+            // TODO: these are in the wrong spot - set them on success (though
+            // currently some depend on latest build being the one in progress)
             project.setLatestBuildId( build.getId() );
 
             project.setState( build.getState() );
@@ -577,7 +582,7 @@ public class JdoContinuumStore
             getLogger().debug( "no default build definition on project, trying project group" );
         }
 
-        //project group should have default build definition defined
+        // project group should have default build definition defined
         if ( bd == null )
         {
             ProjectGroup projectGroup = getProjectGroupByProjectId( projectId );
@@ -618,7 +623,6 @@ public class JdoContinuumStore
 
         throw new ContinuumObjectNotFoundException( "no default build definition declared for project " + projectId );
     }
-
 
     public BuildDefinition getDefaultBuildDefinitionForProjectGroup( int projectGroupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
@@ -663,7 +667,7 @@ public class JdoContinuumStore
 
             List result = (List) query.execute();
 
-            //result = (List) pm.detachCopyAll( result );
+            // result = (List) pm.detachCopyAll( result );
 
             Map builds = new HashMap();
 
@@ -903,15 +907,65 @@ public class JdoContinuumStore
         return schedule;
     }
 
+    // ----------------------------------------------------------------
+    // Profile
+    // ----------------------------------------------------------------    
+
     public List getAllProfilesByName()
     {
         return getAllObjectsDetached( Profile.class, "name ascending", null );
+    }
+
+    public Profile getProfileByName( String profileName )
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( Profile.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareImports( "import java.lang.String" );
+
+            query.declareParameters( "String name" );
+
+            query.setFilter( "this.name == name" );
+
+            Collection result = (Collection) query.execute( profileName );
+
+            if ( result.size() == 0 )
+            {
+                tx.commit();
+
+                return null;
+            }
+
+            Object object = pm.detachCopy( result.iterator().next() );
+
+            tx.commit();
+
+            return (Profile) object;
+        }
+        finally
+        {
+            rollback( tx );
+        }
     }
 
     public Profile addProfile( Profile profile )
     {
         return (Profile) addObject( profile );
     }
+
+    // ----------------------------------------------------------------
+    // Installation
+    // ----------------------------------------------------------------
 
     public Installation addInstallation( Installation installation )
     {
@@ -920,7 +974,161 @@ public class JdoContinuumStore
 
     public List getAllInstallations()
     {
-        return getAllObjectsDetached( Installation.class, "name ascending, version ascending", null );
+        return getAllObjectsDetached( Installation.class, "name ascending", null );
+    }
+
+    public void removeInstallation( Installation installation )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        // first delete link beetwen profile and this installation
+        // then removing this
+        //attachAndDelete( installation );
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            // this must be done in the same transaction
+            tx.begin();
+
+            // first removing linked jdk
+
+            Extent extent = pm.getExtent( Profile.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareImports( "import java.lang.String" );
+
+            query.declareParameters( "String name" );
+
+            query.setFilter( "this.jdk.name == name" );
+
+            Collection<Profile> result = (Collection) query.execute( installation.getName() );
+
+            if ( result.size() != 0 )
+            {
+                for ( Iterator<Profile> iterator = result.iterator(); iterator.hasNext(); )
+                {
+                    Profile profile = iterator.next();
+                    profile.setJdk( null );
+                    pm.makePersistent( profile );
+                }
+            }
+
+            // removing linked builder
+            query = pm.newQuery( extent );
+
+            query.declareImports( "import java.lang.String" );
+
+            query.declareParameters( "String name" );
+
+            query.setFilter( "this.builder.name == name" );
+
+            result = (Collection) query.execute( installation.getName() );
+
+            if ( result.size() != 0 )
+            {
+                for ( Iterator<Profile> iterator = result.iterator(); iterator.hasNext(); )
+                {
+                    Profile profile = iterator.next();
+                    profile.setBuilder( null );
+                    pm.makePersistent( profile );
+                }
+            }
+
+            // removing linked env Var
+            query = pm.newQuery( extent );
+
+            query.declareImports( "import java.lang.String" );
+            query.declareImports( "import " + Installation.class.getName() );
+
+            query.declareParameters( "Installation installation" );
+
+            query.setFilter( "environmentVariables.contains(installation)" );
+
+            //query = pm
+            //    .newQuery( "SELECT FROM profile WHERE environmentVariables.contains(installation) && installation.name == name" );
+
+            result = (Collection) query.execute( installation );
+
+            if ( result.size() != 0 )
+            {
+                for ( Iterator<Profile> iterator = result.iterator(); iterator.hasNext(); )
+                {
+                    Profile profile = iterator.next();
+                    List newEnvironmentVariables = new ArrayList<Installation>();
+                    for ( Iterator<Installation> iteInstallation = profile.getEnvironmentVariables().iterator(); iteInstallation
+                        .hasNext(); )
+                    {
+                        Installation current = iteInstallation.next();
+                        if ( !StringUtils.equals( current.getName(), installation.getName() ) )
+                        {
+                            newEnvironmentVariables.add( current );
+                        }
+                    }
+                    profile.setEnvironmentVariables( newEnvironmentVariables );
+                    pm.makePersistent( profile );
+                }
+            }
+
+            pm.deletePersistent( installation );
+
+            tx.commit();
+
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    public void updateInstallation( Installation installation )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        updateObject( installation );
+    }
+
+    public Installation getInstallationByName( String name )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( Installation.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareImports( "import java.lang.String" );
+
+            query.declareParameters( "String name" );
+
+            query.setFilter( "this.name == name" );
+
+            Collection result = (Collection) query.execute( name );
+
+            if ( result.size() == 0 )
+            {
+                tx.commit();
+
+                return null;
+            }
+
+            Object object = pm.detachCopy( result.iterator().next() );
+
+            tx.commit();
+
+            return (Installation) object;
+        }
+        finally
+        {
+            rollback( tx );
+        }
     }
 
     public List getAllBuildsForAProjectByDate( int projectId )
@@ -933,8 +1141,8 @@ public class JdoContinuumStore
         {
             tx.begin();
 
-            Query query = pm.newQuery( "SELECT FROM " + BuildResult.class.getName() +
-                " WHERE project.id == projectId PARAMETERS int projectId ORDER BY endTime DESC" );
+            Query query = pm.newQuery( "SELECT FROM " + BuildResult.class.getName()
+                + " WHERE project.id == projectId PARAMETERS int projectId ORDER BY endTime DESC" );
 
             query.declareImports( "import java.lang.Integer" );
 
@@ -1172,12 +1380,14 @@ public class JdoContinuumStore
         }
         catch ( Exception e )
         {
-            //Do nothing
+            // Do nothing
         }
 
         if ( pg != null )
         {
-            // TODO: why do we need to do this? if not - build results are not removed and a integrity constraint is violated. I assume its because of the fetch groups
+            // TODO: why do we need to do this? if not - build results are not
+            // removed and a integrity constraint is violated. I assume its
+            // because of the fetch groups
             for ( Iterator i = pg.getProjects().iterator(); i.hasNext(); )
             {
                 removeProject( (Project) i.next() );
@@ -1352,8 +1562,8 @@ public class JdoContinuumStore
         }
         catch ( ContinuumStoreException e )
         {
-            throw new ContinuumObjectNotFoundException(
-                "unable to find project group containing project with id: " + projectId );
+            throw new ContinuumObjectNotFoundException( "unable to find project group containing project with id: "
+                + projectId );
 
         }
     }
@@ -1381,7 +1591,7 @@ public class JdoContinuumStore
         else if ( systemConfs.size() > 1 )
         {
             throw new ContinuumStoreException(
-                "Database is corrupted. There are more than one systemConfiguration object." );
+                                               "Database is corrupted. There are more than one systemConfiguration object." );
         }
         else
         {
@@ -1411,10 +1621,13 @@ public class JdoContinuumStore
 
     public Collection getAllProjectGroupsWithTheLot()
     {
-        List fetchGroups = Arrays.asList( new String[]{PROJECT_WITH_BUILDS_FETCH_GROUP,
-            PROJECTGROUP_PROJECTS_FETCH_GROUP, BUILD_RESULT_WITH_DETAILS_FETCH_GROUP,
-            PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP, PROJECT_ALL_DETAILS_FETCH_GROUP,
-            PROJECT_BUILD_DETAILS_FETCH_GROUP} );
+        List fetchGroups = Arrays.asList( new String[] {
+            PROJECT_WITH_BUILDS_FETCH_GROUP,
+            PROJECTGROUP_PROJECTS_FETCH_GROUP,
+            BUILD_RESULT_WITH_DETAILS_FETCH_GROUP,
+            PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP,
+            PROJECT_ALL_DETAILS_FETCH_GROUP,
+            PROJECT_BUILD_DETAILS_FETCH_GROUP } );
         return PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), ProjectGroup.class, "name ascending",
                                                      fetchGroups );
     }
@@ -1442,8 +1655,9 @@ public class JdoContinuumStore
 
     /**
      * Close the PersistenceManagerFactory.
-     *
-     * @param numTry The number of try. The maximum try is 5.
+     * 
+     * @param numTry
+     *            The number of try. The maximum try is 5.
      */
     private void closePersistenceManagerFactory( PersistenceManagerFactory pmf, int numTry )
     {
@@ -1469,7 +1683,7 @@ public class JdoContinuumStore
                         }
                         catch ( InterruptedException ie )
                         {
-                            //nothing to do
+                            // nothing to do
                         }
 
                         closePersistenceManagerFactory( pmf, numTry + 1 );

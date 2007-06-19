@@ -28,6 +28,9 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -45,8 +48,8 @@ public class DefaultShellCommandHelper
     // ShellCommandHelper Implementation
     // ----------------------------------------------------------------------
 
-    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
-                                                long idCommand )
+    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments,
+                                                File output, long idCommand, Map<String, String> environments )
         throws Exception
     {
         Commandline cl = new Commandline();
@@ -55,11 +58,11 @@ public class DefaultShellCommandHelper
 
         argument.setLine( arguments );
 
-        return executeShellCommand( workingDirectory, executable, argument.getParts(), output, idCommand );
+        return executeShellCommand( workingDirectory, executable, argument.getParts(), output, idCommand, environments );
     }
 
     public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
-                                                File output, long idCommand )
+                                                File output, long idCommand, Map<String, String> environments )
         throws Exception
     {
         // ----------------------------------------------------------------------
@@ -70,10 +73,22 @@ public class DefaultShellCommandHelper
 
         cl.setPid( idCommand );
 
-        cl.addSystemEnvironment();
+        
 
         cl.addEnvironment( "MAVEN_TERMINATE_CMD", "on" );
 
+        if ( environments != null && !environments.isEmpty() )
+        {
+            for ( Iterator<String> iterator = environments.keySet().iterator(); iterator.hasNext(); )
+            {
+                String key = iterator.next();
+                String value = environments.get( key );
+                cl.addEnvironment( key, value );
+            }
+        }
+
+        cl.addSystemEnvironment();
+        
         cl.setExecutable( executable );
 
         cl.setWorkingDirectory( workingDirectory.getAbsolutePath() );
@@ -87,6 +102,7 @@ public class DefaultShellCommandHelper
 
         getLogger().info( "Executing: " + cl );
         getLogger().info( "Working directory: " + cl.getWorkingDirectory().getAbsolutePath() );
+        getLogger().debug( "EnvironmentVariables " + Arrays.asList( cl.getEnvironmentVariables() ) );
 
         // ----------------------------------------------------------------------
         //

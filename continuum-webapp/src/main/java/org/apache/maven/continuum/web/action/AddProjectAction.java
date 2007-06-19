@@ -24,12 +24,16 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.ProfileException;
+import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Nick Gonzalez
@@ -64,6 +68,13 @@ public class AddProjectAction
     private boolean disableGroupSelection;
 
     private boolean projectScmUseCache;
+
+    private List<Profile> profiles;
+
+    /**
+     * @plexus.requirement role-hint="default"
+     */
+    private ProfileService profileService;
 
     public void validate()
     {
@@ -138,7 +149,7 @@ public class AddProjectAction
     }
 
     public String input()
-        throws ContinuumException
+        throws ContinuumException, ProfileException
     {
         try
         {
@@ -171,10 +182,10 @@ public class AddProjectAction
 
         if ( !disableGroupSelection )
         {
-            selectedProjectGroup =
-                getContinuum().getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID ).getId();
+            selectedProjectGroup = getContinuum().getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID )
+                .getId();
         }
-
+        this.profiles = profileService.getAllProfiles();
         return SUCCESS;
     }
 
@@ -296,5 +307,15 @@ public class AddProjectAction
     public void setProjectScmUseCache( boolean projectScmUseCache )
     {
         this.projectScmUseCache = projectScmUseCache;
+    }
+
+    public List<Profile> getProfiles()
+    {
+        return profiles;
+    }
+
+    public void setProfiles( List<Profile> profiles )
+    {
+        this.profiles = profiles;
     }
 }

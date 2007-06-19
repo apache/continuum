@@ -1,5 +1,4 @@
-package org.apache.maven.continuum.utils.shell;
-
+package org.apache.maven.continuum.installation;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,27 +17,21 @@ package org.apache.maven.continuum.utils.shell;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import java.io.File;
-import java.util.Map;
-
 /**
- * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
+ * @author <a href="mailto:olamy@codehaus.org">olamy</a>
+ * @since 13 juin 07
  * @version $Id$
  */
-public interface ShellCommandHelper
+public class InstallationException
+    extends Exception
 {
-    String ROLE = ShellCommandHelper.class.getName();
+    public InstallationException( String message )
+    {
+        super( message );
+    }
 
-    ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
-                                         long idCommand, Map<String, String> environments )
-        throws Exception;
-
-    ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments, File output,
-                                         long idCommand, Map<String, String> environments )
-        throws Exception;
-
-    boolean isRunning( long idCommand );
-
-    void killProcess( long idCommand );
+    public InstallationException( String message, Throwable cause )
+    {
+        super( message, cause );
+    }
 }

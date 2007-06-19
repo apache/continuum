@@ -20,12 +20,14 @@ package org.apache.maven.continuum;
  */
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
@@ -279,10 +281,10 @@ public interface Continuum
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
-    ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId, boolean checkProtocol, 
+    ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId, boolean checkProtocol,
                                                        boolean useCredentialsCache )
         throws ContinuumException;
-    
+
     /**
      * Add a Maven 1 project to the list of projects.
      *
@@ -337,7 +339,7 @@ public interface Continuum
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
-    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId, boolean checkProtocol, 
+    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId, boolean checkProtocol,
                                                        boolean useCredentialsCache )
         throws ContinuumException;
 
@@ -499,9 +501,16 @@ public interface Continuum
     void reloadConfiguration()
         throws ContinuumException;
 
-
     // ----------------------------------------------------------------------
     // Continuum Release
     // ----------------------------------------------------------------------
     ContinuumReleaseManager getReleaseManager();
+
+    // ----------------------------------------------------------------------
+    // Installation
+    // ----------------------------------------------------------------------    
+
+    InstallationService getInstallationService();
+
+    ProfileService getProfileService();
 }

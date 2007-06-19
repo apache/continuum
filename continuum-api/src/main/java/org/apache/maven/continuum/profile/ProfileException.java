@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.utils.shell;
+package org.apache.maven.continuum.profile;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -18,27 +18,28 @@ package org.apache.maven.continuum.utils.shell;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import java.io.File;
-import java.util.Map;
-
 /**
- * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
+ * @author <a href="mailto:olamy@codehaus.org">olamy</a>
+ * @since 15 juin 07
  * @version $Id$
  */
-public interface ShellCommandHelper
+public class ProfileException
+    extends Exception
 {
-    String ROLE = ShellCommandHelper.class.getName();
 
-    ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
-                                         long idCommand, Map<String, String> environments )
-        throws Exception;
+    public ProfileException( String message, Throwable throwable )
+    {
+        super( message, throwable );
+    }
 
-    ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments, File output,
-                                         long idCommand, Map<String, String> environments )
-        throws Exception;
+    public ProfileException( String message )
+    {
+        super( message );
+    }
 
-    boolean isRunning( long idCommand );
+    public ProfileException( Throwable throwable )
+    {
+        super( throwable );
+    }
 
-    void killProcess( long idCommand );
 }
