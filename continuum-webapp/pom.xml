@@ -51,6 +51,8 @@
                 <include>META-INF</include>
                 <include>images/redback</include>
                 <!-- Images from other wars -->
+                <include>template/</include>
+                <!-- validation.js -->
                 <include>template/redback</include>
                 <!-- Templates from other wars -->
                 <include>WEB-INF/classes</include>
@@ -230,6 +232,9 @@
               <tasks>
                 <copy todir="${project.build.directory}/appserver-base">
                   <fileset dir="src/appserver-base" />
+                </copy>
+                <copy todir="src/main/webapp/template">
+                  <fileset file="src/main/resources/template/default/validation.js"/>
                 </copy>
               </tasks>
             </configuration>
