@@ -51,10 +51,10 @@ public class BuildProjectTaskViabilityEvaluator
     /**
      * Removes duplicate tasks from the list. A duplicate task is one with the same
      * build definition and that's scheduled within the required build interval.
-     *
-     * <p>
+     * <p/>
+     * <p/>
      * &forall; <sub>t1, t2 &isin; tasks</sub> [ t1 &ne; t2 &and; t2.buildDefinition = t2.buildDefinition]:
-     *  if ( t2.timestamp - t1.timestamp < requiredBuildInterval ) remove( t2 ).
+     * if ( t2.timestamp - t1.timestamp < requiredBuildInterval ) remove( t2 ).
      * </p>
      *
      * @param tasks A list of queued tasks to evaluate

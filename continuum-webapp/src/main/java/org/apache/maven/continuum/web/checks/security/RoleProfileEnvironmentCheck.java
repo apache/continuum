@@ -19,26 +19,24 @@ package org.apache.maven.continuum.web.checks.security;
  * under the License.
  */
 
+import org.apache.maven.continuum.Continuum;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.system.check.EnvironmentCheck;
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.Continuum;
 
-import java.util.List;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * RoleProfileEnvironmentCheck:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
  * @version: $ID:$
- *
- * @plexus.component
- *   role="org.codehaus.plexus.security.system.check.EnvironmentCheck"
- *   role-hint="continuum-role-profile-check"
+ * @plexus.component role="org.codehaus.plexus.security.system.check.EnvironmentCheck"
+ * role-hint="continuum-role-profile-check"
  */
 public class RoleProfileEnvironmentCheck
     extends AbstractLogEnabled
@@ -74,7 +72,7 @@ public class RoleProfileEnvironmentCheck
                 {
                     roleManager.createTemplatedRole( "project-developer", group.getName() );
                 }
-                
+
                 if ( !roleManager.templatedRoleExists( "project-user", group.getName() ) )
                 {
                     roleManager.createTemplatedRole( "project-user", group.getName() );

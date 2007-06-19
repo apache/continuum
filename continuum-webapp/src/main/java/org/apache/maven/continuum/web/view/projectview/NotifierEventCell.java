@@ -20,19 +20,18 @@ package org.apache.maven.continuum.web.view.projectview;
  */
 
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.codehaus.plexus.util.StringUtils;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Used in Project view
  *
- * @deprecated use of cells is discouraged due to lack of i18n and design in java code.
- *             Use jsp:include instead.
- *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ * @deprecated use of cells is discouraged due to lack of i18n and design in java code.
+ *             Use jsp:include instead.
  */
 public class NotifierEventCell
     extends DisplayCell

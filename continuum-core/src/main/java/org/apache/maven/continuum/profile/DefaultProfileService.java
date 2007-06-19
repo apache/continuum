@@ -19,20 +19,20 @@ package org.apache.maven.continuum.profile;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @since 15 juin 07
  * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.profile.ProfileService"
  * TODO use some cache mechanism to prevent always reading from store ?
+ * @since 15 juin 07
  */
 public class DefaultProfileService
     implements ProfileService
@@ -43,7 +43,7 @@ public class DefaultProfileService
      */
     private ContinuumStore store;
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.profile.ProfileService#updateProfile(org.apache.maven.continuum.model.system.Profile)
      */
     public void updateProfile( Profile profile )
@@ -67,7 +67,7 @@ public class DefaultProfileService
         }
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.profile.ProfileService#addProfile(org.apache.maven.continuum.model.system.Profile)
      */
     public Profile addProfile( Profile profile )
@@ -80,7 +80,7 @@ public class DefaultProfileService
         return store.addProfile( profile );
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.profile.ProfileService#deletedProfile(int)
      */
     public void deleteProfile( int profileId )
@@ -89,7 +89,7 @@ public class DefaultProfileService
         store.removeProfile( getProfile( profileId ) );
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.profile.ProfileService#getAllProfiles()
      */
     public List<Profile> getAllProfiles()
@@ -98,7 +98,7 @@ public class DefaultProfileService
         return store.getAllProfilesByName();
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.profile.ProfileService#getProfile(int)
      */
     public Profile getProfile( int profileId )
@@ -119,8 +119,8 @@ public class DefaultProfileService
         }
     }
 
-    /** 
-     * @see org.apache.maven.continuum.profile.ProfileService#setBuilderInProfile(org.apache.maven.continuum.model.system.Profile, org.apache.maven.continuum.model.system.Installation)
+    /**
+     * @see org.apache.maven.continuum.profile.ProfileService#setBuilderInProfile(org.apache.maven.continuum.model.system.Profile,org.apache.maven.continuum.model.system.Installation)
      */
     public void setBuilderInProfile( Profile profile, Installation builder )
         throws ProfileException
@@ -137,8 +137,8 @@ public class DefaultProfileService
         }
     }
 
-    /** 
-     * @see org.apache.maven.continuum.profile.ProfileService#setJdkInProfile(org.apache.maven.continuum.model.system.Profile, org.apache.maven.continuum.model.system.Installation)
+    /**
+     * @see org.apache.maven.continuum.profile.ProfileService#setJdkInProfile(org.apache.maven.continuum.model.system.Profile,org.apache.maven.continuum.model.system.Installation)
      */
     public void setJdkInProfile( Profile profile, Installation jdk )
         throws ProfileException
@@ -155,8 +155,8 @@ public class DefaultProfileService
         }
     }
 
-    /** 
-     * @see org.apache.maven.continuum.profile.ProfileService#addEnvVarInProfile(org.apache.maven.continuum.model.system.Profile, org.apache.maven.continuum.model.system.Installation)
+    /**
+     * @see org.apache.maven.continuum.profile.ProfileService#addEnvVarInProfile(org.apache.maven.continuum.model.system.Profile,org.apache.maven.continuum.model.system.Installation)
      */
     public void addEnvVarInProfile( Profile profile, Installation envVar )
         throws ProfileException

@@ -43,10 +43,8 @@ import java.util.Properties;
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper"
- *   role-hint="default"
+ * @plexus.component role="org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper"
+ * role-hint="default"
  */
 public class DefaultMavenOneMetadataHelper
     extends AbstractLogEnabled
@@ -77,9 +75,9 @@ public class DefaultMavenOneMetadataHelper
         catch ( XmlPullParserException e )
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_XML_PARSE );
-            
+
             getLogger().info( "Error while reading maven POM (" + e.getMessage() + ").", e );
-            
+
             return;
         }
         catch ( FileNotFoundException e )
@@ -93,9 +91,9 @@ public class DefaultMavenOneMetadataHelper
         catch ( IOException e )
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
-            
+
             getLogger().info( "Error while reading maven POM (" + e.getMessage() + ").", e );
-            
+
             return;
         }
 
@@ -110,9 +108,9 @@ public class DefaultMavenOneMetadataHelper
         if ( extend != null )
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_EXTEND );
-            
+
             getLogger().info( "Cannot use a POM with an 'extend' element." );
-            
+
             return;
         }
 
@@ -166,7 +164,7 @@ public class DefaultMavenOneMetadataHelper
         if ( StringUtils.isEmpty( project.getVersion() ) && StringUtils.isEmpty( version ) )
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_VERSION );
-            
+
             // Do not throw an exception or return here, gather up as many results as possible first.
         }
 
@@ -179,7 +177,7 @@ public class DefaultMavenOneMetadataHelper
         if ( StringUtils.isEmpty( project.getName() ) && StringUtils.isEmpty( name ) )
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_NAME );
-            
+
             // Do not throw an exception or return here, gather up as many results as possible first.
         }
 
@@ -221,7 +219,7 @@ public class DefaultMavenOneMetadataHelper
             if ( StringUtils.isEmpty( scmConnection ) )
             {
                 result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM );
-                
+
                 // Do not throw an exception or return here, gather up as many results as possible first.
             }
         }
@@ -337,11 +335,11 @@ public class DefaultMavenOneMetadataHelper
                 }
             }
         }
-        
+
         // ----------------------------------------------------------------------
         // Handle Errors / Results
         // ----------------------------------------------------------------------
-        
+
         if ( result.hasErrors() )
         {
             // prevent project creation if there are errors.

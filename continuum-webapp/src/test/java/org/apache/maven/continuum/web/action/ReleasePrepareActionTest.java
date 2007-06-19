@@ -21,18 +21,12 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
-import java.util.Map;
-import java.util.HashMap;
-
-import com.opensymphony.xwork.ActionContext;
-
 /**
  * Test for {@link ReleasePrepareAction}
- * 
+ *
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
@@ -61,7 +55,7 @@ public class ReleasePrepareActionTest
 
     /**
      * Test that the tag base url for Subversion is correctly constructed
-     * 
+     *
      * @throws Exception
      */
     public void testScmTagBaseSvn()
@@ -75,7 +69,7 @@ public class ReleasePrepareActionTest
         //continuumMock.expects( once() ).method( "getProjectGroupByProjectId" ).will( returnValue( projectGroup ) );
         Project project = new Project();
         project.setScmUrl( scmUrl );
-        project.setWorkingDirectory(".");
+        project.setWorkingDirectory( "." );
         continuumMock.expects( once() ).method( "getProject" ).will( returnValue( project ) );
         action.input();
         assertEquals( svnUrl + "/tags", action.getScmTagBase() );
@@ -84,7 +78,7 @@ public class ReleasePrepareActionTest
 
     /**
      * Test that tag base url for non Subverson SCMs is empty
-     * 
+     *
      * @throws Exception
      */
     public void testScmTagBaseNonSvn()
@@ -94,7 +88,7 @@ public class ReleasePrepareActionTest
 
         Project project = new Project();
         project.setScmUrl( "scm:cvs:xxx" );
-        project.setWorkingDirectory(".");
+        project.setWorkingDirectory( "." );
         continuumMock.expects( once() ).method( "getProject" ).will( returnValue( project ) );
         action.input();
         assertEquals( "", action.getScmTagBase() );

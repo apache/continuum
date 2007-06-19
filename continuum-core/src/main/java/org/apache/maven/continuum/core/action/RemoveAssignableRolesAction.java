@@ -26,7 +26,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 
-
 import java.util.Map;
 
 /**
@@ -66,7 +65,7 @@ public class RemoveAssignableRolesAction
             {
                 roleManager.removeTemplatedRole( "project-developer", projectGroup.getName() );
             }
-            
+
             if ( !roleManager.templatedRoleExists( "project-user", projectGroup.getName() ) )
             {
                 roleManager.removeTemplatedRole( "project-user", projectGroup.getName() );

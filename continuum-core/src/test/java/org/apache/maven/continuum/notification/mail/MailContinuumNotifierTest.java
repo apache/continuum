@@ -84,8 +84,10 @@ public class MailContinuumNotifierTest
 
     private void dumpContent( MailMessage mailMessage )
     {
-        assertTrue( "The template isn't loaded correctly.", mailMessage.getContent().indexOf( "#shellBuildResult()" ) < 0 );
-        assertTrue( "The template isn't loaded correctly.", mailMessage.getContent().indexOf( "Build statistics" ) > 0 );
+        assertTrue( "The template isn't loaded correctly.",
+                    mailMessage.getContent().indexOf( "#shellBuildResult()" ) < 0 );
+        assertTrue( "The template isn't loaded correctly.",
+                    mailMessage.getContent().indexOf( "Build statistics" ) > 0 );
 
         if ( true )
         {

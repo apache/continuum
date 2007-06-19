@@ -29,10 +29,8 @@ import java.util.Map;
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
  * @version: $Id$
- *
- * @plexus.component
- *   role="org.codehaus.plexus.action.Action"
- *   role-hint="remove-build-definition-from-project"
+ * @plexus.component role="org.codehaus.plexus.action.Action"
+ * role-hint="remove-build-definition-from-project"
  */
 public class RemoveBuildDefinitionFromProjectAction
     extends AbstractBuildDefinitionContinuumAction
@@ -42,7 +40,7 @@ public class RemoveBuildDefinitionFromProjectAction
         throws Exception
     {
         BuildDefinition buildDefinition = getBuildDefinition( map );
-        int projectId =  getProjectId( map );
+        int projectId = getProjectId( map );
 
         Project project = store.getProjectWithAllDetails( projectId );
 

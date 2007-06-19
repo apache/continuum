@@ -34,10 +34,8 @@ import java.util.Map;
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.codehaus.plexus.action.Action"
- *   role-hint="update-project-from-working-directory"
+ * @plexus.component role="org.codehaus.plexus.action.Action"
+ * role-hint="update-project-from-working-directory"
  */
 public class UpdateProjectFromWorkingDirectoryContinuumAction
     extends AbstractContinuumAction

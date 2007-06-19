@@ -25,7 +25,6 @@ import com.opensymphony.xwork.TextProvider;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.jsp.JspException;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ import java.util.List;
  * format a date by using either a specified format attribute, or by falling
  * back on to a globally defined 'webwork.date' property.
  * When nice="true" is specified, it will return a human readable string (in 2 hours, 3 minutes).
- *
+ * <p/>
  * From http://jira.opensymphony.com/browse/WW-805
  *
  * @author <a href="mailto:philip.luppens@gmail.com">Philip Luppens</a>
@@ -54,27 +53,47 @@ public class DateTag
     public final static String DATETAG_PROPERTY = "webwork.date";
 
     public final static String DATETAG_PROPERTY_PAST = "webwork.date.format.past";
+
     public final static String DATETAG_DEFAULT_PAST = "{0} ago";
+
     public final static String DATETAG_PROPERTY_FUTURE = "webwork.date.format.future";
+
     public final static String DATETAG_DEFAULT_FUTURE = "in {0}";
 
     public final static String DATETAG_PROPERTY_SECONDS = "webwork.date.format.seconds";
+
     public final static String DATETAG_DEFAULT_SECONDS = "an instant";
+
     public final static String DATETAG_PROPERTY_MINUTES = "webwork.date.format.minutes";
+
     public final static String DATETAG_DEFAULT_MINUTES = "{0,choice,1#one minute|1<{0} minutes}";
+
     public final static String DATETAG_PROPERTY_HOURS = "webwork.date.format.hours";
-    public final static String DATETAG_DEFAULT_HOURS = "{0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one minute|1<, {1} minutes}";
+
+    public final static String DATETAG_DEFAULT_HOURS =
+        "{0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one minute|1<, {1} minutes}";
+
     public final static String DATETAG_PROPERTY_DAYS = "webwork.date.format.days";
-    public final static String DATETAG_DEFAULT_DAYS = "{0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<, {1} hours}";
+
+    public final static String DATETAG_DEFAULT_DAYS =
+        "{0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<, {1} hours}";
+
     public final static String DATETAG_PROPERTY_YEARS = "webwork.date.format.years";
-    public final static String DATETAG_DEFAULT_YEARS = "{0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one day|1<, {1} days}";
+
+    public final static String DATETAG_DEFAULT_YEARS =
+        "{0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one day|1<, {1} days}";
 
     //our optional format parameter
     private String format;
+
     private String actualName;
+
     private String nameAttr;
+
     private boolean nice;
+
     private Date date;
+
     private TextProvider tp;
 
     public int doEndTag()
@@ -95,7 +114,7 @@ public class DateTag
             else if ( dateObj instanceof Long )
             {
                 Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis( ( (Long) dateObj).longValue() );
+                cal.setTimeInMillis( ( (Long) dateObj ).longValue() );
                 date = cal.getTime();
             }
             else
@@ -129,7 +148,8 @@ public class DateTag
 
                     if ( globalFormat != null )
                     {
-                        msg = new SimpleDateFormat( globalFormat, ActionContext.getContext().getLocale() ).format( date );
+                        msg =
+                            new SimpleDateFormat( globalFormat, ActionContext.getContext().getLocale() ).format( date );
                     }
                     else
                     {
@@ -215,8 +235,8 @@ public class DateTag
         {
             args.add( new Long( hour ) );
             args.add( new Long( min ) );
-            args.add( sb);
-            args.add( null);
+            args.add( sb );
+            args.add( null );
             sb.append( tp.getText( DATETAG_PROPERTY_HOURS, DATETAG_DEFAULT_HOURS, args ) );
         }
         else if ( years == 0 )
@@ -229,8 +249,8 @@ public class DateTag
         }
         else
         {
-            args.add( new Object[]{ new Long( years ) } );
-            args.add( new Object[]{ new Long( day ) } );
+            args.add( new Object[]{new Long( years )} );
+            args.add( new Object[]{new Long( day )} );
             args.add( sb );
             args.add( null );
 
@@ -242,7 +262,9 @@ public class DateTag
         {
             //looks like this date is passed
             return tp.getText( DATETAG_PROPERTY_PAST, DATETAG_DEFAULT_PAST, args );
-        } else {
+        }
+        else
+        {
             return tp.getText( DATETAG_PROPERTY_FUTURE, DATETAG_DEFAULT_FUTURE, args );
         }
     }

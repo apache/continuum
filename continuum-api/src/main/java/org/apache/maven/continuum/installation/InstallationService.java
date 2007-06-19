@@ -1,8 +1,8 @@
 package org.apache.maven.continuum.installation;
 
-import java.util.List;
-
 import org.apache.maven.continuum.model.system.Installation;
+
+import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,8 +24,8 @@ import org.apache.maven.continuum.model.system.Installation;
  */
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @since 13 juin 07
  * @version $Id$
+ * @since 13 juin 07
  */
 public interface InstallationService
 {
@@ -67,7 +67,6 @@ public interface InstallationService
         throws InstallationException;
 
     /**
-     * 
      * @return output of JAVA_HOME/bin/java -version
      * @throws InstallationException
      */

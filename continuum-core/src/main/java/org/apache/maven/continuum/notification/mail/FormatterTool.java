@@ -87,7 +87,8 @@ public class FormatterTool
 
     public String formatTimestamp( long timestamp )
     {
-        if (timestamp <= 0) {
+        if ( timestamp <= 0 )
+        {
             return null;
         }
         return getSimpleDateFormat( timestampFormat, timestampFormatString ).format( new Date( timestamp ) );
@@ -140,8 +141,10 @@ public class FormatterTool
         return dateFormat;
     }
 
-    public String trim(String str) {
-        if (str == null) {
+    public String trim( String str )
+    {
+        if ( str == null )
+        {
             return "";
         }
         return str.trim();

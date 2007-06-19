@@ -82,8 +82,8 @@ public class AntBuildExecutor
             arguments = "-f " + buildFile + " ";
         }
 
-        arguments += StringUtils.clean( buildDefinition.getArguments() ) + " "
-            + StringUtils.clean( buildDefinition.getGoals() );
+        arguments +=
+            StringUtils.clean( buildDefinition.getArguments() ) + " " + StringUtils.clean( buildDefinition.getGoals() );
 
         return executeShellCommand( project, executable, arguments, buildOutput, getEnvironments( buildDefinition ) );
     }

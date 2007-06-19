@@ -19,9 +19,9 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.ContinuumException;
 
 import java.util.Map;
 
@@ -30,10 +30,8 @@ import java.util.Map;
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
  * @version: $Id$
- *
- * @plexus.component
- *   role="org.codehaus.plexus.action.Action"
- *   role-hint="remove-build-definition-from-project-group"
+ * @plexus.component role="org.codehaus.plexus.action.Action"
+ * role-hint="remove-build-definition-from-project-group"
  */
 public class RemoveBuildDefinitionFromProjectGroupAction
     extends AbstractBuildDefinitionContinuumAction
@@ -43,7 +41,7 @@ public class RemoveBuildDefinitionFromProjectGroupAction
         throws Exception
     {
         BuildDefinition buildDefinition = getBuildDefinition( map );
-        int projectGroupId =  getProjectGroupId( map );
+        int projectGroupId = getProjectGroupId( map );
 
         ProjectGroup projectGroup = store.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
 

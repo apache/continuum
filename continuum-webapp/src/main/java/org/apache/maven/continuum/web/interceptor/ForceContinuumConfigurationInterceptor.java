@@ -30,9 +30,8 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
  * @version: $ID:$
- * @plexus.component
- *   role="com.opensymphony.xwork.interceptor.Interceptor"
- *   role-hint="forceContinuumConfigurationInterceptor"
+ * @plexus.component role="com.opensymphony.xwork.interceptor.Interceptor"
+ * role-hint="forceContinuumConfigurationInterceptor"
  */
 public class ForceContinuumConfigurationInterceptor
     extends AbstractLogEnabled

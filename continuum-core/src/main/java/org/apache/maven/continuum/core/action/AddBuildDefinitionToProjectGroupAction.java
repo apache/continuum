@@ -29,20 +29,18 @@ import java.util.Map;
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.codehaus.plexus.action.Action"
- *   role-hint="add-build-definition-to-project-group"
+ * @plexus.component role="org.codehaus.plexus.action.Action"
+ * role-hint="add-build-definition-to-project-group"
  */
 public class AddBuildDefinitionToProjectGroupAction
     extends AbstractBuildDefinitionContinuumAction
 {
-  
+
     public void execute( Map map )
         throws Exception
     {
         BuildDefinition buildDefinition = getBuildDefinition( map );
-        int projectGroupId =  getProjectGroupId( map );
+        int projectGroupId = getProjectGroupId( map );
 
         ProjectGroup projectGroup = store.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
 

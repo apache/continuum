@@ -1,10 +1,10 @@
 package org.apache.maven.continuum.installation;
 
-import java.util.List;
-
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.store.ContinuumStore;
+
+import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,8 +27,8 @@ import org.apache.maven.continuum.store.ContinuumStore;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @since 13 juin 07
  * @version $Id$
+ * @since 13 juin 07
  */
 public class DefaultInstallationServiceTest
     extends AbstractContinuumTest

@@ -392,8 +392,7 @@ public abstract class AbstractContinuumSecureService
     /**
      * Check if the current user is authorized to manage the application's configuration
      *
-     * @throws ContinuumException
-     *                                if the user isn't authorized if the user isn't authenticated
+     * @throws ContinuumException if the user isn't authorized if the user isn't authenticated
      * @throws ContinuumException if the user isn't authorized if the user isn't authorized
      */
     protected void checkManageConfigurationAuthorization()
@@ -410,8 +409,7 @@ public abstract class AbstractContinuumSecureService
     /**
      * Check if the current user is authorized to manage the project build schedules
      *
-     * @throws ContinuumException
-     *                                if the user isn't authorized if the user isn't authenticated
+     * @throws ContinuumException if the user isn't authorized if the user isn't authenticated
      * @throws ContinuumException if the user isn't authorized if the user isn't authorized
      */
     protected void checkManageSchedulesAuthorization()

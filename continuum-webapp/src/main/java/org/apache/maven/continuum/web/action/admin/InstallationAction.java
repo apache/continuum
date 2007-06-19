@@ -1,16 +1,15 @@
 package org.apache.maven.continuum.web.action.admin;
 
+import com.opensymphony.xwork.Preparable;
+import org.apache.maven.continuum.installation.InstallationService;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-
-import org.apache.maven.continuum.installation.InstallationService;
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.web.action.ContinuumActionSupport;
-
-import com.opensymphony.xwork.Preparable;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -32,9 +31,9 @@ import com.opensymphony.xwork.Preparable;
  */
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @since 14 juin 07
  * @version $Id$
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="installation"
+ * @since 14 juin 07
  */
 public class InstallationAction
     extends ContinuumActionSupport

@@ -37,8 +37,8 @@ public class RollbackReleaseTaskExecutor
     {
         try
         {
-            releaseManager.rollback( releaseTask.getDescriptor(), settings,
-                                     new ArrayList(), releaseTask.getListener() );
+            releaseManager.rollback( releaseTask.getDescriptor(), settings, new ArrayList(),
+                                     releaseTask.getListener() );
         }
         catch ( ReleaseExecutionException e )
         {

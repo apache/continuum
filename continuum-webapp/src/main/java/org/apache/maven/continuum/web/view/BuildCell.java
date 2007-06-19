@@ -21,8 +21,8 @@ package org.apache.maven.continuum.web.view;
 
 import com.opensymphony.webwork.views.util.UrlHelper;
 import com.opensymphony.xwork.ActionContext;
-import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
+import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;

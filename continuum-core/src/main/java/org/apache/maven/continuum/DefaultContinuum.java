@@ -122,12 +122,12 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private SchedulesActivator schedulesActivator;
-    
+
     /**
      * @plexus.requirement
      */
     private InstallationService installationService;
-    
+
     /**
      * @plexus.requirement
      */

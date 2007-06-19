@@ -19,12 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -33,6 +27,12 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * BuildDefinitionAction:

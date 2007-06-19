@@ -35,10 +35,8 @@ import java.util.Map;
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.apache.maven.continuum.utils.shell.ShellCommandHelper"
- *   role-hint="default"
+ * @plexus.component role="org.apache.maven.continuum.utils.shell.ShellCommandHelper"
+ * role-hint="default"
  */
 public class DefaultShellCommandHelper
     extends AbstractLogEnabled
@@ -48,8 +46,8 @@ public class DefaultShellCommandHelper
     // ShellCommandHelper Implementation
     // ----------------------------------------------------------------------
 
-    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments,
-                                                File output, long idCommand, Map<String, String> environments )
+    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
+                                                long idCommand, Map<String, String> environments )
         throws Exception
     {
         Commandline cl = new Commandline();
@@ -58,7 +56,8 @@ public class DefaultShellCommandHelper
 
         argument.setLine( arguments );
 
-        return executeShellCommand( workingDirectory, executable, argument.getParts(), output, idCommand, environments );
+        return executeShellCommand( workingDirectory, executable, argument.getParts(), output, idCommand,
+                                    environments );
     }
 
     public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
@@ -73,8 +72,6 @@ public class DefaultShellCommandHelper
 
         cl.setPid( idCommand );
 
-        
-
         cl.addEnvironment( "MAVEN_TERMINATE_CMD", "on" );
 
         if ( environments != null && !environments.isEmpty() )
@@ -88,7 +85,7 @@ public class DefaultShellCommandHelper
         }
 
         cl.addSystemEnvironment();
-        
+
         cl.setExecutable( executable );
 
         cl.setWorkingDirectory( workingDirectory.getAbsolutePath() );

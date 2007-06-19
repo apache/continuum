@@ -1,7 +1,7 @@
 package org.apache.maven.continuum.release.tasks;
 
-import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.ReleaseManagerListener;
+import org.apache.maven.shared.release.config.ReleaseDescriptor;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -28,8 +28,7 @@ import org.apache.maven.shared.release.ReleaseManagerListener;
 public class RollbackReleaseProjectTask
     extends AbstractReleaseProjectTask
 {
-    public RollbackReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor,
-                                      ReleaseManagerListener listener )
+    public RollbackReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener )
     {
         super( releaseId, descriptor, listener );
     }

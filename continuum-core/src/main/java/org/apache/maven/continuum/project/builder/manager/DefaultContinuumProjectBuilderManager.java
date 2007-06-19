@@ -27,10 +27,8 @@ import java.util.Map;
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.apache.maven.continuum.project.builder.manager.ContinuumProjectBuilderManager"
- *   role-hint="default"
+ * @plexus.component role="org.apache.maven.continuum.project.builder.manager.ContinuumProjectBuilderManager"
+ * role-hint="default"
  */
 public class DefaultContinuumProjectBuilderManager
     extends AbstractLogEnabled
@@ -48,7 +46,7 @@ public class DefaultContinuumProjectBuilderManager
     public ContinuumProjectBuilder getProjectBuilder( String id )
         throws ContinuumProjectBuilderManagerException
     {
-        ContinuumProjectBuilder projectBuilder = ( ContinuumProjectBuilder ) projectBuilders.get( id );
+        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) projectBuilders.get( id );
 
         if ( projectBuilder == null )
         {

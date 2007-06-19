@@ -42,7 +42,7 @@ public abstract class AbstractContinuumProjectBuilder
     extends AbstractLogEnabled
     implements ContinuumProjectBuilder
 {
-    
+
     private static final String TMP_DIR = System.getProperty( "java.io.tmpdir" );
 
     protected File createMetadataFile( URL metadata, String username, String password )
@@ -54,7 +54,8 @@ public abstract class AbstractContinuumProjectBuilder
 
         if ( metadata.getProtocol().startsWith( "http" ) )
         {
-            is = new MungedHttpsURL( metadata.toExternalForm(), username, password ).getURLConnection().getInputStream();
+            is =
+                new MungedHttpsURL( metadata.toExternalForm(), username, password ).getURLConnection().getInputStream();
         }
         else
         {
@@ -120,8 +121,8 @@ public abstract class AbstractContinuumProjectBuilder
 
     /**
      * Create metadata file and handle exceptions, adding the errors to the result object.
-     * 
-     * @param result holder with result and errors.
+     *
+     * @param result   holder with result and errors.
      * @param metadata
      * @param username
      * @param password

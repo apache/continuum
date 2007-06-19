@@ -40,10 +40,8 @@ import java.net.URL;
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- *
- * @plexus.component
- *   role="org.apache.maven.continuum.project.builder.ContinuumProjectBuilder"
- *   role-hint="maven-one-builder"
+ * @plexus.component role="org.apache.maven.continuum.project.builder.ContinuumProjectBuilder"
+ * role-hint="maven-one-builder"
  */
 public class MavenOneContinuumProjectBuilder
     extends AbstractContinuumProjectBuilder
@@ -72,7 +70,7 @@ public class MavenOneContinuumProjectBuilder
         File pomFile;
 
         pomFile = createMetadataFile( result, url, username, password );
-        
+
         if ( pomFile == null )
         {
             return result;
@@ -83,7 +81,7 @@ public class MavenOneContinuumProjectBuilder
         try
         {
             metadataHelper.mapMetadata( result, pomFile, project );
-            
+
             if ( result.hasErrors() )
             {
                 return result;
@@ -117,7 +115,7 @@ public class MavenOneContinuumProjectBuilder
         catch ( MavenOneMetadataHelperException e )
         {
             getLogger().error( "Unknown error while processing metadata", e );
-            
+
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
 

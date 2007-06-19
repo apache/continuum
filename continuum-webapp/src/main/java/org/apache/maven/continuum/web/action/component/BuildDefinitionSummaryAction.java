@@ -54,7 +54,7 @@ public class BuildDefinitionSummaryAction
     private List groupBuildDefinitionSummaries = new ArrayList();
 
     private List allBuildDefinitionSummaries = new ArrayList();
-    
+
     //profileName
 
     public String summarizeForProject()

@@ -33,7 +33,7 @@ public class Data
     extends UIBean
 {
     private static final String TEMPLATE = "data";
-    
+
     protected String valueLink;
 
     public Data( OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response )
@@ -45,23 +45,23 @@ public class Data
     {
         return TEMPLATE;
     }
-    
+
     public void setValueLink( String _link )
     {
-        valueLink = _link;                
+        valueLink = _link;
     }
-    
+
     public String getValueLink()
     {
         return valueLink;
     }
-    
+
     protected void evaluateExtraParams()
     {
-        if (this.valueLink != null) 
+        if ( this.valueLink != null )
         {
-            valueLink = findString(this.valueLink);
-            addParameter("valueLink", valueLink);
-        }        
+            valueLink = findString( this.valueLink );
+            addParameter( "valueLink", valueLink );
+        }
     }
 }

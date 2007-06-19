@@ -18,16 +18,16 @@ package org.apache.maven.continuum.project.builder;
  * specific language governing permissions and limitations
  * under the License.
  */
-import java.net.URL;
 
 import junit.framework.TestCase;
-
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 
+import java.net.URL;
+
 /**
  * Test for {@link AbstractContinuumProjectBuilder}
- * 
+ *
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
@@ -47,7 +47,7 @@ public class AbstractContinuumProjectBuilderTest
 
     /**
      * Test for CONTINUUM-747. Disable as it requires a password protected resource under https.
-     * 
+     *
      * @throws Exception
      */
     public void disabledTestCreateMetadataFileURLStringString()

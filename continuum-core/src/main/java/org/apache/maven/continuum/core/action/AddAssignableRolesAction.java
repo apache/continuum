@@ -26,7 +26,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 
-
 import java.util.Map;
 
 /**
@@ -68,7 +67,7 @@ public class AddAssignableRolesAction
             {
                 roleManager.createTemplatedRole( "project-developer", projectGroup.getName() );
             }
-            
+
             if ( !roleManager.templatedRoleExists( "project-user", projectGroup.getName() ) )
             {
                 roleManager.createTemplatedRole( "project-user", projectGroup.getName() );

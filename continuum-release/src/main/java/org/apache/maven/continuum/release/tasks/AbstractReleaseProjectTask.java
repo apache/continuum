@@ -37,8 +37,7 @@ public abstract class AbstractReleaseProjectTask
 
     private long maxExecutionTime;
 
-    public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor,
-                                       ReleaseManagerListener listener )
+    public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener )
     {
         this.releaseId = releaseId;
         this.descriptor = descriptor;
@@ -77,7 +76,7 @@ public abstract class AbstractReleaseProjectTask
 
     public long getMaxExecutionTime()
     {
-         return maxExecutionTime;
+        return maxExecutionTime;
     }
 
     public void setMaxExecutionTime( long maxTime )

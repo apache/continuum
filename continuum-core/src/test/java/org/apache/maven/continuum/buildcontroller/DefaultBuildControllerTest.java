@@ -57,14 +57,14 @@ public class DefaultBuildControllerTest
         BuildResult buildResult1 = new BuildResult();
         buildResult1.setStartTime( Calendar.getInstance().getTimeInMillis() );
         buildResult1.setEndTime( Calendar.getInstance().getTimeInMillis() );
-        buildResult1.setState( ContinuumProjectState.OK);
+        buildResult1.setState( ContinuumProjectState.OK );
         buildResult1.setSuccess( true );
         getStore().addBuildResult( project1, buildResult1 );
         BuildResult buildResult2 = new BuildResult();
         buildResult2.setStartTime( Calendar.getInstance().getTimeInMillis() - 7200000 );
         buildResult2.setEndTime( Calendar.getInstance().getTimeInMillis() - 7200000 );
         buildResult2.setSuccess( true );
-        buildResult2.setState( ContinuumProjectState.OK);
+        buildResult2.setState( ContinuumProjectState.OK );
         getStore().addBuildResult( project1, buildResult2 );
 
         Project project2 = createProject( "project2" );

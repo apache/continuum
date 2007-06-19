@@ -46,27 +46,27 @@ public class CreateProjectsFromMetadataTest
         action = new CreateProjectsFromMetadataAction();
         action.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
         projectBuilderManagerMock = mock( ContinuumProjectBuilderManager.class );
-        mavenSettingsBuilderMock = mock ( MavenSettingsBuilder.class );
+        mavenSettingsBuilderMock = mock( MavenSettingsBuilder.class );
         action.setProjectBuilderManager( (ContinuumProjectBuilderManager) projectBuilderManagerMock.proxy() );
         action.setMavenSettingsBuilder( (MavenSettingsBuilder) mavenSettingsBuilderMock.proxy() );
 
         projectBuilder = mock( ContinuumProjectBuilder.class );
 
-
         projectBuilderManagerMock.expects( once() ).method( "getProjectBuilder" )
-            .will(returnValue( projectBuilder.proxy() ) );
+            .will( returnValue( projectBuilder.proxy() ) );
         projectBuilder.expects( once() ).method( "buildProjectsFromMetadata" )
             .will( returnValue( new ContinuumProjectBuildingResult() ) );
 
         mavenSettingsBuilderMock.expects( once() ).method( "buildSettings" )
-            .will(returnValue( new Settings() ) );
+            .will( returnValue( new Settings() ) );
     }
 
     public void testExecute()
         throws Exception
     {
         Map context = new HashMap();
-        context.put( CreateProjectsFromMetadataAction.KEY_URL, "http://svn.apache.org/repos/asf/maven/continuum/trunk/pom.xml" );
+        context.put( CreateProjectsFromMetadataAction.KEY_URL,
+                     "http://svn.apache.org/repos/asf/maven/continuum/trunk/pom.xml" );
         context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
 
         action.execute( context );

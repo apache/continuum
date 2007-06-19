@@ -67,18 +67,20 @@ public class DefaultContinuumReleaseManager
 
     /**
      * contains previous release:prepare descriptors; one per project
+     *
      * @todo remove static when singleton strategy is working
      */
     private static Map preparedReleases;
 
     /**
      * contains results
+     *
      * @todo remove static when singleton strategy is working
      */
     private static Map releaseResults;
 
-    public String prepare( Project project, Properties releaseProperties, Map relVersions,
-                           Map devVersions, ContinuumReleaseManagerListener listener )
+    public String prepare( Project project, Properties releaseProperties, Map relVersions, Map devVersions,
+                           ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
@@ -89,8 +91,8 @@ public class DefaultContinuumReleaseManager
 
         try
         {
-            prepareReleaseQueue.put( new PrepareReleaseProjectTask( releaseId, descriptor,
-                                                                    (ReleaseManagerListener) listener ) );
+            prepareReleaseQueue.put(
+                new PrepareReleaseProjectTask( releaseId, descriptor, (ReleaseManagerListener) listener ) );
 
         }
         catch ( TaskQueueException e )
@@ -112,8 +114,8 @@ public class DefaultContinuumReleaseManager
         }
     }
 
-    public void perform( String releaseId, String workingDirectory, File buildDirectory,
-                         String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
+    public void perform( String releaseId, String workingDirectory, File buildDirectory, String goals,
+                         boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
         ReleaseDescriptor descriptor = readReleaseDescriptor( workingDirectory );
@@ -121,16 +123,16 @@ public class DefaultContinuumReleaseManager
         perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener );
     }
 
-    private void perform( String releaseId, ReleaseDescriptor descriptor, File buildDirectory,
-                          String goals, boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
+    private void perform( String releaseId, ReleaseDescriptor descriptor, File buildDirectory, String goals,
+                          boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
         try
         {
             getListeners().put( releaseId, listener );
 
-            performReleaseQueue.put( new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory,
-                                                                    goals, useReleaseProfile,
+            performReleaseQueue.put( new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory, goals,
+                                                                    useReleaseProfile,
                                                                     (ReleaseManagerListener) listener ) );
         }
         catch ( TaskQueueException e )
@@ -150,8 +152,7 @@ public class DefaultContinuumReleaseManager
     private void rollback( String releaseId, ReleaseDescriptor descriptor, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
-        Task releaseTask =
-            new RollbackReleaseProjectTask( releaseId, descriptor, (ReleaseManagerListener) listener );
+        Task releaseTask = new RollbackReleaseProjectTask( releaseId, descriptor, (ReleaseManagerListener) listener );
 
         try
         {
@@ -183,8 +184,8 @@ public class DefaultContinuumReleaseManager
         return releaseResults;
     }
 
-    private ReleaseDescriptor getReleaseDescriptor( Project project, Properties releaseProperties,
-                                                    Map relVersions, Map devVersions )
+    private ReleaseDescriptor getReleaseDescriptor( Project project, Properties releaseProperties, Map relVersions,
+                                                    Map devVersions )
     {
         ReleaseDescriptor descriptor = new ReleaseDescriptor();
 

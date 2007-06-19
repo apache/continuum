@@ -47,7 +47,8 @@ public class AddProjectGroupAction
         {
             addActionError( "projectGroup.error.name.required" );
         }
-        else if ( name != null && name.trim().equals( "" ) ) {
+        else if ( name != null && name.trim().equals( "" ) )
+        {
             addActionError( "projectGroup.error.name.cannot.be.spaces" );
         }
         else if ( name != null && !name.equals( "" ) )

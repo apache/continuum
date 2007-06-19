@@ -20,8 +20,8 @@ package org.apache.maven.continuum.profile;
  */
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @since 15 juin 07
  * @version $Id$
+ * @since 15 juin 07
  */
 public class ProfileException
     extends Exception

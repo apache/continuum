@@ -18,7 +18,7 @@ package org.apache.maven.continuum.web.exception;
  * under the License.
  */
 
-/**                                                                                          
+/**
  * ContinuumActionException:
  *
  * @author Jesse McConnell <jmcconnell@apache.org>

@@ -41,7 +41,8 @@ public class ContinuumActionLoggingTest
     StringBuffer testOutput = new StringBuffer();
 
 
-    public void setUp() throws Exception
+    public void setUp()
+        throws Exception
     {
         super.setUp();
 
@@ -84,7 +85,7 @@ public class ContinuumActionLoggingTest
         public void write( byte byteArray[] )
             throws IOException
         {
-            testOutput.append( new String ( byteArray ) );
+            testOutput.append( new String( byteArray ) );
             stream.write( byteArray );
         }
 
