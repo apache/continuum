@@ -23,6 +23,7 @@ import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.system.Installation;
@@ -85,12 +86,12 @@ public class ShellBuildExecutor
         String javaHome = getJavaHomeValue( buildDefinition );
         if ( !StringUtils.isEmpty( javaHome ) )
         {
-            // TODO what todo with this ?
+            envVars.put( getInstallationService().getEnvVar( InstallationService.JDK_TYPE ), javaHome );
         }
         Installation builder = profile.getBuilder();
         if ( builder != null )
         {
-            // TODO what todo with this ?
+            envVars.put( builder.getVarName(), builder.getVarValue() );
         }
         envVars.putAll( getEnvironmentVariables( buildDefinition ) );
         return envVars;
