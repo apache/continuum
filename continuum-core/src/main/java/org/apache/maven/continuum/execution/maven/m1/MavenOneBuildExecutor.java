@@ -68,8 +68,6 @@ public class MavenOneBuildExecutor
     public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
         throws ContinuumBuildExecutorException
     {
-        // TODO: get from installation
-//        String executable = project.getExecutable();
         String executable = "maven";
 
         String arguments = "";
