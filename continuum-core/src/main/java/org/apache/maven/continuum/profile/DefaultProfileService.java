@@ -81,7 +81,7 @@ public class DefaultProfileService
     }
 
     /**
-     * @see org.apache.maven.continuum.profile.ProfileService#deletedProfile(int)
+     * @see org.apache.maven.continuum.profile.ProfileService#deleteProfile(int)
      */
     public void deleteProfile( int profileId )
         throws ProfileException
