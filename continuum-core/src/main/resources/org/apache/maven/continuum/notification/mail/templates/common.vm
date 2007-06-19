@@ -15,6 +15,7 @@
  *#
 #macro( shellBuildResult )
 Online report : $reportUrl
+
 Build statistics:
   State: $formatter.formatProjectState( $build.state )
 #if ( $previousBuild )
