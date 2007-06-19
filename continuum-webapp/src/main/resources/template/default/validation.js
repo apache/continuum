@@ -19,10 +19,13 @@
 
 function clearErrorMessages(form) {
 
-    var table = form.childNodes[1];
-    if( typeof table == "undefined" ) {
-        table = form.childNodes[0];
-    }
+    //var table = form.childNodes[1];
+    //if( typeof table == "undefined" ) {
+    //    table = form.childNodes[0];
+    //}
+    // ie fix
+    var table = form.getElementsByTagName("table")[0];
+    
 
     // clear out any rows with an "errorFor" attribute
     var rows = table.rows;
