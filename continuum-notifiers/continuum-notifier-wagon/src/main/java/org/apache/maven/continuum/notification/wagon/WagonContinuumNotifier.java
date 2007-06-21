@@ -40,6 +40,8 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.settings.MavenSettingsBuilder;
+import org.apache.maven.settings.Proxy;
+import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.wagon.CommandExecutionException;
 import org.apache.maven.wagon.CommandExecutor;
@@ -49,6 +51,7 @@ import org.apache.maven.wagon.TransferFailedException;
 import org.apache.maven.wagon.UnsupportedProtocolException;
 import org.apache.maven.wagon.Wagon;
 import org.apache.maven.wagon.authentication.AuthenticationException;
+import org.apache.maven.wagon.authentication.AuthenticationInfo;
 import org.apache.maven.wagon.authorization.AuthorizationException;
 import org.apache.maven.wagon.observers.Debug;
 import org.apache.maven.wagon.proxy.ProxyInfo;
@@ -64,6 +67,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -164,6 +168,7 @@ public class WagonContinuumNotifier
         if ( configuration.containsKey( "url" ) )
         {
             url = (String) configuration.get( "url" );
+            id = (String) configuration.get( "id" );
         }
         else
         {
@@ -219,15 +224,15 @@ public class WagonContinuumNotifier
                 wagon.addTransferListener( debug );
             }
 
-            ProxyInfo proxyInfo = wagonManager.getProxy( repository.getProtocol() );
+            ProxyInfo proxyInfo = getProxyInfo( repository );
 
             if ( proxyInfo != null )
             {
-                wagon.connect( repository, wagonManager.getAuthenticationInfo( id ), proxyInfo );
+                wagon.connect( repository, getAuthenticationInfo( id ), proxyInfo );
             }
             else
             {
-                wagon.connect( repository, wagonManager.getAuthenticationInfo( id ) );
+                wagon.connect( repository, getAuthenticationInfo( id ) );
             }
 
             File buildOutputFile = configurationService.getBuildOutputFile( build.getId(), build.getProject().getId() );
@@ -300,7 +305,7 @@ public class WagonContinuumNotifier
 
         try
         {
-            mavenProject = projectBuilder.build( pomFile, getLocalRepository(), getProfileManager( settings ) );
+            mavenProject = projectBuilder.build( pomFile, getLocalRepository(), getProfileManager() );
         }
         catch ( ProjectBuildingException e )
         {
@@ -343,7 +348,7 @@ public class WagonContinuumNotifier
         return new DefaultArtifactRepository( "local-repository", "file://" + repo, new DefaultRepositoryLayout() );
     }
 
-    private ProfileManager getProfileManager( Settings settings )
+    private ProfileManager getProfileManager()
     {
         if ( profileManager == null )
         {
@@ -357,5 +362,35 @@ public class WagonContinuumNotifier
         throws ContextException
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
+    }
+
+    private ProxyInfo getProxyInfo( Repository repository )
+    {
+        Settings settings = getSettings();
+        if ( settings.getProxies() != null && !settings.getProxies().isEmpty() )
+        {
+            for ( Iterator i = settings.getProxies().iterator(); i.hasNext(); )
+            {
+                Proxy p = (Proxy) i.next();
+                wagonManager.addProxy( p.getProtocol(), p.getHost(), p.getPort(), p.getUsername(), p.getPassword(),
+                                       p.getNonProxyHosts() );
+            }
+        }
+        return wagonManager.getProxy( repository.getProtocol() );
+    }
+
+    private AuthenticationInfo getAuthenticationInfo( String repositoryId )
+    {
+        Settings settings = getSettings();
+        Server server = settings.getServer( repositoryId );
+
+        if ( server == null )
+        {
+            return null;
+        }
+
+        wagonManager.addAuthenticationInfo( repositoryId, server.getUsername(), server.getPassword(),
+                                            server.getPrivateKey(), server.getPassphrase() );
+        return wagonManager.getAuthenticationInfo( repositoryId );
     }
 }
