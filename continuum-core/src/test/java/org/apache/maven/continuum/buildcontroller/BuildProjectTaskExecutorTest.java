@@ -60,18 +60,26 @@ public class BuildProjectTaskExecutorTest
     public void setUp()
         throws Exception
     {
-        super.setUp();
+        try
+        {
+            super.setUp();
 
-        projectBuilder =
-            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
+            projectBuilder =
+                (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
 
-        buildQueue = (TaskQueue) lookup( TaskQueue.ROLE, "build-project" );
+            buildQueue = (TaskQueue) lookup( TaskQueue.ROLE, "build-project" );
 
-        taskQueueExecutor = (TaskQueueExecutor) lookup( TaskQueueExecutor.ROLE, "build-project" );
+            taskQueueExecutor = (TaskQueueExecutor) lookup( TaskQueueExecutor.ROLE, "build-project" );
 
-        continuumStore = (ContinuumStore) lookup( ContinuumStore.ROLE );
+            continuumStore = (ContinuumStore) lookup( ContinuumStore.ROLE, "jdo" );
 
-        actionManager = (ActionManager) lookup( ActionManager.ROLE );
+            actionManager = (ActionManager) lookup( ActionManager.ROLE );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public void testAutomaticCancellation()

@@ -34,7 +34,12 @@ Build statistics:
   Java Home version : 
     #foreach ( $javaHomeInformation in $javaHomeInformations )
       $javaHomeInformation
-    #end     
+    #end  
+    
+  Builder version :
+    #foreach ( $builderVersion in $builderVersions )
+      $builderVersion
+    #end    
 
 #if ( $build.scmResult )
 ****************************************************************************
