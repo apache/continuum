@@ -32,7 +32,8 @@
     <h3>
       <ww:text name="installationsList.section.title"/>
     </h3>  
-  
+
+    <ww:if test="${not empty installations}">
     <ec:table items="installations"
               var="installation"
               showExports="false"
@@ -57,7 +58,8 @@
           </a>  
         </ec:column>             
       </ec:row>
-    </ec:table>  
+    </ec:table>
+    </ww:if>
     <div class="functnbar3">
       <ww:form action="addInstallation!input.action" method="post">
         <ww:submit value="%{getText('add')}"/>
