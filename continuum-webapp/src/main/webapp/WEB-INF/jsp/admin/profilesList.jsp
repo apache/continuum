@@ -29,7 +29,11 @@
   </head>
   
   <div id="h3">
-  
+    <h3>
+      <ww:text name="profilesList.section.title"/>
+    </h3>
+
+    <ww:if test="${not empty profiles}">
     <ec:table items="profiles"
               var="profile"
               showExports="false"
@@ -65,7 +69,8 @@
           </a>                    
         </ec:column>        
       </ec:row>
-    </ec:table>  
+    </ec:table>
+    </ww:if>
     <div class="functnbar3">
       <ww:form action="addProfile!input.action" method="post">
         <ww:submit value="%{getText('add')}"/>
