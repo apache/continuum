@@ -21,11 +21,17 @@ package org.apache.maven.continuum.notification.mail;
 
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.execution.ExecutorConfigurator;
+import org.apache.maven.continuum.execution.ant.AntBuildExecutor;
+import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
+import org.apache.maven.continuum.execution.maven.m2.MavenTwoBuildExecutor;
 import org.apache.maven.continuum.installation.InstallationException;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
@@ -46,6 +52,7 @@ import org.codehaus.plexus.velocity.VelocityComponent;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -300,7 +307,9 @@ public class MailContinuumNotifier
                 // TODO only in case of a java project ?
                 context.put( "javaHomeInformations", getJavaHomeInformations( buildDefinition ) );
 
-                // TODO add other informations on profile : builder version other envVars used
+                context.put( "builderVersions", getBuilderVersion( buildDefinition, project ) );
+
+                // TODO put other profile env var could be a security if they provide passwords ? 
 
                 // ----------------------------------------------------------------------
                 // Generate
@@ -352,6 +361,53 @@ public class MailContinuumNotifier
             return continuum.getInstallationService().getDefaultJdkInformations();
         }
         return continuum.getInstallationService().getJdkInformations( profile.getJdk() );
+    }
+
+    private List<String> getBuilderVersion( BuildDefinition buildDefinition, Project project )
+        throws InstallationException
+    {
+
+        ExecutorConfigurator executorConfigurator = null;
+        Installation builder = null;
+        if ( buildDefinition != null )
+        {
+            Profile profile = buildDefinition.getProfile();
+            if ( profile != null )
+            {
+                builder = profile.getBuilder();
+
+            }
+        }
+        if ( builder != null )
+        {
+            executorConfigurator = continuum.getInstallationService().getExecutorConfigurator( builder.getType() );
+        }
+        else
+        {
+            // depends on ExecutorId
+            if ( MavenTwoBuildExecutor.ID.equals( project.getExecutorId() ) )
+            {
+                executorConfigurator = continuum.getInstallationService()
+                    .getExecutorConfigurator( InstallationService.MAVEN2_TYPE );
+            }
+            else if ( MavenOneBuildExecutor.ID.equals( project.getExecutorId() ) )
+            {
+                executorConfigurator = continuum.getInstallationService()
+                    .getExecutorConfigurator( InstallationService.MAVEN1_TYPE );
+            }
+            else if ( AntBuildExecutor.ID.equals( project.getExecutorId() ) )
+            {
+                executorConfigurator = continuum.getInstallationService()
+                    .getExecutorConfigurator( InstallationService.ANT_TYPE );
+            }
+            else
+            {
+                return Arrays.asList( new String[]{"No builder defined"} );
+            }
+        }
+
+        return continuum.getInstallationService().getExecutorConfiguratorVersion( builder == null ? null : builder
+            .getVarValue(), executorConfigurator );
     }
 
     private String generateSubject( Project project, BuildResult build )

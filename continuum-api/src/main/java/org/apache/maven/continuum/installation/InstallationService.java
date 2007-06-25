@@ -1,9 +1,5 @@
 package org.apache.maven.continuum.installation;
 
-import org.apache.maven.continuum.model.system.Installation;
-
-import java.util.List;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +18,12 @@ import java.util.List;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apache.maven.continuum.execution.ExecutorConfigurator;
+import org.apache.maven.continuum.model.system.Installation;
+
+import java.util.List;
+
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
@@ -59,6 +61,13 @@ public interface InstallationService
     public String getEnvVar( String type );
 
     /**
+     * @param type
+     * @return ExecutorConfigurator or null if unknown type
+     */
+    public ExecutorConfigurator getExecutorConfigurator( String type );
+
+
+    /**
      * @param installation
      * @return output of JAVA_HOME/bin/java -version (JAVA_HOME = installation.getVarValue()
      * @throws InstallationException
@@ -71,6 +80,15 @@ public interface InstallationService
      * @throws InstallationException
      */
     public List<String> getDefaultJdkInformations()
+        throws InstallationException;
+
+    /**
+     * @param path
+     * @param executorConfigurator (ec)
+     * @return the cli output of $path/ec.relativePath.ec.executable ec.versionArgument
+     * @throws InstallationException
+     */
+    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator )
         throws InstallationException;
 
 }

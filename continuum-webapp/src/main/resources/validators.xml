@@ -33,6 +33,8 @@
   <validator name="regex" class="com.opensymphony.xwork.validator.validators.RegexFieldValidator"/>
   <validator name="cronexpression" class="org.apache.maven.continuum.web.validator.CronExpressionValidator"/>
   <validator name="wagon-url" class="org.apache.maven.continuum.web.validator.WagonUrlValidator"/>
+  <validator name="installationValidator" class="org.apache.maven.continuum.web.validator.InstallationValidator"/>
 </validators>
+
 
 

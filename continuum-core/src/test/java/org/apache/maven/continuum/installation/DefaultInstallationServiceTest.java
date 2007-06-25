@@ -1,6 +1,7 @@
 package org.apache.maven.continuum.installation;
 
 import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.store.ContinuumStore;
 
@@ -153,6 +154,27 @@ public class DefaultInstallationServiceTest
         installation.setVarValue( javaHome );
 
         List<String> infos = installationService.getJdkInformations( installation );
+        assertNotNull( infos );
+    }
+
+    public void testgetJdkInformationsWithCommonMethod()
+        throws Exception
+    {
+        InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
+        ExecutorConfigurator java = installationService.getExecutorConfigurator( InstallationService.JDK_TYPE );
+        String javaHome = System.getProperty( "JAVA_HOME" );
+        List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java );
+        System.out.println( infos );
+        assertNotNull( infos );
+    }
+
+    public void testgetMvnVersionWithCommonMethod()
+        throws Exception
+    {
+        InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
+        ExecutorConfigurator java = installationService.getExecutorConfigurator( InstallationService.MAVEN2_TYPE );
+        String javaHome = System.getProperty( "M2_HOME" );
+        List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java );
         assertNotNull( infos );
     }
 }

@@ -19,9 +19,11 @@ package org.apache.maven.continuum.installation;
  * under the License.
  */
 
+import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
@@ -47,15 +49,15 @@ import java.util.Properties;
  * @since 13 juin 07
  */
 public class DefaultInstallationService
+    extends AbstractLogEnabled
     implements InstallationService, Initializable
 {
-
     /**
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
 
-    private Map<String, String> typesValues;
+    private Map<String, ExecutorConfigurator> typesValues;
 
     // ---------------------------------------------
     // Plexus lifecycle
@@ -64,13 +66,17 @@ public class DefaultInstallationService
     public void initialize()
         throws InitializationException
     {
-        // TODO move this in a component configuration 
-        this.typesValues = new HashMap<String, String>();
-        this.typesValues.put( InstallationService.ANT_TYPE, "ANT_HOME" );
+        this.typesValues = new HashMap<String, ExecutorConfigurator>();
+        this.typesValues.put( InstallationService.ANT_TYPE,
+                              new ExecutorConfigurator( "ant", "bin", "ANT_HOME", "-version" ) );
+
         this.typesValues.put( InstallationService.ENVVAR_TYPE, null );
-        this.typesValues.put( InstallationService.JDK_TYPE, "JAVA_HOME" );
-        this.typesValues.put( InstallationService.MAVEN1_TYPE, "MAVEN_HOME" );
-        this.typesValues.put( InstallationService.MAVEN2_TYPE, "M2_HOME" );
+        this.typesValues.put( InstallationService.JDK_TYPE,
+                              new ExecutorConfigurator( "java", "bin", "JAVA_HOME", "-version" ) );
+        this.typesValues.put( InstallationService.MAVEN1_TYPE,
+                              new ExecutorConfigurator( "maven", "bin", "MAVEN_HOME", "-v" ) );
+        this.typesValues
+            .put( InstallationService.MAVEN2_TYPE, new ExecutorConfigurator( "mvn", "bin", "M2_HOME", "-v" ) );
     }
 
     /**
@@ -81,7 +87,7 @@ public class DefaultInstallationService
     {
         try
         {
-            String envVarName = this.typesValues.get( installation.getType() );
+            String envVarName = this.getEnvVar( installation.getType() );
             // override with the defined var name for defined types
             if ( StringUtils.isNotEmpty( envVarName ) )
             {
@@ -162,7 +168,7 @@ public class DefaultInstallationService
 
             stored.setName( installation.getName() );
             stored.setType( installation.getType() );
-            String envVarName = this.typesValues.get( installation.getType() );
+            String envVarName = this.getEnvVar( installation.getType() );
             // override with the defined var name for defined types
             if ( StringUtils.isNotEmpty( envVarName ) )
             {
@@ -183,11 +189,20 @@ public class DefaultInstallationService
     }
 
     /**
+     * @see org.apache.maven.continuum.installation.InstallationService#getExecutorConfigurator(java.lang.String)
+     */
+    public ExecutorConfigurator getExecutorConfigurator( String type )
+    {
+        return this.typesValues.get( type );
+    }
+
+    /**
      * @see org.apache.maven.continuum.installation.InstallationService#getEnvVar(java.lang.String)
      */
     public String getEnvVar( String type )
     {
-        return (String) this.typesValues.get( type );
+        ExecutorConfigurator executorConfigurator = this.typesValues.get( type );
+        return executorConfigurator == null ? null : executorConfigurator.getEnvVar();
     }
 
     // -------------------------------------------------------------
@@ -195,6 +210,8 @@ public class DefaultInstallationService
     // -------------------------------------------------------------
 
     /**
+     * TODO replace with calling getExecutorConfiguratorVersion
+     *
      * @see org.apache.maven.continuum.installation.InstallationService#getDefaultJdkInformations()
      */
     public List<String> getDefaultJdkInformations()
@@ -218,6 +235,8 @@ public class DefaultInstallationService
     }
 
     /**
+     * TODO replace with calling getExecutorConfiguratorVersion
+     *
      * @see org.apache.maven.continuum.installation.InstallationService#getJdkInformations(org.apache.maven.continuum.model.system.Installation)
      */
     public List<String> getJdkInformations( Installation installation )
@@ -237,6 +256,11 @@ public class DefaultInstallationService
         }
     }
 
+    /**
+     * @param javaHome
+     * @return
+     * @throws CommandLineException
+     */
     private List<String> getJavaHomeInformations( String javaHome )
         throws CommandLineException
     {
@@ -276,4 +300,61 @@ public class DefaultInstallationService
         }
         return cliOutput;
     }
+
+    /**
+     * @see org.apache.maven.continuum.installation.InstallationService#getExecutorConfiguratorVersion(java.lang.String,org.apache.maven.continuum.execution.ExecutorConfigurator)
+     */
+    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator )
+        throws InstallationException
+    {
+        if ( executorConfigurator == null )
+        {
+            return Collections.EMPTY_LIST;
+        }
+        if ( executorConfigurator.getExecutable() == null )
+        {
+            return Collections.EMPTY_LIST;
+        }
+        StringBuilder executable = new StringBuilder();
+        try
+        {
+            Commandline commandline = new Commandline();
+            if ( StringUtils.isNotEmpty( path ) )
+            {
+                executable.append( path ).append( File.separator );
+                executable.append( executorConfigurator.getRelativePath() + File.separator );
+                commandline.addEnvironment( executorConfigurator.getEnvVar(), path );
+            }
+            executable = executable.append( executorConfigurator.getExecutable() );
+            commandline.setExecutable( executable.toString() );
+            commandline.addArguments( new String[]{executorConfigurator.getVersionArgument()} );
+            final List<String> cliOutput = new ArrayList<String>();
+            //TODO ShellCommandHelper ?
+            int result = CommandLineUtils.executeCommandLine( commandline, new StreamConsumer()
+            {
+                public void consumeLine( String line )
+                {
+                    cliOutput.add( line );
+                }
+            }, new StreamConsumer()
+            {
+                public void consumeLine( String line )
+                {
+                    cliOutput.add( line );
+                }
+            } );
+            if ( result != 0 )
+            {
+                throw new InstallationException( "cli to get " + executable + " version return code " + result );
+            }
+            return cliOutput;
+        }
+        catch ( CommandLineException e )
+        {
+            getLogger().error(
+                "fail to execute " + executable + " with arg " + executorConfigurator.getVersionArgument() );
+            throw new InstallationException( e.getMessage(), e );
+        }
+    }
+
 }

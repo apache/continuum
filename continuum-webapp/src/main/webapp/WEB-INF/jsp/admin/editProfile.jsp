@@ -44,70 +44,76 @@
         </p>      
       </div>
       <table>
-      <tr><td>
-      <ww:form action="saveProfile!save" method="post">
+        <tr>
+          <td>
+          <ww:form action="saveProfile!save" method="post">
 
-        <div class="axial">
+            <div class="axial">
+    
+              <table>
+                <tbody>
+                  <ww:hidden name="profile.id" />
+                  <ww:textfield label="%{getText('profile.name.label')}" name="profile.name"
+                                required="true" />
+                </tbody>
+              </table>
+              <div class="functnbar3">
+                <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+              </div>
 
-          <table>
-            <tbody>
-              <ww:hidden name="profile.id" />
-              <ww:textfield label="%{getText('profile.name.label')}" name="profile.name"
-                            required="true" />
-            </tbody>
-          </table>
-          <div class="functnbar3">
-            <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
-          </div>
-          
-        </div>
-      </ww:form>
-      </td></tr>
-      <tr><td>
-      <ww:form action="addInstallationProfile!addInstallation.action" method="get">
-        <div class="axial">
-          <table width="100%">
-            <tbody>
-              <ww:hidden name="profile.id" />
-              <tr>
-                <td>
-                  <ec:table items="profileInstallations"
-                            var="profileInstallation"
-                            showExports="false"
-                            showPagination="false"
-                            showStatusBar="false"
-                            sortable="false"
-                            filterable="false"
-                            width="100%"
-                            autoIncludeParameters="false">
-                    <ec:row highlightRow="true">
-                      <ec:column property="nameEdit" title="Name" style="white-space: nowrap" width="50%">
-                        <a href="editInstallation!edit.action?installation.name=<c:out value="${profileInstallation.name}"/>">
-                          <c:out value="${profileInstallation.name}"/>
-                        </a>
-                         (<c:out value="${profileInstallation.varValue}"/>)
-                      </ec:column>
-                      <ec:column property="type" title="Type" style="white-space: nowrap" width="49%"/>
-                      <ec:column property="id" title="&nbsp;" width="1%">
-                        <a href="removeProfileInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationName=<c:out value="${profileInstallation.name}"/>">
-                          <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
-                        </a>                    
-                      </ec:column>        
-                    </ec:row>
-                  </ec:table>                
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="functnbar3">
-            <!-- can't use default profile to display this select -->
-            <ww:select theme="profile" name="installationName" list="allInstallations" listKey="name" listValue="name" />
-            <ww:submit value="%{getText('add')}"/>
-          </div>
-        </div>              
-      
-      </ww:form>
-      </td></tr>
+            </div>
+          </ww:form>
+          </td>
+        </tr>
+        <ww:if test="profile.id != ''">
+          <tr>
+            <td>
+              <ww:form action="addInstallationProfile!addInstallation.action" method="get">
+                <div class="axial">
+                  <table width="100%">
+                    <tbody>
+                      <ww:hidden name="profile.id" />
+                      <tr>
+                        <td>
+                          <ec:table items="profileInstallations"
+                                    var="profileInstallation"
+                                    showExports="false"
+                                    showPagination="false"
+                                    showStatusBar="false"
+                                    sortable="false"
+                                    filterable="false"
+                                    width="100%"
+                                    autoIncludeParameters="false">
+                            <ec:row highlightRow="true">
+                              <ec:column property="nameEdit" title="Name" style="white-space: nowrap" width="50%">
+                                <a href="editInstallation!edit.action?installation.name=<c:out value="${profileInstallation.name}"/>">
+                                  <c:out value="${profileInstallation.name}"/>
+                                </a>
+                                 (<c:out value="${profileInstallation.varValue}"/>)
+                              </ec:column>
+                              <ec:column property="type" title="Type" style="white-space: nowrap" width="49%"/>
+                              <ec:column property="id" title="&nbsp;" width="1%">
+                                <a href="removeProfileInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationName=<c:out value="${profileInstallation.name}"/>">
+                                  <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
+                                </a>                    
+                              </ec:column>        
+                            </ec:row>
+                          </ec:table>                
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="functnbar3">
+                    <!-- can't use default profile to display this select -->
+                    <ww:select theme="profile" name="installationName" list="allInstallations" listKey="name" listValue="name" />
+                    <ww:submit value="%{getText('add')}"/>
+                  </div>
+                </div>              
+              
+              </ww:form>
+            </td>
+          </tr>
+        </ww:if>
       </table>
     </div>
   </body>

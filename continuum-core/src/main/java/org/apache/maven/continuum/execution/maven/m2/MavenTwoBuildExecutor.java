@@ -100,7 +100,8 @@ public class MavenTwoBuildExecutor
     public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
         throws ContinuumBuildExecutorException
     {
-        String executable = "mvn";
+        String executable = getInstallationService().getExecutorConfigurator( InstallationService.MAVEN2_TYPE )
+            .getExecutable();
 
         String arguments = "";
 
