@@ -24,6 +24,7 @@
   <ww:i18n name="localization.Continuum">
     <head>
         <title><ww:text name="buildResults.page.title"/></title>
+        <meta http-equiv="refresh" content="300"/>
     </head>
     <body>
       <div id="h3">
