@@ -20,6 +20,7 @@ package org.apache.maven.continuum.web.action;
  */
 
 import com.opensymphony.webwork.ServletActionContext;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -84,7 +85,7 @@ public class BuildResultAction
 
         if ( buildOutputFile.exists() )
         {
-            buildOutput = FileUtils.fileRead( buildOutputFile );
+            buildOutput = StringEscapeUtils.escapeHtml( FileUtils.fileRead( buildOutputFile ) );
         }
 
         state = StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
