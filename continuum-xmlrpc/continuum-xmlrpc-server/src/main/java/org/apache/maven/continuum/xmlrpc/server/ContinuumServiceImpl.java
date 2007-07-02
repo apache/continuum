@@ -77,7 +77,7 @@ public class ContinuumServiceImpl
 
         List projectsList = new ArrayList();
 
-        Collection projects = continuum.getProjects();
+        Collection projects = continuum.getProjectsInGroup( projectGroupId );
         if ( projects != null )
         {
             for ( Iterator i = projects.iterator(); i.hasNext(); )
