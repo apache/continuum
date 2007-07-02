@@ -30,6 +30,7 @@
     <title>
       <ww:text name="projectGroup.page.title"/>
     </title>
+    <meta http-equiv="refresh" content="300"/>
     <script type="text/javascript">
       function goToAddProject()
       {
