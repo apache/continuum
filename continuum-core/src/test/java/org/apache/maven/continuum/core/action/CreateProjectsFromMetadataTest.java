@@ -74,6 +74,10 @@ public class CreateProjectsFromMetadataTest
         ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context
             .get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
 
+        if ( result.hasErrors() )
+        {
+            System.out.println( "Errors=" + result.getErrorsAsString() );
+        }
         assertFalse( "Should not have errors", result.hasErrors() );
     }
 

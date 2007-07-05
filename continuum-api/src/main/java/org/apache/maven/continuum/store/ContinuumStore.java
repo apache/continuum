@@ -241,6 +241,8 @@ public interface ContinuumStore
 
     BuildResult getLatestBuildResultForProject( int projectId );
 
+    BuildResult getLatestBuildResultForBuildDefinition( int projectId, int buildDefinitionId );
+
     List getBuildResultsInSuccessForProject( int projectId, long fromDate );
 
     List getBuildResultsForProject( int projectId, long fromDate );

@@ -323,7 +323,7 @@ public class DefaultBuildController
 
             context.setBuildDefinition( buildDefinition );
 
-            BuildResult oldBuildResult = store.getLatestBuildResultForProject( projectId );
+            BuildResult oldBuildResult = store.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
 
             context.setOldBuildResult( oldBuildResult );
 
@@ -455,6 +455,12 @@ public class DefaultBuildController
     protected boolean shouldBuild( BuildContext context )
         throws TaskExecutionException
     {
+        if ( context.getOldBuildResult() == null )
+        {
+            //The project was never be built with the current build definition
+            return true;
+        }
+
         boolean shouldBuild = true;
 
         Project project = context.getProject();

@@ -59,12 +59,14 @@ public class DefaultBuildControllerTest
         buildResult1.setEndTime( Calendar.getInstance().getTimeInMillis() );
         buildResult1.setState( ContinuumProjectState.OK );
         buildResult1.setSuccess( true );
+        buildResult1.setBuildDefinition( bd1 );
         getStore().addBuildResult( project1, buildResult1 );
         BuildResult buildResult2 = new BuildResult();
         buildResult2.setStartTime( Calendar.getInstance().getTimeInMillis() - 7200000 );
         buildResult2.setEndTime( Calendar.getInstance().getTimeInMillis() - 7200000 );
         buildResult2.setSuccess( true );
         buildResult2.setState( ContinuumProjectState.OK );
+        buildResult2.setBuildDefinition( bd1 );
         getStore().addBuildResult( project1, buildResult2 );
 
         Project project2 = createProject( "project2" );
@@ -107,11 +109,17 @@ public class DefaultBuildControllerTest
         return builddef;
     }
 
+    private BuildContext getContext()
+        throws Exception
+    {
+        return controller.initializeBuildContext( projectId2, buildDefinitionId2,
+                                                  ContinuumProjectState.TRIGGER_SCHEDULED );
+    }
+
     private BuildContext getContext( int hourOfLastExecution )
         throws Exception
     {
-        BuildContext context = controller.initializeBuildContext( projectId2, buildDefinitionId2,
-                                                                  ContinuumProjectState.TRIGGER_SCHEDULED );
+        BuildContext context = getContext();
         BuildResult oldBuildResult = new BuildResult();
         oldBuildResult.setEndTime( Calendar.getInstance().getTimeInMillis() + ( hourOfLastExecution * 3600000 ) );
         context.setOldBuildResult( oldBuildResult );
@@ -139,9 +147,17 @@ public class DefaultBuildControllerTest
         p2.setState( ContinuumProjectState.NEW );
         getStore().updateProject( p2 );
 
-        BuildContext context = getContext( +1 );
+        BuildContext context = getContext();
         controller.checkProjectDependencies( context );
         assertEquals( 0, context.getModifiedDependencies().size() );
+        assertTrue( controller.shouldBuild( context ) );
+    }
+
+    public void testWithNewBuildDefinition()
+        throws Exception
+    {
+        BuildContext context = getContext();
+        assertNull( context.getOldBuildResult() );
         assertTrue( controller.shouldBuild( context ) );
     }
 
