@@ -487,6 +487,47 @@ public class JdoContinuumStore
         return null;
     }
 
+    public BuildResult getLatestBuildResultForBuildDefinition( int projectId, int buildDefinitionId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId, int buildDefinitionId" );
+
+            query.setFilter( "this.project.id == projectId && this.buildDefinition.id == buildDefinitionId" );
+            query.setOrdering( "id descending" );
+
+            Object[] params = new Object[2];
+            params[0] = new Integer( projectId );
+            params[1] = new Integer( buildDefinitionId );
+
+            List result = (List) query.executeWithArray( params );
+
+            result = (List) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            if ( result != null && !result.isEmpty() )
+            {
+                return (BuildResult) result.get( 0 );
+            }
+        }
+        finally
+        {
+            rollback( tx );
+        }
+        return null;
+    }
+
     public Map getLatestBuildResultsByProjectGroupId( int projectGroupId )
     {
         PersistenceManager pm = getPersistenceManager();

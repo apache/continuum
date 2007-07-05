@@ -471,6 +471,13 @@
           </association>
         </field>
         <field>
+          <name>buildDefinition</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>BuildDefinition</type>
+          </association>
+        </field>
+        <field>
           <name>id</name>
           <version>1.0.9+</version>
           <type>int</type>
@@ -888,7 +895,7 @@
         </field>
         <field jpox.null-value="default">
           <name>latestBuildId</name>
-          <version>1.0.9+</version>
+          <version>1.0.9</version>
           <type>int</type>
           <defaultValue>0</defaultValue>
         </field>

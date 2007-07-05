@@ -162,7 +162,7 @@ public class ExecuteBuilderContinuumAction
 
             project.setLatestBuildId( buildResult.getId() );
 
-            buildDefinition.setLatestBuildId( buildResult.getId() );
+            buildResult.setBuildDefinition( buildDefinition);
 
             buildResult.setBuildNumber( project.getBuildNumber() );
 
