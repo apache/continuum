@@ -24,6 +24,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
@@ -39,7 +40,6 @@ import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
 import org.apache.maven.continuum.xmlrpc.test.SuiteResult;
 import org.apache.maven.continuum.xmlrpc.test.TestCaseFailure;
 import org.apache.maven.continuum.xmlrpc.test.TestResult;
-import org.apache.xmlrpc.XmlRpcException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -185,12 +185,52 @@ public class ContinuumServiceImpl
     }
 
     public ProjectGroupSummary updateProjectGroup( ProjectGroupSummary projectGroup )
-        throws ContinuumException, XmlRpcException
+        throws ContinuumException
     {
         checkModifyProjectGroupAuthorization( getProjectGroupName( projectGroup.getId() ) );
 
         continuum.updateProjectGroup( populateProjectGroupSummary( projectGroup ) );
         return getProjectGroupSummary( projectGroup.getId() );
+    }
+
+    // ----------------------------------------------------------------------
+    // Build Definitions
+    // ----------------------------------------------------------------------
+
+    public List getBuildDefinitionsForProject( int projectId )
+        throws ContinuumException
+    {
+        ProjectSummary ps = getProjectSummary( projectId );
+
+        checkViewProjectGroupAuthorization( ps.getProjectGroup().getName() );
+
+        List bds = continuum.getBuildDefinitionsForProject( projectId );
+
+        List result = new ArrayList();
+        for ( Iterator i = bds.iterator(); i.hasNext(); )
+        {
+            result.add(
+                populateBuildDefinition( (org.apache.maven.continuum.model.project.BuildDefinition) i.next() ) );
+        }
+        return result;
+    }
+
+    public List getBuildDefinitionsForProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        ProjectGroupSummary pgs = getProjectGroupSummary( projectGroupId );
+
+        checkViewProjectGroupAuthorization( pgs.getName() );
+
+        List bds = continuum.getBuildDefinitionsForProjectGroup( projectGroupId );
+
+        List result = new ArrayList();
+        for ( Iterator i = bds.iterator(); i.hasNext(); )
+        {
+            result.add(
+                populateBuildDefinition( (org.apache.maven.continuum.model.project.BuildDefinition) i.next() ) );
+        }
+        return result;
     }
 
     // ----------------------------------------------------------------------
@@ -833,5 +873,42 @@ public class ContinuumServiceImpl
         res.setException( failure.getException() );
         res.setName( failure.getName() );
         return res;
+    }
+
+    private BuildDefinition populateBuildDefinition( org.apache.maven.continuum.model.project.BuildDefinition buildDef )
+    {
+        if ( buildDef == null )
+        {
+            return null;
+        }
+
+        BuildDefinition bd = new BuildDefinition();
+        bd.setArguments( buildDef.getArguments() );
+        bd.setBuildFile( buildDef.getBuildFile() );
+        bd.setBuildFresh( buildDef.isBuildFresh() );
+        bd.setDefaultForProject( buildDef.isDefaultForProject() );
+        bd.setGoals( buildDef.getGoals() );
+        //TODO: bd.setProfile( populateProfile( buildDef.getProfile() ) );
+        //TODO: bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
+        return bd;
+    }
+
+    private org.apache.maven.continuum.model.project.BuildDefinition populateBuildDefinition( BuildDefinition buildDef )
+    {
+        if ( buildDef == null )
+        {
+            return null;
+        }
+
+        org.apache.maven.continuum.model.project.BuildDefinition bd =
+            new org.apache.maven.continuum.model.project.BuildDefinition();
+        bd.setArguments( buildDef.getArguments() );
+        bd.setBuildFile( buildDef.getBuildFile() );
+        bd.setBuildFresh( buildDef.isBuildFresh() );
+        bd.setDefaultForProject( buildDef.isDefaultForProject() );
+        bd.setGoals( buildDef.getGoals() );
+        //TODO: bd.setProfile( populateProfile( buildDef.getProfile() ) );
+        //TODO: bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
+        return bd;
     }
 }
