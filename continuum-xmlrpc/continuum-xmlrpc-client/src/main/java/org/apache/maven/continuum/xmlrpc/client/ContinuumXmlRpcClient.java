@@ -28,6 +28,7 @@ import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.util.ClientFactory;
@@ -158,6 +159,19 @@ public class ContinuumXmlRpcClient
         }
     }
 
+    public ProjectSummary updateProject( ProjectSummary project )
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.updateProject( project );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
     public ProjectSummary refreshProjectSummary( ProjectSummary project )
         throws ContinuumException
     {
@@ -239,6 +253,19 @@ public class ContinuumXmlRpcClient
             return null;
         }
         return getProjectGroupWithProjects( projectGroup.getId() );
+    }
+
+    public ProjectGroupSummary updateProjectGroup( ProjectGroupSummary projectGroup )
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.updateProjectGroup( projectGroup );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
     }
 
     // ----------------------------------------------------------------------
