@@ -269,6 +269,36 @@ public class ContinuumXmlRpcClient
     }
 
     // ----------------------------------------------------------------------
+    // Build Definitions
+    // ----------------------------------------------------------------------
+
+    public List getBuildDefinitionsForProject( int projectId )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.getBuildDefinitionsForProject( projectId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public List getBuildDefinitionsForProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.getBuildDefinitionsForProjectGroup( projectGroupId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
 
@@ -283,7 +313,6 @@ public class ContinuumXmlRpcClient
         {
             throw new ContinuumException( "The remote method failed.", e );
         }
-
     }
 
     public int addProjectToBuildQueue( int projectId, int buildDefinitionId )
@@ -297,7 +326,6 @@ public class ContinuumXmlRpcClient
         {
             throw new ContinuumException( "The remote method failed.", e );
         }
-
     }
 
     public int buildProject( int projectId )

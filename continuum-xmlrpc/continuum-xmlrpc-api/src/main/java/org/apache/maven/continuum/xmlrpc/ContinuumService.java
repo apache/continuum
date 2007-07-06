@@ -140,6 +140,32 @@ public interface ContinuumService
         throws ContinuumException, XmlRpcException;
 
     // ----------------------------------------------------------------------
+    // Build Definitions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Get the build definitions list of the project.
+     *
+     * @param projectId The project id
+     * @return The build definitions list
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    List getBuildDefinitionsForProject( int projectId )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Get the build definitions list of the project group.
+     *
+     * @param projectGroupId The project group id
+     * @return The build definitions list
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    List getBuildDefinitionsForProjectGroup( int projectGroupId )
+        throws ContinuumException, XmlRpcException;
+
+    // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
 
