@@ -83,6 +83,16 @@ public interface ContinuumService
     int removeProject( int projectId )
         throws ContinuumException, XmlRpcException;
 
+    /**
+     * Update a project. Useful to change the scm parameters.
+     *
+     * @param project The project to update
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    ProjectSummary updateProject( ProjectSummary project )
+        throws ContinuumException, XmlRpcException;
+
     // ----------------------------------------------------------------------
     // Projects Groups
     // ----------------------------------------------------------------------
@@ -117,6 +127,16 @@ public interface ContinuumService
      * @throws XmlRpcException
      */
     int removeProjectGroup( int projectGroupId )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Update a project Group.
+     *
+     * @param projectGroup The project group to update
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    ProjectGroupSummary updateProjectGroup( ProjectGroupSummary projectGroup )
         throws ContinuumException, XmlRpcException;
 
     // ----------------------------------------------------------------------

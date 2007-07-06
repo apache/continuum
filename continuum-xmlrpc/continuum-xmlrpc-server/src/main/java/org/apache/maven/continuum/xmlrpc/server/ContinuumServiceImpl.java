@@ -39,6 +39,7 @@ import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
 import org.apache.maven.continuum.xmlrpc.test.SuiteResult;
 import org.apache.maven.continuum.xmlrpc.test.TestCaseFailure;
 import org.apache.maven.continuum.xmlrpc.test.TestResult;
+import org.apache.xmlrpc.XmlRpcException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -124,6 +125,17 @@ public class ContinuumServiceImpl
         return 0;
     }
 
+    public ProjectSummary updateProject( ProjectSummary project )
+        throws ContinuumException
+    {
+        ProjectSummary ps = getProjectSummary( project.getId() );
+
+        checkRemoveProjectFromGroupAuthorization( ps.getProjectGroup().getName() );
+
+        continuum.updateProject( populateProject( project ) );
+        return getProjectSummary( project.getId() );
+    }
+
     // ----------------------------------------------------------------------
     // Projects Groups
     // ----------------------------------------------------------------------
@@ -170,6 +182,15 @@ public class ContinuumServiceImpl
 
         continuum.removeProjectGroup( projectGroupId );
         return 0;
+    }
+
+    public ProjectGroupSummary updateProjectGroup( ProjectGroupSummary projectGroup )
+        throws ContinuumException, XmlRpcException
+    {
+        checkModifyProjectGroupAuthorization( getProjectGroupName( projectGroup.getId() ) );
+
+        continuum.updateProjectGroup( populateProjectGroupSummary( projectGroup ) );
+        return getProjectGroupSummary( projectGroup.getId() );
     }
 
     // ----------------------------------------------------------------------
@@ -540,6 +561,23 @@ public class ContinuumServiceImpl
         }
 
         ProjectGroupSummary g = new ProjectGroup();
+        g.setDescription( group.getDescription() );
+        g.setGroupId( group.getGroupId() );
+        g.setId( group.getId() );
+        g.setName( group.getName() );
+        return g;
+    }
+
+    private org.apache.maven.continuum.model.project.ProjectGroup populateProjectGroupSummary(
+        ProjectGroupSummary group )
+    {
+        if ( group == null )
+        {
+            return null;
+        }
+
+        org.apache.maven.continuum.model.project.ProjectGroup g =
+            new org.apache.maven.continuum.model.project.ProjectGroup();
         g.setDescription( group.getDescription() );
         g.setGroupId( group.getGroupId() );
         g.setId( group.getId() );
