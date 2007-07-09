@@ -134,7 +134,18 @@ public class ContinuumServiceImpl
 
         checkRemoveProjectFromGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.updateProject( populateProject( project ) );
+        org.apache.maven.continuum.model.project.Project p = continuum.getProject( project.getId() );
+
+        p.setName( project.getName() );
+        p.setVersion( project.getVersion() );
+        p.setScmUrl( p.getScmUrl() );
+        p.setScmUseCache( project.isScmUseCache() );
+        p.setScmUsername( project.getScmUsername() );
+        p.setScmPassword( project.getScmPassword() );
+        p.setScmTag( p.getScmTag() );
+
+        continuum.updateProject( p );
+
         return getProjectSummary( project.getId() );
     }
 
