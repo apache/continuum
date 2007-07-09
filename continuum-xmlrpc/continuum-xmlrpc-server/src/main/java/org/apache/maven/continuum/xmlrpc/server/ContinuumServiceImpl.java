@@ -42,6 +42,9 @@ import org.apache.maven.continuum.xmlrpc.test.SuiteResult;
 import org.apache.maven.continuum.xmlrpc.test.TestCaseFailure;
 import org.apache.maven.continuum.xmlrpc.test.TestResult;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
+import org.codehaus.plexus.redback.role.RoleManager;
+import org.codehaus.plexus.redback.role.RoleManagerException;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,6 +65,11 @@ public class ContinuumServiceImpl
      * @plexus.requirement
      */
     private Continuum continuum;
+
+    /**
+     * @plexus.requirement role-hint="default"
+     */
+    private RoleManager roleManager;
 
     public boolean ping()
         throws ContinuumException
@@ -138,11 +146,11 @@ public class ContinuumServiceImpl
 
         p.setName( project.getName() );
         p.setVersion( project.getVersion() );
-        p.setScmUrl( p.getScmUrl() );
+        p.setScmUrl( project.getScmUrl() );
         p.setScmUseCache( project.isScmUseCache() );
         p.setScmUsername( project.getScmUsername() );
         p.setScmPassword( project.getScmPassword() );
-        p.setScmTag( p.getScmTag() );
+        p.setScmTag( project.getScmTag() );
 
         continuum.updateProject( p );
 
@@ -248,9 +256,46 @@ public class ContinuumServiceImpl
     public ProjectGroupSummary updateProjectGroup( ProjectGroupSummary projectGroup )
         throws ContinuumException
     {
+        if ( projectGroup == null )
+        {
+            return null;
+        }
+
         checkModifyProjectGroupAuthorization( getProjectGroupName( projectGroup.getId() ) );
 
-        continuum.updateProjectGroup( populateProjectGroupSummary( projectGroup ) );
+        if ( StringUtils.isEmpty( projectGroup.getName() ) )
+        {
+            throw new ContinuumException( "project group name is required" );
+        }
+        else if ( StringUtils.isEmpty( projectGroup.getName().trim() ) )
+        {
+            throw new ContinuumException( "project group name can't be spaces" );
+        }
+
+        org.apache.maven.continuum.model.project.ProjectGroup pg =
+            continuum.getProjectGroupWithProjects( projectGroup.getId() );
+
+        // need to administer roles since they are based off of this
+        // todo convert everything like to work off of string keys
+        if ( !projectGroup.getName().equals( pg.getName() ) )
+        {
+            try
+            {
+                roleManager.updateRole( "project-administrator", pg.getName(), projectGroup.getName() );
+                roleManager.updateRole( "project-developer", pg.getName(), projectGroup.getName() );
+                roleManager.updateRole( "project-user", pg.getName(), projectGroup.getName() );
+
+                pg.setName( projectGroup.getName() );
+            }
+            catch ( RoleManagerException e )
+            {
+                throw new ContinuumException( "unable to rename the project group", e );
+            }
+        }
+
+        pg.setDescription( projectGroup.getDescription() );
+
+        continuum.updateProjectGroup( pg );
         return getProjectGroupSummary( projectGroup.getId() );
     }
 
