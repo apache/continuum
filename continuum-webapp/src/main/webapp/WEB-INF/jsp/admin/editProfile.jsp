@@ -65,7 +65,7 @@
           </ww:form>
           </td>
         </tr>
-        <ww:if test="profile.id != ''">
+        <ww:if test="profile.id != '' && ${not empty allInstallations} ">
           <tr>
             <td>
               <ww:form action="addInstallationProfile!addInstallation.action" method="get">
@@ -114,6 +114,15 @@
             </td>
           </tr>
         </ww:if>
+        <ww:else>
+          <tr>
+            <td>
+              <ww:if test="${empty allInstallations}">
+                <div class="warningmessage" style="color: red"><ww:text name="profile.no.installations" /></div>
+              </ww:if>
+            </td>
+          </tr> 
+        </ww:else>
       </table>
     </div>
   </body>
