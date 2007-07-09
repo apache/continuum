@@ -167,8 +167,7 @@ public class DefaultConfigurationService
     //
     // ----------------------------------------------------------------------
 
-    public File getBuildOutputFile( int buildId, int projectId )
-        throws ConfigurationException
+    public File getBuildOutputDirectory( int projectId )
     {
         File dir = new File( getBuildOutputDirectory(), Integer.toString( projectId ) );
 
@@ -179,6 +178,14 @@ public class DefaultConfigurationService
         catch ( IOException e )
         {
         }
+
+        return dir;
+    }
+
+    public File getBuildOutputFile( int buildId, int projectId )
+        throws ConfigurationException
+    {
+        File dir = getBuildOutputDirectory( projectId );
 
         if ( !dir.exists() && !dir.mkdirs() )
         {
