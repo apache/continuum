@@ -31,4 +31,8 @@ public interface ContinuumProjectBuilder
 
     ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password )
         throws ContinuumProjectBuilderException;
+
+    ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                              boolean recursiveProjects )
+        throws ContinuumProjectBuilderException;
 }

@@ -50,6 +50,8 @@ public class AddMavenTwoProjectAction
 
     public static final String FILE_SCHEME = "file:/";
 
+    private boolean nonRecursiveProject;
+
     protected ContinuumProjectBuildingResult doExecute( String pomUrl, int selectedProjectGroup, boolean checkProtocol,
                                                         boolean scmUseCache )
         throws ContinuumException
@@ -102,7 +104,8 @@ public class AddMavenTwoProjectAction
 
         if ( result == null )
         {
-            result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache );
+            result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
+                                                        !this.isNonRecursiveProject() );
         }
 
         return result;
@@ -144,4 +147,15 @@ public class AddMavenTwoProjectAction
     {
         setPomUrl( pomUrl );
     }
+
+    public boolean isNonRecursiveProject()
+    {
+        return nonRecursiveProject;
+    }
+
+    public void setNonRecursiveProject( boolean nonRecursiveProject )
+    {
+        this.nonRecursiveProject = nonRecursiveProject;
+    }
+
 }

@@ -29,6 +29,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.project.builder.AbstractContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
+import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -64,6 +65,13 @@ public class MavenOneContinuumProjectBuilder
     // ----------------------------------------------------------------------
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password )
+        throws ContinuumProjectBuilderException
+    {
+        return buildProjectsFromMetadata( url, username, password, true );
+    }
+
+    public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                                     boolean recursiveProjects )
     {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
 
