@@ -22,6 +22,7 @@ package org.apache.maven.continuum.xmlrpc.client;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.xmlrpc.ContinuumService;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.apache.maven.continuum.xmlrpc.project.Project;
@@ -196,6 +197,32 @@ public class ContinuumXmlRpcClient
     // Projects Groups
     // ----------------------------------------------------------------------
 
+    public List getAllProjectGroups()
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.getAllProjectGroups();
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public List getAllProjectGroupsWithProjects()
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.getAllProjectGroupsWithProjects();
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
     public ProjectGroupSummary getProjectGroupSummary( int projectGroupId )
         throws ContinuumException
     {
@@ -291,6 +318,32 @@ public class ContinuumXmlRpcClient
         try
         {
             return continuum.getBuildDefinitionsForProjectGroup( projectGroupId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDef )
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.updateBuildDefinitionForProject( projectId, buildDef );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDef )
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.updateBuildDefinitionForProjectGroup( projectGroupId, buildDef );
         }
         catch ( Exception e )
         {

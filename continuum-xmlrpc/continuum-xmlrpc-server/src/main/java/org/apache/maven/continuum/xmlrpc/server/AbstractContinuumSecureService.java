@@ -97,6 +97,49 @@ public abstract class AbstractContinuumSecureService
     }
 
     /**
+     * Verify if the current user is authorized to do the action
+     *
+     * @param role     the role
+     * @param resource the operation resource
+     * @return true if the user is authorized
+     * @throws AuthorizationException if the authorizing request generate an error
+     */
+    protected boolean isAuthorized( String role, String resource )
+        throws AuthorizationException
+    {
+        return isAuthorized( role, resource, true );
+    }
+
+    /**
+     * Verify if the current user is authorized to do the action
+     *
+     * @param role             the role
+     * @param resource         the operation resource
+     * @param requiredResource true if resource can't be null
+     * @return true if the user is authorized
+     * @throws AuthorizationException if the authorizing request generate an error
+     */
+    protected boolean isAuthorized( String role, String resource, boolean requiredResource )
+        throws AuthorizationException
+    {
+        if ( resource != null && StringUtils.isNotEmpty( resource.trim() ) )
+        {
+            if ( !getSecuritySystem().isAuthorized( config.getSecuritySession(), role, resource ) )
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if ( requiredResource || !getSecuritySystem().isAuthorized( config.getSecuritySession(), role ) )
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Check if the current user is authorized to do the action
      *
      * @param role             the role
@@ -109,19 +152,9 @@ public abstract class AbstractContinuumSecureService
     {
         try
         {
-            if ( resource != null && StringUtils.isNotEmpty( resource.trim() ) )
+            if ( !isAuthorized( role, resource, requiredResource ) )
             {
-                if ( !getSecuritySystem().isAuthorized( config.getSecuritySession(), role, resource ) )
-                {
-                    throw new ContinuumException( "You're not authorized to execute this action." );
-                }
-            }
-            else
-            {
-                if ( requiredResource || !getSecuritySystem().isAuthorized( config.getSecuritySession(), role ) )
-                {
-                    throw new ContinuumException( "You're not authorized to execute this action." );
-                }
+                throw new ContinuumException( "You're not authorized to execute this action." );
             }
         }
         catch ( AuthorizationException ae )
