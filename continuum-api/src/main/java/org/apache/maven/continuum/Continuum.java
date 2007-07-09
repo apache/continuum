@@ -285,6 +285,23 @@ public interface Continuum
                                                        boolean useCredentialsCache )
         throws ContinuumException;
 
+
+    /**
+     * Add a Maven 2 project to the list of projects.
+     *
+     * @param metadataUrl           url of the pom.xml
+     * @param projectGroupId        id of the project group to use
+     * @param checkProtocol         check if the protocol is allowed, use false if the pom is uploaded
+     * @param useCredentialsCache   whether to use cached scm account credentials or not
+     * @param loadRecursiveProjects if multi modules project record all projects (if false only root project added)
+     * @return a holder with the projects, project groups and errors occurred during the project adding
+     * @throws ContinuumException
+     */
+    public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
+                                                              boolean checkProtocol, boolean useCredentialsCache,
+                                                              boolean loadRecursiveProjects )
+        throws ContinuumException;
+
     /**
      * Add a Maven 1 project to the list of projects.
      *

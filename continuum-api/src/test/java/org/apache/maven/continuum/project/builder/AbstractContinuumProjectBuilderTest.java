@@ -69,6 +69,13 @@ public class AbstractContinuumProjectBuilderTest
             return null;
         }
 
+        public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                                         boolean recursiveProjects )
+            throws ContinuumProjectBuilderException
+        {
+            return null;
+        }
+
     }
 
 }

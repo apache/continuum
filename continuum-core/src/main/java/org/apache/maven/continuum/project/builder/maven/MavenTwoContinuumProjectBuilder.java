@@ -75,8 +75,15 @@ public class MavenTwoContinuumProjectBuilder
     // ----------------------------------------------------------------------
     // AbstractContinuumProjectBuilder Implementation
     // ----------------------------------------------------------------------
-
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password )
+        throws ContinuumProjectBuilderException
+    {
+        return buildProjectsFromMetadata( url, username, password, true );
+    }
+
+
+    public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                                     boolean loadRecursiveProjects )
         throws ContinuumProjectBuilderException
     {
         // ----------------------------------------------------------------------
@@ -85,7 +92,7 @@ public class MavenTwoContinuumProjectBuilder
 
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
 
-        readModules( url, result, true, username, password, null );
+        readModules( url, result, true, username, password, null, loadRecursiveProjects );
 
         return result;
     }
@@ -95,8 +102,9 @@ public class MavenTwoContinuumProjectBuilder
     // ----------------------------------------------------------------------
 
     private void readModules( URL url, ContinuumProjectBuildingResult result, boolean groupPom, String username,
-                              String password, String scmUrl )
+                              String password, String scmUrl, boolean loadRecursiveProjects )
     {
+
         MavenProject mavenProject;
 
         try
@@ -154,8 +162,14 @@ public class MavenTwoContinuumProjectBuilder
 
                 bd.setDefaultForProject( true );
 
-                bd.setArguments( "--batch-mode --non-recursive" );
-
+                if ( loadRecursiveProjects )
+                {
+                    bd.setArguments( "--batch-mode --non-recursive" );
+                }
+                else
+                {
+                    bd.setArguments( "--batch-mode" );
+                }
                 bd.setGoals( "clean install" );
 
                 bd.setBuildFile( "pom.xml" );
@@ -250,29 +264,31 @@ public class MavenTwoContinuumProjectBuilder
         }
 
         prefix = prefix.substring( 0, lastSlash );
-
-        for ( Iterator it = modules.iterator(); it.hasNext(); )
+        if ( loadRecursiveProjects )
         {
-            String module = (String) it.next();
-
-            if ( StringUtils.isNotEmpty( module ) )
+            for ( Iterator it = modules.iterator(); it.hasNext(); )
             {
-                String urlString = prefix + "/" + module + POM_PART + suffix;
+                String module = (String) it.next();
 
-                URL moduleUrl;
-
-                try
+                if ( StringUtils.isNotEmpty( module ) )
                 {
-                    moduleUrl = new URL( urlString );
-                }
-                catch ( MalformedURLException e )
-                {
-                    getLogger().debug( "Error adding project module: Malformed URL " + urlString, e );
-                    result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL, urlString );
-                    continue;
-                }
+                    String urlString = prefix + "/" + module + POM_PART + suffix;
 
-                readModules( moduleUrl, result, false, username, password, scmUrl + "/" + module );
+                    URL moduleUrl;
+
+                    try
+                    {
+                        moduleUrl = new URL( urlString );
+                    }
+                    catch ( MalformedURLException e )
+                    {
+                        getLogger().debug( "Error adding project module: Malformed URL " + urlString, e );
+                        result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL, urlString );
+                        continue;
+                    }
+                    // we are in recursive loading mode
+                    readModules( moduleUrl, result, false, username, password, scmUrl + "/" + module, true );
+                }
             }
         }
     }

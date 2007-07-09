@@ -76,6 +76,7 @@
                               <ww:select label="%{getText('add.m2.project.projectGroup')}" name="selectedProjectGroup" 
                                          list="projectGroups" listKey="id" listValue="name"/>
                             </ww:else>
+                            <ww:checkbox label="%{getText('add.m2.project.nonRecursiveProject')}" name="nonRecursiveProject" />
                           </tbody>
                         </table>
                         <div class="functnbar3">

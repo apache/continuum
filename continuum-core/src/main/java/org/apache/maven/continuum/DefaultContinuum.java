@@ -1158,7 +1158,7 @@ public class DefaultContinuum
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, MavenOneContinuumProjectBuilder.ID, projectGroupId,
-                                                       checkProtocol, useCredentialsCache );
+                                                       checkProtocol, useCredentialsCache, true );
     }
 
     // ----------------------------------------------------------------------
@@ -1195,7 +1195,16 @@ public class DefaultContinuum
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, projectGroupId,
-                                                       checkProtocol, useCredentialsCache );
+                                                       checkProtocol, useCredentialsCache, true );
+    }
+
+    public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
+                                                              boolean checkProtocol, boolean useCredentialsCache,
+                                                              boolean recursiveProjects )
+        throws ContinuumException
+    {
+        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, projectGroupId,
+                                                       checkProtocol, useCredentialsCache, recursiveProjects );
     }
 
     // ----------------------------------------------------------------------
@@ -1295,14 +1304,15 @@ public class DefaultContinuum
                                                                                    boolean checkProtocol )
         throws ContinuumException
     {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, -1, checkProtocol, false );
+        return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, -1, checkProtocol, false, false );
     }
 
     private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
                                                                                    String projectBuilderId,
                                                                                    int projectGroupId,
                                                                                    boolean checkProtocol,
-                                                                                   boolean useCredentialsCache )
+                                                                                   boolean useCredentialsCache,
+                                                                                   boolean loadRecursiveProjects )
         throws ContinuumException
     {
         if ( checkProtocol )
@@ -1327,6 +1337,9 @@ public class DefaultContinuum
         context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, projectBuilderId );
 
         context.put( CreateProjectsFromMetadataAction.KEY_URL, metadataUrl );
+
+        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS,
+                     Boolean.valueOf( loadRecursiveProjects ) );
 
         context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
 
@@ -1424,7 +1437,7 @@ public class DefaultContinuum
         }
 
         // ----------------------------------------------------------------------
-        // Save all the projects
+        // Save all the projects if recursive mode asked
         // TODO: Validate all the projects before saving them
         // ----------------------------------------------------------------------
 
@@ -1464,6 +1477,7 @@ public class DefaultContinuum
         {
             throw new ContinuumException( "Error adding projects from modules", e );
         }
+
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
         // add the relevent security administration roles for this project
         executeAction( "add-assignable-roles", context );

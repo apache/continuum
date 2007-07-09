@@ -61,13 +61,35 @@ public class CreateProjectsFromMetadataTest
             .will( returnValue( new Settings() ) );
     }
 
-    public void testExecute()
+    public void testExecuteWithNonRecursiveMode()
         throws Exception
     {
         Map context = new HashMap();
         context.put( CreateProjectsFromMetadataAction.KEY_URL,
                      "http://svn.apache.org/repos/asf/maven/continuum/trunk/pom.xml" );
         context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
+        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, new Boolean( true ) );
+
+        action.execute( context );
+
+        ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context
+            .get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
+
+        if ( result.hasErrors() )
+        {
+            System.out.println( "Errors=" + result.getErrorsAsString() );
+        }
+        assertFalse( "Should not have errors", result.hasErrors() );
+    }
+
+    public void testExecuteWithRecursiveMode()
+        throws Exception
+    {
+        Map context = new HashMap();
+        context.put( CreateProjectsFromMetadataAction.KEY_URL,
+                     "http://svn.apache.org/repos/asf/maven/archiva/trunk/pom.xml" );
+        context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
+        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, new Boolean( false ) );
 
         action.execute( context );
 

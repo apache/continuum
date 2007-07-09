@@ -73,10 +73,14 @@ public class CreateProjectsFromMetadataAction
 
     public static final String KEY_PROJECT_BUILDING_RESULT = "projectBuildingResult";
 
+    public static final String KEY_LOAD_RECURSIVE_PROJECTS = "loadRecursiveProjects";
+
     public void execute( Map context )
         throws ContinuumException, ContinuumProjectBuilderManagerException, ContinuumProjectBuilderException
     {
         String projectBuilderId = getString( context, KEY_PROJECT_BUILDER_ID );
+
+        boolean loadRecursiveProjects = getBoolean( context, KEY_LOAD_RECURSIVE_PROJECTS );
 
         String curl = getString( context, KEY_URL );
 
@@ -138,7 +142,9 @@ public class CreateProjectsFromMetadataAction
                 {
                     url = mungedURL.getURL();
 
-                    result = projectBuilder.buildProjectsFromMetadata( url, username, password );
+                    result = projectBuilder
+                        .buildProjectsFromMetadata( url, username, password, loadRecursiveProjects );
+
                 }
                 else
                 {
