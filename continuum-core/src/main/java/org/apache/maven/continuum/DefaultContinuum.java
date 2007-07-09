@@ -266,7 +266,7 @@ public class DefaultContinuum
             }
         }
 
-        getLogger().info( "Remove project group" + projectGroup.getName() + "(" + projectGroup.getId() + ")" );
+        getLogger().info( "Remove project group " + projectGroup.getName() + "(" + projectGroup.getId() + ")" );
 
         Map context = new HashMap();
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
@@ -555,6 +555,10 @@ public class DefaultContinuum
             File workingDirectory = getWorkingDirectory( projectId );
 
             FileUtils.deleteDirectory( workingDirectory );
+
+            File buildOutputDirectory = configurationService.getBuildOutputDirectory( projectId );
+
+            FileUtils.deleteDirectory( buildOutputDirectory );
 
             store.removeProject( store.getProject( projectId ) );
         }

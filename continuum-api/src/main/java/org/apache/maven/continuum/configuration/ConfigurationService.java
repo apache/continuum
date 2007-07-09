@@ -58,6 +58,8 @@ public interface ConfigurationService
     String getBuildOutput( int buildId, int projectId )
         throws ConfigurationException;
 
+    File getBuildOutputDirectory( int projectId );
+
     File getBuildOutputFile( int buildId, int projectId )
         throws ConfigurationException;
 

@@ -19,47 +19,53 @@ package org.apache.maven.continuum.wagon;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Map;
-
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 
+import java.io.File;
+import java.util.Map;
+
 /**
  * Mock class for testing WagonContinuumNotifier's call to ConfigurationService.getBuildOutputFile()
- * 
- * @author <a href="mailto:nramirez@exist">Napoleon Esmundo C. Ramirez</a>
  *
+ * @author <a href="mailto:nramirez@exist">Napoleon Esmundo C. Ramirez</a>
  */
-public class MockConfigurationService implements ConfigurationService
+public class MockConfigurationService
+    implements ConfigurationService
 {
     private String basedir;
-    
+
     public MockConfigurationService()
     {
         basedir = System.getProperty( "basedir" );
     }
-    
+
     public File getBuildOutputDirectory()
     {
         return new File( basedir, "src/test/resources" + "/" + "build-output-directory" );
     }
-    
+
+    public File getBuildOutputDirectory( int projectId )
+    {
+        return new File( getBuildOutputDirectory(), Integer.toString( projectId ) );
+    }
+
     public File getBuildOutputFile( int buildId, int projectId )
         throws ConfigurationException
     {
-        File dir = new File( getBuildOutputDirectory(), Integer.toString( projectId ) );
-        
+        File dir = getBuildOutputDirectory( projectId );
+
         if ( !dir.exists() && !dir.mkdirs() )
         {
-            throw new ConfigurationException( "Could not make the build output directory: " + "'" + dir.getAbsolutePath() + "'." );
+            throw new ConfigurationException(
+                "Could not make the build output directory: " + "'" + dir.getAbsolutePath() + "'." );
         }
-        
+
         return new File( dir, buildId + ".log.txt" );
     }
-    
+
     public File getWorkingDirectory()
     {
         return new File( basedir, "src/test/resources" + "/" + "working-directory" );
