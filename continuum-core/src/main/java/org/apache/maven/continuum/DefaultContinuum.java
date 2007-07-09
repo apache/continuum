@@ -1272,11 +1272,15 @@ public class DefaultContinuum
 
         context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, projectGroup );
 
+        context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
+
         executeAction( "validate-project", context );
 
         executeAction( "store-project", context );
 
         executeAction( "add-project-to-checkout-queue", context );
+
+        executeAction( "add-assignable-roles", context );
 
         return ( (Integer) context.get( AbstractContinuumAction.KEY_PROJECT_ID ) ).intValue();
     }
