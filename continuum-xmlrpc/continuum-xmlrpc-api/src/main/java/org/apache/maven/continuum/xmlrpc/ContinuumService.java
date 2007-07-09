@@ -21,6 +21,7 @@ package org.apache.maven.continuum.xmlrpc;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
@@ -98,6 +99,26 @@ public interface ContinuumService
     // ----------------------------------------------------------------------
 
     /**
+     * Get all project groups.
+     *
+     * @return All project groups
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    List getAllProjectGroups()
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Get all project groups with all details.
+     *
+     * @return All project groups
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    List getAllProjectGroupsWithProjects()
+        throws ContinuumException, XmlRpcException;
+
+    /**
      * Get a project group.
      *
      * @param projectGroupId The project group id
@@ -163,6 +184,28 @@ public interface ContinuumService
      * @throws XmlRpcException
      */
     List getBuildDefinitionsForProjectGroup( int projectGroupId )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Update a project buildDefinition.
+     *
+     * @param projectId The project id
+     * @param buildDef  The build defintion to update
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDef )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Update a project group buildDefinition.
+     *
+     * @param projectGroupId The project group id
+     * @param buildDef       The build defintion to update
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDef )
         throws ContinuumException, XmlRpcException;
 
     // ----------------------------------------------------------------------

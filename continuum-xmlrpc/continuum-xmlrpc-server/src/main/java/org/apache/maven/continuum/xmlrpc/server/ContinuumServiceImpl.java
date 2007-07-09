@@ -23,6 +23,7 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
@@ -40,6 +41,7 @@ import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
 import org.apache.maven.continuum.xmlrpc.test.SuiteResult;
 import org.apache.maven.continuum.xmlrpc.test.TestCaseFailure;
 import org.apache.maven.continuum.xmlrpc.test.TestResult;
+import org.codehaus.plexus.redback.authorization.AuthorizationException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -140,6 +142,54 @@ public class ContinuumServiceImpl
     // Projects Groups
     // ----------------------------------------------------------------------
 
+    public List getAllProjectGroups()
+        throws ContinuumException
+    {
+        Collection pgList = continuum.getAllProjectGroups();
+        List result = new ArrayList();
+        for ( Iterator i = pgList.iterator(); i.hasNext(); )
+        {
+            org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
+                (org.apache.maven.continuum.model.project.ProjectGroup) i.next();
+            try
+            {
+                if ( isAuthorized( ContinuumRoleConstants.CONTINUUM_VIEW_GROUP_OPERATION, projectGroup.getName() ) )
+                {
+                    result.add( populateProjectGroupWithProjects( projectGroup ) );
+                }
+            }
+            catch ( AuthorizationException e )
+            {
+                throw new ContinuumException( "error authorizing request." );
+            }
+        }
+        return result;
+    }
+
+    public List getAllProjectGroupsWithProjects()
+        throws ContinuumException
+    {
+        Collection pgList = continuum.getAllProjectGroupsWithProjects();
+        List result = new ArrayList();
+        for ( Iterator i = pgList.iterator(); i.hasNext(); )
+        {
+            org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
+                (org.apache.maven.continuum.model.project.ProjectGroup) i.next();
+            try
+            {
+                if ( isAuthorized( ContinuumRoleConstants.CONTINUUM_VIEW_GROUP_OPERATION, projectGroup.getName() ) )
+                {
+                    result.add( populateProjectGroupWithProjects( projectGroup ) );
+                }
+            }
+            catch ( AuthorizationException e )
+            {
+                throw new ContinuumException( "error authorizing request." );
+            }
+        }
+        return result;
+    }
+
     protected String getProjectGroupName( int projectGroupId )
         throws ContinuumException
     {
@@ -218,9 +268,7 @@ public class ContinuumServiceImpl
     public List getBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumException
     {
-        ProjectGroupSummary pgs = getProjectGroupSummary( projectGroupId );
-
-        checkViewProjectGroupAuthorization( pgs.getName() );
+        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
 
         List bds = continuum.getBuildDefinitionsForProjectGroup( projectGroupId );
 
@@ -231,6 +279,28 @@ public class ContinuumServiceImpl
                 populateBuildDefinition( (org.apache.maven.continuum.model.project.BuildDefinition) i.next() ) );
         }
         return result;
+    }
+
+    public BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDef )
+        throws ContinuumException
+    {
+        ProjectSummary ps = getProjectSummary( projectId );
+
+        checkModifyProjectBuildDefinitionAuthorization( ps.getProjectGroup().getName() );
+
+        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
+        bd = continuum.updateBuildDefinitionForProject( projectId, bd );
+        return populateBuildDefinition( bd );
+    }
+
+    public BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDef )
+        throws ContinuumException
+    {
+        checkModifyGroupBuildDefinitionAuthorization( getProjectGroupName( projectGroupId ) );
+
+        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
+        bd = continuum.updateBuildDefinitionForProjectGroup( projectGroupId, bd );
+        return populateBuildDefinition( bd );
     }
 
     // ----------------------------------------------------------------------
