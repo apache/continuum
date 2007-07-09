@@ -102,7 +102,7 @@ public abstract class AddMavenProjectAction
                         url.getHost() );
                     if ( url.getPort() != -1 )
                     {
-                        urlBuffer.append( url.getPort() );
+                        urlBuffer.append( ":" ).append( url.getPort() );
                     }
                     urlBuffer.append( url.getPath() );
 
