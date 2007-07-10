@@ -359,6 +359,26 @@ public class ContinuumServiceImpl
         return populateBuildDefinition( bd );
     }
 
+    public BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDef )
+        throws ContinuumException
+    {
+        checkAddProjectBuildDefinitionAuthorization( getProjectSummary( projectId ).getName() );
+
+        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
+        bd = continuum.addBuildDefinitionToProject( projectId, bd );
+        return populateBuildDefinition( bd );
+    }
+
+    public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDef )
+        throws ContinuumException
+    {
+        checkAddGroupBuildDefinitionAuthorization( getPGSummary( projectGroupId ).getName() );
+
+        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
+        bd = continuum.addBuildDefinitionToProjectGroup( projectGroupId, bd );
+        return populateBuildDefinition( bd );
+    }
+
     // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
