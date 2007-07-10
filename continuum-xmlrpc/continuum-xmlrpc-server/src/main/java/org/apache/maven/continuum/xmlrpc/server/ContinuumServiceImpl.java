@@ -365,7 +365,7 @@ public class ContinuumServiceImpl
     public BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDef )
         throws ContinuumException
     {
-        checkAddProjectBuildDefinitionAuthorization( getProjectSummary( projectId ).getName() );
+        checkAddProjectBuildDefinitionAuthorization( getProjectSummary( projectId ).getProjectGroup().getName() );
 
         if ( buildDef.getSchedule() == null )
         {
@@ -792,7 +792,7 @@ public class ContinuumServiceImpl
         project.setId( projectSummary.getId() );
         project.setLatestBuildId( projectSummary.getLatestBuildId() );
         project.setName( projectSummary.getName() );
-        //TODO: project.setProjectGroup( populateProjectGroupSummary( projectSummary.getProjectGroup() ) );
+        project.setProjectGroup( populateProjectGroupSummary( projectSummary.getProjectGroup() ) );
         project.setScmTag( projectSummary.getScmTag() );
         project.setScmUrl( projectSummary.getScmUrl() );
         project.setScmUseCache( projectSummary.isScmUseCache() );
