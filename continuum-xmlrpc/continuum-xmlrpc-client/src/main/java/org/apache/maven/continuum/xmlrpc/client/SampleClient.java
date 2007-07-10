@@ -20,6 +20,7 @@ package org.apache.maven.continuum.xmlrpc.client;
  */
 
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
@@ -280,4 +281,17 @@ public class SampleClient
             }
         }
     }
+
+    public static void printBuildDefinition( BuildDefinition buildDef )
+    {
+        System.out.println( buildDef.getId() );
+        System.out.println( buildDef.getBuildFile() );
+        System.out.println( buildDef.getArguments() );
+        System.out.println( buildDef.getGoals() );
+        //printProfile( buildDef.getProfile() );
+        //printSchedule( buildDef.getSchedule() );
+        System.out.println( buildDef.isBuildFresh() );
+        System.out.println( buildDef.isDefaultForProject() );
+    }
+
 }

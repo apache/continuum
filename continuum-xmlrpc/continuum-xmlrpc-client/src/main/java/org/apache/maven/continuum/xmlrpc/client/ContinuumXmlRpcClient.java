@@ -29,7 +29,6 @@ import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
-import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.util.ClientFactory;
@@ -161,7 +160,7 @@ public class ContinuumXmlRpcClient
     }
 
     public ProjectSummary updateProject( ProjectSummary project )
-        throws ContinuumException, XmlRpcException
+        throws ContinuumException
     {
         try
         {
@@ -198,7 +197,7 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public List getAllProjectGroups()
-        throws ContinuumException, XmlRpcException
+        throws ContinuumException
     {
         try
         {
@@ -211,7 +210,7 @@ public class ContinuumXmlRpcClient
     }
 
     public List getAllProjectGroupsWithProjects()
-        throws ContinuumException, XmlRpcException
+        throws ContinuumException
     {
         try
         {
@@ -283,7 +282,7 @@ public class ContinuumXmlRpcClient
     }
 
     public ProjectGroupSummary updateProjectGroup( ProjectGroupSummary projectGroup )
-        throws ContinuumException, XmlRpcException
+        throws ContinuumException
     {
         try
         {
@@ -326,7 +325,7 @@ public class ContinuumXmlRpcClient
     }
 
     public BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDef )
-        throws ContinuumException, XmlRpcException
+        throws ContinuumException
     {
         try
         {
@@ -339,11 +338,37 @@ public class ContinuumXmlRpcClient
     }
 
     public BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDef )
-        throws ContinuumException, XmlRpcException
+        throws ContinuumException
     {
         try
         {
             return continuum.updateBuildDefinitionForProjectGroup( projectGroupId, buildDef );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDef )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.addBuildDefinitionToProject( projectId, buildDef );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDef )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.addBuildDefinitionToProjectGroup( projectGroupId, buildDef );
         }
         catch ( Exception e )
         {

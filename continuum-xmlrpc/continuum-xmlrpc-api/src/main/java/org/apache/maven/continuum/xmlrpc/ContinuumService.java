@@ -187,10 +187,11 @@ public interface ContinuumService
         throws ContinuumException, XmlRpcException;
 
     /**
-     * Update a project buildDefinition.
+     * Update a project build definition.
      *
      * @param projectId The project id
      * @param buildDef  The build defintion to update
+     * @return the updated build definition
      * @throws ContinuumException
      * @throws XmlRpcException
      */
@@ -198,14 +199,39 @@ public interface ContinuumService
         throws ContinuumException, XmlRpcException;
 
     /**
-     * Update a project group buildDefinition.
+     * Update a project group build definition.
      *
      * @param projectGroupId The project group id
      * @param buildDef       The build defintion to update
+     * @return the updated build definition
      * @throws ContinuumException
      * @throws XmlRpcException
      */
     BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDef )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Add a project build definition.
+     *
+     * @param projectId The project id
+     * @param buildDef  The build defintion to update
+     * @return the added build definition
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDef )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Add a project group buildDefinition.
+     *
+     * @param projectGroupId The project group id
+     * @param buildDef       The build defintion to update
+     * @return the build definition added
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDef )
         throws ContinuumException, XmlRpcException;
 
     // ----------------------------------------------------------------------
