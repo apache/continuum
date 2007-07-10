@@ -27,6 +27,8 @@ import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.maven.continuum.xmlrpc.project.Schedule;
+import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.xmlrpc.XmlRpcException;
 
 import java.util.List;
@@ -443,8 +445,54 @@ public interface ContinuumService
     // ----------------------------------------------------------------------
 
     // ----------------------------------------------------------------------
-    // TODO:Schedule
+    // Schedules
     // ----------------------------------------------------------------------
+
+    /**
+     * Return the schedules list.
+     *
+     * @return The schedule list.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    List getSchedules()
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Return the schedule defined by this id.
+     *
+     * @param scheduleId The schedule id
+     * @return The schedule.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    Schedule getSchedule( int scheduleId )
+        throws ContinuumException, XmlRpcException;
+
+    // ----------------------------------------------------------------------
+    // Profiles
+    // ----------------------------------------------------------------------
+
+    /**
+     * Return the profiles list.
+     *
+     * @return The profiles list.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    List getProfiles()
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Return the profile defined by this id.
+     *
+     * @param profileId The profile id
+     * @return The profile.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    Profile getProfile( int profileId )
+        throws ContinuumException, XmlRpcException;
 
     // ----------------------------------------------------------------------
     // TODO:Users

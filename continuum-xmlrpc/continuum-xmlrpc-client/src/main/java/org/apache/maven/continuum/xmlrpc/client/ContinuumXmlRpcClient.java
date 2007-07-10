@@ -29,6 +29,9 @@ import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.maven.continuum.xmlrpc.project.Schedule;
+import org.apache.maven.continuum.xmlrpc.system.Profile;
+import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.util.ClientFactory;
@@ -601,6 +604,65 @@ public class ContinuumXmlRpcClient
         try
         {
             return continuum.addShellProject( project, projectGroupId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Schedules
+    // ----------------------------------------------------------------------
+
+    public List getSchedules()
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.getSchedules();
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public Schedule getSchedule( int scheduleId )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.getSchedule( scheduleId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Profiles
+    // ----------------------------------------------------------------------
+    public List getProfiles()
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.getProfiles();
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public Profile getProfile( int profileId )
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.getProfile( profileId );
         }
         catch ( Exception e )
         {

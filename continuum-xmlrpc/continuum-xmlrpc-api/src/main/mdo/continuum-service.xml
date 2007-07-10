@@ -965,6 +965,7 @@
 
     <class>
       <name>Profile</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.system</packageName>
       <version>1.1.0+</version>
       <fields>
         <field>
@@ -997,6 +998,57 @@
           <name>buildWithoutChanges</name>
           <version>1.1.0+</version>
           <type>boolean</type>
+        </field>
+        <field>
+          <name>jdk</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true">
+            <type>Installation</type>
+          </association>
+        </field>
+        <field>
+          <name>builder</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true">
+            <type>Installation</type>
+          </association>
+        </field>
+        <field>
+          <name>environmentVariables</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true">
+            <type>Installation</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>          
+      </fields>
+    </class>
+
+    <class>
+      <name>Installation</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.system</packageName>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>type</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>varValue</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>varName</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>          
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <identifier>true</identifier>
         </field>
       </fields>
     </class>
