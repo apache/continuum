@@ -604,6 +604,26 @@ public class ContinuumServiceImpl
         return populateSchedule( continuum.getSchedule( scheduleId ) );
     }
 
+    public Schedule updateSchedule( Schedule schedule )
+        throws ContinuumException
+    {
+        checkManageSchedulesAuthorization();
+
+        continuum.updateSchedule( populateSchedule( schedule ) );
+
+        return populateSchedule( continuum.getScheduleByName( schedule.getName() ) );
+    }
+
+    public Schedule addSchedule( Schedule schedule )
+        throws ContinuumException
+    {
+        checkManageSchedulesAuthorization();
+
+        continuum.addSchedule( populateSchedule( schedule ) );
+
+        return populateSchedule( continuum.getScheduleByName( schedule.getName() ) );
+    }
+
     // ----------------------------------------------------------------------
     // Profiles
     // ----------------------------------------------------------------------

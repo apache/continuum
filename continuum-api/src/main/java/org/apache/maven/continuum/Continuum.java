@@ -475,6 +475,9 @@ public interface Continuum
     // Schedule
     // ----------------------------------------------------------------------
 
+    Schedule getScheduleByName( String scheduleName )
+        throws ContinuumException;
+
     Schedule getSchedule( int id )
         throws ContinuumException;
 

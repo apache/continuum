@@ -31,7 +31,6 @@ import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
-import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.util.ClientFactory;
@@ -641,11 +640,38 @@ public class ContinuumXmlRpcClient
         }
     }
 
+    public Schedule addSchedule( Schedule schedule )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.addSchedule( schedule );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public Schedule updateSchedule( Schedule schedule )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.updateSchedule( schedule );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Profiles
     // ----------------------------------------------------------------------
+
     public List getProfiles()
-        throws ContinuumException, XmlRpcException
+        throws ContinuumException
     {
         try
         {
@@ -658,7 +684,7 @@ public class ContinuumXmlRpcClient
     }
 
     public Profile getProfile( int profileId )
-        throws ContinuumException, XmlRpcException
+        throws ContinuumException
     {
         try
         {

@@ -469,6 +469,28 @@ public interface ContinuumService
     Schedule getSchedule( int scheduleId )
         throws ContinuumException, XmlRpcException;
 
+    /**
+     * Add the schedule.
+     *
+     * @param schedule The schedule
+     * @return The schedule.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    Schedule addSchedule( Schedule schedule )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Update the schedule.
+     *
+     * @param schedule The schedule
+     * @return The schedule.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    Schedule updateSchedule( Schedule schedule )
+        throws ContinuumException, XmlRpcException;
+
     // ----------------------------------------------------------------------
     // Profiles
     // ----------------------------------------------------------------------
