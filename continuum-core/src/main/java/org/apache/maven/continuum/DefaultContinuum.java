@@ -299,15 +299,7 @@ public class DefaultContinuum
 
             ProjectGroup new_pg = store.addProjectGroup( projectGroup );
 
-            try
-            {
-                addBuildDefinitionToProjectGroup( new_pg.getId(), getDefaultBuildDefinition() );
-            }
-            catch ( ContinuumStoreException e )
-            {
-                throw new ContinuumException( "Error adding default build definition to the requested project group",
-                                              e );
-            }
+            addBuildDefinitionToProjectGroup( new_pg.getId(), getDefaultBuildDefinition() );
 
             Map context = new HashMap();
             context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( new_pg.getId() ) );
@@ -322,7 +314,7 @@ public class DefaultContinuum
     }
 
     private BuildDefinition getDefaultBuildDefinition()
-        throws ContinuumStoreException
+        throws ContinuumException
     {
         BuildDefinition bd = new BuildDefinition();
 
@@ -334,7 +326,7 @@ public class DefaultContinuum
 
         bd.setBuildFile( "pom.xml" );
 
-        bd.setSchedule( store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME ) );
+        bd.setSchedule( getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME ) );
 
         return bd;
     }
@@ -1984,6 +1976,19 @@ public class DefaultContinuum
         }
     }
 
+    public Schedule getScheduleByName( String scheduleName )
+        throws ContinuumException
+    {
+        try
+        {
+            return store.getScheduleByName( scheduleName );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw logAndCreateException( "Error while accessing the store.", e );
+        }
+    }
+
     public Collection getSchedules()
         throws ContinuumException
     {
@@ -1995,22 +2000,14 @@ public class DefaultContinuum
     {
         Schedule s;
 
-        try
-        {
-            s = store.getScheduleByName( schedule.getName() );
+        s = getScheduleByName( schedule.getName() );
 
-            if ( s != null )
-            {
-                throw logAndCreateException( "Can't create schedule. A schedule with the same name already exists.",
-                                             null );
-            }
-
-            s = store.addSchedule( schedule );
-        }
-        catch ( ContinuumStoreException e )
+        if ( s != null )
         {
-            throw logAndCreateException( "Error while accessing the store.", e );
+            throw logAndCreateException( "Can't create schedule. A schedule with the same name already exists.", null );
         }
+
+        s = store.addSchedule( schedule );
 
         try
         {
