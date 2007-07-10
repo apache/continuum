@@ -18,13 +18,16 @@ package org.apache.maven.continuum.profile;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apache.maven.continuum.ContinuumException;
+
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
  * @since 15 juin 07
  */
 public class ProfileException
-    extends Exception
+    extends ContinuumException
 {
 
     public ProfileException( String message, Throwable throwable )
@@ -36,10 +39,4 @@ public class ProfileException
     {
         super( message );
     }
-
-    public ProfileException( Throwable throwable )
-    {
-        super( throwable );
-    }
-
 }

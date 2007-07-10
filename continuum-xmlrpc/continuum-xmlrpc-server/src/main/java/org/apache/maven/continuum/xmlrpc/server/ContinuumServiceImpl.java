@@ -35,9 +35,12 @@ import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.scm.ChangeFile;
 import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
 import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
+import org.apache.maven.continuum.xmlrpc.system.Installation;
+import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.test.SuiteResult;
 import org.apache.maven.continuum.xmlrpc.test.TestCaseFailure;
 import org.apache.maven.continuum.xmlrpc.test.TestResult;
@@ -364,6 +367,11 @@ public class ContinuumServiceImpl
     {
         checkAddProjectBuildDefinitionAuthorization( getProjectSummary( projectId ).getName() );
 
+        if ( buildDef.getSchedule() == null )
+        {
+            throw new ContinuumException( "The schedule can't be null." );
+        }
+
         org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
         bd = continuum.addBuildDefinitionToProject( projectId, bd );
         return populateBuildDefinition( bd );
@@ -373,6 +381,11 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkAddGroupBuildDefinitionAuthorization( getPGSummary( projectGroupId ).getName() );
+
+        if ( buildDef.getSchedule() == null )
+        {
+            throw new ContinuumException( "The schedule can't be null." );
+        }
 
         org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
         bd = continuum.addBuildDefinitionToProjectGroup( projectGroupId, bd );
@@ -565,6 +578,54 @@ public class ContinuumServiceImpl
 
         int projectId = continuum.addProject( populateProject( project ), "shell", projectGroupId );
         return getProjectSummary( projectId );
+    }
+
+    // ----------------------------------------------------------------------
+    // Schedules
+    // ----------------------------------------------------------------------
+
+    public List getSchedules()
+        throws ContinuumException
+    {
+        Collection schedules = continuum.getSchedules();
+
+        List s = new ArrayList();
+        for ( Iterator i = schedules.iterator(); i.hasNext(); )
+        {
+            s.add( populateSchedule( (org.apache.maven.continuum.model.project.Schedule) i.next() ) );
+        }
+
+        return s;
+    }
+
+    public Schedule getSchedule( int scheduleId )
+        throws ContinuumException
+    {
+        return populateSchedule( continuum.getSchedule( scheduleId ) );
+    }
+
+    // ----------------------------------------------------------------------
+    // Profiles
+    // ----------------------------------------------------------------------
+
+    public List getProfiles()
+        throws ContinuumException
+    {
+        Collection profiles = continuum.getProfileService().getAllProfiles();
+
+        List p = new ArrayList();
+        for ( Iterator i = profiles.iterator(); i.hasNext(); )
+        {
+            p.add( populateProfile( (org.apache.maven.continuum.model.system.Profile) i.next() ) );
+        }
+
+        return p;
+    }
+
+    public Profile getProfile( int profileId )
+        throws ContinuumException
+    {
+        return populateProfile( continuum.getProfileService().getProfile( profileId ) );
     }
 
     // ----------------------------------------------------------------------
@@ -1034,8 +1095,8 @@ public class ContinuumServiceImpl
         bd.setBuildFresh( buildDef.isBuildFresh() );
         bd.setDefaultForProject( buildDef.isDefaultForProject() );
         bd.setGoals( buildDef.getGoals() );
-        //TODO: bd.setProfile( populateProfile( buildDef.getProfile() ) );
-        //TODO: bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
+        bd.setProfile( populateProfile( buildDef.getProfile() ) );
+        bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
         return bd;
     }
 
@@ -1053,8 +1114,131 @@ public class ContinuumServiceImpl
         bd.setBuildFresh( buildDef.isBuildFresh() );
         bd.setDefaultForProject( buildDef.isDefaultForProject() );
         bd.setGoals( buildDef.getGoals() );
-        //TODO: bd.setProfile( populateProfile( buildDef.getProfile() ) );
-        //TODO: bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
+        bd.setProfile( populateProfile( buildDef.getProfile() ) );
+        bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
         return bd;
+    }
+
+    private org.apache.maven.continuum.model.project.Schedule populateSchedule( Schedule schedule )
+    {
+        if ( schedule == null )
+        {
+            return null;
+        }
+
+        org.apache.maven.continuum.model.project.Schedule s = new org.apache.maven.continuum.model.project.Schedule();
+        s.setActive( schedule.isActive() );
+        s.setCronExpression( schedule.getCronExpression() );
+        s.setDelay( schedule.getDelay() );
+        s.setDescription( schedule.getDescription() );
+        s.setId( schedule.getId() );
+        s.setMaxJobExecutionTime( schedule.getMaxJobExecutionTime() );
+        s.setName( schedule.getName() );
+        return s;
+    }
+
+    private Schedule populateSchedule( org.apache.maven.continuum.model.project.Schedule schedule )
+    {
+        if ( schedule == null )
+        {
+            return null;
+        }
+
+        Schedule s = new Schedule();
+        s.setActive( schedule.isActive() );
+        s.setCronExpression( schedule.getCronExpression() );
+        s.setDelay( schedule.getDelay() );
+        s.setDescription( schedule.getDescription() );
+        s.setId( schedule.getId() );
+        s.setMaxJobExecutionTime( schedule.getMaxJobExecutionTime() );
+        s.setName( schedule.getName() );
+        return s;
+    }
+
+    public org.apache.maven.continuum.model.system.Profile populateProfile( Profile profile )
+    {
+        if ( profile == null )
+        {
+            return null;
+        }
+
+        org.apache.maven.continuum.model.system.Profile p = new org.apache.maven.continuum.model.system.Profile();
+        p.setActive( profile.isActive() );
+        p.setBuilder( populateInstallation( profile.getBuilder() ) );
+        p.setBuildWithoutChanges( profile.isBuildWithoutChanges() );
+        p.setDescription( profile.getDescription() );
+        if ( profile.getEnvironmentVariables() != null )
+        {
+            List envs = new ArrayList();
+            for ( Iterator i = profile.getEnvironmentVariables().iterator(); i.hasNext(); )
+            {
+                envs.add( populateInstallation( (Installation) i.next() ) );
+            }
+            p.setEnvironmentVariables( envs );
+        }
+        p.setId( profile.getId() );
+        p.setJdk( populateInstallation( profile.getJdk() ) );
+        p.setName( profile.getName() );
+        p.setScmMode( profile.getScmMode() );
+        return p;
+    }
+
+    public Profile populateProfile( org.apache.maven.continuum.model.system.Profile profile )
+    {
+        if ( profile == null )
+        {
+            return null;
+        }
+
+        Profile p = new Profile();
+        p.setActive( profile.isActive() );
+        p.setBuilder( populateInstallation( profile.getBuilder() ) );
+        p.setBuildWithoutChanges( profile.isBuildWithoutChanges() );
+        p.setDescription( profile.getDescription() );
+        if ( profile.getEnvironmentVariables() != null )
+        {
+            List envs = new ArrayList();
+            for ( Iterator i = profile.getEnvironmentVariables().iterator(); i.hasNext(); )
+            {
+                envs.add( populateInstallation( (org.apache.maven.continuum.model.system.Installation) i.next() ) );
+            }
+            p.setEnvironmentVariables( envs );
+        }
+        p.setId( profile.getId() );
+        p.setJdk( populateInstallation( profile.getJdk() ) );
+        p.setName( profile.getName() );
+        p.setScmMode( profile.getScmMode() );
+        return p;
+    }
+
+    public org.apache.maven.continuum.model.system.Installation populateInstallation( Installation install )
+    {
+        if ( install == null )
+        {
+            return null;
+        }
+
+        org.apache.maven.continuum.model.system.Installation inst =
+            new org.apache.maven.continuum.model.system.Installation();
+        inst.setName( install.getName() );
+        inst.setType( install.getType() );
+        inst.setVarName( install.getVarName() );
+        inst.setVarValue( install.getVarValue() );
+        return inst;
+    }
+
+    public Installation populateInstallation( org.apache.maven.continuum.model.system.Installation install )
+    {
+        if ( install == null )
+        {
+            return null;
+        }
+
+        Installation inst = new Installation();
+        inst.setName( install.getName() );
+        inst.setType( install.getType() );
+        inst.setVarName( install.getVarName() );
+        inst.setVarValue( install.getVarValue() );
+        return inst;
     }
 }
