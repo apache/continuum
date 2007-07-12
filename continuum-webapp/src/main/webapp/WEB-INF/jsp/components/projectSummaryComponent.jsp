@@ -41,14 +41,14 @@
       <c:set var="project" value="${pageScope.project}" scope="request"/>
 
       <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
-      <ec:column property="name" title="summary.projectTable.name" width="48%">
+      <ec:column property="name" title="summary.projectTable.name" width="50%">
         <ww:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
           <ww:param name="projectId" value="${project.id}"/>
         </ww:url>
         <ww:a href="%{projectUrl}">${pageScope.project.name}</ww:a>
       </ec:column>
-      <ec:column property="version" title="summary.projectTable.version" width="13%"/>
-      <ec:column property="buildNumber" title="summary.projectTable.build" width="5%">
+      <ec:column property="version" title="summary.projectTable.version" width="12%"/>
+      <ec:column property="buildNumber" title="summary.projectTable.build" width="2%" style="text-align: center">
         <c:choose>
           <c:when test="${project.buildNumber gt 0}">
             <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
@@ -69,7 +69,7 @@
           </c:otherwise>
         </c:choose>
       </ec:column>
-      <ec:column property="projectGroupName" title="summary.projectTable.group" width="13%"/> 
+      <ec:column property="projectGroupName" title="summary.projectTable.group" width="30%"/> 
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <c:choose>
