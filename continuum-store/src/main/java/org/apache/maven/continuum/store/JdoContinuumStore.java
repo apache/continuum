@@ -592,6 +592,11 @@ public class JdoContinuumStore
     {
         return getLatestBuildResultsByProjectGroupId( -1 );
     }
+    
+    public void removeBuildResult( BuildResult buildResult )
+    {
+        removeObject( buildResult );
+    }
 
     public void removeNotifier( ProjectNotifier notifier )
         throws ContinuumStoreException

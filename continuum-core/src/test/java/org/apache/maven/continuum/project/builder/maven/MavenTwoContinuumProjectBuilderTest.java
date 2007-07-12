@@ -167,20 +167,20 @@ public class MavenTwoContinuumProjectBuilderTest
         URL url = getClass().getClassLoader().getResource( "projects/continuum/pom.xml" );
 
         // Eat System.out
-        PrintStream ps = System.out;
+        //PrintStream ps = System.out;
 
         ContinuumProjectBuildingResult result;
 
-        try
-        {
-            System.setOut( new PrintStream( new ByteArrayOutputStream() ) );
+        //try
+        //{
+            //System.setOut( new PrintStream( new ByteArrayOutputStream() ) );
 
             result = projectBuilder.buildProjectsFromMetadata( url, null, null );
-        }
-        finally
-        {
-            System.setOut( ps );
-        }
+        //}
+        //finally
+        //{
+            //System.setOut( ps );
+        //}
 
         assertNotNull( result );
 
@@ -261,20 +261,20 @@ public class MavenTwoContinuumProjectBuilderTest
         URL url = getClass().getClassLoader().getResource( "projects/continuum/pom_ci.xml" );
 
         // Eat System.out
-        PrintStream ps = System.out;
+        //PrintStream ps = System.out;
 
         ContinuumProjectBuildingResult result;
 
-        try
-        {
-            System.setOut( new PrintStream( new ByteArrayOutputStream() ) );
+        //try
+        //{
+            //System.setOut( new PrintStream( new ByteArrayOutputStream() ) );
 
             result = projectBuilder.buildProjectsFromMetadata( url, null, null );
-        }
-        finally
-        {
-            System.setOut( ps );
-        }
+        //}
+        //finally
+        //{
+            //System.setOut( ps );
+        //}
 
         assertNotNull( result );
 
@@ -355,20 +355,20 @@ public class MavenTwoContinuumProjectBuilderTest
         URL url = getClass().getClassLoader().getResource( "projects/continuum/continuum-core/pom.xml" );
 
         // Eat System.out
-        PrintStream ps = System.out;
+        //PrintStream ps = System.out;
 
         ContinuumProjectBuildingResult result;
 
-        try
-        {
-            System.setOut( new PrintStream( new ByteArrayOutputStream() ) );
+        //try
+        //{
+            //System.setOut( new PrintStream( new ByteArrayOutputStream() ) );
 
             result = projectBuilder.buildProjectsFromMetadata( url, null, null );
-        }
-        finally
-        {
-            System.setOut( ps );
-        }
+        //}
+        //finally
+        //{
+            //System.setOut( ps );
+        //}
 
         assertNotNull( result );
 

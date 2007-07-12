@@ -203,6 +203,8 @@ public interface ContinuumStore
 
     BuildResult getBuildResult( int buildId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
+    
+    void removeBuildResult( BuildResult buildResult );
 
     void removeProject( Project project );
 

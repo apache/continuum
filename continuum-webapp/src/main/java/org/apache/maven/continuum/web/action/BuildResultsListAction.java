@@ -25,6 +25,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -37,6 +38,8 @@ public class BuildResultsListAction
     private Project project;
 
     private Collection buildResults;
+    
+    private Collection selectedBuildResults;
 
     private int projectId;
 
@@ -60,6 +63,41 @@ public class BuildResultsListAction
 
         buildResults = getContinuum().getBuildResultsForProject( projectId );
 
+        return SUCCESS;
+    }
+    
+    public String remove()
+        throws ContinuumException
+    {
+        try
+        {
+            checkModifyProjectGroupAuthorization( getProjectGroupName() );
+        }
+        catch ( AuthorizationRequiredException e )
+        {
+            return REQUIRES_AUTHORIZATION;
+        }
+        
+        if ( selectedBuildResults != null && !selectedBuildResults.isEmpty() )
+        {
+            for ( Iterator i = selectedBuildResults.iterator(); i.hasNext(); )
+            {
+                int buildId = Integer.parseInt( (String) i.next() );
+                
+                try
+                {
+                    getLogger().info( "Removing BuildResult with id=" + buildId );
+                    
+                    getContinuum().removeBuildResult( buildId );
+                }
+                catch ( ContinuumException e )
+                {
+                    getLogger().error( "Error removing BuildResult with id=" + buildId );
+                    addActionError( "Unable to remove BuildResult with id=" + buildId );
+                }
+            }
+        }
+        
         return SUCCESS;
     }
 
@@ -102,5 +140,15 @@ public class BuildResultsListAction
         }
 
         return projectGroupName;
+    }
+
+    public Collection getSelectedBuildResults()
+    {
+        return selectedBuildResults;
+    }
+
+    public void setSelectedBuildResults( Collection selectedBuildResults )
+    {
+        this.selectedBuildResults = selectedBuildResults;
     }
 }

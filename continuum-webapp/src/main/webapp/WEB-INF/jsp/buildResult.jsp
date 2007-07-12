@@ -21,6 +21,7 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib prefix="c1" uri="continuum" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
@@ -61,6 +62,23 @@
                     </ww:else>
                 </ww:param>
             </c1:data>
+          </table>
+        </div>
+        <div class="functnbar3">
+          <table>
+            <tbody>
+            <tr>
+              <td>
+                <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+                  <form action="removeBuildResult.action">
+                    <input type="hidden" name="projectId" value="<ww:property value="projectId"/>"/>
+                    <input type="hidden" name="buildId" value="<ww:property value="buildId"/>"/>
+                    <input type="submit" name="delete-project" value="<ww:text name="delete"/>"/>
+                  </form>
+                </redback:ifAuthorized>
+              </td>
+            </tr>
+            </tbody>
           </table>
         </div>
 

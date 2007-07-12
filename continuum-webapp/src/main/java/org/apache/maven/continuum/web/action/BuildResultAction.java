@@ -92,6 +92,22 @@ public class BuildResultAction
 
         return SUCCESS;
     }
+    
+    public String remove() throws ContinuumException
+    {
+        try
+        {
+            checkModifyProjectGroupAuthorization( getProjectGroupName() );
+        }
+        catch ( AuthorizationRequiredException e )
+        {
+            return REQUIRES_AUTHORIZATION;
+        }
+        
+        getContinuum().removeBuildResult( buildId );
+        
+        return SUCCESS;
+    }
 
 
     public int getBuildId()
