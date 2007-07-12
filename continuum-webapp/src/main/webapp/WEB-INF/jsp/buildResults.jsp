@@ -73,19 +73,21 @@
               </ec:column>
             </ec:row>
           </ec:table>
-          <div class="functnbar3">
-            <table>
-              <tbody>
-              <tr>
-                <td>
-                  <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-                    <input type="button" name="delete-project" value="<ww:text name="delete"/>" onclick="document.forms.buildResultsForm.submit();" />
-                  </redback:ifAuthorized>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
+          <ww:if test="${not empty buildResults}">
+            <div class="functnbar3">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+                        <input type="button" name="delete-project" value="<ww:text name="delete"/>" onclick="document.forms.buildResultsForm.submit();" />
+                      </redback:ifAuthorized>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ww:if>
         </form>
       </div>
     </body>
