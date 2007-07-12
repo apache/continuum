@@ -483,6 +483,15 @@ public class ContinuumServiceImpl
         return result;
     }
 
+    public int removeBuildResult( BuildResult br )
+        throws ContinuumException
+    {
+        checkModifyProjectGroupAuthorization(
+            getProjectSummary( br.getProject().getId() ).getProjectGroup().getName() );
+        continuum.removeBuildResult( br.getId() );
+        return 0;
+    }
+
     public String getBuildOutput( int projectId, int buildId )
         throws ContinuumException
     {
