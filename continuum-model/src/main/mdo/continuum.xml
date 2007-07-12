@@ -558,6 +558,84 @@
           </association>
         </field>
       </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>1.0.9+</version>
+          <code><![CDATA[
+            public String getElapsedTime()
+            {
+                return getTimeDifference( startTime, getSystemTime() );
+            }
+
+            public String getDurationTime()
+            {
+                return getTimeDifference( startTime, endTime );
+            }
+            private long getSystemTime()
+            {
+                return java.util.Calendar.getInstance().getTime().getTime();
+            }
+
+            private String getTimeDifference( long startTime, long endTime )
+            {
+                long start = startTime;
+                long end = endTime;
+
+                if ( start == 0 )
+                {
+                    return "";
+                }
+
+                if ( end == 0 )
+                {
+                    end = getSystemTime();
+                }
+
+                int timeInSeconds = (int) ( ( end - start ) / 1000 );
+                int days, hours, minutes, seconds;
+                days = timeInSeconds / 86400;
+                timeInSeconds = timeInSeconds - ( days * 86400 );
+                hours = timeInSeconds / 3600;
+                timeInSeconds = timeInSeconds - ( hours * 3600 );
+                minutes = timeInSeconds / 60;
+                timeInSeconds = timeInSeconds - ( minutes * 60 );
+                seconds = timeInSeconds;
+
+                String elapsedTime = "";
+                if ( days > 0 )
+                {
+                    elapsedTime = days + " d ";
+                    elapsedTime += hours + " h ";
+                    elapsedTime += minutes + " min ";
+                    elapsedTime += seconds + " sec";
+                }
+                else
+                {
+                    if ( hours > 0 )
+                    {
+                        elapsedTime = hours + " h ";
+                        elapsedTime += minutes + " min ";
+                        elapsedTime += seconds + " sec";
+                    }
+                    else
+                    {
+                        if ( minutes > 0 )
+                        {
+                            elapsedTime = minutes + " min ";
+                            elapsedTime += seconds + " sec";
+                        }
+                        else
+                        {
+                            elapsedTime = seconds + " sec";
+                        }
+                    }
+                }
+
+                return elapsedTime;
+            }
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
     </class>
 
     <class>
