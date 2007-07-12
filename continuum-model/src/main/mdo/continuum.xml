@@ -648,7 +648,7 @@
           <version>1.0.9+</version>
           <type>boolean</type>
         </field>
-        <field>
+        <field stash.maxSize="1024">
           <name>commandLine</name>
           <version>1.0.9+</version>
           <type>String</type>
