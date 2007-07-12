@@ -307,7 +307,7 @@ public class ProjectGroupAction
                 }
             }
 
-            ProjectGroup newProjectGroup = getContinuum().getProjectGroup( new Integer( id[0] ).intValue() );
+            ProjectGroup newProjectGroup = getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() );
 
             if ( newProjectGroup.getId() != projectGroup.getId() )
             {
