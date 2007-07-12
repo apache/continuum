@@ -47,16 +47,19 @@
         <executions>
           <execution>
             <goals>
-              <goal>java</goal>
+              <goal>exec</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <mainClass>org.apache.maven.continuum.xmlrpc.client.SampleClient</mainClass>
+          <executable>java</executable>
           <arguments>
-            <argument>http://localhost:9090/xmlrpc</argument>
-            <argument>${continuum.username}</argument>
-            <argument>${continuum.password}</argument>
+            <argument>-Dmyproperty=myvalue</argument>
+            <argument>-classpath</argument>
+            <!-- automatically creates the classpath using all project dependencies, 
+                 also adding the project build directory -->
+            <classpath/>
+            <argument>org.apache.maven.continuum.xmlrpc.client.SampleClient</argument>
           </arguments>
         </configuration>
       </plugin>
