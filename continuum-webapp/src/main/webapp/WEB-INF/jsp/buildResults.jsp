@@ -61,6 +61,16 @@
               </ec:column>
               <ec:column property="startTime" title="buildResults.startTime" cell="date"/>
               <ec:column property="endTime" title="buildResults.endTime" cell="date"/>
+              <ec:column property="duration" title="&nbsp;">
+                <c:choose>
+                  <c:when test="${buildResult.endTime gt 0}">
+                    <ww:text name="buildResults.duration"/> : ${buildResult.durationTime}
+                  </c:when>
+                  <c:otherwise>
+                    <ww:text name="buildResults.startedSince"/> : ${buildResult.elapsedTime}
+                  </c:otherwise>
+                </c:choose>
+              </ec:column>
               <ec:column property="state" title="buildResults.state" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
               <ec:column property="actions" title="&nbsp;">
                 <ww:url id="buildResultUrl" action="buildResult">

@@ -46,6 +46,10 @@
             <c1:data label="%{getText('buildResult.endTime')}">
                 <ww:param name="after"><c1:date name="buildResult.endTime"/></ww:param>
             </c1:data>
+            <c1:data label="%{getText('buildResult.duration')}">
+                <ww:param name="after">
+                    <ww:if test="${buildResult.endTime == 0}"><ww:text name="buildResult.startedSince"/></ww:if> <ww:property value="buildResult.durationTime"/></ww:param>
+            </c1:data>
             <c1:data label="%{getText('buildResult.trigger')}">
                 <ww:param name="after"><ww:text name="buildResult.trigger.%{buildResult.trigger}"/></ww:param>
             </c1:data>
