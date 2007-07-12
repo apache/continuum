@@ -305,9 +305,23 @@
     <action name="buildResults" class="buildResults">
       <result name="success">/WEB-INF/jsp/buildResults.jsp</result>
     </action>
+    
+    <action name="removeBuildResults" class="buildResults" method="remove">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildResults</param>
+        <param name="projectId">${projectId}</param>
+      </result>
+    </action>
 
     <action name="buildResult" class="buildResult">
       <result name="success">/WEB-INF/jsp/buildResult.jsp</result>
+    </action>
+    
+    <action name="removeBuildResult" class="buildResult" method="remove">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildResults</param>
+        <param name="projectId">${projectId}</param>
+      </result>
     </action>
 
     <action name="surefireReport" class="surefireReport">

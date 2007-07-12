@@ -20,6 +20,7 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
@@ -38,34 +39,54 @@
                 <ww:param><ww:property value="project.name"/></ww:param>
             </ww:text>
         </h3>
-        <ww:set name="buildResults" value="buildResults" scope="request"/>
-        <ec:table items="buildResults"
-                  var="buildResult"
-                  showExports="false"
-                  showPagination="false"
-                  showStatusBar="false"
-                  filterable="false"
-                  sortable="false">
-          <ec:row highlightRow="true">
-            <ec:column property="buildNumberIfNotZero" title="buildResults.buildNumber">
-                <c:if test="${pageScope.buildResult.state == 2}">
-                    <c:out value="${pageScope.buildResult.buildNumber}"/>
-                </c:if>
-            </ec:column>
-            <ec:column property="startTime" title="buildResults.startTime" cell="date"/>
-            <ec:column property="endTime" title="buildResults.endTime" cell="date"/>
-            <ec:column property="state" title="buildResults.state" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
-            <ec:column property="actions" title="&nbsp;">
-              <ww:url id="buildResultUrl" action="buildResult">
-                <ww:param name="projectId" value="${projectId}"/>
-                <ww:param name="projectName" value="%{projectName}"/>
-                <ww:param name="buildId" value="${buildResult.id}"/>
-                <ww:param name="projectGroupId" value="${projectGroupId}"/>
-              </ww:url>
-              <ww:a href="%{buildResultUrl}">Result</ww:a>
-            </ec:column>
-          </ec:row>
-        </ec:table>
+        <form id="buildResultsForm" action="removeBuildResults.action" method="post">
+          <ww:set name="buildResults" value="buildResults" scope="request"/>
+          <ec:table items="buildResults"
+                    var="buildResult"
+                    showExports="false"
+                    showPagination="false"
+                    showStatusBar="false"
+                    filterable="false"
+                    sortable="false">
+            <ec:row highlightRow="true">
+              <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+                <ec:column alias="checkbox" title=" " style="width:5px" filterable="false" sortable="false">
+                  <input type="checkbox" name="selectedBuildResults" value="${buildResult.id}" />
+                </ec:column>
+              </redback:ifAuthorized>
+              <ec:column property="buildNumberIfNotZero" title="buildResults.buildNumber">
+                  <c:if test="${pageScope.buildResult.state == 2}">
+                      <c:out value="${pageScope.buildResult.buildNumber}"/>
+                  </c:if>
+              </ec:column>
+              <ec:column property="startTime" title="buildResults.startTime" cell="date"/>
+              <ec:column property="endTime" title="buildResults.endTime" cell="date"/>
+              <ec:column property="state" title="buildResults.state" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
+              <ec:column property="actions" title="&nbsp;">
+                <ww:url id="buildResultUrl" action="buildResult">
+                  <ww:param name="projectId" value="${projectId}"/>
+                  <ww:param name="projectName" value="%{projectName}"/>
+                  <ww:param name="buildId" value="${buildResult.id}"/>
+                  <ww:param name="projectGroupId" value="${projectGroupId}"/>
+                </ww:url>
+                <ww:a href="%{buildResultUrl}">Result</ww:a>
+              </ec:column>
+            </ec:row>
+          </ec:table>
+          <div class="functnbar3">
+            <table>
+              <tbody>
+              <tr>
+                <td>
+                  <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+                    <input type="button" name="delete-project" value="<ww:text name="delete"/>" onclick="document.forms.buildResultsForm.submit();" />
+                  </redback:ifAuthorized>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
       </div>
     </body>
   </ww:i18n>

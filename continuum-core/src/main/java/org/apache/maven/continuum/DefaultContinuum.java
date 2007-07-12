@@ -1009,6 +1009,12 @@ public class DefaultContinuum
             throw logAndCreateException( "Exception while getting build result for project.", e );
         }
     }
+    
+    public void removeBuildResult( int buildId )
+        throws ContinuumException
+    {
+        store.removeBuildResult( getBuildResult( buildId ) );
+    }
 
     public String getBuildOutput( int projectId, int buildId )
         throws ContinuumException

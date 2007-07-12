@@ -199,6 +199,8 @@ public interface Continuum
 
     List getChangesSinceLastSuccess( int projectId, int buildResultId )
         throws ContinuumException;
+    
+    void removeBuildResult( int buildId ) throws ContinuumException;
 
     // ----------------------------------------------------------------------
     // Projects
