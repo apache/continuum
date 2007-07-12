@@ -321,6 +321,17 @@ public interface ContinuumService
         throws ContinuumException, XmlRpcException;
 
     /**
+     * Remove the project build result.
+     *
+     * @param br The project build result
+     * @return 0
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    int removeBuildResult( BuildResult br )
+        throws ContinuumException, XmlRpcException;
+
+    /**
      * Returns the build output.
      *
      * @param projectId The project id
