@@ -474,6 +474,11 @@
             <level>INFO</level>
           </level>
           <level>
+            <!-- CONTINUUM-1228 -->
+            <hierarchy>com.opensymphony.xwork.util.OgnlUtil</hierarchy>
+            <level>ERROR</level>
+          </level>
+          <level>
             <hierarchy>com.opensymphony.webwork</hierarchy>
             <level>INFO</level>
           </level>
