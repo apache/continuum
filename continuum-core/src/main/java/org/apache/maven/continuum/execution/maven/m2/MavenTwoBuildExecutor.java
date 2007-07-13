@@ -340,7 +340,13 @@ public class MavenTwoBuildExecutor
                             failure.setName( name );
                             if ( parser.next() == XmlPullParser.TEXT )
                             {
-                                failure.setException( parser.getText() );
+                                String exception = parser.getText();
+                                //TODO: review this part as it include an hardcoded value of the columnsize
+                                if ( exception.length() >= 8192 )
+                                {
+                                    exception = exception.substring( 0, 8185 ) + "[...]";
+                                }
+                                failure.setException( exception );
                             }
                             suite.addFailure( failure );
                         }
