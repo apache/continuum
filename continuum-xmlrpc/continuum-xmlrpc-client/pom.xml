@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache.maven.continuum</groupId>
     <artifactId>continuum-xmlrpc</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1-beta-1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-xmlrpc-client</artifactId>
@@ -58,7 +58,7 @@
             <argument>-classpath</argument>
             <!-- automatically creates the classpath using all project dependencies, 
                  also adding the project build directory -->
-            <classpath/>
+            <classpath />
             <argument>org.apache.maven.continuum.xmlrpc.client.SampleClient</argument>
           </arguments>
         </configuration>
