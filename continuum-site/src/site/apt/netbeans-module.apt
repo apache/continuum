@@ -5,7 +5,7 @@
  ------
  January 05 2006
 
-Netbeans IDE Integration
+Netbeans IDE Integration for Continuum 1.0.3
 
  Continuum integration servers can be accessed through XML-RPC directly from Netbeans IDE.
 {{{http://docs.codehaus.org/display/MEVENIDE/MevenideNetbeans2.0} The Netbeans IDE Continuum client}} is part
