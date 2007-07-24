@@ -59,6 +59,7 @@
       <item name="Upgrade" href="upgrade.html"/>
       <item name="Planned Features" href="planned-features.html"/>
       <item name="Netbeans Module" href="netbeans-module.html"/>
+      <item name="Build Profile" href="build-profile.html" />
       <item name="Change Log" href="change-log.html"/>
     </menu>
 

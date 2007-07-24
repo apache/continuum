@@ -26,8 +26,8 @@
   </parent>
   <artifactId>continuum-site</artifactId>
   <groupId>org.apache.maven.continuum</groupId>
-  <version>1.O.3</version>
   <name>Continuum</name>
+  <packaging>pom</packaging>
   <distributionManagement>
     <site>
       <id>apache</id>
