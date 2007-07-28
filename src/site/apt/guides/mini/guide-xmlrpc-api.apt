@@ -7,6 +7,8 @@
 
 Getting Started
 
+ This page refers to Continuum 1.0.3 and 1.1-alpha-1
+
  Continuum has a XML-RPC API which makes it easy to add, remove, view and manipulate
  builds from within your applications. Continuum includes a client class to access this
  API. Alternatively, you may generate a client from favorite XML-RPC toolkit
