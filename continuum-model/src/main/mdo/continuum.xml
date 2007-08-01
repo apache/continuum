@@ -1094,7 +1094,7 @@
         </field>
         <field>
           <name>environmentVariables</name>
-          <version>1.1.1+</version>
+          <version>1.1.0+</version>
           <association xml.reference="true" stash.part="true" jpox.dependent="false">
             <type>Installation</type>
             <!-- org.apache.maven.continuum.model.system. -->
@@ -1111,17 +1111,17 @@
       <fields>
         <field jpox.column="installationtype">
           <name>type</name>
-          <version>1.1.1+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>
         <field jpox.column="varvalue">
           <name>varValue</name>
-          <version>1.1.1+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>
         <field jpox.column="varname">
           <name>varName</name>
-          <version>1.1.1+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>          
         <field jpox.primary-key="true" jpox.value-strategy="off">
