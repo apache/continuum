@@ -50,7 +50,7 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
+import org.codehaus.plexus.jdo.ConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -72,7 +72,7 @@ public class JdoDataManagementTool
     /**
      * @plexus.requirement role="org.codehaus.plexus.jdo.JdoFactory" role-hint="continuum"
      */
-    protected DefaultConfigurableJdoFactory factory;
+    protected ConfigurableJdoFactory factory;
 
     public void backupDatabase( File backupDirectory )
         throws IOException
