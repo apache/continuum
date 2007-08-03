@@ -59,5 +59,14 @@
 </table>
 
 <%@ include file="/WEB-INF/jsp/navigations/DefaultBottom.jsp" %>
+
+<script language="javascript">
+    <!--
+    if (document.forms[0])
+    {
+        document.forms[0].elements[0].focus();
+    }
+    -->
+</script>
 </body>
 </html>
