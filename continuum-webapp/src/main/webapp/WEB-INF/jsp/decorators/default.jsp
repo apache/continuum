@@ -32,11 +32,10 @@
   <link rel="stylesheet" type="text/css" href="<ww:url value="/css/extremecomponents.css"/>" media="screen"/>
   <link rel="shortcut icon" href="<ww:url value="/favicon.ico"/>" type="image/x-icon"/>
 
-  <script src="<ww:url value="/scripts/tigris.js"/>" type="text/javascript"></script>
   <decorator:head/>
 </head>
 
-<body onload="focus()" marginwidth="0" marginheight="0" class="composite">
+<body onload="<decorator:getProperty property="body.onload" />" marginwidth="0" marginheight="0" class="composite">
 <%@ include file="/WEB-INF/jsp/navigations/DefaultTop.jsp" %>
 
 <table id="main" border="0" cellpadding="4" cellspacing="0" width="100%">
