@@ -476,6 +476,7 @@
           <association xml.reference="true" stash.part="true" jpox.dependent="false">
             <type>BuildDefinition</type>
           </association>
+          <defaultValue>null</defaultValue>
         </field>
         <field>
           <name>id</name>
