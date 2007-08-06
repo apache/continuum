@@ -109,6 +109,10 @@ public class ConfigurationAction
         {
             configuration.setDeploymentRepositoryDirectory( new File( deploymentRepositoryDirectory ) );
         }
+        else
+        {
+            configuration.setDeploymentRepositoryDirectory( null );
+        }
 
         configuration.setUrl( baseUrl );
 
