@@ -124,7 +124,15 @@ public abstract class AbstractContinuumNotifier
         // Send if this is the first build
         if ( previousBuild == null )
         {
-            return true;
+            if ( build.getState() == ContinuumProjectState.OK )
+            {
+                return projectNotifier.isSendOnSuccess();
+            }
+
+            if ( build.getState() == ContinuumProjectState.WARNING )
+            {
+                return projectNotifier.isSendOnWarning();
+            }
         }
 
         // Send if the state has changed
