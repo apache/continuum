@@ -477,11 +477,13 @@ public class DefaultBuildController
             {
                 if ( !context.getScmResult().getChanges().isEmpty() )
                 {
-                    getLogger().info( "The project was not built because all changes are unknown." );
+                    getLogger().info(
+                        "The project was not built because all changes are unknown (maybe local modifications or ignored files not defined in your SCM tool." );
                 }
                 else
                 {
-                    getLogger().info( "The project was not built because there are no changes." );
+                    getLogger().info(
+                        "The project was not built because no changes were detected in sources since the last build." );
                 }
 
                 project.setState( project.getOldState() );
