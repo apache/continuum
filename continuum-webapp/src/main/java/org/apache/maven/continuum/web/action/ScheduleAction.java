@@ -24,7 +24,6 @@ import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 
-import javax.jdo.JDODataStoreException;
 import java.util.Collection;
 
 /**
@@ -240,6 +239,8 @@ public class ScheduleAction
             {
                 addActionError( "schedule.remove.error" );
             }
+
+            return ERROR;
         }
         else
         {
