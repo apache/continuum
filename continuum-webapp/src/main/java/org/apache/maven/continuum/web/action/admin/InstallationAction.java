@@ -49,13 +49,15 @@ public class InstallationAction
 
     private Installation installation;
 
-    private Map typesLabels;
+    private Map<String, String> typesLabels;
 
-    private List types;
+    private List<String> types;
 
     private boolean varNameUpdatable = true;
 
     private boolean nameUpdatable = true;
+    
+    private boolean automaticProfile;
 
     // -----------------------------------------------------
     // Webwork methods
@@ -103,7 +105,7 @@ public class InstallationAction
         Installation installationToSave = installationService.getInstallation( this.installation.getName() );
         if ( installationToSave == null )
         {
-            installationService.add( installation );
+            installationService.add( installation, this.automaticProfile );
         }
         else
         {
@@ -148,7 +150,7 @@ public class InstallationAction
         this.installation = installation;
     }
 
-    public Map getTypesLabels()
+    public Map<String, String> getTypesLabels()
     {
         if ( this.typesLabels == null )
         {
@@ -168,7 +170,7 @@ public class InstallationAction
         return typesLabels;
     }
 
-    public void setTypesLabels( Map typesLabels )
+    public void setTypesLabels( Map<String, String> typesLabels )
     {
         this.typesLabels = typesLabels;
     }
@@ -183,11 +185,11 @@ public class InstallationAction
         this.varNameUpdatable = varNameUpdatable;
     }
 
-    public List getTypes()
+    public List<String> getTypes()
     {
         if ( this.types == null )
         {
-            this.types = new ArrayList();
+            this.types = new ArrayList<String>(5);
             this.types.add( InstallationService.JDK_TYPE );
             this.types.add( InstallationService.MAVEN2_TYPE );
             this.types.add( InstallationService.MAVEN1_TYPE );
@@ -198,7 +200,7 @@ public class InstallationAction
         return types;
     }
 
-    public void setTypes( List types )
+    public void setTypes( List<String> types )
     {
         this.types = types;
     }
@@ -211,6 +213,16 @@ public class InstallationAction
     public void setNameUpdatable( boolean nameUpdatable )
     {
         this.nameUpdatable = nameUpdatable;
+    }
+
+    public boolean isAutomaticProfile()
+    {
+        return automaticProfile;
+    }
+
+    public void setAutomaticProfile( boolean automaticProfile )
+    {
+        this.automaticProfile = automaticProfile;
     }
 
 }

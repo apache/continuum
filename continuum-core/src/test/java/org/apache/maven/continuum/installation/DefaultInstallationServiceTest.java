@@ -1,11 +1,13 @@
 package org.apache.maven.continuum.installation;
 
+import java.util.List;
+
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.store.ContinuumStore;
-
-import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -176,5 +178,22 @@ public class DefaultInstallationServiceTest
         String javaHome = System.getProperty( "M2_HOME" );
         List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java );
         assertNotNull( infos );
+    }
+    
+    public void testAddInstallationAutomaticProfile()
+        throws Exception
+    {
+
+        Installation installation = new Installation();
+        installation.setType( InstallationService.JDK_TYPE );
+        installation.setName( "automatic" );
+        installation.setVarName( "automaticvarName" );
+        installation.setVarValue( "automaticvarValue" );
+        installation = getInstallationService().add( installation, true );
+        ProfileService profileService = (ProfileService) lookup( ProfileService.ROLE, "default" );
+        List<Profile> profiles = profileService.getAllProfiles();
+        assertEquals( 1, profiles.size() );
+        Profile profile = (Profile) profiles.get( 0 );
+        assertEquals( "automatic", profile.getName() );
     }
 }

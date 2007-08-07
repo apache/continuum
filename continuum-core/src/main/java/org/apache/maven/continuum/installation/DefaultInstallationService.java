@@ -21,6 +21,9 @@ package org.apache.maven.continuum.installation;
 
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.ProfileException;
+import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -56,6 +59,11 @@ public class DefaultInstallationService
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
+    
+    /**
+     * @plexus.requirement role-hint="default"
+     */    
+    private ProfileService profileService;
 
     private Map<String, ExecutorConfigurator> typesValues;
 
@@ -85,6 +93,16 @@ public class DefaultInstallationService
     public Installation add( Installation installation )
         throws InstallationException
     {
+        return this.add( installation, false );
+
+    }
+
+    public Installation add( Installation installation, boolean automaticProfile )
+        throws InstallationException
+    {
+
+        // TODO must be done in the same transaction
+        Installation storedOne = null;
         try
         {
             String envVarName = this.getEnvVar( installation.getType() );
@@ -93,12 +111,27 @@ public class DefaultInstallationService
             {
                 installation.setVarName( envVarName );
             }
-            return store.addInstallation( installation );
+            storedOne = store.addInstallation( installation );
         }
         catch ( ContinuumStoreException e )
         {
             throw new InstallationException( e.getMessage(), e );
         }
+        try
+        {
+            if ( automaticProfile )
+            {
+                Profile profile = new Profile();
+                profile.setName( storedOne.getName() );
+                profile = profileService.addProfile( profile );
+                profileService.addEnvVarInProfile( profile, storedOne );
+            }
+        }
+        catch ( ProfileException e )
+        {
+            throw new InstallationException( "failed to create automatic Profile " + e.getMessage(), e );
+        }
+        return storedOne;
     }
 
     /**
@@ -107,7 +140,6 @@ public class DefaultInstallationService
     public void delete( Installation installation )
         throws InstallationException
     {
-        // TODO remove the installations attached to profiles : jdo failed
         try
         {
             store.removeInstallation( installation );
