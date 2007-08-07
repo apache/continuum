@@ -49,7 +49,7 @@
           <ww:form action="saveProfile!save" method="post">
 
             <div class="axial">
-    
+              <!--  if other fields are added ProfileAction#save must be changed  -->
               <table>
                 <tbody>
                   <ww:hidden name="profile.id" />
