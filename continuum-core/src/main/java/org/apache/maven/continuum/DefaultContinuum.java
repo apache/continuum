@@ -1009,7 +1009,7 @@ public class DefaultContinuum
             throw logAndCreateException( "Exception while getting build result for project.", e );
         }
     }
-    
+
     public void removeBuildResult( int buildId )
         throws ContinuumException
     {
@@ -2088,10 +2088,27 @@ public class DefaultContinuum
         }
         catch ( SchedulesActivationException e )
         {
-            getLogger().error( "Can't unactivate schedule. You need to restart Continuum.", e );
+            getLogger().error( "Can't unactivate the schedule. You need to restart Continuum.", e );
         }
 
-        store.removeSchedule( schedule );
+        try
+        {
+            store.removeSchedule( schedule );
+        }
+        catch ( Exception e )
+        {
+            getLogger().error( "Can't remove the schedule.", e );
+
+            try
+            {
+                schedulesActivator.activateSchedule( schedule, this );
+            }
+            catch ( SchedulesActivationException sae )
+            {
+                getLogger().error( "Can't reactivate the schedule. You need to restart Continuum.", e );
+            }
+            throw new ContinuumException( "Can't remove the schedule", e );
+        }
     }
 
     public Schedule storeSchedule( Schedule schedule )
