@@ -74,7 +74,7 @@ Files changed:
 #end
 #end
 #end
-#if ( $changesSinceLastSuccess )
+#if ( $changesSinceLastSuccess && $changesSinceLastSuccess.changes )
 ****************************************************************************
 SCM Changes since last success:
 ****************************************************************************
