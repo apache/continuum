@@ -47,11 +47,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -316,7 +319,20 @@ public class MavenTwoBuildExecutor
                 int suiteFailureCount = Integer.parseInt( parser.getAttributeValue( null, "errors" ) ) +
                     Integer.parseInt( parser.getAttributeValue( null, "failures" ) );
 
-                long suiteTotalTime = (long) ( 1000 * Double.parseDouble( parser.getAttributeValue( null, "time" ) ) );
+                String time = parser.getAttributeValue( null, "time" );
+                NumberFormat nf = NumberFormat.getInstance( Locale.ENGLISH );
+                double dTime = 0;
+
+                try
+                {
+                    dTime = nf.parse( time ).doubleValue();
+                }
+                catch ( ParseException nfe )
+                {
+                    getLogger().warn( "Can't parse time value (" + time + ") in " + xmlFile.getAbsolutePath() );
+                }
+
+                long suiteTotalTime = (long) ( 1000 * dTime );
 
                 // TODO: add tests attribute to testsuite element so we only
                 // have to parse the rest of the file if there are failures
