@@ -43,8 +43,11 @@ public interface InstallationService
 
     String ENVVAR_TYPE = "envvar";
 
-    public Installation add( Installation installation )
+    public Installation add( Installation installation, boolean automaticProfile )
         throws InstallationException;
+    
+    public Installation add( Installation installation )
+    throws InstallationException;
 
     public void update( Installation installation )
         throws InstallationException;
