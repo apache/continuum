@@ -127,6 +127,16 @@
       <name>continuum-modify-project-notifier</name>
       <description>Continuum Modify Project Notifier</description>
     </operation>
+    <operation>
+      <id>continuum-manage-installations</id>
+      <name>continuum-manage-installations</name>
+      <description>Continuum Manage Installations</description>
+    </operation>
+    <operation>
+      <id>continuum-manage-profiles</id>
+      <name>continuum-manage-profiles</name>
+      <description>Continuum Manage Installations</description>
+    </operation>        
   </operations>
   <roles>
     <role>
@@ -148,7 +158,21 @@
           <permanent>true</permanent>
           <operation>continuum-manage-schedules</operation>
           <resource>global</resource>
-        </permission>        
+        </permission>
+        <permission>
+          <id>continuum-manage-profiles</id>
+          <name>Manage Continuum Profiles</name>
+          <permanent>true</permanent>          
+          <operation>continuum-manage-profiles</operation>
+          <resource>global</resource>
+        </permission> 
+        <permission>
+          <id>continuum-manage-installations</id>
+          <name>Manage Continuum Installations</name>
+          <permanent>true</permanent>          
+          <operation>continuum-manage-installations</operation>
+          <resource>global</resource>
+        </permission>               
       </permissions>
       <parentRoles>
         <parentRole>system-administrator</parentRole>
@@ -227,6 +251,36 @@
         <parentRole>guest</parentRole>
       </parentRoles>
     </role>
+    <role>
+      <id>continuum-manage-installations</id>
+      <name>Continuum Manage Installations</name>
+      <assignable>true</assignable>
+      <permanent>true</permanent>
+      <permissions>
+        <permission>
+          <id>continuum-manage-installations</id>
+          <name>Manage Continuum Installations</name>
+          <permanent>true</permanent>
+          <operation>continuum-manage-installations</operation>
+          <resource>global</resource>
+        </permission>        
+      </permissions>
+    </role>
+    <role>
+      <id>continuum-manage-profiles</id>
+      <name>Continuum Manage Profiles</name>
+      <assignable>true</assignable>
+      <permanent>true</permanent>
+      <permissions>
+        <permission>
+          <id>continuum-manage-profiles</id>
+          <name>Manage Continuum Profiles</name>
+          <permanent>true</permanent>
+          <operation>continuum-manage-profiles</operation>
+          <resource>global</resource>
+        </permission>        
+      </permissions>
+    </role>        
   </roles>
   <templates>
   	<template>

@@ -82,7 +82,7 @@
   </redback:ifAuthorized>
 
 
-  <redback:ifAnyAuthorized permissions="continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users">
+  <redback:ifAnyAuthorized permissions="continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users,continuum-manage-installations,continuum-manage-profiles">
     <div id="projectmenu" class="toolgroup">
       <div class="label">
         <ww:text name="menu.administration"/>
@@ -96,19 +96,23 @@
             </ww:a>
           </div>
         </redback:ifAuthorized>
-        <redback:ifAuthorized permission="continuum-manage-configuration">
+        <redback:ifAuthorized permission="continuum-manage-profiles">
           <ww:url id="configurationUrl" action="profilesList" namespace="/admin" method="list" includeParams="none"/>
           <div class="body">
             <ww:a href="%{configurationUrl}">
               <ww:text name="menu.administration.profile"/>
             </ww:a>
-          </div>     
+          </div> 
+        </redback:ifAuthorized> 
+        <redback:ifAuthorized permission="continuum-manage-installations">   
           <ww:url id="configurationUrl" action="installationsList" namespace="/admin" method="list" includeParams="none"/>
           <div class="body">
             <ww:a href="%{configurationUrl}">
               <ww:text name="menu.administration.installations"/>
             </ww:a>
-          </div>               
+          </div>
+        </redback:ifAuthorized>
+        <redback:ifAuthorized permission="continuum-manage-configuration">               
           <ww:url id="configurationUrl" action="configuration" namespace="/admin" method="input" includeParams="none"/>
           <div class="body">
             <ww:a href="%{configurationUrl}">
