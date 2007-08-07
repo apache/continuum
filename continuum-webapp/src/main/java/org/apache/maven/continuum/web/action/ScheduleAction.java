@@ -238,9 +238,9 @@ public class ScheduleAction
             catch ( ContinuumException e )
             {
                 addActionError( "schedule.remove.error" );
-            }
 
-            return ERROR;
+                return ERROR;
+            }
         }
         else
         {
