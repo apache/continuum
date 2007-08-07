@@ -108,4 +108,7 @@ public class ContinuumRoleConstants
 
     public static final String USER_MANAGEMENT_USER_ROLE_OPERATION = "user-management-user-role";
 
+    public static final String CONTINUUM_MANAGE_INSTALLATIONS = "continuum-manage-installations";
+    
+    public static final String CONTINUUM_MANAGE_PROFILES = "continuum-manage-profiles";
 }

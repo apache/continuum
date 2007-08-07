@@ -3,7 +3,12 @@ package org.apache.maven.continuum.web.action.admin;
 import com.opensymphony.xwork.Preparable;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.codehaus.plexus.redback.rbac.Resource;
+import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
+import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
+import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -37,7 +42,7 @@ import java.util.ResourceBundle;
  */
 public class InstallationAction
     extends ContinuumActionSupport
-    implements Preparable
+    implements Preparable, SecureAction
 {
 
     /**
@@ -125,6 +130,20 @@ public class InstallationAction
         installationService.delete( installationToDelete );
         this.installations = installationService.getAllInstallations();
         return SUCCESS;
+    }
+
+    // -----------------------------------------------------
+    // security
+    // -----------------------------------------------------    
+    
+    public SecureActionBundle getSecureActionBundle()
+        throws SecureActionException
+    {
+        SecureActionBundle bundle = new SecureActionBundle();
+        bundle.setRequiresAuthentication( true );
+        bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_INSTALLATIONS, Resource.GLOBAL );
+
+        return bundle;
     }
 
     // -----------------------------------------------------

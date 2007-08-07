@@ -19,17 +19,24 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
-import org.apache.maven.continuum.installation.InstallationService;
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.model.system.Profile;
-import org.apache.maven.continuum.profile.ProfileService;
-import org.apache.maven.continuum.web.action.ContinuumActionSupport;
-import org.codehaus.plexus.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.maven.continuum.installation.InstallationService;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.ProfileService;
+import org.apache.maven.continuum.security.ContinuumRoleConstants;
+import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.codehaus.plexus.redback.rbac.Resource;
+import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
+import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
+import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
+import org.codehaus.plexus.util.StringUtils;
+
+import com.opensymphony.xwork.Preparable;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -57,6 +64,7 @@ import java.util.List;
  */
 public class ProfileAction
     extends ContinuumActionSupport
+    implements Preparable, SecureAction
 
 {
     /**
@@ -199,6 +207,20 @@ public class ProfileAction
         return SUCCESS;
     }
 
+    // -----------------------------------------------------
+    // security
+    // -----------------------------------------------------    
+    
+    public SecureActionBundle getSecureActionBundle()
+        throws SecureActionException
+    {
+        SecureActionBundle bundle = new SecureActionBundle();
+        bundle.setRequiresAuthentication( true );
+        bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_PROFILES, Resource.GLOBAL );
+
+        return bundle;
+    }    
+    
     // -------------------------------------------------------
     // Webwork setter/getter
     // -------------------------------------------------------
