@@ -65,7 +65,7 @@ public class AddProjectGroupAction
             while ( iterator.hasNext() )
             {
                 ProjectGroup projectGroup = (ProjectGroup) iterator.next();
-                if ( projectGroup.getName().equals( name ) )
+                if ( name.equals( projectGroup.getName() ) )
                 {
                     addActionError( "projectGroup.error.name.already.exists" );
                     break;
