@@ -553,7 +553,7 @@
         <field jpox.fetch-groups="build-result-with-details">
           <name>modifiedDependencies</name>
           <version>1.1.0+</version>
-          <association>
+          <association jpox.join="false">
             <type>ProjectDependency</type>
             <multiplicity>*</multiplicity>
           </association>
