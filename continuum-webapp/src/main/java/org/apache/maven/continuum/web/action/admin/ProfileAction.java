@@ -69,7 +69,7 @@ public class ProfileAction
      */
     private InstallationService installationService;
 
-    private List profiles;
+    private List<Profile> profiles;
 
     private Profile profile;
 
@@ -114,11 +114,18 @@ public class ProfileAction
         Profile stored = profileService.getProfile( profile.getId() );
         if ( stored == null )
         {
-            profileService.addProfile( profile );
+            this.profile = profileService.addProfile( profile );
+            this.allInstallations = installationService.getAllInstallations();
+            return "editProfile";
         }
         else
         {
-            //profileToStore.setName( profile.getName() );
+            // olamy : the only this to change here is the profile
+            // but in the UI maybe some installations has been we retrieve it
+            // and only set the name
+            String name = profile.getName();
+            profile = profileService.getProfile( profile.getId() );
+            profile.setName( name );
             profileService.updateProfile( profile );
         }
         this.profiles = profileService.getAllProfiles();
