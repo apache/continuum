@@ -52,18 +52,34 @@ public class DefaultWorkingDirectoryService
 //        return new File( projectGroup.getWorkingDirectory(),
 //                         project.getPath() );
 
-        File workDir;
         if ( project.getWorkingDirectory() == null )
         {
-            workDir = new File( configurationService.getWorkingDirectory(), Integer.toString( project.getId() ) );
+            project.setWorkingDirectory( Integer.toString( project.getId() ) );
+        }
 
-            project.setWorkingDirectory( workDir.getAbsolutePath() );
+        File workDir;
+        File projectWorkingDirectory = new File( project.getWorkingDirectory() );
+        if ( projectWorkingDirectory.isAbsolute() )
+        {
+            // clean the project working directory path if it's a subdirectory of the global working directory
+            if ( projectWorkingDirectory.getAbsolutePath().startsWith(
+                configurationService.getWorkingDirectory().getAbsolutePath() ) )
+            {
+                String pwd = projectWorkingDirectory.getAbsolutePath().substring(
+                    configurationService.getWorkingDirectory().getAbsolutePath().length() );
+                if ( pwd.startsWith( "/" ) || pwd.startsWith( "\\" ) )
+                {
+                    pwd = pwd.substring( 1 );
+                }
+                project.setWorkingDirectory( pwd );
+            }
+
+            workDir = projectWorkingDirectory;
         }
         else
         {
-            workDir = new File( project.getWorkingDirectory() );
+            workDir = new File( configurationService.getWorkingDirectory(), project.getWorkingDirectory() );
         }
-
         return workDir;
     }
 }
