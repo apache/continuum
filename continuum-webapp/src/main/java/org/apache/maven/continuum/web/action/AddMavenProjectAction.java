@@ -64,6 +64,8 @@ public abstract class AddMavenProjectAction
     private boolean disableGroupSelection;
 
     private boolean scmUseCache;
+    
+    private int projectGroupId;
 
     public String execute()
         throws ContinuumException
@@ -155,7 +157,13 @@ public abstract class AddMavenProjectAction
 
             return doDefault();
         }
-
+        
+        if ( this.getSelectedProjectGroup() > 0 )
+        {
+            this.setProjectGroupId( this.getSelectedProjectGroup() );
+            return "projectGroupSummary";
+        }
+        
         return SUCCESS;
     }
 
@@ -324,5 +332,15 @@ public abstract class AddMavenProjectAction
     public void setScmUseCache( boolean scmUseCache )
     {
         this.scmUseCache = scmUseCache;
+    }
+
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
+    }
+
+    public void setProjectGroupId( int projectGroupId )
+    {
+        this.projectGroupId = projectGroupId;
     }
 }

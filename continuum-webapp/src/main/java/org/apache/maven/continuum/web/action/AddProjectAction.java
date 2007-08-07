@@ -75,6 +75,8 @@ public class AddProjectAction
      * @plexus.requirement role-hint="default"
      */
     private ProfileService profileService;
+    
+    private int projectGroupId;
 
     public void validate()
     {
@@ -145,6 +147,12 @@ public class AddProjectAction
 
         getContinuum().addProject( project, projectType, selectedProjectGroup );
 
+        if ( this.getSelectedProjectGroup() > 0 )
+        {
+            this.setProjectGroupId( this.getSelectedProjectGroup() );
+            return "projectGroupSummary";
+        }        
+        
         return SUCCESS;
     }
 
@@ -317,5 +325,15 @@ public class AddProjectAction
     public void setProfiles( List<Profile> profiles )
     {
         this.profiles = profiles;
+    }
+
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
+    }
+
+    public void setProjectGroupId( int projectGroupId )
+    {
+        this.projectGroupId = projectGroupId;
     }
 }
