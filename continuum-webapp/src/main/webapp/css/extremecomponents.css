@@ -86,7 +86,8 @@
 }
 
 .eXtremeTable .toolbar {
-	background-color: #F4F4F4;
+	background-color: #fff;
+/*
 	font-family: verdana, arial, helvetica, sans-serif;
 	font-size: 9px;
 	margin-right: 1px;
@@ -94,12 +95,15 @@
 	border-left: 1px solid silver;
 	border-top: 1px solid silver;
 	border-bottom: 1px solid silver;
+*/
 }
 
 .eXtremeTable .toolbar td {
-	color: #444444;
+	color: #fff;
+/*
 	padding: 0px 3px 0px 3px;
 	text-align:center;
+*/
 }
 
 .eXtremeTable .separator {
