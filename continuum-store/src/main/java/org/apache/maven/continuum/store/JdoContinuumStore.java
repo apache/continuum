@@ -1135,7 +1135,7 @@ public class JdoContinuumStore
         updateObject( installation );
     }
 
-    public Installation getInstallationByName( String name )
+    public Installation getInstallation( int installationId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -1152,11 +1152,11 @@ public class JdoContinuumStore
 
             query.declareImports( "import java.lang.String" );
 
-            query.declareParameters( "String name" );
+            query.declareParameters( "int installationId" );
 
-            query.setFilter( "this.name == name" );
+            query.setFilter( "this.installationId == installationId" );
 
-            Collection result = (Collection) query.execute( name );
+            Collection result = (Collection) query.execute( installationId );
 
             if ( result.size() == 0 )
             {

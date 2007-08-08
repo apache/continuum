@@ -438,14 +438,14 @@ public class ContinuumStoreTest
         Installation testOne = createTestInstallation( name, InstallationService.JDK_TYPE, "varName", "varValue" );
         testOne = store.addInstallation( testOne );
 
-        Installation fromStore = store.getInstallationByName( name );
+        Installation fromStore = store.getInstallation( testOne.getInstallationId() );
         assertInstallationEquals( testOne, fromStore );
 
         fromStore.setVarName( "JAVA_HOME" );
         fromStore.setVarValue( "/usr/local/jdk1.5.0_08" );
         store.updateInstallation( fromStore );
 
-        Installation updatedFromStore = store.getInstallationByName( name );
+        Installation updatedFromStore = store.getInstallation( testOne.getInstallationId() );
 
         assertInstallationEquals( fromStore, updatedFromStore );
     }
@@ -458,7 +458,7 @@ public class ContinuumStoreTest
         testOne = store.addInstallation( testOne );
 
         store.removeInstallation( testOne );
-        Installation fromStore = store.getInstallationByName( name );
+        Installation fromStore = store.getInstallation( testOne.getInstallationId() );
         assertNull( fromStore );
     }
 
@@ -520,7 +520,7 @@ public class ContinuumStoreTest
 
         store.removeInstallation( testOne );
 
-        Installation fromStore = store.getInstallationByName( nameFirstInst );
+        Installation fromStore = store.getInstallation( testOne.getInstallationId() );
         assertNull( fromStore );
 
         firstGetted = store.getProfile( firstProfile.getId() );

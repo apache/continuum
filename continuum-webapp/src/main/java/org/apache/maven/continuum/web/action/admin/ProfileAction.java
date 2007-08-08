@@ -81,7 +81,7 @@ public class ProfileAction
 
     private Profile profile;
 
-    private String installationName;
+    private int installationId;
 
     private List<Installation> allInstallations;
 
@@ -130,7 +130,7 @@ public class ProfileAction
         {
             // olamy : the only this to change here is the profile
             // but in the UI maybe some installations has been we retrieve it
-            // and only set the name
+            // and only set the name related to CONTINUUM-1361
             String name = profile.getName();
             profile = profileService.getProfile( profile.getId() );
             profile.setName( name );
@@ -151,21 +151,9 @@ public class ProfileAction
     public String addInstallation()
         throws Exception
     {
-        Installation installation = installationService.getInstallation( this.installationName );
-        if ( InstallationService.JDK_TYPE.equals( installation.getType() ) )
-        {
-            profileService.setJdkInProfile( profile, installation );
-        }
-        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() ) ||
-            InstallationService.MAVEN2_TYPE.equals( installation.getType() ) ||
-            InstallationService.ANT_TYPE.equals( installation.getType() ) )
-        {
-            profileService.setBuilderInProfile( profile, installation );
-        }
-        else
-        {
-            profileService.addEnvVarInProfile( profile, installation );
-        }
+        Installation installation = installationService.getInstallation( this.getInstallationId() );
+        profileService.addInstallationInProfile( profile, installation );
+        // read again
         this.profile = profileService.getProfile( profile.getId() );
         return SUCCESS;
     }
@@ -174,7 +162,7 @@ public class ProfileAction
         throws Exception
     {
 
-        Installation installation = installationService.getInstallation( this.installationName );
+        Installation installation = installationService.getInstallation( this.getInstallationId() );
         Profile stored = profileService.getProfile( profile.getId() );
         if ( InstallationService.JDK_TYPE.equals( installation.getType() ) )
         {
@@ -192,9 +180,8 @@ public class ProfileAction
             // TODO move this in ProfileService
             List<Installation> storedEnvVars = stored.getEnvironmentVariables();
             List<Installation> newEnvVars = new ArrayList<Installation>();
-            for ( Iterator<Installation> iterator = storedEnvVars.iterator(); iterator.hasNext(); )
+            for ( Installation storedInstallation : storedEnvVars )
             {
-                Installation storedInstallation = iterator.next();
                 if ( !StringUtils.equals( storedInstallation.getName(), installation.getName() ) )
                 {
                     newEnvVars.add( storedInstallation );
@@ -291,13 +278,13 @@ public class ProfileAction
         this.profileInstallations = profileInstallations;
     }
 
-    public String getInstallationName()
+    public int getInstallationId()
     {
-        return installationName;
+        return installationId;
     }
 
-    public void setInstallationName( String installationName )
+    public void setInstallationId( int installationId )
     {
-        this.installationName = installationName;
+        this.installationId = installationId;
     }
 }

@@ -19,10 +19,11 @@ package org.apache.maven.continuum.installation;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
-
-import java.util.List;
+import org.apache.maven.continuum.model.system.Profile;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -47,7 +48,7 @@ public interface InstallationService
         throws InstallationException;
     
     public Installation add( Installation installation )
-    throws InstallationException;
+        throws InstallationException;
 
     public void update( Installation installation )
         throws InstallationException;
@@ -55,7 +56,7 @@ public interface InstallationService
     public void delete( Installation installation )
         throws InstallationException;
 
-    public Installation getInstallation( String name )
+    public Installation getInstallation( int installationId )
         throws InstallationException;
 
     public List<Installation> getAllInstallations()
@@ -91,7 +92,7 @@ public interface InstallationService
      * @return the cli output of $path/ec.relativePath.ec.executable ec.versionArgument
      * @throws InstallationException
      */
-    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator )
+    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator, Profile profile )
         throws InstallationException;
 
 }

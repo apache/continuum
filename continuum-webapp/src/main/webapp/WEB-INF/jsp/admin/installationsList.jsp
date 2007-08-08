@@ -48,12 +48,12 @@
         <ec:column property="varValue" title="Value/Path" style="white-space: nowrap" />
         
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="editInstallation!edit.action?installation.name=<c:out value="${installation.name}"/>">
+          <a href="editInstallation!edit.action?installation.installationId=<c:out value="${installation.installationId}"/>">
             <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
           </a>  
         </ec:column>   
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="deleteInstallation!delete.action?installation.name=<c:out value="${installation.name}"/>">
+          <a href="deleteInstallation!delete.action?installation.installationId=<c:out value="${installation.installationId}"/>">
             <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
           </a>  
         </ec:column>             
