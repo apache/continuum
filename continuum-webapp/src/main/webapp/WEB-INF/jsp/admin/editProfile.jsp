@@ -68,49 +68,49 @@
         <ww:if test="profile.id != '' && ${not empty allInstallations} ">
           <tr>
             <td>
-              <ww:form action="addInstallationProfile!addInstallation.action" method="get">
-                <div class="axial">
-                  <table width="100%">
-                    <tbody>
-                      <ww:hidden name="profile.id" />
-                      <tr>
-                        <td>
-                          <ec:table items="profileInstallations"
-                                    var="profileInstallation"
-                                    showExports="false"
-                                    showPagination="false"
-                                    showStatusBar="false"
-                                    sortable="false"
-                                    filterable="false"
-                                    width="100%"
-                                    autoIncludeParameters="false">
-                            <ec:row highlightRow="true">
-                              <ec:column property="nameEdit" title="Name" style="white-space: nowrap" width="50%">
-                                <a href="editInstallation!edit.action?installation.name=<c:out value="${profileInstallation.name}"/>">
-                                  <c:out value="${profileInstallation.name}"/>
-                                </a>
-                                 (<c:out value="${profileInstallation.varValue}"/>)
-                              </ec:column>
-                              <ec:column property="type" title="Type" style="white-space: nowrap" width="49%"/>
-                              <ec:column property="id" title="&nbsp;" width="1%">
-                                <a href="removeProfileInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationName=<c:out value="${profileInstallation.name}"/>">
-                                  <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
-                                </a>                    
-                              </ec:column>        
-                            </ec:row>
-                          </ec:table>                
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+              <div class="axial">
+                <table width="100%">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <ec:table items="profileInstallations"
+                                  var="profileInstallation"
+                                  showExports="false"
+                                  showPagination="false"
+                                  showStatusBar="false"
+                                  sortable="false"
+                                  filterable="false"
+                                  width="100%"
+                                  autoIncludeParameters="false">
+                          <ec:row highlightRow="true">
+                            <ec:column property="nameEdit" title="Name" style="white-space: nowrap" width="50%">
+                              <a href="editInstallation!edit.action?installation.name=<c:out value="${profileInstallation.name}"/>">
+                                <c:out value="${profileInstallation.name}"/>
+                              </a>
+                               (<c:out value="${profileInstallation.varValue}"/>)
+                            </ec:column>
+                            <ec:column property="type" title="Type" style="white-space: nowrap" width="49%"/>
+                            <ec:column property="id" title="&nbsp;" width="1%">
+                              <a href="removeProfileInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationName=<c:out value="${profileInstallation.name}"/>">
+                                <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
+                              </a>                    
+                            </ec:column>        
+                          </ec:row>
+                        </ec:table>                
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ww:form action="addInstallationProfile!addInstallation.action" method="get">
+                  <ww:hidden name="profile.id" />
                   <div class="functnbar3">
                     <!-- can't use default profile to display this select -->
                     <ww:select theme="profile" name="installationName" list="allInstallations" listKey="name" listValue="name" />
                     <ww:submit value="%{getText('add')}"/>
                   </div>
-                </div>              
-              
-              </ww:form>
+                </ww:form>
+              </div>              
+
             </td>
           </tr>
         </ww:if>
