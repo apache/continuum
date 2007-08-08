@@ -73,7 +73,7 @@
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <c:choose>
-            <c:when test="${!project.inBuildingQueue and !project.inCheckoutQueue and ( project.state gt 0 ) and ( project.state lt 5 )}">
+            <c:when test="${!project.inBuildingQueue and !project.inCheckoutQueue and ( ( ( project.state gt 0 ) and ( project.state lt 5 ) ) or project.state == 10 ) }">
               <ww:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
                 <ww:param name="projectId" value="${project.id}"/>
                 <ww:param name="projectGroupId" value="${project.projectGroupId}"/>
