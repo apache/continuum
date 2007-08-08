@@ -369,13 +369,13 @@ public class MailContinuumNotifier
 
         ExecutorConfigurator executorConfigurator = null;
         Installation builder = null;
+        Profile profile = null;
         if ( buildDefinition != null )
         {
-            Profile profile = buildDefinition.getProfile();
+            profile = buildDefinition.getProfile();
             if ( profile != null )
             {
                 builder = profile.getBuilder();
-
             }
         }
         if ( builder != null )
@@ -407,7 +407,7 @@ public class MailContinuumNotifier
         }
 
         return continuum.getInstallationService().getExecutorConfiguratorVersion( builder == null ? null : builder
-            .getVarValue(), executorConfigurator );
+            .getVarValue(), executorConfigurator, profile );
     }
 
     private String generateSubject( Project project, BuildResult build )

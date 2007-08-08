@@ -564,7 +564,8 @@
       
     <action name="saveInstallation" class="installation" method="save">
       <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
-      <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
+      <result name="edit">/WEB-INF/jsp/admin/editInstallation.jsp</result>
+      <result name="success" type="redirect-action">installationsList</result>
     </action> 
     <action name="deleteInstallation" class="installation" method="delete">
       <result name="input">/WEB-INF/jsp/admin/installationsList.jsp</result>

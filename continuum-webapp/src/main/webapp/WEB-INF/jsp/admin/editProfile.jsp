@@ -65,7 +65,7 @@
           </ww:form>
           </td>
         </tr>
-        <ww:if test="profile.id != '' && ${not empty allInstallations} ">
+        <ww:if test="profile.id != 0">
           <tr>
             <td>
               <div class="axial">
@@ -84,14 +84,14 @@
                                   autoIncludeParameters="false">
                           <ec:row highlightRow="true">
                             <ec:column property="nameEdit" title="Name" style="white-space: nowrap" width="50%">
-                              <a href="editInstallation!edit.action?installation.name=<c:out value="${profileInstallation.name}"/>">
+                              <a href="editInstallation!edit.action?installation.installationId=<c:out value="${profileInstallation.installationId}"/>">
                                 <c:out value="${profileInstallation.name}"/>
                               </a>
                                (<c:out value="${profileInstallation.varValue}"/>)
                             </ec:column>
                             <ec:column property="type" title="Type" style="white-space: nowrap" width="49%"/>
                             <ec:column property="id" title="&nbsp;" width="1%">
-                              <a href="removeProfileInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationName=<c:out value="${profileInstallation.name}"/>">
+                              <a href="removeProfileInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
                                 <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
                               </a>                    
                             </ec:column>        
@@ -105,12 +105,11 @@
                   <ww:hidden name="profile.id" />
                   <div class="functnbar3">
                     <!-- can't use default profile to display this select -->
-                    <ww:select theme="profile" name="installationName" list="allInstallations" listKey="name" listValue="name" />
+                    <ww:select theme="profile" name="installationId" list="allInstallations" listKey="installationId" listValue="name" />
                     <ww:submit value="%{getText('add')}"/>
                   </div>
                 </ww:form>
               </div>              
-
             </td>
           </tr>
         </ww:if>

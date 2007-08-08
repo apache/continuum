@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -124,7 +125,7 @@ public class DefaultInstallationService
                 Profile profile = new Profile();
                 profile.setName( storedOne.getName() );
                 profile = profileService.addProfile( profile );
-                profileService.addEnvVarInProfile( profile, storedOne );
+                profileService.addInstallationInProfile( profile, storedOne );
             }
         }
         catch ( ProfileException e )
@@ -154,6 +155,7 @@ public class DefaultInstallationService
     /**
      * @see org.apache.maven.continuum.installation.InstallationService#getAllInstallations()
      */
+    @SuppressWarnings ("unchecked")
     public List<Installation> getAllInstallations()
         throws InstallationException
     {
@@ -169,14 +171,14 @@ public class DefaultInstallationService
     }
 
     /**
-     * @see org.apache.maven.continuum.installation.InstallationService#getInstallation(java.lang.String)
+     * @see org.apache.maven.continuum.installation.InstallationService#getInstallation(int)
      */
-    public Installation getInstallation( String name )
+    public Installation getInstallation( int installationId )
         throws InstallationException
     {
         try
         {
-            return store.getInstallationByName( name );
+            return store.getInstallation( installationId );
         }
         catch ( ContinuumStoreException e )
         {
@@ -192,7 +194,7 @@ public class DefaultInstallationService
     {
         try
         {
-            Installation stored = getInstallation( installation.getName() );
+            Installation stored = getInstallation( installation.getInstallationId() );
             if ( stored == null )
             {
                 throw new InstallationException( "installation with name " + installation.getName() + " not exists" );
@@ -333,13 +335,42 @@ public class DefaultInstallationService
         }
         return cliOutput;
     }
+    
+    private Map<String, String> getEnvVars( Profile profile )
+    {
+        Map<String, String> environnments = new HashMap<String, String>();
+        if ( profile == null )
+        {
+            return environnments;
+        }
+        if ( profile.getBuilder() != null )
+        {
+            environnments.put( profile.getBuilder().getVarName(), profile.getBuilder().getVarValue() );
+        }
+        if ( profile.getJdk() != null )
+        {
+            environnments.put( profile.getJdk().getVarName(), profile.getJdk().getVarValue() );
+        }
+        if ( profile.getEnvironmentVariables() != null )
+        {
+            for ( Iterator iterator = profile.getEnvironmentVariables().iterator(); iterator.hasNext(); )
+            {
+                Installation installation = (Installation) iterator.next();
+                environnments.put( installation.getVarName(), installation.getVarValue() );
+            }
+        }
+        return environnments;
+    }
 
     /**
      * @see org.apache.maven.continuum.installation.InstallationService#getExecutorConfiguratorVersion(java.lang.String,org.apache.maven.continuum.execution.ExecutorConfigurator)
      */
-    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator )
+    @SuppressWarnings ("unchecked")
+    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator, Profile profile )
         throws InstallationException
     {
+         
+
         if ( executorConfigurator == null )
         {
             return Collections.EMPTY_LIST;
@@ -358,6 +389,16 @@ public class DefaultInstallationService
                 executable.append( executorConfigurator.getRelativePath() + File.separator );
                 commandline.addEnvironment( executorConfigurator.getEnvVar(), path );
             }
+            //Installations are env var they must be add if exists
+            Map<String, String> environments = getEnvVars( profile );
+            // no null check we use a private method just here
+            for ( Iterator<String> iterator = environments.keySet().iterator(); iterator.hasNext(); )
+            {
+                String key = iterator.next();
+                String value = environments.get( key );
+                commandline.addEnvironment( key, value );
+            }
+            
             executable = executable.append( executorConfigurator.getExecutable() );
             commandline.setExecutable( executable.toString() );
             commandline.addArguments( new String[]{executorConfigurator.getVersionArgument()} );

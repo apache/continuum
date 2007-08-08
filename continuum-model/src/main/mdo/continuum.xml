@@ -1101,7 +1101,7 @@
             <!-- org.apache.maven.continuum.model.system. -->
             <multiplicity>*</multiplicity>
           </association>
-        </field>          
+        </field>
       </fields>
     </class>
 
@@ -1124,11 +1124,16 @@
           <name>varName</name>
           <version>1.1.0+</version>
           <type>String</type>
-        </field>          
-        <field jpox.primary-key="true" jpox.value-strategy="off">
+        </field>
+        <field>
           <name>name</name>
           <version>1.1.0+</version>
           <type>String</type>
+        </field>
+        <field jpox.primary-key="true">
+          <name>installationId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
           <identifier>true</identifier>
         </field>
       </fields>

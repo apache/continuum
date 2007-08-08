@@ -41,22 +41,22 @@ public class DefaultInstallationServiceTest
 
     private static final String NEW_INSTALLATION_NAME = "newInstallation";
 
-    public Installation defaultInstallation;
+    //public Installation defaultInstallation;
 
     protected void setUp()
         throws Exception
     {
         super.setUp();
         getStore().eraseDatabase();
-        if ( getInstallationService().getInstallation( DEFAULT_INSTALLATION_NAME ) == null )
+        /*if ( getInstallationService().getAllInstallations().isEmpty() )
         {
             defaultInstallation = createDefault();
             ContinuumStore store = getStore();
             defaultInstallation = store.addInstallation( defaultInstallation );
-        }
+        }*/
     }
 
-    private Installation createDefault()
+    private Installation createDefaultInstallation()
     {
         Installation installation = new Installation();
         installation.setType( "description" );
@@ -89,33 +89,22 @@ public class DefaultInstallationServiceTest
     public void testAddInstallation()
         throws Exception
     {
-        this.addInstallation( NEW_INSTALLATION_NAME, null, "bar", InstallationService.JDK_TYPE );
-        Installation getted = getInstallationService().getInstallation( NEW_INSTALLATION_NAME );
+        Installation added = this.addInstallation( NEW_INSTALLATION_NAME, null, "bar", InstallationService.JDK_TYPE );
+        Installation getted = getInstallationService().getInstallation( added.getInstallationId() );
         assertNotNull( getted );
         assertEquals( getInstallationService().getEnvVar( InstallationService.JDK_TYPE ), getted.getVarName() );
         assertEquals( "bar", getted.getVarValue() );
-    }
-
-    public void testgetOne()
-        throws Exception
-    {
-        Installation getted = getInstallationService().getInstallation( DEFAULT_INSTALLATION_NAME );
-        assertNotNull( getted );
-        assertEquals( defaultInstallation.getType(), getted.getType() );
-        assertEquals( defaultInstallation.getName(), getted.getName() );
-        assertEquals( defaultInstallation.getVarName(), getted.getVarName() );
-        assertEquals( defaultInstallation.getVarValue(), getted.getVarValue() );
     }
 
     public void testRemove()
         throws Exception
     {
         String name = "toremove";
-        this.addInstallation( name, "foo", "bar", InstallationService.JDK_TYPE );
-        Installation getted = getInstallationService().getInstallation( name );
+        Installation added = this.addInstallation( name, "foo", "bar", InstallationService.JDK_TYPE );
+        Installation getted = getInstallationService().getInstallation( added.getInstallationId() );
         assertNotNull( getted );
         getInstallationService().delete( getted );
-        getted = getInstallationService().getInstallation( name );
+        getted = getInstallationService().getInstallation( added.getInstallationId() );
         assertNull( getted );
 
     }
@@ -124,15 +113,15 @@ public class DefaultInstallationServiceTest
         throws Exception
     {
         String name = "toupdate";
-        this.addInstallation( name, "foo", "bar", InstallationService.JDK_TYPE );
-        Installation getted = getInstallationService().getInstallation( name );
+        Installation added = this.addInstallation( name, "foo", "bar", InstallationService.JDK_TYPE );
+        Installation getted = getInstallationService().getInstallation( added.getInstallationId() );
         assertNotNull( getted );
         assertEquals( getInstallationService().getEnvVar( InstallationService.JDK_TYPE ), getted.getVarName() );
         assertEquals( "bar", getted.getVarValue() );
         getted.setVarName( "updatefoo" );
         getted.setVarValue( "updatedbar" );
         getInstallationService().update( getted );
-        getted = getInstallationService().getInstallation( name );
+        getted = getInstallationService().getInstallation( added.getInstallationId() );
         assertNotNull( getted );
         assertEquals( getInstallationService().getEnvVar( InstallationService.JDK_TYPE ), getted.getVarName() );
         assertEquals( "updatedbar", getted.getVarValue() );
@@ -174,7 +163,7 @@ public class DefaultInstallationServiceTest
         {
             javaHome = System.getProperty( "java.home" );
         }
-        List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java );
+        List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java, null );
         System.out.println( infos );
         assertNotNull( infos );
     }
@@ -185,7 +174,7 @@ public class DefaultInstallationServiceTest
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
         ExecutorConfigurator java = installationService.getExecutorConfigurator( InstallationService.MAVEN2_TYPE );
         String javaHome = System.getProperty( "M2_HOME" );
-        List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java );
+        List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java, null );
         assertNotNull( infos );
     }
 
@@ -195,7 +184,7 @@ public class DefaultInstallationServiceTest
 
         Installation installation = new Installation();
         installation.setType( InstallationService.JDK_TYPE );
-        installation.setName( "automatic" );
+        installation.setName( "automaticJdk" );
         installation.setVarName( "automaticvarName" );
         installation.setVarValue( "automaticvarValue" );
         installation = getInstallationService().add( installation, true );
@@ -203,6 +192,28 @@ public class DefaultInstallationServiceTest
         List<Profile> profiles = profileService.getAllProfiles();
         assertEquals( 1, profiles.size() );
         Profile profile = (Profile) profiles.get( 0 );
-        assertEquals( "automatic", profile.getName() );
+        assertEquals( "automaticJdk", profile.getName() );
+        Installation jdk = profile.getJdk();
+        assertNotNull( jdk );
+        assertEquals("automaticJdk", jdk.getName());
+    }
+    
+    public void testUpdateName()
+        throws Exception
+    {
+        Installation installation = new Installation();
+        installation.setType( InstallationService.JDK_TYPE );
+        installation.setName( "automatic" );
+        installation.setVarName( "automaticvarName" );
+        installation.setVarValue( "automaticvarValue" );
+        installation = getInstallationService().add( installation, true );
+        
+        installation.setName( "new name here" );
+        getInstallationService().update( installation );
+        
+        Installation getted = getInstallationService().getInstallation( installation.getInstallationId() );
+        assertEquals( "new name here", getted.getName() );
+        
+
     }
 }

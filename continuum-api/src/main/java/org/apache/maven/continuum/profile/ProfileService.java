@@ -63,4 +63,7 @@ public interface ProfileService
 
     public void addEnvVarInProfile( Profile profile, Installation envVar )
         throws ProfileException;
+    
+    public void addInstallationInProfile( Profile profile, Installation installation )
+        throws ProfileException;
 }

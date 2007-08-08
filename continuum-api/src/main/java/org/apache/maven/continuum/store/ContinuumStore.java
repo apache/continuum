@@ -164,7 +164,7 @@ public interface ContinuumStore
     void updateInstallation( Installation installation )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
-    Installation getInstallationByName( String installationName )
+    Installation getInstallation( int installationId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     List getAllBuildsForAProjectByDate( int projectId );

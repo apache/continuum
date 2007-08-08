@@ -19,6 +19,7 @@ package org.apache.maven.continuum.profile;
  * under the License.
  */
 
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
@@ -171,6 +172,26 @@ public class DefaultProfileService
         {
             throw new ProfileException( e.getMessage(), e );
         }
+    }
+
+    public void addInstallationInProfile( Profile profile, Installation installation )
+        throws ProfileException
+    {
+        if ( InstallationService.JDK_TYPE.equals( installation.getType() ) )
+        {
+            setJdkInProfile( profile, installation );
+        }
+        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() )
+            || InstallationService.MAVEN2_TYPE.equals( installation.getType() )
+            || InstallationService.ANT_TYPE.equals( installation.getType() ) )
+        {
+            setBuilderInProfile( profile, installation );
+        }
+        else
+        {
+            addEnvVarInProfile( profile, installation );
+        }
+
     }
 
 }

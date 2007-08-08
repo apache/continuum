@@ -84,7 +84,7 @@ public class InstallationAction
     public String edit()
         throws Exception
     {
-        this.installation = installationService.getInstallation( installation.getName() );
+        this.installation = installationService.getInstallation( installation.getInstallationId() );
 
         if ( this.installation != null )
         {
@@ -107,26 +107,23 @@ public class InstallationAction
     public String save()
         throws Exception
     {
-        Installation installationToSave = installationService.getInstallation( this.installation.getName() );
-        if ( installationToSave == null )
+        if ( installation.getInstallationId() == 0 )
         {
             installationService.add( installation, this.automaticProfile );
         }
         else
         {
-            installationToSave.setName( installation.getName() );
-            installationToSave.setVarName( installation.getVarName() );
-            installationToSave.setVarValue( installation.getVarValue() );
-            installationService.update( installationToSave );
+            installationService.update( installation );
+            return "edit";
         }
-        this.installations = installationService.getAllInstallations();
+        //this.installations = installationService.getAllInstallations();
         return SUCCESS;
     }
 
     public String delete()
         throws Exception
     {
-        Installation installationToDelete = installationService.getInstallation( installation.getName() );
+        Installation installationToDelete = installationService.getInstallation( installation.getInstallationId() );
         installationService.delete( installationToDelete );
         this.installations = installationService.getAllInstallations();
         return SUCCESS;
