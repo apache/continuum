@@ -59,10 +59,10 @@ public class DefaultInstallationService
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
-    
+
     /**
      * @plexus.requirement role-hint="default"
-     */    
+     */
     private ProfileService profileService;
 
     private Map<String, ExecutorConfigurator> typesValues;
@@ -254,7 +254,13 @@ public class DefaultInstallationService
             Properties systemEnvVars = CommandLineUtils.getSystemEnvVars( false );
 
             String javaHome = (String) systemEnvVars.get( "JAVA_HOME" );
+            // olamy : JAVA_HOME can not exists with a mac user
+            if ( StringUtils.isEmpty( javaHome ) )
+            {
+                return getJavaHomeInformations( System.getProperty( "java.home" ) );
+            }
             return getJavaHomeInformations( javaHome );
+
         }
         catch ( IOException e )
         {
@@ -274,6 +280,10 @@ public class DefaultInstallationService
     public List<String> getJdkInformations( Installation installation )
         throws InstallationException
     {
+        if ( installation == null )
+        {
+            return getDefaultJdkInformations();
+        }
         if ( StringUtils.isEmpty( installation.getVarValue() ) )
         {
             return getDefaultJdkInformations();
@@ -299,16 +309,7 @@ public class DefaultInstallationService
         Commandline commandline = new Commandline();
 
         String executable = javaHome + File.separator + "bin" + File.separator + "java";
-        /*
-        if ( Os.isFamily( Os.FAMILY_DOS ) )
-        {
-            executable = "%JAVA_HOME%\\bin\\java";
-        }
-        else
-        {
-            executable = "$JAVA_HOME/bin/java";
-        }
-        */
+
         commandline.setExecutable( executable );
         commandline.addArguments( new String[]{"-version"} );
         final List<String> cliOutput = new ArrayList<String>();

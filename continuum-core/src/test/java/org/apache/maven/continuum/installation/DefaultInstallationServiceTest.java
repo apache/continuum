@@ -1,13 +1,14 @@
 package org.apache.maven.continuum.installation;
 
-import java.util.List;
-
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.store.ContinuumStore;
+import org.codehaus.plexus.util.StringUtils;
+
+import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -149,7 +150,11 @@ public class DefaultInstallationServiceTest
         throws Exception
     {
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
-        String javaHome = System.getProperty( "JAVA_HOME" );
+        String javaHome = System.getenv( "JAVA_HOME" );
+        if ( StringUtils.isEmpty( javaHome ) )
+        {
+            javaHome = System.getProperty( "java.home" );
+        }
         Installation installation = new Installation();
         installation.setName( "test" );
         installation.setType( InstallationService.JDK_TYPE );
@@ -164,7 +169,11 @@ public class DefaultInstallationServiceTest
     {
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
         ExecutorConfigurator java = installationService.getExecutorConfigurator( InstallationService.JDK_TYPE );
-        String javaHome = System.getProperty( "JAVA_HOME" );
+        String javaHome = System.getenv( "JAVA_HOME" );
+        if ( StringUtils.isEmpty( javaHome ) )
+        {
+            javaHome = System.getProperty( "java.home" );
+        }
         List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java );
         System.out.println( infos );
         assertNotNull( infos );
@@ -179,7 +188,7 @@ public class DefaultInstallationServiceTest
         List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java );
         assertNotNull( infos );
     }
-    
+
     public void testAddInstallationAutomaticProfile()
         throws Exception
     {
