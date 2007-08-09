@@ -28,6 +28,7 @@
 
   <h3><ww:text name="projectGroup.projects.title"/></h3>
 
+  <form id="projectsForm" action="removeProjects.action" method="post">
   <ec:table items="projects"
             var="project"
             showExports="false"
@@ -40,6 +41,11 @@
       <%-- needed to access project in included pages --%>
       <c:set var="project" value="${pageScope.project}" scope="request"/>
 
+      <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+        <ec:column alias="checkbox" title=" " style="width:5px" filterable="false" sortable="false" width="1%">
+          <input type="checkbox" name="selectedProjects" value="${project.id}" />
+        </ec:column>
+      </redback:ifAuthorized>
       <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
       <ec:column property="name" title="summary.projectTable.name" width="50%">
         <ww:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
@@ -180,5 +186,22 @@
       </ec:column>
     </ec:row>
   </ec:table>
+  <ww:if test="${not empty projects}">
+    <div class="functnbar3">
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
+                <input type="hidden" name="projectGroupId" value="${project.projectGroupId}" />
+                <input type="button" name="delete-project" value="<ww:text name="delete"/>" onclick="document.forms.projectsForm.submit();" />
+              </redback:ifAuthorized>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ww:if>
+  </form>
 </ww:if>
 </ww:i18n>

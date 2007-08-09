@@ -201,6 +201,13 @@
       </result>
     </action>
 
+    <action name="removeProjects" class="projects" method="remove">
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
     <action name="buildProject" class="buildProject">
       <result name="success" type="chain">groupSummary</result>
       <result name="to_group_page" type="redirect-action">
