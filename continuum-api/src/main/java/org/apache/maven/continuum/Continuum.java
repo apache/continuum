@@ -148,6 +148,16 @@ public interface Continuum
     List getProjectsInBuildOrder()
         throws CycleDetectedException, ContinuumException;
 
+    /**
+     * take a collection of projects and sort for order
+     *
+     * @param projects
+     * @return
+     * @throws CycleDetectedException
+     */
+    List getProjectsInBuildOrder( Collection projects )
+        throws CycleDetectedException;
+
     void buildProjects()
         throws ContinuumException;
 
@@ -199,8 +209,9 @@ public interface Continuum
 
     List getChangesSinceLastSuccess( int projectId, int buildResultId )
         throws ContinuumException;
-    
-    void removeBuildResult( int buildId ) throws ContinuumException;
+
+    void removeBuildResult( int buildId )
+        throws ContinuumException;
 
     // ----------------------------------------------------------------------
     // Projects

@@ -201,7 +201,7 @@
       </result>
     </action>
 
-    <action name="removeProjects" class="projects" method="remove">
+    <action name="ProjectsList" class="projects">
       <result name="success" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>

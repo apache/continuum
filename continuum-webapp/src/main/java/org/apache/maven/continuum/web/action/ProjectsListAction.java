@@ -20,11 +20,20 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.dag.CycleDetectedException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -34,13 +43,40 @@ import java.util.Iterator;
 public class ProjectsListAction
     extends ContinuumActionSupport
 {
+    /**
+     * @plexus.requirement role-hint="jdo"
+     */
+    private ContinuumStore store;
+
     private Collection selectedProjects;
 
     private String projectGroupName = "";
 
     private int projectGroupId;
 
-    public String remove()
+    private String methodToCall;
+
+    public String execute()
+        throws Exception
+    {
+        if ( StringUtils.isEmpty( methodToCall ) )
+        {
+            return SUCCESS;
+        }
+
+        if ( "build".equals( methodToCall ) )
+        {
+            return build();
+        }
+        else if ( "remove".equals( methodToCall ) )
+        {
+            return remove();
+        }
+
+        return SUCCESS;
+    }
+
+    private String remove()
         throws ContinuumException
     {
         try
@@ -69,6 +105,86 @@ public class ProjectsListAction
                     getLogger().error( "Error removing Project with id=" + projectId );
                     addActionError( "Unable to remove Project with id=" + projectId );
                 }
+            }
+        }
+
+        return SUCCESS;
+    }
+
+    private String build()
+        throws ContinuumException
+    {
+        try
+        {
+            checkModifyProjectGroupAuthorization( getProjectGroupName() );
+        }
+        catch ( AuthorizationRequiredException e )
+        {
+            return REQUIRES_AUTHORIZATION;
+        }
+
+        if ( selectedProjects != null && !selectedProjects.isEmpty() )
+        {
+            ArrayList<Project> projectsList = new ArrayList();
+            for ( Iterator i = selectedProjects.iterator(); i.hasNext(); )
+            {
+                int projectId = Integer.parseInt( (String) i.next() );
+                Project p = getContinuum().getProjectWithAllDetails( projectId );
+                projectsList.add( p );
+            }
+
+            List sortedProjects;
+            try
+            {
+                sortedProjects = getContinuum().getProjectsInBuildOrder( projectsList );
+            }
+            catch ( CycleDetectedException e )
+            {
+                sortedProjects = projectsList;
+            }
+
+            //TODO : Change this part because it's a duplicate of DefaultContinuum.buildProjectGroup*
+            BuildDefinition groupDefaultBD = null;
+            try
+            {
+                groupDefaultBD = store.getDefaultBuildDefinitionForProjectGroup( projectGroupId );
+            }
+            catch ( ContinuumObjectNotFoundException e )
+            {
+                throw new ContinuumException( "Project Group (id=" + projectGroupId +
+                    " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( "Project Group (id=" + projectGroupId +
+                    " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
+            }
+
+            for ( Iterator i = sortedProjects.iterator(); i.hasNext(); )
+            {
+                int buildDefId = groupDefaultBD.getId();
+                Project project = (Project) i.next();
+                BuildDefinition projectDefaultBD = null;
+                try
+                {
+                    projectDefaultBD = store.getDefaultBuildDefinitionForProject( project.getId() );
+                }
+                catch ( ContinuumObjectNotFoundException e )
+                {
+                    getLogger().debug( e.getMessage() );
+                }
+                catch ( ContinuumStoreException e )
+                {
+                    getLogger().debug( e.getMessage() );
+                }
+
+                if ( projectDefaultBD != null )
+                {
+                    buildDefId = projectDefaultBD.getId();
+                    getLogger().debug( "Project " + project.getId() +
+                        " has own default build definition, will use it instead of group's." );
+                }
+                getContinuum().buildProject( project.getId(), buildDefId, ContinuumProjectState.TRIGGER_FORCED );
             }
         }
 
@@ -104,5 +220,10 @@ public class ProjectsListAction
     public void setProjectGroupId( int projectGroupId )
     {
         this.projectGroupId = projectGroupId;
+    }
+
+    public void setMethodToCall( String methodToCall )
+    {
+        this.methodToCall = methodToCall;
     }
 }
