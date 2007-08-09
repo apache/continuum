@@ -70,7 +70,7 @@
       <ww:param name="tabName" value="'Summary'"/>
     </ww:action>
 
-    <h3>Project Group</h3>
+    <h3><ww:text name="projectGroup.informations.title"/></h3>
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
         <c1:data label="%{getText('projectGroup.name.label')}" name="projectGroup.name"/>
@@ -80,7 +80,7 @@
     </div>
 
     <redback:ifAnyAuthorized permissions="continuum-build-group,continuum-remove-group" resource="${projectGroup.name}">
-      <h3>Project Group Actions</h3>
+      <h3><ww:text name="projectGroup.actions.title"/></h3>
 
       <c:if test="${!empty actionErrors}">
         <div class="errormessage">
@@ -97,7 +97,7 @@
               <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
                 <form action="buildProjectGroup.action" method="post">
                     <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
-                    <input type="submit" name="build" value="<ww:text name="build"/>"/>
+                    <input type="submit" name="build" value="<ww:text name="projectGroup.buildGroup"/>"/>
                 </form>
                 </redback:ifAuthorized>
             <td>
@@ -112,7 +112,7 @@
               <redback:ifAuthorized permission="continuum-remove-group" resource="${projectGroup.name}">
                 <form action="removeProjectGroup.action" method="post">
                     <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
-                    <input type="submit" name="remove" value="<ww:text name="delete"/>"/>
+                    <input type="submit" name="remove" value="<ww:text name="projectGroup.deleteGroup"/>"/>
                 </form>
               </redback:ifAuthorized>
             </td>
