@@ -195,8 +195,8 @@
             <td>
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
                 <input type="hidden" name="projectGroupId" value="${project.projectGroupId}" />
-                <input type="button" name="delete-projects" value="<ww:text name="delete"/>" onclick="document.forms.projectsForm.methodToCall='remove';document.forms.projectsForm.submit();" />
-                <input type="button" name="build-projects" value="<ww:text name="build"/>" onclick="document.forms.projectsForm.methodToCall='build';document.forms.projectsForm.submit();" />
+                <input type="button" name="delete-projects" value="<ww:text name="delete"/>" onclick="document.forms.projectsForm.methodToCall.value='remove';document.forms.projectsForm.submit();" />
+                <input type="button" name="build-projects" value="<ww:text name="build"/>" onclick="document.forms.projectsForm.methodToCall.value='build';document.forms.projectsForm.submit();" />
               </redback:ifAuthorized>
             </td>
           </tr>
