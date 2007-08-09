@@ -28,7 +28,8 @@
 
   <h3><ww:text name="projectGroup.projects.title"/></h3>
 
-  <form id="projectsForm" action="removeProjects.action" method="post">
+  <form id="projectsForm" action="ProjectsList.action" method="post">
+    <input type="hidden" name="methodToCall" value="" />
   <ec:table items="projects"
             var="project"
             showExports="false"
@@ -194,7 +195,8 @@
             <td>
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
                 <input type="hidden" name="projectGroupId" value="${project.projectGroupId}" />
-                <input type="button" name="delete-project" value="<ww:text name="delete"/>" onclick="document.forms.projectsForm.submit();" />
+                <input type="button" name="delete-projects" value="<ww:text name="delete"/>" onclick="document.forms.projectsForm.methodToCall='remove';document.forms.projectsForm.submit();" />
+                <input type="button" name="build-projects" value="<ww:text name="build"/>" onclick="document.forms.projectsForm.methodToCall='build';document.forms.projectsForm.submit();" />
               </redback:ifAuthorized>
             </td>
           </tr>

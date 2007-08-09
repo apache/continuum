@@ -1115,7 +1115,7 @@ public class DefaultContinuum
      * @return
      * @throws CycleDetectedException
      */
-    private List getProjectsInBuildOrder( Collection projects )
+    public List getProjectsInBuildOrder( Collection projects )
         throws CycleDetectedException
     {
         if ( projects == null || projects.isEmpty() )
