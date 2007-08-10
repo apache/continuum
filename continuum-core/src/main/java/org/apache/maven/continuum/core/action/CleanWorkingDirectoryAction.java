@@ -22,6 +22,8 @@ package org.apache.maven.continuum.core.action;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+import org.apache.maven.shared.model.fileset.FileSet;
+import org.apache.maven.shared.model.fileset.util.FileSetManager;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
@@ -55,7 +57,13 @@ public class CleanWorkingDirectoryAction
 
         if ( workingDirectory.exists() )
         {
-            FileUtils.cleanDirectory( workingDirectory );
+            FileSetManager fileSetManager = new FileSetManager();
+            FileSet fileSet = new FileSet();
+            fileSet.setDirectory( workingDirectory.getPath() );
+            fileSet.addInclude( "**/**" );
+            // TODO : this with a configuration option somewhere ?
+            fileSet.setFollowSymlinks( false );
+            fileSetManager.delete( fileSet );
         }
     }
 }
