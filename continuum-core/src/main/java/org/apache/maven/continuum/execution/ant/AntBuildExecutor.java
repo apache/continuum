@@ -32,8 +32,10 @@ import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -72,17 +74,26 @@ public class AntBuildExecutor
         String executable = getInstallationService().getExecutorConfigurator( InstallationService.ANT_TYPE )
             .getExecutable();
 
-        String arguments = "";
+        StringBuffer arguments = new StringBuffer();
 
         String buildFile = buildDefinition.getBuildFile();
 
         if ( !StringUtils.isEmpty( buildFile ) )
         {
-            arguments = "-f " + buildFile + " ";
+            arguments.append( "-f " ).append( buildFile ).append( " " );
         }
 
-        arguments +=
-            StringUtils.clean( buildDefinition.getArguments() ) + " " + StringUtils.clean( buildDefinition.getGoals() );
+        arguments.append( StringUtils.clean( buildDefinition.getArguments() ) ).append( " " );
+
+        Properties props = getContinuumSystemProperties( project );
+        for ( Enumeration itr = props.propertyNames(); itr.hasMoreElements(); )
+        {
+            String name = (String) itr.nextElement();
+            String value = props.getProperty( name );
+            arguments.append( "\"-D" ).append( name ).append( "=" ).append( value ).append( "\" " );
+        }
+
+        arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
 
         Map<String, String> environments = getEnvironments( buildDefinition );
         String antHome = environments.get( getInstallationService().getEnvVar( InstallationService.ANT_TYPE ) );
@@ -92,7 +103,7 @@ public class AntBuildExecutor
             setResolveExecutable( false );
         }
 
-        return executeShellCommand( project, executable, arguments, buildOutput, environments );
+        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
     }
 
     protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )

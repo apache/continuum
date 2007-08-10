@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -263,6 +264,16 @@ public abstract class AbstractBuildExecutor
             envVars.put( installation.getVarName(), installation.getVarValue() );
         }
         return envVars;
+    }
+
+    protected Properties getContinuumSystemProperties( Project project )
+    {
+        Properties properties = new Properties();
+        properties.setProperty( "continuum.project.group.name", project.getProjectGroup().getName() );
+        properties.setProperty( "continuum.project.lastBuild.state", String.valueOf( project.getOldState() ) );
+        properties.setProperty( "continuum.project.lastBuild.number", String.valueOf( project.getBuildNumber() ) );
+        properties.setProperty( "continuum.project.nextBuild.number", String.valueOf( project.getBuildNumber() + 1 ) );
+        return properties;
     }
 
     public boolean isBuilding( Project project )

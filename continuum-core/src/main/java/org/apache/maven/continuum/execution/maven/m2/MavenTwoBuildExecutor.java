@@ -51,11 +51,13 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -106,17 +108,27 @@ public class MavenTwoBuildExecutor
         String executable = getInstallationService().getExecutorConfigurator( InstallationService.MAVEN2_TYPE )
             .getExecutable();
 
-        String arguments = "";
+        StringBuffer arguments = new StringBuffer();
 
         String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
 
         if ( !StringUtils.isEmpty( buildFile ) && !"pom.xml".equals( buildFile ) )
         {
-            arguments = "-f " + buildFile + " ";
+            arguments.append( "-f " ).append( buildFile ).append( " " );
         }
 
-        arguments +=
-            StringUtils.clean( buildDefinition.getArguments() ) + " " + StringUtils.clean( buildDefinition.getGoals() );
+        arguments.append( StringUtils.clean( buildDefinition.getArguments() ) ).append( " " );
+
+        Properties props = getContinuumSystemProperties( project );
+        for ( Enumeration itr = props.propertyNames(); itr.hasMoreElements(); )
+        {
+            String name = (String) itr.nextElement();
+            String value = props.getProperty( name );
+            arguments.append( "\"-D" ).append( name ).append( "=" ).append( value ).append( "\" " );
+        }
+
+        arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
+
         Map<String, String> environments = getEnvironments( buildDefinition );
         String m2Home = environments.get( getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ) );
         if ( StringUtils.isNotEmpty( m2Home ) )
@@ -125,7 +137,7 @@ public class MavenTwoBuildExecutor
             setResolveExecutable( false );
         }
 
-        return executeShellCommand( project, executable, arguments, buildOutput, environments );
+        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
     }
 
     public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
