@@ -53,6 +53,29 @@
                 <name>mail.smtp.port</name>
                 <value>25</value>
               </property>
+
+              <!--
+              <property> 
+                <name>mail.smtp.auth</name>
+                <value>true</value>
+              </property>
+              <property>
+                <name>mail.smtp.user</name>
+                <value>your_login</value>
+              </property>
+              <property>
+                <name>password</name>
+                <value>your_password</value>
+              </property>
+              <property>
+                <name>mail.smtp.debug</name>
+                <value>true</value>
+              </property>
+              <property>
+                <name>mail.smtp.starttls.enable</name>
+                <value>true</value>
+              </property>
+              -->
             </properties>
           </resource>
           <!--
