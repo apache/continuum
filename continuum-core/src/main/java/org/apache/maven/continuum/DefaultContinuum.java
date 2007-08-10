@@ -720,7 +720,12 @@ public class DefaultContinuum
                 " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
         }
 
-        buildProjectGroupWithBuildDefinition( projectGroupId, groupDefaultBD.getId(), true );
+        int buildDefinitionId = -1;
+        if ( groupDefaultBD != null )
+        {
+            buildDefinitionId = groupDefaultBD.getId();
+        }
+        buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, true );
     }
 
     /**
