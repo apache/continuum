@@ -63,6 +63,37 @@
             <type>javax.sql.DataSource</type>
             <properties>
               <property>
+                <name>factory</name>
+                <value>org.apache.commons.dbcp.BasicDataSourceFactory</value>
+              </property>
+
+              <!-- Maximum number of dB connections in pool. Make sure you
+                   configure your mysqld max_connections large enough to handle
+                   all of your db connections. Set to 0 for no limit.
+                   -->
+              <property>
+                <name>maxActive</name>
+                <value>100</value>
+              </property>
+
+              <!-- Maximum number of idle dB connections to retain in pool.
+                   Set to 0 for no limit.
+                   -->
+              <property>
+                <name>maxIdle</name>
+                <value>30</value>
+              </property>
+
+              <!-- Maximum time to wait for a dB connection to become available
+                   in ms, in this example 10 seconds. An Exception is thrown if
+                   this timeout is exceeded.  Set to -1 to wait indefinitely.
+                   -->
+              <property>
+                <name>maxWait</name>
+                <value>10000</value>
+              </property>
+
+              <property>
                 <name>driverClassName</name>
                 <value>org.apache.derby.jdbc.EmbeddedDriver</value>
               </property>
@@ -84,6 +115,37 @@
             <name>jdbc/continuum</name>
             <type>javax.sql.DataSource</type>
             <properties>
+              <property>
+                <name>factory</name>
+                <value>org.apache.commons.dbcp.BasicDataSourceFactory</value>
+              </property>
+
+              <!-- Maximum number of dB connections in pool. Make sure you
+                   configure your mysqld max_connections large enough to handle
+                   all of your db connections. Set to 0 for no limit.
+                   -->
+              <property>
+                <name>maxActive</name>
+                <value>100</value>
+              </property>
+
+              <!-- Maximum number of idle dB connections to retain in pool.
+                   Set to 0 for no limit.
+                   -->
+              <property>
+                <name>maxIdle</name>
+                <value>30</value>
+              </property>
+
+              <!-- Maximum time to wait for a dB connection to become available
+                   in ms, in this example 10 seconds. An Exception is thrown if
+                   this timeout is exceeded.  Set to -1 to wait indefinitely.
+                   -->
+              <property>
+                <name>maxWait</name>
+                <value>10000</value>
+              </property>
+
               <property>
                 <name>driverClassName</name>
                 <value>org.apache.derby.jdbc.EmbeddedDriver</value>
