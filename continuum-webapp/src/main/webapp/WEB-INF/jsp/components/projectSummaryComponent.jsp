@@ -42,6 +42,9 @@
       <%-- needed to access project in included pages --%>
       <c:set var="project" value="${pageScope.project}" scope="request"/>
 
+      <%-- placed here for reusability --%>
+      <c:set var="projectIdle" value="${!project.inBuildingQueue and !project.inCheckoutQueue and ( ( ( project.state gt 0 ) and ( project.state lt 5 ) ) or project.state == 10 ) }" scope="request"/>
+
       <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
         <ec:column alias="checkbox" title=" " style="width:5px" filterable="false" sortable="false" width="1%">
           <input type="checkbox" name="selectedProjects" value="${project.id}" />
@@ -80,7 +83,7 @@
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <c:choose>
-            <c:when test="${!project.inBuildingQueue and !project.inCheckoutQueue and ( ( ( project.state gt 0 ) and ( project.state lt 5 ) ) or project.state == 10 ) }">
+            <c:when test="${projectIdle}">
               <ww:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
                 <ww:param name="projectId" value="${project.id}"/>
                 <ww:param name="projectGroupId" value="${project.projectGroupId}"/>
@@ -91,12 +94,24 @@
               </ww:a>
             </c:when>
             <c:otherwise>
-              <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="Build Now" title="Build Now" border="0">
+              <ww:url id="cancelBuildProjectUrl" action="cancelBuild" namespace="/" includeParams="none">
+                <ww:param name="projectId" value="${project.id}"/>
+              </ww:url>
+              <ww:a href="%{cancelBuildProjectUrl}">
+                <img src="<ww:url value='/images/cancelbuild.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
+              </ww:a>
             </c:otherwise>
           </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="Build Now" title="Build Now" border="0">
+          <c:choose>
+            <c:when test="${projectIdle}">
+              <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="Build Now" title="Build Now" border="0">
+            </c:when>
+            <c:otherwise>
+              <img src="<ww:url value='/images/cancelbuild_disabled.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
+            </c:otherwise>
+          </c:choose>
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="buildHistoryAction" title="&nbsp;" width="1%">
