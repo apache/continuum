@@ -81,38 +81,45 @@
       </ec:column>
       <ec:column property="projectGroupName" title="summary.projectTable.group" width="30%"/> 
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
-        <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
-          <c:choose>
-            <c:when test="${projectIdle}">
-              <ww:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
-                <ww:param name="projectId" value="${project.id}"/>
-                <ww:param name="projectGroupId" value="${project.projectGroupId}"/>
-                <ww:param name="fromGroupPage" value="true"/>
-              </ww:url>
-              <ww:a href="%{buildProjectUrl}">
-                <img src="<ww:url value='/images/buildnow.gif'/>" alt="Build Now" title="Build Now" border="0">
-              </ww:a>
-            </c:when>
-            <c:otherwise>
-              <ww:url id="cancelBuildProjectUrl" action="cancelBuild" namespace="/" includeParams="none">
-                <ww:param name="projectId" value="${project.id}"/>
-              </ww:url>
-              <ww:a href="%{cancelBuildProjectUrl}">
-                <img src="<ww:url value='/images/cancelbuild.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
-              </ww:a>
-            </c:otherwise>
-          </c:choose>
-        </redback:ifAuthorized>
-        <redback:elseAuthorized>
-          <c:choose>
-            <c:when test="${projectIdle}">
-              <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="Build Now" title="Build Now" border="0">
-            </c:when>
-            <c:otherwise>
-              <img src="<ww:url value='/images/cancelbuild_disabled.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
-            </c:otherwise>
-          </c:choose>
-        </redback:elseAuthorized>
+        <c:choose>
+          <c:when test="${project.inBuildingQueue or project.inCheckoutQueue}">
+            <img src="<ww:url value='/images/inqueue.gif'/>" alt="In Queue" title="In Queue" border="0">
+          </c:when>
+          <c:otherwise>
+            <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
+              <c:choose>
+                <c:when test="${projectIdle}">
+                  <ww:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
+                    <ww:param name="projectId" value="${project.id}"/>
+                    <ww:param name="projectGroupId" value="${project.projectGroupId}"/>
+                    <ww:param name="fromGroupPage" value="true"/>
+                  </ww:url>
+                  <ww:a href="%{buildProjectUrl}">
+                    <img src="<ww:url value='/images/buildnow.gif'/>" alt="Build Now" title="Build Now" border="0">
+                  </ww:a>
+                </c:when>
+                <c:otherwise>
+                  <ww:url id="cancelBuildProjectUrl" action="cancelBuild" namespace="/" includeParams="none">
+                    <ww:param name="projectId" value="${project.id}"/>
+                  </ww:url>
+                  <ww:a href="%{cancelBuildProjectUrl}">
+                    <img src="<ww:url value='/images/cancelbuild.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
+                  </ww:a>
+                </c:otherwise>
+              </c:choose>
+            </redback:ifAuthorized>
+            <redback:elseAuthorized>
+              <c:choose>
+                <c:when test="${projectIdle}">
+                  <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="Build Now" title="Build Now" border="0">
+                </c:when>
+                <c:otherwise>
+                  <img src="<ww:url value='/images/cancelbuild_disabled.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
+                </c:otherwise>
+              </c:choose>
+            </redback:elseAuthorized>
+          </c:otherwise>
+        </c:choose>
       </ec:column>
       <ec:column property="buildHistoryAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
@@ -183,7 +190,7 @@
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
         <c:choose>
           <c:when
-              test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
+              test="${projectIdle}">
             <ww:url id="deleteProjectUrl" value="deleteProject!default.action" namespace="/">
               <ww:param name="projectId" value="${project.id}"/>
             </ww:url>
