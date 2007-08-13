@@ -178,6 +178,10 @@
     <action name="addMavenOneProject" class="addMavenOneProject">
       <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
       <result name="success" type="chain">groupSummary</result>
+      <result name="projectGroupSummary" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
     </action>
 
     <action name="addProjectInput" class="addProject" method="input">
