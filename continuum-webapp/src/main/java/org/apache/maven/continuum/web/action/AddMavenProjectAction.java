@@ -64,7 +64,7 @@ public abstract class AddMavenProjectAction
     private boolean disableGroupSelection;
 
     private boolean scmUseCache;
-    
+
     private int projectGroupId;
 
     public String execute()
@@ -157,13 +157,19 @@ public abstract class AddMavenProjectAction
 
             return doDefault();
         }
-        
+
         if ( this.getSelectedProjectGroup() > 0 )
         {
             this.setProjectGroupId( this.getSelectedProjectGroup() );
             return "projectGroupSummary";
         }
-        
+
+        if ( result.getProjectGroups() != null && !result.getProjectGroups().isEmpty() )
+        {
+            this.setProjectGroupId( ( (ProjectGroup) result.getProjectGroups().get( 0 ) ).getId() );
+            return "projectGroupSummary";
+        }
+
         return SUCCESS;
     }
 
