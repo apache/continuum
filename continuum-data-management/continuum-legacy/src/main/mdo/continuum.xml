@@ -471,6 +471,14 @@
           </association>
         </field>
         <field>
+          <name>buildDefinition</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>BuildDefinition</type>
+          </association>
+          <defaultValue>null</defaultValue>
+        </field>
+        <field>
           <name>id</name>
           <version>1.0.9+</version>
           <type>int</type>
@@ -545,7 +553,7 @@
         <field jpox.fetch-groups="build-result-with-details">
           <name>modifiedDependencies</name>
           <version>1.1.0+</version>
-          <association>
+          <association jpox.join="false">
             <type>ProjectDependency</type>
             <multiplicity>*</multiplicity>
           </association>
@@ -563,7 +571,7 @@
           <version>1.0.9+</version>
           <type>boolean</type>
         </field>
-        <field>
+        <field stash.maxSize="1024">
           <name>commandLine</name>
           <version>1.0.9+</version>
           <type>String</type>
@@ -706,7 +714,7 @@
       <version>1.0.9+</version>
       <fields>
         <field>
-          <name>name</name>
+          <name stash.maxSize="512">name</name>
           <version>1.0.9+</version>
           <type>String</type>
         </field>
@@ -888,7 +896,7 @@
         </field>
         <field jpox.null-value="default">
           <name>latestBuildId</name>
-          <version>1.0.9+</version>
+          <version>1.0.9</version>
           <type>int</type>
           <defaultValue>0</defaultValue>
         </field>
@@ -959,6 +967,7 @@
 
     <class jpox.table="profiles">
       <name>Profile</name>
+      <packageName>org.apache.maven.continuum.model.system</packageName>
       <version>1.1.0+</version>
       <fields>
         <field>
@@ -1006,6 +1015,15 @@
             <type>Installation</type>
           </association>
         </field>
+        <field>
+          <name>environmentVariables</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>Installation</type>
+            <!-- org.apache.maven.continuum.model.system. -->
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
       </fields>
     </class>
 
@@ -1014,20 +1032,30 @@
       <packageName>org.apache.maven.continuum.model.system</packageName>
       <version>1.1.0+</version>
       <fields>
+        <field jpox.column="installationtype">
+          <name>type</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field jpox.column="varvalue">
+          <name>varValue</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field jpox.column="varname">
+          <name>varName</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
         <field>
-          <name>version</name>
-          <version>1.1.0+</version>
-          <type>String</type>
-        </field>
-        <field jpox.column="installpath">
-          <name>path</name>
-          <version>1.1.0+</version>
-          <type>String</type>
-        </field>
-        <field jpox.primary-key="true" jpox.value-strategy="off">
           <name>name</name>
           <version>1.1.0+</version>
           <type>String</type>
+        </field>
+        <field jpox.primary-key="true">
+          <name>installationId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
           <identifier>true</identifier>
         </field>
       </fields>
@@ -1141,8 +1169,8 @@
       </fields>
       <codeSegments>
         <codeSegment>
-          <version>1.1.0+</version>
-          <code><![CDATA[
+           <version>1.1.0+</version>
+           <code><![CDATA[
     public final static int NEW = 1;
     public final static int OK = 2;
     public final static int FAILED = 3;
