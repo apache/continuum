@@ -19,12 +19,6 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -43,6 +37,12 @@ import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Base class for tests using the continuum store.
@@ -130,8 +130,8 @@ public abstract class AbstractContinuumStoreTestCase
         throws Exception
     {
         // Setting up test data
-        defaultProjectGroup = createTestProjectGroup( "Default Group", "The Default Group",
-                                                      "org.apache.maven.test.default" );
+        defaultProjectGroup =
+            createTestProjectGroup( "Default Group", "The Default Group", "org.apache.maven.test.default" );
 
         testProjectGroup2 = createTestProjectGroup( "test group 2", "test group 2 desc", "test group 2 groupId" );
 
@@ -146,10 +146,10 @@ public abstract class AbstractContinuumStoreTestCase
         testSchedule2 = createTestSchedule( "name2", "description2", 2, "cronExpression2", true );
         testSchedule3 = createTestSchedule( "name3", "description3", 3, "cronExpression3", true );
 
-        testInstallationJava13 = createTestInstallation( "JDK 1.3", InstallationService.JDK_TYPE, "JAVA_HOME",
-                                                         "/usr/local/java-1.3" );
-        testInstallationJava14 = createTestInstallation( "JDK 1.4", InstallationService.JDK_TYPE, "JAVA_HOME",
-                                                         "/usr/local/java-1.4" );
+        testInstallationJava13 =
+            createTestInstallation( "JDK 1.3", InstallationService.JDK_TYPE, "JAVA_HOME", "/usr/local/java-1.3" );
+        testInstallationJava14 =
+            createTestInstallation( "JDK 1.4", InstallationService.JDK_TYPE, "JAVA_HOME", "/usr/local/java-1.4" );
         testInstallationMaven20a3 = createTestInstallation( "Maven 2.0 alpha 3", InstallationService.MAVEN2_TYPE,
                                                             "M2_HOME", "/usr/local/maven-2.0-alpha-3" );
 
@@ -235,11 +235,19 @@ public abstract class AbstractContinuumStoreTestCase
         {
             installationJava14 = store.addInstallation( installationJava14 );
         }
+        else
+        {
+            installationJava14.setInstallationId( 1 );
+        }
 
         Installation installationMaven20a3 = createTestInstallation( testInstallationMaven20a3 );
         if ( addToStore )
         {
             installationMaven20a3 = store.addInstallation( installationMaven20a3 );
+        }
+        else
+        {
+            installationMaven20a3.setInstallationId( 2 );
         }
 
         Installation installationJava13 = createTestInstallation( testInstallationJava13 );
@@ -247,52 +255,68 @@ public abstract class AbstractContinuumStoreTestCase
         {
             installationJava13 = store.addInstallation( installationJava13 );
         }
+        else
+        {
+            installationJava13.setInstallationId( 3 );
+        }
 
-        testProfile1 = createTestProfile( "name1", "description1", 1, true, true, installationJava13,
-                                          installationMaven20a3 );
-        testProfile2 = createTestProfile( "name2", "description2", 2, false, true, installationJava14,
-                                          installationMaven20a3 );
-        testProfile3 = createTestProfile( "name3", "description3", 3, true, false, installationJava14,
-                                          installationMaven20a3 );
+        testProfile1 =
+            createTestProfile( "name1", "description1", 1, true, true, installationJava13, installationMaven20a3 );
+        testProfile2 =
+            createTestProfile( "name2", "description2", 2, false, true, installationJava14, installationMaven20a3 );
+        testProfile3 =
+            createTestProfile( "name3", "description3", 3, true, false, installationJava14, installationMaven20a3 );
 
         Profile profile1 = createTestProfile( testProfile1 );
         if ( addToStore )
         {
             profile1 = store.addProfile( profile1 );
+            testProfile1.setId( profile1.getId() );
         }
-        testProfile1.setId( profile1.getId() );
+        else
+        {
+            testProfile1.setId( 1 );
+        }
 
         Profile profile2 = createTestProfile( testProfile2 );
         if ( addToStore )
         {
             profile2 = store.addProfile( profile2 );
+            testProfile2.setId( profile2.getId() );
         }
-        testProfile2.setId( profile2.getId() );
+        else
+        {
+            testProfile2.setId( 2 );
+        }
 
         Profile profile3 = createTestProfile( testProfile3 );
         if ( addToStore )
         {
             profile3 = store.addProfile( profile3 );
+            testProfile3.setId( profile3.getId() );
         }
-        testProfile3.setId( profile3.getId() );
+        else
+        {
+            profile3.setId( 3 );
+        }
 
-        BuildDefinition testGroupBuildDefinition1 = createTestBuildDefinition( "arguments1", "buildFile1", "goals1",
-                                                                               profile1, schedule2, false, false );
-        BuildDefinition testGroupBuildDefinition2 = createTestBuildDefinition( "arguments2", "buildFile2", "goals2",
-                                                                               profile1, schedule1, false, false );
-        BuildDefinition testGroupBuildDefinition3 = createTestBuildDefinition( "arguments3", "buildFile3", "goals3",
-                                                                               profile2, schedule1, false, false );
-        BuildDefinition testGroupBuildDefinition4 = createTestBuildDefinition( null, null, "deploy", null, null, false,
-                                                                               false );
+        BuildDefinition testGroupBuildDefinition1 =
+            createTestBuildDefinition( "arguments1", "buildFile1", "goals1", profile1, schedule2, false, false );
+        BuildDefinition testGroupBuildDefinition2 =
+            createTestBuildDefinition( "arguments2", "buildFile2", "goals2", profile1, schedule1, false, false );
+        BuildDefinition testGroupBuildDefinition3 =
+            createTestBuildDefinition( "arguments3", "buildFile3", "goals3", profile2, schedule1, false, false );
+        BuildDefinition testGroupBuildDefinition4 =
+            createTestBuildDefinition( null, null, "deploy", null, null, false, false );
 
-        BuildDefinition testBuildDefinition1 = createTestBuildDefinition( "arguments11", "buildFile11", "goals11",
-                                                                          profile2, schedule1, false, false );
-        BuildDefinition testBuildDefinition2 = createTestBuildDefinition( "arguments12", "buildFile12", "goals12",
-                                                                          profile2, schedule2, false, false );
-        BuildDefinition testBuildDefinition3 = createTestBuildDefinition( "arguments13", "buildFile13", "goals13",
-                                                                          profile1, schedule2, false, false );
-        BuildDefinition testBuildDefinition4 = createTestBuildDefinition( null, null, "deploy", null, null, false,
-                                                                          false );
+        BuildDefinition testBuildDefinition1 =
+            createTestBuildDefinition( "arguments11", "buildFile11", "goals11", profile2, schedule1, false, false );
+        BuildDefinition testBuildDefinition2 =
+            createTestBuildDefinition( "arguments12", "buildFile12", "goals12", profile2, schedule2, false, false );
+        BuildDefinition testBuildDefinition3 =
+            createTestBuildDefinition( "arguments13", "buildFile13", "goals13", profile1, schedule2, false, false );
+        BuildDefinition testBuildDefinition4 =
+            createTestBuildDefinition( null, null, "deploy", null, null, false, false );
 
         ProjectGroup group = createTestProjectGroup( defaultProjectGroup );
 
@@ -640,8 +664,8 @@ public abstract class AbstractContinuumStoreTestCase
     {
         return createTestBuildDefinition( buildDefinition.getArguments(), buildDefinition.getBuildFile(),
                                           buildDefinition.getGoals(), buildDefinition.getProfile(), buildDefinition
-                                              .getSchedule(), buildDefinition.isDefaultForProject(), buildDefinition
-                                              .isBuildFresh() );
+            .getSchedule(), buildDefinition.isDefaultForProject(), buildDefinition
+            .isBuildFresh() );
     }
 
     protected static BuildDefinition createTestBuildDefinition( String arguments, String buildFile, String goals,
@@ -685,8 +709,8 @@ public abstract class AbstractContinuumStoreTestCase
 
     private static ScmResult createTestScmResult( ScmResult scmResult, String base )
     {
-        return createTestScmResult( scmResult.getCommandOutput(), scmResult.getProviderMessage(),
-                                    scmResult.isSuccess(), base );
+        return createTestScmResult( scmResult.getCommandOutput(), scmResult.getProviderMessage(), scmResult.isSuccess(),
+                                    base );
     }
 
     private static ScmResult createTestScmResult( String commandOutput, String providerMessage, boolean success,
@@ -752,6 +776,7 @@ public abstract class AbstractContinuumStoreTestCase
     {
         Installation installation = new Installation();
         installation.setName( name );
+        installation.setType( type );
         installation.setVarName( varName );
         installation.setVarValue( varValue );
         return installation;
@@ -784,7 +809,8 @@ public abstract class AbstractContinuumStoreTestCase
     protected static Profile createTestProfile( Profile profile )
     {
         return createTestProfile( profile.getName(), profile.getDescription(), profile.getScmMode(), profile
-            .isBuildWithoutChanges(), profile.isActive(), profile.getJdk(), profile.getBuilder() );
+            .isBuildWithoutChanges(), profile.isActive(), profile.getJdk(), profile.getBuilder(),
+                                      profile.getEnvironmentVariables() );
 //                                  createTestInstallation( profile.getJdk() ),
 //                                  createTestInstallation( profile.getBuilder() ) );
     }
@@ -793,17 +819,9 @@ public abstract class AbstractContinuumStoreTestCase
                                                 boolean buildWithoutChanges, boolean active, Installation jdk,
                                                 Installation builder )
     {
-        Profile profile = new Profile();
-        profile.setActive( active );
-        profile.setBuildWithoutChanges( buildWithoutChanges );
-        profile.setScmMode( scmMode );
-        profile.setDescription( description );
-        profile.setName( name );
-        profile.setBuilder( builder );
-        profile.setJdk( jdk );
-        return profile;
+        return createTestProfile( name, description, scmMode, buildWithoutChanges, active, jdk, builder, null );
     }
-    
+
     protected static Profile createTestProfile( String name, String description, int scmMode,
                                                 boolean buildWithoutChanges, boolean active, Installation jdk,
                                                 Installation builder, List envVars )
@@ -867,7 +885,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare expectedProject - name", expectedProject.getName(), project.getName() );
         assertEquals( "compare expectedProject - desc", expectedProject.getDescription(), project.getDescription() );
         assertEquals( "compare expectedProject - groupId", expectedProject.getGroupId(), project.getGroupId() );
-        assertEquals( "compare expectedProject - artifactId", expectedProject.getArtifactId(), project.getArtifactId() );
+        assertEquals( "compare expectedProject - artifactId", expectedProject.getArtifactId(),
+                      project.getArtifactId() );
         assertEquals( "compare expectedProject - buildNumber", expectedProject.getBuildNumber(), project
             .getBuildNumber() );
         assertEquals( "compare expectedProject - scmUrl", expectedProject.getScmUrl(), project.getScmUrl() );
@@ -896,7 +915,8 @@ public abstract class AbstractContinuumStoreTestCase
             assertNotSame( expectedSchedule, actualSchedule );
             assertEquals( "compare schedule - id", expectedSchedule.getId(), actualSchedule.getId() );
             assertEquals( "compare schedule - name", expectedSchedule.getName(), actualSchedule.getName() );
-            assertEquals( "compare schedule - desc", expectedSchedule.getDescription(), actualSchedule.getDescription() );
+            assertEquals( "compare schedule - desc", expectedSchedule.getDescription(),
+                          actualSchedule.getDescription() );
             assertEquals( "compare schedule - delay", expectedSchedule.getDelay(), actualSchedule.getDelay() );
             assertEquals( "compare schedule - cron", expectedSchedule.getCronExpression(), actualSchedule
                 .getCronExpression() );
@@ -946,7 +966,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare SCM result - changes size", actual.getChanges().size(), expected.getChanges().size() );
         for ( int i = 0; i < actual.getChanges().size(); i++ )
         {
-            assertChangeSetEquals( (ChangeSet) expected.getChanges().get( i ), (ChangeSet) actual.getChanges().get( i ) );
+            assertChangeSetEquals( (ChangeSet) expected.getChanges().get( i ),
+                                   (ChangeSet) actual.getChanges().get( i ) );
         }
     }
 
@@ -959,7 +980,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare change set result - files size", expected.getFiles().size(), actual.getFiles().size() );
         for ( int i = 0; i < actual.getFiles().size(); i++ )
         {
-            assertChangeFileEquals( (ChangeFile) expected.getFiles().get( i ), (ChangeFile) actual.getFiles().get( i ) );
+            assertChangeFileEquals( (ChangeFile) expected.getFiles().get( i ),
+                                    (ChangeFile) actual.getFiles().get( i ) );
         }
     }
 
@@ -1088,7 +1110,8 @@ public abstract class AbstractContinuumStoreTestCase
     protected ContinuumStore createStore()
         throws Exception
     {
-        DefaultConfigurableJdoFactory jdoFactory = (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE, "continuum" );
+        DefaultConfigurableJdoFactory jdoFactory =
+            (DefaultConfigurableJdoFactory) lookup( JdoFactory.ROLE, "continuum" );
 
         jdoFactory.setUrl( "jdbc:hsqldb:mem:" + getName() );
 

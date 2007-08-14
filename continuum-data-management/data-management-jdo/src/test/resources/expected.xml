@@ -404,19 +404,25 @@
   </systemConfiguration>
   <installations>
     <installation>
+      <type>jdk</type>
       <varValue>/usr/local/java-1.3</varValue>
       <varName>JAVA_HOME</varName>
       <name>JDK 1.3</name>
+      <installationId>3</installationId>
     </installation>
     <installation>
+      <type>jdk</type>
       <varValue>/usr/local/java-1.4</varValue>
       <varName>JAVA_HOME</varName>
       <name>JDK 1.4</name>
+      <installationId>1</installationId>
     </installation>
     <installation>
+      <type>maven2</type>
       <varValue>/usr/local/maven-2.0-alpha-3</varValue>    
       <varName>M2_HOME</varName>
       <name>Maven 2.0 alpha 3</name>
+      <installationId>2</installationId>
     </installation>
   </installations>
   <schedules>
@@ -453,8 +459,8 @@
       <description>description1</description>
       <scmMode>1</scmMode>
       <buildWithoutChanges>true</buildWithoutChanges>
-      <jdk name="JDK 1.3"></jdk>
-      <builder name="Maven 2.0 alpha 3"></builder>
+      <jdk installationId="3"></jdk>
+      <builder installationId="2"></builder>
     </profile>
     <profile>
       <id>2</id>
@@ -462,8 +468,8 @@
       <name>name2</name>
       <description>description2</description>
       <scmMode>2</scmMode>
-      <jdk name="JDK 1.4"></jdk>
-      <builder name="Maven 2.0 alpha 3"></builder>
+      <jdk installationId="1"></jdk>
+      <builder installationId="2"></builder>
     </profile>
     <profile>
       <id>3</id>
@@ -471,8 +477,8 @@
       <description>description3</description>
       <scmMode>3</scmMode>
       <buildWithoutChanges>true</buildWithoutChanges>
-      <jdk name="JDK 1.4"></jdk>
-      <builder name="Maven 2.0 alpha 3"></builder>
+      <jdk installationId="1"></jdk>
+      <builder installationId="2"></builder>
     </profile>
   </profiles>
 </continuumDatabase>
