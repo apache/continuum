@@ -540,9 +540,15 @@ public class DefaultContinuum
     {
         try
         {
-            Project project = store.getProject( projectId );
+            Project project = store.getProjectWithBuilds( projectId );
 
             getLogger().info( "Remove project " + project.getName() + "(" + projectId + ")" );
+
+            for ( Iterator i = project.getBuildResults().iterator(); i.hasNext(); )
+            {
+                BuildResult br = (BuildResult) i.next();
+                store.removeBuildResult( br );
+            }
 
             File workingDirectory = getWorkingDirectory( projectId );
 
