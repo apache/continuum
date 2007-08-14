@@ -166,13 +166,13 @@ public class JdoDataManagementTool
             schedules.put( Integer.valueOf( schedule.getId() ), schedule );
         }
 
-        Map<String, Installation> installations = new HashMap<String, Installation>();
+        Map<Integer, Installation> installations = new HashMap<Integer, Installation>();
         for ( Iterator i = database.getInstallations().iterator(); i.hasNext(); )
         {
             Installation installation = (Installation) i.next();
 
             installation = (Installation) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), installation );
-            installations.put( installation.getName(), installation );
+            installations.put( Integer.valueOf( installation.getInstallationId() ), installation );
         }
 
         Map<Integer, Profile> profiles = new HashMap<Integer, Profile>();
@@ -183,11 +183,11 @@ public class JdoDataManagementTool
             // process installations
             if ( profile.getJdk() != null )
             {
-                profile.setJdk( installations.get( profile.getJdk().getName() ) );
+                profile.setJdk( installations.get( profile.getJdk().getInstallationId() ) );
             }
             if ( profile.getBuilder() != null )
             {
-                profile.setBuilder( installations.get( profile.getBuilder().getName() ) );
+                profile.setBuilder( installations.get( profile.getBuilder().getInstallationId() ) );
             }
 
             profile = (Profile) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), profile );
