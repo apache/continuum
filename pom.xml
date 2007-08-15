@@ -355,11 +355,6 @@
       </dependency>
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
-        <artifactId>continuum-web</artifactId>
-        <version>${pom.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-xmlrpc-api</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -418,6 +413,36 @@
         <artifactId>continuum-webapp</artifactId>
         <version>${pom.version}</version>
         <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>continuum-legacy</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>data-management-api</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>data-management-cli</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>data-management-jdo</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>data-management-redback-jdo</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>redback-legacy</artifactId>
+        <version>${pom.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.shared</groupId>

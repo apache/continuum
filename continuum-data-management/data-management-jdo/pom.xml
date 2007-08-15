@@ -31,7 +31,6 @@
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>data-management-api</artifactId>
-      <version>1.1-beta-3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -40,7 +39,6 @@
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-legacy</artifactId>
-      <version>1.1-beta-3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
