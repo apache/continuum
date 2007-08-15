@@ -487,6 +487,11 @@
         <version>1.1.7</version>
       </dependency>
       <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.8</version>
+      </dependency>
+      <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
         <version>1.4.3</version>
@@ -600,6 +605,11 @@
         <artifactId>redback-taglib</artifactId>
         <version>${redback.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus.redback</groupId>
+        <artifactId>redback-data-management</artifactId>
+        <version>${redback.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -626,7 +636,7 @@
 
   <properties>
     <continuumWebappVersion>${pom.version}</continuumWebappVersion>
-    <maven.version>2.0.5</maven.version>
+    <maven.version>2.0.6</maven.version>
     <wagon.version>1.0-beta-2</wagon.version>
     <maven-scm.version>1.0</maven-scm.version>
     <redback.version>1.0-alpha-2</redback.version>

@@ -35,7 +35,6 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-jdo2</artifactId>
-      <version>1.0-alpha-8</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
@@ -44,24 +43,6 @@
     <dependency>
       <groupId>org.codehaus.plexus.redback</groupId>
       <artifactId>redback-data-management</artifactId>
-      <version>1.0-alpha-1</version>
     </dependency>
-<!--
-    <dependency>
-      <groupId>org.codehaus.plexus.security</groupId>
-      <artifactId>plexus-security-authorization-rbac-store-jdo</artifactId>
-      <version>1.0-alpha-5</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus.security</groupId>
-      <artifactId>plexus-security-keys-jdo</artifactId>
-      <version>1.0-alpha-5</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus.security</groupId>
-      <artifactId>plexus-security-user-management-provider-jdo</artifactId>
-      <version>1.0-alpha-5</version>
-    </dependency>
--->
   </dependencies>
 </project>
