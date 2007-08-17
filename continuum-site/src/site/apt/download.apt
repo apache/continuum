@@ -4,14 +4,16 @@
  Trygve Laugstol
  Emmanuel Venisse
  ------
- MON July 24 2007
+ Fri Aug 17 2007
 
-Download Continuum 1.1 Beta 1
+Download Continuum 1.1 Beta 2
 
-  Continuum 1.1 Beta 1 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
+  Continuum 1.1 Beta 2 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
 
 *-------------------------------+---------+----------+-----------+
 |                               | Download | Checksum | Signature |
+*-------------------------------+---------+----------+-----------+
+| Continuum 1.1-beta-2 (tar.gz)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-plexus-runtime-1.1-beta-2-bin.tar.gz} continuum-plexus-runtime-1.1-beta-2-bin.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/continuum-plexus-runtime-1.1-beta-2-bin.tar.gz.md5} continuum-plexus-runtime-1.1-beta-2-bin.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-plexus-runtime-1.1-beta-2-bin.tar.gz.asc} continuum-plexus-runtime-1.1-beta-2-bin.tar.gz.asc}} |
 *-------------------------------+---------+----------+-----------+
 | Continuum 1.1-beta-1 (tar.gz)| {{{http://people.apache.org/builds/maven/continuum/1.1-beta-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-beta-1/continuum-plexus-runtime-1.1-beta-1-bin.tar.gz} continuum-plexus-runtime-1.1-beta-1-bin.tar.gz}} | {{{http://people.apache.org/builds/maven/continuum/1.1-beta-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-beta-1/continuum-plexus-runtime-1.1-beta-1-bin.tar.gz.md5} continuum-1.1-beta-1-bin.tar.gz.md5}} | {{{http://people.apache.org/builds/maven/continuum/1.1-beta-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-beta-1/continuum-plexus-runtime-1.1-beta-1-bin.tar.gz.asc} continuum-1.1-beta-1-bin.tar.gz.asc}} |
 *-------------------------------+---------+----------+-----------+
