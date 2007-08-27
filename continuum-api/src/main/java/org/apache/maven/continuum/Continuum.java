@@ -141,6 +141,9 @@ public interface Continuum
     boolean isInCheckoutQueue( int projectId )
         throws ContinuumException;
 
+    boolean removeProjectFromCheckoutQueue( int projectId )
+        throws ContinuumException;
+
     // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------

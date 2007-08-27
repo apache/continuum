@@ -336,4 +336,28 @@ public class DefaultContinuumTest
             }
         }
     }
+
+    public void testRemoveProjectFromCheckoutQueue()
+        throws Exception
+    {
+        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+
+        String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
+
+        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
+
+        assertNotNull( result );
+
+        List projects = result.getProjects();
+
+        assertEquals( 1, projects.size() );
+
+        assertEquals( Project.class, projects.get( 0 ).getClass() );
+
+        Project project = (Project) projects.get( 0 );
+
+        assertTrue( "project missing from the checkout queue", continuum.removeProjectFromCheckoutQueue( project.getId() ) );
+
+        assertFalse( "project still exist on the checkout queue", continuum.removeProjectFromCheckoutQueue( project.getId() ) );
+    }
 }
