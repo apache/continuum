@@ -531,6 +531,33 @@ public class DefaultContinuum
         return false;
     }
 
+    public boolean removeProjectFromCheckoutQueue( int projectId )
+        throws ContinuumException
+    {
+        List queue;
+
+        try
+        {
+            queue = checkoutQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumException( "Error while getting the checkout queue.", e );
+        }
+
+        for ( Iterator it = queue.iterator(); it.hasNext(); )
+        {
+            CheckOutTask task = (CheckOutTask) it.next();
+
+            if ( task != null && task.getProjectId() == projectId )
+            {
+                return checkoutQueue.remove( task );
+            }
+        }
+
+        return false;
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -956,9 +983,13 @@ public class DefaultContinuum
     {
         if ( checkQueues )
         {
-            if ( isInBuildingQueue( project.getId(), buildDefinitionId ) || isInCheckoutQueue( project.getId() ) )
+            if ( isInBuildingQueue( project.getId(), buildDefinitionId ) )
             {
                 return;
+            }
+            if ( isInCheckoutQueue( project.getId() ) )
+            {
+                removeProjectFromCheckoutQueue( project.getId() );
             }
         }
 
