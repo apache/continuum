@@ -112,7 +112,11 @@ public class DefaultBuildController
             updateWorkingDirectory( context );
 
             getLogger().info( "Merging SCM results" );
-            mergeScmResults( context );
+            //CONTINUUM-1393
+            if ( !context.getBuildDefinition().isBuildFresh() )
+            {
+                mergeScmResults( context );
+            }
 
             if ( !checkScmResult( context ) )
             {
