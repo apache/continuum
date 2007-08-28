@@ -298,7 +298,7 @@ public abstract class AbstractBuildExecutor
         return workingDirectoryService.getWorkingDirectory( project );
     }
 
-    public TestResult getTestResults( Project project )
+    public TestResult getTestResults( Project project, int buildResultId )
         throws ContinuumBuildExecutorException
     {
         return null;

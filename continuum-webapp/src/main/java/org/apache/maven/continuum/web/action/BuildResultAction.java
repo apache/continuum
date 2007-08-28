@@ -75,10 +75,20 @@ public class BuildResultAction
         //todo get this working for other types of test case rendering other then just surefire
         // check if there are surefire results to display
         project = getContinuum().getProject( getProjectId() );
-        hasSurefireResults = FileUtils.fileExists( project.getWorkingDirectory() + "/target/surefire-reports" );
 
         buildResult = getContinuum().getBuildResult( getBuildId() );
 
+        // directory contains files ?
+        File surefireReportsDirectory = getContinuum().getConfiguration().getTestReportsDirectory( buildId, projectId );
+        File[] files = surefireReportsDirectory.listFiles();
+        if ( files == null )
+        {
+            hasSurefireResults = false;
+        }
+        else
+        {
+            hasSurefireResults = files.length > 0;
+        }
         changeSet = getContinuum().getChangesSinceLastSuccess( getProjectId(), getBuildId() );
 
         File buildOutputFile = getContinuum().getConfiguration().getBuildOutputFile( getBuildId(), getProjectId() );

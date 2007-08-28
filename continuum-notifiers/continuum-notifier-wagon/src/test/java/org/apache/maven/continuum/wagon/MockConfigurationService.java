@@ -71,6 +71,19 @@ public class MockConfigurationService
         return new File( basedir, "src/test/resources" + "/" + "working-directory" );
     }
 
+    public File getTestReportsDirectory( int buildId, int projectId )
+        throws ConfigurationException
+    {
+        File dir = getBuildOutputDirectory( projectId );
+
+        if ( !dir.exists() && !dir.mkdirs() )
+        {
+            throw new ConfigurationException( "Could not make the build output directory: " + "'"
+                + dir.getAbsolutePath() + "'." );
+        }
+        return new File( dir.getPath() + File.separatorChar + buildId + File.separatorChar + "surefire-reports " );
+    }
+
     public File getApplicationHome()
     {
         return null;

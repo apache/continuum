@@ -167,6 +167,8 @@ public class DefaultConfigurationService
     //
     // ----------------------------------------------------------------------
 
+
+
     public File getBuildOutputDirectory( int projectId )
     {
         File dir = new File( getBuildOutputDirectory(), Integer.toString( projectId ) );
@@ -182,6 +184,15 @@ public class DefaultConfigurationService
         return dir;
     }
 
+    public File getTestReportsDirectory( int buildId, int projectId )
+        throws ConfigurationException
+    {
+        File ouputDirectory = getBuildOutputDirectory( projectId );
+        
+        return new File( ouputDirectory.getPath() + File.separatorChar + buildId + File.separatorChar + "surefire-reports" );
+
+    }    
+    
     public File getBuildOutputFile( int buildId, int projectId )
         throws ConfigurationException
     {

@@ -20,6 +20,7 @@ package org.apache.maven.continuum.execution;
  */
 
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.TestResult;
 
@@ -47,6 +48,6 @@ public interface ContinuumBuildExecutor
     List getDeployableArtifacts( File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException;
 
-    TestResult getTestResults( Project project )
+    TestResult getTestResults( Project project, int buildResultId )
         throws ContinuumBuildExecutorException;
 }

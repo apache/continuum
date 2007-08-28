@@ -21,6 +21,8 @@ package org.apache.maven.continuum.execution.maven.m2;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
+import org.apache.maven.continuum.configuration.ConfigurationException;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -38,6 +40,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.MXParser;
 import org.codehaus.plexus.util.xml.pull.XmlPullParser;
@@ -88,6 +91,11 @@ public class MavenTwoBuildExecutor
      * @plexus.requirement
      */
     private MavenProjectHelper projectHelper;
+    
+    /**
+     * @plexus.requirement
+     */    
+    private ConfigurationService configurationService;
 
     // ----------------------------------------------------------------------
     //
@@ -293,13 +301,26 @@ public class MavenTwoBuildExecutor
         return artifacts;
     }
 
-    public TestResult getTestResults( Project project )
+    public TestResult getTestResults( Project project, int buildId )
         throws ContinuumBuildExecutorException
     {
-        return getTestResults( getWorkingDirectory( project ) );
+        File backupDirectory = null;
+        try
+        {
+            backupDirectory = configurationService.getTestReportsDirectory( buildId, project.getId() );
+            if ( !backupDirectory.exists() )
+            {
+                backupDirectory.mkdirs();
+            }
+        }
+        catch ( ConfigurationException e )
+        {
+            getLogger().info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
+        }
+        return getTestResults( getWorkingDirectory( project ), backupDirectory );
     }
 
-    private TestResult getTestResults( File workingDir )
+    private TestResult getTestResults( File workingDir, File backupDirectory )
         throws ContinuumBuildExecutorException
     {
         DirectoryScanner scanner = new DirectoryScanner();
@@ -316,6 +337,16 @@ public class MavenTwoBuildExecutor
         for ( int i = 0; i < testResultFiles.length; i++ )
         {
             File xmlFile = new File( workingDir, testResultFiles[i] );
+            try
+            {
+            if (backupDirectory != null)
+            {
+                FileUtils.copyFileToDirectory( xmlFile, backupDirectory );
+            }
+            } catch (IOException e)
+            {
+                getLogger().info( "failed to backup unit report file " + xmlFile.getPath() );
+            }
             SuiteResult suite = new SuiteResult();
             try
             {

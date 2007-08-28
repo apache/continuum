@@ -181,7 +181,7 @@ public class ExecuteBuilderContinuumAction
 
             try
             {
-                TestResult testResult = buildExecutor.getTestResults( project );
+                TestResult testResult = buildExecutor.getTestResults( project, buildResult.getId() );
                 buildResult.setTestResult( testResult );
             }
             catch ( Throwable t )

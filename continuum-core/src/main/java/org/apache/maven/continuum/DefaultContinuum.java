@@ -1057,7 +1057,34 @@ public class DefaultContinuum
     public void removeBuildResult( int buildId )
         throws ContinuumException
     {
-        store.removeBuildResult( getBuildResult( buildId ) );
+        BuildResult buildResult = getBuildResult( buildId );
+        store.removeBuildResult( buildResult );
+        
+        // cleanup some files
+        try
+        {
+            File buildOutputDirectory = getConfiguration().getBuildOutputDirectory( buildResult.getProject().getId() );
+            File buildDirectory = new File( buildOutputDirectory, Integer.toString( buildId ) );
+
+            if ( buildDirectory.exists() )
+            {
+                FileUtils.deleteDirectory( buildDirectory );
+            }
+            File buildOutputFile = getConfiguration().getBuildOutputFile( buildId, buildResult.getProject().getId() );
+            if ( buildOutputFile.exists() )
+            {
+                buildOutputFile.delete();
+            }
+        }
+        catch ( ConfigurationException e )
+        {
+            getLogger().info( "skip error during cleanup build files " + e.getMessage(), e );
+        }
+        catch ( IOException e )
+        {
+            getLogger().info( "skip IOException during cleanup build files " + e.getMessage(), e );
+        }
+        
     }
 
     public String getBuildOutput( int projectId, int buildId )
