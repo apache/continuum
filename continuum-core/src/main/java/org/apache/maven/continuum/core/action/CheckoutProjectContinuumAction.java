@@ -70,6 +70,8 @@ public class CheckoutProjectContinuumAction
         try
         {
             result = scm.checkOut( project, workingDirectory );
+            //CONTINUUM-1394
+            result.setChanges( null );
         }
         catch ( ContinuumScmException e )
         {
