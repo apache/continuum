@@ -62,6 +62,9 @@ public interface ConfigurationService
 
     File getBuildOutputFile( int buildId, int projectId )
         throws ConfigurationException;
+    
+    File getTestReportsDirectory( int buildId, int projectId )
+        throws ConfigurationException;
 
     // ----------------------------------------------------------------------
     //

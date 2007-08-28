@@ -20,7 +20,9 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.TestResult;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.StringUtils;
@@ -66,7 +68,7 @@ public class SurefireReportAction
     private Project project;
 
     public String execute()
-        throws ContinuumException
+        throws ContinuumException, ConfigurationException
     {
         try
         {
@@ -79,8 +81,7 @@ public class SurefireReportAction
 
         project = getProjectById( projectId );
 
-        //@todo maven-surefire-report reportsDirectory should be detected ?
-        File reportsDirectory = new File( project.getWorkingDirectory() + "/target/surefire-reports" );
+        File reportsDirectory = getContinuum().getConfiguration().getTestReportsDirectory( buildId, projectId );
 
         parseReports( reportsDirectory );
 
@@ -137,6 +138,7 @@ public class SurefireReportAction
 
         for ( Iterator suites = suiteList.iterator(); suites.hasNext(); )
         {
+            
             ReportTestSuite suite = (ReportTestSuite) suites.next();
 
             totalTests += suite.getNumberOfTests();
@@ -761,4 +763,5 @@ public class SurefireReportAction
     {
         return getProjectById( projectId ).getProjectGroup().getName();
     }
+
 }
