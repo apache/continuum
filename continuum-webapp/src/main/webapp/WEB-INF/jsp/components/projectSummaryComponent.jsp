@@ -26,6 +26,20 @@
 <ww:i18n name="localization.Continuum">
 <ww:if test="${not empty projects}">
 
+  <h3><ww:text name="projectGroup.buildsStatut.title"/></h3>
+  <table>
+    <tr>
+      <td>
+          <ww:text name="projectGroup.buildsStatut.success"/> : ${groupSummary.numSuccesses}
+          &nbsp;<img src="${request.contextPath}/images/icon_success_sml.gif" alt="<ww:text name="projectGroup.buildsStatut.success"/>">    
+          &nbsp; <ww:text name="projectGroup.buildsStatut.errors"/> : ${groupSummary.numErrors}
+          &nbsp;<img src="${request.contextPath}/images/icon_error_sml.gif" alt="<ww:text name="projectGroup.buildsStatut.errors"/>">
+          &nbsp; <ww:text name="projectGroup.buildsStatut.failures"/> : ${groupSummary.numFailures}
+          &nbsp;<img src="${request.contextPath}/images/icon_warning_sml.gif" alt="<ww:text name="projectGroup.buildsStatut.failures"/>">
+      <td>      
+    </tr>
+  </table>
+
   <h3><ww:text name="projectGroup.projects.title"/></h3>
 
   <form id="projectsForm" action="ProjectsList.action" method="post">
