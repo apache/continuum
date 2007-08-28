@@ -87,6 +87,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -2186,11 +2188,19 @@ public class DefaultContinuum
     public String getFileContent( int projectId, String directory, String filename )
         throws ContinuumException
     {
+        String relativePath = "\\.\\./"; // prevent users from using relative paths.
+        Pattern pattern = Pattern.compile( relativePath );
+        Matcher matcher = pattern.matcher( directory );
+        String filteredDirectory = matcher.replaceAll( "" );
+
+        matcher = pattern.matcher( filename );
+        String filteredFilename = matcher.replaceAll( "" );
+
         File workingDirectory = getWorkingDirectory( projectId );
 
-        File fileDirectory = new File( workingDirectory, directory );
+        File fileDirectory = new File( workingDirectory, filteredDirectory );
 
-        File userFile = new File( fileDirectory, filename );
+        File userFile = new File( fileDirectory, filteredFilename );
 
         try
         {
