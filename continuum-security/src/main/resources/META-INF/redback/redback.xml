@@ -280,7 +280,22 @@
           <resource>global</resource>
         </permission>        
       </permissions>
-    </role>        
+    </role> 
+	  <role>
+      <id>continuum-manage-schedules</id>
+	    <name>Continuum Manage Scheduling</name>
+      <assignable>true</assignable>
+      <permanent>true</permanent>
+      <permissions>
+        <permission>
+          <id>continuum-manage-schedules</id>
+          <name>Continuum Manage Scheduling</name>  
+          <permanent>true</permanent>
+          <operation>continuum-manage-schedules</operation>
+          <resource>global</resource>
+        </permission>
+      </permissions>		
+	  </role>       
   </roles>
   <templates>
   	<template>
