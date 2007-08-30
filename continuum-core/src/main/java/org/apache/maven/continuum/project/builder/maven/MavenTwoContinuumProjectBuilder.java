@@ -19,6 +19,7 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
 import org.apache.maven.continuum.execution.maven.m2.MavenTwoBuildExecutor;
 import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
@@ -68,6 +69,11 @@ public class MavenTwoContinuumProjectBuilder
     private ContinuumStore store;
 
     /**
+     * @plexus.requirement
+     */
+    private ConfigurationService configurationService;
+
+    /**
      * @plexus.configuration
      */
     private List excludedPackagingTypes = new ArrayList();
@@ -103,6 +109,7 @@ public class MavenTwoContinuumProjectBuilder
 
     private void readModules( URL url, ContinuumProjectBuildingResult result, boolean groupPom, String username,
                               String password, String scmUrl, boolean loadRecursiveProjects )
+        throws ContinuumProjectBuilderException
     {
 
         MavenProject mavenProject;
@@ -158,27 +165,13 @@ public class MavenTwoContinuumProjectBuilder
             // projects
             if ( projectGroup != null )
             {
-                BuildDefinition bd = new BuildDefinition();
-
-                bd.setDefaultForProject( true );
-
-                if ( loadRecursiveProjects )
-                {
-                    bd.setArguments( "--batch-mode --non-recursive" );
-                }
-                else
-                {
-                    bd.setArguments( "--batch-mode" );
-                }
-                bd.setGoals( "clean install" );
-
-                bd.setBuildFile( "pom.xml" );
+                BuildDefinition buildDefinition = getDefaultBuildDefinition( loadRecursiveProjects );
 
                 try
                 {
                     Schedule schedule = store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME );
 
-                    bd.setSchedule( schedule );
+                    buildDefinition.setSchedule( schedule );
                 }
                 catch ( ContinuumStoreException e )
                 {
@@ -188,7 +181,7 @@ public class MavenTwoContinuumProjectBuilder
                 // jdo complains that Collections.singletonList(bd) is a second class object and fails.
                 ArrayList arrayList = new ArrayList();
 
-                arrayList.add( bd );
+                arrayList.add( buildDefinition );
 
                 projectGroup.setBuildDefinitions( arrayList );
 
@@ -290,6 +283,37 @@ public class MavenTwoContinuumProjectBuilder
                     readModules( moduleUrl, result, false, username, password, scmUrl + "/" + module, true );
                 }
             }
+        }
+    }
+
+    private BuildDefinition getDefaultBuildDefinition( boolean loadRecursiveProjects )
+        throws ContinuumProjectBuilderException
+    {
+        try
+        {
+            // due to CONTINUUM-1207 user can do what they with arguments
+            // we must remove if exists --non-recursive or -N
+            BuildDefinition buildDefinition = configurationService.getDefaultMavenTwoBuildDefinition();
+            if ( !loadRecursiveProjects )
+            {
+                if ( StringUtils.isEmpty( buildDefinition.getArguments() ) )
+                {
+                    // strange for a mvn build 
+                    getLogger().info( "build definition has empty args" );
+                }
+                else
+                {
+                    String arguments = buildDefinition.getArguments().replace( "--non-recursive", "" );
+                    arguments = arguments.replace( "-N", "" );
+                    buildDefinition.setArguments( arguments );
+                }
+
+            }
+            return buildDefinition;
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumProjectBuilderException( e.getMessage(), e );
         }
     }
 

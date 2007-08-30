@@ -19,6 +19,7 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelperException;
@@ -53,6 +54,11 @@ public class MavenOneContinuumProjectBuilder
     /**
      * @plexus.requirement
      */
+    private ConfigurationService configurationService;
+
+    /**
+     * @plexus.requirement
+     */
     private MavenOneMetadataHelper metadataHelper;
 
     /**
@@ -72,6 +78,7 @@ public class MavenOneContinuumProjectBuilder
 
     public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                                      boolean recursiveProjects )
+        throws ContinuumProjectBuilderException
     {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
 
@@ -95,26 +102,7 @@ public class MavenOneContinuumProjectBuilder
                 return result;
             }
 
-            BuildDefinition bd = new BuildDefinition();
-
-            bd.setDefaultForProject( true );
-
-            bd.setArguments( "" );
-
-            bd.setGoals( "clean:clean jar:install" );
-
-            bd.setBuildFile( "project.xml" );
-
-            try
-            {
-                Schedule schedule = store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME );
-
-                bd.setSchedule( schedule );
-            }
-            catch ( ContinuumStoreException e )
-            {
-                getLogger().error( "Can't get default schedule.", e );
-            }
+            BuildDefinition bd = configurationService.getDefaultMavenOneBuildDefinition();
 
             project.addBuildDefinition( bd );
 
@@ -125,6 +113,10 @@ public class MavenOneContinuumProjectBuilder
             getLogger().error( "Unknown error while processing metadata", e );
 
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumProjectBuilderException( e.getMessage(), e );
         }
 
         ProjectGroup projectGroup = new ProjectGroup();
