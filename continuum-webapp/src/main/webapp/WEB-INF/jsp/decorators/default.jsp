@@ -31,6 +31,7 @@
   <link rel="stylesheet" type="text/css" href="<ww:url value="/css/print.css"/>" media="print"/>
   <link rel="stylesheet" type="text/css" href="<ww:url value="/css/extremecomponents.css"/>" media="screen"/>
   <link rel="shortcut icon" href="<ww:url value="/favicon.ico"/>" type="image/x-icon"/>
+  <script type="text/javascript" src="<ww:url value="/js/prototype.js"/>"></script>
 
   <decorator:head/>
 </head>
@@ -62,9 +63,12 @@
 
 <script language="javascript">
     <!--
-    if (document.forms[0])
+    if ( document.forms[0] )
     {
-        document.forms[0].elements[0].focus();
+        if ( Form.findFirstElement( document.forms[0] ) )
+        {
+            Form.focusFirstElement( document.forms[0] ).activate;
+        }
     }
     -->
 </script>
