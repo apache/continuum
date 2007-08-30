@@ -152,33 +152,15 @@
           <operation>continuum-manage-configuration</operation>
           <resource>global</resource>
         </permission>
-        <permission>
-          <id>continuum-manage-schedules</id>
-          <name>Manage Continuum Schedules</name>
-          <permanent>true</permanent>
-          <operation>continuum-manage-schedules</operation>
-          <resource>global</resource>
-        </permission>
-        <permission>
-          <id>continuum-manage-profiles</id>
-          <name>Manage Continuum Profiles</name>
-          <permanent>true</permanent>          
-          <operation>continuum-manage-profiles</operation>
-          <resource>global</resource>
-        </permission> 
-        <permission>
-          <id>continuum-manage-installations</id>
-          <name>Manage Continuum Installations</name>
-          <permanent>true</permanent>          
-          <operation>continuum-manage-installations</operation>
-          <resource>global</resource>
-        </permission>               
       </permissions>
       <parentRoles>
         <parentRole>system-administrator</parentRole>
       </parentRoles>
       <childRoles>
-        <childRole>continuum-group-project-administrator</childRole>        
+        <childRole>continuum-group-project-administrator</childRole>
+        <childRole>continuum-manage-installations</childRole>
+        <childRole>continuum-manage-profiles</childRole>
+        <childRole>continuum-manage-schedules</childRole>
       </childRoles>
     </role>
     <role>
@@ -220,12 +202,18 @@
           <resource>global</resource>
         </permission>        
       </permissions>
+      <childRoles>
+        <childRole>continuum-group-project-developer</childRole>
+      </childRoles>
     </role>
     <role>
       <id>continuum-group-project-developer</id>
       <name>Continuum Group Project Developer</name>
       <assignable>true</assignable>
       <permanent>true</permanent>
+      <childRoles>
+        <childRole>continuum-group-project-user</childRole>
+      </childRoles>
     </role>
     <role>
       <id>continuum-group-project-user</id>
