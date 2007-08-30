@@ -160,19 +160,6 @@ public class SummaryAction
                 getLogger().warn(
                     "unknown buildState value " + latestBuild.getState() + " with build " + latestBuild.getId() );
         }
-        // to not display -1
-        if ( groupSummary.getNumFailures() < 0 )
-        {
-            groupSummary.setNumFailures( 0 );
-        }
-        if ( groupSummary.getNumErrors() < 0 )
-        {
-            groupSummary.setNumErrors( 0 );
-        }
-        if ( groupSummary.getNumSuccesses() < 0 )
-        {
-            groupSummary.setNumSuccesses( 0 );
-        }
     }
 
     public List getProjects()
