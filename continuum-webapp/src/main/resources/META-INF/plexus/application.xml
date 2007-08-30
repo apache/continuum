@@ -100,7 +100,7 @@
         <default-m1-goals>clean:clean jar:install</default-m1-goals>
         <default-m1-arguments></default-m1-arguments>
         <default-m2-goals>clean install</default-m2-goals>
-        <default-m2-arguments>--batch-mode --non-recursive</default-m2-arguments>
+        <default-m2-arguments>-B -N</default-m2-arguments>
       </configuration>
     </component>    
     -->
