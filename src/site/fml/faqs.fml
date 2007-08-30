@@ -198,7 +198,7 @@ scm:cvs:pserver:username:@servername:path_to_repository:module_name
       <answer>
         <p>
           If you want to build recursively from the parent, you have to remove the <code>--non-recursive</code> or <code>-N</code> argument under the
-          "Build Definitions" section of your parent project.
+          "Build Definitions" section of your parent project. Or use the checkbox "For multi modules project, load only root as recursive build" when adding a m2 project.
         </p>
         <p>
           Ensure that your entire project can be checked out using the SCM URL in your parent project.
@@ -249,5 +249,39 @@ dyld: lazy symbol binding failed: Symbol not found: _ftime
         </p>
       </answer>
     </faq>
+    <faq id="change-default-build-definition">
+      <question>When I had a maven2 project I always have goals clean install and arguments --batch-mode --non-recursive?</question>
+      <answer>
+        <p>
+          You have to modify the file application.xml (located in WEB-INF/classes/META-INF/plexus).
+          Find the line with org.apache.maven.continuum.configuration.ConfigurationService and the values in default-goals and default-arguments.
+          <source>
+    <component>
+      <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+      <implementation>org.apache.maven.continuum.configuration.DefaultConfigurationService</implementation>
+      <description></description>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.store.ContinuumStore</role>
+          <role-hint>jdo</role-hint>
+          <field-name>store</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <application-home>${plexus.home}</application-home>
+         uncomment the component the
+         replace here to override default-goals and default-arguments 
+        <default-ant-goals></default-ant-goals>
+        <default-ant-arguments></default-ant-arguments>
+        <default-m1-goals>clean:clean jar:install</default-m1-goals>
+        <default-m1-arguments></default-m1-arguments>
+        <default-m2-goals>clean install</default-m2-goals>
+        <default-m2-arguments>--batch-mode --non-recursive</default-m2-arguments>
+      </configuration>
+    </component>          
+          </source>
+        </p>
+      </answer>
+    </faq>    
   </part>
 </faqs>
