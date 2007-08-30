@@ -23,6 +23,8 @@ import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import java.io.File;
 import java.util.Map;
@@ -78,8 +80,8 @@ public class MockConfigurationService
 
         if ( !dir.exists() && !dir.mkdirs() )
         {
-            throw new ConfigurationException( "Could not make the build output directory: " + "'"
-                + dir.getAbsolutePath() + "'." );
+            throw new ConfigurationException(
+                "Could not make the build output directory: " + "'" + dir.getAbsolutePath() + "'." );
         }
         return new File( dir.getPath() + File.separatorChar + buildId + File.separatorChar + "surefire-reports " );
     }
@@ -188,5 +190,53 @@ public class MockConfigurationService
     public void store()
         throws ConfigurationStoringException
     {
+    }
+
+    public BuildDefinition getDefaultAntBuildDefinition()
+        throws ContinuumStoreException
+    {
+        return null;
+    }
+
+    public String getDefaultAntGoals()
+    {
+        return null;
+    }
+
+    public String getDefaultAntArguments()
+    {
+        return null;
+    }
+
+    public BuildDefinition getDefaultMavenOneBuildDefinition()
+        throws ContinuumStoreException
+    {
+        return null;
+    }
+
+    public String getDefaultMavenOneGoals()
+    {
+        return null;
+    }
+
+    public String getDefaultMavenOneArguments()
+    {
+        return null;
+    }
+
+    public String getDefaultMavenTwoArguments()
+    {
+        return null;
+    }
+
+    public String getDefaultMavenTwoGoals()
+    {
+        return null;
+    }
+
+    public BuildDefinition getDefaultMavenTwoBuildDefinition()
+        throws ContinuumStoreException
+    {
+        return null;
     }
 }

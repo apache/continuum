@@ -298,39 +298,28 @@ public class DefaultContinuum
 
         if ( pg == null )
         {
+            try
+            {
+                ProjectGroup new_pg = store.addProjectGroup( projectGroup );
 
-            ProjectGroup new_pg = store.addProjectGroup( projectGroup );
+                addBuildDefinitionToProjectGroup( new_pg.getId(), configurationService.getDefaultMavenTwoBuildDefinition() );
 
-            addBuildDefinitionToProjectGroup( new_pg.getId(), getDefaultBuildDefinition() );
+                Map context = new HashMap();
+                context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( new_pg.getId() ) );
+                executeAction( "add-assignable-roles", context );
 
-            Map context = new HashMap();
-            context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( new_pg.getId() ) );
-            executeAction( "add-assignable-roles", context );
-
-            getLogger().info( "Added new project group: " + new_pg.getName() );
+                getLogger().info( "Added new project group: " + new_pg.getName() );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }
         }
         else
         {
             throw new ContinuumException( "Unable to add the requested project group: groupId already exists." );
         }
-    }
 
-    private BuildDefinition getDefaultBuildDefinition()
-        throws ContinuumException
-    {
-        BuildDefinition bd = new BuildDefinition();
-
-        bd.setDefaultForProject( true );
-
-        bd.setGoals( "clean install" );
-
-        bd.setArguments( "--batch-mode --non-recursive" );
-
-        bd.setBuildFile( "pom.xml" );
-
-        bd.setSchedule( getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME ) );
-
-        return bd;
     }
 
     public Collection getAllProjectGroups()
@@ -1059,7 +1048,7 @@ public class DefaultContinuum
     {
         BuildResult buildResult = getBuildResult( buildId );
         store.removeBuildResult( buildResult );
-        
+
         // cleanup some files
         try
         {
@@ -1084,7 +1073,7 @@ public class DefaultContinuum
         {
             getLogger().info( "skip IOException during cleanup build files " + e.getMessage(), e );
         }
-        
+
     }
 
     public String getBuildOutput( int projectId, int buildId )
@@ -1299,19 +1288,7 @@ public class DefaultContinuum
         {
             try
             {
-                BuildDefinition bd = new BuildDefinition();
-
-                bd.setDefaultForProject( true );
-
-                bd.setGoals( "" );
-
-                bd.setArguments( "" );
-
-                bd.setBuildFile( "build.xml" );
-
-                Schedule schedule = store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME );
-
-                bd.setSchedule( schedule );
+                BuildDefinition bd = configurationService.getDefaultAntBuildDefinition();
 
                 project.addBuildDefinition( bd );
             }

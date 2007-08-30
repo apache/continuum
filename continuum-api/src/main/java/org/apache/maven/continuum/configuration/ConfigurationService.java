@@ -19,6 +19,9 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+
 import java.io.File;
 
 /**
@@ -62,7 +65,7 @@ public interface ConfigurationService
 
     File getBuildOutputFile( int buildId, int projectId )
         throws ConfigurationException;
-    
+
     File getTestReportsDirectory( int buildId, int projectId )
         throws ConfigurationException;
 
@@ -83,4 +86,25 @@ public interface ConfigurationService
 
     void store()
         throws ConfigurationStoringException;
+
+    public BuildDefinition getDefaultAntBuildDefinition()
+        throws ContinuumStoreException;
+
+    public String getDefaultAntGoals();
+
+    public String getDefaultAntArguments();
+
+    public BuildDefinition getDefaultMavenOneBuildDefinition()
+        throws ContinuumStoreException;
+
+    public String getDefaultMavenOneGoals();
+
+    public String getDefaultMavenOneArguments();
+
+    public BuildDefinition getDefaultMavenTwoBuildDefinition()
+        throws ContinuumStoreException;
+
+    public String getDefaultMavenTwoGoals();
+
+    public String getDefaultMavenTwoArguments();
 }
