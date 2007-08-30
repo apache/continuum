@@ -19,12 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -32,6 +26,12 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.GroupSummary;
 import org.apache.maven.continuum.web.model.ProjectSummary;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Used to render the list of projects in the project group page.
@@ -48,7 +48,7 @@ public class SummaryAction
     private String projectGroupName;
 
     private List summary;
-    
+
     private GroupSummary groupSummary = new GroupSummary();
 
     public String execute()
@@ -75,9 +75,16 @@ public class SummaryAction
 
         summary = new ArrayList();
 
+        groupSummary.setNumErrors( 0 );
+        groupSummary.setNumFailures( 0 );
+        groupSummary.setNumSuccesses( 0 );
+        groupSummary.setNumProjects( 0 );
+
         for ( Iterator i = projectsInGroup.iterator(); i.hasNext(); )
         {
             Project project = (Project) i.next();
+
+            groupSummary.setNumProjects( groupSummary.getNumProjects() + 1 );
 
             ProjectSummary model = new ProjectSummary();
 
@@ -135,59 +142,34 @@ public class SummaryAction
 
         return SUCCESS;
     }
-    
-    private void populateGroupSummary(BuildResult latestBuild)
+
+    private void populateGroupSummary( BuildResult latestBuild )
     {
         switch ( latestBuild.getState() )
         {
             case ContinuumProjectState.ERROR:
-                // default value -1 so +2 first time
-                if ( groupSummary.getNumErrors() < 0 )
-                {
-                    groupSummary.setNumErrors( groupSummary.getNumErrors() + 2 );
-                }
-                else
-                {
-                    groupSummary.setNumErrors( groupSummary.getNumErrors() + 1 );
-                }
+                groupSummary.setNumErrors( groupSummary.getNumErrors() + 1 );
                 break;
             case ContinuumProjectState.OK:
-                // default value -1 so +2 first time
-                if ( groupSummary.getNumSuccesses() < 0 )
-                {
-                    groupSummary.setNumSuccesses( groupSummary.getNumSuccesses() + 2 );
-                }
-                else
-                {
-                    groupSummary.setNumSuccesses( groupSummary.getNumSuccesses() + 1 );
-                }
+                groupSummary.setNumSuccesses( groupSummary.getNumSuccesses() + 1 );
                 break;
             case ContinuumProjectState.FAILED:
-                // default value -1 so +2 first time
-                if ( groupSummary.getNumFailures() < 0 )
-                {
-                    groupSummary.setNumFailures( groupSummary.getNumFailures() + 2 );
-                }
-                else
-                {
-                    groupSummary.setNumFailures( groupSummary.getNumFailures() + 1 );
-                }
+                groupSummary.setNumFailures( groupSummary.getNumFailures() + 1 );
                 break;
             default:
                 getLogger().warn(
-                                  "unknown buildState value " + latestBuild.getState() + " with build "
-                                      + latestBuild.getId() );
+                    "unknown buildState value " + latestBuild.getState() + " with build " + latestBuild.getId() );
         }
         // to not display -1
-        if (groupSummary.getNumFailures() < 0)
+        if ( groupSummary.getNumFailures() < 0 )
         {
             groupSummary.setNumFailures( 0 );
         }
-        if (groupSummary.getNumErrors() < 0 )
+        if ( groupSummary.getNumErrors() < 0 )
         {
             groupSummary.setNumErrors( 0 );
         }
-        if (groupSummary.getNumSuccesses() < 0 )
+        if ( groupSummary.getNumSuccesses() < 0 )
         {
             groupSummary.setNumSuccesses( 0 );
         }
