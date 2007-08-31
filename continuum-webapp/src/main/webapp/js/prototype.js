@@ -1809,8 +1809,8 @@ Form.Element.Methods = {
   activate: function(element) {
     element = $(element);
     element.focus();
-    if (element.select)
-      element.select();
+    //if (element.select)
+    //  element.select();
     return element;
   },
 
