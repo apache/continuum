@@ -20,6 +20,8 @@ package org.apache.maven.continuum.web.action;
  */
 
 import com.opensymphony.webwork.ServletActionContext;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
@@ -32,6 +34,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -91,13 +94,8 @@ public class BuildResultAction
         }
         changeSet = getContinuum().getChangesSinceLastSuccess( getProjectId(), getBuildId() );
 
-        File buildOutputFile = getContinuum().getConfiguration().getBuildOutputFile( getBuildId(), getProjectId() );
-
-        if ( buildOutputFile.exists() )
-        {
-            buildOutput = StringEscapeUtils.escapeHtml( FileUtils.fileRead( buildOutputFile ) );
-        }
-
+        buildOutput = getBuildOutputText();
+        
         state = StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
 
         return SUCCESS;
@@ -120,6 +118,33 @@ public class BuildResultAction
     }
 
 
+    public String buildLogAsText()
+        throws ConfigurationException, IOException
+    {
+        buildOutput = getBuildOutputText();
+        return SUCCESS;
+    }
+    
+    public InputStream getBuildOutputInputStream()
+    throws ConfigurationException, IOException
+    {
+        String outputText = getBuildOutputText();
+        return outputText == null ? null : IOUtils.toInputStream( outputText );
+    }
+
+    private String getBuildOutputText()
+        throws ConfigurationException, IOException
+    {
+        File buildOutputFile = getContinuum().getConfiguration().getBuildOutputFile( getBuildId(), getProjectId() );
+
+        if ( buildOutputFile.exists() )
+        {
+            return StringEscapeUtils.escapeHtml( FileUtils.fileRead( buildOutputFile ) );
+        }
+        return null;
+    }
+    
+    
     public int getBuildId()
     {
         return buildId;

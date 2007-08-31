@@ -339,6 +339,12 @@
       <result name="success">/WEB-INF/jsp/buildResult.jsp</result>
     </action>
     
+    <action name="buildOutputText" class="buildResult">
+      <result name="success" type="stream">
+        <param name="inputName">buildOutputInputStream</param>
+      </result>
+    </action>    
+    
     <action name="removeBuildResult" class="buildResult" method="remove">
       <result name="success" type="redirect-action">
         <param name="actionName">buildResults</param>
