@@ -180,6 +180,11 @@
                 <ww:text name="buildResult.noOutput"/>
             </ww:if>
             <ww:else>
+              <ww:url id="buildOutputTextUrl" action="buildOutputText">
+                <ww:param name="projectId" value="projectId"/>
+                <ww:param name="buildId" value="buildId"/>
+              </ww:url>
+              <ww:a href="%{buildOutputTextUrl}"><ww:text name="buildResult.buildOutput.text"/></ww:a>
               <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
                 <pre><ww:property value="buildOutput"/></pre>
               </div>
