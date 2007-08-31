@@ -55,8 +55,6 @@ public class BuildDefinitionSummaryAction
 
     private List<BuildDefinitionSummary> allBuildDefinitionSummaries = new ArrayList<BuildDefinitionSummary>();
 
-    private boolean containsDefaultBDForProject = false;
-
     //profileName
 
     public String summarizeForProject()
@@ -127,6 +125,8 @@ public class BuildDefinitionSummaryAction
 
     private void fixDefaultBuildDefinitions()
     {
+        boolean containsDefaultBDForProject = false;
+
         for ( BuildDefinitionSummary bds : projectBuildDefinitionSummaries )
         {
             if ( bds.isIsDefault() )
@@ -135,9 +135,12 @@ public class BuildDefinitionSummaryAction
             }
         }
 
-        for ( BuildDefinitionSummary bds : groupBuildDefinitionSummaries )
+        if ( containsDefaultBDForProject )
         {
-            bds.setIsDefault( false );
+            for ( BuildDefinitionSummary bds : groupBuildDefinitionSummaries )
+            {
+                bds.setIsDefault( false );
+            }
         }
     }
 
