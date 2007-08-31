@@ -49,11 +49,13 @@ public class BuildDefinitionSummaryAction
 
     private ProjectGroup projectGroup;
 
-    private List projectBuildDefinitionSummaries = new ArrayList();
+    private List<BuildDefinitionSummary> projectBuildDefinitionSummaries = new ArrayList<BuildDefinitionSummary>();
 
-    private List groupBuildDefinitionSummaries = new ArrayList();
+    private List<BuildDefinitionSummary> groupBuildDefinitionSummaries = new ArrayList<BuildDefinitionSummary>();
 
-    private List allBuildDefinitionSummaries = new ArrayList();
+    private List<BuildDefinitionSummary> allBuildDefinitionSummaries = new ArrayList<BuildDefinitionSummary>();
+
+    private boolean containsDefaultBDForProject = false;
 
     //profileName
 
@@ -69,6 +71,8 @@ public class BuildDefinitionSummaryAction
 
             groupBuildDefinitionSummaries = gatherGroupBuildDefinitionSummaries( projectGroupId );
             projectBuildDefinitionSummaries = gatherProjectBuildDefinitionSummaries( projectId );
+
+            fixDefaultBuildDefinitions();
 
             allBuildDefinitionSummaries.addAll( groupBuildDefinitionSummaries );
             allBuildDefinitionSummaries.addAll( projectBuildDefinitionSummaries );
@@ -121,10 +125,26 @@ public class BuildDefinitionSummaryAction
         return SUCCESS;
     }
 
-    private List gatherProjectBuildDefinitionSummaries( int projectId )
+    private void fixDefaultBuildDefinitions()
+    {
+        for ( BuildDefinitionSummary bds : projectBuildDefinitionSummaries )
+        {
+            if ( bds.isIsDefault() )
+            {
+                containsDefaultBDForProject = true;
+            }
+        }
+
+        for ( BuildDefinitionSummary bds : groupBuildDefinitionSummaries )
+        {
+            bds.setIsDefault( false );
+        }
+    }
+
+    private List<BuildDefinitionSummary> gatherProjectBuildDefinitionSummaries( int projectId )
         throws ContinuumException
     {
-        List summaryList = new ArrayList();
+        List<BuildDefinitionSummary> summaryList = new ArrayList<BuildDefinitionSummary>();
 
         Project project = getContinuum().getProjectWithAllDetails( projectId );
         for ( Iterator i = project.getBuildDefinitions().iterator(); i.hasNext(); )
@@ -140,10 +160,10 @@ public class BuildDefinitionSummaryAction
         return summaryList;
     }
 
-    private List gatherGroupBuildDefinitionSummaries( int projectGroupId )
+    private List<BuildDefinitionSummary> gatherGroupBuildDefinitionSummaries( int projectGroupId )
         throws ContinuumException
     {
-        List summaryList = new ArrayList();
+        List<BuildDefinitionSummary> summaryList = new ArrayList<BuildDefinitionSummary>();
 
         projectGroup = getContinuum().getProjectGroupWithBuildDetails( projectGroupId );
 
@@ -213,27 +233,27 @@ public class BuildDefinitionSummaryAction
         return projectBuildDefinitionSummaries;
     }
 
-    public void setProjectBuildDefinitionSummaries( List projectBuildDefinitionSummaries )
+    public void setProjectBuildDefinitionSummaries( List<BuildDefinitionSummary> projectBuildDefinitionSummaries )
     {
         this.projectBuildDefinitionSummaries = projectBuildDefinitionSummaries;
     }
 
-    public List getGroupBuildDefinitionSummaries()
+    public List<BuildDefinitionSummary> getGroupBuildDefinitionSummaries()
     {
         return groupBuildDefinitionSummaries;
     }
 
-    public void setGroupBuildDefinitionSummaries( List groupBuildDefinitionSummaries )
+    public void setGroupBuildDefinitionSummaries( List<BuildDefinitionSummary> groupBuildDefinitionSummaries )
     {
         this.groupBuildDefinitionSummaries = groupBuildDefinitionSummaries;
     }
 
-    public List getAllBuildDefinitionSummaries()
+    public List<BuildDefinitionSummary> getAllBuildDefinitionSummaries()
     {
         return allBuildDefinitionSummaries;
     }
 
-    public void setAllBuildDefinitionSummaries( List allBuildDefinitionSummaries )
+    public void setAllBuildDefinitionSummaries( List<BuildDefinitionSummary> allBuildDefinitionSummaries )
     {
         this.allBuildDefinitionSummaries = allBuildDefinitionSummaries;
     }

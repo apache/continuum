@@ -45,16 +45,16 @@ public class ProjectViewAction
     public String execute()
         throws ContinuumException
     {
+        projectGroup = getProjectGroup();
+
         try
         {
-            checkViewProjectGroupAuthorization( getProjectGroup().getName() );
+            checkViewProjectGroupAuthorization( projectGroup.getName() );
         }
         catch ( AuthorizationRequiredException e )
         {
             return REQUIRES_AUTHORIZATION;
         }
-
-        projectGroup = getProjectGroup();
 
         project = getContinuum().getProjectWithAllDetails( projectId );
         return SUCCESS;
