@@ -93,9 +93,8 @@ public class DataManagementToolTest
         IOUtil.copy( getClass().getResourceAsStream( "/expected.xml" ), sw );
 
         //assertEquals( "Check database content", removeTimestampVariance( sw.toString() ),
-        //              removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );
-        assertXmlIdentical( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils
-            .fileRead( backupFile ) ) );
+        //              removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );        
+        assertXmlSimilar( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils.fileRead( backupFile ) ));
     }
 
     public void testEraseBuilds()
@@ -133,7 +132,7 @@ public class DataManagementToolTest
 
         //assertEquals( "Check database content", removeTimestampVariance( sw.toString() ),
         //              removeTimestampVariance( FileUtils.fileRead( backupFile ) ) );
-        assertXmlIdentical( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils
+        assertXmlSimilar( removeTimestampVariance( sw.toString() ), removeTimestampVariance( FileUtils
             .fileRead( backupFile ) ) );
     }
 
@@ -167,17 +166,17 @@ public class DataManagementToolTest
         assertTrue( " xml diff not identical " + diff.appendMessage( diffMessage ).toString(), diff.identical() );
     }
 
-/*
+
     public void assertXmlSimilar( String expected, String test )
         throws Exception
     {
-        String expectedXml = XMLOutputHelper.prettyXmlPrint( expected );
-        String testXml = XMLOutputHelper.prettyXmlPrint( test );
+        String expectedXml = prettyXmlPrint( expected );
+        String testXml = prettyXmlPrint( test );
         Diff diff = new Diff( expectedXml, testXml );
         StringBuffer diffMessage = new StringBuffer();
         assertTrue( " xml diff not similar " + diff.appendMessage( diffMessage ).toString(), diff.similar() );
     }
-*/
+
     public String prettyXmlPrint( String xml )
         throws Exception
     {
