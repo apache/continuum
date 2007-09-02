@@ -96,14 +96,6 @@
             </ww:a>
           </div>
         </redback:ifAuthorized>
-        <redback:ifAuthorized permission="continuum-manage-profiles">
-          <ww:url id="configurationUrl" action="profilesList" namespace="/admin" method="list" includeParams="none"/>
-          <div class="body">
-            <ww:a href="%{configurationUrl}">
-              <ww:text name="menu.administration.profile"/>
-            </ww:a>
-          </div> 
-        </redback:ifAuthorized> 
         <redback:ifAuthorized permission="continuum-manage-installations">   
           <ww:url id="configurationUrl" action="installationsList" namespace="/admin" method="list" includeParams="none"/>
           <div class="body">
@@ -112,6 +104,14 @@
             </ww:a>
           </div>
         </redback:ifAuthorized>
+        <redback:ifAuthorized permission="continuum-manage-profiles">
+          <ww:url id="configurationUrl" action="profilesList" namespace="/admin" method="list" includeParams="none"/>
+          <div class="body">
+            <ww:a href="%{configurationUrl}">
+              <ww:text name="menu.administration.profile"/>
+            </ww:a>
+          </div> 
+        </redback:ifAuthorized> 
         <redback:ifAuthorized permission="continuum-manage-configuration">               
           <ww:url id="configurationUrl" action="configuration" namespace="/admin" method="input" includeParams="none"/>
           <div class="body">
