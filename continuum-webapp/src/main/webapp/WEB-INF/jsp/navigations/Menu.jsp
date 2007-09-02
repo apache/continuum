@@ -145,12 +145,13 @@
       <div id="litem4" class="body">Working Copy</div>
       <div id="litem5" class="body">Checking Out Build</div>
       <div id="litem6" class="body">Queued Build</div>
-      <div id="litem7" class="body">Delete</div>
-      <div id="litem8" class="body">Edit</div>
-      <div id="litem9" class="body">Release</div>
-      <div id="litem10" class="body">Build in Success</div>
-      <div id="litem11" class="body">Build in Failure</div>
-      <div id="litem12" class="body">Build in Error</div>
+      <div id="litem7" class="body">Cancel Build</div>
+      <div id="litem8" class="body">Delete</div>
+      <div id="litem9" class="body">Edit</div>
+      <div id="litem10" class="body">Release</div>
+      <div id="litem11" class="body">Build in Success</div>
+      <div id="litem12" class="body">Build in Failure</div>
+      <div id="litem13" class="body">Build in Error</div>
     </div>
   </div>
 </div>
