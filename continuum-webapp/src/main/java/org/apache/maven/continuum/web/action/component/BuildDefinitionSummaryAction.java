@@ -197,6 +197,7 @@ public class BuildDefinitionSummaryAction
         if ( bd.getProfile() != null )
         {
             bds.setProfileName( bd.getProfile().getName() );
+            bds.setProfileId( bd.getProfile().getId() );
         }
         return bds;
     }
