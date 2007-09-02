@@ -335,6 +335,13 @@
           <description>if project lvl, then the name of the project using the definition</description>
           <type>String</type>
         </field>
+        <field>
+          <name>profileId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>id of the profile for build definition</description>
+          <type>int</type>
+        </field>        
       </fields>
     </class>
     <class>

@@ -25,7 +25,7 @@
 
 <ww:i18n name="localization.Continuum">
 
-  <h3>Project Group Build Definitions of ${projectGroup.name} group</h3>
+  <h3><ww:text name="buildDefinitionSummary.projectGroup.section.title"><ww:param>${projectGroup.name}</ww:param></ww:text></h3>
   <ww:if test="${not empty groupBuildDefinitionSummaries}">
   <ec:table items="groupBuildDefinitionSummaries"
             var="buildDefinitionSummary"
@@ -49,7 +49,12 @@
           ${pageScope.buildDefinitionSummary.scheduleName}
         </redback:elseAuthorized>
       </ec:column>
-      <ec:column property="profileName" title="projectView.buildDefinition.profile"/>      
+      <ec:column property="profileName" title="projectView.buildDefinition.profile">
+        <ww:url id="profileUrl" action="editProfile!edit.action" namespace="/" includeParams="none">
+          <ww:param name="profile.id">${pageScope.buildDefinitionSummary.profileId}</ww:param>
+        </ww:url>    
+        <ww:a href="%{profileUrl}">${pageScope.buildDefinitionSummary.profileName}</ww:a>     
+      </ec:column>      
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isBuildFresh" title="projectView.buildDefinition.buildFresh"/>
       <ec:column property="isDefault" title="projectView.buildDefinition.default"/>
@@ -130,7 +135,6 @@
       <ec:column property="goals" title="projectView.buildDefinition.goals"/>
       <ec:column property="arguments" title="projectView.buildDefinition.arguments"/>
       <ec:column property="buildFile" title="projectView.buildDefinition.buildFile"/>
-      <!-- ec:column property="profile" title="projectView.buildDefinition.profile"/ -->
       <ec:column property="scheduleName" title="projectView.buildDefinition.schedule">
         <redback:ifAuthorized permission="continuum-manage-schedules">
           <ww:url id="scheduleUrl" action="schedule" namespace="/" includeParams="none">
@@ -142,7 +146,14 @@
           ${pageScope.buildDefinitionSummary.scheduleName}
         </redback:elseAuthorized>
       </ec:column>
+      <ec:column property="profileName" title="projectView.buildDefinition.profile">
+        <ww:url id="profileUrl" action="editProfile!edit.action" namespace="/" includeParams="none">
+          <ww:param name="profile.id">${pageScope.buildDefinitionSummary.profileId}</ww:param>
+        </ww:url>
+        <ww:a href="%{profileUrl}">${pageScope.buildDefinitionSummary.profileName}</ww:a>        
+      </ec:column>      
       <ec:column property="from" title="projectView.buildDefinition.from"/>
+      <ec:column property="isBuildFresh" title="projectView.buildDefinition.buildFresh"/>
       <ec:column property="isDefault" title="projectView.buildDefinition.default"/>
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
