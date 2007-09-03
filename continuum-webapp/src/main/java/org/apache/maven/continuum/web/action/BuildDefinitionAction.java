@@ -27,6 +27,7 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -157,26 +158,37 @@ public class BuildDefinitionAction
             }
             else
             {
+                String preDefinedBuildFile = "";
+
                 if ( projectId != 0 )
                 {
                     checkAddProjectBuildDefinitionAuthorization( getProjectGroupName() );
+                    BuildDefinition bd = getContinuum().getDefaultBuildDefinition( projectId );
+                    preDefinedBuildFile = bd.getBuildFile();
                 }
                 else
                 {
                     checkAddGroupBuildDefinitionAuthorization( getProjectGroupName() );
                 }
 
-                if ( "maven2".equals( executor ) )
+                if ( StringUtils.isEmpty( preDefinedBuildFile ) )
                 {
-                    buildFile = "pom.xml";
+                    if ( "maven2".equals( executor ) )
+                    {
+                        buildFile = "pom.xml";
+                    }
+                    else if ( "maven-1".equals( executor ) )
+                    {
+                        buildFile = "project.xml";
+                    }
+                    else if ( "ant".equals( executor ) )
+                    {
+                        buildFile = "build.xml";
+                    }
                 }
-                else if ( "maven-1".equals( executor ) )
+                else
                 {
-                    buildFile = "project.xml";
-                }
-                else if ( "ant".equals( executor ) )
-                {
-                    buildFile = "build.xml";
+                    buildFile = preDefinedBuildFile;
                 }
             }
         }
