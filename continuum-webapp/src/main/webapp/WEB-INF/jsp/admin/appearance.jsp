@@ -74,7 +74,7 @@
         </tr>
         <tr>
           <th>URL</th>
-          <td><a href="${companyModel.organization.url}">
+          <td><a href="${companyModel.organization.url}" target="_blank">
             <code>${companyModel.organization.url}</code>
           </a></td>
         </tr>
