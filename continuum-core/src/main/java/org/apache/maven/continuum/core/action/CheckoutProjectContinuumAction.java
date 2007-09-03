@@ -19,14 +19,18 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.maven.continuum.Continuum;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
+import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.scm.ContinuumScm;
 import org.apache.maven.continuum.scm.ContinuumScmException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.utils.ContinuumUtils;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.util.Map;
@@ -43,6 +47,11 @@ public class CheckoutProjectContinuumAction
     /**
      * @plexus.requirement
      */
+    private ContinuumNotificationDispatcher notifier;
+
+    /**
+     * @plexus.requirement
+     */
     private ContinuumScm scm;
 
     /**
@@ -50,10 +59,19 @@ public class CheckoutProjectContinuumAction
      */
     private ContinuumStore store;
 
+    /**
+     * @plexus.requirement
+     */
+    private Continuum continuum;
+
     public void execute( Map context )
         throws Exception
     {
         Project project = getProject( context );
+
+        int oldState = project.getState();
+
+        BuildDefinition buildDefinition = getBuildDefinition( context );
 
         project.setState( ContinuumProjectState.CHECKING_OUT );
 
@@ -69,7 +87,7 @@ public class CheckoutProjectContinuumAction
 
         try
         {
-            result = scm.checkOut( project, workingDirectory );
+            result = scm.checkOut( project, workingDirectory, context );
             //CONTINUUM-1394
             result.setChanges( null );
         }
@@ -110,9 +128,22 @@ public class CheckoutProjectContinuumAction
         }
         finally
         {
+            if ( oldState == ContinuumProjectState.NEW )
+            {
+                String relativePath = (String) getObject( context, KEY_PROJECT_RELATIVE_PATH, "" );
+                if ( StringUtils.isNotEmpty( relativePath ) )
+                {
+                    //CONTINUUM-1218 : updating only the default build definition only for new projects
+                    BuildDefinition bd = continuum.getDefaultBuildDefinition( project.getId() );
+                    bd.setBuildFile( relativePath + "/" + "pom.xml" );
+                    store.storeBuildDefinition( bd );
+                }
+            }
             project.setState( ContinuumProjectState.CHECKEDOUT );
 
             store.updateProject( project );
+
+            notifier.checkoutComplete( project, buildDefinition );
         }
 
         context.put( KEY_CHECKOUT_SCM_RESULT, result );

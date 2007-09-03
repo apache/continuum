@@ -23,6 +23,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -32,12 +33,12 @@ public interface ContinuumScm
 {
     String ROLE = ContinuumScm.class.getName();
 
-    ScmResult checkOut( Project project, File workingDirectory )
+    ScmResult checkOut( Project project, File workingDirectory, Map context )
         throws ContinuumScmException;
 
-    ScmResult checkOutProject( Project project )
+    ScmResult checkOutProject( Project project, Map context )
         throws ContinuumScmException;
 
-    ScmResult updateProject( Project project )
+    ScmResult updateProject( Project project, Map context )
         throws ContinuumScmException;
 }

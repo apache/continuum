@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -79,7 +80,7 @@ public class DefaultContinuumScm
     // ContinuumScm implementation
     // ----------------------------------------------------------------------
 
-    public ScmResult checkOut( Project project, File workingDirectory )
+    public ScmResult checkOut( Project project, File workingDirectory, Map context )
         throws ContinuumScmException
     {
         String tag = project.getScmTag();
@@ -131,8 +132,15 @@ public class DefaultContinuumScm
 
                 ScmFileSet fileSet = new ScmFileSet( workingDirectory );
 
-                result = convertScmResult(
-                    scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, tag ) );
+                CheckOutScmResult res =
+                    scmManager.getProviderByRepository( repository ).checkOut( repository, fileSet, tag );
+
+                if ( StringUtils.isNotEmpty( res.getRelativePathProjectDirectory() ) )
+                {
+                    context.put( "pomRelativePath", res.getRelativePathProjectDirectory() );
+                }
+
+                result = convertScmResult( res );
             }
 
             if ( !result.isSuccess() )
@@ -174,7 +182,7 @@ public class DefaultContinuumScm
      * @param project The project to check out.
      * @throws ContinuumScmException Thrown in case of a exception while checking out the sources.
      */
-    public ScmResult checkOutProject( Project project )
+    public ScmResult checkOutProject( Project project, Map context )
         throws ContinuumScmException
     {
         File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
@@ -185,10 +193,10 @@ public class DefaultContinuumScm
                 project.getName() + "', id: '" + project.getId() + "'." );
         }
 
-        return checkOut( project, workingDirectory );
+        return checkOut( project, workingDirectory, context );
     }
 
-    public ScmResult updateProject( Project project )
+    public ScmResult updateProject( Project project, Map context )
         throws ContinuumScmException
     {
         String tag = project.getScmTag();
