@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
  * @version: $ID:$
- * @plexus.component role="org.codehaus.plexus.security.system.check.EnvironmentCheck"
+ * @plexus.component role="org.codehaus.plexus.redback.system.check.EnvironmentCheck"
  * role-hint="continuum-role-profile-check"
  */
 public class RoleProfileEnvironmentCheck
@@ -56,6 +56,8 @@ public class RoleProfileEnvironmentCheck
     {
         try
         {
+            getLogger().info( "Checking roles list." );
+
             Collection projectGroups = continuum.getAllProjectGroups();
 
             for ( Iterator i = projectGroups.iterator(); i.hasNext(); )
