@@ -72,7 +72,7 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
             notifier.checkoutStarted( project, buildDefinition );
 
-            scmResult = scm.updateProject( project );
+            scmResult = scm.updateProject( project, context );
 
             context.put( KEY_UPDATE_SCM_RESULT, scmResult );
         }
