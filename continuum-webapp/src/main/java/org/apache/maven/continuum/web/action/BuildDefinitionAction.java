@@ -169,6 +169,11 @@ public class BuildDefinitionAction
                 else
                 {
                     checkAddGroupBuildDefinitionAuthorization( getProjectGroupName() );
+                    List bds = getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
+                    if ( bds != null && !bds.isEmpty() )
+                    {
+                        preDefinedBuildFile = ( (BuildDefinition) bds.get( 0 ) ).getBuildFile();
+                    }
                 }
 
                 if ( StringUtils.isEmpty( preDefinedBuildFile ) )
