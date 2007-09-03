@@ -135,7 +135,21 @@ public class CheckoutProjectContinuumAction
                 {
                     //CONTINUUM-1218 : updating only the default build definition only for new projects
                     BuildDefinition bd = continuum.getDefaultBuildDefinition( project.getId() );
-                    bd.setBuildFile( relativePath + "/" + "pom.xml" );
+
+                    String buildFile = "";
+                    if ( "maven2".equals( project.getExecutorId() ) )
+                    {
+                        buildFile = "pom.xml";
+                    }
+                    else if ( "maven-1".equals( project.getExecutorId() ) )
+                    {
+                        buildFile = "project.xml";
+                    }
+                    else if ( "ant".equals( project.getExecutorId() ) )
+                    {
+                        buildFile = "build.xml";
+                    }
+                    bd.setBuildFile( relativePath + "/" + "buildFile" );
                     store.storeBuildDefinition( bd );
                 }
             }
