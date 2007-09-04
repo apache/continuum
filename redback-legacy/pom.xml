@@ -33,7 +33,7 @@
             <configuration>
               <model>src/main/mdo/rbac-jdo.mdo</model>
               <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/redback/rbac/jdo
+                ${basedir}/target/classes/org/codehaus/plexus/security/authorization/rbac/jdo
               </outputDirectory>
             </configuration>
           </execution>
@@ -45,7 +45,7 @@
             <configuration>
               <model>src/main/mdo/rbac-jdo.mdo</model>
               <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/redback/rbac/jdo
+                ${basedir}/target/classes/org/codehaus/plexus/security/authorization/rbac/jdo
               </outputDirectory>
               <replicationParameters>true</replicationParameters>
             </configuration>
@@ -70,7 +70,7 @@
             <configuration>
               <model>src/main/mdo/keys-jdo.mdo</model>
               <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/redback/keys/jdo
+                ${basedir}/target/classes/org/codehaus/plexus/security/keys/jdo
               </outputDirectory>
             </configuration>
           </execution>
@@ -82,7 +82,7 @@
             <configuration>
               <model>src/main/mdo/keys-jdo.mdo</model>
               <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/redback/keys/jdo
+                ${basedir}/target/classes/org/codehaus/plexus/security/keys/jdo
               </outputDirectory>
               <replicationParameters>true</replicationParameters>
             </configuration>
@@ -107,7 +107,7 @@
             <configuration>
               <model>src/main/mdo/users-jdo.mdo</model>
               <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/redback/users/jdo
+                ${basedir}/target/classes/org/codehaus/plexus/security/user/jdo
               </outputDirectory>
             </configuration>
           </execution>
@@ -119,7 +119,7 @@
             <configuration>
               <model>src/main/mdo/users-jdo.mdo</model>
               <outputDirectory>
-                ${basedir}/target/classes/org/codehaus/plexus/redback/users/jdo
+                ${basedir}/target/classes/org/codehaus/plexus/security/user/jdo
               </outputDirectory>
               <replicationParameters>true</replicationParameters>
             </configuration>
@@ -139,9 +139,9 @@
             <configuration>
               <tasks>
                 <!-- Workaround for MODELLO-89 -->
-                <replace file="target/generated-sources/modello/org/codehaus/plexus/redback/keys/jdo/v0_9_0/RedbackKeyManagementJdoModelloMetadata.java" token="jdo;" value="jdo.v0_9_0;" />
-                <replace file="target/generated-sources/modello/org/codehaus/plexus/redback/rbac/jdo/v0_9_0/RbacJdoModelModelloMetadata.java" token="jdo;" value="jdo.v0_9_0;" />
-                <replace file="target/generated-sources/modello/org/codehaus/plexus/redback/users/jdo/v0_9_0/UserManagementModelloMetadata.java" token="jdo;" value="jdo.v0_9_0;" />
+                <replace file="target/generated-sources/modello/org/codehaus/plexus/security/keys/jdo/v0_9_0/PlexusSecurityKeyManagementJdoModelloMetadata.java" token="jdo;" value="jdo.v0_9_0;" />
+                <replace file="target/generated-sources/modello/org/codehaus/plexus/security/authorization/rbac/jdo/v0_9_0/RbacJdoModelModelloMetadata.java" token="jdo;" value="jdo.v0_9_0;" />
+                <replace file="target/generated-sources/modello/org/codehaus/plexus/security/user/jdo/v0_9_0/UserManagementModelloMetadata.java" token="jdo;" value="jdo.v0_9_0;" />
               </tasks>
             </configuration>
             <goals>
@@ -154,11 +154,11 @@
             <configuration>
               <tasks>
                 <!-- Workaround for MODELLO-91 -->
-                <replace dir="target/classes/org/codehaus/plexus/redback/users/jdo" token="name=&quot;USER_PASSWORD&quot;" value="name=&quot;PASSWORD&quot;" />
-                <replace dir="target/classes/org/codehaus/plexus/redback/rbac/jdo" token="SECURITY_" value="" />
-                <replace dir="target/classes/org/codehaus/plexus/redback/rbac/jdo" token="name=&quot;RBAC_OPERATION&quot;" value="name=&quot;OPERATION&quot;" />
-                <replace dir="target/classes/org/codehaus/plexus/redback/rbac/jdo" token="name=&quot;RBAC_RESOURCE&quot;" value="name=&quot;RESOURCE&quot;" />
-                <replace dir="target/classes/org/codehaus/plexus/redback/rbac/jdo" token="name=&quot;LAST_UPDATED&quot;" value="name=&quot;TIMESTAMP&quot;" />
+                <replace dir="target/classes/org/codehaus/plexus/security/user/jdo" token="name=&quot;USER_PASSWORD&quot;" value="name=&quot;PASSWORD&quot;" />
+                <replace dir="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo" token="SECURITY_" value="" />
+                <replace dir="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo" token="name=&quot;RBAC_OPERATION&quot;" value="name=&quot;OPERATION&quot;" />
+                <replace dir="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo" token="name=&quot;RBAC_RESOURCE&quot;" value="name=&quot;RESOURCE&quot;" />
+                <replace dir="target/classes/org/codehaus/plexus/security/authorization/rbac/jdo" token="name=&quot;LAST_UPDATED&quot;" value="name=&quot;TIMESTAMP&quot;" />
               </tasks>
             </configuration>
             <goals>
@@ -199,19 +199,19 @@
       <version>1.0.1</version>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus.redback</groupId>
-      <artifactId>redback-keys-api</artifactId>
-      <version>1.0-alpha-2</version>
+      <groupId>org.codehaus.plexus.security</groupId>
+      <artifactId>plexus-security-keys-api</artifactId>
+      <version>1.0-alpha-5</version>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus.redback</groupId>
-      <artifactId>redback-rbac-model</artifactId>
-      <version>1.0-alpha-2</version>
+      <groupId>org.codehaus.plexus.security</groupId>
+      <artifactId>plexus-security-authorization-rbac-model</artifactId>
+      <version>1.0-alpha-5</version>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus.redback</groupId>
-      <artifactId>redback-users-api</artifactId>
-      <version>1.0-alpha-2</version>
+      <groupId>org.codehaus.plexus.security</groupId>
+      <artifactId>plexus-security-user-management-api</artifactId>
+      <version>1.0-alpha-5</version>
     </dependency>
   </dependencies>
 </project>
