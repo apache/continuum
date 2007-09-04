@@ -37,15 +37,17 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ExcludesArtifactFilter;
+import org.apache.maven.settings.MavenSettingsBuilder;
+import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -232,7 +234,7 @@ public class DataManagementCli
 
     private static Collection<Artifact> downloadArtifact( PlexusContainer container, String groupId, String artifactId,
                                                           String version )
-        throws ComponentLookupException, MalformedURLException, ArtifactNotFoundException, ArtifactResolutionException
+        throws ComponentLookupException, ArtifactNotFoundException, ArtifactResolutionException, IOException
     {
         ArtifactRepositoryFactory factory =
             (ArtifactRepositoryFactory) container.lookup( ArtifactRepositoryFactory.ROLE );
@@ -240,12 +242,12 @@ public class DataManagementCli
         DefaultRepositoryLayout layout =
             (DefaultRepositoryLayout) container.lookup( ArtifactRepositoryLayout.ROLE, "default" );
 
-        File file = new File( System.getProperty( "user.home" ), "/.m2/repository" );
         ArtifactRepository localRepository =
-            factory.createArtifactRepository( "local", file.toURL().toString(), layout, null, null );
+            factory.createArtifactRepository( "local", getLocalRepositoryURL( container ), layout, null, null );
 
         List<ArtifactRepository> remoteRepositories = new ArrayList<ArtifactRepository>();
-        remoteRepositories.add( factory.createArtifactRepository( "central", "http://repo1.maven.org/maven2", layout, null, null ) );
+        remoteRepositories.add(
+            factory.createArtifactRepository( "central", "http://repo1.maven.org/maven2", layout, null, null ) );
 
         ArtifactFactory artifactFactory = (ArtifactFactory) container.lookup( ArtifactFactory.ROLE );
         Artifact artifact =
@@ -253,8 +255,10 @@ public class DataManagementCli
         Artifact dummyArtifact = artifactFactory.createProjectArtifact( "dummy", "dummy", "1.0" );
 
         if ( artifact.isSnapshot() )
-	{
-	    remoteRepositories.add( factory.createArtifactRepository( "apache.snapshots", "http://people.apache.org/repo/m2-snapshot-repository", layout, null, null ) );
+        {
+            remoteRepositories.add( factory.createArtifactRepository( "apache.snapshots",
+                                                                      "http://people.apache.org/repo/m2-snapshot-repository",
+                                                                      layout, null, null ) );
         }
 
         ArtifactResolver resolver = (ArtifactResolver) container.lookup( ArtifactResolver.ROLE );
@@ -277,11 +281,43 @@ public class DataManagementCli
         return result.getArtifacts();
     }
 
+    private static String getLocalRepositoryURL( PlexusContainer container )
+        throws ComponentLookupException, IOException
+    {
+        File settingsFile = new File( System.getProperty( "user.home" ), "/.m2/settings.xml" );
+        if ( !settingsFile.exists() )
+        {
+            return new File( System.getProperty( "user.home" ), "/.m2/repository" ).toURL().toString();
+        }
+        else
+        {
+            Settings settings = getSettings( container );
+            return new File( settings.getLocalRepository() ).toURL().toString();
+        }
+    }
+
+    private static Settings getSettings( PlexusContainer container )
+        throws ComponentLookupException, IOException
+    {
+        MavenSettingsBuilder mavenSettingsBuilder =
+            (MavenSettingsBuilder) container.lookup( MavenSettingsBuilder.class.getName() );
+        try
+        {
+            return mavenSettingsBuilder.buildSettings( false );
+        }
+        catch ( XmlPullParserException e )
+        {
+            e.printStackTrace();
+            throw new IOException( "Can't read settings.xml. " + e.getMessage() );
+        }
+    }
+
     private static String getVersion()
         throws IOException
     {
         Properties properties = new Properties();
-        properties.load( DataManagementCli.class.getResourceAsStream( "/META-INF/maven/org.apache.maven.continuum/data-management-api/pom.properties" ) );
+        properties.load( DataManagementCli.class.getResourceAsStream(
+            "/META-INF/maven/org.apache.maven.continuum/data-management-api/pom.properties" ) );
         return properties.getProperty( "version" );
     }
 
