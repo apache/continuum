@@ -469,6 +469,13 @@ public class DefaultBuildController
 
         Project project = context.getProject();
 
+        //CONTINUUM-1428
+        if ( project.getOldState() == ContinuumProjectState.ERROR ||
+            context.getOldBuildResult().getState() == ContinuumProjectState.ERROR )
+        {
+            return true;
+        }
+
         if ( project.getOldState() != ContinuumProjectState.NEW &&
             project.getOldState() != ContinuumProjectState.CHECKEDOUT &&
             context.getTrigger() != ContinuumProjectState.TRIGGER_FORCED &&
