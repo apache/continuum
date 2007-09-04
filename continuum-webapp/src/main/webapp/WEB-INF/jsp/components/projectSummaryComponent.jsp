@@ -234,6 +234,8 @@
                 <input type="button" name="delete-projects" value="<ww:text name="projectGroup.deleteProjects"/>" onclick="document.forms.projectsForm.methodToCall.value='remove';document.forms.projectsForm.submit();" />
                 <input type="button" name="build-projects" value="<ww:text name="projectGroup.buildProjects"/>" onclick="document.forms.projectsForm.methodToCall.value='build';document.forms.projectsForm.submit();" />
                 <input type="button" name="cancel-builds" value="<ww:text name="projectGroup.cancelBuilds"/>" onclick="document.forms.projectsForm.action='cancelBuilds.action';document.forms.projectsForm.submit();" />
+                <a href="#" onclick="selectAll();return false;"><ww:text name="selectAll"/></a>
+                <a href="#" onclick="unselectAll();return false;"><ww:text name="unselectAll"/></a>
               </redback:ifAuthorized>
             </td>
           </tr>
@@ -243,4 +245,31 @@
   </ww:if>
   </form>
 </ww:if>
+
+<script language="javascript">
+    <!--
+    function selectAll()
+    {
+        var inputs = document.getElementsByTagName("input");
+        for( var i = 0; inputs && i < inputs.length; i++ )
+        {
+            if( inputs[i].type == "checkbox" )
+            {
+                inputs[i].checked = true;
+            }
+        }
+    }
+    function unselectAll()
+    {
+        var inputs = document.getElementsByTagName("input");
+        for( var i = 0; inputs && i < inputs.length; i++ )
+        {
+            if( inputs[i].type == "checkbox" )
+            {
+                inputs[i].checked = false;
+            }
+        }
+    }
+    -->
+</script>
 </ww:i18n>
