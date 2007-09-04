@@ -138,10 +138,22 @@ public interface Continuum
     boolean isInBuildingQueue( int projectId, int buildDefinitionId )
         throws ContinuumException;
 
+    boolean removeProjectsFromBuildingQueue( int[] projectsId )
+        throws ContinuumException;
+
+    List getBuildProjectTasksInQueue()
+        throws ContinuumException;
+
     boolean isInCheckoutQueue( int projectId )
         throws ContinuumException;
 
     boolean removeProjectFromCheckoutQueue( int projectId )
+        throws ContinuumException;
+
+    List getCheckOutTasksInQueue()
+        throws ContinuumException;
+
+    boolean removeProjectsFromCheckoutQueue( int[] projectId )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------

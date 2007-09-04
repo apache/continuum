@@ -390,6 +390,13 @@
     <action name="cancelBuild" class="cancelBuild">
       <result name="success" type="chain">buildResults</result>
     </action>
+    
+    <action name="cancelBuilds" class="cancelBuild" method="cancelBuilds">
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>    
 
     <!--
     - continuum release

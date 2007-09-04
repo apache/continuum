@@ -19,6 +19,7 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
@@ -32,7 +33,6 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.initialization.ContinuumInitializationException;
 import org.apache.maven.continuum.initialization.ContinuumInitializer;
-import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -302,7 +302,8 @@ public class DefaultContinuum
             {
                 ProjectGroup new_pg = store.addProjectGroup( projectGroup );
 
-                addBuildDefinitionToProjectGroup( new_pg.getId(), configurationService.getDefaultMavenTwoBuildDefinition() );
+                addBuildDefinitionToProjectGroup( new_pg.getId(),
+                                                  configurationService.getDefaultMavenTwoBuildDefinition() );
 
                 Map context = new HashMap();
                 context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( new_pg.getId() ) );
@@ -519,6 +520,120 @@ public class DefaultContinuum
             }
         }
 
+        return false;
+    }
+
+    public List getBuildProjectTasksInQueue()
+        throws ContinuumException
+    {
+        try
+        {
+            return buildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumException( "Error while getting the building queue.", e );
+        }
+    }
+
+    public List getCheckOutTasksInQueue()
+        throws ContinuumException
+    {
+        try
+        {
+            return checkoutQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumException( "Error while getting the checkout queue.", e );
+        }
+    }
+
+    public boolean removeProjectsFromBuildingQueue( int[] projectsId )
+        throws ContinuumException
+    {
+        if ( projectsId == null )
+        {
+            return false;
+        }
+        if ( projectsId.length < 1 )
+        {
+            return false;
+        }
+        List queue;
+
+        try
+        {
+            queue = this.buildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumException( "Error while getting the building queue.", e );
+        }
+        List<BuildProjectTask> tasks = new ArrayList<BuildProjectTask>();
+
+        for ( Iterator it = queue.iterator(); it.hasNext(); )
+        {
+            BuildProjectTask task = (BuildProjectTask) it.next();
+
+            if ( task != null )
+            {
+                if ( ArrayUtils.contains( projectsId, task.getProjectId() ) )
+                {
+                    tasks.add( task );
+                }
+            }
+        }
+        if ( !tasks.isEmpty() )
+        {
+            return buildQueue.removeAll( tasks );
+        }
+        for ( BuildProjectTask buildProjectTask : tasks )
+        {
+            getLogger().info( "cancel build for project " + buildProjectTask.getProjectId() );
+        }
+        return false;
+    }
+
+    public boolean removeProjectsFromCheckoutQueue( int[] projectsId )
+        throws ContinuumException
+    {
+        if ( projectsId == null )
+        {
+            return false;
+        }
+        if ( projectsId.length < 1 )
+        {
+            return false;
+        }
+        List queue;
+
+        try
+        {
+            queue = this.checkoutQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumException( "Error while getting the checkout queue.", e );
+        }
+        List tasks = new ArrayList();
+
+        for ( Iterator it = queue.iterator(); it.hasNext(); )
+        {
+            BuildProjectTask task = (BuildProjectTask) it.next();
+
+            if ( task != null )
+            {
+                if ( ArrayUtils.contains( projectsId, task.getProjectId() ) )
+                {
+                    tasks.add( task );
+                }
+            }
+        }
+        if ( !tasks.isEmpty() )
+        {
+            return checkoutQueue.removeAll( tasks );
+        }
         return false;
     }
 

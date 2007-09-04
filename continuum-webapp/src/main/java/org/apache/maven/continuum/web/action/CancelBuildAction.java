@@ -19,12 +19,15 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -41,6 +44,10 @@ public class CancelBuildAction
 
     private int projectId;
 
+    private int projectGroupId;
+
+    private List<String> selectedProjects;
+
     private String projectGroupName = "";
 
     public String execute()
@@ -55,8 +62,39 @@ public class CancelBuildAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        Task task = taskQueueExecutor.getCurrentTask();
+        cancelBuild( projectId );
 
+        return SUCCESS;
+    }
+
+    public String cancelBuilds()
+        throws ContinuumException
+    {
+        // first we remove from the build queue
+        if ( getSelectedProjects().isEmpty() )
+        {
+            return SUCCESS;
+        }
+        int[] projectsId = new int[getSelectedProjects().size()];
+        for ( String selectedProjectId : getSelectedProjects() )
+        {
+            int projectId = Integer.parseInt( selectedProjectId );
+            projectsId = ArrayUtils.add( projectsId, projectId );
+        }
+        getContinuum().removeProjectsFromBuildingQueue( projectsId );
+        // now we must check if the current build is one of this
+        int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
+        if ( index > 0 )
+        {
+            cancelBuild( projectsId[index] );
+        }
+        return SUCCESS;
+    }
+
+    private boolean cancelBuild( int projectId )
+        throws ContinuumException
+    {
+        Task task = taskQueueExecutor.getCurrentTask();
         getLogger().info( "TaskQueueExecutor: " + taskQueueExecutor );
 
         if ( task != null )
@@ -66,7 +104,7 @@ public class CancelBuildAction
                 if ( ( (BuildProjectTask) task ).getProjectId() == projectId )
                 {
                     getLogger().info( "Cancelling task for project " + projectId );
-                    taskQueueExecutor.cancelTask( task );
+                    return taskQueueExecutor.cancelTask( task );
                 }
                 else
                 {
@@ -83,8 +121,25 @@ public class CancelBuildAction
         {
             getLogger().warn( "No task running - not cancelling" );
         }
+        return false;
+    }
 
-        return SUCCESS;
+    /**
+     * @return -1 if not project currently building
+     * @throws ContinuumException
+     */
+    private int getCurrentProjectIdBuilding()
+        throws ContinuumException
+    {
+        Task task = taskQueueExecutor.getCurrentTask();
+        if ( task != null )
+        {
+            if ( task instanceof BuildProjectTask )
+            {
+                return ( (BuildProjectTask) task ).getProjectId();
+            }
+        }
+        return -1;
     }
 
     public void setProjectId( int projectId )
@@ -101,5 +156,25 @@ public class CancelBuildAction
         }
 
         return projectGroupName;
+    }
+
+    public List<String> getSelectedProjects()
+    {
+        return selectedProjects;
+    }
+
+    public void setSelectedProjects( List<String> selectedProjects )
+    {
+        this.selectedProjects = selectedProjects;
+    }
+
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
+    }
+
+    public void setProjectGroupId( int projectGroupId )
+    {
+        this.projectGroupId = projectGroupId;
     }
 }
