@@ -28,7 +28,7 @@ import java.util.Iterator;
 
 public class ProjectGroupUserBean
 {
-    public static final String ROLE_ADMINISTRATOR = "Group Project Administrator";
+    public static final String ROLE_ADMINISTRATOR = "Project Administrator";
 
     public static final String ROLE_DEVELOPER = "Project Developer";
 
