@@ -24,29 +24,29 @@ import org.apache.maven.continuum.management.DataManagementTool;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusStoreException;
-import org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0.JdoOperation;
-import org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0.JdoPermission;
-import org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0.JdoResource;
-import org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0.JdoRole;
-import org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0.JdoUserAssignment;
-import org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0.RbacDatabase;
-import org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0.RbacJdoModelModelloMetadata;
-import org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0.io.stax.RbacJdoModelStaxReader;
-import org.codehaus.plexus.security.authorization.rbac.jdo.v0_9_0.io.stax.RbacJdoModelStaxWriter;
-import org.codehaus.plexus.security.keys.jdo.v0_9_0.AuthenticationKeyDatabase;
-import org.codehaus.plexus.security.keys.jdo.v0_9_0.JdoAuthenticationKey;
-import org.codehaus.plexus.security.keys.jdo.v0_9_0.PlexusSecurityKeyManagementJdoModelloMetadata;
-import org.codehaus.plexus.security.keys.jdo.v0_9_0.io.stax.PlexusSecurityKeyManagementJdoStaxReader;
-import org.codehaus.plexus.security.keys.jdo.v0_9_0.io.stax.PlexusSecurityKeyManagementJdoStaxWriter;
-import org.codehaus.plexus.security.rbac.RBACObjectAssertions;
-import org.codehaus.plexus.security.rbac.RbacManagerException;
-import org.codehaus.plexus.security.user.Messages;
-import org.codehaus.plexus.security.user.UserManagerException;
-import org.codehaus.plexus.security.user.jdo.v0_9_0.JdoUser;
-import org.codehaus.plexus.security.user.jdo.v0_9_0.UserDatabase;
-import org.codehaus.plexus.security.user.jdo.v0_9_0.UserManagementModelloMetadata;
-import org.codehaus.plexus.security.user.jdo.v0_9_0.io.stax.UserManagementStaxReader;
-import org.codehaus.plexus.security.user.jdo.v0_9_0.io.stax.UserManagementStaxWriter;
+import org.codehaus.plexus.redback.rbac.jdo.v0_9_0.JdoOperation;
+import org.codehaus.plexus.redback.rbac.jdo.v0_9_0.JdoPermission;
+import org.codehaus.plexus.redback.rbac.jdo.v0_9_0.JdoResource;
+import org.codehaus.plexus.redback.rbac.jdo.v0_9_0.JdoRole;
+import org.codehaus.plexus.redback.rbac.jdo.v0_9_0.JdoUserAssignment;
+import org.codehaus.plexus.redback.rbac.jdo.v0_9_0.RbacDatabase;
+import org.codehaus.plexus.redback.rbac.jdo.v0_9_0.RbacJdoModelModelloMetadata;
+import org.codehaus.plexus.redback.rbac.jdo.v0_9_0.io.stax.RbacJdoModelStaxReader;
+import org.codehaus.plexus.redback.rbac.jdo.v0_9_0.io.stax.RbacJdoModelStaxWriter;
+import org.codehaus.plexus.redback.keys.jdo.v0_9_0.AuthenticationKeyDatabase;
+import org.codehaus.plexus.redback.keys.jdo.v0_9_0.JdoAuthenticationKey;
+import org.codehaus.plexus.redback.keys.jdo.v0_9_0.RedbackKeyManagementJdoModelloMetadata;
+import org.codehaus.plexus.redback.keys.jdo.v0_9_0.io.stax.RedbackKeyManagementJdoStaxReader;
+import org.codehaus.plexus.redback.keys.jdo.v0_9_0.io.stax.RedbackKeyManagementJdoStaxWriter;
+import org.codehaus.plexus.redback.rbac.RBACObjectAssertions;
+import org.codehaus.plexus.redback.rbac.RbacManagerException;
+import org.codehaus.plexus.redback.users.Messages;
+import org.codehaus.plexus.redback.users.UserManagerException;
+import org.codehaus.plexus.redback.users.jdo.v0_9_0.JdoUser;
+import org.codehaus.plexus.redback.users.jdo.v0_9_0.UserDatabase;
+import org.codehaus.plexus.redback.users.jdo.v0_9_0.UserManagementModelloMetadata;
+import org.codehaus.plexus.redback.users.jdo.v0_9_0.io.stax.UserManagementStaxReader;
+import org.codehaus.plexus.redback.users.jdo.v0_9_0.io.stax.UserManagementStaxWriter;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -180,7 +180,7 @@ public class LegacyJdoDataManagementTool
 
         database.setKeys( keys );
 
-        PlexusSecurityKeyManagementJdoStaxWriter writer = new PlexusSecurityKeyManagementJdoStaxWriter();
+        RedbackKeyManagementJdoStaxWriter writer = new RedbackKeyManagementJdoStaxWriter();
         FileWriter fileWriter = new FileWriter( new File( backupDirectory, KEYS_XML_NAME ) );
         try
         {
@@ -355,7 +355,7 @@ public class LegacyJdoDataManagementTool
     public void restoreKeysDatabase( File backupDirectory )
         throws IOException, XMLStreamException
     {
-        PlexusSecurityKeyManagementJdoStaxReader reader = new PlexusSecurityKeyManagementJdoStaxReader();
+    	RedbackKeyManagementJdoStaxReader reader = new RedbackKeyManagementJdoStaxReader();
 
         FileReader fileReader = new FileReader( new File( backupDirectory, KEYS_XML_NAME ) );
 
@@ -397,6 +397,6 @@ public class LegacyJdoDataManagementTool
     public void eraseKeysDatabase()
     {
         PlexusJdoUtils.removeAll( getPersistenceManager(), JdoAuthenticationKey.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), PlexusSecurityKeyManagementJdoModelloMetadata.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), RedbackKeyManagementJdoModelloMetadata.class );
     }
 }

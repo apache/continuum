@@ -26,7 +26,7 @@
   <defaults>
     <default>
       <key>package</key>
-      <value>org.codehaus.plexus.security.authorization.rbac.jdo</value>
+      <value>org.codehaus.plexus.redback.rbac.jdo</value>
     </default>
   </defaults>
   <classes>
@@ -84,9 +84,9 @@
       <name>JdoRole</name>
       <version>0.9.0</version>
       <interfaces>
-        <interface>org.codehaus.plexus.security.rbac.Role</interface>
+        <interface>org.codehaus.plexus.redback.rbac.Role</interface>
       </interfaces>
-      <superClass>org.codehaus.plexus.security.rbac.AbstractRole</superClass>
+      <superClass>org.codehaus.plexus.redback.rbac.AbstractRole</superClass>
       <fields>
         <field jpox.primary-key="true" jpox.value-strategy="off">
           <name>name</name>
@@ -126,7 +126,7 @@
                        jpox.dependent="false"
                        java.generate-break="false" 
                        java.generate-create="false"
-                       zjava.use-interface="org.codehaus.plexus.security.rbac.Role">
+                       zjava.use-interface="org.codehaus.plexus.redback.rbac.Role">
             <type>String</type>
             <multiplicity>*</multiplicity>
           </association>
@@ -145,7 +145,7 @@
                        java.init="field"
                        java.generate-break="false"
                        java.generate-create="false"
-                       java.use-interface="org.codehaus.plexus.security.rbac.Permission">
+                       java.use-interface="org.codehaus.plexus.redback.rbac.Permission">
             <type>JdoPermission</type>
             <multiplicity>*</multiplicity>
           </association>
@@ -159,7 +159,7 @@
       <name>JdoPermission</name>
       <version>0.9.0</version>
       <interfaces>
-        <interface>org.codehaus.plexus.security.rbac.Permission</interface>
+        <interface>org.codehaus.plexus.redback.rbac.Permission</interface>
       </interfaces>
       <fields>
         <field jpox.primary-key="true" jpox.value-strategy="off">
@@ -186,7 +186,7 @@
           <version>0.9.0</version>
           <association stash.part="true" 
                        xml.reference="true"
-                       java.use-interface="org.codehaus.plexus.security.rbac.Operation"
+                       java.use-interface="org.codehaus.plexus.redback.rbac.Operation"
                        jpox.dependent="false">
             <type>JdoOperation</type>
             <multiplicity>1</multiplicity>
@@ -197,7 +197,7 @@
           <version>0.9.0</version>
           <association stash.part="true" 
                        xml.reference="true"
-                       java.use-interface="org.codehaus.plexus.security.rbac.Resource"
+                       java.use-interface="org.codehaus.plexus.redback.rbac.Resource"
                        jpox.dependent="false">
             <type>JdoResource</type>
             <multiplicity>1</multiplicity>
@@ -212,7 +212,7 @@
       <name>JdoOperation</name>
       <version>0.9.0</version>
       <interfaces>
-        <interface>org.codehaus.plexus.security.rbac.Operation</interface>
+        <interface>org.codehaus.plexus.redback.rbac.Operation</interface>
       </interfaces>
       <fields>
         <field jpox.primary-key="true" jpox.value-strategy="off">
@@ -254,7 +254,7 @@
         In RBAC terms, this is the entity which an operation is associated with that which permissions are based on.
       </description>
       <interfaces>
-        <interface>org.codehaus.plexus.security.rbac.Resource</interface>
+        <interface>org.codehaus.plexus.redback.rbac.Resource</interface>
       </interfaces>
       <fields>
         <field jpox.primary-key="true" jpox.value-strategy="off">
@@ -293,9 +293,9 @@
       <description>binding of a principal to a role</description>
       <version>0.9.0</version>
       <interfaces>
-        <interface>org.codehaus.plexus.security.rbac.UserAssignment</interface>
+        <interface>org.codehaus.plexus.redback.rbac.UserAssignment</interface>
       </interfaces>
-      <superClass>org.codehaus.plexus.security.rbac.AbstractUserAssignment</superClass>
+      <superClass>org.codehaus.plexus.redback.rbac.AbstractUserAssignment</superClass>
       <fields>
         <field jpox.primary-key="true" jpox.value-strategy="off">
           <name>principal</name>
