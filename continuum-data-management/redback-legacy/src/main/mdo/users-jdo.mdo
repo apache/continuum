@@ -19,14 +19,14 @@
   -->
 
 <model>
-  <id>redback-user-management-provider-jdo</id>
+  <id>plexus-security-user-management-provider-jdo</id>
   <name>UserManagement</name>
   <version>0.9.0</version>
-  <description>Redback User Management object model.</description>
+  <description>Plexus Security User Management object model.</description>
   <defaults>
     <default>
       <key>package</key>
-      <value>org.codehaus.plexus.redback.users.jdo</value>
+      <value>org.codehaus.plexus.security.user.jdo</value>
     </default>
   </defaults>
 
@@ -49,10 +49,10 @@
       <name>JdoUser</name>
       <version>0.9.0</version>
       <interfaces>
-        <interface>org.codehaus.plexus.redback.users.User</interface>
+        <interface>org.codehaus.plexus.security.user.User</interface>
       </interfaces>
       <description>
-        @plexus.component role="org.codehaus.plexus.redback.users.User"
+        @plexus.component role="org.codehaus.plexus.security.user.User"
         role-hint="jdo"
       </description>
       <fields>
