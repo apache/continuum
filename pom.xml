@@ -639,7 +639,7 @@
     <maven.version>2.0.6</maven.version>
     <wagon.version>1.0-beta-2</wagon.version>
     <maven-scm.version>1.0</maven-scm.version>
-    <redback.version>1.0-alpha-2</redback.version>
+    <redback.version>1.0-alpha-3</redback.version>
     <mail-sender.version>1.0-alpha-7</mail-sender.version>
   </properties>
 </project>
