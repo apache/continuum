@@ -45,6 +45,92 @@
   </load-on-start>
 
   <components>
+  
+    
+    <component> 
+      <role>org.codehaus.plexus.redback.common.ldap.connection.LdapConnectionFactory</role>
+      <role-hint>configurable</role-hint>
+      <implementation>org.codehaus.plexus.redback.common.ldap.connection.ConfigurableLdapConnectionFactory</implementation>
+      <description></description>
+      <configuration>
+        <hostname>everest.devzuz.com</hostname>
+        <port>389</port>
+        <baseDn>o=com</baseDn>
+        <contextFactory>com.sun.jndi.ldap.LdapCtxFactory</contextFactory>
+        <password>123qwe</password>
+        <bindDn>cn=maestro,ou=utility,ou=simulalabs,ou=intra,ou=simulalabs,o=com</bindDn>
+      </configuration>
+    </component>
+    <component>
+      <role>org.codehaus.plexus.redback.common.ldap.UserMapper</role>
+      <role-hint>ldap</role-hint>
+      <implementation>org.codehaus.plexus.redback.common.ldap.LdapUserMapper</implementation>
+      <description></description>
+      <configuration>
+        <email-attribute>email</email-attribute>
+        <full-name-attribute>givenName</full-name-attribute>
+        <password-attribute>userPassword</password-attribute>
+        <user-id-attribute>cn</user-id-attribute>
+        <user-base-dn>o=com</user-base-dn>
+        <user-object-class>inetOrgPerson</user-object-class>
+      </configuration>
+    </component> 
+    
+    <component>
+      <role>org.codehaus.plexus.redback.users.UserManager</role>
+      <role-hint>cached</role-hint>
+      <implementation>org.codehaus.plexus.redback.users.cached.CachedUserManager</implementation>
+      <description>CachedUserManager</description>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.redback.users.UserManager</role>
+          <role-hint>ldap</role-hint>
+          <field-name>userImpl</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.ehcache.EhcacheComponent</role>
+          <role-hint>users</role-hint>
+          <field-name>usersCache</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    
+    <component>
+      <role>org.codehaus.plexus.redback.policy.UserSecurityPolicy</role>
+      <role-hint>default</role-hint>
+      <implementation>org.codehaus.plexus.redback.policy.DefaultUserSecurityPolicy</implementation>
+      <description>User Security Policy.</description>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.redback.configuration.UserConfiguration</role>
+          <field-name>config</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.PasswordEncoder</role>
+          <role-hint>sha1</role-hint>
+          <field-name>passwordEncoder</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.UserValidationSettings</role>
+          <field-name>userValidationSettings</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.CookieSettings</role>
+          <role-hint>rememberMe</role-hint>
+          <field-name>rememberMeCookieSettings</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.CookieSettings</role>
+          <role-hint>signon</role-hint>
+          <field-name>signonCookieSettings</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.PasswordRule</role>
+          <field-name>rules</field-name>
+        </requirement>
+      </requirements>
+    </component>
+  
     <component>
       <role>org.codehaus.plexus.registry.Registry</role>
       <implementation>org.codehaus.plexus.registry.commons.CommonsConfigurationRegistry</implementation>
@@ -53,29 +139,38 @@
         <properties>
           <system/>
           <jndi prefix="java:comp/env" config-optional="true"/>
-          <xml fileName="${user.home}/.m2/continuum.xml" config-optional="true" config-name="org.apache.maven.continuum"
-               config-at="org.apache.maven.continuum" config-forceCreate="true"/>
-          <xml fileName="${user.home}/.m2/shared.xml" config-optional="true"
+          <!-- Archiva configuration is present to be able to load the managed repository definitions -->
+          <xml fileName="${appserver.base}/conf/maestro.xml" config-optional="true"
+               config-name="com.mergere.maestro.projectserver"
+               config-at="com.mergere.maestro.projectserver" config-forceCreate="true"/>
+          <xml fileName="${appserver.base}/conf/continuum.xml" config-optional="true"
+               config-at="org.apache.maven.continuum" config-forceCreate="true" />
+          <xml fileName="${appserver.base}/conf/shared.xml" config-optional="true"
                config-name="org.apache.maven.shared.app.user" config-at="org.apache.maven.shared.app"
                config-forceCreate="true"/>
-          <properties fileName="${user.home}/.m2/security.properties" config-optional="true"
-                      config-at="org.codehaus.plexus.redback"/>
-          <properties fileName="${user.home}/.m2/continuum.properties" config-optional="true"
-                      config-at="org.codehaus.plexus.redback"/>
-          <xml fileName="${appserver.base}/conf/continuum.xml" config-optional="true"
-               config-at="org.apache.maven.continuum"/>
           <xml fileName="${appserver.base}/conf/shared.xml" config-optional="true"
                config-name="org.apache.maven.shared.app.base" config-at="org.apache.maven.shared.app"/>
           <xml fileName="${appserver.base}/conf/common.xml" config-optional="true"/>
           <properties fileName="${appserver.base}/conf/security.properties" config-optional="true"
                       config-at="org.codehaus.plexus.redback"/>
+          <xml fileName="${appserver.home}/conf/maestro.xml" config-optional="true"
+               config-at="com.mergere.maestro.projectserver"/>
           <xml fileName="${appserver.home}/conf/continuum.xml" config-optional="true"
                config-at="org.apache.maven.continuum"/>
           <xml fileName="${appserver.home}/conf/shared.xml" config-optional="true"
-               config-at="org.apache.maven.shared.app"/>
+               config-at="org.apache.maven.shared.app" />
           <xml fileName="${appserver.home}/conf/common.xml" config-optional="true"/>
           <properties fileName="${appserver.home}/conf/security.properties" config-optional="true"
                       config-at="org.codehaus.plexus.redback"/>
+          <!-- Previous settings, deprecated -->
+          <xml fileName="${user.home}/.m2/continuum.xml" config-optional="true" 
+               config-at="org.apache.maven.continuum" />
+          <xml fileName="${user.home}/.m2/shared.xml" config-optional="true"/>
+          <properties fileName="${user.home}/.m2/security.properties" config-optional="true"
+                      config-at="org.codehaus.plexus.redback"/>
+          <properties fileName="${user.home}/.m2/continuum.properties" config-optional="true"
+                      config-at="org.codehaus.plexus.redback"/>
+          <!-- Defaults -->
           <properties fileName="org/apache/maven/continuum/security.properties" config-at="org.codehaus.plexus.redback"/>
         </properties>
       </configuration>
@@ -341,11 +436,6 @@
             <name>org.jpox.rdbms.dateTimezone</name>
             <value>JDK_DEFAULT_TIMEZONE</value>
           </property>
-          <!-- this is required for some MySQL versions and configurations, see CONTINUUM-1113 -->
-          <property>
-            <name>org.jpox.rdbms.stringDefaultLength</name>
-            <value>255</value>
-          </property>
 <!--
           <property>
             <name>org.jpox.identifier.case</name>
@@ -535,9 +625,153 @@
             <hierarchy>freemarker</hierarchy>
             <level>WARN</level>
           </level>
+          <level>
+            <hierarchy>org.codehaus.plexus.component.manager.ClassicSingletonComponentManager</hierarchy>
+            <level>ERROR</level>
+          </level>
         </levels>
       </configuration>
     </component>
+
+	<!-- 
+	-- Ldap Authentication can be enabled by setting enabling these components and setting the following configuration options in your security.properties file
+	--
+	-- user.manager.impl=ldap
+    -- ldap.bind.authenticator.enabled=true
+    -- redback.default.admin=admin
+    -- redback.default.guest=guest
+    -- security.policy.password.expiration.enabled=false
+	--
+	-- until this process is better documented, the following is the apt document for configuration ldap with redback
+	--
+	-- http://svn.codehaus.org/plexus/plexus-redback/trunk/redback-site/src/site/apt/integration/ldap.apt
+	-->
+
+	<!--
+	
+	this component manages the connection to the ldap server
+	
+	 * hostname - The hostname of the ldap server
+     * port - The port of the ldap server
+     * baseDn - The baseDn of the ldap system
+     * contextFactory - context factory for ldap connections
+     * password - password for the bindDn for the root ldap connection
+     * bindDn - the core user used for authentication the ldap server, must be able to perform the necessary searches, etc.
+
+    <component>
+      <role>org.codehaus.plexus.redback.common.ldap.connection.LdapConnectionFactory</role>
+      <role-hint>configurable</role-hint>
+      <implementation>org.codehaus.plexus.redback.common.ldap.connection.ConfigurableLdapConnectionFactory</implementation>
+      <description></description>
+      <configuration>
+        <hostname></hostname>
+        <port></port>
+        <baseDn></baseDn>
+        <contextFactory>com.sun.jndi.ldap.LdapCtxFactory</contextFactory>
+        <password></password>
+        <bindDn></bindDn>
+      </configuration>
+    </component-->
+    
+    <!-- 
+    
+    this component manages the mapping of attributes in ldap to user information in redback
+    
+     * email-attribute - The name of the attribute on a user that contains the email address
+     * full-name-attribute - The name of the attribute on a user that contains the users fullName
+     * password-attribute - The name of the attribute containing the users password, used for the authentiction using the user manager and not the ldap bind authent
+icator
+     * user-id-attribute - The name of the attribute containing the users userId, most commonly cn or sn.
+     * user-base-dn - The base dn that will be subtree searched for users.
+     * user-object-class - the objectClass used in the ldap server for indentifying users, most commonly inetOrgPerson.
+    
+    <component>
+      <role>org.codehaus.plexus.redback.common.ldap.UserMapper</role>
+      <role-hint>ldap</role-hint>
+      <implementation>org.codehaus.plexus.redback.common.ldap.LdapUserMapper</implementation>
+      <description></description>
+      <configuration>
+        <email-attribute>email</email-attribute>
+        <full-name-attribute>givenName</full-name-attribute>
+        <password-attribute>userPassword</password-attribute>
+        <user-id-attribute>cn</user-id-attribute>
+        <user-base-dn>o=com</user-base-dn>
+        <user-object-class>inetOrgPerson</user-object-class>
+      </configuration>
+    </component-->
+    
+    <!--
+     
+    If caching is desired then make uncomment this and make sure the following configuration parameter is in the sec
+     
+    user.manager.impl=cached
+     
+     
+    <component>
+      <role>org.codehaus.plexus.redback.users.UserManager</role>
+      <role-hint>cached</role-hint>
+      <implementation>org.codehaus.plexus.redback.users.cached.CachedUserManager</implementation>
+      <description>CachedUserManager</description>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.redback.users.UserManager</role>
+          <role-hint>ldap</role-hint>
+          <field-name>userImpl</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.ehcache.EhcacheComponent</role>
+          <role-hint>users</role-hint>
+          <field-name>usersCache</field-name>
+        </requirement>
+      </requirements>
+    </component-->
+    
+    <!-- 
+    
+    if using the user manager authenticator to authenticate the user and not the ldap bind authenticator make sure
+    this definition has the correct password encoder
+    
+    Note: you should probably just use the ldap bind authenticator which is enabled by putting
+    
+    ldap.bind.authenticator.enabled=true
+    
+    in the security.properties
+    
+    <component>
+      <role>org.codehaus.plexus.redback.policy.UserSecurityPolicy</role>
+      <role-hint>default</role-hint>
+      <implementation>org.codehaus.plexus.redback.policy.DefaultUserSecurityPolicy</implementation>
+      <description>User Security Policy.</description>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.redback.configuration.UserConfiguration</role>
+          <field-name>config</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.PasswordEncoder</role>
+          <role-hint>sha1</role-hint>
+          <field-name>passwordEncoder</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.UserValidationSettings</role>
+          <field-name>userValidationSettings</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.CookieSettings</role>
+          <role-hint>rememberMe</role-hint>
+          <field-name>rememberMeCookieSettings</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.CookieSettings</role>
+          <role-hint>signon</role-hint>
+          <field-name>signonCookieSettings</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.redback.policy.PasswordRule</role>
+          <field-name>rules</field-name>
+        </requirement>
+      </requirements>
+    </component-->
   </components>
 
   <lifecycle-handler-manager implementation="org.codehaus.plexus.lifecycle.DefaultLifecycleHandlerManager">
