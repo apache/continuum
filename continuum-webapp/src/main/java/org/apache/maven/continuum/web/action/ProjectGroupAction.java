@@ -64,7 +64,7 @@ public class ProjectGroupAction
     }
 
     /**
-     * @plexus.requirement role-hint="cached"
+     * @plexus.requirement role-hint="configurable"
      */
     private UserManager manager;
 
