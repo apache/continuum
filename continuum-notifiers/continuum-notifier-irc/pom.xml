@@ -9,14 +9,30 @@
   <name>Continuum IRC Notifier</name>
   <dependencies>
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-ircbot</artifactId>
-      <version>1.1-alpha-6</version>
-    </dependency>
+      <groupId>org.schwering</groupId>
+      <artifactId>irclib</artifactId>
+      <version>1.04-bsd</version>
+    </dependency>    
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-notifier-api</artifactId>
       <version>${pom.version}</version>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate</id>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
