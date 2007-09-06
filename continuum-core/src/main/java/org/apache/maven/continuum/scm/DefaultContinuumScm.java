@@ -103,7 +103,7 @@ public class DefaultContinuumScm
             getLogger().info( "Checking out project: '" + project.getName() + "', " + "id: '" + project.getId() + "' " +
                 "to '" + workingDirectory + "'" + tagMessage + "." );
 
-            ScmRepository repository = getScmRepository( project, false );
+            ScmRepository repository = getScmRepository( project, project.isScmUseCache() );
 
             ScmResult result;
 
