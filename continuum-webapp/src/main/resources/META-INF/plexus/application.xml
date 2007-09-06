@@ -547,25 +547,25 @@
       </configuration>
     </component>
 
-	<!-- 
-	-- Ldap Authentication can be enabled by setting enabling these components and setting the following configuration options in your security.properties file
-	--
-	-- user.manager.impl=ldap
-    -- ldap.bind.authenticator.enabled=true
-    -- redback.default.admin=admin
-    -- redback.default.guest=guest
-    -- security.policy.password.expiration.enabled=false
-	--
-	-- until this process is better documented, the following is the apt document for configuration ldap with redback
-	--
-	-- http://svn.codehaus.org/plexus/plexus-redback/trunk/redback-site/src/site/apt/integration/ldap.apt
-	-->
+    <!-- 
+       Ldap Authentication can be enabled by setting enabling these components and setting the following configuration options in your security.properties file
+      
+       user.manager.impl=ldap
+       ldap.bind.authenticator.enabled=true
+       redback.default.admin=admin
+       redback.default.guest=guest
+       security.policy.password.expiration.enabled=false
+      
+       until this process is better documented, the following is the apt document for configuration ldap with redback
+      
+       http://svn.codehaus.org/plexus/plexus-redback/trunk/redback-site/src/site/apt/integration/ldap.apt
+    -->
 
-	<!--
-	
-	this component manages the connection to the ldap server
-	
-	 * hostname - The hostname of the ldap server
+    <!--
+    
+    this component manages the connection to the ldap server
+    
+     * hostname - The hostname of the ldap server
      * port - The port of the ldap server
      * baseDn - The baseDn of the ldap system
      * contextFactory - context factory for ldap connections
