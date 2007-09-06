@@ -113,7 +113,7 @@ public abstract class AbstractContinuumAction
 
     public static BuildDefinition getBuildDefinition( Map context )
     {
-        return (BuildDefinition) getObject( context, KEY_BUILD_DEFINITION );
+        return (BuildDefinition) getObject( context, KEY_BUILD_DEFINITION, null );
     }
 
     public static String getBuildId( Map context )
