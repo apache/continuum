@@ -29,21 +29,32 @@ import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.ircbot.IrcBot;
 import org.codehaus.plexus.notification.NotificationException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.util.StringUtils;
+import org.schwering.irc.lib.IRCConnection;
+import org.schwering.irc.lib.IRCEventListener;
+import org.schwering.irc.lib.IRCModeParser;
+import org.schwering.irc.lib.IRCUser;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 /**
+ * <b>This implementation assumes there aren't concurrent acces to the IRCConnection</b>
+ *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ * @plexus.component role="org.codehaus.plexus.notification.notifier.Notifier" role-hint="irc"
  */
 public class IrcContinuumNotifier
     extends AbstractContinuumNotifier
+    implements Disposable
 {
     // ----------------------------------------------------------------------
     // Requirements
@@ -55,18 +66,72 @@ public class IrcContinuumNotifier
     private ContinuumStore store;
 
     /**
-     * @plexus.configuration
-     */
-    private IrcBot ircClient;
-
-    /**
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
 
+    /**
+     * @plexus.configuration default-value="6667"
+     */
+    private int defaultPort;
+
+    /**
+     * key is upper(hostname) + port
+     */
+    private Map<String, IRCConnection> hostConnections = new HashMap<String, IRCConnection>();
+
+
+    // ----------------------------------------------------------------------
+    // Plexus Lifecycle
+    // ----------------------------------------------------------------------    
+    public void dispose()
+    {
+        // cleanup connections
+        for ( Iterator<String> keys = hostConnections.keySet().iterator(); keys.hasNext(); )
+        {
+            String key = keys.next();
+            IRCConnection connection = hostConnections.get( key );
+            connection.doQuit( "Application shutting down" );
+            connection.close();
+        }
+
+    }
+
+    // ----------------------------------------------------------------------
+    // Internal connections 
+    // ----------------------------------------------------------------------    
+    private IRCConnection getIRConnection( String host, int port, String password, String nick, String userName,
+                                           String realName, String channel )
+        throws IOException
+    {
+        String key = host.toUpperCase() + Integer.toString( port );
+        IRCConnection ircConnection = hostConnections.get( key );
+        if ( ircConnection != null )
+        {
+            checkConnection( ircConnection );
+            return ircConnection;
+        }
+        ircConnection = new IRCConnection( host, new int[]{port}, password, nick, userName, realName );
+        ircConnection.addIRCEventListener( new Listener() );
+        checkConnection( ircConnection );
+        ircConnection.doJoin( channel );
+        hostConnections.put( key, ircConnection );
+        return ircConnection;
+    }
+
+    private void checkConnection( IRCConnection conn )
+        throws IOException
+    {
+        if ( !conn.isConnected() )
+        {
+            conn.connect();
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Notifier Implementation
     // ----------------------------------------------------------------------
+
 
     public void sendNotification( String source, Set recipients, Map configuration, Map context )
         throws NotificationException
@@ -124,8 +189,12 @@ public class IrcContinuumNotifier
 
         String host = (String) configuration.get( "host" );
 
-        int port = Integer.parseInt( (String) configuration.get( "port" ) );
-
+        String portAsString = (String) configuration.get( "port" );
+        int port = defaultPort;
+        if ( portAsString != null )
+        {
+            port = Integer.parseInt( portAsString );
+        }
         String channel = (String) configuration.get( "channel" );
 
         String login = (String) configuration.get( "nick" );
@@ -137,57 +206,16 @@ public class IrcContinuumNotifier
 
         String fullName = (String) configuration.get( "fullName" );
 
-        if ( !StringUtils.isEmpty( fullName ) )
-        {
-            ircClient.setFullName( fullName );
-        }
-
         String password = (String) configuration.get( "password" );
-
-        if ( !StringUtils.isEmpty( password ) )
-        {
-            ircClient.setPassword( password );
-        }
-
-        // ----------------------------------------------------------------------
-        // Send message
-        // ----------------------------------------------------------------------
 
         try
         {
-            ircClient.connect( host, port );
-
-            ircClient.setLogin( login );
-
-            ircClient.logon();
-
-            ircClient.sendMessageToChannel( channel, generateMessage( project, build ) );
+            IRCConnection ircConnection = getIRConnection( host, port, password, login, fullName, fullName, channel );
+            ircConnection.doPrivmsg( channel, generateMessage( project, build ) );
         }
-        catch ( Exception e )
+        catch ( IOException e )
         {
-            throw new ContinuumException( "Exception while sending message.", e );
-        }
-        finally
-        {
-            try
-            {
-                ircClient.logoff();
-            }
-            catch ( Exception e )
-            {
-                throw new ContinuumException( "Exception while logoff.", e );
-            }
-            finally
-            {
-                try
-                {
-                    ircClient.disconnect();
-                }
-                catch ( Exception e )
-                {
-                    throw new ContinuumException( "Exception while disconnecting.", e );
-                }
-            }
+            throw new ContinuumException( "Exception while checkConnection to irc ." + host, e );
         }
     }
 
@@ -266,4 +294,103 @@ public class IrcContinuumNotifier
     {
         throw new NotificationException( "Not implemented." );
     }
+
+    /**
+     * Treats IRC events. The most of them are just printed.
+     */
+    class Listener
+        implements IRCEventListener
+    {
+
+        public void onRegistered()
+        {
+            getLogger().info( "Connected" );
+        }
+
+        public void onDisconnected()
+        {
+            getLogger().info( "Disconnected" );
+        }
+
+        public void onError( String msg )
+        {
+            getLogger().error( "Error: " + msg );
+        }
+
+        public void onError( int num, String msg )
+        {
+            getLogger().error( "Error #" + num + ": " + msg );
+        }
+
+        public void onInvite( String chan, IRCUser u, String nickPass )
+        {
+            getLogger().debug( chan + "> " + u.getNick() + " invites " + nickPass );
+        }
+
+        public void onJoin( String chan, IRCUser u )
+        {
+            getLogger().debug( chan + "> " + u.getNick() + " joins" );
+        }
+
+        public void onKick( String chan, IRCUser u, String nickPass, String msg )
+        {
+            getLogger().debug( chan + "> " + u.getNick() + " kicks " + nickPass );
+        }
+
+        public void onMode( IRCUser u, String nickPass, String mode )
+        {
+            getLogger().debug( "Mode: " + u.getNick() + " sets modes " + mode + " " + nickPass );
+        }
+
+        public void onMode( String chan, IRCUser u, IRCModeParser mp )
+        {
+            getLogger().debug( chan + "> " + u.getNick() + " sets mode: " + mp.getLine() );
+        }
+
+        public void onNick( IRCUser u, String nickNew )
+        {
+            getLogger().debug( "Nick: " + u.getNick() + " is now known as " + nickNew );
+        }
+
+        public void onNotice( String target, IRCUser u, String msg )
+        {
+            getLogger().debug( target + "> " + u.getNick() + " (notice): " + msg );
+        }
+
+        public void onPart( String chan, IRCUser u, String msg )
+        {
+            getLogger().debug( chan + "> " + u.getNick() + " parts" );
+        }
+
+        public void onPrivmsg( String chan, IRCUser u, String msg )
+        {
+            getLogger().debug( chan + "> " + u.getNick() + ": " + msg );
+        }
+
+        public void onQuit( IRCUser u, String msg )
+        {
+            getLogger().debug( "Quit: " + u.getNick() );
+        }
+
+        public void onReply( int num, String value, String msg )
+        {
+            getLogger().debug( "Reply #" + num + ": " + value + " " + msg );
+        }
+
+        public void onTopic( String chan, IRCUser u, String topic )
+        {
+            getLogger().debug( chan + "> " + u.getNick() + " changes topic into: " + topic );
+        }
+
+        public void onPing( String p )
+        {
+            getLogger().debug( "Ping:" + p );
+        }
+
+        public void unknown( String a, String b, String c, String d )
+        {
+            getLogger().debug( "UNKNOWN: " + a + " b " + c + " " + d );
+        }
+    }
+
 }
