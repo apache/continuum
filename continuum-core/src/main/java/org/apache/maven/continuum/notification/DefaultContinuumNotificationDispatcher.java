@@ -200,7 +200,7 @@ public class DefaultContinuumNotificationDispatcher
         }
         catch ( NotificationException e )
         {
-            getLogger().error( "Error while trying to use the " + notifierType + "notifier.", e );
+            getLogger().error( "Error while trying to use the " + notifierType + " notifier.", e );
         }
     }
 }

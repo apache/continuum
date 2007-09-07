@@ -40,6 +40,7 @@ import org.schwering.irc.lib.ssl.SSLDefaultTrustManager;
 import org.schwering.irc.lib.ssl.SSLIRCConnection;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -78,9 +79,11 @@ public class IrcContinuumNotifier
     private int defaultPort;
 
     /**
-     * key is upper(hostname) + port
+     * key is upper(hostname) + port + upper(nick)
      */
     private Map<String, IRCConnection> hostConnections = new HashMap<String, IRCConnection>();
+
+    private Map<String, List> channelConnections = new HashMap<String, List>();
 
 
     // ----------------------------------------------------------------------
@@ -93,7 +96,7 @@ public class IrcContinuumNotifier
         {
             String key = keys.next();
             IRCConnection connection = hostConnections.get( key );
-            connection.doQuit( "Application shutting down" );
+            connection.doQuit( "Continuum shutting down" );
             connection.close();
         }
 
@@ -106,11 +109,11 @@ public class IrcContinuumNotifier
                                            String realName, String channel, boolean ssl )
         throws IOException
     {
-        String key = host.toUpperCase() + Integer.toString( port );
+        String key = host.toUpperCase() + Integer.toString( port ) + nick.toUpperCase();
         IRCConnection conn = hostConnections.get( key );
         if ( conn != null )
         {
-            checkConnection( conn );
+            checkConnection( conn, key );
             return conn;
         }
 
@@ -125,13 +128,13 @@ public class IrcContinuumNotifier
         }
 
         conn.addIRCEventListener( new Listener() );
-        checkConnection( conn );
-        conn.doJoin( channel );
+        checkConnection( conn, key );
+        checkChannel( conn, key, channel );
         hostConnections.put( key, conn );
         return conn;
     }
 
-    private void checkConnection( IRCConnection conn )
+    private void checkConnection( IRCConnection conn, String key )
         throws IOException
     {
         if ( !conn.isConnected() )
@@ -146,7 +149,51 @@ public class IrcContinuumNotifier
             {
                 //nothing to do
             }
+
+            //join to all channels
+            List channels = channelConnections.get( key );
+            if ( channels != null )
+            {
+                for ( Iterator i = channels.iterator(); i.hasNext(); )
+                {
+                    String channel = (String) i.next();
+                    connectToChannel( conn, channel);
+                }
+            }
         }
+    }
+
+    private void checkChannel( IRCConnection conn, String key, String channel )
+    {
+        List channels = channelConnections.get( key );
+        if ( channels == null )
+        {
+            connectToChannel( conn, channel );
+            channels = new ArrayList();
+            channels.add( channel );
+            channelConnections.put( key, channels );
+        }
+        else
+        {
+            boolean found = false;
+            for ( Iterator i = channels.iterator(); i.hasNext(); )
+            {
+                String c = (String) i.next();
+                if ( c.equalsIgnoreCase( channel ) )
+                {
+                    found = true;
+                }
+            }
+            if ( !found )
+            {
+                connectToChannel( conn, channel );
+            }
+        }
+    }
+
+    private void connectToChannel( IRCConnection conn, String channel )
+    {
+        conn.doJoin( channel );
     }
 
     // ----------------------------------------------------------------------
