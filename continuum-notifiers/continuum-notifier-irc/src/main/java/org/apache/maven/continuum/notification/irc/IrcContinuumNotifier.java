@@ -186,8 +186,12 @@ public class IrcContinuumNotifier
             }
             if ( !found )
             {
-                connectToChannel( conn, channel );
+                channels.add( channel);
+                channelConnections.put( key, channels );
             }
+
+            //reconnect unconditionally
+            connectToChannel( conn, channel );
         }
     }
 
