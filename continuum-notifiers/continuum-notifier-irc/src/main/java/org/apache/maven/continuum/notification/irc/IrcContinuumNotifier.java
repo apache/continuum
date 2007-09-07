@@ -157,7 +157,7 @@ public class IrcContinuumNotifier
                 for ( Iterator i = channels.iterator(); i.hasNext(); )
                 {
                     String channel = (String) i.next();
-                    connectToChannel( conn, channel);
+                    connectToChannel( conn, channel );
                 }
             }
         }
@@ -186,7 +186,7 @@ public class IrcContinuumNotifier
             }
             if ( !found )
             {
-                channels.add( channel);
+                channels.add( channel );
                 channelConnections.put( key, channels );
             }
 
@@ -277,6 +277,11 @@ public class IrcContinuumNotifier
         }
 
         String fullName = (String) configuration.get( "fullName" );
+
+        if ( StringUtils.isEmpty( fullName ) )
+        {
+            fullName = login;
+        }
 
         String password = (String) configuration.get( "password" );
 
