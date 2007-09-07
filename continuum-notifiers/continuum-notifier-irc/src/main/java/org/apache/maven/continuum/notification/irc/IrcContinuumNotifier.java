@@ -36,6 +36,8 @@ import org.schwering.irc.lib.IRCConnection;
 import org.schwering.irc.lib.IRCEventListener;
 import org.schwering.irc.lib.IRCModeParser;
 import org.schwering.irc.lib.IRCUser;
+import org.schwering.irc.lib.ssl.SSLDefaultTrustManager;
+import org.schwering.irc.lib.ssl.SSLIRCConnection;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -101,22 +103,32 @@ public class IrcContinuumNotifier
     // Internal connections 
     // ----------------------------------------------------------------------    
     private IRCConnection getIRConnection( String host, int port, String password, String nick, String userName,
-                                           String realName, String channel )
+                                           String realName, String channel, boolean ssl )
         throws IOException
     {
         String key = host.toUpperCase() + Integer.toString( port );
-        IRCConnection ircConnection = hostConnections.get( key );
-        if ( ircConnection != null )
+        IRCConnection conn = hostConnections.get( key );
+        if ( conn != null )
         {
-            checkConnection( ircConnection );
-            return ircConnection;
+            checkConnection( conn );
+            return conn;
         }
-        ircConnection = new IRCConnection( host, new int[]{port}, password, nick, userName, realName );
-        ircConnection.addIRCEventListener( new Listener() );
-        checkConnection( ircConnection );
-        ircConnection.doJoin( channel );
-        hostConnections.put( key, ircConnection );
-        return ircConnection;
+
+        if ( !ssl )
+        {
+            conn = new IRCConnection( host, new int[]{port}, password, nick, userName, realName );
+        }
+        else
+        {
+            conn = new SSLIRCConnection( host, new int[]{port}, password, nick, userName, realName );
+            ( (SSLIRCConnection) conn ).addTrustManager( new SSLDefaultTrustManager() );
+        }
+
+        conn.addIRCEventListener( new Listener() );
+        checkConnection( conn );
+        conn.doJoin( channel );
+        hostConnections.put( key, conn );
+        return conn;
     }
 
     private void checkConnection( IRCConnection conn )
@@ -125,6 +137,15 @@ public class IrcContinuumNotifier
         if ( !conn.isConnected() )
         {
             conn.connect();
+            //required for some servers that are slow to initialise the connection, in most of case, servers with auth 
+            try
+            {
+                Thread.sleep( 5000 );
+            }
+            catch ( InterruptedException e )
+            {
+                //nothing to do
+            }
         }
     }
 
@@ -208,9 +229,12 @@ public class IrcContinuumNotifier
 
         String password = (String) configuration.get( "password" );
 
+        boolean isSsl = Boolean.parseBoolean( (String) configuration.get( "ssl" ) );
+
         try
         {
-            IRCConnection ircConnection = getIRConnection( host, port, password, login, fullName, fullName, channel );
+            IRCConnection ircConnection =
+                getIRConnection( host, port, password, login, fullName, fullName, channel, isSsl );
             ircConnection.doPrivmsg( channel, generateMessage( project, build ) );
         }
         catch ( IOException e )
@@ -354,7 +378,7 @@ public class IrcContinuumNotifier
 
         public void onNotice( String target, IRCUser u, String msg )
         {
-            getLogger().debug( target + "> " + u.getNick() + " (notice): " + msg );
+            getLogger().info( target + "> " + u.getNick() + " (notice): " + msg );
         }
 
         public void onPart( String chan, IRCUser u, String msg )
@@ -374,7 +398,7 @@ public class IrcContinuumNotifier
 
         public void onReply( int num, String value, String msg )
         {
-            getLogger().debug( "Reply #" + num + ": " + value + " " + msg );
+            getLogger().info( "Reply #" + num + ": " + value + " " + msg );
         }
 
         public void onTopic( String chan, IRCUser u, String topic )

@@ -44,6 +44,8 @@ public class IrcProjectNotifierEditAction
 
     private String password;
 
+    private boolean ssl = false;
+
     protected void initConfiguration( Map configuration )
     {
         host = (String) configuration.get( "host" );
@@ -60,6 +62,11 @@ public class IrcProjectNotifierEditAction
         fullName = (String) configuration.get( "fullName" );
 
         password = (String) configuration.get( "password" );
+
+        if ( configuration.get( "ssl" ) != null )
+        {
+            ssl = Boolean.parseBoolean( (String) configuration.get( "ssl" ) );
+        }
     }
 
     protected void setNotifierConfiguration( ProjectNotifier notifier )
@@ -77,6 +84,8 @@ public class IrcProjectNotifierEditAction
         configuration.put( "fullName", fullName );
 
         configuration.put( "password", password );
+
+        configuration.put( "ssl", String.valueOf( ssl ) );
 
         notifier.setConfiguration( configuration );
     }
@@ -139,5 +148,15 @@ public class IrcProjectNotifierEditAction
     public void setPassword( String password )
     {
         this.password = password;
+    }
+
+    public boolean isSsl()
+    {
+        return ssl;
+    }
+
+    public void setSsl( boolean ssl )
+    {
+        this.ssl = ssl;
     }
 }
