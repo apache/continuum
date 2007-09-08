@@ -96,7 +96,7 @@
             </ww:a>
           </div>
         </redback:ifAuthorized>
-        <redback:ifAuthorized permission="continuum-manage-installations">   
+        <redback:ifAuthorized permission="continuum-manage-installations">
           <ww:url id="configurationUrl" action="installationsList" namespace="/admin" method="list" includeParams="none"/>
           <div class="body">
             <ww:a href="%{configurationUrl}">

@@ -46,17 +46,22 @@
 
         <table>
           <tbody>
-            <ww:hidden name="installation.installationId" />         
+            <ww:hidden name="installation.installationId" />
+            <ww:hidden name="installationType" />
             <ww:textfield label="%{getText('installation.name.label')}" name="installation.name"
                             required="true"/>
-          
-            <ww:select label="%{getText('installation.type.label')}" name="installation.type" list="typesLabels" />
-
+            <ww:if test="displayTypes">
+              <ww:select label="%{getText('installation.type.label')}" name="installation.type" list="typesLabels" />
+            </ww:if>
             <ww:if test="varNameUpdatable">
-              <ww:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true" />
+              <ww:if test="varNameDisplayable">
+                <ww:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="${varNameUpdatable}" />
+              </ww:if>
             </ww:if>
             <ww:else>
-              <ww:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true" readonly="true"/>
+              <ww:if test="varNameDisplayable">
+                <ww:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true" readonly="true"/>
+              </ww:if>
             </ww:else>
             <ww:textfield label="%{getText('installation.value.label')}" name="installation.varValue"
                           required="true"/>

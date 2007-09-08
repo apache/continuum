@@ -61,7 +61,7 @@
     </ec:table>
     </ww:if>
     <div class="functnbar3">
-      <ww:form action="addInstallation!input.action" method="post">
+      <ww:form action="installationsTypeChoice!listTypes.action" method="post">
         <ww:submit value="%{getText('add')}"/>
       </ww:form>
     </div>  
