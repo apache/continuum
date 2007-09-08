@@ -11,6 +11,7 @@ import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,21 +59,23 @@ public class InstallationAction
 
     private List<String> types;
 
-    private boolean varNameUpdatable = true;
-
-    private boolean nameUpdatable = true;
-    
+    private boolean varNameUpdatable = false;
+   
     private boolean automaticProfile;
-
+   
+    private boolean varNameDisplayable = false;
+    
+    private boolean displayTypes = true;
+    
+    private String installationType;
+    
+    private Map<String, String> installationTypes;
+    
+    private static final String TOOL_TYPE_KEY = "tool";
+   
     // -----------------------------------------------------
     // Webwork methods
     // -----------------------------------------------------
-
-    public void prepare()
-        throws Exception
-    {
-        super.prepare();
-    }
 
     public String list()
         throws Exception
@@ -88,12 +91,7 @@ public class InstallationAction
 
         if ( this.installation != null )
         {
-            this.nameUpdatable = false;
-            // we can update env var name only with env var type
-            if ( !InstallationService.ENVVAR_TYPE.equals( this.installation.getType() ) )
-            {
-                this.varNameUpdatable = false;
-            }
+            this.configureUiFlags();
         }
         return SUCCESS;
     }
@@ -101,22 +99,40 @@ public class InstallationAction
     public String input()
         throws Exception
     {
+        if ( InstallationService.ENVVAR_TYPE.equalsIgnoreCase( this.getInstallationType() ) )
+        {
+            this.installation = new Installation();
+            this.installation.setType( InstallationService.ENVVAR_TYPE );
+            this.setDisplayTypes( false );
+            this.setVarNameUpdatable( true );
+            this.setVarNameDisplayable( true );
+        }
+        else
+        {
+            this.setVarNameUpdatable( false );
+            this.setVarNameDisplayable( false );
+        }
         return INPUT;
     }
 
     public String save()
         throws Exception
     {
+        if ( InstallationService.ENVVAR_TYPE.equalsIgnoreCase( this.getInstallationType() ) )
+        {
+            this.installation.setType( InstallationService.ENVVAR_TYPE );
+        }
         if ( installation.getInstallationId() == 0 )
         {
             installationService.add( installation, this.automaticProfile );
         }
         else
         {
+            this.configureUiFlags();
             installationService.update( installation );
             return "edit";
         }
-        //this.installations = installationService.getAllInstallations();
+        this.configureUiFlags();
         return SUCCESS;
     }
 
@@ -129,6 +145,16 @@ public class InstallationAction
         return SUCCESS;
     }
 
+    public String listTypes()
+    {
+        this.installationTypes = new LinkedHashMap<String, String>();
+        ResourceBundle resourceBundle = getResourceBundle();
+        this.installationTypes.put( TOOL_TYPE_KEY, resourceBundle.getString( "installationTypeChoice.tool.label" ) );
+        this.installationTypes.put( InstallationService.ENVVAR_TYPE, resourceBundle.getString( "installationTypeChoice.envar.label" ) );
+
+        return SUCCESS;
+    }
+    
     // -----------------------------------------------------
     // security
     // -----------------------------------------------------    
@@ -144,8 +170,33 @@ public class InstallationAction
     }
 
     // -----------------------------------------------------
+    // utils
+    // -----------------------------------------------------    
+    private void configureUiFlags()
+    {
+        // we can update env var name only with env var type
+        if ( !InstallationService.ENVVAR_TYPE.equals( this.installation.getType() ) )
+        {
+            this.setDisplayTypes( true );
+            this.setVarNameUpdatable( false );
+        }
+        else
+        {
+            this.setDisplayTypes( false );
+            this.setVarNameUpdatable( true );
+            this.setVarNameDisplayable( true );
+        }
+        this.setInstallationType( this.getInstallation().getType() );
+    }
+    
+    
+    // -----------------------------------------------------
     // getter/setters
     // -----------------------------------------------------
+    protected ResourceBundle getResourceBundle()
+    {
+        return getTexts( "localization/Continuum" );
+    }
     public List<Installation> getInstallations()
     {
         return installations;
@@ -171,7 +222,7 @@ public class InstallationAction
         if ( this.typesLabels == null )
         {
             this.typesLabels = new LinkedHashMap<String, String>();
-            ResourceBundle resourceBundle = getTexts( "localization/Continuum" );
+            ResourceBundle resourceBundle = getResourceBundle();
             this.typesLabels.put( InstallationService.JDK_TYPE, resourceBundle
                 .getString( "installation.jdk.type.label" ) );
             this.typesLabels.put( InstallationService.MAVEN2_TYPE, resourceBundle
@@ -180,8 +231,9 @@ public class InstallationAction
                 .getString( "installation.maven1.type.label" ) );
             this.typesLabels.put( InstallationService.ANT_TYPE, resourceBundle
                 .getString( "installation.ant.type.label" ) );
-            this.typesLabels.put( InstallationService.ENVVAR_TYPE, resourceBundle
-                .getString( "installation.envvar.type.label" ) );
+            // CONTINUUM-1430
+            //this.typesLabels.put( InstallationService.ENVVAR_TYPE, resourceBundle
+            //    .getString( "installation.envvar.type.label" ) );
         }
         return typesLabels;
     }
@@ -210,7 +262,8 @@ public class InstallationAction
             this.types.add( InstallationService.MAVEN2_TYPE );
             this.types.add( InstallationService.MAVEN1_TYPE );
             this.types.add( InstallationService.ANT_TYPE );
-            this.types.add( InstallationService.ENVVAR_TYPE );
+            // CONTINUUM-1430
+            //this.types.add( InstallationService.ENVVAR_TYPE );
 
         }
         return types;
@@ -221,16 +274,6 @@ public class InstallationAction
         this.types = types;
     }
 
-    public boolean isNameUpdatable()
-    {
-        return nameUpdatable;
-    }
-
-    public void setNameUpdatable( boolean nameUpdatable )
-    {
-        this.nameUpdatable = nameUpdatable;
-    }
-
     public boolean isAutomaticProfile()
     {
         return automaticProfile;
@@ -239,6 +282,46 @@ public class InstallationAction
     public void setAutomaticProfile( boolean automaticProfile )
     {
         this.automaticProfile = automaticProfile;
+    }
+
+    public Map<String, String> getInstallationTypes()
+    {
+        return installationTypes;
+    }
+
+    public void setInstallationTypes( Map<String, String> installationTypes )
+    {
+        this.installationTypes = installationTypes;
+    }
+
+    public boolean isVarNameDisplayable()
+    {
+        return varNameDisplayable;
+    }
+
+    public void setVarNameDisplayable( boolean varNameDisplayable )
+    {
+        this.varNameDisplayable = varNameDisplayable;
+    }
+
+    public boolean isDisplayTypes()
+    {
+        return displayTypes;
+    }
+
+    public void setDisplayTypes( boolean displayTypes )
+    {
+        this.displayTypes = displayTypes;
+    }
+
+    public String getInstallationType()
+    {
+        return installationType;
+    }
+
+    public void setInstallationType( String installationType )
+    {
+        this.installationType = installationType;
     }
 
 }
