@@ -55,6 +55,8 @@ public class ProjectsListAction
     private int projectGroupId;
 
     private String methodToCall;
+    
+    private int buildDefinitionId;
 
     public String execute()
         throws Exception
@@ -125,7 +127,7 @@ public class ProjectsListAction
 
         if ( selectedProjects != null && !selectedProjects.isEmpty() )
         {
-            ArrayList<Project> projectsList = new ArrayList();
+            ArrayList<Project> projectsList = new ArrayList<Project>();
             for ( Iterator i = selectedProjects.iterator(); i.hasNext(); )
             {
                 int projectId = Integer.parseInt( (String) i.next() );
@@ -133,6 +135,7 @@ public class ProjectsListAction
                 projectsList.add( p );
             }
 
+            
             List sortedProjects;
             try
             {
@@ -145,47 +148,65 @@ public class ProjectsListAction
 
             //TODO : Change this part because it's a duplicate of DefaultContinuum.buildProjectGroup*
             BuildDefinition groupDefaultBD = null;
-            try
+            if (getBuildDefinitionId() == -1 || getBuildDefinitionId() == 0)
             {
-                groupDefaultBD = store.getDefaultBuildDefinitionForProjectGroup( projectGroupId );
-            }
-            catch ( ContinuumObjectNotFoundException e )
-            {
-                throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                    " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
-            }
-            catch ( ContinuumStoreException e )
-            {
-                throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                    " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
-            }
-
-            for ( Iterator i = sortedProjects.iterator(); i.hasNext(); )
-            {
-                int buildDefId = groupDefaultBD.getId();
-                Project project = (Project) i.next();
-                BuildDefinition projectDefaultBD = null;
                 try
                 {
-                    projectDefaultBD = store.getDefaultBuildDefinitionForProject( project.getId() );
+                    groupDefaultBD = store.getDefaultBuildDefinitionForProjectGroup( projectGroupId );
                 }
                 catch ( ContinuumObjectNotFoundException e )
                 {
-                    getLogger().debug( e.getMessage() );
+                    throw new ContinuumException( "Project Group (id=" + projectGroupId +
+                        " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
                 }
                 catch ( ContinuumStoreException e )
                 {
-                    getLogger().debug( e.getMessage() );
+                    throw new ContinuumException( "Project Group (id=" + projectGroupId +
+                        " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
                 }
-
-                if ( projectDefaultBD != null )
-                {
-                    buildDefId = projectDefaultBD.getId();
-                    getLogger().debug( "Project " + project.getId() +
-                        " has own default build definition, will use it instead of group's." );
-                }
-                getContinuum().buildProject( project.getId(), buildDefId, ContinuumProjectState.TRIGGER_FORCED );
             }
+            for ( Iterator i = sortedProjects.iterator(); i.hasNext(); )
+            {
+                Project project = (Project) i.next();
+                if ( this.getBuildDefinitionId() == -1 || getBuildDefinitionId() == 0)
+                {
+                    int buildDefId = groupDefaultBD.getId();
+
+                    BuildDefinition projectDefaultBD = null;
+                    if ( this.getBuildDefinitionId() == -1 )
+                    {
+                        try
+                        {
+                            projectDefaultBD = store.getDefaultBuildDefinitionForProject( project.getId() );
+                        }
+                        catch ( ContinuumObjectNotFoundException e )
+                        {
+                            getLogger().debug( e.getMessage() );
+                        }
+                        catch ( ContinuumStoreException e )
+                        {
+                            getLogger().debug( e.getMessage() );
+                        }
+
+                        if ( projectDefaultBD != null )
+                        {
+                            buildDefId = projectDefaultBD.getId();
+                            getLogger()
+                                .debug(
+                                        "Project " + project.getId()
+                                            + " has own default build definition, will use it instead of group's." );
+                        }
+                    }
+
+                    getContinuum().buildProject( project.getId(), buildDefId, ContinuumProjectState.TRIGGER_FORCED );
+                }
+                else
+                {
+                    getContinuum().buildProject( project.getId(), this.getBuildDefinitionId(),
+                                                 ContinuumProjectState.TRIGGER_FORCED );
+                }
+            }
+            
         }
 
         return SUCCESS;
@@ -225,5 +246,15 @@ public class ProjectsListAction
     public void setMethodToCall( String methodToCall )
     {
         this.methodToCall = methodToCall;
+    }
+
+    public int getBuildDefinitionId()
+    {
+        return buildDefinitionId;
+    }
+
+    public void setBuildDefinitionId( int buildDefinitionId )
+    {
+        this.buildDefinitionId = buildDefinitionId;
     }
 }

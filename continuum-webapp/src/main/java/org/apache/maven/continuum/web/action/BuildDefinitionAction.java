@@ -76,6 +76,8 @@ public class BuildDefinitionAction
     private String projectGroupName = "";
 
     private int profileId;
+    
+    private String description;
 
     public void prepare()
         throws Exception
@@ -155,6 +157,7 @@ public class BuildDefinitionAction
                 {
                     profileId = profile.getId();
                 }
+                description = buildDefinition.getDescription();
             }
             else
             {
@@ -383,6 +386,7 @@ public class BuildDefinitionAction
                 buildDefinition.setProfile( profile );
             }
         }
+        buildDefinition.setDescription( description );
         return buildDefinition;
     }
 
@@ -552,5 +556,15 @@ public class BuildDefinitionAction
     public void setProfileId( int profileId )
     {
         this.profileId = profileId;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription( String description )
+    {
+        this.description = description;
     }
 }

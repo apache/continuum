@@ -44,6 +44,7 @@
 
   <form id="projectsForm" action="ProjectsList.action" method="post">
     <input type="hidden" name="methodToCall" value="" />
+    <input type="hidden" id="buildDefinitionId" name="buildDefinitionId" />
   <ec:table items="projects"
             var="project"
             showExports="false"
@@ -232,7 +233,10 @@
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
                 <input type="hidden" name="projectGroupId" value="${project.projectGroupId}" />
                 <input type="button" name="delete-projects" value="<ww:text name="projectGroup.deleteProjects"/>" onclick="document.forms.projectsForm.methodToCall.value='remove';document.forms.projectsForm.submit();" />
-                <input type="button" name="build-projects" value="<ww:text name="projectGroup.buildProjects"/>" onclick="document.forms.projectsForm.methodToCall.value='build';document.forms.projectsForm.submit();" />
+                <ww:select theme="simple" name="buildDefinitionId" id="buildDefinitions" list="buildDefinitions" 
+                           listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}"
+                           onchange="$('projectsForm').buildDefinitionId.value=$('buildDefinitions').value" />                
+                <input type="button" name="build-projects" value="<ww:text name="projectGroup.buildProjects"/>" onclick="$('projectsForm').methodToCall.value='build';$('projectsForm').submit();" />
                 <input type="button" name="cancel-builds" value="<ww:text name="projectGroup.cancelBuilds"/>" onclick="document.forms.projectsForm.action='cancelBuilds.action';document.forms.projectsForm.submit();" />
                 <a href="#" onclick="selectAll();return false;"><ww:text name="selectAll"/></a>
                 <a href="#" onclick="unselectAll();return false;"><ww:text name="unselectAll"/></a>

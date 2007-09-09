@@ -94,33 +94,38 @@
         <table>
           <tr>
             <td>
-              <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
-                <form action="buildProjectGroup.action" method="post">
+              <table>
+                <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
+                  <form action="buildProjectGroup.action" method="post">
                     <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
+                    <ww:select theme="simple" name="buildDefinitionId" list="buildDefinitions" 
+                               listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}" />                    
                     <input type="submit" name="build" value="<ww:text name="projectGroup.buildGroup"/>"/>
-                </form>
+                  </form>
                 </redback:ifAuthorized>
+              </table>
+            </td>
             <td>
-                <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
+              <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
                 <form action="editProjectGroup.action" method="post">
-                    <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
-                    <input type="submit" name="edit" value="<ww:text name="edit"/>"/>
+                  <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
+                  <input type="submit" name="edit" value="<ww:text name="edit"/>"/>
                 </form>
-                </redback:ifAuthorized>
+              </redback:ifAuthorized>
             </td>
             <td>
               <redback:ifAuthorized permission="continuum-remove-group" resource="${projectGroup.name}">
                 <form action="removeProjectGroup.action" method="post">
-                    <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
-                    <input type="submit" name="remove" value="<ww:text name="projectGroup.deleteGroup"/>"/>
+                  <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
+                  <input type="submit" name="remove" value="<ww:text name="projectGroup.deleteGroup"/>"/>
                 </form>
               </redback:ifAuthorized>
             </td>
             <td>
               <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
                 <form action="releaseProjectGroup.action" method="post">
-                    <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
-                    <input type="submit" name="release" value="<ww:text name="release"/>"/>
+                  <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
+                  <input type="submit" name="release" value="<ww:text name="release"/>"/>
                 </form>
               </redback:ifAuthorized>
             </td>
@@ -138,7 +143,7 @@
                 <c:url var="addProjectUrl" value="/addProjectInput.action" />
 
                 <select id="projectTypes">
-                  <option value="">Add New Project</option>
+                  <option value=""><ww:text name="projectGroup.addProject.label" /></option>
                   <option value="${addM2ProjectUrl}">Add M2 Project</option>
                   <option value="${addM1ProjectUrl}">Add M1 Project</option>
                   <option value="${addProjectUrl}">Add Ant Project</option>

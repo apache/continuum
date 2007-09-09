@@ -75,6 +75,7 @@
                     <ww:select label="%{getText('buildDefinition.schedule.label')}" name="scheduleId" list="schedules"/>
                     <ww:select label="%{getText('buildDefinition.profile.label')}" name="profileId" list="profiles" listValue="name" 
                                listKey="id" headerKey="-1" headerValue=""/>
+                    <ww:textfield label="%{getText('buildDefinition.description.label')}" name="description" />
                   </tbody>
                 </table>
                 <div class="functnbar3">
