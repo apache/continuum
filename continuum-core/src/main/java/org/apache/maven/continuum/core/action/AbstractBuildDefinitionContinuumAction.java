@@ -180,6 +180,8 @@ public abstract class AbstractBuildDefinitionContinuumAction
 
                 storedDefinition.setProfile( buildDefinition.getProfile() );
 
+                storedDefinition.setDescription( buildDefinition.getDescription() );
+                
                 store.storeBuildDefinition( storedDefinition );
 
                 return storedDefinition;

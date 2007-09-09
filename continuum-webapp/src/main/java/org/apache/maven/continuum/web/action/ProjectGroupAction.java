@@ -20,12 +20,15 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.bean.ProjectGroupUserBean;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.continuum.web.model.BuildDefinitionSummary;
+import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.codehaus.plexus.redback.rbac.RBACManager;
 import org.codehaus.plexus.redback.rbac.RbacManagerException;
 import org.codehaus.plexus.redback.rbac.RbacObjectNotFoundException;
@@ -41,6 +44,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -107,6 +111,10 @@ public class ProjectGroupAction
     private Collection groupProjects;
 
     private int releaseProjectId;
+    
+    private Map<String, Integer> buildDefinitions;
+    
+    private int buildDefinitionId;
 
     public String summary()
         throws ContinuumException
@@ -120,9 +128,25 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-
+        
         projectGroup = getProjectGroup( projectGroupId );
 
+        List<BuildDefinition> projectGroupBuildDefs = getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
+        
+        if (projectGroupBuildDefs != null)
+        {
+            this.buildDefinitions = new LinkedHashMap<String, Integer>(projectGroupBuildDefs.size());
+            for(BuildDefinition buildDefinition : projectGroupBuildDefs)
+            {
+                String key = StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals() : buildDefinition.getDescription();
+                buildDefinitions.put( key, Integer.valueOf( buildDefinition.getId() ) );
+            }
+        }
+        else
+        {
+            this.buildDefinitions = Collections.EMPTY_MAP;
+        }
+        
         return SUCCESS;
     }
 
@@ -334,8 +358,14 @@ public class ProjectGroupAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        getContinuum().buildProjectGroup( projectGroupId );
-
+        if ( this.getBuildDefinitionId() == -1 )
+        {
+            getContinuum().buildProjectGroup( projectGroupId );
+        }
+        else
+        {
+            getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
+        }
         return SUCCESS;
     }
 
@@ -670,6 +700,26 @@ public class ProjectGroupAction
     {
 
         return getProjectGroup( projectGroupId ).getName();
+    }
+
+    public Map<String, Integer> getBuildDefinitions()
+    {
+        return buildDefinitions;
+    }
+
+    public void setBuildDefinitions( Map<String, Integer> buildDefinitions )
+    {
+        this.buildDefinitions = buildDefinitions;
+    }
+
+    public int getBuildDefinitionId()
+    {
+        return buildDefinitionId;
+    }
+
+    public void setBuildDefinitionId( int buildDefinitionId )
+    {
+        this.buildDefinitionId = buildDefinitionId;
     }
 
 }

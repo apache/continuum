@@ -58,6 +58,7 @@
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isBuildFresh" title="projectView.buildDefinition.buildFresh"/>
       <ec:column property="isDefault" title="projectView.buildDefinition.default"/>
+      <ec:column property="description" title="projectView.buildDefinition.description"/>
       <ec:column property="buildAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <ww:url id="buildUrl" action="buildProject" namespace="/">
@@ -155,6 +156,7 @@
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isBuildFresh" title="projectView.buildDefinition.buildFresh"/>
       <ec:column property="isDefault" title="projectView.buildDefinition.default"/>
+      <ec:column property="description" title="projectView.buildDefinition.description"/>
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
           <ww:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">

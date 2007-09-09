@@ -341,7 +341,13 @@
           <required>true</required>
           <description>id of the profile for build definition</description>
           <type>int</type>
-        </field>        
+        </field> 
+        <field>
+          <name>description</name>
+          <version>1.0.0</version>
+          <type>String</type>
+          <description>description of the buid defintion</description>
+        </field>               
       </fields>
     </class>
     <class>

@@ -959,6 +959,18 @@
           </description>
         </field>
         <field>
+          <name>description</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>description of the buid defintion</description>
+        </field>
+        <!--field jpox.column="executor_type">
+          <name>type</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>type of the buid defintion</description>          
+        </field-->
+        <field>
           <name>schedule</name>
           <version>1.0.9+</version>
           <association xml.reference="true" stash.part="true" jpox.dependent="false">

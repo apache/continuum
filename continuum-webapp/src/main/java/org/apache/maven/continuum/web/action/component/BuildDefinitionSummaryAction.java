@@ -182,7 +182,7 @@ public class BuildDefinitionSummaryAction
         return summaryList;
     }
 
-    private BuildDefinitionSummary generateBuildDefinitionSummary( BuildDefinition bd )
+    protected BuildDefinitionSummary generateBuildDefinitionSummary( BuildDefinition bd )
     {
         BuildDefinitionSummary bds = new BuildDefinitionSummary();
 
@@ -199,6 +199,7 @@ public class BuildDefinitionSummaryAction
             bds.setProfileName( bd.getProfile().getName() );
             bds.setProfileId( bd.getProfile().getId() );
         }
+        bds.setDescription( bd.getDescription() );
         return bds;
     }
 
