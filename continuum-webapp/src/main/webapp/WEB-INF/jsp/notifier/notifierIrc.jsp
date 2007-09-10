@@ -55,6 +55,8 @@
                 <ww:textfield label="%{getText('notifier.irc.port.label')}" name="port"/>
                 <ww:textfield label="%{getText('notifier.irc.channel.label')}" name="channel" required="true"/>
                 <ww:textfield label="%{getText('notifier.irc.nick.label')}" name="nick"/>
+                <ww:textfield label="%{getText('notifier.irc.alternateNick.label')}" name="alternateNick"/>
+                <ww:textfield label="%{getText('notifier.irc.username.label')}" name="username"/>
                 <ww:textfield label="%{getText('notifier.irc.fullName.label')}" name="fullName"/>
                 <ww:password label="%{getText('notifier.irc.password.label')}" name="password"/>
                 <ww:checkbox label="%{getText('notifier.irc.isSSL.label')}" name="ssl" value="ssl" fieldValue="true"/>

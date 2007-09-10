@@ -40,6 +40,10 @@ public class IrcProjectNotifierEditAction
 
     private String nick;
 
+    private String alternateNick;
+
+    private String username;
+
     private String fullName;
 
     private String password;
@@ -58,6 +62,10 @@ public class IrcProjectNotifierEditAction
         channel = (String) configuration.get( "channel" );
 
         nick = (String) configuration.get( "nick" );
+
+        alternateNick = (String) configuration.get( "alternateNick" );
+
+        username = (String) configuration.get( "username" );
 
         fullName = (String) configuration.get( "fullName" );
 
@@ -80,6 +88,10 @@ public class IrcProjectNotifierEditAction
         configuration.put( "channel", channel );
 
         configuration.put( "nick", nick );
+
+        configuration.put( "alternateNick", alternateNick );
+
+        configuration.put( "username", username );
 
         configuration.put( "fullName", fullName );
 
@@ -128,6 +140,26 @@ public class IrcProjectNotifierEditAction
     public void setNick( String nick )
     {
         this.nick = nick;
+    }
+
+    public String getAlternateNick()
+    {
+        return alternateNick;
+    }
+
+    public void setAlternateNick( String alternateNick )
+    {
+        this.alternateNick = alternateNick;
+    }
+
+    public String getUsername()
+    {
+        return username;
+    }
+
+    public void setUsername( String username )
+    {
+        this.username = username;
     }
 
     public String getFullName()

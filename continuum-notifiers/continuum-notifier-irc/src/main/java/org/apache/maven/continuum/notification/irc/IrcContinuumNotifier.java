@@ -96,8 +96,11 @@ public class IrcContinuumNotifier
         {
             String key = keys.next();
             IRCConnection connection = hostConnections.get( key );
-            connection.doQuit( "Continuum shutting down" );
-            connection.close();
+            if ( connection.isConnected() )
+            {
+                connection.doQuit( "Continuum shutting down" );
+                connection.close();
+            }
         }
 
     }
@@ -105,8 +108,8 @@ public class IrcContinuumNotifier
     // ----------------------------------------------------------------------
     // Internal connections 
     // ----------------------------------------------------------------------    
-    private IRCConnection getIRConnection( String host, int port, String password, String nick, String userName,
-                                           String realName, String channel, boolean ssl )
+    private IRCConnection getIRConnection( String host, int port, String password, String nick, String alternateNick,
+                                           String userName, String realName, String channel, boolean ssl )
         throws IOException
     {
         String key = host.toUpperCase() + Integer.toString( port ) + nick.toUpperCase();
@@ -269,18 +272,32 @@ public class IrcContinuumNotifier
         }
         String channel = (String) configuration.get( "channel" );
 
-        String login = (String) configuration.get( "nick" );
+        String nickName = (String) configuration.get( "nick" );
 
-        if ( StringUtils.isEmpty( login ) )
+        if ( StringUtils.isEmpty( nickName ) )
         {
-            login = "continuum";
+            nickName = "continuum";
+        }
+
+        String alternateNickName = (String) configuration.get( "alternateNick" );
+
+        if ( StringUtils.isEmpty( alternateNickName ) )
+        {
+            alternateNickName = "continuum_";
+        }
+
+        String userName = (String) configuration.get( "username" );
+
+        if ( StringUtils.isEmpty( userName ) )
+        {
+            userName = nickName;
         }
 
         String fullName = (String) configuration.get( "fullName" );
 
         if ( StringUtils.isEmpty( fullName ) )
         {
-            fullName = login;
+            fullName = nickName;
         }
 
         String password = (String) configuration.get( "password" );
@@ -289,8 +306,8 @@ public class IrcContinuumNotifier
 
         try
         {
-            IRCConnection ircConnection =
-                getIRConnection( host, port, password, login, fullName, fullName, channel, isSsl );
+            IRCConnection ircConnection = getIRConnection( host, port, password, nickName, alternateNickName, userName,
+                                                           fullName, channel, isSsl );
             ircConnection.doPrivmsg( channel, generateMessage( project, build ) );
         }
         catch ( IOException e )
