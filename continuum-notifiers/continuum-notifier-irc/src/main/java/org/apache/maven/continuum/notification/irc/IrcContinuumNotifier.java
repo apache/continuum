@@ -33,6 +33,7 @@ import org.codehaus.plexus.notification.NotificationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.util.StringUtils;
 import org.schwering.irc.lib.IRCConnection;
+import org.schwering.irc.lib.IRCConstants;
 import org.schwering.irc.lib.IRCEventListener;
 import org.schwering.irc.lib.IRCModeParser;
 import org.schwering.irc.lib.IRCUser;
@@ -139,7 +140,17 @@ public class IrcContinuumNotifier
 
     private String getConnectionKey( String host, int port, String nick, String alternateNick )
     {
-        return host.toUpperCase() + Integer.toString( port ) + nick.toUpperCase() + alternateNick.toUpperCase();
+        String nickname = nick;
+        String alternateNickName = alternateNick;
+        if ( nick == null )
+        {
+            nickname = "null";
+        }
+        if ( alternateNick == null )
+        {
+            alternateNickName = "null";
+        }
+        return host.toUpperCase() + Integer.toString( port ) + nickname.toUpperCase() + alternateNickName.toUpperCase();
     }
 
     private void checkConnection( IRCConnection conn, String key )
@@ -434,7 +445,7 @@ public class IrcContinuumNotifier
         public void onError( int num, String msg )
         {
             getLogger().error( "Error #" + num + ": " + msg );
-            if ( num == 433 )
+            if ( num == IRCConstants.ERR_NICKNAMEINUSE )
             {
                 if ( alternateNick != null )
                 {
