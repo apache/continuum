@@ -132,14 +132,20 @@ public class ProjectGroupAction
         projectGroup = getProjectGroup( projectGroupId );
 
         List<BuildDefinition> projectGroupBuildDefs = getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
+        int defaultBuildDefinitionId = getContinuum().getDefaultBuildDefinition( projectGroupId ).getId();
         
         if (projectGroupBuildDefs != null)
         {
             this.buildDefinitions = new LinkedHashMap<String, Integer>(projectGroupBuildDefs.size());
             for(BuildDefinition buildDefinition : projectGroupBuildDefs)
             {
-                String key = StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals() : buildDefinition.getDescription();
-                buildDefinitions.put( key, Integer.valueOf( buildDefinition.getId() ) );
+                if (buildDefinition.getId() != defaultBuildDefinitionId)
+                {
+                    String key = StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals()
+                                                                                        : buildDefinition
+                                                                                            .getDescription();
+                    buildDefinitions.put( key, Integer.valueOf( buildDefinition.getId() ) );
+                }
             }
         }
         else
