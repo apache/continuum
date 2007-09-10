@@ -79,7 +79,7 @@ public class IrcContinuumNotifier
     private int defaultPort;
 
     /**
-     * key is upper(hostname) + port + upper(nick)
+     * key is upper(hostname) + port + upper(nick) + upper(alternateNick)
      */
     private Map<String, IRCConnection> hostConnections = new HashMap<String, IRCConnection>();
 
@@ -112,7 +112,7 @@ public class IrcContinuumNotifier
                                            String userName, String realName, String channel, boolean ssl )
         throws IOException
     {
-        String key = host.toUpperCase() + Integer.toString( port ) + nick.toUpperCase();
+        String key = getConnectionKey( host, port, nick, alternateNick );
         IRCConnection conn = hostConnections.get( key );
         if ( conn != null )
         {
@@ -130,11 +130,16 @@ public class IrcContinuumNotifier
             ( (SSLIRCConnection) conn ).addTrustManager( new SSLDefaultTrustManager() );
         }
 
-        conn.addIRCEventListener( new Listener() );
+        conn.addIRCEventListener( new Listener( conn, nick, alternateNick ) );
         checkConnection( conn, key );
         checkChannel( conn, key, channel );
         hostConnections.put( key, conn );
         return conn;
+    }
+
+    private String getConnectionKey( String host, int port, String nick, String alternateNick )
+    {
+        return host.toUpperCase() + Integer.toString( port ) + nick.toUpperCase() + alternateNick.toUpperCase();
     }
 
     private void checkConnection( IRCConnection conn, String key )
@@ -398,6 +403,18 @@ public class IrcContinuumNotifier
     class Listener
         implements IRCEventListener
     {
+        private String nick;
+
+        private String alternateNick;
+
+        private IRCConnection conn;
+
+        public Listener( IRCConnection conn, String nick, String alternateNick )
+        {
+            this.conn = conn;
+            this.nick = nick;
+            this.alternateNick = alternateNick;
+        }
 
         public void onRegistered()
         {
@@ -417,6 +434,29 @@ public class IrcContinuumNotifier
         public void onError( int num, String msg )
         {
             getLogger().error( "Error #" + num + ": " + msg );
+            if ( num == 433 )
+            {
+                if ( alternateNick != null )
+                {
+                    getLogger().info( "reconnection with alternate nick: '" + alternateNick + "'" );
+                    try
+                    {
+                        boolean ssl = false;
+                        if ( conn instanceof SSLIRCConnection )
+                        {
+                            ssl = true;
+                        }
+                        String key = getConnectionKey( conn.getHost(), conn.getPort(), nick, alternateNick );
+                        conn = getIRConnection( conn.getHost(), conn.getPort(), conn.getPassword(), alternateNick, null,
+                                                conn.getUsername(), conn.getRealname(), "#foo", ssl );
+                        hostConnections.put( key, conn );
+                    }
+                    catch ( IOException e )
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
 
         public void onInvite( String chan, IRCUser u, String nickPass )
