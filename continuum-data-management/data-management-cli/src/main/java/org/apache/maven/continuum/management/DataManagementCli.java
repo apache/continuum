@@ -44,6 +44,7 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
@@ -69,6 +70,8 @@ public class DataManagementCli
     {
         Commands command = new Commands();
 
+        
+        
         DatabaseFormat databaseFormat;
         OperationMode mode;
         SupportedDatabase databaseType;
@@ -76,7 +79,16 @@ public class DataManagementCli
         try
         {
             Args.parse( command, args );
-
+            if ( command.help )
+            {
+                Args.usage( command );
+                System.exit( 0 );
+            }
+            if (command.version)
+            {
+                System.out.print("continuum-data-management version " + getVersion() );
+                System.exit( 0 );
+            }
             databaseFormat = DatabaseFormat.valueOf( command.databaseFormat );
             mode = OperationMode.valueOf( command.mode );
             databaseType = SupportedDatabase.valueOf( command.databaseType );
@@ -323,6 +335,13 @@ public class DataManagementCli
 
     private static class Commands
     {
+        
+        @Argument(description = "Display help information", value = "help", alias = "h")
+        private boolean help;        
+        
+        @Argument(description = "Display version information", value = "version", alias = "v")
+        private boolean version;        
+        
         @Argument(
             description = "The JDBC URL for the Continuum database that contains the data to convert, or to import the data into",
             value = "buildsJdbcUrl")
