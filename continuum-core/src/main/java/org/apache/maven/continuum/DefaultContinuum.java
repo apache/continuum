@@ -844,22 +844,11 @@ public class DefaultContinuum
         throws ContinuumException
     {
         BuildDefinition groupDefaultBD = null;
-        try
-        {
-            groupDefaultBD = store.getDefaultBuildDefinitionForProjectGroup( projectGroupId );
-        }
-        catch ( ContinuumObjectNotFoundException e )
-        {
-            throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
-        }
+
+        groupDefaultBD = getDefaultBuildDefinitionForProjectGroup( projectGroupId );
 
         int buildDefinitionId = -1;
+
         if ( groupDefaultBD != null )
         {
             buildDefinitionId = groupDefaultBD.getId();
@@ -1987,9 +1976,26 @@ public class DefaultContinuum
         catch ( ContinuumStoreException cse )
         {
             throw new ContinuumException(
-                "error attempting to access default build definition for project + " + projectId, cse );
+                "error attempting to access default build definition for project " + projectId, cse );
         }
+    }
 
+    public BuildDefinition getDefaultBuildDefinitionForProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        try
+        {
+            return store.getDefaultBuildDefinitionForProjectGroup( projectGroupId );
+        }
+        catch ( ContinuumObjectNotFoundException cne )
+        {
+            throw new ContinuumException( "no default build definition for project group", cne );
+        }
+        catch ( ContinuumStoreException cse )
+        {
+            throw new ContinuumException(
+                "error attempting to access default build definition for project group " + projectGroupId, cse );
+        }
     }
 
     public BuildDefinition getBuildDefinition( int buildDefinitionId )
