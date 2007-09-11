@@ -21,6 +21,7 @@ package org.apache.maven.continuum.web.action.notifier;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.notification.ContinuumRecipientSource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class MsnProjectNotifierEditAction
 
         password = (String) configuration.get( "password" );
 
-        address = (String) configuration.get( "address" );
+        address = (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD );
     }
 
     protected void setNotifierConfiguration( ProjectNotifier notifier )
@@ -60,7 +61,7 @@ public class MsnProjectNotifierEditAction
 
         configuration.put( "password", password );
 
-        configuration.put( "address", address );
+        configuration.put( ContinuumRecipientSource.ADDRESS_FIELD, address );
 
         notifier.setConfiguration( configuration );
     }

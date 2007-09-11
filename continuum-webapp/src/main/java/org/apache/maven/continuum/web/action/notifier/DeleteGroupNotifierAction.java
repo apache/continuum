@@ -20,6 +20,7 @@ package org.apache.maven.continuum.web.action.notifier;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.notification.ContinuumRecipientSource;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
@@ -90,7 +91,7 @@ public class DeleteGroupNotifierAction
         if ( ( "mail".equals( notifierType ) ) || ( "msn".equals( notifierType ) ) ||
             ( "jabber".equals( notifierType ) ) )
         {
-            recipient = (String) configuration.get( "address" );
+            recipient = (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD );
         }
 
         if ( "irc".equals( notifierType ) )

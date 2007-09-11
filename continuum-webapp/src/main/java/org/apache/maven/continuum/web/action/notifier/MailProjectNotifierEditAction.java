@@ -21,6 +21,8 @@ package org.apache.maven.continuum.web.action.notifier;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.notification.ContinuumRecipientSource;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,16 +41,31 @@ public class MailProjectNotifierEditAction
 {
     private String address;
 
+    private boolean committers;
+
     protected void initConfiguration( Map configuration )
     {
-        address = (String) configuration.get( "address" );
+        if ( StringUtils.isNotEmpty( (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD ) ) )
+        {
+            address = (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD );
+        }
+
+        if ( StringUtils.isNotEmpty( (String) configuration.get( ContinuumRecipientSource.COMMITTER_FIELD ) ) )
+        {
+            committers = Boolean.parseBoolean( (String) configuration.get( ContinuumRecipientSource.COMMITTER_FIELD ) );
+        }
     }
 
     protected void setNotifierConfiguration( ProjectNotifier notifier )
     {
-        HashMap configuration = new HashMap();
+        HashMap<String, Object> configuration = new HashMap<String, Object>();
 
-        configuration.put( "address", address );
+        if ( StringUtils.isNotEmpty( address ) )
+        {
+            configuration.put( ContinuumRecipientSource.ADDRESS_FIELD, address );
+        }
+
+        configuration.put( ContinuumRecipientSource.COMMITTER_FIELD, String.valueOf( committers ) );
 
         notifier.setConfiguration( configuration );
     }
@@ -61,5 +78,15 @@ public class MailProjectNotifierEditAction
     public void setAddress( String address )
     {
         this.address = address;
+    }
+
+    public boolean isCommitters()
+    {
+        return committers;
+    }
+
+    public void setCommitters( boolean committers )
+    {
+        this.committers = committers;
     }
 }

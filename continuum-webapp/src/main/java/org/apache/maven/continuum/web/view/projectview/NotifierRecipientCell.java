@@ -20,6 +20,7 @@ package org.apache.maven.continuum.web.view.projectview;
  */
 
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.notification.ContinuumRecipientSource;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
@@ -67,13 +68,13 @@ public class NotifierRecipientCell
                 return notifier.getConfiguration().get( "url" ).toString();
             }
 
-            if ( notifier.getConfiguration().get( "address" ) == null )
+            if ( notifier.getConfiguration().get( ContinuumRecipientSource.ADDRESS_FIELD ) == null )
             {
                 return "";
             }
             else
             {
-                return notifier.getConfiguration().get( "address" ).toString();
+                return notifier.getConfiguration().get( ContinuumRecipientSource.ADDRESS_FIELD ).toString();
             }
         }
     }

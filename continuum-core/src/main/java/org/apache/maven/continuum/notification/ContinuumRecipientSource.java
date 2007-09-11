@@ -20,15 +20,19 @@ package org.apache.maven.continuum.notification;
  */
 
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectDeveloper;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.codehaus.plexus.notification.AbstractRecipientSource;
 import org.codehaus.plexus.notification.NotificationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +45,8 @@ public class ContinuumRecipientSource
     implements Initializable
 {
     public static String ADDRESS_FIELD = "address";
+
+    public static String COMMITTER_FIELD = "committers";
 
     /**
      * @plexus.configuration
@@ -85,7 +91,7 @@ public class ContinuumRecipientSource
             throw new NotificationException( "Missing project from the notification context." );
         }
 
-        Set recipients = new HashSet();
+        Set<String> recipients = new HashSet<String>();
 
         if ( !StringUtils.isEmpty( toOverride ) )
         {
@@ -93,18 +99,16 @@ public class ContinuumRecipientSource
         }
         else if ( projectNotifier != null )
         {
-            addNotifierAdresses( projectNotifier, recipients );
+            addNotifierAdresses( projectNotifier, recipients, project, context );
         }
         else if ( project.getNotifiers() != null && !project.getNotifiers().isEmpty() )
         {
-            for ( Iterator notifierIterator = project.getNotifiers().iterator(); notifierIterator.hasNext(); )
+            for ( ProjectNotifier notifier : (List<ProjectNotifier>) project.getNotifiers() )
             {
-                ProjectNotifier notifier = (ProjectNotifier) notifierIterator.next();
-
-                if ( notifier.getId() == new Integer( notifierId ).intValue() &&
+                if ( notifier.getId() == Integer.parseInt( notifierId ) &&
                     notifier.getConfiguration().containsKey( ADDRESS_FIELD ) )
                 {
-                    addNotifierAdresses( notifier, recipients );
+                    addNotifierAdresses( notifier, recipients, project, context );
                 }
             }
         }
@@ -119,7 +123,8 @@ public class ContinuumRecipientSource
         }
     }
 
-    private void addNotifierAdresses( ProjectNotifier notifier, Set recipients )
+    private void addNotifierAdresses( ProjectNotifier notifier, Set<String> recipients, Project project, Map context )
+        throws NotificationException
     {
         if ( notifier.getConfiguration() != null )
         {
@@ -129,11 +134,76 @@ public class ContinuumRecipientSource
             {
                 String[] addresses = StringUtils.split( addressField, "," );
 
-                for ( int i = 0; i < addresses.length; i++ )
+                for ( String address : addresses )
                 {
-                    recipients.add( addresses[i].trim() );
+                    recipients.add( address.trim() );
+                }
+            }
+
+            if ( "mail".equals( notifier.getType() ) )
+            {
+                String committerField = (String) notifier.getConfiguration().get( COMMITTER_FIELD );
+                if ( StringUtils.isNotEmpty( committerField ) )
+                {
+                    if ( Boolean.parseBoolean( committerField ) )
+                    {
+                        ScmResult scmResult =
+                            (ScmResult) context.get( ContinuumNotificationDispatcher.CONTEXT_UPDATE_SCM_RESULT );
+                        if ( scmResult != null && scmResult.getChanges() != null && !scmResult.getChanges().isEmpty() )
+                        {
+                            if ( project == null )
+                            {
+                                throw new NotificationException( "Missing project from the notification context." );
+                            }
+
+                            List<ProjectDeveloper> developers = project.getDevelopers();
+                            if ( developers == null || developers.isEmpty() )
+                            {
+                                getLogger().warn(
+                                    "No developers have been configured...notifcation email " + "will not be sent" );
+                                return;
+                            }
+
+                            Map<String, String> developerToEmailMap = mapDevelopersToRecipients( developers );
+
+                            List<ChangeSet> changes = scmResult.getChanges();
+
+                            for ( ChangeSet changeSet : changes )
+                            {
+                                String scmId = changeSet.getAuthor();
+                                if ( StringUtils.isNotEmpty( scmId ) )
+                                {
+                                    String email = developerToEmailMap.get( scmId );
+                                    if ( StringUtils.isEmpty( email ) )
+                                    {
+                                        getLogger().warn( "no email address is defined in developers list for '" +
+                                            scmId + "' scm id." );
+                                    }
+                                    else
+                                    {
+                                        recipients.add( email );
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private Map<String, String> mapDevelopersToRecipients( List<ProjectDeveloper> developers )
+    {
+        Map<String, String> developersMap = new HashMap<String, String>();
+
+        for ( ProjectDeveloper developer : developers )
+        {
+            if ( StringUtils.isNotEmpty( developer.getScmId() ) && StringUtils.isNotEmpty( developer.getEmail() ) )
+            {
+                developersMap.put( developer.getScmId(), developer.getEmail() );
+            }
+        }
+
+        return developersMap;
     }
 }
