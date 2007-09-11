@@ -26,9 +26,11 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.notification.ContinuumRecipientSource;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.NotifierSummary;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -251,7 +253,24 @@ public class NotifierSummaryAction
         if ( ( "mail".equals( notifier.getType() ) ) || ( "msn".equals( notifier.getType() ) ) ||
             ( "jabber".equals( notifier.getType() ) ) )
         {
-            recipient = (String) configuration.get( "address" );
+            if ( StringUtils.isNotEmpty( (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD ) ) )
+            {
+                recipient = (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD );
+            }
+            if ( StringUtils.isNotEmpty( (String) configuration.get( ContinuumRecipientSource.COMMITTER_FIELD ) ) )
+            {
+                if ( Boolean.parseBoolean( (String) configuration.get( ContinuumRecipientSource.COMMITTER_FIELD ) ) )
+                {
+                    if ( "unknown".equals( recipient ) )
+                    {
+                        recipient = "latest committers";
+                    }
+                    else
+                    {
+                        recipient += ", " + "latest committers";
+                    }
+                }
+            }
         }
 
         if ( "irc".equals( notifier.getType() ) )
