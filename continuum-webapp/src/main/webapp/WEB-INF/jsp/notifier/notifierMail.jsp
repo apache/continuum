@@ -52,7 +52,8 @@
             <ww:hidden name="fromGroupPage"/>
             <table>
               <tbody>
-                <ww:textfield label="%{getText('notifier.mail.recipient.label')}" name="address" required="true" />
+                <ww:textfield label="%{getText('notifier.mail.recipient.address.label')}" name="address" />
+                <ww:checkbox label="%{getText('notifier.mail.recipient.committers.label')}" name="committers" value="committers" fieldValue="true"/>
                 <ww:checkbox label="%{getText('notifier.event.sendOnSuccess')}" name="sendOnSuccess" value="sendOnSuccess" fieldValue="true"/>
                 <ww:checkbox label="%{getText('notifier.event.sendOnFailure')}" name="sendOnFailure" value="sendOnFailure" fieldValue="true"/>
                 <ww:checkbox label="%{getText('notifier.event.sendOnError')}" name="sendOnError" value="sendOnError" fieldValue="true"/>

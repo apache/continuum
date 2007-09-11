@@ -23,9 +23,6 @@
 
 <validators>
   <field name="address">
-    <field-validator type="requiredstring">
-      <message key="mailNotifier.address.required"/>
-    </field-validator>
     <field-validator type="email">
       <message key="mailNotifier.address.invalid"/>
     </field-validator>
