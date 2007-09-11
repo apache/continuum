@@ -166,6 +166,12 @@ public class MavenTwoContinuumProjectBuilder
             if ( projectGroup != null )
             {
                 BuildDefinition buildDefinition = getDefaultBuildDefinition( loadRecursiveProjects );
+                //CONTINUUM-1296
+                String defaultGoal = mavenProject.getBuild().getDefaultGoal();
+                if ( StringUtils.isNotEmpty( defaultGoal ) )
+                {
+                    buildDefinition.setGoals( defaultGoal );
+                }
 
                 try
                 {
