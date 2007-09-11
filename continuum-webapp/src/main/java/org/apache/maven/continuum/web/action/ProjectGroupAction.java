@@ -111,9 +111,9 @@ public class ProjectGroupAction
     private Collection groupProjects;
 
     private int releaseProjectId;
-    
+
     private Map<String, Integer> buildDefinitions;
-    
+
     private int buildDefinitionId;
 
     public String summary()
@@ -128,12 +128,12 @@ public class ProjectGroupAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-        
+
         projectGroup = getProjectGroup( projectGroupId );
 
         List<BuildDefinition> projectGroupBuildDefs = getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
-        int defaultBuildDefinitionId = getContinuum().getDefaultBuildDefinition( projectGroupId ).getId();
-        
+        int defaultBuildDefinitionId = getContinuum().getDefaultBuildDefinitionForProjectGroup( projectGroupId ).getId();
+
         if (projectGroupBuildDefs != null)
         {
             this.buildDefinitions = new LinkedHashMap<String, Integer>(projectGroupBuildDefs.size());
@@ -152,7 +152,7 @@ public class ProjectGroupAction
         {
             this.buildDefinitions = Collections.EMPTY_MAP;
         }
-        
+
         return SUCCESS;
     }
 
