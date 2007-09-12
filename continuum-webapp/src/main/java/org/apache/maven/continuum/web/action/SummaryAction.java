@@ -157,8 +157,11 @@ public class SummaryAction
                 groupSummary.setNumFailures( groupSummary.getNumFailures() + 1 );
                 break;
             default:
-                getLogger().warn(
-                    "unknown buildState value " + latestBuild.getState() + " with build " + latestBuild.getId() );
+                if ( latestBuild.getState() == 5 || latestBuild.getState() > 10 )
+                {
+                    getLogger().warn(
+                        "unknown buildState value " + latestBuild.getState() + " with build " + latestBuild.getId() );
+                }
         }
     }
 
