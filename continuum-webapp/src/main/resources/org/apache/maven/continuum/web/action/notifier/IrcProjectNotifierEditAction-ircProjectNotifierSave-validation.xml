@@ -28,8 +28,9 @@
     </field-validator>
   </field>
   <field name="port">
-    <field-validator type="regex">
-      <param name="expression"><![CDATA[([0-9])]]></param>
+    <field-validator type="int">
+      <param name="min">0</param>
+      <param name="max">65535</param>
       <message key="ircNotifier.port.invalid"/>
     </field-validator>
   </field>
