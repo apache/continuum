@@ -1387,8 +1387,8 @@ public class DefaultContinuum
     public int addProject( Project project, String executorId, int groupId )
         throws ContinuumException
     {
-        //test
-        //project.setExecutorId( executorId );
+
+        project.setExecutorId( executorId );
 
         if ( executorId.equalsIgnoreCase( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR ) )
         {

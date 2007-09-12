@@ -990,6 +990,15 @@
           <type>int</type>
           <defaultValue>0</defaultValue>
         </field>
+        <field>
+          <name>alwaysBuild</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if the build had to be forced even if there is no scm change
+          </description>
+        </field>        
       </fields>
     </class>
 

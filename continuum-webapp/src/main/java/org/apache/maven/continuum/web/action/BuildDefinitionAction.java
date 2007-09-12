@@ -82,6 +82,8 @@ public class BuildDefinitionAction
     private String description;
     
     private String buildDefinitionType;
+    
+    private boolean alwaysBuild;
 
     public void prepare()
         throws Exception
@@ -163,7 +165,7 @@ public class BuildDefinitionAction
                 }
                 description = buildDefinition.getDescription();
                 buildDefinitionType = buildDefinition.getType();
-                
+                alwaysBuild = buildDefinition.isAlwaysBuild();
             }
             else
             {
@@ -423,6 +425,7 @@ public class BuildDefinitionAction
         }
         buildDefinition.setDescription( description );
         buildDefinition.setType( buildDefinitionType );
+        buildDefinition.setAlwaysBuild( alwaysBuild );
         return buildDefinition;
     }
 
@@ -612,5 +615,15 @@ public class BuildDefinitionAction
     public void setBuildDefinitionType( String buildDefinitionType )
     {
         this.buildDefinitionType = buildDefinitionType;
+    }
+
+    public boolean isAlwaysBuild()
+    {
+        return alwaysBuild;
+    }
+
+    public void setAlwaysBuild( boolean alwaysBuild )
+    {
+        this.alwaysBuild = alwaysBuild;
     }
 }

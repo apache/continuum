@@ -353,7 +353,14 @@
           <version>1.0.0</version>
           <type>String</type>
           <description>type of the buid defintion</description>
-        </field>               
+        </field>   
+        <field>
+          <name>alwaysBuild</name>
+          <version>1.0.0</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>true if the build had to be forced even if there is no scm change</description>
+        </field>                    
       </fields>
     </class>
     <class>

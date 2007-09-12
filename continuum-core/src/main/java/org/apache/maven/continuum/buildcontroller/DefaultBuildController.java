@@ -118,6 +118,7 @@ public class DefaultBuildController
                 mergeScmResults( context );
             }
 
+            // ignore this if AlwaysBuild ?
             if ( !checkScmResult( context ) )
             {
                 getLogger().info( "Error updating from SCM, not building" );
@@ -131,8 +132,14 @@ public class DefaultBuildController
                 getLogger().info( "No changes, not building" );
                 return;
             }
-
-            getLogger().info( "Changes found, building" );
+            if ( context.getBuildDefinition().isAlwaysBuild() )
+            {
+                getLogger().info( "AlwaysBuild configured, building" );
+            }
+            else
+            {
+                getLogger().info( "Changes found, building" );
+            }
 
             Map actionContext = context.getActionContext();
 
@@ -459,6 +466,11 @@ public class DefaultBuildController
     protected boolean shouldBuild( BuildContext context )
         throws TaskExecutionException
     {
+        BuildDefinition buildDefinition = (BuildDefinition) context.getBuildDefinition();
+        if ( buildDefinition.isAlwaysBuild() )
+        {
+            return true;
+        }
         if ( context.getOldBuildResult() == null )
         {
             //The project was never be built with the current build definition

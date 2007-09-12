@@ -201,6 +201,7 @@ public class BuildDefinitionSummaryAction
         }
         bds.setDescription( bd.getDescription() );
         bds.setType( bd.getType() );
+        bds.setAlwaysBuild( bd.isAlwaysBuild() );
         return bds;
     }
 
