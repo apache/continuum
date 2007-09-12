@@ -75,7 +75,7 @@ public class AddProjectAction
      * @plexus.requirement role-hint="default"
      */
     private ProfileService profileService;
-    
+
     private int projectGroupId;
 
     public void validate()
@@ -112,6 +112,8 @@ public class AddProjectAction
     public String add()
         throws ContinuumException
     {
+        initializeProjectGroupName();
+
         try
         {
             if ( StringUtils.isEmpty( getProjectGroupName() ) )
@@ -151,8 +153,8 @@ public class AddProjectAction
         {
             this.setProjectGroupId( this.getSelectedProjectGroup() );
             return "projectGroupSummary";
-        }        
-        
+        }
+
         return SUCCESS;
     }
 
@@ -195,6 +197,21 @@ public class AddProjectAction
         }
         this.profiles = profileService.getAllProfiles();
         return SUCCESS;
+    }
+
+    private void initializeProjectGroupName()
+    {
+        if ( disableGroupSelection == true )
+        {
+            try
+            {
+                projectGroupName = getContinuum().getProjectGroup( selectedProjectGroup ).getName();
+            }
+            catch ( ContinuumException e )
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     public String getProjectName()
