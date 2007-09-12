@@ -19,6 +19,7 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Schedule;
@@ -335,6 +336,8 @@ public class DefaultConfigurationService
 
         bd.setSchedule( getDefaultSchedule() );
 
+        bd.setType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
+        
         return bd;
     }
 
@@ -373,6 +376,8 @@ public class DefaultConfigurationService
 
         bd.setSchedule( getDefaultSchedule() );
 
+        bd.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
+        
         return bd;
     }
 
@@ -401,6 +406,8 @@ public class DefaultConfigurationService
 
         bd.setSchedule( getDefaultSchedule() );
 
+        bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+        
         return bd;
     }
 
