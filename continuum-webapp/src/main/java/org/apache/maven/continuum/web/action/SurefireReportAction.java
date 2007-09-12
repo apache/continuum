@@ -22,7 +22,6 @@ package org.apache.maven.continuum.web.action;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.scm.TestResult;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.StringUtils;
@@ -83,7 +82,12 @@ public class SurefireReportAction
 
         File reportsDirectory = getContinuum().getConfiguration().getTestReportsDirectory( buildId, projectId );
 
-        parseReports( reportsDirectory );
+        testSuites = new ArrayList();
+
+        if ( reportsDirectory != null && reportsDirectory.exists() )
+        {
+            parseReports( reportsDirectory );
+        }
 
         getSummary( testSuites );
 
@@ -96,8 +100,6 @@ public class SurefireReportAction
         throws ContinuumException
     {
         String[] xmlReportFiles = getIncludedFiles( reportsDirectory, "*.xml", "*.txt" );
-
-        testSuites = new ArrayList();
 
         for ( int index = 0; index < xmlReportFiles.length; index++ )
         {
@@ -138,7 +140,7 @@ public class SurefireReportAction
 
         for ( Iterator suites = suiteList.iterator(); suites.hasNext(); )
         {
-            
+
             ReportTestSuite suite = (ReportTestSuite) suites.next();
 
             totalTests += suite.getNumberOfTests();
