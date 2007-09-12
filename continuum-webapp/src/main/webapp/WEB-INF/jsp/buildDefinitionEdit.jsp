@@ -86,6 +86,7 @@
                 <ww:hidden name="projectId"/>
                 <ww:hidden name="projectGroupId"/>
                 <ww:hidden name="groupBuildDefinition"/>
+                <ww:hidden name="buildDefinitionType" />
                 <ww:if test="defaultBuildDefinition == true">
                   <ww:hidden name="defaultBuildDefinition" value="true"/>
                 </ww:if>

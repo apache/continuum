@@ -200,6 +200,7 @@ public class BuildDefinitionSummaryAction
             bds.setProfileId( bd.getProfile().getId() );
         }
         bds.setDescription( bd.getDescription() );
+        bds.setType( bd.getType() );
         return bds;
     }
 

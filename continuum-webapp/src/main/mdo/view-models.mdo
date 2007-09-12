@@ -347,6 +347,12 @@
           <version>1.0.0</version>
           <type>String</type>
           <description>description of the buid defintion</description>
+        </field>
+        <field>
+          <name>type</name>
+          <version>1.0.0</version>
+          <type>String</type>
+          <description>type of the buid defintion</description>
         </field>               
       </fields>
     </class>

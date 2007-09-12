@@ -81,17 +81,18 @@ public class AddProjectAction
     public void validate()
     {
         boolean projectNameAlreadyExist = false;
-        Iterator iterator;
-        Project project;
-
+        
         clearErrorsAndMessages();
         try
         {
-            iterator = getContinuum().getProjects().iterator();
-            while ( iterator.hasNext() )
+            Iterator<Project> projects = getContinuum().getProjects().iterator(); 
+            while ( projects.hasNext() )
             {
-                project = (Project) iterator.next();
-                if ( project.getName().equalsIgnoreCase( projectName ) )
+                Project project = projects.next();
+                // CONTINUUM-1445
+                if ( StringUtils.equalsIgnoreCase( project.getName(), projectName )
+                    && StringUtils.equalsIgnoreCase( project.getVersion(), projectVersion )
+                    && StringUtils.equalsIgnoreCase( project.getScmUrl(), projectScmUrl ) )
                 {
                     projectNameAlreadyExist = true;
                     break;
@@ -100,12 +101,12 @@ public class AddProjectAction
             if ( projectNameAlreadyExist )
             {
                 addActionError( "projectName.already.exist.error" );
+                this.input();
             }
         }
         catch ( ContinuumException e )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            getLogger().error( e.getMessage(), e );
         }
     }
 
@@ -147,6 +148,8 @@ public class AddProjectAction
 
         project.setScmUseCache( projectScmUseCache );
 
+        project.setExecutorId( projectType );
+        
         getContinuum().addProject( project, projectType, selectedProjectGroup );
 
         if ( this.getSelectedProjectGroup() > 0 )

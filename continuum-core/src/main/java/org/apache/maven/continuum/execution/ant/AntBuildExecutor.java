@@ -22,6 +22,7 @@ package org.apache.maven.continuum.execution.ant;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -53,7 +54,7 @@ public class AntBuildExecutor
 
     public static final String CONFIGURATION_TARGETS = "targets";
 
-    public static final String ID = "ant";
+    public static final String ID = ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR;
 
     // ----------------------------------------------------------------------
     //
