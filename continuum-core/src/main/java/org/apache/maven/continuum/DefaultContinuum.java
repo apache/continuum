@@ -30,6 +30,7 @@ import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.core.action.CreateProjectsFromMetadataAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.initialization.ContinuumInitializationException;
 import org.apache.maven.continuum.initialization.ContinuumInitializer;
@@ -1386,9 +1387,10 @@ public class DefaultContinuum
     public int addProject( Project project, String executorId, int groupId )
         throws ContinuumException
     {
-        project.setExecutorId( executorId );
+        //test
+        //project.setExecutorId( executorId );
 
-        if ( executorId.equalsIgnoreCase( "ant" ) )
+        if ( executorId.equalsIgnoreCase( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR ) )
         {
             try
             {

@@ -182,6 +182,8 @@ public abstract class AbstractBuildDefinitionContinuumAction
 
                 storedDefinition.setDescription( buildDefinition.getDescription() );
                 
+                storedDefinition.setType( buildDefinition.getType() );
+                
                 store.storeBuildDefinition( storedDefinition );
 
                 return storedDefinition;

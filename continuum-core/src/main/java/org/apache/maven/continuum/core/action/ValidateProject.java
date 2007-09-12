@@ -23,7 +23,9 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumStore;
+import org.codehaus.plexus.util.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,11 +61,25 @@ public class ValidateProject
         {
             throw new ContinuumException( "No such executor with id '" + project.getExecutorId() + "'." );
         }
-
+        
+        List<Project> projects = store.getAllProjectsByName();
+        
+        for (Project storedProject : projects)
+        {
+            // CONTINUUM-1445
+            if ( StringUtils.equalsIgnoreCase( project.getName(), storedProject.getName() )
+                && StringUtils.equalsIgnoreCase( project.getVersion(), storedProject.getVersion() )
+                && StringUtils.equalsIgnoreCase( project.getScmUrl(), storedProject.getScmUrl() ) )
+            {
+                throw new ContinuumException( "A duplicate project already exist '" + storedProject.getName() + "'." );
+            }
+        }
+        /*
         if ( store.getProjectByName( project.getName() ) != null )
         {
             throw new ContinuumException( "A project with the name '" + project.getName() + "' already exist." );
         }
+        */
 
 //        if ( getProjectByScmUrl( scmUrl ) != null )
 //        {

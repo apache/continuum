@@ -20,11 +20,13 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.ProfileException;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
 import org.codehaus.plexus.util.StringUtils;
@@ -78,6 +80,8 @@ public class BuildDefinitionAction
     private int profileId;
     
     private String description;
+    
+    private String buildDefinitionType;
 
     public void prepare()
         throws Exception
@@ -112,7 +116,7 @@ public class BuildDefinitionAction
      * @return action result
      */
     public String input()
-        throws ContinuumException
+        throws ContinuumException, ContinuumStoreException
     {
         try
         {
@@ -158,6 +162,8 @@ public class BuildDefinitionAction
                     profileId = profile.getId();
                 }
                 description = buildDefinition.getDescription();
+                buildDefinitionType = buildDefinition.getType();
+                
             }
             else
             {
@@ -181,17 +187,24 @@ public class BuildDefinitionAction
 
                 if ( StringUtils.isEmpty( preDefinedBuildFile ) )
                 {
-                    if ( "maven2".equals( executor ) )
+                    if ( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( executor ) )
                     {
-                        buildFile = "pom.xml";
+                        buildFile = getContinuum().getConfiguration().getDefaultMavenTwoBuildDefinition().getBuildFile();
+                        buildDefinitionType = ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR;
                     }
-                    else if ( "maven-1".equals( executor ) )
+                    else if ( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR.equals( executor ) )
                     {
-                        buildFile = "project.xml";
+                        buildFile = getContinuum().getConfiguration().getDefaultMavenOneBuildDefinition().getBuildFile();
+                        buildDefinitionType = ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR;
                     }
-                    else if ( "ant".equals( executor ) )
+                    else if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( executor ) )
                     {
-                        buildFile = "build.xml";
+                        buildFile = getContinuum().getConfiguration().getDefaultAntBuildDefinition().getBuildFile();
+                        buildDefinitionType = ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR;
+                    }
+                    else
+                    {
+                        buildDefinitionType = ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR;
                     }
                 }
                 else
@@ -199,6 +212,28 @@ public class BuildDefinitionAction
                     buildFile = preDefinedBuildFile;
                 }
             }
+            
+            // if buildDefinitionType is null it will find with the executor
+            if ( StringUtils.isEmpty( buildDefinitionType ) )
+            {
+                if ( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( executor ) )
+                {
+                    buildDefinitionType = ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR;
+                }
+                else if ( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR.equals( executor ) )
+                {
+                    buildDefinitionType = ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR;
+                }
+                else if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( executor ) )
+                {
+                    buildDefinitionType = ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR;
+                }
+                else
+                {
+                    buildDefinitionType = ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR;
+                }
+            }
+
         }
         catch ( AuthorizationRequiredException authzE )
         {
@@ -387,6 +422,7 @@ public class BuildDefinitionAction
             }
         }
         buildDefinition.setDescription( description );
+        buildDefinition.setType( buildDefinitionType );
         return buildDefinition;
     }
 
@@ -566,5 +602,15 @@ public class BuildDefinitionAction
     public void setDescription( String description )
     {
         this.description = description;
+    }
+
+    public String getBuildDefinitionType()
+    {
+        return buildDefinitionType;
+    }
+
+    public void setBuildDefinitionType( String buildDefinitionType )
+    {
+        this.buildDefinitionType = buildDefinitionType;
     }
 }

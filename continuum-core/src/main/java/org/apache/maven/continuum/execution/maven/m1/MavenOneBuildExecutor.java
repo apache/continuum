@@ -22,6 +22,7 @@ package org.apache.maven.continuum.execution.maven.m1;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -47,7 +48,7 @@ public class MavenOneBuildExecutor
 {
     public final static String CONFIGURATION_GOALS = "goals";
 
-    public final static String ID = "maven-1";
+    public final static String ID = ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR;
 
     /**
      * @plexus.requirement

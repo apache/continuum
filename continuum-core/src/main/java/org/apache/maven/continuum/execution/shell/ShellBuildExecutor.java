@@ -22,6 +22,7 @@ package org.apache.maven.continuum.execution.shell;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -49,7 +50,7 @@ public class ShellBuildExecutor
 
     public static final String CONFIGURATION_EXECUTABLE = "executable";
 
-    public static final String ID = "shell";
+    public static final String ID = ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR;
 
     // ----------------------------------------------------------------------
     //

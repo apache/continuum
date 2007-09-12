@@ -20,6 +20,7 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.maven.continuum.Continuum;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
@@ -137,17 +138,24 @@ public class CheckoutProjectContinuumAction
                     BuildDefinition bd = continuum.getDefaultBuildDefinition( project.getId() );
 
                     String buildFile = "";
-                    if ( "maven2".equals( project.getExecutorId() ) )
+                    if (ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
                     {
                         buildFile = "pom.xml";
+                        bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
                     }
-                    else if ( "maven-1".equals( project.getExecutorId() ) )
+                    else if ( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
                     {
                         buildFile = "project.xml";
+                        bd.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
                     }
-                    else if ( "ant".equals( project.getExecutorId() ) )
+                    else if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
                     {
                         buildFile = "build.xml";
+                        bd.setType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
+                    }
+                    else
+                    {
+                        bd.setType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
                     }
                     bd.setBuildFile( relativePath + "/" + "buildFile" );
                     store.storeBuildDefinition( bd );
