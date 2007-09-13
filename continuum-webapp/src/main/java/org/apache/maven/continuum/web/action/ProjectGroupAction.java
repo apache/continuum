@@ -27,8 +27,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.bean.ProjectGroupUserBean;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.continuum.web.model.BuildDefinitionSummary;
-import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.codehaus.plexus.redback.rbac.RBACManager;
 import org.codehaus.plexus.redback.rbac.RbacManagerException;
 import org.codehaus.plexus.redback.rbac.RbacObjectNotFoundException;
@@ -131,23 +129,21 @@ public class ProjectGroupAction
 
         projectGroup = getProjectGroup( projectGroupId );
         //projectGroup.
-        
-                
-        List<BuildDefinition> projectGroupBuildDefs = getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
 
-        int defaultBuildDefinitionId = getContinuum().getDefaultBuildDefinitionForProjectGroup( projectGroupId ).getId();
+        List<BuildDefinition> projectGroupBuildDefs =
+            getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
 
-        if (projectGroupBuildDefs != null)
+        if ( projectGroupBuildDefs != null )
         {
-            this.buildDefinitions = new LinkedHashMap<String, Integer>(projectGroupBuildDefs.size());
-            for(BuildDefinition buildDefinition : projectGroupBuildDefs)
+            this.buildDefinitions = new LinkedHashMap<String, Integer>( projectGroupBuildDefs.size() );
+            for ( BuildDefinition buildDefinition : projectGroupBuildDefs )
             {
-                
-                if (buildDefinition.getId() != defaultBuildDefinitionId)
+
+                if ( !buildDefinition.isDefaultForProject() )
                 {
                     String key = StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals()
-                                                                                        : buildDefinition
-                                                                                            .getDescription();
+                        : buildDefinition
+                            .getDescription();
                     buildDefinitions.put( key, Integer.valueOf( buildDefinition.getId() ) );
                 }
             }
@@ -341,7 +337,8 @@ public class ProjectGroupAction
                 }
             }
 
-            ProjectGroup newProjectGroup = getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() );
+            ProjectGroup newProjectGroup =
+                getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() );
 
             if ( newProjectGroup.getId() != projectGroup.getId() )
             {

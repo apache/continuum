@@ -844,29 +844,30 @@ public class DefaultContinuum
     public void buildProjectGroup( int projectGroupId )
         throws ContinuumException
     {
-        BuildDefinition groupDefaultBD = null;
+        List<BuildDefinition> groupDefaultBDs = null;
 
-        groupDefaultBD = getDefaultBuildDefinitionForProjectGroup( projectGroupId );
+        groupDefaultBDs = getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
 
-        int buildDefinitionId = -1;
-
-        if ( groupDefaultBD != null )
-        {
-            buildDefinitionId = groupDefaultBD.getId();
-        }
-        buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, true );
+        buildProjectGroupWithBuildDefinition( projectGroupId, groupDefaultBDs, true );
     }
 
     /**
-     * fire off a build for all of the projects in a project group using their default builds
+     * fire off a build for all of the projects in a project group using their default builds.
      *
-     * @param projectGroupId
+     * @param projectGroupId the project group id
+     * @param buildDefinitionId the build definition id to use
      * @throws ContinuumException
      */
     public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId )
         throws ContinuumException
     {
-        buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId, false );
+        List<BuildDefinition> bds = new ArrayList<BuildDefinition>();
+        BuildDefinition bd = getBuildDefinition( buildDefinitionId );
+        if ( bd != null )
+        {
+            bds.add( bd );
+        }
+        buildProjectGroupWithBuildDefinition( projectGroupId, bds, false );
     }
 
     /**
@@ -875,7 +876,7 @@ public class DefaultContinuum
      * @param projectGroupId
      * @throws ContinuumException
      */
-    private void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId,
+    private void buildProjectGroupWithBuildDefinition( int projectGroupId, List<BuildDefinition> bds,
                                                        boolean checkDefaultBuildDefinitionForProject )
         throws ContinuumException
     {
@@ -898,7 +899,16 @@ public class DefaultContinuum
         {
             Project project = (Project) i.next();
 
-            int buildDefId = buildDefinitionId;
+            int buildDefId = -1;
+
+            for ( BuildDefinition bd : bds )
+            {
+                if ( project.getExecutorId().equals( bd.getType() ) )
+                {
+                    buildDefId = bd.getId();
+                    break;
+                }
+            }
 
             if ( checkDefaultBuildDefinitionForProject )
             {
@@ -924,10 +934,10 @@ public class DefaultContinuum
                 }
             }
 
-            if ( !"maven2".equals( project.getExecutorId() ) )
+            if ( buildDefId == -1 )
             {
-                getLogger().info(
-                    "Project " + project.getId() + " is not a maven2 project, will not be included in group build." );
+                getLogger().info( "Project " + project.getId() +
+                    " don't have a default build definition defined in the project or project group, will not be included in group build." );
                 continue;
             }
 
@@ -1982,12 +1992,12 @@ public class DefaultContinuum
         }
     }
 
-    public BuildDefinition getDefaultBuildDefinitionForProjectGroup( int projectGroupId )
+    public List<BuildDefinition> getDefaultBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumException
     {
         try
         {
-            return store.getDefaultBuildDefinitionForProjectGroup( projectGroupId );
+            return store.getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
         }
         catch ( ContinuumObjectNotFoundException cne )
         {

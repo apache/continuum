@@ -86,6 +86,7 @@ public abstract class AbstractBuildDefinitionContinuumAction
      *
      * @param buildDefinition
      * @param projectGroup
+     * @throws ContinuumException
      */
     protected void resolveDefaultBuildDefinitionsForProjectGroup( BuildDefinition buildDefinition,
                                                                   ProjectGroup projectGroup )
@@ -93,27 +94,35 @@ public abstract class AbstractBuildDefinitionContinuumAction
     {
         try
         {
-            BuildDefinition storedDefinition = store.getDefaultBuildDefinitionForProjectGroup( projectGroup.getId() );
+            List<BuildDefinition> storedDefinitions =
+                store.getDefaultBuildDefinitionsForProjectGroup( projectGroup.getId() );
 
-            // if buildDefinition passed in is not default then we are done
-            if ( buildDefinition.isDefaultForProject() )
+            for ( BuildDefinition storedDefinition : storedDefinitions )
             {
-                if ( storedDefinition != null && storedDefinition.getId() != buildDefinition.getId() )
+                // if buildDefinition passed in is not default then we are done
+                if ( buildDefinition.isDefaultForProject() )
                 {
-                    storedDefinition.setDefaultForProject( false );
+                    if ( storedDefinition != null && storedDefinition.getId() != buildDefinition.getId() )
+                    {
+                        if ( buildDefinition.getType() != null &&
+                            buildDefinition.getType().equals( storedDefinition.getType() ) )
+                        {
+                            storedDefinition.setDefaultForProject( false );
 
-                    store.storeBuildDefinition( storedDefinition );
+                            store.storeBuildDefinition( storedDefinition );
+                        }
+                    }
                 }
-            }
-            else
-            {
-                //make sure we are not wacking out default build definition, that would be bad
-                if ( buildDefinition.getId() == storedDefinition.getId() )
+                else
                 {
-                    getLogger().info(
-                        "processing this build definition would result in no default build definition for project group" );
-                    throw new ContinuumException(
-                        "processing this build definition would result in no default build definition for project group" );
+                    //make sure we are not wacking out default build definition, that would be bad
+                    if ( buildDefinition.getId() == storedDefinition.getId() )
+                    {
+                        getLogger().info(
+                            "processing this build definition would result in no default build definition for project group" );
+                        throw new ContinuumException(
+                            "processing this build definition would result in no default build definition for project group" );
+                    }
                 }
             }
         }
@@ -181,11 +190,11 @@ public abstract class AbstractBuildDefinitionContinuumAction
                 storedDefinition.setProfile( buildDefinition.getProfile() );
 
                 storedDefinition.setDescription( buildDefinition.getDescription() );
-                
+
                 storedDefinition.setType( buildDefinition.getType() );
-                
+
                 storedDefinition.setAlwaysBuild( buildDefinition.isAlwaysBuild() );
-                
+
                 store.storeBuildDefinition( storedDefinition );
 
                 return storedDefinition;

@@ -155,7 +155,7 @@ public class DefaultInstallationService
     /**
      * @see org.apache.maven.continuum.installation.InstallationService#getAllInstallations()
      */
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings("unchecked")
     public List<Installation> getAllInstallations()
         throws InstallationException
     {
@@ -335,7 +335,7 @@ public class DefaultInstallationService
         }
         return cliOutput;
     }
-    
+
     private Map<String, String> getEnvVars( Profile profile )
     {
         Map<String, String> environnments = new HashMap<String, String>();
@@ -363,13 +363,13 @@ public class DefaultInstallationService
     }
 
     /**
-     * @see org.apache.maven.continuum.installation.InstallationService#getExecutorConfiguratorVersion(java.lang.String,org.apache.maven.continuum.execution.ExecutorConfigurator)
+     * @see org.apache.maven.continuum.installation.InstallationService#getExecutorConfiguratorVersion(java.lang.String,org.apache.maven.continuum.execution.ExecutorConfigurator,Profile)
      */
-    @SuppressWarnings ("unchecked")
-    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator, Profile profile )
+    @SuppressWarnings("unchecked")
+    public List<String> getExecutorConfiguratorVersion( String path, ExecutorConfigurator executorConfigurator,
+                                                        Profile profile )
         throws InstallationException
     {
-         
 
         if ( executorConfigurator == null )
         {
@@ -398,7 +398,7 @@ public class DefaultInstallationService
                 String value = environments.get( key );
                 commandline.addEnvironment( key, value );
             }
-            
+
             executable = executable.append( executorConfigurator.getExecutable() );
             commandline.setExecutable( executable.toString() );
             commandline.addArguments( new String[]{executorConfigurator.getVersionArgument()} );

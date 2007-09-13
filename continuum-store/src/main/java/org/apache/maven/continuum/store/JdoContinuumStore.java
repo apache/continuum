@@ -592,7 +592,7 @@ public class JdoContinuumStore
     {
         return getLatestBuildResultsByProjectGroupId( -1 );
     }
-    
+
     public void removeBuildResult( BuildResult buildResult )
     {
         removeObject( buildResult );
@@ -632,7 +632,17 @@ public class JdoContinuumStore
         {
             ProjectGroup projectGroup = getProjectGroupByProjectId( projectId );
 
-            bd = getDefaultBuildDefinitionForProjectGroup( projectGroup.getId() );
+            Project p = getProject( projectId );
+
+            List<BuildDefinition> bds = getDefaultBuildDefinitionsForProjectGroup( projectGroup.getId() );
+
+            for ( BuildDefinition bdef : bds )
+            {
+                if ( p.getExecutorId().equals( bdef.getType() ) )
+                {
+                    return bdef;
+                }
+            }
         }
 
         return bd;
@@ -669,10 +679,12 @@ public class JdoContinuumStore
         throw new ContinuumObjectNotFoundException( "no default build definition declared for project " + projectId );
     }
 
-    public BuildDefinition getDefaultBuildDefinitionForProjectGroup( int projectGroupId )
+    public List<BuildDefinition> getDefaultBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
         ProjectGroup projectGroup = getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
+
+        List<BuildDefinition> bds = new ArrayList<BuildDefinition>();
 
         for ( Iterator i = projectGroup.getBuildDefinitions().iterator(); i.hasNext(); )
         {
@@ -681,11 +693,11 @@ public class JdoContinuumStore
             // also applies to project group membership
             if ( bd.isDefaultForProject() )
             {
-                return bd;
+                bds.add( bd );
             }
         }
 
-        return null;
+        return bds;
     }
 
     public Map getDefaultBuildDefinitions()

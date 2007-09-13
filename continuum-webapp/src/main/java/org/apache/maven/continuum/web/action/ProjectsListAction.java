@@ -147,12 +147,12 @@ public class ProjectsListAction
             }
 
             //TODO : Change this part because it's a duplicate of DefaultContinuum.buildProjectGroup*
-            BuildDefinition groupDefaultBD = null;
+            List<BuildDefinition> groupDefaultBDs = null;
             if (getBuildDefinitionId() == -1 || getBuildDefinitionId() == 0)
             {
                 try
                 {
-                    groupDefaultBD = store.getDefaultBuildDefinitionForProjectGroup( projectGroupId );
+                    groupDefaultBDs = store.getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
                 }
                 catch ( ContinuumObjectNotFoundException e )
                 {
@@ -170,7 +170,16 @@ public class ProjectsListAction
                 Project project = (Project) i.next();
                 if ( this.getBuildDefinitionId() == -1 || getBuildDefinitionId() == 0)
                 {
-                    int buildDefId = groupDefaultBD.getId();
+                    int buildDefId = -1;
+
+                    for ( BuildDefinition bd : groupDefaultBDs )
+                    {
+                        if ( project.getExecutorId().equals( bd.getType() ) )
+                        {
+                            buildDefId = bd.getId();
+                            break;
+                        }
+                    }
 
                     BuildDefinition projectDefaultBD = null;
                     if ( this.getBuildDefinitionId() == -1 )
