@@ -138,12 +138,13 @@ public class CheckoutProjectContinuumAction
                     BuildDefinition bd = continuum.getDefaultBuildDefinition( project.getId() );
 
                     String buildFile = "";
-                    if (ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
+                    if ( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
                     {
                         buildFile = "pom.xml";
                         bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
                     }
-                    else if ( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
+                    else
+                    if ( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
                     {
                         buildFile = "project.xml";
                         bd.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
@@ -157,7 +158,7 @@ public class CheckoutProjectContinuumAction
                     {
                         bd.setType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
                     }
-                    bd.setBuildFile( relativePath + "/" + "buildFile" );
+                    bd.setBuildFile( relativePath + "/" + buildFile );
                     store.storeBuildDefinition( bd );
                 }
             }
