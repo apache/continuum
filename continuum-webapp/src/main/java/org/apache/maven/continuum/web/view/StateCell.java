@@ -61,6 +61,8 @@ public class StateCell
             case ContinuumProjectState.FAILED:
             case ContinuumProjectState.ERROR:
             case ContinuumProjectState.BUILDING:
+            case ContinuumProjectState.UPDATING:
+            case ContinuumProjectState.CHECKING_OUT:
             {
                 String state = StateGenerator.generate( project.getState(), tableModel.getContext().getContextPath() );
 

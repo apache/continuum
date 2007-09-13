@@ -29,6 +29,12 @@ public class StateGenerator
 {
     public static final String NEW = "NEW";
 
+    public static final String SUCCESS = "Success";
+
+    public static final String FAILED = "Failed";
+
+    public static final String ERROR = "Error";
+
     public static final String BUILDING = "Building";
 
     public static final String UPDATING = "Updating";
@@ -45,31 +51,33 @@ public class StateGenerator
         }
         else if ( state == ContinuumProjectState.OK )
         {
-            return "<img src=\"" + contextPath +
-                "/images/icon_success_sml.gif\" alt=\"Success\" title=\"Success\" border=\"0\" />";
+            return "<img src=\"" + contextPath + "/images/icon_success_sml.gif\" alt=\"" + SUCCESS + "\" title=\"" +
+                SUCCESS + "\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.FAILED )
         {
-            return "<img src=\"" + contextPath +
-                "/images/icon_warning_sml.gif\" alt=\"Failed\" title=\"Failed\" border=\"0\" />";
+            return "<img src=\"" + contextPath + "/images/icon_warning_sml.gif\" alt=\"" + FAILED + "\" title=\"" +
+                FAILED + "\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.ERROR )
         {
-            return "<img src=\"" + contextPath +
-                "/images/icon_error_sml.gif\" alt=\"Error\" title=\"Error\" border=\"0\" />";
+            return "<img src=\"" + contextPath + "/images/icon_error_sml.gif\" alt=\"" + ERROR + "\" title=\"" + ERROR +
+                "\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.BUILDING )
         {
-            return "<img src=\"" + contextPath +
-                "/images/building.gif\" alt=\"Building\" title=\"Building\" border=\"0\" />";
+            return "<img src=\"" + contextPath + "/images/building.gif\" alt=\"" + BUILDING + "\" title=\"" + BUILDING +
+                "\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.UPDATING )
         {
-            return UPDATING;
+            return "<img src=\"" + contextPath + "/images/checkingout.gif\" alt=\"" + UPDATING + "\" title=\"" +
+                UPDATING + "\" border=\"0\" />";
         }
         else if ( state == ContinuumProjectState.CHECKING_OUT )
         {
-            return CHECKING_OUT;
+            return "<img src=\"" + contextPath + "/images/checkingout.gif\" alt=\"" + CHECKING_OUT + "\" title=\"" +
+                CHECKING_OUT + "\" border=\"0\" />";
         }
         else
         {
