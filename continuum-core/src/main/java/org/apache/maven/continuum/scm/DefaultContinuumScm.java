@@ -19,6 +19,7 @@ package org.apache.maven.continuum.scm;
  * under the License.
  */
 
+import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeFile;
@@ -137,7 +138,8 @@ public class DefaultContinuumScm
 
                 if ( StringUtils.isNotEmpty( res.getRelativePathProjectDirectory() ) )
                 {
-                    context.put( "pomRelativePath", res.getRelativePathProjectDirectory() );
+                    context.put( AbstractContinuumAction.KEY_PROJECT_RELATIVE_PATH,
+                                 res.getRelativePathProjectDirectory() );
                 }
 
                 result = convertScmResult( res );
