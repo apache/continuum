@@ -79,8 +79,8 @@ public interface ContinuumStore
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     /**
-     * returns the default build definition for the project group and there
-     * should always be one declared
+     * returns the default build definitions for the project group and there
+     * should always be at least one declared
      *
      * @param projectGroupId
      * @return
@@ -88,7 +88,7 @@ public interface ContinuumStore
      * @throws ContinuumObjectNotFoundException
      *
      */
-    BuildDefinition getDefaultBuildDefinitionForProjectGroup( int projectGroupId )
+    List<BuildDefinition> getDefaultBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     BuildDefinition getBuildDefinition( int buildDefinitionId )

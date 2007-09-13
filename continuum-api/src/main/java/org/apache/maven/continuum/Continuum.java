@@ -475,7 +475,7 @@ public interface Continuum
     BuildDefinition getDefaultBuildDefinition( int projectId )
         throws ContinuumException;
 
-    public BuildDefinition getDefaultBuildDefinitionForProjectGroup( int projectGroupId )
+    public List<BuildDefinition> getDefaultBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumException;
 
     BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
