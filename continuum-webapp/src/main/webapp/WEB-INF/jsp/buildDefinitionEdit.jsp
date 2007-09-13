@@ -76,6 +76,7 @@
                     <ww:select label="%{getText('buildDefinition.schedule.label')}" name="scheduleId" list="schedules"/>
                     <ww:select label="%{getText('buildDefinition.profile.label')}" name="profileId" list="profiles" listValue="name" 
                                listKey="id" headerKey="-1" headerValue=""/>
+                    <ww:select label="%{getText('buildDefinition.type.label')}" name="buildDefinitionType" list="buildDefinitionTypes"/>
                     <ww:textfield label="%{getText('buildDefinition.description.label')}" name="description" />
                   </tbody>
                 </table>
@@ -87,7 +88,6 @@
                 <ww:hidden name="projectId"/>
                 <ww:hidden name="projectGroupId"/>
                 <ww:hidden name="groupBuildDefinition"/>
-                <ww:hidden name="buildDefinitionType" />
                 <ww:if test="defaultBuildDefinition == true">
                   <ww:hidden name="defaultBuildDefinition" value="true"/>
                 </ww:if>
