@@ -19,8 +19,16 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
-import com.sampullara.cli.Args;
-import com.sampullara.cli.Argument;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -44,18 +52,10 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
 
 /**
  * An application for performing database upgrades from old Continuum and Redback versions. A suitable tool until it
@@ -82,12 +82,12 @@ public class DataManagementCli
             if ( command.help )
             {
                 Args.usage( command );
-                System.exit( 0 );
+                return;
             }
             if (command.version)
             {
                 System.out.print("continuum-data-management version " + getVersion() );
-                System.exit( 0 );
+                return;
             }
             databaseFormat = DatabaseFormat.valueOf( command.databaseFormat );
             mode = OperationMode.valueOf( command.mode );
@@ -95,15 +95,15 @@ public class DataManagementCli
         }
         catch ( IllegalArgumentException e )
         {
-            Args.usage( command );
-
             System.err.println( e.getMessage() );
+            Args.usage( command );
             return;
         }
 
         if ( command.directory.exists() && !command.directory.isDirectory() )
         {
             System.err.println( command.directory + " already exists and is not a directory." );
+            Args.usage( command );
             return;
         }
 
@@ -111,18 +111,21 @@ public class DataManagementCli
         {
             System.err.println(
                 command.directory + " already exists and will not be overwritten unless the -overwrite flag is used." );
+            Args.usage( command );
             return;
         }
 
         if ( command.buildsJdbcUrl == null && command.usersJdbcUrl == null )
         {
             System.err.println( "You must specify one of -buildsJdbcUrl and -usersJdbcUrl" );
+            Args.usage( command );
             return;
         }
 
         if ( command.usersJdbcUrl != null && databaseFormat == DatabaseFormat.CONTINUUM_103 )
         {
             System.err.println( "The -usersJdbcUrl option can not be used with Continuum 1.0.3 databases" );
+            Args.usage( command );
             return;
         }
 
