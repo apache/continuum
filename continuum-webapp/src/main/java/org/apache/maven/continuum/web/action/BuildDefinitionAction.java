@@ -183,7 +183,10 @@ public class BuildDefinitionAction
                 {
                     checkAddProjectBuildDefinitionAuthorization( getProjectGroupName() );
                     BuildDefinition bd = getContinuum().getDefaultBuildDefinition( projectId );
-                    preDefinedBuildFile = bd.getBuildFile();
+                    if ( bd != null )
+                    {
+                        preDefinedBuildFile = bd.getBuildFile();
+                    }
                 }
                 else
                 {
