@@ -128,7 +128,6 @@ public class ProjectGroupAction
         }
 
         projectGroup = getProjectGroup( projectGroupId );
-        //projectGroup.
 
         List<BuildDefinition> projectGroupBuildDefs =
             getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
