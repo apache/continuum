@@ -155,6 +155,64 @@
         <ww:else>
           <b><ww:text name="buildResult.dependencies.noChanges"/></b>
         </ww:else>
+        
+        <h4><ww:text name="buildResult.buildDefinition"/></h4>
+          <table border="1" cellspacing="2" cellpadding="3" width="80%">
+            <tbody>
+              <ww:if test="buildResult.buildDefinition.type='ant'">
+                <tr class="b">
+                  <th><ww:text name="buildResult.buildDefinition.ant.label"/></th>
+                  <td><ww:property value="buildResult.buildDefinition.buildFile"/></td>
+                </tr>               
+              </ww:if>
+              <ww:elseif test="buildResult.buildDefinition.type='shell'">
+                <tr class="b">
+                  <th><ww:text name="buildResult.buildDefinition.shell.label"/></th>
+                  <td><ww:property value="buildResult.buildDefinition.buildFile"/></td>
+                </tr>               
+              </ww:elseif> 
+              <ww:else>
+                <tr class="b">
+                  <th><ww:text name="buildResult.buildDefinition.maven.label"/></th>
+                  <td><ww:property value="buildResult.buildDefinition.buildFile"/></td>
+                </tr>               
+              </ww:else>                        
+              <tr class="b">
+                <th><ww:text name="buildResult.buildDefinition.goals"/></th>
+                <td><ww:property value="buildResult.buildDefinition.goals"/></td>
+              </tr>
+              <tr class="b">
+                <th><ww:text name="buildResult.buildDefinition.arguments"/></th>
+                <td><ww:property value="buildResult.buildDefinition.arguments"/></td>
+              </tr>
+              <tr class="b">
+                <th><ww:text name="buildResult.buildDefinition.buildFresh"/></th>
+                <td><ww:property value="buildResult.buildDefinition.buildFresh"/></td>
+              </tr>
+              <tr class="b">
+                <th><ww:text name="buildResult.buildDefinition.alwaysBuild"/></th>
+                <td><ww:property value="buildResult.buildDefinition.alwaysBuild"/></td>
+              </tr>
+              <tr class="b">
+                <th><ww:text name="buildResult.buildDefinition.defaultForProject"/></th>
+                <td><ww:property value="buildResult.buildDefinition.defaultForProject"/></td>
+              </tr>
+              <tr class="b">
+                <th><ww:text name="buildResult.buildDefinition.schedule"/></th>
+                <td><ww:property value="buildResult.buildDefinition.schedule.name"/></td>
+              </tr>
+              <ww:if test="buildResult.buildDefinition.profile != null">
+                <tr class="b">
+                  <th><ww:text name="buildResult.buildDefinition.profileName"/></th>
+                  <td><ww:property value="buildResult.buildDefinition.profile.name"/></td>
+                </tr>          
+              </ww:if>
+              <tr class="b">
+                <th><ww:text name="buildResult.buildDefinition.description"/></th>
+                <td><ww:property value="buildResult.buildDefinition.description"/></td>
+              </tr>              
+            </tbody>
+          </table> 
 
         <ww:if test="hasSurefireResults">
           <h4><ww:text name="buildResult.generatedReports.title"/></h4>
