@@ -121,6 +121,32 @@ $dep.groupId:$dep.artifactId:$dep.version
 #end
 #end
 #end
+
+#if ( $build.buildDefinition )
+****************************************************************************
+Build Defintion:
+****************************************************************************
+#if ( $build.buildDefinition.type == 'ant' )
+Ant build filename: $build.buildDefinition.buildFile   
+Goals: $build.buildDefinition.goals 
+#elseif ( $build.buildDefinition.type == 'shell' )
+shell: $build.buildDefinition.buildFile   
+#else
+POM filename: $build.buildDefinition.buildFile
+Goals: $build.buildDefinition.goals   
+#end
+Arguments: $build.buildDefinition.arguments
+Build Fresh: $build.buildDefinition.buildFresh
+Always Build: $build.buildDefinition.alwaysBuild
+Default Build Definition: $build.buildDefinition.defaultForProject
+Schedule: $build.buildDefinition.schedule.name
+#if ( $build.buildDefinition.profile ) 
+Profile Name: $build.buildDefinition.profile.name
+#end
+Description: $build.buildDefinition.description
+#end
+
+
 #if ( $build.testResult )
 ****************************************************************************
 Test Summary:
