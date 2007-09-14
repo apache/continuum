@@ -1,0 +1,29 @@
+<document>
+  <properties>
+    <title>Continuum :: Data Management</title>
+    <author email="olamy@apache.org">Olivier Lamy</author>
+  </properties>
+  <body>
+    <section name="Data Management">
+      <subsection name="Goal">
+        <p>When upgrading continuum, it could have some database model change, this tool can export datas from old versions and import this datas to a new model.</p>
+      </subsection>
+      <subsection name="Download The Tool">
+        <p>This is a standalone jar which is available in the central repo, you can download at the url http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/${version}/data-management-cli-${version}-app.jar</p>
+      </subsection>
+      <subsection name="Restoring datas from an old instance">
+        <p>You have to follow this steps 
+          <ul>
+            <li>stop continuum</li>
+            <li>export data : java -Xmx512m -jar data-management-cli-1.1-beta-2-app.jar -buildsJdbcUrl jdbc:derby:path_continuum_old_db -mode EXPORT</li>
+            <li>start continuum to create the new data model.</li>
+            <li>stop continuum</li>
+            <li>import data : java -Xmx512m -jar data-management-cli-1.1-beta-2-app.jar  -buildsJdbcUrl jdbc:derby:path_continuum_new_db -mode IMPORT</li>
+            <li>start continuum.</li>
+          </ul>
+        </p>
+        <p><b>NEXT_VAL values in SEQUENCE_TABLE must be checked before restarting continuum</b></p>
+      </subsection>
+    </section>
+  </body>
+</document>
