@@ -36,7 +36,8 @@
       <interceptor name="redbackAutoLogin" class="redbackAutoLoginInterceptor"/>
       <interceptor name="redbackPolicyEnforcement" class="redbackPolicyEnforcementInterceptor"/>
       <interceptor name="redbackEnvironmentChecker" class="redbackEnvironmentCheckInterceptor"/>
-
+      <interceptor name="plexusReleaseComponentInterceptor" class="plexusReleaseComponentInterceptor"/>
+      
       <interceptor-stack name="configuredContinuumStack">
         <interceptor-ref name="redbackEnvironmentChecker"/>
         <interceptor-ref name="redbackForceAdminUser"/>
@@ -52,6 +53,7 @@
         <interceptor-ref name="workflow">
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
+        <interceptor-ref name="plexusReleaseComponentInterceptor"/>
       </interceptor-stack>
 
       <interceptor-stack name="unconfiguredContinuumStack">
@@ -68,6 +70,7 @@
         <interceptor-ref name="workflow">
           <param name="excludeMethods">input,back,cancel,browse,edit</param>
         </interceptor-ref>
+        <interceptor-ref name="plexusReleaseComponentInterceptor"/>
       </interceptor-stack>
     </interceptors>
 
