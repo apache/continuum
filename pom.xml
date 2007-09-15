@@ -564,7 +564,7 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-xwork-integration</artifactId>
-        <version>1.0-alpha-6</version>
+        <version>1.0-alpha-7</version>
       </dependency>
       <!--
         Plexus Redback Dependencies
