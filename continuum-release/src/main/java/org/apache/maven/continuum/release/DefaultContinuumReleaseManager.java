@@ -23,6 +23,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.RollbackReleaseProjectTask;
+import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.config.ReleaseDescriptorStore;
@@ -63,6 +64,11 @@ public class DefaultContinuumReleaseManager
      */
     private TaskQueue rollbackReleaseQueue;
 
+    /**
+     * @plexus.requirement
+     */
+    private WorkingDirectoryService workingDirectoryService;
+    
     private Map listeners;
 
     /**
@@ -188,9 +194,10 @@ public class DefaultContinuumReleaseManager
                                                     Map devVersions )
     {
         ReleaseDescriptor descriptor = new ReleaseDescriptor();
+        String workingDirectory = workingDirectoryService.getWorkingDirectory( project ).getPath(); 
 
         //release properties from the project
-        descriptor.setWorkingDirectory( project.getWorkingDirectory() );
+        descriptor.setWorkingDirectory( workingDirectory );
         descriptor.setScmSourceUrl( project.getScmUrl() );
 
         //required properties
