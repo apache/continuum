@@ -20,7 +20,7 @@ package org.apache.maven.continuum.configuration;
  */
 
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
-import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
+import org.apache.maven.continuum.initialization.ContinuumInitializer;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
@@ -414,6 +414,6 @@ public class DefaultConfigurationService
     private Schedule getDefaultSchedule()
         throws ContinuumStoreException
     {
-        return store.getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME );
+        return store.getScheduleByName( ContinuumInitializer.DEFAULT_SCHEDULE_NAME );
     }
 }

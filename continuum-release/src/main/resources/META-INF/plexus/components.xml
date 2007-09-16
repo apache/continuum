@@ -43,6 +43,9 @@
           <role-hint>rollback-release</role-hint>
           <field-name>rollbackReleaseQueue</field-name>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
+        </requirement>
       </requirements>
     </component>
 

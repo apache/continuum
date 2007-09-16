@@ -20,6 +20,7 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
@@ -34,6 +35,11 @@ import org.codehaus.plexus.util.StringUtils;
 public class ReleaseRollbackAction
     extends ContinuumActionSupport
 {
+    /**
+     * @plexus.requirement
+     */
+    private WorkingDirectoryService workingDirectoryService;
+
     private int projectId;
 
     private String releaseId;
@@ -58,7 +64,7 @@ public class ReleaseRollbackAction
 
         Project project = getContinuum().getProject( projectId );
 
-        releaseManager.rollback( releaseId, project.getWorkingDirectory(), listener );
+        releaseManager.rollback( releaseId, workingDirectoryService.getWorkingDirectory( project ).getPath(), listener );
 
         //recurse until rollback is finished
         while ( listener.getState() != ContinuumReleaseManagerListener.FINISHED )

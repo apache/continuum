@@ -45,10 +45,6 @@ public class DefaultContinuumInitializer
     // Default values for the default schedule
     // ----------------------------------------------------------------------
 
-    //TODO: move this to an other place
-
-    public static final String DEFAULT_SCHEDULE_NAME = "DEFAULT_SCHEDULE";
-
     private SystemConfiguration systemConf;
 
     // ----------------------------------------------------------------------

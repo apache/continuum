@@ -27,6 +27,10 @@ public interface ContinuumInitializer
 {
     String ROLE = ContinuumInitializer.class.getName();
 
+    //TODO: move this to an other place
+
+    public static final String DEFAULT_SCHEDULE_NAME = "DEFAULT_SCHEDULE";
+
     void initialize()
         throws ContinuumInitializationException;
 

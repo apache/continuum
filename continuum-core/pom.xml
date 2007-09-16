@@ -53,6 +53,10 @@
       <artifactId>continuum-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-commons</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-command-line</artifactId>
       <version>1.0-alpha-2</version>

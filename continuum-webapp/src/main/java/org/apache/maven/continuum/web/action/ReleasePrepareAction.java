@@ -99,7 +99,8 @@ public class ReleasePrepareAction
         scmUsername = project.getScmUsername();
         scmPassword = project.getScmPassword();
         scmTag = project.getScmTag();
-
+        String workingDirectory = getContinuum().getWorkingDirectory(project.getId()).getPath();
+        
         String scmUrl = project.getScmUrl();
         if ( scmUrl.startsWith( SCM_SVN_PROTOCOL_PREFIX ) )
         {
@@ -114,9 +115,9 @@ public class ReleasePrepareAction
 
         prepareGoals = "clean integration-test";
 
-        getReleasePluginParameters( project.getWorkingDirectory(), "pom.xml" );
+        getReleasePluginParameters( workingDirectory, "pom.xml" );
 
-        processProject( project.getWorkingDirectory(), "pom.xml" );
+        processProject( workingDirectory, "pom.xml" );
 
         return SUCCESS;
     }
