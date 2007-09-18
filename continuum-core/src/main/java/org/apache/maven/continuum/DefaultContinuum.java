@@ -854,7 +854,7 @@ public class DefaultContinuum
     /**
      * fire off a build for all of the projects in a project group using their default builds.
      *
-     * @param projectGroupId the project group id
+     * @param projectGroupId    the project group id
      * @param buildDefinitionId the build definition id to use
      * @throws ContinuumException
      */
@@ -1108,7 +1108,7 @@ public class DefaultContinuum
             {
                 ContinuumBuildExecutor executor = executorManager.getBuildExecutor( project.getExecutorId() );
 
-                if ( executor.isBuilding( project ) )
+                if ( executor.isBuilding( project ) || project.getState() == ContinuumProjectState.UPDATING )
                 {
                     // project is building
                     getLogger().info( "Project '" + project.getName() + "' already being built." );

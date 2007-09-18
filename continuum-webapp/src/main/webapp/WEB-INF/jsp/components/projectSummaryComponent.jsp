@@ -58,7 +58,7 @@
       <c:set var="project" value="${pageScope.project}" scope="request"/>
 
       <%-- placed here for reusability --%>
-      <c:set var="projectIdle" value="${!project.inBuildingQueue and !project.inCheckoutQueue and ( ( ( project.state gt 0 ) and ( project.state lt 5 ) ) or project.state == 10 ) }" scope="request"/>
+      <c:set var="projectIdle" value="${!project.inBuildingQueue and ( ( ( project.state gt 0 ) and ( project.state lt 5 ) ) or project.state == 7 or project.state gt 8 ) }" scope="request"/>
 
       <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
         <ec:column alias="checkbox" title=" " style="width:5px" filterable="false" sortable="false" width="1%">
@@ -97,7 +97,7 @@
       <ec:column property="projectGroupName" title="summary.projectTable.group" width="30%"/> 
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <c:choose>
-          <c:when test="${project.inBuildingQueue or project.inCheckoutQueue}">
+          <c:when test="${project.inBuildingQueue}">
             <img src="<ww:url value='/images/inqueue.gif'/>" alt="In Queue" title="In Queue" border="0">
           </c:when>
           <c:otherwise>
