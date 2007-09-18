@@ -25,6 +25,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.TestResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.continuum.utils.shell.ExecutionResult;
 import org.apache.maven.continuum.utils.shell.ShellCommandHelper;
@@ -278,7 +279,7 @@ public abstract class AbstractBuildExecutor
 
     public boolean isBuilding( Project project )
     {
-        return shellCommandHelper.isRunning( project.getId() );
+        return project.getState() == ContinuumProjectState.BUILDING || shellCommandHelper.isRunning( project.getId() );
     }
 
     public void killProcess( Project project )
