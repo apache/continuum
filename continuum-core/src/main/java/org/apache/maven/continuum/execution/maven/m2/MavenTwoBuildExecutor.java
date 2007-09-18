@@ -92,10 +92,10 @@ public class MavenTwoBuildExecutor
      * @plexus.requirement
      */
     private MavenProjectHelper projectHelper;
-    
+
     /**
      * @plexus.requirement
-     */    
+     */
     private ConfigurationService configurationService;
 
     // ----------------------------------------------------------------------
@@ -340,11 +340,12 @@ public class MavenTwoBuildExecutor
             File xmlFile = new File( workingDir, testResultFiles[i] );
             try
             {
-            if (backupDirectory != null)
-            {
-                FileUtils.copyFileToDirectory( xmlFile, backupDirectory );
+                if ( backupDirectory != null )
+                {
+                    FileUtils.copyFileToDirectory( xmlFile, backupDirectory );
+                }
             }
-            } catch (IOException e)
+            catch ( IOException e )
             {
                 getLogger().info( "failed to backup unit report file " + xmlFile.getPath() );
             }
