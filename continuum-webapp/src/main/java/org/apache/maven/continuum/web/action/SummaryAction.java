@@ -29,6 +29,8 @@ import org.apache.maven.continuum.web.model.ProjectSummary;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +75,7 @@ public class SummaryAction
 
         Map buildResultsInSuccess = getContinuum().getBuildResultsInSuccess( projectGroupId );
 
-        summary = new ArrayList();
+        summary = new ArrayList<ProjectSummary>();
 
         groupSummary.setNumErrors( 0 );
         groupSummary.setNumFailures( 0 );
@@ -139,6 +141,16 @@ public class SummaryAction
 
             summary.add( model );
         }
+
+        Comparator<ProjectSummary> projectComparator = new Comparator<ProjectSummary>()
+        {
+            public int compare( ProjectSummary ps1, ProjectSummary ps2 )
+            {
+                return ps1.getName().compareTo( ps2.getName() );
+            }
+        };
+
+        Collections.sort( summary, projectComparator );
 
         return SUCCESS;
     }
