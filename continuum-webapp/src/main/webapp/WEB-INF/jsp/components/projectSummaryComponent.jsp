@@ -117,9 +117,16 @@
                   <ww:url id="cancelBuildProjectUrl" action="cancelBuild" namespace="/" includeParams="none">
                     <ww:param name="projectId" value="${project.id}"/>
                   </ww:url>
-                  <ww:a href="%{cancelBuildProjectUrl}">
-                    <img src="<ww:url value='/images/cancelbuild.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
-                  </ww:a>
+                  <c:choose>
+                    <c:when test="${project.state != 8}">
+                      <ww:a href="%{cancelBuildProjectUrl}">
+                        <img src="<ww:url value='/images/cancelbuild.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
+                      </ww:a>
+                    </c:when>
+                    <c:otherwise>
+                      <img src="<ww:url value='/images/cancelbuild_disabled.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
+                    </c:otherwise>
+                  </c:choose>
                 </c:otherwise>
               </c:choose>
             </redback:ifAuthorized>
