@@ -99,7 +99,12 @@ public class WorkingCopyAction
         String baseUrl = UrlHelper.buildUrl( "/workingCopy.action", ServletActionContext.getRequest(),
                                              ServletActionContext.getResponse(), params );
 
-        output = generator.generate( files, baseUrl, getContinuum().getWorkingDirectory( projectId ) );
+        String imagesBaseUrl = UrlHelper.buildUrl( "/images/", ServletActionContext.getRequest(),
+                                                   ServletActionContext.getResponse(), params );
+
+        imagesBaseUrl = imagesBaseUrl.substring( 0, imagesBaseUrl.indexOf( "/images/" ) + "/images/".length() );
+
+        output = generator.generate( files, baseUrl, imagesBaseUrl, getContinuum().getWorkingDirectory( projectId ) );
 
         if ( currentFile != null && currentFile != "" )
         {
