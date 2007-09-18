@@ -23,6 +23,10 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,7 +41,17 @@ public class WorkingCopyContentGenerator
 
     private String urlParamSeparator;
 
-    public String generate( Object item, String baseUrl, File basedir )
+    private static DecimalFormat decFormatter = new DecimalFormat( "###.##" );
+
+    private static final long KILO = 1024;
+
+    private static final long MEGA = 1024 * KILO;
+
+    private static final long GIGA = 1024 * MEGA;
+
+    private boolean odd = false;
+
+    public String generate( Object item, String baseUrl, String imagesBaseUrl, File basedir )
     {
         this.basedir = basedir;
         if ( baseUrl.indexOf( "?" ) > 0 )
@@ -53,29 +67,38 @@ public class WorkingCopyContentGenerator
 
         StringBuffer buf = new StringBuffer();
 
-        buf.append( "+&nbsp;<a href=\"" + baseUrl + urlParamSeparator + "userDirectory=/\">/</a><br />" );
+        buf.append( "<div class=\"eXtremeTable\" >" );
+        buf.append( "<table class=\"tableRegion\" width=\"100%\">\n" );
 
-        print( directoryEntries, "&nbsp;&nbsp;", baseUrl, buf );
+        buf.append( "<tr class=\"odd\"><td><img src=\"" + imagesBaseUrl +
+            "icon_arrowfolder1_sml.gif\">&nbsp;<a href=\"" + baseUrl + urlParamSeparator +
+            "userDirectory=/\">/</a><br /></td><td>&nbsp;</td><td>&nbsp;</td>" );
+
+        print( directoryEntries, "&nbsp;&nbsp;", baseUrl, imagesBaseUrl, buf );
+
+        buf.append( "</table>\n" );
+        buf.append( "</div>\n" );
 
         return buf.toString();
     }
 
-    private void print( List dirs, String indent, String baseUrl, StringBuffer buf )
+    private void print( List dirs, String indent, String baseUrl, String imagesBaseUrl, StringBuffer buf )
     {
         for ( Iterator i = dirs.iterator(); i.hasNext(); )
         {
             Object obj = i.next();
 
-            print( obj, indent, baseUrl, buf );
+            print( obj, indent, baseUrl, imagesBaseUrl, buf );
         }
     }
 
-    private void print( Object obj, String indent, String baseUrl, StringBuffer buf )
+    private void print( Object obj, String indent, String baseUrl, String imagesBaseUrl, StringBuffer buf )
     {
         if ( obj instanceof File )
         {
+            String cssClass = odd ? "odd" : "even";
+
             File f = (File) obj;
-            ;
 
             if ( !f.isDirectory() )
             {
@@ -98,8 +121,16 @@ public class WorkingCopyContentGenerator
 
                     userDirectory = StringUtils.replace( userDirectory, "\\", "/" );
 
-                    buf.append( indent + "&nbsp;&nbsp;&nbsp;<a href=\"" + baseUrl + urlParamSeparator +
-                        "userDirectory=" + userDirectory + "&file=" + fileName + "\">" + fileName + "</a><br />" );
+                    buf.append( "<tr class=\"" + cssClass + "\">" );
+
+                    buf.append( "<td width=\"98%\">" + indent + "&nbsp;&nbsp;<img src=\"" + imagesBaseUrl +
+                        "file.gif\">&nbsp;<a href=\"" + baseUrl + urlParamSeparator + "userDirectory=" + userDirectory +
+                        "&file=" + fileName + "\">" + fileName + "</a></td><td width=\"1%\">" +
+                        getReadableFileSize( f.length() ) + "</td><td width=\"1%\">" +
+                        getFormattedDate( f.lastModified() ) + "</td>\n" );
+                    buf.append( "</tr>\n" );
+
+                    odd = !odd;
                 }
             }
             else
@@ -113,14 +144,52 @@ public class WorkingCopyContentGenerator
 
                     userDirectory = StringUtils.replace( userDirectory, "\\", "/" );
 
-                    buf.append( indent + "+&nbsp;<a href=\"" + baseUrl + urlParamSeparator + "userDirectory=" +
-                        userDirectory + "\">" + directoryName + "</a><br />" );
+                    buf.append( "<tr class=\"" + cssClass + "\">" );
+
+                    buf.append( "<td width=\"98%\">" + indent + " <img src=\"" + imagesBaseUrl +
+                        "icon_arrowfolder1_sml.gif\"> &nbsp;<a href =\"" + baseUrl + urlParamSeparator +
+                        "userDirectory=" + userDirectory + "\">" + directoryName + "</a></td><td width=\"1%\">" +
+                        "&nbsp;" + "</td><td width=\"1%\">" + getFormattedDate( f.lastModified() ) + "</td>" );
+                    buf.append( "</tr>\n" );
+
+                    odd = !odd;
                 }
             }
         }
         else
         {
-            print( (List) obj, indent + "&nbsp;&nbsp;", baseUrl, buf );
+            print( (List) obj, indent + "&nbsp;&nbsp;", baseUrl, imagesBaseUrl, buf );
         }
+    }
+
+    private String getFormattedDate( long timestamp )
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis( timestamp );
+        Date date = cal.getTime();
+        String res = new SimpleDateFormat( "dd-MMM-yyyy, K:mm a, z" ).format( date );
+        return StringUtils.replace( res, " ", "&nbsp;" );
+    }
+
+    private static String getReadableFileSize( long fileSizeInBytes )
+    {
+        if ( fileSizeInBytes >= GIGA )
+        {
+            return decFormatter.format( fileSizeInBytes / GIGA ) + "&nbsp;Gb";
+        }
+        else if ( fileSizeInBytes >= MEGA )
+        {
+            return decFormatter.format( fileSizeInBytes / MEGA ) + "&nbsp;Mb";
+        }
+        else if ( fileSizeInBytes >= KILO )
+        {
+            return decFormatter.format( fileSizeInBytes / KILO ) + "&nbsp;Kb";
+        }
+        else if ( fileSizeInBytes > 0 && fileSizeInBytes < KILO )
+        {
+            return decFormatter.format( fileSizeInBytes ) + " b";
+        }
+
+        return "0 B";
     }
 }
