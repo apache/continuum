@@ -187,9 +187,9 @@ public class WorkingCopyContentGenerator
         }
         else if ( fileSizeInBytes > 0 && fileSizeInBytes < KILO )
         {
-            return decFormatter.format( fileSizeInBytes ) + " b";
+            return decFormatter.format( fileSizeInBytes ) + "&nbsp;b";
         }
 
-        return "0 B";
+        return "0&nbsp;b";
     }
 }
