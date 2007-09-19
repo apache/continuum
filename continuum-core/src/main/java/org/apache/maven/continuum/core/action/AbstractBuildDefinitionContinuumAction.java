@@ -107,9 +107,11 @@ public abstract class AbstractBuildDefinitionContinuumAction
                         if ( buildDefinition.getType() != null &&
                             buildDefinition.getType().equals( storedDefinition.getType() ) )
                         {
-                            storedDefinition.setDefaultForProject( false );
+                            //Required to get buil def from store because storedDefinition is readonly
+                            BuildDefinition def = store.getBuildDefinition( storedDefinition.getId() );
+                            def.setDefaultForProject( false );
 
-                            store.storeBuildDefinition( storedDefinition );
+                            store.storeBuildDefinition( def );
                         }
                     }
                 }
