@@ -964,7 +964,7 @@
           <type>String</type>
           <description>description of the buid defintion</description>
         </field>
-        <field jpox.column="builddefintion_type">
+        <field jpox.column="builddefinition_type">
           <name>type</name>
           <version>1.1.0+</version>
           <type>String</type>
@@ -1036,7 +1036,7 @@
             true if this definition is a continuum default build def (cannot be removed)
           </description>
         </field>
-        <field jpox.column="builddefintion_template_type">
+        <field jpox.column="builddefinition_template_type">
           <name>type</name>
           <version>1.1.0+</version>
           <type>String</type>
