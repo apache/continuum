@@ -638,6 +638,33 @@ public class DefaultContinuum
         return false;
     }
 
+    public boolean removeProjectFromBuildingQueue( int projectId )
+        throws ContinuumException
+    {
+        List queue;
+
+        try
+        {
+            queue = buildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumException( "Error while getting the build queue.", e );
+        }
+
+        for ( Iterator it = queue.iterator(); it.hasNext(); )
+        {
+            BuildProjectTask task = (BuildProjectTask) it.next();
+
+            if ( task != null && task.getProjectId() == projectId )
+            {
+                return buildQueue.remove( task );
+            }
+        }
+
+        return false;
+    }
+
     public boolean removeProjectFromCheckoutQueue( int projectId )
         throws ContinuumException
     {
@@ -677,6 +704,16 @@ public class DefaultContinuum
             Project project = store.getProjectWithBuilds( projectId );
 
             getLogger().info( "Remove project " + project.getName() + "(" + projectId + ")" );
+
+            if ( isInCheckoutQueue( projectId ) )
+            {
+                removeProjectFromCheckoutQueue( projectId );
+            }
+
+            if ( isInBuildingQueue( projectId ) )
+            {
+                removeProjectFromBuildingQueue( projectId );
+            }
 
             for ( Iterator i = project.getBuildResults().iterator(); i.hasNext(); )
             {
