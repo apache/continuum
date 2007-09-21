@@ -299,10 +299,10 @@ public class DataManagementCli
     private static String getLocalRepositoryURL( PlexusContainer container )
         throws ComponentLookupException, IOException
     {
-        File settingsFile = new File( System.getProperty( "user.home" ), "/.m2/settings.xml" );
+        File settingsFile = new File( System.getProperty( "user.home" ), ".m2/settings.xml" );
         if ( !settingsFile.exists() )
         {
-            return new File( System.getProperty( "user.home" ), "/.m2/repository" ).toURL().toString();
+            return new File( System.getProperty( "user.home" ), ".m2/repository" ).toURL().toString();
         }
         else
         {
