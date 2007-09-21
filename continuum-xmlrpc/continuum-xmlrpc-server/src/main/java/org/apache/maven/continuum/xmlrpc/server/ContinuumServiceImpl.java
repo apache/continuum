@@ -21,6 +21,7 @@ package org.apache.maven.continuum.xmlrpc.server;
 
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -432,7 +433,7 @@ public class ContinuumServiceImpl
         ProjectSummary ps = getProjectSummary( projectId );
         checkBuildProjectInGroupAuthorization( ps.getProjectGroup().getName() );
 
-        continuum.buildProject( projectId, buildDefintionId );
+        continuum.buildProjectWithBuildDefinition( projectId, buildDefintionId );
         return 0;
     }
 
@@ -554,7 +555,8 @@ public class ContinuumServiceImpl
     {
         checkAddProjectGroupAuthorization();
 
-        int projectId = continuum.addProject( populateProject( project ), "ant" );
+        int projectId =
+            continuum.addProject( populateProject( project ), ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
         return getProjectSummary( projectId );
     }
 
@@ -563,7 +565,8 @@ public class ContinuumServiceImpl
     {
         checkAddProjectGroupAuthorization();
 
-        int projectId = continuum.addProject( populateProject( project ), "ant", projectGroupId );
+        int projectId = continuum.addProject( populateProject( project ),
+                                              ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR, projectGroupId );
         return getProjectSummary( projectId );
     }
 
@@ -576,7 +579,8 @@ public class ContinuumServiceImpl
     {
         checkAddProjectGroupAuthorization();
 
-        int projectId = continuum.addProject( populateProject( project ), "shell" );
+        int projectId =
+            continuum.addProject( populateProject( project ), ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
         return getProjectSummary( projectId );
     }
 
@@ -585,7 +589,8 @@ public class ContinuumServiceImpl
     {
         checkAddProjectGroupAuthorization();
 
-        int projectId = continuum.addProject( populateProject( project ), "shell", projectGroupId );
+        int projectId = continuum.addProject( populateProject( project ),
+                                              ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR, projectGroupId );
         return getProjectSummary( projectId );
     }
 
