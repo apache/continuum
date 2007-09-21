@@ -21,6 +21,7 @@ package org.apache.maven.continuum;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -233,7 +234,7 @@ public abstract class AbstractContinuumTest
         Project project = new Project();
 
         makeProject( project, name, "1.0" );
-        project.setExecutorId( "shell" );
+        project.setExecutorId( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
 
         BuildDefinition def = new BuildDefinition();
         def.setBuildFile( script );
@@ -244,7 +245,7 @@ public abstract class AbstractContinuumTest
 
     public static Project makeProject( Project project, String name, String version )
     {
-        project.setExecutorId( "maven2" );
+        project.setExecutorId( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
         project.setName( name );
         project.setVersion( version );
 

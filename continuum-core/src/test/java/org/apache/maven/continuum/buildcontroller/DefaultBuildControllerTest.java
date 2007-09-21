@@ -20,6 +20,7 @@ package org.apache.maven.continuum.buildcontroller;
  */
 
 import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -92,7 +93,7 @@ public class DefaultBuildControllerTest
     private Project createProject( String artifactId )
     {
         Project project = new Project();
-        project.setExecutorId( "maven2" );
+        project.setExecutorId( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
         project.setName( artifactId );
         project.setGroupId( "org.apache.maven.testproject" );
         project.setArtifactId( artifactId );

@@ -20,6 +20,7 @@ package org.apache.maven.continuum.plugin;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -33,10 +34,6 @@ import org.apache.maven.plugin.MojoFailureException;
 public abstract class AbstractAddProject
     extends AbstractContinuumMojo
 {
-    public static final String ANT = "ant";
-
-    public static final String SHELL = "shell";
-
     /**
      * The project name.
      *
@@ -112,7 +109,7 @@ public abstract class AbstractAddProject
         {
             if ( projectGroupId != null && projectGroupId.length() > 0 )
             {
-                if ( ANT.equals( getProjectType() ) )
+                if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( getProjectType() ) )
                 {
                     getClient().addAntProject( project, Integer.parseInt( projectGroupId ) );
                 }
@@ -123,7 +120,7 @@ public abstract class AbstractAddProject
             }
             else
             {
-                if ( ANT.equals( getProjectType() ) )
+                if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( getProjectType() ) )
                 {
                     getClient().addAntProject( project );
                 }
