@@ -19,13 +19,12 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.scm.TestResult;
-
 import java.io.File;
 import java.util.List;
+
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.TestResult;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>

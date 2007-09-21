@@ -21,6 +21,8 @@ package org.apache.maven.continuum.core.action;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.maven.m2.SettingsConfigurationException;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
@@ -142,8 +144,13 @@ public class CreateProjectsFromMetadataAction
                 {
                     url = mungedURL.getURL();
 
-                    result = projectBuilder
-                        .buildProjectsFromMetadata( url, username, password, loadRecursiveProjects );
+                    BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( context );
+                    if ( buildDefinitionTemplate == null )
+                    {
+                        buildDefinitionTemplate = projectBuilder.getDefaultBuildDefinitionTemplate();
+                    }
+                    result = projectBuilder.buildProjectsFromMetadata( url, username, password, loadRecursiveProjects,
+                                                                       buildDefinitionTemplate );
 
                 }
                 else

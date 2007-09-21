@@ -81,6 +81,9 @@
                             <ww:else>
                               <ww:select label="%{getText('projectGroup.name.label')}" name="selectedProjectGroup" list="projectGroups" listKey="id" listValue="name"/>
                             </ww:else>
+                            <ww:select label="%{getText('add.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
+                                       list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
+                                       headerValue="%{getText('add.project.defaultBuildDefinition')}"/>                             
                           </tbody>
                         </table>
                         <input type="hidden" name="projectType" value="<ww:property value="projectType"/>">

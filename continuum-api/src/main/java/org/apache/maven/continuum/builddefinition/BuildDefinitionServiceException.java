@@ -1,6 +1,3 @@
-package org.apache.maven.continuum.initialization;
-
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,16 +16,48 @@ package org.apache.maven.continuum.initialization;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.continuum.builddefinition;
 
 /**
- * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
+ * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @since 15 sept. 07
  * @version $Id$
  */
-public interface ContinuumInitializer
+public class BuildDefinitionServiceException
+    extends Exception
 {
-    String ROLE = ContinuumInitializer.class.getName();
 
-    void initialize()
-        throws ContinuumInitializationException;
+    /**
+     * 
+     */
+    public BuildDefinitionServiceException()
+    {
+        // nothing
+    }
+
+    /**
+     * @param message
+     */
+    public BuildDefinitionServiceException( String message )
+    {
+        super( message );
+    }
+
+    /**
+     * @param cause
+     */
+    public BuildDefinitionServiceException( Throwable cause )
+    {
+        super( cause );
+    }
+
+    /**
+     * @param message
+     * @param cause
+     */
+    public BuildDefinitionServiceException( String message, Throwable cause )
+    {
+        super( message, cause );
+    }
 
 }

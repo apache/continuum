@@ -3,6 +3,11 @@
   <application>Continuum</application>
   <operations>
     <operation>
+      <id>continuum-manage-build-templates</id>
+      <name>continuum-manage-build-templates</name>
+      <description>Manage Continuum Build Definition Templates</description>
+    </operation>    
+    <operation>
       <id>continuum-manage-schedules</id>
       <name>continuum-manage-schedules</name>
       <description>Manage Continuum Scheduling</description>
@@ -161,6 +166,7 @@
         <childRole>continuum-manage-installations</childRole>
         <childRole>continuum-manage-profiles</childRole>
         <childRole>continuum-manage-schedules</childRole>
+        <childRole>continuum-manage-build-templates</childRole>
       </childRoles>
     </role>
     <role>
@@ -283,7 +289,22 @@
           <resource>global</resource>
         </permission>
       </permissions>		
-	  </role>       
+	  </role>
+    <role>
+      <id>continuum-manage-build-templates</id>
+      <name>continuum-manage-build-templates</name>
+      <assignable>true</assignable>
+      <permanent>true</permanent>
+      <permissions>
+        <permission>
+          <id>continuum-manage-build-templates</id>
+          <name>Manage Continuum Build Definition Templates</name>
+          <permanent>true</permanent>
+          <operation>continuum-manage-build-templates</operation>
+          <resource>global</resource>
+        </permission>  
+      </permissions>
+    </role>       
   </roles>
   <templates>
   	<template>

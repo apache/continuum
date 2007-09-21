@@ -19,10 +19,12 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-
 import java.io.File;
+
+import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 
 /**
  * Add a Maven 1 project to Continuum.
@@ -40,7 +42,8 @@ public class AddMavenOneProjectAction
                                                         boolean scmUseCache )
         throws ContinuumException
     {
-        return getContinuum().addMavenOneProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache );
+        return getContinuum().addMavenOneProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
+                                                  this.getBuildDefinitionTemplateId() );
     }
 
     /**

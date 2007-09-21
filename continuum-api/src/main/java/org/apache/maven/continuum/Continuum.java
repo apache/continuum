@@ -19,9 +19,11 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -256,6 +258,18 @@ public interface Continuum
         throws ContinuumException;
 
     /**
+     * Add a project to the list of building projects (ant, shell,...)
+     *
+     * @param project        the project to add
+     * @param executorId     the id of an {@link org.apache.maven.continuum.execution.ContinuumBuildExecutor}, eg. <code>ant</code> or <code>shell</code>
+     * @param projectGroupId
+     * @return id of the project
+     * @throws ContinuumException
+     */    
+    int addProject( Project project, String executorId, int projectGroupId, int buildDefintionTemplateId )
+        throws ContinuumException;    
+    
+    /**
      * Add a Maven 2 project to the list of projects.
      *
      * @param metadataUrl url of the pom.xml
@@ -331,6 +345,23 @@ public interface Continuum
         throws ContinuumException;
 
     /**
+     * Add a Maven 2 project to the list of projects.
+     *
+     * @param metadataUrl              url of the pom.xml
+     * @param projectGroupId           id of the project group to use
+     * @param checkProtocol            check if the protocol is allowed, use false if the pom is uploaded
+     * @param useCredentialsCache      whether to use cached scm account credentials or not
+     * @param loadRecursiveProjects    if multi modules project record all projects (if false only root project added)
+     * @param buildDefintionTemplateId buildDefintionTemplateId
+     * @return a holder with the projects, project groups and errors occurred during the project adding
+     * @throws ContinuumException
+     */
+    public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
+                                                              boolean checkProtocol, boolean useCredentialsCache,
+                                                              boolean loadRecursiveProjects, int buildDefintionTemplateId )
+        throws ContinuumException;    
+    
+    /**
      * Add a Maven 1 project to the list of projects.
      *
      * @param metadataUrl url of the project.xml
@@ -387,6 +418,10 @@ public interface Continuum
     ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId, boolean checkProtocol,
                                                        boolean useCredentialsCache )
         throws ContinuumException;
+    
+    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId, boolean checkProtocol,
+                                                       boolean useCredentialsCache, int buildDefintionTemplateId )
+        throws ContinuumException;    
 
     void updateProject( Project project )
         throws ContinuumException;
@@ -481,8 +516,9 @@ public interface Continuum
     BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
+
     BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
-        throws ContinuumException;
+        throws ContinuumException;    
 
     List getBuildDefinitionsForProject( int projectId )
         throws ContinuumException;
@@ -564,4 +600,6 @@ public interface Continuum
     InstallationService getInstallationService();
 
     ProfileService getProfileService();
+    
+    BuildDefinitionService getBuildDefinitionService();
 }

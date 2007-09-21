@@ -19,18 +19,20 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+
+import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /**
  * Add a Maven 2 project to Continuum.
@@ -105,13 +107,14 @@ public class AddMavenTwoProjectAction
         if ( result == null )
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
-                                                        !this.isNonRecursiveProject() );
+                                                        !this.isNonRecursiveProject(), this.getBuildDefinitionTemplateId() );
         }
 
         return result;
     }
-
+    
     public String doDefault()
+        throws BuildDefinitionServiceException
     {
         return super.doDefault();
     }

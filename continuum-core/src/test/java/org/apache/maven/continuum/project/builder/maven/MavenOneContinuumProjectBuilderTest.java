@@ -20,6 +20,10 @@ package org.apache.maven.continuum.project.builder.maven;
  */
 
 import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
@@ -40,9 +44,54 @@ public class MavenOneContinuumProjectBuilderTest
         ContinuumProjectBuilder projectBuilder =
             (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenOneContinuumProjectBuilder.ID );
 
-        ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata(
-            getTestFile( "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null, null );
+        
+        BuildDefinition bd = new BuildDefinition();
 
+        bd.setDefaultForProject( true );
+
+        bd.setGoals( "clean:clean jar:install" );
+
+        bd.setBuildFile( "project.xml" );
+
+        bd.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
+        
+        bd.setTemplate( true );
+        
+        BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
+        
+        BuildDefinitionTemplate bdt = new BuildDefinitionTemplate();
+        bdt.setName( "maven1" );
+        bd = service.addBuildDefinition( bd );
+        bdt = service.addBuildDefinitionTemplate( bdt );
+        bdt = service.addBuildDefinitionInTemplate( bdt, bd, false );
+        
+        ContinuumProjectBuildingResult result = projectBuilder
+            .buildProjectsFromMetadata( getTestFile( "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null,
+                                        null, false, bdt );
+
+
+        assertOnResult( result );
+        
+    }
+    
+    public void testBuildingAProjectFromMetadataWithACompleteMaven1PomWithDefaultBuildDef()
+        throws Exception
+    {
+        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE,
+                                                                                   MavenOneContinuumProjectBuilder.ID );
+
+        BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
+
+        ContinuumProjectBuildingResult result = projectBuilder
+            .buildProjectsFromMetadata( getTestFile( "src/test/resources/projects/maven-1.pom.xml" ).toURL(), null,
+                                        null, false, service.getDefaultMavenOneBuildDefinitionTemplate() );
+
+        assertOnResult( result );
+
+    }    
+    
+    protected void assertOnResult( ContinuumProjectBuildingResult result )
+    {
         assertNotNull( result.getWarnings() );
 
         assertNotNull( result.getProjects() );

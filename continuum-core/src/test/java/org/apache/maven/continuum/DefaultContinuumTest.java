@@ -19,7 +19,16 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
-import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
+import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -28,13 +37,6 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -204,7 +206,7 @@ public class DefaultContinuumTest
         nbd.setGoals( "clean" );
         nbd.setArguments( "" );
         nbd.setDefaultForProject( true );
-        nbd.setSchedule( getStore().getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME ) );
+        nbd.setSchedule( getStore().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME ) );
 
         continuum.addBuildDefinitionToProject( project.getId(), nbd );
 
@@ -359,5 +361,39 @@ public class DefaultContinuumTest
         assertTrue( "project missing from the checkout queue", continuum.removeProjectFromCheckoutQueue( project.getId() ) );
 
         assertFalse( "project still exist on the checkout queue", continuum.removeProjectFromCheckoutQueue( project.getId() ) );
+    }
+
+    public void testAddAntProjectWithdefaultBuildDef()
+        throws Exception
+    {
+        Continuum continuum = getContinuum();
+
+        Project project = new Project();
+        int projectId = continuum.addProject( project, ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
+        ProjectGroup defaultProjectGroup = continuum
+            .getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        assertEquals( 1, continuum.getProjectGroupWithProjects( defaultProjectGroup.getId() ).getProjects().size() );
+        project = continuum.getProjectWithAllDetails( projectId );
+        assertNotNull( project );
+        
+        BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
+        assertEquals( 4, service.getAllBuildDefinitionTemplate().size() );
+        assertEquals( 5, service.getAllBuildDefinitions().size() );
+        
+        BuildDefinition buildDef = (BuildDefinition) service.getDefaultAntBuildDefinitionTemplate()
+            .getBuildDefinitions().get( 0 );
+        buildDef = service.cloneBuildDefinition( buildDef );
+        buildDef.setTemplate( false );
+        continuum.addBuildDefinitionToProject( project.getId(), buildDef );
+        project = continuum.getProjectWithAllDetails( project.getId() );
+        assertEquals( 2, project.getBuildDefinitions().size() );
+        assertEquals( 4, service.getAllBuildDefinitionTemplate().size() );
+        assertEquals( 6, service.getAllBuildDefinitions().size() );
+    }
+    
+    private Continuum getContinuum()
+        throws Exception
+    {
+        return (Continuum) lookup( Continuum.ROLE );
     }
 }

@@ -21,6 +21,9 @@ package org.apache.maven.continuum.project.builder;
 
 import java.net.URL;
 
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -34,5 +37,12 @@ public interface ContinuumProjectBuilder
 
     ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                               boolean recursiveProjects )
+        throws ContinuumProjectBuilderException;
+
+    ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                              boolean recursiveProjects, BuildDefinitionTemplate buildDefinitionTemplate )
+        throws ContinuumProjectBuilderException;
+
+    BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
         throws ContinuumProjectBuilderException;
 }

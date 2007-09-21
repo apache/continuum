@@ -20,6 +20,7 @@ package org.apache.maven.continuum.initialization;
  */
 
 import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStore;
 
@@ -36,6 +37,7 @@ public class DefaultContinuumInitializerTest
         throws Exception
     {
         super.setUp();
+        getContinuumStore().eraseDatabase();
         ContinuumInitializer continuumInitializer =
             (ContinuumInitializer) lookup( ContinuumInitializer.ROLE, "default" );
         continuumInitializer.initialize();
@@ -50,7 +52,7 @@ public class DefaultContinuumInitializerTest
     public void testDefaultSchedule()
         throws Exception
     {
-        Schedule schedule = getContinuumStore().getScheduleByName( DefaultContinuumInitializer.DEFAULT_SCHEDULE_NAME );
+        Schedule schedule = getContinuumStore().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
         assertNotNull( schedule );
     }
 
