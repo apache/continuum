@@ -19,15 +19,15 @@ package org.apache.maven.continuum.wagon;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Map;
+
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
-import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-
-import java.io.File;
-import java.util.Map;
 
 /**
  * Mock class for testing WagonContinuumNotifier's call to ConfigurationService.getBuildOutputFile()
@@ -192,51 +192,11 @@ public class MockConfigurationService
     {
     }
 
-    public BuildDefinition getDefaultAntBuildDefinition()
+    public Schedule getDefaultSchedule()
         throws ContinuumStoreException
     {
+        // TODO Auto-generated method stub
         return null;
     }
 
-    public String getDefaultAntGoals()
-    {
-        return null;
-    }
-
-    public String getDefaultAntArguments()
-    {
-        return null;
-    }
-
-    public BuildDefinition getDefaultMavenOneBuildDefinition()
-        throws ContinuumStoreException
-    {
-        return null;
-    }
-
-    public String getDefaultMavenOneGoals()
-    {
-        return null;
-    }
-
-    public String getDefaultMavenOneArguments()
-    {
-        return null;
-    }
-
-    public String getDefaultMavenTwoArguments()
-    {
-        return null;
-    }
-
-    public String getDefaultMavenTwoGoals()
-    {
-        return null;
-    }
-
-    public BuildDefinition getDefaultMavenTwoBuildDefinition()
-        throws ContinuumStoreException
-    {
-        return null;
-    }
 }

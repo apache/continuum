@@ -601,8 +601,61 @@
     <action name="deleteInstallation" class="installation" method="delete">
       <result name="input">/WEB-INF/jsp/admin/installationsList.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
+    </action>  
+    
+    <!--
+       Build Definitions Templates actions 
+    -->  
+    <action name="buildDefinitionTemplates" class="buildDefinitionTemplates" method="summary">
+      <result name="success">/WEB-INF/jsp/admin/buildDefinitionTemplateSummary.jsp</result>
+    </action> 
+    
+    <action name="buildDefinitionTemplate" class="buildDefinitionTemplates" method="input">
+      <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+    </action>    
+    
+    <action name="editBuildDefinitionTemplate" class="buildDefinitionTemplates" method="edit">
+      <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+    </action>                 
+
+    <action name="deleteDefinitionTemplate" class="buildDefinitionTemplates" method="delete">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildDefinitionTemplates!summary.action</param>
+      </result>
+    </action>    
+    
+    <action name="saveBuildDefinitionTemplate" class="buildDefinitionTemplates" method="save">
+      <result name="success" type="redirect-action">
+        <param name="actionName">editBuildDefinitionTemplate!edit.action</param>
+        <param name="buildDefinitionTemplate.id">${buildDefinitionTemplate.id}</param>
+      </result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+    </action>    
+    
+    <action name="editBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="editBuildDefinition">
+      <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+    </action>    
+    
+    <action name="saveBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="saveBuildDefinition">
+      <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
     </action>             
-      
+
+    <action name="buildDefinitionAsTemplate" class="buildDefinitionTemplates" method="saveBuildDefinition">
+      <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+    </action>    
+              
+    <action name="deleteBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="deleteBuildDefinition">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildDefinitionTemplates!summary.action</param>
+      </result>
+    </action>    
+    
+    
   </package>
 
   <package name="component" extends="default">

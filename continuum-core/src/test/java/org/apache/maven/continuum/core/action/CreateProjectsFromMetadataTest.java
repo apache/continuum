@@ -19,6 +19,12 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.manager.ContinuumProjectBuilderManager;
@@ -28,9 +34,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CreateProjectsFromMetadataTest
     extends MockObjectTestCase
@@ -57,10 +60,33 @@ public class CreateProjectsFromMetadataTest
         projectBuilder.expects( once() ).method( "buildProjectsFromMetadata" )
             .will( returnValue( new ContinuumProjectBuildingResult() ) );
 
-        mavenSettingsBuilderMock.expects( once() ).method( "buildSettings" )
-            .will( returnValue( new Settings() ) );
+        projectBuilder.expects( once() ).method( "getDefaultBuildDefinitionTemplate" )
+            .will( returnValue( getDefaultBuildDefinitionTemplate() ) );
+
+        mavenSettingsBuilderMock.expects( once() ).method( "buildSettings" ).will( returnValue( new Settings() ) );
+        
     }
 
+    private BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
+    throws Exception
+    {
+        BuildDefinition bd = new BuildDefinition();
+
+        bd.setDefaultForProject( true );
+
+        bd.setGoals( "clean install" );
+
+        bd.setArguments( "-B" );
+
+        bd.setBuildFile( "pom.xml" );
+
+        bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+        
+        BuildDefinitionTemplate bdt = new BuildDefinitionTemplate();
+        bdt.addBuildDefinition( bd );
+        return bdt;
+    }
+    
     public void testExecuteWithNonRecursiveMode()
         throws Exception
     {
@@ -70,6 +96,7 @@ public class CreateProjectsFromMetadataTest
         context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
         context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, new Boolean( true ) );
 
+        
         action.execute( context );
 
         ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context

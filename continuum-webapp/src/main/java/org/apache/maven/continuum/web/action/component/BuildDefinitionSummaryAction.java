@@ -19,17 +19,17 @@ package org.apache.maven.continuum.web.action.component;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.apache.maven.continuum.web.action.AbstractBuildDefinitionAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.BuildDefinitionSummary;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * BuildDefinitionSummaryAction:
@@ -39,7 +39,7 @@ import java.util.List;
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildDefinitionSummary"
  */
 public class BuildDefinitionSummaryAction
-    extends ContinuumActionSupport
+    extends AbstractBuildDefinitionAction
 {
     private int projectGroupId;
 
@@ -182,28 +182,7 @@ public class BuildDefinitionSummaryAction
         return summaryList;
     }
 
-    protected BuildDefinitionSummary generateBuildDefinitionSummary( BuildDefinition bd )
-    {
-        BuildDefinitionSummary bds = new BuildDefinitionSummary();
-
-        bds.setGoals( bd.getGoals() );
-        bds.setId( bd.getId() );
-        bds.setArguments( bd.getArguments() );
-        bds.setBuildFile( bd.getBuildFile() );
-        bds.setScheduleId( bd.getSchedule().getId() );
-        bds.setScheduleName( bd.getSchedule().getName() );
-        bds.setIsDefault( bd.isDefaultForProject() );
-        bds.setIsBuildFresh( bd.isBuildFresh() );
-        if ( bd.getProfile() != null )
-        {
-            bds.setProfileName( bd.getProfile().getName() );
-            bds.setProfileId( bd.getProfile().getId() );
-        }
-        bds.setDescription( bd.getDescription() );
-        bds.setType( bd.getType() );
-        bds.setAlwaysBuild( bd.isAlwaysBuild() );
-        return bds;
-    }
+    
 
     public int getProjectId()
     {

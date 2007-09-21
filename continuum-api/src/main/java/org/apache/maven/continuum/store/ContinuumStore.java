@@ -19,7 +19,12 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -28,10 +33,6 @@ import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -99,6 +100,60 @@ public interface ContinuumStore
 
     BuildDefinition storeBuildDefinition( BuildDefinition buildDefinition )
         throws ContinuumStoreException;
+    
+    BuildDefinition addBuildDefinition( BuildDefinition buildDefinition )
+        throws ContinuumStoreException;
+    
+    List<BuildDefinition> getAllBuildDefinitions()
+        throws ContinuumStoreException;
+    
+    List<BuildDefinition> getAllTemplates()
+        throws ContinuumStoreException;
+
+    // ------------------------------------------------------
+    //  BuildDefinitionTemplate
+    // ------------------------------------------------------
+
+    List<BuildDefinitionTemplate> getAllBuildDefinitionTemplate()
+        throws ContinuumStoreException;
+
+    BuildDefinitionTemplate getBuildDefinitionTemplate( int id )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
+
+    BuildDefinitionTemplate addBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
+        throws ContinuumStoreException;
+
+    BuildDefinitionTemplate updateBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
+        throws ContinuumStoreException;
+
+    void removeBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
+        throws ContinuumStoreException;
+
+    public List<BuildDefinitionTemplate> getBuildDefinitionTemplatesWithType( String type )
+        throws ContinuumStoreException;    
+    
+    public List<BuildDefinitionTemplate> getContinuumBuildDefinitionTemplates()
+        throws ContinuumStoreException;    
+
+    /**
+     * @param type
+     * @return BuildDefinitionTemplate null if not found
+     * @throws ContinuumStoreException
+     */
+    BuildDefinitionTemplate getContinuumBuildDefinitionTemplateWithType( String type )
+        throws ContinuumStoreException;
+
+    /**
+     * the list returned will contains only continuumDefaults {@link BuildDefinition}
+     * @return List<BuildDefinitionTemplate> 
+     * @throws ContinuumStoreException
+     */
+    List<BuildDefinitionTemplate> getContinuumDefaultdDefinitions()
+        throws ContinuumStoreException;
+
+    // ------------------------------------------------------
+    //  Project Group
+    // ------------------------------------------------------
 
     ProjectGroup addProjectGroup( ProjectGroup group );
 

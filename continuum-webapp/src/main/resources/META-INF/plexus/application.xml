@@ -91,6 +91,7 @@
     </component>
 
     <!-- uncomment the component the replace here to override default-goals and default-arguments 
+      TODO remove due to CONTINUUM-1436
     <component>
       <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
       <implementation>org.apache.maven.continuum.configuration.DefaultConfigurationService</implementation>

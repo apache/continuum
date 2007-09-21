@@ -19,18 +19,15 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
-import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
-import org.apache.maven.continuum.initialization.ContinuumInitializer;
-import org.apache.maven.continuum.model.project.BuildDefinition;
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -49,35 +46,6 @@ public class DefaultConfigurationService
      */
     private File applicationHome;
 
-    /**
-     * @plexus.configuration default-value=""
-     */
-    private String defaultAntGoals;
-
-    /**
-     * @plexus.configuration default-value=""
-     */
-    private String defaultAntArguments;
-
-    /**
-     * @plexus.configuration default-value="clean:clean jar:install"
-     */
-    private String defaultM1Goals;
-
-    /**
-     * @plexus.configuration default-value=""
-     */
-    private String defaultM1Arguments;
-
-    /**
-     * @plexus.configuration default-value="clean install"
-     */
-    private String defaultM2Goals;
-
-    /**
-     * @plexus.configuration default-value="--batch-mode --non-recursive"
-     */
-    private String defaultM2Arguments;
 
     /**
      * @plexus.requirement role-hint="jdo"
@@ -91,10 +59,15 @@ public class DefaultConfigurationService
     private SystemConfiguration systemConf;
 
     private boolean loaded = false;
+    
 
+    
+    
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
+
+
 
     public File getApplicationHome()
     {
@@ -320,100 +293,49 @@ public class DefaultConfigurationService
             throw new ConfigurationStoringException( "Error writting configuration to database.", e );
         }
     }
-
-    public BuildDefinition getDefaultAntBuildDefinition()
-        throws ContinuumStoreException
+    
+    public Schedule getDefaultSchedule()
+        throws ContinuumStoreException, ConfigurationLoadingException
     {
-        BuildDefinition bd = new BuildDefinition();
+        // Schedule
+        Schedule defaultSchedule = store.getScheduleByName( DEFAULT_SCHEDULE_NAME );
 
-        bd.setDefaultForProject( true );
+        if ( defaultSchedule == null )
+        {
+            defaultSchedule = createDefaultSchedule();
 
-        bd.setGoals( getDefaultAntGoals() );
+            defaultSchedule = store.addSchedule( defaultSchedule );
+        }
 
-        bd.setArguments( getDefaultAntArguments() );
+        return defaultSchedule;
+    }
 
-        bd.setBuildFile( "build.xml" );
+    // ----------------------------------------------------------------------
+    //
+    // ----------------------------------------------------------------------
 
-        bd.setSchedule( getDefaultSchedule() );
-
-        bd.setType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
+    private Schedule createDefaultSchedule()
+        throws ConfigurationLoadingException
+    {
         
-        return bd;
-    }
-
-    public String getDefaultAntGoals()
-    {
-        return defaultAntGoals;
-    }
-
-    public String getDefaultAntArguments()
-    {
-        return defaultAntArguments;
-    }
-
-    public String getDefaultMavenOneGoals()
-    {
-        return defaultM1Goals;
-    }
-
-    public String getDefaultMavenOneArguments()
-    {
-        return defaultM1Arguments;
-    }
-
-    public BuildDefinition getDefaultMavenOneBuildDefinition()
-        throws ContinuumStoreException
-    {
-        BuildDefinition bd = new BuildDefinition();
-
-        bd.setDefaultForProject( true );
-
-        bd.setArguments( getDefaultMavenOneArguments() );
-
-        bd.setGoals( getDefaultMavenOneGoals() );
-
-        bd.setBuildFile( "project.xml" );
-
-        bd.setSchedule( getDefaultSchedule() );
-
-        bd.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
+        getLogger().info( "create Default Schedule" );
         
-        return bd;
-    }
+        Schedule schedule = new Schedule();
 
-    public String getDefaultMavenTwoArguments()
-    {
-        return this.defaultM2Arguments;
-    }
+        schedule.setName( DEFAULT_SCHEDULE_NAME );
 
-    public String getDefaultMavenTwoGoals()
-    {
-        return this.defaultM2Goals;
-    }
+        if ( systemConf == null )
+        {
+            this.load();
+        }
 
-    public BuildDefinition getDefaultMavenTwoBuildDefinition()
-        throws ContinuumStoreException
-    {
-        BuildDefinition bd = new BuildDefinition();
+        schedule.setDescription( systemConf.getDefaultScheduleDescription() );
 
-        bd.setDefaultForProject( true );
+        schedule.setCronExpression( systemConf.getDefaultScheduleCronExpression() );
 
-        bd.setGoals( getDefaultMavenTwoGoals() );
+        schedule.setActive( true );
 
-        bd.setArguments( getDefaultMavenTwoArguments() );
+        return schedule;
+    }    
 
-        bd.setBuildFile( "pom.xml" );
-
-        bd.setSchedule( getDefaultSchedule() );
-
-        bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
-        
-        return bd;
-    }
-
-    private Schedule getDefaultSchedule()
-        throws ContinuumStoreException
-    {
-        return store.getScheduleByName( ContinuumInitializer.DEFAULT_SCHEDULE_NAME );
-    }
 }

@@ -27,8 +27,10 @@ import java.util.List;
 
 import javax.jdo.JDODetachedFieldAccessException;
 
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
@@ -38,7 +40,6 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
-import org.codehaus.plexus.logging.LoggerManager;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -1059,7 +1060,42 @@ public class ContinuumStoreTest
         // TODO: test the def was physically deleted
         // TODO: test the schedule/profile was NOT physically deleted
     }
+    
+    public void testgetTemplatesBuildDefinitions()
+        throws Exception
+    {
 
+        int all = store.getAllBuildDefinitions().size();
+        BuildDefinition buildDefinition = new BuildDefinition();
+        buildDefinition.setBuildFile( "pom.xml" );
+        buildDefinition.setGoals( "clean" );
+        buildDefinition.setTemplate( true );
+        BuildDefinitionTemplate template = new BuildDefinitionTemplate();
+        template.setName( "test" );
+        template.setContinuumDefault( true );
+        template.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+        template = store.addBuildDefinitionTemplate( template );
+        buildDefinition = store.addBuildDefinition( buildDefinition );
+
+        template.addBuildDefinition( buildDefinition );
+        
+        template = store.updateBuildDefinitionTemplate( template );
+
+        assertEquals( "test", template.getName() );
+        assertTrue( template.isContinuumDefault() );
+        assertEquals( 1, template.getBuildDefinitions().size() );
+        assertEquals( all + 1, store.getAllBuildDefinitions().size() );
+        assertEquals( 1, store.getAllBuildDefinitionTemplate().size() );
+
+        template = store
+            .getContinuumBuildDefinitionTemplateWithType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+
+        assertNotNull( template );
+        assertEquals( 1, template.getBuildDefinitions().size() );
+        
+        assertEquals( 1, store.getAllBuildDefinitionTemplate().size() );
+    }
+    
     // ----------------------------------------------------------------------
     //  HELPER METHODS
     // ----------------------------------------------------------------------

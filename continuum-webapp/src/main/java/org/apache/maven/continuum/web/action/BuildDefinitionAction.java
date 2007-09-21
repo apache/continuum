@@ -20,6 +20,8 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -88,6 +90,11 @@ public class BuildDefinitionAction
 
     private boolean alwaysBuild;
 
+    /**
+     * @plexus.requirement
+     */    
+    private BuildDefinitionService buildDefinitionService;    
+    
     public void prepare()
         throws Exception
     {
@@ -126,7 +133,7 @@ public class BuildDefinitionAction
      * @return action result
      */
     public String input()
-        throws ContinuumException, ContinuumStoreException
+        throws ContinuumException, ContinuumStoreException, BuildDefinitionServiceException
     {
         try
         {
@@ -202,19 +209,22 @@ public class BuildDefinitionAction
                 {
                     if ( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( executor ) )
                     {
-                        buildFile =
-                            getContinuum().getConfiguration().getDefaultMavenTwoBuildDefinition().getBuildFile();
+                        buildFile = ( (BuildDefinition) buildDefinitionService
+                            .getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions().get( 0 ) )
+                            .getBuildFile();
                         buildDefinitionType = ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR;
                     }
                     else if ( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR.equals( executor ) )
                     {
-                        buildFile =
-                            getContinuum().getConfiguration().getDefaultMavenOneBuildDefinition().getBuildFile();
+                        buildFile = ( (BuildDefinition) buildDefinitionService
+                            .getDefaultMavenOneBuildDefinitionTemplate().getBuildDefinitions().get( 0 ) )
+                            .getBuildFile();
                         buildDefinitionType = ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR;
                     }
                     else if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( executor ) )
                     {
-                        buildFile = getContinuum().getConfiguration().getDefaultAntBuildDefinition().getBuildFile();
+                        buildFile = ( (BuildDefinition) buildDefinitionService.getDefaultAntBuildDefinitionTemplate()
+                            .getBuildDefinitions().get( 0 ) ).getBuildFile();
                         buildDefinitionType = ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR;
                     }
                     else

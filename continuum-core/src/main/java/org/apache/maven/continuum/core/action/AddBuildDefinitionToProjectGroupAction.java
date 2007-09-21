@@ -20,8 +20,10 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -39,17 +41,32 @@ public class AddBuildDefinitionToProjectGroupAction
     public void execute( Map map )
         throws Exception
     {
-        BuildDefinition buildDefinition = getBuildDefinition( map );
         int projectGroupId = getProjectGroupId( map );
-
         ProjectGroup projectGroup = store.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
+        BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( map );
+        if ( buildDefinitionTemplate != null )
+        {
+            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator(); iterator
+                .hasNext(); )
+            {
+                BuildDefinition buildDefinition = iterator.next();
+                resolveDefaultBuildDefinitionsForProjectGroup( buildDefinition, projectGroup );
 
-        resolveDefaultBuildDefinitionsForProjectGroup( buildDefinition, projectGroup );
+                projectGroup.addBuildDefinition( buildDefinition );
 
-        projectGroup.addBuildDefinition( buildDefinition );
+                store.updateProjectGroup( projectGroup );
+            }
+        }
+        else
+        {
+            BuildDefinition buildDefinition = getBuildDefinition( map );
 
-        store.updateProjectGroup( projectGroup );
+            resolveDefaultBuildDefinitionsForProjectGroup( buildDefinition, projectGroup );
 
-        map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
+            projectGroup.addBuildDefinition( buildDefinition );
+
+            store.updateProjectGroup( projectGroup );
+        }
+        //map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
     }
 }

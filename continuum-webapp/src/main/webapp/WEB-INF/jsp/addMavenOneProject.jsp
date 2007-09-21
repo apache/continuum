@@ -75,6 +75,9 @@
                             <ww:else>
                               <ww:select label="%{getText('add.m1.project.projectGroup')}" name="selectedProjectGroup" list="projectGroups" listKey="id" listValue="name"/>
                             </ww:else>
+                            <ww:select label="%{getText('add.m1.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
+                                       list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
+                                       headerValue="%{getText('add.m1.project.defaultBuildDefinition')}"/>                            
                           </tbody>
                         </table>
                         <div class="functnbar3">

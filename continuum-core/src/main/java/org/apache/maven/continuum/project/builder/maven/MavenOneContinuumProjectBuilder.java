@@ -19,25 +19,25 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
-import org.apache.maven.continuum.configuration.ConfigurationService;
+import java.io.File;
+import java.net.URL;
+import java.util.Iterator;
+
+import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelper;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneMetadataHelperException;
-import org.apache.maven.continuum.initialization.DefaultContinuumInitializer;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.project.builder.AbstractContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.net.URL;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -50,11 +50,11 @@ public class MavenOneContinuumProjectBuilder
     implements ContinuumProjectBuilder
 {
     public static final String ID = "maven-one-builder";
-
+   
     /**
      * @plexus.requirement
-     */
-    private ConfigurationService configurationService;
+     */    
+    private BuildDefinitionService buildDefinitionService;    
 
     /**
      * @plexus.requirement
@@ -80,6 +80,22 @@ public class MavenOneContinuumProjectBuilder
                                                                      boolean recursiveProjects )
         throws ContinuumProjectBuilderException
     {
+        try
+        {
+            return buildProjectsFromMetadata( url, username, password, recursiveProjects, buildDefinitionService
+                .getDefaultMavenOneBuildDefinitionTemplate() );
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumProjectBuilderException( e.getMessage(), e );
+        }
+    }
+
+    public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                                     boolean recursiveProjects,
+                                                                     BuildDefinitionTemplate buildDefinitionTemplate )
+        throws ContinuumProjectBuilderException
+    {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
 
         File pomFile;
@@ -101,11 +117,11 @@ public class MavenOneContinuumProjectBuilder
             {
                 return result;
             }
-
-            BuildDefinition bd = configurationService.getDefaultMavenOneBuildDefinition();
-
-            project.addBuildDefinition( bd );
-
+            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator(); iterator
+                .hasNext(); )
+            {
+                project.addBuildDefinition( iterator.next() );
+            }
             result.addProject( project, MavenOneBuildExecutor.ID );
         }
         catch ( MavenOneMetadataHelperException e )
@@ -114,10 +130,7 @@ public class MavenOneContinuumProjectBuilder
 
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
-        catch ( ContinuumStoreException e )
-        {
-            throw new ContinuumProjectBuilderException( e.getMessage(), e );
-        }
+        
 
         ProjectGroup projectGroup = new ProjectGroup();
 
@@ -154,5 +167,18 @@ public class MavenOneContinuumProjectBuilder
         result.addProjectGroup( projectGroup );
 
         return result;
+    }
+
+    public BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
+        throws ContinuumProjectBuilderException
+    {
+        try
+        {
+            return buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate();
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumProjectBuilderException( e.getMessage(), e );
+        }
     }
 }

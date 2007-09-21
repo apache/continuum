@@ -19,9 +19,15 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import com.opensymphony.xwork.Validateable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.system.Profile;
@@ -30,10 +36,7 @@ import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import com.opensymphony.xwork.Validateable;
 
 /**
  * @author Nick Gonzalez
@@ -77,15 +80,19 @@ public class AddProjectAction
     private ProfileService profileService;
 
     private int projectGroupId;
+    
+    private int buildDefintionTemplateId;
+    
+    private List<BuildDefinitionTemplate> buildDefinitionTemplates;
 
     public void validate()
     {
         boolean projectNameAlreadyExist = false;
-        
+
         clearErrorsAndMessages();
         try
         {
-            Iterator<Project> projects = getContinuum().getProjects().iterator(); 
+            Iterator<Project> projects = getContinuum().getProjects().iterator();
             while ( projects.hasNext() )
             {
                 Project project = projects.next();
@@ -105,6 +112,10 @@ public class AddProjectAction
             }
         }
         catch ( ContinuumException e )
+        {
+            getLogger().error( e.getMessage(), e );
+        }
+        catch ( BuildDefinitionServiceException e )
         {
             getLogger().error( e.getMessage(), e );
         }
@@ -150,7 +161,7 @@ public class AddProjectAction
 
         project.setExecutorId( projectType );
         
-        getContinuum().addProject( project, projectType, selectedProjectGroup );
+        getContinuum().addProject( project, projectType, selectedProjectGroup, this.getBuildDefintionTemplateId() );
 
         if ( this.getSelectedProjectGroup() > 0 )
         {
@@ -162,7 +173,7 @@ public class AddProjectAction
     }
 
     public String input()
-        throws ContinuumException, ProfileException
+        throws ContinuumException, ProfileException, BuildDefinitionServiceException
     {
         try
         {
@@ -199,6 +210,7 @@ public class AddProjectAction
                 .getId();
         }
         this.profiles = profileService.getAllProfiles();
+        buildDefinitionTemplates = getContinuum().getBuildDefinitionService().getAllBuildDefinitionTemplate();
         return SUCCESS;
     }
 
@@ -355,5 +367,25 @@ public class AddProjectAction
     public void setProjectGroupId( int projectGroupId )
     {
         this.projectGroupId = projectGroupId;
+    }
+
+    public int getBuildDefintionTemplateId()
+    {
+        return buildDefintionTemplateId;
+    }
+
+    public void setBuildDefintionTemplateId( int buildDefintionTemplateId )
+    {
+        this.buildDefintionTemplateId = buildDefintionTemplateId;
+    }
+
+    public List<BuildDefinitionTemplate> getBuildDefinitionTemplates()
+    {
+        return buildDefinitionTemplates;
+    }
+
+    public void setBuildDefinitionTemplates( List<BuildDefinitionTemplate> buildDefinitionTemplates )
+    {
+        this.buildDefinitionTemplates = buildDefinitionTemplates;
     }
 }

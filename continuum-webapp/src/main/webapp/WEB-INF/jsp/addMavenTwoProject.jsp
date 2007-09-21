@@ -77,6 +77,9 @@
                                          list="projectGroups" listKey="id" listValue="name"/>
                             </ww:else>
                             <ww:checkbox label="%{getText('add.m2.project.nonRecursiveProject')}" name="nonRecursiveProject" />
+                            <ww:select label="%{getText('add.m2.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
+                                       list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
+                                       headerValue="%{getText('add.m2.project.defaultBuildDefinition')}"/> 
                           </tbody>
                         </table>
                         <div class="functnbar3">

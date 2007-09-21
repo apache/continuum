@@ -22,6 +22,8 @@ package org.apache.maven.continuum;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
@@ -36,6 +38,7 @@ import org.apache.maven.continuum.initialization.ContinuumInitializationExceptio
 import org.apache.maven.continuum.initialization.ContinuumInitializer;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -135,6 +138,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private ProfileService profileService;
+    
+    /**
+     * @plexus.requirement
+     */    
+    private BuildDefinitionService buildDefinitionService;    
 
     // ----------------------------------------------------------------------
     // Moved from core
@@ -169,6 +177,7 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private BuildExecutorManager executorManager;
+        
 
     /**
      * @plexus.requirement role-hint="url"
@@ -303,8 +312,8 @@ public class DefaultContinuum
             {
                 ProjectGroup new_pg = store.addProjectGroup( projectGroup );
 
-                addBuildDefinitionToProjectGroup( new_pg.getId(),
-                                                  configurationService.getDefaultMavenTwoBuildDefinition() );
+                buildDefinitionService.addBuildDefinitionTemplateToProjectGroup( new_pg.getId(), buildDefinitionService
+                    .getDefaultMavenTwoBuildDefinitionTemplate() );
 
                 Map context = new HashMap();
                 context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( new_pg.getId() ) );
@@ -312,10 +321,15 @@ public class DefaultContinuum
 
                 getLogger().info( "Added new project group: " + new_pg.getName() );
             }
-            catch ( ContinuumStoreException e )
+            catch ( BuildDefinitionServiceException e )
             {
                 throw new ContinuumException( e.getMessage(), e );
             }
+            catch ( ContinuumObjectNotFoundException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }
+            
         }
         else
         {
@@ -1352,7 +1366,17 @@ public class DefaultContinuum
     public ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, boolean checkProtocol )
         throws ContinuumException
     {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenOneContinuumProjectBuilder.ID, checkProtocol );
+        try
+        {
+            return executeAddProjectsFromMetadataActivity( metadataUrl, MavenOneContinuumProjectBuilder.ID,
+                                                           getDefaultProjectGroup().getId(), checkProtocol,
+                                                           buildDefinitionService
+                                                               .getDefaultMavenOneBuildDefinitionTemplate().getId() );
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
 
     public ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId )
@@ -1372,9 +1396,25 @@ public class DefaultContinuum
                                                               boolean checkProtocol, boolean useCredentialsCache )
         throws ContinuumException
     {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenOneContinuumProjectBuilder.ID, projectGroupId,
-                                                       checkProtocol, useCredentialsCache, true );
+        try
+        {
+            return addMavenOneProject( metadataUrl, projectGroupId, checkProtocol, useCredentialsCache,
+                                       buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate().getId() );
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
+    
+    public ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId,
+                                                              boolean checkProtocol, boolean useCredentialsCache, int buildDefintionTemplateId )
+        throws ContinuumException
+    {
+            return executeAddProjectsFromMetadataActivity( metadataUrl, MavenOneContinuumProjectBuilder.ID,
+                                                           projectGroupId, checkProtocol, useCredentialsCache, true,
+                                                           buildDefintionTemplateId );
+    }    
 
     // ----------------------------------------------------------------------
     // Maven 2.x projects
@@ -1389,7 +1429,16 @@ public class DefaultContinuum
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, boolean checkProtocol )
         throws ContinuumException
     {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, checkProtocol );
+        try
+        {
+            return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, -1,
+                                                           checkProtocol, buildDefinitionService
+                                                               .getDefaultMavenTwoBuildDefinitionTemplate().getId() );
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
 
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId )
@@ -1409,8 +1458,17 @@ public class DefaultContinuum
                                                               boolean checkProtocol, boolean useCredentialsCache )
         throws ContinuumException
     {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, projectGroupId,
-                                                       checkProtocol, useCredentialsCache, true );
+        try
+        {
+            return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
+                                                           projectGroupId, checkProtocol, useCredentialsCache, true,
+                                                           buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate()
+                                                               .getId() );
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
 
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
@@ -1418,9 +1476,27 @@ public class DefaultContinuum
                                                               boolean recursiveProjects )
         throws ContinuumException
     {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, projectGroupId,
-                                                       checkProtocol, useCredentialsCache, recursiveProjects );
+        try
+        {
+            return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
+                                                           projectGroupId, checkProtocol, useCredentialsCache,
+                                                           recursiveProjects, buildDefinitionService
+                                                               .getDefaultMavenTwoBuildDefinitionTemplate().getId() );
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
+    
+    public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
+                                                              boolean checkProtocol, boolean useCredentialsCache,
+                                                              boolean recursiveProjects, int buildDefintionTemplateId )
+        throws ContinuumException
+    {
+        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, projectGroupId,
+                                                       checkProtocol, useCredentialsCache, recursiveProjects, buildDefintionTemplateId );
+    }    
 
     // ----------------------------------------------------------------------
     // Shell projects
@@ -1435,21 +1511,57 @@ public class DefaultContinuum
     public int addProject( Project project, String executorId, int groupId )
         throws ContinuumException
     {
-
+        return addProject(project, executorId, groupId, -1);
+    }
+    
+    public int addProject( Project project, String executorId, int groupId, int buildDefintionTemplateId )
+        throws ContinuumException
+    {
         project.setExecutorId( executorId );
 
-        if ( executorId.equalsIgnoreCase( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR ) )
-        {
-            try
-            {
-                BuildDefinition bd = configurationService.getDefaultAntBuildDefinition();
+        List<BuildDefinition> buildDefinitions = Collections.EMPTY_LIST;
 
-                project.addBuildDefinition( bd );
-            }
-            catch ( ContinuumStoreException e )
+        try
+        {
+            if ( executorId.equalsIgnoreCase( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR ) )
             {
-                getLogger().warn( "Can't get default schedule.", e );
+                BuildDefinitionTemplate bdt = null;
+                if ( buildDefintionTemplateId <= 0 )
+                {
+                    bdt = buildDefinitionService.getDefaultAntBuildDefinitionTemplate();
+                }
+                else
+                {
+                    bdt = buildDefinitionService.getBuildDefinitionTemplate( buildDefintionTemplateId );
+                }
+                buildDefinitions = bdt.getBuildDefinitions();
             }
+            else
+            {
+                //shell default
+
+                BuildDefinitionTemplate bdt = null;
+                if ( buildDefintionTemplateId <= 0 )
+                {
+                    bdt = buildDefinitionService.getDefaultShellBuildDefinitionTemplate();
+                }
+                else
+                {
+                    bdt = buildDefinitionService.getBuildDefinitionTemplate( buildDefintionTemplateId );
+                }
+                buildDefinitions = bdt.getBuildDefinitions();
+            }
+            for ( BuildDefinition buildDefinition : buildDefinitions )
+            {
+
+                BuildDefinition cloned = buildDefinitionService.cloneBuildDefinition( buildDefinition );
+                cloned.setTemplate( false );
+                project.addBuildDefinition( buildDefinitionService.addBuildDefinition( cloned ) );
+            }
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
         }
 
         return executeAddProjectFromScmActivity( project, groupId );
@@ -1498,6 +1610,7 @@ public class DefaultContinuum
      * @return a holder with the projects, project groups and errors occurred during the project adding
      * @throws ContinuumException
      */
+    /*
     private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
                                                                                    String projectBuilderId,
                                                                                    boolean checkProtocol )
@@ -1505,14 +1618,16 @@ public class DefaultContinuum
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, -1, checkProtocol );
     }
+    */
 
     private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
                                                                                    String projectBuilderId,
                                                                                    int projectGroupId,
-                                                                                   boolean checkProtocol )
+                                                                                   boolean checkProtocol, int buildDefintionTemplateId )
         throws ContinuumException
     {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, -1, checkProtocol, false, false );
+        return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol, false, false,
+                                                       buildDefintionTemplateId );
     }
 
     private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
@@ -1520,7 +1635,7 @@ public class DefaultContinuum
                                                                                    int projectGroupId,
                                                                                    boolean checkProtocol,
                                                                                    boolean useCredentialsCache,
-                                                                                   boolean loadRecursiveProjects )
+                                                                                   boolean loadRecursiveProjects, int buildDefintionTemplateId )
         throws ContinuumException
     {
         if ( checkProtocol )
@@ -1550,7 +1665,22 @@ public class DefaultContinuum
                      Boolean.valueOf( loadRecursiveProjects ) );
 
         context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
+        
+        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_TEMPLATE_ID, Integer.valueOf( buildDefintionTemplateId ) );
 
+        // CreateProjectsFromMetadataAction will check null and use default
+        if ( buildDefintionTemplateId > 0 )
+        {
+            try
+            {
+                context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_TEMPLATE_ID, buildDefinitionService
+                    .getBuildDefinitionTemplate( buildDefintionTemplateId ) );
+            }
+            catch ( BuildDefinitionServiceException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }
+        }
         // ----------------------------------------------------------------------
         // Create the projects from the URL
         // ----------------------------------------------------------------------
@@ -2118,8 +2248,9 @@ public class DefaultContinuum
 
         return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
     }
-
-    public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
+    
+    public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId,
+                                                             BuildDefinition buildDefinition )
         throws ContinuumException
     {
         HashMap context = new HashMap();
@@ -2130,7 +2261,7 @@ public class DefaultContinuum
         executeAction( "add-build-definition-to-project-group", context );
 
         return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
-    }
+    }    
 
     public void removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
         throws ContinuumException
@@ -3056,6 +3187,11 @@ public class DefaultContinuum
     public ProfileService getProfileService()
     {
         return profileService;
+    }
+
+    public BuildDefinitionService getBuildDefinitionService()
+    {
+        return buildDefinitionService;
     }
 
 }

@@ -19,18 +19,24 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.codehaus.plexus.util.StringUtils;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Action to add a Maven project to Continuum, either Maven 1 or Maven 2.
@@ -66,9 +72,13 @@ public abstract class AddMavenProjectAction
     private boolean scmUseCache;
 
     private int projectGroupId;
-
+    
+    private List<BuildDefinitionTemplate> buildDefinitionTemplates;
+    
+    private int buildDefinitionTemplateId;
+    
     public String execute()
-        throws ContinuumException
+        throws ContinuumException, BuildDefinitionServiceException
     {
         try
         {
@@ -187,11 +197,13 @@ public abstract class AddMavenProjectAction
 
     // TODO: Remove this method because a default method return SUCCESS instead of INPUT
     public String doDefault()
+    throws BuildDefinitionServiceException
     {
         return input();
     }
 
     public String input()
+        throws BuildDefinitionServiceException
     {
         try
         {
@@ -211,7 +223,6 @@ public abstract class AddMavenProjectAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-
         Collection allProjectGroups = getContinuum().getAllProjectGroups();
         projectGroups = new ArrayList();
 
@@ -231,7 +242,7 @@ public abstract class AddMavenProjectAction
         }
 
         initializeProjectGroupName();
-
+        this.setBuildDefinitionTemplates( getContinuum().getBuildDefinitionService().getAllBuildDefinitionTemplate() );
         return INPUT;
     }
 
@@ -348,5 +359,25 @@ public abstract class AddMavenProjectAction
     public void setProjectGroupId( int projectGroupId )
     {
         this.projectGroupId = projectGroupId;
+    }
+
+    public List<BuildDefinitionTemplate> getBuildDefinitionTemplates()
+    {
+        return buildDefinitionTemplates;
+    }
+
+    public void setBuildDefinitionTemplates( List<BuildDefinitionTemplate> buildDefinitionTemplates )
+    {
+        this.buildDefinitionTemplates = buildDefinitionTemplates;
+    }
+
+    public int getBuildDefinitionTemplateId()
+    {
+        return buildDefinitionTemplateId;
+    }
+
+    public void setBuildDefinitionTemplateId( int buildDefinitionTemplateId )
+    {
+        this.buildDefinitionTemplateId = buildDefinitionTemplateId;
     }
 }

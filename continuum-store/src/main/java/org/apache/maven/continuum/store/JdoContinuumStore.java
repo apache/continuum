@@ -21,6 +21,7 @@ package org.apache.maven.continuum.store;
 
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
@@ -57,6 +58,7 @@ import javax.jdo.Transaction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -101,6 +103,8 @@ public class JdoContinuumStore
     private static final String PROJECT_DEPENDENCIES_FETCH_GROUP = "project-dependencies";
 
     private static final String PROJECTGROUP_PROJECTS_FETCH_GROUP = "projectgroup-projects";
+    
+    private static final String BUILD_TEMPLATE_BUILD_DEFINITIONS = "build-template-build-definitions";
 
     // ----------------------------------------------------------------------
     // Component Lifecycle
@@ -613,6 +617,10 @@ public class JdoContinuumStore
         return notifier;
     }
 
+    // ------------------------------------------------------
+    //  BuildDefinition
+    // ------------------------------------------------------    
+    
     public BuildDefinition getDefaultBuildDefinition( int projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
@@ -752,6 +760,121 @@ public class JdoContinuumStore
         return null;
     }
 
+    
+    public List<BuildDefinitionTemplate> getContinuumBuildDefinitionTemplates()
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildDefinitionTemplate.class, true );
+
+            Query query = pm.newQuery( extent );
+            query.setFilter( "continuumDefault == true" );
+            pm.getFetchPlan().addGroup( BUILD_TEMPLATE_BUILD_DEFINITIONS );
+            List result = (List) query.execute();
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+
+            rollback( tx );
+        }
+    }    
+    
+    
+    public BuildDefinitionTemplate getContinuumBuildDefinitionTemplateWithType( String type )
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildDefinitionTemplate.class, true );
+
+            Query query = pm.newQuery( extent );
+            query.declareImports( "import java.lang.String" );
+            query.declareParameters( "String type" );
+            query.setFilter( "continuumDefault == true && this.type == type" );
+            pm.getFetchPlan().addGroup( BUILD_TEMPLATE_BUILD_DEFINITIONS );
+            List result = (List) query.execute( type );
+            if ( result == null || result.isEmpty() )
+            {
+                return null;
+            }
+            return (BuildDefinitionTemplate) pm.detachCopy( result.get( 0 ) );
+        }
+        finally
+        {
+            tx.commit();
+
+            rollback( tx );
+        }
+    }
+
+    public List<BuildDefinition> getAllTemplates()
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildDefinition.class, true );
+
+            Query query = pm.newQuery( extent );
+            query.setFilter( "this.template == true" );
+            List result = (List) query.execute();
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+
+            rollback( tx );
+        }
+    }
+
+    public List<BuildDefinition> getAllBuildDefinitions()
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildDefinition.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            List result = (List) query.execute();
+
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+
+            rollback( tx );
+        }
+    }
+
     public BuildDefinition getBuildDefinition( int buildDefinitionId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
@@ -761,7 +884,7 @@ public class JdoContinuumStore
     public void removeBuildDefinition( BuildDefinition buildDefinition )
         throws ContinuumStoreException
     {
-        attachAndDelete( buildDefinition );
+        removeObject( buildDefinition );
     }
 
     public BuildDefinition storeBuildDefinition( BuildDefinition buildDefinition )
@@ -771,7 +894,111 @@ public class JdoContinuumStore
 
         return buildDefinition;
     }
+    
+    
 
+    public BuildDefinition addBuildDefinition( BuildDefinition buildDefinition )
+        throws ContinuumStoreException
+    {
+        return (BuildDefinition) addObject( buildDefinition );
+    }
+
+    
+    // ------------------------------------------------------
+    //  BuildDefinitionTemplate
+    // ------------------------------------------------------      
+    
+    
+    public BuildDefinitionTemplate addBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
+        throws ContinuumStoreException
+    {
+        return (BuildDefinitionTemplate) addObject( buildDefinitionTemplate );
+    }
+
+    public List<BuildDefinitionTemplate> getAllBuildDefinitionTemplate()
+        throws ContinuumStoreException
+    {
+        return getAllObjectsDetached( BuildDefinitionTemplate.class, BUILD_TEMPLATE_BUILD_DEFINITIONS );
+    }
+
+    public BuildDefinitionTemplate getBuildDefinitionTemplate( int id )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        return (BuildDefinitionTemplate) getObjectById( BuildDefinitionTemplate.class, id, BUILD_TEMPLATE_BUILD_DEFINITIONS );
+    }
+
+    public void removeBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
+        throws ContinuumStoreException
+    {
+        removeObject( buildDefinitionTemplate );
+    }
+
+    public BuildDefinitionTemplate updateBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
+        throws ContinuumStoreException
+    {
+        updateObject( buildDefinitionTemplate );
+
+        return buildDefinitionTemplate;
+    }
+
+    public List<BuildDefinitionTemplate> getContinuumDefaultdDefinitions()
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildDefinitionTemplate.class, true );
+
+            Query query = pm.newQuery( extent );
+            query.setFilter( "continuumDefault == true" );
+
+            List result = (List) query.execute();
+
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+
+            rollback( tx );
+        }
+    }
+    
+    public List<BuildDefinitionTemplate> getBuildDefinitionTemplatesWithType( String type )
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildDefinitionTemplate.class, true );
+
+            Query query = pm.newQuery( extent );
+            query.declareImports( "import java.lang.String" );
+            query.declareParameters( "String type" );
+            query.setFilter( "this.type == type" );
+            pm.getFetchPlan().addGroup( BUILD_TEMPLATE_BUILD_DEFINITIONS );
+            List result = (List) query.execute( type );
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+
+            rollback( tx );
+        }
+    }
+    
+    
     private Object makePersistent( PersistenceManager pm, Object object, boolean detach )
     {
         return PlexusJdoUtils.makePersistent( pm, object, detach );
@@ -1707,6 +1934,7 @@ public class JdoContinuumStore
         PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectDependency.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ChangeSet.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ChangeFile.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinitionTemplate.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinition.class );
     }
 

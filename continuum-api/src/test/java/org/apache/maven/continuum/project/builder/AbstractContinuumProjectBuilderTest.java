@@ -19,11 +19,13 @@ package org.apache.maven.continuum.project.builder;
  * under the License.
  */
 
+import java.net.URL;
+
 import junit.framework.TestCase;
+
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
-
-import java.net.URL;
 
 /**
  * Test for {@link AbstractContinuumProjectBuilder}
@@ -71,6 +73,20 @@ public class AbstractContinuumProjectBuilderTest
 
         public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                                          boolean recursiveProjects )
+            throws ContinuumProjectBuilderException
+        {
+            return null;
+        }
+
+        public ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
+                                                                         boolean recursiveProjects,
+                                                                         BuildDefinitionTemplate buildDefinitionTemplate )
+            throws ContinuumProjectBuilderException
+        {
+            return null;
+        }
+
+        public BuildDefinitionTemplate  getDefaultBuildDefinitionTemplate()
             throws ContinuumProjectBuilderException
         {
             return null;

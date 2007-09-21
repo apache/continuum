@@ -20,9 +20,9 @@ package org.apache.maven.continuum.initialization;
  */
 
 import org.apache.maven.continuum.Continuum;
-import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
@@ -55,11 +55,11 @@ public class DefaultContinuumInitializer
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
-
+    
     /**
-     * @plexus.requirement role-hint="default"
-     */
-    private ConfigurationService configurationService;
+     * @plexus.requirement
+     */    
+    private BuildDefinitionService buildDefinitionService;    
 
     // ----------------------------------------------------------------------
     //
@@ -96,53 +96,35 @@ public class DefaultContinuumInitializer
                 systemConf = store.addSystemConfiguration( systemConf );
             }
 
-            // Schedule
-            Schedule s = store.getScheduleByName( DEFAULT_SCHEDULE_NAME );
-
-            if ( s == null )
-            {
-                Schedule defaultSchedule = createDefaultSchedule();
-
-                store.addSchedule( defaultSchedule );
-            }
-
             createDefaultProjectGroup();
         }
         catch ( ContinuumStoreException e )
         {
             throw new ContinuumInitializationException( "Can't initialize default schedule.", e );
         }
+        catch (BuildDefinitionServiceException e)
+        {
+            throw new ContinuumInitializationException( "Can't get default build definition", e );
+        }
+        getLogger().info( "Continuum initializer end running ..." );
     }
-
-    // ----------------------------------------------------------------------
-    //
-    // ----------------------------------------------------------------------
-
-    public Schedule createDefaultSchedule()
-    {
-        Schedule schedule = new Schedule();
-
-        schedule.setName( DEFAULT_SCHEDULE_NAME );
-
-        schedule.setDescription( systemConf.getDefaultScheduleDescription() );
-
-        schedule.setCronExpression( systemConf.getDefaultScheduleCronExpression() );
-
-        schedule.setActive( true );
-
-        return schedule;
-    }
+    
+    
 
     private void createDefaultProjectGroup()
-        throws ContinuumStoreException
+        throws ContinuumStoreException, BuildDefinitionServiceException
     {
         ProjectGroup group;
         try
         {
             group = store.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+            getLogger().info( "Default Project Group exists" );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
+            
+            getLogger().info( "create Default Project Group" );
+            
             group = new ProjectGroup();
 
             group.setName( "Default Project Group" );
@@ -151,7 +133,7 @@ public class DefaultContinuumInitializer
 
             group.setDescription( "Contains all projects that do not have a group of their own" );
 
-            group.getBuildDefinitions().add( configurationService.getDefaultMavenTwoBuildDefinition() );
+            group.getBuildDefinitions().addAll( buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions() );
 
             group = store.addProjectGroup( group );
         }

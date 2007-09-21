@@ -82,7 +82,7 @@
   </redback:ifAuthorized>
 
 
-  <redback:ifAnyAuthorized permissions="continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users,continuum-manage-installations,continuum-manage-profiles">
+  <redback:ifAnyAuthorized permissions="continuum-manage-build-templates,continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users,continuum-manage-installations,continuum-manage-profiles">
     <div id="projectmenu" class="toolgroup">
       <div class="label">
         <ww:text name="menu.administration"/>
@@ -112,6 +112,14 @@
             </ww:a>
           </div> 
         </redback:ifAuthorized> 
+        <redback:ifAuthorized permission="continuum-manage-build-templates">
+          <ww:url id="buildDefinitionTemplatesUrl" action="buildDefinitionTemplates" namespace="/admin" method="summary" includeParams="none"/>
+          <div class="body">
+            <ww:a href="%{buildDefinitionTemplatesUrl}">
+              <ww:text name="menu.administration.buildDefinitionTemplates"/>
+            </ww:a>
+          </div> 
+        </redback:ifAuthorized>        
         <redback:ifAuthorized permission="continuum-manage-configuration">               
           <ww:url id="configurationUrl" action="configuration" namespace="/admin" method="input" includeParams="none"/>
           <div class="body">

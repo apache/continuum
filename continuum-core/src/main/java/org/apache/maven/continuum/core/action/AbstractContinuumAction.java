@@ -20,6 +20,7 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.scm.ScmResult;
@@ -27,6 +28,7 @@ import org.codehaus.plexus.action.AbstractAction;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -45,10 +47,14 @@ public abstract class AbstractContinuumAction
 
     public static final String KEY_PROJECT = "project";
 
-    public static final String KEY_BUILD_DEFINITION_ID = "build-definition-id";
+    public static final String KEY_BUILD_DEFINITION_TEMPLATE_ID = "build-definition-template-id";
+    
+    public static final String KEY_BUILD_DEFINITION_TEMPLATE = "build-definition-template";
 
     public static final String KEY_BUILD_DEFINITION = "build-definition";
-
+    
+    public static final String KEY_BUILD_DEFINITION_ID = "build-definition-id";
+    
     public static final String KEY_UNVALIDATED_PROJECT = "unvalidated-project";
 
     public static final String KEY_PROJECT_GROUP_ID = "project-group-id";
@@ -106,14 +112,24 @@ public abstract class AbstractContinuumAction
         return getInteger( context, KEY_PROJECT_GROUP_ID );
     }
 
-    public static int getBuildDefinitionId( Map context )
+    public static int getBuildDefinitionTemplateId( Map context )
     {
-        return getInteger( context, KEY_BUILD_DEFINITION_ID );
+        return getInteger( context, KEY_BUILD_DEFINITION_TEMPLATE_ID );
     }
 
+    public static BuildDefinitionTemplate getBuildDefinitionTemplate( Map context )
+    {
+        return (BuildDefinitionTemplate) getObject( context, KEY_BUILD_DEFINITION_TEMPLATE_ID, null );
+    }
+    
     public static BuildDefinition getBuildDefinition( Map context )
     {
         return (BuildDefinition) getObject( context, KEY_BUILD_DEFINITION, null );
+    }
+    
+    public static int getBuildDefinitionId( Map context )
+    {
+        return getInteger( context, KEY_BUILD_DEFINITION_ID );
     }
 
     public static String getBuildId( Map context )
