@@ -1,5 +1,7 @@
 package org.apache.maven.continuum.plugin;
 
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,6 +33,6 @@ public class AddAntProject
 {
     protected String getProjectType()
     {
-        return ANT;
+        return ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR;
     }
 }
