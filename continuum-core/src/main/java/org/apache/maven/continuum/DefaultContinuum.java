@@ -940,7 +940,8 @@ public class DefaultContinuum
 
             for ( BuildDefinition bd : bds )
             {
-                if ( project.getExecutorId().equals( bd.getType() ) )
+                if ( project.getExecutorId().equals( bd.getType() ) || ( StringUtils.isEmpty( bd.getType() ) &&
+                    ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( project.getExecutorId() ) ) )
                 {
                     buildDefId = bd.getId();
                     break;
