@@ -133,62 +133,31 @@ scm:cvs:pserver:username:@servername:path_to_repository:module_name
       <question>How can I run Continuum on a different port? I already have application X running on port 8000/8080.</question>
       <answer>
         <p>
-          Continuum uses two ports. Port 8000 is used for XML-RPC calls and port 8080 is used by the instance of Jetty that supplies the web interface for Continuum.
+          Port 8080 is used by the instance of Jetty that supplies the web interface for Continuum.
         </p>
         <p>
-          If you have another application already running on port 8000/8080, you will get an exception when you start Continuum.
-          If you want to change the port that Continuum uses you should edit the file <code>apps/continuum/conf/application.xml</code>.
+          If you have another application already running on port 8080, you will get an exception when you start Continuum.
+          If you want to change the port that Continuum uses you should edit the file <code>conf/plexus.xml</code>.
           Find the following section in that file:
         </p>
         <source>
 <application>
   ...
-  <services>
-    <service>
-      <id>jetty</id>
+    <component>
+      <role>org.codehaus.plexus.contextualizer.Contextualizer</role>
+      <role-hint>jettyConfiguration</role-hint>
+      <implementation>org.codehaus.plexus.contextualizer.DefaultContextualizer</implementation>
       <configuration>
-        <webapps>
-          <webapp>
-            <file>${plexus.home}/lib/continuum-web-1.0.2.jar</file>
-            <context>/continuum</context>
-            <extraction-path>${plexus.home}/webapp</extraction-path>
-            <listeners>
-              <http-listener>
-                <port>8080</port>	
-              </http-listener>
-              <!--
-              <proxy-http-listener>
-                <port>8090</port>
-                <proxy-host>localhost</proxy-host>
-                <proxy-port>80</proxy-port>
-              </proxy-http-listener>
-              -->
-            </listeners>
-          </webapp>
-        </webapps>
+        <contextValues>
+          <jetty.port>8080</jetty.port>
+        </contextValues>
       </configuration>
-    </service>
-
-    <service>
-      <id>xml-rpc</id>
-      <configuration>
-        <xmlrpc>
-          <port>8000</port>
-        </xmlrpc>
-        <handlers>
-          <handler>
-            <role>org.apache.maven.continuum.xmlrpc.ContinuumXmlRpc</role>
-            <name>continuum</name>
-          </handler>
-        </handlers>
-      </configuration>
-    </service>
-  </services>
+    </component>
     ...
 </application>
         </source>
         <p>
-          Change the appropriate <code>&lt;port&gt;</code> elements to the port numbers you want for jetty and xml-rpc.
+          Change the appropriate <code>&lt;jetty.port&gt;</code> element to the port number you want for jetty.
           You need to restart Continuum for the changes to take effect.
         </p>
       </answer>
@@ -281,6 +250,7 @@ dyld: lazy symbol binding failed: Symbol not found: _ftime
     </component>          
           </source>
         </p>
+        <p><b>1.1-In beta-4, the default build defintions will be updatable without restarting with the build template future</b></p>
       </answer>
     </faq>    
   </part>
