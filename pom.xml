@@ -451,6 +451,11 @@
         <version>${pom.version}</version>
       </dependency>
       <dependency>
+        <groupId>net.sf.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>1.3.0</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.maven.shared</groupId>
         <artifactId>maven-app-configuration-model</artifactId>
         <version>1.0</version>
