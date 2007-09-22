@@ -173,8 +173,7 @@ public class DefaultInstallationServiceTest
     {
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
         ExecutorConfigurator java = installationService.getExecutorConfigurator( InstallationService.MAVEN2_TYPE );
-        String javaHome = System.getProperty( "M2_HOME" );
-        List<String> infos = installationService.getExecutorConfiguratorVersion( javaHome, java, null );
+        List<String> infos = installationService.getExecutorConfiguratorVersion( null, java, null );
         assertNotNull( infos );
     }
 
