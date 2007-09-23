@@ -46,8 +46,6 @@ public abstract class AbstractContinuumAction
     public static final String KEY_PROJECT_ID = "project-id";
 
     public static final String KEY_PROJECT = "project";
-
-    public static final String KEY_BUILD_DEFINITION_TEMPLATE_ID = "build-definition-template-id";
     
     public static final String KEY_BUILD_DEFINITION_TEMPLATE = "build-definition-template";
 
@@ -110,11 +108,6 @@ public abstract class AbstractContinuumAction
     public static int getProjectGroupId( Map context )
     {
         return getInteger( context, KEY_PROJECT_GROUP_ID );
-    }
-
-    public static int getBuildDefinitionTemplateId( Map context )
-    {
-        return getInteger( context, KEY_BUILD_DEFINITION_TEMPLATE_ID );
     }
 
     public static BuildDefinitionTemplate getBuildDefinitionTemplate( Map context )
