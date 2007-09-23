@@ -1666,14 +1666,12 @@ public class DefaultContinuum
 
         context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
         
-        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_TEMPLATE_ID, Integer.valueOf( buildDefintionTemplateId ) );
-
         // CreateProjectsFromMetadataAction will check null and use default
         if ( buildDefintionTemplateId > 0 )
         {
             try
             {
-                context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_TEMPLATE_ID, buildDefinitionService
+                context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_TEMPLATE, buildDefinitionService
                     .getBuildDefinitionTemplate( buildDefintionTemplateId ) );
             }
             catch ( BuildDefinitionServiceException e )
