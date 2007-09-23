@@ -119,7 +119,7 @@ public abstract class AbstractContinuumAction
 
     public static BuildDefinitionTemplate getBuildDefinitionTemplate( Map context )
     {
-        return (BuildDefinitionTemplate) getObject( context, KEY_BUILD_DEFINITION_TEMPLATE_ID, null );
+        return (BuildDefinitionTemplate) getObject( context, KEY_BUILD_DEFINITION_TEMPLATE, null );
     }
     
     public static BuildDefinition getBuildDefinition( Map context )
