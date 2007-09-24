@@ -113,7 +113,7 @@
           </div> 
         </redback:ifAuthorized> 
         <redback:ifAuthorized permission="continuum-manage-build-templates">
-          <ww:url id="buildDefinitionTemplatesUrl" action="buildDefinitionTemplates" namespace="/admin" method="summary" includeParams="none"/>
+          <ww:url id="buildDefinitionTemplatesUrl" action="buildDefinitionTemplates" namespace="/admin" includeParams="none"/>
           <div class="body">
             <ww:a href="%{buildDefinitionTemplatesUrl}">
               <ww:text name="menu.administration.buildDefinitionTemplates"/>
