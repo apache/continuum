@@ -42,6 +42,7 @@
             <c1:data label="%{getText('projectView.project.name')}" name="project.name"/>
             <c1:data label="%{getText('projectView.project.version')}" name="project.version"/>
             <c1:data label="%{getText('projectView.project.scmUrl')}" name="project.scmUrl"/>
+            <c1:data label="%{getText('projectView.project.scmTag')}" name="project.scmTag"/>
             <ww:url id="projectGroupSummaryUrl" value="/projectGroupSummary.action">
                 <ww:param name="projectGroupId" value="%{project.projectGroup.id}"/>
             </ww:url>            
