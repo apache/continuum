@@ -30,4 +30,9 @@
       <message key="wagonNotifier.url.invalid"/>
     </field-validator>
   </field>
+  <field name="id">
+    <field-validator type="requiredstring">
+      <message key="wagonNotifier.id.required"/>
+    </field-validator>
+  </field>
 </validators>
