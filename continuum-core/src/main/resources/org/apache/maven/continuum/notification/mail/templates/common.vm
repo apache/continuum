@@ -16,6 +16,7 @@
 #macro( shellBuildResult )
 Online report : $reportUrl
 
+#if ( $build )
 Build statistics:
   State: $formatter.formatProjectState( $build.state )
 #if ( $previousBuild )
@@ -178,16 +179,14 @@ $suite.name
 #end
 #end
 #end
-#else
+#end
+#end
+#if ( $buildOutput && $buildOutput != "" )
 ****************************************************************************
 Output:
 ****************************************************************************
-#if ( $buildOutput && $buildOutput != "" )
 $buildOutput
-#else
-There was no output.
-#end
 ****************************************************************************
-
 #end
+
 #end ## #macro( shellBuildResult )

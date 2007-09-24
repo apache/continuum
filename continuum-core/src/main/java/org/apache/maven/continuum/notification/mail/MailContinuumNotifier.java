@@ -123,6 +123,11 @@ public class MailContinuumNotifier
      */
     private boolean includeBuildResult = true;
 
+    /**
+     * @plexus.configuration
+     */
+    private boolean includeBuildSummary = true;
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -259,24 +264,20 @@ public class MailContinuumNotifier
 
         try
         {
+            VelocityContext context = new VelocityContext();
+
             if ( includeBuildResult )
             {
-                VelocityContext context = new VelocityContext();
+                context.put( "buildOutput", buildOutput );
+            }
 
-                // ----------------------------------------------------------------------
-                // Data objects
-                // ----------------------------------------------------------------------
-
-                context.put( "reportUrl", getReportUrl( project, build, configurationService ) );
+            if ( includeBuildSummary ) {
+                context.put( "build", build );
 
                 context.put( "project", project );
 
-                context.put( "build", build );
-
                 context.put( "changesSinceLastSuccess", continuum.getChangesSinceLastSuccess( project.getId(), build
                     .getId() ) );
-
-                context.put( "buildOutput", buildOutput );
 
                 context.put( "previousBuild", previousBuild );
 
@@ -308,21 +309,24 @@ public class MailContinuumNotifier
                 context.put( "javaHomeInformations", getJavaHomeInformations( buildDefinition ) );
 
                 context.put( "builderVersions", getBuilderVersion( buildDefinition, project ) );
-
-                // TODO put other profile env var could be a security if they provide passwords ? 
-
-                // ----------------------------------------------------------------------
-                // Generate
-                // ----------------------------------------------------------------------
-
-                velocity.getEngine().mergeTemplate( templateName, context, writer );
-
-                content = writer.getBuffer().toString();
             }
-            else
-            {
-                content = getReportUrl( project, build, configurationService );
-            }
+            
+            // ----------------------------------------------------------------------
+            // Data objects
+            // ----------------------------------------------------------------------
+
+            context.put( "reportUrl", getReportUrl( project, build, configurationService ) );
+
+
+            // TODO put other profile env var could be a security if they provide passwords ? 
+
+            // ----------------------------------------------------------------------
+            // Generate
+            // ----------------------------------------------------------------------
+
+            velocity.getEngine().mergeTemplate( templateName, context, writer );
+
+            content = writer.getBuffer().toString();
         }
         catch ( ResourceNotFoundException e )
         {

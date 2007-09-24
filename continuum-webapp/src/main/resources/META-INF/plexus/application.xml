@@ -145,6 +145,7 @@
         <from-name></from-name>
         <timestamp-format>EEE d MMM yyyy HH:mm:ss Z</timestamp-format>
         <includeBuildResult>true</includeBuildResult>
+        <includeBuildSummary>true</includeBuildSummary>
         <alwaysSend>false</alwaysSend>
       </configuration>
     </component>
