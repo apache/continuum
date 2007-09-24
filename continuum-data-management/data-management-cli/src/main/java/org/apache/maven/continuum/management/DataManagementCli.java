@@ -19,16 +19,8 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
-
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -54,8 +46,15 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
-import com.sampullara.cli.Args;
-import com.sampullara.cli.Argument;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * An application for performing database upgrades from old Continuum and Redback versions. A suitable tool until it
@@ -70,8 +69,6 @@ public class DataManagementCli
     {
         Commands command = new Commands();
 
-        
-        
         DatabaseFormat databaseFormat;
         OperationMode mode;
         SupportedDatabase databaseType;
@@ -84,9 +81,9 @@ public class DataManagementCli
                 Args.usage( command );
                 return;
             }
-            if (command.version)
+            if ( command.version )
             {
-                System.out.print("continuum-data-management version " + getVersion() );
+                System.out.print( "continuum-data-management version " + getVersion() );
                 return;
             }
             databaseFormat = DatabaseFormat.valueOf( command.databaseFormat );
@@ -127,6 +124,21 @@ public class DataManagementCli
             System.err.println( "The -usersJdbcUrl option can not be used with Continuum 1.0.3 databases" );
             Args.usage( command );
             return;
+        }
+
+        if ( SupportedDatabase.OTHER.equals( databaseType ) )
+        {
+            if ( command.driverClass == null || command.artifactId == null || command.groupId == null ||
+                command.artifactVersion == null || command.password == null || command.username == null )
+            {
+                System.err.println(
+                    "If OTHER databaseType is selected, -driverClass, -artifactId, -groupId, -artifactVersion, -username and -password must be provided together" );
+                Args.usage( command );
+                return;
+            }
+            databaseType.defaultParams = new DatabaseParams( command.driverClass, command.groupId, command.artifactId,
+                                                             command.artifactVersion, command.username,
+                                                             command.password );
         }
 
         BasicConfigurator.configure();
@@ -338,13 +350,13 @@ public class DataManagementCli
 
     private static class Commands
     {
-        
+
         @Argument(description = "Display help information", value = "help", alias = "h")
-        private boolean help;        
-        
+        private boolean help;
+
         @Argument(description = "Display version information", value = "version", alias = "v")
-        private boolean version;        
-        
+        private boolean version;
+
         @Argument(
             description = "The JDBC URL for the Continuum database that contains the data to convert, or to import the data into",
             value = "buildsJdbcUrl")
@@ -386,6 +398,26 @@ public class DataManagementCli
             value = "databaseType")
         private String databaseType = SupportedDatabase.DERBY_10_1.toString();
 
+        @Argument(description = "JDBC driver class", value = "driverClass", required = false)
+        private String driverClass;
+
+        @Argument(description = "JDBC driver groupId", value = "groupId", required = false)
+        private String groupId;
+
+        @Argument(description = "JDBC driver artifactId", value = "artifactId", required = false)
+        private String artifactId;
+
+        @Argument(description = "Artifact version of the JDBC driver class",
+                  value = "artifactVersion",
+                  required = false)
+        private String artifactVersion;
+
+        @Argument(description = "Username", value = "username", required = false)
+        private String username;
+
+        @Argument(description = "Password", value = "password", required = false)
+        private String password;
+
         @Argument(
             description = "Turn on debugging information. Default is off.",
             value = "debug")
@@ -400,7 +432,9 @@ public class DataManagementCli
     private enum SupportedDatabase
     {
         DERBY_10_1( new DatabaseParams( "org.apache.derby.jdbc.EmbeddedDriver", "org.apache.derby", "derby", "10.1.3.1",
-                                        "sa", "" ) );
+                                        "sa", "" ) ),
+
+        OTHER( new DatabaseParams( null, null, null, null, null, null ) );
 
         private DatabaseParams defaultParams;
 
