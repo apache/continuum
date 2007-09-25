@@ -277,6 +277,19 @@ public abstract class AbstractBuildExecutor
         return properties;
     }
 
+    protected String getBuildFileForProject( Project project, BuildDefinition buildDefinition )
+    {
+        String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
+        String relPath = StringUtils.clean( project.getRelativePath() );
+
+        if ( StringUtils.isEmpty( relPath ) )
+        {
+            return buildFile;
+        }
+
+        return relPath + File.separator + buildFile;
+    }
+
     public boolean isBuilding( Project project )
     {
         return project.getState() == ContinuumProjectState.BUILDING || shellCommandHelper.isRunning( project.getId() );
@@ -287,7 +300,7 @@ public abstract class AbstractBuildExecutor
         shellCommandHelper.killProcess( project.getId() );
     }
 
-    public List getDeployableArtifacts( File workingDirectory, BuildDefinition buildDefinition )
+    public List getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException
     {
         // Not supported by this builder

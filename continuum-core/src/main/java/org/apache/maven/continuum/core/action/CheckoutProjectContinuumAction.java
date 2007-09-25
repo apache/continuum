@@ -20,7 +20,6 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.maven.continuum.Continuum;
-import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
@@ -129,39 +128,14 @@ public class CheckoutProjectContinuumAction
         }
         finally
         {
-            if ( oldState == ContinuumProjectState.NEW )
+            String relativePath = (String) getObject( context, KEY_PROJECT_RELATIVE_PATH, "" );
+            if ( StringUtils.isNotEmpty( relativePath ) )
             {
-                String relativePath = (String) getObject( context, KEY_PROJECT_RELATIVE_PATH, "" );
-                if ( StringUtils.isNotEmpty( relativePath ) )
-                {
-                    //CONTINUUM-1218 : updating only the default build definition only for new projects
-                    BuildDefinition bd = continuum.getDefaultBuildDefinition( project.getId() );
 
-                    String buildFile = "";
-                    if ( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
-                    {
-                        buildFile = "pom.xml";
-                        bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
-                    }
-                    else
-                    if ( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
-                    {
-                        buildFile = "project.xml";
-                        bd.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
-                    }
-                    else if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( project.getExecutorId() ) )
-                    {
-                        buildFile = "build.xml";
-                        bd.setType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
-                    }
-                    else
-                    {
-                        bd.setType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
-                    }
-                    bd.setBuildFile( relativePath + "/" + buildFile );
-                    store.storeBuildDefinition( bd );
-                }
+                project.setRelativePath( relativePath );
+
             }
+
             project.setState( ContinuumProjectState.CHECKEDOUT );
 
             store.updateProject( project );

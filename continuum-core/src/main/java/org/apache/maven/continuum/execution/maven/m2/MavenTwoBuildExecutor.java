@@ -119,7 +119,7 @@ public class MavenTwoBuildExecutor
 
         StringBuffer arguments = new StringBuffer();
 
-        String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
+        String buildFile = getBuildFileForProject( project, buildDefinition );
 
         if ( !StringUtils.isEmpty( buildFile ) && !"pom.xml".equals( buildFile ) )
         {
@@ -152,7 +152,7 @@ public class MavenTwoBuildExecutor
     public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException
     {
-        File f = getPomFile( buildDefinition, workingDirectory );
+        File f = getPomFile( getBuildFileForProject( project, buildDefinition ), workingDirectory );
 
         if ( !f.exists() )
         {
@@ -169,18 +169,15 @@ public class MavenTwoBuildExecutor
         }
     }
 
-    private static File getPomFile( BuildDefinition buildDefinition, File workingDirectory )
+    private static File getPomFile( String projectBuildFile, File workingDirectory )
     {
         File f = null;
 
-        if ( buildDefinition != null )
-        {
-            String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
+        String buildFile = StringUtils.clean( projectBuildFile );
 
-            if ( !StringUtils.isEmpty( buildFile ) )
-            {
-                f = new File( workingDirectory, buildFile );
-            }
+        if ( !StringUtils.isEmpty( buildFile ) )
+        {
+            f = new File( workingDirectory, buildFile );
         }
 
         if ( f == null )
@@ -191,10 +188,11 @@ public class MavenTwoBuildExecutor
         return f;
     }
 
-    public List getDeployableArtifacts( File workingDirectory, BuildDefinition buildDefinition )
+    public List getDeployableArtifacts( Project continuumProject, File workingDirectory,
+                                        BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException
     {
-        File f = getPomFile( buildDefinition, workingDirectory );
+        File f = getPomFile( getBuildFileForProject( continuumProject, buildDefinition ), workingDirectory );
 
         if ( !f.exists() )
         {

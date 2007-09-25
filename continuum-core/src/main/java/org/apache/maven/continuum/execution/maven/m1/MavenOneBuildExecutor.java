@@ -76,7 +76,7 @@ public class MavenOneBuildExecutor
 
         StringBuffer arguments = new StringBuffer();
 
-        String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
+        String buildFile = getBuildFileForProject( project, buildDefinition );
 
         if ( !StringUtils.isEmpty( buildFile ) && !"project.xml".equals( buildFile ) )
         {

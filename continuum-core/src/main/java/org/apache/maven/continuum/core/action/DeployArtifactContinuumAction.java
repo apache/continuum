@@ -101,8 +101,9 @@ public class DeployArtifactContinuumAction
             {
                 BuildDefinition buildDefinition = getBuildDefinition( context );
 
-                List artifacts = buildExecutor.getDeployableArtifacts(
-                    workingDirectoryService.getWorkingDirectory( project ), buildDefinition );
+                List artifacts = buildExecutor.getDeployableArtifacts( project,
+                                                                       workingDirectoryService.getWorkingDirectory(
+                                                                           project ), buildDefinition );
 
                 for ( Iterator i = artifacts.iterator(); i.hasNext(); )
                 {
