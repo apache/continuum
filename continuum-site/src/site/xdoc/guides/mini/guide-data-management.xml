@@ -18,7 +18,7 @@
             <li>export data : java -Xmx512m -jar data-management-cli-1.1-beta-2-app.jar -buildsJdbcUrl jdbc:derby:path_continuum_old_db -mode EXPORT</li>
             <li>start continuum to create the new data model.</li>
             <li>stop continuum</li>
-            <li>import data : java -Xmx512m -jar data-management-cli-1.1-beta-2-app.jar  -buildsJdbcUrl jdbc:derby:path_continuum_new_db -mode IMPORT</li>
+            <li>import data : java -Xmx512m -jar data-management-cli-1.1-beta-3-app.jar -buildsJdbcUrl jdbc:derby:path_continuum_new_db -mode IMPORT</li>
             <li>start continuum.</li>
           </ul>
         </p>
