@@ -19,12 +19,12 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.TestResult;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -44,7 +44,7 @@ public interface ContinuumBuildExecutor
 
     void killProcess( Project project );
 
-    List getDeployableArtifacts( File workingDirectory, BuildDefinition buildDefinition )
+    List getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException;
 
     TestResult getTestResults( Project project, int buildResultId )

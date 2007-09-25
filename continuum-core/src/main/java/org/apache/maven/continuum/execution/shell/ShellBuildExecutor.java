@@ -70,7 +70,7 @@ public class ShellBuildExecutor
         throws ContinuumBuildExecutorException
     {
         // TODO: this should be validated earlier?
-        String executable = buildDefinition.getBuildFile();
+        String executable = getBuildFileForProject( project, buildDefinition );
 
         return executeShellCommand( project, executable, buildDefinition.getArguments(), buildOutput,
                                     getEnvironments( buildDefinition ) );

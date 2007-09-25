@@ -77,7 +77,7 @@ public class AntBuildExecutor
 
         StringBuffer arguments = new StringBuffer();
 
-        String buildFile = buildDefinition.getBuildFile();
+        String buildFile = getBuildFileForProject( project, buildDefinition );
 
         if ( !StringUtils.isEmpty( buildFile ) )
         {
