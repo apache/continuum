@@ -881,6 +881,18 @@
           </description>
         </field>
         <field>
+          <name>description</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>description of the buid defintion</description>
+        </field>
+        <field jpox.column="builddefinition_type">
+          <name>type</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>type of the buid defintion</description>          
+        </field>
+        <field>
           <name>schedule</name>
           <version>1.0.9+</version>
           <association xml.reference="true" stash.part="true" jpox.dependent="false">
@@ -900,9 +912,68 @@
           <type>int</type>
           <defaultValue>0</defaultValue>
         </field>
+        <field>
+          <name>alwaysBuild</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if the build had to be forced even if there is no scm change
+          </description>
+        </field>
+        <field jpox.column="is_template">
+          <name>template</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if this buildDefinition is a template
+          </description>
+        </field>        
       </fields>
     </class>
-
+    <class>
+      <name>BuildDefinitionTemplate</name>
+      <version>1.1.0+</version>
+      <description>Template which contains some buildDefinitions</description>
+      <fields>
+        <field>
+          <name>id</name>
+          <identifier>true</identifier>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <required>true</required>
+        </field>
+        <field>
+          <name>continuumDefault</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if this definition is a continuum default build def (cannot be removed)
+          </description>
+        </field>
+        <field jpox.column="builddefinition_template_type">
+          <name>type</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>type of the buid BuildDefinitionTemplate use for default</description>          
+        </field>                                
+        <field xml.reference="true" stash.part="true" jpox.fetch-groups="build-template-build-definitions">
+          <name>buildDefinitions</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>BuildDefinition</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
     <class>
       <name>Schedule</name>
       <version>1.0.9+</version>
