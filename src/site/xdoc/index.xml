@@ -26,14 +26,14 @@
   <body>
     <section name="Welcome to Continuum">
       <div id="downloadbox">
-        <h5>Get Continuum 1.1 Beta 2</h5>
+        <h5>Get Continuum 1.1 Beta 3</h5>
         <p>
           <a href="download.html">
             <img valign="top" src="http://maven.apache.org/images/folder-open.gif" border="0" alt="" title="download"/>
             Download
           </a>
           Continuum
-          <small>(25Mb)</small>
+          <small>(26Mb)</small>
         </p>
         <ul>
           <li>
@@ -95,6 +95,7 @@
     <section name="Latest News">
       <p>
         <ul>
+          <li>Continuum 1.1 Beta 3 Release Available - September 25, 2007</li>
           <li>Continuum 1.1 Beta 2 Release Available - August 17, 2007</li>
           <li>Continuum 1.1 Beta 1 Release Available - July 24, 2007</li>
           <li>Continuum 1.1 Alpha 2 Release Available - June 3, 2007</li>

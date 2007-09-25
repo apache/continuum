@@ -7,7 +7,7 @@
     <section name="Build Profile">
       <subsection name="Goal">
       <p>
-        The main goal is to compile/test sources against the targeted jvm, mvn/maven version, ant version and to add defined envvar (MAVEN_OPTS, ANT_OPTS ...). <br />This is now possible at the build definition level (in 1.1-beta-1).
+        The main goal is to compile/test sources against the targeted jvm, mvn/maven version, ant version and to add defined envvar (MAVEN_OPTS, ANT_OPTS ...). <br />This is now possible at the build definition level (in 1.1).
       </p>
       <p>
         Use case : a solaris with a JAVA_HOME set to a jdk1.4 in the .profile user, a continuum instance running with JAVA_HOME defined in the starting script (<b>NOTE : 1.5 requirement to run continuum</b>), a project which need to be jdk1.4 compliant and some developpers which have ide with jdk1.5 (and fautly add 1.5 methods ;-) ). 
