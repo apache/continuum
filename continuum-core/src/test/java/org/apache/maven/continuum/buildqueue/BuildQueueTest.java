@@ -130,7 +130,7 @@ public class BuildQueueTest
     private void buildProject( int projectId, int trigger )
         throws Exception
     {
-        buildQueue.put( new BuildProjectTask( projectId, 0, trigger ) );
+        buildQueue.put( new BuildProjectTask( projectId, 0, trigger, null ) );
     }
 
     private void assertNextBuildIs( int expectedProjectId )

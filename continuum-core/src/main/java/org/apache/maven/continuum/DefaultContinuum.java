@@ -465,6 +465,19 @@ public class DefaultContinuum
     // Queues
     // ----------------------------------------------------------------------
 
+    public List<BuildProjectTask> getProjectsInBuildQueue()
+      throws ContinuumException
+    {
+        try
+        {
+            return buildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new ContinuumException( "Error while getting the building queue.", e );
+        }        
+    }
+    
     public boolean isInBuildingQueue( int projectId )
         throws ContinuumException
     {
@@ -564,6 +577,13 @@ public class DefaultContinuum
         }
     }
 
+    public boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+    throws ContinuumException
+    {
+        BuildProjectTask buildProjectTask = new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName );
+        return this.buildQueue.remove( buildProjectTask );
+    }
+    
     public boolean removeProjectsFromBuildingQueue( int[] projectsId )
         throws ContinuumException
     {
@@ -1169,6 +1189,8 @@ public class DefaultContinuum
                 }
                 else
                 {
+                    project.setOldState( project.getState() );
+                    
                     project.setState( ContinuumProjectState.ERROR );
 
                     store.updateProject( project );
@@ -1176,11 +1198,19 @@ public class DefaultContinuum
                     project = store.getProject( project.getId() );
                 }
             }
+            else
+            {
+                project.setOldState( project.getState() );
+                
+                store.updateProject( project );
+
+                project = store.getProject( project.getId() );                
+            }
 
             getLogger().info(
                 "Enqueuing '" + project.getName() + "' (Build definition id=" + buildDefinitionId + ")." );
 
-            BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinitionId, trigger );
+            BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project.getName() );
 
             task.setMaxExecutionTime( store.getBuildDefinition( buildDefinitionId ).getSchedule()
                 .getMaxJobExecutionTime() * 1000 );

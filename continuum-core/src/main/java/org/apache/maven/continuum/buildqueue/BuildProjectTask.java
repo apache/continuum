@@ -37,8 +37,10 @@ public class BuildProjectTask
     private int trigger;
 
     private long maxExecutionTime;
+    
+    private String projectName;
 
-    public BuildProjectTask( int projectId, int buildDefinitionId, int trigger )
+    public BuildProjectTask( int projectId, int buildDefinitionId, int trigger, String projectName )
     {
         this.projectId = projectId;
 
@@ -47,6 +49,8 @@ public class BuildProjectTask
         this.timestamp = System.currentTimeMillis();
 
         this.trigger = trigger;
+        
+        this.projectName = projectName;
     }
 
     public int getProjectId()
@@ -78,4 +82,36 @@ public class BuildProjectTask
     {
         return maxExecutionTime;
     }
+
+    public String getProjectName()
+    {
+        return projectName;
+    }    
+    
+    public boolean equals( Object obj )
+    {
+        if ( obj == null )
+        {
+            return false;
+        }
+        if ( obj == this )
+        {
+            return false;
+        }
+        if ( !( obj instanceof BuildProjectTask ) )
+        {
+            return false;
+        }
+        BuildProjectTask buildProjectTask = (BuildProjectTask) obj;
+        return buildProjectTask.getBuildDefinitionId() == this.getBuildDefinitionId()
+            && buildProjectTask.getProjectId() == this.getProjectId()
+            && buildProjectTask.getTrigger() == this.getTrigger();
+    }
+
+    public int hashCode()
+    {
+        return this.getBuildDefinitionId() + this.getProjectId() + this.getTrigger();
+    }
+    
+    
 }
