@@ -37,14 +37,14 @@
         </p>
         <ul>
           <li>
-            <a href="download.html#requirements">System Requirements</a>
+            <a href="download.html#Requirements">System Requirements</a>
           </li>
           <li>
-            <a href="download.html#installation">Installation Instructions</a>
+            <a href="download.html#Installation">Installation Instructions</a>
           </li>
           <li>
-            <a href="release-notes.html">Release Notes</a>
-          </li>                         
+            <a href="http://jira.codehaus.org/secure/ReleaseNote.jspa?projectId=10540&amp;styleName=Html&amp;version=13661">Release Notes</a>
+          </li>
           <li>
             <a href="guides/getting-started/index.html">Getting Started</a>
           </li>
