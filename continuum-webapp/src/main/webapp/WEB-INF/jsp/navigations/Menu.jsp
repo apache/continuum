@@ -82,7 +82,7 @@
   </redback:ifAuthorized>
 
 
-  <redback:ifAnyAuthorized permissions="continuum-manage-build-templates,continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users,continuum-manage-installations,continuum-manage-profiles">
+  <redback:ifAnyAuthorized permissions="continuum-manage-build-templates,continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users,continuum-manage-installations,continuum-manage-profiles,continuum-manage-build-queue">
     <div id="projectmenu" class="toolgroup">
       <div class="label">
         <ww:text name="menu.administration"/>
@@ -109,6 +109,14 @@
           <div class="body">
             <ww:a href="%{configurationUrl}">
               <ww:text name="menu.administration.profile"/>
+            </ww:a>
+          </div> 
+        </redback:ifAuthorized> 
+        <redback:ifAuthorized permission="continuum-manage-build-queue">
+          <ww:url id="buildQueueUrl" action="displayGlobalBuildQueue" namespace="/admin" method="global" includeParams="none"/>
+          <div class="body">
+            <ww:a href="%{buildQueueUrl}">
+              <ww:text name="menu.administration.buildqueue"/>
             </ww:a>
           </div> 
         </redback:ifAuthorized> 

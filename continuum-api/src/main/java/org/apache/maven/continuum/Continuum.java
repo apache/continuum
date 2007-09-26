@@ -19,11 +19,15 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -33,11 +37,6 @@ import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -134,6 +133,9 @@ public interface Continuum
     // Queues
     // ----------------------------------------------------------------------
 
+    public List /*BuildProjectTask*/ getProjectsInBuildQueue()
+        throws ContinuumException;    
+    
     boolean isInBuildingQueue( int projectId )
         throws ContinuumException;
 
@@ -143,6 +145,9 @@ public interface Continuum
     boolean removeProjectsFromBuildingQueue( int[] projectsId )
         throws ContinuumException;
 
+    boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+        throws ContinuumException;
+    
     List getBuildProjectTasksInQueue()
         throws ContinuumException;
 

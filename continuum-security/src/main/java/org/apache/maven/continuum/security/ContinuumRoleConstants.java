@@ -113,4 +113,6 @@ public class ContinuumRoleConstants
     public static final String CONTINUUM_MANAGE_PROFILES = "continuum-manage-profiles";
     
     public static final String CONTINUUM_MANAGE_BUILD_TEMPLATES = "continuum-manage-build-templates";
+    
+    public static final String CONTINUUM_MANAGE_BUILD_QUEUE = "continuum-manage-build-queue";
 }

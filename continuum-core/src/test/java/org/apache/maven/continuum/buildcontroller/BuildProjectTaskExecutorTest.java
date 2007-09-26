@@ -250,7 +250,7 @@ public class BuildProjectTaskExecutorTest
 
         // projectGroup = continuumStore.addProjectGroup( projectGroup );
 
-        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(), 0 );
+        BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinition.getId(), 0, project.getName() );
 
         task.setMaxExecutionTime( maxRunTime );
 

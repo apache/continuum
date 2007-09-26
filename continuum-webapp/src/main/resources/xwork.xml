@@ -657,6 +657,20 @@
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
     </action>
+    
+    <action name="displayGlobalBuildQueue" class="buildQueue" method="global">
+      <result name="success">/WEB-INF/jsp/admin/buildQueueView.jsp</result>
+    </action>
+    
+    <action name="buildQueueView" class="buildQueue" method="display">
+      <result name="success">/WEB-INF/jsp/components/buildQueueComponent.jsp</result>
+    </action>
+    
+    <action name="removeBuildQueueEntry" class="buildQueue" method="remove">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayGlobalBuildQueue</param>
+      </result>      
+    </action>    
   </package>
 
   <package name="component" extends="default">
