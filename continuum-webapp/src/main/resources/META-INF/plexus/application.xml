@@ -534,9 +534,9 @@
        redback.default.guest=guest
        security.policy.password.expiration.enabled=false
       
-       until this process is better documented, the following is the apt document for configuration ldap with redback
+       until this process is better documented, the following is the document for configuration ldap with redback
       
-       http://svn.codehaus.org/plexus/plexus-redback/trunk/redback-site/src/site/apt/integration/ldap.apt
+       http://redback.codehaus.org/integration/ldap.html
     -->
 
     <!--
