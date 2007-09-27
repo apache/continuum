@@ -96,7 +96,7 @@ public class BuildProjectTask
         }
         if ( obj == this )
         {
-            return false;
+            return true;
         }
         if ( !( obj instanceof BuildProjectTask ) )
         {
