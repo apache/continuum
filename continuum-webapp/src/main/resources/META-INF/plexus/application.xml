@@ -119,6 +119,24 @@
         <from-mailbox></from-mailbox>
         <from-name></from-name>
         <timestamp-format>EEE d MMM yyyy HH:mm:ss Z</timestamp-format>
+        <!-- Customizable mail subject.  Use any combination of literal text, or state, project, or build attributes.
+          Examples: 
+            "[continuum] BUILD ${state}: ${project.groupId} ${project.name}"
+              results in "[continuum] BUILD SUCCESSFUL: foo.bar Hello World"
+            
+            "[continuum] BUILD ${state}: ${project.name} ${project.scmTag}" 
+              results in "[continuum] BUILD SUCCESSFULL: Hello World Branch001"
+            
+            "[continuum] BUILD ${state}: ${project.name} ${project.version}" 
+              results in "[continuum] BUILD SUCCESSFUL: Hello World 2.1-SNAPSHOT"
+            
+            "[continuum] BUILD ${state}: ${project.name} ${build.durationTime}" 
+              results in "[continuum] BUILD SUCCESSFUL: Hello World 2 sec"
+            
+            "[continuum] BUILD ${state}: ${project.name}, Build Def - ${build.buildDefinition.description}" 
+              results in "[continuum] BUILD SUCCESSFUL: Hello World, Build Def - Nightly Test Build"
+         -->
+        <subject-format>[continuum] BUILD ${state}: ${project.projectGroup.name} - ${project.name} - Build Def: ${build.buildDefinition.description}</subject-format>
         <includeBuildResult>true</includeBuildResult>
         <includeBuildSummary>true</includeBuildSummary>
         <alwaysSend>false</alwaysSend>

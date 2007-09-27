@@ -128,6 +128,18 @@ public class MailContinuumNotifier
      */
     private boolean includeBuildSummary = true;
 
+    /**
+     * Customizable mail subject.  Use any combination of literal text, project or build attributes.
+     * Examples: 
+     *   "[continuum] BUILD ${state}: ${project.groupId} ${project.name}" results in "[continuum] BUILD SUCCESSFUL: foo.bar Hello World"
+     *   "[continuum] BUILD ${state}: ${project.name} ${project.scmTag}" results in "[continuum] BUILD SUCCESSFUL: Hello World Branch001"
+     *   "[continuum] BUILD ${state}: ${project.name} ${build.durationTime}" results in "[continuum] BUILD SUCCESSFUL: Hello World 2 sec"
+     *   "[continuum] BUILD ${state}: ${project.name}, Build Def - ${build.buildDefinition.description}" results in "[continuum] BUILD SUCCESSFUL: Hello World, Build Def - Nightly Test Build"
+     * 
+     * @plexus.configuration
+     */
+    private String subjectFormat = "[continuum] BUILD ${state}: ${project.groupId} ${project.name}";
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -343,7 +355,12 @@ public class MailContinuumNotifier
         // Send the mail
         // ----------------------------------------------------------------------
 
-        String subject = generateSubject( project, build );
+        String subject;
+        try {
+            subject = generateSubject( project, build );
+        } catch ( Exception e ) {
+            throw new NotificationException( "Error while generating mail subject.", e );
+        }
 
         sendMessage( project, recipients, subject, content, configuration );
     }
@@ -414,33 +431,51 @@ public class MailContinuumNotifier
             .getVarValue(), executorConfigurator, profile );
     }
 
-    private String generateSubject( Project project, BuildResult build )
+    private String generateSubject( Project project, BuildResult build ) throws Exception
+    {
+        String state = getState( project, build );
+        
+        VelocityContext context = new VelocityContext();
+        context.put( "project", project );
+        context.put( "build", build );
+        context.put( "state", state );
+        
+        StringWriter writer = new StringWriter();
+
+        boolean velocityResults = velocity.getEngine().evaluate( context, writer, "subjectPattern", subjectFormat );
+            
+        String subject = writer.toString();
+
+        return subject;
+    }
+
+    private String getState( Project project, BuildResult build )
     {
         int state = project.getState();
 
-        if ( build != null )
-        {
+        if ( build != null ) {
             state = build.getState();
         }
 
+
         if ( state == ContinuumProjectState.OK )
         {
-            return "[continuum] BUILD SUCCESSFUL: " + project.getName();
+            return "SUCCESSFUL";
         }
         else if ( state == ContinuumProjectState.FAILED )
         {
-            return "[continuum] BUILD FAILURE: " + project.getName();
+            return "FAILURE";
         }
         else if ( state == ContinuumProjectState.ERROR )
         {
-            return "[continuum] BUILD ERROR: " + project.getName();
+            return "ERROR";
         }
         else
         {
             getLogger().warn( "Unknown build state " + state + " for project " + project.getId() );
 
-            return "[continuum] ERROR: Unknown build state " + state + " for " + project.getName() + " project";
-        }
+            return "ERROR: Unknown build state " + state;
+       }
     }
 
     private void sendMessage( Project project, Set recipients, String subject, String content, Map configuration )
@@ -478,6 +513,8 @@ public class MailContinuumNotifier
         try
         {
             message.setSubject( subject );
+
+            getLogger().info( "Message Subject: '" + subject + "'." );
 
             message.setContent( content );
 
