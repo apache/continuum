@@ -47,11 +47,14 @@ public class MailContinuumNotifierTest
         throws Exception
     {
         Project project = makeStubProject( "Test Project" );
+        project.setGroupId( "foo.bar" );
 
         BuildResult build = makeBuild( ContinuumProjectState.OK );
 
         MailMessage mailMessage = sendNotificationAndGetMessage( project, build, "lots out build output" );
 
+        assertEquals( "[continuum] BUILD SUCCESSFUL: foo.bar Test Project", mailMessage.getSubject() );
+        
         dumpContent( mailMessage );
     }
 
@@ -59,10 +62,13 @@ public class MailContinuumNotifierTest
         throws Exception
     {
         Project project = makeStubProject( "Test Project" );
+        project.setGroupId( "foo.bar" );
 
         BuildResult build = makeBuild( ContinuumProjectState.FAILED );
 
         MailMessage mailMessage = sendNotificationAndGetMessage( project, build, "output" );
+
+        assertEquals( "[continuum] BUILD FAILURE: foo.bar Test Project", mailMessage.getSubject() );
 
         dumpContent( mailMessage );
     }
@@ -71,12 +77,15 @@ public class MailContinuumNotifierTest
         throws Exception
     {
         Project project = makeStubProject( "Test Project" );
+        project.setGroupId( "foo.bar" );
 
         BuildResult build = makeBuild( ContinuumProjectState.ERROR );
 
         build.setError( "Big long error message" );
 
         MailMessage mailMessage = sendNotificationAndGetMessage( project, build, "lots of stack traces" );
+
+        assertEquals( "[continuum] BUILD ERROR: foo.bar Test Project", mailMessage.getSubject() );
 
         dumpContent( mailMessage );
     }
