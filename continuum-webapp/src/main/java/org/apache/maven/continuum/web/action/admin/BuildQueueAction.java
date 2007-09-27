@@ -1,3 +1,5 @@
+package org.apache.maven.continuum.web.action.admin;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,9 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.continuum.web.action.admin;
-
-import java.util.List;
 
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
@@ -29,33 +28,34 @@ import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 24 sept. 07
  * @version $Id$
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildQueue"
+ * @since 24 sept. 07
  */
 public class BuildQueueAction
     extends ContinuumActionSupport
     implements SecureAction
 {
-
     private List<BuildProjectTask> buildProjectTasks;
-    
+
     private List<String> selectedProjectIds;
-    
+
     private int buildDefinitionId;
-    
+
     private int projectId;
-    
+
     private int trigger;
-    
+
     private String projectName;
-    
+
     // -----------------------------------------------------
     //  webwork
     // -----------------------------------------------------     
-    
+
     public String global()
         throws Exception
     {
@@ -65,22 +65,20 @@ public class BuildQueueAction
     public String display()
         throws Exception
     {
-        this.setBuildProjectTasks( getContinuum().getBuildProjectTasksInQueue() );
+        this.setBuildProjectTasks( getContinuum().getProjectsInBuildQueue() );
         return SUCCESS;
     }
 
     public String remove()
         throws Exception
     {
-        BuildProjectTask buildProjectTask = new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName );
         getContinuum().removeFromBuildingQueue( projectId, buildDefinitionId, trigger, projectName );
         Project project = getContinuum().getProject( projectId );
         project.setState( project.getOldState() );
         getContinuum().updateProject( project );
-        
+
         return SUCCESS;
     }
-    
 
     // -----------------------------------------------------
     //  security
@@ -145,7 +143,7 @@ public class BuildQueueAction
     {
         this.trigger = trigger;
     }
-    
+
     public String getProjectName()
     {
         return projectName;
@@ -156,5 +154,5 @@ public class BuildQueueAction
         this.projectName = projectName;
     }
 
-    
+
 }

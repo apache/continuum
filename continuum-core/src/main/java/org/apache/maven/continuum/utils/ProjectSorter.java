@@ -28,7 +28,6 @@ import org.codehaus.plexus.util.dag.TopologicalSorter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,17 +55,15 @@ public class ProjectSorter
      * <li>do a topo sort on the graph that remains.</li>
      * </ul>
      */
-    public static List getSortedProjects( Collection projects )
+    public static List<Project> getSortedProjects( Collection<Project> projects )
         throws CycleDetectedException
     {
         DAG dag = new DAG();
 
-        Map projectMap = new HashMap();
+        Map<String, Project> projectMap = new HashMap<String, Project>();
 
-        for ( Iterator i = projects.iterator(); i.hasNext(); )
+        for ( Project project : projects )
         {
-            Project project = (Project) i.next();
-
             String id = getProjectId( project );
 
             dag.addVertex( id );
@@ -74,10 +71,8 @@ public class ProjectSorter
             projectMap.put( id, project );
         }
 
-        for ( Iterator i = projects.iterator(); i.hasNext(); )
+        for ( Project project : projects )
         {
-            Project project = (Project) i.next();
-
             String id = getProjectId( project );
 
             // Parent
@@ -94,9 +89,9 @@ public class ProjectSorter
             }
 
             // Dependencies
-            for ( Iterator j = project.getDependencies().iterator(); j.hasNext(); )
+            for ( Object o : project.getDependencies() )
             {
-                ProjectDependency dependency = (ProjectDependency) j.next();
+                ProjectDependency dependency = (ProjectDependency) o;
 
                 String dependencyId = getDependencyId( dependency );
 
@@ -107,11 +102,11 @@ public class ProjectSorter
             }
         }
 
-        List sortedProjects = new ArrayList();
+        List<Project> sortedProjects = new ArrayList<Project>();
 
-        for ( Iterator i = TopologicalSorter.sort( dag ).iterator(); i.hasNext(); )
+        for ( Object o : TopologicalSorter.sort( dag ) )
         {
-            String id = (String) i.next();
+            String id = (String) o;
 
             sortedProjects.add( projectMap.get( id ) );
         }
@@ -143,9 +138,7 @@ public class ProjectSorter
             artifactId = project.getArtifactId();
         }
 
-        String id = groupId + ":" + artifactId + ":" + project.getVersion();
-
-        return id;
+        return groupId + ":" + artifactId + ":" + project.getVersion();
     }
 
     private static String getDependencyId( ProjectDependency project )
