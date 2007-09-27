@@ -26,6 +26,7 @@
   <ww:i18n name="localization.Continuum">
     <head>
       <title><ww:text name="buildQueue.page.title"/></title>
+      <meta http-equiv="refresh" content="60"/>
     </head>
     <body>
       <div id="h3">
