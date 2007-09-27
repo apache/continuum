@@ -19,10 +19,6 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -33,6 +29,10 @@ import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -100,13 +100,13 @@ public interface ContinuumStore
 
     BuildDefinition storeBuildDefinition( BuildDefinition buildDefinition )
         throws ContinuumStoreException;
-    
+
     BuildDefinition addBuildDefinition( BuildDefinition buildDefinition )
         throws ContinuumStoreException;
-    
+
     List<BuildDefinition> getAllBuildDefinitions()
         throws ContinuumStoreException;
-    
+
     List<BuildDefinition> getAllTemplates()
         throws ContinuumStoreException;
 
@@ -130,10 +130,10 @@ public interface ContinuumStore
         throws ContinuumStoreException;
 
     public List<BuildDefinitionTemplate> getBuildDefinitionTemplatesWithType( String type )
-        throws ContinuumStoreException;    
-    
+        throws ContinuumStoreException;
+
     public List<BuildDefinitionTemplate> getContinuumBuildDefinitionTemplates()
-        throws ContinuumStoreException;    
+        throws ContinuumStoreException;
 
     /**
      * @param type
@@ -145,7 +145,8 @@ public interface ContinuumStore
 
     /**
      * the list returned will contains only continuumDefaults {@link BuildDefinition}
-     * @return List<BuildDefinitionTemplate> 
+     *
+     * @return List<BuildDefinitionTemplate>
      * @throws ContinuumStoreException
      */
     List<BuildDefinitionTemplate> getContinuumDefaultdDefinitions()
@@ -166,19 +167,19 @@ public interface ContinuumStore
     void updateProjectGroup( ProjectGroup group )
         throws ContinuumStoreException;
 
-    Collection getAllProjectGroupsWithProjects();
+    Collection<ProjectGroup> getAllProjectGroupsWithProjects();
 
-    Collection getAllProjectGroups();
+    Collection<ProjectGroup> getAllProjectGroups();
 
-    List getAllProjectsByName();
+    List<Project> getAllProjectsByName();
 
-    List getAllProjectsByNameWithDependencies();
+    List<Project> getAllProjectsByNameWithDependencies();
 
-    public List getProjectsWithDependenciesByGroupId( int projectGroupId );
+    public List<Project> getProjectsWithDependenciesByGroupId( int projectGroupId );
 
-    List getAllProjectsByNameWithBuildDetails();
+    List<Project> getAllProjectsByNameWithBuildDetails();
 
-    List getAllSchedulesByName();
+    List<Schedule> getAllSchedulesByName();
 
     Schedule addSchedule( Schedule schedule );
 
@@ -191,7 +192,7 @@ public interface ContinuumStore
     // ----------------------------------------------------------------
     // Profile
     // ----------------------------------------------------------------    
-    List getAllProfilesByName();
+    List<Profile> getAllProfilesByName();
 
     Profile addProfile( Profile profile );
 
@@ -210,7 +211,7 @@ public interface ContinuumStore
     // Installation
     // ----------------------------------------------------------------  
 
-    List getAllInstallations()
+    List<Installation> getAllInstallations()
         throws ContinuumStoreException;
 
     void removeInstallation( Installation installation )
@@ -222,7 +223,7 @@ public interface ContinuumStore
     Installation getInstallation( int installationId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
-    List getAllBuildsForAProjectByDate( int projectId );
+    List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
 
     Project getProject( int projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
@@ -258,7 +259,7 @@ public interface ContinuumStore
 
     BuildResult getBuildResult( int buildId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
-    
+
     void removeBuildResult( BuildResult buildResult );
 
     void removeProject( Project project );
@@ -268,18 +269,18 @@ public interface ContinuumStore
     ProjectGroup getProjectGroupWithBuildDetailsByProjectGroupId( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    List getProjectsInGroup( int projectGroupId )
+    List<Project> getProjectsInGroup( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    List getProjectsInGroupWithDependencies( int projectGroupId )
+    List<Project> getProjectsInGroupWithDependencies( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     ProjectGroup getProjectGroupWithProjects( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
-    List getAllProjectGroupsWithBuildDetails();
+    List<ProjectGroup> getAllProjectGroupsWithBuildDetails();
 
-    List getAllProjectsWithAllDetails();
+    List<Project> getAllProjectsWithAllDetails();
 
     Project getProjectWithAllDetails( int projectId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
@@ -300,15 +301,15 @@ public interface ContinuumStore
 
     BuildResult getLatestBuildResultForBuildDefinition( int projectId, int buildDefinitionId );
 
-    List getBuildResultsInSuccessForProject( int projectId, long fromDate );
+    List<BuildResult> getBuildResultsInSuccessForProject( int projectId, long fromDate );
 
-    List getBuildResultsForProject( int projectId, long fromDate );
+    List<BuildResult> getBuildResultsForProject( int projectId, long fromDate );
 
     Map getLatestBuildResultsByProjectGroupId( int projectGroupId );
 
     Map getLatestBuildResults();
 
-    List getBuildResultByBuildNumber( int projectId, int buildNumber );
+    List<BuildResult> getBuildResultByBuildNumber( int projectId, int buildNumber );
 
     Map getBuildResultsInSuccess();
 
@@ -333,7 +334,7 @@ public interface ContinuumStore
 
     void closeStore();
 
-    Collection getAllProjectGroupsWithTheLot();
+    Collection<ProjectGroup> getAllProjectGroupsWithTheLot();
 
     void eraseDatabase();
 }
