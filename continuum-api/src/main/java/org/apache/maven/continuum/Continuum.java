@@ -19,11 +19,6 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -33,10 +28,16 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -61,17 +62,17 @@ public interface Continuum
      *
      * @return {@link Collection} &lt;{@link ProjectGroup}>
      */
-    public Collection getAllProjectGroupsWithProjects();
+    public Collection<ProjectGroup> getAllProjectGroupsWithProjects();
 
-    public Collection getAllProjectGroups();
+    public Collection<ProjectGroup> getAllProjectGroups();
 
     public ProjectGroup getProjectGroupByProjectId( int projectId )
         throws ContinuumException;
 
-    public Collection getProjectsInGroup( int projectGroupId )
+    public Collection<Project> getProjectsInGroup( int projectGroupId )
         throws ContinuumException;
 
-    public Collection getProjectsInGroupWithDependencies( int projectGroupId )
+    public Collection<Project> getProjectsInGroupWithDependencies( int projectGroupId )
         throws ContinuumException;
 
     public void removeProjectGroup( int projectGroupId )
@@ -108,15 +109,15 @@ public interface Continuum
     Project getProjectWithBuildDetails( int projectId )
         throws ContinuumException;
 
-    List getAllProjectsWithAllDetails( int start, int end );
+    List<Project> getAllProjectsWithAllDetails( int start, int end );
 
-    Collection getAllProjects( int start, int end )
+    Collection<Project> getAllProjects( int start, int end )
         throws ContinuumException;
 
-    Collection getProjects()
+    Collection<Project> getProjects()
         throws ContinuumException;
 
-    Collection getProjectsWithDependencies()
+    Collection<Project> getProjectsWithDependencies()
         throws ContinuumException;
 
     BuildResult getLatestBuildResultForProject( int projectId );
@@ -134,8 +135,8 @@ public interface Continuum
     // ----------------------------------------------------------------------
 
     public List /*BuildProjectTask*/ getProjectsInBuildQueue()
-        throws ContinuumException;    
-    
+        throws ContinuumException;
+
     boolean isInBuildingQueue( int projectId )
         throws ContinuumException;
 
@@ -146,9 +147,6 @@ public interface Continuum
         throws ContinuumException;
 
     boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
-        throws ContinuumException;
-    
-    List getBuildProjectTasksInQueue()
         throws ContinuumException;
 
     boolean isInCheckoutQueue( int projectId )
@@ -167,7 +165,7 @@ public interface Continuum
     // Building
     // ----------------------------------------------------------------------
 
-    List getProjectsInBuildOrder()
+    List<Project> getProjectsInBuildOrder()
         throws CycleDetectedException, ContinuumException;
 
     /**
@@ -177,7 +175,7 @@ public interface Continuum
      * @return
      * @throws CycleDetectedException
      */
-    List getProjectsInBuildOrder( Collection projects )
+    List<Project> getProjectsInBuildOrder( Collection<Project> projects )
         throws CycleDetectedException;
 
     void buildProjects()
@@ -226,10 +224,10 @@ public interface Continuum
     String getBuildOutput( int projectId, int buildId )
         throws ContinuumException;
 
-    Collection getBuildResultsForProject( int projectId )
+    Collection<BuildResult> getBuildResultsForProject( int projectId )
         throws ContinuumException;
 
-    List getChangesSinceLastSuccess( int projectId, int buildResultId )
+    List<ChangeSet> getChangesSinceLastSuccess( int projectId, int buildResultId )
         throws ContinuumException;
 
     void removeBuildResult( int buildId )
@@ -270,10 +268,10 @@ public interface Continuum
      * @param projectGroupId
      * @return id of the project
      * @throws ContinuumException
-     */    
+     */
     int addProject( Project project, String executorId, int projectGroupId, int buildDefintionTemplateId )
-        throws ContinuumException;    
-    
+        throws ContinuumException;
+
     /**
      * Add a Maven 2 project to the list of projects.
      *
@@ -363,9 +361,10 @@ public interface Continuum
      */
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
                                                               boolean checkProtocol, boolean useCredentialsCache,
-                                                              boolean loadRecursiveProjects, int buildDefintionTemplateId )
-        throws ContinuumException;    
-    
+                                                              boolean loadRecursiveProjects,
+                                                              int buildDefintionTemplateId )
+        throws ContinuumException;
+
     /**
      * Add a Maven 1 project to the list of projects.
      *
@@ -423,10 +422,10 @@ public interface Continuum
     ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId, boolean checkProtocol,
                                                        boolean useCredentialsCache )
         throws ContinuumException;
-    
+
     ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId, boolean checkProtocol,
                                                        boolean useCredentialsCache, int buildDefintionTemplateId )
-        throws ContinuumException;    
+        throws ContinuumException;
 
     void updateProject( Project project )
         throws ContinuumException;
@@ -478,7 +477,7 @@ public interface Continuum
     /**
      * @deprecated
      */
-    List getBuildDefinitions( int projectId )
+    List<BuildDefinition> getBuildDefinitions( int projectId )
         throws ContinuumException;
 
     /**
@@ -523,12 +522,12 @@ public interface Continuum
 
 
     BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
-        throws ContinuumException;    
-
-    List getBuildDefinitionsForProject( int projectId )
         throws ContinuumException;
 
-    List getBuildDefinitionsForProjectGroup( int projectGroupId )
+    List<BuildDefinition> getBuildDefinitionsForProject( int projectId )
+        throws ContinuumException;
+
+    List<BuildDefinition> getBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumException;
 
     void removeBuildDefinitionFromProject( int projectId, int buildDefinitionId )
@@ -553,7 +552,7 @@ public interface Continuum
     Schedule getSchedule( int id )
         throws ContinuumException;
 
-    Collection getSchedules()
+    Collection<Schedule> getSchedules()
         throws ContinuumException;
 
     void addSchedule( Schedule schedule )
@@ -562,7 +561,7 @@ public interface Continuum
     void updateSchedule( Schedule schedule )
         throws ContinuumException;
 
-    void updateSchedule( int scheduleId, Map configuration )
+    void updateSchedule( int scheduleId, Map<String, String> configuration )
         throws ContinuumException;
 
     void removeSchedule( int scheduleId )
@@ -578,7 +577,7 @@ public interface Continuum
     String getFileContent( int projectId, String directory, String filename )
         throws ContinuumException;
 
-    List getFiles( int projectId, String currentDirectory )
+    List<File> getFiles( int projectId, String currentDirectory )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
@@ -587,7 +586,7 @@ public interface Continuum
 
     ConfigurationService getConfiguration();
 
-    void updateConfiguration( Map parameters )
+    void updateConfiguration( Map<String, Object> parameters )
         throws ContinuumException;
 
     void reloadConfiguration()
@@ -605,6 +604,6 @@ public interface Continuum
     InstallationService getInstallationService();
 
     ProfileService getProfileService();
-    
+
     BuildDefinitionService getBuildDefinitionService();
 }

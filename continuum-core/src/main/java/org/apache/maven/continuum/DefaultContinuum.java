@@ -44,6 +44,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -138,11 +139,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private ProfileService profileService;
-    
+
     /**
      * @plexus.requirement
-     */    
-    private BuildDefinitionService buildDefinitionService;    
+     */
+    private BuildDefinitionService buildDefinitionService;
 
     // ----------------------------------------------------------------------
     // Moved from core
@@ -177,7 +178,7 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private BuildExecutorManager executorManager;
-        
+
 
     /**
      * @plexus.requirement role-hint="url"
@@ -272,9 +273,9 @@ public class DefaultContinuum
 
         if ( projectGroup != null )
         {
-            for ( Iterator i = projectGroup.getProjects().iterator(); i.hasNext(); )
+            for ( Object o : projectGroup.getProjects() )
             {
-                removeProject( ( (Project) i.next() ).getId() );
+                removeProject( ( (Project) o ).getId() );
             }
         }
 
@@ -329,7 +330,7 @@ public class DefaultContinuum
             {
                 throw new ContinuumException( e.getMessage(), e );
             }
-            
+
         }
         else
         {
@@ -338,7 +339,7 @@ public class DefaultContinuum
 
     }
 
-    public Collection getAllProjectGroups()
+    public Collection<ProjectGroup> getAllProjectGroups()
     {
         return store.getAllProjectGroups();
     }
@@ -381,13 +382,13 @@ public class DefaultContinuum
     // Projects
     // ----------------------------------------------------------------------
 
-    public Collection getProjects()
+    public Collection<Project> getProjects()
         throws ContinuumException
     {
         return store.getAllProjectsByName();
     }
 
-    public Collection getProjectsWithDependencies()
+    public Collection<Project> getProjectsWithDependencies()
         throws ContinuumException
     {
         return store.getAllProjectsByNameWithDependencies();
@@ -449,7 +450,7 @@ public class DefaultContinuum
     public BuildResult getBuildResultByBuildNumber( int projectId, int buildNumber )
         throws ContinuumException
     {
-        List builds = store.getBuildResultByBuildNumber( projectId, buildNumber );
+        List<BuildResult> builds = store.getBuildResultByBuildNumber( projectId, buildNumber );
 
         if ( builds.isEmpty() )
         {
@@ -457,7 +458,7 @@ public class DefaultContinuum
         }
         else
         {
-            return (BuildResult) builds.get( 0 );
+            return builds.get( 0 );
         }
     }
 
@@ -466,7 +467,7 @@ public class DefaultContinuum
     // ----------------------------------------------------------------------
 
     public List<BuildProjectTask> getProjectsInBuildQueue()
-      throws ContinuumException
+        throws ContinuumException
     {
         try
         {
@@ -475,9 +476,9 @@ public class DefaultContinuum
         catch ( TaskQueueException e )
         {
             throw new ContinuumException( "Error while getting the building queue.", e );
-        }        
+        }
     }
-    
+
     public boolean isInBuildingQueue( int projectId )
         throws ContinuumException
     {
@@ -487,21 +488,10 @@ public class DefaultContinuum
     public boolean isInBuildingQueue( int projectId, int buildDefinitionId )
         throws ContinuumException
     {
-        List queue;
+        List<BuildProjectTask> queue = getProjectsInBuildQueue();
 
-        try
+        for ( BuildProjectTask task : queue )
         {
-            queue = buildQueue.getQueueSnapshot();
-        }
-        catch ( TaskQueueException e )
-        {
-            throw new ContinuumException( "Error while getting the building queue.", e );
-        }
-
-        for ( Iterator it = queue.iterator(); it.hasNext(); )
-        {
-            BuildProjectTask task = (BuildProjectTask) it.next();
-
             if ( task != null )
             {
                 if ( buildDefinitionId < 0 )
@@ -527,21 +517,10 @@ public class DefaultContinuum
     public boolean isInCheckoutQueue( int projectId )
         throws ContinuumException
     {
-        List queue;
+        List<CheckOutTask> queue = getCheckOutTasksInQueue();
 
-        try
+        for ( CheckOutTask task : queue )
         {
-            queue = checkoutQueue.getQueueSnapshot();
-        }
-        catch ( TaskQueueException e )
-        {
-            throw new ContinuumException( "Error while getting the checkout queue.", e );
-        }
-
-        for ( Iterator it = queue.iterator(); it.hasNext(); )
-        {
-            CheckOutTask task = (CheckOutTask) it.next();
-
             if ( task != null && task.getProjectId() == projectId )
             {
                 return true;
@@ -551,20 +530,7 @@ public class DefaultContinuum
         return false;
     }
 
-    public List getBuildProjectTasksInQueue()
-        throws ContinuumException
-    {
-        try
-        {
-            return buildQueue.getQueueSnapshot();
-        }
-        catch ( TaskQueueException e )
-        {
-            throw new ContinuumException( "Error while getting the building queue.", e );
-        }
-    }
-
-    public List getCheckOutTasksInQueue()
+    public List<CheckOutTask> getCheckOutTasksInQueue()
         throws ContinuumException
     {
         try
@@ -578,12 +544,12 @@ public class DefaultContinuum
     }
 
     public boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
-    throws ContinuumException
+        throws ContinuumException
     {
         BuildProjectTask buildProjectTask = new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName );
         return this.buildQueue.remove( buildProjectTask );
     }
-    
+
     public boolean removeProjectsFromBuildingQueue( int[] projectsId )
         throws ContinuumException
     {
@@ -595,22 +561,12 @@ public class DefaultContinuum
         {
             return false;
         }
-        List queue;
+        List<BuildProjectTask> queue = getProjectsInBuildQueue();
 
-        try
-        {
-            queue = this.buildQueue.getQueueSnapshot();
-        }
-        catch ( TaskQueueException e )
-        {
-            throw new ContinuumException( "Error while getting the building queue.", e );
-        }
         List<BuildProjectTask> tasks = new ArrayList<BuildProjectTask>();
 
-        for ( Iterator it = queue.iterator(); it.hasNext(); )
+        for ( BuildProjectTask task : queue )
         {
-            BuildProjectTask task = (BuildProjectTask) it.next();
-
             if ( task != null )
             {
                 if ( ArrayUtils.contains( projectsId, task.getProjectId() ) )
@@ -619,14 +575,16 @@ public class DefaultContinuum
                 }
             }
         }
-        if ( !tasks.isEmpty() )
-        {
-            return buildQueue.removeAll( tasks );
-        }
+
         for ( BuildProjectTask buildProjectTask : tasks )
         {
             getLogger().info( "cancel build for project " + buildProjectTask.getProjectId() );
         }
+        if ( !tasks.isEmpty() )
+        {
+            return buildQueue.removeAll( tasks );
+        }
+
         return false;
     }
 
@@ -641,22 +599,12 @@ public class DefaultContinuum
         {
             return false;
         }
-        List queue;
+        List<CheckOutTask> queue = getCheckOutTasksInQueue();
 
-        try
-        {
-            queue = this.checkoutQueue.getQueueSnapshot();
-        }
-        catch ( TaskQueueException e )
-        {
-            throw new ContinuumException( "Error while getting the checkout queue.", e );
-        }
-        List tasks = new ArrayList();
+        List<CheckOutTask> tasks = new ArrayList<CheckOutTask>();
 
-        for ( Iterator it = queue.iterator(); it.hasNext(); )
+        for ( CheckOutTask task : queue )
         {
-            BuildProjectTask task = (BuildProjectTask) it.next();
-
             if ( task != null )
             {
                 if ( ArrayUtils.contains( projectsId, task.getProjectId() ) )
@@ -675,21 +623,10 @@ public class DefaultContinuum
     public boolean removeProjectFromBuildingQueue( int projectId )
         throws ContinuumException
     {
-        List queue;
+        List<BuildProjectTask> queue = getProjectsInBuildQueue();
 
-        try
+        for ( BuildProjectTask task : queue )
         {
-            queue = buildQueue.getQueueSnapshot();
-        }
-        catch ( TaskQueueException e )
-        {
-            throw new ContinuumException( "Error while getting the build queue.", e );
-        }
-
-        for ( Iterator it = queue.iterator(); it.hasNext(); )
-        {
-            BuildProjectTask task = (BuildProjectTask) it.next();
-
             if ( task != null && task.getProjectId() == projectId )
             {
                 return buildQueue.remove( task );
@@ -702,21 +639,10 @@ public class DefaultContinuum
     public boolean removeProjectFromCheckoutQueue( int projectId )
         throws ContinuumException
     {
-        List queue;
+        List<CheckOutTask> queue = getCheckOutTasksInQueue();
 
-        try
+        for ( CheckOutTask task : queue )
         {
-            queue = checkoutQueue.getQueueSnapshot();
-        }
-        catch ( TaskQueueException e )
-        {
-            throw new ContinuumException( "Error while getting the checkout queue.", e );
-        }
-
-        for ( Iterator it = queue.iterator(); it.hasNext(); )
-        {
-            CheckOutTask task = (CheckOutTask) it.next();
-
             if ( task != null && task.getProjectId() == projectId )
             {
                 return checkoutQueue.remove( task );
@@ -749,9 +675,9 @@ public class DefaultContinuum
                 removeProjectFromBuildingQueue( projectId );
             }
 
-            for ( Iterator i = project.getBuildResults().iterator(); i.hasNext(); )
+            for ( Object o : project.getBuildResults() )
             {
-                BuildResult br = (BuildResult) i.next();
+                BuildResult br = (BuildResult) o;
                 store.removeBuildResult( br );
             }
 
@@ -778,7 +704,7 @@ public class DefaultContinuum
     public void checkoutProject( int projectId )
         throws ContinuumException
     {
-        Map context = new HashMap();
+        Map<String, Object> context = new HashMap<String, Object>();
 
         context.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
 
@@ -811,7 +737,7 @@ public class DefaultContinuum
         }
     }
 
-    public Collection getAllProjects( int start, int end )
+    public Collection<Project> getAllProjects( int start, int end )
         throws ContinuumException
     {
         return store.getAllProjectsByName();
@@ -842,7 +768,7 @@ public class DefaultContinuum
     public void buildProjects( int trigger )
         throws ContinuumException
     {
-        Collection projectsList;
+        Collection<Project> projectsList;
 
         try
         {
@@ -855,10 +781,8 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        for ( Iterator i = projectsList.iterator(); i.hasNext(); )
+        for ( Project project : projectsList )
         {
-            Project project = (Project) i.next();
-
             Integer buildDefId = null;
 
             try
@@ -885,7 +809,7 @@ public class DefaultContinuum
     public void buildProjects( int trigger, int buildDefinitionId )
         throws ContinuumException
     {
-        Collection projectsList;
+        Collection<Project> projectsList;
 
         try
         {
@@ -898,10 +822,8 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        for ( Iterator i = projectsList.iterator(); i.hasNext(); )
+        for ( Project project : projectsList )
         {
-            Project project = (Project) i.next();
-
             buildProject( project, buildDefinitionId, trigger );
         }
     }
@@ -951,7 +873,7 @@ public class DefaultContinuum
                                                        boolean checkDefaultBuildDefinitionForProject )
         throws ContinuumException
     {
-        Collection projectsList;
+        Collection<Project> projectsList;
 
         try
         {
@@ -966,10 +888,8 @@ public class DefaultContinuum
 
         //Map buildDefinitionsIds = store.getDefaultBuildDefinitions();
 
-        for ( Iterator i = projectsList.iterator(); i.hasNext(); )
+        for ( Project project : projectsList )
         {
-            Project project = (Project) i.next();
-
             int buildDefId = -1;
 
             for ( BuildDefinition bd : bds )
@@ -1028,7 +948,7 @@ public class DefaultContinuum
     public void buildProjects( Schedule schedule )
         throws ContinuumException
     {
-        Collection projectsList;
+        Collection<Project> projectsList;
 
         Map projectsMap = null;
 
@@ -1056,9 +976,8 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        for ( Iterator projectIterator = projectsList.iterator(); projectIterator.hasNext(); )
+        for ( Project project : projectsList )
         {
-            Project project = (Project) projectIterator.next();
             List buildDefIds = (List) projectsMap.get( new Integer( project.getId() ) );
 
             if ( buildDefIds != null && !buildDefIds.isEmpty() )
@@ -1072,26 +991,6 @@ public class DefaultContinuum
                     {
                         buildProject( project, buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
                     }
-                }
-            }
-        }
-    }
-
-
-    private void buildFromDefinitionIds( Collection buildDefinitionIds, Project project )
-        throws ContinuumException
-    {
-        if ( buildDefinitionIds != null && !buildDefinitionIds.isEmpty() )
-        {
-            getLogger().info( "Processing " + buildDefinitionIds.size() + " build definitions for project " + project );
-            for ( Iterator buildDefinitionIterator = buildDefinitionIds.iterator(); buildDefinitionIterator.hasNext(); )
-            {
-                Integer buildDefId = (Integer) buildDefinitionIterator.next();
-
-                if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
-                    !isInCheckoutQueue( project.getId() ) )
-                {
-                    buildProject( project, buildDefId.intValue(), ContinuumProjectState.TRIGGER_SCHEDULED, false );
                 }
             }
         }
@@ -1190,7 +1089,7 @@ public class DefaultContinuum
                 else
                 {
                     project.setOldState( project.getState() );
-                    
+
                     project.setState( ContinuumProjectState.ERROR );
 
                     store.updateProject( project );
@@ -1201,16 +1100,17 @@ public class DefaultContinuum
             else
             {
                 project.setOldState( project.getState() );
-                
+
                 store.updateProject( project );
 
-                project = store.getProject( project.getId() );                
+                project = store.getProject( project.getId() );
             }
 
             getLogger().info(
                 "Enqueuing '" + project.getName() + "' (Build definition id=" + buildDefinitionId + ")." );
 
-            BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project.getName() );
+            BuildProjectTask task =
+                new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project.getName() );
 
             task.setMaxExecutionTime( store.getBuildDefinition( buildDefinitionId ).getSchedule()
                 .getMaxJobExecutionTime() * 1000 );
@@ -1286,12 +1186,11 @@ public class DefaultContinuum
         }
     }
 
-    public List getChangesSinceLastSuccess( int projectId, int buildResultId )
+    public List<ChangeSet> getChangesSinceLastSuccess( int projectId, int buildResultId )
         throws ContinuumException
     {
-        ArrayList buildResults;
-
-        buildResults = new ArrayList( store.getBuildResultsForProject( projectId, 0 ) );
+        ArrayList<BuildResult> buildResults =
+            new ArrayList<BuildResult>( store.getBuildResultsForProject( projectId, 0 ) );
 
         Collections.reverse( buildResults );
 
@@ -1323,13 +1222,13 @@ public class DefaultContinuum
 
         BuildResult buildResult = (BuildResult) buildResultsIterator.next();
 
-        List changes = null;
+        List<ChangeSet> changes = null;
 
         while ( buildResult.getState() != ContinuumProjectState.OK )
         {
             if ( changes == null )
             {
-                changes = new ArrayList();
+                changes = new ArrayList<ChangeSet>();
             }
 
             ScmResult scmResult = buildResult.getScmResult();
@@ -1359,7 +1258,7 @@ public class DefaultContinuum
     //
     // ----------------------------------------------------------------------
 
-    public List getProjectsInBuildOrder()
+    public List<Project> getProjectsInBuildOrder()
         throws CycleDetectedException, ContinuumException
     {
         return getProjectsInBuildOrder( getProjectsWithDependencies() );
@@ -1372,12 +1271,12 @@ public class DefaultContinuum
      * @return
      * @throws CycleDetectedException
      */
-    public List getProjectsInBuildOrder( Collection projects )
+    public List<Project> getProjectsInBuildOrder( Collection<Project> projects )
         throws CycleDetectedException
     {
         if ( projects == null || projects.isEmpty() )
         {
-            return new ArrayList();
+            return new ArrayList<Project>();
         }
 
         return ProjectSorter.getSortedProjects( projects );
@@ -1436,15 +1335,16 @@ public class DefaultContinuum
             throw new ContinuumException( e.getMessage(), e );
         }
     }
-    
+
     public ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId,
-                                                              boolean checkProtocol, boolean useCredentialsCache, int buildDefintionTemplateId )
+                                                              boolean checkProtocol, boolean useCredentialsCache,
+                                                              int buildDefintionTemplateId )
         throws ContinuumException
     {
-            return executeAddProjectsFromMetadataActivity( metadataUrl, MavenOneContinuumProjectBuilder.ID,
-                                                           projectGroupId, checkProtocol, useCredentialsCache, true,
-                                                           buildDefintionTemplateId );
-    }    
+        return executeAddProjectsFromMetadataActivity( metadataUrl, MavenOneContinuumProjectBuilder.ID, projectGroupId,
+                                                       checkProtocol, useCredentialsCache, true,
+                                                       buildDefintionTemplateId );
+    }
 
     // ----------------------------------------------------------------------
     // Maven 2.x projects
@@ -1463,7 +1363,7 @@ public class DefaultContinuum
         {
             return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, -1,
                                                            checkProtocol, buildDefinitionService
-                                                               .getDefaultMavenTwoBuildDefinitionTemplate().getId() );
+                .getDefaultMavenTwoBuildDefinitionTemplate().getId() );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -1511,22 +1411,23 @@ public class DefaultContinuum
             return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
                                                            projectGroupId, checkProtocol, useCredentialsCache,
                                                            recursiveProjects, buildDefinitionService
-                                                               .getDefaultMavenTwoBuildDefinitionTemplate().getId() );
+                .getDefaultMavenTwoBuildDefinitionTemplate().getId() );
         }
         catch ( BuildDefinitionServiceException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }
     }
-    
+
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
                                                               boolean checkProtocol, boolean useCredentialsCache,
                                                               boolean recursiveProjects, int buildDefintionTemplateId )
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, projectGroupId,
-                                                       checkProtocol, useCredentialsCache, recursiveProjects, buildDefintionTemplateId );
-    }    
+                                                       checkProtocol, useCredentialsCache, recursiveProjects,
+                                                       buildDefintionTemplateId );
+    }
 
     // ----------------------------------------------------------------------
     // Shell projects
@@ -1541,9 +1442,9 @@ public class DefaultContinuum
     public int addProject( Project project, String executorId, int groupId )
         throws ContinuumException
     {
-        return addProject(project, executorId, groupId, -1);
+        return addProject( project, executorId, groupId, -1 );
     }
-    
+
     public int addProject( Project project, String executorId, int groupId, int buildDefintionTemplateId )
         throws ContinuumException
     {
@@ -1649,15 +1550,15 @@ public class DefaultContinuum
         return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, -1, checkProtocol );
     }
     */
-
     private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
                                                                                    String projectBuilderId,
                                                                                    int projectGroupId,
-                                                                                   boolean checkProtocol, int buildDefintionTemplateId )
+                                                                                   boolean checkProtocol,
+                                                                                   int buildDefintionTemplateId )
         throws ContinuumException
     {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol, false, false,
-                                                       buildDefintionTemplateId );
+        return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol,
+                                                       false, false, buildDefintionTemplateId );
     }
 
     private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
@@ -1665,7 +1566,8 @@ public class DefaultContinuum
                                                                                    int projectGroupId,
                                                                                    boolean checkProtocol,
                                                                                    boolean useCredentialsCache,
-                                                                                   boolean loadRecursiveProjects, int buildDefintionTemplateId )
+                                                                                   boolean loadRecursiveProjects,
+                                                                                   int buildDefintionTemplateId )
         throws ContinuumException
     {
         if ( checkProtocol )
@@ -1695,7 +1597,7 @@ public class DefaultContinuum
                      Boolean.valueOf( loadRecursiveProjects ) );
 
         context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
-        
+
         // CreateProjectsFromMetadataAction will check null and use default
         if ( buildDefintionTemplateId > 0 )
         {
@@ -1807,12 +1709,10 @@ public class DefaultContinuum
         // TODO: Validate all the projects before saving them
         // ----------------------------------------------------------------------
 
-        List projects = result.getProjects();
+        List<Project> projects = result.getProjects();
 
-        for ( Iterator i = projects.iterator(); i.hasNext(); )
+        for ( Project project : projects )
         {
-            Project project = (Project) i.next();
-
             project.setScmUseCache( useCredentialsCache );
 
             projectGroup.addProject( project );
@@ -1822,10 +1722,8 @@ public class DefaultContinuum
         {
             store.updateProjectGroup( projectGroup );
 
-            for ( Iterator i = projects.iterator(); i.hasNext(); )
+            for ( Project project : projects )
             {
-                Project project = (Project) i.next();
-
                 context = new HashMap();
 
                 context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT, project );
@@ -1863,13 +1761,13 @@ public class DefaultContinuum
     {
         Project project = getProjectWithAllDetails( projectId );
 
-        List notifiers = project.getNotifiers();
+        List<ProjectNotifier> notifiers = project.getNotifiers();
 
         ProjectNotifier notifier = null;
 
-        for ( Iterator i = notifiers.iterator(); i.hasNext(); )
+        for ( ProjectNotifier notif : notifiers )
         {
-            notifier = (ProjectNotifier) i.next();
+            notifier = notif;
 
             if ( notifier.getId() == notifierId )
             {
@@ -1885,13 +1783,13 @@ public class DefaultContinuum
     {
         ProjectGroup projectGroup = getProjectGroupWithBuildDetails( projectGroupId );
 
-        List notifiers = projectGroup.getNotifiers();
+        List<ProjectNotifier> notifiers = projectGroup.getNotifiers();
 
         ProjectNotifier notifier = null;
 
-        for ( Iterator i = notifiers.iterator(); i.hasNext(); )
+        for ( ProjectNotifier notif : notifiers )
         {
-            notifier = (ProjectNotifier) i.next();
+            notifier = notif;
 
             if ( notifier.getId() == notifierId )
             {
@@ -2142,7 +2040,7 @@ public class DefaultContinuum
     // Build Definition
     // ----------------------------------------------------------------------
 
-    public List getBuildDefinitions( int projectId )
+    public List<BuildDefinition> getBuildDefinitions( int projectId )
         throws ContinuumException
     {
         Project project = getProjectWithAllDetails( projectId );
@@ -2153,14 +2051,12 @@ public class DefaultContinuum
     public BuildDefinition getBuildDefinition( int projectId, int buildDefinitionId )
         throws ContinuumException
     {
-        List buildDefinitions = getBuildDefinitions( projectId );
+        List<BuildDefinition> buildDefinitions = getBuildDefinitions( projectId );
 
         BuildDefinition buildDefinition = null;
 
-        for ( Iterator i = buildDefinitions.iterator(); i.hasNext(); )
+        for ( BuildDefinition bd : buildDefinitions )
         {
-            buildDefinition = (BuildDefinition) i.next();
-
             if ( buildDefinition.getId() == buildDefinitionId )
             {
                 break;
@@ -2223,7 +2119,7 @@ public class DefaultContinuum
         }
     }
 
-    public List getBuildDefinitionsForProject( int projectId )
+    public List<BuildDefinition> getBuildDefinitionsForProject( int projectId )
         throws ContinuumException
     {
         Project project = getProjectWithAllDetails( projectId );
@@ -2231,7 +2127,7 @@ public class DefaultContinuum
         return project.getBuildDefinitions();
     }
 
-    public List getBuildDefinitionsForProjectGroup( int projectGroupId )
+    public List<BuildDefinition> getBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumException
     {
 
@@ -2276,9 +2172,8 @@ public class DefaultContinuum
 
         return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
     }
-    
-    public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId,
-                                                             BuildDefinition buildDefinition )
+
+    public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException
     {
         HashMap context = new HashMap();
@@ -2289,7 +2184,7 @@ public class DefaultContinuum
         executeAction( "add-build-definition-to-project-group", context );
 
         return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
-    }    
+    }
 
     public void removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
         throws ContinuumException
@@ -2373,7 +2268,7 @@ public class DefaultContinuum
         }
     }
 
-    public Collection getSchedules()
+    public Collection<Schedule> getSchedules()
         throws ContinuumException
     {
         return store.getAllSchedulesByName();
@@ -2437,20 +2332,20 @@ public class DefaultContinuum
         }
     }
 
-    public void updateSchedule( int scheduleId, Map configuration )
+    public void updateSchedule( int scheduleId, Map<String, String> configuration )
         throws ContinuumException
     {
         Schedule schedule = getSchedule( scheduleId );
 
-        schedule.setName( (String) configuration.get( "schedule.name" ) );
+        schedule.setName( configuration.get( "schedule.name" ) );
 
-        schedule.setDescription( (String) configuration.get( "schedule.description" ) );
+        schedule.setDescription( configuration.get( "schedule.description" ) );
 
-        schedule.setCronExpression( (String) configuration.get( "schedule.cronExpression" ) );
+        schedule.setCronExpression( configuration.get( "schedule.cronExpression" ) );
 
-        schedule.setDelay( Integer.parseInt( (String) configuration.get( "schedule.delay" ) ) );
+        schedule.setDelay( Integer.parseInt( configuration.get( "schedule.delay" ) ) );
 
-        schedule.setActive( Boolean.valueOf( (String) configuration.get( "schedule.active" ) ).booleanValue() );
+        schedule.setActive( Boolean.valueOf( configuration.get( "schedule.active" ) ).booleanValue() );
 
         updateSchedule( schedule, true );
     }
@@ -2546,7 +2441,7 @@ public class DefaultContinuum
         }
     }
 
-    public List getFiles( int projectId, String userDirectory )
+    public List<File> getFiles( int projectId, String userDirectory )
         throws ContinuumException
     {
         File workingDirectory = getWorkingDirectory( projectId );
@@ -2554,9 +2449,9 @@ public class DefaultContinuum
         return getFiles( workingDirectory, null, userDirectory );
     }
 
-    private List getFiles( File baseDirectory, String currentSubDirectory, String userDirectory )
+    private List<File> getFiles( File baseDirectory, String currentSubDirectory, String userDirectory )
     {
-        List dirs = new ArrayList();
+        List<File> dirs = new ArrayList<File>();
 
         File workingDirectory;
 
@@ -2573,26 +2468,26 @@ public class DefaultContinuum
 
         if ( files != null )
         {
-            for ( int i = 0; i < files.length; i++ )
+            for ( String file : files )
             {
-                File current = new File( workingDirectory, files[i] );
+                File current = new File( workingDirectory, file );
 
                 String currentFile;
 
                 if ( currentSubDirectory == null )
                 {
-                    currentFile = files[i];
+                    currentFile = file;
                 }
                 else
                 {
-                    currentFile = currentSubDirectory + "/" + files[i];
+                    currentFile = currentSubDirectory + "/" + file;
                 }
 
                 if ( userDirectory != null && current.isDirectory() && userDirectory.startsWith( currentFile ) )
                 {
                     dirs.add( current );
 
-                    dirs.add( getFiles( baseDirectory, currentFile, userDirectory ) );
+                    dirs.addAll( getFiles( baseDirectory, currentFile, userDirectory ) );
                 }
                 else
                 {
@@ -2613,7 +2508,7 @@ public class DefaultContinuum
         return configurationService;
     }
 
-    public void updateConfiguration( Map configuration )
+    public void updateConfiguration( Map<String, Object> configuration )
         throws ContinuumException
     {
         try
@@ -2844,12 +2739,13 @@ public class DefaultContinuum
         stopped = true;
     }
 
-    public Collection getBuildResultsForProject( int projectId )
+    public Collection<BuildResult> getBuildResultsForProject( int projectId )
         throws ContinuumException
     {
         try
         {
-            ArrayList buildResults = new ArrayList( store.getProjectWithBuilds( projectId ).getBuildResults() );
+            ArrayList<BuildResult> buildResults =
+                new ArrayList<BuildResult>( store.getProjectWithBuilds( projectId ).getBuildResults() );
 
             Collections.reverse( buildResults );
 
@@ -3024,7 +2920,7 @@ public class DefaultContinuum
         }
     }
 
-    public List getAllProjectsWithAllDetails( int start, int end )
+    public List<Project> getAllProjectsWithAllDetails( int start, int end )
     {
         return store.getAllProjectsWithAllDetails();
     }
@@ -3080,14 +2976,14 @@ public class DefaultContinuum
         }
     }
 
-    public Collection getAllProjectGroupsWithProjects()
+    public Collection<ProjectGroup> getAllProjectGroupsWithProjects()
     {
         // todo check why this interface isn't throwing exceptions on this guy
         return store.getAllProjectGroupsWithProjects();
 
     }
 
-    public Collection getProjectsInGroup( int projectGroupId )
+    public Collection<Project> getProjectsInGroup( int projectGroupId )
         throws ContinuumException
     {
         try
@@ -3104,7 +3000,7 @@ public class DefaultContinuum
         }
     }
 
-    public Collection getProjectsInGroupWithDependencies( int projectGroupId )
+    public Collection<Project> getProjectsInGroupWithDependencies( int projectGroupId )
         throws ContinuumException
     {
         try
