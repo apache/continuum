@@ -1089,32 +1089,30 @@ public class JdoContinuumStore
         }
     }
 
-    public Collection getAllProjectGroupsWithProjects()
+    public Collection<ProjectGroup> getAllProjectGroupsWithProjects()
     {
         return getAllObjectsDetached( ProjectGroup.class, "name ascending", PROJECTGROUP_PROJECTS_FETCH_GROUP );
     }
 
-    public Collection getAllProjectGroups()
+    public Collection<ProjectGroup> getAllProjectGroups()
     {
         return getAllObjectsDetached( ProjectGroup.class, "name ascending", null );
     }
 
-    public List getAllProjectsByName()
+    public List<Project> getAllProjectsByName()
     {
         return getAllObjectsDetached( Project.class, "name ascending", null );
     }
 
     // todo get this natively supported in the store
-    public List getProjectsWithDependenciesByGroupId( int projectGroupId )
+    public List<Project> getProjectsWithDependenciesByGroupId( int projectGroupId )
     {
-        List allProjects = getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
+        List<Project> allProjects = getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
 
-        List groupProjects = new ArrayList();
+        List<Project> groupProjects = new ArrayList<Project>();
 
-        for ( Iterator i = allProjects.iterator(); i.hasNext(); )
+        for ( Project project:allProjects )
         {
-            Project project = (Project) i.next();
-
             if ( project.getProjectGroup().getId() == projectGroupId )
             {
                 groupProjects.add( project );
@@ -1123,17 +1121,17 @@ public class JdoContinuumStore
         return groupProjects;
     }
 
-    public List getAllProjectsByNameWithDependencies()
+    public List<Project> getAllProjectsByNameWithDependencies()
     {
         return getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
     }
 
-    public List getAllProjectsByNameWithBuildDetails()
+    public List<Project> getAllProjectsByNameWithBuildDetails()
     {
         return getAllObjectsDetached( Project.class, "name ascending", PROJECT_BUILD_DETAILS_FETCH_GROUP );
     }
 
-    public List getAllSchedulesByName()
+    public List<Schedule> getAllSchedulesByName()
     {
         return getAllObjectsDetached( Schedule.class, "name ascending", null );
     }
@@ -1197,7 +1195,7 @@ public class JdoContinuumStore
     // Profile
     // ----------------------------------------------------------------    
 
-    public List getAllProfilesByName()
+    public List<Profile> getAllProfilesByName()
     {
         return getAllObjectsDetached( Profile.class, "name ascending", null );
     }
@@ -1258,7 +1256,7 @@ public class JdoContinuumStore
         return (Installation) addObject( installation );
     }
 
-    public List getAllInstallations()
+    public List<Installation> getAllInstallations()
     {
         return getAllObjectsDetached( Installation.class, "name ascending", null );
     }
@@ -1343,7 +1341,7 @@ public class JdoContinuumStore
                 for ( Iterator<Profile> iterator = result.iterator(); iterator.hasNext(); )
                 {
                     Profile profile = iterator.next();
-                    List newEnvironmentVariables = new ArrayList<Installation>();
+                    List<Installation> newEnvironmentVariables = new ArrayList<Installation>();
                     for ( Iterator<Installation> iteInstallation = profile.getEnvironmentVariables().iterator();
                           iteInstallation
                               .hasNext(); )
@@ -1418,7 +1416,7 @@ public class JdoContinuumStore
         }
     }
 
-    public List getAllBuildsForAProjectByDate( int projectId )
+    public List<BuildResult> getAllBuildsForAProjectByDate( int projectId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -1501,7 +1499,7 @@ public class JdoContinuumStore
         return (BuildResult) getObjectById( BuildResult.class, buildId, BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
     }
 
-    public List getBuildResultByBuildNumber( int projectId, int buildNumber )
+    public List<BuildResult> getBuildResultByBuildNumber( int projectId, int buildNumber )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -1533,7 +1531,7 @@ public class JdoContinuumStore
         }
     }
 
-    public List getBuildResultsForProject( int projectId, long fromDate )
+    public List<BuildResult> getBuildResultsForProject( int projectId, long fromDate )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -1567,17 +1565,16 @@ public class JdoContinuumStore
         }
     }
 
-    public List getBuildResultsInSuccessForProject( int projectId, long fromDate )
+    public List<BuildResult> getBuildResultsInSuccessForProject( int projectId, long fromDate )
     {
-        List buildResults = getBuildResultsForProject( projectId, fromDate );
+        List<BuildResult> buildResults = getBuildResultsForProject( projectId, fromDate );
 
-        List results = new ArrayList();
+        List<BuildResult> results = new ArrayList<BuildResult>();
 
         if ( buildResults != null )
         {
-            for ( Iterator i = buildResults.iterator(); i.hasNext(); )
+            for ( BuildResult res : buildResults )
             {
-                BuildResult res = (BuildResult) i.next();
                 if ( res.getState() == ContinuumProjectState.OK )
                 {
                     results.add( res );
@@ -1683,13 +1680,13 @@ public class JdoContinuumStore
         }
     }
 
-    public List getProjectsInGroup( int projectGroupId )
+    public List<Project> getProjectsInGroup( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
         return getProjectGroupWithProjects( projectGroupId ).getProjects();
     }
 
-    public List getProjectsInGroupWithDependencies( int projectGroupId )
+    public List<Project> getProjectsInGroupWithDependencies( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -1736,12 +1733,12 @@ public class JdoContinuumStore
         return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
     }
 
-    public List getAllProjectGroupsWithBuildDetails()
+    public List<ProjectGroup> getAllProjectGroupsWithBuildDetails()
     {
         return getAllObjectsDetached( ProjectGroup.class, "name ascending", PROJECT_BUILD_DETAILS_FETCH_GROUP );
     }
 
-    public List getAllProjectsWithAllDetails()
+    public List<Project> getAllProjectsWithAllDetails()
     {
         return getAllObjectsDetached( Project.class, "name ascending", PROJECT_ALL_DETAILS_FETCH_GROUP );
     }
@@ -1906,7 +1903,7 @@ public class JdoContinuumStore
         closePersistenceManagerFactory( continuumPmf, 1 );
     }
 
-    public Collection getAllProjectGroupsWithTheLot()
+    public Collection<ProjectGroup> getAllProjectGroupsWithTheLot()
     {
         List fetchGroups = Arrays.asList( new String[]{PROJECT_WITH_BUILDS_FETCH_GROUP,
             PROJECTGROUP_PROJECTS_FETCH_GROUP, BUILD_RESULT_WITH_DETAILS_FETCH_GROUP,
