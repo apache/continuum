@@ -19,15 +19,13 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.maven.continuum.web.action.admin.AbstractBuildQueueAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.codehaus.plexus.taskqueue.Task;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -35,12 +33,8 @@ import java.util.List;
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="cancelBuild"
  */
 public class CancelBuildAction
-    extends ContinuumActionSupport
+    extends AbstractBuildQueueAction
 {
-    /**
-     * @plexus.requirement role-hint='build-project'
-     */
-    private TaskQueueExecutor taskQueueExecutor;
 
     private int projectId;
 
@@ -91,56 +85,6 @@ public class CancelBuildAction
         return SUCCESS;
     }
 
-    private boolean cancelBuild( int projectId )
-        throws ContinuumException
-    {
-        Task task = taskQueueExecutor.getCurrentTask();
-        getLogger().info( "TaskQueueExecutor: " + taskQueueExecutor );
-
-        if ( task != null )
-        {
-            if ( task instanceof BuildProjectTask )
-            {
-                if ( ( (BuildProjectTask) task ).getProjectId() == projectId )
-                {
-                    getLogger().info( "Cancelling task for project " + projectId );
-                    return taskQueueExecutor.cancelTask( task );
-                }
-                else
-                {
-                    getLogger().warn( "Current task is not for the given projectId (" + projectId + "): " +
-                        ( (BuildProjectTask) task ).getProjectId() + "; not cancelling" );
-                }
-            }
-            else
-            {
-                getLogger().warn( "Current task not a BuildProjectTask - not cancelling" );
-            }
-        }
-        else
-        {
-            getLogger().warn( "No task running - not cancelling" );
-        }
-        return false;
-    }
-
-    /**
-     * @return -1 if not project currently building
-     * @throws ContinuumException
-     */
-    private int getCurrentProjectIdBuilding()
-        throws ContinuumException
-    {
-        Task task = taskQueueExecutor.getCurrentTask();
-        if ( task != null )
-        {
-            if ( task instanceof BuildProjectTask )
-            {
-                return ( (BuildProjectTask) task ).getProjectId();
-            }
-        }
-        return -1;
-    }
 
     public void setProjectId( int projectId )
     {

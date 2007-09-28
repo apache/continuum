@@ -33,12 +33,16 @@ public class CheckOutTask
     private int projectId;
 
     private File workingDirectory;
+    
+    private String projectName;
 
-    public CheckOutTask( int projectId, File workingDirectory )
+    public CheckOutTask( int projectId, File workingDirectory, String projectName )
     {
         this.projectId = projectId;
 
         this.workingDirectory = workingDirectory;
+        
+        this.projectName = projectName;
     }
 
     public int getProjectId()
@@ -55,4 +59,14 @@ public class CheckOutTask
     {
         return 0;
     }
+
+    public String getProjectName()
+    {
+        return projectName;
+    }
+    
+    public int getHashCode()
+    {
+        return this.hashCode();
+    }    
 }

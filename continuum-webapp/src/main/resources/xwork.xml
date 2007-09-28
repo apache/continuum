@@ -658,19 +658,46 @@
       </result>
     </action>
     
-    <action name="displayGlobalBuildQueue" class="buildQueue" method="global">
+    <action name="displayQueues" class="queues" method="display">
       <result name="success">/WEB-INF/jsp/admin/buildQueueView.jsp</result>
     </action>
     
-    <action name="buildQueueView" class="buildQueue" method="display">
-      <result name="success">/WEB-INF/jsp/components/buildQueueComponent.jsp</result>
-    </action>
-    
-    <action name="removeBuildQueueEntry" class="buildQueue" method="remove">
+    <action name="removeBuildQueueEntry" class="queues" method="remove">
       <result name="success" type="redirect-action">
-        <param name="actionName">displayGlobalBuildQueue</param>
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action>   
+    
+    <action name="removeBuildQueueEntries" class="queues" method="removeBuildEntries">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
       </result>      
     </action>    
+    
+    <action name="cancelCurrentBuildTask" class="queues" method="cancelCurrent">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action> 
+    
+    <action name="removeCheckoutQueueEntry" class="queues" method="removeCheckout">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action>
+    
+    <action name="cancelCurrentQueueTask" class="queues" method="cancelCurrentCheckout">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action>    
+    
+    <action name="removeCheckoutQueueEntries" class="queues" method="removeCheckoutEntries">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action>    
+    
   </package>
 
   <package name="component" extends="default">
