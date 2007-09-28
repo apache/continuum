@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
-import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;

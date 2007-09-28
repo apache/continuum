@@ -57,7 +57,7 @@ public class AddProjectToCheckOutQueueAction
         Project project = store.getProject( getProjectId( context ) );
 
         CheckOutTask checkOutTask =
-            new CheckOutTask( project.getId(), workingDirectoryService.getWorkingDirectory( project ) );
+            new CheckOutTask( project.getId(), workingDirectoryService.getWorkingDirectory( project ), project.getName() );
 
         checkOutQueue.put( checkOutTask );
     }

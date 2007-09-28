@@ -3,9 +3,9 @@
   <application>Continuum</application>
   <operations>
     <operation>
-      <id>continuum-manage-build-queue</id>
-      <name>continuum-manage-build-queue</name>
-      <description>Manage Continuum Build Queue</description>
+      <id>continuum-manage-queues</id>
+      <name>continuum-manage-queues</name>
+      <description>Manage Continuum Queues</description>
     </operation>    
     <operation>
       <id>continuum-manage-build-templates</id>
@@ -172,7 +172,7 @@
         <childRole>continuum-manage-profiles</childRole>
         <childRole>continuum-manage-schedules</childRole>
         <childRole>continuum-manage-build-templates</childRole>
-        <childRole>continuum-manage-build-queue</childRole>
+        <childRole>continuum-manage-queues</childRole>
       </childRoles>
     </role>
     <role>
@@ -312,16 +312,16 @@
       </permissions>
     </role>    
     <role>
-      <id>continuum-manage-build-queue</id>
-      <name>continuum-manage-build-queue</name>
+      <id>continuum-manage-queues</id>
+      <name>continuum-manage-queues</name>
       <assignable>true</assignable>
       <permanent>true</permanent>
       <permissions>
         <permission>
-          <id>continuum-manage-build-queue</id>
-          <name>Manage Continuum Build Queue</name>
+          <id>continuum-manage-queues</id>
+          <name>Manage Continuum Queues</name>
           <permanent>true</permanent>
-          <operation>continuum-manage-build-queue</operation>
+          <operation>continuum-manage-queues</operation>
           <resource>global</resource>
         </permission>
       </permissions>

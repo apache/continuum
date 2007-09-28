@@ -22,8 +22,6 @@ package org.apache.maven.continuum.web.action;
 import java.io.File;
 
 import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
-import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 
 /**

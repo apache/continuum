@@ -146,6 +146,13 @@ public interface Continuum
     boolean removeProjectsFromBuildingQueue( int[] projectsId )
         throws ContinuumException;
 
+    /**
+     * @param hashCodes BuildProjectTask hashCodes
+     * @throws ContinuumException
+     */
+    void removeProjectsFromBuildingQueueWithHashCodes( int[] hashCodes )
+        throws ContinuumException;
+
     boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
         throws ContinuumException;
 
@@ -155,11 +162,18 @@ public interface Continuum
     boolean removeProjectFromCheckoutQueue( int projectId )
         throws ContinuumException;
 
-    List getCheckOutTasksInQueue()
+    List /* CheckOutTask */getCheckOutTasksInQueue()
         throws ContinuumException;
 
     boolean removeProjectsFromCheckoutQueue( int[] projectId )
         throws ContinuumException;
+    
+    /**
+     * @param hashCodes CheckOutTask hashCodes
+     * @throws ContinuumException
+     */
+    void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
+        throws ContinuumException;    
 
     // ----------------------------------------------------------------------
     // Building

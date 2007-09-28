@@ -546,7 +546,14 @@ public class DefaultContinuum
     public boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
         throws ContinuumException
     {
-        BuildProjectTask buildProjectTask = new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName );
+        BuildDefinition buildDefinition = getBuildDefinition( buildDefinitionId );
+        String buildDefinitionLabel = buildDefinition.getDescription();
+        if ( StringUtils.isEmpty( buildDefinitionLabel ) )
+        {
+            buildDefinitionLabel = buildDefinition.getGoals();
+        }
+        BuildProjectTask buildProjectTask = new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName,
+                                                                  buildDefinitionLabel );
         return this.buildQueue.remove( buildProjectTask );
     }
 
@@ -636,6 +643,20 @@ public class DefaultContinuum
         return false;
     }
 
+    public void removeProjectsFromBuildingQueueWithHashCodes( int[] hashCodes )
+        throws ContinuumException
+    {
+        List<BuildProjectTask> queue = getProjectsInBuildQueue();
+
+        for ( BuildProjectTask task : queue )
+        {
+            if ( ArrayUtils.contains( hashCodes, task.hashCode() ) )
+            {
+                buildQueue.remove( task );
+            }
+        }
+    }
+
     public boolean removeProjectFromCheckoutQueue( int projectId )
         throws ContinuumException
     {
@@ -652,9 +673,26 @@ public class DefaultContinuum
         return false;
     }
 
+    public void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
+        throws ContinuumException
+    {
+        List<CheckOutTask> queue = getCheckOutTasksInQueue();
+
+        for ( CheckOutTask task : queue )
+        {
+            if ( ArrayUtils.contains( hashCodes, task.hashCode() ) )
+            {
+                checkoutQueue.remove( task );
+            }
+        }
+    }    
+    
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
+
+
 
     public void removeProject( int projectId )
         throws ContinuumException
@@ -1106,11 +1144,18 @@ public class DefaultContinuum
                 project = store.getProject( project.getId() );
             }
 
+            BuildDefinition buildDefinition = getBuildDefinition( buildDefinitionId );
+            String buildDefinitionLabel = buildDefinition.getDescription();
+            if ( StringUtils.isEmpty( buildDefinitionLabel ) )
+            {
+                buildDefinitionLabel = buildDefinition.getGoals();
+            }            
+            
             getLogger().info(
                 "Enqueuing '" + project.getName() + "' (Build definition id=" + buildDefinitionId + ")." );
 
-            BuildProjectTask task =
-                new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project.getName() );
+            BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project
+                .getName(), buildDefinitionLabel );
 
             task.setMaxExecutionTime( store.getBuildDefinition( buildDefinitionId ).getSchedule()
                 .getMaxJobExecutionTime() * 1000 );
