@@ -19,15 +19,13 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import com.opensymphony.xwork.Validateable;
+import java.util.Iterator;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 
-import java.util.Iterator;
+import com.opensymphony.xwork.Validateable;
 
 /**
  * @author Henry Isidro <hisidro@exist.com>
@@ -37,11 +35,6 @@ public class AddProjectGroupAction
     extends ContinuumActionSupport
     implements Validateable
 {
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
-
     private String name;
 
     private String groupId;
@@ -84,18 +77,15 @@ public class AddProjectGroupAction
         {
             try
             {
-                if ( store.getProjectGroupByGroupId( groupId ) != null )
+                if ( getContinuum().getProjectGroupByGroupId( groupId ) != null )
                 {
                     addActionError( "projectGroup.error.groupId.already.exists" );
                 }
             }
-            catch ( ContinuumObjectNotFoundException e )
+            catch ( ContinuumException e )
             {
                 //since we want to add a new project group, we should be getting
                 //this exception
-            }
-            catch ( ContinuumStoreException e )
-            {
             }
         }
     }

@@ -2138,12 +2138,13 @@ public class DefaultContinuum
         }
         catch ( ContinuumObjectNotFoundException cne )
         {
-            throw new ContinuumException( "no default build definition for project group", cne );
+            throw new ContinuumException( "Project Group (id=" + projectGroupId +
+            " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
         }
         catch ( ContinuumStoreException cse )
         {
-            throw new ContinuumException(
-                "error attempting to access default build definition for project group " + projectGroupId, cse );
+            throw new ContinuumException( "Project Group (id=" + projectGroupId +
+            " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
         }
     }
 

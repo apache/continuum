@@ -43,11 +43,6 @@ import java.util.List;
 public class ProjectsListAction
     extends ContinuumActionSupport
 {
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
-
     private Collection selectedProjects;
 
     private String projectGroupName = "";
@@ -148,22 +143,9 @@ public class ProjectsListAction
 
             //TODO : Change this part because it's a duplicate of DefaultContinuum.buildProjectGroup*
             List<BuildDefinition> groupDefaultBDs = null;
-            if (getBuildDefinitionId() == -1 || getBuildDefinitionId() == 0)
+            if ( getBuildDefinitionId() == -1 || getBuildDefinitionId() == 0 )
             {
-                try
-                {
-                    groupDefaultBDs = store.getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
-                }
-                catch ( ContinuumObjectNotFoundException e )
-                {
-                    throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                        " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
-                }
-                catch ( ContinuumStoreException e )
-                {
-                    throw new ContinuumException( "Project Group (id=" + projectGroupId +
-                        " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
-                }
+                groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
             }
             for ( Iterator i = sortedProjects.iterator(); i.hasNext(); )
             {
@@ -186,16 +168,14 @@ public class ProjectsListAction
                     {
                         try
                         {
-                            projectDefaultBD = store.getDefaultBuildDefinitionForProject( project.getId() );
+                            projectDefaultBD = getContinuum().getDefaultBuildDefinition( project.getId() );
                         }
-                        catch ( ContinuumObjectNotFoundException e )
+                        catch ( ContinuumException e )
                         {
+                            // here skip ObjectNotException
                             getLogger().debug( e.getMessage() );
                         }
-                        catch ( ContinuumStoreException e )
-                        {
-                            getLogger().debug( e.getMessage() );
-                        }
+                        
 
                         if ( projectDefaultBD != null )
                         {
