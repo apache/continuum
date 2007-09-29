@@ -19,12 +19,13 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.xwork.Preparable;
+import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.codehaus.plexus.redback.rbac.Resource;
@@ -33,8 +34,8 @@ import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
 import org.codehaus.plexus.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import com.opensymphony.webwork.ServletActionContext;
+import com.opensymphony.xwork.Preparable;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -45,11 +46,6 @@ public class ConfigurationAction
     extends ContinuumActionSupport
     implements Preparable, SecureAction
 {
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
-
     private String workingDirectory;
 
     private String buildOutputDirectory;
