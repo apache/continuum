@@ -127,11 +127,16 @@ $dep.groupId:$dep.artifactId:$dep.version
 ****************************************************************************
 Build Defintion:
 ****************************************************************************
+#if ( $build.buildDefinition.type )
 #if ( $build.buildDefinition.type == 'ant' )
 Ant build filename: $build.buildDefinition.buildFile   
 Goals: $build.buildDefinition.goals 
 #elseif ( $build.buildDefinition.type == 'shell' )
 shell: $build.buildDefinition.buildFile   
+#else
+POM filename: $build.buildDefinition.buildFile
+Goals: $build.buildDefinition.goals   
+#end
 #else
 POM filename: $build.buildDefinition.buildFile
 Goals: $build.buildDefinition.goals   
