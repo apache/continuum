@@ -32,7 +32,9 @@
           <p>
             <strong>
                 <ww:text name="deleteBuildDefinition.confirmation.message">
-                    <ww:param><ww:property value="buildDefinitionId"/></ww:param>
+                  <ww:param><ww:property value="buildDefinitionId"/></ww:param>
+                  <ww:param><ww:property value="description"/></ww:param>
+                  <ww:param><ww:property value="goals"/></ww:param>
                 </ww:text>
             </strong>
           </p>
