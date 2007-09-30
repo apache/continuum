@@ -19,6 +19,13 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -32,13 +39,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * BuildDefinitionAction:
@@ -89,7 +89,7 @@ public class BuildDefinitionAction
     private String buildDefinitionType;
 
     private boolean alwaysBuild;
-
+    
     /**
      * @plexus.requirement
      */    
@@ -375,6 +375,9 @@ public class BuildDefinitionAction
             }
             else
             {
+                BuildDefinition buildDefinition = getContinuum().getBuildDefinition( buildDefinitionId );
+                this.description = buildDefinition.getDescription();
+                this.goals = buildDefinition.getGoals();
                 return CONFIRM;
             }
         }
@@ -400,6 +403,9 @@ public class BuildDefinitionAction
             }
             else
             {
+                BuildDefinition buildDefinition = getContinuum().getBuildDefinition( buildDefinitionId );
+                this.description = buildDefinition.getDescription();
+                this.goals = buildDefinition.getGoals();
                 return CONFIRM;
             }
         }
@@ -654,4 +660,5 @@ public class BuildDefinitionAction
     {
         this.alwaysBuild = alwaysBuild;
     }
+    
 }
