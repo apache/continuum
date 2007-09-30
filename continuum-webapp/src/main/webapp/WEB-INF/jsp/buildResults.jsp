@@ -72,6 +72,7 @@
                 </c:choose>
               </ec:column>
               <ec:column property="state" title="buildResults.state" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
+              <ec:column property="buildDefinition.description" title="buildResults.buildDefinition.description" />
               <ec:column property="actions" title="&nbsp;">
                 <ww:url id="buildResultUrl" action="buildResult">
                   <ww:param name="projectId" value="${projectId}"/>
