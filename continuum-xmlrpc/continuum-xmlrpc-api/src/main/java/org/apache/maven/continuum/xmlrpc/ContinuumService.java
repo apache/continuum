@@ -282,6 +282,26 @@ public interface ContinuumService
     int buildProject( int projectId, int buildDefinitionId )
         throws ContinuumException, XmlRpcException;
 
+    /**
+     * Build the project group with the default build definition.
+     *
+     * @param projectGroupId The project group id
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    int buildGroup( int projectGroupId )
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Build the project group with the specified build definition.
+     *
+     * @param projectGroupId    The project group id
+     * @param buildDefinitionId The build definition id
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    int buildGroup( int projectGroupId, int buildDefinitionId )
+        throws ContinuumException, XmlRpcException;
     // ----------------------------------------------------------------------
     // Build Results
     // ----------------------------------------------------------------------
