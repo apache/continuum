@@ -57,8 +57,10 @@
           <a href="<ww:url  action="projectGroupSummary" namespace="/"><ww:param name="projectGroupId" value="%{'${group.id}'}"/></ww:url>">${group.name}</a>
         </ec:column>
         <ec:column property="groupId" title="Group&nbsp;Id" width="20%"/>
-        <ec:column property="numProjects" title="Projects" width="1%" style="text-align: center"/>
-        <ec:column property="numSuccesses" title="Build&nbsp;Status" width="1%" style="white-space: nowrap" cell="org.apache.maven.continuum.web.view.BuildStatusCell"/>
+        <ec:column property="numProjects" title="Projects" format="0" width="1%" style="text-align: right" calc="total" calcTitle="Summary"/>
+        <ec:column property="numSuccesses" title=" " format="0" width="2%" style="text-align: right" headerClass="calcHeaderSucces" calc="total" />
+        <ec:column property="numFailures" title=" " format="0" width="2%" style="text-align: right" headerClass="calcHeaderFailure" calc="total" />
+        <ec:column property="numErrors" title=" " format="0" width="2%" style="text-align: right" headerClass="calcHeaderError" calc="total"/>
       </ec:row>
     </ec:table>
     </ww:if>
