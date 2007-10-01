@@ -178,7 +178,7 @@ public class ContinuumServiceImpl
             {
                 if ( isAuthorized( ContinuumRoleConstants.CONTINUUM_VIEW_GROUP_OPERATION, projectGroup.getName() ) )
                 {
-                    result.add( populateProjectGroupWithProjects( projectGroup ) );
+                    result.add( populateProjectGroupSummary( projectGroup ) );
                 }
             }
             catch ( AuthorizationException e )
