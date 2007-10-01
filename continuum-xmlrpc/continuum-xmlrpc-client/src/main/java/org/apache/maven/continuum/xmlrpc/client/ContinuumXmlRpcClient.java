@@ -435,6 +435,32 @@ public class ContinuumXmlRpcClient
         }
     }
 
+    public int buildGroup( int projectGroupId )
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.buildGroup( projectGroupId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public int buildGroup( int projectGroupId, int buildDefinitionId )
+        throws ContinuumException, XmlRpcException
+    {
+        try
+        {
+            return continuum.buildGroup( projectGroupId, buildDefinitionId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Build Results
     // ----------------------------------------------------------------------

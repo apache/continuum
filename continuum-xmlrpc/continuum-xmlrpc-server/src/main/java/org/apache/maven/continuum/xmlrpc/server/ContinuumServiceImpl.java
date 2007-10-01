@@ -437,6 +437,28 @@ public class ContinuumServiceImpl
         return 0;
     }
 
+    public int buildGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
+        checkBuildProjectInGroupAuthorization( pg.getName() );
+
+        continuum.buildProjectGroup( projectGroupId );
+
+        return 0;
+    }
+
+    public int buildGroup( int projectGroupId, int buildDefintionId )
+        throws ContinuumException
+    {
+        ProjectGroupSummary pg = getProjectGroupSummary( projectGroupId );
+        checkBuildProjectInGroupAuthorization( pg.getName() );
+
+        continuum.buildProjectGroupWithBuildDefinition( projectGroupId, buildDefintionId );
+
+        return 0;
+    }
+
     // ----------------------------------------------------------------------
     // Build Results
     // ----------------------------------------------------------------------
