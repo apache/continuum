@@ -61,7 +61,7 @@
 	text-align: left;
 	vertical-align: top;
 	background-color: #aaa;
-	color:white
+	color: white;
 }
 
 .eXtremeTable .odd a, .even a {
@@ -76,6 +76,46 @@
 
 .eXtremeTable .even {
 	background: #ddd;
+}
+
+
+.eXtremeTable .calcRow {
+  text-align: right;
+  font-weight: bold;
+  background-color: #bbb;
+  color: white;
+  border-color: black;
+}
+
+.eXtremeTable .calcTitle {
+  text-align: left;
+}
+
+.eXtremeTable .calcResult {
+	text-align: right;
+	background-color: #aaa;
+	color: white;
+}
+
+.eXtremeTable .calcHeaderSucces {
+  background-image: url(/images/icon_success_sml.gif); 
+  background-repeat: no-repeat; 
+  background-position: center;
+  background-color: #bbb;
+}
+
+.eXtremeTable .calcHeaderFailure {
+  background-image: url(/images/icon_warning_sml.gif); 
+  background-repeat: no-repeat; 
+  background-position: center;
+  background-color: #bbb;
+}
+
+.eXtremeTable .calcHeaderError {
+  background-image: url(/images/icon_error_sml.gif); 
+  background-repeat: no-repeat; 
+  background-position: center;
+  background-color: #bbb;
 }
 
 .eXtremeTable .highlight td {
