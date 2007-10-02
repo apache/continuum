@@ -297,6 +297,8 @@ public class ProjectGroupAction
         // todo convert everything like to work off of string keys
         if ( !name.equals( projectGroup.getName() ) )
         {
+            //CONTINUUM-1502
+            name = name.trim();
             try
             {
                 roleManager.updateRole( "project-administrator", projectGroup.getName(), name );
