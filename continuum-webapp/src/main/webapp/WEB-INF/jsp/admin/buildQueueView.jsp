@@ -34,7 +34,7 @@
           <h3>
             <ww:text name="buildQueue.currentTask.section.title"/>
           </h3>  
-          <table>
+          <table width="100%">
             <ww:if test="currentBuildProjectTask != null">
             <tbody>
               <tr>
@@ -43,9 +43,9 @@
                 <th>&nbsp;</th>
               </tr>
               <tr>
-                <td><ww:property value="currentBuildProjectTask.projectName"/></td>
-                <td><ww:property value="currentBuildProjectTask.buildDefinitionLabel"/></td>
-                <td>
+                <td width="50%"><ww:property value="currentBuildProjectTask.projectName"/></td>
+                <td width="49%"><ww:property value="currentBuildProjectTask.buildDefinitionLabel"/></td>
+                <td width="1%">
                   <ww:url id="cancelUrl" action="cancelCurrentBuildTask" method="cancelCurrent" namespace="/">
                     <ww:param name="projectId"><ww:property value="currentBuildProjectTask.projectId"/></ww:param>
                   </ww:url>      
@@ -72,10 +72,10 @@
                         sortable="false"
                         filterable="false">
                 <ec:row highlightRow="true">
-                  <ec:column alias="checkbox" title=" " style="width:5px" filterable="false" sortable="false" width="1%">
+                  <ec:column alias="checkbox" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%">
                     <input type="checkbox" name="selectedBuildTaskHashCodes" value="${buildProjectTask.hashCode}" />
                   </ec:column>              
-                  <ec:column property="projectName" title="Project Name" style="white-space: nowrap" />
+                  <ec:column property="projectName" title="Project Name" style="white-space: nowrap" width="98%"/>
                   <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                     <ww:url id="cancelUrl" action="removeBuildQueueEntry" method="remove" namespace="/">
                       <ww:param name="projectId">${pageScope.buildProjectTask.projectId}</ww:param>
@@ -113,7 +113,7 @@
           <h3>
             <ww:text name="checkoutQueue.currentTask.section.title"/>
           </h3>  
-          <table>
+          <table width="100%">
             <ww:if test="currentCheckOutTask != null">
             <tbody>
               <tr>
@@ -121,8 +121,8 @@
                 <th>&nbsp;</th>
               </tr>
               <tr>
-                <td><ww:property value="currentCheckOutTask.projectName"/></td>
-                <td>
+                <td width="99%"><ww:property value="currentCheckOutTask.projectName"/></td>
+                <td width="1%">
                   <ww:url id="cancelUrl" action="cancelCurrentQueueTask" method="cancelCurrentCheckout" namespace="/">
                     <ww:param name="projectId"><ww:property value="currentCheckOutTask.projectId"/></ww:param>
                   </ww:url>      
@@ -149,10 +149,10 @@
                         sortable="false"
                         filterable="false">
                 <ec:row highlightRow="true">
-                  <ec:column alias="checkbox" title=" " style="width:5px" filterable="false" sortable="false" width="1%">
+                  <ec:column alias="checkbox" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%">
                     <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="${currentCheckOutTask.hashCode}" />
                   </ec:column>              
-                  <ec:column property="projectName" title="Project Name" style="white-space: nowrap" />
+                  <ec:column property="projectName" title="Project Name" style="white-space: nowrap" width="98%"/>
                   <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                     <ww:url id="cancelUrl" action="removeCheckoutQueueEntry" method="removeCheckout">
                       <ww:param name="projectId">${pageScope.currentCheckOutTask.projectId}</ww:param>
