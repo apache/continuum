@@ -50,7 +50,7 @@
                     sortable="false">
             <ec:row highlightRow="true">
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-                <ec:column alias="checkbox" title=" " style="width:5px" filterable="false" sortable="false">
+                <ec:column alias="selectedBuildResults" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
                   <input type="checkbox" name="selectedBuildResults" value="${buildResult.id}" />
                 </ec:column>
               </redback:ifAuthorized>
@@ -92,8 +92,6 @@
                     <td>
                       <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
                         <input type="button" name="delete-project" value="<ww:text name="delete"/>" onclick="document.forms.buildResultsForm.submit();" />
-                        <a href="#" onclick="selectAll();return false;"><ww:text name="selectAll"/></a>
-                        <a href="#" onclick="unselectAll();return false;"><ww:text name="unselectAll"/></a>
                       </redback:ifAuthorized>
                     </td>
                   </tr>
@@ -103,33 +101,6 @@
           </ww:if>
         </form>
       </div>
-
-    <script language="javascript">
-        <!--
-        function selectAll()
-        {
-            var inputs = document.getElementsByTagName("input");
-            for( var i = 0; inputs && i < inputs.length; i++ )
-            {
-                if( inputs[i].type == "checkbox" )
-                {
-                    inputs[i].checked = true;
-                }
-            }
-        }
-        function unselectAll()
-        {
-            var inputs = document.getElementsByTagName("input");
-            for( var i = 0; inputs && i < inputs.length; i++ )
-            {
-                if( inputs[i].type == "checkbox" )
-                {
-                    inputs[i].checked = false;
-                }
-            }
-        }
-        -->
-    </script>
     </body>
   </ww:i18n>
 </html>

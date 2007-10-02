@@ -61,7 +61,7 @@
       <c:set var="projectIdle" value="${!project.inBuildingQueue and ( ( ( project.state gt 0 ) and ( project.state lt 5 ) ) or project.state == 7 or project.state gt 8 ) }" scope="request"/>
 
       <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-        <ec:column alias="checkbox" title=" " style="width:5px" filterable="false" sortable="false" width="1%">
+        <ec:column alias="selectedProjects" title=" " style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
           <input type="checkbox" name="selectedProjects" value="${project.id}" />
         </ec:column>
       </redback:ifAuthorized>
@@ -245,8 +245,6 @@
                            onchange="$('projectsForm').buildDefinitionId.value=$('buildDefinitions').value" />                
                 <input type="button" name="build-projects" value="<ww:text name="projectGroup.buildProjects"/>" onclick="$('projectsForm').methodToCall.value='build';$('projectsForm').submit();" />
                 <input type="button" name="cancel-builds" value="<ww:text name="projectGroup.cancelBuilds"/>" onclick="document.forms.projectsForm.action='cancelBuilds.action';document.forms.projectsForm.submit();" />
-                <a href="#" onclick="selectAll();return false;"><ww:text name="selectAll"/></a>
-                <a href="#" onclick="unselectAll();return false;"><ww:text name="unselectAll"/></a>
               </redback:ifAuthorized>
             </td>
           </tr>
@@ -256,31 +254,4 @@
   </ww:if>
   </form>
 </ww:if>
-
-<script language="javascript">
-    <!--
-    function selectAll()
-    {
-        var inputs = document.getElementsByTagName("input");
-        for( var i = 0; inputs && i < inputs.length; i++ )
-        {
-            if( inputs[i].type == "checkbox" )
-            {
-                inputs[i].checked = true;
-            }
-        }
-    }
-    function unselectAll()
-    {
-        var inputs = document.getElementsByTagName("input");
-        for( var i = 0; inputs && i < inputs.length; i++ )
-        {
-            if( inputs[i].type == "checkbox" )
-            {
-                inputs[i].checked = false;
-            }
-        }
-    }
-    -->
-</script>
 </ww:i18n>

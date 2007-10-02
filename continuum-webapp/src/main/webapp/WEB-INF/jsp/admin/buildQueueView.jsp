@@ -72,7 +72,7 @@
                         sortable="false"
                         filterable="false">
                 <ec:row highlightRow="true">
-                  <ec:column alias="checkbox" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%">
+                  <ec:column alias="selectedBuildTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
                     <input type="checkbox" name="selectedBuildTaskHashCodes" value="${buildProjectTask.hashCode}" />
                   </ec:column>              
                   <ec:column property="projectName" title="buildQueue.currentTask.projectName" style="white-space: nowrap" width="49%"/>
@@ -150,7 +150,7 @@
                         sortable="false"
                         filterable="false">
                 <ec:row highlightRow="true">
-                  <ec:column alias="checkbox" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%">
+                  <ec:column alias="selectedCheckOutTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
                     <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="${currentCheckOutTask.hashCode}" />
                   </ec:column>              
                   <ec:column property="projectName" title="Project Name" style="white-space: nowrap" width="98%"/>
