@@ -19,14 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -34,6 +26,14 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Action to add a Maven project to Continuum, either Maven 1 or Maven 2.
@@ -69,11 +69,11 @@ public abstract class AddMavenProjectAction
     private boolean scmUseCache;
 
     private int projectGroupId;
-    
+
     private List<BuildDefinitionTemplate> buildDefinitionTemplates;
-    
+
     private int buildDefinitionTemplateId;
-    
+
     public String execute()
         throws ContinuumException, BuildDefinitionServiceException
     {
@@ -194,7 +194,7 @@ public abstract class AddMavenProjectAction
 
     // TODO: Remove this method because a default method return SUCCESS instead of INPUT
     public String doDefault()
-    throws BuildDefinitionServiceException
+        throws BuildDefinitionServiceException
     {
         return input();
     }
@@ -231,11 +231,10 @@ public abstract class AddMavenProjectAction
         for ( Iterator i = allProjectGroups.iterator(); i.hasNext(); )
         {
             ProjectGroup pg = (ProjectGroup) i.next();
-            //TODO: must implement same functionality using plexus-security
-            //if ( pg.getPermissions().isWrite() )
-            //{
-            projectGroups.add( pg );
-            //}
+            if ( isAuthorizedToAddProjectToGroup( pg.getName() ) )
+            {
+                projectGroups.add( pg );
+            }
         }
 
         initializeProjectGroupName();
@@ -376,5 +375,18 @@ public abstract class AddMavenProjectAction
     public void setBuildDefinitionTemplateId( int buildDefinitionTemplateId )
     {
         this.buildDefinitionTemplateId = buildDefinitionTemplateId;
+    }
+
+    private boolean isAuthorizedToAddProjectToGroup( String projectGroupName )
+    {
+        try
+        {
+            checkAddProjectToGroupAuthorization( projectGroupName );
+            return true;
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            return false;
+        }
     }
 }
