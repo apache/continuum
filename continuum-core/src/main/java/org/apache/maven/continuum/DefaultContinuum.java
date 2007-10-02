@@ -309,6 +309,8 @@ public class DefaultContinuum
 
         if ( pg == null )
         {
+            //CONTINUUM-1502
+            projectGroup.setName( projectGroup.getName().trim() );
             try
             {
                 ProjectGroup new_pg = store.addProjectGroup( projectGroup );
@@ -552,8 +554,8 @@ public class DefaultContinuum
         {
             buildDefinitionLabel = buildDefinition.getGoals();
         }
-        BuildProjectTask buildProjectTask = new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName,
-                                                                  buildDefinitionLabel );
+        BuildProjectTask buildProjectTask =
+            new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName, buildDefinitionLabel );
         return this.buildQueue.remove( buildProjectTask );
     }
 
@@ -685,13 +687,11 @@ public class DefaultContinuum
                 checkoutQueue.remove( task );
             }
         }
-    }    
-    
+    }
 
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
-
 
 
     public void removeProject( int projectId )
@@ -1149,8 +1149,8 @@ public class DefaultContinuum
             if ( StringUtils.isEmpty( buildDefinitionLabel ) )
             {
                 buildDefinitionLabel = buildDefinition.getGoals();
-            }            
-            
+            }
+
             getLogger().info(
                 "Enqueuing '" + project.getName() + "' (Build definition id=" + buildDefinitionId + ")." );
 
@@ -2139,12 +2139,12 @@ public class DefaultContinuum
         catch ( ContinuumObjectNotFoundException cne )
         {
             throw new ContinuumException( "Project Group (id=" + projectGroupId +
-            " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
+                " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
         }
         catch ( ContinuumStoreException cse )
         {
             throw new ContinuumException( "Project Group (id=" + projectGroupId +
-            " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
+                " doens't have a default build definition, this should be impossible, it should always have a default definition set." );
         }
     }
 
@@ -2908,6 +2908,8 @@ public class DefaultContinuum
     public void updateProjectGroup( ProjectGroup projectGroup )
         throws ContinuumException
     {
+        //CONTINUUM-1502
+        projectGroup.setName( projectGroup.getName().trim() );
         try
         {
             store.updateProjectGroup( projectGroup );
