@@ -874,7 +874,7 @@
       <version>1.0.9+</version>
       <fields>
         <field>
-          <name>name</name>
+          <name stash.maxSize="512">name</name>
           <version>1.0.9+</version>
           <type>String</type>
         </field>
