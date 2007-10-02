@@ -1151,6 +1151,7 @@ public class ContinuumServiceImpl
         bd.setBuildFresh( buildDef.isBuildFresh() );
         bd.setDefaultForProject( buildDef.isDefaultForProject() );
         bd.setGoals( buildDef.getGoals() );
+        bd.setId( buildDef.getId() );
         bd.setProfile( populateProfile( buildDef.getProfile() ) );
         bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
         return bd;
@@ -1170,6 +1171,7 @@ public class ContinuumServiceImpl
         bd.setBuildFresh( buildDef.isBuildFresh() );
         bd.setDefaultForProject( buildDef.isDefaultForProject() );
         bd.setGoals( buildDef.getGoals() );
+        bd.setId( buildDef.getId() );
         bd.setProfile( populateProfile( buildDef.getProfile() ) );
         bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
         return bd;
