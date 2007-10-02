@@ -19,11 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
+import com.opensymphony.xwork.Validateable;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -36,7 +32,10 @@ import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.opensymphony.xwork.Validateable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Nick Gonzalez
@@ -47,7 +46,6 @@ public class AddProjectAction
     extends ContinuumActionSupport
     implements Validateable
 {
-
     private String projectName;
 
     private String projectVersion;
@@ -80,9 +78,9 @@ public class AddProjectAction
     private ProfileService profileService;
 
     private int projectGroupId;
-    
+
     private int buildDefintionTemplateId;
-    
+
     private List<BuildDefinitionTemplate> buildDefinitionTemplates;
 
     public void validate()
@@ -97,9 +95,9 @@ public class AddProjectAction
             {
                 Project project = projects.next();
                 // CONTINUUM-1445
-                if ( StringUtils.equalsIgnoreCase( project.getName(), projectName )
-                    && StringUtils.equalsIgnoreCase( project.getVersion(), projectVersion )
-                    && StringUtils.equalsIgnoreCase( project.getScmUrl(), projectScmUrl ) )
+                if ( StringUtils.equalsIgnoreCase( project.getName(), projectName ) &&
+                    StringUtils.equalsIgnoreCase( project.getVersion(), projectVersion ) &&
+                    StringUtils.equalsIgnoreCase( project.getScmUrl(), projectScmUrl ) )
                 {
                     projectNameAlreadyExist = true;
                     break;
@@ -160,7 +158,7 @@ public class AddProjectAction
         project.setScmUseCache( projectScmUseCache );
 
         project.setExecutorId( projectType );
-        
+
         getContinuum().addProject( project, projectType, selectedProjectGroup, this.getBuildDefintionTemplateId() );
 
         if ( this.getSelectedProjectGroup() > 0 )
@@ -200,8 +198,10 @@ public class AddProjectAction
         {
             ProjectGroup pg = (ProjectGroup) i.next();
 
-            //TODO: must implement same functionality using plexus-security
-            projectGroups.add( pg );
+            if ( isAuthorizedToAddProjectToGroup( pg.getName() ) )
+            {
+                projectGroups.add( pg );
+            }
         }
 
         if ( !disableGroupSelection )
@@ -387,5 +387,18 @@ public class AddProjectAction
     public void setBuildDefinitionTemplates( List<BuildDefinitionTemplate> buildDefinitionTemplates )
     {
         this.buildDefinitionTemplates = buildDefinitionTemplates;
+    }
+
+    private boolean isAuthorizedToAddProjectToGroup( String projectGroupName )
+    {
+        try
+        {
+            checkAddProjectToGroupAuthorization( projectGroupName );
+            return true;
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            return false;
+        }
     }
 }
