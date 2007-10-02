@@ -75,7 +75,8 @@
                   <ec:column alias="checkbox" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%">
                     <input type="checkbox" name="selectedBuildTaskHashCodes" value="${buildProjectTask.hashCode}" />
                   </ec:column>              
-                  <ec:column property="projectName" title="Project Name" style="white-space: nowrap" width="98%"/>
+                  <ec:column property="projectName" title="buildQueue.currentTask.projectName" style="white-space: nowrap" width="49%"/>
+                  <ec:column property="buildDefinitionLabel" title="buildQueue.currentTask.buildDefinition" style="white-space: nowrap" width="49%"/>
                   <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                     <ww:url id="cancelUrl" action="removeBuildQueueEntry" method="remove" namespace="/">
                       <ww:param name="projectId">${pageScope.buildProjectTask.projectId}</ww:param>
