@@ -98,21 +98,21 @@
 }
 
 .eXtremeTable .calcHeaderSucces {
-  background-image: url(/images/icon_success_sml.gif); 
+  background-image: url(../images/icon_success_sml.gif); 
   background-repeat: no-repeat; 
   background-position: center;
   background-color: #bbb;
 }
 
 .eXtremeTable .calcHeaderFailure {
-  background-image: url(/images/icon_warning_sml.gif); 
+  background-image: url(../images/icon_warning_sml.gif); 
   background-repeat: no-repeat; 
   background-position: center;
   background-color: #bbb;
 }
 
 .eXtremeTable .calcHeaderError {
-  background-image: url(/images/icon_error_sml.gif); 
+  background-image: url(../images/icon_error_sml.gif); 
   background-repeat: no-repeat; 
   background-position: center;
   background-color: #bbb;
