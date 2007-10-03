@@ -43,7 +43,7 @@ import java.util.List;
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildResult"
  */
 public class BuildResultAction
-    extends ContinuumActionSupport
+    extends ContinuumConfirmAction
 {
     private Project project;
 
@@ -62,6 +62,7 @@ public class BuildResultAction
     private String state;
 
     private String projectGroupName = "";
+    
 
     public String execute()
         throws ContinuumException, ConfigurationException, IOException
@@ -111,10 +112,13 @@ public class BuildResultAction
         {
             return REQUIRES_AUTHORIZATION;
         }
-        
-        getContinuum().removeBuildResult( buildId );
-        
-        return SUCCESS;
+        if ( this.isConfirmed() )
+        {
+            getContinuum().removeBuildResult( buildId );
+            return SUCCESS;
+        }
+
+        return CONFIRM;
     }
 
 

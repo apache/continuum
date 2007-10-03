@@ -33,7 +33,7 @@ import java.util.Iterator;
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildResults"
  */
 public class BuildResultsListAction
-    extends ContinuumActionSupport
+    extends ContinuumConfirmAction
 {
     private Project project;
 
@@ -42,11 +42,13 @@ public class BuildResultsListAction
     private Collection selectedBuildResults;
 
     private int projectId;
+    
+    private int projectGroupId;
 
     private String projectName;
 
     private String projectGroupName = "";
-
+    
     public String execute()
         throws ContinuumException
     {
@@ -77,28 +79,30 @@ public class BuildResultsListAction
         {
             return REQUIRES_AUTHORIZATION;
         }
-        
-        if ( selectedBuildResults != null && !selectedBuildResults.isEmpty() )
+        if ( this.isConfirmed() )
         {
-            for ( Iterator i = selectedBuildResults.iterator(); i.hasNext(); )
+            if ( selectedBuildResults != null && !selectedBuildResults.isEmpty() )
             {
-                int buildId = Integer.parseInt( (String) i.next() );
-                
-                try
+                for ( Iterator i = selectedBuildResults.iterator(); i.hasNext(); )
                 {
-                    getLogger().info( "Removing BuildResult with id=" + buildId );
-                    
-                    getContinuum().removeBuildResult( buildId );
-                }
-                catch ( ContinuumException e )
-                {
-                    getLogger().error( "Error removing BuildResult with id=" + buildId );
-                    addActionError( "Unable to remove BuildResult with id=" + buildId );
+                    int buildId = Integer.parseInt( (String) i.next() );
+
+                    try
+                    {
+                        getLogger().info( "Removing BuildResult with id=" + buildId );
+
+                        getContinuum().removeBuildResult( buildId );
+                    }
+                    catch ( ContinuumException e )
+                    {
+                        getLogger().error( "Error removing BuildResult with id=" + buildId );
+                        addActionError( "Unable to remove BuildResult with id=" + buildId );
+                    }
                 }
             }
+            return SUCCESS;
         }
-        
-        return SUCCESS;
+        return CONFIRM;
     }
 
     public int getProjectId()
@@ -151,4 +155,16 @@ public class BuildResultsListAction
     {
         this.selectedBuildResults = selectedBuildResults;
     }
+
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
+    }
+
+    public void setProjectGroupId( int projectGroupId )
+    {
+        this.projectGroupId = projectGroupId;
+    }
+
+    
 }

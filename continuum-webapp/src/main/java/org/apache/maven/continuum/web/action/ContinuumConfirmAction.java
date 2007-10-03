@@ -89,19 +89,19 @@ public class ContinuumConfirmAction
         return confirmedDisplay;
     }
 
-    public void setConfirmed( boolean _confirmed )
+    public void setConfirmed( boolean confirmed )
     {
-        confirmed = _confirmed;
+        this.confirmed = confirmed;
     }
 
-    public boolean getConfirmed()
+    public boolean isConfirmed()
     {
         return confirmed;
     }
 
-    public void setAction( String _action )
+    public void setAction( String action )
     {
-        action = _action;
+        this.action = action;
     }
 
     public String getAction()
