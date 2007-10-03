@@ -23,17 +23,17 @@
 
 <validators>
   <field name="name">
-    <field-validator type="required">
+    <field-validator type="requiredstring">
       <message key="projectEdit.name.required"/>
     </field-validator>
   </field>
   <field name="version">
-    <field-validator type="required">
+    <field-validator type="requiredstring">
       <message key="projectEdit.version.required"/>
     </field-validator>
   </field>
   <field name="scmUrl">
-    <field-validator type="required">
+    <field-validator type="requiredstring">
       <message key="projectEdit.scmUrl.required"/>
     </field-validator>
   </field>
