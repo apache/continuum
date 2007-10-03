@@ -1,6 +1,6 @@
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one
-  ~ or more contributor license agreements.  See the NOTICE file
+  ~ or more contributor license agreements.  See the NOTICE filebu
   ~ distributed with this work for additional information
   ~ regarding copyright ownership.  The ASF licenses this file
   ~ to you under the Apache License, Version 2.0 (the
@@ -336,6 +336,7 @@
         <param name="actionName">buildResults</param>
         <param name="projectId">${projectId}</param>
       </result>
+      <result name="confirm">/WEB-INF/jsp/confirmBuildResultsRemoval.jsp</result>
     </action>
 
     <action name="buildResult" class="buildResult">
@@ -353,6 +354,7 @@
         <param name="actionName">buildResults</param>
         <param name="projectId">${projectId}</param>
       </result>
+      <result name="confirm">/WEB-INF/jsp/confirmBuildResultsRemoval.jsp</result>
     </action>
 
     <action name="surefireReport" class="surefireReport">

@@ -40,6 +40,8 @@
             </ww:text>
         </h3>
         <form id="buildResultsForm" action="removeBuildResults.action" method="post">
+          <ww:hidden name="projectGroupId"/>
+          <ww:hidden name="projectId"/> 
           <ww:set name="buildResults" value="buildResults" scope="request"/>
           <ec:table items="buildResults"
                     var="buildResult"
