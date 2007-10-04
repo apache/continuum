@@ -15,12 +15,12 @@ package org.apache.maven.continuum.core.action;
  * the License.
  */
 
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * AddBuildDefinitionToProjectAction:
@@ -39,13 +39,13 @@ public class AddBuildDefinitionToProjectAction
     {
         int projectId = getProjectId( map );
         Project project = store.getProjectWithAllDetails( projectId );
-        
+
         BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( map );
 
-        if (buildDefinitionTemplate != null)
+        if ( buildDefinitionTemplate != null )
         {
-            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator(); iterator
-                .hasNext(); )
+            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator();
+                  iterator.hasNext(); )
             {
                 BuildDefinition buildDefinition = iterator.next();
                 resolveDefaultBuildDefinitionsForProject( buildDefinition, project );
@@ -53,12 +53,13 @@ public class AddBuildDefinitionToProjectAction
                 project.addBuildDefinition( buildDefinition );
 
                 store.updateProject( project );
-                if (buildDefinition.isDefaultForProject())
+                if ( buildDefinition.isDefaultForProject() )
                 {
                     map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
                 }
             }
-        } else
+        }
+        else
         {
             BuildDefinition buildDefinition = getBuildDefinition( map );
             resolveDefaultBuildDefinitionsForProject( buildDefinition, project );
@@ -68,6 +69,6 @@ public class AddBuildDefinitionToProjectAction
             store.updateProject( project );
             map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
         }
-        
+
     }
 }

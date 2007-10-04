@@ -67,11 +67,14 @@ public class CheckoutProjectContinuumAction
     public void execute( Map context )
         throws Exception
     {
-        Project project = getProject( context );
-
-        int oldState = project.getState();
+        Project project = store.getProject( getProject( context ).getId() );
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
+
+        if ( buildDefinition != null )
+        {
+            buildDefinition = store.getBuildDefinition( buildDefinition.getId() );
+        }
 
         project.setState( ContinuumProjectState.CHECKING_OUT );
 
@@ -135,6 +138,8 @@ public class CheckoutProjectContinuumAction
                 project.setRelativePath( relativePath );
 
             }
+
+            project = store.getProject( project.getId() );
 
             project.setState( ContinuumProjectState.CHECKEDOUT );
 

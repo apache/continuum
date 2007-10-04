@@ -74,7 +74,7 @@ public class ExecuteBuilderContinuumAction
         // Get parameters from the context
         // ----------------------------------------------------------------------
 
-        Project project = getProject( context );
+        Project project = store.getProject( getProject( context ).getId() );
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
@@ -155,6 +155,8 @@ public class ExecuteBuilderContinuumAction
         {
             buildResult.setEndTime( new Date().getTime() );
 
+            project = store.getProject( project.getId() );
+
             if ( buildResult.getState() == ContinuumProjectState.OK )
             {
                 project.setBuildNumber( project.getBuildNumber() + 1 );
@@ -162,7 +164,7 @@ public class ExecuteBuilderContinuumAction
 
             project.setLatestBuildId( buildResult.getId() );
 
-            buildResult.setBuildDefinition( buildDefinition);
+            buildResult.setBuildDefinition( buildDefinition );
 
             buildResult.setBuildNumber( project.getBuildNumber() );
 
@@ -196,8 +198,6 @@ public class ExecuteBuilderContinuumAction
             store.updateBuildResult( buildResult );
 
             buildResult = store.getBuildResult( buildResult.getId() );
-
-            store.storeBuildDefinition( buildDefinition );
 
             store.updateProject( project );
 
