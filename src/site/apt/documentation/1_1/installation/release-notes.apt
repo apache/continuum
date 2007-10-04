@@ -26,7 +26,7 @@ Release Note
     
     {{http://maven.apache.org/continuum/download.html}}
     
-    To upgrade from 1.1-beta-2, you can look at this guide: {{http://maven.apache.org/continuum/guides/mini/guide-data-management.html}}
+    To upgrade from 1.1-beta-2, you can look at {{upgrade.html}Upgrade Guide}.
     
     Below is the jira release notes for this release.
     
