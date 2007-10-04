@@ -151,9 +151,12 @@ public class ProfileAction
         throws Exception
     {
         Installation installation = installationService.getInstallation( this.getInstallationId() );
-        profileService.addInstallationInProfile( profile, installation );
-        // read again
-        this.profile = profileService.getProfile( profile.getId() );
+        if ( installation != null )
+        {
+            profileService.addInstallationInProfile( profile, installation );
+            // read again
+            this.profile = profileService.getProfile( profile.getId() );
+        }
         return SUCCESS;
     }
 
