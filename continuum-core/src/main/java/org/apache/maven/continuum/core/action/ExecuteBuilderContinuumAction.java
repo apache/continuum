@@ -96,7 +96,8 @@ public class ExecuteBuilderContinuumAction
 
         if ( !isFirstRun && project.getOldState() != ContinuumProjectState.NEW &&
             project.getOldState() != ContinuumProjectState.CHECKEDOUT && scmResult.getChanges().size() == 0 &&
-            !hasUpdatedDependencies && trigger != ContinuumProjectState.TRIGGER_FORCED && !isNew( project ) )
+            !hasUpdatedDependencies && trigger != ContinuumProjectState.TRIGGER_FORCED && !isNew( project ) &&
+            !buildDefinition.isAlwaysBuild() )
         {
             getLogger().info( "No files updated, not building. Project id '" + project.getId() + "'." );
 
