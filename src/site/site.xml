@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project name="Apache Maven Continuum">
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-stylus-skin</artifactId>
+    <version>1.0.1</version>
+  </skin>
+  <bannerLeft>
+    <name>Maven</name>
+    <src>http://maven.apache.org/maven2/images/apache-maven-project-2.png</src>
+    <href>http://maven.apache.org/</href>
+  </bannerLeft>
+  <bannerRight>
+    <name>Apache Maven Continuum</name>
+    <src>images/continuum_logo.jpg</src>
+    <href>http://maven.apache.org/continuum</href>
+  </bannerRight>
+  <publishDate format="dd MMM yyyy" />
+  <body>
+    <links>
+      <item name="Apache" href="http://www.apache.org/"/>
+      <item name="Maven 1.x" href="http://maven.apache.org/maven-1.x"/>
+      <item name="Maven 2.x" href="http://maven.apache.org/"/>
+      <item name="Continuum" href="http://maven.apache.org/continuum"/>
+      <item name="SCM" href="http://maven.apache.org/scm"/>
+      <item name="Wagon" href="http://maven.apache.org/wagon"/>
+      <item name="JXR" href="http://maven.apache.org/jxr"/>
+      <item name="DOXIA" href="http://maven.apache.org/doxia"/>
+    </links>
+
+    <menu name="Main">
+      <item name="Home" href="index.html"/>
+      <item name="Download" href="download.html"/>
+      <item name="Change Log" href="change-log.html"/>
+      <item name="Users Wiki" href="http://docs.codehaus.org/display/CONTINUUMUSER"/>
+      <!--item name="Articles" href="articles.html"/ -->
+    </menu>
+    <menu name="Documentation">
+      <item name="Index (category)" href="documentation/1_1/index.html"/>
+      <item name="Installation/Upgrade Guides" href="documentation/1_1/installation/index.html" collapse="true">
+          <item name="Installation" href="documentation/1_1/installation/installation.html"/>
+          <item name="Release Notes" href="documentation/1_1/installation/release-notes.html"/>
+          <item name="Upgrade" href="documentation/1_1/installation/upgrade.html"/>
+      </item>
+      <item name="User's Guides" collapse="true" href="documentation/1_1/user_guides/index.html">
+        <item name="Managing a Project" collapse="true">
+            <item name="Add a Project"/>
+            <item name="Edit a Project"/>
+            <item name="Remove a Project"/>
+            <!-- item name="SCM security hints"/ -->
+        </item>
+        <item name="Managing Build Definitions">
+            <item name="Add a Project Build Definition"/>
+            <item name="Add a Project GroupBuild Definition"/>
+            <item name="Add a Build Definition Template"/>
+        </item>
+        <item name="Managing Notification" href="documentation/1_1/user_guides/notification/index.html" collapse="true">
+            <item name="Mail Notification"/>
+            <item name="IRC Notification"/>
+            <item name="Jabber Notification"/>
+            <item name="MSN Notification"/>
+            <item name="Wagon Notification"/>
+            <!-- item name="mail to an address, mail to latest committers, irc, jabber, msn, wagon, alwaysSend..."/ -->
+        </item>
+        <item name="Building a project">
+            <item name="Scheduled Build"/>
+            <item name="Forced Build/>
+        </item>
+        <item name="Release Management"/>
+      </item>
+      <item name="Knowledge Base" href="documentation/1_1/knowledge_base/index.html" collapse="true">
+        <item name="FAQs" href="documentation/1_1/knowledge_base/faqs.html"/>
+      </item>
+      <item name="Administrator's Guides" collapse="true">
+        <item name="Managing Users and Security">
+            <item name="LDAP Configuration"/>
+        </item>
+        <item name="Adding Project Group"/>
+        <item name="Managing Builders"/>
+        <item name="Managing JDKs"/>
+        <item name="Managing Profiles"/>
+        <item name="Managing Schedules"/>
+        <item name="Managing General Configuration (configuration and appearance)"/>
+      </item>
+      <item name="Developer's Guides" collapse="true">
+        <item name="SVN repository structure"/>
+        <item name="XML-RPC"/>
+        <!-- item name="TO BE DEFINED"/ -->
+      </item>
+      <item name="Old versions" collapse="true">
+        <item name="1.0.x"/>
+      </item>
+    </menu>
+    <menu name="Community">
+      <item name="Community Overview"/>
+      <item name="How to Contribute"/>
+      <item name="Getting Help"/>
+      <item name="Issue Tracking"/>
+      <item name="The Continuum Team"/>
+    </menu>
+
+    ${reports}
+
+  </body>
+</project>
