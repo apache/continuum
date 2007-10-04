@@ -46,8 +46,8 @@ public class AddBuildDefinitionToProjectGroupAction
         BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( map );
         if ( buildDefinitionTemplate != null )
         {
-            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator(); iterator
-                .hasNext(); )
+            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator();
+                  iterator.hasNext(); )
             {
                 BuildDefinition buildDefinition = iterator.next();
                 resolveDefaultBuildDefinitionsForProjectGroup( buildDefinition, projectGroup );

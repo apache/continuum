@@ -56,7 +56,7 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
     public void execute( Map context )
         throws Exception
     {
-        Project project = getProject( context );
+        Project project = store.getProject( getProject( context ).getId() );
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
@@ -78,6 +78,8 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         }
         finally
         {
+            project = store.getProject( project.getId() );
+
             project.setState( state );
 
             store.updateProject( project );
