@@ -101,14 +101,19 @@
                     </tr>
                   </tbody>
                 </table>
-                <ww:form action="addInstallationProfile!addInstallation.action" method="get">
-                  <ww:hidden name="profile.id" />
-                  <div class="functnbar3">
-                    <!-- can't use default profile to display this select -->
-                    <ww:select theme="profile" name="installationId" list="allInstallations" listKey="installationId" listValue="name" />
-                    <ww:submit value="%{getText('add')}"/>
-                  </div>
-                </ww:form>
+                <ww:if test="${!empty allInstallations}">
+                  <ww:form action="addInstallationProfile!addInstallation.action" method="get">
+                    <ww:hidden name="profile.id" />
+                    <div class="functnbar3">
+                      <!-- can't use default profile to display this select -->
+                      <ww:select theme="profile" name="installationId" list="allInstallations" listKey="installationId" listValue="name" />
+                      <ww:submit value="%{getText('add')}"/>
+                    </div>
+                  </ww:form>
+                </ww:if>
+                <ww:else>
+                  <div class="warningmessage" style="color: red"><ww:text name="profile.no.installations" /></div>
+                </ww:else>
               </div>              
             </td>
           </tr>
