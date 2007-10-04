@@ -223,5 +223,36 @@ public class DefaultProfileServiceTest
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
         installationService.delete( jdk2 );
     }
+    
+    public void testRemoveEnvVarFromProfile()
+        throws Exception
+    {
+        Profile profile = getProfileService().getProfile( jdk1mvn205.getId() );
+        getProfileService().setJdkInProfile( profile, jdk2 );
+        getProfileService().addEnvVarInProfile( profile, mvnOpts1 );
+        getProfileService().addEnvVarInProfile( profile, mvnOpts2 );
+
+        profile = getProfileService().getProfile( jdk1mvn205.getId() );
+        assertNotNull( profile.getJdk() );
+        assertEquals( 2, profile.getEnvironmentVariables().size() );
+        
+        getProfileService().removeInstallationFromProfile( profile, mvnOpts1 );
+        
+        profile = getProfileService().getProfile( jdk1mvn205.getId() );
+        assertNotNull( profile.getJdk() );
+        assertEquals( 1, profile.getEnvironmentVariables().size() );
+        
+        getProfileService().removeInstallationFromProfile( profile, jdk2 );
+        
+        profile = getProfileService().getProfile( jdk1mvn205.getId() );
+        assertNull( profile.getJdk() );
+        assertEquals( 1, profile.getEnvironmentVariables().size() );
+        
+        getProfileService().removeInstallationFromProfile( profile, mvnOpts2 );
+        profile = getProfileService().getProfile( jdk1mvn205.getId() );
+        assertNull( profile.getJdk() );
+        assertEquals( 0, profile.getEnvironmentVariables().size() );
+    }
+    
 
 }

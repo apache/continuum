@@ -66,4 +66,13 @@ public interface ProfileService
     
     public void addInstallationInProfile( Profile profile, Installation installation )
         throws ProfileException;
+    
+    /**
+     * @param profile
+     * @param installation
+     * @throws ProfileException
+     * @since 1.1-beta-4
+     */
+    public void removeInstallationFromProfile( Profile profile, Installation installation )
+        throws ProfileException;
 }

@@ -33,7 +33,6 @@ import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
-import org.codehaus.plexus.util.StringUtils;
 
 import com.opensymphony.xwork.Preparable;
 
@@ -165,33 +164,7 @@ public class ProfileAction
     {
 
         Installation installation = installationService.getInstallation( this.getInstallationId() );
-        Profile stored = profileService.getProfile( profile.getId() );
-        if ( InstallationService.JDK_TYPE.equals( installation.getType() ) )
-        {
-            stored.setJdk( null );
-        }
-        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() ) ||
-            InstallationService.MAVEN2_TYPE.equals( installation.getType() ) ||
-            InstallationService.ANT_TYPE.equals( installation.getType() ) )
-        {
-            stored.setBuilder( null );
-        }
-        else
-        {
-            // remove one
-            // TODO move this in ProfileService
-            List<Installation> storedEnvVars = stored.getEnvironmentVariables();
-            List<Installation> newEnvVars = new ArrayList<Installation>();
-            for ( Installation storedInstallation : storedEnvVars )
-            {
-                if ( !StringUtils.equals( storedInstallation.getName(), installation.getName() ) )
-                {
-                    newEnvVars.add( storedInstallation );
-                }
-            }
-            stored.setEnvironmentVariables( newEnvVars );
-        }
-        profileService.updateProfile( stored );
+        profileService.removeInstallationFromProfile( profile, installation );
         this.profile = profileService.getProfile( profile.getId() );
         return SUCCESS;
     }

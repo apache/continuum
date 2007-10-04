@@ -25,7 +25,9 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -192,6 +194,38 @@ public class DefaultProfileService
             addEnvVarInProfile( profile, installation );
         }
 
+    }
+
+    public void removeInstallationFromProfile( Profile profile, Installation installation )
+        throws ProfileException
+    {
+        Profile stored = getProfile( profile.getId() );
+        if ( InstallationService.JDK_TYPE.equals( installation.getType() ) )
+        {
+            stored.setJdk( null );
+        }
+        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() ) ||
+            InstallationService.MAVEN2_TYPE.equals( installation.getType() ) ||
+            InstallationService.ANT_TYPE.equals( installation.getType() ) )
+        {
+            stored.setBuilder( null );
+        }
+        else
+        {
+            // remove one
+            List<Installation> storedEnvVars = stored.getEnvironmentVariables();
+            List<Installation> newEnvVars = new ArrayList<Installation>();
+            for ( Installation storedInstallation : storedEnvVars )
+            {
+                if ( !StringUtils.equals( storedInstallation.getName(), installation.getName() ) )
+                {
+                    newEnvVars.add( storedInstallation );
+                }
+            }
+            stored.setEnvironmentVariables( newEnvVars );
+        }
+        updateProfile( stored );
+        
     }
 
 }
