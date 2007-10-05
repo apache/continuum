@@ -40,16 +40,16 @@
             <a href="download.html#Requirements">System Requirements</a>
           </li>
           <li>
-            <a href="download.html#Installation">Installation Instructions</a>
+            <a href="documentation/1_1/installation/index.html">Installation Instructions</a>
           </li>
           <li>
             <a href="http://jira.codehaus.org/secure/ReleaseNote.jspa?projectId=10540&amp;styleName=Html&amp;version=13661">Release Notes</a>
           </li>
           <li>
-            <a href="guides/getting-started/index.html">Getting Started</a>
+            <a href="documentation/1_1/getting-started.html">Getting Started</a>
           </li>
           <li>
-            <a href="guides/index.html">Documentation</a>
+            <a href="documentation/1_1/index.html">Documentation</a>
           </li>          
         </ul>
       </div>
@@ -67,7 +67,7 @@
       </p>
       
       <p>
-        We are currently working on releasing version 1.1 of continuum, if you would like to help out, download one of the alpha releases and give it a whirl.
+        We are currently working on releasing version 1.1 of continuum, if you would like to help out, download one of the beta releases and give it a whirl.
         
         <ul/>
       </p>
@@ -77,16 +77,13 @@
         <p>
           <ul>
             <li>
-              <a href="about.html#what-is-continuum">What is Continuum?</a>
+              <a href="features.html">What are the features of Continuum?</a>
             </li>
             <li>
-              <a href="continuum-features.html">What are the features of Continuum?</a>
+              <a href="guide-helping.html">Can I get involved?</a>
             </li>
             <li>
-              <a href="about.html#get-involved">Can I get involved?</a>
-            </li>
-            <li>
-              <a href="about.html#get-help">Where do I get help with Continuum?</a>
+              <a href="getting-help.html">Where do I get help with Continuum?</a>
             </li>
           </ul>
         </p>
