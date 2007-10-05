@@ -28,6 +28,13 @@
       <div id="axial" class="h3">
         <h3><ww:text name="buildResult.delete.confirmation.section.title"/></h3>
         <div class="axial">
+        <ww:if test="hasActionMessages()">
+          <div class="warningmessage">
+            <p>
+              <ww:actionmessage/>
+            </p>        
+          </div>
+        </ww:if>
         <!-- in this case we come from the build result edit -->
         <ww:if test="buildId">
           <form action="removeBuildResult.action" method="post">
@@ -61,7 +68,15 @@
           </div>
 
           <div class="functnbar3">
-            <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
+            <ww:if test="buildId > 0">
+              <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
+            </ww:if>
+            <ww:elseif test="selectedBuildResults.size > 0">
+              <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
+            </ww:elseif>
+            <ww:else>
+              <input type="submit" value="<ww:text name="cancel"/>" onClick="history.back()"/> 
+            </ww:else>
           </div>
         </form>
         </div>

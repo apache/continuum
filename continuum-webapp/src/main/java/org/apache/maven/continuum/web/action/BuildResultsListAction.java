@@ -19,13 +19,18 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ResourceBundle;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.util.Collection;
-import java.util.Iterator;
+import com.opensymphony.xwork.util.LocalizedTextUtil;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -33,13 +38,13 @@ import java.util.Iterator;
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildResults"
  */
 public class BuildResultsListAction
-    extends ContinuumConfirmAction
+    extends AbstractBuildAction
 {
     private Project project;
 
     private Collection buildResults;
     
-    private Collection selectedBuildResults;
+    private Collection<String> selectedBuildResults;
 
     private int projectId;
     
@@ -83,9 +88,9 @@ public class BuildResultsListAction
         {
             if ( selectedBuildResults != null && !selectedBuildResults.isEmpty() )
             {
-                for ( Iterator i = selectedBuildResults.iterator(); i.hasNext(); )
+                for ( String id : selectedBuildResults )
                 {
-                    int buildId = Integer.parseInt( (String) i.next() );
+                    int buildId = Integer.parseInt( id );
 
                     try
                     {
@@ -101,6 +106,32 @@ public class BuildResultsListAction
                 }
             }
             return SUCCESS;
+        }
+        else
+        {
+            List<String> buildResultsRemovable = new ArrayList<String>();
+            if ( selectedBuildResults != null && !selectedBuildResults.isEmpty() )
+            {
+                for ( String id : selectedBuildResults )
+                {
+                    int buildId = Integer.parseInt( id );
+
+                    if ( canRemoveBuildResult( getContinuum().getBuildResult( buildId ) ) )
+                    {
+                        buildResultsRemovable.add( Integer.toString( buildId ) );
+                    }
+                    else
+                    {
+
+                        ResourceBundle resourceBundle = getResourceBundle();
+                        String message = LocalizedTextUtil.findText( resourceBundle, "buildResult.cannot.delete",
+                                                                     getLocale(), "", new String[] { Integer
+                                                                         .toString( buildId ) } );
+                        this.addActionMessage( message );
+                    }
+                }
+            }
+            this.setSelectedBuildResults( buildResultsRemovable );
         }
         return CONFIRM;
     }

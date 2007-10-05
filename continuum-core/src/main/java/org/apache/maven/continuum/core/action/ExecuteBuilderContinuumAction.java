@@ -126,6 +126,8 @@ public class ExecuteBuilderContinuumAction
 
         buildResult.setModifiedDependencies( updatedDependencies );
 
+        buildResult.setBuildDefinition( getBuildDefinition( context ) );
+        
         store.addBuildResult( project, buildResult );
 
         context.put( KEY_BUILD_ID, Integer.toString( buildResult.getId() ) );

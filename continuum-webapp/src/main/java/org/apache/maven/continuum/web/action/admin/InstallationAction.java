@@ -1,6 +1,11 @@
 package org.apache.maven.continuum.web.action.admin;
 
-import com.opensymphony.xwork.Preparable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -10,12 +15,7 @@ import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import com.opensymphony.xwork.Preparable;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -193,10 +193,7 @@ public class InstallationAction
     // -----------------------------------------------------
     // getter/setters
     // -----------------------------------------------------
-    protected ResourceBundle getResourceBundle()
-    {
-        return getTexts( "localization/Continuum" );
-    }
+
     public List<Installation> getInstallations()
     {
         return installations;

@@ -77,7 +77,12 @@
                   <form action="removeBuildResult.action">
                     <input type="hidden" name="projectId" value="<ww:property value="projectId"/>"/>
                     <input type="hidden" name="buildId" value="<ww:property value="buildId"/>"/>
-                    <input type="submit" name="delete-project" value="<ww:text name="delete"/>"/>
+                    <ww:if test="canDelete">
+                      <input type="submit" name="delete-project" value="<ww:text name="delete"/>"/>
+                    </ww:if>
+                    <ww:else>
+                      <input type="submit" disabled="true" name="delete-project" value="<ww:text name="delete"/>"/>
+                    </ww:else>                    
                   </form>
                 </redback:ifAuthorized>
               </td>
