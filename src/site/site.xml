@@ -59,6 +59,7 @@
       <item name="Index (category)" href="documentation/1_1/index.html"/>
       <item name="Getting Started" href="documentation/1_1/getting-started.html"/>
       <item name="Installation/Upgrade Guides" href="documentation/1_1/installation/index.html" collapse="true">
+          <item name="System Requirements" href="documentation/1_1/installation/requirements.html"/>
           <item name="Installation" href="documentation/1_1/installation/installation.html"/>
           <item name="Release Notes" href="documentation/1_1/installation/release-notes.html"/>
           <item name="Upgrade" href="documentation/1_1/installation/upgrade.html"/>
