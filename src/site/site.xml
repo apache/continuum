@@ -106,6 +106,7 @@
         <item name="Managing Schedules" href="documentation/1_1/administrator_guides/schedules.html"/>
         <item name="Managing General Configuration" href="documentation/1_1/administrator_guides/configuration.html"/> <!-- (configuration and appearance) -->
         <item name="External databases" href="documentation/1_1/administrator_guides/external-db.html"/>
+        <item name="Monitoring Continuum" href="documentation/1_1/administrator_guides/monitoring.html"/>
         <item name="Shutdown Continuum" href="documentation/1_1/administrator_guides/shutdown.html"/>
       </item>
       <item name="Developer's Guides" href="documentation/1_1/developer_guides/index.html" collapse="true">
