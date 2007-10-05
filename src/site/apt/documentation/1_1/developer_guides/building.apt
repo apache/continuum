@@ -42,3 +42,5 @@ Guide to Building Continuum
 -----------------
 mvn clean install
 -----------------
+
+      <<Note:>> You may be prompted to install some sun specific dependency jars.
