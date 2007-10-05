@@ -22,11 +22,9 @@ Release Note
       
       * performance improvement
     
-    You can grab the latest release from:
+    You can grab the latest release from the {{{../../../download.html}download page}}
     
-    {{http://maven.apache.org/continuum/download.html}}
-    
-    To upgrade from 1.1-beta-2, you can look at {{upgrade.html}Upgrade Guide}.
+    To upgrade from 1.1-beta-2, you can look at {{{upgrade.html}Upgrade Guide}}.
     
     Below is the jira release notes for this release.
     

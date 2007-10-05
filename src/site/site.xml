@@ -62,7 +62,7 @@
           <item name="Upgrade" href="documentation/1_1/installation/upgrade.html"/>
       </item>
       <item name="User's Guides" collapse="true" href="documentation/1_1/user_guides/index.html">
-        <item name="Managing a Project" href="documentation/1_1/user_guides/managing_project/index.html" collapse="true">
+        <item name="Managing Projects" href="documentation/1_1/user_guides/managing_project/index.html" collapse="true">
             <item name="Add a Project" href="documentation/1_1/user_guides/managing_project/addProject.html"/>
             <item name="Edit a Project" href="documentation/1_1/user_guides/managing_project/EditProject.html"/>
             <item name="Remove a Project" href="documentation/1_1/user_guides/managing_project/RemoveProject.html"/>
@@ -76,14 +76,15 @@
         <item name="Managing Notification" href="documentation/1_1/user_guides/notification/index.html" collapse="true">
             <item name="Mail Notification" href="documentation/1_1/user_guides/notification/mail.html"/>
             <item name="IRC Notification" href="documentation/1_1/user_guides/notification/irc.html"/>
-            <item name="Jabber Notification" href="documentation/1_1/user_guides/notification/jabber.html"/>
+            <item name="Jabber Notification" href="documentation/1_1/user_guides/notification/jabber.html">
+                <item name="Google Talk Notification" href="documentation/1_1/user_guides/notification/jabber.html#GTalk"/>
+            </item>
             <item name="MSN Notification" href="documentation/1_1/user_guides/notification/msn.html"/>
             <item name="Wagon Notification" href="documentation/1_1/user_guides/notification/wagon.html"/>
-            <!-- item name="mail to an address, mail to latest committers, irc, jabber, msn, wagon, alwaysSend..."/ -->
         </item>
         <item name="Building a project" href="documentation/1_1/user_guides/building_project/index.html" collapse="true">
-            <item name="Scheduled Build"/>
-            <item name="Forced Build"/>
+            <item name="Scheduled Build" href="documentation/1_1/user_guides/building_project/index.html#Scheduled Build"/>
+            <item name="Forced Build" href="documentation/1_1/user_guides/building_project/index.html#Forced Build"/>
         </item>
         <item name="Release Management" href="documentation/1_1/user_guides/release/index.html"/>
       </item>
