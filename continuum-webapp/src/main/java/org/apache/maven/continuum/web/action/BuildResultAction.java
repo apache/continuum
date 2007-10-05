@@ -19,23 +19,25 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import com.opensymphony.webwork.ServletActionContext;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.StateGenerator;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
+import com.opensymphony.webwork.ServletActionContext;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -43,15 +45,13 @@ import java.util.List;
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildResult"
  */
 public class BuildResultAction
-    extends ContinuumConfirmAction
+    extends AbstractBuildAction
 {
     private Project project;
 
     private BuildResult buildResult;
 
     private int buildId;
-
-    private int projectId;
 
     private List changeSet;
 
@@ -63,7 +63,6 @@ public class BuildResultAction
 
     private String projectGroupName = "";
     
-
     public String execute()
         throws ContinuumException, ConfigurationException, IOException
     {
@@ -83,7 +82,7 @@ public class BuildResultAction
         buildResult = getContinuum().getBuildResult( getBuildId() );
 
         // directory contains files ?
-        File surefireReportsDirectory = getContinuum().getConfiguration().getTestReportsDirectory( buildId, projectId );
+        File surefireReportsDirectory = getContinuum().getConfiguration().getTestReportsDirectory( buildId, getProjectId() );
         File[] files = surefireReportsDirectory.listFiles();
         if ( files == null )
         {
@@ -99,6 +98,7 @@ public class BuildResultAction
         
         state = StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
 
+        this.setCanDelete( this.canRemoveBuildResult( buildResult ) );
         return SUCCESS;
     }
     
@@ -164,16 +164,6 @@ public class BuildResultAction
         return project;
     }
 
-    public int getProjectId()
-    {
-        return projectId;
-    }
-
-    public void setProjectId( int projectId )
-    {
-        this.projectId = projectId;
-    }
-
     public BuildResult getBuildResult()
     {
         return buildResult;
@@ -214,4 +204,5 @@ public class BuildResultAction
 
         return projectGroupName;
     }
+
 }

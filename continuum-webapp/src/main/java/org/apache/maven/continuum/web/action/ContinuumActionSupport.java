@@ -19,6 +19,8 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ResourceBundle;
+
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.Preparable;
 import org.apache.maven.continuum.Continuum;
@@ -510,4 +512,9 @@ public class ContinuumActionSupport
 
         return true;
     }
+    
+    protected ResourceBundle getResourceBundle()
+    {
+        return getTexts( "localization/Continuum" );
+    }    
 }

@@ -67,7 +67,7 @@
 
   <!-- CONTINUUM-1228 -->
   <logger name="com.opensymphony.xwork.util.OgnlUtil">
-    <level value="info"/>
+    <level value="error"/>
   </logger>
 
   <logger name="com.opensymphony.webwork">
@@ -103,7 +103,7 @@
   </logger>
 
   <root>
-    <priority value ="info" />
+    <priority value="info" />
     <appender-ref ref="console" />
     <appender-ref ref="rolling" />
   </root>
