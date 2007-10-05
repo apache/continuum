@@ -60,7 +60,13 @@
       <item name="Getting Started" href="documentation/1_1/getting-started.html"/>
       <item name="Installation/Upgrade Guides" href="documentation/1_1/installation/index.html" collapse="true">
           <item name="System Requirements" href="documentation/1_1/installation/requirements.html"/>
-          <item name="Installation" href="documentation/1_1/installation/installation.html"/>
+          <item name="Installation" href="documentation/1_1/installation/installation.html" collapse="true">
+            <item name="Standalone" href="documentation/1_1/installation/standalone.html"/>
+            <item name="Tomcat" href="documentation/1_1/installation/tomcat.html"/>
+            <item name="JBoss" href="documentation/1_1/installation/jboss.html"/>
+            <item name="Geronimo" href="documentation/1_1/installation/geronimo.html"/>
+            <item name="Glassfish" href="documentation/1_1/installation/glassfish.html"/>
+          </item>
           <item name="Release Notes" href="documentation/1_1/installation/release-notes.html"/>
           <item name="Upgrade" href="documentation/1_1/installation/upgrade.html"/>
       </item>
