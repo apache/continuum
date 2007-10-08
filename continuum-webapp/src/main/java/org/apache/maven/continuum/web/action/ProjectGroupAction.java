@@ -21,6 +21,7 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -346,6 +347,14 @@ public class ProjectGroupAction
                 getLogger().info(
                     "Moving project " + project.getName() + " to project group " + newProjectGroup.getName() );
                 project.setProjectGroup( newProjectGroup );
+
+                //CONTINUUM-1512
+                Collection<BuildResult> results = getContinuum().getBuildResultsForProject( project.getId() );
+                for ( BuildResult br : results )
+                {
+                    getContinuum().removeBuildResult( br.getId() );
+                }
+
                 getContinuum().updateProject( project );
             }
         }
