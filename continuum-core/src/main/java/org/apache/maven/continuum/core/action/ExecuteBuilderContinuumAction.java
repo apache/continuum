@@ -143,8 +143,6 @@ public class ExecuteBuilderContinuumAction
 
             project.setLatestBuildId( buildResult.getId() );
 
-            buildResult.setBuildDefinition( buildDefinition );
-
             buildResult.setBuildNumber( project.getBuildNumber() );
 
             if ( buildResult.getState() != ContinuumProjectState.OK &&
