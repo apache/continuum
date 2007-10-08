@@ -1151,8 +1151,8 @@ public class DefaultContinuum
                 buildDefinitionLabel = buildDefinition.getGoals();
             }
 
-            getLogger().info(
-                "Enqueuing '" + project.getName() + "' (Build definition id=" + buildDefinitionId + ")." );
+            getLogger().info( "Enqueuing '" + project.getName() + "' with build definition '" + buildDefinitionLabel +
+                "' - id=" + buildDefinitionId + ")." );
 
             BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project
                 .getName(), buildDefinitionLabel );
