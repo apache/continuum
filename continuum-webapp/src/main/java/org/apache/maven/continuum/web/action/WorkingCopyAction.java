@@ -104,7 +104,7 @@ public class WorkingCopyAction
 
         output = generator.generate( files, baseUrl, imagesBaseUrl, getContinuum().getWorkingDirectory( projectId ) );
 
-        if ( currentFile != null && currentFile != "" )
+        if ( currentFile != null && !currentFile.equals( "" ) )
         {
             String dir;
 
