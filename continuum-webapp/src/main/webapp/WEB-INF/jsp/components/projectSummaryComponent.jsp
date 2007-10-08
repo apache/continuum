@@ -75,7 +75,7 @@
       <ec:column property="version" title="summary.projectTable.version" width="12%"/>
       <ec:column property="buildNumber" title="summary.projectTable.build" width="2%" style="text-align: center">
         <c:choose>
-          <c:when test="${project.buildNumber gt 0}">
+          <c:when test="${project.buildNumber gt 0 && project.buildInSuccessId gt 0}">
             <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
               <ww:url id="buildResult" action="buildResult">
                 <ww:param name="projecGroupId" value="${project.projectGroupId}"/>
@@ -88,6 +88,9 @@
             <redback:elseAuthorized>
               ${project.buildNumber}
             </redback:elseAuthorized>
+          </c:when>
+          <c:when test="${project.buildNumber gt 0 && project.buildInSuccessId lt 0}">
+              ${project.buildNumber}
           </c:when>
           <c:otherwise>
             &nbsp;
