@@ -21,7 +21,6 @@ package org.apache.maven.continuum.web.action;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -122,12 +121,7 @@ public class BuildResultsListAction
                     }
                     else
                     {
-
-                        ResourceBundle resourceBundle = getResourceBundle();
-                        String message = LocalizedTextUtil.findText( resourceBundle, "buildResult.cannot.delete",
-                                                                     getLocale(), "", new String[] { Integer
-                                                                         .toString( buildId ) } );
-                        this.addActionMessage( message );
+                        this.addActionMessage( getResourceBundle().getString( "buildResult.cannot.delete" ) );
                     }
                 }
             }
