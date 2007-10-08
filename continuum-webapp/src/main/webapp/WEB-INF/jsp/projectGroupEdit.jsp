@@ -53,13 +53,13 @@
               </tbody>
             </table>
             
-            <h3>Projects</h3>
+            <h3><ww:text name="projectGroup.edit.section.projects.title"/></h3>
             <div class="eXtremeTable">
               <table id="projects_table" border="1" cellspacing="2" cellpadding="3" class="tableRegion" width="100%">
                 <thead>
                   <tr>
-                    <td class="tableHeader"><ww:text name="Project Name"/></td>
-                    <td class="tableHeader"><ww:text name="Move to Group"/></td>
+                    <td class="tableHeader"><ww:text name="projectGroup.edit.project.name"/></td>
+                    <td class="tableHeader"><ww:text name="projectGroup.edit.move.to.group"/></td>
                   </tr>
                 </thead>
                 <tbody class="tableBody">
@@ -77,7 +77,7 @@
                   <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
                 </c:when>
                 <c:otherwise>
-                  <input type="button" value="Back" onClick="history.go(-1)">
+                  <input type="button" value="<ww:text name="back"/>" onClick="history.go(-1)">
                 </c:otherwise>
               </c:choose>
             </div>
