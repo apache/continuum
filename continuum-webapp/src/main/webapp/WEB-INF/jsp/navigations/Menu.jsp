@@ -155,19 +155,19 @@
   <div id="projectmenu" class="toolgroup">
     <div class="label">Legend</div>
     <div id="legend">
-      <div id="litem1" class="body">Build Now</div>
-      <div id="litem2" class="body">Build History</div>
-      <div id="litem3" class="body">Build In Progress</div>
-      <div id="litem4" class="body">Working Copy</div>
-      <div id="litem5" class="body">Checking Out Build</div>
-      <div id="litem6" class="body">Queued Build</div>
-      <div id="litem7" class="body">Cancel Build</div>
-      <div id="litem8" class="body">Delete</div>
-      <div id="litem9" class="body">Edit</div>
-      <div id="litem10" class="body">Release</div>
-      <div id="litem11" class="body">Build in Success</div>
-      <div id="litem12" class="body">Build in Failure</div>
-      <div id="litem13" class="body">Build in Error</div>
+      <div id="litem1" class="body"><ww:text name="legend.buildNow"/></div>
+      <div id="litem2" class="body"><ww:text name="legend.buildHistory"/></div>
+      <div id="litem3" class="body"><ww:text name="legend.buildInProgress"/></div>
+      <div id="litem4" class="body"><ww:text name="legend.workingCopy"/></div>
+      <div id="litem5" class="body"><ww:text name="legend.checkingOutBuild"/></div>
+      <div id="litem6" class="body"><ww:text name="legend.queuedBuild"/></div>
+      <div id="litem7" class="body"><ww:text name="legend.cancelBuild"/></div>
+      <div id="litem8" class="body"><ww:text name="legend.delete"/></div>
+      <div id="litem9" class="body"><ww:text name="legend.edit"/></div>
+      <div id="litem10" class="body"><ww:text name="legend.release"/></div>
+      <div id="litem11" class="body"><ww:text name="legend.buildInSuccess"/></div>
+      <div id="litem12" class="body"><ww:text name="legend.buildInFailure"/></div>
+      <div id="litem13" class="body"><ww:text name="legend.buildInError"/></div>
     </div>
   </div>
 </div>
