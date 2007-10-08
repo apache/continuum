@@ -84,31 +84,7 @@ public class ExecuteBuilderContinuumAction
 
         List updatedDependencies = getUpdatedDependencies( context );
 
-        boolean hasUpdatedDependencies = updatedDependencies != null && !updatedDependencies.isEmpty();
-
-        boolean isFirstRun = ( (Boolean) context.get( AbstractContinuumAction.KEY_FIRST_RUN ) ).booleanValue();
-
         ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
-
-        // ----------------------------------------------------------------------
-        // This is really a precondition for this action to execute
-        // ----------------------------------------------------------------------
-
-        if ( !isFirstRun && project.getOldState() != ContinuumProjectState.NEW &&
-            project.getOldState() != ContinuumProjectState.CHECKEDOUT && scmResult.getChanges().size() == 0 &&
-            !hasUpdatedDependencies && trigger != ContinuumProjectState.TRIGGER_FORCED && !isNew( project ) &&
-            !buildDefinition.isAlwaysBuild() )
-        {
-            getLogger().info( "No files updated, not building. Project id '" + project.getId() + "'." );
-
-            project.setState( project.getOldState() );
-
-            project.setOldState( 0 );
-
-            store.updateProject( project );
-
-            return;
-        }
 
         // ----------------------------------------------------------------------
         // Make the buildResult
@@ -127,7 +103,7 @@ public class ExecuteBuilderContinuumAction
         buildResult.setModifiedDependencies( updatedDependencies );
 
         buildResult.setBuildDefinition( getBuildDefinition( context ) );
-        
+
         store.addBuildResult( project, buildResult );
 
         context.put( KEY_BUILD_ID, Integer.toString( buildResult.getId() ) );
