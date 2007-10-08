@@ -129,7 +129,6 @@ public class DefaultBuildController
 
             if ( !shouldBuild( context ) )
             {
-                getLogger().info( "No changes, not building" );
                 return;
             }
 
@@ -536,7 +535,15 @@ public class DefaultBuildController
             }
         }
 
-        getLogger().info( "Changes found, building" );
+        if ( shouldBuild )
+        {
+            getLogger().info( "Changes found, building" );
+        }
+        else
+        {
+            getLogger().info( "No changes, not building" );
+
+        }
         return shouldBuild;
     }
 
