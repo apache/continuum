@@ -58,8 +58,6 @@ public class WorkingCopyAction
 
     private String currentFileContent;
 
-    private List files;
-
     private String output;
 
     private String projectName;
@@ -84,7 +82,7 @@ public class WorkingCopyAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        files = getContinuum().getFiles( projectId, userDirectory );
+        List<File> files = getContinuum().getFiles( projectId, userDirectory );
 
         project = getContinuum().getProject( projectId );
 
@@ -174,11 +172,6 @@ public class WorkingCopyAction
         this.currentFile = currentFile;
     }
 
-    public List getFiles()
-    {
-        return files;
-    }
-
     public String getOutput()
     {
         return output;
@@ -193,7 +186,7 @@ public class WorkingCopyAction
     public InputStream getInputStream()
         throws ContinuumException
     {
-        FileInputStream fis = null;
+        FileInputStream fis;
         try
         {
             fis = new FileInputStream( downloadFile );
