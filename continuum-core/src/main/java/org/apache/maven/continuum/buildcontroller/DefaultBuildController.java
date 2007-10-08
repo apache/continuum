@@ -132,14 +132,6 @@ public class DefaultBuildController
                 getLogger().info( "No changes, not building" );
                 return;
             }
-            if ( context.getBuildDefinition().isAlwaysBuild() )
-            {
-                getLogger().info( "AlwaysBuild configured, building" );
-            }
-            else
-            {
-                getLogger().info( "Changes found, building" );
-            }
 
             Map actionContext = context.getActionContext();
 
@@ -466,14 +458,15 @@ public class DefaultBuildController
     protected boolean shouldBuild( BuildContext context )
         throws TaskExecutionException
     {
-        BuildDefinition buildDefinition = (BuildDefinition) context.getBuildDefinition();
+        BuildDefinition buildDefinition = context.getBuildDefinition();
         if ( buildDefinition.isAlwaysBuild() )
         {
+            getLogger().info( "AlwaysBuild configured, building" );
             return true;
         }
         if ( context.getOldBuildResult() == null )
         {
-            //The project was never be built with the current build definition
+            getLogger().info( "The project was never be built with the current build definition, building" );
             return true;
         }
 
@@ -485,6 +478,7 @@ public class DefaultBuildController
         if ( project.getOldState() == ContinuumProjectState.ERROR ||
             context.getOldBuildResult().getState() == ContinuumProjectState.ERROR )
         {
+            getLogger().info( "Latest state was 'ERROR', building" );
             return true;
         }
 
@@ -527,6 +521,7 @@ public class DefaultBuildController
                 // Check dependencies changes
                 if ( context.getModifiedDependencies() != null && !context.getModifiedDependencies().isEmpty() )
                 {
+                    getLogger().info( "Found dependencies changes, building" );
                     shouldBuild = true;
                 }
             }
@@ -535,11 +530,13 @@ public class DefaultBuildController
                 // Check dependencies changes
                 if ( context.getModifiedDependencies() != null && !context.getModifiedDependencies().isEmpty() )
                 {
+                    getLogger().info( "Found dependencies changes, building" );
                     shouldBuild = true;
                 }
             }
         }
 
+        getLogger().info( "Changes found, building" );
         return shouldBuild;
     }
 
