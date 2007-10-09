@@ -123,9 +123,9 @@
         <item name="XML-RPC" href="documentation/1_1/developer_guides/xmlrpc.html"/>
         <!-- item name="TO BE DEFINED"/ -->
       </item>
-      <item name="Old versions" collapse="true">
+      <!-- item name="Old versions" collapse="true">
         <item name="1.0.x"/>
-      </item>
+      </item -->
     </menu>
     <menu name="Community">
       <item name="Community Overview" href="community.html"/>
