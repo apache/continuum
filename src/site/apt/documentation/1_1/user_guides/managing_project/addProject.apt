@@ -2,10 +2,24 @@
  Add a Project
  ------
  Emmanuel Venisse
+ Olivier Lamy
  ------
  Oct 3 2007
  ------
 
 Add a Project
 
-    To write
+* Maven 2 project
+    
+  The pom.xml file must be available through one of the following format : http, https and ftp 
+  (file protocol is off by default for security and must enabled manually).
+    
+  Or it can be uploaded (Note this doesn't support multi modules project).
+    
+[./../../../../images/add-m2-project.jpg] Add a maven2 project
+
+  You can define the group you want to use or "Defined by POM" in this case project.name will be use as Project Group.
+  
+  You can choose a Build Definition which will be apply to your project.
+
+    
