@@ -1,0 +1,58 @@
+ ------
+ Installing Continuum Standalone
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 9 2007
+ ------
+
+Installing Continuum Standalone
+
+%{toc|section=0}
+
+* {Basics & Fundamentals}
+
+    * Download the standalone version from the {{{../../../download.html} Download page}}
+
+    * Extract the file
+
+** {Defining JNDI Resources}
+
+*** {Mail server configuration}
+
+    <<TO WRITE>>
+    Configure it in $CONTINUUM_HOME/conf/plexus.xml
+
+*** {Databases configuration}
+
+    <<TO WRITE>>
+    Configure it in $CONTINUUM_HOME/conf/plexus.xml
+
+* {Installing as a Windows Service}
+
+    * Go to <<<$CONTINUUM_HOME/bin/windows-x86-32/>>> and run the folowwing command
+
+------------------
+InstallService.bat
+------------------
+
+    * Edit the <<<'Apache Continuum'>>> service
+
+        * To see the services that are on your computer go to Start|Run and enter <<<'services.msc'>>>.
+
+    * Select the <<<'Startup Type'>>>
+
+    * Go to the <<<'Log On'>>> tab and select a real user. A real user is required because you'll need a home directory for maven repository and some other things
+
+    * Validate your changes
+
+* {Installing as a Linux Service}
+
+    * Create a <<<'continuum'>>> file under <<</etc/init.d/>>> with the following content:
+
+------------------
+#!/bin/sh
+
+CONTINUUM_HOME=/opt/continuum-1.1
+su - continuum_user -c "$CONTINUUM_HOME/bin/solaris-x86-32/run.sh $@"
+------------------
