@@ -100,7 +100,7 @@
         <item name="Release Management" href="documentation/1_1/user_guides/release/index.html"/>
       </item>
       <item name="Knowledge Base" href="documentation/1_1/knowledge_base/index.html" collapse="true">
-        <item name="FAQs" href="documentation/1_1/knowledge_base/faqs.html"/>
+        <item name="FAQs" href="faqs.html"/>
       </item>
       <item name="Administrator's Guides" href="documentation/1_1/administrator_guides/index.html" collapse="true">
         <item name="Managing Users and Security" href="documentation/1_1/administrator_guides/security/index.html" collapse="true">
