@@ -92,7 +92,7 @@
                             <ec:column property="type" title="Type" style="white-space: nowrap" width="49%"/>
                             <ec:column property="id" title="&nbsp;" width="1%">
                               <a href="removeProfileInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
-                                <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
+                                <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
                               </a>                    
                             </ec:column>        
                           </ec:row>

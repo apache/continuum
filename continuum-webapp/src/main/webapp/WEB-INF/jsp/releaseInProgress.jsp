@@ -37,21 +37,21 @@
             <tr>
               <td>
               <ww:if test="listener.completedPhases.contains( top )">
-                <img src="<ww:url value='/images/icon_success_sml.gif'/>"
+                <img src="<ww:url value='/images/icon_success_sml.gif' includeParams="none"/>"
                      alt="Done" title="Done" border="0">
               </ww:if>
               <ww:elseif test="listener.inProgress.equals( top )">
                 <ww:if test="listener.error == null">
-                  <img src="<ww:url value='/images/building.gif'/>"
+                  <img src="<ww:url value='/images/building.gif' includeParams="none"/>"
                        alt="In Progress" title="In Progress" border="0">
                 </ww:if>
                 <ww:else>
-                  <img src="<ww:url value='/images/icon_error_sml.gif'/>"
+                  <img src="<ww:url value='/images/icon_error_sml.gif' includeParams="none"/>"
                        alt="Error" title="Error" border="0">
                 </ww:else>
               </ww:elseif>
               <ww:else>
-                <img src="<ww:url value='/images/inqueue.gif'/>"
+                <img src="<ww:url value='/images/inqueue.gif' includeParams="none"/>"
                      alt="Queued" title="Queued" border="0">
               </ww:else>
               </td>

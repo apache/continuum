@@ -46,18 +46,18 @@
             <ww:url id="editUrl" action="editBuildDefinitionTemplate" method="edit" namespace="/">
               <ww:param name="buildDefinitionTemplate.id">${pageScope.template.id}</ww:param>
             </ww:url>
-            <ww:a href="%{editUrl}"><img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0"></ww:a>          
+            <ww:a href="%{editUrl}"><img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0"></ww:a>          
           </ec:column>  
           <!-- TODO list attached buildDefs -->
           <ec:column property="deleteAction" title="&nbsp;" width="1%">
             <ww:if test="${template.continuumDefault == true}">
-              <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="<ww:text name='disabled'/>" title="<ww:text name='disabled'/>" border="0" />
+              <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='disabled'/>" title="<ww:text name='disabled'/>" border="0" />
             </ww:if>
             <ww:else>
               <ww:url id="deleteUrl" action="deleteDefinitionTemplate" method="delete" namespace="/">
                 <ww:param name="buildDefinitionTemplate.id">${pageScope.template.id}</ww:param>
               </ww:url>
-              <ww:a href="%{deleteUrl}"><img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"></ww:a>
+              <ww:a href="%{deleteUrl}"><img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"></ww:a>
             </ww:else>          
           </ec:column>                     
         </ec:row>  
@@ -92,7 +92,7 @@
             <ww:url id="editUrl" action="editBuildDefinitionAsTemplate" method="editBuildDefinition" namespace="/">
               <ww:param name="buildDefinition.id">${pageScope.buildDefinitionSummary.id}</ww:param>
             </ww:url>
-            <ww:a href="%{editUrl}"><img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0"></ww:a>          
+            <ww:a href="%{editUrl}"><img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0"></ww:a>          
           </ec:column>          
         </ec:row>  
       </ec:table>      

@@ -60,12 +60,12 @@
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">
           <a href="editProfile!edit.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
-            <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+            <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
           </a>                    
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">
           <a href="deleteProfile!delete.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
-            <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
+            <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
           </a>                    
         </ec:column>        
       </ec:row>

@@ -116,15 +116,15 @@
                         <ww:param name="projectGroupId" value="${project.projectGroup.id}"/>
                         <ww:param name="notifierType">${notifier.type}</ww:param>
                         </ww:url>'>
-                        <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" /></a>
+                        <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" /></a>
                     </c:when>
                     <c:otherwise>
-                      <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+                      <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
                     </c:otherwise>
                 </c:choose>
                 </redback:ifAuthorized>
                 <redback:elseAuthorized>
-                  <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+                  <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
                 </redback:elseAuthorized>
               </ec:column>
               <ec:column property="deleteAction" title="&nbsp;" width="1%">
@@ -137,15 +137,15 @@
                         <ww:param name="notifierType">${notifier.type}</ww:param>
                         <ww:param name="notifierId" value="${notifier.id}"/>
                         </ww:url>'>
-                        <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"></a>
+                        <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"></a>
                     </c:when>
                     <c:otherwise>
-                      <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+                      <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
                     </c:otherwise>
                   </c:choose>
                 </redback:ifAuthorized>
                 <redback:elseAuthorized>
-                  <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+                  <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
                 </redback:elseAuthorized>
               </ec:column>
             </ec:row>

@@ -49,7 +49,7 @@
                   <ww:url id="cancelUrl" action="cancelCurrentBuildTask" method="cancelCurrent" namespace="/">
                     <ww:param name="projectId"><ww:property value="currentBuildProjectTask.projectId"/></ww:param>
                   </ww:url>      
-                  <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif'/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>              
+                  <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>              
                 </td>
               </tr>
             </tbody>
@@ -84,7 +84,7 @@
                       <ww:param name="trigger">${pageScope.buildProjectTask.trigger}</ww:param>
                       <ww:param name="projectName">${pageScope.buildProjectTask.projectName}</ww:param>
                     </ww:url>      
-                    <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif'/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>    
+                    <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>    
                   </ec:column>             
                 </ec:row>
               </ec:table>
@@ -127,7 +127,7 @@
                   <ww:url id="cancelUrl" action="cancelCurrentQueueTask" method="cancelCurrentCheckout" namespace="/">
                     <ww:param name="projectId"><ww:property value="currentCheckOutTask.projectId"/></ww:param>
                   </ww:url>      
-                  <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif'/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>              
+                  <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>              
                 </td>
               </tr>
             </tbody>
@@ -158,7 +158,7 @@
                     <ww:url id="cancelUrl" action="removeCheckoutQueueEntry" method="removeCheckout">
                       <ww:param name="projectId">${pageScope.currentCheckOutTask.projectId}</ww:param>
                     </ww:url>      
-                    <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif'/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>    
+                    <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>    
                   </ec:column>             
                 </ec:row>
               </ec:table>

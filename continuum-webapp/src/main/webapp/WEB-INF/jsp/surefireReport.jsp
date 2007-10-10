@@ -90,12 +90,12 @@
               <!-- @todo there must be a better option than to use #attr -->
               <ww:if test="#attr.report.errors > 0 || #attr.report.failures > 0">
                 <ec:column property="icon" title="&nbsp;" width="1%">
-                  <img src="<ww:url value="/images/icon_error_sml.gif"/>" alt="<ww:text name="message.error"/>" title="<ww:text name="message.error"/>"/>
+                  <img src="<ww:url value="/images/icon_error_sml.gif" includeParams="none"/>" alt="<ww:text name="message.error"/>" title="<ww:text name="message.error"/>"/>
                 </ec:column>
               </ww:if>
               <ww:else>
                 <ec:column property="icon" title="&nbsp;" width="1%">
-                  <img src="<ww:url value="/images/icon_success_sml.gif"/>" alt="<ww:text name="message.success"/>" title="<ww:text name="message.success"/>"/>
+                  <img src="<ww:url value="/images/icon_success_sml.gif" includeParams="none"/>" alt="<ww:text name="message.success"/>" title="<ww:text name="message.success"/>"/>
                 </ec:column>
               </ww:else>
               <ec:column property="name" title="surefireReport.class">
@@ -125,7 +125,7 @@
                 <!-- @todo there must be a better option than to use #attr -->
                 <ww:if test="#attr.testCase.failureType != null">
                   <ec:column property="icon" title="&nbsp;" width="1%">
-                    <img src="<ww:url value="/images/icon_error_sml.gif"/>" alt="<ww:text name="message.error"/>" title="<ww:text name="message.error"/>"/>
+                    <img src="<ww:url value="/images/icon_error_sml.gif" includeParams="none"/>" alt="<ww:text name="message.error"/>" title="<ww:text name="message.error"/>"/>
                   </ec:column>
                   <ec:column property="name" title="surefireReport.testCase" sortable="false">
                     <c:out value="${pageScope.testCase.name}"/><br/><br/>
@@ -136,7 +136,7 @@
                 </ww:if>
                 <ww:else>
                   <ec:column property="icon" title="&nbsp;" width="1%">
-                    <img src="<ww:url value="/images/icon_success_sml.gif"/>" alt="<ww:text name="message.success"/>" title="<ww:text name="message.success"/>"/>
+                    <img src="<ww:url value="/images/icon_success_sml.gif" includeParams="none"/>" alt="<ww:text name="message.success"/>" title="<ww:text name="message.success"/>"/>
                   </ec:column>
                   <ec:column property="name" title="surefireReport.testCase"/>
                 </ww:else>
