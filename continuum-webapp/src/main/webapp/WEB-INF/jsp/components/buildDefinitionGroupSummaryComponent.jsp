@@ -168,7 +168,7 @@
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
           <ww:a href="%{buildProjectUrl}">
-            <img src="<c:url value='/images/buildnow.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0">
+            <img src="<ww:url value='/images/buildnow.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0">
           </ww:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>

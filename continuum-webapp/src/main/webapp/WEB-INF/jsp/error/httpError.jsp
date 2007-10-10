@@ -37,7 +37,7 @@
   </title>
   <link rel="stylesheet" type="text/css" href="<ww:url value="/css/tigris.css" includeParams="none"/>" media="screen"/>
   <link rel="stylesheet" type="text/css" href="<ww:url value="/css/print.css" includeParams="none"/>" media="print"/>
-  <link rel="stylesheet" type="text/css" href="<ww:url value="/css/extremecomponents.css includeParams="none""/>" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="<ww:url value="/css/extremecomponents.css" includeParams="none"/>" media="screen"/>
   <link rel="shortcut icon" href="<ww:url value="/favicon.ico" includeParams="none"/>" type="image/x-icon"/>
 
   <script src="<ww:url value="/scripts/tigris.js" includeParams="none"/>" type="text/javascript"></script>
