@@ -35,12 +35,12 @@
       </c:otherwise>
     </c:choose>
   </title>
-  <link rel="stylesheet" type="text/css" href="<ww:url value="/css/tigris.css"/>" media="screen"/>
-  <link rel="stylesheet" type="text/css" href="<ww:url value="/css/print.css"/>" media="print"/>
-  <link rel="stylesheet" type="text/css" href="<ww:url value="/css/extremecomponents.css"/>" media="screen"/>
-  <link rel="shortcut icon" href="<ww:url value="/favicon.ico"/>" type="image/x-icon"/>
+  <link rel="stylesheet" type="text/css" href="<ww:url value="/css/tigris.css" includeParams="none"/>" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="<ww:url value="/css/print.css" includeParams="none"/>" media="print"/>
+  <link rel="stylesheet" type="text/css" href="<ww:url value="/css/extremecomponents.css includeParams="none""/>" media="screen"/>
+  <link rel="shortcut icon" href="<ww:url value="/favicon.ico" includeParams="none"/>" type="image/x-icon"/>
 
-  <script src="<ww:url value="/scripts/tigris.js"/>" type="text/javascript"></script>
+  <script src="<ww:url value="/scripts/tigris.js" includeParams="none"/>" type="text/javascript"></script>
 </head>
 
 <body onload="focus()" marginwidth="0" marginheight="0" class="composite">

@@ -46,11 +46,11 @@
             <ww:param name="notifierType">${pageScope.projectGroupNotifierSummary.type}</ww:param>
           </ww:url>
           <ww:a href="%{editUrl}">
-            <img src="<ww:url value='/images/edit.gif'/>" alt="Edit" title="Edit" border="0">
+            <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
           </ww:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
+          <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
         </redback:elseAuthorized>
       </ec:column>    
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
@@ -62,11 +62,11 @@
             <ww:param name="confirmed" value="false"/>
           </ww:url>
         <ww:a href="%{removeUrl}">
-          <img src="<ww:url value='/images/delete.gif'/>" alt="Delete" title="Delete" border="0">
+          <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
         </ww:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
+          <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
         </redback:elseAuthorized>
       </ec:column>      
     </ec:row>
@@ -115,16 +115,16 @@
                   <ww:param name="fromGroupPage" value="true"/>
                 </ww:url>
                 <ww:a href="%{editUrl}">
-                  <img src="<ww:url value='/images/edit.gif'/>" alt="Edit" title="Edit" border="0">
+                  <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
                 </ww:a>
               </c:when>
               <c:otherwise>
-                <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
+                <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
               </c:otherwise>
             </c:choose>
           </redback:ifAuthorized>
           <redback:elseAuthorized>
-            <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
+            <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
           </redback:elseAuthorized>
         </ec:column>
         <ec:column property="deleteActions" title="&nbsp;" width="1%">
@@ -139,16 +139,16 @@
                   <ww:param name="fromGroupPage" value="true"/>
                 </ww:url>
                 <ww:a href="%{removeUrl}">
-                  <img src="<ww:url value='/images/delete.gif'/>" alt="Delete" title="Delete" border="0">
+                  <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
                 </ww:a>
               </c:when>
               <c:otherwise>
-                <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
+                <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
               </c:otherwise>
             </c:choose>
           </redback:ifAuthorized>
           <redback:elseAuthorized>
-            <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
+            <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
           </redback:elseAuthorized>
         </ec:column>
       </ec:row>

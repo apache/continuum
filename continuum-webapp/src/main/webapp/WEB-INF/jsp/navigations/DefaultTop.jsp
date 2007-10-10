@@ -25,7 +25,7 @@
   <div id="banner">
     <span id="bannerLeft">
       <a href="http://maven.apache.org/continuum">
-        <img src="<ww:url value="/images/continuum_logo_75.gif"/>" alt="Continuum" title="Continuum" border="0">
+        <img src="<ww:url value="/images/continuum_logo_75.gif" includeParams="none"/>" alt="Continuum" title="Continuum" border="0">
       </a>
     </span>
     <span id="bannerRight">

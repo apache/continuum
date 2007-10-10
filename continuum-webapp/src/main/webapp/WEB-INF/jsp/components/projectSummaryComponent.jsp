@@ -31,11 +31,11 @@
     <tr>
       <td>
           <ww:text name="projectGroup.buildsStatut.success"/> : ${groupSummary.numSuccesses}
-          &nbsp;<img src="<ww:url value='/images/icon_success_sml.gif'/>" alt="<ww:text name="projectGroup.buildsStatut.success"/>">    
+          &nbsp;<img src="<ww:url value='/images/icon_success_sml.gif' includeParams="none"/>" alt="<ww:text name="projectGroup.buildsStatut.success"/>">    
           &nbsp; <ww:text name="projectGroup.buildsStatut.errors"/> : ${groupSummary.numErrors}
-          &nbsp;<img src="<ww:url value='/images/icon_error_sml.gif'/>" alt="<ww:text name="projectGroup.buildsStatut.errors"/>">
+          &nbsp;<img src="<ww:url value='/images/icon_error_sml.gif' includeParams="none"/>" alt="<ww:text name="projectGroup.buildsStatut.errors"/>">
           &nbsp; <ww:text name="projectGroup.buildsStatut.failures"/> : ${groupSummary.numFailures}
-          &nbsp;<img src="<ww:url value='/images/icon_warning_sml.gif'/>" alt="<ww:text name="projectGroup.buildsStatut.failures"/>">
+          &nbsp;<img src="<ww:url value='/images/icon_warning_sml.gif' includeParams="none"/>" alt="<ww:text name="projectGroup.buildsStatut.failures"/>">
       <td>      
     </tr>
   </table>
@@ -101,7 +101,7 @@
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <c:choose>
           <c:when test="${project.inBuildingQueue}">
-            <img src="<ww:url value='/images/inqueue.gif'/>" alt="In Queue" title="In Queue" border="0">
+            <img src="<ww:url value='/images/inqueue.gif' includeParams="none"/>" alt="In Queue" title="In Queue" border="0">
           </c:when>
           <c:otherwise>
             <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
@@ -113,7 +113,7 @@
                     <ww:param name="fromGroupPage" value="true"/>
                   </ww:url>
                   <ww:a href="%{buildProjectUrl}">
-                    <img src="<ww:url value='/images/buildnow.gif'/>" alt="Build Now" title="Build Now" border="0">
+                    <img src="<ww:url value='/images/buildnow.gif' includeParams="none"/>" alt="Build Now" title="Build Now" border="0">
                   </ww:a>
                 </c:when>
                 <c:otherwise>
@@ -123,11 +123,11 @@
                   <c:choose>
                     <c:when test="${project.state != 8}">
                       <ww:a href="%{cancelBuildProjectUrl}">
-                        <img src="<ww:url value='/images/cancelbuild.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
+                        <img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="Cancel Build" title="Cancel Build" border="0">
                       </ww:a>
                     </c:when>
                     <c:otherwise>
-                      <img src="<ww:url value='/images/cancelbuild_disabled.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
+                      <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="Cancel Build" title="Cancel Build" border="0">
                     </c:otherwise>
                   </c:choose>
                 </c:otherwise>
@@ -136,10 +136,10 @@
             <redback:elseAuthorized>
               <c:choose>
                 <c:when test="${projectIdle}">
-                  <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="Build Now" title="Build Now" border="0">
+                  <img src="<ww:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="Build Now" title="Build Now" border="0">
                 </c:when>
                 <c:otherwise>
-                  <img src="<ww:url value='/images/cancelbuild_disabled.gif'/>" alt="Cancel Build" title="Cancel Build" border="0">
+                  <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="Cancel Build" title="Cancel Build" border="0">
                 </c:otherwise>
               </c:choose>
             </redback:elseAuthorized>
@@ -154,17 +154,17 @@
               <ww:param name="projectId" value="${project.id}"/>
               <ww:param name="projectName">${project.name}</ww:param>
             </ww:url>
-            <ww:a href="%{buildResultsUrl}"><img src="<ww:url value='/images/buildhistory.gif'/>" alt="Build History"
+            <ww:a href="%{buildResultsUrl}"><img src="<ww:url value='/images/buildhistory.gif' includeParams="none"/>" alt="Build History"
                                                  title="Build History" border="0"></ww:a>
           </c:when>
           <c:otherwise>
-            <img src="<ww:url value='/images/buildhistory_disabled.gif'/>" alt="Build History" title="Build History"
+            <img src="<ww:url value='/images/buildhistory_disabled.gif' includeParams="none"/>" alt="Build History" title="Build History"
                  border="0">
           </c:otherwise>
         </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/buildhistory_disabled.gif'/>" alt="Build History" title="Build History"
+          <img src="<ww:url value='/images/buildhistory_disabled.gif' includeParams="none"/>" alt="Build History" title="Build History"
                  border="0">
         </redback:elseAuthorized>
       </ec:column>
@@ -175,17 +175,17 @@
             <ww:url id="workingCopyUrl" action="workingCopy" namespace="/">
               <ww:param name="projectId" value="${project.id}"/>
             </ww:url>
-            <ww:a href="%{workingCopyUrl}"><img src="<ww:url value='/images/workingcopy.gif'/>" alt="Working Copy"
+            <ww:a href="%{workingCopyUrl}"><img src="<ww:url value='/images/workingcopy.gif' includeParams="none"/>" alt="Working Copy"
                                                 title="Working Copy" border="0"></ww:a>
           </c:when>
           <c:otherwise>
-            <img src="<ww:url value='/images/workingcopy_disabled.gif'/>" alt="Working Copy" title="Working Copy"
+            <img src="<ww:url value='/images/workingcopy_disabled.gif' includeParams="none"/>" alt="Working Copy" title="Working Copy"
                  border="0">
           </c:otherwise>
         </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/workingcopy_disabled.gif'/>" alt="Working Copy" title="Working Copy"
+          <img src="<ww:url value='/images/workingcopy_disabled.gif' includeParams="none"/>" alt="Working Copy" title="Working Copy"
                  border="0">
         </redback:elseAuthorized>
       </ec:column>
@@ -197,18 +197,18 @@
               <ww:param name="projectId" value="${project.id}"/>
             </ww:url>
             <ww:a href="%{releaseProjectUrl}">
-              <img src="<ww:url value='/images/releaseproject.gif'/>" alt="Release Project" title="Release Project"
+              <img src="<ww:url value='/images/releaseproject.gif' includeParams="none"/>" alt="Release Project" title="Release Project"
                 border="0"/>
             </ww:a>
           </c:when>
           <c:otherwise>
-            <img src="<ww:url value='/images/releaseproject_disabled.gif'/>" alt="Release Project"
+            <img src="<ww:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="Release Project"
               title="Release Project" border="0"/>
           </c:otherwise>
         </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/releaseproject_disabled.gif'/>" alt="Delete" title="Delete" border="0">
+          <img src="<ww:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
@@ -220,16 +220,16 @@
               <ww:param name="projectId" value="${project.id}"/>
             </ww:url>
             <ww:a href="%{deleteProjectUrl}">
-              <img src="<ww:url value='/images/delete.gif'/>" alt="Delete" title="Delete" border="0">
+              <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
             </ww:a>
           </c:when>
           <c:otherwise>
-            <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
+            <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
           </c:otherwise>
         </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
+          <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
         </redback:elseAuthorized>
       </ec:column>
     </ec:row>

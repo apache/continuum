@@ -68,16 +68,16 @@
                   <ww:param name="projectName" value="${project.name}"/>
                 </ww:url>
                 <ww:a href="%{editProjectUrl}">
-                  <img src="<ww:url value='/images/edit.gif'/>" alt="Edit" title="Edit" border="0">
+                  <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
                 </ww:a>
               </c:when>
               <c:otherwise>
-                <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
+                <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
               </c:otherwise>
             </c:choose>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
-                <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="Edit" title="Edit" border="0">
+                <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
             </redback:elseAuthorized>
           </center>
         </ec:column>
@@ -92,16 +92,16 @@
                   <ww:param name="projectName" value="${pageScope.project.name}"/>
                 </ww:url>
                 <ww:a href="%{removeProjectUrl}">
-                  <img src="<ww:url value='/images/delete.gif'/>" alt="Delete" title="Delete" border="0">
+                  <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
                 </ww:a>
               </c:when>
               <c:otherwise>
-                <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
+                <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
               </c:otherwise>
             </c:choose>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
-                <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="Delete" title="Delete" border="0">
+                <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
             </redback:elseAuthorized>
           </center>
         </ec:column>
@@ -144,10 +144,10 @@
         <th nowrap="true">
           <ww:form id="sortlist" name="sortlist" action="projectGroupMembers" theme="xhtml" method="post">
             <ww:if test="${ascending}">
-              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortdown.gif'/>" title="<ww:text name='Sort descending'/>" border="0"></ww:a> Username
+              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<ww:text name='Sort descending'/>" border="0"></ww:a> Username
             </ww:if>
             <ww:else>
-              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortup.gif'/>" title="<ww:text name='Sort ascending'/>" border="0"></ww:a> Username
+              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<ww:text name='Sort ascending'/>" border="0"></ww:a> Username
             </ww:else>
             <ww:hidden name="ascending" value="${!ascending}"/>
             <ww:hidden name="projectGroupId" />
@@ -176,17 +176,17 @@
           </td>
           <td>
             <ww:if test="${administrator}">
-              <img src="<ww:url value='/images/icon_success_sml.gif'/>" border="0">
+              <img src="<ww:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
             </ww:if>
           </td>
           <td>
             <ww:if test="${developer}">
-              <img src="<ww:url value='/images/icon_success_sml.gif'/>" border="0">
+              <img src="<ww:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
             </ww:if>
           </td>
           <td>
             <ww:if test="${user}">
-              <img src="<ww:url value='/images/icon_success_sml.gif'/>" border="0">
+              <img src="<ww:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
             </ww:if>
           </td>
         </tr>

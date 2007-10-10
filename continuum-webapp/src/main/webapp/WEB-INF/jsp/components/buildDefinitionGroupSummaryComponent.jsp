@@ -67,10 +67,10 @@
             <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
-          <ww:a href="%{buildUrl}"><img src="<ww:url value='/images/buildnow.gif'/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0"></ww:a>
+          <ww:a href="%{buildUrl}"><img src="<ww:url value='/images/buildnow.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0"></ww:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0" />
+          <img src="<ww:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0" />
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="editActions" title="&nbsp;" width="1%">
@@ -81,11 +81,11 @@
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
           <ww:a href="%{editUrl}">
-              <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">
+              <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">
           </ww:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">
+          <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">
         </redback:elseAuthorized>
         </center>
       </ec:column>    
@@ -98,11 +98,11 @@
             <ww:param name="confirmed" value="false"/>
           </ww:url>
           <ww:a href="%{removeUrl}">
-            <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
+            <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
           </ww:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
+          <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
         </redback:elseAuthorized>
         </center>
       </ec:column>
@@ -168,11 +168,11 @@
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
           <ww:a href="%{buildProjectUrl}">
-            <img src="<c:url value='/images/buildnow.gif'/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0">
+            <img src="<c:url value='/images/buildnow.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0">
           </ww:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0" />
+          <img src="<ww:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0" />
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="editAction" title="&nbsp;" width="1%">
@@ -182,11 +182,11 @@
             <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
           </ww:url>
           <ww:a href="%{editUrl}">
-              <img src="<ww:url value='/images/edit.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">          
+              <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">          
           </ww:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/edit_disabled.gif'/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">
+          <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="removeAction" title="&nbsp;" width="1%">
@@ -197,11 +197,11 @@
             <ww:param name="confirmed" value="false"/>
           </ww:url>
           <ww:a href="%{removeUrl}">
-              <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
+              <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
           </ww:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-           <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"> 
+           <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"> 
         </redback:elseAuthorized>
       </ec:column>
     </ec:row>
