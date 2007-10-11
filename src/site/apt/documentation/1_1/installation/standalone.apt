@@ -20,17 +20,177 @@ Installing Continuum Standalone
 
 *** {Mail server configuration}
 
-    <<TO WRITE>>
-    Configure it in $CONTINUUM_HOME/conf/plexus.xml
+    Before to start Continuum, you must configure your SMTP configuration for mail notification. The configuration to do is in <<<$CONTINUUM_HOME/conf/plexus.xml>>>:
+
+------------------
+  <!--
+       Mail Session
+  -->
+  <resource>
+    <name>mail/Session</name>
+    <type>javax.mail.Session</type>
+    <properties>
+      <property>
+        <name>mail.smtp.host</name>
+        <value>localhost</value>
+      </property>
+      <property>
+        <name>mail.smtp.port</name>
+        <value>25</value>
+      </property>
+
+      <!--
+      <property> 
+        <name>mail.smtp.auth</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>mail.smtp.user</name>
+        <value>your_login</value>
+      </property>
+      <property>
+        <name>password</name>
+        <value>your_password</value>
+      </property>
+      <property>
+        <name>mail.smtp.debug</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>mail.smtp.starttls.enable</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>mail.smtp.socketFactory.class</name>
+        <value>javax.net.ssl.SSLSocketFactory</value>
+      </property>
+      -->
+    </properties>
+  </resource>
+------------------
+
 
 *** {Databases configuration}
 
-    <<TO WRITE>>
-    Configure it in $CONTINUUM_HOME/conf/plexus.xml
+    By default, Continuum use an embedded {{{http://db.apache.org/derby}Derby}} database. If you want to use an other database, you can modify the JNDI
+    configuration in <<<$CONTINUUM_HOME/conf/plexus.xml>>>:
+
+------------------
+          <!--
+               Datasources
+          -->
+          <resource>
+            <name>jdbc/users</name>
+            <type>javax.sql.DataSource</type>
+            <properties>
+              <property>
+                <name>factory</name>
+                <value>org.apache.commons.dbcp.BasicDataSourceFactory</value>
+              </property>
+
+              <!-- Maximum number of dB connections in pool. Make sure you
+                   configure your mysqld max_connections large enough to handle
+                   all of your db connections. Set to 0 for no limit.
+                   -->
+              <property>
+                <name>maxActive</name>
+                <value>100</value>
+              </property>
+
+              <!-- Maximum number of idle dB connections to retain in pool.
+                   Set to 0 for no limit.
+                   -->
+              <property>
+                <name>maxIdle</name>
+                <value>30</value>
+              </property>
+
+              <!-- Maximum time to wait for a dB connection to become available
+                   in ms, in this example 10 seconds. An Exception is thrown if
+                   this timeout is exceeded.  Set to -1 to wait indefinitely.
+                   -->
+              <property>
+                <name>maxWait</name>
+                <value>10000</value>
+              </property>
+
+              <property>
+                <name>driverClassName</name>
+                <value>org.apache.derby.jdbc.EmbeddedDriver</value>
+              </property>
+              <property>
+                <name>url</name>
+                <value>jdbc:derby:${plexus.home}/data/users/database;create=true</value>
+              </property>
+              <property>
+                <name>username</name>
+                <value>sa</value>
+              </property>
+              <property>
+                <name>password</name>
+                <value></value>
+              </property>
+            </properties>
+          </resource>
+          <resource>
+            <name>jdbc/continuum</name>
+            <type>javax.sql.DataSource</type>
+            <properties>
+              <property>
+                <name>factory</name>
+                <value>org.apache.commons.dbcp.BasicDataSourceFactory</value>
+              </property>
+
+              <!-- Maximum number of dB connections in pool. Make sure you
+                   configure your mysqld max_connections large enough to handle
+                   all of your db connections. Set to 0 for no limit.
+                   -->
+              <property>
+                <name>maxActive</name>
+                <value>100</value>
+              </property>
+
+              <!-- Maximum number of idle dB connections to retain in pool.
+                   Set to 0 for no limit.
+                   -->
+              <property>
+                <name>maxIdle</name>
+                <value>30</value>
+              </property>
+
+              <!-- Maximum time to wait for a dB connection to become available
+                   in ms, in this example 10 seconds. An Exception is thrown if
+                   this timeout is exceeded.  Set to -1 to wait indefinitely.
+                   -->
+              <property>
+                <name>maxWait</name>
+                <value>10000</value>
+              </property>
+
+              <property>
+                <name>driverClassName</name>
+                <value>org.apache.derby.jdbc.EmbeddedDriver</value>
+              </property>
+              <property>
+                <name>url</name>
+                <value>jdbc:derby:${plexus.home}/data/continuum/database;create=true</value>
+              </property>
+              <property>
+                <name>username</name>
+                <value>sa</value>
+              </property>
+              <property>
+                <name>password</name>
+                <value></value>
+              </property>
+            </properties>
+          </resource>
+        </resources>
+------------------
 
 * {Installing as a Windows Service}
 
-    * Go to <<<$CONTINUUM_HOME/bin/windows-x86-32/>>> and run the folowwing command
+    * Go to <<<$CONTINUUM_HOME/bin/windows-x86-32/>>> and run the following command:
 
 ------------------
 InstallService.bat
@@ -48,6 +208,11 @@ InstallService.bat
 
 * {Installing as a Linux Service}
 
+    Since the Continuum linux script bin/linux/run.sh understands the same arguments as linux boot scripts, there is no need to write a particular
+    startup script to add Continuum to the linux boot process. All you need to do, as root, is:
+    
+** {Basic script in /etc/init.d}
+
     * Create a <<<'continuum'>>> file under <<</etc/init.d/>>> with the following content:
 
 ------------------
@@ -55,4 +220,92 @@ InstallService.bat
 
 CONTINUUM_HOME=/opt/continuum-1.1
 su - continuum_user -c "$CONTINUUM_HOME/bin/solaris-x86-32/run.sh $@"
+------------------
+
+** {In a Debian-based system}
+
+------------------
+ln -s /usr/local/continuum-[VERSION]/bin/linux/run.sh /etc/init.d/continuum
+------------------
+
+    At this point you have Continuum ready to be symlinked from different runlevels. This might sound a bit esoteric, but it is not, you will find these words
+    very fast as soon as you start reading about the init process. Fortunately, Debian GNU/Linux comes with a very handy utility to create this links, just run as root:
+
+------------------
+update-rc.d -n continuum defaults 80
+------------------
+
+    If you run this command, you will see something like this:
+
+------------------
+ Adding system startup for /etc/init.d/continuum ...
+   /etc/rc0.d/K80continuum -> ../init.d/continuum
+   /etc/rc1.d/K80continuum -> ../init.d/continuum
+   /etc/rc6.d/K80continuum -> ../init.d/continuum
+   /etc/rc2.d/S80continuum -> ../init.d/continuum
+   /etc/rc3.d/S80continuum -> ../init.d/continuum
+   /etc/rc4.d/S80continuum -> ../init.d/continuum
+   /etc/rc5.d/S80continuum -> ../init.d/continuum
+------------------
+
+    What you see is the symlinks that would be created. The above command didn't do anything because of the -n  switch, remove it to get the real links created.
+
+** {In a RedHat-based system}
+
+    Configuring Continuum in a RedHat-based system (like Fedora Core) is slightly different: Instead of running update-rc.d, you need to add a new
+    service using chkconfig. And in order to add Continuum to chkconfig, it is necessary to add some comments to the /etc/rc.d/init.d/continuum script
+    and run a couple of commands; these tasks are automatically executed by running the chkconfig_install.sh script:
+
+------------------
+#! /bin/sh
+#
+# chkconfig_install.sh - install Continuum on a chkconfig-bases system
+# 
+# Author: Felipe Leme <felipeal@apache.org>
+#
+
+# figure out what's Continuum's directory
+CONTINUUM_HOME=`dirname $0`
+cd ${CONTINUUM_HOME}
+CONTINUUM_HOME=`pwd`
+
+INITD_SCRIPT=/etc/rc.d/init.d/continuum
+
+if [ -f ${INITD_SCRIPT} ]
+then
+  echo "File ${INITD_SCRIPT} already exists. Please remove it and try again."
+  exit 1
+fi
+
+echo "Creating file ${INITD_SCRIPT}"  
+cat >> ${INITD_SCRIPT} <<EOF
+#! /bin/sh
+# chkconfig: 345 90 10
+# description: Maven Continuum server
+
+# uncoment to set JAVA_HOME as the value present when Continuum installed
+#export JAVA_HOME=${JAVA_HOME}
+
+if [ -z "\${JAVA_HOME}" ]
+then
+  echo "Cannot manage Continuum without variable JAVA_HOME set"
+  echo "  (try to set it on file ${INITD_SCRIPT})"
+  exit 1
+fi
+# run Continuum as root
+cd ${CONTINUUM_HOME}
+./run.sh \$*
+# run Continuum as user _continuum_user_
+#su - _continuum_user_ -c "cd ${CONTINUUM_HOME}; ./run.sh \$*"
+EOF
+chmod +x ${INITD_SCRIPT}
+
+echo "Adding Continuum to chkconfig"  
+chkconfig --add continuum
+
+echo "Enabling Continuum on chkconfig"  
+chkconfig continuum on
+echo "Continuum set to start on run levels 3, 4 and 5."
+echo "To start continuum now, run 'service continuum start'"
+
 ------------------
