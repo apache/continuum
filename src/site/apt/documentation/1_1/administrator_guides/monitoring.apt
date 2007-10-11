@@ -22,11 +22,11 @@ wrapper.java.additional.9=-Dcom.sun.management.jmxremote
 
     The following image shows starting Continuum 1.1-beta-1, adding a project group, then adding and building the trunk of the Shale Framework (14 modules):
 
-[http://www.pbase.com/wendysmoak/image/82956777/medium.jpg]
+[../../../images/jconsole1.jpg]
 
     The following image shows the same Continuum instance running for several hours:
 
-[http://www.pbase.com/wendysmoak/image/82956785/medium.jpg]
+[../../../images/jconsole2.jpg]
 
 * Garbage Collection and Heap Size
 
