@@ -198,6 +198,7 @@
         </resources>
       </configuration>
     </component>
+    <!-- START SNIPPET: jetty_port -->
     <component>
       <role>org.codehaus.plexus.contextualizer.Contextualizer</role>
       <role-hint>jettyConfiguration</role-hint>
@@ -208,6 +209,7 @@
         </contextValues>
       </configuration>
     </component>
+    <!-- END SNIPPET: jetty_port -->
     <!--component>
       <role>org.codehaus.plexus.logging.LoggerManager</role>
       <implementation>org.codehaus.plexus.logging.console.ConsoleLoggerManager</implementation>
