@@ -27,24 +27,24 @@
         <subsection name="Adding a jdk installation">
           <a name="add-jdk-installation"></a>
           <p>Here you must provide a JAVA_HOME path<br/></p>
-          <p><img src="../../images/add-installation.png"/></p>
+          <p><img src="../../../images/add-installation.png"/></p>
         </subsection>
         <subsection name="Creating a profile">
           <a name="create-profile"></a>
           <p>Enter a profile name (the name is free)<br/></p>
-          <p><img src="../../images/add-profile.png"/></p>
+          <p><img src="../../../images/add-profile.png"/></p>
         </subsection>       
         <subsection name="Attach jdk to a profile">
           <a name="set-profile-jdk"></a>
           <p>The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.<br/></p>
           <p>In the modification mode of a profile, adding an already attached type will override the existing one.</p>
-          <p><img src="../../images/setup-jdk-profile.png"/></p>
+          <p><img src="../../../images/setup-jdk-profile.png"/></p>
         </subsection>      
         <subsection name="Link profile to build definition">
           <a name="set-builddef-profile"></a>
           <p>The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.<br/></p>
           <p>In the modification mode of a profile, adding an already attached type will override the existing one.</p>
-          <p><img src="../../images/setup-build-profile.png"/></p>
+          <p><img src="../../../images/setup-build-profile.png"/></p>
         </subsection>           
       </subsection>
       <subsection name="Installations used in Notification mail">
