@@ -10,7 +10,7 @@
 Getting Started
 
     When you start continuum for the first time (without existing database), the first you will
-    have to do is the admin account creation.
+    have to do is the admin account creation and the {{{administrator_guides/configuration.html}general configuration}}
     
 [../../images/admin-account-creation.jpg] Admin account creation
 
