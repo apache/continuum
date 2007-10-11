@@ -38,6 +38,7 @@
       <role-hint>dataSources</role-hint>
       <configuration>
         <resources>
+          <!-- START SNIPPET: mail -->
           <!--
                Mail Session
           -->
@@ -82,6 +83,8 @@
               -->
             </properties>
           </resource>
+          <!-- END SNIPPET: mail -->
+          <!-- START SNIPPET: datasources -->
           <!--
                Datasources
           -->
@@ -191,6 +194,7 @@
               </property>
             </properties>
           </resource>
+          <!-- END SNIPPET: datasources -->
         </resources>
       </configuration>
     </component>
