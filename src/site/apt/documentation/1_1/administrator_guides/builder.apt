@@ -1,0 +1,43 @@
+ ------
+ Managing Building Tool
+ ------
+ Olivier Lamy
+ ------
+ Oct 11 2007
+ ------
+ 
+Managing Building Tool
+
+  From the menu, choose the 'Installations' entry 
+  
+[../../../images/installations.png] Installations
+
+  Here you must choose the Installation Type you want to add (here a Tool)
+
+[../../../images/installation-type-choice.png] Installation Type Choice
+
+  You must configure the tool you want to add
+
+[../../../images/installation-tool-edit.png] Tool Setup
+
+  You can use the checkbox if you want to add a Profile with the same name as your tool name.
+  
+  The value 'Value/Path' field must contains the path to the tool :
+  
+  * For maven2 : it must be similar to your M2_HOME
+  
+  * For maven1 : it must be similar to your MAVEN_HOME
+  
+  * For ant : it must be similar to your ANT_HOME
+
+  A control will be made to validate the path value :
+  
+  * For maven2 : path/bin/mvn -v will be tested
+  
+  * For maven1 : path/bin/maven -v will be tested
+  
+  * For ant : path/bin/ant -v will be tested
+  
+  It the the test, the following error will be displayed 
+  
+[../../../images/installation-validation-failed.png] Installation validation failed   

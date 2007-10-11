@@ -18,19 +18,16 @@
         <p>
         Steps :
           <ul>
-            <li><a href="#add-jdk-installation">adding the jdk in installations.</a></li>
+            <li><a href="jdk.html">adding the jdk in installations.</a></li>
             <li><a href="#create-profile">create a profile.</a></li>
             <li><a href="#set-profile-jdk">attached jdk to the new profile.</a></li>
             <li><a href="#set-builddef-profile">set profile in the build definition.</a></li>
           </ul>
         </p>
-        <subsection name="Adding a jdk installation">
-          <a name="add-jdk-installation"></a>
-          <p>Here you must provide a JAVA_HOME path<br/></p>
-          <p><img src="../../../images/add-installation.png"/></p>
-        </subsection>
         <subsection name="Creating a profile">
           <a name="create-profile"></a>
+          <p>From the menu, choose the 'Profiles<br/></p>
+          <p><img src="../../../images/menu-profiles.png"/></p>
           <p>Enter a profile name (the name is free)<br/></p>
           <p><img src="../../../images/add-profile.png"/></p>
         </subsection>       
