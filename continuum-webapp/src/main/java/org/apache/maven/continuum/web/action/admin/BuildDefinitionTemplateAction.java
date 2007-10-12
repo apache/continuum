@@ -303,6 +303,10 @@ public class BuildDefinitionTemplateAction
 
     public BuildDefinition getBuildDefinition()
     {
+        if ( this.buildDefinition == null )
+        {
+            this.buildDefinition = new BuildDefinition();
+        }
         return buildDefinition;
     }
 
