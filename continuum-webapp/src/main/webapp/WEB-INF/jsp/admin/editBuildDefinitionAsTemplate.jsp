@@ -67,6 +67,7 @@
                     <ww:textfield label="%{getText('buildDefinition.arguments.label')}" name="buildDefinition.arguments"/>
                     <ww:checkbox label="%{getText('buildDefinition.buildFresh.label')}" name="buildDefinition.buildFresh"/>
                     <ww:checkbox label="%{getText('buildDefinition.alwaysBuild.label')}" name="buildDefinition.alwaysBuild" />
+                    <ww:checkbox label="%{getText('buildDefinition.defaultForProject.label')}" name="buildDefinition.defaultForProject" />
                     <ww:select label="%{getText('buildDefinition.schedule.label')}" name="buildDefinition.schedule.id" list="schedules" listValue="name"
                                listKey="id"/>
                     <ww:if test="buildDefinition.profile == null">
