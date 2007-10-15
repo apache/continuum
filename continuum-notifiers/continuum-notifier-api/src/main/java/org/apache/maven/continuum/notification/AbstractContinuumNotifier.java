@@ -185,34 +185,60 @@ public abstract class AbstractContinuumNotifier
     protected BuildResult getPreviousBuild( Project project, BuildDefinition buildDef, BuildResult currentBuild )
         throws NotificationException
     {
+        List<BuildResult> builds;
         try
         {
-            // TODO: prefer to remove this and get them up front
-            if ( project.getId() > 0 )
+            if ( buildDef != null )
             {
-                project = store.getProjectWithBuilds( project.getId() );
+                builds = store.getBuildResultsByBuildDefinition( project.getId(), buildDef.getId() );
+
+                if ( builds.size() < 2 )
+                {
+                    return null;
+                }
+                //builds are sorted in descending way
+                BuildResult build = builds.get( 0 );
+                if ( currentBuild != null && build.getId() != currentBuild.getId() )
+                {
+                    throw new NotificationException(
+                        "INTERNAL ERROR: The current build wasn't the first in the build list. " + "Current build: '" +
+                            currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
+                }
+                else
+                {
+                    return builds.get( 1 );
+                }
+            }
+            else
+            {
+                //Normally, it isn't possible, buildDef should be != null
+                if ( project.getId() > 0 )
+                {
+                    project = store.getProjectWithBuilds( project.getId() );
+                }
+                builds = project.getBuildResults();
+
+                if ( builds.size() < 2 )
+                {
+                    return null;
+                }
+
+                BuildResult build = builds.get( builds.size() - 1 );
+
+                if ( currentBuild != null && build.getId() != currentBuild.getId() )
+                {
+                    throw new NotificationException(
+                        "INTERNAL ERROR: The current build wasn't the first in the build list. " + "Current build: '" +
+                            currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
+                }
+
+                return builds.get( builds.size() - 2 );
             }
         }
         catch ( ContinuumStoreException e )
         {
             throw new NotificationException( "Unable to obtain project builds", e );
         }
-        List builds = project.getBuildResults();
-
-        if ( builds.size() < 2 )
-        {
-            return null;
-        }
-
-        BuildResult build = (BuildResult) builds.get( builds.size() - 1 );
-
-        if ( currentBuild != null && build.getId() != currentBuild.getId() )
-        {
-            throw new NotificationException( "INTERNAL ERROR: The current build wasn't the first in the build list. " +
-                "Current build: '" + currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
-        }
-
-        return (BuildResult) builds.get( builds.size() - 2 );
     }
 
 }
