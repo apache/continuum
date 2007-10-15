@@ -22,15 +22,26 @@ package org.apache.maven.continuum.notification;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.notification.NotificationException;
 import org.codehaus.plexus.notification.notifier.AbstractNotifier;
+
+import java.util.List;
 
 public abstract class AbstractContinuumNotifier
     extends AbstractNotifier
 {
+    /**
+     * @plexus.requirement role-hint="jdo"
+     */
+    private ContinuumStore store;
+
     /**
      * @plexus.configuration
      */
@@ -39,8 +50,11 @@ public abstract class AbstractContinuumNotifier
     /**
      * Returns url of the last build
      *
-     * @param project The project
-     * @param build   The build
+     * @param project              The project
+     * @param build                The build
+     * @param configurationService The configuration Service
+     * @return The report URL
+     * @throws ContinuumException whne the configuration can't be loaded
      */
     public String getReportUrl( Project project, BuildResult build, ConfigurationService configurationService )
         throws ContinuumException
@@ -71,19 +85,6 @@ public abstract class AbstractContinuumNotifier
         {
             throw new ContinuumException( "Can't obtain the base url from configuration.", e );
         }
-    }
-
-    /**
-     * Determine if message must be sent
-     *
-     * @param build         The current build result
-     * @param previousBuild The previous build result
-     * @return True if a message must be sent
-     * @deprecated
-     */
-    public boolean shouldNotify( BuildResult build, BuildResult previousBuild )
-    {
-        return shouldNotify( build, previousBuild, null );
     }
 
     /**
@@ -180,4 +181,38 @@ public abstract class AbstractContinuumNotifier
 
         return false;
     }
+
+    protected BuildResult getPreviousBuild( Project project, BuildDefinition buildDef, BuildResult currentBuild )
+        throws NotificationException
+    {
+        try
+        {
+            // TODO: prefer to remove this and get them up front
+            if ( project.getId() > 0 )
+            {
+                project = store.getProjectWithBuilds( project.getId() );
+            }
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new NotificationException( "Unable to obtain project builds", e );
+        }
+        List builds = project.getBuildResults();
+
+        if ( builds.size() < 2 )
+        {
+            return null;
+        }
+
+        BuildResult build = (BuildResult) builds.get( builds.size() - 1 );
+
+        if ( currentBuild != null && build.getId() != currentBuild.getId() )
+        {
+            throw new NotificationException( "INTERNAL ERROR: The current build wasn't the first in the build list. " +
+                "Current build: '" + currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
+        }
+
+        return (BuildResult) builds.get( builds.size() - 2 );
+    }
+
 }

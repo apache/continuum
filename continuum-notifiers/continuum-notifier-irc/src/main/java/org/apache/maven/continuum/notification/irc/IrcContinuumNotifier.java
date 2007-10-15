@@ -21,14 +21,13 @@ package org.apache.maven.continuum.notification.irc;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.notification.NotificationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.util.StringUtils;
@@ -63,11 +62,6 @@ public class IrcContinuumNotifier
     // ----------------------------------------------------------------------
     // Requirements
     // ----------------------------------------------------------------------
-
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
 
     /**
      * @plexus.requirement
@@ -232,6 +226,9 @@ public class IrcContinuumNotifier
         ProjectNotifier projectNotifier =
             (ProjectNotifier) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT_NOTIFIER );
 
+        BuildDefinition buildDefinition = (BuildDefinition) context
+            .get( ContinuumNotificationDispatcher.CONTEXT_BUILD_DEFINITION );
+
         BuildResult build = (BuildResult) context.get( ContinuumNotificationDispatcher.CONTEXT_BUILD );
 
         // ----------------------------------------------------------------------
@@ -251,7 +248,7 @@ public class IrcContinuumNotifier
         {
             if ( source.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
             {
-                buildComplete( project, projectNotifier, build, configuration );
+                buildComplete( project, projectNotifier, build, buildDefinition, configuration );
             }
         }
         catch ( ContinuumException e )
@@ -260,14 +257,15 @@ public class IrcContinuumNotifier
         }
     }
 
-    private void buildComplete( Project project, ProjectNotifier projectNotifier, BuildResult build, Map configuration )
-        throws ContinuumException
+    private void buildComplete( Project project, ProjectNotifier projectNotifier, BuildResult build,
+                                BuildDefinition buildDef, Map configuration )
+        throws ContinuumException, NotificationException
     {
         // ----------------------------------------------------------------------
         // Check if the message should be sent at all
         // ----------------------------------------------------------------------
 
-        BuildResult previousBuild = getPreviousBuild( project, build );
+        BuildResult previousBuild = getPreviousBuild( project, buildDef, build );
 
         if ( !shouldNotify( build, previousBuild, projectNotifier ) )
         {
@@ -328,7 +326,7 @@ public class IrcContinuumNotifier
         }
         catch ( IOException e )
         {
-            throw new ContinuumException( "Exception while checkConnection to irc ." + host, e );
+            throw new NotificationException( "Exception while checkConnection to irc ." + host, e );
         }
     }
 
@@ -364,39 +362,6 @@ public class IrcContinuumNotifier
         }
 
         return message + " " + getReportUrl( project, build, configurationService );
-    }
-
-    private BuildResult getPreviousBuild( Project project, BuildResult currentBuild )
-        throws ContinuumException
-    {
-        try
-        {
-            // TODO: prefer to remove this and get them up front
-            if ( project.getId() > 0 )
-            {
-                project = store.getProjectWithBuilds( project.getId() );
-            }
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new ContinuumException( "Unable to obtain project builds", e );
-        }
-        List builds = project.getBuildResults();
-
-        if ( builds.size() < 2 )
-        {
-            return null;
-        }
-
-        BuildResult build = (BuildResult) builds.get( builds.size() - 1 );
-
-        if ( currentBuild != null && build.getId() != currentBuild.getId() )
-        {
-            throw new ContinuumException( "INTERNAL ERROR: The current build wasn't the first in the build list. " +
-                "Current build: '" + currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
-        }
-
-        return (BuildResult) builds.get( builds.size() - 2 );
     }
 
     /**

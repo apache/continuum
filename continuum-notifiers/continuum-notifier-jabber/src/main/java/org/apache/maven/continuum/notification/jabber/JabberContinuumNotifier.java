@@ -21,20 +21,18 @@ package org.apache.maven.continuum.notification.jabber;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jabber.JabberClient;
 import org.codehaus.plexus.jabber.JabberClientException;
 import org.codehaus.plexus.notification.NotificationException;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -59,11 +57,6 @@ public class JabberContinuumNotifier
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
-
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
 
     // ----------------------------------------------------------------------
     // Configuration
@@ -111,6 +104,9 @@ public class JabberContinuumNotifier
         ProjectNotifier projectNotifier =
             (ProjectNotifier) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT_NOTIFIER );
 
+        BuildDefinition buildDefinition = (BuildDefinition) context
+            .get( ContinuumNotificationDispatcher.CONTEXT_BUILD_DEFINITION );
+
         BuildResult build = (BuildResult) context.get( ContinuumNotificationDispatcher.CONTEXT_BUILD );
 
         // ----------------------------------------------------------------------
@@ -139,7 +135,7 @@ public class JabberContinuumNotifier
 
         if ( source.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
         {
-            sendMessage( project, projectNotifier, build, recipients, configuration );
+            sendMessage( project, projectNotifier, build, recipients, buildDefinition, configuration );
         }
     }
 
@@ -182,7 +178,7 @@ public class JabberContinuumNotifier
     }
 
     private void sendMessage( Project project, ProjectNotifier projectNotifier, BuildResult build, Set recipients,
-                              Map configuration )
+                              BuildDefinition buildDef, Map configuration )
         throws NotificationException
     {
         String message;
@@ -191,7 +187,7 @@ public class JabberContinuumNotifier
         // Check if the mail should be sent at all
         // ----------------------------------------------------------------------
 
-        BuildResult previousBuild = getPreviousBuild( project, build );
+        BuildResult previousBuild = getPreviousBuild( project, buildDef, build );
 
         if ( !shouldNotify( build, previousBuild, projectNotifier ) )
         {
@@ -254,39 +250,6 @@ public class JabberContinuumNotifier
 
             }
         }
-    }
-
-    private BuildResult getPreviousBuild( Project project, BuildResult currentBuild )
-        throws NotificationException
-    {
-        try
-        {
-            // TODO: prefer to remove this and get them up front
-            if ( project.getId() > 0 )
-            {
-                project = store.getProjectWithBuilds( project.getId() );
-            }
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new NotificationException( "Unable to obtain project builds", e );
-        }
-        List builds = project.getBuildResults();
-
-        if ( builds.size() < 2 )
-        {
-            return null;
-        }
-
-        BuildResult build = (BuildResult) builds.get( builds.size() - 1 );
-
-        if ( currentBuild != null && build.getId() != currentBuild.getId() )
-        {
-            throw new NotificationException( "INTERNAL ERROR: The current build wasn't the first in the build list. " +
-                "Current build: '" + currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
-        }
-
-        return (BuildResult) builds.get( builds.size() - 2 );
     }
 
     public void sendNotification( String arg0, Set arg1, Properties arg2 )

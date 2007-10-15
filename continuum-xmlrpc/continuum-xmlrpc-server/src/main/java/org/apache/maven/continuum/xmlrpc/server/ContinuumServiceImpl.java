@@ -929,6 +929,7 @@ public class ContinuumServiceImpl
         br.setSuccess( buildResult.isSuccess() );
         br.setTrigger( buildResult.getTrigger() );
         br.setProject( populateProjectSummary( buildResult.getProject() ) );
+        br.setBuildDefinition( populateBuildDefinition( buildResult.getBuildDefinition() ) );
         return br;
     }
 
