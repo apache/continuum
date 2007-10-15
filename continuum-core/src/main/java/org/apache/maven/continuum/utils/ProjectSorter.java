@@ -21,6 +21,7 @@ package org.apache.maven.continuum.utils;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.dag.DAG;
 import org.codehaus.plexus.util.dag.TopologicalSorter;
@@ -55,7 +56,7 @@ public class ProjectSorter
      * <li>do a topo sort on the graph that remains.</li>
      * </ul>
      */
-    public static List<Project> getSortedProjects( Collection<Project> projects )
+    public static List<Project> getSortedProjects( Collection<Project> projects, Logger logger )
         throws CycleDetectedException
     {
         DAG dag = new DAG();
@@ -66,6 +67,11 @@ public class ProjectSorter
         {
             String id = getProjectId( project );
 
+            if ( dag.getVertex( id ) != null )
+            {
+                logger.warn( "Project '" + id + "' is duplicated in the reactor" );
+            }
+
             dag.addVertex( id );
 
             projectMap.put( id, project );
@@ -74,19 +80,6 @@ public class ProjectSorter
         for ( Project project : projects )
         {
             String id = getProjectId( project );
-
-            // Parent
-            ProjectDependency parent = project.getParent();
-
-            if ( parent != null )
-            {
-                String dependencyId = getDependencyId( parent );
-
-                if ( dag.getVertex( dependencyId ) != null )
-                {
-                    dag.addEdge( id, dependencyId );
-                }
-            }
 
             // Dependencies
             for ( Object o : project.getDependencies() )
@@ -98,6 +91,24 @@ public class ProjectSorter
                 if ( dag.getVertex( dependencyId ) != null )
                 {
                     dag.addEdge( id, dependencyId );
+                }
+            }
+
+            // Parent
+            ProjectDependency parent = project.getParent();
+
+            if ( parent != null )
+            {
+                String parentId = getDependencyId( parent );
+
+                if ( dag.getVertex( parentId ) != null )
+                {
+                    // Parent is added as an edge, but must not cause a cycle - so we remove any other edges it has in conflict
+                    if ( dag.hasEdge( parentId, id ) )
+                    {
+                        dag.removeEdge( parentId, id );
+                    }
+                    dag.addEdge( id, parentId );
                 }
             }
         }

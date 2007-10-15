@@ -57,7 +57,7 @@ public class ProjectSorterTest
         c2.setDependencies( Collections.singletonList( generateProjectDependency( c1 ) ) );
         list.add( c2 );
 
-        List sortedList = ProjectSorter.getSortedProjects( list );
+        List sortedList = ProjectSorter.getSortedProjects( list, null );
 
         assertNotNull( sortedList );
 
@@ -92,7 +92,7 @@ public class ProjectSorterTest
         c2.setDependencies( Collections.singletonList( generateProjectDependency( c1 ) ) );
         list.add( c2 );
 
-        List sortedList = ProjectSorter.getSortedProjects( list );
+        List sortedList = ProjectSorter.getSortedProjects( list, null );
 
         assertNotNull( sortedList );
 
