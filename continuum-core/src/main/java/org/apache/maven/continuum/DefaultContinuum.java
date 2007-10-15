@@ -1324,7 +1324,7 @@ public class DefaultContinuum
             return new ArrayList<Project>();
         }
 
-        return ProjectSorter.getSortedProjects( projects );
+        return ProjectSorter.getSortedProjects( projects, getLogger() );
     }
 
     // ----------------------------------------------------------------------

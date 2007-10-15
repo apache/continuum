@@ -31,9 +31,12 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Developer;
+import org.apache.maven.model.Extension;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Notifier;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Profile;
+import org.apache.maven.model.ReportPlugin;
 import org.apache.maven.model.Scm;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.profiles.DefaultProfileManager;
@@ -260,6 +263,51 @@ public class DefaultMavenBuilderHelper
         for ( Iterator i = mavenProject.getDependencies().iterator(); i.hasNext(); )
         {
             Dependency dependency = (Dependency) i.next();
+
+            ProjectDependency cd = new ProjectDependency();
+
+            cd.setGroupId( dependency.getGroupId() );
+
+            cd.setArtifactId( dependency.getArtifactId() );
+
+            cd.setVersion( dependency.getVersion() );
+
+            dependencies.add( cd );
+        }
+
+        for ( Iterator i = mavenProject.getBuildPlugins().iterator(); i.hasNext(); )
+        {
+            Plugin dependency = (Plugin) i.next();
+
+            ProjectDependency cd = new ProjectDependency();
+
+            cd.setGroupId( dependency.getGroupId() );
+
+            cd.setArtifactId( dependency.getArtifactId() );
+
+            cd.setVersion( dependency.getVersion() );
+
+            dependencies.add( cd );
+        }
+
+        for ( Iterator i = mavenProject.getReportPlugins().iterator(); i.hasNext(); )
+        {
+            ReportPlugin dependency = (ReportPlugin) i.next();
+
+            ProjectDependency cd = new ProjectDependency();
+
+            cd.setGroupId( dependency.getGroupId() );
+
+            cd.setArtifactId( dependency.getArtifactId() );
+
+            cd.setVersion( dependency.getVersion() );
+
+            dependencies.add( cd );
+        }
+
+        for ( Iterator i = mavenProject.getBuildExtensions().iterator(); i.hasNext(); )
+        {
+            Extension dependency = (Extension) i.next();
 
             ProjectDependency cd = new ProjectDependency();
 
