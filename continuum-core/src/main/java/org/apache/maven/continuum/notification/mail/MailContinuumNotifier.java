@@ -37,8 +37,6 @@ import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.ContinuumRecipientSource;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.codehaus.plexus.mailsender.MailMessage;
@@ -80,11 +78,6 @@ public class MailContinuumNotifier
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
-
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
 
     /**
      * @plexus.requirement
@@ -130,12 +123,12 @@ public class MailContinuumNotifier
 
     /**
      * Customizable mail subject.  Use any combination of literal text, project or build attributes.
-     * Examples: 
-     *   "[continuum] BUILD ${state}: ${project.groupId} ${project.name}" results in "[continuum] BUILD SUCCESSFUL: foo.bar Hello World"
-     *   "[continuum] BUILD ${state}: ${project.name} ${project.scmTag}" results in "[continuum] BUILD SUCCESSFUL: Hello World Branch001"
-     *   "[continuum] BUILD ${state}: ${project.name} ${build.durationTime}" results in "[continuum] BUILD SUCCESSFUL: Hello World 2 sec"
-     *   "[continuum] BUILD ${state}: ${project.name}, Build Def - ${build.buildDefinition.description}" results in "[continuum] BUILD SUCCESSFUL: Hello World, Build Def - Nightly Test Build"
-     * 
+     * Examples:
+     * "[continuum] BUILD ${state}: ${project.groupId} ${project.name}" results in "[continuum] BUILD SUCCESSFUL: foo.bar Hello World"
+     * "[continuum] BUILD ${state}: ${project.name} ${project.scmTag}" results in "[continuum] BUILD SUCCESSFUL: Hello World Branch001"
+     * "[continuum] BUILD ${state}: ${project.name} ${build.durationTime}" results in "[continuum] BUILD SUCCESSFUL: Hello World 2 sec"
+     * "[continuum] BUILD ${state}: ${project.name}, Build Def - ${build.buildDefinition.description}" results in "[continuum] BUILD SUCCESSFUL: Hello World, Build Def - Nightly Test Build"
+     *
      * @plexus.configuration
      */
     private String subjectFormat = "[continuum] BUILD ${state}: ${project.groupId} ${project.name}";
@@ -255,7 +248,7 @@ public class MailContinuumNotifier
         // Check if the mail should be sent at all
         // ----------------------------------------------------------------------
 
-        BuildResult previousBuild = getPreviousBuild( project, build );
+        BuildResult previousBuild = getPreviousBuild( project, buildDefinition, build );
 
         if ( !shouldNotify( build, previousBuild, projectNotifier ) )
         {
@@ -283,7 +276,8 @@ public class MailContinuumNotifier
                 context.put( "buildOutput", buildOutput );
             }
 
-            if ( includeBuildSummary ) {
+            if ( includeBuildSummary )
+            {
                 context.put( "build", build );
 
                 context.put( "project", project );
@@ -322,15 +316,14 @@ public class MailContinuumNotifier
 
                 context.put( "builderVersions", getBuilderVersion( buildDefinition, project ) );
             }
-            
+
             // ----------------------------------------------------------------------
             // Data objects
             // ----------------------------------------------------------------------
 
             context.put( "reportUrl", getReportUrl( project, build, configurationService ) );
 
-
-            // TODO put other profile env var could be a security if they provide passwords ? 
+            // TODO put other profile env var could be a security if they provide passwords ?
 
             // ----------------------------------------------------------------------
             // Generate
@@ -356,9 +349,12 @@ public class MailContinuumNotifier
         // ----------------------------------------------------------------------
 
         String subject;
-        try {
+        try
+        {
             subject = generateSubject( project, build );
-        } catch ( Exception e ) {
+        }
+        catch ( Exception e )
+        {
             throw new NotificationException( "Error while generating mail subject.", e );
         }
 
@@ -431,19 +427,20 @@ public class MailContinuumNotifier
             .getVarValue(), executorConfigurator, profile );
     }
 
-    private String generateSubject( Project project, BuildResult build ) throws Exception
+    private String generateSubject( Project project, BuildResult build )
+        throws Exception
     {
         String state = getState( project, build );
-        
+
         VelocityContext context = new VelocityContext();
         context.put( "project", project );
         context.put( "build", build );
         context.put( "state", state );
-        
+
         StringWriter writer = new StringWriter();
 
         boolean velocityResults = velocity.getEngine().evaluate( context, writer, "subjectPattern", subjectFormat );
-            
+
         String subject = writer.toString();
 
         return subject;
@@ -453,10 +450,10 @@ public class MailContinuumNotifier
     {
         int state = project.getState();
 
-        if ( build != null ) {
+        if ( build != null )
+        {
             state = build.getState();
         }
-
 
         if ( state == ContinuumProjectState.OK )
         {
@@ -475,7 +472,7 @@ public class MailContinuumNotifier
             getLogger().warn( "Unknown build state " + state + " for project " + project.getId() );
 
             return "ERROR: Unknown build state " + state;
-       }
+        }
     }
 
     private void sendMessage( Project project, Set recipients, String subject, String content, Map configuration )
@@ -564,39 +561,6 @@ public class MailContinuumNotifier
         }
 
         return address;
-    }
-
-    private BuildResult getPreviousBuild( Project project, BuildResult currentBuild )
-        throws NotificationException
-    {
-        try
-        {
-            // TODO: prefer to remove this and get them up front
-            if ( project.getId() > 0 )
-            {
-                project = store.getProjectWithBuilds( project.getId() );
-            }
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new NotificationException( "Unable to obtain project builds", e );
-        }
-        List builds = project.getBuildResults();
-
-        if ( builds.size() < 2 )
-        {
-            return null;
-        }
-
-        BuildResult build = (BuildResult) builds.get( builds.size() - 1 );
-
-        if ( currentBuild != null && build.getId() != currentBuild.getId() )
-        {
-            throw new NotificationException( "INTERNAL ERROR: The current build wasn't the first in the build list. " +
-                "Current build: '" + currentBuild.getId() + "', " + "first build: '" + build.getId() + "'." );
-        }
-
-        return (BuildResult) builds.get( builds.size() - 2 );
     }
 
     /**

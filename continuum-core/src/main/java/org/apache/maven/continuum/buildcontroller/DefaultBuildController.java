@@ -703,6 +703,8 @@ public class DefaultBuildController
 
         build.setScmResult( context.getScmResult() );
 
+        build.setBuildDefinition( context.getBuildDefinition() );
+
         if ( error != null )
         {
             build.setError( error );
