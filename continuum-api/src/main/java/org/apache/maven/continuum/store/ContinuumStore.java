@@ -311,6 +311,8 @@ public interface ContinuumStore
 
     List<BuildResult> getBuildResultByBuildNumber( int projectId, int buildNumber );
 
+    List<BuildResult> getBuildResultsByBuildDefinition( int projectId, int buildDefinitionId );
+
     Map getBuildResultsInSuccess();
 
     Map getBuildResultsInSuccessByProjectGroupId( int projectGroupId );

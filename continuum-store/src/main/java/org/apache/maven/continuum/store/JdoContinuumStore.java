@@ -103,7 +103,7 @@ public class JdoContinuumStore
     private static final String PROJECT_DEPENDENCIES_FETCH_GROUP = "project-dependencies";
 
     private static final String PROJECTGROUP_PROJECTS_FETCH_GROUP = "projectgroup-projects";
-    
+
     private static final String BUILD_TEMPLATE_BUILD_DEFINITIONS = "build-template-build-definitions";
 
     // ----------------------------------------------------------------------
@@ -620,7 +620,7 @@ public class JdoContinuumStore
     // ------------------------------------------------------
     //  BuildDefinition
     // ------------------------------------------------------    
-    
+
     public BuildDefinition getDefaultBuildDefinition( int projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
@@ -760,7 +760,7 @@ public class JdoContinuumStore
         return null;
     }
 
-    
+
     public List<BuildDefinitionTemplate> getContinuumBuildDefinitionTemplates()
         throws ContinuumStoreException
     {
@@ -786,9 +786,9 @@ public class JdoContinuumStore
 
             rollback( tx );
         }
-    }    
-    
-    
+    }
+
+
     public BuildDefinitionTemplate getContinuumBuildDefinitionTemplateWithType( String type )
         throws ContinuumStoreException
     {
@@ -894,8 +894,7 @@ public class JdoContinuumStore
 
         return buildDefinition;
     }
-    
-    
+
 
     public BuildDefinition addBuildDefinition( BuildDefinition buildDefinition )
         throws ContinuumStoreException
@@ -903,12 +902,11 @@ public class JdoContinuumStore
         return (BuildDefinition) addObject( buildDefinition );
     }
 
-    
     // ------------------------------------------------------
     //  BuildDefinitionTemplate
     // ------------------------------------------------------      
-    
-    
+
+
     public BuildDefinitionTemplate addBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
         throws ContinuumStoreException
     {
@@ -924,7 +922,8 @@ public class JdoContinuumStore
     public BuildDefinitionTemplate getBuildDefinitionTemplate( int id )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
     {
-        return (BuildDefinitionTemplate) getObjectById( BuildDefinitionTemplate.class, id, BUILD_TEMPLATE_BUILD_DEFINITIONS );
+        return (BuildDefinitionTemplate) getObjectById( BuildDefinitionTemplate.class, id,
+                                                        BUILD_TEMPLATE_BUILD_DEFINITIONS );
     }
 
     public void removeBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
@@ -968,7 +967,7 @@ public class JdoContinuumStore
             rollback( tx );
         }
     }
-    
+
     public List<BuildDefinitionTemplate> getBuildDefinitionTemplatesWithType( String type )
         throws ContinuumStoreException
     {
@@ -997,8 +996,8 @@ public class JdoContinuumStore
             rollback( tx );
         }
     }
-    
-    
+
+
     private Object makePersistent( PersistenceManager pm, Object object, boolean detach )
     {
         return PlexusJdoUtils.makePersistent( pm, object, detach );
@@ -1107,11 +1106,12 @@ public class JdoContinuumStore
     // todo get this natively supported in the store
     public List<Project> getProjectsWithDependenciesByGroupId( int projectGroupId )
     {
-        List<Project> allProjects = getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
+        List<Project> allProjects =
+            getAllObjectsDetached( Project.class, "name ascending", PROJECT_DEPENDENCIES_FETCH_GROUP );
 
         List<Project> groupProjects = new ArrayList<Project>();
 
-        for ( Project project:allProjects )
+        for ( Project project : allProjects )
         {
             if ( project.getProjectGroup().getId() == projectGroupId )
             {
@@ -1520,6 +1520,41 @@ public class JdoContinuumStore
             List result = (List) query.execute( new Integer( projectId ), new Integer( buildNumber ) );
 
             result = (List) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    public List<BuildResult> getBuildResultsByBuildDefinition( int projectId, int buildDefinitionId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId, int buildDefinitionId" );
+
+            query.setFilter( "this.project.id == projectId && this.buildDefinition.id == buildDefinitionId" );
+
+            query.setOrdering( "this.id descending" );
+
+            List<BuildResult> result =
+                (List<BuildResult>) query.execute( new Integer( projectId ), new Integer( buildDefinitionId ) );
+
+            result = (List<BuildResult>) pm.detachCopyAll( result );
 
             tx.commit();
 
