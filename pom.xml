@@ -75,6 +75,12 @@
           </configuration>
         </plugin>
         <plugin>
+          <artifactId>maven-idea-plugin</artifactId>
+          <configuration>
+            <jdkLevel>1.5</jdkLevel>
+          </configuration>
+        </plugin>
+        <plugin>
           <artifactId>maven-release-plugin</artifactId>
           <configuration>
             <tagBase>https://svn.apache.org/repos/asf/maven/continuum/tags</tagBase>
