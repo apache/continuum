@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
 import com.opensymphony.xwork.ActionContext;
@@ -65,6 +66,8 @@ public class ContinuumActionSupport
      * @plexus.requirement
      */
     private Continuum continuum;
+    
+    protected SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss aaa z");
 
     public void prepare()
         throws Exception

@@ -19,7 +19,11 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.Date;
+import java.util.Iterator;
+
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -36,6 +40,8 @@ public class ProjectViewAction
     private Project project;
 
     private int projectId;
+    
+    private String lastBuildDateTime;
 
     /**
      * Target {@link ProjectGroup} to view.
@@ -57,9 +63,24 @@ public class ProjectViewAction
         }
 
         project = getContinuum().getProjectWithAllDetails( projectId );
+        if ( project.getLatestBuildId() > 0 )
+        {
+            try
+            {
+            BuildResult lastBuildResult = getContinuum().getBuildResult( project.getLatestBuildId() );
+            if ( lastBuildResult != null )
+            {
+                this.setLastBuildDateTime( dateFormatter.format( new Date( lastBuildResult.getEndTime() ) ) );
+            }
+            } catch (ContinuumException e)
+            {
+                getLogger().info( "buildResult with id " + project.getLatestBuildId() + " has been deleted" );
+            }
+        }
+
         return SUCCESS;
     }
-
+    
     public void setProjectId( int projectId )
     {
         this.projectId = projectId;
@@ -85,5 +106,15 @@ public class ProjectViewAction
         throws ContinuumException
     {
         return getContinuum().getProjectGroupByProjectId( projectId );
+    }
+
+    public String getLastBuildDateTime()
+    {
+        return lastBuildDateTime;
+    }
+
+    public void setLastBuildDateTime( String lastBuildDateTime )
+    {
+        this.lastBuildDateTime = lastBuildDateTime;
     }
 }

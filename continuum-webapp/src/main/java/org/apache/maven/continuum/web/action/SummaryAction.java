@@ -19,6 +19,16 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -26,14 +36,6 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.GroupSummary;
 import org.apache.maven.continuum.web.model.ProjectSummary;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Used to render the list of projects in the project group page.
@@ -70,7 +72,7 @@ public class SummaryAction
 
         //TODO: Create a summary jpox request so code will be more simple and performance will be better
         projectsInGroup = getContinuum().getProjectsInGroup( projectGroupId );
-
+        
         Map buildResults = getContinuum().getLatestBuildResults( projectGroupId );
 
         Map buildResultsInSuccess = getContinuum().getBuildResultsInSuccess( projectGroupId );
@@ -136,6 +138,7 @@ public class SummaryAction
                 {
                     model.setLatestBuildId( latestBuild.getId() );
                     populateGroupSummary( latestBuild );
+                    model.setLastBuildDateTime( dateFormatter.format( new Date( latestBuild.getEndTime() ) ) );
                 }
             }
 
