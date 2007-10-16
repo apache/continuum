@@ -135,7 +135,7 @@
         <executions>
           <execution>
             <id>hack-sources</id>
-            <phase>process-sources</phase>
+            <phase>generate-sources</phase>
             <configuration>
               <tasks>
                 <!-- Workaround for MODELLO-89 -->
