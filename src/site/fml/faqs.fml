@@ -98,38 +98,52 @@
   </part>
   <part id="general">
     <title>General</title>
-    <faq id="how-does-continuum-detect-a-successful-build">
-      <question>How does Continuum detect a successful build?</question>
+    <faq id="how-does-continuum-detect-a-successful-build-with-ant">
+      <question>Why Maven doesn't detect my failed builds?</question>
+      <answer>
+        <p>
+          mvn.bat distributed with Maven 2.0.7 doesn't set correctly the exit code.
+          The fixed version is available <b><a href="http://svn.apache.org/repos/asf/maven/components/branches/maven-2.0.x/maven-core/src/bin/">here</a></b>.
+        </p>
+      </answer>
+    </faq>
+    <faq id="how-does-continuum-detect-a-successful-build-with-ant">
+      <question>How does Continuum detect a successful build with ANT?</question>
       <answer>
         <p>
           Continuum uses the command line return code for detecting a successful or failed execution.
         </p>
         <p>
-          If you use maven or ant, you need to add the following line at the end of <code>maven.bat</code> and <code>ant.bat</code> :
+          If you use ant, you need to add the following lines at the end of <code>ant.bat</code> :
         </p>
         <source>
-if "%MAVEN_TERMINATE_CMD%" == "on" exit %ERRORLEVEL%
+if "%MAVEN_TERMINATE_CMD%" == "on" exit %ANT_ERROR%
+
+exit /B %ANT_ERROR%
         </source>
         <p>
         If your bat file contains an <code>exit /B</code> at the end, this line must be inserted before it.
         </p>
         <p>
-        <b>This part is for Continuum &lt; 1.0.2</b>
-        You must also add the following lines at the begin of <code>$CONTINUUM/bin/win32/run.bat</code>, if you run Continuum from the command line :
+        <p>
+          <b>The code above is for ANT 1.7, you can download fixed scripts for older ANT <a href="scripts">here</a></b>.
+        </p>
+      </answer>
+    </faq>
+    <faq id="how-does-continuum-detect-a-successful-build-with-sript-shell">
+      <question>How does Continuum detect a successful build with a SHELL script?</question>
+      <answer>
+        <p>
+          Continuum uses the command line return code for detecting a successful or failed execution.
+        </p>
+        <p>
+          You need to add the following lines at the end of script :
         </p>
         <source>
-@echo off
-set MAVEN_TERMINATE_CMD=on
+if "%MAVEN_TERMINATE_CMD%" == "on" exit %ERROR_CODE%
         </source>
         <p>
-        or this line in <code>wrapper.conf</code>, if you run Continuum as a service (works with command line too) :
-        </p>
-        <source>
-set.MAVEN_TERMINATE_CMD=on
-        </source>
-        <p>
-          <b>You can download fixed scripts for ant and maven <a href="scripts">here</a></b>.
-        </p>
+        If your bat file contains an <code>exit /B</code> at the end, this line must be inserted before it.
       </answer>
     </faq>
     <faq id="How-can-I-run-continuum-on-a-different-port">
