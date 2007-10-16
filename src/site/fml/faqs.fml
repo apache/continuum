@@ -209,6 +209,17 @@ if "%MAVEN_TERMINATE_CMD%" == "on" exit %ERROR_CODE%
   </part>
   <part id="misc">
     <title>Misc</title>
+    <faq id="the-embedded-java-CVS-client-doesn-t-work-for-me-what-is-the-workaround">
+      <question>The embedded java CVS client doesn't work for me, what is the workaround?</question>
+      <answer>
+        <p>
+          If you have a native CVS client installed, you can use it instead of the embedded java CVS client. You should add the following property in your startup script:
+        </p>
+        <source>
+-Dmaven.scm.provider.cvs.implementation=cvs_native
+        </source>
+      </answer>
+    </faq>
     <faq id="i-m-running-on-windows-and-continuum-cant-log-to-my-cvs-repository-whats-going-on">
       <question>I'm running on Windows, and Continuum can't log in to my CVS repository! What's going on?</question>
       <answer>
