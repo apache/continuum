@@ -47,6 +47,7 @@
                 <ww:param name="projectGroupId" value="%{project.projectGroup.id}"/>
             </ww:url>            
             <c1:data label="%{getText('projectView.project.group')}" name="project.projectGroup.name" valueLink="%{'${projectGroupSummaryUrl}'}"/>
+            <c1:data label="%{getText('projectView.project.lastBuildDateTime')}" name="lastBuildDateTime" />
           </table>
 
           <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
