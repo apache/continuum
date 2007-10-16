@@ -291,31 +291,6 @@ scm:cvs:pserver:username:@servername:path_to_repository:module_name
         </p>
       </answer>
     </faq>
-    <faq id="cant-run-on-macosx">
-      <question>Why $CONTINUUM/bin/macosx/run.sh doesn't work for me?</question>
-      <answer>
-        <p>
-          On some MacOS X version, The <a href="http://wrapper.tanukisoftware.org/">Java Service Wrapper</a> used by Continuum doesn't work with an error like this:
-        </p>
-        <source>
-$ run.sh console
-Running continuum...
-wrapper  | --> Wrapper Started as Console
-dyld: lazy symbol binding failed: Symbol not found: _ftime
-        </source>
-        <p>
-          You can run <b>$CONTINUUM/bin/plexus.sh</b> instead.
-        </p>
-      </answer>
-    </faq>
-    <faq id="cant-run-on-solaris">
-      <question>Why $CONTINUUM/bin/solaris/run.sh doesn't work for me?</question>
-      <answer>
-        <p>
-          This script is only for sparc processor. If you have an Intel processor, you must run <b>$CONTINUUM/bin/plexus.sh</b> instead.
-        </p>
-      </answer>
-    </faq>
     <faq id="add-an-scm-hook-script">
       <question>How can I build projects with a scm post-commit hook?</question>
       <answer>
@@ -324,40 +299,5 @@ dyld: lazy symbol binding failed: Symbol not found: _ftime
         </p>
       </answer>
     </faq>
-    <faq id="change-default-build-definition">
-      <question>When I had a maven2 project I always have goals clean install and arguments --batch-mode --non-recursive?</question>
-      <answer>
-        <p>
-          You have to modify the file application.xml (located in WEB-INF/classes/META-INF/plexus).
-          Find the line with org.apache.maven.continuum.configuration.ConfigurationService and the values in default-goals and default-arguments.
-          <source>
-    <component>
-      <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
-      <implementation>org.apache.maven.continuum.configuration.DefaultConfigurationService</implementation>
-      <description></description>
-      <requirements>
-        <requirement>
-          <role>org.apache.maven.continuum.store.ContinuumStore</role>
-          <role-hint>jdo</role-hint>
-          <field-name>store</field-name>
-        </requirement>
-      </requirements>
-      <configuration>
-        <application-home>${plexus.home}</application-home>
-         uncomment the component the
-         replace here to override default-goals and default-arguments 
-        <default-ant-goals></default-ant-goals>
-        <default-ant-arguments></default-ant-arguments>
-        <default-m1-goals>clean:clean jar:install</default-m1-goals>
-        <default-m1-arguments></default-m1-arguments>
-        <default-m2-goals>clean install</default-m2-goals>
-        <default-m2-arguments>-B -N</default-m2-arguments>
-      </configuration>
-    </component>          
-          </source>
-        </p>
-        <p><b>1.1-In beta-4, the default build defintions will be updatable without restarting with the build template future</b></p>
-      </answer>
-    </faq>    
   </part>
 </faqs>
