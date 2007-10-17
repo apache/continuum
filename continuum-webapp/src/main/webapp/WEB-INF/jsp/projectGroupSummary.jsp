@@ -32,27 +32,39 @@
     </title>
     <meta http-equiv="refresh" content="300"/>
     <script type="text/javascript">
+
+      <c:url var="addM2ProjectUrl" value="/addMavenTwoProject!input.action" />
+      <c:url var="addM1ProjectUrl" value="/addMavenOneProject!input.action" />
+      <c:url var="addProjectUrl" value="/addProjectInput.action" />
+
       function goToAddProject()
       {
-        var urls = document.getElementById( "projectTypes" );
-        var index = urls.selectedIndex;
+        var projectTypes = document.getElementById( "preferredExecutor" );
+        var type = projectTypes.value;
 
-        if ( index > 0 )
+        if ( type != '' )
         {
           var form = document.forms[ "addNewProject" ];
-          form.action = urls[ index ].value;
 
-          if ( index == 3 )
+          if ( type == 'maven2' )
           {
+            form.action = '${addM2ProjectUrl}';
+            form.projectType.value = "";
+          }
+          else if ( type == 'maven-1' )
+          {
+            form.action = '${addM1ProjectUrl}';
+            form.projectType.value = "";
+          }
+          else if ( type == 'ant' )
+          {
+            form.action = '${addProjectUrl}';
             form.projectType.value = "ant";
           }
-          else if ( index == 4 )
+          else if ( type == 'shell' )
           {
+            form.action = '${addProjectUrl}';
             form.projectType.value = "shell";
-          }
-          else
-          {
-            form.projectType.value = "";
           }
 
           form.submit();
@@ -138,17 +150,8 @@
                   <ww:hidden name="projectType" value=""/>
                 </ww:form>
 
-                <c:url var="addM2ProjectUrl" value="/addMavenTwoProject!input.action" />
-                <c:url var="addM1ProjectUrl" value="/addMavenOneProject!input.action" />
-                <c:url var="addProjectUrl" value="/addProjectInput.action" />
-
-                <select id="projectTypes">
-                  <option value=""><ww:text name="projectGroup.addProject.label" /></option>
-                  <option value="${addM2ProjectUrl}">Add M2 Project</option>
-                  <option value="${addM1ProjectUrl}">Add M1 Project</option>
-                  <option value="${addProjectUrl}">Add Ant Project</option>
-                  <option value="${addProjectUrl}">Add Shell Project</option>
-                </select>
+                <ww:select theme="simple" name="preferredExecutor" list="#{'maven2' : 'Add M2 Project', 'maven-1' : 'Add M1 Project', 'ant' : 'Add Ant Project', 'shell' : 'Add Shell Project'}"
+                    headerValue="Choose the project type" headerKey="" emptyOption="true" />
 
                 <input type="button" value="Add" onclick="goToAddProject()"/>
               </redback:ifAnyAuthorized>
