@@ -44,7 +44,8 @@
 
   <form id="projectsForm" action="ProjectsList.action" method="post">
     <input type="hidden" name="methodToCall" value="" />
-    <input type="hidden" id="buildDefinitionId" name="buildDefinitionId" />
+    <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
+    <input type="hidden" name="buildDefinitionId" value="-1" />
   <ec:table items="projects"
             var="project"
             showExports="false"
@@ -241,12 +242,11 @@
           <tr>
             <td>
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-                <input type="hidden" name="projectGroupId" value="${project.projectGroupId}" />
                 <input type="button" name="delete-projects" value="<ww:text name="projectGroup.deleteProjects"/>" onclick="document.forms.projectsForm.methodToCall.value='remove';document.forms.projectsForm.submit();" />
-                <ww:select theme="simple" name="buildDefinitionId" id="buildDefinitions" list="buildDefinitions" 
+                <ww:select theme="simple" name="buildDef" list="buildDefinitions" 
                            listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}"
-                           onchange="$('projectsForm').buildDefinitionId.value=$('buildDefinitions').value" />                
-                <input type="button" name="build-projects" value="<ww:text name="projectGroup.buildProjects"/>" onclick="$('projectsForm').methodToCall.value='build';$('projectsForm').submit();" />
+                           onchange="$('projectsForm').buildDefinitionId.value=$('buildDef').value" />
+                <input type="button" name="build-projects" value="<ww:text name="projectGroup.buildProjects"/>" onclick="$('projectsForm').methodToCall.value='build';document.forms.projectsForm.submit();" />
                 <input type="button" name="cancel-builds" value="<ww:text name="projectGroup.cancelBuilds"/>" onclick="document.forms.projectsForm.action='cancelBuilds.action';document.forms.projectsForm.submit();" />
               </redback:ifAuthorized>
             </td>

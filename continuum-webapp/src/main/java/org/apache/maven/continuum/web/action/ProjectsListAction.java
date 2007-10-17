@@ -23,9 +23,6 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
@@ -50,7 +47,7 @@ public class ProjectsListAction
     private int projectGroupId;
 
     private String methodToCall;
-    
+
     private int buildDefinitionId;
 
     public String execute()
@@ -130,7 +127,6 @@ public class ProjectsListAction
                 projectsList.add( p );
             }
 
-            
             List sortedProjects;
             try
             {
@@ -143,23 +139,27 @@ public class ProjectsListAction
 
             //TODO : Change this part because it's a duplicate of DefaultContinuum.buildProjectGroup*
             List<BuildDefinition> groupDefaultBDs = null;
-            if ( getBuildDefinitionId() == -1 || getBuildDefinitionId() == 0 )
+
+            if ( getBuildDefinitionId() <= 0 )
             {
                 groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
             }
             for ( Iterator i = sortedProjects.iterator(); i.hasNext(); )
             {
                 Project project = (Project) i.next();
-                if ( this.getBuildDefinitionId() == -1 || getBuildDefinitionId() == 0)
+                if ( this.getBuildDefinitionId() <= 0 )
                 {
                     int buildDefId = -1;
 
-                    for ( BuildDefinition bd : groupDefaultBDs )
+                    if ( groupDefaultBDs != null )
                     {
-                        if ( project.getExecutorId().equals( bd.getType() ) )
+                        for ( BuildDefinition bd : groupDefaultBDs )
                         {
-                            buildDefId = bd.getId();
-                            break;
+                            if ( project.getExecutorId().equals( bd.getType() ) )
+                            {
+                                buildDefId = bd.getId();
+                                break;
+                            }
                         }
                     }
 
@@ -175,15 +175,12 @@ public class ProjectsListAction
                             // here skip ObjectNotException
                             getLogger().debug( e.getMessage() );
                         }
-                        
 
                         if ( projectDefaultBD != null )
                         {
                             buildDefId = projectDefaultBD.getId();
-                            getLogger()
-                                .debug(
-                                        "Project " + project.getId()
-                                            + " has own default build definition, will use it instead of group's." );
+                            getLogger().debug( "Project " + project.getId() +
+                                " has own default build definition, will use it instead of group's." );
                         }
                     }
 
@@ -195,7 +192,7 @@ public class ProjectsListAction
                                                  ContinuumProjectState.TRIGGER_FORCED );
                 }
             }
-            
+
         }
 
         return SUCCESS;
