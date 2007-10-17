@@ -65,7 +65,7 @@ public class CancelBuildAction
         throws ContinuumException
     {
         // first we remove from the build queue
-        if ( getSelectedProjects().isEmpty() )
+        if ( getSelectedProjects() != null && getSelectedProjects().isEmpty() )
         {
             return SUCCESS;
         }
