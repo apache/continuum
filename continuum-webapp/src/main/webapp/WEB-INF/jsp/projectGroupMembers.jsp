@@ -144,10 +144,10 @@
         <th nowrap="true">
           <ww:form id="sortlist" name="sortlist" action="projectGroupMembers" theme="xhtml" method="post">
             <ww:if test="${ascending}">
-              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<ww:text name='Sort descending'/>" border="0"></ww:a> Username
+              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<ww:text name='sort.descending'/>" border="0"></ww:a> Username
             </ww:if>
             <ww:else>
-              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<ww:text name='Sort ascending'/>" border="0"></ww:a> Username
+              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<ww:text name='sort.ascending'/>" border="0"></ww:a> Username
             </ww:else>
             <ww:hidden name="ascending" value="${!ascending}"/>
             <ww:hidden name="projectGroupId" />
