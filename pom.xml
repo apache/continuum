@@ -73,6 +73,28 @@
   <reporting>
     <plugins>
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>1.1.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>changelog-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>taglist-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <configuration>
+          <aggregate>true</aggregate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+      </plugin>
+      <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <source>1.5</source>
@@ -89,6 +111,13 @@
             -postfixpackage -nodefontsize 9
             -nodefontpackagesize 7
           </additionalparam>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <!-- TODO: choose appropriate rulesets -->
+        <configuration>
+          <targetJdk>1.5</targetJdk>
         </configuration>
       </plugin>
     </plugins>
