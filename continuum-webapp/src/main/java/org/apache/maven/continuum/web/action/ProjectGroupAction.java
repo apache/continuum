@@ -115,6 +115,8 @@ public class ProjectGroupAction
 
     private int buildDefinitionId;
 
+    private String preferredExecutor = "maven2";
+
     public String summary()
         throws ContinuumException
     {
@@ -128,7 +130,7 @@ public class ProjectGroupAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        projectGroup = getProjectGroup( projectGroupId );
+        projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
 
         List<BuildDefinition> projectGroupBuildDefs =
             getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
@@ -151,6 +153,53 @@ public class ProjectGroupAction
         else
         {
             this.buildDefinitions = Collections.EMPTY_MAP;
+        }
+
+        if ( projectGroup != null )
+        {
+            if ( projectGroup.getProjects() != null && projectGroup.getProjects().size() > 0 )
+            {
+                int nbMaven2Projects = 0;
+                int nbMaven1Projects = 0;
+                int nbAntProjects = 0;
+                int nbShellProjects = 0;
+                for ( Object o : projectGroup.getProjects() )
+                {
+                    Project p = (Project) o;
+                    if ( "maven2".equals( p.getExecutorId() ) )
+                    {
+                        nbMaven2Projects += 1;
+                    }
+                    else if ( "maven-1".equals( p.getExecutorId() ) )
+                    {
+                        nbMaven1Projects += 1;
+                    }
+                    else if ( "ant".equals( p.getExecutorId() ) )
+                    {
+                        nbAntProjects += 1;
+                    }
+                    else if ( "shell".equals( p.getExecutorId() ) )
+                    {
+                        nbShellProjects += 1;
+                    }
+                }
+
+                int nbActualPreferredProject = nbMaven2Projects;
+                if ( nbMaven1Projects > nbActualPreferredProject )
+                {
+                    preferredExecutor = "maven-1";
+                    nbActualPreferredProject = nbMaven1Projects;
+                }
+                if ( nbAntProjects > nbActualPreferredProject )
+                {
+                    preferredExecutor = "ant";
+                    nbActualPreferredProject = nbAntProjects;
+                }
+                if ( nbShellProjects > nbActualPreferredProject )
+                {
+                    preferredExecutor = "shell";
+                }
+            }
         }
 
         return SUCCESS;
@@ -739,4 +788,8 @@ public class ProjectGroupAction
         this.buildDefinitionId = buildDefinitionId;
     }
 
+    public String getPreferredExecutor()
+    {
+        return preferredExecutor;
+    }
 }
