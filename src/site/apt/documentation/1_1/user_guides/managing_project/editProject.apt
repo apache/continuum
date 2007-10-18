@@ -15,32 +15,34 @@ Edit a Project
 
   When you edit a project from the groupSummary, you will see basics informations.
   First part of the page contains some informations regarding :
-    
+
   * project name
-  
+
   * project version 
-    
+
   * project scm url
-    
+
   * project Last Build Date
-    
+
   * all build definitions attached to the project
-    
-            
+
+  []
+
 [../../../../images/project-view-top.png] Project View Top
 
   Second part contains informations regarding :
-    
+
   * project notifiers
-    
+
   * project dependencies
-    
+
   * project developpers
-    
-        
+
+  []
+
 [../../../../images/project-view-bottom.png] Project View Bottom
 
-* {Build Results}    
+* {Build Results}
 
   You can view all project's Build Results with the link Builds 
   You will see all build results summary : start/end Time, result.
@@ -48,22 +50,24 @@ Edit a Project
 
 [../../../../images/build-results.png] Build Results
 
-  Now you can edit a build result 
-  
+  Now you can edit a build result
+
 * {Build Result}
 
   Editing a build result will display :
-  
+
   * scm changes (author and file path)
-  
+
   * project dependencies (project recorded in this continuum instance)
-  
+
   * detail of the build definition used
-  
+
   * the full build command line output
 
-[../../../../images/build-result.png] Build Result      
-  
-  
-    
-        
+  []
+
+[../../../../images/build-result.png] Build Result
+
+
+
+
