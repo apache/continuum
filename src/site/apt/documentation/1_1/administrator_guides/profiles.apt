@@ -5,7 +5,7 @@
  ------
  Oct 17 2007
  ------
- 
+
 Build Profile
 
 %{toc|section=0}
@@ -20,15 +20,15 @@ Build Profile
 ** {Creating a profile}
 
   From the menu, choose the 'Profiles' entry
-  
+
 [../../../images/menu-profiles.png] Profile   
 
   Enter a profile name (the name is free)
 
-[../../../images/add-profile.png] Add Profile  
+[../../../images/add-profile.png] Add Profile
 
 ** {Attach jdk to a Profile}
-  
+
   The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
   In the modification mode of a profile, adding an already attached type will override the existing one.
 
@@ -44,10 +44,12 @@ Build Profile
 ** {Installations used in Notification mail}
 
   The notification mail contains the following informations :
-  
+
   * Java Home version : coming from $JAVA_HOME/bin/java -version.
-  
-  * Builder version : coming from builder used version arg (mvn  used -v, ant use -version).  
+
+  * Builder version : coming from builder used version arg (mvn  used -v, ant use -version).
+
+  []
 
 +-------------------------------+
   Java Home version : 
