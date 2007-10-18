@@ -19,24 +19,26 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
+import java.io.File;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
 public class ContinuumBuildExecutionResult
 {
-    private String output;
+    private File output;
 
     private int exitCode;
 
-    public ContinuumBuildExecutionResult( String output, int exitCode )
+    public ContinuumBuildExecutionResult( File output, int exitCode )
     {
         this.output = output;
 
         this.exitCode = exitCode;
     }
 
-    public String getOutput()
+    public File getOutput()
     {
         return output;
     }
