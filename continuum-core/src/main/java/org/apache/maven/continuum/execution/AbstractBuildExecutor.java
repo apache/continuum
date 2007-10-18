@@ -207,7 +207,7 @@ public abstract class AbstractBuildExecutor
 
             getLogger().info( "Exit code: " + result.getExitCode() );
 
-            return new ContinuumBuildExecutionResult( FileUtils.fileRead( output ), result.getExitCode() );
+            return new ContinuumBuildExecutionResult( output, result.getExitCode() );
         }
         catch ( CommandLineException e )
         {
