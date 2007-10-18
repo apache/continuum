@@ -125,7 +125,6 @@ exit /B %ANT_ERROR%
         If your bat file contains an <code>exit /B</code> at the end, this line must be inserted before it.
         </p>
         <p>
-        <p>
           <b>The code above is for ANT 1.7, you can download fixed scripts for older ANT <a href="scripts">here</a></b>.
         </p>
       </answer>
@@ -143,7 +142,8 @@ exit /B %ANT_ERROR%
 if "%MAVEN_TERMINATE_CMD%" == "on" exit %ERROR_CODE%
         </source>
         <p>
-        If your bat file contains an <code>exit /B</code> at the end, this line must be inserted before it.
+          If your bat file contains an <code>exit /B</code> at the end, this line must be inserted before it.
+        </p>
       </answer>
     </faq>
     <faq id="How-can-I-run-continuum-on-a-different-port">
