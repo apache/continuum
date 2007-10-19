@@ -234,12 +234,12 @@
           <tr>
             <td>
               <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-                <input type="button" name="delete-projects" value="<ww:text name="projectGroup.deleteProjects"/>" onclick="document.forms.projectsForm.methodToCall.value='remove';document.forms.projectsForm.submit();" />
                 <ww:select theme="simple" name="buildDef" list="buildDefinitions" 
                            listKey="value" listValue="key" headerKey="-1" headerValue="%{getText('projectGroup.buildDefinition.label')}"
                            onchange="$('projectsForm').buildDefinitionId.value=$('buildDef').value" />
                 <input type="button" name="build-projects" value="<ww:text name="projectGroup.buildProjects"/>" onclick="$('projectsForm').methodToCall.value='build';document.forms.projectsForm.submit();" />
                 <input type="button" name="cancel-builds" value="<ww:text name="projectGroup.cancelBuilds"/>" onclick="document.forms.projectsForm.action='cancelBuilds.action';document.forms.projectsForm.submit();" />
+                <input type="button" name="delete-projects" value="<ww:text name="projectGroup.deleteProjects"/>" onclick="document.forms.projectsForm.methodToCall.value='remove';document.forms.projectsForm.submit();" />
               </redback:ifAuthorized>
             </td>
           </tr>

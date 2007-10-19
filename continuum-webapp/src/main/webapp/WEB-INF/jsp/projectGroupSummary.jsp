@@ -126,14 +126,6 @@
               </redback:ifAuthorized>
             </td>
             <td>
-              <redback:ifAuthorized permission="continuum-remove-group" resource="${projectGroup.name}">
-                <form action="removeProjectGroup.action" method="post">
-                  <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
-                  <input type="submit" name="remove" value="<ww:text name="projectGroup.deleteGroup"/>"/>
-                </form>
-              </redback:ifAuthorized>
-            </td>
-            <td>
               <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroup.name}">
                 <form action="releaseProjectGroup.action" method="post">
                   <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
@@ -155,6 +147,14 @@
 
                 <input type="button" value="Add" onclick="goToAddProject()"/>
               </redback:ifAnyAuthorized>
+            </td>
+            <td>
+              <redback:ifAuthorized permission="continuum-remove-group" resource="${projectGroup.name}">
+                <form action="removeProjectGroup.action" method="post">
+                  <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
+                  <input type="submit" name="remove" value="<ww:text name="projectGroup.deleteGroup"/>"/>
+                </form>
+              </redback:ifAuthorized>
             </td>
           </tr>
         </table>
