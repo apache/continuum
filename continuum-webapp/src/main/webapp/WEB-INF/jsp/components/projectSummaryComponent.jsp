@@ -102,7 +102,7 @@
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <c:choose>
           <c:when test="${project.inBuildingQueue}">
-            <img src="<ww:url value='/images/inqueue.gif' includeParams="none"/>" alt="In Queue" title="In Queue" border="0">
+            <img src="<ww:url value='/images/inqueue.gif' includeParams="none"/>" alt="<ww:text name="legend.queuedBuild"/>" title="<ww:text name="legend.queuedBuild"/>" border="0">
           </c:when>
           <c:otherwise>
             <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
@@ -114,7 +114,7 @@
                     <ww:param name="fromGroupPage" value="true"/>
                   </ww:url>
                   <ww:a href="%{buildProjectUrl}">
-                    <img src="<ww:url value='/images/buildnow.gif' includeParams="none"/>" alt="Build Now" title="Build Now" border="0">
+                    <img src="<ww:url value='/images/buildnow.gif' includeParams="none"/>" alt="<ww:text name="legend.buildNow"/>" title="<ww:text name="legend.buildNow"/>" border="0">
                   </ww:a>
                 </c:when>
                 <c:otherwise>
@@ -124,11 +124,11 @@
                   <c:choose>
                     <c:when test="${project.state != 8}">
                       <ww:a href="%{cancelBuildProjectUrl}">
-                        <img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="Cancel Build" title="Cancel Build" border="0">
+                        <img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name="legend.cancelBuild"/>" title="<ww:text name="legend.cancelBuild"/>" border="0">
                       </ww:a>
                     </c:when>
                     <c:otherwise>
-                      <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="Cancel Build" title="Cancel Build" border="0">
+                      <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<ww:text name="legend.cancelBuild"/>" title="<ww:text name="legend.cancelBuild"/>" border="0">
                     </c:otherwise>
                   </c:choose>
                 </c:otherwise>
@@ -137,10 +137,10 @@
             <redback:elseAuthorized>
               <c:choose>
                 <c:when test="${projectIdle}">
-                  <img src="<ww:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="Build Now" title="Build Now" border="0">
+                  <img src="<ww:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="<ww:text name="legend.buildNow"/>" title="<ww:text name="legend.buildNow"/>" border="0">
                 </c:when>
                 <c:otherwise>
-                  <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="Cancel Build" title="Cancel Build" border="0">
+                  <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<ww:text name="legend.cancelBuild"/>" title="<ww:text name="legend.cancelBuild"/>" border="0">
                 </c:otherwise>
               </c:choose>
             </redback:elseAuthorized>
@@ -155,18 +155,15 @@
               <ww:param name="projectId" value="${project.id}"/>
               <ww:param name="projectName">${project.name}</ww:param>
             </ww:url>
-            <ww:a href="%{buildResultsUrl}"><img src="<ww:url value='/images/buildhistory.gif' includeParams="none"/>" alt="Build History"
-                                                 title="Build History" border="0"></ww:a>
+            <ww:a href="%{buildResultsUrl}"><img src="<ww:url value='/images/buildhistory.gif' includeParams="none"/>" alt="<ww:text name="legend.buildHistory"/>" title="<ww:text name="legend.buildHistory"/>" border="0"></ww:a>
           </c:when>
           <c:otherwise>
-            <img src="<ww:url value='/images/buildhistory_disabled.gif' includeParams="none"/>" alt="Build History" title="Build History"
-                 border="0">
+            <img src="<ww:url value='/images/buildhistory_disabled.gif' includeParams="none"/>" alt="<ww:text name="legend.buildHistory"/>" title="<ww:text name="legend.buildHistory"/>" border="0">
           </c:otherwise>
         </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/buildhistory_disabled.gif' includeParams="none"/>" alt="Build History" title="Build History"
-                 border="0">
+          <img src="<ww:url value='/images/buildhistory_disabled.gif' includeParams="none"/>" alt="<ww:text name="legend.buildHistory"/>" title="<ww:text name="legend.buildHistory"/>" border="0">
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="workingCopyAction" title="&nbsp;" width="1%">
@@ -176,18 +173,15 @@
             <ww:url id="workingCopyUrl" action="workingCopy" namespace="/">
               <ww:param name="projectId" value="${project.id}"/>
             </ww:url>
-            <ww:a href="%{workingCopyUrl}"><img src="<ww:url value='/images/workingcopy.gif' includeParams="none"/>" alt="Working Copy"
-                                                title="Working Copy" border="0"></ww:a>
+            <ww:a href="%{workingCopyUrl}"><img src="<ww:url value='/images/workingcopy.gif' includeParams="none"/>" alt="<ww:text name="legend.workingCopy"/>" title="<ww:text name="legend.workingCopy"/>" border="0"></ww:a>
           </c:when>
           <c:otherwise>
-            <img src="<ww:url value='/images/workingcopy_disabled.gif' includeParams="none"/>" alt="Working Copy" title="Working Copy"
-                 border="0">
+            <img src="<ww:url value='/images/workingcopy_disabled.gif' includeParams="none"/>" alt="<ww:text name="legend.workingCopy"/>" title="<ww:text name="legend.workingCopy"/>" border="0">
           </c:otherwise>
         </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/workingcopy_disabled.gif' includeParams="none"/>" alt="Working Copy" title="Working Copy"
-                 border="0">
+          <img src="<ww:url value='/images/workingcopy_disabled.gif' includeParams="none"/>" alt="<ww:text name="legend.workingCopy"/>" title="<ww:text name="legend.workingCopy"/>" border="0">
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="releaseAction" title="&nbsp;" width="1%" sortable="false">
@@ -198,13 +192,11 @@
               <ww:param name="projectId" value="${project.id}"/>
             </ww:url>
             <ww:a href="%{releaseProjectUrl}">
-              <img src="<ww:url value='/images/releaseproject.gif' includeParams="none"/>" alt="Release Project" title="Release Project"
-                border="0"/>
+              <img src="<ww:url value='/images/releaseproject.gif' includeParams="none"/>" alt="<ww:text name="legend.release"/>" title="<ww:text name="legend.release"/>" border="0"/>
             </ww:a>
           </c:when>
           <c:otherwise>
-            <img src="<ww:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="Release Project"
-              title="Release Project" border="0"/>
+            <img src="<ww:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="<ww:text name="legend.release"/>" title="<ww:text name="legend.release"/>" border="0"/>
           </c:otherwise>
         </c:choose>
         </redback:ifAuthorized>
