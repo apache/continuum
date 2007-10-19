@@ -41,7 +41,7 @@
       -->
     </div>
 
-    <h3>Member Projects of ${projectGroup.name} group</h3>
+    <h3><ww:text name="projectGroup.members.section.title"><ww:param>${projectGroup.name}</ww:param></ww:text></h3>
 
     <ec:table items="groupProjects"
               var="project"
@@ -109,7 +109,7 @@
     </ec:table>
     
   <redback:ifAuthorized permission="continuum-manage-users">
-  <h3>Users</h3>
+  <h3><ww:text name="projectGroup.members.users.title"/></h3>
     
   <ww:form action="projectGroupMembers" theme="xhtml" method="post">
     <ww:hidden name="ascending" />
@@ -117,7 +117,7 @@
     <tr>
       <td nowrap="true">
         <table cellpadding="0" cellspacing="0">               
-          <ww:select label="User search"
+          <ww:select label="%{getText('projectGroup.members.users.search.label')}"
                list="criteria"
                name="filterProperty"
                value="filterProperty" />
@@ -130,7 +130,7 @@
       </td>  
       <td colspan="2" align="right">
         <table cellpadding="0" cellspacing="0">
-          <ww:submit value="Search"/>
+          <ww:submit value="%{getText('projectGroup.members.users.search.button')}"/>
         </table>
       </td>
     </tr>             
@@ -144,10 +144,10 @@
         <th nowrap="true">
           <ww:form id="sortlist" name="sortlist" action="projectGroupMembers" theme="xhtml" method="post">
             <ww:if test="${ascending}">
-              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<ww:text name='sort.descending'/>" border="0"></ww:a> Username
+              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<ww:text name='sort.descending'/>" border="0"></ww:a> <ww:text name="user.username.label"/>
             </ww:if>
             <ww:else>
-              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<ww:text name='sort.ascending'/>" border="0"></ww:a> Username
+              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<ww:text name='sort.ascending'/>" border="0"></ww:a> <ww:text name="user.username.label"/>
             </ww:else>
             <ww:hidden name="ascending" value="${!ascending}"/>
             <ww:hidden name="projectGroupId" />
@@ -155,11 +155,11 @@
             <ww:hidden name="filterKey" />
           </ww:form>
         </th>   
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Administrator</th>
-        <th>Developer</th>
-        <th>User</th>
+        <th><ww:text name="user.fullName.label"/></th>
+        <th><ww:text name="user.email.label"/></th>
+        <th><ww:text name="projectGroup.members.user.role.administrator"/></th>
+        <th><ww:text name="projectGroup.members.user.role.developer"/></th>
+        <th><ww:text name="projectGroup.members.user.role.user"/></th>
       </tr>
     </thead>
     <tbody>
