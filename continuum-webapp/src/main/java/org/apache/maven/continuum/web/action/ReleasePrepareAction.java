@@ -99,8 +99,8 @@ public class ReleasePrepareAction
         scmUsername = project.getScmUsername();
         scmPassword = project.getScmPassword();
         scmTag = project.getScmTag();
-        String workingDirectory = getContinuum().getWorkingDirectory(project.getId()).getPath();
-        
+        String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
+
         String scmUrl = project.getScmUrl();
         if ( scmUrl.startsWith( SCM_SVN_PROTOCOL_PREFIX ) )
         {
@@ -139,28 +139,31 @@ public class ReleasePrepareAction
                 {
                     Xpp3Dom dom = (Xpp3Dom) plugin.getConfiguration();
 
-                    Xpp3Dom configuration = dom.getChild( "releaseLabel" );
-                    if ( configuration != null )
+                    if ( dom != null )
                     {
-                        scmTag = configuration.getValue();
-                    }
+                        Xpp3Dom configuration = dom.getChild( "releaseLabel" );
+                        if ( configuration != null )
+                        {
+                            scmTag = configuration.getValue();
+                        }
 
-                    configuration = dom.getChild( "tag" );
-                    if ( configuration != null )
-                    {
-                        scmTag = configuration.getValue();
-                    }
+                        configuration = dom.getChild( "tag" );
+                        if ( configuration != null )
+                        {
+                            scmTag = configuration.getValue();
+                        }
 
-                    configuration = dom.getChild( "tagBase" );
-                    if ( configuration != null )
-                    {
-                        scmTagBase = configuration.getValue();
-                    }
+                        configuration = dom.getChild( "tagBase" );
+                        if ( configuration != null )
+                        {
+                            scmTagBase = configuration.getValue();
+                        }
 
-                    configuration = dom.getChild( "preparationGoals" );
-                    if ( configuration != null )
-                    {
-                        prepareGoals = configuration.getValue();
+                        configuration = dom.getChild( "preparationGoals" );
+                        if ( configuration != null )
+                        {
+                            prepareGoals = configuration.getValue();
+                        }
                     }
                 }
             }
