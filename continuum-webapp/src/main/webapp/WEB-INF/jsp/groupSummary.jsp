@@ -36,11 +36,11 @@
        <p>${infoMessage}</p>
     </ww:if>
     <ww:else>
-       <h3>Project Groups</h3>
+       <h3><ww:text name="groups.page.section.title"/>Project Groups</h3>
     </ww:else>
   
     <ww:if test="${empty groups}">
-      Project Groups list is empty.
+      <ww:text name="groups.page.list.empty"/>
     </ww:if>
 
     <ww:if test="${not empty groups}">
@@ -53,11 +53,11 @@
               sortable="false"
               filterable="false">
       <ec:row highlightRow="true">
-        <ec:column property="name" title="Name" width="20%" style="white-space: nowrap">
+        <ec:column property="name" title="groups.table.name" width="20%" style="white-space: nowrap">
           <a href="<ww:url  action="projectGroupSummary" namespace="/"><ww:param name="projectGroupId" value="%{'${group.id}'}"/></ww:url>">${group.name}</a>
         </ec:column>
-        <ec:column property="groupId" title="Group&nbsp;Id" width="20%"/>
-        <ec:column property="numProjects" title="Projects" format="0" width="1%" style="text-align: right" calc="total" calcTitle="Summary"/>
+        <ec:column property="groupId" title="groups.table.groupId" width="20%"/>
+        <ec:column property="numProjects" title="groups.table.nbProjects" format="0" width="1%" style="text-align: right" calc="total" calcTitle="groups.table.summary"/>
         <ec:column property="numSuccesses" title="&nbsp;" format="0" width="2%" style="text-align: right" headerClass="calcHeaderSucces" calc="total" />
         <ec:column property="numFailures" title="&nbsp;" format="0" width="2%" style="text-align: right" headerClass="calcHeaderFailure" calc="total" />
         <ec:column property="numErrors" title="&nbsp;" format="0" width="2%" style="text-align: right" headerClass="calcHeaderError" calc="total"/>

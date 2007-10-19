@@ -68,16 +68,16 @@
                   <ww:param name="projectName" value="${project.name}"/>
                 </ww:url>
                 <ww:a href="%{editProjectUrl}">
-                  <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
+                  <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name="edit"/>" title="<ww:text name="edit"/>" border="0">
                 </ww:a>
               </c:when>
               <c:otherwise>
-                <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
+                <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name="edit"/>" title="<ww:text name="edit"/>" border="0">
               </c:otherwise>
             </c:choose>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
-                <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="Edit" title="Edit" border="0">
+                <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name="edit"/>" title="<ww:text name="edit"/>" border="0">
             </redback:elseAuthorized>
           </center>
         </ec:column>
@@ -92,16 +92,16 @@
                   <ww:param name="projectName" value="${pageScope.project.name}"/>
                 </ww:url>
                 <ww:a href="%{removeProjectUrl}">
-                  <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
+                  <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
                 </ww:a>
               </c:when>
               <c:otherwise>
-                <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
+                <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
               </c:otherwise>
             </c:choose>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
-                <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
+                <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
             </redback:elseAuthorized>
           </center>
         </ec:column>

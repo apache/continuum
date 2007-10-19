@@ -82,7 +82,7 @@
                   <ww:param name="buildId" value="${buildResult.id}"/>
                   <ww:param name="projectGroupId" value="${projectGroupId}"/>
                 </ww:url>
-                <ww:a href="%{buildResultUrl}">Result</ww:a>
+                <ww:a href="%{buildResultUrl}"><ww:text name="buildResults.result"/></ww:a>
               </ec:column>
             </ec:row>
           </ec:table>

@@ -209,7 +209,7 @@
         </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
+          <img src="<ww:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
@@ -221,16 +221,16 @@
               <ww:param name="projectId" value="${project.id}"/>
             </ww:url>
             <ww:a href="%{deleteProjectUrl}">
-              <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
+              <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
             </ww:a>
           </c:when>
           <c:otherwise>
-            <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
+            <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
           </c:otherwise>
         </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="Delete" title="Delete" border="0">
+          <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
         </redback:elseAuthorized>
       </ec:column>
     </ec:row>
