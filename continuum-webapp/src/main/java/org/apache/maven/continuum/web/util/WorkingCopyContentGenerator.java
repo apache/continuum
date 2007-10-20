@@ -154,7 +154,7 @@ public class WorkingCopyContentGenerator
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis( timestamp );
         Date date = cal.getTime();
-        String res = new SimpleDateFormat( "dd-MMM-yyyy, K:mm a, z" ).format( date );
+        String res = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aaa z" ).format( date );
         return StringUtils.replace( res, " ", "&nbsp;" );
     }
 
