@@ -19,7 +19,6 @@ package org.apache.maven.continuum.web.view.commons;
  * under the License.
  */
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
@@ -61,7 +60,7 @@ public class DateCell
 
             if ( StringUtils.isEmpty( format ) )
             {
-                format = DateFormatUtils.SMTP_DATETIME_FORMAT.getPattern();
+                format = "MMM dd, yyyy hh:mm:ss aaa z";
             }
 
             value = ExtremeUtils.formatDate( column.getParse(), format, value, locale );
