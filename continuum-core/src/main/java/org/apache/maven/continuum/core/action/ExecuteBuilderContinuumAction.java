@@ -168,6 +168,7 @@ public class ExecuteBuilderContinuumAction
             // ----------------------------------------------------------------------
             // Backup test result files
             // ----------------------------------------------------------------------
+            //TODO: Move as a plugin
             buildExecutor.backupTestFiles( project, buildResult.getId() );
         }
     }
