@@ -244,6 +244,11 @@ public abstract class AbstractBuildExecutor
         return jdk.getVarValue();
     }
 
+    public void backupTestFiles( Project project, int buildId )
+    {
+        //Nothing to do, by default
+    }
+
     protected Map<String, String> getEnvironmentVariables( BuildDefinition buildDefinition )
     {
         Profile profile = buildDefinition.getProfile();

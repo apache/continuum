@@ -164,16 +164,11 @@ public class ExecuteBuilderContinuumAction
             store.updateProject( project );
 
             notifier.goalsCompleted( project, buildDefinition, buildResult );
+
+            // ----------------------------------------------------------------------
+            // Backup test result files
+            // ----------------------------------------------------------------------
+            buildExecutor.backupTestFiles( project, buildResult.getId() );
         }
-    }
-
-    // ----------------------------------------------------------------------
-    //
-    // ----------------------------------------------------------------------
-
-    private boolean isNew( Project project )
-    {
-        return project.getState() == ContinuumProjectState.NEW ||
-            project.getState() == ContinuumProjectState.CHECKEDOUT;
     }
 }
