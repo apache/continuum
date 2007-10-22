@@ -21,6 +21,7 @@ package org.apache.maven.continuum.execution.maven.m2;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
+import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
@@ -36,9 +37,12 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
+import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -283,6 +287,51 @@ public class MavenTwoBuildExecutor
         }
 
         return artifacts;
+    }
+
+    public void backupTestFiles( Project project, int buildId )
+    {
+        getLogger().info( "Backup surefire files." );
+        File backupDirectory = null;
+        try
+        {
+            backupDirectory = configurationService.getTestReportsDirectory( buildId, project.getId() );
+            if ( !backupDirectory.exists() )
+            {
+                backupDirectory.mkdirs();
+            }
+        }
+        catch ( ConfigurationException e )
+        {
+            getLogger().info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
+        }
+        backupTestFiles( getWorkingDirectory( project ), backupDirectory );
+    }
+
+    private void backupTestFiles( File workingDir, File backupDirectory )
+    {
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setBasedir( workingDir );
+        scanner.setIncludes(
+            new String[]{"**/target/surefire-reports/TEST-*.xml", "**/target/surefire-it-reports/TEST-*.xml"} );
+        scanner.scan();
+
+        String[] testResultFiles = scanner.getIncludedFiles();
+        for ( String testResultFile : testResultFiles )
+        {
+            File xmlFile = new File( workingDir, testResultFile );
+            try
+            {
+                if ( backupDirectory != null )
+                {
+                    FileUtils.copyFileToDirectory( xmlFile, backupDirectory );
+                }
+            }
+            catch ( IOException e )
+            {
+                getLogger().info( "failed to backup unit report file " + xmlFile.getPath() );
+            }
+        }
     }
 
     protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )

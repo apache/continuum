@@ -45,4 +45,6 @@ public interface ContinuumBuildExecutor
 
     List getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException;
+
+    void backupTestFiles( Project project, int buildId );
 }
