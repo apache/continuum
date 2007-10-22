@@ -190,7 +190,7 @@ public abstract class AbstractContinuumNotifier
         {
             if ( buildDef != null )
             {
-                builds = store.getBuildResultsByBuildDefinition( project.getId(), buildDef.getId() );
+                builds = store.getBuildResultsByBuildDefinition( project.getId(), buildDef.getId(), 0, 2 );
 
                 if ( builds.size() < 2 )
                 {
