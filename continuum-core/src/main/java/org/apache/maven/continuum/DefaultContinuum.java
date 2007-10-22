@@ -699,7 +699,7 @@ public class DefaultContinuum
     {
         try
         {
-            Project project = store.getProjectWithBuilds( projectId );
+            Project project = getProjectWithBuilds( projectId );
 
             getLogger().info( "Remove project " + project.getName() + "(" + projectId + ")" );
 
@@ -2788,19 +2788,12 @@ public class DefaultContinuum
     public Collection<BuildResult> getBuildResultsForProject( int projectId )
         throws ContinuumException
     {
-        try
-        {
-            ArrayList<BuildResult> buildResults =
-                new ArrayList<BuildResult>( store.getProjectWithBuilds( projectId ).getBuildResults() );
+        ArrayList<BuildResult> buildResults =
+            new ArrayList<BuildResult>( getProjectWithBuilds( projectId ).getBuildResults() );
 
-            Collections.reverse( buildResults );
+        Collections.reverse( buildResults );
 
-            return buildResults;
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw logAndCreateException( "Unable to get builds for project", e );
-        }
+        return buildResults;
     }
 
     // ----------------------------------------------------------------------
