@@ -41,11 +41,10 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 public abstract class AbstractBuildDefinitionContinuumAction
     extends AbstractContinuumAction
 {
-
     /**
      * @plexus.requirement role-hint="jdo"
      */
-    ContinuumStore store;
+    protected ContinuumStore store;
 
     protected void resolveDefaultBuildDefinitionsForProject( BuildDefinition buildDefinition, Project project )
         throws ContinuumException
