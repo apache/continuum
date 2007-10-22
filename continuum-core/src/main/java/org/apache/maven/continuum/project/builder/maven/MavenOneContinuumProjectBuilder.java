@@ -19,10 +19,6 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
-import java.io.File;
-import java.net.URL;
-import java.util.Iterator;
-
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
@@ -36,8 +32,11 @@ import org.apache.maven.continuum.project.builder.AbstractContinuumProjectBuilde
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Iterator;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -50,21 +49,16 @@ public class MavenOneContinuumProjectBuilder
     implements ContinuumProjectBuilder
 {
     public static final String ID = "maven-one-builder";
-   
+
     /**
      * @plexus.requirement
-     */    
-    private BuildDefinitionService buildDefinitionService;    
+     */
+    private BuildDefinitionService buildDefinitionService;
 
     /**
      * @plexus.requirement
      */
     private MavenOneMetadataHelper metadataHelper;
-
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
 
     // ----------------------------------------------------------------------
     // ProjectCreator Implementation
@@ -117,8 +111,9 @@ public class MavenOneContinuumProjectBuilder
             {
                 return result;
             }
-            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator(); iterator
-                .hasNext(); )
+            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator();
+                  iterator
+                      .hasNext(); )
             {
                 project.addBuildDefinition( iterator.next() );
             }
@@ -130,7 +125,6 @@ public class MavenOneContinuumProjectBuilder
 
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
-        
 
         ProjectGroup projectGroup = new ProjectGroup();
 
