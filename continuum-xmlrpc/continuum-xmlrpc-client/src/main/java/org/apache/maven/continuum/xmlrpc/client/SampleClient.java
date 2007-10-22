@@ -27,9 +27,6 @@ import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
 import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
-import org.apache.maven.continuum.xmlrpc.test.SuiteResult;
-import org.apache.maven.continuum.xmlrpc.test.TestCaseFailure;
-import org.apache.maven.continuum.xmlrpc.test.TestResult;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -205,12 +202,6 @@ public class SampleClient
                 printChangeSet( (ChangeSet) i.next() );
             }
         }
-
-        if ( result.getTestResult() != null )
-        {
-            System.out.println( "TestResult:" );
-            printTestResult( result.getTestResult() );
-        }
     }
 
     public static void printDependency( ProjectDependency dep )
@@ -248,37 +239,6 @@ public class SampleClient
         if ( changeSet.getFiles() != null )
         {
             System.out.println( "Author: " + changeSet.getFiles() );
-        }
-    }
-
-    public static void printTestResult( TestResult testresult )
-    {
-        System.out.println( "Total Time: " + testresult.getTotalTime() );
-        System.out.println( "Nb Tests: " + testresult.getTestCount() );
-        System.out.println( "Nb Failures: " + testresult.getFailureCount() );
-
-        if ( testresult.getSuiteResults() != null )
-        {
-            System.out.println( "Suite Results:" );
-        }
-    }
-
-    public static void printSuiteResult( SuiteResult result )
-    {
-        System.out.println( "Name: " + result.getName() );
-        System.out.println( "Total Time: " + result.getTotalTime() );
-        System.out.println( "Nb Tests: " + result.getTestCount() );
-        System.out.println( "Nb Failures: " + result.getFailureCount() );
-
-        if ( result.getFailures() != null )
-        {
-            for ( Iterator i = result.getFailures().iterator(); i.hasNext(); )
-            {
-                System.out.println( "Failure:" );
-                TestCaseFailure failure = (TestCaseFailure) i.next();
-                System.out.println( "Name: " + failure.getName() );
-                System.out.println( "Exception: " + failure.getException() );
-            }
         }
     }
 

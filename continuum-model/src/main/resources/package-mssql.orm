@@ -31,10 +31,5 @@
         <column name="changecomment" length="8000" jdbc-type="VARCHAR"/>
       </field>
     </class>
-    <class name="TestCaseFailure">
-      <field name="exception">
-        <column name="exceptionstring" length="8000" jdbc-type="VARCHAR"/>
-      </field>
-    </class>
   </package>
 </orm>

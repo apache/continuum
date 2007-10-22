@@ -21,7 +21,6 @@ package org.apache.maven.continuum.execution.maven.m2;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
-import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
@@ -31,35 +30,21 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.scm.SuiteResult;
-import org.apache.maven.continuum.model.scm.TestCaseFailure;
-import org.apache.maven.continuum.model.scm.TestResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
-import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.pull.MXParser;
-import org.codehaus.plexus.util.xml.pull.XmlPullParser;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -298,148 +283,6 @@ public class MavenTwoBuildExecutor
         }
 
         return artifacts;
-    }
-
-    public TestResult getTestResults( Project project, int buildId )
-        throws ContinuumBuildExecutorException
-    {
-        File backupDirectory = null;
-        try
-        {
-            backupDirectory = configurationService.getTestReportsDirectory( buildId, project.getId() );
-            if ( !backupDirectory.exists() )
-            {
-                backupDirectory.mkdirs();
-            }
-        }
-        catch ( ConfigurationException e )
-        {
-            getLogger().info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
-        }
-        return getTestResults( getWorkingDirectory( project ), backupDirectory );
-    }
-
-    private TestResult getTestResults( File workingDir, File backupDirectory )
-        throws ContinuumBuildExecutorException
-    {
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir( workingDir );
-        scanner.setIncludes(
-            new String[]{"**/target/surefire-reports/TEST-*.xml", "**/target/surefire-it-reports/TEST-*.xml"} );
-        scanner.scan();
-
-        TestResult testResult = new TestResult();
-        int testCount = 0;
-        int failureCount = 0;
-        int totalTime = 0;
-        String[] testResultFiles = scanner.getIncludedFiles();
-        for ( int i = 0; i < testResultFiles.length; i++ )
-        {
-            File xmlFile = new File( workingDir, testResultFiles[i] );
-            try
-            {
-                if ( backupDirectory != null )
-                {
-                    FileUtils.copyFileToDirectory( xmlFile, backupDirectory );
-                }
-            }
-            catch ( IOException e )
-            {
-                getLogger().info( "failed to backup unit report file " + xmlFile.getPath() );
-            }
-            SuiteResult suite = new SuiteResult();
-            try
-            {
-                XmlPullParser parser = new MXParser();
-                parser.setInput( new FileReader( xmlFile ) );
-                if ( parser.next() != XmlPullParser.START_TAG || !"testsuite".equals( parser.getName() ) )
-                {
-                    continue;
-                }
-
-                suite.setName( parser.getAttributeValue( null, "name" ) );
-
-                int suiteFailureCount = Integer.parseInt( parser.getAttributeValue( null, "errors" ) ) +
-                    Integer.parseInt( parser.getAttributeValue( null, "failures" ) );
-
-                String time = parser.getAttributeValue( null, "time" );
-                NumberFormat nf = NumberFormat.getInstance( Locale.ENGLISH );
-                double dTime = 0;
-
-                try
-                {
-                    dTime = nf.parse( time ).doubleValue();
-                }
-                catch ( ParseException nfe )
-                {
-                    getLogger().warn( "Can't parse time value (" + time + ") in " + xmlFile.getAbsolutePath() );
-                }
-
-                long suiteTotalTime = (long) ( 1000 * dTime );
-
-                // TODO: add tests attribute to testsuite element so we only
-                // have to parse the rest of the file if there are failures
-                int suiteTestCount = 0;
-                while ( !( parser.next() == XmlPullParser.END_TAG && "testsuite".equals( parser.getName() ) ) )
-                {
-                    if ( parser.getEventType() == XmlPullParser.START_TAG && "testcase".equals( parser.getName() ) )
-                    {
-                        suiteTestCount++;
-                        String name = parser.getAttributeValue( null, "name" );
-                        do
-                        {
-                            parser.next();
-                        }
-                        while ( parser.getEventType() != XmlPullParser.START_TAG &&
-                            parser.getEventType() != XmlPullParser.END_TAG );
-                        if ( parser.getEventType() == XmlPullParser.START_TAG &&
-                            ( "error".equals( parser.getName() ) || "failure".equals( parser.getName() ) ) )
-                        {
-                            TestCaseFailure failure = new TestCaseFailure();
-                            failure.setName( name );
-                            if ( parser.next() == XmlPullParser.TEXT )
-                            {
-                                String exception = parser.getText();
-                                //TODO: review this part as it include an hardcoded value of the columnsize
-                                if ( exception.length() >= 8192 )
-                                {
-                                    exception = exception.substring( 0, 8185 ) + "[...]";
-                                }
-                                failure.setException( exception );
-                            }
-                            suite.addFailure( failure );
-                        }
-                    }
-                }
-
-                testCount += suiteTestCount;
-                failureCount += suiteFailureCount;
-                totalTime += suiteTotalTime;
-
-                suite.setTestCount( suiteTestCount );
-                suite.setFailureCount( suiteFailureCount );
-                suite.setTotalTime( suiteTotalTime );
-            }
-            catch ( XmlPullParserException xppex )
-            {
-                throw new ContinuumBuildExecutorException( "Error parsing file: " + xmlFile, xppex );
-            }
-            catch ( FileNotFoundException fnfex )
-            {
-                throw new ContinuumBuildExecutorException( "Test file not found", fnfex );
-            }
-            catch ( IOException ioex )
-            {
-                throw new ContinuumBuildExecutorException( "Parsing error for file: " + xmlFile, ioex );
-            }
-            testResult.addSuiteResult( suite );
-        }
-
-        testResult.setTestCount( testCount );
-        testResult.setFailureCount( failureCount );
-        testResult.setTotalTime( totalTime );
-
-        return testResult;
     }
 
     protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )
