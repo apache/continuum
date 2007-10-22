@@ -15,12 +15,16 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>localization/Continuum.properties</include>
+          <include>localization/Continuum_fr.properties</include>
+          <include>localization/Continuum_pt_BR.properties</include>
         </includes>
       </resource>
       <resource>
         <directory>src/main/resources</directory>
         <excludes>
           <exclude>localization/Continuum.properties</exclude>
+          <exclude>localization/Continuum_fr.properties</exclude>
+          <exclude>localization/Continuum_pt_BR.properties</exclude>
         </excludes>
       </resource>
     </resources>
