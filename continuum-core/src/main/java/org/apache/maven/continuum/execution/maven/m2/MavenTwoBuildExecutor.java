@@ -291,7 +291,6 @@ public class MavenTwoBuildExecutor
 
     public void backupTestFiles( Project project, int buildId )
     {
-        getLogger().info( "Backup surefire files." );
         File backupDirectory = null;
         try
         {
@@ -317,6 +316,10 @@ public class MavenTwoBuildExecutor
         scanner.scan();
 
         String[] testResultFiles = scanner.getIncludedFiles();
+        if ( testResultFiles.length > 0 )
+        {
+            getLogger().info( "Backup surefire files." );
+        }
         for ( String testResultFile : testResultFiles )
         {
             File xmlFile = new File( workingDir, testResultFile );
