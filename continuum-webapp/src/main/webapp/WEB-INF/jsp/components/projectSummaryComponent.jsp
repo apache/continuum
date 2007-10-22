@@ -98,7 +98,7 @@
           </c:otherwise>
         </c:choose>
       </ec:column>
-      <ec:column property="lastBuildDateTime" title="summary.projectTable.lastBuildDateTime" width="30%"/> 
+      <ec:column property="lastBuildDateTime" title="summary.projectTable.lastBuildDateTime" width="30%" cell="date"/>
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <c:choose>
           <c:when test="${project.inBuildingQueue}">
