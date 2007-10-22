@@ -148,7 +148,14 @@
           <version>1.0.0</version>
           <required>true</required>
           <description>last build dateTime of the project</description>
-          <type>String</type>          
+          <type>long</type>
+        </field>
+        <field>
+          <name>lastBuildDuration</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>last build duration of the project</description>
+          <type>String</type>
         </field>
       </fields>
     </class>
