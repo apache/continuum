@@ -42,12 +42,6 @@ public class DefaultContinuumInitializer
     implements ContinuumInitializer
 {
     // ----------------------------------------------------------------------
-    // Default values for the default schedule
-    // ----------------------------------------------------------------------
-
-    private SystemConfiguration systemConf;
-
-    // ----------------------------------------------------------------------
     //  Requirements
     // ----------------------------------------------------------------------
 
@@ -55,11 +49,11 @@ public class DefaultContinuumInitializer
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
-    
+
     /**
      * @plexus.requirement
-     */    
-    private BuildDefinitionService buildDefinitionService;    
+     */
+    private BuildDefinitionService buildDefinitionService;
 
     // ----------------------------------------------------------------------
     //
@@ -87,7 +81,7 @@ public class DefaultContinuumInitializer
         try
         {
             // System Configuration
-            systemConf = store.getSystemConfiguration();
+            SystemConfiguration systemConf = store.getSystemConfiguration();
 
             if ( systemConf == null )
             {
@@ -102,14 +96,13 @@ public class DefaultContinuumInitializer
         {
             throw new ContinuumInitializationException( "Can't initialize default schedule.", e );
         }
-        catch (BuildDefinitionServiceException e)
+        catch ( BuildDefinitionServiceException e )
         {
             throw new ContinuumInitializationException( "Can't get default build definition", e );
         }
         getLogger().info( "Continuum initializer end running ..." );
     }
-    
-    
+
 
     private void createDefaultProjectGroup()
         throws ContinuumStoreException, BuildDefinitionServiceException
@@ -122,9 +115,9 @@ public class DefaultContinuumInitializer
         }
         catch ( ContinuumObjectNotFoundException e )
         {
-            
+
             getLogger().info( "create Default Project Group" );
-            
+
             group = new ProjectGroup();
 
             group.setName( "Default Project Group" );
@@ -133,7 +126,8 @@ public class DefaultContinuumInitializer
 
             group.setDescription( "Contains all projects that do not have a group of their own" );
 
-            group.getBuildDefinitions().addAll( buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions() );
+            group.getBuildDefinitions().addAll(
+                buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions() );
 
             group = store.addProjectGroup( group );
         }

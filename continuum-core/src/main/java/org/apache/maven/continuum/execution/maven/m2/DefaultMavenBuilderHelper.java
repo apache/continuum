@@ -46,7 +46,6 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.validation.ModelValidationResult;
-import org.apache.maven.scm.manager.ScmManager;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Proxy;
@@ -108,11 +107,6 @@ public class DefaultMavenBuilderHelper
      * @plexus.configuration default-value="${plexus.home}/local-repository"
      */
     private String localRepository;
-
-    /**
-     * @plexus.requirement
-     */
-    private ScmManager scmManager;
 
     private PlexusContainer container;
 
