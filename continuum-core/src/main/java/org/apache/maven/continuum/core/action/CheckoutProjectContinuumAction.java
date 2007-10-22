@@ -59,11 +59,6 @@ public class CheckoutProjectContinuumAction
      */
     private ContinuumStore store;
 
-    /**
-     * @plexus.requirement
-     */
-    private Continuum continuum;
-
     public void execute( Map context )
         throws Exception
     {

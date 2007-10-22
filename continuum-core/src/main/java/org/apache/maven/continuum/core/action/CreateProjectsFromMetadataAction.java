@@ -21,7 +21,6 @@ package org.apache.maven.continuum.core.action;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.maven.m2.SettingsConfigurationException;
-import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
@@ -67,8 +66,6 @@ public class CreateProjectsFromMetadataAction
      */
     private MavenSettingsBuilder mavenSettingsBuilder;
 
-    private Settings settings;
-
     public static final String KEY_URL = "url";
 
     public static final String KEY_PROJECT_BUILDER_ID = "builderId";
@@ -108,7 +105,7 @@ public class CreateProjectsFromMetadataAction
 
                 try
                 {
-                    settings = getSettings();
+                    Settings settings = getSettings();
 
                     getLogger().info( "checking for settings auth setup" );
                     if ( settings != null && settings.getServer( url.getHost() ) != null )

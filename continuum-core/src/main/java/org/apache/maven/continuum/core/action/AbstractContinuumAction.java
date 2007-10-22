@@ -28,7 +28,6 @@ import org.codehaus.plexus.action.AbstractAction;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -46,13 +45,13 @@ public abstract class AbstractContinuumAction
     public static final String KEY_PROJECT_ID = "project-id";
 
     public static final String KEY_PROJECT = "project";
-    
+
     public static final String KEY_BUILD_DEFINITION_TEMPLATE = "build-definition-template";
 
     public static final String KEY_BUILD_DEFINITION = "build-definition";
-    
+
     public static final String KEY_BUILD_DEFINITION_ID = "build-definition-id";
-    
+
     public static final String KEY_UNVALIDATED_PROJECT = "unvalidated-project";
 
     public static final String KEY_PROJECT_GROUP_ID = "project-group-id";
@@ -114,12 +113,12 @@ public abstract class AbstractContinuumAction
     {
         return (BuildDefinitionTemplate) getObject( context, KEY_BUILD_DEFINITION_TEMPLATE, null );
     }
-    
+
     public static BuildDefinition getBuildDefinition( Map context )
     {
         return (BuildDefinition) getObject( context, KEY_BUILD_DEFINITION, null );
     }
-    
+
     public static int getBuildDefinitionId( Map context )
     {
         return getInteger( context, KEY_BUILD_DEFINITION_ID );
