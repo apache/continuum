@@ -1530,6 +1530,12 @@ public class JdoContinuumStore
 
     public List<BuildResult> getBuildResultsByBuildDefinition( int projectId, int buildDefinitionId )
     {
+        return getBuildResultsByBuildDefinition( projectId, buildDefinitionId, -1, -1 );
+    }
+
+    public List<BuildResult> getBuildResultsByBuildDefinition( int projectId, int buildDefinitionId, long startIndex,
+                                                               long endIndex )
+    {
         PersistenceManager pm = getPersistenceManager();
 
         Transaction tx = pm.currentTransaction();
@@ -1541,6 +1547,11 @@ public class JdoContinuumStore
             Extent extent = pm.getExtent( BuildResult.class, true );
 
             Query query = pm.newQuery( extent );
+
+            if ( startIndex >= 0 && endIndex >= 0 )
+            {
+                query.setRange( startIndex, endIndex );
+            }
 
             query.declareParameters( "int projectId, int buildDefinitionId" );
 
