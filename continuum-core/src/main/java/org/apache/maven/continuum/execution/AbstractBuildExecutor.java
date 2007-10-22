@@ -22,7 +22,6 @@ package org.apache.maven.continuum.execution;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.scm.TestResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -33,7 +32,6 @@ import org.codehaus.plexus.commandline.ExecutableResolver;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
@@ -310,12 +308,6 @@ public abstract class AbstractBuildExecutor
     public File getWorkingDirectory( Project project )
     {
         return workingDirectoryService.getWorkingDirectory( project );
-    }
-
-    public TestResult getTestResults( Project project, int buildResultId )
-        throws ContinuumBuildExecutorException
-    {
-        return null;
     }
 
     public InstallationService getInstallationService()

@@ -42,9 +42,6 @@ import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
 import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
-import org.apache.maven.continuum.xmlrpc.test.SuiteResult;
-import org.apache.maven.continuum.xmlrpc.test.TestCaseFailure;
-import org.apache.maven.continuum.xmlrpc.test.TestResult;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
@@ -964,7 +961,7 @@ public class ContinuumServiceImpl
                 br.addModifiedDependency( dep );
             }
         }
-        br.setTestResult( populateTestResult( buildResult.getTestResult() ) );
+
         return br;
     }
 
@@ -1072,70 +1069,6 @@ public class ContinuumServiceImpl
         res.setName( changeFile.getName() );
         res.setRevision( changeFile.getRevision() );
         res.setStatus( changeFile.getStatus() );
-        return res;
-    }
-
-    private TestResult populateTestResult( org.apache.maven.continuum.model.scm.TestResult testResult )
-    {
-        if ( testResult == null )
-        {
-            return null;
-        }
-
-        TestResult res = new TestResult();
-        res.setFailureCount( testResult.getFailureCount() );
-
-        if ( testResult.getSuiteResults() != null )
-        {
-            for ( Iterator i = testResult.getSuiteResults().iterator(); i.hasNext(); )
-            {
-                org.apache.maven.continuum.model.scm.SuiteResult suiteResult =
-                    (org.apache.maven.continuum.model.scm.SuiteResult) i.next();
-                res.addSuiteResult( populateSuiteResult( suiteResult ) );
-            }
-        }
-
-        res.setTestCount( testResult.getTestCount() );
-        res.setTotalTime( testResult.getTotalTime() );
-        return res;
-    }
-
-    private SuiteResult populateSuiteResult( org.apache.maven.continuum.model.scm.SuiteResult suiteresult )
-    {
-        if ( suiteresult == null )
-        {
-            return null;
-        }
-
-        SuiteResult res = new SuiteResult();
-        res.setFailureCount( suiteresult.getFailureCount() );
-
-        if ( suiteresult.getFailures() != null )
-        {
-            for ( Iterator i = suiteresult.getFailures().iterator(); i.hasNext(); )
-            {
-                org.apache.maven.continuum.model.scm.TestCaseFailure failure =
-                    (org.apache.maven.continuum.model.scm.TestCaseFailure) i.next();
-                res.addFailure( populateTestCaseFailure( failure ) );
-            }
-        }
-
-        res.setName( suiteresult.getName() );
-        res.setTestCount( suiteresult.getTestCount() );
-        res.setTotalTime( suiteresult.getTotalTime() );
-        return res;
-    }
-
-    private TestCaseFailure populateTestCaseFailure( org.apache.maven.continuum.model.scm.TestCaseFailure failure )
-    {
-        if ( failure == null )
-        {
-            return null;
-        }
-
-        TestCaseFailure res = new TestCaseFailure();
-        res.setException( failure.getException() );
-        res.setName( failure.getName() );
         return res;
     }
 

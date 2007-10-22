@@ -549,13 +549,6 @@
           </association>
         </field>
         <field jpox.fetch-groups="build-result-with-details">
-          <name>testResult</name>
-          <version>1.0.9+</version>
-          <association>
-            <type>TestResult</type>
-          </association>
-        </field>
-        <field jpox.fetch-groups="build-result-with-details">
           <name>modifiedDependencies</name>
           <version>1.1.0+</version>
           <association jpox.join="false">
@@ -835,91 +828,6 @@
           ]]></code>
         </codeSegment>
       </codeSegments>
-    </class>
-
-    <class>
-      <name>TestResult</name>
-      <packageName>org.apache.maven.continuum.model.scm</packageName>
-      <version>1.0.9+</version>
-      <fields>
-        <field>
-          <name>testCount</name>
-          <version>1.0.9+</version>
-          <type>int</type>
-        </field>
-        <field>
-          <name>failureCount</name>
-          <version>1.0.9+</version>
-          <type>int</type>
-        </field>
-        <field>
-          <name>totalTime</name>
-          <version>1.0.9+</version>
-          <type>long</type>
-        </field>
-        <field>
-          <name>suiteResults</name>
-          <version>1.0.9+</version>
-          <association stash.part="true" jpox.join="false">
-            <type>SuiteResult</type>
-            <multiplicity>*</multiplicity>
-          </association>
-        </field>
-      </fields>
-    </class>
-
-    <class>
-      <name>SuiteResult</name>
-      <packageName>org.apache.maven.continuum.model.scm</packageName>
-      <version>1.0.9+</version>
-      <fields>
-        <field>
-          <name stash.maxSize="512">name</name>
-          <version>1.0.9+</version>
-          <type>String</type>
-        </field>
-        <field>
-          <name>testCount</name>
-          <version>1.0.9+</version>
-          <type>int</type>
-        </field>
-        <field>
-          <name>failureCount</name>
-          <version>1.0.9+</version>
-          <type>int</type>
-        </field>
-        <field>
-          <name>totalTime</name>
-          <version>1.0.9+</version>
-          <type>long</type>
-        </field>
-        <field>
-          <name>failures</name>
-          <version>1.0.9+</version>
-          <association stash.part="true" jpox.join="false">
-            <type>TestCaseFailure</type>
-            <multiplicity>*</multiplicity>
-          </association>
-        </field>
-      </fields>
-    </class>
-
-    <class>
-      <name>TestCaseFailure</name>
-      <packageName>org.apache.maven.continuum.model.scm</packageName>
-      <version>1.0.9+</version>
-      <fields>
-        <field>
-          <name>name</name>
-          <version>1.0.9+</version>
-          <type>String</type>
-        </field>
-        <field stash.maxSize="8192" jpox.column="exceptionstring">
-          <name>exception</name>
-          <version>1.0.9+</version>
-          <type>String</type>
-        </field>
-      </fields>
     </class>
 
     <class>
