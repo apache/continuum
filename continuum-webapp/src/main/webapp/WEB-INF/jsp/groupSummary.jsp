@@ -36,7 +36,7 @@
        <p>${infoMessage}</p>
     </ww:if>
     <ww:else>
-       <h3><ww:text name="groups.page.section.title"/>Project Groups</h3>
+       <h3><ww:text name="groups.page.section.title"/></h3>
     </ww:else>
   
     <ww:if test="${empty groups}">
