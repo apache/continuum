@@ -47,20 +47,92 @@
       <item name="DOXIA" href="http://maven.apache.org/doxia"/>
     </links>
 
-    <menu name="Quick Links">
+    <menu name="Main">
       <item name="Home" href="index.html"/>
-      <item name="Features" href="continuum-features.html"/>
       <item name="Download" href="download.html"/>
-      <item name="Installation Instructions" href="download.html#Installation"/>
-      <item name="Getting Started" href="/guides/getting-started/index.html"/>
-      <item name="Documentation" href="/guides/index.html"/>
-      <item name="Wiki" href="http://docs.codehaus.org/display/CONTINUUMUSER"/>
-      <item name="General Information" href="about.html"/>
-      <item name="Faqs" href="faqs.html"/>
-      <item name="Upgrade" href="upgrade.html"/>
-      <item name="Planned Features" href="planned-features.html"/>
-      <item name="Netbeans Module" href="netbeans-module.html"/>
       <item name="Change Log" href="change-log.html"/>
+      <item name="Users Wiki" href="http://docs.codehaus.org/display/CONTINUUMUSER"/>
+      <!--item name="Articles" href="articles.html"/ -->
+      <item name="Features" href="features.html"/>
+      <item name="Live Demo" href="http://vmbuild.apache.org/continuum/"/>
+    </menu>
+    <menu name="Documentation">
+      <item name="Index (category)" href="documentation/1_1/index.html"/>
+      <item name="Getting Started" href="documentation/1_1/getting-started.html"/>
+      <item name="Installation/Upgrade Guides" href="documentation/1_1/installation/index.html" collapse="true">
+          <item name="System Requirements" href="documentation/1_1/installation/requirements.html"/>
+          <item name="Installation" href="documentation/1_1/installation/installation.html" collapse="true">
+            <item name="Standalone" href="documentation/1_1/installation/standalone.html"/>
+            <item name="Tomcat" href="documentation/1_1/installation/tomcat.html"/>
+            <item name="JBoss" href="documentation/1_1/installation/jboss.html"/>
+            <item name="Geronimo" href="documentation/1_1/installation/geronimo.html"/>
+            <item name="Glassfish" href="documentation/1_1/installation/glassfish.html"/>
+          </item>
+          <item name="Release Notes" href="documentation/1_1/installation/release-notes.html"/>
+          <item name="Upgrade" href="documentation/1_1/installation/upgrade.html"/>
+      </item>
+      <item name="User's Guides" collapse="true" href="documentation/1_1/user_guides/index.html">
+        <item name="Getting Started" href="documentation/1_1/getting-started.html"/>
+        <item name="Managing Projects" href="documentation/1_1/user_guides/managing_project/index.html" collapse="true">
+            <item name="Add a Project" href="documentation/1_1/user_guides/managing_project/addProject.html"/>
+            <item name="Edit a Project" href="documentation/1_1/user_guides/managing_project/editProject.html"/>
+            <item name="Remove a Project" href="documentation/1_1/user_guides/managing_project/removeProject.html"/>
+            <!-- item name="SCM security hints"/ -->
+        </item>
+        <item name="Managing Build Definitions" href="documentation/1_1/user_guides/managing_builddef/index.html" collapse="true">
+            <item name="Project Build Definition" href="documentation/1_1/user_guides/managing_builddef/builddefProject.html"/>
+            <item name="Project Group Build Definition" href="documentation/1_1/user_guides/managing_builddef/builddefGroup.html"/>
+            <item name="Build Definition Template" href="documentation/1_1/user_guides/managing_builddef/builddefTemplate.html"/>
+        </item>
+        <item name="Managing Notification" href="documentation/1_1/user_guides/notification/index.html" collapse="true">
+            <item name="Mail Notification" href="documentation/1_1/user_guides/notification/mail.html"/>
+            <item name="IRC Notification" href="documentation/1_1/user_guides/notification/irc.html"/>
+            <item name="Jabber Notification" href="documentation/1_1/user_guides/notification/jabber.html">
+                <item name="Google Talk Notification" href="documentation/1_1/user_guides/notification/jabber.html#GTalk"/>
+            </item>
+            <item name="MSN Notification" href="documentation/1_1/user_guides/notification/msn.html"/>
+            <item name="Wagon Notification" href="documentation/1_1/user_guides/notification/wagon.html"/>
+        </item>
+        <item name="Building a project" href="documentation/1_1/user_guides/building_project/index.html" collapse="true">
+            <item name="Scheduled Build" href="documentation/1_1/user_guides/building_project/index.html#Scheduled Build"/>
+            <item name="Forced Build" href="documentation/1_1/user_guides/building_project/index.html#Forced Build"/>
+        </item>
+        <item name="Release Management" href="documentation/1_1/user_guides/release/index.html"/>
+      </item>
+      <item name="Knowledge Base" href="documentation/1_1/knowledge_base/index.html" collapse="true">
+        <item name="FAQs" href="faqs.html"/>
+      </item>
+      <item name="Administrator's Guides" href="documentation/1_1/administrator_guides/index.html" collapse="true">
+        <item name="Managing Users and Security" href="documentation/1_1/administrator_guides/security/index.html" collapse="true">
+            <item name="LDAP Configuration" href="documentation/1_1/administrator_guides/security/ldap.html"/>
+        </item>
+        <item name="Adding Project Group" href="documentation/1_1/administrator_guides/projectgroup.html"/>
+        <item name="Managing Builders" href="documentation/1_1/administrator_guides/builder.html"/>
+        <item name="Managing JDKs" href="documentation/1_1/administrator_guides/jdk.html"/>
+        <item name="Managing Profiles" href="documentation/1_1/administrator_guides/profiles.html"/>
+        <item name="Managing Schedules" href="documentation/1_1/administrator_guides/schedules.html"/>
+        <item name="Managing General Configuration" href="documentation/1_1/administrator_guides/configuration.html"/> <!-- (configuration and appearance) -->
+        <item name="External databases" href="documentation/1_1/administrator_guides/external-db.html"/>
+        <item name="Monitoring Continuum" href="documentation/1_1/administrator_guides/monitoring.html"/>
+        <item name="Shutdown Continuum" href="documentation/1_1/administrator_guides/shutdown.html"/>
+      </item>
+      <item name="Developer's Guides" href="documentation/1_1/developer_guides/index.html" collapse="true">
+        <item name="SVN repository structure" href="documentation/1_1/developer_guides/svn.html"/>
+        <item name="Building Continuum" href="documentation/1_1/developer_guides/building.html"/>
+        <!-- item name="Design" href="documentation/1_1/developer_guides/design.html"/ -->
+        <item name="XML-RPC" href="documentation/1_1/developer_guides/xmlrpc.html"/>
+        <!-- item name="TO BE DEFINED"/ -->
+      </item>
+      <!-- item name="Old versions" collapse="true">
+        <item name="1.0.x"/>
+      </item -->
+    </menu>
+    <menu name="Community">
+      <item name="Community Overview" href="community.html"/>
+      <item name="How to Contribute" href="guide-helping.html"/>
+      <item name="Getting Help" href="getting-help.html"/>
+      <item name="Issue Tracking" href="issue-tracking.html"/>
+      <item name="The Continuum Team" href="team-list.html"/>
     </menu>
 
     ${reports}
