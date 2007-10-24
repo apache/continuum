@@ -1,0 +1,66 @@
+ ------
+ Monitoring a Continuum instance
+ ------
+ Wendy Smoak
+ ------
+ Oct 3 2007
+ ------
+
+Monitoring a Continuum instance
+
+* JConsole
+
+    * Edit $CONTINUUM_HOME/bin/\[platform\]/wrapper.conf to add:
+
+------------------------
+wrapper.java.additional.9=-Dcom.sun.management.jmxremote
+------------------------
+
+    * Start Continuum
+
+    * Start jconsole, (included with Sun JDK 1.5 and later,) select the 'WrapperSimpleApp' line, and click Connect
+
+    The following image shows starting Continuum 1.1-beta-1, adding a project group, then adding and building the trunk of the Shale Framework (14 modules):
+
+[../../../images/jconsole1.jpg]
+
+    The following image shows the same Continuum instance running for several hours:
+
+[../../../images/jconsole2.jpg]
+
+* Garbage Collection and Heap Size
+
+    Edit $CONTINUUM_HOME/bin/\[platform\]/wrapper.conf to add:
+
+------------------------
+wrapper.java.additional.10=-verbose:gc
+   or
+wrapper.java.additional.10=-Xloggc:gc.txt
+------------------------
+
+    The first sends to the console (and wrapper log) while the second sends to the filename that you tell it to.
+
+    Example output:
+
+------------------------
+420.568: [GC 62459K->58474K(65104K), 0.0074933 secs]
+420.778: [GC 62634K->58733K(65104K), 0.0060762 secs]
+420.919: [GC 62893K->58832K(65104K), 0.0034433 secs]
+421.015: [GC 62992K->58723K(65104K), 0.0026420 secs]
+421.067: [GC 62883K->60885K(65104K), 0.0107248 secs]
+421.140: [GC 65045K->62114K(66384K), 0.0122194 secs]
+421.153: [Full GC 62114K->32136K(66384K), 0.3591207 secs]
+421.655: [GC 36296K->32242K(65104K), 0.0037377 secs]
+421.754: [GC 36402K->33061K(65104K), 0.0037182 secs]
+421.835: [GC 37221K->33120K(65104K), 0.0028722 secs]
+421.930: [GC 37280K->34582K(65104K), 0.0056601 secs]
+422.074: [GC 38742K->35150K(65104K), 0.0072451 secs]
+
+             before->after (total),  time
+------------------------
+
+    This shows the heap size before and after garbage collection as well as the total heap size and the time for the GC run.
+
+* References
+
+    * [http://java.sun.com/developer/technicalArticles/J2SE/jconsole.html]

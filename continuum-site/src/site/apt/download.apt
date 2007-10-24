@@ -76,32 +76,3 @@ Download Continuum 1.1 Beta 3
 *-------------------------------+---------+----------+-----------+
 | Continuum 1.0 (zip)         | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0-bin.zip} continuum-1.0-bin.zip}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0-bin.zip.md5} continuum-1.0-bin.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0-bin.zip.asc} continuum-1.0-bin.zip.asc}} |
 *-------------------------------+---------+----------+-----------+
-
-* System {Requirements}
-
-*----------------------+--------------------------------------------------------------------------------------------------------------------------------+
-|  <<JDK>>             | 1.5 or above                                                                                                                   |
-*----------------------+--------------------------------------------------------------------------------------------------------------------------------+
-| <<Memory>>           | No minimum requirement                                                                                                         |
-*----------------------+--------------------------------------------------------------------------------------------------------------------------------+
-| <<Disk>>             | The Continuum application is in itself less than 30MB but will use more disk space when it's checking out and building sources |
-*----------------------+--------------------------------------------------------------------------------------------------------------------------------+
-| <<Operating System>> | No minimum requirement. Tested on Windows XP, Debian, Fedora Core, Solaris and Mac OS X                                                 |
-*----------------------+--------------------------------------------------------------------------------------------------------------------------------+
-
- After downloading Continuum see the {{{guides/getting-started/index.html}Getting Started}}
- document for instructions on how to install and start Continuum.
-
-* {Installation} Instructions
-
- The installation of Continuum consists solely of unpacking the archive in the desired directory. It's that simple!
-
-** Windows 2000/XP
-
-  [[1]] Unzip the binary to the directory you wish to install Continuum. These instructions
-        assume you chose <<<C:\Program Files\Apache Software Foundation\continuum-x.x.x>>>
-
-** Unix-based Operating Systems (Linux, Solaris and Mac OS X)
-
-  [[1]] Extract the distribution archive to the directory you wish to install Continuum. These instructions
-        assume you chose <<</usr/local/continuum-x.x.x>>>.

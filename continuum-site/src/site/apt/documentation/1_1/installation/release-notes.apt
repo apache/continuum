@@ -1,0 +1,159 @@
+ ------
+ Release Notes - Continuum 1.1
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+ ------
+
+Release Note
+
+    The Continuum team is pleased to announce the Continuum 1.1-beta-3 release
+    
+    <<Highlights are:>>
+    
+      * lot of bug fixes
+      
+      * xwork/webwork update to fix remote code exploit in forms
+      
+      * mail notification to latest committers
+      
+      * LDAP authentication
+      
+      * performance improvement
+    
+    You can grab the latest release from the {{{../../../download.html}download page}}
+    
+    To upgrade from 1.1-beta-2, you can look at {{{upgrade.html}Upgrade Guide}}.
+    
+    Below is the jira release notes for this release.
+    
+* Release Notes - Continuum - Version 1.1-beta-3 :
+    
+** Sub-task
+
+    * [CONTINUUM-1441] - Keep connection on irc server between each messages
+
+** Bug
+
+    * [CONTINUUM-697] - sizes incompatible with mssql (Patch Attached)
+    
+    * [CONTINUUM-1037] - Ant projects inherit a default build definition for Maven 2.
+    
+    * [CONTINUUM-1038] - Build definitions should list what type they are (ant, maven, maven2, shell)
+    
+    * [CONTINUUM-1041] - two defaults on the build definition page
+    
+    * [CONTINUUM-1181] - Continuum aborts when running Postgres under JBoss
+    
+    * [CONTINUUM-1296] - Continuum 1.1-alpha-1 does not copy Maven2 project pom.xml's /project/build/defaultGoal/text() value to Build Definition Goals field.
+    
+    * [CONTINUUM-1306] - templated roles are not added automatically if missing after upgrade
+    
+    * [CONTINUUM-1325] - Surefire Report history is not kept for prior builds
+    
+    * [CONTINUUM-1348] - jut of memory in build result
+    
+    * [CONTINUUM-1367] - granting group admin rights for a single project doesn't seem to work
+    
+    * [CONTINUUM-1384] - Build error when enqueing happens during SCM update
+    
+    * [CONTINUUM-1391] - Missing "Download as text " link
+    
+    * [CONTINUUM-1393] - change sets are duplicated on multiple failed builds
+    
+    * [CONTINUUM-1395] - check the permissions on the add project action for ant projects
+    
+    * [CONTINUUM-1404] - M2 Multi module projects still build non-recursively
+    
+    * [CONTINUUM-1411] - Link to display build surefire report doesn't work (in fact displaying surefire report per build is false)
+    
+    * [CONTINUUM-1412] - File Inclusion Vulnerability
+    
+    * [CONTINUUM-1415] - Javascript errors with IE
+    
+    * [CONTINUUM-1417] - continuum group administrator role should imply user + developer too
+    
+    * [CONTINUUM-1418] - Groups Roles aren't added automatically at startup in the available roles list if the users list was deleted
+    
+    * [CONTINUUM-1420] - "Build Fresh" and Profile columns are missed in group build definitions page for specific project build definitions
+    
+    * [CONTINUUM-1423] - Default project group is missing from the list
+    
+    * [CONTINUUM-1428] - Continuum must rebuild automatically a project that was in error in the previous build even if it haven't changesin the current update
+    
+    * [CONTINUUM-1429] - Initial checkout does not respect 'Use cached scm credentials' setting
+    
+    * [CONTINUUM-1435] - Release prepare not working
+    
+    * [CONTINUUM-1439] - Group Summary page display error
+    
+    * [CONTINUUM-1445] - Impossible to add two projects with the same name even if they have differents version and/or scmUrl
+    
+    * [CONTINUUM-1448] - upgrade to last webwork/xwork
+
+** Improvement
+
+    * [CONTINUUM-406] - irc notifications: support for registered nicks
+    
+    * [CONTINUUM-522] - IRC support needed for IRC servers not supporting /privmsg
+    
+    * [CONTINUUM-1093] - After validation, logged in user is shown the login page
+    
+    * [CONTINUUM-1218] - Automatically determine correct POM file location in Build Definition when checking out from SCMs like ClearCase
+    
+    * [CONTINUUM-1278] - Need to add description and/or name to build defintion
+    
+    * [CONTINUUM-1279] - Need to add "Build Information" to the build result reports and notification.
+    
+    * [CONTINUUM-1333] - show in project group summary per project also the status counters (as they are shown on the project groups pages)
+    
+    * [CONTINUUM-1366] - surefire report shown is always latest, even with a different build number
+    
+    * [CONTINUUM-1394] - continuum should not record change sets when it is a new checkout
+    
+    * [CONTINUUM-1396] - Continuum should have a separate permission to administer schedules
+    
+    * [CONTINUUM-1409] - A build does not say which build definition it came from
+    
+    * [CONTINUUM-1422] - The icon for 'Cancel Build' is missing from the legend
+    
+    * [CONTINUUM-1424] - Ability to Cancel Build for a subset of a project group
+    
+    * [CONTINUUM-1425] - URL in Company Pom should open in a new Window
+    
+    * [CONTINUUM-1427] - Ability to choose the build definition for 'Build all projects' and 'Build Project(s)'
+    
+    * [CONTINUUM-1430] - Split forms for environment variables and Ant/Maven/JDK installations
+    
+    * [CONTINUUM-1440] - write documentation how to use continuum-data-management
+    
+    * [CONTINUUM-1443] - Add an 'Always build' checkbox in 'build definition'
+    
+    * [CONTINUUM-1444] - IRC and Jabber notifiers accept invalid ports.
+    
+    * [CONTINUUM-1446] - Webwork Performance Tuning
+    
+    * [CONTINUUM-1455] - In a project's working directory it would be nice to see a date and time...
+    
+    * [CONTINUUM-1478] - Place a "Check All / Check None" checkbox for projects
+
+** New Feature
+
+    * [CONTINUUM-358] - User Authentication via LDAP
+    
+    * [CONTINUUM-605] - Add a RecipientSource that derives addresses from the change list
+    
+    * [CONTINUUM-1207] - Need to be able to define default build definition used when adding new project
+
+** Task
+
+    * [CONTINUUM-1386] - Some data management modules use always plexus-security dependencies instead of redback
+    
+    * [CONTINUUM-1447] - To fix /bin/bash issue on some platform, update plexus-utils to 1.4.6
+
+** Wish
+
+    * [CONTINUUM-622] - Configure default build description
+    
+    * [CONTINUUM-1167] - Patch to add JBoss support

@@ -1,0 +1,44 @@
+ ------
+ Documentation
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+
+Documentation
+
+* Installation/Upgrade Guides
+
+** Installation
+
+*** Standalone version
+
+    Standard (Linux, Mac OSX, Solaris, Windows, others)
+
+    As a service
+
+*** Webapp
+
+    Tomcat
+    Jetty
+    Geronimo
+    GlassFish
+    ...
+
+** Release Notes
+
+    {{{installation/release-notes.html} Release Notes}}
+
+** Upgrade
+
+    {{{installation/upgrade.html} How to upgrade from a previous versions?}}
+
+* User's Guides
+
+* Knowledge Base
+
+    {{{faqs.html} Frequently Asked Questions}}
+
+* Administrator's Guide
+
+* Developer's Guide
