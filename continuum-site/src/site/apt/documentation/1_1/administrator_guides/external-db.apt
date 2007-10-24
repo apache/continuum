@@ -1,0 +1,31 @@
+ ------
+ How to use an external database?
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 12 2007
+ ------
+
+How to use an external database?
+
+* Supported databases
+
+    * Derby
+
+    * MySQL
+
+    * MS SQL Server
+
+    * Oracle (not yet, but coming soon)
+
+* Configure Continuum
+
+** Standalone version
+
+    To use an external database with Continuum standalone, you must configure datasources in <<<$CONTINUUM_HOME/conf/plexus.xml>>>
+
+%{snippet|id=datasources|url=http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-plexus-runtime/src/conf/plexus.xml}
+
+** Webapp
+
+    To use an external database with the Continuum webapp, you should configure the datasource in your container.
