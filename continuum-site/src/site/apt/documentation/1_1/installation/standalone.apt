@@ -157,7 +157,7 @@ echo "To start continuum now, run 'service continuum start'"
 
 ~~ Submitted by Hilco Wijbenga
 
-    To Configure Continuum startup in a Gentoo, you can use the following script:
+    To Configure Continuum startup in a Gentoo, you can copy the following script in <<</etc/init.d/continuuum>>>:
 
 ------------------
 #!/bin/sh
