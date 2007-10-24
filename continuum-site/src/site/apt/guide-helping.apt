@@ -20,6 +20,10 @@ Guide to helping with Continuum
 
  * {{{development/guide-continuum-development.html#Creating and submitting a patch}Submit patches}} to reported issues (both those you find, or that others have filed)
 
+ * Developer reference docs for the latest snapshot can be found starting <a href="ref/latest/index.html">here</a>.
+
+ * the <a href="ref/latest/apidocs/index.html">Javadoc</a> is your friend.
+
  * Help with the documentation by pointing out areas that are lacking or unclear, and if you are so inclined, submitting patches to correct it.
    You can quickly contribute rough thoughts to the {{{http://docs.codehaus.org/display/CONTINUUMUSER} wiki}}, or you can volunteer to help collate and
    organise information that is already there.
