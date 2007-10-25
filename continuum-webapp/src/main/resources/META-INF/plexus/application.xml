@@ -394,6 +394,7 @@
       <lifecycle-handler>basic</lifecycle-handler>
     </component>
 
+    <!-- START SNIPPET: ldap -->
     <!-- 
        Ldap Authentication can be enabled by setting enabling these components and setting the following configuration options in your security.properties file
       
@@ -418,8 +419,9 @@
      * contextFactory - context factory for ldap connections
      * password - password for the bindDn for the root ldap connection
      * bindDn - the core user used for authentication the ldap server, must be able to perform the necessary searches, etc.
+     -->
 
-    <component>
+    <!-- component>
       <role>org.codehaus.plexus.redback.common.ldap.connection.LdapConnectionFactory</role>
       <role-hint>configurable</role-hint>
       <implementation>org.codehaus.plexus.redback.common.ldap.connection.ConfigurableLdapConnectionFactory</implementation>
@@ -440,13 +442,13 @@
     
      * email-attribute - The name of the attribute on a user that contains the email address
      * full-name-attribute - The name of the attribute on a user that contains the users fullName
-     * password-attribute - The name of the attribute containing the users password, used for the authentiction using the user manager and not the ldap bind authent
-icator
+     * password-attribute - The name of the attribute containing the users password, used for the authentiction using the user manager and not the ldap bind authenticator
      * user-id-attribute - The name of the attribute containing the users userId, most commonly cn or sn.
      * user-base-dn - The base dn that will be subtree searched for users.
      * user-object-class - the objectClass used in the ldap server for indentifying users, most commonly inetOrgPerson.
+     -->
     
-    <component>
+    <!-- component>
       <role>org.codehaus.plexus.redback.common.ldap.UserMapper</role>
       <role-hint>ldap</role-hint>
       <implementation>org.codehaus.plexus.redback.common.ldap.LdapUserMapper</implementation>
@@ -463,12 +465,12 @@ icator
     
     <!--
      
-    If caching is desired then make uncomment this and make sure the following configuration parameter is in the sec
+    If caching is desired then make uncomment this and make sure the following configuration parameter is in the security.properties
      
     user.manager.impl=cached
+    -->
      
-     
-    <component>
+    <!-- component>
       <role>org.codehaus.plexus.redback.users.UserManager</role>
       <role-hint>cached</role-hint>
       <implementation>org.codehaus.plexus.redback.users.cached.CachedUserManager</implementation>
@@ -497,8 +499,9 @@ icator
     ldap.bind.authenticator.enabled=true
     
     in the security.properties
+    -->
     
-    <component>
+    <!-- component>
       <role>org.codehaus.plexus.redback.policy.UserSecurityPolicy</role>
       <role-hint>default</role-hint>
       <implementation>org.codehaus.plexus.redback.policy.DefaultUserSecurityPolicy</implementation>
@@ -533,6 +536,7 @@ icator
         </requirement>
       </requirements>
     </component-->
+    <!-- END SNIPPET: ldap -->
   </components>
 
   <lifecycle-handler-manager implementation="org.codehaus.plexus.lifecycle.DefaultLifecycleHandlerManager">
