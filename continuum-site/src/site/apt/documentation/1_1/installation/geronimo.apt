@@ -78,6 +78,8 @@ Guide to Install Continuum on Geronimo
 
     The '<<<continuum>>>' string used in <<<console.dbpool>>> and <<<\<resource-link\>>>> is the name of the datasource created in the previous part.
 
+    <<<commons-lang 2.2>>> is required by Continuum and must be installed in the geronimo repository.
+
 * {Install Continuum}
 
     To Install Continuum, you'll need the Continuum war and the deployment plan.
