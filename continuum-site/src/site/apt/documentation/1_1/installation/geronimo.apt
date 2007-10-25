@@ -1,21 +1,27 @@
  ------
- Installing Continuum on Geronimo
+ Guide to Install Continuum on Geronimo
  ------
  Emmanuel Venisse
  ------
  Oct 25 2007
  ------
 
-Installing Continuum on Geronimo
+Guide to Install Continuum on Geronimo
 
-* Datasource Configuration
+    Instructions for installing, deploying, configuring Continuum for the Apache Geronimo.
+
+    Sections:
+
+%{toc|section=0}
+
+* {Datasource Configuration}
 
     Continuum uses two datasources (<<<jdbc/continuum>>> and <<<jdbc/users>>>). You can create one or two databases for them.
 
     Here, we create only one database '<<<continuum>>>' used by both datasources.
     Look at {{{http://cwiki.apache.org/GMOxDOC20/configuring-database-pools.html}Configuring database pools}} in Geronimo User's Guide.
 
-* Deployment Plan
+* {Deployment Plan}
 
     When your datasource is created, before you install Continuum, you must create a <<Geronimo Deployment Plan>> like this one:
 
@@ -72,13 +78,13 @@ Installing Continuum on Geronimo
 
     The '<<<continuum>>>' string used in <<<console.dbpool>>> and <<<\<resource-link\>>>> is the name of the datasource created in the previous part.
 
-* Install Continuum
+* {Install Continuum}
 
     To Install Continuum, you'll need the Continuum war and the deployment plan.
 
     Look at {{{http://cwiki.apache.org/GMOxDOC20/installing-and-removing-applications.html}Installing and removing applications}} in Geronimo.
 
-* Continuum Configuration
+* {Continuum Configuration}
 
     By default, the '<<<working directory>>>' and the '<<<build output directory>>>' are stored under the WEB-INF directory. If you want to change them (necessary on Windows
     due to the path length limitation), you can configure them in the {{{../administrator_guides/configuration.html}Configuration page}}.
