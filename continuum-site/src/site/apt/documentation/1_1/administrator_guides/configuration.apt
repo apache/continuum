@@ -17,7 +17,7 @@ Managing General Configuration
 *---------------------------------+------------------------------------------------------+
 | Build Output Directory          | The directory where all build output will be stored |
 *---------------------------------+------------------------------------------------------+
-| Deployment Repository Directory | The directory where generated maven2 artifacts will be stored. This directory will be respect a repository structure |
+| Deployment Repository Directory | The directory where generated maven2 artifacts will be stored. This directory will be respect a repository structure. It is independant of the maven deploy phase |
 *---------------------------------+------------------------------------------------------+
 | Base URL                        | The base Continuum URL. This URL is used in notifications |
 *---------------------------------+------------------------------------------------------+
