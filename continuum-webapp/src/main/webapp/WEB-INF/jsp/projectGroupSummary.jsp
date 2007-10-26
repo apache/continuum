@@ -142,7 +142,7 @@
                   <ww:hidden name="projectType" value=""/>
                 </ww:form>
 
-                <ww:select theme="simple" name="preferredExecutor" list="#{'maven2' : 'Add M2 Project', 'maven-1' : 'Add M1 Project', 'ant' : 'Add Ant Project', 'shell' : 'Add Shell Project'}"
+                <ww:select theme="simple" name="preferredExecutor" list="#@java.util.HashMap@{'maven2' : 'Add M2 Project', 'maven-1' : 'Add M1 Project', 'ant' : 'Add Ant Project', 'shell' : 'Add Shell Project'}"
                     headerValue="Choose the project type" headerKey="" emptyOption="true" />
 
                 <input type="button" value="Add" onclick="goToAddProject()"/>
