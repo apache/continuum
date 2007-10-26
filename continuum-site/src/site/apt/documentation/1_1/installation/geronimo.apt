@@ -23,7 +23,7 @@ Guide to Install Continuum on Geronimo
 
 * {Deployment Plan}
 
-    When your datasource is created, before you install Continuum, you must create a <<Geronimo Deployment Plan>> like this one:
+    When your datasource is created, before you install Continuum, you must create a <<Geronimo Deployment Plan>> like this one (Geronimo 2.0.2):
 
 -----------------------------
 <?xml version="1.0" encoding="UTF-8"?>
