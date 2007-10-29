@@ -323,8 +323,18 @@ public class MavenTwoContinuumProjectBuilder
                         result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL, urlString );
                         continue;
                     }
+
+                    String moduleScmUrl;
+                    if ( scmUrl.endsWith( "/" ) )
+                    {
+                        moduleScmUrl = scmUrl + module;
+                    }
+                    else
+                    {
+                        moduleScmUrl = scmUrl + "/" + module;
+                    }
                     // we are in recursive loading mode
-                    readModules( moduleUrl, result, false, username, password, scmUrl + "/" + module, true,
+                    readModules( moduleUrl, result, false, username, password, moduleScmUrl, true,
                                  buildDefinitionTemplate );
                 }
             }
