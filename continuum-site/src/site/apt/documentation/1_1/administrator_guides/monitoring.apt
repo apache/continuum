@@ -20,7 +20,7 @@ wrapper.java.additional.9=-Dcom.sun.management.jmxremote
 
     * Start jconsole, (included with Sun JDK 1.5 and later,) select the 'WrapperSimpleApp' line, and click Connect
 
-    The following image shows starting Continuum 1.1-beta-1, adding a project group, then adding and building the trunk of the Shale Framework (14 modules):
+    The following image shows starting Continuum 1.1, adding a project group, then adding and building the trunk of the Shale Framework (14 modules):
 
 [../../../images/jconsole1.jpg]
 

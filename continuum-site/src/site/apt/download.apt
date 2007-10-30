@@ -4,11 +4,23 @@
  Trygve Laugstol
  Emmanuel Venisse
  ------
- Tue Sep 25 2007
+ Tue Oct 30 2007
 
-Download Continuum 1.1 Beta 3
+Download Continuum 1.1 Beta 4
 
-  Continuum 1.1 Beta 3 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
+  Continuum 1.1 Beta 4 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
+
+*-------------------------------+---------+----------+-----------+
+|                               | Download | Checksum | Signature |
+*-------------------------------+---------+----------+-----------+
+| Continuum 1.1-beta-4 (tar.bz2)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1-beta-4.tar.bz2} apache-continuum-1.1-beta-4.tar.bz2}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.tar.bz2.md5} apache-continuum-1.1-beta-4.tar.bz2.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.tar.bz2.asc} apache-continuum-1.1-beta-4.tar.bz2.asc}} |
+*-------------------------------+---------+----------+-----------+
+| Continuum 1.1-beta-4 (tar.gz)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1-beta-4.tar.gz} apache-continuum-1.1-beta-4.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.tar.gz.md5} apache-continuum-1.1-beta-4.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.tar.gz.asc} apache-continuum-1.1-beta-4.tar.gz.asc}} |
+*-------------------------------+---------+----------+-----------+
+| Continuum 1.1-beta-4 (zip)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1-beta-4.zip} apache-continuum-1.1-beta-4.zip}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.zip.md5} apache-continuum-1.1-beta-4.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.zip.asc} apache-continuum-1.1-beta-4.zip.asc}} |
+*-------------------------------+---------+----------+-----------+
+
+    Previous 1.1-beta:
 
 *-------------------------------+---------+----------+-----------+
 |                               | Download | Checksum | Signature |
