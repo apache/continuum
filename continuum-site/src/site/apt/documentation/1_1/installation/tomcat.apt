@@ -4,7 +4,7 @@
  Joakim Erdfelt
  Emmanuel Venisse
  ------
- Oct 5 2007
+ Oct 30 2007
  ------
 
 Guide to Install Continuum on Tomcat
@@ -116,7 +116,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
 
     Tested on Tomcat v5.0.28
 
-    These instructions explain how to deploy the Continuum 1.1-SNAPSHOT web application in an existing installation of Tomcat 5.0.x.
+    These instructions explain how to deploy the Continuum 1.1-beta-4 web application in an existing installation of Tomcat 5.0.x.
 
     <<Extra Jars:>>
 
@@ -126,7 +126,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
         the internal JAXP implementation in JDK 1.5, we recommend that you remove the files in <<<$CATALINA_HOME/common/endorsed/>>>.
 
 ------------------------------------------
-<Context path="/continuum" docBase="/path/to/continuum-webapp-1.1-SNAPSHOT.war" debug="0">
+<Context path="/continuum" docBase="/path/to/continuum-webapp-1.1-beta-4.war" debug="0">
 
   <!-- JNDI Datasource for User/Security Database (REQUIRED) -->
   <Resource name="jdbc/users" auth="Container" type="javax.sql.DataSource"/>
@@ -196,7 +196,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
 
 ------------------------------------------
 <Context path="/continuum"
-         docBase="/path/to/continuum-webapp-1.1-SNAPSHOT.war">
+         docBase="/path/to/continuum-webapp-1.1-beta-4.war">
 
   <Resource name="jdbc/users"
             auth="Container"
@@ -230,7 +230,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
 
 ------------------------------------------
 <Context path="/continuum"
-         docBase="/path/to/continuum-webapp-1.1-SNAPSHOT.war">
+         docBase="/path/to/continuum-webapp-1.1-beta-4.war">
 
   <Resource name="jdbc/users"
             auth="Container"
