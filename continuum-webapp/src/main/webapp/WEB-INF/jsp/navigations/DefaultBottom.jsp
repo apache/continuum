@@ -31,7 +31,7 @@
 %>
 <div id="footer">
   <div class="xright">
-    Copyright &copy; <%= copyrightRange %> Apache Software Foundation
+    Copyright &copy; <%= copyrightRange %> The Apache Software Foundation
   </div>
 
   <div class="clear">
