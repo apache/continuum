@@ -671,6 +671,11 @@
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus.redback</groupId>
+        <artifactId>redback-users-configurable</artifactId>
+        <version>${redback.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus.redback</groupId>
         <artifactId>redback-system</artifactId>
         <version>${redback.version}</version>
       </dependency>
