@@ -190,7 +190,7 @@ public abstract class AbstractContinuumNotifier
         {
             if ( buildDef != null )
             {
-                builds = store.getBuildResultsByBuildDefinition( project.getId(), buildDef.getId(), 0, 2 );
+                builds = getContinuumStore().getBuildResultsByBuildDefinition( project.getId(), buildDef.getId(), 0, 2 );
 
                 if ( builds.size() < 2 )
                 {
@@ -214,7 +214,7 @@ public abstract class AbstractContinuumNotifier
                 //Normally, it isn't possible, buildDef should be != null
                 if ( project.getId() > 0 )
                 {
-                    project = store.getProjectWithBuilds( project.getId() );
+                    project = getContinuumStore().getProjectWithBuilds( project.getId() );
                 }
                 builds = project.getBuildResults();
 
@@ -241,4 +241,8 @@ public abstract class AbstractContinuumNotifier
         }
     }
 
+    protected ContinuumStore getContinuumStore()
+    {
+        return this.store;
+    }
 }

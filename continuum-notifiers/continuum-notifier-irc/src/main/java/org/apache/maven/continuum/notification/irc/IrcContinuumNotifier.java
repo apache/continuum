@@ -28,6 +28,7 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.plexus.notification.NotificationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.util.StringUtils;
@@ -63,6 +64,11 @@ public class IrcContinuumNotifier
     // Requirements
     // ----------------------------------------------------------------------
 
+    /**
+     * @plexus.requirement role-hint="jdo"
+     */
+    private ContinuumStore store;    
+    
     /**
      * @plexus.requirement
      */
@@ -506,4 +512,8 @@ public class IrcContinuumNotifier
         }
     }
 
+    protected ContinuumStore getContinuumStore()
+    {
+        return this.store;
+    }    
 }
