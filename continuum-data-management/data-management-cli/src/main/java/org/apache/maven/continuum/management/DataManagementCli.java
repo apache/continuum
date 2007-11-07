@@ -26,6 +26,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
@@ -38,12 +39,18 @@ import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ExcludesArtifactFilter;
 import org.apache.maven.settings.MavenSettingsBuilder;
+import org.apache.maven.settings.Mirror;
+import org.apache.maven.settings.Proxy;
+import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
+import org.apache.maven.wagon.repository.RepositoryPermissions;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.File;
@@ -53,6 +60,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -170,8 +178,8 @@ public class DataManagementCli
     private static void processDatabase( SupportedDatabase databaseType, DatabaseFormat databaseFormat,
                                          OperationMode mode, String jdbcUrl, File directory, String toolRoleHint,
                                          String managementArtifactId, String configRoleHint )
-        throws PlexusContainerException, ComponentLookupException, ArtifactNotFoundException,
-        ArtifactResolutionException, IOException
+        throws PlexusContainerException, ComponentLookupException, ComponentLifecycleException,
+        ArtifactNotFoundException, ArtifactResolutionException, IOException
     {
         String applicationVersion = getVersion();
 
@@ -179,6 +187,9 @@ public class DataManagementCli
         params.setUrl( jdbcUrl );
 
         DefaultPlexusContainer container = new DefaultPlexusContainer();
+
+        initializeWagon( container );
+
         List<Artifact> artifacts = new ArrayList<Artifact>();
         artifacts.addAll(
             downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion() ) );
@@ -257,6 +268,66 @@ public class DataManagementCli
 
         container.setLookupRealm( oldRealm );
         Thread.currentThread().setContextClassLoader( oldLoader );
+    }
+
+    private static void initializeWagon( DefaultPlexusContainer container )
+        throws ComponentLookupException, ComponentLifecycleException, IOException
+    {
+        WagonManager wagonManager = (WagonManager) container.lookup( WagonManager.ROLE );
+
+        Settings settings = getSettings( container );
+
+        try
+        {
+            Proxy proxy = settings.getActiveProxy();
+
+            if ( proxy != null )
+            {
+                if ( proxy.getHost() == null )
+                {
+                    throw new IOException( "Proxy in settings.xml has no host" );
+                }
+
+                wagonManager.addProxy( proxy.getProtocol(), proxy.getHost(), proxy.getPort(), proxy.getUsername(),
+                                       proxy.getPassword(), proxy.getNonProxyHosts() );
+            }
+
+            for ( Iterator i = settings.getServers().iterator(); i.hasNext(); )
+            {
+                Server server = (Server) i.next();
+
+                wagonManager.addAuthenticationInfo( server.getId(), server.getUsername(), server.getPassword(),
+                                                    server.getPrivateKey(), server.getPassphrase() );
+
+                wagonManager.addPermissionInfo( server.getId(), server.getFilePermissions(),
+                                                server.getDirectoryPermissions() );
+
+                if ( server.getConfiguration() != null )
+                {
+                    wagonManager.addConfiguration( server.getId(), (Xpp3Dom) server.getConfiguration() );
+                }
+            }
+
+            RepositoryPermissions defaultPermissions = new RepositoryPermissions();
+
+            defaultPermissions.setDirectoryMode( "775" );
+
+            defaultPermissions.setFileMode( "664" );
+
+            wagonManager.setDefaultRepositoryPermissions( defaultPermissions );
+
+            for ( Iterator i = settings.getMirrors().iterator(); i.hasNext(); )
+            {
+                Mirror mirror = (Mirror) i.next();
+
+                wagonManager.addMirror( mirror.getId(), mirror.getMirrorOf(), mirror.getUrl() );
+            }
+        }
+        finally
+        {
+            container.release( wagonManager );
+        }
+
     }
 
     private static Collection<Artifact> downloadArtifact( PlexusContainer container, String groupId, String artifactId,
