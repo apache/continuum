@@ -40,7 +40,9 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ExcludesArtifactFilter;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Mirror;
+import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Proxy;
+import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.wagon.repository.RepositoryPermissions;
@@ -346,6 +348,23 @@ public class DataManagementCli
         List<ArtifactRepository> remoteRepositories = new ArrayList<ArtifactRepository>();
         remoteRepositories.add(
             factory.createArtifactRepository( "central", "http://repo1.maven.org/maven2", layout, null, null ) );
+        //Load extra repositories from active profile
+        List<Profile> profiles = getSettings( container ).getActiveProfiles();
+        if ( profiles != null && !profiles.isEmpty() )
+        {
+            for ( Profile p : profiles )
+            {
+                List<Repository> repos = p.getRepositories();
+                if ( repos != null && !repos.isEmpty() )
+                {
+                    for ( Repository repo : repos )
+                    {
+                        remoteRepositories.add(
+                            factory.createArtifactRepository( repo.getId(), repo.getUrl(), layout, null, null ) );
+                    }
+                }
+            }
+        }
 
         ArtifactFactory artifactFactory = (ArtifactFactory) container.lookup( ArtifactFactory.ROLE );
         Artifact artifact =
