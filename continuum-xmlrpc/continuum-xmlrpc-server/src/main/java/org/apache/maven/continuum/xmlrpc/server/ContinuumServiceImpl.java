@@ -19,29 +19,29 @@ package org.apache.maven.continuum.xmlrpc.server;
  * under the License.
  */
 
+import net.sf.dozer.util.mapping.DozerBeanMapperSingletonWrapper;
+import net.sf.dozer.util.mapping.MapperIF;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
+import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
-import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
-import org.apache.maven.continuum.xmlrpc.project.ProjectDeveloper;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
-import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
-import org.apache.maven.continuum.xmlrpc.scm.ChangeFile;
-import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
-import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
+import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
@@ -49,10 +49,8 @@ import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -62,10 +60,17 @@ import java.util.Map;
 public class ContinuumServiceImpl
     extends AbstractContinuumSecureService
 {
+    private static MapperIF mapper = DozerBeanMapperSingletonWrapper.getInstance();
+
     /**
      * @plexus.requirement
      */
     private Continuum continuum;
+
+    /**
+     * @plexus.requirement role-hint="jdo"
+     */
+    private ContinuumStore store;
 
     /**
      * @plexus.requirement role-hint="default"
@@ -162,15 +167,13 @@ public class ContinuumServiceImpl
     // Projects Groups
     // ----------------------------------------------------------------------
 
-    public List getAllProjectGroups()
+    public List<ProjectGroupSummary> getAllProjectGroups()
         throws ContinuumException
     {
-        Collection pgList = continuum.getAllProjectGroups();
-        List result = new ArrayList();
-        for ( Iterator i = pgList.iterator(); i.hasNext(); )
+        Collection<org.apache.maven.continuum.model.project.ProjectGroup> pgList = continuum.getAllProjectGroups();
+        List<ProjectGroupSummary> result = new ArrayList<ProjectGroupSummary>();
+        for ( org.apache.maven.continuum.model.project.ProjectGroup projectGroup : pgList )
         {
-            org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
-                (org.apache.maven.continuum.model.project.ProjectGroup) i.next();
             try
             {
                 if ( isAuthorized( ContinuumRoleConstants.CONTINUUM_VIEW_GROUP_OPERATION, projectGroup.getName() ) )
@@ -186,20 +189,19 @@ public class ContinuumServiceImpl
         return result;
     }
 
-    public List getAllProjectGroupsWithProjects()
+    public List<ProjectGroup> getAllProjectGroupsWithAllDetails()
         throws ContinuumException
     {
-        Collection pgList = continuum.getAllProjectGroupsWithProjects();
-        List result = new ArrayList();
-        for ( Iterator i = pgList.iterator(); i.hasNext(); )
+        Collection<org.apache.maven.continuum.model.project.ProjectGroup> pgList =
+            continuum.getAllProjectGroupsWithBuildDetails();
+        List<ProjectGroup> result = new ArrayList<ProjectGroup>();
+        for ( org.apache.maven.continuum.model.project.ProjectGroup projectGroup : pgList )
         {
-            org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
-                (org.apache.maven.continuum.model.project.ProjectGroup) i.next();
             try
             {
                 if ( isAuthorized( ContinuumRoleConstants.CONTINUUM_VIEW_GROUP_OPERATION, projectGroup.getName() ) )
                 {
-                    result.add( populateProjectGroupWithProjects( projectGroup ) );
+                    result.add( populateProjectGroupWithAllDetails( projectGroup ) );
                 }
             }
             catch ( AuthorizationException e )
@@ -208,6 +210,12 @@ public class ContinuumServiceImpl
             }
         }
         return result;
+    }
+
+    public List<ProjectGroup> getAllProjectGroupsWithProjects()
+        throws ContinuumException
+    {
+        return getAllProjectGroupsWithAllDetails();
     }
 
     protected String getProjectGroupName( int projectGroupId )
@@ -242,7 +250,7 @@ public class ContinuumServiceImpl
 
         org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
             continuum.getProjectGroupWithProjects( projectGroupId );
-        return populateProjectGroupWithProjects( projectGroup );
+        return populateProjectGroupWithAllDetails( projectGroup );
     }
 
     public int removeProjectGroup( int projectGroupId )
@@ -481,20 +489,18 @@ public class ContinuumServiceImpl
         return populateBuildResult( continuum.getBuildResult( buildId ) );
     }
 
-    public List getBuildResultsForProject( int projectId )
+    public List<BuildResultSummary> getBuildResultsForProject( int projectId )
         throws ContinuumException
     {
         ProjectSummary ps = getProjectSummary( projectId );
         checkViewProjectGroupAuthorization( ps.getProjectGroup().getName() );
 
-        List result = new ArrayList();
+        List<BuildResultSummary> result = new ArrayList<BuildResultSummary>();
         Collection buildResults = continuum.getBuildResultsForProject( projectId );
         if ( buildResults != null )
         {
-            for ( Iterator i = buildResults.iterator(); i.hasNext(); )
+            for ( org.apache.maven.continuum.model.project.BuildResult buildResult : (List<org.apache.maven.continuum.model.project.BuildResult>) buildResults )
             {
-                org.apache.maven.continuum.model.project.BuildResult buildResult =
-                    (org.apache.maven.continuum.model.project.BuildResult) i.next();
                 BuildResultSummary br = populateBuildResultSummary( buildResult );
                 result.add( br );
             }
@@ -617,15 +623,15 @@ public class ContinuumServiceImpl
     // Schedules
     // ----------------------------------------------------------------------
 
-    public List getSchedules()
+    public List<Schedule> getSchedules()
         throws ContinuumException
     {
         Collection schedules = continuum.getSchedules();
 
-        List s = new ArrayList();
-        for ( Iterator i = schedules.iterator(); i.hasNext(); )
+        List<Schedule> s = new ArrayList<Schedule>();
+        for ( Object schedule : schedules )
         {
-            s.add( populateSchedule( (org.apache.maven.continuum.model.project.Schedule) i.next() ) );
+            s.add( populateSchedule( (org.apache.maven.continuum.model.project.Schedule) schedule ) );
         }
 
         return s;
@@ -661,15 +667,15 @@ public class ContinuumServiceImpl
     // Profiles
     // ----------------------------------------------------------------------
 
-    public List getProfiles()
+    public List<Profile> getProfiles()
         throws ContinuumException
     {
         Collection profiles = continuum.getProfileService().getAllProfiles();
 
-        List p = new ArrayList();
-        for ( Iterator i = profiles.iterator(); i.hasNext(); )
+        List<Profile> p = new ArrayList<Profile>();
+        for ( Object profile : profiles )
         {
-            p.add( populateProfile( (org.apache.maven.continuum.model.system.Profile) i.next() ) );
+            p.add( populateProfile( (org.apache.maven.continuum.model.system.Profile) profile ) );
         }
 
         return p;
@@ -682,130 +688,75 @@ public class ContinuumServiceImpl
     }
 
     // ----------------------------------------------------------------------
+    // Installations
+    // ----------------------------------------------------------------------
+
+    public List<Installation> getInstallations()
+        throws ContinuumException
+    {
+        try
+        {
+            List<org.apache.maven.continuum.model.system.Installation> installs =
+                continuum.getInstallationService().getAllInstallations();
+
+            List<Installation> i = new ArrayList<Installation>();
+            for ( Object install : installs )
+            {
+                i.add( populateInstallation( (org.apache.maven.continuum.model.system.Installation) install ) );
+            }
+            return i;
+        }
+        catch ( InstallationException e )
+        {
+            throw new ContinuumException( "Can't load installations", e );
+        }
+    }
+
+    public Installation getInstallation( int installationId )
+        throws ContinuumException
+    {
+        try
+        {
+            org.apache.maven.continuum.model.system.Installation install =
+                continuum.getInstallationService().getInstallation( installationId );
+            return populateInstallation( install );
+        }
+        catch ( InstallationException e )
+        {
+            throw new ContinuumException( "Can't load installations", e );
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // SystemConfiguration
+    // ----------------------------------------------------------------------
+
+    public SystemConfiguration getSystemConfiguration()
+        throws ContinuumException
+    {
+        try
+        {
+            org.apache.maven.continuum.model.system.SystemConfiguration sysConf = store.getSystemConfiguration();
+            return populateSystemConfiguration( sysConf );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Can't get SystemConfiguration.", e );
+        }
+    }
+
+    // ----------------------------------------------------------------------
     // Converters
     // ----------------------------------------------------------------------
 
     private ProjectSummary populateProjectSummary( org.apache.maven.continuum.model.project.Project project )
     {
-        if ( project == null )
-        {
-            return null;
-        }
-
-        ProjectSummary ps = new Project();
-        ps.setArtifactId( project.getArtifactId() );
-        ps.setBuildNumber( project.getBuildNumber() );
-        ps.setDescription( project.getDescription() );
-        ps.setExecutorId( project.getExecutorId() );
-        ps.setGroupId( project.getGroupId() );
-        ps.setId( project.getId() );
-        ps.setLatestBuildId( project.getLatestBuildId() );
-        ps.setName( project.getName() );
-        ps.setProjectGroup( populateProjectGroupSummary( project.getProjectGroup() ) );
-        ps.setScmTag( project.getScmTag() );
-        ps.setScmUrl( project.getScmUrl() );
-        ps.setScmUseCache( project.isScmUseCache() );
-        ps.setScmUsername( project.getScmUsername() );
-        ps.setState( project.getState() );
-        ps.setUrl( project.getUrl() );
-        ps.setVersion( project.getVersion() );
-        ps.setWorkingDirectory( project.getWorkingDirectory() );
-        return ps;
+        return (ProjectSummary) mapper.map( project, ProjectSummary.class );
     }
 
     private Project populateProject( org.apache.maven.continuum.model.project.Project project )
     {
-        if ( project == null )
-        {
-            return null;
-        }
-
-        Project p = (Project) populateProjectSummary( project );
-
-        p.setParent( populateProjectDependency( project.getParent() ) );
-
-        if ( project.getDependencies() != null )
-        {
-            List deps = new ArrayList();
-            for ( Iterator i = project.getDependencies().iterator(); i.hasNext(); )
-            {
-                org.apache.maven.continuum.model.project.ProjectDependency d =
-                    (org.apache.maven.continuum.model.project.ProjectDependency) i.next();
-                deps.add( populateProjectDependency( d ) );
-            }
-            p.setDependencies( deps );
-        }
-
-        //TODO: p.setBuildDefinitions( );
-
-        if ( project.getDevelopers() != null )
-        {
-            for ( Iterator i = project.getDevelopers().iterator(); i.hasNext(); )
-            {
-                org.apache.maven.continuum.model.project.ProjectDeveloper developer =
-                    (org.apache.maven.continuum.model.project.ProjectDeveloper) i.next();
-                p.addDeveloper( populateProjectDeveloper( developer ) );
-            }
-        }
-
-        if ( project.getNotifiers() != null )
-        {
-            for ( Iterator i = project.getNotifiers().iterator(); i.hasNext(); )
-            {
-                org.apache.maven.continuum.model.project.ProjectNotifier notifier =
-                    (org.apache.maven.continuum.model.project.ProjectNotifier) i.next();
-                p.addNotifier( populateProjectNotifier( notifier ) );
-            }
-        }
-
-        return p;
-    }
-
-    private ProjectDeveloper populateProjectDeveloper(
-        org.apache.maven.continuum.model.project.ProjectDeveloper developer )
-    {
-        if ( developer == null )
-        {
-            return null;
-        }
-
-        ProjectDeveloper res = new ProjectDeveloper();
-        res.setContinuumId( developer.getContinuumId() );
-        res.setEmail( developer.getEmail() );
-        res.setName( developer.getName() );
-        res.setScmId( developer.getScmId() );
-        return res;
-    }
-
-    private ProjectNotifier populateProjectNotifier( org.apache.maven.continuum.model.project.ProjectNotifier notifier )
-    {
-        if ( notifier == null )
-        {
-            return null;
-        }
-
-        ProjectNotifier res = new ProjectNotifier();
-        res.setEnabled( notifier.isEnabled() );
-        res.setFrom( notifier.getFrom() );
-        res.setId( notifier.getId() );
-        res.setRecipientType( notifier.getRecipientType() );
-        res.setSendOnError( notifier.isSendOnError() );
-        res.setSendOnFailure( notifier.isSendOnFailure() );
-        res.setSendOnSuccess( notifier.isSendOnSuccess() );
-        res.setSendOnWarning( notifier.isSendOnWarning() );
-        res.setType( notifier.getType() );
-
-        if ( notifier.getConfiguration() != null )
-        {
-            Map conf = new HashMap();
-            for ( Iterator i = notifier.getConfiguration().keySet().iterator(); i.hasNext(); )
-            {
-                String key = (String) i.next();
-                conf.put( key, notifier.getConfiguration().get( key ) );
-            }
-            res.setConfiguration( conf );
-        }
-        return res;
+        return (Project) mapper.map( project, Project.class );
     }
 
     private org.apache.maven.continuum.model.project.Project populateProject( ProjectSummary projectSummary )
@@ -837,35 +788,10 @@ public class ContinuumServiceImpl
         return project;
     }
 
-    private ProjectDependency populateProjectDependency(
-        org.apache.maven.continuum.model.project.ProjectDependency dependency )
-    {
-        if ( dependency == null )
-        {
-            return null;
-        }
-
-        ProjectDependency dep = new ProjectDependency();
-        dep.setArtifactId( dependency.getArtifactId() );
-        dep.setGroupId( dependency.getGroupId() );
-        dep.setVersion( dependency.getVersion() );
-        return dep;
-    }
-
     private ProjectGroupSummary populateProjectGroupSummary(
         org.apache.maven.continuum.model.project.ProjectGroup group )
     {
-        if ( group == null )
-        {
-            return null;
-        }
-
-        ProjectGroupSummary g = new ProjectGroup();
-        g.setDescription( group.getDescription() );
-        g.setGroupId( group.getGroupId() );
-        g.setId( group.getId() );
-        g.setName( group.getName() );
-        return g;
+        return (ProjectGroupSummary) mapper.map( group, ProjectGroupSummary.class );
     }
 
     private org.apache.maven.continuum.model.project.ProjectGroup populateProjectGroupSummary(
@@ -885,84 +811,22 @@ public class ContinuumServiceImpl
         return g;
     }
 
-    private ProjectGroup populateProjectGroupWithProjects( org.apache.maven.continuum.model.project.ProjectGroup group )
+    private ProjectGroup populateProjectGroupWithAllDetails(
+        org.apache.maven.continuum.model.project.ProjectGroup group )
     {
-        if ( group == null )
-        {
-            return null;
-        }
-        ProjectGroup g = (ProjectGroup) populateProjectGroupSummary( group );
-
-        if ( group.getProjects() != null )
-        {
-            List projects = new ArrayList();
-            for ( Iterator i = group.getProjects().iterator(); i.hasNext(); )
-            {
-                org.apache.maven.continuum.model.project.Project p =
-                    (org.apache.maven.continuum.model.project.Project) i.next();
-                ProjectSummary ps = populateProjectSummary( p );
-                projects.add( ps );
-            }
-            g.setProjects( projects );
-        }
-        return g;
+        return (ProjectGroup) mapper.map( group, ProjectGroup.class );
     }
 
     private BuildResultSummary populateBuildResultSummary(
         org.apache.maven.continuum.model.project.BuildResult buildResult )
     {
-        if ( buildResult == null )
-        {
-            return null;
-        }
-        BuildResultSummary br = new BuildResult();
-        br.setBuildNumber( buildResult.getBuildNumber() );
-        br.setEndTime( buildResult.getEndTime() );
-        br.setError( buildResult.getError() );
-        br.setExitCode( buildResult.getExitCode() );
-        br.setId( buildResult.getId() );
-        br.setStartTime( buildResult.getStartTime() );
-        br.setState( buildResult.getState() );
-        br.setSuccess( buildResult.isSuccess() );
-        br.setTrigger( buildResult.getTrigger() );
-        br.setProject( populateProjectSummary( buildResult.getProject() ) );
-        br.setBuildDefinition( populateBuildDefinition( buildResult.getBuildDefinition() ) );
-        return br;
+        return (BuildResultSummary) mapper.map( buildResult, BuildResultSummary.class );
     }
 
     private BuildResult populateBuildResult( org.apache.maven.continuum.model.project.BuildResult buildResult )
         throws ContinuumException
     {
-        if ( buildResult == null )
-        {
-            return null;
-        }
-        BuildResult br = (BuildResult) populateBuildResultSummary( buildResult );
-
-        List changeSet = continuum.getChangesSinceLastSuccess( br.getProject().getId(), br.getId() );
-        if ( changeSet != null )
-        {
-            for ( Iterator i = changeSet.iterator(); i.hasNext(); )
-            {
-                br.addChangesSinceLastSucces(
-                    populateChangeSet( (org.apache.maven.continuum.model.scm.ChangeSet) i.next() ) );
-            }
-        }
-
-        br.setScmResult( populateScmResult( buildResult.getScmResult() ) );
-
-        if ( buildResult.getModifiedDependencies() != null )
-        {
-            for ( Iterator i = buildResult.getModifiedDependencies().iterator(); i.hasNext(); )
-            {
-                org.apache.maven.continuum.model.project.ProjectDependency dependency =
-                    (org.apache.maven.continuum.model.project.ProjectDependency) i.next();
-                ProjectDependency dep = populateProjectDependency( dependency );
-                br.addModifiedDependency( dep );
-            }
-        }
-
-        return br;
+        return (BuildResult) mapper.map( buildResult, BuildResult.class );
     }
 
     private AddingResult populateAddingResult( ContinuumProjectBuildingResult result )
@@ -1005,90 +869,9 @@ public class ContinuumServiceImpl
         return res;
     }
 
-    private ScmResult populateScmResult( org.apache.maven.continuum.model.scm.ScmResult scmResult )
-    {
-        if ( scmResult == null )
-        {
-            return null;
-        }
-
-        ScmResult res = new ScmResult();
-
-        if ( scmResult.getChanges() != null )
-        {
-            for ( Iterator i = scmResult.getChanges().iterator(); i.hasNext(); )
-            {
-                org.apache.maven.continuum.model.scm.ChangeSet changeSet =
-                    (org.apache.maven.continuum.model.scm.ChangeSet) i.next();
-                res.addChange( populateChangeSet( changeSet ) );
-            }
-        }
-
-        res.setCommandLine( scmResult.getCommandLine() );
-        res.setCommandOutput( scmResult.getCommandOutput() );
-        res.setException( scmResult.getException() );
-        res.setProviderMessage( scmResult.getProviderMessage() );
-        res.setSuccess( scmResult.isSuccess() );
-        return res;
-    }
-
-    private ChangeSet populateChangeSet( org.apache.maven.continuum.model.scm.ChangeSet changeSet )
-    {
-        if ( changeSet == null )
-        {
-            return null;
-        }
-
-        ChangeSet res = new ChangeSet();
-        res.setAuthor( changeSet.getAuthor() );
-        res.setComment( changeSet.getComment() );
-        res.setDate( changeSet.getDate() );
-
-        if ( changeSet.getFiles() != null )
-        {
-            for ( Iterator i = changeSet.getFiles().iterator(); i.hasNext(); )
-            {
-                org.apache.maven.continuum.model.scm.ChangeFile changeFile =
-                    (org.apache.maven.continuum.model.scm.ChangeFile) i.next();
-                res.addFile( populateChangeFile( changeFile ) );
-            }
-        }
-
-        res.setId( changeSet.getId() );
-        return res;
-    }
-
-    private ChangeFile populateChangeFile( org.apache.maven.continuum.model.scm.ChangeFile changeFile )
-    {
-        if ( changeFile == null )
-        {
-            return null;
-        }
-
-        ChangeFile res = new ChangeFile();
-        res.setName( changeFile.getName() );
-        res.setRevision( changeFile.getRevision() );
-        res.setStatus( changeFile.getStatus() );
-        return res;
-    }
-
     private BuildDefinition populateBuildDefinition( org.apache.maven.continuum.model.project.BuildDefinition buildDef )
     {
-        if ( buildDef == null )
-        {
-            return null;
-        }
-
-        BuildDefinition bd = new BuildDefinition();
-        bd.setArguments( buildDef.getArguments() );
-        bd.setBuildFile( buildDef.getBuildFile() );
-        bd.setBuildFresh( buildDef.isBuildFresh() );
-        bd.setDefaultForProject( buildDef.isDefaultForProject() );
-        bd.setGoals( buildDef.getGoals() );
-        bd.setId( buildDef.getId() );
-        bd.setProfile( populateProfile( buildDef.getProfile() ) );
-        bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
-        return bd;
+        return (BuildDefinition) mapper.map( buildDef, BuildDefinition.class );
     }
 
     private org.apache.maven.continuum.model.project.BuildDefinition populateBuildDefinition( BuildDefinition buildDef )
@@ -1131,23 +914,10 @@ public class ContinuumServiceImpl
 
     private Schedule populateSchedule( org.apache.maven.continuum.model.project.Schedule schedule )
     {
-        if ( schedule == null )
-        {
-            return null;
-        }
-
-        Schedule s = new Schedule();
-        s.setActive( schedule.isActive() );
-        s.setCronExpression( schedule.getCronExpression() );
-        s.setDelay( schedule.getDelay() );
-        s.setDescription( schedule.getDescription() );
-        s.setId( schedule.getId() );
-        s.setMaxJobExecutionTime( schedule.getMaxJobExecutionTime() );
-        s.setName( schedule.getName() );
-        return s;
+        return (Schedule) mapper.map( schedule, Schedule.class );
     }
 
-    public org.apache.maven.continuum.model.system.Profile populateProfile( Profile profile )
+    private org.apache.maven.continuum.model.system.Profile populateProfile( Profile profile )
     {
         if ( profile == null )
         {
@@ -1175,35 +945,12 @@ public class ContinuumServiceImpl
         return p;
     }
 
-    public Profile populateProfile( org.apache.maven.continuum.model.system.Profile profile )
+    private Profile populateProfile( org.apache.maven.continuum.model.system.Profile profile )
     {
-        if ( profile == null )
-        {
-            return null;
-        }
-
-        Profile p = new Profile();
-        p.setActive( profile.isActive() );
-        p.setBuilder( populateInstallation( profile.getBuilder() ) );
-        p.setBuildWithoutChanges( profile.isBuildWithoutChanges() );
-        p.setDescription( profile.getDescription() );
-        if ( profile.getEnvironmentVariables() != null )
-        {
-            List envs = new ArrayList();
-            for ( Iterator i = profile.getEnvironmentVariables().iterator(); i.hasNext(); )
-            {
-                envs.add( populateInstallation( (org.apache.maven.continuum.model.system.Installation) i.next() ) );
-            }
-            p.setEnvironmentVariables( envs );
-        }
-        p.setId( profile.getId() );
-        p.setJdk( populateInstallation( profile.getJdk() ) );
-        p.setName( profile.getName() );
-        p.setScmMode( profile.getScmMode() );
-        return p;
+        return (Profile) mapper.map( profile, Profile.class );
     }
 
-    public org.apache.maven.continuum.model.system.Installation populateInstallation( Installation install )
+    private org.apache.maven.continuum.model.system.Installation populateInstallation( Installation install )
     {
         if ( install == null )
         {
@@ -1219,18 +966,14 @@ public class ContinuumServiceImpl
         return inst;
     }
 
-    public Installation populateInstallation( org.apache.maven.continuum.model.system.Installation install )
+    private Installation populateInstallation( org.apache.maven.continuum.model.system.Installation install )
     {
-        if ( install == null )
-        {
-            return null;
-        }
+        return (Installation) mapper.map( install, Installation.class );
+    }
 
-        Installation inst = new Installation();
-        inst.setName( install.getName() );
-        inst.setType( install.getType() );
-        inst.setVarName( install.getVarName() );
-        inst.setVarValue( install.getVarValue() );
-        return inst;
+    private SystemConfiguration populateSystemConfiguration(
+        org.apache.maven.continuum.model.system.SystemConfiguration sysConf )
+    {
+        return (SystemConfiguration) mapper.map( sysConf, SystemConfiguration.class );
     }
 }

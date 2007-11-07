@@ -24,13 +24,16 @@ import org.apache.maven.continuum.xmlrpc.ContinuumService;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
 import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
+import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
+import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -199,7 +202,7 @@ public class ContinuumXmlRpcClient
     // Projects Groups
     // ----------------------------------------------------------------------
 
-    public List getAllProjectGroups()
+    public List<ProjectGroupSummary> getAllProjectGroups()
         throws ContinuumException
     {
         try
@@ -212,17 +215,23 @@ public class ContinuumXmlRpcClient
         }
     }
 
-    public List getAllProjectGroupsWithProjects()
+    public List<ProjectGroup> getAllProjectGroupsWithAllDetails()
         throws ContinuumException
     {
         try
         {
-            return continuum.getAllProjectGroupsWithProjects();
+            return continuum.getAllProjectGroupsWithAllDetails();
         }
         catch ( Exception e )
         {
             throw new ContinuumException( "The remote method failed.", e );
         }
+    }
+
+    public List<ProjectGroup> getAllProjectGroupsWithProjects()
+        throws ContinuumException
+    {
+        return getAllProjectGroupsWithAllDetails();
     }
 
     public ProjectGroupSummary getProjectGroupSummary( int projectGroupId )
@@ -491,7 +500,7 @@ public class ContinuumXmlRpcClient
         }
     }
 
-    public List getBuildResultsForProject( int projectId )
+    public List<BuildResultSummary> getBuildResultsForProject( int projectId )
         throws ContinuumException
     {
         try
@@ -654,7 +663,7 @@ public class ContinuumXmlRpcClient
     // Schedules
     // ----------------------------------------------------------------------
 
-    public List getSchedules()
+    public List<Schedule> getSchedules()
         throws ContinuumException
     {
         try
@@ -710,7 +719,7 @@ public class ContinuumXmlRpcClient
     // Profiles
     // ----------------------------------------------------------------------
 
-    public List getProfiles()
+    public List<Profile> getProfiles()
         throws ContinuumException
     {
         try
@@ -729,6 +738,53 @@ public class ContinuumXmlRpcClient
         try
         {
             return continuum.getProfile( profileId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Installations
+    // ----------------------------------------------------------------------
+
+    public List<Installation> getInstallations()
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.getInstallations();
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    public Installation getInstallation( int installationId )
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.getInstallation( installationId );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "The remote method failed.", e );
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // SystemConfiguration
+    // ----------------------------------------------------------------------
+
+    public SystemConfiguration getSystemConfiguration()
+        throws ContinuumException
+    {
+        try
+        {
+            return continuum.getSystemConfiguration();
         }
         catch ( Exception e )
         {

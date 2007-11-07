@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mappings PUBLIC "-//DOZER//DTD MAPPINGS//EN"
+   "http://dozer.sourceforge.net/dtd/dozerbeanmapping.dtd">
+<mappings>
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary</class-a>
+    <class-b>org.apache.maven.continuum.model.project.ProjectGroup</class-b>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.ProjectGroup</class-a>
+    <class-b>org.apache.maven.continuum.model.project.ProjectGroup</class-b>
+    <field>
+      <a>projects</a>
+      <b>projects</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectSummary</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.Project</b-hint>
+    </field>
+    <field>
+      <a>notifiers</a>
+      <b>notifiers</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectNotifier</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.ProjectNotifier</b-hint>
+    </field>
+    <field>
+      <a>buildDefinitions</a>
+      <b>buildDefinitions</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.BuildDefinition</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.BuildDefinition</b-hint>
+    </field>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.ProjectSummary</class-a>
+    <class-b>org.apache.maven.continuum.model.project.Project</class-b>
+    <field>
+      <a>projectGroup</a>
+      <b>projectGroup</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.ProjectGroup</b-hint>
+    </field>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.Project</class-a>
+    <class-b>org.apache.maven.continuum.model.project.Project</class-b>
+    <field>
+      <a>projectGroup</a>
+      <b>projectGroup</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.ProjectGroup</b-hint>
+    </field>
+    <field>
+      <a>developers</a>
+      <b>developers</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectDeveloper</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.ProjectDeveloper</b-hint>
+    </field>
+    <field>
+      <a>dependencies</a>
+      <b>dependencies</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectDependency</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.ProjectDependency</b-hint>
+    </field>
+    <field>
+      <a>notifiers</a>
+      <b>notifiers</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectNotifier</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.ProjectNotifier</b-hint>
+    </field>
+    <field>
+      <a>buildDefinitions</a>
+      <b>buildDefinitions</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.BuildDefinition</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.BuildDefinition</b-hint>
+    </field>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.ProjectDependency</class-a>
+    <class-b>org.apache.maven.continuum.model.project.ProjectDependency</class-b>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.ProjectNotifier</class-a>
+    <class-b>org.apache.maven.continuum.model.project.ProjectNotifier</class-b>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.ProjectDeveloper</class-a>
+    <class-b>org.apache.maven.continuum.model.project.ProjectDeveloper</class-b>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.BuildResultSummary</class-a>
+    <class-b>org.apache.maven.continuum.model.project.BuildResult</class-b>
+    <field>
+      <a>project</a>
+      <b>project</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectSummary</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.Project</b-hint>
+    </field>
+    <field>
+      <a>buildDefinition</a>
+      <b>buildDefinition</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.BuildDefinition</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.BuildDefinition</b-hint>
+    </field>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.BuildResult</class-a>
+    <class-b>org.apache.maven.continuum.model.project.BuildResult</class-b>
+    <field>
+      <a>scmResult</a>
+      <b>scmResult</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.scm.ScmResult</a-hint>
+      <b-hint>org.apache.maven.continuum.model.scm.ScmResult</b-hint>
+    </field>
+    <field>
+      <a>modifiedDependencies</a>
+      <b>modifiedDependencies</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectDependency</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.ProjectDependency</b-hint>
+    </field>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.Schedule</class-a>
+    <class-b>org.apache.maven.continuum.model.project.Schedule</class-b>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.scm.ScmResult</class-a>
+    <class-b>org.apache.maven.continuum.model.scm.ScmResult</class-b>
+    <field>
+      <a>changes</a>
+      <b>changes</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.scm.ChangeSet</a-hint>
+      <b-hint>org.apache.maven.continuum.model.scm.ChangeSet</b-hint>
+    </field>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.scm.ChangeSet</class-a>
+    <class-b>org.apache.maven.continuum.model.scm.ChangeSet</class-b>
+    <field>
+      <a>files</a>
+      <b>files</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.scm.ChangeFile</a-hint>
+      <b-hint>org.apache.maven.continuum.model.scm.ChangeFile</b-hint>
+    </field>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.scm.ChangeFile</class-a>
+    <class-b>org.apache.maven.continuum.model.scm.ChangeFile</class-b>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.system.Profile</class-a>
+    <class-b>org.apache.maven.continuum.model.system.Profile</class-b>
+    <field>
+      <a>jdk</a>
+      <b>jdk</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.system.Installation</a-hint>
+      <b-hint>org.apache.maven.continuum.model.system.Installation</b-hint>
+    </field>
+    <field>
+      <a>builder</a>
+      <b>builder</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.system.Installation</a-hint>
+      <b-hint>org.apache.maven.continuum.model.system.Installation</b-hint>
+    </field>
+    <field>
+      <a>environmentVariables</a>
+      <b>environmentVariables</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.system.Installation</a-hint>
+      <b-hint>org.apache.maven.continuum.model.system.Installation</b-hint>
+    </field>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.system.Installation</class-a>
+    <class-b>org.apache.maven.continuum.model.system.Installation</class-b>
+  </mapping>
+</mappings>

@@ -23,12 +23,15 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
+import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
+import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.apache.xmlrpc.XmlRpcException;
 
 import java.util.List;
@@ -107,7 +110,17 @@ public interface ContinuumService
      * @throws ContinuumException
      * @throws XmlRpcException
      */
-    List getAllProjectGroups()
+    List<ProjectGroupSummary> getAllProjectGroups()
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Get all project groups with all details (project summaries, notifiers, build definitions).
+     *
+     * @return All project groups
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    List<ProjectGroup> getAllProjectGroupsWithAllDetails()
         throws ContinuumException, XmlRpcException;
 
     /**
@@ -116,8 +129,9 @@ public interface ContinuumService
      * @return All project groups
      * @throws ContinuumException
      * @throws XmlRpcException
+     * @deprecated
      */
-    List getAllProjectGroupsWithProjects()
+    List<ProjectGroup> getAllProjectGroupsWithProjects()
         throws ContinuumException, XmlRpcException;
 
     /**
@@ -337,7 +351,7 @@ public interface ContinuumService
      * @throws ContinuumException
      * @throws XmlRpcException
      */
-    List getBuildResultsForProject( int projectId )
+    List<BuildResultSummary> getBuildResultsForProject( int projectId )
         throws ContinuumException, XmlRpcException;
 
     /**
@@ -486,7 +500,7 @@ public interface ContinuumService
      * @throws ContinuumException
      * @throws XmlRpcException
      */
-    List getSchedules()
+    List<Schedule> getSchedules()
         throws ContinuumException, XmlRpcException;
 
     /**
@@ -533,7 +547,7 @@ public interface ContinuumService
      * @throws ContinuumException
      * @throws XmlRpcException
      */
-    List getProfiles()
+    List<Profile> getProfiles()
         throws ContinuumException, XmlRpcException;
 
     /**
@@ -545,6 +559,38 @@ public interface ContinuumService
      * @throws XmlRpcException
      */
     Profile getProfile( int profileId )
+        throws ContinuumException, XmlRpcException;
+
+    // ----------------------------------------------------------------------
+    // Installations
+    // ----------------------------------------------------------------------
+
+    /**
+     * Return the installations list.
+     *
+     * @return The installations list.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    List<Installation> getInstallations()
+        throws ContinuumException, XmlRpcException;
+
+    /**
+     * Return the installation defined by this id.
+     *
+     * @param installationId The installation id
+     * @return The installation.
+     * @throws ContinuumException
+     * @throws XmlRpcException
+     */
+    Installation getInstallation( int installationId )
+        throws ContinuumException, XmlRpcException;
+
+    // ----------------------------------------------------------------------
+    // SystemConfiguration
+    // ----------------------------------------------------------------------
+
+    SystemConfiguration getSystemConfiguration()
         throws ContinuumException, XmlRpcException;
 
     // ----------------------------------------------------------------------

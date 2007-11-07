@@ -64,6 +64,8 @@ public interface Continuum
      */
     public Collection<ProjectGroup> getAllProjectGroupsWithProjects();
 
+    public List<ProjectGroup> getAllProjectGroupsWithBuildDetails();
+
     public Collection<ProjectGroup> getAllProjectGroups();
 
     public ProjectGroup getProjectGroupByProjectId( int projectId )
