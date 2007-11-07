@@ -3021,7 +3021,11 @@ public class DefaultContinuum
     {
         // todo check why this interface isn't throwing exceptions on this guy
         return store.getAllProjectGroupsWithProjects();
+    }
 
+    public List<ProjectGroup> getAllProjectGroupsWithBuildDetails()
+    {
+        return store.getAllProjectGroupsWithBuildDetails();
     }
 
     public Collection<Project> getProjectsInGroup( int projectGroupId )

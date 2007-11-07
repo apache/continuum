@@ -189,7 +189,11 @@
           <version>1.1.0+</version>
           <type>String</type>
         </field>
-        <!-- TODO, this is not exported over XMLRPC yet -->
+        <field>
+          <name>relativePath</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
         <field>
           <name>projectGroup</name>
           <version>1.1.0+</version>
@@ -477,14 +481,6 @@
           <version>1.1.0+</version>
           <association>
             <type>ScmResult</type>
-          </association>
-        </field>
-        <field>
-          <name>changesSinceLastSuccess</name>
-          <version>1.1.0+</version>
-          <association>
-            <type>ChangeSet</type>
-            <multiplicity>*</multiplicity>
           </association>
         </field>
         <field>
@@ -963,7 +959,65 @@
           <name>name</name>
           <version>1.1.0+</version>
           <type>String</type>
+        </field>
+        <field>
+          <name>installationId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
           <identifier>true</identifier>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>SystemConfiguration</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.system</packageName>
+      <version>1.0.9+</version>
+      <fields>
+        <field>
+          <name>guestAccountEnabled</name>
+          <version>1.0.9+</version>
+          <type>boolean</type>
+          <defaultValue>true</defaultValue>
+        </field>
+        <field>
+          <name>defaultScheduleDescription</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+          <defaultValue>Run hourly</defaultValue>
+        </field>
+        <field>
+          <name>defaultScheduleCronExpression</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+          <defaultValue>0 0 * * * ?</defaultValue>
+        </field>
+        <field>
+          <name>workingDirectory</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+          <defaultValue>working-directory</defaultValue>
+        </field>
+        <field>
+          <name>buildOutputDirectory</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+          <defaultValue>build-output-directory</defaultValue>
+        </field>
+        <field>
+          <name>deploymentRepositoryDirectory</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>baseUrl</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>initialized</name>
+          <version>1.0.9+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
         </field>
       </fields>
     </class>

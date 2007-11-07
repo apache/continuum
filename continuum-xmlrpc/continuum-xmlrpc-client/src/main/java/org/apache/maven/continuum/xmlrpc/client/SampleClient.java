@@ -193,15 +193,6 @@ public class SampleClient
             System.out.println( "Scm Result:" );
             printScmResult( result.getScmResult() );
         }
-
-        if ( result.getChangesSinceLastSuccess() != null )
-        {
-            System.out.println( "Changes since last success:" );
-            for ( Iterator i = result.getChangesSinceLastSuccess().iterator(); i.hasNext(); )
-            {
-                printChangeSet( (ChangeSet) i.next() );
-            }
-        }
     }
 
     public static void printDependency( ProjectDependency dep )
