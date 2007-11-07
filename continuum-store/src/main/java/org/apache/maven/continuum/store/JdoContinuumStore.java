@@ -1958,21 +1958,21 @@ public class JdoContinuumStore
 
     public void eraseDatabase()
     {
+        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinitionTemplate.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildResult.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectGroup.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Project.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinition.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Schedule.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Profile.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Installation.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ScmResult.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildResult.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), SystemConfiguration.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectNotifier.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectDeveloper.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectDependency.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ChangeSet.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ChangeFile.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinitionTemplate.class );
-        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinition.class );
     }
 
     /**
