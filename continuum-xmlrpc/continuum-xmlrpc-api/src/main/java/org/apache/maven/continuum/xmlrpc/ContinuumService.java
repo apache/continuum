@@ -54,7 +54,7 @@ public interface ContinuumService
      * @throws ContinuumException
      * @throws XmlRpcException
      */
-    List getProjects( int projectGroupId )
+    List<ProjectSummary> getProjects( int projectGroupId )
         throws ContinuumException, XmlRpcException;
 
     /**
@@ -188,7 +188,7 @@ public interface ContinuumService
      * @throws ContinuumException
      * @throws XmlRpcException
      */
-    List getBuildDefinitionsForProject( int projectId )
+    List<BuildDefinition> getBuildDefinitionsForProject( int projectId )
         throws ContinuumException, XmlRpcException;
 
     /**
@@ -199,7 +199,7 @@ public interface ContinuumService
      * @throws ContinuumException
      * @throws XmlRpcException
      */
-    List getBuildDefinitionsForProjectGroup( int projectGroupId )
+    List<BuildDefinition> getBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumException, XmlRpcException;
 
     /**
