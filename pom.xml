@@ -516,6 +516,22 @@
         <version>1.1</version>
       </dependency>
       <dependency>
+        <groupId>org.codehaus.plexus.registry</groupId>
+        <artifactId>plexus-registry-api</artifactId>
+        <version>1.0-alpha-2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus.registry</groupId>
+        <artifactId>plexus-registry-commons</artifactId>
+        <version>1.0-alpha-2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>ant</groupId>
+            <artifactId>ant-optional</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
         <groupId>jpox</groupId>
         <artifactId>jpox</artifactId>
         <version>1.1.7</version>
@@ -523,6 +539,10 @@
           <exclusion>
             <groupId>javax.sql</groupId>
             <artifactId>jdbc-stdext</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -596,6 +616,12 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-slf4j-logging</artifactId>
         <version>1.1-alpha-1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
