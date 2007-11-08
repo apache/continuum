@@ -426,10 +426,9 @@ public abstract class AbstractContinuumSecureService
      * Check if the current user is authorized to manage the application's configuration
      *
      * @throws ContinuumException if the user isn't authorized if the user isn't authenticated
-     * @throws ContinuumException if the user isn't authorized if the user isn't authorized
      */
     protected void checkManageConfigurationAuthorization()
-        throws ContinuumException, ContinuumException
+        throws ContinuumException
     {
         if ( !isAuthenticated() )
         {
@@ -443,10 +442,9 @@ public abstract class AbstractContinuumSecureService
      * Check if the current user is authorized to manage the project build schedules
      *
      * @throws ContinuumException if the user isn't authorized if the user isn't authenticated
-     * @throws ContinuumException if the user isn't authorized if the user isn't authorized
      */
     protected void checkManageSchedulesAuthorization()
-        throws ContinuumException, ContinuumException
+        throws ContinuumException
     {
         if ( !isAuthenticated() )
         {
@@ -454,5 +452,37 @@ public abstract class AbstractContinuumSecureService
         }
 
         checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_SCHEDULES );
+    }
+
+    /**
+     * Check if the current user is authorized to manage the installations
+     *
+     * @throws ContinuumException if the user isn't authorized if the user isn't authenticated
+     */
+    protected void checkManageInstallationsAuthorization()
+        throws ContinuumException
+    {
+        if ( !isAuthenticated() )
+        {
+            throw new ContinuumException( "Authentication required." );
+        }
+
+        checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_INSTALLATIONS );
+    }
+
+    /**
+     * Check if the current user is authorized to manage the profiles
+     *
+     * @throws ContinuumException if the user isn't authorized if the user isn't authenticated
+     */
+    protected void checkManageProfilesAuthorization()
+        throws ContinuumException
+    {
+        if ( !isAuthenticated() )
+        {
+            throw new ContinuumException( "Authentication required." );
+        }
+
+        checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_PROFILES );
     }
 }

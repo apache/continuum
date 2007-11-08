@@ -171,6 +171,9 @@ public class ContinuumXmlRpcClient
         return continuum.getAllProjectGroupsWithAllDetails();
     }
 
+    /**
+     * @deprecated
+     */
     public List<ProjectGroup> getAllProjectGroupsWithProjects()
         throws Exception
     {
