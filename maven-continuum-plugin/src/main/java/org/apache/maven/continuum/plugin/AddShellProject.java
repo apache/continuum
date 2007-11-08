@@ -1,7 +1,5 @@
 package org.apache.maven.continuum.plugin;
 
-import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,6 +18,8 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 
 /**
  * Goal which add a Shell Project.

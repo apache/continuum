@@ -19,7 +19,6 @@ package org.apache.maven.continuum.plugin;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -130,7 +129,7 @@ public abstract class AbstractAddProject
                 }
             }
         }
-        catch ( ContinuumException e )
+        catch ( Exception e )
         {
             throw new MojoExecutionException( "Can't add the " + getProjectType() + " project.", e );
         }

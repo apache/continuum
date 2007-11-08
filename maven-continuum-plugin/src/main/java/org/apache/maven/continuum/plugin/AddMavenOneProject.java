@@ -19,7 +19,6 @@ package org.apache.maven.continuum.plugin;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -62,7 +61,7 @@ public class AddMavenOneProject
                 getClient().addMavenOneProject( projectUrl );
             }
         }
-        catch ( ContinuumException e )
+        catch ( Exception e )
         {
             throw new MojoExecutionException( "Can't add the Maven1 project from '" + projectUrl + "'.", e );
         }
