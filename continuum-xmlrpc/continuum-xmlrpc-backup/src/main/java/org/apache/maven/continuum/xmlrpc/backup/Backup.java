@@ -128,6 +128,15 @@ public class Backup
         {
             out = new File( "backup/builds.xml" );
         }
+        out.getParentFile().mkdirs();
+
+        if ( !command.overwrite && out.exists() )
+        {
+            System.err.println( out.getAbsolutePath() +
+                " already exists and will not be overwritten unless the -overwrite flag is used." );
+            Args.usage( command );
+            return;
+        }
 
         writer = new PrintWriter( new FileWriter( out ) );
 
@@ -172,6 +181,11 @@ public class Backup
 
         @Argument(description = "Backup file", value = "outputFile", alias = "o")
         private File outputFile;
+
+        @Argument(
+            description = "Whether to overwrite the designated backup file if it already exists in export mode. Default is false.",
+            value = "overwrite")
+        private boolean overwrite;
 
         @Argument(
             description = "Turn on debugging information. Default is off.",
@@ -435,10 +449,6 @@ public class Backup
                     endTag( f.getName(), false );
                 }
             }
-            /*else if ( BuildDefinition.class.getName().equals( f.getType().getName() ) )
-            {
-                backupBuildDefinition( (BuildDefinition) f.get( obj ) );
-            }*/
             else if ( ScmResult.class.getName().equals( f.getType().getName() ) )
             {
                 writeScmResult( (ScmResult) f.get( obj ) );
@@ -447,17 +457,14 @@ public class Backup
             {
                 writeObject( f.get( obj ), "changeFile", true );
             }
-            /*else if ( Schedule.class.getName().equals( f.getType().getName() ) )
-            {
-                writeObject( f.get( obj ), "schedule", true );
-            }*/
             else if ( Profile.class.getName().equals( f.getType().getName() ) )
             {
                 writeProfile( (Profile) f.get( obj ) );
             }
             else
             {
-                writer.println( "Rejected: (" + f.getName() + ") " + f.getType() );
+                LOGGER.debug(
+                    "Rejected: (" + f.getName() + ") " + f.getType() + " in object " + obj.getClass().getName() );
             }
         }
     }
