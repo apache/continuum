@@ -52,7 +52,7 @@
       <item name="Download" href="download.html"/>
       <item name="Change Log" href="change-log.html"/>
       <item name="Users Wiki" href="http://docs.codehaus.org/display/CONTINUUMUSER"/>
-      <!--item name="Articles" href="articles.html"/ -->
+      <item name="Articles" href="articles.html"/>
       <item name="Features" href="features.html"/>
       <item name="Live Demo" href="http://vmbuild.apache.org/continuum/"/>
     </menu>
