@@ -227,6 +227,8 @@ public class ContinuumServiceImpl
     private ProjectGroupSummary getPGSummary( int projectGroupId )
         throws ContinuumException
     {
+        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
+
         org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
             continuum.getProjectGroup( projectGroupId );
         return populateProjectGroupSummary( projectGroup );
@@ -625,6 +627,7 @@ public class ContinuumServiceImpl
     public List<Schedule> getSchedules()
         throws ContinuumException
     {
+        checkManageSchedulesAuthorization();
         Collection schedules = continuum.getSchedules();
 
         List<Schedule> s = new ArrayList<Schedule>();
@@ -639,6 +642,7 @@ public class ContinuumServiceImpl
     public Schedule getSchedule( int scheduleId )
         throws ContinuumException
     {
+        checkManageSchedulesAuthorization();
         return populateSchedule( continuum.getSchedule( scheduleId ) );
     }
 
@@ -669,6 +673,7 @@ public class ContinuumServiceImpl
     public List<Profile> getProfiles()
         throws ContinuumException
     {
+        checkManageProfilesAuthorization();
         Collection profiles = continuum.getProfileService().getAllProfiles();
 
         List<Profile> p = new ArrayList<Profile>();
@@ -683,6 +688,7 @@ public class ContinuumServiceImpl
     public Profile getProfile( int profileId )
         throws ContinuumException
     {
+        checkManageProfilesAuthorization();
         return populateProfile( continuum.getProfileService().getProfile( profileId ) );
     }
 
@@ -693,6 +699,7 @@ public class ContinuumServiceImpl
     public List<Installation> getInstallations()
         throws ContinuumException
     {
+        checkManageInstallationsAuthorization();
         try
         {
             List<org.apache.maven.continuum.model.system.Installation> installs =
@@ -714,6 +721,7 @@ public class ContinuumServiceImpl
     public Installation getInstallation( int installationId )
         throws ContinuumException
     {
+        checkManageInstallationsAuthorization();
         try
         {
             org.apache.maven.continuum.model.system.Installation install =
@@ -733,6 +741,7 @@ public class ContinuumServiceImpl
     public SystemConfiguration getSystemConfiguration()
         throws ContinuumException
     {
+        checkManageConfigurationAuthorization();
         try
         {
             org.apache.maven.continuum.model.system.SystemConfiguration sysConf = store.getSystemConfiguration();
