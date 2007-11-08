@@ -224,6 +224,18 @@ public class ContinuumXmlRpcClient
         return continuum.updateProjectGroup( projectGroup );
     }
 
+    public ProjectGroupSummary addProjectGroup( ProjectGroupSummary pg )
+        throws Exception
+    {
+        return addProjectGroup( pg.getName(), pg.getGroupId(), pg.getDescription() );
+    }
+
+    public ProjectGroupSummary addProjectGroup( String groupName, String groupId, String description )
+        throws Exception
+    {
+        return continuum.addProjectGroup( groupName, groupId, description );
+    }
+
     // ----------------------------------------------------------------------
     // Build Definitions
     // ----------------------------------------------------------------------
