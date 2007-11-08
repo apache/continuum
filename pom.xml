@@ -637,8 +637,21 @@
         -->
       <dependency>
         <groupId>org.codehaus.plexus.redback</groupId>
-        <artifactId>redback-rbac-role-manager</artifactId>
+        <artifactId>redback-rbac-memory</artifactId>
         <version>${redback.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus.redback</groupId>
+        <artifactId>redback-users-memory</artifactId>
+        <version>${redback.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus.redback</groupId>
+        <artifactId>redback-keys-memory</artifactId>
+        <version>${redback.version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus.redback</groupId>
@@ -647,7 +660,12 @@
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus.redback</groupId>
-        <artifactId>redback-rbac-memory</artifactId>
+        <artifactId>redback-authorization-rbac</artifactId>
+        <version>${redback.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus.redback</groupId>
+        <artifactId>redback-rbac-role-manager</artifactId>
         <version>${redback.version}</version>
       </dependency>
       <dependency>
@@ -662,18 +680,24 @@
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus.redback</groupId>
+        <artifactId>redback-taglib</artifactId>
+        <version>${redback.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus.redback</groupId>
         <artifactId>redback-xwork-content</artifactId>
         <version>${redback.version}</version>
         <type>war</type>
+        <exclusions>
+          <exclusion>
+            <groupId>classworlds</groupId>
+            <artifactId>classworlds</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus.redback</groupId>
         <artifactId>redback-xwork-integration</artifactId>
-        <version>${redback.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
-        <artifactId>redback-taglib</artifactId>
         <version>${redback.version}</version>
       </dependency>
       <dependency>
@@ -727,7 +751,7 @@
     <maven.version>2.0.6</maven.version>
     <wagon.version>1.0-beta-2</wagon.version>
     <maven-scm.version>1.0</maven-scm.version>
-    <redback.version>1.0-alpha-3</redback.version>
+    <redback.version>1.0-alpha-4</redback.version>
     <mail-sender.version>1.0-alpha-7</mail-sender.version>
   </properties>
 </project>
