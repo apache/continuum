@@ -19,7 +19,6 @@ package org.apache.maven.continuum.xmlrpc;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
@@ -51,53 +50,49 @@ public interface ContinuumService
      *
      * @param projectGroupId The project group Id
      * @return List of {@link ProjectSummary}
-     * @throws ContinuumException
+     * @throws Exception
      * @throws XmlRpcException
      */
     List<ProjectSummary> getProjects( int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Get a project.
      *
      * @param projectId the project id
      * @return The project summary
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     ProjectSummary getProjectSummary( int projectId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Get a project with all details.
      *
      * @param projectId The project id
      * @return The project
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     Project getProjectWithAllDetails( int projectId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Remove a project.
      *
      * @param projectId The project id
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     int removeProject( int projectId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Update a project. Useful to change the scm parameters.
      *
      * @param project The project to update
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     ProjectSummary updateProject( ProjectSummary project )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // Projects Groups
@@ -107,74 +102,67 @@ public interface ContinuumService
      * Get all project groups.
      *
      * @return All project groups
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     List<ProjectGroupSummary> getAllProjectGroups()
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Get all project groups with all details (project summaries, notifiers, build definitions).
      *
      * @return All project groups
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     List<ProjectGroup> getAllProjectGroupsWithAllDetails()
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Get all project groups with all details.
      *
      * @return All project groups
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      * @deprecated
      */
     List<ProjectGroup> getAllProjectGroupsWithProjects()
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Get a project group.
      *
      * @param projectGroupId The project group id
      * @return The project group summary
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     ProjectGroupSummary getProjectGroupSummary( int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Get a project group with all details.
      *
      * @param projectGroupId The project group id
      * @return The project group
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     ProjectGroup getProjectGroupWithProjects( int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Remove a project group.
      *
      * @param projectGroupId The project group id
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     int removeProjectGroup( int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Update a project Group.
      *
      * @param projectGroup The project group to update
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     ProjectGroupSummary updateProjectGroup( ProjectGroupSummary projectGroup )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // Build Definitions
@@ -185,22 +173,20 @@ public interface ContinuumService
      *
      * @param projectId The project id
      * @return The build definitions list
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     List<BuildDefinition> getBuildDefinitionsForProject( int projectId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Get the build definitions list of the project group.
      *
      * @param projectGroupId The project group id
      * @return The build definitions list
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     List<BuildDefinition> getBuildDefinitionsForProjectGroup( int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Update a project build definition.
@@ -208,11 +194,10 @@ public interface ContinuumService
      * @param projectId The project id
      * @param buildDef  The build defintion to update
      * @return the updated build definition
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDef )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Update a project group build definition.
@@ -220,11 +205,10 @@ public interface ContinuumService
      * @param projectGroupId The project group id
      * @param buildDef       The build defintion to update
      * @return the updated build definition
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDef )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Add a project build definition.
@@ -232,11 +216,10 @@ public interface ContinuumService
      * @param projectId The project id
      * @param buildDef  The build defintion to update
      * @return the added build definition
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDef )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Add a project group buildDefinition.
@@ -244,11 +227,10 @@ public interface ContinuumService
      * @param projectGroupId The project group id
      * @param buildDef       The build defintion to update
      * @return the build definition added
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDef )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // Building
@@ -258,64 +240,58 @@ public interface ContinuumService
      * Add the project to the build queue.
      *
      * @param projectId The project id
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     int addProjectToBuildQueue( int projectId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Add the project to the build queue.
      *
      * @param projectId         The project id
      * @param buildDefinitionId The build definition id
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     int addProjectToBuildQueue( int projectId, int buildDefinitionId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Build the project
      *
      * @param projectId The project id
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     int buildProject( int projectId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Build the project
      *
      * @param projectId         The project id
      * @param buildDefinitionId The build definition id
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     int buildProject( int projectId, int buildDefinitionId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Build the project group with the default build definition.
      *
      * @param projectGroupId The project group id
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     int buildGroup( int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Build the project group with the specified build definition.
      *
      * @param projectGroupId    The project group id
      * @param buildDefinitionId The build definition id
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     int buildGroup( int projectGroupId, int buildDefinitionId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
     // ----------------------------------------------------------------------
     // Build Results
     // ----------------------------------------------------------------------
@@ -325,11 +301,10 @@ public interface ContinuumService
      *
      * @param projectId The project id
      * @return The build result
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     BuildResult getLatestBuildResult( int projectId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Returns the build result.
@@ -337,33 +312,30 @@ public interface ContinuumService
      * @param projectId The project id
      * @param buildId   The build id
      * @return The build result
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     BuildResult getBuildResult( int projectId, int buildId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Returns the project build result summary list.
      *
      * @param projectId The project id
      * @return The build result list
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     List<BuildResultSummary> getBuildResultsForProject( int projectId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Remove the project build result.
      *
      * @param br The project build result
      * @return 0
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     int removeBuildResult( BuildResult br )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Returns the build output.
@@ -371,11 +343,10 @@ public interface ContinuumService
      * @param projectId The project id
      * @param buildId   The build id
      * @return The build output
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     String getBuildOutput( int projectId, int buildId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // Maven 2.x projects
@@ -386,11 +357,10 @@ public interface ContinuumService
      *
      * @param url The POM url
      * @return The result of the action with the list of projects created
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     AddingResult addMavenTwoProject( String url )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Add a maven 2.x project from an url.
@@ -398,11 +368,10 @@ public interface ContinuumService
      * @param url            The POM url
      * @param projectGroupId The id of the group where projects will be stored
      * @return The result of the action with the list of projects created
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     AddingResult addMavenTwoProject( String url, int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // Maven 1.x projects
@@ -413,11 +382,10 @@ public interface ContinuumService
      *
      * @param url The POM url
      * @return The result of the action with the list of projects created
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     AddingResult addMavenOneProject( String url )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Add a maven 1.x project from an url.
@@ -425,11 +393,10 @@ public interface ContinuumService
      * @param url            The POM url
      * @param projectGroupId The id of the group where projects will be stored
      * @return The result of the action with the list of projects created
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     AddingResult addMavenOneProject( String url, int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // Maven ANT projects
@@ -440,11 +407,10 @@ public interface ContinuumService
      *
      * @param project The project to add. name, version and scm informations are required
      * @return The project populated with the id.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     ProjectSummary addAntProject( ProjectSummary project )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Add an ANT project in the specified group.
@@ -452,11 +418,10 @@ public interface ContinuumService
      * @param project        The project to add. name, version and scm informations are required
      * @param projectGroupId The id of the group where projects will be stored
      * @return The project populated with the id.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     ProjectSummary addAntProject( ProjectSummary project, int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // Maven Shell projects
@@ -467,11 +432,10 @@ public interface ContinuumService
      *
      * @param project The project to add. name, version and scm informations are required
      * @return The project populated with the id.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     ProjectSummary addShellProject( ProjectSummary project )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Add an shell project in the specified group.
@@ -479,11 +443,10 @@ public interface ContinuumService
      * @param project        The project to add. name, version and scm informations are required
      * @param projectGroupId The id of the group where projects will be stored
      * @return The project populated with the id.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     ProjectSummary addShellProject( ProjectSummary project, int projectGroupId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // ADMIN TASKS
@@ -497,44 +460,40 @@ public interface ContinuumService
      * Return the schedules list.
      *
      * @return The schedule list.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     List<Schedule> getSchedules()
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Return the schedule defined by this id.
      *
      * @param scheduleId The schedule id
      * @return The schedule.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     Schedule getSchedule( int scheduleId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Add the schedule.
      *
      * @param schedule The schedule
      * @return The schedule.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     Schedule addSchedule( Schedule schedule )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Update the schedule.
      *
      * @param schedule The schedule
      * @return The schedule.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     Schedule updateSchedule( Schedule schedule )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // Profiles
@@ -544,22 +503,20 @@ public interface ContinuumService
      * Return the profiles list.
      *
      * @return The profiles list.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     List<Profile> getProfiles()
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Return the profile defined by this id.
      *
      * @param profileId The profile id
      * @return The profile.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     Profile getProfile( int profileId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // Installations
@@ -569,29 +526,27 @@ public interface ContinuumService
      * Return the installations list.
      *
      * @return The installations list.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     List<Installation> getInstallations()
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     /**
      * Return the installation defined by this id.
      *
      * @param installationId The installation id
      * @return The installation.
-     * @throws ContinuumException
-     * @throws XmlRpcException
+     * @throws Exception
      */
     Installation getInstallation( int installationId )
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // SystemConfiguration
     // ----------------------------------------------------------------------
 
     SystemConfiguration getSystemConfiguration()
-        throws ContinuumException, XmlRpcException;
+        throws Exception;
 
     // ----------------------------------------------------------------------
     // TODO:Users
@@ -602,5 +557,5 @@ public interface ContinuumService
     // ----------------------------------------------------------------------
 
     boolean ping()
-        throws ContinuumException;
+        throws Exception;
 }
