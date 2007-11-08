@@ -74,3 +74,22 @@ java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -usersJdbcUrl jdbc:der
 ** 1.1-beta-4 import
 
     Before to import from an older version to 1.1-beta-4, you must open the builds.xml file under backup directory and remove all <<'testResults'>> tags.
+    You can remove them with the following XSL:
+
++------------------------------------------+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="xml"/>
+ <xsl:template match="testResult"/>
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+</xsl:stylesheet>
++------------------------------------------+
+
+    And you can run it with this command:
+
++------------------------------------------+
+xsltproc copy.xsl builds.xml > fixed-builds.xml
++------------------------------------------+
