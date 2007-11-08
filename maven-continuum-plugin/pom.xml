@@ -31,6 +31,10 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
+      <artifactId>continuum-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-xmlrpc-client</artifactId>
     </dependency>
     <dependency>
