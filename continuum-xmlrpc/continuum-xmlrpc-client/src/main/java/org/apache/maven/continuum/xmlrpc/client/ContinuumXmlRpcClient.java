@@ -113,7 +113,7 @@ public class ContinuumXmlRpcClient
     // Projects
     // ----------------------------------------------------------------------
 
-    public List getProjects( int projectGroupId )
+    public List<ProjectSummary> getProjects( int projectGroupId )
         throws ContinuumException
     {
         try
@@ -310,7 +310,7 @@ public class ContinuumXmlRpcClient
     // Build Definitions
     // ----------------------------------------------------------------------
 
-    public List getBuildDefinitionsForProject( int projectId )
+    public List<BuildDefinition> getBuildDefinitionsForProject( int projectId )
         throws ContinuumException
     {
         try
@@ -323,7 +323,7 @@ public class ContinuumXmlRpcClient
         }
     }
 
-    public List getBuildDefinitionsForProjectGroup( int projectGroupId )
+    public List<BuildDefinition> getBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumException
     {
         try

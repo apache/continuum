@@ -87,20 +87,19 @@ public class ContinuumServiceImpl
     // Projects
     // ----------------------------------------------------------------------
 
-    public List getProjects( int projectGroupId )
+    public List<ProjectSummary> getProjects( int projectGroupId )
         throws ContinuumException
     {
         checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
 
-        List projectsList = new ArrayList();
+        List<ProjectSummary> projectsList = new ArrayList<ProjectSummary>();
 
-        Collection projects = continuum.getProjectsInGroup( projectGroupId );
+        Collection<org.apache.maven.continuum.model.project.Project> projects =
+            continuum.getProjectsInGroup( projectGroupId );
         if ( projects != null )
         {
-            for ( Iterator i = projects.iterator(); i.hasNext(); )
+            for ( org.apache.maven.continuum.model.project.Project project : projects )
             {
-                org.apache.maven.continuum.model.project.Project project =
-                    (org.apache.maven.continuum.model.project.Project) i.next();
                 ProjectSummary ps = populateProjectSummary( project );
                 projectsList.add( ps );
             }
@@ -312,36 +311,36 @@ public class ContinuumServiceImpl
     // Build Definitions
     // ----------------------------------------------------------------------
 
-    public List getBuildDefinitionsForProject( int projectId )
+    public List<BuildDefinition> getBuildDefinitionsForProject( int projectId )
         throws ContinuumException
     {
         ProjectSummary ps = getProjectSummary( projectId );
 
         checkViewProjectGroupAuthorization( ps.getProjectGroup().getName() );
 
-        List bds = continuum.getBuildDefinitionsForProject( projectId );
+        List<org.apache.maven.continuum.model.project.BuildDefinition> bds =
+            continuum.getBuildDefinitionsForProject( projectId );
 
-        List result = new ArrayList();
-        for ( Iterator i = bds.iterator(); i.hasNext(); )
+        List<BuildDefinition> result = new ArrayList<BuildDefinition>();
+        for ( org.apache.maven.continuum.model.project.BuildDefinition bd : bds )
         {
-            result.add(
-                populateBuildDefinition( (org.apache.maven.continuum.model.project.BuildDefinition) i.next() ) );
+            result.add( populateBuildDefinition( bd ) );
         }
         return result;
     }
 
-    public List getBuildDefinitionsForProjectGroup( int projectGroupId )
+    public List<BuildDefinition> getBuildDefinitionsForProjectGroup( int projectGroupId )
         throws ContinuumException
     {
         checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
 
-        List bds = continuum.getBuildDefinitionsForProjectGroup( projectGroupId );
+        List<org.apache.maven.continuum.model.project.BuildDefinition> bds =
+            continuum.getBuildDefinitionsForProjectGroup( projectGroupId );
 
-        List result = new ArrayList();
-        for ( Iterator i = bds.iterator(); i.hasNext(); )
+        List<BuildDefinition> result = new ArrayList<BuildDefinition>();
+        for ( org.apache.maven.continuum.model.project.BuildDefinition bd : bds )
         {
-            result.add(
-                populateBuildDefinition( (org.apache.maven.continuum.model.project.BuildDefinition) i.next() ) );
+            result.add( populateBuildDefinition( bd ) );
         }
         return result;
     }
@@ -931,10 +930,11 @@ public class ContinuumServiceImpl
         p.setDescription( profile.getDescription() );
         if ( profile.getEnvironmentVariables() != null )
         {
-            List envs = new ArrayList();
-            for ( Iterator i = profile.getEnvironmentVariables().iterator(); i.hasNext(); )
+            List<org.apache.maven.continuum.model.system.Installation> envs =
+                new ArrayList<org.apache.maven.continuum.model.system.Installation>();
+            for ( Installation install : (List<Installation>) profile.getEnvironmentVariables() )
             {
-                envs.add( populateInstallation( (Installation) i.next() ) );
+                envs.add( populateInstallation( install ) );
             }
             p.setEnvironmentVariables( envs );
         }
