@@ -19,7 +19,6 @@ package org.apache.maven.continuum.xmlrpc.client;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.xmlrpc.ContinuumService;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
@@ -97,16 +96,9 @@ public class ContinuumXmlRpcClient
     }
 
     public boolean ping()
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.ping();
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.ping();
     }
 
     // ----------------------------------------------------------------------
@@ -114,72 +106,37 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public List<ProjectSummary> getProjects( int projectGroupId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getProjects( projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getProjects( projectGroupId );
     }
 
     public ProjectSummary getProjectSummary( int projectId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getProjectSummary( projectId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getProjectSummary( projectId );
     }
 
     public Project getProjectWithAllDetails( int projectId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getProjectWithAllDetails( projectId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getProjectWithAllDetails( projectId );
     }
 
     public int removeProject( int projectId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.removeProject( projectId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.removeProject( projectId );
     }
 
     public ProjectSummary updateProject( ProjectSummary project )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.updateProject( project );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.updateProject( project );
     }
 
     public ProjectSummary refreshProjectSummary( ProjectSummary project )
-        throws ContinuumException
+        throws Exception
     {
         if ( project == null )
         {
@@ -189,7 +146,7 @@ public class ContinuumXmlRpcClient
     }
 
     public Project refreshProjectWithAllDetails( ProjectSummary project )
-        throws ContinuumException
+        throws Exception
     {
         if ( project == null )
         {
@@ -203,78 +160,43 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public List<ProjectGroupSummary> getAllProjectGroups()
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getAllProjectGroups();
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getAllProjectGroups();
     }
 
     public List<ProjectGroup> getAllProjectGroupsWithAllDetails()
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getAllProjectGroupsWithAllDetails();
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getAllProjectGroupsWithAllDetails();
     }
 
     public List<ProjectGroup> getAllProjectGroupsWithProjects()
-        throws ContinuumException
+        throws Exception
     {
         return getAllProjectGroupsWithAllDetails();
     }
 
     public ProjectGroupSummary getProjectGroupSummary( int projectGroupId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getProjectGroupSummary( projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getProjectGroupSummary( projectGroupId );
     }
 
     public ProjectGroup getProjectGroupWithProjects( int projectGroupId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getProjectGroupWithProjects( projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getProjectGroupWithProjects( projectGroupId );
     }
 
     public int removeProjectGroup( int projectGroupId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.removeProjectGroup( projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.removeProjectGroup( projectGroupId );
     }
 
     public ProjectGroupSummary refreshProjectGroupSummary( ProjectGroupSummary projectGroup )
-        throws ContinuumException
+        throws Exception
     {
         if ( projectGroup == null )
         {
@@ -284,7 +206,7 @@ public class ContinuumXmlRpcClient
     }
 
     public ProjectGroup refreshProjectGroupSummaryWithProjects( ProjectGroupSummary projectGroup )
-        throws ContinuumException
+        throws Exception
     {
         if ( projectGroup == null )
         {
@@ -294,16 +216,9 @@ public class ContinuumXmlRpcClient
     }
 
     public ProjectGroupSummary updateProjectGroup( ProjectGroupSummary projectGroup )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.updateProjectGroup( projectGroup );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.updateProjectGroup( projectGroup );
     }
 
     // ----------------------------------------------------------------------
@@ -311,81 +226,39 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public List<BuildDefinition> getBuildDefinitionsForProject( int projectId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getBuildDefinitionsForProject( projectId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getBuildDefinitionsForProject( projectId );
     }
 
     public List<BuildDefinition> getBuildDefinitionsForProjectGroup( int projectGroupId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getBuildDefinitionsForProjectGroup( projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getBuildDefinitionsForProjectGroup( projectGroupId );
     }
 
     public BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDef )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.updateBuildDefinitionForProject( projectId, buildDef );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.updateBuildDefinitionForProject( projectId, buildDef );
     }
 
     public BuildDefinition updateBuildDefinitionForProjectGroup( int projectGroupId, BuildDefinition buildDef )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.updateBuildDefinitionForProjectGroup( projectGroupId, buildDef );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.updateBuildDefinitionForProjectGroup( projectGroupId, buildDef );
     }
 
     public BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDef )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addBuildDefinitionToProject( projectId, buildDef );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addBuildDefinitionToProject( projectId, buildDef );
     }
 
     public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDef )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addBuildDefinitionToProjectGroup( projectGroupId, buildDef );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addBuildDefinitionToProjectGroup( projectGroupId, buildDef );
     }
 
     // ----------------------------------------------------------------------
@@ -393,81 +266,39 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public int addProjectToBuildQueue( int projectId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addProjectToBuildQueue( projectId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addProjectToBuildQueue( projectId );
     }
 
     public int addProjectToBuildQueue( int projectId, int buildDefinitionId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addProjectToBuildQueue( projectId, buildDefinitionId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addProjectToBuildQueue( projectId, buildDefinitionId );
     }
 
     public int buildProject( int projectId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.buildProject( projectId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.buildProject( projectId );
     }
 
     public int buildProject( int projectId, int buildDefinitionId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.buildProject( projectId, buildDefinitionId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.buildProject( projectId, buildDefinitionId );
     }
 
     public int buildGroup( int projectGroupId )
-        throws ContinuumException, XmlRpcException
+        throws Exception, XmlRpcException
     {
-        try
-        {
-            return continuum.buildGroup( projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.buildGroup( projectGroupId );
     }
 
     public int buildGroup( int projectGroupId, int buildDefinitionId )
-        throws ContinuumException, XmlRpcException
+        throws Exception, XmlRpcException
     {
-        try
-        {
-            return continuum.buildGroup( projectGroupId, buildDefinitionId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.buildGroup( projectGroupId, buildDefinitionId );
     }
 
     // ----------------------------------------------------------------------
@@ -475,68 +306,33 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public BuildResult getLatestBuildResult( int projectId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getLatestBuildResult( projectId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getLatestBuildResult( projectId );
     }
 
     public BuildResult getBuildResult( int projectId, int buildId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getBuildResult( projectId, buildId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getBuildResult( projectId, buildId );
     }
 
     public List<BuildResultSummary> getBuildResultsForProject( int projectId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getBuildResultsForProject( projectId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getBuildResultsForProject( projectId );
     }
 
     public int removeBuildResult( BuildResult br )
-        throws ContinuumException, XmlRpcException
+        throws Exception, XmlRpcException
     {
-        try
-        {
-            return continuum.removeBuildResult( br );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.removeBuildResult( br );
     }
 
     public String getBuildOutput( int projectId, int buildId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getBuildOutput( projectId, buildId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getBuildOutput( projectId, buildId );
     }
 
     // ----------------------------------------------------------------------
@@ -544,29 +340,15 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public AddingResult addMavenTwoProject( String url )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addMavenTwoProject( url );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addMavenTwoProject( url );
     }
 
     public AddingResult addMavenTwoProject( String url, int projectGroupId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addMavenTwoProject( url, projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addMavenTwoProject( url, projectGroupId );
     }
 
     // ----------------------------------------------------------------------
@@ -574,29 +356,15 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public AddingResult addMavenOneProject( String url )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addMavenOneProject( url );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addMavenOneProject( url );
     }
 
     public AddingResult addMavenOneProject( String url, int projectGroupId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addMavenOneProject( url, projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addMavenOneProject( url, projectGroupId );
     }
 
     // ----------------------------------------------------------------------
@@ -604,29 +372,15 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public ProjectSummary addAntProject( ProjectSummary project )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addAntProject( project );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addAntProject( project );
     }
 
     public ProjectSummary addAntProject( ProjectSummary project, int projectGroupId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addAntProject( project, projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addAntProject( project, projectGroupId );
     }
 
     // ----------------------------------------------------------------------
@@ -634,29 +388,15 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public ProjectSummary addShellProject( ProjectSummary project )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addShellProject( project );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addShellProject( project );
     }
 
     public ProjectSummary addShellProject( ProjectSummary project, int projectGroupId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addShellProject( project, projectGroupId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addShellProject( project, projectGroupId );
     }
 
     // ----------------------------------------------------------------------
@@ -664,55 +404,27 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public List<Schedule> getSchedules()
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getSchedules();
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getSchedules();
     }
 
     public Schedule getSchedule( int scheduleId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getSchedule( scheduleId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getSchedule( scheduleId );
     }
 
     public Schedule addSchedule( Schedule schedule )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.addSchedule( schedule );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.addSchedule( schedule );
     }
 
     public Schedule updateSchedule( Schedule schedule )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.updateSchedule( schedule );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.updateSchedule( schedule );
     }
 
     // ----------------------------------------------------------------------
@@ -720,29 +432,15 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public List<Profile> getProfiles()
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getProfiles();
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getProfiles();
     }
 
     public Profile getProfile( int profileId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getProfile( profileId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getProfile( profileId );
     }
 
     // ----------------------------------------------------------------------
@@ -750,29 +448,15 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public List<Installation> getInstallations()
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getInstallations();
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getInstallations();
     }
 
     public Installation getInstallation( int installationId )
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getInstallation( installationId );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getInstallation( installationId );
     }
 
     // ----------------------------------------------------------------------
@@ -780,16 +464,9 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
 
     public SystemConfiguration getSystemConfiguration()
-        throws ContinuumException
+        throws Exception
     {
-        try
-        {
-            return continuum.getSystemConfiguration();
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "The remote method failed.", e );
-        }
+        return continuum.getSystemConfiguration();
     }
 
     // ----------------------------------------------------------------------
