@@ -164,6 +164,18 @@ public interface ContinuumService
     ProjectGroupSummary updateProjectGroup( ProjectGroupSummary projectGroup )
         throws Exception;
 
+    /**
+     * Add a project Group.
+     *
+     * @param groupName   The project group name
+     * @param groupId     The project group id
+     * @param description The project group description
+     * @return the project group summary of the created project group
+     * @throws Exception
+     */
+    ProjectGroupSummary addProjectGroup( String groupName, String groupId, String description )
+        throws Exception;
+
     // ----------------------------------------------------------------------
     // Build Definitions
     // ----------------------------------------------------------------------

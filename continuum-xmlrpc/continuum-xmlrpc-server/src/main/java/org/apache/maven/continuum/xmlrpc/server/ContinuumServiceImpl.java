@@ -309,6 +309,18 @@ public class ContinuumServiceImpl
         return getProjectGroupSummary( projectGroup.getId() );
     }
 
+    public ProjectGroupSummary addProjectGroup( String groupName, String groupId, String description )
+        throws Exception
+    {
+        org.apache.maven.continuum.model.project.ProjectGroup pg =
+            new org.apache.maven.continuum.model.project.ProjectGroup();
+        pg.setName( groupName );
+        pg.setGroupId( groupId );
+        pg.setDescription( description );
+        continuum.addProjectGroup( pg );
+        return populateProjectGroupSummary( continuum.getProjectGroupByGroupId( groupId ) );
+    }
+
     // ----------------------------------------------------------------------
     // Build Definitions
     // ----------------------------------------------------------------------
