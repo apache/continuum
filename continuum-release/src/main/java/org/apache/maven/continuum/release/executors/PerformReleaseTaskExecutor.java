@@ -42,6 +42,7 @@ import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 import java.io.File;
@@ -92,13 +93,22 @@ public class PerformReleaseTaskExecutor
         continuumReleaseManager.getReleaseResults().put( performTask.getReleaseId(), result );
     }
 
-    protected List getReactorProjects( ReleaseProjectTask releaseTask )
+    protected List<MavenProject> getReactorProjects( PerformReleaseProjectTask releaseTask )
         throws TaskExecutionException
     {
-        List reactorProjects;
+        List<MavenProject> reactorProjects;
+        ReleaseDescriptor descriptor = releaseTask.getDescriptor();
+
+        if ( StringUtils.isEmpty( descriptor.getWorkingDirectory() ) )
+        {
+            //Perform with provided release parameters (CONTINUUM-1541)
+            descriptor.setCheckoutDirectory( releaseTask.getBuildDirectory().getAbsolutePath() );
+            return null;
+        }
+
         try
         {
-            reactorProjects = getReactorProjects( releaseTask.getDescriptor() );
+            reactorProjects = getReactorProjects( descriptor );
         }
         catch ( ContinuumReleaseException e )
         {
@@ -119,10 +129,10 @@ public class PerformReleaseTaskExecutor
     /**
      * @todo remove and use generate-reactor-projects phase
      */
-    protected List getReactorProjects( ReleaseDescriptor descriptor )
+    protected List<MavenProject> getReactorProjects( ReleaseDescriptor descriptor )
         throws ContinuumReleaseException
     {
-        List reactorProjects = new ArrayList();
+        List<MavenProject> reactorProjects = new ArrayList<MavenProject>();
 
         MavenProject project;
         try

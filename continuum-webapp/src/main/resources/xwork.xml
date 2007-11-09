@@ -464,6 +464,7 @@
       <result name="success" type="redirect-action">
         <param name="actionName">releaseInProgress</param>
         <param name="projectId">${projectId}</param>
+        <param name="releaseId">${releaseId}</param>
       </result>
     </action>
 
