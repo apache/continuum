@@ -30,6 +30,12 @@
       <outputDirectory>/</outputDirectory>
       <unpack>true</unpack>
       <scope>runtime</scope>
+      <excludes>
+        <exclude>org.codehaus.plexus:plexus-classworlds</exclude>
+        <exclude>org.codehaus.plexus:plexus-component-api</exclude>
+        <exclude>org.codehaus.plexus:plexus-container-default</exclude>
+        <exclude>org.codehaus.plexus:plexus-utils</exclude>
+      </excludes>
     </dependencySet>
   </dependencySets>
 </assembly>
