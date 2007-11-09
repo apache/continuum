@@ -184,4 +184,15 @@
     <class-a>org.apache.maven.continuum.xmlrpc.system.Installation</class-a>
     <class-b>org.apache.maven.continuum.model.system.Installation</class-b>
   </mapping>
+
+  <mapping>
+    <class-a>org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate</class-a>
+    <class-b>org.apache.maven.continuum.model.project.BuildDefinitionTemplate</class-b>
+    <field>
+      <a>buildDefinitions</a>
+      <b>buildDefinitions</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.BuildDefinition</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.BuildDefinition</b-hint>
+    </field>
+  </mapping>
 </mappings>

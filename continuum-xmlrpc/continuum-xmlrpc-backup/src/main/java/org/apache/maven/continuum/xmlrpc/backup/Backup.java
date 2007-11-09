@@ -26,6 +26,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.maven.continuum.xmlrpc.client.ContinuumXmlRpcClient;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
@@ -231,6 +232,34 @@ public class Backup
                 writeObject( install, "installation", true );
             }
             endTag( "installations", true );
+        }
+    }
+
+    private static void backupAllBuildDefinitionTemplates()
+        throws Exception
+    {
+        LOGGER.info( "Backup Build Definitions Templates" );
+        List<BuildDefinitionTemplate> bdts = client.getBuildDefinitionTemplates();
+        if ( bdts != null && !bdts.isEmpty() )
+        {
+            startTag( "buildDefinitionTemplates", true );
+            for ( BuildDefinitionTemplate bdt : bdts )
+            {
+                LOGGER.debug( "Backup build definition template " + bdt.getName() );
+                startTag( "buildDefinitionTemplate", true );
+                writeSimpleFields( bdt );
+
+                List<BuildDefinition> bds = bdt.getBuildDefinitions();
+                if ( bds != null && !bds.isEmpty() )
+                {
+                    for ( BuildDefinition bd : bds )
+                    {
+                        backupBuildDefinition( bd );
+                    }
+                }
+                endTag( "buildDefinitionTemplate", true );
+            }
+            endTag( "buildDefinitionTemplates", true );
         }
     }
 

@@ -485,4 +485,20 @@ public abstract class AbstractContinuumSecureService
 
         checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_PROFILES );
     }
+
+    /**
+     * Check if the current user is authorized to manage the build definitions templates
+     *
+     * @throws ContinuumException if the user isn't authorized if the user isn't authenticated
+     */
+    protected void checkManageBuildDefinitionTemplatesAuthorization()
+        throws ContinuumException
+    {
+        if ( !isAuthenticated() )
+        {
+            throw new ContinuumException( "Authentication required." );
+        }
+
+        checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_BUILD_TEMPLATES );
+    }
 }

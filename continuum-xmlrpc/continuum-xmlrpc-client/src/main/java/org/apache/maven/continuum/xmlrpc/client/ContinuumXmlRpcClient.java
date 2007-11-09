@@ -22,6 +22,7 @@ package org.apache.maven.continuum.xmlrpc.client;
 import org.apache.maven.continuum.xmlrpc.ContinuumService;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
@@ -274,6 +275,12 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.addBuildDefinitionToProjectGroup( projectGroupId, buildDef );
+    }
+
+    public List<BuildDefinitionTemplate> getBuildDefinitionTemplates()
+        throws Exception
+    {
+        return continuum.getBuildDefinitionTemplates();
     }
 
     // ----------------------------------------------------------------------
