@@ -21,6 +21,7 @@ package org.apache.maven.continuum.xmlrpc;
 
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
@@ -242,6 +243,15 @@ public interface ContinuumService
      * @throws Exception
      */
     BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDef )
+        throws Exception;
+
+    /**
+     * Get the build definition templates list.
+     *
+     * @return The build definitions templates list
+     * @throws Exception
+     */
+    List<BuildDefinitionTemplate> getBuildDefinitionTemplates()
         throws Exception;
 
     // ----------------------------------------------------------------------

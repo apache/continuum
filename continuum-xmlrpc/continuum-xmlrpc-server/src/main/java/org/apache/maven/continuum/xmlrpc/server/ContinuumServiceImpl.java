@@ -32,6 +32,7 @@ import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
@@ -409,6 +410,21 @@ public class ContinuumServiceImpl
         org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
         bd = continuum.addBuildDefinitionToProjectGroup( projectGroupId, bd );
         return populateBuildDefinition( bd );
+    }
+
+    public List<BuildDefinitionTemplate> getBuildDefinitionTemplates()
+        throws Exception
+    {
+        checkManageBuildDefinitionTemplatesAuthorization();
+        List<org.apache.maven.continuum.model.project.BuildDefinitionTemplate> bdts =
+            continuum.getBuildDefinitionService().getAllBuildDefinitionTemplate();
+
+        List<BuildDefinitionTemplate> result = new ArrayList<BuildDefinitionTemplate>();
+        for ( org.apache.maven.continuum.model.project.BuildDefinitionTemplate bdt : bdts )
+        {
+            result.add( populateBuildDefinitionTemplate( bdt ) );
+        }
+        return result;
     }
 
     // ----------------------------------------------------------------------
@@ -912,6 +928,12 @@ public class ContinuumServiceImpl
         bd.setProfile( populateProfile( buildDef.getProfile() ) );
         bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
         return bd;
+    }
+
+    private BuildDefinitionTemplate populateBuildDefinitionTemplate(
+        org.apache.maven.continuum.model.project.BuildDefinitionTemplate bdt )
+    {
+        return (BuildDefinitionTemplate) mapper.map( bdt, BuildDefinitionTemplate.class );
     }
 
     private org.apache.maven.continuum.model.project.Schedule populateSchedule( Schedule schedule )
