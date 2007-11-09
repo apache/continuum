@@ -15,6 +15,7 @@
         <executions>
           <execution>
             <id>modello-continuum</id>
+            <phase>initialize</phase>
             <goals>
               <goal>java</goal>
               <goal>stax-reader</goal>
