@@ -147,6 +147,7 @@ public class Backup
         backupAllSchedules();
         backupAllInstallations();
         backupAllProfiles();
+        backupAllBuildDefinitionTemplates();
         backupAllProjectGroup();
         endTag( "continuumDatabase", true );
         writer.close();
