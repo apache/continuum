@@ -529,6 +529,14 @@
             <groupId>ant</groupId>
             <artifactId>ant-optional</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>jdom</groupId>
+            <artifactId>jdom</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
@@ -657,6 +665,12 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-xwork-integration</artifactId>
         <version>1.0-alpha-7</version>
+        <exclusions>
+          <exclusion>
+            <groupId>velocity</groupId>
+            <artifactId>velocity-dep</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <!--
         Plexus Redback Dependencies
