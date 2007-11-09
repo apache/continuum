@@ -60,6 +60,7 @@
           </div>
         </ww:else>
       </p>
+      <input type="button" value="Back" onClick="history.go(-1)">
 
     </body>
   </ww:i18n>
