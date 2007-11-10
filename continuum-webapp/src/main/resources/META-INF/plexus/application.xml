@@ -58,7 +58,7 @@
                config-name="com.mergere.maestro.projectserver"
                config-at="com.mergere.maestro.projectserver" config-forceCreate="true"/>
           <xml fileName="${appserver.base}/conf/continuum.xml" config-optional="true"
-               config-at="org.apache.maven.continuum" config-forceCreate="true" />
+               config-at="org.apache.maven.continuum" config-forceCreate="true"/>
           <xml fileName="${appserver.base}/conf/shared.xml" config-optional="true"
                config-name="org.apache.maven.shared.app.user" config-at="org.apache.maven.shared.app"
                config-forceCreate="true"/>
@@ -70,7 +70,8 @@
           <xml fileName="${appserver.home}/conf/maestro.xml" config-optional="true"
                config-at="com.mergere.maestro.projectserver"/>
           <xml fileName="${appserver.home}/conf/continuum.xml" config-optional="true"
-               config-at="org.apache.maven.continuum"/>
+               config-at="org.apache.maven.continuum" config-name="org.apache.maven.continuum.user"
+               config-forceCreate="true"/>
           <xml fileName="${appserver.home}/conf/shared.xml" config-optional="true"
                config-at="org.apache.maven.shared.app" />
           <xml fileName="${appserver.home}/conf/common.xml" config-optional="true"/>
@@ -89,6 +90,7 @@
         </properties>
       </configuration>
     </component>
+  
 
     <!--
     | The mail notifier

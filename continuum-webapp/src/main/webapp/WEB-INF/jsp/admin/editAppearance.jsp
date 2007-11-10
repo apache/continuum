@@ -25,21 +25,21 @@
 </head>
 
 <body>
-<h1>Appearance</h1>
+  <h1>Appearance</h1>
 
-<h2>Company Details</h2>
+  <h2>Company Details</h2>
 
-<p>
-  Enter the details of the company super POM below. If it exists, the organization name, URL and logo will be read
-  from it.
-</p>
+  <p>
+    Enter the details of the company super POM below. If it exists, the organization name, URL and logo will be read
+    from it.
+  </p>
 
-<ww:actionmessage/>
-<ww:form method="post" action="saveAppearance" namespace="/admin" validate="true" theme="xhtml">
-  <ww:textfield name="companyPom.groupId" label="Group ID"/>
-  <ww:textfield name="companyPom.artifactId" label="Artifact ID"/>
-  <ww:submit value="Save"/>
-</ww:form>
+  <ww:actionmessage/>
+  <ww:form method="post" action="saveAppearance" namespace="/admin" validate="true" theme="xhtml">
+    <ww:textfield name="companyPom.groupId" label="Group ID"/>
+    <ww:textfield name="companyPom.artifactId" label="Artifact ID"/>
+    <ww:submit value="Save"/>
+  </ww:form>
 </body>
 
 </html>

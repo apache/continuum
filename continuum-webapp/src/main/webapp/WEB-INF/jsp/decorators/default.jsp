@@ -59,7 +59,7 @@
   </tbody>
 </table>
 
-<%@ include file="/WEB-INF/jsp/navigations/DefaultBottom.jsp" %>
+<ww:action name="bottom" executeResult="true"/>
 
 <script language="javascript">
     <!--

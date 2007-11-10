@@ -19,12 +19,14 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
-import com.opensymphony.xwork.ModelDriven;
+import java.io.IOException;
+
 import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
 import org.apache.maven.continuum.execution.maven.m2.SettingsConfigurationException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
-import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.apache.maven.continuum.web.action.component.AbstractFooterAction;
+import org.apache.maven.continuum.web.appareance.AppareanceConfiguration;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.shared.app.company.CompanyPomHandler;
@@ -36,7 +38,7 @@ import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
 import org.codehaus.plexus.registry.RegistryException;
 
-import java.io.IOException;
+import com.opensymphony.xwork.ModelDriven;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
@@ -44,7 +46,7 @@ import java.io.IOException;
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="configureAppearance"
  */
 public class ConfigureAppearanceAction
-    extends ContinuumActionSupport
+    extends AbstractFooterAction
     implements ModelDriven, SecureAction
 {
     /**
@@ -68,7 +70,13 @@ public class ConfigureAppearanceAction
      * @plexus.requirement
      */
     private MavenBuilderHelper helper;
+    
 
+    /**
+     * @plexus.requirement
+     */    
+    private AppareanceConfiguration appareanceConfiguration;
+    
     public String execute()
         throws IOException, RegistryException
     {
@@ -82,7 +90,7 @@ public class ConfigureAppearanceAction
     {
         return INPUT;
     }
-
+    
     public Object getModel()
     {
         return configuration;
@@ -95,6 +103,8 @@ public class ConfigureAppearanceAction
 
         companyModel =
             companyPomHandler.getCompanyPomModel( configuration.getCompanyPom(), helper.getLocalRepository() );
+        
+        this.setFooter( appareanceConfiguration.getFooter() );
     }
 
     public Model getCompanyModel()
@@ -111,4 +121,5 @@ public class ConfigureAppearanceAction
 
         return bundle;
     }
+
 }
