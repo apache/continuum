@@ -19,6 +19,7 @@
 
 <%@ taglib prefix="ww" uri="/webwork" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="continuum" prefix="c1" %>
 <html>
 <head>
   <title>Configure Appearance</title>
@@ -92,6 +93,21 @@
     </c:otherwise>
   </c:choose>
 </c:if>
+<ww:form action="saveFooter!saveFooter.action" method="get" namespace="/admin">
+  <div id="axial" class="h3">
+    <h3>footer content</h3>
+    <div class="axial">
+      <table>
+        <tbody>  
+          <ww:textarea cols="120" rows="3" label="HTML Content" name="footer" />
+        </tbody>
+      </table>
+      <div class="functnbar3">
+        <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
+      </div>      
+    </div>
+  </div>
+</ww:form>
 </body>
 
 </html>

@@ -523,12 +523,12 @@
       <dependency>
         <groupId>org.codehaus.plexus.registry</groupId>
         <artifactId>plexus-registry-api</artifactId>
-        <version>1.0-alpha-2</version>
+        <version>1.0-alpha-3-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus.registry</groupId>
         <artifactId>plexus-registry-commons</artifactId>
-        <version>1.0-alpha-2</version>
+        <version>1.0-alpha-3-SNAPSHOT</version>
         <exclusions>
           <exclusion>
             <groupId>ant</groupId>
