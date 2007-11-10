@@ -101,10 +101,6 @@
   <logger name="org.codehaus.plexus.component.manager.ClassicSingletonComponentManager">
     <level value="error"/>
   </logger>
-  
-  <logger name="org.apache.commons.configuration">
-    <level value="debug"/>
-  </logger>  
 
   <root>
     <priority value="info" />
