@@ -30,7 +30,7 @@ Guide to Install Continuum on Jetty
       <Arg>jdbc/continuum</Arg>
       <Arg>
         <New class="org.apache.derby.jdbc.EmbeddedDataSource">
-          <Set name="DatabaseName">../continuum_database</Set>
+          <Set name="DatabaseName">your_directory/continuum_database</Set>
           <Set name="user">sa</Set>
           <Set name="createDatabase">create</Set>
         </New>
@@ -40,7 +40,7 @@ Guide to Install Continuum on Jetty
       <Arg>jdbc/continuum_shutdown</Arg>
       <Arg>
         <New class="org.apache.derby.jdbc.EmbeddedDataSource">
-          <Set name="DatabaseName">../continuum_database</Set>
+          <Set name="DatabaseName">your_directory/continuum_database</Set>
           <Set name="user">sa</Set>
           <Set name="shutdownDatabase">shutdown</Set>
         </New>
@@ -50,7 +50,7 @@ Guide to Install Continuum on Jetty
       <Arg>jdbc/users</Arg>
       <Arg>
         <New class="org.apache.derby.jdbc.EmbeddedDataSource">
-          <Set name="DatabaseName">../users_database</Set>
+          <Set name="DatabaseName">your_directory/users_database</Set>
           <Set name="user">sa</Set>
           <Set name="createDatabase">create</Set>
         </New>
@@ -60,7 +60,7 @@ Guide to Install Continuum on Jetty
       <Arg>jdbc/users_shutdown</Arg>
       <Arg>
         <New class="org.apache.derby.jdbc.EmbeddedDataSource">
-          <Set name="DatabaseName">../users_database</Set>
+          <Set name="DatabaseName">your_directory/users_database</Set>
           <Set name="user">sa</Set>
           <Set name="shutdownDatabase">shutdown</Set>
         </New>
