@@ -65,6 +65,7 @@
             <item name="Standalone" href="documentation/1_1/installation/standalone.html"/>
             <item name="Tomcat" href="documentation/1_1/installation/tomcat.html"/>
             <item name="JBoss" href="documentation/1_1/installation/jboss.html"/>
+            <item name="Jetty" href="documentation/1_1/installation/jetty.html"/>
             <item name="Geronimo" href="documentation/1_1/installation/geronimo.html"/>
             <item name="Glassfish" href="documentation/1_1/installation/glassfish.html"/>
           </item>
