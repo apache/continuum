@@ -53,6 +53,7 @@
               </tbody>
             </table>
             
+            <ww:if test="${!empty projectList}">
             <h3><ww:text name="projectGroup.edit.section.projects.title"/></h3>
             <div class="eXtremeTable">
               <table id="projects_table" border="1" cellspacing="2" cellpadding="3" class="tableRegion" width="100%">
@@ -71,6 +72,7 @@
                 </tbody>
               </table>
             </div>
+            </ww:if>
             <div class="functnbar3">
               <c:choose>
                 <c:when test="${!projectInCOQueue}">
