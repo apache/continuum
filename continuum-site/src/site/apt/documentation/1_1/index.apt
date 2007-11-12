@@ -9,20 +9,19 @@ Documentation
 
 * Installation/Upgrade Guides
 
-** Installation
+** {{{installation/index.html}Installation}}
 
 *** Standalone version
 
-    Standard (Linux, Mac OSX, Solaris, Windows, others)
-
-    As a service
+    {{{installation/standalone.html}Standard (Linux, Mac OSX, Solaris, Windows, others) as a service or not}}
 
 *** Webapp
 
-    Tomcat
-    Jetty
-    Geronimo
-    GlassFish
+    {{{installation/tomcat.html}Tomcat}},
+    {{{installation/jetty.html}Jetty}},
+    {{{installation/jboss.html}JBoss}},
+    {{{installation/geronimo.html}Geronimo}},
+    {{{installation/glassfish.html}GlassFish}},
     ...
 
 ** Release Notes
@@ -42,3 +41,5 @@ Documentation
 * Administrator's Guide
 
 * Developer's Guide
+
+    {{{developer_guides/building.html}Guide to build Continuum}}
