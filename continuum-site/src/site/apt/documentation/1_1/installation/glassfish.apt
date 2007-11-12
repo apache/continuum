@@ -17,7 +17,7 @@ Guide to Install Continuum on GlassFish V2
 
 * {Datasource Configuration}
 
-    * Create a connection pool naled '<<continuum>>' for your database
+    * Create a connection pool named '<<continuum>>' for your database
 
     * Create a JDBC resource named '<<jdbc/continuum>>'linked to the '<<continuum>>' connection pool
 
