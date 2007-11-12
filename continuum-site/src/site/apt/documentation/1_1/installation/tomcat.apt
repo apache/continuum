@@ -240,7 +240,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
             driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
             url="jdbc:derby:database/users;create=true" />
 
-  <Resource name="jdbc/continuuù"
+  <Resource name="jdbc/continuum"
             auth="Container"
             type="javax.sql.DataSource"
             username="sa"
