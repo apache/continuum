@@ -295,7 +295,7 @@ scm:cvs:pserver:username:@servername:path_to_repository:module_name
       <question>How can I build projects with a scm post-commit hook?</question>
       <answer>
         <p>
-          If your SCM support hook scripts, you'll need to write an <a href="guides/mini/guide-xmlrpc-api.html">xml-rpc client</a> for Continuum and call it in your post-commit script.
+          If your SCM support hook scripts, you'll need to write an <a href="documentation/1_1/developer_guides/xmlrpc.html">xml-rpc client</a> for Continuum and call it in your post-commit script.
         </p>
       </answer>
     </faq>
