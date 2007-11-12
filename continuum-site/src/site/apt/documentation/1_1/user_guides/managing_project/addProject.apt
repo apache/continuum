@@ -82,3 +82,29 @@ Add a Project
     From the Project Group, you can add a project without to use the menu. With this operation, the Project Group will be set to the current group.
 
 [./../../../../images/add-project-from-group.png] Add a project from a project group
+
+* Scm hints
+
+** Clearcase
+
+    With Clearcase, you can configure SCM things in few ways. For example, you can use, in the scm url in your POM, the absolute path of your config spec file like this:
+
++----------------------------+
+<scm>
+  <connection>scm:clearcase:absolute_path_of_config_spec</connection>
+</scm>
++----------------------------+
+
+    The SCM URL format used for Clearcase is defined {{{http://maven.apache.org/scm/clearcase.html}here}}
+
+    and you can create a <<<clearcase-settings.xml>>> file under <<<${user.home}/.scm/>>> with the following content:
+
++----------------------------+
+<clearcase-settings>
+    <viewstore>\\mymachine\myvwstore</viewstore>
+    <useVWSParameter>true</useVWSParameter>
+</clearcase-settings>
++----------------------------+
+
+    This configuration won't work with each Clearcase installation because each Clearcase configuration is different, so we recommend to read the
+    {{{http://maven.apache.org/scm/clearcase.html}Clearcase page}} on the Maven-SCM site.
