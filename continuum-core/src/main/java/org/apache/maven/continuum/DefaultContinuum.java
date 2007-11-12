@@ -2788,12 +2788,7 @@ public class DefaultContinuum
     public Collection<BuildResult> getBuildResultsForProject( int projectId )
         throws ContinuumException
     {
-        ArrayList<BuildResult> buildResults =
-            new ArrayList<BuildResult>( getProjectWithBuilds( projectId ).getBuildResults() );
-
-        Collections.reverse( buildResults );
-
-        return buildResults;
+        return store.getBuildResultsForProject( projectId );
     }
 
     // ----------------------------------------------------------------------

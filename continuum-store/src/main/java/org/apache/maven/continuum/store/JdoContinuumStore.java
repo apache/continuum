@@ -1574,6 +1574,42 @@ public class JdoContinuumStore
         }
     }
 
+    public List<BuildResult> getBuildResultsForProject( int projectId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId" );
+
+            query.setFilter( "this.project.id == projectId" );
+
+            query.setOrdering( "this.startTime descending" );
+
+            List result = (List) query.execute( new Integer( projectId ) );
+
+            result = (List) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
     public List<BuildResult> getBuildResultsForProject( int projectId, long fromDate )
     {
         PersistenceManager pm = getPersistenceManager();
