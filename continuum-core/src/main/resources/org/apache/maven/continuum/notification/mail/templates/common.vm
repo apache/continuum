@@ -146,10 +146,12 @@ Build Fresh: $build.buildDefinition.buildFresh
 Always Build: $build.buildDefinition.alwaysBuild
 Default Build Definition: $build.buildDefinition.defaultForProject
 Schedule: $build.buildDefinition.schedule.name
-#if ( $build.buildDefinition.profile ) 
+#if ( $build.buildDefinition.profile )
 Profile Name: $build.buildDefinition.profile.name
 #end
+#if ( $build.buildDefinition.description )
 Description: $build.buildDefinition.description
+#end
 #end
 
 
