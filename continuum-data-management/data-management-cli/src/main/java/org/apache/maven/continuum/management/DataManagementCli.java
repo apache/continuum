@@ -64,6 +64,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -349,23 +350,28 @@ public class DataManagementCli
         remoteRepositories.add(
             factory.createArtifactRepository( "central", "http://repo1.maven.org/maven2", layout, null, null ) );
         //Load extra repositories from active profile
-        List<Profile> profiles = getSettings( container ).getActiveProfiles();
-        if ( profiles != null && !profiles.isEmpty() )
+        
+        Settings settings = getSettings( container );
+        List<String> profileIds = settings.getActiveProfiles();
+        List<Profile> profiles = settings.getProfiles();
+        Map<String, Profile> profilesAsMap = settings.getProfilesAsMap();
+        if ( profileIds != null && !profileIds.isEmpty() )
         {
-            for ( Profile p : profiles )
+            for ( String profileId : profileIds )
             {
-                List<Repository> repos = p.getRepositories();
+                Profile profile = profilesAsMap.get( profileId );
+                List<Repository> repos = profile.getRepositories();
                 if ( repos != null && !repos.isEmpty() )
                 {
                     for ( Repository repo : repos )
                     {
-                        remoteRepositories.add(
-                            factory.createArtifactRepository( repo.getId(), repo.getUrl(), layout, null, null ) );
+                        remoteRepositories.add( factory.createArtifactRepository( repo.getId(), repo
+                            .getUrl(), layout, null, null ) );
                     }
                 }
             }
         }
-
+        
         ArtifactFactory artifactFactory = (ArtifactFactory) container.lookup( ArtifactFactory.ROLE );
         Artifact artifact =
             artifactFactory.createArtifact( groupId, artifactId, version, Artifact.SCOPE_RUNTIME, "jar" );
