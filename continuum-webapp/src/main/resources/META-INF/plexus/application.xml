@@ -116,6 +116,11 @@
         <requirement>
           <role>org.apache.maven.continuum.Continuum</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator</role>
+          <field-name>reportTestSuiteGenerator</field-name>
+          <role-hint>default</role-hint>
+        </requirement>        
       </requirements>
       <configuration>
         <from-mailbox></from-mailbox>
@@ -141,6 +146,8 @@
         <subject-format>[continuum] BUILD ${state}: ${project.projectGroup.name} - ${project.name} - Build Def: ${build.buildDefinition.description}</subject-format>
         <includeBuildResult>true</includeBuildResult>
         <includeBuildSummary>true</includeBuildSummary>
+        <includeTestSummary>true</includeTestSummary>
+        <includeOutput>false</includeOutput>
         <alwaysSend>false</alwaysSend>
       </configuration>
     </component>

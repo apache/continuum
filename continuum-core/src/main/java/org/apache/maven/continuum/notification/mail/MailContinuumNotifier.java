@@ -19,6 +19,16 @@ package org.apache.maven.continuum.notification.mail;
  * under the License.
  */
 
+import java.io.StringWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
@@ -37,6 +47,8 @@ import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.ContinuumRecipientSource;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.continuum.reports.surefire.ReportTestResult;
+import org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.codehaus.plexus.mailsender.MailMessage;
@@ -46,16 +58,6 @@ import org.codehaus.plexus.notification.NotificationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.velocity.VelocityComponent;
-
-import java.io.StringWriter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -88,6 +90,11 @@ public class MailContinuumNotifier
      * @plexus.configuration
      */
     private MailSender mailSender;
+    
+    /**
+     * @plexus.requirement
+     */    
+    private ReportTestSuiteGenerator reportTestSuiteGenerator;
 
     /**
      * @plexus.requirement role-hint="default"
@@ -120,6 +127,16 @@ public class MailContinuumNotifier
      * @plexus.configuration
      */
     private boolean includeBuildSummary = true;
+    
+    /**
+     * @plexus.configuration
+     */
+    private boolean includeTestSummary = true;
+    
+    /**
+     * @plexus.configuration
+     */
+    private boolean includeOutput = false;    
 
     /**
      * Customizable mail subject.  Use any combination of literal text, project or build attributes.
@@ -270,6 +287,10 @@ public class MailContinuumNotifier
         try
         {
             VelocityContext context = new VelocityContext();
+            
+            context.put( "includeTestSummary", includeTestSummary );
+            
+            context.put( "includeOutput", includeOutput );
 
             if ( includeBuildResult )
             {
@@ -280,6 +301,11 @@ public class MailContinuumNotifier
             {
                 context.put( "build", build );
 
+                ReportTestResult reportTestResult = reportTestSuiteGenerator.generateReportTestResult( build.getId(),
+                                                                                                       project.getId() );
+
+                context.put( "testResult", reportTestResult );
+                
                 context.put( "project", project );
 
                 context.put( "changesSinceLastSuccess", continuum.getChangesSinceLastSuccess( project.getId(), build
