@@ -59,12 +59,14 @@ public class InstallationValidator
         String name = (String) this.getFieldValue( "installation.name", object );
         if ( StringUtils.isEmpty( name ) )
         {
-            // nothing empty name
             return;
         }
 
         String varValue = (String) this.getFieldValue( "installation.varValue", object );
-
+        if (StringUtils.isEmpty( varValue ))
+        {
+            return;
+        }
         // TODO validating varValue != null depending on type (not null for envVar)
 
         String type = (String) this.getFieldValue( "installation.type", object );
