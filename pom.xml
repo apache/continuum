@@ -139,6 +139,12 @@
           </configuration>
         </plugin>
         <plugin>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <configuration>
+            <buildOutputDirectory>build</buildOutputDirectory>
+          </configuration>
+        </plugin>        
+        <plugin>
           <artifactId>maven-release-plugin</artifactId>
           <configuration>
             <tagBase>https://svn.apache.org/repos/asf/maven/continuum/tags</tagBase>
@@ -164,12 +170,13 @@
     <module>continuum-commons</module>
     <module>continuum-security</module>
     <!-- module>continuum-core-it</module -->    <!-- TODO RE-ADD it when continuum-plexus-application will be back -->
+    <module>continuum-store</module>    
+    <module>continuum-reports</module>    
     <module>continuum-core</module>
     <module>continuum-model</module>
     <module>continuum-notifiers</module>
     <module>continuum-plexus-application</module>
     <module>continuum-plexus-runtime</module>
-    <module>continuum-store</module>
     <module>continuum-test</module>
     <module>continuum-webapp</module>
     <module>continuum-xmlrpc</module>
@@ -399,6 +406,11 @@
         <artifactId>continuum-store</artifactId>
         <version>${pom.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.maven.continuum</groupId>
+        <artifactId>continuum-reports</artifactId>
+        <version>${pom.version}</version>
+      </dependency>      
       <dependency>
         <groupId>org.apache.maven.continuum</groupId>
         <artifactId>continuum-core</artifactId>

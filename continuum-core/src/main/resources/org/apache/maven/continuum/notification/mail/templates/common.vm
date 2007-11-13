@@ -154,14 +154,13 @@ Description: $build.buildDefinition.description
 #end
 #end
 
-
-#if ( $build.testResult )
+#if ( $testResult )
 ****************************************************************************
 Test Summary:
 ****************************************************************************
-Tests: $build.testResult.testCount
-Failures: $build.testResult.failureCount
-Total time: $build.testResult.totalTime
+Tests: $testResult.testCount
+Failures: $testResult.failureCount
+Total time: $testResult.totalTime
 
 #end
 #if ( $build.state == 4 )
@@ -170,16 +169,19 @@ Build Error:
 ****************************************************************************
 $build.error
 
-#if ( $build.testResult && $build.testResult.failureCount > 0)
+#end
+#if ( $includeTestSummary )
+#if ( $testResult && $testResult.failureCount > 0 )
 ****************************************************************************
 Test Failures:
 ****************************************************************************
 
-#foreach( $suite in $build.testResult.suiteResults )
-#if ( $suite.failureCount > 0)
+#foreach( $suite in $testResult.suiteResults )
+#if ( $suite.numberOfFailures > 0)
 $suite.name
-  #foreach( $failure in $suite.failures )
-  $failure.name
+  #foreach( $failure in $suite.reportFailures )
+  $failure.testName :
+  $failure.type
   $failure.exception
 
   #end
@@ -188,12 +190,15 @@ $suite.name
 #end
 #end
 #end
+
+#if ( $includeOutput )
 #if ( $buildOutput && $buildOutput != "" )
 ****************************************************************************
 Output:
 ****************************************************************************
 $buildOutput
 ****************************************************************************
+#end
 #end
 
 #end ## #macro( shellBuildResult )
