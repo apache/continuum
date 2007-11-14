@@ -145,7 +145,9 @@
         <redback:ifAuthorized permission="continuum-manage-users">
           <ww:url id="userListUrl" action="userlist" namespace="/security" includeParams="none"/>
           <div class="body">
-            <ww:a href="%{userListUrl}">Users</ww:a>
+            <ww:a href="%{userListUrl}">
+              <ww:text name="menu.administration.users"/>
+            </ww:a>
           </div>
         </redback:ifAuthorized>
       </div>
