@@ -2785,6 +2785,11 @@ public class DefaultContinuum
         stopped = true;
     }
 
+    public long getNbBuildResultsForProject( int projectId )
+    {
+        return store.getNbBuildResultsForProject( projectId );
+    }
+
     public Collection<BuildResult> getBuildResultsForProject( int projectId )
         throws ContinuumException
     {

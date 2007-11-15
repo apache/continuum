@@ -169,13 +169,13 @@ public interface Continuum
 
     boolean removeProjectsFromCheckoutQueue( int[] projectId )
         throws ContinuumException;
-    
+
     /**
      * @param hashCodes CheckOutTask hashCodes
      * @throws ContinuumException
      */
     void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
-        throws ContinuumException;    
+        throws ContinuumException;
 
     // ----------------------------------------------------------------------
     // Building
@@ -239,6 +239,8 @@ public interface Continuum
 
     String getBuildOutput( int projectId, int buildId )
         throws ContinuumException;
+
+    long getNbBuildResultsForProject( int projectId );
 
     Collection<BuildResult> getBuildResultsForProject( int projectId )
         throws ContinuumException;

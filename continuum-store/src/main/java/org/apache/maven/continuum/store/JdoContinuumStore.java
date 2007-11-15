@@ -1574,13 +1574,44 @@ public class JdoContinuumStore
         }
     }
 
-    public List<BuildResult> getBuildResultsForProject( int projectId )
+    public long getNbBuildResultsForProject( int projectId )
     {
         PersistenceManager pm = getPersistenceManager();
 
         Transaction tx = pm.currentTransaction();
 
-        pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
+        try
+        {
+            tx.begin();
+
+            Query query = pm.newQuery( BuildResult.class, "project.id == projectId" );
+
+            query.declareParameters( "int projectId" );
+
+            query.setResult( "count(this)" );
+
+            long result = (Long) query.execute( new Integer( projectId ) );
+
+            tx.commit();
+
+            return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    public List<BuildResult> getBuildResultsForProject( int projectId )
+    {
+        return getBuildResultsForProject( projectId, -1, -1 );
+    }
+
+    public List<BuildResult> getBuildResultsForProject( int projectId, long startIndex, long endIndex )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
 
         try
         {
@@ -1595,6 +1626,11 @@ public class JdoContinuumStore
             query.setFilter( "this.project.id == projectId" );
 
             query.setOrdering( "this.startTime descending" );
+
+            if ( startIndex >= 0 )
+            {
+                query.setRange( startIndex, endIndex );
+            }
 
             List result = (List) query.execute( new Integer( projectId ) );
 
