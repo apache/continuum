@@ -30,6 +30,9 @@ Edit a Project
 
 [../../../../images/project-view-top.png] Project View Top
 
+  With the <<<'Edit'>>> button, you can change some project informations like the scm url if your project was moved.
+  With the <<<'Build Now'>>> button, you build the project manually with the default build definition.
+
   Second part contains informations regarding :
 
   * project notifiers

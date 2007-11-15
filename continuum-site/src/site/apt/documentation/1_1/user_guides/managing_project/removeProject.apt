@@ -3,9 +3,13 @@
  ------
  Emmanuel Venisse
  ------
- Oct 3 2007
+ Nov 15 2007
  ------
 
 Remove a Project
 
-    To write
+    To remove a project, go to the project group summary and use the <<delete>> icon.
+
+[./../../../../images/delete.gif] Delete icon
+
+    You can also use the <<<'Delete group'>>> button in the project group summary to remove the whole project group.

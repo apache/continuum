@@ -3,9 +3,13 @@
  ------
  Emmanuel Venisse
  ------
- Oct 3 2007
+ Nov 15 2007
  ------
 
 Managing Projects
 
-    To write
+    * {{{addProject.html}How to add a project}}
+
+    * {{{editProject.html}How to edit a project}}
+
+    * {{{removeProject.html}How to remove a project}}

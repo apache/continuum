@@ -83,9 +83,9 @@ Add a Project
 
 [./../../../../images/add-project-from-group.png] Add a project from a project group
 
-* Scm hints
+* {Scm hints}
 
-** Clearcase
+** {Clearcase}
 
     With Clearcase, you can configure SCM things in few ways. For example, you can use, in the scm url in your POM, the absolute path of your config spec file like this:
 
