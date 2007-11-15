@@ -303,7 +303,11 @@ public interface ContinuumStore
 
     List<BuildResult> getBuildResultsInSuccessForProject( int projectId, long fromDate );
 
+    long getNbBuildResultsForProject( int projectId );
+
     List<BuildResult> getBuildResultsForProject( int projectId );
+
+    List<BuildResult> getBuildResultsForProject( int projectId, long startIndex, long endIndex );
 
     List<BuildResult> getBuildResultsForProject( int projectId, long fromDate );
 
