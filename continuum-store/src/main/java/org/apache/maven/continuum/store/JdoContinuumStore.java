@@ -1798,7 +1798,32 @@ public class JdoContinuumStore
     public List<Project> getProjectsInGroup( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
-        return getProjectGroupWithProjects( projectGroupId ).getProjects();
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( Project.class, true );
+
+            Query query = pm.newQuery( extent, "projectGroup.id == " + projectGroupId );
+
+            query.setOrdering( "name ascending" );
+
+            List result = (List) query.execute();
+
+            result = (List) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
     }
 
     public List<Project> getProjectsInGroupWithDependencies( int projectGroupId )
