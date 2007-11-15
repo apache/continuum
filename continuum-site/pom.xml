@@ -48,28 +48,25 @@
     </extensions>
   </build>
   <reporting>
+    <excludeDefaults>true</excludeDefaults>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-         <configuration>
-            <checkoutDirectoryName>continuum</checkoutDirectoryName>
-         </configuration>
+        <version>2.0.1</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>license</report>
+              <report>project-team</report>
+              <report>scm</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <checkoutDirectoryName>continuum</checkoutDirectoryName>
+        </configuration>
       </plugin>
-      <!--
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-      </plugin>
-      -->
     </plugins>
   </reporting>
 </project>
