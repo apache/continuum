@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+  <persistence-unit name="continuum-store">    
+    <!-- provider>org.hibernate.ejb.HibernatePersistence</provider -->
+    <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+    
+    <class>org.apache.maven.continuum.model.project.BuildDefinition</class>
+    <class>org.apache.maven.continuum.model.project.BuildDefinitionTemplate</class>
+    <class>org.apache.maven.continuum.model.project.BuildResult</class>
+    <class>org.apache.maven.continuum.model.project.Project</class>
+    <class>org.apache.maven.continuum.model.project.ProjectDependency</class>
+    <class>org.apache.maven.continuum.model.project.ProjectDeveloper</class>
+    <class>org.apache.maven.continuum.model.project.ProjectGroup</class>
+    <class>org.apache.maven.continuum.model.project.ProjectNotifier</class>
+    <class>org.apache.maven.continuum.model.project.Schedule</class>
+    
+    <class>org.apache.maven.continuum.model.scm.ChangeFile</class>
+    <class>org.apache.maven.continuum.model.scm.ChangeSet</class>
+    <class>org.apache.maven.continuum.model.scm.ScmResult</class>
+    <class>org.apache.maven.continuum.model.scm.SuiteResult</class>
+    <class>org.apache.maven.continuum.model.scm.TestCaseFailure</class>
+    <class>org.apache.maven.continuum.model.scm.TestResult</class>
+    
+    <class>org.apache.maven.continuum.model.system.Installation</class>
+    <class>org.apache.maven.continuum.model.system.NotificationAddress</class>
+    <class>org.apache.maven.continuum.model.system.Profile</class>
+    <class>org.apache.maven.continuum.model.system.SystemConfiguration</class>
+    
+  </persistence-unit>
+</persistence>
