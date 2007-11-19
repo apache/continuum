@@ -772,7 +772,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.2-beta-1</version>
+            <version>2.1</version>
             <inherited>false</inherited>
             <configuration>
               <descriptors>
@@ -780,7 +780,7 @@
               </descriptors>
               <tarLongFileMode>gnu</tarLongFileMode>
               <appendAssemblyId>false</appendAssemblyId>
-              <finalName>apache-archiva-${version}-src</finalName>
+              <finalName>apache-continuum-${version}-src</finalName>
             </configuration>
             <executions>
               <execution>
