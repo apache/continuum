@@ -37,4 +37,22 @@ Notification
   
   Or to a project with the add button in the edit project page :
   
-[./../../../../images/notifiers-button-project.png] Notifier Button  
+[./../../../../images/notifiers-button-project.png] Notifier Button 
+
+  Here you will the choice between notifiers implementation provided with continuum
+
+[./../../../../images/notifiers-type-choice.png] Notifier Type Choice
+
+  You have the following choices :
+  
+  * {{{mail.html}Mail}}
+  
+  * {{{irc.html}Irc}}
+  
+  * {{{jabber.html}Jabber}}
+  
+  * {{{msn.html}MSN}}
+  
+  * {{{wagon.html}Wagon}}
+    
+   
