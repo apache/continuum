@@ -1,0 +1,9 @@
+
+TODO for Continuum JPA store implementation
+-------------------------------------------
+
+1)  Review JPA annotated Entities.   
+
+2)  Put together unit tests for JPA Store implementations. (Need to investigate
+    if there is a something available in OpenJPA for writing unit tests.)
+        
