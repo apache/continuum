@@ -98,7 +98,7 @@
   </part>
   <part id="general">
     <title>General</title>
-    <faq id="how-does-continuum-detect-a-successful-build-with-ant">
+    <faq id="why-maven-doesn-t-detect-my-failed-builds">
       <question>Why Maven doesn't detect my failed builds?</question>
       <answer>
         <p>
