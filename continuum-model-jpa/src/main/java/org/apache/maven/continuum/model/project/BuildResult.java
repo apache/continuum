@@ -8,7 +8,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -121,7 +124,9 @@ public class BuildResult extends CommonUpdatableModelEntity
      * Field modifiedDependencies
      */
     @OneToMany( cascade = CascadeType.ALL )
-    @JoinColumn( name = "ID_PROJECT_DEPENDENCY" )
+    @JoinTable( name = "PROJECT_DEPENDENCY", 
+                joinColumns = @JoinColumn( name = "BUILD_ID" ), 
+                inverseJoinColumns = @JoinColumn( name = "ID_PROJECT_DEPENDENCY" ) )
     private List<ProjectDependency> modifiedDependencies;
 
     /**

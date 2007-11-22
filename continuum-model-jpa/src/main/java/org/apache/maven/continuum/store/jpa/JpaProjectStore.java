@@ -13,7 +13,8 @@ import org.apache.maven.continuum.store.api.Store;
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
- * 
+ * @version $Id$
+ * @since 1.2
  */
 public class JpaProjectStore implements Store<Project>
 {
