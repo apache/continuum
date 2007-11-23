@@ -4,36 +4,22 @@
  Trygve Laugstol
  Emmanuel Venisse
  ------
- Tue Oct 30 2007
+ Nov 23 2007
 
-Download Continuum 1.1 Beta 4
+Download Continuum 1.1 Final
 
-  Continuum 1.1 Beta 4 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
-
-*-------------------------------+---------+----------+-----------+
-|                               | Download | Checksum | Signature |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.1-beta-4 (tar.bz2)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1-beta-4.tar.bz2} apache-continuum-1.1-beta-4.tar.bz2}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.tar.bz2.md5} apache-continuum-1.1-beta-4.tar.bz2.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.tar.bz2.asc} apache-continuum-1.1-beta-4.tar.bz2.asc}} |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.1-beta-4 (tar.gz)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1-beta-4.tar.gz} apache-continuum-1.1-beta-4.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.tar.gz.md5} apache-continuum-1.1-beta-4.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.tar.gz.asc} apache-continuum-1.1-beta-4.tar.gz.asc}} |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.1-beta-4 (zip)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1-beta-4.zip} apache-continuum-1.1-beta-4.zip}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.zip.md5} apache-continuum-1.1-beta-4.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-4.zip.asc} apache-continuum-1.1-beta-4.zip.asc}} |
-*-------------------------------+---------+----------+-----------+
-
-    Previous 1.1-beta:
+  Continuum 1.1 Final is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
 
 *-------------------------------+---------+----------+-----------+
 |                               | Download | Checksum | Signature |
 *-------------------------------+---------+----------+-----------+
-| Continuum 1.1-beta-3 (tar.gz)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1-beta-3.tar.gz} apache-continuum-1.1-beta-3.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-3.tar.gz.md5} apache-continuum-1.1-beta-3.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1-beta-3.tar.gz.asc} apache-continuum-1.1-beta-3.tar.gz.asc}} |
+| Continuum 1.1 (tar.bz2)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1.tar.bz2} apache-continuum-1.1.tar.bz2}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.tar.bz2.md5} apache-continuum-1.1.tar.bz2.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.tar.bz2.asc} apache-continuum-1.1.tar.bz2.asc}} |
 *-------------------------------+---------+----------+-----------+
-| Continuum 1.1-beta-2 (tar.gz)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-plexus-runtime-1.1-beta-2-bin.tar.gz} continuum-plexus-runtime-1.1-beta-2-bin.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/continuum-plexus-runtime-1.1-beta-2-bin.tar.gz.md5} continuum-plexus-runtime-1.1-beta-2-bin.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-plexus-runtime-1.1-beta-2-bin.tar.gz.asc} continuum-plexus-runtime-1.1-beta-2-bin.tar.gz.asc}} |
+| Continuum 1.1 (tar.gz)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1.tar.gz} apache-continuum-1.1.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.tar.gz.md5} apache-continuum-1.1.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.tar.gz.asc} apache-continuum-1.1.tar.gz.asc}} |
 *-------------------------------+---------+----------+-----------+
-| Continuum 1.1-beta-1 (tar.gz)| {{{http://people.apache.org/builds/maven/continuum/1.1-beta-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-beta-1/continuum-plexus-runtime-1.1-beta-1-bin.tar.gz} continuum-plexus-runtime-1.1-beta-1-bin.tar.gz}} | {{{http://people.apache.org/builds/maven/continuum/1.1-beta-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-beta-1/continuum-plexus-runtime-1.1-beta-1-bin.tar.gz.md5} continuum-1.1-beta-1-bin.tar.gz.md5}} | {{{http://people.apache.org/builds/maven/continuum/1.1-beta-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-beta-1/continuum-plexus-runtime-1.1-beta-1-bin.tar.gz.asc} continuum-1.1-beta-1-bin.tar.gz.asc}} |
+| Continuum 1.1 (zip)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1.zip} apache-continuum-1.1.zip}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.zip.md5} apache-continuum-1.1.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.zip.asc} apache-continuum-1.1.zip.asc}} |
 *-------------------------------+---------+----------+-----------+
-| Continuum 1.1-alpha-2 (tar.gz)| {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-2/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-2/continuum-plexus-runtime-1.1-alpha-2-bin.tar.gz} continuum-plexus-runtime-1.1-alpha-2-bin.tar.gz}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-2/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-2/continuum-plexus-runtime-1.1-alpha-2-bin.tar.gz.md5} continuum-1.1-alpha-2-bin.tar.gz.md5}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-2/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-2/continuum-plexus-runtime-1.1-alpha-2.tar.gz.asc} continuum-1.1-alpha-2-bin.tar.gz.asc}} |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.1-alpha-1 (tar.gz)| {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-1/continuum-plexus-runtime-1.1-alpha-1-bin.tar.gz} continuum-plexus-runtime-1.1-alpha-1-bin.tar.gz}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-1/continuum-plexus-runtime-1.1-alpha-1-bin.tar.gz.md5} continuum-1.1-alpha-1-bin.tar.gz.md5}} | {{{http://people.apache.org/builds/maven/continuum/1.1-alpha-1/org/apache/maven/continuum/continuum-plexus-runtime/1.1-alpha-1/continuum-plexus-runtime-1.1-alpha-1.tar.gz.asc} continuum-1.1-alpha-1-bin.tar.gz.asc}} |
+| Continuum 1.1 (war)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1.war} apache-continuum-1.1.war}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.war.md5} apache-continuum-1.1.war.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.war.asc} apache-continuum-1.1.war.asc}} |
 *-------------------------------+---------+----------+-----------+
 
 *Previous Releases

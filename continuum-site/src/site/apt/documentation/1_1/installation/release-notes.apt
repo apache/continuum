@@ -3,7 +3,7 @@
  ------
  Emmanuel Venisse
  ------
- Oct 30 2007
+ Nov 23 2007
  ------
 
 Release Note
@@ -12,130 +12,78 @@ Release Note
     
     <<Highlights are:>>
     
-      * lot of bug fixes
+      * bug fixes
       
-      * A new page to view the build queue
+      * A new backup tool with xmlrpc for continuum db (not the users db)
 
-      * Customization of mail subject
-    
     You can grab the latest release from the {{{../../../download.html}download page}}
     
     To upgrade from a previous 1.1 beta, you can look at {{{upgrade.html}Upgrade Guide}}.
     
     Below is the jira release notes for this release.
 
-* Release Notes - Continuum - Version 1.1-beta-4
-
-** Sub-task
-
-    * [CONTINUUM-1499] - Translate to Brazilian Portuguese
-
-    * [CONTINUUM-1534] - Translate to French
+* Release Notes - Continuum - Version 1.1
 
 ** Bug
 
-    * [CONTINUUM-811] - Documentation of Deployment Repository Directory
+    * [CONTINUUM-1313] - Document changes to XMLRPC
 
-    * [CONTINUUM-1355] - No admin user found after Tomcat shutdown (Tomcat doesn't shutdown properly)
+    * [CONTINUUM-1492] - error when trying to run data management tool when behind a proxied firewall
 
-    * [CONTINUUM-1392] - Continuum tests require too much external set up
+    * [CONTINUUM-1536] - Data management cli doesn't read settings.xml
 
-    * [CONTINUUM-1403] - Error on edit project group page
+    * [CONTINUUM-1539] - French langage misspelling
 
-    * [CONTINUUM-1453] - Confirmation Page for Deleting a Build Definition is not Informative Enough
+    * [CONTINUUM-1540] - data-management-cli-1.1-beta-4-app.jar will not import builds data
 
-    * [CONTINUUM-1466] - Project name accepts blank spaces when edited in Project Summary > Members Tab > Edit Project
+    * [CONTINUUM-1541] - NPE with "Provide Release Parameters"
 
-    * [CONTINUUM-1473] - Server Id in wagon notifier edit pages is required but doesn't have validation
+    * [CONTINUUM-1543] - Email Subject line templates support only 3 name variables.
 
-    * [CONTINUUM-1474] - At the time of an addition of new BuildDefinition with XmlRPC client, the automatically generated buildDefinitionID cannot be recovered
+    * [CONTINUUM-1544] - Email Summary no longer includes the Test Summary statistics.
 
-    * [CONTINUUM-1476] - warning/error in the mail generation
+    * [CONTINUUM-1547] - data-management-cli import cannot handle testResult entities in build.xml
 
-    * [CONTINUUM-1481] - datamanagement-cli must support more db
+    * [CONTINUUM-1548] - NPE in IRC Notifier
 
-    * [CONTINUUM-1487] - should not be allowed to delete a build result that is still executing
+    * [CONTINUUM-1550] - Upgrade documentation commands don't work
 
-    * [CONTINUUM-1491] - Build history screen should show build definition description
+    * [CONTINUUM-1551] - the builds are not ordered by date
 
-    * [CONTINUUM-1494] - Maximum length for name column exceeded in makeAndStoreBuildResult
+    * [CONTINUUM-1552] - When trying to export the user database -> FileNotFoundException: backups/users/keys.xml (No such file or directory)
 
-    * [CONTINUUM-1495] - Calling getAllProjectGroups() fails
+    * [CONTINUUM-1556] - Empty Group Description causes Freemarker error in Group Edit mode
 
-    * [CONTINUUM-1502] - After changing the name of a project group, the project dissapears and is not accessible, not even by the admin user.
+    * [CONTINUUM-1557] - Appearance is not saved
 
-    * [CONTINUUM-1508] - NullPointerException when adding an empty installation to a profile
+    * [CONTINUUM-1559] - loading company pom doesn't use repositories declared in settings.xml
 
-    * [CONTINUUM-1509] - always build option doesn't work with scheduler --> log = No files updated, not building
+    * [CONTINUUM-1560] - Error with group summary auto-refresh after performing a release
 
-    * [CONTINUUM-1512] - Constraint Violation Exception when deleting an empty group
+    * [CONTINUUM-1561] - Documentation on how to configure appareance in Continuum
 
-    * [CONTINUUM-1516] - Unable to send mail with more than one build definition
+    * [CONTINUUM-1564] - Adding Continuum Installations accepts null value for "value/path" field
 
-    * [CONTINUUM-1517] - missing <includeBuildResult> configuration
-
-    * [CONTINUUM-1519] - Continuum does not respect build order for flat projects
-
-    * [CONTINUUM-1520] - Scheduler is unstable
-
-    * [CONTINUUM-1524] - Continuum don't find the default build definition for ANT/Shell projects
-
-    * [CONTINUUM-1527] - NullPointer when Releasing without <configuration> node in the maven-release-plugin
-
-    * [CONTINUUM-1530] - Problems releasing project in group with more than one project definition
-
-    * [CONTINUUM-1532] - Remove TestResult/SuiteResult/TestCaseFailure from the model
+    * [CONTINUUM-1571] - NullPointerException - IrcContinuumNotifier
 
 ** Improvement
 
-    * [CONTINUUM-150] - Continuum site needs screenshots
+    * [CONTINUUM-1397] - ability to customise html footer
 
-    * [CONTINUUM-606] - Add Build Time to Project Summary Page
+    * [CONTINUUM-1472] - No navigation on Project Release Summary page
 
-    * [CONTINUUM-703] - Display of last build date on Project Summary page
+    * [CONTINUUM-1546] - There should be a way to simply create a project group without having to add a project
 
-    * [CONTINUUM-789] - Show SCM branch/tag on summary screen
-
-    * [CONTINUUM-815] - directory configuration
-
-    * [CONTINUUM-1233] - Reduce number of clicks to add a project
-
-    * [CONTINUUM-1254] - Clarification of Configuring Continuum as a Service in "Getting Started" Guide
-
-    * [CONTINUUM-1388] - the NOTICE file is overzealous in declaring dependencies
-
-    * [CONTINUUM-1436] - Add build definition template
-
-    * [CONTINUUM-1483] - Better support for SCM like clearcase or SYNERGY
-
-    * [CONTINUUM-1484] - Allow customization of email subject
-
-    * [CONTINUUM-1493] - Data migration site documentation improvement
-
-    * [CONTINUUM-1500] - remove ContinuumStore use from the webapp part
-
-    * [CONTINUUM-1514] - Legend is hardcoded
+    * [CONTINUUM-1563] - add two new parameters in the mail notifier includeTestSummary and includeOutput
 
 ** New Feature
 
-    * [CONTINUUM-310] - customisable email templates
-
-    * [CONTINUUM-583] - Show the build/checkout queues on the web interface
-
-    * [CONTINUUM-1287] - editable build queue
-
-    * [CONTINUUM-1328] - create build-definition-templates and link to them in build-definitons
-
-    * [CONTINUUM-1331] - create new page: show current build queue with project name, next build time
-
-    * [CONTINUUM-1332] - project group summary: show per project the last build time
+    * [CONTINUUM-1379] - Documentation Configuration Continuum ClearCase Maven 2
 
 ** Task
 
-    * [CONTINUUM-253] - Create a matrix of databases that Continuum can work with
+    * [CONTINUUM-347] - document push build technique by project id
 
-** Wish
+    * [CONTINUUM-570] - Documentation to add for war deployment in several container
 
-    * [CONTINUUM-409] - Email notifications could still include build stats when includeBuildResult is false
-
-    * [CONTINUUM-1452] - Show a summary total of the Projects and Build Status columns on the Project Groups page
+    * [CONTINUUM-1204] - Fix permissons on the CONTINUUMUSER space

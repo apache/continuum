@@ -4,7 +4,7 @@
  Olivier Lamy
  Emmanuel Venisse
  ------
- Oct 30 2007
+ Nov 23 2007
  ------
 
 Upgrade
@@ -25,6 +25,8 @@ Upgrade
 
         * {{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.1-beta-4/data-management-cli-1.1-beta-4-app.jar}}
 
+        * {{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.1/data-management-cli-1.1-app.jar}}
+
     The first version of this tool is 1.1-beta-2
 
 * Exporting Data from the old version
@@ -36,8 +38,8 @@ Upgrade
         * Export the build and user data from the old version using the jar for the old version:
 
 +------------------------------------------+
-java -Xmx512m -jar data-management-cli-1.1-beta-3-app.jar -buildsJdbcUrl jdbc:derby:${old.continuum.home}/data/continuum/database -mode EXPORT -directory backups
-java -Xmx512m -jar data-management-cli-1.1-beta-3-app.jar -usersJdbcUrl jdbc:derby:${old.continuum.home}/data/users/database -mode EXPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -buildsJdbcUrl jdbc:derby:${old.continuum.home}/data/continuum/database -mode EXPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -usersJdbcUrl jdbc:derby:${old.continuum.home}/data/users/database -mode EXPORT -directory backups
 +------------------------------------------+
 
 * Importing Data to the new version
@@ -53,8 +55,8 @@ java -Xmx512m -jar data-management-cli-1.1-beta-3-app.jar -usersJdbcUrl jdbc:der
         * Import the build and user data into the new version using the jar for the new version:
 
 +------------------------------------------+
-java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/continuum/database -mode IMPORT -directory backups
-java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -usersJdbcUrl jdbc:derby:${new.continuum.home}/data/users/database -mode IMPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.1-app.jar -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/continuum/database -mode IMPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.1-app.jar -usersJdbcUrl jdbc:derby:${new.continuum.home}/data/users/database -mode IMPORT -directory backups
 +------------------------------------------+
 
         * <<NEXT_VAL values in SEQUENCE_TABLE must be checked before restarting continuum>>
@@ -71,9 +73,9 @@ java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -usersJdbcUrl jdbc:der
 
 * Specific steps to do before to import
 
-** 1.1-beta-4 import
+** 1.1 import
 
-    Before to import from an older version to 1.1-beta-4, you must open the builds.xml file under backup directory and remove all <<'testResults'>> tags.
+    Before to import from an older version (before 1.1-beta-4 to 1.1 final, you must open the builds.xml file under backup directory and remove all <<'testResults'>> tags.
     You can remove them with the following XSL:
 
 +------------------------------------------+
