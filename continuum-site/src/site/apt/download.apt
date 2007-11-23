@@ -19,7 +19,7 @@ Download Continuum 1.1 Final
 *-------------------------------+---------+----------+-----------+
 | Continuum 1.1 (zip)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1.zip} apache-continuum-1.1.zip}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.zip.md5} apache-continuum-1.1.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.zip.asc} apache-continuum-1.1.zip.asc}} |
 *-------------------------------+---------+----------+-----------+
-| Continuum 1.1 (war)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/apache-continuum-1.1.war} apache-continuum-1.1.war}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.war.md5} apache-continuum-1.1.war.md5}} | {{{http://www.apache.org/dist/maven/binaries/apache-continuum-1.1.war.asc} apache-continuum-1.1.war.asc}} |
+| Continuum 1.1 (war)| {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-webapp-1.1.war} continuum-webapp-1.1.war}} | {{{http://www.apache.org/dist/maven/binaries/continuum-webapp-1.1.war.md5} continuum-webapp-1.1.war.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-webapp-1.1.war.asc} continuum-webapp-1.1.war.asc}} |
 *-------------------------------+---------+----------+-----------+
 
 *Previous Releases
