@@ -3,6 +3,14 @@
  */
 package org.apache.maven.continuum.store.jpa;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -20,13 +28,18 @@ import org.apache.openjpa.persistence.test.SingleEMTestCase;
  */
 public class JpaProjectStoreTest extends SingleEMTestCase
 {
-    private static final String PERSITENT_UNIT_CONTINUUM_STORE = "continuum-store";
+    private static final String PERSISTENT_UNIT_CONTINUUM_STORE = "continuum-store";
 
     @Override
     public void setUp()
     {
+        File testData = new File( "src/test/resources/sql/table-project-data.sql" );
+        assertTrue( "Unable to find test data resource: " + testData.getAbsolutePath(), testData.exists() );
         Properties propMap = new Properties();
         setUp( propMap );
+
+        // load test data from SQL file.
+        setSqlSource( testData );
     }
 
     /**
@@ -35,7 +48,7 @@ public class JpaProjectStoreTest extends SingleEMTestCase
     @Override
     protected String getPersistenceUnitName()
     {
-        return PERSITENT_UNIT_CONTINUUM_STORE;
+        return PERSISTENT_UNIT_CONTINUUM_STORE;
     }
 
     public void testContinuumJPAStoreActions()
@@ -44,10 +57,9 @@ public class JpaProjectStoreTest extends SingleEMTestCase
         String[] sql = q.getDataStoreActions( null );
         assertEquals( 1, sql.length );
         assertTrue( sql[0].startsWith( "SELECT" ) );
-        // TODO: Uncomment following!
         List results = q.getResultList();
         assertNotNull( results );
-        assertEquals( 0, results.size() );
+        assertEquals( 1, results.size() );
     }
 
     /**
@@ -57,8 +69,90 @@ public class JpaProjectStoreTest extends SingleEMTestCase
     @Override
     public void tearDown() throws Exception
     {
-        // super.tearDown();
+        super.tearDown();
         // do nothing
+    }
+
+    /**
+     * Imports sql from the specified file.
+     * 
+     * @param sqlResource
+     *            Resource containing sql
+     */
+    public void setSqlSource( File sqlResource )
+    {
+        try
+        {
+            // TODO: Use Logger!
+            // System.out.println( "Loading sql: " + sqlResource.getAbsolutePath() );
+            List<String> statements = new ArrayList<String>( 20 );
+            BufferedReader br = new BufferedReader( new InputStreamReader( new FileInputStream( sqlResource ) ) );
+            String line = null;
+            StringBuffer currentStatement = new StringBuffer();
+            while ( ( line = br.readLine() ) != null )
+            {
+                if ( line.trim().length() == 0 )
+                    continue;
+                if ( line.trim().startsWith( "#" ) )
+                    continue;
+
+                currentStatement.append( line );
+                if ( line.endsWith( ";" ) )
+                {
+                    statements.add( currentStatement.toString() );
+                    currentStatement = new StringBuffer();
+                }
+            }
+            // append a line if missing a ';'
+            if ( currentStatement.length() > 0 )
+            {
+                statements.add( currentStatement.toString() );
+            }
+            runSQLStatements( statements );
+        }
+        catch ( Throwable e )
+        {
+            // TODO: User logger!
+            System.err.println( "Problem executing SQL!" );
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Run a bunch of SQL statements.
+     * 
+     * @param statements
+     *            Statements to run.
+     * @throws SQLException
+     */
+
+    public void runSQLStatements( final List<String> statements ) throws SQLException
+    {
+        for ( String qry : statements )
+        {
+            Connection con = (Connection) this.em.getConnection();
+            try
+            {
+                Statement stmt = con.createStatement();
+                System.out.println( qry );
+                stmt.execute( qry );
+                con.commit();
+            }
+            catch ( SQLException e )
+            {
+                try
+                {
+                    con.rollback();
+                }
+                catch ( SQLException e1 )
+                {
+                    // TODO: Use logger!
+                    System.err.println( "Unable to rollback transaction." );
+                    throw e1;
+                }
+                throw e;
+            }
+        }
     }
 
 }
