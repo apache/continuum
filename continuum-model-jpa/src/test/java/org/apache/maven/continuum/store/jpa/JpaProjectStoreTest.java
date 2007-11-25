@@ -13,7 +13,10 @@ import org.apache.openjpa.persistence.test.SingleEMTestCase;
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @since 1.2
  * @version $Id$
- * @see {@linkplain http://mail-archives.apache.org/mod_mbox/openjpa-users/200706.mbox/%3CBF2B99E3-7EF3-4E99-91E1-8AEB940524C7@apache.org%3E}
+ * @see <a
+ *      href="http://mail-archives.apache.org/mod_mbox/openjpa-users/200706.mbox/%3CBF2B99E3-7EF3-4E99-91E1-8AEB940524C7@apache.org%3E">
+ *      http://mail-archives.apache.org/mod_mbox/openjpa-users/200706.mbox/%3CBF2B99E3-7EF3-4E99-91E1-8AEB940524C7@apache.org%3E
+ *      </a>
  */
 public class JpaProjectStoreTest extends SingleEMTestCase
 {
@@ -42,9 +45,9 @@ public class JpaProjectStoreTest extends SingleEMTestCase
         assertEquals( 1, sql.length );
         assertTrue( sql[0].startsWith( "SELECT" ) );
         // TODO: Uncomment following!
-        //List results = q.getResultList();
-        //assertNotNull( results );
-        //assertEquals( 0, results.size() );
+        List results = q.getResultList();
+        assertNotNull( results );
+        assertEquals( 0, results.size() );
     }
 
     /**

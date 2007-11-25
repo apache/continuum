@@ -18,43 +18,13 @@
     <dependency>
       <groupId>org.apache.openjpa</groupId>
       <artifactId>openjpa</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derby</artifactId>
-      <version>10.3.1.4</version>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.8.0.7</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
-  <!-- build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>process-sources</phase>
-            <configuration>
-              <tasks>                  
-                <property name="compile_classpath"
-                  refid="maven.compile.classpath" />
-                <property name="runtime_classpath"
-                  refid="maven.runtime.classpath" />
-                <property name="test_classpath"
-                  refid="maven.test.classpath" />
-                <property name="plugin_classpath"
-                  refid="maven.plugin.classpath" />
-                <ant antfile="${basedir}/build.xml">
-                  <target name="refresh" />
-                </ant>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build -->
+  </dependencies>  
 </project>
