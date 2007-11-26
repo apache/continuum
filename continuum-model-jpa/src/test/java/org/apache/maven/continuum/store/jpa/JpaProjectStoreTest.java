@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.StoreTestCase;
 import org.apache.openjpa.persistence.OpenJPAQuery;
 
@@ -26,7 +27,7 @@ public class JpaProjectStoreTest extends StoreTestCase
     @Override
     public void setUp()
     {
-        File testData = new File( "src/test/resources/sql/table-project-data.sql" );
+        File testData = new File( "src/test/resources/sql/project-table-data.sql" );
         assertTrue( "Unable to find test data resource: " + testData.getAbsolutePath(), testData.exists() );
         Properties propMap = new Properties();
         setUp( propMap );
@@ -44,7 +45,7 @@ public class JpaProjectStoreTest extends StoreTestCase
         return PERSISTENT_UNIT_CONTINUUM_STORE;
     }
 
-    public void testContinuumJPAStoreActions()
+    public void testOpenJPASetup()
     {
         OpenJPAQuery q = em.createQuery( "select p from Project p" );
         String[] sql = q.getDataStoreActions( null );
@@ -52,7 +53,21 @@ public class JpaProjectStoreTest extends StoreTestCase
         assertTrue( sql[0].startsWith( "SELECT" ) );
         List results = q.getResultList();
         assertNotNull( results );
-        assertEquals( 1, results.size() );
+        assertEquals( 2, results.size() );
+    }
+    
+    public void testCreateProject()
+    {
+        Project project = new Project();
+        project.setArtifactId( "sample-project" );
+        project.setGroupId( "org.sample.group" );
+        project.setName( "Sample Project" );
+        project.setDescription( "A sample project" );
+        project.setScmUseCache( false );
+        project.setScmUrl( "https://localhost/svn/sample-project" );
+        project.setModelEncoding( "UTF-8" );
+        
+        
     }
 
     /**

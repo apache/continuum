@@ -26,6 +26,26 @@ public abstract class StoreTestCase extends SingleEMTestCase
 {
 
     /**
+     * @see org.apache.openjpa.persistence.test.SingleEMTestCase#setUp()
+     */
+    @Override
+    public void setUp()
+    {
+
+        super.setUp();
+    }
+
+    /**
+     * @see org.apache.openjpa.persistence.test.SingleEMTestCase#tearDown()
+     */
+    @Override
+    public void tearDown() throws Exception
+    {
+        // TODO Auto-generated method stub
+        super.tearDown();
+    }
+
+    /**
      * Imports sql from the specified file.
      * 
      * @param sqlResource
