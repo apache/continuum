@@ -493,8 +493,8 @@ public class Backup
             }
             else
             {
-                LOGGER.debug(
-                    "Rejected: (" + f.getName() + ") " + f.getType() + " in object " + obj.getClass().getName() );
+                //LOGGER.debug(
+                //    "Rejected: (" + f.getName() + ") " + f.getType() + " in object " + obj.getClass().getName() );
             }
         }
     }
