@@ -36,8 +36,6 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
 {
     private static final String BEAN_REF__PROJECT_GROUP_STORE = "projectGroupStore";
 
-    private static final String PERSISTENT_UNIT_CONTINUUM_STORE = "continuum-store";
-
     @Override
     @Before
     public void setUp()

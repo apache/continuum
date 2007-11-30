@@ -34,17 +34,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
 {
     private static final String BEAN_REF__PROJECT_STORE = "projectStore";
-    private static final String PERSISTENT_UNIT_CONTINUUM_STORE = "continuum-store";
 
     @Override
-    @Before
+    @Before    
     public void setUp()
     {
         File testData = new File( "src/test/resources/sql/project-table-data.sql" );
-        Assert.assertTrue( "Unable to find test data resource: " + testData.getAbsolutePath(), testData.exists() );
         Properties propMap = new Properties();
         setUp( propMap );
-
         // load test data from SQL file.
         setSqlSource( testData );
     }
@@ -88,10 +85,6 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
         Assert.assertTrue( project.getId() > 0L );
     }
 
-    /**
-     * TODO: Investigate {@link org.apache.openjpa.persistence.PersistenceException} attempting to clear tables from
-     * schema.
-     */
     @Override
     @After
     public void tearDown() throws Exception

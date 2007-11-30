@@ -32,6 +32,10 @@ import org.springframework.context.ApplicationContextAware;
  */
 public abstract class ApplicationContextAwareStoreTestCase extends SingleEMTestCase implements ApplicationContextAware
 {
+    /**
+     * Continuum Store persistent unit defined in <code>persistence.xml</code> used by tests.
+     */
+    protected static final String PERSISTENT_UNIT_CONTINUUM_STORE = "continuum-store";
 
     /**
      * Spring application context.
