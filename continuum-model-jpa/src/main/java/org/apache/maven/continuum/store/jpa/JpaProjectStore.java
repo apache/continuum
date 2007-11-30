@@ -7,16 +7,17 @@ import java.util.List;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.api.EntityNotFoundException;
-import org.apache.maven.continuum.store.api.StoreException;
 import org.apache.maven.continuum.store.api.Query;
 import org.apache.maven.continuum.store.api.Store;
+import org.apache.maven.continuum.store.api.StoreException;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
  * @since 1.2
  */
-public class JpaProjectStore implements Store<Project>
+public class JpaProjectStore extends StoreSupport implements Store<Project>
 {
 
     /**
@@ -24,10 +25,10 @@ public class JpaProjectStore implements Store<Project>
      * 
      * @see org.apache.maven.continuum.store.api.Store#delete(java.lang.Object)
      */
+    @Transactional( readOnly = false )
     public void delete( Project entity ) throws StoreException
     {
-        // TODO Auto-generated method stub
-
+        getJpaTemplate().remove( entity );
     }
 
     /**
@@ -37,8 +38,7 @@ public class JpaProjectStore implements Store<Project>
      */
     public Project lookup( Long id ) throws StoreException, EntityNotFoundException
     {
-        // TODO Auto-generated method stub
-        return null;
+        return lookup( Project.class, id );
     }
 
     /**
@@ -46,10 +46,17 @@ public class JpaProjectStore implements Store<Project>
      * 
      * @see org.apache.maven.continuum.store.api.Store#save(java.lang.Object)
      */
+    @Transactional( readOnly = false )
     public Project save( Project entity ) throws StoreException
     {
-        // TODO Auto-generated method stub
-        return null;
+        if ( null != entity )
+        {
+            if ( null == entity.getId() )
+                getJpaTemplate().persist( entity );
+            else
+                entity = getJpaTemplate().merge( entity );
+        }
+        return entity;
     }
 
     /**
@@ -59,7 +66,7 @@ public class JpaProjectStore implements Store<Project>
      */
     public List<Project> query( Query query ) throws StoreException
     {
-        // TODO Auto-generated method stub
+        // TODO Implement!
         return null;
     }
 

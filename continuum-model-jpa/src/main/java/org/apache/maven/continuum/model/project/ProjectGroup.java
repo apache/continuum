@@ -1,5 +1,6 @@
 package org.apache.maven.continuum.model.project;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -114,6 +115,8 @@ public class ProjectGroup extends CommonUpdatableModelEntity
      */
     public List<Project> getProjects()
     {
+        if ( null == this.projects )
+            this.projects = new ArrayList<Project>();
         return projects;
     }
 

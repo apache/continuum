@@ -25,6 +25,11 @@ package org.apache.maven.continuum.store.api;
  */
 public class EntityNotFoundException extends StoreException
 {
+    public EntityNotFoundException()
+    {
+        super();
+    }
+
     public EntityNotFoundException( String message )
     {
         super( message );
