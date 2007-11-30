@@ -46,15 +46,6 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
         setSqlSource( testData );
     }
 
-    /**
-     * Returns the name of the persistent-unit setup in <code>persistence.xml</code>.
-     */
-    @Override
-    protected String getPersistenceUnitName()
-    {
-        return PERSISTENT_UNIT_CONTINUUM_STORE;
-    }
-
     @Test
     public void testOpenJPASetup()
     {
@@ -90,7 +81,6 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
     public void tearDown() throws Exception
     {
         super.tearDown();
-        // do nothing
     }
 
     /**

@@ -49,15 +49,6 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
         setSqlSource( testData );
     }
 
-    /**
-     * Returns the name of the persistent-unit setup in <code>persistence.xml</code>.
-     */
-    @Override
-    protected String getPersistenceUnitName()
-    {
-        return PERSISTENT_UNIT_CONTINUUM_STORE;
-    }
-
     @Test
     public void testOpenJPASetup()
     {
@@ -94,7 +85,7 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
     }
 
     /**
-     * Convenience method to get {@link Store} implementation tied to a {@link Project}.
+     * Convenience method to get {@link Store} implementation tied to a {@link ProjectGroup}.
      * 
      * @return
      */

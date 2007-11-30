@@ -35,7 +35,7 @@ public abstract class ApplicationContextAwareStoreTestCase extends SingleEMTestC
     /**
      * Continuum Store persistent unit defined in <code>persistence.xml</code> used by tests.
      */
-    protected static final String PERSISTENT_UNIT_CONTINUUM_STORE = "continuum-store";
+    private static final String PERSISTENT_UNIT_CONTINUUM_STORE = "continuum-store";
 
     /**
      * Spring application context.
@@ -168,6 +168,15 @@ public abstract class ApplicationContextAwareStoreTestCase extends SingleEMTestC
     {
         Object store = this.applicationContext.getBean( storeBeanReference );
         return (Store<T>) store;
+    }
+
+    /**
+     * Returns the name of the persistent-unit setup in <code>persistence.xml</code>.
+     */
+    @Override
+    protected String getPersistenceUnitName()
+    {
+        return PERSISTENT_UNIT_CONTINUUM_STORE;
     }
 
 }
