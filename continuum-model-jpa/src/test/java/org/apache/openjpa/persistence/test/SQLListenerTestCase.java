@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.openjpa.lib.jdbc.AbstractJDBCListener;
 import org.apache.openjpa.lib.jdbc.JDBCEvent;
 import org.apache.openjpa.lib.jdbc.JDBCListener;
+import org.junit.Assert;
 
 /**
  * Base class for tests that need to check generated SQL.
@@ -56,7 +57,7 @@ public abstract class SQLListenerTestCase
                 return;
         }
 
-        fail("Expected regular expression <" + sqlExp + "> to have"
+        Assert.fail("Expected regular expression <" + sqlExp + "> to have"
             + " existed in SQL statements: " + sql);
     }
 
@@ -74,7 +75,7 @@ public abstract class SQLListenerTestCase
         }
 
         if (failed)
-            fail("Regular expression <" + sqlExp + ">"
+            Assert.fail("Regular expression <" + sqlExp + ">"
                 + " should not have been executed in SQL statements: " + sql);
     }
 
@@ -89,7 +90,7 @@ public abstract class SQLListenerTestCase
                 return;
         }
 
-        fail("Expected regular expression <" + sqlExp + "> to be"
+        Assert.fail("Expected regular expression <" + sqlExp + "> to be"
             + " contained in SQL statements: " + sql);
     }
     

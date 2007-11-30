@@ -4,12 +4,12 @@
     <!-- provider>org.hibernate.ejb.HibernatePersistence</provider -->
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
     
-    <!-- Mapped superclasses -->    
+    <!-- Mapped superclasses -->
     <class>org.apache.maven.continuum.model.CommonPersistableEntity</class>    
     <class>org.apache.maven.continuum.model.CommonCreatedEntity</class>
     <class>org.apache.maven.continuum.model.CommonUpdatableEntity</class>
     <class>org.apache.maven.continuum.model.CommonUpdatableModelEntity</class>    
-        
+    
     <!-- Entities -->    
     <class>org.apache.maven.continuum.model.project.BuildDefinition</class>
     <class>org.apache.maven.continuum.model.project.BuildDefinitionTemplate</class>
@@ -43,7 +43,7 @@
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/> 
       
       <!-- Enable SQL logging in OpenJPA -->
-      <property name="openjpa.Log" value="DefaultLevel=INFO,SQL=TRACE"/>
+      <!-- property name="openjpa.Log" value="DefaultLevel=INFO,SQL=TRACE" /-->
       
       <!-- Change default log level across OpenJPA 
       <property name="openjpa.Log" value="DefaultLevel=TRACE"/>

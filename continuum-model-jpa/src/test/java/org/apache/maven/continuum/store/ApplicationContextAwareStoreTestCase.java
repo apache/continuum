@@ -13,17 +13,42 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.maven.continuum.model.CommonPersistableEntity;
+import org.apache.maven.continuum.store.api.Store;
 import org.apache.openjpa.persistence.test.SingleEMTestCase;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * Test Case support class that allows extensions to load test data from specified SQL files.
+ * <p>
+ * This also implements Spring's {@link ApplicationContextAware} interface that allows the {@link ApplicationContext} to
+ * be made available to this test case's extensions.
  * 
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @since 1.2
  * @version $Id$
  */
-public abstract class StoreTestCase extends SingleEMTestCase
+public abstract class ApplicationContextAwareStoreTestCase extends SingleEMTestCase implements ApplicationContextAware
 {
+
+    /**
+     * Spring application context.
+     */
+    private ApplicationContext applicationContext;
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Spring IoC container injects the {@link ApplicationContext} through here.
+     * 
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+     */
+    public void setApplicationContext( ApplicationContext applicationContext ) throws BeansException
+    {
+        this.applicationContext = applicationContext;
+    }
 
     /**
      * @see org.apache.openjpa.persistence.test.SingleEMTestCase#setUp()
@@ -124,6 +149,21 @@ public abstract class StoreTestCase extends SingleEMTestCase
                 throw e;
             }
         }
+    }
+
+    /**
+     * Returns the appropriate Store implementation tied to a specific {@link CommonPersistableEntity}.
+     * 
+     * @param <T>
+     * @param t
+     * @param storeBeanReference
+     * @return
+     */
+    @SuppressWarnings( "unchecked" )
+    protected <T extends CommonPersistableEntity> Store<T> getStore( String storeBeanReference )
+    {
+        Object store = this.applicationContext.getBean( storeBeanReference );
+        return (Store<T>) store;
     }
 
 }

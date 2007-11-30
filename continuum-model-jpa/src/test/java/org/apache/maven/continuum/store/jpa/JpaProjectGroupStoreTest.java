@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
@@ -31,16 +32,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith( SpringJUnit4ClassRunner.class )
 @ContextConfiguration( locations = "/META-INF/spring-config.xml" )
-public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
+public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCase
 {
-    private static final String BEAN_REF__PROJECT_STORE = "projectStore";
+    private static final String BEAN_REF__PROJECT_GROUP_STORE = "projectGroupStore";
+
     private static final String PERSISTENT_UNIT_CONTINUUM_STORE = "continuum-store";
 
     @Override
     @Before
     public void setUp()
     {
-        File testData = new File( "src/test/resources/sql/project-table-data.sql" );
+        File testData = new File( "src/test/resources/sql/project-group-table-data.sql" );
         Assert.assertTrue( "Unable to find test data resource: " + testData.getAbsolutePath(), testData.exists() );
         Properties propMap = new Properties();
         setUp( propMap );
@@ -61,43 +63,36 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
     @Test
     public void testOpenJPASetup()
     {
-        OpenJPAQuery q = em.createQuery( "select p from Project p" );
+        OpenJPAQuery q = em.createQuery( "select pg from ProjectGroup pg" );
         String[] sql = q.getDataStoreActions( null );
         Assert.assertEquals( 1, sql.length );
         Assert.assertTrue( sql[0].startsWith( "SELECT" ) );
         List results = q.getResultList();
         Assert.assertNotNull( results );
-        Assert.assertEquals( 2, results.size() );
+        Assert.assertEquals( 1, results.size() );
     }
 
     @Test
-    public void testCreateProject() throws StoreException
+    public void testCreateProjectGroup() throws StoreException
     {
-        Project project = new Project();
-        project.setArtifactId( "sample-project" );
-        project.setGroupId( "org.sample.group" );
-        project.setName( "Sample Project" );
-        project.setDescription( "A sample project" );
-        project.setScmUseCache( false );
-        project.setScmUrl( "https://localhost/svn/sample-project" );
-        project.setModelEncoding( "UTF-8" );
+        ProjectGroup group = new ProjectGroup();
+        group.setGroupId( "org.sample.group" );
+        group.setName( "Sample Project Group" );
+        group.setDescription( "A sample project group" );
+        group.setModelEncoding( "UTF-8" );
 
-        Assert.assertTrue( null == project.getId() );
-        project = getProjectStore().save( project );
-        Assert.assertTrue( null != project.getId() );
-        Assert.assertTrue( project.getId() > 0L );
+        Assert.assertTrue( null == group.getId() );
+        group = getProjectGroupStore().save( group );
+        Assert.assertTrue( null != group.getId() );
+        Assert.assertTrue( group.getId() > 0L );
+        Assert.assertEquals( 0, group.getProjects().size() );
     }
 
-    /**
-     * TODO: Investigate {@link org.apache.openjpa.persistence.PersistenceException} attempting to clear tables from
-     * schema.
-     */
     @Override
     @After
     public void tearDown() throws Exception
     {
         super.tearDown();
-        // do nothing
     }
 
     /**
@@ -105,9 +100,9 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
      * 
      * @return
      */
-    private Store<Project> getProjectStore()
+    private Store<ProjectGroup> getProjectGroupStore()
     {
-        Store<Project> store = getStore( BEAN_REF__PROJECT_STORE );
+        Store<ProjectGroup> store = getStore( BEAN_REF__PROJECT_GROUP_STORE );
         return store;
     }
 

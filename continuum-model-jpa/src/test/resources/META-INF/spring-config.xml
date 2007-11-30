@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Middle tier application context definition for the image database.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+
+  <bean id="entityManagerFactory"
+    class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+    <property name="persistenceUnitName" value="continuum-store" />
+  </bean>
+
+  <!-- Setup the transaction manager -->
+  <bean id="transactionManager"
+    class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory" />
+  </bean>
+  <bean id="transactionInterceptor"
+    class="org.springframework.transaction.interceptor.TransactionInterceptor">
+    <property name="transactionManager" ref="transactionManager" />
+    <property name="transactionAttributeSource">
+      <bean
+        class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+    </property>
+  </bean>
+
+  <bean id="projectStoreTarget"
+    class="org.apache.maven.continuum.store.jpa.JpaProjectStore">
+    <property name="entityManagerFactory" ref="entityManagerFactory" />
+  </bean>
+
+  <bean id="projectStore"
+    class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="targetName" value="projectStoreTarget" />
+    <property name="autodetectInterfaces" value="true" />
+    <property name="interceptorNames">
+      <idref local="transactionInterceptor" />
+    </property>
+  </bean>
+
+  <bean id="projectGroupStoreTarget"
+    class="org.apache.maven.continuum.store.jpa.JpaProjectGroupStore">
+    <property name="entityManagerFactory" ref="entityManagerFactory" />
+  </bean>
+
+  <bean id="projectGroupStore"
+    class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="targetName" value="projectGroupStoreTarget" />
+    <property name="autodetectInterfaces" value="true" />
+    <property name="interceptorNames">
+      <idref local="transactionInterceptor" />
+    </property>
+  </bean>
+
+</beans>

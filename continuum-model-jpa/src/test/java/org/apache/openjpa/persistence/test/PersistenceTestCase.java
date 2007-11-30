@@ -29,19 +29,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import junit.framework.TestCase;
-
 import org.apache.openjpa.kernel.AbstractBrokerFactory;
 import org.apache.openjpa.kernel.Broker;
 import org.apache.openjpa.meta.ClassMetaData;
 import org.apache.openjpa.persistence.JPAFacadeHelper;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
+import org.junit.Assert;
 
 /**
  * Base test class providing persistence utilities.
  */
-public abstract class PersistenceTestCase
-    extends TestCase {
+public abstract class PersistenceTestCase {
 
     /**
      * Marker object you an pass to {@link #setUp} to indicate that the
@@ -113,12 +111,12 @@ public abstract class PersistenceTestCase
     }
 
     public void tearDown() throws Exception {
-        super.tearDown();
+        //super.tearDown();
     }
 
     /**
      * Safely close the given factory.
-     */
+     */    
     protected boolean closeEMF(EntityManagerFactory emf) {
         if (emf == null)
             return false;
@@ -198,10 +196,10 @@ public abstract class PersistenceTestCase
 
     public static void assertNotEquals(Object o1, Object o2) {
         if (o1 == o2)
-            fail("expected args to be different; were the same instance.");
+            Assert.fail("expected args to be different; were the same instance.");
         else if (o1 == null || o2 == null)
             return;
         else if (o1.equals(o2))
-            fail("expected args to be different; compared equal.");
+            Assert.fail("expected args to be different; compared equal.");
     }
 }
