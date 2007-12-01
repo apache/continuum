@@ -115,7 +115,7 @@ public class JpaProjectGroupStore extends StoreSupport implements Store<ProjectG
         }
         if ( query.hasName() )
         {
-            where.put( "name", query.getModelEncoding() );
+            where.put( "name", query.getName() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " projectGroup.name =:name " );

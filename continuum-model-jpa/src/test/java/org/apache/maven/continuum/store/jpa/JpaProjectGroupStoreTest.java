@@ -9,9 +9,8 @@ import java.util.Properties;
 
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
+import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.ProjectGroupQuery;
-import org.apache.maven.continuum.store.api.Query;
-import org.apache.maven.continuum.store.api.QueryFactory;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
 import org.apache.openjpa.persistence.OpenJPAQuery;
@@ -80,11 +79,45 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
     }
 
     @Test
-    public void testExecuteProjectGroupQuery() throws Exception
+    public void testLookupProjectGroup() throws EntityNotFoundException, StoreException
     {
-        Query<ProjectGroup> qry = QueryFactory.createQuery( ProjectGroupQuery.class );
-        Assert.assertNotNull( qry );
-        // TODO: Implement!
+        ProjectGroup projectGroup = getProjectGroupStore().lookup( 1000L );
+        Assert.assertNotNull( projectGroup );
+        Assert.assertEquals( 1000L, projectGroup.getId().longValue() );
+        Assert.assertEquals( "Continuum Projects", projectGroup.getName() );
+        Assert.assertEquals( "org.apache.continuum", projectGroup.getGroupId() );
+    }
+
+    @Test
+    public void testLookupInvalidProjectGroup() throws StoreException
+    {
+        try
+        {
+            ProjectGroup projectGroup = getProjectGroupStore().lookup( 99999L );
+            Assert.fail( "Expected " + EntityNotFoundException.class.getSimpleName()
+                            + " on account of an invalid ProjectGroup Id." );
+        }
+        catch ( EntityNotFoundException e )
+        {
+            // Expected!
+        }
+    }
+
+    @Test
+    public void testQueryProjectGroup() throws Exception
+    {
+        ProjectGroupQuery qry = new ProjectGroupQuery();
+        qry.setName( "Continuum Projects" );
+        List<ProjectGroup> results = getProjectGroupStore().query( qry );
+        Assert.assertNotNull( results );
+        Assert.assertEquals( "Expected 1 matching Project Group.", 1, results.size() );
+
+        // with an invalid ProjectGroup Id
+        qry = new ProjectGroupQuery();
+        qry.setName( "invalid Project" );
+        results = getProjectGroupStore().query( qry );
+        Assert.assertNotNull( results );
+        Assert.assertEquals( "Expected 0 matching Project Group.", 0, results.size() );
     }
 
     @Override
