@@ -12,8 +12,7 @@ import org.apache.maven.continuum.model.project.Project;
  * @version $Id$
  * @since 1.2
  */
-public class ProjectQuery
-    implements Query<Project>
+public class ProjectQuery implements Query<Project>
 {
 
     /**
@@ -48,7 +47,7 @@ public class ProjectQuery
      */
     public boolean hasId()
     {
-        return ( null != id && id >= 0 );
+        return ( null != this.id && this.id >= 0 );
     }
 
     /**
@@ -56,11 +55,12 @@ public class ProjectQuery
      */
     public Long getId()
     {
-        return id;
+        return this.id;
     }
 
     /**
-     * @param id the id to set
+     * @param id
+     *            the id to set
      */
     public void setId( Long id )
     {
@@ -74,7 +74,7 @@ public class ProjectQuery
      */
     public boolean hasGroupId()
     {
-        return ( null != groupId );
+        return ( null != this.groupId );
     }
 
     /**
@@ -82,11 +82,12 @@ public class ProjectQuery
      */
     public String getGroupId()
     {
-        return groupId;
+        return this.groupId;
     }
 
     /**
-     * @param groupId the groupId to set
+     * @param groupId
+     *            the groupId to set
      */
     public void setGroupId( String groupId )
     {
@@ -100,7 +101,7 @@ public class ProjectQuery
      */
     public boolean hasArtifactId()
     {
-        return ( null != artifactId );
+        return ( null != this.artifactId );
     }
 
     /**
@@ -108,11 +109,12 @@ public class ProjectQuery
      */
     public String getArtifactId()
     {
-        return artifactId;
+        return this.artifactId;
     }
 
     /**
-     * @param artifactId the artifactId to set
+     * @param artifactId
+     *            the artifactId to set
      */
     public void setArtifactId( String artifactId )
     {
@@ -126,7 +128,7 @@ public class ProjectQuery
      */
     public boolean hasVersion()
     {
-        return ( null != version );
+        return ( null != this.version );
     }
 
     /**
@@ -134,11 +136,12 @@ public class ProjectQuery
      */
     public String getVersion()
     {
-        return version;
+        return this.version;
     }
 
     /**
-     * @param version the version to set
+     * @param version
+     *            the version to set
      */
     public void setVersion( String version )
     {
@@ -152,7 +155,7 @@ public class ProjectQuery
      */
     public boolean hasName()
     {
-        return ( null != name );
+        return ( null != this.name );
     }
 
     /**
@@ -160,11 +163,12 @@ public class ProjectQuery
      */
     public String getName()
     {
-        return name;
+        return this.name;
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName( String name )
     {

@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.api.EntityNotFoundException;
-import org.apache.maven.continuum.store.api.Query;
+import org.apache.maven.continuum.store.api.ProjectQuery;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version $Id$
  * @since 1.2
  */
-public class JpaProjectStore extends StoreSupport implements Store<Project>
+public class JpaProjectStore extends StoreSupport implements Store<Project, ProjectQuery>
 {
 
     /**
@@ -64,9 +64,9 @@ public class JpaProjectStore extends StoreSupport implements Store<Project>
      * 
      * @see org.apache.maven.continuum.store.api.Store#query(org.apache.maven.continuum.store.api.Query)
      */
-    public List<Project> query( Query query ) throws StoreException
+    public List<Project> query( ProjectQuery query ) throws StoreException
     {
-        // TODO Implement!
+        // TODO Auto-generated method stub
         return null;
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
  * @version $Id$
  * @since 1.2
  */
-public interface Store<T>
+public interface Store<T, Q extends Query<T>>
 {
 
     /**
@@ -60,6 +60,6 @@ public interface Store<T>
      * @return {@link List} of instances of type {@link T} which match the specified query.
      * @throws StoreException
      */
-    public List<T> query( Query query ) throws StoreException;
+    public List<T> query( Q query ) throws StoreException;
 
 }
