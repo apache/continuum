@@ -7,9 +7,11 @@ import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
+import org.apache.maven.continuum.store.api.ProjectGroupQuery;
+import org.apache.maven.continuum.store.api.Query;
+import org.apache.maven.continuum.store.api.QueryFactory;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
 import org.apache.openjpa.persistence.OpenJPAQuery;
@@ -77,6 +79,14 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
         Assert.assertEquals( 0, group.getProjects().size() );
     }
 
+    @Test
+    public void testExecuteProjectGroupQuery() throws Exception
+    {
+        Query<ProjectGroup> qry = QueryFactory.createQuery( ProjectGroupQuery.class );
+        Assert.assertNotNull( qry );
+        // TODO: Implement!
+    }
+
     @Override
     @After
     public void tearDown() throws Exception
@@ -89,9 +99,9 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
      * 
      * @return
      */
-    private Store<ProjectGroup> getProjectGroupStore()
+    private Store<ProjectGroup, ProjectGroupQuery> getProjectGroupStore()
     {
-        Store<ProjectGroup> store = getStore( BEAN_REF__PROJECT_GROUP_STORE );
+        Store<ProjectGroup, ProjectGroupQuery> store = getStore( BEAN_REF__PROJECT_GROUP_STORE );
         return store;
     }
 

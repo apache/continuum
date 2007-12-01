@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
+import org.apache.maven.continuum.store.api.ProjectQuery;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
 import org.apache.openjpa.persistence.OpenJPAQuery;
@@ -36,7 +37,7 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
     private static final String BEAN_REF__PROJECT_STORE = "projectStore";
 
     @Override
-    @Before    
+    @Before
     public void setUp()
     {
         File testData = new File( "src/test/resources/sql/project-table-data.sql" );
@@ -88,9 +89,9 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
      * 
      * @return
      */
-    private Store<Project> getProjectStore()
+    private Store<Project, ProjectQuery> getProjectStore()
     {
-        Store<Project> store = getStore( BEAN_REF__PROJECT_STORE );
+        Store<Project, ProjectQuery> store = getStore( BEAN_REF__PROJECT_STORE );
         return store;
     }
 

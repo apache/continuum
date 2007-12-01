@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.continuum.model.CommonPersistableEntity;
+import org.apache.maven.continuum.store.api.Query;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.openjpa.persistence.test.SingleEMTestCase;
 import org.springframework.beans.BeansException;
@@ -164,10 +165,10 @@ public abstract class ApplicationContextAwareStoreTestCase extends SingleEMTestC
      * @return
      */
     @SuppressWarnings( "unchecked" )
-    protected <T extends CommonPersistableEntity> Store<T> getStore( String storeBeanReference )
+    protected <T extends CommonPersistableEntity, Q extends Query<T>> Store<T, Q> getStore( String storeBeanReference )
     {
         Object store = this.applicationContext.getBean( storeBeanReference );
-        return (Store<T>) store;
+        return (Store<T, Q>) store;
     }
 
     /**
