@@ -3,9 +3,12 @@
  */
 package org.apache.maven.continuum.store.jpa;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.ProjectQuery;
 import org.apache.maven.continuum.store.api.Store;
@@ -66,8 +69,85 @@ public class JpaProjectStore extends StoreSupport implements Store<Project, Proj
      */
     public List<Project> query( ProjectQuery query ) throws StoreException
     {
-        // TODO Auto-generated method stub
-        return null;
+        Map<String, Object> where = new HashMap<String, Object>();
+        StringBuffer sb = new StringBuffer();
+
+        if ( query.hasId() )
+        {
+            where.put( "id", query.getId() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.id =:id " );
+        }
+        if ( query.hasDateCreated() )
+        {
+            where.put( "dateCreated", query.getDateCreated() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.dateCreated =:dateCreated " );
+        }
+        if ( query.hasDateUpdated() )
+        {
+            where.put( "dateUpdated", query.getDateUpdated() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.dateUpdated =:dateUpdated " );
+        }
+        if ( query.hasDescription() )
+        {
+            where.put( "description", query.getDescription() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.description =:description " );
+        }
+        if ( query.hasGroupId() )
+        {
+            where.put( "groupId", query.getGroupId() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.groupId =:groupId " );
+        }
+        if ( query.hasModelEncoding() )
+        {
+            where.put( "modelEncoding", query.getModelEncoding() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.modelEncoding =:modelEncoding " );
+        }
+        if ( query.hasName() )
+        {
+            where.put( "name", query.getName() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.name =:name " );
+        }
+        if ( query.hasArtifactId() )
+        {
+            where.put( "artifactId", query.getArtifactId() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.artifactId =:artifactId" );
+        }
+        if ( query.hasBuildNumber() )
+        {
+            where.put( "buildNumber", query.getBuildNumber() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.buildNumber =:buildNumber" );
+        }
+        if ( query.hasVersion() )
+        {
+            where.put( "version", query.getVersion() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " project.version =:version" );
+        }
+
+        String whereClause = ( sb.length() > 0 ? " where " : "" ) + sb.toString();
+
+        List<Project> results = find( "select project from Project as project " + whereClause, where, 0, 0 );
+
+        return results;
     }
 
 }

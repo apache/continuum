@@ -11,8 +11,9 @@ import javax.persistence.Transient;
 import org.apache.maven.continuum.model.CommonUpdatableModelEntity;
 
 /**
- * 
  * Configures one method for notifying users/developers when a build breaks.
+ * <p>
+ * TODO: Review this to use discriminators for different Notifier extensions.
  * 
  * @version $Id$
  */
