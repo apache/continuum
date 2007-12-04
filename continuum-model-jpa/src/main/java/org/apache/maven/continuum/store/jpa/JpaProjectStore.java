@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.ProjectQuery;
 import org.apache.maven.continuum.store.api.Store;

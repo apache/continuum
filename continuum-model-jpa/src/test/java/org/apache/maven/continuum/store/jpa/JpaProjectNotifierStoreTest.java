@@ -7,7 +7,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
 import org.apache.maven.continuum.store.api.ProjectNotifierQuery;
