@@ -43,7 +43,7 @@
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/> 
       
       <!-- Enable SQL logging in OpenJPA -->
-      <!-- property name="openjpa.Log" value="DefaultLevel=INFO,SQL=TRACE" /-->
+      <property name="openjpa.Log" value="DefaultLevel=INFO,SQL=TRACE" />
       
       <!-- Change default log level across OpenJPA 
       <property name="openjpa.Log" value="DefaultLevel=TRACE"/>

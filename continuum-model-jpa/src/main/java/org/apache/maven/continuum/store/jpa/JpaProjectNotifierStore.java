@@ -107,6 +107,7 @@ public class JpaProjectNotifierStore extends StoreSupport implements Store<Proje
      * 
      * @see org.apache.maven.continuum.store.api.Store#save(java.lang.Object)
      */
+    @Transactional( readOnly = false )
     public ProjectNotifier save( ProjectNotifier entity ) throws StoreException
     {
         if ( null != entity )

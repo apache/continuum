@@ -50,7 +50,7 @@ public class JpaProjectNotifierStoreTest extends ApplicationContextAwareStoreTes
     {
         OpenJPAQuery q = em.createQuery( "select n from ProjectNotifier n" );
         String[] sql = q.getDataStoreActions( null );
-        Assert.assertEquals( 0, sql.length );
+        Assert.assertEquals( 1, sql.length );
         Assert.assertTrue( sql[0].startsWith( "SELECT" ) );
         List results = q.getResultList();
         Assert.assertNotNull( results );

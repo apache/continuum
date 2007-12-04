@@ -59,7 +59,7 @@
   </bean>
 
   <bean id="projectNotifierStoreTarget"
-    class="org.apache.maven.continuum.store.jpa.JpaProjectGroupStore">
+    class="org.apache.maven.continuum.store.jpa.JpaProjectNotifierStore">
     <property name="entityManagerFactory" ref="entityManagerFactory" />
   </bean>
 
