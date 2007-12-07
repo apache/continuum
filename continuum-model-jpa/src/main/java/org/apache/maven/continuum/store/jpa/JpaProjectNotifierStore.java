@@ -40,6 +40,16 @@ public class JpaProjectNotifierStore extends StoreSupport implements Store<Proje
      */
     public ProjectNotifier lookup( Long id ) throws StoreException, EntityNotFoundException
     {
+        return lookup( null, id );
+    }
+
+    /**
+     * @{inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.api.Store#lookup(Class, java.lang.Long)
+     */
+    public ProjectNotifier lookup( Class<T> klass, Long id ) throws StoreException, EntityNotFoundException
+    {
         return lookup( ProjectNotifier.class, id );
     }
 

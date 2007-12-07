@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version $Id$
  * @since 1.2
  */
-public class JpaProjectStore extends StoreSupport implements Store<Project, ProjectQuery>
+public class JpaProjectStore extends StoreSupport implements Store<Project, ProjectQuery<Project>>
 {
 
     /**
@@ -39,6 +39,16 @@ public class JpaProjectStore extends StoreSupport implements Store<Project, Proj
      * @see org.apache.maven.continuum.store.api.Store#lookup(java.lang.Long)
      */
     public Project lookup( Long id ) throws StoreException, EntityNotFoundException
+    {
+        return lookup( null, id );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.api.Store#lookup(Class, java.lang.Long)
+     */
+    public Project lookup( Class<T> klass, Long id ) throws StoreException, EntityNotFoundException
     {
         return lookup( Project.class, id );
     }

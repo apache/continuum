@@ -30,6 +30,7 @@
     </property>
   </bean>
 
+  <!-- 
   <bean id="projectStoreTarget"
     class="org.apache.maven.continuum.store.jpa.JpaProjectStore">
     <property name="entityManagerFactory" ref="entityManagerFactory" />
@@ -70,6 +71,19 @@
     <property name="interceptorNames">
       <idref local="transactionInterceptor" />
     </property>
+  </bean>
+  -->
+
+  <bean id="projectStoreFactory"
+    class="org.apache.maven.continuum.store.jpa.JpaStoreFactory">
+  </bean>
+  
+   <bean id="projectStore"
+    class="org.apache.maven.continuum.store.jpa.JpaStore"
+    factory-bean="projectStoreFactory"
+    factory-method="createProjectStoreInstance"    
+    >    
+    <property name="entityManagerFactory" ref="entityManagerFactory" />
   </bean>
 
 </beans>

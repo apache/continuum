@@ -40,6 +40,16 @@ public class JpaProjectGroupStore extends StoreSupport implements Store<ProjectG
      */
     public ProjectGroup lookup( Long id ) throws StoreException, EntityNotFoundException
     {
+        return lookup( null, id );
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.api.Store#lookup(Class, java.lang.Long)
+     */
+    public ProjectGroup lookup( Class<T> klass, Long id ) throws StoreException, EntityNotFoundException
+    {
         return lookup( ProjectGroup.class, id );
     }
 

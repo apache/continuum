@@ -30,33 +30,6 @@ public abstract class StoreSupport extends JpaDaoSupport
 {
 
     /**
-     * Service method to lookup matching entities.
-     * 
-     * @param <E>
-     * @param klass
-     * @param id
-     * @return
-     * @throws EntityNotFoundException
-     */
-    protected <E extends CommonPersistableEntity> E lookup( Class<E> klass, Long id ) throws EntityNotFoundException
-    {
-        if ( id == null )
-            throw new EntityNotFoundException();
-        E entity = null;
-        try
-        {
-            entity = getJpaTemplate().find( klass, id );
-        }
-        catch ( JpaObjectRetrievalFailureException e )
-        {
-            throw new EntityNotFoundException();
-        }
-        if ( entity == null )
-            throw new EntityNotFoundException();
-        return entity;
-    }
-
-    /**
      * Prepares and executes a query using the 'where' criteria, a start index and a given range of results to return.
      * 
      * @param queryString
