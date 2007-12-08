@@ -27,6 +27,9 @@
         class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
     </property>
   </bean>
+  
+  <!-- enable the configuration of transactional behavior based on annotations -->
+  <tx:annotation-driven transaction-manager="transactionManager" />
 
   <bean id="storeFactory"
     class="org.apache.maven.continuum.store.jpa.JpaStoreFactory">

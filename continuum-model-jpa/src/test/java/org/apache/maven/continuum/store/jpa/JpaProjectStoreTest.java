@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
+import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.ProjectQuery;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
@@ -20,6 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.AfterTransaction;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
@@ -73,8 +76,9 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
 
         Assert.assertTrue( null == project.getId() );
         project = getProjectStore().save( project );
-        Assert.assertTrue( null != project.getId() );
-        Assert.assertTrue( project.getId() > 0L );
+        Assert.assertTrue( "Identifier of the persisted new Entity should not be null.", null != project.getId() );
+        Assert.assertTrue( "Identifier of the persisted new Entity should be a valid positive value.",
+                           project.getId() > 0L );
     }
 
     @Test
@@ -83,6 +87,32 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
         Project project = getProjectStore().lookup( Project.class, 100L );
         Assert.assertNotNull( project );
         Assert.assertTrue( project.getId() > 0L );
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteProject() throws StoreException
+    {
+        Project project = getProjectStore().lookup( Project.class, 100L );
+        Assert.assertNotNull( project );
+        Assert.assertTrue( project.getId() > 0L );
+        getProjectStore().delete( project );
+        // assertion follows in a separate transaction
+    }
+
+    @AfterTransaction
+    public void assertProjectDeleted() throws StoreException
+    {
+        try
+        {
+            getProjectStore().lookup( Project.class, 100L );
+            Assert.fail( "Expected exception: " + EntityNotFoundException.class.getSimpleName()
+                            + ". Project instance should have been deleted from the underlying store.D" );
+        }
+        catch ( EntityNotFoundException e )
+        {
+            // expected!
+        }
     }
 
     @Override

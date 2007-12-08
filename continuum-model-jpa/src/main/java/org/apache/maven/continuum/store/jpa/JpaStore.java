@@ -77,7 +77,7 @@ public class JpaStore<T extends CommonUpdatableEntity, Q extends Query<T>> exten
      * 
      * @see org.apache.maven.continuum.store.api.Store#save(java.lang.Object)
      */
-    @Transactional( readOnly = false )
+    @Transactional( readOnly = true )
     public T save( T entity ) throws StoreException
     {
         if ( null != entity )
