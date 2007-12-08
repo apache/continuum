@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
 import org.apache.maven.continuum.store.api.ProjectNotifierQuery;
@@ -60,16 +61,25 @@ public class JpaProjectNotifierStoreTest extends ApplicationContextAwareStoreTes
     public void testCreateProjectNotifier() throws StoreException
     {
         ProjectNotifier notifier = new ProjectNotifier();
-        notifier.setModelEncoding( "UTF-8" );        
+        notifier.setModelEncoding( "UTF-8" );
         Assert.assertTrue( null == notifier.getId() );
         notifier = getProjectNotifierStore().save( notifier );
         Assert.assertTrue( null != notifier.getId() );
-        Assert.assertTrue( notifier.getId() > 0L );        
+        Assert.assertTrue( notifier.getId() > 0L );
     }
 
-    private Store<ProjectNotifier, ProjectNotifierQuery> getProjectNotifierStore()
+    @Test
+    public void testLookupProjectNotifier() throws StoreException
     {
-        Store<ProjectNotifier, ProjectNotifierQuery> store = getStore( BEAN_REF__PROJECT_NOTIFIER_STORE );
+        ProjectNotifier notifier = getProjectNotifierStore().lookup( ProjectNotifier.class, 100L );
+        Assert.assertNotNull( notifier );
+        Assert.assertTrue( notifier.getId() > 0L );
+    }
+
+    private Store<ProjectNotifier, ProjectNotifierQuery<ProjectNotifier>> getProjectNotifierStore()
+    {
+        Store<ProjectNotifier, ProjectNotifierQuery<ProjectNotifier>> store =
+            getStore( BEAN_REF__PROJECT_NOTIFIER_STORE );
         return store;
     }
 }

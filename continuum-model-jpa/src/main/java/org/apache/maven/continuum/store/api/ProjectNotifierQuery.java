@@ -4,17 +4,17 @@
 package org.apache.maven.continuum.store.api;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.model.project.ProjectNotifier;
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
  * @since 1.2
  */
-public class ProjectNotifierQuery implements Query<ProjectNotifier>
+public class ProjectNotifierQuery<ProjectNotifier> implements Query<ProjectNotifier>
 {
 
     /**
@@ -184,6 +184,63 @@ public class ProjectNotifierQuery implements Query<ProjectNotifier>
     public void setUserDefined( boolean isUserDefined )
     {
         this.isUserDefined = isUserDefined;
+    }
+
+    /**
+     * @{inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.api.Query#toString(java.util.Map)
+     */
+    public String toString( Map<String, Object> whereClause )
+    {
+        StringBuffer sb = new StringBuffer();
+
+        if ( this.hasId() )
+        {
+            whereClause.put( "id", this.getId() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " notifier.id =:id " );
+        }
+        if ( this.hasDateCreated() )
+        {
+            whereClause.put( "dateCreated", this.getDateCreated() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " notifier.dateCreated =:dateCreated " );
+        }
+        if ( this.hasDateUpdated() )
+        {
+            whereClause.put( "dateUpdated", this.getDateUpdated() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " notifier.dateUpdated =:dateUpdated " );
+        }
+        if ( this.hasModelEncoding() )
+        {
+            whereClause.put( "modelEncoding", this.getModelEncoding() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " notifier.modelEncoding =:modelEncoding " );
+        }
+        if ( this.isDefinedOnProject() )
+        {
+            // TODO: Implement!
+            // Need to check what property is setup on the Notifier.
+            // May need to add a property ORM mapping to persist.
+        }
+        if ( this.isUserDefined() )
+        {
+            // TODO: Implement!
+            // Need to check what property is setup on the Notifier.
+            // May need to add a property ORM mapping to persist.
+        }
+
+        if ( sb.length() > 0 )
+            sb.insert( 0, " where " );
+        sb.insert( 0, "select project from Project as project " );
+
+        return sb.toString();
     }
 
 }

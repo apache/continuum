@@ -81,7 +81,7 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
     @Test
     public void testLookupProjectGroup() throws EntityNotFoundException, StoreException
     {
-        ProjectGroup projectGroup = getProjectGroupStore().lookup( null, 1000L );
+        ProjectGroup projectGroup = getProjectGroupStore().lookup( ProjectGroup.class, 1000L );
         Assert.assertNotNull( projectGroup );
         Assert.assertEquals( 1000L, projectGroup.getId().longValue() );
         Assert.assertEquals( "Continuum Projects", projectGroup.getName() );
@@ -93,7 +93,7 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
     {
         try
         {
-            ProjectGroup projectGroup = getProjectGroupStore().lookup( null, 99999L );
+            ProjectGroup projectGroup = getProjectGroupStore().lookup( ProjectGroup.class, 99999L );
             Assert.fail( "Expected " + EntityNotFoundException.class.getSimpleName()
                             + " on account of an invalid ProjectGroup Id." );
         }
@@ -132,9 +132,9 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
      * 
      * @return
      */
-    private Store<ProjectGroup, ProjectGroupQuery> getProjectGroupStore()
+    private Store<ProjectGroup, ProjectGroupQuery<ProjectGroup>> getProjectGroupStore()
     {
-        Store<ProjectGroup, ProjectGroupQuery> store = getStore( BEAN_REF__PROJECT_GROUP_STORE );
+        Store<ProjectGroup, ProjectGroupQuery<ProjectGroup>> store = getStore( BEAN_REF__PROJECT_GROUP_STORE );
         return store;
     }
 

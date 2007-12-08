@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.CommonUpdatableEntity;
 import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.Query;
 import org.apache.maven.continuum.store.api.Store;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @version $Id$
  * @since 1.2
  */
-public class JpaStore<T, Q extends Query<T>> extends StoreSupport implements Store<T, Q>
+public class JpaStore<T extends CommonUpdatableEntity, Q extends Query<T>> extends StoreSupport implements Store<T, Q>
 {
 
     /**
@@ -80,8 +80,14 @@ public class JpaStore<T, Q extends Query<T>> extends StoreSupport implements Sto
     @Transactional( readOnly = false )
     public T save( T entity ) throws StoreException
     {
-        // TODO Auto-generated method stub
-        return null;
+        if ( null != entity )
+        {
+            if ( null == entity.getId() )
+                getJpaTemplate().persist( entity );
+            else
+                entity = getJpaTemplate().merge( entity );
+        }
+        return entity;
     }
 
 }

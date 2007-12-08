@@ -5,6 +5,8 @@ package org.apache.maven.continuum.store.api;
 
 import java.util.List;
 
+import org.apache.maven.continuum.model.CommonUpdatableEntity;
+
 /**
  * Interface that Continuum store extensions/implementations are expected to implement to allow operations on the
  * underlying store.
@@ -19,7 +21,7 @@ import java.util.List;
  * @version $Id$
  * @since 1.2
  */
-public interface Store<T, Q extends Query<T>>
+public interface Store<T extends CommonUpdatableEntity, Q extends Query<T>>
 {
 
     /**

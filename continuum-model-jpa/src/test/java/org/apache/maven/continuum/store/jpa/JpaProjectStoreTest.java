@@ -77,6 +77,14 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
         Assert.assertTrue( project.getId() > 0L );
     }
 
+    @Test
+    public void testLookupProject() throws StoreException
+    {
+        Project project = getProjectStore().lookup( Project.class, 100L );
+        Assert.assertNotNull( project );
+        Assert.assertTrue( project.getId() > 0L );
+    }
+
     @Override
     @After
     public void tearDown() throws Exception

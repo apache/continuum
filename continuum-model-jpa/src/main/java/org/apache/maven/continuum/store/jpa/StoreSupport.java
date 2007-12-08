@@ -11,12 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
-import org.apache.maven.continuum.model.CommonPersistableEntity;
-import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.Store;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.jpa.JpaCallback;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.orm.jpa.support.JpaDaoSupport;
 
 /**

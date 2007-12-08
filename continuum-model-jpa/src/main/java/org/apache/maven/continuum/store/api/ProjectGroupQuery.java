@@ -4,8 +4,7 @@
 package org.apache.maven.continuum.store.api;
 
 import java.util.Date;
-
-import org.apache.maven.continuum.model.project.ProjectGroup;
+import java.util.Map;
 
 /**
  * Wraps up retrieval criteria for {@link ProjectGroup}s.
@@ -14,7 +13,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
  * @version $Id$
  * @since 1.2
  */
-public class ProjectGroupQuery implements Query<ProjectGroup>
+public class ProjectGroupQuery<ProjectGroup> implements Query<ProjectGroup>
 {
 
     /**
@@ -236,6 +235,72 @@ public class ProjectGroupQuery implements Query<ProjectGroup>
     public void setName( String name )
     {
         this.name = name;
+    }
+
+    /**
+     * @{inheritDoc}
+     * 
+     * @see org.apache.maven.continuum.store.api.Query#toString(java.util.Map)
+     */
+    public String toString( Map<String, Object> whereClause )
+    {
+        StringBuffer sb = new StringBuffer();
+
+        if ( this.hasId() )
+        {
+            whereClause.put( "id", this.getId() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " projectGroup.id =:id " );
+        }
+        if ( this.hasDateCreated() )
+        {
+            whereClause.put( "dateCreated", this.getDateCreated() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " projectGroup.dateCreated =:dateCreated " );
+        }
+        if ( this.hasDateUpdated() )
+        {
+            whereClause.put( "dateUpdated", this.getDateUpdated() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " projectGroup.dateUpdated =:dateUpdated " );
+        }
+        if ( this.hasDescription() )
+        {
+            whereClause.put( "description", this.getDescription() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " projectGroup.description =:description " );
+        }
+        if ( this.hasGroupId() )
+        {
+            whereClause.put( "groupId", this.getGroupId() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " projectGroup.groupId =:groupId " );
+        }
+        if ( this.hasModelEncoding() )
+        {
+            whereClause.put( "modelEncoding", this.getModelEncoding() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " projectGroup.modelEncoding =:modelEncoding " );
+        }
+        if ( this.hasName() )
+        {
+            whereClause.put( "name", this.getName() );
+            if ( sb.length() > 0 )
+                sb.append( "and" );
+            sb.append( " projectGroup.name =:name " );
+        }
+
+        if ( sb.length() > 0 )
+            sb.insert( 0, " where " );
+        sb.insert( 0, "select projectGroup from ProjectGroup as projectGroup " );
+
+        return sb.toString();
     }
 
 }

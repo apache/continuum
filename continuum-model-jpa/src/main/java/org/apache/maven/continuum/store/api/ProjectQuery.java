@@ -6,8 +6,6 @@ package org.apache.maven.continuum.store.api;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.maven.continuum.model.project.Project;
-
 /**
  * Wraps up retrieval criteria for {@link Project}s.
  * 
@@ -327,84 +325,86 @@ public class ProjectQuery<Project> implements Query<Project>
      * 
      * @see org.apache.maven.continuum.store.api.Query#toString(java.util.Map)
      */
-    public String toString( Map<String, Object> where )
+    public String toString( Map<String, Object> whereClause )
     {
         StringBuffer sb = new StringBuffer();
 
         if ( this.hasId() )
         {
-            where.put( "id", this.getId() );
+            whereClause.put( "id", this.getId() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.id =:id " );
         }
         if ( this.hasDateCreated() )
         {
-            where.put( "dateCreated", this.getDateCreated() );
+            whereClause.put( "dateCreated", this.getDateCreated() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.dateCreated =:dateCreated " );
         }
         if ( this.hasDateUpdated() )
         {
-            where.put( "dateUpdated", this.getDateUpdated() );
+            whereClause.put( "dateUpdated", this.getDateUpdated() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.dateUpdated =:dateUpdated " );
         }
         if ( this.hasDescription() )
         {
-            where.put( "description", this.getDescription() );
+            whereClause.put( "description", this.getDescription() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.description =:description " );
         }
         if ( this.hasGroupId() )
         {
-            where.put( "groupId", this.getGroupId() );
+            whereClause.put( "groupId", this.getGroupId() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.groupId =:groupId " );
         }
         if ( this.hasModelEncoding() )
         {
-            where.put( "modelEncoding", this.getModelEncoding() );
+            whereClause.put( "modelEncoding", this.getModelEncoding() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.modelEncoding =:modelEncoding " );
         }
         if ( this.hasName() )
         {
-            where.put( "name", this.getName() );
+            whereClause.put( "name", this.getName() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.name =:name " );
         }
         if ( this.hasArtifactId() )
         {
-            where.put( "artifactId", this.getArtifactId() );
+            whereClause.put( "artifactId", this.getArtifactId() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.artifactId =:artifactId" );
         }
         if ( this.hasBuildNumber() )
         {
-            where.put( "buildNumber", this.getBuildNumber() );
+            whereClause.put( "buildNumber", this.getBuildNumber() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.buildNumber =:buildNumber" );
         }
         if ( this.hasVersion() )
         {
-            where.put( "version", this.getVersion() );
+            whereClause.put( "version", this.getVersion() );
             if ( sb.length() > 0 )
                 sb.append( "and" );
             sb.append( " project.version =:version" );
         }
 
-        String whereClause = ( sb.length() > 0 ? " where " : "" ) + sb.toString();
+        if ( sb.length() > 0 )
+            sb.insert( 0, " where " );
+        sb.insert( 0, "select project from Project as project " );
 
-        return null;
+        return sb.toString();
     }
 
 }

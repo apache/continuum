@@ -67,9 +67,9 @@ public class JpaStoreTest extends ApplicationContextAwareStoreTestCase
         Assert.assertTrue( notifier.getId() > 0L );
     }
 
-    private Store<ProjectNotifier, ProjectNotifierQuery> getProjectNotifierStore()
+    private Store<ProjectNotifier, ProjectNotifierQuery<ProjectNotifier>> getProjectNotifierStore()
     {
-        Store<ProjectNotifier, ProjectNotifierQuery> store = getStore( BEAN_REF__PROJECT_STORE );
+        Store<ProjectNotifier, ProjectNotifierQuery<ProjectNotifier>> store = getStore( BEAN_REF__PROJECT_STORE );
         return store;
     }
 }

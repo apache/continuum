@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  - Middle tier application context definition for the image database.
--->
+
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
@@ -30,59 +28,28 @@
     </property>
   </bean>
 
-  <!-- 
-  <bean id="projectStoreTarget"
-    class="org.apache.maven.continuum.store.jpa.JpaProjectStore">
-    <property name="entityManagerFactory" ref="entityManagerFactory" />
+  <bean id="storeFactory"
+    class="org.apache.maven.continuum.store.jpa.JpaStoreFactory">
   </bean>
 
   <bean id="projectStore"
-    class="org.springframework.aop.framework.ProxyFactoryBean">
-    <property name="targetName" value="projectStoreTarget" />
-    <property name="autodetectInterfaces" value="true" />
-    <property name="interceptorNames">
-      <idref local="transactionInterceptor" />
-    </property>
-  </bean>
-
-  <bean id="projectGroupStoreTarget"
-    class="org.apache.maven.continuum.store.jpa.JpaProjectGroupStore">
+    class="org.apache.maven.continuum.store.jpa.JpaStore"
+    factory-bean="storeFactory"
+    factory-method="createProjectStoreInstance">
     <property name="entityManagerFactory" ref="entityManagerFactory" />
   </bean>
 
   <bean id="projectGroupStore"
-    class="org.springframework.aop.framework.ProxyFactoryBean">
-    <property name="targetName" value="projectGroupStoreTarget" />
-    <property name="autodetectInterfaces" value="true" />
-    <property name="interceptorNames">
-      <idref local="transactionInterceptor" />
-    </property>
-  </bean>
-
-  <bean id="projectNotifierStoreTarget"
-    class="org.apache.maven.continuum.store.jpa.JpaProjectNotifierStore">
+    class="org.apache.maven.continuum.store.jpa.JpaStore"
+    factory-bean="storeFactory"
+    factory-method="createProjectGroupStoreInstance">
     <property name="entityManagerFactory" ref="entityManagerFactory" />
   </bean>
 
   <bean id="projectNotifierStore"
-    class="org.springframework.aop.framework.ProxyFactoryBean">
-    <property name="targetName" value="projectNotifierStoreTarget" />
-    <property name="autodetectInterfaces" value="true" />
-    <property name="interceptorNames">
-      <idref local="transactionInterceptor" />
-    </property>
-  </bean>
-  -->
-
-  <bean id="projectStoreFactory"
-    class="org.apache.maven.continuum.store.jpa.JpaStoreFactory">
-  </bean>
-  
-   <bean id="projectStore"
     class="org.apache.maven.continuum.store.jpa.JpaStore"
-    factory-bean="projectStoreFactory"
-    factory-method="createProjectStoreInstance"    
-    >    
+    factory-bean="storeFactory"
+    factory-method="createProjectNotifierStoreInstance">
     <property name="entityManagerFactory" ref="entityManagerFactory" />
   </bean>
 
