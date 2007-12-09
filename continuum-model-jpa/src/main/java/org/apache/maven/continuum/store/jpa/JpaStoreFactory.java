@@ -6,9 +6,6 @@ package org.apache.maven.continuum.store.jpa;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.store.api.ProjectGroupQuery;
-import org.apache.maven.continuum.store.api.ProjectNotifierQuery;
-import org.apache.maven.continuum.store.api.ProjectQuery;
 import org.apache.maven.continuum.store.api.Store;
 
 /**

@@ -12,7 +12,6 @@ import java.util.Properties;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
 import org.apache.maven.continuum.store.api.EntityNotFoundException;
-import org.apache.maven.continuum.store.api.ProjectQuery;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
 import org.apache.maven.continuum.store.matcher.JpaEntity;

@@ -1,10 +1,12 @@
 /**
  * 
  */
-package org.apache.maven.continuum.store.api;
+package org.apache.maven.continuum.store.jpa;
 
 import java.util.Date;
 import java.util.Map;
+
+import org.apache.maven.continuum.store.api.Query;
 
 /**
  * Wraps up retrieval criteria for {@link ProjectGroup}s.

@@ -1,13 +1,14 @@
 /**
  * 
  */
-package org.apache.maven.continuum.store.api;
+package org.apache.maven.continuum.store.jpa;
 
 import java.util.Date;
 import java.util.Map;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.store.api.Query;
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
