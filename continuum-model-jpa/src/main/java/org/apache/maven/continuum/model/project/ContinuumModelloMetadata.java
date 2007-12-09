@@ -4,7 +4,7 @@ package org.apache.maven.continuum.model.project;
 
 /**
  * Generated ModelloMetadata class for Continuum.
- *
+ * 
  * @author Mr Modello
  */
 public class ContinuumModelloMetadata

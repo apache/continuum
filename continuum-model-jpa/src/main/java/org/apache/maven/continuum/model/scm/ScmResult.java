@@ -2,8 +2,8 @@ package org.apache.maven.continuum.model.scm;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -12,7 +12,7 @@ import org.apache.maven.continuum.model.CommonUpdatableModelEntity;
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
- * @version $Id$ 
+ * @version $Id$
  */
 @Entity
 @Table( name = "SCM_RESULT" )
@@ -48,8 +48,7 @@ public class ScmResult extends CommonUpdatableModelEntity
     private String commandOutput;
 
     /**
-     * Field exception
-     * XXX: Renamed from 'EXCEPTION' to 'EXCEPTION_MSG'
+     * Field exception XXX: Renamed from 'EXCEPTION' to 'EXCEPTION_MSG'
      */
     @Basic
     @Column( name = "EXCEPTION_MSG" )

@@ -21,51 +21,58 @@ package org.apache.openjpa.persistence.test;
 import org.apache.openjpa.jdbc.meta.ClassMapping;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
 
-public abstract class SingleEMFTestCase
-    extends PersistenceTestCase {
+public abstract class SingleEMFTestCase extends PersistenceTestCase
+{
 
     protected OpenJPAEntityManagerFactorySPI emf;
 
     /**
-     * Call {@link #setUp(Object...)} with no arguments so that the emf
-     * set-up happens even if <code>setUp()</code> is not called from the
-     * subclass.
+     * Call {@link #setUp(Object...)} with no arguments so that the emf set-up happens even if <code>setUp()</code> is
+     * not called from the subclass.
      */
-    public void setUp() throws Exception {
-        setUp(new Object[0]);
+    public void setUp() throws Exception
+    {
+        setUp( new Object[0] );
     }
 
     /**
-     * Initialize entity manager factory. Put {@link #CLEAR_TABLES} in
-     * this list to tell the test framework to delete all table contents
-     * before running the tests.
-     *
-     * @param props list of persistent types used in testing and/or 
-     * configuration values in the form key,value,key,value...
+     * Initialize entity manager factory. Put {@link #CLEAR_TABLES} in this list to tell the test framework to delete
+     * all table contents before running the tests.
+     * 
+     * @param props
+     *            list of persistent types used in testing and/or configuration values in the form
+     *            key,value,key,value...
      */
-    protected void setUp(Object... props) {
-        emf = createEMF(props);
+    protected void setUp( Object... props )
+    {
+        emf = createEMF( props );
     }
 
     /**
      * Closes the entity manager factory.
      */
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
         super.tearDown();
 
-        if (emf == null)
+        if ( emf == null )
             return;
 
-        try {
-            clear(emf);
-        } finally {
-            closeEMF(emf);
+        try
+        {
+            clear( emf );
+        }
+        finally
+        {
+            closeEMF( emf );
         }
     }
-    
-    protected ClassMapping getMapping(String name) {
-        return (ClassMapping) emf.getConfiguration()
-                .getMetaDataRepositoryInstance().getMetaData(name,
-                        getClass().getClassLoader(), true);
+
+    protected ClassMapping getMapping( String name )
+    {
+        return (ClassMapping) emf.getConfiguration().getMetaDataRepositoryInstance().getMetaData(
+                                                                                                  name,
+                                                                                                  getClass().getClassLoader(),
+                                                                                                  true );
     }
 }

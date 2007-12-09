@@ -26,7 +26,6 @@ package org.apache.maven.continuum.store.api;
 public class StoreException extends Exception
 {
 
-   
     public StoreException()
     {
         super();

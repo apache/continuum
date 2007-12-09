@@ -3,8 +3,6 @@
  */
 package org.apache.maven.continuum.store.jpa;
 
-import javax.persistence.EntityManagerFactory;
-
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;

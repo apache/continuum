@@ -28,98 +28,112 @@ import org.junit.Assert;
 
 /**
  * Base class for tests that need to check generated SQL.
- *
+ * 
  * @author Patrick Linskey
  */
-public abstract class SQLListenerTestCase
-    extends SingleEMFTestCase {
+public abstract class SQLListenerTestCase extends SingleEMFTestCase
+{
 
     protected List<String> sql = new ArrayList<String>();
+
     protected int sqlCount;
-    
+
     @Override
-    public void setUp(Object... props) {
+    public void setUp( Object... props )
+    {
         Object[] copy = new Object[props.length + 2];
-        System.arraycopy(props, 0, copy, 0, props.length);
+        System.arraycopy( props, 0, copy, 0, props.length );
         copy[copy.length - 2] = "openjpa.jdbc.JDBCListeners";
         copy[copy.length - 1] = new JDBCListener[] { new Listener() };
-        super.setUp(copy); 
+        super.setUp( copy );
     }
 
     /**
      * Confirm that the specified SQL has been executed.
-     *
-     * @param sqlExp the SQL expression. E.g., "SELECT FOO .*"
+     * 
+     * @param sqlExp
+     *            the SQL expression. E.g., "SELECT FOO .*"
      */
-    public void assertSQL(String sqlExp) {
-        for (String statement : sql) {
-            if (statement.matches(sqlExp))
+    public void assertSQL( String sqlExp )
+    {
+        for ( String statement : sql )
+        {
+            if ( statement.matches( sqlExp ) )
                 return;
         }
 
-        Assert.fail("Expected regular expression <" + sqlExp + "> to have"
-            + " existed in SQL statements: " + sql);
+        Assert.fail( "Expected regular expression <" + sqlExp + "> to have" + " existed in SQL statements: " + sql );
     }
 
     /**
      * Confirm that the specified SQL has not been executed.
-     *
-     * @param sqlExp the SQL expression. E.g., "SELECT BADCOLUMN .*"
+     * 
+     * @param sqlExp
+     *            the SQL expression. E.g., "SELECT BADCOLUMN .*"
      */
-    public void assertNotSQL(String sqlExp) {
+    public void assertNotSQL( String sqlExp )
+    {
         boolean failed = false;
 
-        for (String statement : sql) {
-            if (statement.matches(sqlExp))
+        for ( String statement : sql )
+        {
+            if ( statement.matches( sqlExp ) )
                 failed = true;
         }
 
-        if (failed)
-            Assert.fail("Regular expression <" + sqlExp + ">"
-                + " should not have been executed in SQL statements: " + sql);
+        if ( failed )
+            Assert.fail( "Regular expression <" + sqlExp + ">" + " should not have been executed in SQL statements: "
+                            + sql );
     }
 
     /**
      * Confirm that the executed SQL String contains the specified sqlExp.
-     *
-     * @param sqlExp the SQL expression. E.g., "SELECT BADCOLUMN .*"
+     * 
+     * @param sqlExp
+     *            the SQL expression. E.g., "SELECT BADCOLUMN .*"
      */
-    public void assertContainsSQL(String sqlExp) {
-        for (String statement : sql) {
-            if (statement.contains(sqlExp))
+    public void assertContainsSQL( String sqlExp )
+    {
+        for ( String statement : sql )
+        {
+            if ( statement.contains( sqlExp ) )
                 return;
         }
 
-        Assert.fail("Expected regular expression <" + sqlExp + "> to be"
-            + " contained in SQL statements: " + sql);
+        Assert.fail( "Expected regular expression <" + sqlExp + "> to be" + " contained in SQL statements: " + sql );
     }
-    
+
     /**
      * Gets the number of SQL issued since last reset.
      */
-    public int getSQLCount() {
-    	return sqlCount;
+    public int getSQLCount()
+    {
+        return sqlCount;
     }
-    
+
     /**
      * Resets SQL count.
+     * 
      * @return number of SQL counted since last reset.
      */
-    public int resetSQLCount() {
-    	int tmp = sqlCount;
-    	sqlCount = 0;
-    	return tmp;
+    public int resetSQLCount()
+    {
+        int tmp = sqlCount;
+        sqlCount = 0;
+        return tmp;
     }
 
-    public class Listener
-        extends AbstractJDBCListener {
+    public class Listener extends AbstractJDBCListener
+    {
 
         @Override
-        public void beforeExecuteStatement(JDBCEvent event) {
-            if (event.getSQL() != null && sql != null) {
-                sql.add(event.getSQL());
+        public void beforeExecuteStatement( JDBCEvent event )
+        {
+            if ( event.getSQL() != null && sql != null )
+            {
+                sql.add( event.getSQL() );
                 sqlCount++;
             }
-		}
-	}
+        }
+    }
 }
