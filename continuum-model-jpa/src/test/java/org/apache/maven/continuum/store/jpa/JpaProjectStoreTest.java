@@ -3,6 +3,8 @@
  */
 package org.apache.maven.continuum.store.jpa;
 
+import static org.apache.maven.continuum.store.matcher.JpaEntity.isDeleted;
+
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
@@ -13,6 +15,7 @@ import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.ProjectQuery;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
+import org.apache.maven.continuum.store.matcher.JpaEntity;
 import org.apache.openjpa.persistence.OpenJPAQuery;
 import org.junit.After;
 import org.junit.Assert;
@@ -98,9 +101,10 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
         Assert.assertTrue( project.getId() > 0L );
         getProjectStore().delete( project );
         // assertion follows in a separate transaction
+        isDeleted( getProjectStore(), Project.class, project );
     }
 
-    @AfterTransaction
+    // @AfterTransaction
     public void assertProjectDeleted() throws StoreException
     {
         try
