@@ -2,4 +2,4 @@
 
 
 INSERT INTO PROJECT_GROUP ( ID, DATE_CREATED, MODEL_ENCODING, DESCRIPTION, GROUP_ID, NAME) 
-	VALUES ( 1000, 2007-11-10, 'UTF-8', 'Group for Continuum sub-projects', 'org.apache.continuum', 'Continuum Projects')
+	VALUES ( 100, 2007-11-10, 'UTF-8', 'Group for Continuum sub-projects', 'org.apache.continuum', 'Continuum Projects')

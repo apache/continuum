@@ -107,7 +107,7 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
         {
             getProjectStore().lookup( Project.class, 100L );
             Assert.fail( "Expected exception: " + EntityNotFoundException.class.getSimpleName()
-                            + ". Project instance should have been deleted from the underlying store.D" );
+                            + ". Project instance should have been deleted from the underlying store." );
         }
         catch ( EntityNotFoundException e )
         {

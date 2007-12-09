@@ -9,16 +9,20 @@ import java.util.Properties;
 
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
+import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.ProjectNotifierQuery;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
 import org.apache.openjpa.persistence.OpenJPAQuery;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.AfterTransaction;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
@@ -73,6 +77,39 @@ public class JpaProjectNotifierStoreTest extends ApplicationContextAwareStoreTes
         ProjectNotifier notifier = getProjectNotifierStore().lookup( ProjectNotifier.class, 100L );
         Assert.assertNotNull( notifier );
         Assert.assertTrue( notifier.getId() > 0L );
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteProjectNotifier() throws StoreException
+    {
+        ProjectNotifier notifier = getProjectNotifierStore().lookup( ProjectNotifier.class, 100L );
+        Assert.assertNotNull( notifier );
+        Assert.assertTrue( notifier.getId() > 0L );
+        getProjectNotifierStore().delete( notifier );
+        // assertion follows in a separate transaction
+    }
+
+    @AfterTransaction
+    public void assertProjectNotifierDeleted() throws StoreException
+    {
+        try
+        {
+            ProjectNotifier notifier = getProjectNotifierStore().lookup( ProjectNotifier.class, 100L );
+            Assert.fail( "Expected exception: " + EntityNotFoundException.class.getSimpleName()
+                            + ". ProjectNotifier instance should have been deleted from the underlying store." );
+        }
+        catch ( EntityNotFoundException e )
+        {
+            // expected!
+        }
+    }
+
+    @Override
+    @After
+    public void tearDown() throws Exception
+    {
+        super.tearDown();
     }
 
     private Store<ProjectNotifier, ProjectNotifierQuery<ProjectNotifier>> getProjectNotifierStore()

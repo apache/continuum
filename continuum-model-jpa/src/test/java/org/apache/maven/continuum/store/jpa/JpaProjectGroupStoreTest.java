@@ -21,6 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.AfterTransaction;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
@@ -81,25 +83,44 @@ public class JpaProjectGroupStoreTest extends ApplicationContextAwareStoreTestCa
     @Test
     public void testLookupProjectGroup() throws EntityNotFoundException, StoreException
     {
-        ProjectGroup projectGroup = getProjectGroupStore().lookup( ProjectGroup.class, 1000L );
+        ProjectGroup projectGroup = getProjectGroupStore().lookup( ProjectGroup.class, 100L );
         Assert.assertNotNull( projectGroup );
-        Assert.assertEquals( 1000L, projectGroup.getId().longValue() );
+        Assert.assertEquals( 100L, projectGroup.getId().longValue() );
         Assert.assertEquals( "Continuum Projects", projectGroup.getName() );
         Assert.assertEquals( "org.apache.continuum", projectGroup.getGroupId() );
     }
 
-    @Test
+    @Test( expected = EntityNotFoundException.class )
     public void testLookupInvalidProjectGroup() throws StoreException
+    {
+        ProjectGroup projectGroup = getProjectGroupStore().lookup( ProjectGroup.class, 99999L );
+        Assert.fail( "Expected " + EntityNotFoundException.class.getSimpleName()
+                        + " on account of an invalid ProjectGroup Id." );
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteProjectGroup() throws StoreException
+    {
+        ProjectGroup group = getProjectGroupStore().lookup( ProjectGroup.class, 100L );
+        Assert.assertNotNull( group );
+        Assert.assertTrue( group.getId() > 0L );
+        getProjectGroupStore().delete( group );
+        // assertion follows in a separate transaction
+    }
+
+    @AfterTransaction
+    public void assertProjectGroupDeleted() throws StoreException
     {
         try
         {
-            ProjectGroup projectGroup = getProjectGroupStore().lookup( ProjectGroup.class, 99999L );
-            Assert.fail( "Expected " + EntityNotFoundException.class.getSimpleName()
-                            + " on account of an invalid ProjectGroup Id." );
+            getProjectGroupStore().lookup( ProjectGroup.class, 100L );
+            Assert.fail( "Expected exception: " + EntityNotFoundException.class.getSimpleName()
+                            + ". ProjectNotifier instance should have been deleted from the underlying store." );
         }
         catch ( EntityNotFoundException e )
         {
-            // Expected!
+            // expected!
         }
     }
 
