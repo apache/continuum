@@ -12,6 +12,8 @@ import org.apache.maven.continuum.store.api.ProjectQuery;
 import org.apache.maven.continuum.store.api.Store;
 
 /**
+ * Bean factory that is used by Spring container to create and return instances of {@link Store} implementations.
+ * 
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
  * @since 1.2
@@ -37,16 +39,31 @@ public class JpaStoreFactory
     private final JpaStore<ProjectNotifier, ProjectNotifierQuery<ProjectNotifier>> JPA_PROJECT_NOTIFIER_STORE =
         new JpaStore<ProjectNotifier, ProjectNotifierQuery<ProjectNotifier>>();
 
+    /**
+     * Returns a {@link Store} instance to service {@link Project} Entity.
+     * 
+     * @return a {@link Store} instance to service {@link Project} Entity
+     */
     public Store<Project, ProjectQuery<Project>> createProjectGroupStoreInstance()
     {
         return JPA_PROJECT_STORE;
     }
 
+    /**
+     * Returns a {@link Store} instance to service {@link ProjectGroup} Entity.
+     * 
+     * @return a {@link Store} instance to service {@link ProjectGroup} Entity.
+     */
     public Store<ProjectGroup, ProjectGroupQuery<ProjectGroup>> createProjectStoreInstance()
     {
         return JPA_PROJECT_GROUP_STORE;
     }
 
+    /**
+     * Returns a {@link Store} instance to service {@link ProjectNotifier} Entity.
+     * 
+     * @return a {@link Store} instance to service {@link ProjectNotifier} Entity.
+     */
     public Store<ProjectNotifier, ProjectNotifierQuery<ProjectNotifier>> createProjectNotifierStoreInstance()
     {
 
