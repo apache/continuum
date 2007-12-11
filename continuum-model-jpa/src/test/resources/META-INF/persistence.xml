@@ -42,12 +42,13 @@
       <!--  Configure OpenJPA to automatically run the mapping tool at runtime and create schema on Unit Test setup -->
       <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/> 
       
-      <!-- Enable SQL logging in OpenJPA -->
+      <!-- Enable SQL logging in OpenJPA 
       <property name="openjpa.Log" value="DefaultLevel=INFO,SQL=TRACE" />
-      
-      <!-- Change default log level across OpenJPA 
-      <property name="openjpa.Log" value="DefaultLevel=TRACE"/>
       -->
+      
+      <!-- Change default log level across OpenJPA --> 
+      <property name="openjpa.Log" value="DefaultLevel=WARN"/>
+      
     </properties>
     
   </persistence-unit>

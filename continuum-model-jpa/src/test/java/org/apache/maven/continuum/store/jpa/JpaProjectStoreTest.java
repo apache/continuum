@@ -11,10 +11,8 @@ import java.util.Properties;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
-import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
-import org.apache.maven.continuum.store.matcher.JpaEntity;
 import org.apache.openjpa.persistence.OpenJPAQuery;
 import org.junit.After;
 import org.junit.Assert;
@@ -23,7 +21,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -101,21 +98,6 @@ public class JpaProjectStoreTest extends ApplicationContextAwareStoreTestCase
         getProjectStore().delete( project );
         // assertion follows in a separate transaction
         isDeleted( getProjectStore(), Project.class, project );
-    }
-
-    // @AfterTransaction
-    public void assertProjectDeleted() throws StoreException
-    {
-        try
-        {
-            getProjectStore().lookup( Project.class, 100L );
-            Assert.fail( "Expected exception: " + EntityNotFoundException.class.getSimpleName()
-                            + ". Project instance should have been deleted from the underlying store." );
-        }
-        catch ( EntityNotFoundException e )
-        {
-            // expected!
-        }
     }
 
     @Override

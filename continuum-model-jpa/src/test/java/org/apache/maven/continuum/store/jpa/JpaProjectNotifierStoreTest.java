@@ -3,13 +3,14 @@
  */
 package org.apache.maven.continuum.store.jpa;
 
+import static org.apache.maven.continuum.store.matcher.JpaEntity.isDeleted;
+
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.store.ApplicationContextAwareStoreTestCase;
-import org.apache.maven.continuum.store.api.EntityNotFoundException;
 import org.apache.maven.continuum.store.api.Store;
 import org.apache.maven.continuum.store.api.StoreException;
 import org.apache.openjpa.persistence.OpenJPAQuery;
@@ -20,7 +21,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -87,21 +87,7 @@ public class JpaProjectNotifierStoreTest extends ApplicationContextAwareStoreTes
         Assert.assertTrue( notifier.getId() > 0L );
         getProjectNotifierStore().delete( notifier );
         // assertion follows in a separate transaction
-    }
-
-    @AfterTransaction
-    public void assertProjectNotifierDeleted() throws StoreException
-    {
-        try
-        {
-            ProjectNotifier notifier = getProjectNotifierStore().lookup( ProjectNotifier.class, 100L );
-            Assert.fail( "Expected exception: " + EntityNotFoundException.class.getSimpleName()
-                            + ". ProjectNotifier instance should have been deleted from the underlying store." );
-        }
-        catch ( EntityNotFoundException e )
-        {
-            // expected!
-        }
+        isDeleted( getProjectNotifierStore(), ProjectNotifier.class, notifier );
     }
 
     @Override
