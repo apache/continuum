@@ -33,7 +33,7 @@ import org.codehaus.plexus.logging.console.ConsoleLogger;
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
-public class AbstractContinuumProjectBuilderTest
+public abstract class AbstractContinuumProjectBuilderTest
     extends TestCase
 {
 
