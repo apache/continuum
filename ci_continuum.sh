@@ -30,7 +30,7 @@ fi
 HOME_DIR=$HOME
 DIR=$HOME_DIR/checkouts
 SUNREPO=$HOME_DIR/sunrepo
-REPO=$HOME_DIR/maven-repo-local
+REPO=$HOME_DIR/maven-repo-local-ci
 SCM_LOG=$HOME_DIR/scm.log
 TIMESTAMP=`date +%Y%m%d.%H%M%S`
 WWW=$HOME/public_html
@@ -40,7 +40,7 @@ DIST_WAR=continuum-${TIMESTAMP}.war
 DIST_APP=continuum-${TIMESTAMP}.tar.gz
 SVN=svn
 
-M2_HOME=$HOME_DIR/maven-2.0
+M2_HOME=/usr/local/maven-2.0.7
 export M2_HOME
 PATH=$PATH:$JAVA_HOME/bin:$M2_HOME/bin
 export PATH
@@ -134,7 +134,7 @@ fi
     (
       cd $DIR/continuum
 
-      $M2_HOME/bin/mvn -Denv=test --batch-mode --no-plugin-registry --update-snapshots -e clean:clean install
+      $M2_HOME/bin/mvn --settings $HOME/.m2/settings-ci.xml -Denv=test --batch-mode --no-plugin-registry --update-snapshots -e clean:clean install
       ret=$?; if [ $ret != 0 ]; then exit $ret; fi
     )
     ret=$?; if [ $ret != 0 ]; then exit $ret; fi
