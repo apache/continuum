@@ -17,8 +17,14 @@
 # under the License.
 #
 
-# The subject line for the email message.
-email.validation.subject=Welcome to Apache Continuum
+# To override the defaults, edit and rename this file as "security.properties"
 
-# Feedback page
-email.feedback.path=http://maven.apache.org/continuum/mail-lists.html
+# --------------------------------------------------------------------
+# Email Settings
+
+# All emails sent by the system will be from the following user name and address
+email.from.name=Continuum
+email.from.address=continuum@localhost
+
+# The subject line for the new user validation email message
+email.validation.subject=Welcome to Apache Continuum
