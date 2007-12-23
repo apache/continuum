@@ -105,6 +105,7 @@
       </item>
       <item name="Administrator's Guides" href="documentation/1_1/administrator_guides/index.html" collapse="true">
         <item name="Managing Users and Security" href="documentation/1_1/administrator_guides/security/index.html" collapse="true">
+            <item name="Security Configuration" href="documentation/1_1/administrator_guides/security/customising-security.html"/>
             <item name="LDAP Configuration" href="documentation/1_1/administrator_guides/security/ldap.html"/>
         </item>
         <item name="Adding Project Group" href="documentation/1_1/administrator_guides/projectgroup.html"/>

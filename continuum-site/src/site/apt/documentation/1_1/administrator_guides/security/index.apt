@@ -8,4 +8,6 @@
 
 Managing Users and Security
 
-    To write
+    {{{customising-security.html}Security Configuration}}
+
+    {{{ldap.html}LDAP Configuration}}
