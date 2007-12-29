@@ -24,14 +24,14 @@
     <artifactId>continuum-parent</artifactId>
     <version>1.2-SNAPSHOT</version>
   </parent>
-  <artifactId>continuum-site</artifactId>
+  <artifactId>continuum-docs</artifactId>
   <groupId>org.apache.maven.continuum</groupId>
   <name>Continuum</name>
   <packaging>pom</packaging>
   <distributionManagement>
     <site>
       <id>apache</id>
-      <url>scpexe://people.apache.org//www/maven.apache.org/continuum/</url>
+      <url>scpexe://people.apache.org//www/maven.apache.org/continuum/docs/${project.version}</url>
     </site>
   </distributionManagement>
   <scm>
