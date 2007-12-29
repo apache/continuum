@@ -1,0 +1,36 @@
+ ------
+ Managing General Configuration
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 11 2007
+ ------
+
+Managing General Configuration
+
+    The first time you start Continuum, you will see the 'General Configuration' page. This page is preconfigured with default values.
+
+[./../../../images/configuration.png] General Configuration
+
+*---------------------------------+------------------------------------------------------+
+| Working Directory               | The directory where all projects will be checked out |
+*---------------------------------+------------------------------------------------------+
+| Build Output Directory          | The directory where all build output will be stored |
+*---------------------------------+------------------------------------------------------+
+| Deployment Repository Directory | The directory where generated maven2 artifacts will be stored. This directory will be respect a repository structure. It is independant of the maven deploy phase |
+*---------------------------------+------------------------------------------------------+
+| Base URL                        | The base Continuum URL. This URL is used in notifications |
+*---------------------------------+------------------------------------------------------+
+
+    You can modify values or keep defaults then save.
+
+    You'll can modify values at a later time with the following steps:
+
+    [[1]] Login to Continuum with an Administrator account
+
+    [[1]] Click the <<Configuration>> link under the <<Administration>> section
+
+[./../../../images/configuration-menu.png] General Configuration Menu
+
+    [[1]] Click the <<Edit>> button
+

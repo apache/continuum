@@ -1,0 +1,44 @@
+ ------
+ Guide to build Continuum
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+ ------
+
+Guide to build Continuum
+
+* Why would I want to build Continuum?
+
+  Building Continuum yourself is for one of two reasons:
+
+    * to try out a bleeding edge feature or bugfix (issues can be found in
+      {{{http://jira.codehaus.org/browse/CONTINUUM} JIRA}}), but you can try our SNAPSHOTs: {{http://maven.zones.apache.org/~continuum/builds/trunk/}}
+
+    * to fix a problem you are having and submit a patch to the developers team.
+
+  Note, that you don't need to build Continuum for day to day use. While we encourage getting
+  involved and fixing bugs that you find, for day to day use we recommend using the latest release.
+
+* Checking out the sources
+
+  All of the source code for Maven and its related libraries is in {{{http://subversion.tigris.org/} Subversion}}.
+  You can {{{http://svn.apache.org/viewvc/maven/continuum/} browse the repository}}, or checkout specific modules directly.
+
+  All SVN instructions are available in {{{../../../source-repository.html}Source Repository page}}.
+
+* Building the sources
+
+** Prerequisites
+
+    * JDK 5 or greater
+
+    * Maven 2
+
+** Building
+
+  To build Continuum, you run this command from the top directory:
+
+-----------------
+mvn clean install
+-----------------
