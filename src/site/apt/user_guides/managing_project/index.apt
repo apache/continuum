@@ -1,0 +1,15 @@
+ ------
+ Managing Projects
+ ------
+ Emmanuel Venisse
+ ------
+ Nov 15 2007
+ ------
+
+Managing Projects
+
+    * {{{addProject.html}How to add a project}}
+
+    * {{{editProject.html}How to edit a project}}
+
+    * {{{removeProject.html}How to remove a project}}
