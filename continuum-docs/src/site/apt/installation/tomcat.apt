@@ -54,6 +54,7 @@ Guide to Install Continuum on Tomcat
     The individual techniques for describing these resources, and the parameters associated with them are specific to the Tomcat version, resource type, and even jdbc implementation type.
 
     For the purposes of this document, the following assumptions are made.
+    
     [[1]] You are an Apache Tomcat administrator.
 
     [[1]] You have an SMTP Server on localhost, port 25, with no login / password.
