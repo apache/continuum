@@ -162,6 +162,14 @@
           <artifactId>modello-maven-plugin</artifactId>
           <version>1.0-alpha-15</version>
         </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.3.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.0.4</version>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
@@ -200,6 +208,8 @@
       <url>http://download.java.net/maven/2/</url>
     </repository>
   </repositories>
+  <!--
+  uncomment if snapshot plugins are needed
   <pluginRepositories>
     <pluginRepository>
       <id>codehaus.org</id>
@@ -218,6 +228,7 @@
       </releases>
     </pluginRepository>
   </pluginRepositories>
+  -->
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
