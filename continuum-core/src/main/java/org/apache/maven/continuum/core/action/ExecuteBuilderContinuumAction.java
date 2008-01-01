@@ -161,6 +161,8 @@ public class ExecuteBuilderContinuumAction
 
             buildResult = store.getBuildResult( buildResult.getId() );
 
+            context.put( KEY_PROJECT, project );
+            
             store.updateProject( project );
 
             notifier.goalsCompleted( project, buildDefinition, buildResult );

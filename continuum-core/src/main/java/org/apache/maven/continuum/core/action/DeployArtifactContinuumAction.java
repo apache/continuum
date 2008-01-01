@@ -89,6 +89,7 @@ public class DeployArtifactContinuumAction
 
         if ( deploymentRepositoryDirectory != null )
         {
+
             Project project = getProject( context );
 
             ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
