@@ -221,8 +221,8 @@ public class ContinuumServiceImpl
     protected String getProjectGroupName( int projectGroupId )
         throws ContinuumException
     {
-        ProjectGroupSummary pgs = getPGSummary( projectGroupId );
-        return pgs.getName();
+        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId );
+        return projectGroup == null ? null : projectGroup.getName();
     }
 
     private ProjectGroupSummary getPGSummary( int projectGroupId )
