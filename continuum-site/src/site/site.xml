@@ -41,6 +41,7 @@
       <item name="Maven 1.x" href="http://maven.apache.org/maven-1.x"/>
       <item name="Maven 2.x" href="http://maven.apache.org/"/>
       <item name="Continuum" href="http://maven.apache.org/continuum"/>
+      <item name="Archiva" href="http://maven.apache.org/archiva"/>
       <item name="SCM" href="http://maven.apache.org/scm"/>
       <item name="Wagon" href="http://maven.apache.org/wagon"/>
       <item name="JXR" href="http://maven.apache.org/jxr"/>
@@ -75,55 +76,55 @@
       <item name="User's Guides" collapse="true" href="documentation/1_1/user_guides/index.html">
         <item name="Getting Started" href="documentation/1_1/getting-started.html"/>
         <item name="Managing Projects" href="documentation/1_1/user_guides/managing_project/index.html" collapse="true">
-            <item name="Add a Project" href="documentation/1_1/user_guides/managing_project/addProject.html"/>
-            <item name="Edit a Project" href="documentation/1_1/user_guides/managing_project/editProject.html"/>
-            <item name="Remove a Project" href="documentation/1_1/user_guides/managing_project/removeProject.html"/>
+            <item name="Add a Project" href="docs/1.1/user_guides/managing_project/addProject.html"/>
+            <item name="Edit a Project" href="docs/1.1/user_guides/managing_project/editProject.html"/>
+            <item name="Remove a Project" href="docs/1.1/user_guides/managing_project/removeProject.html"/>
             <!-- item name="SCM security hints"/ -->
         </item>
-        <item name="Managing Build Definitions" href="documentation/1_1/user_guides/managing_builddef/index.html" collapse="true">
-            <item name="Project Build Definition" href="documentation/1_1/user_guides/managing_builddef/builddefProject.html"/>
-            <item name="Project Group Build Definition" href="documentation/1_1/user_guides/managing_builddef/builddefGroup.html"/>
-            <item name="Build Definition Template" href="documentation/1_1/user_guides/managing_builddef/builddefTemplate.html"/>
+        <item name="Managing Build Definitions" href="docs/1.1/user_guides/managing_builddef/index.html" collapse="true">
+            <item name="Project Build Definition" href="docs/1.1/user_guides/managing_builddef/builddefProject.html"/>
+            <item name="Project Group Build Definition" href="docs/1.1/user_guides/managing_builddef/builddefGroup.html"/>
+            <item name="Build Definition Template" href="docs/1.1/user_guides/managing_builddef/builddefTemplate.html"/>
         </item>
-        <item name="Managing Notification" href="documentation/1_1/user_guides/notification/index.html" collapse="true">
-            <item name="Mail Notification" href="documentation/1_1/user_guides/notification/mail.html"/>
-            <item name="IRC Notification" href="documentation/1_1/user_guides/notification/irc.html"/>
-            <item name="Jabber Notification" href="documentation/1_1/user_guides/notification/jabber.html">
-                <item name="Google Talk Notification" href="documentation/1_1/user_guides/notification/jabber.html#GTalk"/>
+        <item name="Managing Notification" href="docs/1.1/user_guides/notification/index.html" collapse="true">
+            <item name="Mail Notification" href="docs/1.1/user_guides/notification/mail.html"/>
+            <item name="IRC Notification" href="docs/1.1/user_guides/notification/irc.html"/>
+            <item name="Jabber Notification" href="docs/1.1/user_guides/notification/jabber.html">
+                <item name="Google Talk Notification" href="docs/1.1/user_guides/notification/jabber.html#GTalk"/>
             </item>
-            <item name="MSN Notification" href="documentation/1_1/user_guides/notification/msn.html"/>
-            <item name="Wagon Notification" href="documentation/1_1/user_guides/notification/wagon.html"/>
+            <item name="MSN Notification" href="docs/1.1/user_guides/notification/msn.html"/>
+            <item name="Wagon Notification" href="docs/1.1/user_guides/notification/wagon.html"/>
         </item>
-        <item name="Building a project" href="documentation/1_1/user_guides/building_project/index.html" collapse="true">
-            <item name="Scheduled Build" href="documentation/1_1/user_guides/building_project/index.html#Scheduled Build"/>
-            <item name="Forced Build" href="documentation/1_1/user_guides/building_project/index.html#Forced Build"/>
+        <item name="Building a project" href="docs/1.1/user_guides/building_project/index.html" collapse="true">
+            <item name="Scheduled Build" href="docs/1.1/user_guides/building_project/index.html#Scheduled Build"/>
+            <item name="Forced Build" href="docs/1.1/user_guides/building_project/index.html#Forced Build"/>
         </item>
-        <item name="Release Management" href="documentation/1_1/user_guides/release/index.html"/>
+        <item name="Release Management" href="docs/1.1/user_guides/release/index.html"/>
       </item>
-      <item name="Knowledge Base" href="documentation/1_1/knowledge_base/index.html" collapse="true">
+      <item name="Knowledge Base" href="docs/1.1/knowledge_base/index.html" collapse="true">
         <item name="FAQs" href="faqs.html"/>
       </item>
-      <item name="Administrator's Guides" href="documentation/1_1/administrator_guides/index.html" collapse="true">
-        <item name="Managing Users and Security" href="documentation/1_1/administrator_guides/security/index.html" collapse="true">
-            <item name="Security Configuration" href="documentation/1_1/administrator_guides/security/customising-security.html"/>
-            <item name="LDAP Configuration" href="documentation/1_1/administrator_guides/security/ldap.html"/>
+      <item name="Administrator's Guides" href="docs/1.1/administrator_guides/index.html" collapse="true">
+        <item name="Managing Users and Security" href="docs/1.1/administrator_guides/security/index.html" collapse="true">
+            <item name="Security Configuration" href="docs/1.1/administrator_guides/security/customising-security.html"/>
+            <item name="LDAP Configuration" href="docs/1.1/administrator_guides/security/ldap.html"/>
         </item>
-        <item name="Adding Project Group" href="documentation/1_1/administrator_guides/projectgroup.html"/>
-        <item name="Managing Builders" href="documentation/1_1/administrator_guides/builder.html"/>
-        <item name="Managing JDKs" href="documentation/1_1/administrator_guides/jdk.html"/>
-        <item name="Managing Profiles" href="documentation/1_1/administrator_guides/profiles.html"/>
-        <item name="Managing Schedules" href="documentation/1_1/administrator_guides/schedules.html"/>
-        <item name="Managing General Configuration" href="documentation/1_1/administrator_guides/configuration.html"/> <!-- (configuration and appearance) -->
-        <item name="External databases" href="documentation/1_1/administrator_guides/external-db.html"/>
-        <item name="Monitoring Continuum" href="documentation/1_1/administrator_guides/monitoring.html"/>
-        <item name="Appearance Configuration" href="documentation/1_1/administrator_guides/appearance.html"/>
-        <item name="Shutdown Continuum" href="documentation/1_1/administrator_guides/shutdown.html"/>
+        <item name="Adding Project Group" href="docs/1.1/administrator_guides/projectgroup.html"/>
+        <item name="Managing Builders" href="docs/1.1/administrator_guides/builder.html"/>
+        <item name="Managing JDKs" href="docs/1.1/administrator_guides/jdk.html"/>
+        <item name="Managing Profiles" href="docs/1.1/administrator_guides/profiles.html"/>
+        <item name="Managing Schedules" href="docs/1.1/administrator_guides/schedules.html"/>
+        <item name="Managing General Configuration" href="docs/1.1/administrator_guides/configuration.html"/> <!-- (configuration and appearance) -->
+        <item name="External databases" href="docs/1.1/administrator_guides/external-db.html"/>
+        <item name="Monitoring Continuum" href="docs/1.1/administrator_guides/monitoring.html"/>
+        <item name="Appearance Configuration" href="docs/1.1/administrator_guides/appearance.html"/>
+        <item name="Shutdown Continuum" href="docs/1.1/administrator_guides/shutdown.html"/>
       </item>
-      <item name="Developer's Guides" href="documentation/1_1/developer_guides/index.html" collapse="true">
-        <!-- item name="SVN repository structure" href="documentation/1_1/developer_guides/svn.html"/ -->
-        <item name="Building Continuum" href="documentation/1_1/developer_guides/building.html"/>
-        <!-- item name="Design" href="documentation/1_1/developer_guides/design.html"/ -->
-        <item name="XML-RPC" href="documentation/1_1/developer_guides/xmlrpc.html"/>
+      <item name="Developer's Guides" href="docs/1.1/developer_guides/index.html" collapse="true">
+        <!-- item name="SVN repository structure" href="docs/1.1/developer_guides/svn.html"/ -->
+        <item name="Building Continuum" href="docs/1.1/developer_guides/building.html"/>
+        <!-- item name="Design" href="docs/1.1/developer_guides/design.html"/ -->
+        <item name="XML-RPC" href="docs/1.1/developer_guides/xmlrpc.html"/>
       </item>
     </menu>
     <menu name="Community">
