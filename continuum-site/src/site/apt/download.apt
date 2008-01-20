@@ -6,9 +6,12 @@
  ------
  Nov 23 2007
 
-Download Continuum 1.1 Final
+Download Continuum 1.1
 
-  Continuum 1.1 Final is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
+  Continuum 1.1 is distributed under the {{{http://maven.apache.org/continuum/license.html} Apache License, version 2.0}}.
+
+  You will be prompted for a mirror - if the file is not found on yours, please be patient, as it may take 24
+  hours to reach all mirrors.
 
 *-------------------------------+---------+----------+-----------+
 |                               | Download | Checksum | Signature |
@@ -24,53 +27,16 @@ Download Continuum 1.1 Final
 
 *Previous Releases
 
-  You will be prompted for a mirror - if the file is not found on yours, please be patient, as it may take 24
-  hours to reach all mirrors.
-
 **Continuum 1.0.3
 
 *-------------------------------+---------+----------+-----------+
 |                               | Mirrors | Checksum | Signature |
 *-------------------------------+---------+----------+-----------+
-| Continuum 1.0.3 (tar.bz2)     | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.3-bin.tar.bz2} continuum-1.0.3-bin.tar.bz2}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.bz2.md5} continuum-1.0.3-bin.tar.bz2.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.bz2.asc} continuum-1.0.3-bin.tar.bz2.asc}} |
+| Continuum 1.0.3 (tar.bz2)     | {{{http://archive.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.bz2} continuum-1.0.3-bin.tar.bz2}} | {{{http://archive.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.bz2.md5} continuum-1.0.3-bin.tar.bz2.md5}} | {{{http://archive.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.bz2.asc} continuum-1.0.3-bin.tar.bz2.asc}} |
 *-------------------------------+---------+----------+-----------+
-| Continuum 1.0.3 (tar.gz)      | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.3-bin.tar.gz} continuum-1.0.3-bin.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.gz.md5} continuum-1.0.3-bin.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.gz.asc} continuum-1.0.3-bin.tar.gz.asc}} |
+| Continuum 1.0.3 (tar.gz)      | {{{http://archive.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.gz} continuum-1.0.3-bin.tar.gz}} | {{{http://archive.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.gz.md5} continuum-1.0.3-bin.tar.gz.md5}} | {{{http://archive.apache.org/dist/maven/binaries/continuum-1.0.3-bin.tar.gz.asc} continuum-1.0.3-bin.tar.gz.asc}} |
 *-------------------------------+---------+----------+-----------+
-| Continuum 1.0.3 (zip)         | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.3-bin.zip} continuum-1.0.3-bin.zip}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.3-bin.zip.md5} continuum-1.0.3-bin.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.3-bin.zip.asc} continuum-1.0.3-bin.zip.asc}} |
-*-------------------------------+---------+----------+-----------+
-
-**Continuum 1.0.2
-
-*-------------------------------+---------+----------+-----------+
-|                               | Mirrors | Checksum | Signature |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.0.2 (tar.bz2)     | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.2-bin.tar.bz2} continuum-1.0.2-bin.tar.bz2}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.2-bin.tar.bz2.md5} continuum-1.0.2-bin.tar.bz2.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.2-bin.tar.bz2.asc} continuum-1.0.2-bin.tar.bz2.asc}} |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.0.2 (tar.gz)      | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.2-bin.tar.gz} continuum-1.0.2-bin.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.2-bin.tar.gz.md5} continuum-1.0.2-bin.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.2-bin.tar.gz.asc} continuum-1.0.2-bin.tar.gz.asc}} |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.0.2 (zip)         | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.2-bin.zip} continuum-1.0.2-bin.zip}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.2-bin.zip.md5} continuum-1.0.2-bin.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.2-bin.zip.asc} continuum-1.0.2-bin.zip.asc}} |
+| Continuum 1.0.3 (zip)         | {{{http://archive.apache.org/dist/maven/binaries/continuum-1.0.3-bin.zip} continuum-1.0.3-bin.zip}} | {{{http://archive.apache.org/dist/maven/binaries/continuum-1.0.3-bin.zip.md5} continuum-1.0.3-bin.zip.md5}} | {{{http://archive.apache.org/dist/maven/binaries/continuum-1.0.3-bin.zip.asc} continuum-1.0.3-bin.zip.asc}} |
 *-------------------------------+---------+----------+-----------+
 
-**Continuum 1.0.1
-
-*-------------------------------+---------+----------+-----------+
-|                               | Mirrors | Checksum | Signature |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.0.1 (tar.bz2)     | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.1-bin.tar.bz2} continuum-1.0.1-bin.tar.bz2}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.1-bin.tar.bz2.md5} continuum-1.0.1-bin.tar.bz2.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.1-bin.tar.bz2.asc} continuum-1.0.1-bin.tar.bz2.asc}} |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.0.1 (tar.gz)      | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.1-bin.tar.gz} continuum-1.0.1-bin.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.1-bin.tar.gz.md5} continuum-1.0.1-bin.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.1-bin.tar.gz.asc} continuum-1.0.1-bin.tar.gz.asc}} |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.0.1 (zip)         | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0.1-bin.zip} continuum-1.0.1-bin.zip}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.1-bin.zip.md5} continuum-1.0.1-bin.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0.1-bin.zip.asc} continuum-1.0.1-bin.zip.asc}} |
-*-------------------------------+---------+----------+-----------+
-
-**Continuum 1.0
-
-*-------------------------------+---------+----------+-----------+
-|                               | Mirrors | Checksum | Signature |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.0 (tar.bz2)     | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0-bin.tar.bz2} continuum-1.0-bin.tar.bz2}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0-bin.tar.bz2.md5} continuum-1.0-bin.tar.bz2.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0-bin.tar.bz2.asc} continuum-1.0-bin.tar.bz2.asc}} |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.0 (tar.gz)      | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0-bin.tar.gz} continuum-1.0-bin.tar.gz}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0-bin.tar.gz.md5} continuum-1.0-bin.tar.gz.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0-bin.tar.gz.asc} continuum-1.0-bin.tar.gz.asc}} |
-*-------------------------------+---------+----------+-----------+
-| Continuum 1.0 (zip)         | {{{http://www.apache.org/dyn/closer.cgi/maven/binaries/continuum-1.0-bin.zip} continuum-1.0-bin.zip}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0-bin.zip.md5} continuum-1.0-bin.zip.md5}} | {{{http://www.apache.org/dist/maven/binaries/continuum-1.0-bin.zip.asc} continuum-1.0-bin.zip.asc}} |
-*-------------------------------+---------+----------+-----------+
+  More releases are available at {{{http://archive.apache.org/dist/maven/binaries/}}}.
