@@ -466,7 +466,7 @@
     </action>
 
     <action name="releasePerformFromScm" class="releasePerform" method="executeFromScm">
-      <result name="input" type="chain">releasePerformFromScmInput</result>
+      <result name="input">/WEB-INF/jsp/releasePerformFromScm.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">releaseInProgress</param>
         <param name="projectId">${projectId}</param>
