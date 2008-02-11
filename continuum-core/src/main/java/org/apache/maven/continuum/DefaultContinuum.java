@@ -716,7 +716,10 @@ public class DefaultContinuum
             for ( Object o : project.getBuildResults() )
             {
                 BuildResult br = (BuildResult) o;
-                store.removeBuildResult( br );
+                //Remove all modified dependencies to prevent SQL errors
+                br.setModifiedDependencies( null );
+                store.updateBuildResult( br );
+                removeBuildResult( br );
             }
 
             File workingDirectory = getWorkingDirectory( projectId );
@@ -1189,19 +1192,27 @@ public class DefaultContinuum
         throws ContinuumException
     {
         BuildResult buildResult = getBuildResult( buildId );
+        removeBuildResult( buildResult );
+    }
+
+
+    private void removeBuildResult( BuildResult buildResult )
+        throws ContinuumException
+    {
         store.removeBuildResult( buildResult );
 
         // cleanup some files
         try
         {
             File buildOutputDirectory = getConfiguration().getBuildOutputDirectory( buildResult.getProject().getId() );
-            File buildDirectory = new File( buildOutputDirectory, Integer.toString( buildId ) );
+            File buildDirectory = new File( buildOutputDirectory, Integer.toString( buildResult.getId() ) );
 
             if ( buildDirectory.exists() )
             {
                 FileUtils.deleteDirectory( buildDirectory );
             }
-            File buildOutputFile = getConfiguration().getBuildOutputFile( buildId, buildResult.getProject().getId() );
+            File buildOutputFile =
+                getConfiguration().getBuildOutputFile( buildResult.getId(), buildResult.getProject().getId() );
             if ( buildOutputFile.exists() )
             {
                 buildOutputFile.delete();
