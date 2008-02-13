@@ -585,8 +585,12 @@
       <dependency>
         <groupId>jpox</groupId>
         <artifactId>jpox-enhancer</artifactId>
-        <version>1.1.7</version>
+        <version>1.1.9</version>
         <exclusions>
+          <exclusion>
+            <groupId>bcel</groupId>
+            <artifactId>bcel</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>javax.sql</groupId>
             <artifactId>jdbc-stdext</artifactId>
@@ -596,7 +600,12 @@
       <dependency>
         <groupId>jpox</groupId>
         <artifactId>jpox-dbcp</artifactId>
-        <version>1.1.7</version>
+        <version>1.1.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.bcel</groupId>
+        <artifactId>bcel</artifactId>
+        <version>5.2</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
