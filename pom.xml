@@ -86,9 +86,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/continuum/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/trunk/</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/continuum/trunk/</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/trunk/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk/</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/continuum/trunk/</url>
   </scm>
   <distributionManagement>
     <site>
@@ -173,7 +173,7 @@
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
           <configuration>
-            <tagBase>https://svn.apache.org/repos/asf/maven/continuum/tags</tagBase>
+            <tagBase>https://svn.apache.org/repos/asf/continuum/tags</tagBase>
             <preparationGoals>clean install</preparationGoals>
           </configuration>
         </plugin>
