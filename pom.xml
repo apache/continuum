@@ -86,9 +86,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.x</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.x</developerConnection>
-    <url>https://svn.apache.org/repos/asf/maven/continuum/branches/continuum-1.x</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/continuum/branches/continuum-1.x</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/branches/continuum-1.x</developerConnection>
+    <url>https://svn.apache.org/repos/asf/continuum/branches/continuum-1.x</url>
   </scm>
   <distributionManagement>
     <site>
@@ -173,7 +173,7 @@
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
           <configuration>
-            <tagBase>https://svn.apache.org/repos/asf/maven/continuum/tags</tagBase>
+            <tagBase>https://svn.apache.org/repos/asf/continuum/tags</tagBase>
             <preparationGoals>clean install</preparationGoals>
           </configuration>
         </plugin>
