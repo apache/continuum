@@ -115,7 +115,7 @@ public class DefaultSchedulesActivator
     public void unactivateSchedule( Schedule schedule, Continuum continuum )
         throws SchedulesActivationException
     {
-        getLogger().info( "Unactivating schedule " + schedule.getName() );
+        getLogger().info( "Deactivating schedule " + schedule.getName() );
 
         unschedule( schedule, continuum );
     }
