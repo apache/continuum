@@ -86,9 +86,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/continuum/branches/continuum-1.x</connection>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/branches/continuum-1.x</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/branches/continuum-1.x</developerConnection>
-    <url>https://svn.apache.org/repos/asf/continuum/branches/continuum-1.x</url>
+    <url>http://svn.apache.org/viewvc/continuum/branches/continuum-1.x</url>
   </scm>
   <distributionManagement>
     <site>
