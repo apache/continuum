@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>  
-    <artifactId>continuum-parent</artifactId>
-    <groupId>org.apache.maven.continuum</groupId>
+    <artifactId>continuum</artifactId>
+    <groupId>org.apache.continuum</groupId>
     <version>2.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -29,11 +29,11 @@
       <artifactId>maven-settings</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-reports</artifactId>
     </dependency>    
     <dependency>
@@ -53,11 +53,11 @@
       <artifactId>plexus-velocity</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-commons</artifactId>
     </dependency>
     <dependency>
@@ -107,7 +107,7 @@
       <artifactId>jpox</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-store</artifactId>
     </dependency>
     <dependency>
@@ -120,11 +120,11 @@
       <version>1.4</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-release</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-security</artifactId>
     </dependency>
     <dependency>
@@ -138,17 +138,17 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-test</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-security</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-configuration</artifactId>
       <scope>test</scope>
     </dependency>

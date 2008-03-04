@@ -20,16 +20,16 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.apache.maven.continuum</groupId>
-    <artifactId>continuum-parent</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <groupId>org.apache.continuum</groupId>
+    <artifactId>continuum</artifactId>
+    <version>1.2-SNAPSHOT</version>
   </parent>
   <artifactId>continuum-webapp-test</artifactId>
   <name>Continuum Webapp Test</name>
   <packaging>pom</packaging>
   <dependencies>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-webapp</artifactId>
       <type>war</type>
     </dependency>
@@ -46,7 +46,7 @@
        the webapp because they are provided by appserver
     -->
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-configuration</artifactId>
     </dependency>
     <dependency>
@@ -58,11 +58,11 @@
       <artifactId>maven-app-configuration-web</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-security</artifactId>
     </dependency>
     <dependency> <!-- added since depMgt doesn't override imported dependencies -->
@@ -158,23 +158,23 @@
       <artifactId>maven-scm-provider-vss</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-irc</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-jabber</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-msn</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-wagon</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-xmlrpc</artifactId>
     </dependency>
     <dependency>
