@@ -20,13 +20,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.apache.maven</groupId>
-    <artifactId>maven-parent</artifactId>
-    <version>7</version>
-    <relativePath>../pom/maven/pom.xml</relativePath>
+    <groupId>org.apache.continuum</groupId>
+    <artifactId>continuum-parent</artifactId>
+    <version>1-SNAPSHOT</version>
+    <relativePath>../parent/pom.xml</relativePath>
   </parent>
-  <groupId>org.apache.maven.continuum</groupId>
-  <artifactId>continuum-parent</artifactId>
+  <groupId>org.apache.continuum</groupId>
+  <artifactId>continuum</artifactId>
   <packaging>pom</packaging>
   <name>Continuum Project</name>
   <version>2.0-SNAPSHOT</version>
@@ -38,53 +38,6 @@
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/CONTINUUM</url>
   </issueManagement>
-  <inceptionYear>2003</inceptionYear>
-  <mailingLists>
-    <mailingList>
-      <name>Continuum User List</name>
-      <post>continuum-users@maven.apache.org</post>
-      <subscribe>continuum-users-subscribe@maven.apache.org</subscribe>
-      <unsubscribe>continuum-users-unsubscribe@maven.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/maven-continuum-users/</archive>
-      <otherArchives>
-        <otherArchive>http://www.mail-archive.com/continuum-users@maven.apache.org</otherArchive>
-        <otherArchive>http://www.nabble.com/Continuum---Users-f13868.html</otherArchive>
-        <otherArchive>http://users.continuum.markmail.org/</otherArchive>
-      </otherArchives>
-    </mailingList>
-    <mailingList>
-      <name>Continuum Developer List</name>
-      <post>continuum-dev@maven.apache.org</post>
-      <subscribe>continuum-dev-subscribe@maven.apache.org</subscribe>
-      <unsubscribe>continuum-dev-unsubscribe@maven.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/maven-continuum-dev/</archive>
-      <otherArchives>
-        <otherArchive>http://www.mail-archive.com/continuum-dev@maven.apache.org</otherArchive>
-        <otherArchive>http://www.nabble.com/Continuum---Dev-f13867.html</otherArchive>
-        <otherArchive>http://dev.continuum.markmail.org/</otherArchive>
-      </otherArchives>
-    </mailingList>
-    <mailingList>
-      <name>Continuum Commits List</name>
-      <subscribe>continuum-commits-subscribe@maven.apache.org</subscribe>
-      <unsubscribe>continuum-commits-unsubscribe@maven.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/maven-continuum-commits/</archive>
-      <otherArchives>
-        <otherArchive>http://www.mail-archive.com/continuum-commits@maven.apache.org</otherArchive>
-        <otherArchive>http://maven.continuum.commits.markmail.org/</otherArchive>
-      </otherArchives>
-    </mailingList>
-    <mailingList>
-      <name>Continuum Issues List</name>
-      <subscribe>continuum-issues-subscribe@maven.apache.org</subscribe>
-      <unsubscribe>continuum-issues-unsubscribe@maven.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/maven-continuum-issues/</archive>
-      <otherArchives>
-        <otherArchive>http://www.mail-archive.com/continuum-issues@maven.apache.org</otherArchive>
-        <otherArchive>http://www.nabble.com/Continuum---Issues-f29618.html</otherArchive>
-      </otherArchives>
-    </mailingList>
-  </mailingLists>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/trunk/</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk/</developerConnection>
@@ -118,9 +71,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-surefire-report-plugin</artifactId>
-      </plugin>
-      <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <source>1.5</source>
@@ -152,25 +102,6 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-idea-plugin</artifactId>
-          <configuration>
-            <jdkLevel>1.5</jdkLevel>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-eclipse-plugin</artifactId>
-          <configuration>
-            <buildOutputDirectory>build</buildOutputDirectory>
-          </configuration>
-        </plugin>        
-        <plugin>
           <artifactId>maven-release-plugin</artifactId>
           <configuration>
             <tagBase>https://svn.apache.org/repos/asf/continuum/tags</tagBase>
@@ -187,14 +118,6 @@
           <groupId>org.codehaus.modello</groupId>
           <artifactId>modello-maven-plugin</artifactId>
           <version>1.0-alpha-15</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.3.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>2.0.4</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -413,139 +336,139 @@
         <version>${wagon.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-model</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-api</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-commons</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-configuration</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-store</artifactId>
         <classifier>tests</classifier>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-store</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-reports</artifactId>
         <version>${pom.version}</version>
       </dependency>      
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-core</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-test</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-xmlrpc-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-xmlrpc-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-xmlrpc-server</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-plexus-application</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-api</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-irc</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-jabber</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-msn</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-notifier-wagon</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-release</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-security</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-webapp</artifactId>
         <version>${pom.version}</version>
         <type>war</type>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-legacy</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>data-management-api</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>data-management-cli</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>data-management-jdo</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>data-management-redback-jdo</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.maven.continuum</groupId>
+        <groupId>org.apache.continuum</groupId>
         <artifactId>redback-legacy</artifactId>
         <version>${pom.version}</version>
       </dependency>
