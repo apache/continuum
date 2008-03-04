@@ -25,8 +25,8 @@
     <maven>2.0.6</maven>
   </prerequisites>
   <parent>
-    <artifactId>continuum-parent</artifactId>
-    <groupId>org.apache.maven.continuum</groupId>
+    <artifactId>continuum</artifactId>
+    <groupId>org.apache.continuum</groupId>
     <version>1.2-SNAPSHOT</version>
   </parent>
   <packaging>pom</packaging>
