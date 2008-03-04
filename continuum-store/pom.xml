@@ -12,6 +12,11 @@
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-jdo2</artifactId>
     </dependency>
+    <!-- bcel is reauired by jpox 1.1.9 -->
+    <dependency>
+      <groupId>org.apache.bcel</groupId>
+      <artifactId>bcel</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.maven.continuum</groupId>
       <artifactId>continuum-test</artifactId>

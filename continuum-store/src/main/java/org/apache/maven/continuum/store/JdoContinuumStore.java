@@ -344,7 +344,7 @@ public class JdoContinuumStore
 
             query.setResult( "this.id, buildDef.id" );
 
-            List result = (List) query.execute( new Integer( scheduleId ) );
+            List result = (List) query.execute( scheduleId );
 
             Map projectGroups = new HashMap();
 
@@ -431,7 +431,7 @@ public class JdoContinuumStore
 
             pm.getFetchPlan().addGroup( PROJECT_WITH_BUILDS_FETCH_GROUP );
 
-            Object objectId = pm.newObjectIdInstance( Project.class, new Integer( project.getId() ) );
+            Object objectId = pm.newObjectIdInstance( Project.class, project.getId() );
 
             project = (Project) pm.getObjectById( objectId );
 
@@ -471,7 +471,7 @@ public class JdoContinuumStore
 
             query.setFilter( "this.project.id == projectId && this.project.latestBuildId == this.id" );
 
-            List result = (List) query.execute( new Integer( projectId ) );
+            List result = (List) query.execute( projectId );
 
             result = (List) pm.detachCopyAll( result );
 
@@ -509,8 +509,8 @@ public class JdoContinuumStore
             query.setOrdering( "id descending" );
 
             Object[] params = new Object[2];
-            params[0] = new Integer( projectId );
-            params[1] = new Integer( buildDefinitionId );
+            params[0] = projectId;
+            params[1] = buildDefinitionId;
 
             List result = (List) query.executeWithArray( params );
 
@@ -554,29 +554,27 @@ public class JdoContinuumStore
 
             query.setFilter( filter );
 
-            List result = null;
+            List<BuildResult> result;
             if ( projectGroupId > 0 )
             {
-                result = (List) query.execute( new Integer( projectGroupId ) );
+                result = (List<BuildResult>) query.execute( projectGroupId );
             }
             else
             {
-                result = (List) query.execute();
+                result = (List<BuildResult>) query.execute();
             }
 
-            result = (List) pm.detachCopyAll( result );
+            result = (List<BuildResult>) pm.detachCopyAll( result );
 
             tx.commit();
 
             if ( result != null && !result.isEmpty() )
             {
-                Map builds = new HashMap();
+                Map<Integer, BuildResult> builds = new HashMap<Integer, BuildResult>();
 
-                for ( Iterator i = result.iterator(); i.hasNext(); )
+                for ( BuildResult br : result )
                 {
-                    BuildResult br = (BuildResult) i.next();
-
-                    builds.put( new Integer( br.getProject().getId() ), br );
+                    builds.put( br.getProject().getId(), br );
                 }
 
                 return builds;
@@ -737,9 +735,9 @@ public class JdoContinuumStore
 
             if ( result != null && !result.isEmpty() )
             {
-                for ( Iterator i = result.iterator(); i.hasNext(); )
+                for ( Object aResult : result )
                 {
-                    Object[] obj = (Object[]) i.next();
+                    Object[] obj = (Object[]) aResult;
 
                     builds.put( (Integer) obj[0], (Integer) obj[1] );
                 }
@@ -1335,15 +1333,11 @@ public class JdoContinuumStore
 
             if ( result.size() != 0 )
             {
-                for ( Iterator<Profile> iterator = result.iterator(); iterator.hasNext(); )
+                for ( Profile profile : result )
                 {
-                    Profile profile = iterator.next();
                     List<Installation> newEnvironmentVariables = new ArrayList<Installation>();
-                    for ( Iterator<Installation> iteInstallation = profile.getEnvironmentVariables().iterator();
-                          iteInstallation
-                              .hasNext(); )
+                    for ( Installation current : (Iterable<Installation>) profile.getEnvironmentVariables() )
                     {
-                        Installation current = iteInstallation.next();
                         if ( !StringUtils.equals( current.getName(), installation.getName() ) )
                         {
                             newEnvironmentVariables.add( current );
@@ -1430,7 +1424,7 @@ public class JdoContinuumStore
 
             query.declareParameters( "Integer projectId" );
 
-            List result = (List) query.execute( new Integer( projectId ) );
+            List result = (List) query.execute( projectId );
 
             result = (List) pm.detachCopyAll( result );
 
@@ -1514,7 +1508,7 @@ public class JdoContinuumStore
 
             query.setFilter( "this.project.id == projectId && this.buildNumber == buildNumber" );
 
-            List result = (List) query.execute( new Integer( projectId ), new Integer( buildNumber ) );
+            List result = (List) query.execute( projectId, buildNumber );
 
             result = (List) pm.detachCopyAll( result );
 
@@ -1559,8 +1553,7 @@ public class JdoContinuumStore
 
             query.setOrdering( "this.id descending" );
 
-            List<BuildResult> result =
-                (List<BuildResult>) query.execute( new Integer( projectId ), new Integer( buildDefinitionId ) );
+            List<BuildResult> result = (List<BuildResult>) query.execute( projectId, buildDefinitionId );
 
             result = (List<BuildResult>) pm.detachCopyAll( result );
 
@@ -1590,7 +1583,7 @@ public class JdoContinuumStore
 
             query.setResult( "count(this)" );
 
-            long result = (Long) query.execute( new Integer( projectId ) );
+            long result = (Long) query.execute( projectId );
 
             tx.commit();
 
@@ -1632,7 +1625,7 @@ public class JdoContinuumStore
                 query.setRange( startIndex, endIndex );
             }
 
-            List result = (List) query.execute( new Integer( projectId ) );
+            List result = (List) query.execute( projectId );
 
             result = (List) pm.detachCopyAll( result );
 
@@ -1666,7 +1659,7 @@ public class JdoContinuumStore
 
             query.setFilter( "this.project.id == projectId && this.startTime > fromDate" );
 
-            List result = (List) query.execute( new Integer( projectId ), new Long( fromDate ) );
+            List result = (List) query.execute( projectId, fromDate );
 
             result = (List) pm.detachCopyAll( result );
 
@@ -1723,11 +1716,11 @@ public class JdoContinuumStore
 
             query.setFilter( filter );
 
-            List result = null;
+            List<BuildResult> result;
 
             if ( projectGroupId > 0 )
             {
-                result = (List) query.execute( new Integer( projectGroupId ) );
+                result = (List) query.execute( projectGroupId );
             }
             else
             {
@@ -1740,13 +1733,11 @@ public class JdoContinuumStore
 
             if ( result != null && !result.isEmpty() )
             {
-                Map builds = new HashMap();
+                Map<Integer, BuildResult> builds = new HashMap<Integer, BuildResult>();
 
-                for ( Iterator i = result.iterator(); i.hasNext(); )
+                for ( BuildResult br : result )
                 {
-                    BuildResult br = (BuildResult) i.next();
-
-                    builds.put( new Integer( br.getProject().getId() ), br );
+                    builds.put( br.getProject().getId(), br );
                 }
 
                 return builds;
@@ -1787,9 +1778,9 @@ public class JdoContinuumStore
             // TODO: why do we need to do this? if not - build results are not
             // removed and a integrity constraint is violated. I assume its
             // because of the fetch groups
-            for ( Iterator i = pg.getProjects().iterator(); i.hasNext(); )
+            for ( Project p : (List<Project>) pg.getProjects() )
             {
-                removeProject( (Project) i.next() );
+                removeProject( p );
             }
             removeObject( pg );
         }

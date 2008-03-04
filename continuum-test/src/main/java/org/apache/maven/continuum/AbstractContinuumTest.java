@@ -40,7 +40,6 @@ import javax.jdo.PersistenceManagerFactory;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -81,13 +80,14 @@ public abstract class AbstractContinuumTest
     protected void createDefaultProjectGroup()
         throws Exception
     {
-        ProjectGroup group;
         try
         {
-            group = getDefaultProjectGroup();
+            getDefaultProjectGroup();
         }
         catch ( ContinuumObjectNotFoundException e )
         {
+            ProjectGroup group;
+
             group = new ProjectGroup();
 
             group.setName( "Default Project Group" );
@@ -96,7 +96,7 @@ public abstract class AbstractContinuumTest
 
             group.setDescription( "Contains all projects that do not have a group of their own" );
 
-            group = store.addProjectGroup( group );
+            store.addProjectGroup( group );
         }
     }
 
@@ -158,10 +158,8 @@ public abstract class AbstractContinuumTest
 
         Properties properties = jdoFactory.getProperties();
 
-        for ( Iterator it = properties.entrySet().iterator(); it.hasNext(); )
+        for ( Map.Entry entry : properties.entrySet() )
         {
-            Map.Entry entry = (Map.Entry) it.next();
-
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
