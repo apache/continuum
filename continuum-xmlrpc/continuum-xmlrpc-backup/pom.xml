@@ -60,7 +60,7 @@
           <arguments>
             <argument>-classpath</argument>
             <classpath />
-            <argument>org.apache.continuum.xmlrpc.backup.Backup</argument>
+            <argument>org.apache.maven.continuum.xmlrpc.backup.Backup</argument>
             <argument>-h</argument>
           </arguments>
         </configuration>
@@ -73,7 +73,7 @@
           <descriptor>src/assembly/app.xml</descriptor>
           <archive>
             <manifest>
-              <mainClass>org.apache.continuum.xmlrpc.backup.Backup</mainClass>
+              <mainClass>org.apache.maven.continuum.xmlrpc.backup.Backup</mainClass>
             </manifest>
           </archive>
         </configuration>
