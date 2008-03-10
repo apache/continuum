@@ -143,7 +143,7 @@
             "[continuum] BUILD ${state}: ${project.name}, Build Def - ${build.buildDefinition.description}" 
               results in "[continuum] BUILD SUCCESSFUL: Hello World, Build Def - Nightly Test Build"
          -->
-        <subject-format>[continuum] BUILD ${state}: ${project.projectGroup.name} - ${project.name} - Build Def: ${build.buildDefinition.description}</subject-format>
+        <subject-format>[continuum] BUILD ${state}: ${project.projectGroup.name} - ${project.name} - ${build.buildDefinition.description}</subject-format>
         <includeBuildResult>true</includeBuildResult>
         <includeBuildSummary>true</includeBuildSummary>
         <includeTestSummary>true</includeTestSummary>
