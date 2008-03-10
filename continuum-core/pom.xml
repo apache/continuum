@@ -250,11 +250,11 @@
               <systemProperties>
                 <property>
                   <name>JAVA_HOME</name>
-                  <value>${java.homr}</value>    
+                  <value>${java.home}</value>    
                 </property>
                 <property>
                   <name>M2_HOME</name>
-                  <value>${m2.home}</value>    
+                  <value>${maven.home}</value>    
                 </property>                      
               </systemProperties>
             </configuration>
