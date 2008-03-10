@@ -2,7 +2,7 @@
   <parent>  
     <artifactId>continuum</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>2.0-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-core</artifactId>
@@ -250,11 +250,11 @@
               <systemProperties>
                 <property>
                   <name>JAVA_HOME</name>
-                  <value>${JAVA_HOME}</value>    
+                  <value>${java.homr}</value>    
                 </property>
                 <property>
                   <name>M2_HOME</name>
-                  <value>${M2_HOME}</value>    
+                  <value>${m2.home}</value>    
                 </property>                      
               </systemProperties>
             </configuration>
