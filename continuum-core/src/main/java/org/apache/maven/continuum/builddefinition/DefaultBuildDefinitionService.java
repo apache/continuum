@@ -260,7 +260,7 @@ public class DefaultBuildDefinitionService
         getLogger().info( "create default AntBuildDefinitionTemplate" );
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
-        template.setName( "default ant template" );
+        template.setName( "Default Ant Template" );
         template.setType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR  );
 
         template = addBuildDefinitionTemplate( template );
@@ -277,7 +277,7 @@ public class DefaultBuildDefinitionService
 
         bd.setSchedule( getDefaultSchedule() );
 
-        bd.setDescription( "default ant buildDefinition" );
+        bd.setDescription( "Default Ant Build Definition" );
         
         bd.setTemplate( true );
         
@@ -297,7 +297,7 @@ public class DefaultBuildDefinitionService
         getLogger().info( "create default MavenOneBuildDefinitionTemplate" );
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
-        template.setName( "default maven1 template" );
+        template.setName( "Default Maven 1 Template" );
         template.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR  );
         
         template = addBuildDefinitionTemplate( template );
@@ -316,7 +316,7 @@ public class DefaultBuildDefinitionService
 
         bd.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
 
-        bd.setDescription( "default maven1 buildDefinition" );
+        bd.setDescription( "Default Maven 1 Build Definition" );
         
         bd.setTemplate( true );
         
@@ -334,7 +334,7 @@ public class DefaultBuildDefinitionService
         getLogger().info( "create default MavenTwoBuildDefinitionTemplate" );
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
-        template.setName( "default maven2 template" );
+        template.setName( "Default Maven 2 Template" );
         template.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR  );
         
         template = addBuildDefinitionTemplate( template );        
@@ -353,7 +353,7 @@ public class DefaultBuildDefinitionService
 
         bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
 
-        bd.setDescription( "default maven2 buildDefinition" );
+        bd.setDescription( "Default Maven 2 Build Definition" );
         
         bd.setTemplate( true );
         
@@ -371,7 +371,7 @@ public class DefaultBuildDefinitionService
         getLogger().info( "create default ShellBuildDefinitionTemplate" );
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
-        template.setName( "default shell template" );
+        template.setName( "Default Shell Template" );
         template.setType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR  );
         
         template = addBuildDefinitionTemplate( template );        
@@ -386,7 +386,7 @@ public class DefaultBuildDefinitionService
 
         bd.setTemplate( true );
         
-        bd.setDescription( "default shell buildDefinition" );
+        bd.setDescription( "Default Shell Build Definition" );
         
         return addBuildDefinitionInTemplate( template, bd, true );
     }
