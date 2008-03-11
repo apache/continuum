@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<html>
+  <head>
+    <title>$page.title</title>
+
+    <link type="text/css" rel="stylesheet" href="$stylesheet" />
+    <style type="text/css" media="all">
+      @import url("http://maven.apache.org/scm/css/maven-base.css");
+      @import url("http://maven.apache.org/scm/css/maven-theme.css");
+      @import url("http://maven.apache.org/scm/css/site.css");
+    </style>
+    <link rel="stylesheet" href="http://maven.apache.org/scm/css/print.css" type="text/css" media="print" />
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+      </head>
+  <body class="composite">
+    <div id="banner">
+                  <a href="/" id="bannerLeft">
+
+    
+                                    <img src="http://maven.apache.org/maven2/images/apache-maven-project-2.png" alt="" />
+    
+            </a>
+                          <span id="bannerRight">
+    
+                                    <img src="http://maven.apache.org/maven2/images/maven-logo-2.gif" alt="" />
+    
+            </span>
+            <div class="clear">
+        <hr/>
+      </div>
+    </div>
+
+    <div id="breadcrumbs">
+          
+  
+
+  
+    
+  
+  
+    
+<!-- TODO: make it an include so that it can be modified by Maven, or process site.xml files -->           
+            <div class="xleft">
+            $autoexport.breadcrumbs($page)
+                      </div>
+            <div class="xright">            <a href="http://www.apache.org/" class="externalLink">Apache</a>
+            |
+                <a href="http://maven.apache.org/maven-1.x" class="externalLink">Maven 1.x</a>
+            |
+                <a href="/">Maven 2.x</a>
+
+            |
+                <a href="http://maven.apache.org/continuum" class="externalLink">Continuum</a>
+            |
+                <a href="http://maven.apache.org/scm">SCM</a>
+            |
+                <a href="http://maven.apache.org/wagon" class="externalLink">Wagon</a>
+            |
+                <a href="http://maven.apache.org/jxr" class="externalLink">JXR</a>
+            |
+                <a href="http://maven.apache.org/doxia" class="externalLink">Doxia</a>
+
+            
+  
+
+  
+    
+  
+  
+    
+  </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="leftColumn">
+      <div id="navcolumn">
+<!-- TODO: make it an include so that it can be modified by Maven, or process site.xml files -->           
+  
+
+  
+    
+  
+  
+    
+                   <h5>Quick Links</h5>
+
+            <ul>
+              
+    <li class="none">
+              <strong>Home</strong>
+        </li>
+              
+    <li class="none">
+                    <a href="plugins/index.html">Maven SCM Plugin</a>
+          </li>
+              
+    <li class="none">
+
+                    <a href="projects/apidocs/index.html">Javadoc</a>
+          </li>
+              
+    <li class="none">
+                    <a href="scm-url-format.html">SCM URL Format</a>
+          </li>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+                    <a href="scms-overview.html">Supported SCMs</a>
+
+                </li>
+              
+                
+              
+      
+            
+      
+              
+        <li class="collapsed">
+                    <a href="guide/index.html">Guides</a>
+                </li>
+              
+    <li class="none">
+                    <a href="scm-matrix.html" class="externalLink">SCM providers Matrix</a>
+          </li>
+          </ul>
+
+              <h5>Project Documentation</h5>
+            <ul>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+                    <a href="project-info.html">Project Information</a>
+                </li>
+              
+                
+              
+      
+            
+      
+              
+        <li class="collapsed">
+                    <a href="project-reports.html">Project Reports</a>
+
+                </li>
+          </ul>
+                                           <a href="http://maven.apache.org/" title="Built by Maven" class="poweredBy">
+            <img alt="Built by Maven" src="./images/logos/maven-feather.png"></img>
+          </a>
+                       
+  
+
+  
+    
+  
+  
+    
+        </div>
+    </div>
+    <div id="bodyColumn">
+      <div id="contentBox">
+
+        <div class="wiki-content">
+          $body
+        </div>
+
+      </div>
+    </div>
+    <div class="clear">
+
+      <hr/>
+    </div>
+    <div id="footer">
+      <div class="xleft">        
+        #editReport() 
+        (<a href="$confluenceUri/pages/editpage.action?pageId=$page.id">edit page</a>)
+      </div>
+
+    <!-- TODO: year -->
+      <div class="xright">&#169;  
+          2001-2007
+    
+          Apache Software Foundation
+          
+  
+
+  
+    
+  
+  
+    
+  </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+
+  </body>
+</html>
+
