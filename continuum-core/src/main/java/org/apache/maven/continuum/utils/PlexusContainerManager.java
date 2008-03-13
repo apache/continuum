@@ -22,6 +22,7 @@ package org.apache.maven.continuum.utils;
 import org.codehaus.plexus.PlexusContainer;
 
 /**
+ * TODO this class can be removed ?
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  */

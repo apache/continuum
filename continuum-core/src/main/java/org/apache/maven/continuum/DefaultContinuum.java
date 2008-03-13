@@ -64,6 +64,7 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.action.Action;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.formica.FormicaException;
@@ -75,8 +76,10 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
+import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
@@ -178,6 +181,8 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private BuildExecutorManager executorManager;
+    
+    private PlexusContainer container;
 
 
     /**
@@ -544,7 +549,34 @@ public class DefaultContinuum
             throw new ContinuumException( "Error while getting the checkout queue.", e );
         }
     }
+    
+    public TaskQueueExecutor getBuildTaskQueueExecutor()
+        throws ContinuumException
+    {
+        try
+        {
+            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "build-project" );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+    }
 
+    public int getCurrentProjectIdBuilding()
+        throws ContinuumException
+    {
+        Task task = getBuildTaskQueueExecutor().getCurrentTask();
+        if ( task != null )
+        {
+            if ( task instanceof BuildProjectTask )
+            {
+                return ( (BuildProjectTask) task ).getProjectId();
+            }
+        }
+        return -1;
+    }    
+    
     public boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
         throws ContinuumException
     {
@@ -711,6 +743,23 @@ public class DefaultContinuum
             if ( isInBuildingQueue( projectId ) )
             {
                 removeProjectFromBuildingQueue( projectId );
+            }
+            
+            // cancel it if currently building
+            
+            if ( getCurrentProjectIdBuilding() == projectId )
+            {
+                Task currentTask = getBuildTaskQueueExecutor().getCurrentTask();
+                {
+                    if ( currentTask instanceof BuildProjectTask )
+                    {
+                        if ( ( (BuildProjectTask) currentTask ).getProjectId() == projectId )
+                        {
+                            getLogger().info( "Cancelling task for project " + projectId );
+                            getBuildTaskQueueExecutor().cancelTask( currentTask );
+                        }
+                    }
+                }
             }
 
             for ( Object o : project.getBuildResults() )
@@ -2712,11 +2761,14 @@ public class DefaultContinuum
                 project.getExecutorId() );
         }
     }
-
+    
+    // --------------------------------
+    //  Plexus Lifecycle
+    // --------------------------------
     public void contextualize( Context context )
         throws ContextException
     {
-        PlexusContainer container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
+        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
 
         PlexusContainerManager.getInstance().setContainer( container );
     }
@@ -2754,6 +2806,12 @@ public class DefaultContinuum
             getLogger().error( "Error activating schedules.", e );
         }
     }
+    
+    public void stop()
+    throws StoppingException
+{
+    stopContinuum();
+}    
 
     private void closeStore()
     {
@@ -2763,11 +2821,7 @@ public class DefaultContinuum
         }
     }
 
-    public void stop()
-        throws StoppingException
-    {
-        stopContinuum();
-    }
+
 
     public void stopContinuum()
         throws StoppingException
