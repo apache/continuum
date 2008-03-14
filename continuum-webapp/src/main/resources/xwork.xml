@@ -251,6 +251,7 @@
     </action>
 
     <action name="saveBuildDefinition" class="buildDefinition" method="saveBuildDefinition">
+      <result name="input">/WEB-INF/jsp/buildDefinitionEdit.jsp</result>
       <result name="success" type="chain">projectView</result>
       <result name="success_group" type="chain">projectGroupBuildDefinition</result>
     </action>
