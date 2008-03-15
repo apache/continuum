@@ -101,7 +101,8 @@ public class SampleClient
 
         System.out.println( "Building..." );
         String state = "unknown";
-        while ( "Building".equals( client.getProjectStatusAsString( ps.getState() ) ) )
+        while ( "Updating".equals( client.getProjectStatusAsString( ps.getState() ) ) ||
+                "Building".equals( client.getProjectStatusAsString( ps.getState() ) ) )
         {
             ps = client.refreshProjectSummary( ps );
             state = client.getProjectStatusAsString( ps.getState() );
