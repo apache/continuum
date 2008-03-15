@@ -46,7 +46,7 @@ public class SampleClient
         client = new ContinuumXmlRpcClient( new URL( args[0] ), args[1], args[2] );
 
         System.out.println( "Adding project..." );
-        AddingResult result = client.addMavenTwoProject( "http://svn.codehaus.org/plexus/plexus-utils/trunk/pom.xml" );
+        AddingResult result = client.addMavenTwoProject( "http://svn.apache.org/repos/asf/continuum/sandbox/simple-example/pom.xml" );
         if ( result.hasErrors() )
         {
             System.out.println( result.getErrorsAsString() );
