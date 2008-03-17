@@ -138,6 +138,7 @@
     <module>continuum-data-management</module>
     <module>continuum-configuration</module>
     <module>maven-continuum-plugin</module>
+    <module>continuum-docs</module>
   </modules>
   <repositories>
     <repository>
