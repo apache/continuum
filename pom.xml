@@ -31,7 +31,7 @@
   <distributionManagement>
     <site>
       <id>apache</id>
-      <url>scpexe://people.apache.org//www/maven.apache.org/continuum/docs/${project.version}</url>
+      <url>scpexe://people.apache.org/www/continuum.apache.org/docs/${project.version}</url>
     </site>
   </distributionManagement>
   <scm>
