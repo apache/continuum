@@ -19,12 +19,7 @@ package org.apache.maven.continuum.xmlrpc.client;
  * under the License.
  */
 
-import org.apache.maven.continuum.xmlrpc.project.AddingResult;
-import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
-import org.apache.maven.continuum.xmlrpc.project.BuildResult;
-import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
-import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
-import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
+import org.apache.maven.continuum.xmlrpc.project.*;
 import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
 import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
 
@@ -123,11 +118,17 @@ public class SampleClient
 
         System.out.println();
 
-        System.out.println( "Removing latest build result." );
+        System.out.println( "Removing build results." );
         System.out.println( "============================" );
-        BuildResult lbr = client.getLatestBuildResult( ps.getId() );
-        System.out.println( "Removing build result " + lbr.getId() );
-        client.removeBuildResult( lbr );
+        BuildResultSummary brs;
+        List results = client.getBuildResultsForProject( ps.getId() );
+        for ( Iterator i = results.iterator(); i.hasNext(); )
+        {
+            brs = (BuildResultSummary) i.next();
+            System.out.print( "Removing build result (" + brs.getId() + ") - " );
+            BuildResult br = client.getBuildResult( ps.getId(), brs.getId() );
+            System.out.println( (client.removeBuildResult( br ) == 0 ? "OK" : "Error" ) );
+        }
         System.out.println( "Done.");
 
         System.out.println();
