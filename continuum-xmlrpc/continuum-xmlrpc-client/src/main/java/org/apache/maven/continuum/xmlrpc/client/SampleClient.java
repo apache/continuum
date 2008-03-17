@@ -123,6 +123,15 @@ public class SampleClient
 
         System.out.println();
 
+        System.out.println( "Removing latest build result." );
+        System.out.println( "============================" );
+        BuildResult lbr = client.getLatestBuildResult( ps.getId() );
+        System.out.println( "Removing build result " + lbr.getId() );
+        client.removeBuildResult( lbr );
+        System.out.println( "Done.");
+
+        System.out.println();
+
         System.out.println( "Projects list." );
         System.out.println( "=====================" );
         List projects = client.getProjects( projectGroupId );
