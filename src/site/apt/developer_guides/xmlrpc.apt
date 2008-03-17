@@ -31,7 +31,7 @@ Guide to use XML-RPC with Continuum
 * {Connection to Continuum}
 
     To connect to your Continuum with the client API, you must use the
-    {{{http://maven.apache.org/continuum/ref/latest/apidocs/org/apache/maven/continuum/xmlrpc/client/ContinuumXmlRpcClient.html}ContinuumXmlRpcClient}} class.
+    {{{http://continuum.apache.org/ref/latest/apidocs/org/apache/maven/continuum/xmlrpc/client/ContinuumXmlRpcClient.html}ContinuumXmlRpcClient}} class.
 
     The constructor use 3 parameters:
     
@@ -104,6 +104,27 @@ client.buildProject( project.getId(), buildDefinitionId );
     To do this, you can write a simple xmlrpc client that will use a project id as parameter and you'll use the <<<buildProject(...)>>> method described above.
     
     This method will start a forced build.
+
+* {Removing a project}
+
+    A project can be removed by supplying the project id.
+
++--------------------------+
+List<ProjectSummary> projects = client.getProjects( projectGroupId );
+...
+  client.removeProject( ps.getId() );
++--------------------------+
+
+* {Removing build results}
+
+    Currently, to remove a build result, you need the entire build result (rather than just the summary).
+
++--------------------------+
+List<BuildResultSummary> results = client.getBuildResultsForProject( ps.getId() );
+...
+  BuildResult br = client.getBuildResult( ps.getId(), brs.getId() );
+  client.removeBuildResult( br );
++--------------------------+
 
 * {Backup}
 
