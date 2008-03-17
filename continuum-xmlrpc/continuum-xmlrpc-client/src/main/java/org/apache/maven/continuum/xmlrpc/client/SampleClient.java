@@ -19,7 +19,13 @@ package org.apache.maven.continuum.xmlrpc.client;
  * under the License.
  */
 
-import org.apache.maven.continuum.xmlrpc.project.*;
+import org.apache.maven.continuum.xmlrpc.project.AddingResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
+import org.apache.maven.continuum.xmlrpc.project.BuildResult;
+import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
+import org.apache.maven.continuum.xmlrpc.project.ProjectDependency;
+import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
+import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.scm.ChangeSet;
 import org.apache.maven.continuum.xmlrpc.scm.ScmResult;
 
