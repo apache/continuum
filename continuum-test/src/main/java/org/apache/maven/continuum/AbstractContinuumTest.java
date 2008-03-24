@@ -19,6 +19,16 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -30,26 +40,17 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
 public abstract class AbstractContinuumTest
-    extends PlexusTestCase
+    extends PlexusInSpringTestCase
 {
     private ContinuumStore store;
 

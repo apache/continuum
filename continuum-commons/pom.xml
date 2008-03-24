@@ -46,6 +46,11 @@
       <artifactId>continuum-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-spring</artifactId>
+      <scope>test</scope>
+    </dependency>    
   </dependencies>
   <build>
     <plugins>

@@ -48,16 +48,7 @@ public class DefaultContinuumTest
     public void testContinuumConfiguration()
         throws Exception
     {
-        try
-        {
-            lookup( Continuum.ROLE );
-        }
-        catch ( ComponentLookupException e )
-        {
-            e.printStackTrace();
-            throw e;
-        }
-
+        lookup( Continuum.ROLE );
     }
 
     public void testLookups()
