@@ -268,8 +268,15 @@
                 </property>                      
                 <property>
                   <name>plexus.home</name>
-                  <value>${project.build.directory}/plexus</value>
+                  <!-- ${project.build.directory} is not evaluated see surefire documentation -->
+                  <!--value>${project.build.directory}</value-->
+                  <value>./target</value>
                 </property>
+                <property>
+                  <!-- java.io.tmpdir is a shared directory on solaris and cause permission issues -->
+                  <name>java.io.tmpdir</name>
+                  <value>./target</value>
+                </property> 
               </systemProperties>
             </configuration>
           </plugin>
