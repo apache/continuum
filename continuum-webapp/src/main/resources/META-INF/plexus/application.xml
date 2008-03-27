@@ -18,6 +18,8 @@
   ~ under the License.
   -->
 <plexus>
+  <!-- 
+    Not supported with plexus-spring
   <load-on-start>
     <component>
       <role>org.apache.maven.continuum.Continuum</role>
@@ -43,7 +45,7 @@
       <role-hint>rollback-release</role-hint>
     </component>
   </load-on-start>
-
+  -->
   <components>
     <component>
       <role>org.codehaus.plexus.registry.Registry</role>
@@ -270,7 +272,7 @@
     <component>
       <role>org.codehaus.plexus.formica.validation.Validator</role>
       <role-hint>url</role-hint>
-      <implementation>org.codehaus.plexus.formica.validation.UrlValidator</implementation>
+      <implementation>org.apache.maven.continuum.utils.ContinuumUrlValidator</implementation>
       <configuration>
         <allowedSchemes>
           <allowedScheme>http</allowedScheme>

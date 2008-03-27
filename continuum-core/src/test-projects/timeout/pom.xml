@@ -24,7 +24,7 @@
   <version>1.0-SNAPSHOT</version>
   <name>Continuum Timeout test</name>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-core/src/test-projects/timeout</connection>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk/continuum-core/src/test-projects/timeout</connection>
   </scm>
   <dependencies>
     <dependency>

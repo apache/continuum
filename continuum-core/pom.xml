@@ -198,7 +198,17 @@
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-log4j-logging</artifactId>
       <scope>test</scope>
-    </dependency>    
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-spring</artifactId>
+      <scope>test</scope>
+    </dependency>  
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <scope>test</scope>
+    </dependency>          
   </dependencies>
   <build>
     <plugins>
@@ -256,6 +266,17 @@
                   <name>M2_HOME</name>
                   <value>${maven.home}</value>    
                 </property>                      
+                <property>
+                  <name>plexus.home</name>
+                  <!-- ${project.build.directory} is not evaluated see surefire documentation -->
+                  <!--value>${project.build.directory}</value-->
+                  <value>./target</value>
+                </property>
+                <property>
+                  <!-- java.io.tmpdir is a shared directory on solaris and cause permission issues -->
+                  <name>java.io.tmpdir</name>
+                  <value>./target</value>
+                </property> 
               </systemProperties>
             </configuration>
           </plugin>

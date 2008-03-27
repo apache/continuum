@@ -55,7 +55,7 @@
     <component>
       <role>org.codehaus.plexus.formica.validation.Validator</role>
       <role-hint>url</role-hint>
-      <implementation>org.codehaus.plexus.formica.validation.UrlValidator</implementation>
+      <implementation>org.apache.maven.continuum.utils.ContinuumUrlValidator</implementation>
       <configuration>
         <allowedSchemes>
           <allowedScheme>http</allowedScheme>
