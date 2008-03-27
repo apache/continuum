@@ -207,6 +207,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
+      <scope>test</scope>
     </dependency>          
   </dependencies>
   <build>
@@ -265,6 +266,10 @@
                   <name>M2_HOME</name>
                   <value>${maven.home}</value>    
                 </property>                      
+                <property>
+                  <name>plexus.home</name>
+                  <value>${project.build.directory}/plexus</value>
+                </property>
               </systemProperties>
             </configuration>
           </plugin>
