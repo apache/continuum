@@ -102,7 +102,7 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l </a>
  * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.Continuum"
+ * @plexus.component role="org.apache.maven.continuum.Continuum" role-hint="default"
  */
 public class DefaultContinuum
     extends AbstractLogEnabled
@@ -2808,10 +2808,10 @@ public class DefaultContinuum
     }
     
     public void stop()
-    throws StoppingException
-{
-    stopContinuum();
-}    
+        throws StoppingException
+    {
+        stopContinuum();
+    }
 
     private void closeStore()
     {
@@ -2822,6 +2822,19 @@ public class DefaultContinuum
     }
 
 
+
+    public void startup()
+        throws ContinuumException
+    {
+        try
+        {
+            this.start();
+        }
+        catch ( StartingException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
+    }
 
     public void stopContinuum()
         throws StoppingException

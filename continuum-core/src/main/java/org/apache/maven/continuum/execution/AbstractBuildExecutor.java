@@ -334,4 +334,9 @@ public abstract class AbstractBuildExecutor
     {
         this.resolveExecutable = resolveExecutable;
     }
+
+    public void setExecutableResolver( ExecutableResolver executableResolver )
+    {
+        this.executableResolver = executableResolver;
+    }
 }

@@ -624,4 +624,8 @@ public interface Continuum
     ProfileService getProfileService();
 
     BuildDefinitionService getBuildDefinitionService();
+    
+    
+    public void startup()
+        throws ContinuumException;
 }
