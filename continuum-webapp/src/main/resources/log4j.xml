@@ -101,6 +101,17 @@
   <logger name="org.codehaus.plexus.component.manager.ClassicSingletonComponentManager">
     <level value="error"/>
   </logger>
+  
+  <logger name="org.springframework.beans.factory.xml.XmlBeanDefinitionReader">
+    <level value="error"/>
+  </logger>
+  <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory">
+    <level value="error"/>
+  </logger>
+  
+  <logger name="org.codehaus.plexus.spring.PlexusContextPropertyPlaceholderConfigurer">
+    <level value="debug"/>
+  </logger>
 
   <root>
     <priority value="info" />

@@ -7,4 +7,22 @@
   <bean id="loggerManager" class="org.codehaus.plexus.logging.slf4j.Slf4jLoggerManager"
     init-method="initialize"/>
 
+  <bean id="propertyConfigurer" 
+         class="org.codehaus.plexus.spring.PlexusServletContextPropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:plexus.properties</value>
+      </list>
+    </property> 
+    <!-- ignore if plexus.properties not found -->
+    <property name="ignoreResourceNotFound">
+      <value>true</value>
+    </property>  
+    <!-- ignore if a interpolated key not exists -->
+    <property name="ignoreUnresolvablePlaceholders">
+      <value>true</value>
+    </property> 
+  </bean>
+  
+  
 </beans>
