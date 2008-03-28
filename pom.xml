@@ -162,8 +162,10 @@
     <module>continuum-core</module>
     <module>continuum-model</module>
     <module>continuum-notifiers</module>
+    <!-- TODO remove modules when documentation updated
     <module>continuum-plexus-application</module>
     <module>continuum-plexus-runtime</module>
+    -->
     <module>continuum-test</module>
     <module>continuum-webapp</module>
     <module>continuum-xmlrpc</module>
@@ -172,6 +174,7 @@
     <module>continuum-configuration</module>
     <module>maven-continuum-plugin</module>
     <module>continuum-docs</module>
+    <module>continuum-jetty</module>
   </modules>
   <repositories>
     <repository>
