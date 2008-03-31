@@ -22,9 +22,9 @@ How to use an external database?
 
 ** Standalone version
 
-    To use an external database with Continuum standalone, you must configure datasources in <<<$CONTINUUM_HOME/conf/plexus.xml>>>
+    To use an external database with Continuum standalone, you must configure datasources in <<<$CONTINUUM_HOME/conf/jetty.xml>>>
 
-%{snippet|id=datasources|url=http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-plexus-runtime/src/conf/plexus.xml}
+%{snippet|id=datasources|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/conf/jetty.xml}
 
 ** Webapp
 

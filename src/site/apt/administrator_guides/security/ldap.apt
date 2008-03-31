@@ -16,7 +16,7 @@ LDAP Configuration
 
     []
 
-%{snippet|id=ldap|url=http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp/src/main/resources/META-INF/plexus/application.xml}
+%{snippet|id=ldap|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/main/resources/META-INF/plexus/application.xml}
 
     All you need to configure is the ConfigurableLdapConnectionFactory and LdapUserMapper components
 
