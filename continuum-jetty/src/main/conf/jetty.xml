@@ -61,6 +61,7 @@
     <!-- Use this connector for many frequently idle connections
          and for threadless continuations.
     -->    
+    <!-- START SNIPPET: jetty_port -->    
     <Call name="addConnector">
       <Arg>
           <New class="org.mortbay.jetty.nio.SelectChannelConnector">
@@ -75,6 +76,7 @@
           </New>
       </Arg>
     </Call>
+    <!-- END SNIPPET: jetty_port -->
 
     <!-- Use this connector if NIO is not available. 
     <Call name="addConnector">
@@ -272,7 +274,7 @@
   
   
   <!-- continuum configuration -->
-	
+	<!-- START SNIPPET: mail -->
   <New id="validation_mail" class="org.mortbay.jetty.plus.naming.Resource">
     <Arg>mail/Session</Arg>
     <Arg>
@@ -287,7 +289,9 @@
       </New>
     </Arg>
   </New>
-
+  <!-- END SNIPPET: mail -->
+  
+  <!-- START SNIPPET: datasources -->  
   <!-- continuum database -->
    
   <New id="continuum" class="org.mortbay.jetty.plus.naming.Resource">
@@ -335,4 +339,6 @@
       </New>
     </Arg>
   </New>
+  
+  <!-- END SNIPPET: datasources -->  
 </Configure>
