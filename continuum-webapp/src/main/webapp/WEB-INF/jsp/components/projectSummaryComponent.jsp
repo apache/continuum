@@ -201,7 +201,7 @@
         </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
+          <img src="<ww:url value='/images/releaseproject_disabled.gif' includeParams="none"/>" alt="<ww:text name="legend.release"/>" title="<ww:text name="legend.release"/>" border="0">
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%" sortable="false">
