@@ -626,6 +626,12 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-formica</artifactId>
         <version>1.0-beta-13</version>
+        <exclusions>
+          <exclusion>
+            <groupId>ognl</groupId>
+            <artifactId>ognl</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
