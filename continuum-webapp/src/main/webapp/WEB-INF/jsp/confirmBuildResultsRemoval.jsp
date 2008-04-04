@@ -19,6 +19,7 @@
 
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="continuum" prefix="c1" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
@@ -37,11 +38,12 @@
         </ww:if>
         <!-- in this case we come from the build result edit -->
         <ww:if test="buildId">
-          <form action="removeBuildResult.action" method="post">
+          <c:set var="action" value="removeBuildResult.action" />
         </ww:if>
         <ww:else>
-          <form action="removeBuildResults.action" method="post">
+          <c:set var="action" value="removeBuildResults.action" />
         </ww:else>
+        <form action="${action}" method="post">
           <ww:hidden name="projectGroupId"/>
           <ww:hidden name="projectId"/>
           <ww:hidden name="buildId"/>
