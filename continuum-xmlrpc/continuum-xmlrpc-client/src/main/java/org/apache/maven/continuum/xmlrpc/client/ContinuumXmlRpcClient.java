@@ -499,4 +499,21 @@ public class ContinuumXmlRpcClient
     {
         return (String) statusMap.get( new Integer( status ) );
     }
+
+    // ----------------------------------------------------------------------
+    // Queue
+    // ----------------------------------------------------------------------
+
+    public List getProjectsInBuildQueue()
+        throws Exception
+    {
+        return continuum.getProjectsInBuildQueue();
+    }
+
+    public boolean isProjectInBuildingQueue( int projectId )
+        throws Exception
+    {
+        return continuum.isProjectInBuildingQueue( projectId );
+    }
+        
 }

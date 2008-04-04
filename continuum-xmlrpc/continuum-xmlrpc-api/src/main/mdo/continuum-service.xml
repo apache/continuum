@@ -1128,5 +1128,49 @@
         </codeSegment>
       </codeSegments>
     </class>
+
+    <class>
+      <name>BuildProjectTask</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.project</packageName>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>projectId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>buildDefinitionId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>timestamp</name>
+          <version>1.1.0+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>trigger</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>maxExecutionTime</name>
+          <version>1.1.0+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>projectName</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildDefinitionLabel</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>    
+    
   </classes>
 </model>
