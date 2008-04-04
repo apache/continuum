@@ -195,4 +195,9 @@
       <b-hint>org.apache.maven.continuum.model.project.BuildDefinition</b-hint>
     </field>
   </mapping>
+  
+  <mapping>
+    <class-a>org.apache.maven.continuum.buildqueue.BuildProjectTask</class-a>
+    <class-b>org.apache.maven.continuum.xmlrpc.project.BuildProjectTask</class-b>
+  </mapping>  
 </mappings>

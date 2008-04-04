@@ -19,6 +19,8 @@ package org.apache.maven.continuum.buildqueue;
  * under the License.
  */
 
+import java.io.Serializable;
+
 import org.codehaus.plexus.taskqueue.Task;
 
 /**
@@ -26,7 +28,7 @@ import org.codehaus.plexus.taskqueue.Task;
  * @version $Id$
  */
 public class BuildProjectTask
-    implements Task
+    implements Task, Serializable
 {    
     private int projectId;
 

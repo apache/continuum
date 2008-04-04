@@ -19,8 +19,14 @@ package org.apache.maven.continuum.xmlrpc.server;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import net.sf.dozer.util.mapping.DozerBeanMapperSingletonWrapper;
 import net.sf.dozer.util.mapping.MapperIF;
+
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -33,6 +39,7 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
+import org.apache.maven.continuum.xmlrpc.project.BuildProjectTask;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
@@ -47,11 +54,6 @@ import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -782,9 +784,38 @@ public class ContinuumServiceImpl
     }
 
     // ----------------------------------------------------------------------
+    // Queue
+    // ----------------------------------------------------------------------
+
+
+    public boolean isProjectInBuildingQueue( int projectId )
+        throws ContinuumException
+    {
+        return continuum.isInBuildingQueue( projectId );
+    }
+
+    public List getProjectsInBuildQueue()
+        throws ContinuumException
+    {
+        return populateBuildProjectTaskList( continuum.getProjectsInBuildQueue() );
+    }
+
+    // ----------------------------------------------------------------------
     // Converters
     // ----------------------------------------------------------------------
 
+    private List populateBuildProjectTaskList(
+                                               List<org.apache.maven.continuum.buildqueue.BuildProjectTask> buildProjectTasks )
+    {
+        List<BuildProjectTask> responses = new ArrayList<BuildProjectTask>();
+        for ( org.apache.maven.continuum.buildqueue.BuildProjectTask buildProjectTask : buildProjectTasks )
+        {
+
+            responses.add( (BuildProjectTask) mapper.map( buildProjectTask, BuildProjectTask.class ) );
+        }
+        return responses;
+    }
+    
     private ProjectSummary populateProjectSummary( org.apache.maven.continuum.model.project.Project project )
     {
         return (ProjectSummary) mapper.map( project, ProjectSummary.class );

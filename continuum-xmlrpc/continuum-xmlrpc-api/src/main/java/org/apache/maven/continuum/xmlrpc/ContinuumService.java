@@ -19,6 +19,8 @@ package org.apache.maven.continuum.xmlrpc;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
@@ -33,8 +35,6 @@ import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.apache.xmlrpc.XmlRpcException;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -569,6 +569,28 @@ public interface ContinuumService
 
     SystemConfiguration getSystemConfiguration()
         throws Exception;
+    
+    // ----------------------------------------------------------------------
+    // Queue
+    // ----------------------------------------------------------------------
+    
+        
+        /**
+     * Return true is the project is in building queue.
+     *
+     * @param projectGroupId    The project group id
+     * @throws ContinuumException
+     */
+    boolean isProjectInBuildingQueue( int projectId )
+        throws Exception;
+
+    /**
+     * Return projects building queue.
+     *
+     * @throws ContinuumException
+     */
+    public List getProjectsInBuildQueue()
+        throws Exception;    
 
     // ----------------------------------------------------------------------
     // TODO:Users
