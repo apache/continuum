@@ -59,7 +59,6 @@ public class ContinuumStartup
             .getServletContext() );
 
         // to simulate Plexus load on start with Spring
-        /*
         Continuum continuum = (Continuum) wac.getBean( PlexusToSpringUtils.buildSpringId( Continuum.class ) );
 
         TaskQueueExecutor buildProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
@@ -76,8 +75,7 @@ public class ContinuumStartup
 
         TaskQueueExecutor rollbackRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "rollback-release" ) );        
-        */
-        /*
+
         try
         {
             continuum.startup();
@@ -86,7 +84,7 @@ public class ContinuumStartup
         {
             log.error( e.getMessage(), e );
             throw new RuntimeException( e.getMessage(), e );
-        }*/
+        }
     }
 
 }
