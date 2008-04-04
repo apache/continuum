@@ -28,6 +28,7 @@
       <title><ww:text name="buildDefinition.templates.page.title"/></title>
     </head>
     
+    <body>
     <div>
       
       <h3>
@@ -66,7 +67,7 @@
         <ww:form action="buildDefinitionTemplate!input.action" method="post">
           <ww:submit value="%{getText('add')}"/>
         </ww:form>
-      </div      
+      </div>      
       <h3>
         <ww:text name="buildDefinition.templates.buildDefinitions.section.title"/>
       </h3>
@@ -104,5 +105,6 @@
       </div>           
       
     </div>
+    </body>
   </ww:i18n>
 </html> 
