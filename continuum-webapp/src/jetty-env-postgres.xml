@@ -51,11 +51,11 @@
 </New>
 
 <New id="continuum" class="org.mortbay.jetty.plus.naming.Resource">
-  <Arg>jdbc/users</Arg>
+  <Arg>jdbc/continuum</Arg>
   <Arg><Ref id="continuumDataSource"/></Arg>
 </New>
 <New id="continuum_shutdown" class="org.mortbay.jetty.plus.naming.Resource">
-  <Arg>jdbc/users_shutdown</Arg>
+  <Arg>jdbc/continuum_shutdown</Arg>
   <Arg><Ref id="continuumDataSource"/></Arg>
 </New>
 <New id="users" class="org.mortbay.jetty.plus.naming.Resource">
