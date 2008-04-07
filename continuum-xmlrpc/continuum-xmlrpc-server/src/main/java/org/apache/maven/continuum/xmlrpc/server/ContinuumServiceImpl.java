@@ -794,7 +794,7 @@ public class ContinuumServiceImpl
         return continuum.isInBuildingQueue( projectId );
     }
 
-    public List getProjectsInBuildQueue()
+    public List<BuildProjectTask> getProjectsInBuildQueue()
         throws ContinuumException
     {
         return populateBuildProjectTaskList( continuum.getProjectsInBuildQueue() );
@@ -804,7 +804,7 @@ public class ContinuumServiceImpl
     // Converters
     // ----------------------------------------------------------------------
 
-    private List populateBuildProjectTaskList(
+    private List<BuildProjectTask> populateBuildProjectTaskList(
                                                List<org.apache.maven.continuum.buildqueue.BuildProjectTask> buildProjectTasks )
     {
         List<BuildProjectTask> responses = new ArrayList<BuildProjectTask>();
