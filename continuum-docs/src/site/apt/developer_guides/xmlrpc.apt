@@ -126,6 +126,15 @@ List<BuildResultSummary> results = client.getBuildResultsForProject( ps.getId() 
   client.removeBuildResult( br );
 +--------------------------+
 
+* {Editing build queue}
+
+    You can edit all projects which are in the build queue or check if one project is currently in the build queue.
+
++--------------------------+
+List<BuildProjectTask> prjsInBuildQueue = client.getProjectsInBuildQueue();
+client.isProjectInBuildingQueue( int projectId );
++--------------------------+
+
 * {Backup}
 
     With the Continuum xmlrpc client, you can backup a full Continuum instance (without users database, for the moment).

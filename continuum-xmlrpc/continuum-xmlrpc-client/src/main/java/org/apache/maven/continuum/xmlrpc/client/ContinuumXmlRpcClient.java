@@ -23,6 +23,7 @@ import org.apache.maven.continuum.xmlrpc.ContinuumService;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
+import org.apache.maven.continuum.xmlrpc.project.BuildProjectTask;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.ContinuumProjectState;
@@ -504,7 +505,7 @@ public class ContinuumXmlRpcClient
     // Queue
     // ----------------------------------------------------------------------
 
-    public List getProjectsInBuildQueue()
+    public List<BuildProjectTask> getProjectsInBuildQueue()
         throws Exception
     {
         return continuum.getProjectsInBuildQueue();
