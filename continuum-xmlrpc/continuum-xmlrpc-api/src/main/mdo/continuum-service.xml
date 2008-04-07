@@ -804,6 +804,18 @@
           </description>
         </field>
         <field>
+          <name>description</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>description of the buid defintion</description>
+        </field>
+        <field>
+          <name>type</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>type of the buid defintion</description>          
+        </field>                
+        <field>
           <name>schedule</name>
           <version>1.1.0+</version>
           <association xml.reference="true">
@@ -817,6 +829,24 @@
             <type>Profile</type>
           </association>
         </field>
+        <field>
+          <name>alwaysBuild</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if the build had to be forced even if there is no scm change
+          </description>
+        </field>
+        <field>
+          <name>template</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if this buildDefinition is a template
+          </description>
+        </field>         
       </fields>
     </class>
     <class>

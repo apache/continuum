@@ -958,6 +958,9 @@ public class ContinuumServiceImpl
         bd.setId( buildDef.getId() );
         bd.setProfile( populateProfile( buildDef.getProfile() ) );
         bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
+        bd.setDescription( buildDef.getDescription() );
+        bd.setAlwaysBuild( buildDef.isAlwaysBuild() );
+        bd.setTemplate( buildDef.isTemplate() );
         return bd;
     }
 
