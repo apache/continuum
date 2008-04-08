@@ -118,6 +118,10 @@
               <role>com.opensymphony.xwork.Action</role>
               <instantiation-strategy>per-lookup</instantiation-strategy>
             </roleDefault>
+            <roleDefault>
+              <role>com.opensymphony.xwork.validator.Validator</role>
+              <instantiation-strategy>per-lookup</instantiation-strategy>
+            </roleDefault>            
           </roleDefaults>
         </configuration>
         <executions>
