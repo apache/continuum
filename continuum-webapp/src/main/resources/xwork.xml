@@ -376,6 +376,14 @@
         <param name="contentLength">${fileLength}</param>
       </result>
     </action>
+    
+    <action name="workingCopyFileText" class="workingCopy">
+      <result name="success" type="stream">
+        <param name="contentType">application/octet-stream</param>
+        <param name="contentDisposition">filename="${downloadFilename}"</param>
+        <param name="contentLength">${fileLength}</param>
+      </result>
+    </action>
 
     <!--
     * schedule actions
