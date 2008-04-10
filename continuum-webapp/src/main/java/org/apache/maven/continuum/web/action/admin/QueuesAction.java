@@ -26,6 +26,8 @@ import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
+import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
+import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
@@ -82,6 +84,21 @@ public class QueuesAction
     public String cancelCurrent()
         throws Exception
     {
+        try 
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+        
         cancelBuild( projectId );
         return SUCCESS;
     }
@@ -89,12 +106,42 @@ public class QueuesAction
     public String removeCheckout()
         throws Exception
     {
+        try 
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+            
         getContinuum().removeProjectFromCheckoutQueue( projectId );
         return SUCCESS;
     }
 
     public String cancelCurrentCheckout()
     {
+        try 
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+        
         cancelCheckout( projectId );
         return SUCCESS;
     }
@@ -112,6 +159,21 @@ public class QueuesAction
     public String remove()
         throws Exception
     {
+        try 
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+        
         getContinuum().removeFromBuildingQueue( projectId, buildDefinitionId, trigger, projectName );
         Project project = getContinuum().getProject( projectId );
         project.setState( project.getOldState() );
@@ -123,6 +185,21 @@ public class QueuesAction
     public String removeBuildEntries()
         throws Exception
     {
+        try 
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+        
         getContinuum().removeProjectsFromBuildingQueueWithHashCodes( listToIntArray(this.getSelectedBuildTaskHashCodes()) );
         return SUCCESS;
     }
@@ -130,6 +207,21 @@ public class QueuesAction
     public String removeCheckoutEntries()
         throws Exception
     {
+        try 
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+        
         getContinuum()
             .removeTasksFromCheckoutQueueWithHashCodes( listToIntArray( this.getSelectedCheckOutTaskHashCodes() ) );
         return SUCCESS;
@@ -159,7 +251,7 @@ public class QueuesAction
     {
         SecureActionBundle bundle = new SecureActionBundle();
         bundle.setRequiresAuthentication( true );
-        bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_QUEUES, Resource.GLOBAL );
+        bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_VIEW_QUEUES, Resource.GLOBAL );
 
         return bundle;
     }

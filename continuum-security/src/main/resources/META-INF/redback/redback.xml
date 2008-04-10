@@ -8,6 +8,11 @@
       <description>Manage Continuum Queues</description>
     </operation>    
     <operation>
+      <id>continuum-view-queues</id>
+      <name>continuum-view-queues</name>
+      <description>Continuum View Queues</description>
+    </operation>
+    <operation>
       <id>continuum-manage-build-templates</id>
       <name>continuum-manage-build-templates</name>
       <description>Manage Continuum Build Definition Templates</description>
@@ -324,6 +329,13 @@
           <operation>continuum-manage-queues</operation>
           <resource>global</resource>
         </permission>
+        <permission>
+          <id>continuum-view-queues</id>
+          <name>Continuum View Queues</name>
+          <permanent>true</permanent>
+          <operation>continuum-view-queues</operation>
+          <resource>global</resource>
+        </permission>
       </permissions>
     </role>   
   </roles>
@@ -496,6 +508,12 @@
           <name>Continuum View Group</name>
           <operation>continuum-view-group</operation>
           <resource>${resource}</resource>
+        </permission>
+        <permission>
+          <id>continuum-view-queues</id>
+          <name>Continuum View Queues</name>
+          <operation>continuum-view-queues</operation>
+          <resource>global</resource>
         </permission>
   	  </permissions>  	  
   	  <parentRoles>
