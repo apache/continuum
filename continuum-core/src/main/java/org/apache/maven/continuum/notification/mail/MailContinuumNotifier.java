@@ -585,7 +585,12 @@ public class MailContinuumNotifier
         {
             return FALLBACK_FROM_MAILBOX;
         }
-
+        // olamy : CONTINUUM-860 if address contains commas we use only the first one
+        if ( address.contains( "," ) )
+        {
+            String[] addresses = StringUtils.split( address, "," );
+            return addresses[0];
+        }
         return address;
     }
 
