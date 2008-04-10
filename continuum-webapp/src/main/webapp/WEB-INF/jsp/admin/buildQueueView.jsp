@@ -21,6 +21,7 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
+<%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
   <ww:i18n name="localization.Continuum">
@@ -46,10 +47,15 @@
                 <td width="50%"><ww:property value="currentBuildProjectTask.projectName"/></td>
                 <td width="49%"><ww:property value="currentBuildProjectTask.buildDefinitionLabel"/></td>
                 <td width="1%">
+                <redback:ifAuthorized permission="continuum-manage-queues">
                   <ww:url id="cancelUrl" action="cancelCurrentBuildTask" method="cancelCurrent" namespace="/">
                     <ww:param name="projectId"><ww:property value="currentBuildProjectTask.projectId"/></ww:param>
                   </ww:url>      
                   <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>              
+                </redback:ifAuthorized>
+                <redback:elseAuthorized>
+                  <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0">
+                </redback:elseAuthorized>
                 </td>
               </tr>
             </tbody>
@@ -72,19 +78,26 @@
                         sortable="false"
                         filterable="false">
                 <ec:row highlightRow="true">
+                  <redback:ifAuthorized permission="continuum-manage-queues">
                   <ec:column alias="selectedBuildTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
                     <input type="checkbox" name="selectedBuildTaskHashCodes" value="${buildProjectTask.hashCode}" />
                   </ec:column>              
+                  </redback:ifAuthorized>
                   <ec:column property="projectName" title="buildQueue.currentTask.projectName" style="white-space: nowrap" width="49%"/>
                   <ec:column property="buildDefinitionLabel" title="buildQueue.currentTask.buildDefinition" style="white-space: nowrap" width="49%"/>
                   <ec:column property="cancelEntry" title="&nbsp;" width="1%">
+                    <redback:ifAuthorized permission="continuum-manage-queues">
                     <ww:url id="cancelUrl" action="removeBuildQueueEntry" method="remove" namespace="/">
                       <ww:param name="projectId">${pageScope.buildProjectTask.projectId}</ww:param>
                       <ww:param name="buildDefinitionId">${pageScope.buildProjectTask.buildDefinitionId}</ww:param>
                       <ww:param name="trigger">${pageScope.buildProjectTask.trigger}</ww:param>
                       <ww:param name="projectName">${pageScope.buildProjectTask.projectName}</ww:param>
                     </ww:url>      
-                    <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>    
+                    <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>
+                    </redback:ifAuthorized>
+                    <redback:elseAuthorized>
+                      <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0">
+                    </redback:elseAuthorized>    
                   </ec:column>             
                 </ec:row>
               </ec:table>
@@ -124,10 +137,15 @@
               <tr>
                 <td width="99%"><ww:property value="currentCheckOutTask.projectName"/></td>
                 <td width="1%">
+                <redback:ifAuthorized permission="continuum-manage-queues">
                   <ww:url id="cancelUrl" action="cancelCurrentQueueTask" method="cancelCurrentCheckout" namespace="/">
                     <ww:param name="projectId"><ww:property value="currentCheckOutTask.projectId"/></ww:param>
                   </ww:url>      
-                  <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>              
+                  <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>
+                </redback:ifAuthorized>
+                <redback:elseAuthorized>
+                  <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0">
+                </redback:elseAuthorized>              
                 </td>
               </tr>
             </tbody>
@@ -150,15 +168,22 @@
                         sortable="false"
                         filterable="false">
                 <ec:row highlightRow="true">
+                  <redback:ifAuthorized permission="continuum-manage-queues">
                   <ec:column alias="selectedCheckOutTaskHashCodes" title="&nbsp;" style="width:5px" filterable="false" sortable="false" width="1%" headerCell="selectAll">
                     <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="${currentCheckOutTask.hashCode}" />
                   </ec:column>              
+                  </redback:ifAuthorized>
                   <ec:column property="projectName" title="Project Name" style="white-space: nowrap" width="98%"/>
                   <ec:column property="cancelEntry" title="&nbsp;" width="1%">
+                  <redback:ifAuthorized permission="continuum-manage-queues">
                     <ww:url id="cancelUrl" action="removeCheckoutQueueEntry" method="removeCheckout">
                       <ww:param name="projectId">${pageScope.currentCheckOutTask.projectId}</ww:param>
                     </ww:url>      
-                    <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>    
+                    <ww:a href="%{cancelUrl}"><img src="<ww:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0"></ww:a>
+                  </redback:ifAuthorized>
+                  <redback:elseAuthorized>
+                    <img src="<ww:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<ww:text name='cancel'/>" title="<ww:text name='cancel'/>" border="0">
+                  </redback:elseAuthorized>    
                   </ec:column>             
                 </ec:row>
               </ec:table>
@@ -173,8 +198,10 @@
               <tbody>
                 <tr>
                   <td>
+                    <redback:ifAuthorized permission="continuum-manage-queues">
                     <input type="submit" value="<ww:text name="checkoutQueue.removeEntries"/>" 
                            onclick="$('removeForm').action='removeCheckoutQueueEntries!removeCheckoutEntries.action';$('removeForm').submit();" />
+                    </redback:ifAuthorized>
                   </td>
                 </tr>
               </tbody>

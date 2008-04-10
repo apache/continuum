@@ -462,6 +462,23 @@ public class ContinuumActionSupport
     }
 
     /**
+     * Check if the current user is authorized to manage queues 
+     * 
+     * @throws AuthenticationRequiredException if the user isn't authenticated
+     * @throws AuthorizationRequiredException if the user isn't authorized
+     */
+    protected void checkManageQueuesAuthorization()
+        throws AuthenticationRequiredException, AuthorizationRequiredException
+    {
+        if ( !isAuthenticated() )
+        {
+            throw new AuthenticationRequiredException( "Authentication required" );
+        }
+        
+        checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_QUEUES );
+    }
+    
+    /**
      * Get the security session
      *
      * @return current SecuritySession
