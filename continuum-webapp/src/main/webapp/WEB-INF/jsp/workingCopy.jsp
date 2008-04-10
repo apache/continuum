@@ -42,10 +42,19 @@
             if ( request.getParameter( "file" ) != null )
             {
         %>
-        <br />
+        <p>
+        <ww:url id="workingCopyTextUrl" action="workingCopyFileText">
+          <ww:param name="projectId" value="projectId"/>
+          <ww:param name="projectName" value="projectName"/>
+          <ww:param name="userDirectory" value="userDirectory"/>
+          <ww:param name="file" value="file"/>
+        </ww:url>
+        <ww:a href="%{workingCopyTextUrl}"><ww:text name="workingCopy.currentFile.text"/></ww:a>
+        
         <form>
           <textarea rows="50" cols="100"><ww:property value="fileContent"/></textarea>
         </form>
+        </p>
         <%
             }
         %>

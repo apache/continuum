@@ -171,6 +171,11 @@ public class WorkingCopyAction
     {
         this.currentFile = currentFile;
     }
+    
+    public String getFile()
+    {
+        return currentFile;
+    }
 
     public String getOutput()
     {
