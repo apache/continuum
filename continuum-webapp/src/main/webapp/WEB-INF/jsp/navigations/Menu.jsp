@@ -48,14 +48,14 @@
       </div>
       <div>
         <div class="body">
-          <ww:url id="addMavenTwoProjectUrl" action="addMavenTwoProject" method="input" namespace="/"
+          <ww:url id="addMavenTwoProjectUrl" action="addMavenTwoProjectInput" method="input" namespace="/"
                   includeParams="none"/>
           <ww:a href="%{addMavenTwoProjectUrl}">
             <ww:text name="menu.add.m2Project"/>
           </ww:a>
         </div>
         <div class="body">
-          <ww:url id="addMavenOneProjectUrl" action="addMavenOneProject" method="input" namespace="/"
+          <ww:url id="addMavenOneProjectUrl" action="addMavenOneProjectInput" method="input" namespace="/"
                   includeParams="none"/>
           <ww:a href="%{addMavenOneProjectUrl}">
             <ww:text name="menu.add.m1Project"/>

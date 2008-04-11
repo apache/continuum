@@ -172,7 +172,14 @@
       <result name="success">/WEB-INF/jsp/groupSummary.jsp</result>
     </action>
 
+    <action name="addMavenTwoProjectInput" class="addMavenTwoProject">
+      <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
+    </action>        
+    
     <action name="addMavenTwoProject" class="addMavenTwoProject">
+      <interceptor-ref name="configuredContinuumStack"/>
+      <interceptor-ref name="execAndWait"/> 
+      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>     
       <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirect-action">
@@ -181,7 +188,14 @@
       </result>
     </action>
 
+    <action name="addMavenOneProjectInput" class="addMavenOneProject">
+      <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
+    </action>    
+    
     <action name="addMavenOneProject" class="addMavenOneProject">
+      <interceptor-ref name="configuredContinuumStack"/>
+      <interceptor-ref name="execAndWait"/> 
+      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>      
       <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirect-action">
@@ -195,6 +209,9 @@
     </action>
 
     <action name="addProject" class="addProject" method="add">
+      <interceptor-ref name="configuredContinuumStack"/>
+      <interceptor-ref name="execAndWait"/> 
+      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>      
       <result name="input">/WEB-INF/jsp/addProject.jsp</result>
       <result name="success" type="chain">groupSummary</result>
       <result name="projectGroupSummary" type="redirect-action">
