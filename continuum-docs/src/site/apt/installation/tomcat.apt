@@ -65,7 +65,7 @@ Guide to Install Continuum on Tomcat
 
 ** {The Javamail / Activation JAR files}
 
-    <<Note:>> Continuum requires Javamail 1.5 (or later)
+    <<Note:>> Continuum requires Javamail 1.4 (or later)
 
     Apache Tomcat does not typically ship with a copy of the Javamail or Activation jar files. 
     In your role as the Apache Tomcat administrator of your installation, you will need to obtain these jar files and place it into your preferred lib directory.
