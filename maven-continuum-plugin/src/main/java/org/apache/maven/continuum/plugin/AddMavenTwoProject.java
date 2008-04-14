@@ -19,6 +19,7 @@ package org.apache.maven.continuum.plugin;
  * under the License.
  */
 
+import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -50,16 +51,27 @@ public class AddMavenTwoProject
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        AddingResult addingResult = null;
         try
         {
+
             if ( projectGroupId != null && projectGroupId.length() > 0 )
             {
-                getClient().addMavenTwoProject( projectUrl, Integer.parseInt( projectGroupId ) );
+                addingResult = getClient().addMavenTwoProject( projectUrl, Integer.parseInt( projectGroupId ) );
             }
             else
             {
-                getClient().addMavenTwoProject( projectUrl );
+                addingResult = getClient().addMavenTwoProject( projectUrl );
             }
+            if ( addingResult.getErrorsAsString() != null )
+            {
+                getLog().error( "fail to add mavenTwo project " + addingResult.getErrorsAsString() );
+                throw new MojoExecutionException( "fail to add mavenTwo project " + addingResult.getErrorsAsString() );
+            }
+        }
+        catch ( MojoExecutionException e )
+        {
+            throw e;
         }
         catch ( Exception e )
         {
