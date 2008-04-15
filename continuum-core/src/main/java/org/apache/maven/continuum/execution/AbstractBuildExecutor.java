@@ -277,6 +277,9 @@ public abstract class AbstractBuildExecutor
         properties.setProperty( "continuum.project.lastBuild.state", String.valueOf( project.getOldState() ) );
         properties.setProperty( "continuum.project.lastBuild.number", String.valueOf( project.getBuildNumber() ) );
         properties.setProperty( "continuum.project.nextBuild.number", String.valueOf( project.getBuildNumber() + 1 ) );
+        properties.setProperty( "continuum.project.id", String.valueOf( project.getId() ) );
+        properties.setProperty( "continuum.project.name", project.getName() );
+        properties.setProperty( "continuum.project.version", project.getVersion() );
         return properties;
     }
 
