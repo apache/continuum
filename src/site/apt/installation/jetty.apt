@@ -20,7 +20,10 @@ Guide to Install Continuum on Jetty
 
     * Create a JDBC resource named '<<jdbc/users>>'
 
-    You can copy the following configuration in your <<<$JETTY_HOME/etc/jetty.xml>>>
+    For derby you can copy the following configuration in your <<<$JETTY_HOME/etc/jetty.xml>>>
+
+    For other databases see {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/jetty-env-postgres.xml}PostgreSQL}} 
+    and {{{https://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/jetty-env-mysql.xml}MySQL}}
 
 +-------------------------------------+
     <!-- =========================================================== -->
