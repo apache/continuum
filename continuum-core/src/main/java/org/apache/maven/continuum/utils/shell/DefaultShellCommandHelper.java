@@ -60,14 +60,21 @@ public class DefaultShellCommandHelper
                                     environments );
     }
 
-    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
-                                                File output, long idCommand, Map<String, String> environments )
+    /**
+     * Make the command line
+     * 
+     * @param workingDirectory
+     * @param executable
+     * @param arguments
+     * @param idCommand
+     * @param environments
+     * @return
+     * @throws Exception
+     */
+    protected Commandline createCommandline( File workingDirectory, String executable, String[] arguments,
+                                             long idCommand, Map<String, String> environments )
         throws Exception
     {
-        // ----------------------------------------------------------------------
-        // Make the command line
-        // ----------------------------------------------------------------------
-
         Commandline cl = new Commandline();
 
         cl.setPid( idCommand );
@@ -96,6 +103,16 @@ public class DefaultShellCommandHelper
 
             cl.createArgument().setValue( argument );
         }
+
+        return cl;
+    }
+
+    public ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments,
+                                                File output, long idCommand, Map<String, String> environments )
+        throws Exception
+    {
+
+        Commandline cl = createCommandline( workingDirectory, executable, arguments, idCommand, environments );
 
         getLogger().info( "Executing: " + cl );
         getLogger().info( "Working directory: " + cl.getWorkingDirectory().getAbsolutePath() );
