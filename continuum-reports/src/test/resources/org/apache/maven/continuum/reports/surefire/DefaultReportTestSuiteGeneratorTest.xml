@@ -21,7 +21,7 @@
   <components>
     <component>
       <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
-      <implementation>org.apache.maven.continuum.reports.surefire.MockConfigurationService</implementation>
+      <implementation>org.apache.maven.continuum.reports.surefire.ConfigurationServiceMock</implementation>
     </component>
   </components>
 </plexus>
