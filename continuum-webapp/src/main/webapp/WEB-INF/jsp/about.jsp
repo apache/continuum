@@ -32,6 +32,9 @@
             <c1:data label="%{getText('about.version.label')}">
                 <ww:param name="after"><ww:text name="about.version.number"/></ww:param>
             </c1:data>
+            <c1:data label="%{getText('about.buildnumber.label')}">
+                <ww:param name="after"><ww:text name="about.buildnumber"/></ww:param>
+            </c1:data>
           </table>
         </div>
       </div>
