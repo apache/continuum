@@ -99,6 +99,26 @@ public abstract class AbstractBuildExecutor
         this.resolveExecutable = resolveExecutable;
     }
 
+    public void setShellCommandHelper( ShellCommandHelper shellCommandHelper )
+    {
+        this.shellCommandHelper = shellCommandHelper;
+    }
+
+    public ShellCommandHelper getShellCommandHelper()
+    {
+        return shellCommandHelper;
+    }
+
+    public void setWorkingDirectoryService( WorkingDirectoryService workingDirectoryService )
+    {
+        this.workingDirectoryService = workingDirectoryService;
+    }
+
+    public WorkingDirectoryService getWorkingDirectoryService()
+    {
+        return workingDirectoryService;
+    }
+
     // ----------------------------------------------------------------------
     // Component Lifecycle
     // ----------------------------------------------------------------------
@@ -137,9 +157,11 @@ public abstract class AbstractBuildExecutor
     //
     // ----------------------------------------------------------------------
 
-    protected ContinuumBuildExecutionResult executeShellCommand( Project project, String executable, String arguments,
-                                                                 File output, Map<String, String> environments )
-        throws ContinuumBuildExecutorException
+    /**
+     * Find the actual executable path to be used
+     * @param defaultExecutable 
+     */
+    protected String findExecutable( Project project, String executable, String defaultExecutable, boolean resolveExecutable, File workingDirectory )
     {
         // ----------------------------------------------------------------------
         // If we're not searching the path for the executable, prefix the
@@ -148,8 +170,6 @@ public abstract class AbstractBuildExecutor
         // ----------------------------------------------------------------------
 
         String actualExecutable;
-
-        File workingDirectory = getWorkingDirectory( project );
 
         if ( !resolveExecutable )
         {
@@ -192,6 +212,19 @@ public abstract class AbstractBuildExecutor
         {
             actualExecutable = executable;
         }
+        
+        return actualExecutable;
+    }
+
+    protected ContinuumBuildExecutionResult executeShellCommand( Project project, String executable, String arguments,
+                                                                 File output, Map<String, String> environments )
+        throws ContinuumBuildExecutorException
+    {
+
+        File workingDirectory = getWorkingDirectory( project );
+
+        String actualExecutable =
+            findExecutable( project, executable, defaultExecutable, resolveExecutable, workingDirectory );
 
         // ----------------------------------------------------------------------
         // Execute the build
@@ -199,9 +232,9 @@ public abstract class AbstractBuildExecutor
 
         try
         {
-            ExecutionResult result = shellCommandHelper.executeShellCommand( workingDirectory, actualExecutable,
-                                                                             arguments, output, project.getId(),
-                                                                             environments );
+            ExecutionResult result =
+                getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable, arguments, output,
+                                                             project.getId(), environments );
 
             getLogger().info( "Exit code: " + result.getExitCode() );
 
@@ -298,12 +331,12 @@ public abstract class AbstractBuildExecutor
 
     public boolean isBuilding( Project project )
     {
-        return project.getState() == ContinuumProjectState.BUILDING || shellCommandHelper.isRunning( project.getId() );
+        return project.getState() == ContinuumProjectState.BUILDING || getShellCommandHelper().isRunning( project.getId() );
     }
 
     public void killProcess( Project project )
     {
-        shellCommandHelper.killProcess( project.getId() );
+        getShellCommandHelper().killProcess( project.getId() );
     }
 
     public List getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
@@ -315,7 +348,7 @@ public abstract class AbstractBuildExecutor
 
     public File getWorkingDirectory( Project project )
     {
-        return workingDirectoryService.getWorkingDirectory( project );
+        return getWorkingDirectoryService().getWorkingDirectory( project );
     }
 
     public InstallationService getInstallationService()
