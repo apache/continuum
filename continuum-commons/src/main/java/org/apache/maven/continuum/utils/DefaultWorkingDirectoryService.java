@@ -40,6 +40,16 @@ public class DefaultWorkingDirectoryService
      */
     private ConfigurationService configurationService;
 
+    public void setConfigurationService( ConfigurationService configurationService )
+    {
+        this.configurationService = configurationService;
+    }
+
+    public ConfigurationService getConfigurationService()
+    {
+        return configurationService;
+    }
+
     // ----------------------------------------------------------------------
     // WorkingDirectoryService Implementation
     // ----------------------------------------------------------------------
@@ -63,10 +73,10 @@ public class DefaultWorkingDirectoryService
         {
             // clean the project working directory path if it's a subdirectory of the global working directory
             if ( projectWorkingDirectory.getAbsolutePath().startsWith(
-                configurationService.getWorkingDirectory().getAbsolutePath() ) )
+                getConfigurationService().getWorkingDirectory().getAbsolutePath() ) )
             {
                 String pwd = projectWorkingDirectory.getAbsolutePath().substring(
-                    configurationService.getWorkingDirectory().getAbsolutePath().length() );
+                    getConfigurationService().getWorkingDirectory().getAbsolutePath().length() );
                 if ( pwd.startsWith( "/" ) || pwd.startsWith( "\\" ) )
                 {
                     pwd = pwd.substring( 1 );
@@ -78,7 +88,7 @@ public class DefaultWorkingDirectoryService
         }
         else
         {
-            workDir = new File( configurationService.getWorkingDirectory(), project.getWorkingDirectory() );
+            workDir = new File( getConfigurationService().getWorkingDirectory(), project.getWorkingDirectory() );
         }
         return workDir;
     }
