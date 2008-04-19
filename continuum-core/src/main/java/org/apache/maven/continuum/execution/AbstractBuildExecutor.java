@@ -19,6 +19,7 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -51,6 +52,9 @@ public abstract class AbstractBuildExecutor
     extends AbstractLogEnabled
     implements ContinuumBuildExecutor, Initializable
 {
+    private static final String SUDO_EXECUTABLE = "sudo";
+    private static final String CHROOT_EXECUTABLE = "chroot";
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -74,6 +78,11 @@ public abstract class AbstractBuildExecutor
      * @plexus.requirement
      */
     private InstallationService installationService;
+
+    /**
+     * @plexus.configuration
+     */
+    private File chrootJailDirectory;
 
     /**
      * @plexus.configuration
@@ -232,6 +241,26 @@ public abstract class AbstractBuildExecutor
 
         try
         {
+            File chrootJailDirectory = getChrootJailDirectory();
+            if ( chrootJailDirectory != null )
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append( CHROOT_EXECUTABLE );
+                sb.append( " " );
+                sb.append( new File( chrootJailDirectory, project.getGroupId() ) );
+                sb.append( " " );
+                sb.append( " cd " );
+                sb.append( getRelativePath( chrootJailDirectory, workingDirectory, project.getGroupId() ) );
+                sb.append( " && " );
+                sb.append( actualExecutable );
+                sb.append( " " );
+                sb.append( arguments );
+
+                arguments = sb.toString();
+                actualExecutable = SUDO_EXECUTABLE;
+                workingDirectory = chrootJailDirectory; // not really used but must exist
+            }
+
             ExecutionResult result =
                 getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable, arguments, output,
                                                              project.getId(), environments );
@@ -257,6 +286,21 @@ public abstract class AbstractBuildExecutor
         {
             throw new ContinuumBuildExecutorException( "Error while executing shell command. " +
                 "The most common error is that '" + executable + "' " + "is not in your path.", e );
+        }
+    }
+
+    private String getRelativePath( File chrootDir, File workingDirectory, String groupId )
+    {
+        String path = workingDirectory.getPath();
+        String chrootBase = new File( chrootDir, groupId ).getPath();
+        if ( path.startsWith( chrootBase ) )
+        {
+            return path.substring( chrootBase.length(), path.length() );
+        }
+        else
+        {
+            throw new IllegalArgumentException( "Working directory is not inside the chroot jail " + chrootBase +
+                " , " + path );
         }
     }
 
@@ -374,5 +418,15 @@ public abstract class AbstractBuildExecutor
     public void setExecutableResolver( ExecutableResolver executableResolver )
     {
         this.executableResolver = executableResolver;
+    }
+
+    public void setChrootJailDirectory( File chrootJailDirectory )
+    {
+        this.chrootJailDirectory = chrootJailDirectory;
+    }
+
+    public File getChrootJailDirectory()
+    {
+        return chrootJailDirectory;
     }
 }
