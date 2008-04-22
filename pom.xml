@@ -576,15 +576,15 @@
       <dependency>
         <groupId>jpox</groupId>
         <artifactId>jpox</artifactId>
-        <version>1.1.9</version>
+        <version>1.1.9-1</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.sql</groupId>
-            <artifactId>jdbc-stdext</artifactId>
+            <groupId>javax.transaction</groupId>
+            <artifactId>transaction-api</artifactId>
           </exclusion>
           <exclusion>
-            <groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
+            <groupId>javax.resource</groupId>
+            <artifactId>connector-api</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
