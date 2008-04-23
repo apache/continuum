@@ -68,6 +68,15 @@ public class DefaultConfigurationService
     // ----------------------------------------------------------------------
 
 
+    public void setStore( ContinuumStore store )
+    {
+        this.store = store;
+    }
+
+    public ContinuumStore getStore()
+    {
+        return store;
+    }
 
     public File getApplicationHome()
     {
@@ -264,13 +273,13 @@ public class DefaultConfigurationService
     {
         try
         {
-            systemConf = store.getSystemConfiguration();
+            systemConf = getStore().getSystemConfiguration();
 
             if ( systemConf == null )
             {
                 systemConf = new SystemConfiguration();
 
-                systemConf = store.addSystemConfiguration( systemConf );
+                systemConf = getStore().addSystemConfiguration( systemConf );
             }
 
             loaded = true;
@@ -286,7 +295,7 @@ public class DefaultConfigurationService
     {
         try
         {
-            store.updateSystemConfiguration( systemConf );
+            getStore().updateSystemConfiguration( systemConf );
         }
         catch ( ContinuumStoreException e )
         {
@@ -298,13 +307,13 @@ public class DefaultConfigurationService
         throws ContinuumStoreException, ConfigurationLoadingException
     {
         // Schedule
-        Schedule defaultSchedule = store.getScheduleByName( DEFAULT_SCHEDULE_NAME );
+        Schedule defaultSchedule = getStore().getScheduleByName( DEFAULT_SCHEDULE_NAME );
 
         if ( defaultSchedule == null )
         {
             defaultSchedule = createDefaultSchedule();
 
-            defaultSchedule = store.addSchedule( defaultSchedule );
+            defaultSchedule = getStore().addSchedule( defaultSchedule );
         }
 
         return defaultSchedule;
@@ -336,6 +345,6 @@ public class DefaultConfigurationService
         schedule.setActive( true );
 
         return schedule;
-    }    
+    }
 
 }
