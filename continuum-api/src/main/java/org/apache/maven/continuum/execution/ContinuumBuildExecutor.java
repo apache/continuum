@@ -33,9 +33,11 @@ public interface ContinuumBuildExecutor
 {
     String ROLE = ContinuumBuildExecutor.class.getName();
 
+    // TODO: stream the build output
     ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
         throws ContinuumBuildExecutorException;
 
+    // TODO: rename to be clearer
     void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException;
 
@@ -43,8 +45,10 @@ public interface ContinuumBuildExecutor
 
     void killProcess( Project project );
 
+    // TODO: are these part of the builder interface, or a separate project/build definition interface?
     List getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException;
 
+    //TODO: Move as a plugin
     void backupTestFiles( Project project, int buildId );
 }

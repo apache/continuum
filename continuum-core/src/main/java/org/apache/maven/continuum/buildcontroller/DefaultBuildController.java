@@ -29,12 +29,13 @@ import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.scm.ContinuumScmException;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+import org.apache.maven.scm.ScmException;
+import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -413,19 +414,15 @@ public class DefaultBuildController
             error = ContinuumUtils.throwableToString( e );
             exception = new TaskExecutionException( "Error looking up action '" + actionName + "'", e );
         }
-        catch ( ContinuumScmException e )
+        catch ( ScmRepositoryException e )
         {
-            ScmResult result = e.getResult();
+            error = getValidationMessages( e ) + "\n" + ContinuumUtils.throwableToString( e );
 
-            if ( result != null )
-            {
-                error = convertScmResultToError( result );
-            }
-
-            if ( error == null )
-            {
-                error = ContinuumUtils.throwableToString( e );
-            }
+            exception = new TaskExecutionException( "SCM error while executing '" + actionName + "'", e );
+        }
+        catch ( ScmException e )
+        {
+            error = ContinuumUtils.throwableToString( e );
 
             exception = new TaskExecutionException( "SCM error while executing '" + actionName + "'", e );
         }
@@ -569,6 +566,27 @@ public class DefaultBuildController
         }
 
         return true;
+    }
+
+    private String getValidationMessages( ScmRepositoryException ex )
+    {
+        List<String> messages = ex.getValidationMessages();
+
+        StringBuffer message = new StringBuffer();
+
+        if ( messages != null && !messages.isEmpty() )
+        {
+            for ( Iterator<String> i = messages.iterator(); i.hasNext(); )
+            {
+                message.append( (String) i.next() );
+
+                if ( i.hasNext() )
+                {
+                    message.append( System.getProperty( "line.separator" ) );
+                }
+            }
+        }
+        return message.toString();
     }
 
     protected void checkProjectDependencies( BuildContext context )

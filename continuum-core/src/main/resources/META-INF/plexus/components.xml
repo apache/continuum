@@ -20,32 +20,6 @@
 <component-set>
   <components>
 
-    <!-- not using plexus-maven-plugin because of configuration complexity -->
-    <component>
-      <role>org.apache.maven.continuum.scm.ContinuumScm</role>
-      <implementation>org.apache.maven.continuum.scm.DefaultContinuumScm</implementation>
-      <requirements>
-        <requirement>
-          <role>org.apache.maven.scm.manager.ScmManager</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.maven.continuum.store.ContinuumStore</role>
-          <role-hint>jdo</role-hint>
-        </requirement>
-      </requirements>
-      <configuration>
-        <updateProperties>
-          <property>
-            <name>maven.scm.starteam.deleteLocal</name>
-            <value>true</value>
-          </property>
-        </updateProperties>
-      </configuration>
-    </component>
-
     <!-- ConnectionConsumer -->
     <component>
       <role>org.apache.maven.continuum.network.ConnectionConsumer</role>

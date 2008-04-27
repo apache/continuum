@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+  <bean id="continuumScm" class="org.apache.continuum.scm.DefaultContinuumScm">
+    <property name="scmManager" ref="scmManager" />
+  </bean>
+
+  <bean id="scmManager" class="org.apache.continuum.scm.manager.ScmManager">
+    <property name="scmLogger" ref="scmLogger" />
+  </bean>
+
+  <bean id="scmLogger" class="org.apache.continuum.scm.manager.Slf4jScmLogger" />
+</beans>
