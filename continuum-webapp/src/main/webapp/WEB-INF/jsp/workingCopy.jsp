@@ -50,11 +50,11 @@
           <ww:param name="file" value="file"/>
         </ww:url>
         <ww:a href="%{workingCopyTextUrl}"><ww:text name="workingCopy.currentFile.text"/></ww:a>
+        </p>
         
         <form>
           <textarea rows="50" cols="100"><ww:property value="fileContent"/></textarea>
         </form>
-        </p>
         <%
             }
         %>
