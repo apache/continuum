@@ -23,6 +23,11 @@
       <value>true</value>
     </property> 
   </bean>
-  
-  
+
+  <!-- to run builds in a chroot jail environment
+  <bean name="chrootJailDirectory" class="java.io.File">
+    <constructor-arg value="/home/jail"/>
+  </bean>
+  <bean id="workingDirectoryService" class="org.apache.maven.continuum.utils.ChrootJailWorkingDirectoryService" autowire="byName"/>
+  -->
 </beans>
