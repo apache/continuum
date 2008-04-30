@@ -19,6 +19,8 @@ package org.apache.maven.continuum.release.executors;
  * under the License.
  */
 
+import java.io.File;
+
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
@@ -31,19 +33,17 @@ import org.apache.maven.scm.repository.ScmRepository;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
-import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.FileUtils;
 
-import java.io.File;
-
 /**
  * @author Edwin Punzalan
  */
 public class ReleaseTaskExecutorTest
-    extends PlexusTestCase
+    extends PlexusInSpringTestCase
 {
     private ScmManager scmManager;
 
