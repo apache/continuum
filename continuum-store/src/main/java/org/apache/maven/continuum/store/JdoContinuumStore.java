@@ -19,6 +19,24 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.jdo.Extent;
+import javax.jdo.FetchPlan;
+import javax.jdo.JDOHelper;
+import javax.jdo.JDOUserException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -40,26 +58,7 @@ import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
-
-import javax.jdo.Extent;
-import javax.jdo.FetchPlan;
-import javax.jdo.JDOHelper;
-import javax.jdo.JDOUserException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -70,7 +69,7 @@ import java.util.Map;
  */
 public class JdoContinuumStore
     extends AbstractContinuumStore
-    implements ContinuumStore, Initializable
+    implements ContinuumStore
 {
     /**
      * @plexus.requirement role-hint="continuum"
@@ -81,7 +80,7 @@ public class JdoContinuumStore
     //
     // ----------------------------------------------------------------------
 
-    private PersistenceManagerFactory continuumPmf;
+    private PersistenceManagerFactory continuumPersistenceManagerFactory;
 
     // ----------------------------------------------------------------------
     // Fetch Groups
@@ -102,16 +101,6 @@ public class JdoContinuumStore
     private static final String PROJECTGROUP_PROJECTS_FETCH_GROUP = "projectgroup-projects";
 
     private static final String BUILD_TEMPLATE_BUILD_DEFINITIONS = "build-template-build-definitions";
-
-    // ----------------------------------------------------------------------
-    // Component Lifecycle
-    // ----------------------------------------------------------------------
-
-    public void initialize()
-        throws InitializationException
-    {
-        continuumPmf = continuumJdoFactory.getPersistenceManagerFactory();
-    }
 
     // ----------------------------------------------------------------------
     // ContinuumStore Implementation
@@ -2016,7 +2005,7 @@ public class JdoContinuumStore
 
     private PersistenceManager getPersistenceManager()
     {
-        return getPersistenceManager( continuumPmf );
+        return getPersistenceManager( getContinuumPersistenceManagerFactory() );
     }
 
     private PersistenceManager getPersistenceManager( PersistenceManagerFactory pmf )
@@ -2031,7 +2020,7 @@ public class JdoContinuumStore
 
     public void closeStore()
     {
-        closePersistenceManagerFactory( continuumPmf, 1 );
+        closePersistenceManagerFactory( getContinuumPersistenceManagerFactory(), 1 );
     }
 
     public Collection<ProjectGroup> getAllProjectGroupsWithTheLot()
@@ -2104,5 +2093,14 @@ public class JdoContinuumStore
                 }
             }
         }
+    }
+
+    private PersistenceManagerFactory getContinuumPersistenceManagerFactory()
+    {
+        if ( continuumPersistenceManagerFactory == null )
+        {
+            continuumPersistenceManagerFactory = continuumJdoFactory.getPersistenceManagerFactory();
+        }
+        return continuumPersistenceManagerFactory;
     }
 }
