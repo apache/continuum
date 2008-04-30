@@ -64,6 +64,11 @@ public class MavenOneBuildExecutor
         super( ID, true );
     }
 
+    public void setMetadataHelper( MavenOneMetadataHelper metadataHelper )
+    {
+        this.metadataHelper = metadataHelper;
+    }
+
     // ----------------------------------------------------------------------
     // Builder Implementation
     // ----------------------------------------------------------------------

@@ -128,6 +128,11 @@ public abstract class AbstractBuildExecutor
         return workingDirectoryService;
     }
 
+    public void setDefaultExecutable( String defaultExecutable )
+    {
+        this.defaultExecutable = defaultExecutable;
+    }
+
     // ----------------------------------------------------------------------
     // Component Lifecycle
     // ----------------------------------------------------------------------
