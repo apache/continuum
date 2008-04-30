@@ -32,6 +32,7 @@ import javax.jdo.PersistenceManagerFactory;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.jdo.MemoryJdoFactory;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -40,7 +41,6 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
@@ -137,25 +137,45 @@ public abstract class AbstractContinuumTest
 
         Object o = lookup( JdoFactory.ROLE, "continuum" );
 
-        assertEquals( DefaultConfigurableJdoFactory.class.getName(), o.getClass().getName() );
+        assertEquals( MemoryJdoFactory.class.getName(), o.getClass().getName() );
 
-        DefaultConfigurableJdoFactory jdoFactory = (DefaultConfigurableJdoFactory) o;
+        MemoryJdoFactory jdoFactory = (MemoryJdoFactory) o;
 
-        jdoFactory.setPersistenceManagerFactoryClass( "org.jpox.PersistenceManagerFactoryImpl" );
+//        jdoFactory.setPersistenceManagerFactoryClass( "org.jpox.PersistenceManagerFactoryImpl" );
+//
+//        jdoFactory.setDriverName( "org.hsqldb.jdbcDriver" );
 
-        jdoFactory.setDriverName( "org.hsqldb.jdbcDriver" );
+        String url = "jdbc:hsqldb:mem:" + getClass().getName() + "." + getName();
 
-        jdoFactory.setUrl( "jdbc:hsqldb:mem:" + getClass().getName() + "." + getName() );
+        jdoFactory.setUrl( url );
 
-        jdoFactory.setUserName( "sa" );
+//        jdoFactory.setUserName( "sa" );
+//
+//        jdoFactory.setPassword( "" );
+//
+//        jdoFactory.setProperty( "org.jpox.transactionIsolation", "READ_UNCOMMITTED" );
+//
+//        jdoFactory.setProperty( "org.jpox.poid.transactionIsolation", "READ_UNCOMMITTED" );
+//
+//        jdoFactory.setProperty( "org.jpox.autoCreateTables", "true" );
 
-        jdoFactory.setPassword( "" );
+        // ----------------------------------------------------------------------
+        // Check the configuration
+        // ----------------------------------------------------------------------
 
-        jdoFactory.setProperty( "org.jpox.transactionIsolation", "READ_UNCOMMITTED" );
+        PersistenceManagerFactory pmf = jdoFactory.getPersistenceManagerFactory();
 
-        jdoFactory.setProperty( "org.jpox.poid.transactionIsolation", "READ_UNCOMMITTED" );
+        assertNotNull( pmf );
 
-        jdoFactory.setProperty( "org.jpox.autoCreateTables", "true" );
+        assertEquals( url, pmf.getConnectionURL() );
+
+        PersistenceManager pm = pmf.getPersistenceManager();
+
+        pm.close();
+
+        // ----------------------------------------------------------------------
+        //
+        // ----------------------------------------------------------------------
 
         Properties properties = jdoFactory.getProperties();
 
@@ -166,18 +186,6 @@ public abstract class AbstractContinuumTest
 
         SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/META-INF/package.jdo" )}, new URL[]{}, null,
                                        false, null );
-
-        // ----------------------------------------------------------------------
-        // Check the configuration
-        // ----------------------------------------------------------------------
-
-        PersistenceManagerFactory pmf = jdoFactory.getPersistenceManagerFactory();
-
-        assertNotNull( pmf );
-
-        PersistenceManager pm = pmf.getPersistenceManager();
-
-        pm.close();
 
         // ----------------------------------------------------------------------
         //
