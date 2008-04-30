@@ -80,9 +80,7 @@ public class AbstractContinuumBuildExecutorTest
 
         final String cmd =
             "chroot /home/xx " + " cd /dir1/dir2/workingdir/" + project.getId() + " && " + executable + " " + arguments;
-        // Constraint[] args =
-        // new Constraint[] { eq( chrootJailFile ), eq( "sudo" ), eq( toSystemPath( cmd ) ), eq( output ),
-        // eq( project.getId() ), eq( environments ) };
+
         final ExecutionResult result = new ExecutionResult( 0 );
 
         context.checking( new Expectations()
@@ -94,12 +92,9 @@ public class AbstractContinuumBuildExecutorTest
             }
         } );
 
-        // helperMock.expects( once() ).method( "executeShellCommand" ).with( args ).will( returnValue( result ) );
-
         executor.executeShellCommand( project, executable, arguments, output, environments );
 
         context.assertIsSatisfied();
-        // super.verify();
     }
 
     class BuildExecutorStub
