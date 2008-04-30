@@ -102,11 +102,8 @@ public class CreateProjectsFromMetadataTest
         ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context
             .get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
 
-        if ( result.hasErrors() )
-        {
-            System.out.println( "Errors=" + result.getErrorsAsString() );
-        }
-        assertFalse( "Should not have errors", result.hasErrors() );
+        assertFalse( "Should not have errors but had " + result.getErrorsAsString() +
+            " (this test requires internet access)", result.hasErrors() );
     }
 
     public void testExecuteWithRecursiveMode()
@@ -123,11 +120,8 @@ public class CreateProjectsFromMetadataTest
         ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context
             .get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
 
-        if ( result.hasErrors() )
-        {
-            System.out.println( "Errors=" + result.getErrorsAsString() );
-        }
-        assertFalse( "Should not have errors", result.hasErrors() );
+        assertFalse( "Should not have errors but had " + result.getErrorsAsString() +
+            " (this test requires internet access)", result.hasErrors() );
     }
 
 }
