@@ -31,32 +31,6 @@
   <!-- enable the configuration of transactional behavior based on annotations -->
   <tx:annotation-driven transaction-manager="transactionManager" />
 
-  <bean id="storeFactory"
-    class="org.apache.continuum.store.jpa.JpaStoreFactory">
-  </bean>
-
-  <bean id="projectStore"
-    class="org.apache.continuum.store.jpa.JpaStore"
-    factory-bean="storeFactory"
-    factory-method="createProjectStoreInstance">
-    <property name="entityManagerFactory" ref="entityManagerFactory" />
-  </bean>
-
-  <bean id="projectGroupStore"
-    class="org.apache.continuum.store.jpa.JpaStore"
-    factory-bean="storeFactory"
-    factory-method="createProjectGroupStoreInstance">
-    <property name="entityManagerFactory" ref="entityManagerFactory" />
-  </bean>
-
-  <bean id="projectNotifierStore"
-    class="org.apache.continuum.store.jpa.JpaStore"
-    factory-bean="storeFactory"
-    factory-method="createProjectNotifierStoreInstance">
-    <property name="entityManagerFactory" ref="entityManagerFactory" />
-  </bean>
-
-
   <!-- DAO -->
 
   <bean id="daoFactory"
