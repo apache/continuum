@@ -10,6 +10,8 @@
   <bean name="continuumBuildExecutor#maven2"
          class="org.apache.maven.continuum.execution.maven.m2.MavenTwoBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="mvn"/>
+    <property name="builderHelper" ref="mavenBuilderHelper"/>
+    <property name="projectHelper" ref="mavenProjectHelper"/>
   </bean>
   <bean name="continuumBuildExecutor#maven-1"
          class="org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor" autowire="byName">

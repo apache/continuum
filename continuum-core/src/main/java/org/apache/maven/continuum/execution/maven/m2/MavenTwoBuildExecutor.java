@@ -96,6 +96,36 @@ public class MavenTwoBuildExecutor
         super( ID, true );
     }
 
+    public MavenBuilderHelper getBuilderHelper()
+    {
+        return builderHelper;
+    }
+
+    public void setBuilderHelper( MavenBuilderHelper builderHelper )
+    {
+        this.builderHelper = builderHelper;
+    }
+
+    public MavenProjectHelper getProjectHelper()
+    {
+        return projectHelper;
+    }
+
+    public void setProjectHelper( MavenProjectHelper projectHelper )
+    {
+        this.projectHelper = projectHelper;
+    }
+
+    public ConfigurationService getConfigurationService()
+    {
+        return configurationService;
+    }
+
+    public void setConfigurationService( ConfigurationService configurationService )
+    {
+        this.configurationService = configurationService;
+    }
+
     // ----------------------------------------------------------------------
     // ContinuumBuilder Implementation
     // ----------------------------------------------------------------------

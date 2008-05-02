@@ -20,6 +20,11 @@ package org.apache.maven.continuum.execution.manager;
  */
 
 import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.maven.continuum.execution.AbstractBuildExecutor;
+import org.apache.maven.continuum.execution.ant.AntBuildExecutor;
+import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
+import org.apache.maven.continuum.execution.maven.m2.MavenTwoBuildExecutor;
+import org.apache.maven.continuum.execution.shell.ShellBuildExecutor;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -28,9 +33,59 @@ import org.apache.maven.continuum.AbstractContinuumTest;
 public class DefaultBuildExecutorManagerTest
     extends AbstractContinuumTest
 {
-    public void testBasic()
+    private BuildExecutorManager builderManager;
+
+    @Override
+    protected void setUp()
         throws Exception
     {
-        lookup( BuildExecutorManager.ROLE );
+        super.setUp();
+        builderManager = (BuildExecutorManager) lookup( BuildExecutorManager.ROLE );
+    }
+
+    public void testMavenTwoBuildExecutorDependencyInjection()
+        throws Exception
+    {
+        MavenTwoBuildExecutor executor =
+            (MavenTwoBuildExecutor) builderManager.getBuildExecutor( MavenTwoBuildExecutor.ID );
+
+        assertCommonFields( executor );
+        assertNotNull( executor.getBuilderHelper() );
+        assertNotNull( executor.getProjectHelper() );
+        assertNotNull( executor.getConfigurationService() );
+    }
+
+    public void testMavenOneBuildExecutorDependencyInjection()
+        throws Exception
+    {
+        MavenOneBuildExecutor executor =
+            (MavenOneBuildExecutor) builderManager.getBuildExecutor( MavenOneBuildExecutor.ID );
+
+        assertCommonFields( executor );
+        assertNotNull( executor.getMetadataHelper() );
+    }
+
+    public void testAntBuildExecutorDependencyInjection()
+        throws Exception
+    {
+        AntBuildExecutor executor = (AntBuildExecutor) builderManager.getBuildExecutor( AntBuildExecutor.ID );
+
+        assertCommonFields( executor );
+    }
+
+    public void testShellBuildExecutorDependencyInjection()
+        throws Exception
+    {
+        ShellBuildExecutor executor = (ShellBuildExecutor) builderManager.getBuildExecutor( ShellBuildExecutor.ID );
+
+        assertCommonFields( executor );
+    }
+
+    private void assertCommonFields( AbstractBuildExecutor executor )
+    {
+        assertNotNull( executor.getShellCommandHelper() );
+        assertNotNull( executor.getExecutableResolver() );
+        assertNotNull( executor.getWorkingDirectoryService() );
+        assertNotNull( executor.getInstallationService() );
     }
 }

@@ -137,6 +137,11 @@ public abstract class AbstractBuildExecutor
     // Component Lifecycle
     // ----------------------------------------------------------------------
 
+    public String getDefaultExecutable()
+    {
+        return defaultExecutable;
+    }
+
     public void initialize()
         throws InitializationException
     {
@@ -423,6 +428,11 @@ public abstract class AbstractBuildExecutor
     public void setExecutableResolver( ExecutableResolver executableResolver )
     {
         this.executableResolver = executableResolver;
+    }
+
+    public ExecutableResolver getExecutableResolver()
+    {
+        return executableResolver;
     }
 
     public void setChrootJailDirectory( File chrootJailDirectory )
