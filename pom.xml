@@ -872,7 +872,7 @@
 
   <properties>
     <continuumWebappVersion>${pom.version}</continuumWebappVersion>
-    <maven.version>2.0.6</maven.version>
+    <maven.version>2.0.9</maven.version>
     <spring.version>2.5.3</spring.version>
     <wagon.version>1.0-beta-2</wagon.version>
     <maven-scm.version>1.1-SNAPSHOT</maven-scm.version>
