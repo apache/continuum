@@ -19,27 +19,32 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import org.apache.maven.continuum.Continuum;
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.continuum.scm.ContinuumScm;
+import org.apache.continuum.scm.ContinuumScmConfiguration;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.scm.ContinuumScm;
-import org.apache.maven.continuum.scm.ContinuumScmException;
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUtils;
+import org.apache.maven.scm.ScmException;
+import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
+import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- * @plexus.component role="org.codehaus.plexus.action.Action"
- * role-hint="checkout-project"
+ * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="checkout-project"
  */
 public class CheckoutProjectContinuumAction
     extends AbstractContinuumAction
@@ -60,7 +65,7 @@ public class CheckoutProjectContinuumAction
     private ContinuumStore store;
 
     public void execute( Map context )
-        throws Exception
+        throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
         Project project = store.getProject( getProject( context ).getId() );
 
@@ -85,39 +90,71 @@ public class CheckoutProjectContinuumAction
 
         try
         {
-            result = scm.checkOut( project, workingDirectory, context );
-            //CONTINUUM-1394
-            result.setChanges( null );
-        }
-        catch ( ContinuumScmException e )
-        {
-            // TODO: Dissect the scm exception to be able to give better feedback
-            Throwable cause = e.getCause();
+            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
 
-            if ( cause instanceof NoSuchScmProviderException )
+            String tag = config.getTag();
+            getLogger().info(
+                              "Checking out project: '" + project.getName() + "', id: '" + project.getId() + "' "
+                                  + "to '" + workingDirectory + "'"
+                                  + ( tag != null ? " with branch/tag " + tag + "." : "." ) );
+
+            CheckOutScmResult checkoutResult = scm.checkout( config );
+            if ( StringUtils.isNotEmpty( checkoutResult.getRelativePathProjectDirectory() ) )
             {
-                result = new ScmResult();
-
-                result.setSuccess( false );
-
-                result.setProviderMessage( cause.getMessage() );
+                context.put( AbstractContinuumAction.KEY_PROJECT_RELATIVE_PATH,
+                             checkoutResult.getRelativePathProjectDirectory() );
             }
-            else if ( e.getResult() != null )
+
+            if ( !checkoutResult.isSuccess() )
             {
-                result = e.getResult();
+                // TODO: is it more appropriate to return this in the converted result so that it can be presented to
+                // the user?
+                String msg =
+                    "Error while checking out the code for project: '" + project.getName() + "', id: '"
+                        + project.getId() + "' to '" + workingDirectory.getAbsolutePath() + "'"
+                        + ( tag != null ? " with branch/tag " + tag + "." : "." );
+                getLogger().warn( msg );
+
+                getLogger().warn( "Command output: " + checkoutResult.getCommandOutput() );
+
+                getLogger().warn( "Provider message: " + checkoutResult.getProviderMessage() );
             }
             else
             {
-                result = new ScmResult();
-
-                result.setSuccess( false );
-
-                result.setException( ContinuumUtils.throwableMessagesToString( e ) );
+                getLogger().info( "Checked out " + checkoutResult.getCheckedOutFiles().size() + " files." );
             }
+
+            result = convertScmResult( checkoutResult );
+        }
+        catch ( ScmRepositoryException e )
+        {
+            result = new ScmResult();
+
+            result.setSuccess( false );
+
+            result.setProviderMessage( e.getMessage() + ": " + getValidationMessages( e ) );
+        }
+        catch ( NoSuchScmProviderException e )
+        {
+            // TODO: this is not making it back into a result of any kind - log it at least. Same is probably the case for ScmException
+            result = new ScmResult();
+
+            result.setSuccess( false );
+
+            result.setProviderMessage( e.getMessage() );
+        }
+        catch ( ScmException e )
+        {
+            result = new ScmResult();
+
+            result.setSuccess( false );
+
+            result.setException( ContinuumUtils.throwableMessagesToString( e ) );
         }
         catch ( Throwable t )
         {
             // TODO: do we want this here, or should it be to the logs?
+            // TODO: what throwables do we really get here that we can cope with?
             result = new ScmResult();
 
             result.setSuccess( false );
@@ -129,9 +166,7 @@ public class CheckoutProjectContinuumAction
             String relativePath = (String) getObject( context, KEY_PROJECT_RELATIVE_PATH, "" );
             if ( StringUtils.isNotEmpty( relativePath ) )
             {
-
                 project.setRelativePath( relativePath );
-
             }
 
             project = store.getProject( project.getId() );
@@ -144,5 +179,74 @@ public class CheckoutProjectContinuumAction
         }
 
         context.put( KEY_CHECKOUT_SCM_RESULT, result );
+    }
+
+    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )
+    {
+        ContinuumScmConfiguration config = new ContinuumScmConfiguration();
+        config.setUrl( project.getScmUrl() );
+        config.setUsername( project.getScmUsername() );
+        config.setPassword( project.getScmPassword() );
+        config.setUseCredentialsCache( project.isScmUseCache() );
+        config.setWorkingDirectory( workingDirectory );
+        config.setTag( project.getScmTag() );
+        return config;
+    }
+
+    private ScmResult convertScmResult( CheckOutScmResult scmResult )
+    {
+        ScmResult result = new ScmResult();
+
+        result.setSuccess( scmResult.isSuccess() );
+
+        result.setCommandLine( maskPassword( scmResult.getCommandLine() ) );
+
+        result.setCommandOutput( scmResult.getCommandOutput() );
+
+        result.setProviderMessage( scmResult.getProviderMessage() );
+
+        return result;
+    }
+
+    private String maskPassword( String commandLine )
+    {
+        String cmd = commandLine;
+
+        if ( cmd != null && cmd.startsWith( "svn" ) )
+        {
+            String pwdString = "--password";
+
+            if ( cmd.indexOf( pwdString ) > 0 )
+            {
+                int index = cmd.indexOf( pwdString ) + pwdString.length() + 1;
+
+                int nextSpace = cmd.indexOf( " ", index );
+
+                cmd = cmd.substring( 0, index ) + "********" + cmd.substring( nextSpace );
+            }
+        }
+
+        return cmd;
+    }
+
+    private String getValidationMessages( ScmRepositoryException ex )
+    {
+        List<String> messages = ex.getValidationMessages();
+
+        StringBuffer message = new StringBuffer();
+
+        if ( messages != null && !messages.isEmpty() )
+        {
+            for ( Iterator<String> i = messages.iterator(); i.hasNext(); )
+            {
+                message.append( (String) i.next() );
+
+                if ( i.hasNext() )
+                {
+                    message.append( System.getProperty( "line.separator" ) );
+                }
+            }
+        }
+        return message.toString();
     }
 }

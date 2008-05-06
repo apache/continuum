@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.scm;
+package org.apache.continuum.scm.manager;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,20 +19,36 @@ package org.apache.maven.continuum.scm;
  * under the License.
  */
 
-import org.apache.maven.continuum.AbstractContinuumTest;
+import java.util.Map;
+
+import org.apache.maven.scm.log.ScmLogger;
+import org.apache.maven.scm.manager.AbstractScmManager;
+import org.apache.maven.scm.provider.ScmProvider;
 
 /**
- * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id$
+ * Default implementation of the SCM manager.
+ * 
+ * @todo move to maven-scm as the default 
  */
-public class ContinuumScmTest
-    extends AbstractContinuumTest
+public class ScmManager
+    extends AbstractScmManager
 {
-    public void testBasic()
-        throws Exception
+    private ScmLogger scmLogger;
+    
+    @Override
+    protected ScmLogger getScmLogger()
     {
-        ContinuumScm continuumScm = (ContinuumScm) lookup( ContinuumScm.ROLE );
+        return scmLogger;
+    }
 
-        release( continuumScm );
+    @Override
+    public void setScmProviders( Map providers )
+    {
+        super.setScmProviders( providers );
+    }
+
+    public void setScmLogger( ScmLogger scmLogger )
+    {
+        this.scmLogger = scmLogger;
     }
 }

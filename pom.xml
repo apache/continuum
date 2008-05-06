@@ -16,8 +16,7 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
-  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.continuum</groupId>
@@ -171,6 +170,7 @@
     <module>maven-continuum-plugin</module>
     <module>continuum-docs</module>
     <module>continuum-jetty</module>
+    <module>continuum-base</module>
   </modules>
   <repositories>
     <repository>
@@ -236,6 +236,7 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <!-- TODO: remove the below, they should not be universal -->
     <dependency>
       <groupId>jmock</groupId>
       <artifactId>jmock</artifactId>
@@ -410,6 +411,11 @@
       <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-configuration</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-scm</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
@@ -878,5 +884,6 @@
     <maven-scm.version>1.1-SNAPSHOT</maven-scm.version>
     <redback.version>1.0.1</redback.version>
     <mail-sender.version>1.0-alpha-7</mail-sender.version>
+    <spring.version>2.5.1</spring.version>
   </properties>
 </project>
