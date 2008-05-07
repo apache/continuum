@@ -6,15 +6,9 @@
 
   <bean id="scmManager"
     class="org.apache.continuum.scm.manager.ScmManager">
-    <!--  TODO: better way to add the providers without having to redeclare all this? -->
     <property name="scmLogger" ref="scmLogger" />
     <property name="scmProviders">
-      <map>
-        <entry key="svnexe">
-          <bean
-            class="org.apache.maven.scm.provider.svn.svnexe.SvnExeScmProvider" />
-        </entry>
-      </map>
+      <bean class="org.apache.continuum.scm.manager.spring.ScmProviderFactoryBean"/>
     </property>
   </bean>
 </beans>
