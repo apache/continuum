@@ -250,6 +250,7 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         return changeSet;
     }
 
+    // TODO: migrate to the SvnCommandLineUtils version (preferably properly encapsulated in the provider)
     private String maskPassword( String commandLine )
     {
         String cmd = commandLine;
