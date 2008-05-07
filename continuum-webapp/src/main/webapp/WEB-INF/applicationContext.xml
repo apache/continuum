@@ -26,51 +26,9 @@
   
   <bean id="scmManager"
     class="org.apache.continuum.scm.manager.ScmManager">
-    <!--  TODO: better way to add the providers without having to redeclare all this? -->
     <property name="scmLogger" ref="scmLogger" />
     <property name="scmProviders">
-      <map>
-        <entry key="svn">
-          <bean
-            class="org.apache.maven.scm.provider.svn.svnexe.SvnExeScmProvider" />
-        </entry>
-        <entry key="bazaar">
-          <bean
-            class="org.apache.maven.scm.provider.bazaar.BazaarScmProvider" />
-        </entry>
-        <entry key="clearcase">
-          <bean
-            class="org.apache.maven.scm.provider.clearcase.ClearCaseScmProvider" />
-        </entry>
-        <entry key="cvs">
-          <bean
-            class="org.apache.maven.scm.provider.cvslib.cvsjava.CvsJavaScmProvider" />
-        </entry>
-        <entry key="cvs_native">
-          <bean
-            class="org.apache.maven.scm.provider.cvslib.cvsexe.CvsExeScmProvider" />
-        </entry>
-        <entry key="local">
-          <bean
-            class="org.apache.maven.scm.provider.local.LocalScmProvider" />
-        </entry>
-        <entry key="perforce">
-          <bean
-            class="org.apache.maven.scm.provider.perforce.PerforceScmProvider" />
-        </entry>
-        <entry key="starteam">
-          <bean
-            class="org.apache.maven.scm.provider.starteam.StarteamScmProvider" />
-        </entry>
-        <entry key="synergy">
-          <bean
-            class="org.apache.maven.scm.provider.synergy.SynergyScmProvider" />
-        </entry>
-        <entry key="vss">
-          <bean
-            class="org.apache.maven.scm.provider.vss.VssScmProvider" />
-        </entry>
-      </map>
+      <bean class="org.apache.continuum.scm.manager.spring.ScmProviderFactoryBean"/>
     </property>
   </bean>
   
