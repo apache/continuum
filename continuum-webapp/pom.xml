@@ -193,7 +193,7 @@
           <jettyEnvXml>${basedir}/src/jetty-env.xml</jettyEnvXml>
           <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-              <port>9999</port>
+              <port>9090</port>
               <maxIdleTime>60000</maxIdleTime>
             </connector>
           </connectors>
