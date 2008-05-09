@@ -195,6 +195,18 @@
         <enabled>false</enabled>
       </snapshots>      
     </repository>
+    <repository>
+      <id>maven1-repository.dev.java.net</id>
+      <name>Java.net Repository for Maven 1</name>
+      <url>http://download.java.net/maven/1/</url>
+      <layout>legacy</layout>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>      
+    </repository>    
     <!-- comment when parent is released -->
     <repository>
       <id>people.apache.org</id>
