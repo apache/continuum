@@ -22,6 +22,7 @@ package org.apache.maven.continuum.installation;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.store.ContinuumStore;
@@ -94,12 +95,19 @@ public class DefaultInstallationService
     public Installation add( Installation installation )
         throws InstallationException
     {
-        return this.add( installation, false );
-
+        try
+        {
+            return this.add( installation, false );
+        }
+        catch ( AlreadyExistsProfileException e )
+        {
+            // normally cannot happend here but anyway we throw the exception
+            throw new InstallationException( e.getMessage(), e );
+        }
     }
 
     public Installation add( Installation installation, boolean automaticProfile )
-        throws InstallationException
+        throws InstallationException, AlreadyExistsProfileException
     {
 
         // TODO must be done in the same transaction

@@ -22,10 +22,12 @@ package org.apache.maven.continuum.web.action.admin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
@@ -117,22 +119,30 @@ public class ProfileAction
     public String save()
         throws Exception
     {
-        Profile stored = profileService.getProfile( profile.getId() );
-        if ( stored == null )
+        try
         {
-            this.profile = profileService.addProfile( profile );
-            this.allInstallations = installationService.getAllInstallations();
-            return "editProfile";
+            Profile stored = profileService.getProfile( profile.getId() );
+            if ( stored == null )
+            {
+                this.profile = profileService.addProfile( profile );
+                this.allInstallations = installationService.getAllInstallations();
+                return "editProfile";
+            }
+            else
+            {
+                // olamy : the only this to change here is the profile
+                // but in the UI maybe some installations has been we retrieve it
+                // and only set the name related to CONTINUUM-1361
+                String name = profile.getName();
+                profile = profileService.getProfile( profile.getId() );
+                profile.setName( name );
+                profileService.updateProfile( profile );
+            }
         }
-        else
+        catch ( AlreadyExistsProfileException e )
         {
-            // olamy : the only this to change here is the profile
-            // but in the UI maybe some installations has been we retrieve it
-            // and only set the name related to CONTINUUM-1361
-            String name = profile.getName();
-            profile = profileService.getProfile( profile.getId() );
-            profile.setName( name );
-            profileService.updateProfile( profile );
+            this.addActionError( getResourceBundle().getString( "profile.name.already.exists" ) );
+            return INPUT;
         }
         this.profiles = profileService.getAllProfiles();
         return SUCCESS;

@@ -39,8 +39,13 @@ public interface ProfileService
     public void deleteProfile( int profileId )
         throws ProfileException;
 
+    /**
+     * @param profile
+     * @throws ProfileException
+     * @throws AlreadyExistsProfileException if a profile with the same name already exists
+     */
     public void updateProfile( Profile profile )
-        throws ProfileException;
+        throws ProfileException, AlreadyExistsProfileException;
 
     /**
      * <b>Add an empty profile without builder, jdk and envVars</b>
@@ -48,9 +53,10 @@ public interface ProfileService
      * @param profile
      * @return
      * @throws ProfileException
+     * @throws AlreadyExistsProfileException if a profile with the same name already exists
      */
     public Profile addProfile( Profile profile )
-        throws ProfileException;
+        throws ProfileException, AlreadyExistsProfileException;
 
     public List<Profile> getAllProfiles()
         throws ProfileException;
