@@ -88,16 +88,19 @@ public class AddProjectAction
         boolean projectNameAlreadyExist = false;
 
         clearErrorsAndMessages();
+        
         try
         {
+            if ( ( projectName.trim().length() > 0 ) && ( projectVersion.trim().length() > 0 ) && ( projectScmUrl.trim().length() > 0 ) )
+            {
             Iterator<Project> projects = getContinuum().getProjects().iterator();
             while ( projects.hasNext() )
             {
                 Project project = projects.next();
                 // CONTINUUM-1445
-                if ( StringUtils.equalsIgnoreCase( project.getName(), projectName ) &&
-                    StringUtils.equalsIgnoreCase( project.getVersion(), projectVersion ) &&
-                    StringUtils.equalsIgnoreCase( project.getScmUrl(), projectScmUrl ) )
+                if ( StringUtils.equalsIgnoreCase( project.getName(), projectName.trim() ) &&
+                    StringUtils.equalsIgnoreCase( project.getVersion(), projectVersion.trim() ) &&
+                    StringUtils.equalsIgnoreCase( project.getScmUrl(), projectScmUrl.trim() ) )
                 {
                     projectNameAlreadyExist = true;
                     break;
@@ -106,6 +109,23 @@ public class AddProjectAction
             if ( projectNameAlreadyExist )
             {
                 addActionError( "projectName.already.exist.error" );
+                this.input();
+            }
+            }
+            else
+            {
+                if ( !( projectName.trim().length() > 0 ) )
+                {
+                    addActionError( getText( "addProject.name.required" ) );
+                }
+                if ( !( projectVersion.trim().length() > 0 ) )
+                {
+                    addActionError( getText( "addProject.version.required" ) );
+                }
+                if ( !( projectScmUrl.trim().length() > 0 ) )
+                {
+                    addActionError( getText( "addProject.scmUrl.required" ) );
+                }
                 this.input();
             }
         }
@@ -143,11 +163,11 @@ public class AddProjectAction
 
         Project project = new Project();
 
-        project.setName( projectName );
+        project.setName( projectName.trim() );
 
-        project.setVersion( projectVersion );
+        project.setVersion( projectVersion.trim() );
 
-        project.setScmUrl( projectScmUrl );
+        project.setScmUrl( projectScmUrl.trim() );
 
         project.setScmUsername( projectScmUsername );
 
