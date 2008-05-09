@@ -1,15 +1,5 @@
 package org.apache.maven.continuum.installation;
 
-import org.apache.maven.continuum.AbstractContinuumTest;
-import org.apache.maven.continuum.execution.ExecutorConfigurator;
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.model.system.Profile;
-import org.apache.maven.continuum.profile.ProfileService;
-import org.apache.maven.continuum.store.ContinuumStore;
-import org.codehaus.plexus.util.StringUtils;
-
-import java.util.List;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,6 +18,15 @@ import java.util.List;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.util.List;
+
+import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.maven.continuum.execution.ExecutorConfigurator;
+import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.ProfileService;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -94,7 +93,28 @@ public class DefaultInstallationServiceTest
         assertNotNull( getted );
         assertEquals( getInstallationService().getEnvVar( InstallationService.JDK_TYPE ), getted.getVarName() );
         assertEquals( "bar", getted.getVarValue() );
+        assertEquals( 1, getInstallationService().getAllInstallations().size() );
     }
+    
+    public void testAddDuplicateInstallation()
+        throws Exception
+    {
+        Installation added = this.addInstallation( NEW_INSTALLATION_NAME, null, "bar", InstallationService.JDK_TYPE );
+        Installation getted = getInstallationService().getInstallation( added.getInstallationId() );
+        assertNotNull( getted );
+        assertEquals( getInstallationService().getEnvVar( InstallationService.JDK_TYPE ), getted.getVarName() );
+        assertEquals( "bar", getted.getVarValue() );
+        try
+        {
+            added = this.addInstallation( NEW_INSTALLATION_NAME, null, "bar", InstallationService.JDK_TYPE );
+            fail( "not in AlreadyExistsInstallationException" );
+        }
+        catch ( AlreadyExistsInstallationException e )
+        {
+            // we must be here
+        }
+        assertEquals( 1, getInstallationService().getAllInstallations().size() );
+    }    
 
     public void testRemove()
         throws Exception

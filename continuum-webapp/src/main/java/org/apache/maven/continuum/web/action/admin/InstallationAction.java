@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -124,7 +125,15 @@ public class InstallationAction
         }
         if ( installation.getInstallationId() == 0 )
         {
-            installationService.add( installation, this.automaticProfile );
+            try
+            {
+                installationService.add( installation, this.automaticProfile );
+            }
+            catch ( AlreadyExistsInstallationException e )
+            {
+                this.addActionError( getResourceBundle().getString( "installation.name.duplicate" ) );
+                return INPUT;
+            }
         }
         else
         {
