@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -45,7 +46,7 @@ public interface InstallationService
     String ENVVAR_TYPE = "envvar";
 
     public Installation add( Installation installation, boolean automaticProfile )
-        throws InstallationException;
+        throws InstallationException, AlreadyExistsProfileException;
     
     public Installation add( Installation installation )
         throws InstallationException;

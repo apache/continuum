@@ -19,13 +19,14 @@ package org.apache.maven.continuum.profile;
  * under the License.
  */
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +51,16 @@ public class DefaultProfileService
      * @see org.apache.maven.continuum.profile.ProfileService#updateProfile(org.apache.maven.continuum.model.system.Profile)
      */
     public void updateProfile( Profile profile )
-        throws ProfileException
+        throws ProfileException, AlreadyExistsProfileException
     {
+        
+        // already exists check should be done in the same transaction
+        // but we assume we don't have a huge load and a lot of concurrent access ;-)
+        if ( alreadyExistsProfileName( profile ) )
+        {
+            throw new AlreadyExistsProfileException( "profile with name " + profile.getName() + " already exists" );
+        }        
+        
         try
         {
             Profile stored = getProfile( profile.getId() );
@@ -69,20 +78,55 @@ public class DefaultProfileService
             throw new ProfileException( e.getMessage(), e );
         }
     }
+    
+    public void updateProfileCheckDuplicateName( Profile profile, boolean checkDuplicateName )
+        throws ProfileException, AlreadyExistsProfileException
+    {
+        if ( checkDuplicateName )
+        {
+            // already exists check should be done in the same transaction
+            // but we assume we don't have a huge load and a lot of concurrent access ;-)
+            if ( alreadyExistsProfileName( profile ) )
+            {
+                throw new AlreadyExistsProfileException( "profile with name " + profile.getName() + " already exists" );
+            }
+        }
+        try
+        {
+            Profile stored = getProfile( profile.getId() );
+            stored.setActive( profile.isActive() );
+            stored.setBuilder( profile.getBuilder() );
+            stored.setBuildWithoutChanges( profile.isBuildWithoutChanges() );
+            stored.setDescription( profile.getDescription() );
+            stored.setJdk( profile.getJdk() );
+            stored.setName( profile.getName() );
+            stored.setEnvironmentVariables( profile.getEnvironmentVariables() );
+            store.updateProfile( stored );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ProfileException( e.getMessage(), e );
+        }
+    }    
 
     /**
      * @see org.apache.maven.continuum.profile.ProfileService#addProfile(org.apache.maven.continuum.model.system.Profile)
      */
     public Profile addProfile( Profile profile )
-        throws ProfileException
+        throws ProfileException, AlreadyExistsProfileException
     {
-        // TODO check if one with the same name already here
+        // already exists check should be done in the same transaction
+        // but we assume we don't have a huge load and a lot of concurrent access ;-)
+        if ( alreadyExistsProfileName( profile ) )
+        {
+            throw new AlreadyExistsProfileException( "profile with name " + profile.getName() + " already exists" );
+        }
         profile.setBuilder( null );
         profile.setJdk( null );
         profile.setEnvironmentVariables( null );
         return store.addProfile( profile );
     }
-
+    
     /**
      * @see org.apache.maven.continuum.profile.ProfileService#deleteProfile(int)
      */
@@ -224,8 +268,35 @@ public class DefaultProfileService
             }
             stored.setEnvironmentVariables( newEnvVars );
         }
-        updateProfile( stored );
-        
+        try
+        {
+            updateProfileCheckDuplicateName( stored, false );
+        }
+        catch ( AlreadyExistsProfileException e )
+        {
+            // normally cannot happend here but anyway we throw the exception
+            throw new ProfileException( e.getMessage(), e );
+        }        
     }
 
+
+    /**
+     * @param profile
+     * @return true if profile with same name (<b>case sensitive) exists
+     * @throws ProfileException
+     */
+    private boolean alreadyExistsProfileName( Profile profile )
+        throws ProfileException
+    {
+        List<Profile> allProfiles = getAllProfiles();
+        for ( Profile prof : allProfiles )
+        {
+            if ( StringUtils.equals( prof.getName(), profile.getName() ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }    
+    
 }

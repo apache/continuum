@@ -4,6 +4,8 @@ import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -34,6 +36,7 @@ import java.util.List;
 public class DefaultProfileServiceTest
     extends AbstractContinuumTest
 {
+    
     Installation jdk1;
 
     String jdk1Name = "jdk1";
@@ -140,11 +143,39 @@ public class DefaultProfileServiceTest
         throws Exception
     {
         Profile defaultProfile = new Profile();
-        defaultProfile.setName( "default profile" );
+        String name = "default profile";
+        defaultProfile.setName( name );
         Profile getted = getProfileService().addProfile( defaultProfile );
         assertNotNull( getProfileService().getProfile( getted.getId() ) );
+        assertEquals( name, getProfileService().getProfile( getted.getId() ).getName() );
+        assertEquals( 3, getProfileService().getAllProfiles().size() );
     }
 
+    public void testAddDuplicateProfile()
+        throws Exception
+    {
+        Profile defaultProfile = new Profile();
+        String name = "default profile";
+        defaultProfile.setName( name );
+        Profile getted = getProfileService().addProfile( defaultProfile );
+        assertNotNull( getProfileService().getProfile( getted.getId() ) );
+        assertEquals( name, getProfileService().getProfile( getted.getId() ).getName() );
+        assertEquals( 3, getProfileService().getAllProfiles().size() );
+
+        defaultProfile = new Profile();
+        defaultProfile.setName( name );
+        try
+        {
+            getted = getProfileService().addProfile( defaultProfile );
+            fail( "no AlreadyExistsProfileException with an already exist name " );
+        }
+        catch ( AlreadyExistsProfileException e )
+        {
+            // we must be here
+        }
+        assertEquals( 3, getProfileService().getAllProfiles().size() );
+    }    
+    
     public void testDeleteProfile()
         throws Exception
     {
@@ -166,7 +197,7 @@ public class DefaultProfileServiceTest
         assertEquals( 2, all.size() );
     }
 
-    public void updateProfile()
+    public void testupdateProfile()
         throws Exception
     {
         Profile profile = getProfileService().getProfile( jdk1mvn205.getId() );
@@ -179,6 +210,27 @@ public class DefaultProfileServiceTest
         assertNotNull( getted );
         assertEquals( newName, getted.getName() );
     }
+    
+    public void testupdateProfileDuplicateName()
+        throws Exception
+    {
+        Profile profile = getProfileService().getProfile( jdk1mvn205.getId() );
+        assertEquals( jdk1mvn205Name, profile.getName() );
+        profile.setName( jdk2mvn206Name );
+
+        try
+        {
+            getProfileService().updateProfile( profile );
+            fail( "no AlreadyExistsProfileException with duplicate name" );
+        }
+        catch ( AlreadyExistsProfileException e )
+        {
+            // we must be here
+        }
+        Profile getted = getProfileService().getProfile( jdk1mvn205.getId() );
+        assertNotNull( getted );
+        assertEquals( jdk1mvn205Name, getted.getName() );
+    }    
 
     public void testsetJdkInProfile()
         throws Exception
