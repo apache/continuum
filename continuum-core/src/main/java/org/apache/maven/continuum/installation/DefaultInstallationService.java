@@ -93,7 +93,7 @@ public class DefaultInstallationService
      * @see org.apache.maven.continuum.installation.InstallationService#add(org.apache.maven.continuum.model.system.Installation)
      */
     public Installation add( Installation installation )
-        throws InstallationException
+        throws InstallationException, AlreadyExistsInstallationException
     {
         try
         {
@@ -107,9 +107,13 @@ public class DefaultInstallationService
     }
 
     public Installation add( Installation installation, boolean automaticProfile )
-        throws InstallationException, AlreadyExistsProfileException
+        throws InstallationException, AlreadyExistsProfileException, AlreadyExistsInstallationException
     {
-
+        if ( alreadyExistInstallationName( installation ) )
+        {
+            throw new AlreadyExistsInstallationException( "Installation with name " + installation.getName()
+                + " already exists" );
+        }
         // TODO must be done in the same transaction
         Installation storedOne = null;
         try
@@ -437,6 +441,20 @@ public class DefaultInstallationService
                 "fail to execute " + executable + " with arg " + executorConfigurator.getVersionArgument() );
             throw new InstallationException( e.getMessage(), e );
         }
+    }
+    
+    private boolean alreadyExistInstallationName( Installation installation )
+        throws InstallationException
+    {
+        List<Installation> all = getAllInstallations();
+        for ( Installation install : all )
+        {
+            if ( org.apache.commons.lang.StringUtils.equals( installation.getName(), install.getName() ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

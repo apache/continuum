@@ -46,13 +46,13 @@ public interface InstallationService
     String ENVVAR_TYPE = "envvar";
 
     public Installation add( Installation installation, boolean automaticProfile )
-        throws InstallationException, AlreadyExistsProfileException;
-    
+        throws InstallationException, AlreadyExistsProfileException, AlreadyExistsInstallationException;
+
     public Installation add( Installation installation )
-        throws InstallationException;
+        throws InstallationException, AlreadyExistsInstallationException;
 
     public void update( Installation installation )
-        throws InstallationException;
+        throws InstallationException, AlreadyExistsInstallationException;
 
     public void delete( Installation installation )
         throws InstallationException;
