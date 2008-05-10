@@ -81,4 +81,7 @@ public interface ProfileService
      */
     public void removeInstallationFromProfile( Profile profile, Installation installation )
         throws ProfileException;
+    
+    public Profile getProfileWithName( String profileName )
+        throws ProfileException;
 }
