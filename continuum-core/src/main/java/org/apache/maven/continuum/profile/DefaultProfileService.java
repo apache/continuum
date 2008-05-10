@@ -19,17 +19,16 @@ package org.apache.maven.continuum.profile;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -280,23 +279,29 @@ public class DefaultProfileService
     }
 
 
+    public Profile getProfileWithName( String profileName )
+        throws ProfileException
+    {
+        List<Profile> allProfiles = getAllProfiles();
+        for ( Profile profile : allProfiles )
+        {
+            if ( StringUtils.equals( profile.getName(), profileName ) )
+            {
+                return profile;
+            }
+        }
+        return null;
+    }
+
     /**
      * @param profile
-     * @return true if profile with same name (<b>case sensitive) exists
+     * @return true if profile with same name (<b>case sensitive</b>) exists
      * @throws ProfileException
      */
     private boolean alreadyExistsProfileName( Profile profile )
         throws ProfileException
     {
-        List<Profile> allProfiles = getAllProfiles();
-        for ( Profile prof : allProfiles )
-        {
-            if ( StringUtils.equals( prof.getName(), profile.getName() ) )
-            {
-                return true;
-            }
-        }
-        return false;
+        return getProfileWithName( profile.getName() ) != null;
     }    
     
 }

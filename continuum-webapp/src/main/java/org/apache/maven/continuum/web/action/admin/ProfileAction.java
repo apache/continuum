@@ -22,8 +22,8 @@ package org.apache.maven.continuum.web.action.admin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ResourceBundle;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
@@ -130,13 +130,17 @@ public class ProfileAction
             }
             else
             {
-                // olamy : the only this to change here is the profile
+                // olamy : the only thing to change here is the profile name
                 // but in the UI maybe some installations has been we retrieve it
                 // and only set the name related to CONTINUUM-1361
                 String name = profile.getName();
                 profile = profileService.getProfile( profile.getId() );
-                profile.setName( name );
-                profileService.updateProfile( profile );
+                // CONTINUUM-1746 we update the profile only if the name has changed 
+                if ( !StringUtils.equals( name, profile.getName() ) )
+                {
+                    profile.setName( name );
+                    profileService.updateProfile( profile );
+                }
             }
         }
         catch ( AlreadyExistsProfileException e )
