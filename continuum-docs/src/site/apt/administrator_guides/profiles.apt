@@ -1,45 +1,45 @@
  ------
- Continuum :: Build Profile
+ Continuum :: Build Environment
  ------
  Olivier Lamy
  ------
  Oct 17 2007
  ------
 
-Build Profile
+Build Environment
 
 %{toc|section=0}
 
 * Goal
 
-  The main goal is to compile/test sources against the targeted jvm, mvn/maven version, ant version and to add defined envvar (MAVEN_OPTS, ANT_OPTS ...). 
-  This is now possible at the build definition level (in 1.1).
+  The main goal is to compile/test sources against the targeted jvm, mvn/maven version, ant version and to add defined
+  envvar (MAVEN_OPTS, ANT_OPTS ...).  This is now possible at the build definition level (in 1.1).
 
-* Setup Profile/Installations  
+* Setup Build Environments/Installations
 
-** {Creating a profile}
+** {Creating a Build Environment}
 
-  From the menu, choose the 'Profiles' entry
+  From the menu, choose the 'Build Environments' entry
 
-[../../../images/menu-profiles.png] Profile   
+[../../../images/menu-profiles.png] Build Environment
 
-  Enter a profile name (the name is free)
+  Enter a name
 
-[../../../images/add-profile.png] Add Profile
+[../../../images/add-profile.png] Add Build Environment
 
-** {Attach jdk to a Profile}
-
-  The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
-  In the modification mode of a profile, adding an already attached type will override the existing one.
-
-[../../../images/setup-jdk-profile.png] Add Profile
-
-** {Link profile to build definition}
+** {Attach JDK to a Build Environment}
 
   The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
-  In the modification mode of a profile, adding an already attached type will override the existing one.
+  In the modification mode of a build environment, adding an already attached type will override the existing one.
 
-[../../../images/setup-build-profile.png] Setup Build Profile
+[../../../images/setup-jdk-profile.png] Add Build Environment
+
+** {Link Build Environment to build definition}
+
+  The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
+  In the modification mode of a build environment, adding an already attached type will override the existing one.
+
+[../../../images/setup-build-profile.png] Setup Build Environment
 
 ** {Installations used in Notification mail}
 
