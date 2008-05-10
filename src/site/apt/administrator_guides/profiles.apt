@@ -21,25 +21,25 @@ Build Environment
 
   From the menu, choose the 'Build Environments' entry
 
-[../../../images/menu-profiles.png] Build Environment
+[../images/menu-profiles.png] Build Environment
 
   Enter a name
 
-[../../../images/add-profile.png] Add Build Environment
+[../images/add-profile.png] Add Build Environment
 
 ** {Attach JDK to a Build Environment}
 
   The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
   In the modification mode of a build environment, adding an already attached type will override the existing one.
 
-[../../../images/setup-jdk-profile.png] Add Build Environment
+[../images/setup-jdk-profile.png] Add Build Environment
 
 ** {Link Build Environment to build definition}
 
   The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
   In the modification mode of a build environment, adding an already attached type will override the existing one.
 
-[../../../images/setup-build-profile.png] Setup Build Environment
+[../images/setup-build-profile.png] Setup Build Environment
 
 ** {Installations used in Notification mail}
 
