@@ -52,6 +52,8 @@ public class ReleasePrepareAction
     extends ContinuumActionSupport
 {
     private static final String SCM_SVN_PROTOCOL_PREFIX = "scm:svn";
+    
+    private static final String SNAPSHOT_VERSION_SUFFIX = "-SNAPSHOT";
 
     private int projectId;
 
@@ -99,6 +101,23 @@ public class ReleasePrepareAction
         scmUsername = project.getScmUsername();
         scmPassword = project.getScmPassword();
         scmTag = project.getScmTag();
+        
+        if ( scmTag == null )
+        {
+            String version = project.getVersion();
+            int idx = version.indexOf( SNAPSHOT_VERSION_SUFFIX );
+            
+            if ( idx >= 0 )
+            {
+                // strip the snapshot version suffix
+                scmTag = project.getArtifactId() + "-" + version.substring( 0, idx );
+            }
+            else
+            {
+                scmTag = project.getArtifactId() + "-" + version;
+            }
+        }
+        
         String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
 
         String scmUrl = project.getScmUrl();
