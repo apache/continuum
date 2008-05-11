@@ -29,17 +29,17 @@ Build Environment
 
 ** {Attach JDK to a Build Environment}
 
+  The list box contains all available installations (jdk, mvn etc..). The installation's type is automatically recognized.
+  In the modification mode of a build environment, adding an already attached type will override the existing one.
+
+[../images/buildenv-setup-jdk.png] Add JDK to Build Environment
+
+** {Link Build Environment to Build Definition}
+
   The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
   In the modification mode of a build environment, adding an already attached type will override the existing one.
 
-[../images/setup-jdk-profile.png] Add Build Environment
-
-** {Link Build Environment to build definition}
-
-  The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
-  In the modification mode of a build environment, adding an already attached type will override the existing one.
-
-[../images/setup-build-profile.png] Setup Build Environment
+[../images/buildenv-in-builddef.png] Setup Build Environment
 
 ** {Installations used in Notification mail}
 
