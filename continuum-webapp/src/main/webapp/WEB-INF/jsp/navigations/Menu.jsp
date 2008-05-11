@@ -105,7 +105,7 @@
           </div>
         </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-profiles">
-          <ww:url id="configurationUrl" action="profilesList" namespace="/admin" method="list" includeParams="none"/>
+          <ww:url id="configurationUrl" action="buildEnvList" namespace="/admin" method="list" includeParams="none"/>
           <div class="body">
             <ww:a href="%{configurationUrl}">
               <ww:text name="menu.administration.profile"/>
