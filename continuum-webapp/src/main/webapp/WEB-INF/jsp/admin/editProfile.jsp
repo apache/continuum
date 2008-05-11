@@ -46,7 +46,7 @@
       <table>
         <tr>
           <td>
-          <ww:form action="saveProfile!save" method="post">
+          <ww:form action="saveBuildEnv!save" method="post">
 
             <div class="axial">
               <!--  if other fields are added ProfileAction#save must be changed  -->
@@ -83,7 +83,7 @@
                                   width="100%"
                                   autoIncludeParameters="false">
                           <ec:row highlightRow="true">
-                            <ec:column property="nameEdit" title="Name" style="white-space: nowrap" width="50%">
+                            <ec:column property="nameEdit" title="Installation Name" style="white-space: nowrap" width="50%">
                               <a href="editInstallation!edit.action?installation.installationId=<c:out value="${profileInstallation.installationId}"/>">
                                 <c:out value="${profileInstallation.name}"/>
                               </a>
@@ -91,7 +91,7 @@
                             </ec:column>
                             <ec:column property="type" title="Type" style="white-space: nowrap" width="49%"/>
                             <ec:column property="id" title="&nbsp;" width="1%">
-                              <a href="removeProfileInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
+                              <a href="removeBuildEnvInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
                                 <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
                               </a>                    
                             </ec:column>        
@@ -102,7 +102,7 @@
                   </tbody>
                 </table>
                 <ww:if test="${!empty allInstallations}">
-                  <ww:form action="addInstallationProfile!addInstallation.action" method="get">
+                  <ww:form action="addInstallationBuildEnv!addInstallation.action" method="get">
                     <ww:hidden name="profile.id" />
                     <div class="functnbar3">
                       <!-- can't use default profile to display this select -->

@@ -576,39 +576,39 @@
     </action>
       
     <!--
-       Profile actions 
+       Build Environment actions
     -->      
       
-    <action name="profilesList" class="profileAdministration" method="list">
+    <action name="buildEnvList" class="profileAdministration" method="list">
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
     </action>   
       
-    <action name="addProfile" class="profileAdministration">
+    <action name="addBuildEnv" class="profileAdministration">
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>   
     </action>
         
-    <action name="editProfile" class="profileAdministration">
+    <action name="editBuildEnv" class="profileAdministration">
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
       
-    <action name="deleteProfile" class="profileAdministration" method="delete">
+    <action name="deleteBuildEnv" class="profileAdministration" method="delete">
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
     </action>        
       
-    <action name="saveProfile" class="profileAdministration" method="save">
+    <action name="saveBuildEnv" class="profileAdministration" method="save">
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
       <result name="editProfile">/WEB-INF/jsp/admin/editProfile.jsp</result>
     </action>
       
-    <action name="addInstallationProfile" class="profileAdministration" method="addInstallation">
+    <action name="addInstallationBuildEnv" class="profileAdministration" method="addInstallation">
       <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>        
     </action>  
     
-    <action name="removeProfileInstallation" class="profileAdministration" method="removeInstallation">
+    <action name="removeBuildEnvInstallation" class="profileAdministration" method="removeInstallation">
       <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
       <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>        
     </action>

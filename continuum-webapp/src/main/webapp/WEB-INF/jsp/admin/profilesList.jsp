@@ -59,12 +59,12 @@
           <ul>
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="editProfile!edit.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
+          <a href="editBuildEnv!edit.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
             <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
           </a>                    
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="deleteProfile!delete.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
+          <a href="deleteBuildEnv!delete.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
             <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
           </a>                    
         </ec:column>        
@@ -72,7 +72,7 @@
     </ec:table>
     </ww:if>
     <div class="functnbar3">
-      <ww:form action="addProfile!input.action" method="post">
+      <ww:form action="addBuildEnv!input.action" method="post">
         <ww:submit value="%{getText('add')}"/>
       </ww:form>
     </div>    
