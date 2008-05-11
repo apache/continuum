@@ -21,11 +21,11 @@ Build Environment
 
   From the menu, choose the 'Build Environments' entry
 
-[../images/menu-profiles.png] Build Environment
+[../images/buildenv-menu.png] Build Environment Menu
 
   Enter a name
 
-[../images/add-profile.png] Add Build Environment
+[../images/buildenv-add.png] Add Build Environment
 
 ** {Attach JDK to a Build Environment}
 
