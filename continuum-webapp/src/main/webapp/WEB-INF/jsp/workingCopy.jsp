@@ -53,7 +53,7 @@
         </p>
         
         <form>
-          <textarea rows="50" cols="100"><ww:property value="fileContent"/></textarea>
+          <textarea rows="50" cols="100" readonly="true"><ww:property value="fileContent"/></textarea>
         </form>
         <%
             }
