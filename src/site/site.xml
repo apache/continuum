@@ -60,43 +60,42 @@
       <item name="Index (category)" href="documentation/1_1/index.html"/>
       <item name="Getting Started" href="documentation/1_1/getting-started.html"/>
       <item name="Installation/Upgrade Guides" href="documentation/1_1/installation/index.html" collapse="true">
-          <item name="System Requirements" href="documentation/1_1/installation/requirements.html"/>
-          <item name="Installation" href="documentation/1_1/installation/installation.html" collapse="true">
-            <item name="Standalone" href="documentation/1_1/installation/standalone.html"/>
-            <item name="Tomcat" href="documentation/1_1/installation/tomcat.html"/>
-            <item name="JBoss" href="documentation/1_1/installation/jboss.html"/>
-            <item name="Jetty" href="documentation/1_1/installation/jetty.html"/>
-            <item name="Geronimo" href="documentation/1_1/installation/geronimo.html"/>
-            <item name="Glassfish" href="documentation/1_1/installation/glassfish.html"/>
-          </item>
-          <item name="Release Notes" href="documentation/1_1/installation/release-notes.html"/>
-          <item name="Upgrade" href="documentation/1_1/installation/upgrade.html"/>
+        <item name="System Requirements" href="documentation/1_1/installation/requirements.html"/>
+        <item name="Installation" href="documentation/1_1/installation/installation.html" collapse="true">
+          <item name="Standalone" href="documentation/1_1/installation/standalone.html"/>
+          <item name="Tomcat" href="documentation/1_1/installation/tomcat.html"/>
+          <item name="JBoss" href="documentation/1_1/installation/jboss.html"/>
+          <item name="Jetty" href="documentation/1_1/installation/jetty.html"/>
+          <item name="Geronimo" href="documentation/1_1/installation/geronimo.html"/>
+          <item name="Glassfish" href="documentation/1_1/installation/glassfish.html"/>
+        </item>
+        <item name="Release Notes" href="documentation/1_1/installation/release-notes.html"/>
+        <item name="Upgrade" href="documentation/1_1/installation/upgrade.html"/>
       </item>
       <item name="User's Guides" collapse="true" href="documentation/1_1/user_guides/index.html">
         <item name="Getting Started" href="documentation/1_1/getting-started.html"/>
         <item name="Managing Projects" href="documentation/1_1/user_guides/managing_project/index.html" collapse="true">
-            <item name="Add a Project" href="documentation/1_1/user_guides/managing_project/addProject.html"/>
-            <item name="Edit a Project" href="documentation/1_1/user_guides/managing_project/editProject.html"/>
-            <item name="Remove a Project" href="documentation/1_1/user_guides/managing_project/removeProject.html"/>
-            <!-- item name="SCM security hints"/ -->
+          <item name="Add a Project" href="documentation/1_1/user_guides/managing_project/addProject.html"/>
+          <item name="Edit a Project" href="documentation/1_1/user_guides/managing_project/editProject.html"/>
+          <item name="Remove a Project" href="documentation/1_1/user_guides/managing_project/removeProject.html"/>
+          <!-- item name="SCM security hints"/ -->
         </item>
         <item name="Managing Build Definitions" href="documentation/1_1/user_guides/managing_builddef/index.html" collapse="true">
-            <item name="Project Build Definition" href="documentation/1_1/user_guides/managing_builddef/builddefProject.html"/>
-            <item name="Project Group Build Definition" href="documentation/1_1/user_guides/managing_builddef/builddefGroup.html"/>
-            <item name="Build Definition Template" href="documentation/1_1/user_guides/managing_builddef/builddefTemplate.html"/>
+          <item name="Project Build Definition" href="documentation/1_1/user_guides/managing_builddef/builddefProject.html"/>
+          <item name="Project Group Build Definition" href="documentation/1_1/user_guides/managing_builddef/builddefGroup.html"/>
         </item>
         <item name="Managing Notification" href="documentation/1_1/user_guides/notification/index.html" collapse="true">
-            <item name="Mail Notification" href="documentation/1_1/user_guides/notification/mail.html"/>
-            <item name="IRC Notification" href="documentation/1_1/user_guides/notification/irc.html"/>
-            <item name="Jabber Notification" href="documentation/1_1/user_guides/notification/jabber.html">
-                <item name="Google Talk Notification" href="documentation/1_1/user_guides/notification/jabber.html#GTalk"/>
-            </item>
-            <item name="MSN Notification" href="documentation/1_1/user_guides/notification/msn.html"/>
-            <item name="Wagon Notification" href="documentation/1_1/user_guides/notification/wagon.html"/>
+          <item name="Mail Notification" href="documentation/1_1/user_guides/notification/mail.html"/>
+          <item name="IRC Notification" href="documentation/1_1/user_guides/notification/irc.html"/>
+          <item name="Jabber Notification" href="documentation/1_1/user_guides/notification/jabber.html">
+            <item name="Google Talk Notification" href="documentation/1_1/user_guides/notification/jabber.html#GTalk"/>
+          </item>
+          <item name="MSN Notification" href="documentation/1_1/user_guides/notification/msn.html"/>
+          <item name="Wagon Notification" href="documentation/1_1/user_guides/notification/wagon.html"/>
         </item>
         <item name="Building a project" href="documentation/1_1/user_guides/building_project/index.html" collapse="true">
-            <item name="Scheduled Build" href="documentation/1_1/user_guides/building_project/index.html#Scheduled Build"/>
-            <item name="Forced Build" href="documentation/1_1/user_guides/building_project/index.html#Forced Build"/>
+          <item name="Scheduled Build" href="documentation/1_1/user_guides/building_project/index.html#Scheduled Build"/>
+          <item name="Forced Build" href="documentation/1_1/user_guides/building_project/index.html#Forced Build"/>
         </item>
         <item name="Release Management" href="documentation/1_1/user_guides/release/index.html"/>
       </item>
@@ -105,8 +104,8 @@
       </item>
       <item name="Administrator's Guides" href="documentation/1_1/administrator_guides/index.html" collapse="true">
         <item name="Managing Users and Security" href="documentation/1_1/administrator_guides/security/index.html" collapse="true">
-            <item name="Security Configuration" href="documentation/1_1/administrator_guides/security/customising-security.html"/>
-            <item name="LDAP Configuration" href="documentation/1_1/administrator_guides/security/ldap.html"/>
+          <item name="Security Configuration" href="documentation/1_1/administrator_guides/security/customising-security.html"/>
+          <item name="LDAP Configuration" href="documentation/1_1/administrator_guides/security/ldap.html"/>
         </item>
         <item name="Adding Project Group" href="documentation/1_1/administrator_guides/projectgroup.html"/>
         <item name="Managing Builders" href="documentation/1_1/administrator_guides/builder.html"/>
@@ -117,6 +116,7 @@
         <item name="External databases" href="documentation/1_1/administrator_guides/external-db.html"/>
         <item name="Monitoring Continuum" href="documentation/1_1/administrator_guides/monitoring.html"/>
         <item name="Appearance Configuration" href="documentation/1_1/administrator_guides/appearance.html"/>
+        <item name="Build Definition Template" href="documentation/1_1/administrator_guides/builddefTemplate.html"/>
         <item name="Shutdown Continuum" href="documentation/1_1/administrator_guides/shutdown.html"/>
       </item>
       <item name="Developer's Guides" href="documentation/1_1/developer_guides/index.html" collapse="true">
