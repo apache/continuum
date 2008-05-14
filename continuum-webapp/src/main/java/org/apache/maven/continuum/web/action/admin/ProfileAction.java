@@ -28,6 +28,7 @@ import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
+import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
@@ -142,6 +143,13 @@ public class ProfileAction
         return SUCCESS;
     }
 
+    public String confirmDelete()
+        throws ProfileException
+    {
+        this.profile = getContinuum().getProfileService().getProfile( profile.getId() );
+        return SUCCESS;
+    }
+    
     public String addInstallation()
         throws Exception
     {
