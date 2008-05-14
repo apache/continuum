@@ -64,7 +64,7 @@
           </a>                    
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="deleteBuildEnv!delete.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
+          <a href="confirmDeleteBuildEnv!confirmDelete.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
             <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
           </a>                    
         </ec:column>        

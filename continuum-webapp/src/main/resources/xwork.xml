@@ -594,9 +594,16 @@
     </action>
       
     <action name="deleteBuildEnv" class="profileAdministration" method="delete">
-      <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
-      <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
-    </action>        
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildEnvList</param>
+        <param name="namespace">/admin</param>
+        <param name="method">list</param>
+      </result>
+    </action>      
+    
+    <action name="confirmDeleteBuildEnv" class="profileAdministration" method="confirmDelete">
+      <result name="success">/WEB-INF/jsp/admin/confirmDeleteBuildEnv.jsp</result>
+    </action>  
       
     <action name="saveBuildEnv" class="profileAdministration" method="save">
       <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
