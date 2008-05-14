@@ -229,6 +229,7 @@
     </action>
 
     <action name="ProjectsList" class="projects">
+      <result name="confirmRemove">/WEB-INF/jsp/confirmDeleteProjects.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
