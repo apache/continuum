@@ -19,6 +19,10 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -26,11 +30,6 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -40,7 +39,9 @@ import java.util.List;
 public class ProjectsListAction
     extends ContinuumActionSupport
 {
-    private Collection selectedProjects;
+    private List<String> selectedProjects;
+    
+    private List<String> selectedProjectsNames;
 
     private String projectGroupName = "";
 
@@ -66,10 +67,14 @@ public class ProjectsListAction
         {
             return remove();
         }
+        else if ("confirmRemove".equals( methodToCall ))
+        {
+            return confirmRemove();
+        }
 
         return SUCCESS;
     }
-
+   
     private String remove()
         throws ContinuumException
     {
@@ -84,9 +89,9 @@ public class ProjectsListAction
 
         if ( selectedProjects != null && !selectedProjects.isEmpty() )
         {
-            for ( Iterator i = selectedProjects.iterator(); i.hasNext(); )
+            for ( String selectedProject : selectedProjects )
             {
-                int projectId = Integer.parseInt( (String) i.next() );
+                int projectId = Integer.parseInt( selectedProject );
 
                 try
                 {
@@ -105,6 +110,21 @@ public class ProjectsListAction
         return SUCCESS;
     }
 
+    public String confirmRemove()
+        throws ContinuumException
+    {
+        if ( selectedProjects != null && !selectedProjects.isEmpty() )
+        {
+            this.selectedProjectsNames = new ArrayList<String>();
+            for ( String selectedProject : selectedProjects )
+            {
+                int projectId = Integer.parseInt( selectedProject );
+                selectedProjectsNames.add( getContinuum().getProject( projectId ).getName() );
+            }
+        }
+        return "confirmRemove";
+    }
+    
     private String build()
         throws ContinuumException
     {
@@ -209,12 +229,12 @@ public class ProjectsListAction
         return projectGroupName;
     }
 
-    public Collection getSelectedProjects()
+    public List<String> getSelectedProjects()
     {
         return selectedProjects;
     }
 
-    public void setSelectedProjects( Collection selectedProjects )
+    public void setSelectedProjects( List<String> selectedProjects )
     {
         this.selectedProjects = selectedProjects;
     }
@@ -242,5 +262,15 @@ public class ProjectsListAction
     public void setBuildDefinitionId( int buildDefinitionId )
     {
         this.buildDefinitionId = buildDefinitionId;
+    }
+
+    public List<String> getSelectedProjectsNames()
+    {
+        return selectedProjectsNames;
+    }
+
+    public void setSelectedProjectsNames( List<String> selectedProjectsNames )
+    {
+        this.selectedProjectsNames = selectedProjectsNames;
     }
 }
