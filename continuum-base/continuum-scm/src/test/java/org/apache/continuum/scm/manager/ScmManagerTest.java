@@ -19,11 +19,11 @@ package org.apache.continuum.scm.manager;
  * under the License.
  */
 
-import org.apache.maven.scm.manager.NoSuchScmProviderException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import junit.framework.TestCase;
+
+import org.apache.maven.scm.manager.NoSuchScmProviderException;
+import org.codehaus.plexus.spring.PlexusClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
 
 /**
  * @todo replace with a spring integration test
@@ -38,7 +38,8 @@ public class ScmManagerTest
     public void setUp()
     {
         context =
-            new ClassPathXmlApplicationContext( new String[] { "classpath*:META-INF/spring-context.xml",
+            new PlexusClassPathXmlApplicationContext( new String[] { "classpath*:META-INF/spring-context.xml",
+                "classpath*:META-INF/plexus/components.xml",
                 "classpath*:" + getClass().getName().replace( '.', '/' ) + ".xml" } );
         manager = (ScmManager) context.getBean( "scmManager" );
     }
@@ -47,6 +48,6 @@ public class ScmManagerTest
         throws NoSuchScmProviderException
     {
         manager.getScmLogger().info( "Hello, World" );
-        assertNotNull( manager.getProviderByType( "svnexe" ) );
+        assertNotNull( manager.getProviderByType( "svn" ) );
     }
 }
