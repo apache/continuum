@@ -34,6 +34,8 @@ import org.springframework.context.ApplicationContext;
 
 /**
  * @todo replace with a spring integration test
+ * 
+ * @version $Id$
  */
 public class ScmManagerTest
     extends TestCase

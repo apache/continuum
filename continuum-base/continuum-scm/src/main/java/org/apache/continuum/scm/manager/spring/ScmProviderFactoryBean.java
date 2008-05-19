@@ -5,11 +5,7 @@ import java.util.Map;
 
 import org.apache.maven.scm.provider.ScmProvider;
 import org.codehaus.plexus.spring.PlexusToSpringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactoryUtils;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -24,6 +20,7 @@ import org.springframework.context.ApplicationContextAware;
  * </p>
  * 
  * @author Carlos Sanchez <carlos@apache.org>
+ * @version $Id$
  */
 public class ScmProviderFactoryBean
     implements FactoryBean, ApplicationContextAware

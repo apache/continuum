@@ -28,6 +28,8 @@ import org.apache.maven.scm.manager.AbstractScmManager;
  * Default implementation of the SCM manager.
  * 
  * @todo move to maven-scm as the default 
+ * 
+ * @version $Id$
  */
 public class ScmManager
     extends AbstractScmManager
