@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 /**
  * SLF4J logger for Maven SCM.
  * @todo move to maven-scm? 
+ * 
+ * @version $Id$
  */
 public class Slf4jScmLogger
     implements ScmLogger

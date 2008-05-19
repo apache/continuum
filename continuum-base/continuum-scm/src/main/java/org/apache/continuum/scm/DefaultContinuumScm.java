@@ -38,6 +38,8 @@ import org.apache.maven.scm.repository.ScmRepositoryException;
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @todo consider folding some of this into Maven SCM itself
+ * 
+ * @version $Id$
  */
 public class DefaultContinuumScm
     implements ContinuumScm

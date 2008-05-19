@@ -26,6 +26,8 @@ import java.util.Date;
  * Configuration for a project's source control.
  * 
  * @todo JAXB for persistence
+ * 
+ * @version $Id$
  */
 public class ContinuumScmConfiguration
 {

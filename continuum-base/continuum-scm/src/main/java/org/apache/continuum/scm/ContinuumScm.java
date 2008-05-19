@@ -29,6 +29,8 @@ import org.apache.maven.scm.repository.ScmRepositoryException;
 
 /**
  * Component that manages SCM interactions and checkouts within Continuum.
+ * 
+ * @version $Id$
  */
 public interface ContinuumScm
 {
