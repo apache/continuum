@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.apache.maven.scm.log.ScmLogger;
 import org.apache.maven.scm.manager.AbstractScmManager;
-import org.apache.maven.scm.provider.ScmProvider;
 
 /**
  * Default implementation of the SCM manager.

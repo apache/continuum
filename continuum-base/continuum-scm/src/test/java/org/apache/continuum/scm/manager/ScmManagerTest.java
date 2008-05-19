@@ -19,10 +19,17 @@ package org.apache.continuum.scm.manager;
  * under the License.
  */
 
+import java.util.Properties;
+
 import junit.framework.TestCase;
 
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
+import org.apache.maven.scm.provider.ScmProvider;
+import org.apache.maven.scm.provider.cvslib.cvsexe.CvsExeScmProvider;
+import org.apache.maven.scm.provider.cvslib.cvsjava.CvsJavaScmProvider;
 import org.codehaus.plexus.spring.PlexusClassPathXmlApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -34,6 +41,8 @@ public class ScmManagerTest
     private ApplicationContext context;
 
     private ScmManager manager;
+    
+    private Logger log = LoggerFactory.getLogger( getClass() );
 
     public void setUp()
     {
@@ -47,7 +56,41 @@ public class ScmManagerTest
     public void testScmProviders()
         throws NoSuchScmProviderException
     {
-        manager.getScmLogger().info( "Hello, World" );
-        assertNotNull( manager.getProviderByType( "svn" ) );
+        Properties backupSysProps = System.getProperties();
+
+        try
+        {
+            manager.getScmLogger().info( "Hello, World" );
+            assertNotNull( manager.getProviderByType( "svn" ) );
+
+            ScmProvider cvsProvider = manager.getProviderByType( "cvs" );
+            assertNotNull( cvsProvider );
+
+            log.info( "cvs provider class " + cvsProvider.getClass().getName() );
+
+            assertEquals( CvsJavaScmProvider.class, cvsProvider.getClass() );
+
+            System.setProperty( "maven.scm.provider.cvs.implementation", "cvs_native" );
+
+            cvsProvider = manager.getProviderByType( "cvs" );
+            assertNotNull( cvsProvider );
+
+            log.info( "cvs provider class " + cvsProvider.getClass().getName() );
+            assertEquals( CvsExeScmProvider.class, cvsProvider.getClass() );
+            System.setProperty( "maven.scm.provider.cvs.implementation", "cvs" );
+
+            cvsProvider = manager.getProviderByType( "cvs" );
+            assertNotNull( cvsProvider );
+
+            log.info( "cvs provider class " + cvsProvider.getClass().getName() );
+
+            assertEquals( CvsJavaScmProvider.class, cvsProvider.getClass() );
+        }
+        finally
+        {
+            System.setProperties( backupSysProps );
+            System.setProperty( "maven.scm.provider.cvs.implementation", "cvs" );
+        }
+        
     }
 }
