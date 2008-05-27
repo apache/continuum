@@ -54,8 +54,9 @@ Guide to Install Continuum on Geronimo
             </dependency>
         </dependencies>
 
-	    <hidden-classes>
+        <hidden-classes>
             <filter>org.apache.commons.lang.</filter>
+            <filter>org.jaxen.</filter>
         </hidden-classes>
     </environment>
 
@@ -79,6 +80,8 @@ Guide to Install Continuum on Geronimo
     The '<<<continuum>>>' string used in <<<console.dbpool>>> and <<<\<resource-link\>>>> is the name of the datasource created in the previous part.
 
     <<<commons-lang 2.2>>> is required by Continuum and must be installed in the geronimo repository.
+
+    <<<org.jaxen.>>> needs to be added as a <<<\<filter\>>>> in the <<<\<hidden-classes\>>>> section because of {{{https://issues.apache.org/jira/browse/GERONIMO-3894}GERONIMO-3894}}
 
 * {Install Continuum}
 
