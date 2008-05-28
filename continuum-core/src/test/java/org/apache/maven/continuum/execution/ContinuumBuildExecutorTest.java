@@ -49,7 +49,8 @@ public class ContinuumBuildExecutorTest
     {
         if ( File.separator.equals( "\\" ) )
         {
-            return path.replaceAll( "/", "\\" + File.separator );
+            String newPath = path.replaceAll( "/", "\\" + File.separator );
+            return newPath.replaceAll( "\\\\bin\\\\sh", "/bin/sh" );
         }
         return path;
     }
@@ -96,7 +97,8 @@ public class ContinuumBuildExecutorTest
         final Map<String, String> environments = new HashMap<String, String>();
 
         final String cmd =
-            "chroot /home/xx " + " cd /dir1/dir2/workingdir/" + project.getId() + " && " + executable + " " + arguments;
+            "chroot /home/xx " + " /bin/sh -c cd /dir1/dir2/workingdir/" + project.getId() + " && " + executable + " " +
+                arguments;
 
         final ExecutionResult result = new ExecutionResult( 0 );
 
