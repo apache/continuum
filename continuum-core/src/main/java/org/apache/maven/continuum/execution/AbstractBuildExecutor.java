@@ -19,7 +19,6 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
-import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -259,7 +258,7 @@ public abstract class AbstractBuildExecutor
                 sb.append( " " );
                 sb.append( new File( chrootJailDirectory, project.getGroupId() ) );
                 sb.append( " " );
-                sb.append( " cd " );
+                sb.append( " /bin/sh -c cd " );
                 sb.append( getRelativePath( chrootJailDirectory, workingDirectory, project.getGroupId() ) );
                 sb.append( " && " );
                 sb.append( actualExecutable );
