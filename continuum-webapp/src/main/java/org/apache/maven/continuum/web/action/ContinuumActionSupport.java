@@ -505,7 +505,7 @@ public class ContinuumActionSupport
      *
      * @return the security system
      */
-    private SecuritySystem getSecuritySystem()
+    protected SecuritySystem getSecuritySystem()
     {
         return securitySystem;
     }
