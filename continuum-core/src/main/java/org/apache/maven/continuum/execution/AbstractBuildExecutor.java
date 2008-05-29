@@ -258,12 +258,13 @@ public abstract class AbstractBuildExecutor
                 sb.append( " " );
                 sb.append( new File( chrootJailDirectory, project.getGroupId() ) );
                 sb.append( " " );
-                sb.append( " /bin/sh -c cd " );
+                sb.append( " /bin/sh -c 'cd " );
                 sb.append( getRelativePath( chrootJailDirectory, workingDirectory, project.getGroupId() ) );
                 sb.append( " && " );
                 sb.append( actualExecutable );
                 sb.append( " " );
                 sb.append( arguments );
+                sb.append( "'" );
 
                 arguments = sb.toString();
                 actualExecutable = SUDO_EXECUTABLE;

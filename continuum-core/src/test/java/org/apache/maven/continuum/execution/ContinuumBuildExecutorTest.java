@@ -97,8 +97,8 @@ public class ContinuumBuildExecutorTest
         final Map<String, String> environments = new HashMap<String, String>();
 
         final String cmd =
-            "chroot /home/xx " + " /bin/sh -c cd /dir1/dir2/workingdir/" + project.getId() + " && " + executable + " " +
-                arguments;
+            "chroot /home/xx " + " /bin/sh -c 'cd /dir1/dir2/workingdir/" + project.getId() + " && " + executable +
+                " " + arguments + "'";
 
         final ExecutionResult result = new ExecutionResult( 0 );
 
