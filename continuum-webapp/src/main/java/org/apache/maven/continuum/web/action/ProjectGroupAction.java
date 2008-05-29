@@ -32,10 +32,10 @@ import org.codehaus.plexus.redback.rbac.RBACManager;
 import org.codehaus.plexus.redback.rbac.RbacManagerException;
 import org.codehaus.plexus.redback.rbac.RbacObjectNotFoundException;
 import org.codehaus.plexus.redback.rbac.Role;
+import org.codehaus.plexus.redback.rbac.UserAssignment;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.users.User;
-import org.codehaus.plexus.redback.users.UserManager;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
@@ -65,11 +65,6 @@ public class ProjectGroupAction
         FILTER_CRITERIA.put( "fullName", "Name contains" );
         FILTER_CRITERIA.put( "email", "Email contains" );
     }
-
-    /**
-     * @plexus.requirement role-hint="configurable"
-     */
-    private UserManager manager;
 
     /**
      * @plexus.requirement role-hint="cached"
@@ -533,25 +528,49 @@ public class ProjectGroupAction
 
     private void populateProjectGroupUsers( ProjectGroup group )
     {
-        List users;
+        List<User> users = new ArrayList<User>();
 
-        if ( StringUtils.isEmpty( filterKey ) )
+        try
         {
-            // REVIEW: for caching in the user manager
-            users = manager.getUsers( ascending );
+            List<Role> roles = rbac.getAllRoles();
+            List<String> roleNames = new ArrayList<String>();
+            for ( Role r : roles )
+            {
+                if ( r.getName().indexOf( projectGroup.getName() ) > -1 )
+                {
+                    roleNames.add( r.getName() );
+                }
+            }
+            List<UserAssignment> userAssignments = rbac.getUserAssignmentsForRoles( roleNames );
+            for ( UserAssignment ua : userAssignments )
+            {
+                User u = getSecuritySystem().getUserManager().findUser( ua.getPrincipal() );
+                if ( u != null )
+                {
+                    users.add( u );
+                }
+            }
         }
-        else
+        catch ( Exception e )
         {
-            users = findUsers( filterProperty, filterKey, ascending );
+            getLogger().error( "Can't get the users list", e );
+        }
+
+        if ( !StringUtils.isEmpty( filterKey ) )
+        {
+            users = findUsers( users, filterProperty, filterKey, ascending );
         }
 
         projectGroupUsers = new ArrayList();
 
-        for ( Iterator i = users.iterator(); i.hasNext(); )
+        if ( users == null )
+        {
+            return;
+        }
+
+        for ( User user : users )
         {
             ProjectGroupUserBean pgUser = new ProjectGroupUserBean();
-
-            User user = (User) i.next();
 
             pgUser.setUser( user );
 
@@ -584,28 +603,47 @@ public class ProjectGroupAction
         }
     }
 
-    private List findUsers( String searchProperty, String searchKey, boolean orderAscending )
+    private List<User> findUsers( List<User> users, String searchProperty, String searchKey, boolean orderAscending )
     {
-        List users = null;
+        List<User> userList = new ArrayList<User>();
+        for ( User user : users )
+        {
+            if ( "username".equals( searchProperty ) )
+            {
+                String username = user.getUsername();
+                if ( username != null )
+                {
+                    if ( username.toLowerCase().indexOf( searchKey.toLowerCase() ) >= 0 )
+                    {
+                        userList.add( user );
+                    }
+                }
+            }
+            else if ( "fullName".equals( searchProperty ) )
+            {
+                String fullname = user.getFullName();
+                if ( fullname != null )
+                {
+                    if ( fullname.toLowerCase().indexOf( searchKey.toLowerCase() ) >= 0 )
+                    {
+                        userList.add( user );
+                    }
+                }
+            }
+            else if ( "email".equals( searchProperty ) )
+            {
+                String email = user.getEmail();
+                if ( email != null )
+                {
+                    if ( email.toLowerCase().indexOf( searchKey.toLowerCase() ) >= 0 )
+                    {
+                        userList.add( user );
+                    }
+                }
+            }
+        }
 
-        if ( "username".equals( searchProperty ) )
-        {
-            users = manager.findUsersByUsernameKey( searchKey, orderAscending );
-        }
-        else if ( "fullName".equals( getFilterProperty() ) )
-        {
-            users = manager.findUsersByFullNameKey( searchKey, orderAscending );
-        }
-        else if ( "email".equals( getFilterProperty() ) )
-        {
-            users = manager.findUsersByEmailKey( searchKey, orderAscending );
-        }
-        else
-        {
-            users = Collections.EMPTY_LIST;
-        }
-
-        return users;
+        return userList;
     }
 
     public int getProjectGroupId()
