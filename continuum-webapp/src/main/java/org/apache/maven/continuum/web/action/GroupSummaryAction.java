@@ -19,19 +19,16 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.model.project.BuildResult;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.continuum.web.model.GroupSummary;
-import org.apache.maven.continuum.web.model.ProjectSummary;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.continuum.web.model.GroupSummary;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -43,18 +40,17 @@ public class GroupSummaryAction
 {
     private String infoMessage;
 
-    private List groups;
+    private List<GroupSummary> groups;
 
     public String execute()
         throws ContinuumException
     {
-        groups = new ArrayList();
+        groups = new ArrayList<GroupSummary>();
 
-        Collection projectGroups = getContinuum().getAllProjectGroupsWithProjects();
+        Collection<ProjectGroup> projectGroups = getContinuum().getAllProjectGroupsWithProjects();
 
-        for ( Iterator j = projectGroups.iterator(); j.hasNext(); )
+        for ( ProjectGroup projectGroup : projectGroups )
         {
-            ProjectGroup projectGroup = (ProjectGroup) j.next();
 
             if ( isAuthorized( projectGroup.getName() ) )
             {
@@ -67,58 +63,17 @@ public class GroupSummaryAction
                 groupModel.setDescription( projectGroup.getDescription() );
 
                 //TODO: Create a summary jpox request so code will be more simple and performance will be better
-                Collection projects = projectGroup.getProjects();
+                Collection<Project> projects = projectGroup.getProjects();
 
                 groupModel.setNumProjects( projects.size() );
 
-                Map buildResults = getContinuum().getLatestBuildResults();
-
-                Map buildResultsInSuccess = getContinuum().getBuildResultsInSuccess();
-
-                List projectModels = new ArrayList();
                 int numSuccesses = 0;
                 int numFailures = 0;
                 int numErrors = 0;
 
-                for ( Iterator i = projects.iterator(); i.hasNext(); )
+                for ( Project project : projects )
                 {
-                    Project project = (Project) i.next();
-
-                    if ( groupModel.getProjectType() == null )
-                    {
-                        groupModel.setProjectType( project.getExecutorId() );
-                    }
-
-                    ProjectSummary model = new ProjectSummary();
-
-                    getLogger().debug( "GroupSummaryAction: building project model " + project.getName() );
-
-                    model.setId( project.getId() );
-
-                    model.setName( project.getName() );
-
-                    model.setVersion( project.getVersion() );
-
-                    model.setProjectGroupId( project.getProjectGroup().getId() );
-
-                    model.setProjectGroupName( project.getProjectGroup().getName() );
-
-                    if ( getContinuum().isInBuildingQueue( project.getId() ) )
-                    {
-                        model.setInBuildingQueue( true );
-                    }
-                    else if ( getContinuum().isInCheckoutQueue( project.getId() ) )
-                    {
-                        model.setInCheckoutQueue( true );
-                    }
-                    else
-                    {
-                        model.setInBuildingQueue( false );
-                        model.setInCheckoutQueue( false );
-                    }
-
-                    model.setState( project.getState() );
-
+                    
                     if ( project.getState() == 2 )
                     {
                         numSuccesses++;
@@ -131,31 +86,6 @@ public class GroupSummaryAction
                     {
                         numErrors++;
                     }
-
-                    model.setBuildNumber( project.getBuildNumber() );
-
-                    if ( buildResultsInSuccess != null )
-                    {
-                        BuildResult buildInSuccess =
-                            (BuildResult) buildResultsInSuccess.get( new Integer( project.getId() ) );
-
-                        if ( buildInSuccess != null )
-                        {
-                            model.setBuildInSuccessId( buildInSuccess.getId() );
-                        }
-                    }
-
-                    if ( buildResults != null )
-                    {
-                        BuildResult latestBuild = (BuildResult) buildResults.get( new Integer( project.getId() ) );
-
-                        if ( latestBuild != null )
-                        {
-                            model.setLatestBuildId( latestBuild.getId() );
-                        }
-                    }
-                    getLogger().debug( "GroupSummaryAction: adding model to group " + model.getName() );
-                    projectModels.add( model );
                 }
 
                 //todo wire in the next scheduled build for the project group and a meaningful status message
@@ -165,7 +95,6 @@ public class GroupSummaryAction
                 groupModel.setNumSuccesses( numSuccesses );
                 groupModel.setNumFailures( numFailures );
                 groupModel.setNumErrors( numErrors );
-                groupModel.setProjects( projectModels );
                 getLogger().debug( "GroupSummaryAction: adding group to groups list " + groupModel.getName() );
                 groups.add( groupModel );
             }
@@ -174,7 +103,7 @@ public class GroupSummaryAction
         return SUCCESS;
     }
 
-    public List getGroups()
+    public List<GroupSummary> getGroups()
     {
         return groups;
     }
