@@ -325,15 +325,32 @@ public class ProjectGroupAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        if ( name != null && name.equals( "" ) )
+        if ( name != null )
         {
-            addActionError( "projectGroup.error.name.required" );
-            return INPUT;
-        }
-        else if ( name != null && name.trim().equals( "" ) )
-        {
-            addActionError( "projectGroup.error.name.cannot.be.spaces" );
-            return INPUT;
+            if ( name.equals( "" ) )
+            {
+                addActionError( "projectGroup.error.name.required" );
+                return INPUT;
+            }
+            else if ( name.trim().equals( "" ) )
+            {
+                addActionError( "projectGroup.error.name.cannot.be.spaces" );
+                return INPUT;
+            }
+            else
+            {
+                name = name.trim();
+                Iterator iterator = getContinuum().getAllProjectGroups().iterator();
+                while ( iterator.hasNext() )
+                {
+                    ProjectGroup projectGroup = (ProjectGroup) iterator.next();
+                    if ( name.equals( projectGroup.getName() ) && projectGroup.getId() != projectGroupId )
+                    {
+                        addActionError( "projectGroup.error.name.already.exists" );
+                        return INPUT;
+                    }
+                }
+            }
         }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
