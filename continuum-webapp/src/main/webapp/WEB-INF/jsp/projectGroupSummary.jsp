@@ -82,7 +82,7 @@
       <ww:param name="tabName" value="'Summary'"/>
     </ww:action>
 
-    <h3><ww:text name="projectGroup.informations.title"/></h3>
+    <h3><ww:text name="projectGroup.information.title"/></h3>
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
         <c1:data label="%{getText('projectGroup.name.label')}" name="projectGroup.name"/>
