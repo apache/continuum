@@ -65,7 +65,7 @@
             </ww:else>
             <ww:textfield label="%{getText('installation.value.label')}" name="installation.varValue"
                           required="true"/>
-            <ww:if test="installation == null">
+            <ww:if test="(automaticProfileDisplayable && installation == null) ||  (installation.installationId == 0)">
               <ww:checkbox label="%{getText('installation.automaticProfile.label')}" name="automaticProfile" />
             </ww:if>
           </tbody>
