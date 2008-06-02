@@ -73,6 +73,8 @@ public class InstallationAction
     private Map<String, String> installationTypes;
     
     private static final String TOOL_TYPE_KEY = "tool";
+    
+    private boolean automaticProfileDisplayable = true;
    
     // -----------------------------------------------------
     // Webwork methods
@@ -94,6 +96,7 @@ public class InstallationAction
         {
             this.configureUiFlags();
         }
+        this.automaticProfileDisplayable = false;
         return SUCCESS;
     }
 
@@ -330,4 +333,14 @@ public class InstallationAction
         this.installationType = installationType;
     }
 
+    public boolean isAutomaticProfileDisplayable()
+    {
+        return automaticProfileDisplayable;
+    }
+
+    public void setAutomaticProfileDisplayable( boolean automaticProfileDisplayable )
+    {
+        this.automaticProfileDisplayable = automaticProfileDisplayable;
+    }    
+    
 }
