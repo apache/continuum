@@ -1,0 +1,17 @@
+ ------
+ Viewing Queues
+ ------
+ Maria Catherine Tan
+ ------
+ June 02 2008
+ ------
+
+Viewing Queues
+
+	Click the <<Queues>> link under the <<Administration>> section
+
+[../images/queues.png] Queues
+
+	You can only view the current checkout, current build, checkout queues and build queues. 
+ 
+[../../images/queues-view.png] Queues View 
