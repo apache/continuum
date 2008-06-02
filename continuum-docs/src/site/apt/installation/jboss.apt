@@ -8,7 +8,7 @@
 
 Guide to Install Continuum on JBoss
 
-    Instructions for installing, deploying, configuring Continuum for the Jetty. Tested with JBoss 4.2.2.GA and 4.0.5.GA.
+    Instructions for installing, deploying, configuring Continuum JBoss. Tested with JBoss 4.2.2.GA and 4.0.5.GA.
 
     Sections:
 
@@ -89,10 +89,6 @@ Guide to Install Continuum on JBoss
     To Install Continuum, you'll need the Continuum war.
 
     Extract the Continuum war into <<<$JBOSS_HOME/server/default/deploy/continuum.war>>>
-
-* {Start Jetty}
-
-    To start Jetty, you'll need to use <<<$JETTY_HOME/etc/jetty.xml>>> <<and>> <<<$JETTY_HOME/etc/jetty-plus.xml>>> due to the datasources and mail configuration.
 
 * {Continuum Configuration}
 
