@@ -371,6 +371,7 @@
     <action name="buildOutputText" class="buildResult">
       <result name="success" type="stream">
         <param name="inputName">buildOutputInputStream</param>
+        <param name="contentDisposition">attachment; filename="build-output.txt"</param>
       </result>
     </action>    
     
