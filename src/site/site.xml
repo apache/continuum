@@ -98,6 +98,7 @@
           <item name="Forced Build" href="documentation/1_1/user_guides/building_project/index.html#Forced Build"/>
         </item>
         <item name="Release Management" href="documentation/1_1/user_guides/release/index.html"/>
+        <item name="Queues" href="documentation/1_1/user_guides/viewing_queues/index.html"/>
       </item>
       <item name="Knowledge Base" href="documentation/1_1/knowledge_base/index.html" collapse="true">
         <item name="FAQs" href="faqs.html"/>
@@ -118,6 +119,7 @@
         <item name="Appearance Configuration" href="documentation/1_1/administrator_guides/appearance.html"/>
         <item name="Build Definition Template" href="documentation/1_1/administrator_guides/builddefTemplate.html"/>
         <item name="Shutdown Continuum" href="documentation/1_1/administrator_guides/shutdown.html"/>
+        <item name="Managing Queues" href="documentation/1_1/administrator_guides/queues.html"/> 
       </item>
       <item name="Developer's Guides" href="documentation/1_1/developer_guides/index.html" collapse="true">
         <!-- item name="SVN repository structure" href="documentation/1_1/developer_guides/svn.html"/ -->
