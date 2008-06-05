@@ -96,7 +96,7 @@ public class WorkingCopyContentGenerator
             String fileName = f.getName();
 
             if ( !".cvsignore".equals( fileName ) && !"vssver.scc".equals( fileName ) &&
-                !".DS_Store".equals( fileName ) )
+                !".DS_Store".equals( fileName ) && !"release.properties".equals( fileName ) )
             {
                 String userDirectory;
 

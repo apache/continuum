@@ -81,6 +81,11 @@ public class WorkingCopyAction
         {
             return REQUIRES_AUTHORIZATION;
         }
+        
+        if ( "release.properties".equals( currentFile ) )
+        {
+            throw new ContinuumException( "release.properties is not accessible." );
+        }
 
         List<File> files = getContinuum().getFiles( projectId, userDirectory );
 
