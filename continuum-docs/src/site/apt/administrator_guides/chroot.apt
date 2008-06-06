@@ -1,0 +1,90 @@
+ ------
+ Running builds in a chroot jail
+ ------
+ Carlos Sanchez
+ ------
+ June 5 2008
+ ------
+
+Running builds in chroot jail
+
+ Feature not yet finished! See {{{http://jira.codehaus.org/browse/CONTINUUM-1731}CONTINUUM-1731}}
+
+ You could make continuum run the builds in each project group in a separate chroot jail so they don't interfere with each other
+ for security and stability issues. It requires a fair amount of work to setup the system.
+
+ There are still some security concerns. The user could escape the chroot jail.
+
+
+Creating a chroot jail
+
+ Installed {{{http://olivier.sessink.nl/jailkit/jailkit-2.5.tar.bz2}jailkit}}
+ ( {{{http://olivier.sessink.nl/jailkit/howtos_chroot_shell.html}howto}} )
+
+ Add chroot to /etc/sudoers and comment out requiretty
+
++----------------------------+
+ jetty ALL=NOPASSWD:/usr/sbin/chroot
++----------------------------+
+
+
+  Add /usr/sbin to the PATH in /home/jetty/.bash_profile
+
+Create the jail
+
++----------------------------+
+export JAIL=/home/jail/org.apache.continuum
+jk_init -v -j $JAIL basicshell netbasics
+jk_cp -j $JAIL /bin/uname
+jk_cp -j $JAIL /usr/bin/expr
+jk_cp -j $JAIL /usr/bin/dirname
+jk_cp -j $JAIL /usr/bin/which
+jk_cp -j $JAIL /bin/env
+jk_cp -j $JAIL /bin/su
+ 
+cd $JAIL
+
+# devices
+mkdir proc
+mount -t proc /proc proc
+mkdir dev
+mknod dev/null c 1 3
+mknod dev/zero c 1 5
+chmod a=rw dev/null dev/zero
+
+# Java
+cp -r /usr/java usr
+ln -s /usr/java/default/bin/java bin/
+ln -s /usr/java/default/bin/javac bin/
+cd lib
+for f in `find /usr/java/default/jre/lib/i386 -maxdepth 1 -iname "*.so*"`; do ln -s $f ; done
+ln -s /usr/java/default/jre/lib/i386/jli/libjli.so
+ln -s /usr/java/default/jre/lib/i386
+cp /lib/libm.so.6&nbsp; .
+
+# Maven
+mkdir -p usr/share
+cp -r /usr/share/apache-maven-2.0.9 usr/share
+ln -s /usr/share/apache-maven-2.0.9/bin/mvn bin/mvn
+
+sudo /usr/sbin/chroot $JAIL /bin/bash
+
+# env
+export M2_HOME=/usr/share/apache-maven-2.0.9
+export JAVA_HOME=/usr/java/default
+
++----------------------------+
+
+
+Configuring continuum webapp
+
+  Uncomment the following lines in WEB-INF/applicationContext.xml
+
++----------------------------+
+  <!-- to run builds in a chroot jail environment
+       note this is not secure yet, see http://jira.codehaus.org/browse/CONTINUUM-1731 
+  <bean name="chrootJailDirectory" class="java.io.File">
+    <constructor-arg value="/home/jail"/>
+  </bean>
+  <bean id="workingDirectoryService" class="org.apache.maven.continuum.utils.ChrootJailWorkingDirectoryService" autowire="byName"/>
++----------------------------+

@@ -120,6 +120,7 @@
         <item name="Build Definition Template" href="documentation/1_1/administrator_guides/builddefTemplate.html"/>
         <item name="Shutdown Continuum" href="documentation/1_1/administrator_guides/shutdown.html"/>
         <item name="Managing Queues" href="documentation/1_1/administrator_guides/queues.html"/> 
+        <item name="Running builds in chroot jail" href="documentation/1_1/administrator_guides/chroot.html"/>
       </item>
       <item name="Developer's Guides" href="documentation/1_1/developer_guides/index.html" collapse="true">
         <!-- item name="SVN repository structure" href="documentation/1_1/developer_guides/svn.html"/ -->
