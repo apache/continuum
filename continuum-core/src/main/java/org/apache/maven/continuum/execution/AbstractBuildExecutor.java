@@ -255,6 +255,9 @@ public abstract class AbstractBuildExecutor
             {
                 StringBuilder sb = new StringBuilder();
                 sb.append( CHROOT_EXECUTABLE );
+                // TODO see CONTINUUM-1731
+                //sb.append( "su" );
+                //sb.append( username );
                 sb.append( " " );
                 sb.append( new File( chrootJailDirectory, project.getGroupId() ) );
                 sb.append( " " );
