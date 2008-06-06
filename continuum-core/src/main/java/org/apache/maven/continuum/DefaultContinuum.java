@@ -1744,12 +1744,7 @@ public class DefaultContinuum
             if ( result.hasErrors() )
             {
                 getLogger().info( result.getErrors().size() + " errors during project add: " );
-
-                for ( Iterator i = result.getErrors().iterator(); i.hasNext(); )
-                {
-                    getLogger().info( (String) i.next() );
-                }
-
+                getLogger().info( result.getErrorsAsString() );
                 return result;
             }
         }

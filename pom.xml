@@ -175,7 +175,7 @@
   </modules>
   <repositories>
     <repository>
-      <id>codehaus.org</id>
+      <id>snapshots.codehaus.org</id>
       <name>Codehaus Snapshot Development Repository</name>
       <url>http://snapshots.repository.codehaus.org/</url>
       <releases>
