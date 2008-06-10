@@ -197,6 +197,18 @@ under the License.
                       <name>wrapper.app.parameter.3</name>
                       <value>%APP_BASE%/conf/jetty-logging.xml</value>
                     </property>
+                    <property>
+                      <name>wrapper.on_exit.default</name>
+                      <value>RESTART</value>
+                    </property>
+                    <property>
+                      <name>wrapper.on_exit.0</name>
+                      <value>SHUTDOWN</value>
+                    </property>
+                    <property>
+                      <name>wrapper.restart.delay</name>
+                      <value>30</value>
+                    </property>
                   </configuration>
                 </generatorConfiguration>
               </generatorConfigurations>
