@@ -26,7 +26,8 @@
     <field-validator type="requiredstring">
       <message key="mailNotifier.address.required"/>
     </field-validator>
-    <field-validator type="email">
+    <field-validator type="regex">
+      <param name="expression"><![CDATA[(^[_A-Za-z0-9-]+[_A-Za-z0-9-+]*(\.[_A-Za-z0-9-+]+)*@([A-Za-z0-9-])+(\.[A-Za-z0-9-]+)*((\.[A-Za-z0-9]{2,})|(\.[A-Za-z0-9]{2,}\.[A-Za-z0-9]{2,}))$)]]></param>
       <message key="mailNotifier.address.invalid"/>
     </field-validator>
   </field>
