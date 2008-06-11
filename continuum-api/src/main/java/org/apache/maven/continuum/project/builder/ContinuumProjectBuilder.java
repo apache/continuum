@@ -21,7 +21,6 @@ package org.apache.maven.continuum.project.builder;
 
 import java.net.URL;
 
-import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 
 /**
@@ -40,7 +39,8 @@ public interface ContinuumProjectBuilder
         throws ContinuumProjectBuilderException;
 
     ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
-                                                              boolean recursiveProjects, BuildDefinitionTemplate buildDefinitionTemplate )
+                                                              boolean recursiveProjects,
+                                                              BuildDefinitionTemplate buildDefinitionTemplate )
         throws ContinuumProjectBuilderException;
 
     BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()

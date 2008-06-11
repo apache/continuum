@@ -90,7 +90,9 @@ public class CheckoutProjectContinuumAction
 
         try
         {
-            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
+            String scmUserName = getString( context, KEY_SCM_USERNAME );
+            String scmPassword = getString( context, KEY_SCM_PASSWORD );
+            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
 
             String tag = config.getTag();
             getLogger().info(
@@ -181,12 +183,13 @@ public class CheckoutProjectContinuumAction
         context.put( KEY_CHECKOUT_SCM_RESULT, result );
     }
 
-    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )
+    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory,
+                                                              String scmUserName, String scmPassword )
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
         config.setUrl( project.getScmUrl() );
-        config.setUsername( project.getScmUsername() );
-        config.setPassword( project.getScmPassword() );
+        config.setUsername( scmUserName );
+        config.setPassword( scmPassword );
         config.setUseCredentialsCache( project.isScmUseCache() );
         config.setWorkingDirectory( workingDirectory );
         config.setTag( project.getScmTag() );

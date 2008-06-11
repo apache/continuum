@@ -386,4 +386,6 @@ public class DefaultContinuumTest
     {
         return (Continuum) lookup( Continuum.ROLE );
     }
+    
+
 }

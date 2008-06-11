@@ -241,8 +241,6 @@ public class MavenTwoContinuumProjectBuilder
             We are interested in having the scm username and password being passed into this method be taken into
             account during project mapping so make sure we set it to the continuum project instance.
              */
-            /* 
-            CONTINUUM-1605 don't store username/password
             if ( username != null && StringUtils.isNotEmpty( username ) )
             {
                 continuumProject.setScmUsername( username );
@@ -252,7 +250,6 @@ public class MavenTwoContinuumProjectBuilder
                     continuumProject.setScmPassword( password );
                 }
             }
-            */
 
             builderHelper.mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, groupPom );
 

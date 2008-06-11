@@ -346,9 +346,9 @@ public class DefaultContinuum
 
     }
 
-    public Collection<ProjectGroup> getAllProjectGroups()
+    public List<ProjectGroup> getAllProjectGroups()
     {
-        return store.getAllProjectGroups();
+        return new ArrayList<ProjectGroup>( store.getAllProjectGroups() );
     }
 
     public ProjectGroup getProjectGroupByGroupId( String groupId )
@@ -791,6 +791,9 @@ public class DefaultContinuum
         }
     }
 
+    /** 
+     * @see org.apache.maven.continuum.Continuum#checkoutProject(int)
+     */
     public void checkoutProject( int projectId )
         throws ContinuumException
     {
@@ -1538,6 +1541,9 @@ public class DefaultContinuum
     // Shell projects
     // ----------------------------------------------------------------------
 
+    /** 
+     * @see org.apache.maven.continuum.Continuum#addProject(org.apache.maven.continuum.model.project.Project, java.lang.String)
+     */
     public int addProject( Project project, String executorId )
         throws ContinuumException
     {
@@ -1550,6 +1556,9 @@ public class DefaultContinuum
         return addProject( project, executorId, groupId, -1 );
     }
 
+    /** 
+     * @see org.apache.maven.continuum.Continuum#addProject(org.apache.maven.continuum.model.project.Project, java.lang.String, int, int)
+     */
     public int addProject( Project project, String executorId, int groupId, int buildDefintionTemplateId )
         throws ContinuumException
     {
@@ -1607,6 +1616,7 @@ public class DefaultContinuum
     // Activities. These should end up as workflows in werkflow
     // ----------------------------------------------------------------------
 
+    @SuppressWarnings("unchecked")
     private int executeAddProjectFromScmActivity( Project project, int groupId )
         throws ContinuumException
     {
@@ -1625,7 +1635,7 @@ public class DefaultContinuum
         context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, projectGroup );
 
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
-
+        
         executeAction( "validate-project", context );
 
         executeAction( "store-project", context );
@@ -1637,24 +1647,6 @@ public class DefaultContinuum
         return ( (Integer) context.get( AbstractContinuumAction.KEY_PROJECT_ID ) ).intValue();
     }
 
-    /**
-     * Add a Maven 1 / Maven 2 project to Continuum
-     *
-     * @param metadataUrl      url of the pom
-     * @param projectBuilderId {@link MavenTwoContinuumProjectBuilder#ID} for Maven 2 project
-     *                         or {@link MavenOneContinuumProjectBuilder#ID} for Maven 1 project.
-     * @return a holder with the projects, project groups and errors occurred during the project adding
-     * @throws ContinuumException
-     */
-    /*
-    private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
-                                                                                   String projectBuilderId,
-                                                                                   boolean checkProtocol )
-        throws ContinuumException
-    {
-        return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, -1, checkProtocol );
-    }
-    */
     private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
                                                                                    String projectBuilderId,
                                                                                    int projectGroupId,
@@ -1666,15 +1658,16 @@ public class DefaultContinuum
                                                        false, false, buildDefintionTemplateId );
     }
 
-    private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
-                                                                                   String projectBuilderId,
-                                                                                   int projectGroupId,
-                                                                                   boolean checkProtocol,
-                                                                                   boolean useCredentialsCache,
-                                                                                   boolean loadRecursiveProjects,
-                                                                                   int buildDefintionTemplateId )
-        throws ContinuumException
-    {
+    
+    protected ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
+                                                                                     String projectBuilderId,
+                                                                                     int projectGroupId,
+                                                                                     boolean checkProtocol,
+                                                                                     boolean useCredentialsCache,
+                                                                                     boolean loadRecursiveProjects,
+                                                                                     int buildDefintionTemplateId, boolean addAssignableRoles )
+          throws ContinuumException
+      {
         if ( checkProtocol )
         {
             try
@@ -1698,8 +1691,11 @@ public class DefaultContinuum
 
         context.put( CreateProjectsFromMetadataAction.KEY_URL, metadataUrl );
 
-        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS,
-                     Boolean.valueOf( loadRecursiveProjects ) );
+        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, Boolean
+            .valueOf( loadRecursiveProjects ) );
+
+        context.put( CreateProjectsFromMetadataAction.KEY_SCM_USE_CREDENTIALS_CACHE, Boolean
+            .valueOf( useCredentialsCache ) );
 
         context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
 
@@ -1811,10 +1807,23 @@ public class DefaultContinuum
 
         List<Project> projects = result.getProjects();
 
+        String scmUserName = null;
+        String scmPassword = null;
+        
         for ( Project project : projects )
         {
             project.setScmUseCache( useCredentialsCache );
-
+            
+            // values backup for first checkout
+            scmUserName = project.getScmUsername();
+            scmPassword = project.getScmPassword();
+            // CONTINUUM-1792 : we don't store it
+            if ( useCredentialsCache )
+            {
+                project.setScmUsername( null );
+                project.setScmPassword( null );
+            }
+    
             projectGroup.addProject( project );
         }
 
@@ -1834,6 +1843,17 @@ public class DefaultContinuum
                 //
                 context.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( project.getId() ) );
 
+                if ( !StringUtils.isEmpty( scmUserName ) )
+                {
+                    project.setScmUsername( scmUserName );
+                    context.put( AbstractContinuumAction.KEY_SCM_USERNAME, scmUserName );
+                }
+                if ( !StringUtils.isEmpty( scmPassword ) )
+                {
+                    project.setScmPassword( scmPassword );
+                    context.put( AbstractContinuumAction.KEY_SCM_PASSWORD, scmPassword );
+                }
+                context.put( AbstractContinuumAction.KEY_PROJECT, project );
                 executeAction( "add-project-to-checkout-queue", context );
             }
         }
@@ -1844,9 +1864,25 @@ public class DefaultContinuum
 
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
         // add the relevent security administration roles for this project
-        executeAction( "add-assignable-roles", context );
-
+        if ( addAssignableRoles )
+        {
+            executeAction( "add-assignable-roles", context );
+        }
         return result;
+      }
+    
+    protected ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
+                                                                                   String projectBuilderId,
+                                                                                   int projectGroupId,
+                                                                                   boolean checkProtocol,
+                                                                                   boolean useCredentialsCache,
+                                                                                   boolean loadRecursiveProjects,
+                                                                                   int buildDefintionTemplateId )
+        throws ContinuumException
+    {
+        return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol,
+                                                       useCredentialsCache, loadRecursiveProjects,
+                                                       buildDefintionTemplateId, true );
     }
 
     // ----------------------------------------------------------------------

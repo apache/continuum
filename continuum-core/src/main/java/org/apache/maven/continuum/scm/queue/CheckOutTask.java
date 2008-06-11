@@ -35,14 +35,22 @@ public class CheckOutTask
     private File workingDirectory;
     
     private String projectName;
+    
+    private String scmUserName;
 
-    public CheckOutTask( int projectId, File workingDirectory, String projectName )
+    private String scmPassword;
+
+    public CheckOutTask( int projectId, File workingDirectory, String projectName, String scmUserName, String scmPassword )
     {
         this.projectId = projectId;
 
         this.workingDirectory = workingDirectory;
         
         this.projectName = projectName;
+        
+        this.scmUserName = scmUserName;
+        
+        this.scmPassword = scmPassword;
     }
 
     public int getProjectId()
@@ -64,6 +72,18 @@ public class CheckOutTask
     {
         return projectName;
     }
+    
+    
+    public String getScmUserName()
+    {
+        return scmUserName;
+    }
+
+    public String getScmPassword()
+    {
+        return scmPassword;
+    }
+    
     
     public int getHashCode()
     {

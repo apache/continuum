@@ -67,7 +67,7 @@ public interface Continuum
 
     public List<ProjectGroup> getAllProjectGroupsWithBuildDetails();
 
-    public Collection<ProjectGroup> getAllProjectGroups();
+    public List<ProjectGroup> getAllProjectGroups();
 
     public ProjectGroup getProjectGroupByProjectId( int projectId )
         throws ContinuumException;
@@ -103,6 +103,12 @@ public interface Continuum
     void removeProject( int projectId )
         throws ContinuumException;
 
+    
+    /**
+     * @deprecated
+     * @param projectId
+     * @throws ContinuumException
+     */
     void checkoutProject( int projectId )
         throws ContinuumException;
 
