@@ -75,6 +75,12 @@ public abstract class AbstractContinuumAction
     public static final String KEY_FIRST_RUN = "first-run";
 
     public static final String KEY_PROJECT_RELATIVE_PATH = "project-relative-path";
+    
+    public static final String KEY_SCM_USE_CREDENTIALS_CACHE = "useCredentialsCache";
+    
+    public static final String KEY_SCM_USERNAME = "scmUserName";
+    
+    public static final String KEY_SCM_PASSWORD = "scmUserPassword";
 
     // ----------------------------------------------------------------------
     // Utils
@@ -192,6 +198,11 @@ public abstract class AbstractContinuumAction
     {
         return ( (Boolean) getObject( context, key ) ).booleanValue();
     }
+    
+    public static boolean getBoolean( Map context, String key, boolean defaultValue )
+    {
+        return ( (Boolean) getObject( context, key, Boolean.valueOf( defaultValue ) ) ).booleanValue();
+    }    
 
     protected static int getInteger( Map context, String key )
     {

@@ -85,6 +85,11 @@ public class CheckOutTaskExecutor
         context.put( AbstractContinuumAction.KEY_PROJECT, project );
 
         context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, workingDirectory );
+        
+        context.put( AbstractContinuumAction.KEY_SCM_USERNAME, task.getScmUserName() );
+        
+        context.put( AbstractContinuumAction.KEY_SCM_PASSWORD, task.getScmPassword() );
+        
 
         try
         {
