@@ -55,10 +55,6 @@
         <properties>
           <system/>
           <jndi prefix="java:comp/env" config-optional="true"/>
-          <!-- Archiva configuration is present to be able to load the managed repository definitions -->
-          <xml fileName="${appserver.base}/conf/maestro.xml" config-optional="true"
-               config-name="com.mergere.maestro.projectserver"
-               config-at="com.mergere.maestro.projectserver" config-forceCreate="true"/>
           <xml fileName="${appserver.base}/conf/continuum.xml" config-optional="true"
                config-at="org.apache.maven.continuum" config-forceCreate="true"/>
           <xml fileName="${appserver.base}/conf/shared.xml" config-optional="true"
@@ -69,8 +65,6 @@
           <xml fileName="${appserver.base}/conf/common.xml" config-optional="true"/>
           <properties fileName="${appserver.base}/conf/security.properties" config-optional="true"
                       config-at="org.codehaus.plexus.redback"/>
-          <xml fileName="${appserver.home}/conf/maestro.xml" config-optional="true"
-               config-at="com.mergere.maestro.projectserver"/>
           <xml fileName="${appserver.home}/conf/continuum.xml" config-optional="true"
                config-at="org.apache.maven.continuum" config-name="org.apache.maven.continuum.user"
                config-forceCreate="true"/>
@@ -408,13 +402,30 @@
     <!-- START SNIPPET: ldap -->
     <!-- 
        Ldap Authentication can be enabled by setting enabling these components and setting the following configuration options in your security.properties file
-      
+
+       ============================================================
        user.manager.impl=ldap
        ldap.bind.authenticator.enabled=true
        redback.default.admin=admin
        redback.default.guest=guest
        security.policy.password.expiration.enabled=false
-      
+
+       ldap.config.hostname=ldap.hostname
+       ldap.config.port=389
+       ldap.config.base.dn=o=com
+       ldap.config.context.factory=com.sun.jndi.ldap.LdapCtxFactory
+       ldap.config.bind.dn=uid=myusername,o=com
+       ldap.config.password=s3cr3t
+       #ldap.config.authentication.method=
+       ============================================================
+
+       * ldap.config.hostname - The hostname of the ldap server
+       * ldap.config.port - The port of the ldap server
+       * ldap.config.base.dn - The baseDn of the ldap system
+       * ldap.config.context.factory - context factory for ldap connections
+       * ldap.config.bind.dn - the core user used for authentication the ldap server, must be able to perform the necessary searches, etc.
+       * ldap.config.password - password for the bindDn for the root ldap connection
+
        until this process is better documented, the following is the document for configuration ldap with redback
       
        http://redback.codehaus.org/integration/ldap.html
@@ -423,34 +434,34 @@
     <!--
     
     this component manages the connection to the ldap server
-    
-     * hostname - The hostname of the ldap server
-     * port - The port of the ldap server
-     * baseDn - The baseDn of the ldap system
-     * contextFactory - context factory for ldap connections
-     * password - password for the bindDn for the root ldap connection
-     * bindDn - the core user used for authentication the ldap server, must be able to perform the necessary searches, etc.
      -->
 
     <!-- component>
       <role>org.codehaus.plexus.redback.common.ldap.connection.LdapConnectionFactory</role>
       <role-hint>configurable</role-hint>
       <implementation>org.codehaus.plexus.redback.common.ldap.connection.ConfigurableLdapConnectionFactory</implementation>
-      <description></description>
-      <configuration>
-        <hostname></hostname>
-        <port></port>
-        <baseDn></baseDn>
-        <contextFactory>com.sun.jndi.ldap.LdapCtxFactory</contextFactory>
-        <password></password>
-        <bindDn></bindDn>
-      </configuration>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.redback.configuration.UserConfiguration</role>
+        </requirement>
+      </requirements>
     </component-->
     
     <!-- 
     
-    this component manages the mapping of attributes in ldap to user information in redback
-    
+    this component manages the mapping of attributes in ldap to user information in redback. To configure the mapping, you can add the following properties in your security.properties
+
+       ============================================================
+       ldap.config.mapper.attribute.email=mail
+       ldap.config.mapper.attribute.fullname=givenName
+       ldap.config.mapper.attribute.password=userPassword
+       ldap.config.mapper.attribute.user.id=cn
+       ldap.config.mapper.attribute.user.base.dn=
+       ldap.config.mapper.attribute.user.object.class=inetOrgPerson
+       ldap.config.mapper.attribute.user.filter=(attributeName=value)
+       ============================================================
+
+
      * email-attribute - The name of the attribute on a user that contains the email address
      * full-name-attribute - The name of the attribute on a user that contains the users fullName
      * password-attribute - The name of the attribute containing the users password, used for the authentiction using the user manager and not the ldap bind authenticator
@@ -463,7 +474,6 @@
       <role>org.codehaus.plexus.redback.common.ldap.UserMapper</role>
       <role-hint>ldap</role-hint>
       <implementation>org.codehaus.plexus.redback.common.ldap.LdapUserMapper</implementation>
-      <description></description>
       <configuration>
         <email-attribute>email</email-attribute>
         <full-name-attribute>givenName</full-name-attribute>
@@ -472,11 +482,16 @@
         <user-base-dn>o=com</user-base-dn>
         <user-object-class>inetOrgPerson</user-object-class>
       </configuration>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.redback.configuration.UserConfiguration</role>
+        </requirement>
+      </requirements>
     </component-->
     
     <!--
      
-    If caching is desired then make uncomment this and make sure the following configuration parameter is in the security.properties
+    If caching is desired to improve performance then make uncomment this and make sure the following configuration parameter is in the security.properties
      
     user.manager.impl=cached
     -->
