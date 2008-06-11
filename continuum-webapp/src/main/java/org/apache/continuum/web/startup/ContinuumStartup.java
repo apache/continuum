@@ -75,16 +75,6 @@ public class ContinuumStartup
 
         TaskQueueExecutor rollbackRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "rollback-release" ) );        
-
-        try
-        {
-            continuum.startup();
-        }
-        catch ( ContinuumException e )
-        {
-            log.error( e.getMessage(), e );
-            throw new RuntimeException( e.getMessage(), e );
-        }
     }
 
 }
