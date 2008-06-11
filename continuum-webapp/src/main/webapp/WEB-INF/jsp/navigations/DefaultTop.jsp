@@ -24,7 +24,7 @@
 <ww:i18n name="localization.Continuum">
   <div id="banner">
     <span id="bannerLeft">
-      <a href="http://maven.apache.org/continuum">
+      <a href="http://continuum.apache.org">
         <img src="<ww:url value="/images/continuum_logo_75.gif" includeParams="none"/>" alt="Continuum" title="Continuum" border="0">
       </a>
     </span>
@@ -40,7 +40,7 @@
   <div id="breadcrumbs">
 
     <div style="float: right;">
-      <a href="http://maven.apache.org/continuum">Continuum</a> |
+      <a href="http://continuum.apache.org">Continuum</a> |
       <a href="http://maven.apache.org/">Maven</a> |
       <a href="http://www.apache.org/">Apache</a>
     </div>
