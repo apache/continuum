@@ -130,6 +130,7 @@ public class ReleasePerformAction
         ReleaseDescriptor descriptor = new ReleaseDescriptor();
         descriptor.setScmSourceUrl( scmUrl );
         descriptor.setScmUsername( scmUsername );
+        descriptor.setScmPassword( scmPassword );
         descriptor.setScmReleaseLabel( scmTag );
         descriptor.setScmTagBase( scmTagBase );
 
