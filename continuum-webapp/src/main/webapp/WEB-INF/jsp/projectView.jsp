@@ -111,13 +111,15 @@
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
-                      <a href='<ww:url value="${notifier.type}ProjectNotifierEdit.action">
+                      <ww:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
                         <ww:param name="notifierId" value="${notifier.id}"/>
                         <ww:param name="projectId" value="project.id"/>
                         <ww:param name="projectGroupId" value="${project.projectGroup.id}"/>
                         <ww:param name="notifierType">${notifier.type}</ww:param>
-                        </ww:url>'>
-                        <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" /></a>
+                      </ww:url>
+                      <ww:a href="%{editUrl}">
+                        <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name="edit"/>" title="<ww:text name="edit"/>" border="0">
+                      </ww:a>
                     </c:when>
                     <c:otherwise>
                       <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
@@ -132,13 +134,15 @@
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
-                      <a href='<ww:url value="/deleteProjectNotifier!default.action">
+                      <ww:url id="removeUrl" action="deleteProjectNotifier" namespace="/">
                         <ww:param name="projectId" value="project.id"/>
                         <ww:param name="projectGroupId" value="${project.projectGroup.id}"/>
                         <ww:param name="notifierType">${notifier.type}</ww:param>
                         <ww:param name="notifierId" value="${notifier.id}"/>
-                        </ww:url>'>
-                        <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"></a>
+                    </ww:url>
+                    <ww:a href="%{removeUrl}">
+                      <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
+                    </ww:a>
                     </c:when>
                     <c:otherwise>
                       <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
