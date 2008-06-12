@@ -30,9 +30,9 @@
     <href>http://maven.apache.org/</href>
   </bannerLeft>
   <bannerRight>
-    <name>Apache Maven Continuum</name>
+    <name>Apache Continuum</name>
     <src>images/continuum_logo.jpg</src>
-    <href>http://maven.apache.org/continuum</href>
+    <href>http://continuum.apache.org</href>
   </bannerRight>
   <publishDate format="dd MMM yyyy" />
   <body>
