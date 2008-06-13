@@ -90,8 +90,8 @@ public class CheckoutProjectContinuumAction
 
         try
         {
-            String scmUserName = getString( context, KEY_SCM_USERNAME );
-            String scmPassword = getString( context, KEY_SCM_PASSWORD );
+            String scmUserName = getString( context, KEY_SCM_USERNAME, "" );
+            String scmPassword = getString( context, KEY_SCM_PASSWORD, "" );
             ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
 
             String tag = config.getTag();
@@ -135,6 +135,8 @@ public class CheckoutProjectContinuumAction
             result.setSuccess( false );
 
             result.setProviderMessage( e.getMessage() + ": " + getValidationMessages( e ) );
+            
+            getLogger().error( e.getMessage(), e);
         }
         catch ( NoSuchScmProviderException e )
         {
@@ -144,6 +146,8 @@ public class CheckoutProjectContinuumAction
             result.setSuccess( false );
 
             result.setProviderMessage( e.getMessage() );
+            
+            getLogger().error( e.getMessage(), e);
         }
         catch ( ScmException e )
         {
@@ -152,6 +156,8 @@ public class CheckoutProjectContinuumAction
             result.setSuccess( false );
 
             result.setException( ContinuumUtils.throwableMessagesToString( e ) );
+            
+            getLogger().error( e.getMessage(), e);
         }
         catch ( Throwable t )
         {
@@ -162,6 +168,8 @@ public class CheckoutProjectContinuumAction
             result.setSuccess( false );
 
             result.setException( ContinuumUtils.throwableMessagesToString( t ) );
+            
+            getLogger().error( t.getMessage(), t);
         }
         finally
         {
