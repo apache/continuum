@@ -20,7 +20,6 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.util.Date;
-import java.util.Iterator;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
