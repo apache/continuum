@@ -73,6 +73,8 @@ public abstract class AddMavenProjectAction
     private List<BuildDefinitionTemplate> buildDefinitionTemplates;
 
     private int buildDefinitionTemplateId;
+    
+    private List<String> errorMessages = new ArrayList<String>();
 
     public String execute()
         throws ContinuumException, BuildDefinitionServiceException
@@ -155,11 +157,19 @@ public abstract class AddMavenProjectAction
 
         if ( result.hasErrors() )
         {
-            Iterator it = result.getErrors().iterator();
-
-            while ( it.hasNext() )
+            for ( String key : result.getErrors() )
             {
-                addActionError( (String) it.next() );
+                String cause = result.getErrorsWithCause().get( key );
+                String msg = getText( key, new String[] { cause } );
+                if ( !StringUtils.equals( msg, key ) )
+                {
+                    errorMessages.add( msg );
+                }
+                else
+                {
+                    addActionError( msg );
+                }
+                
             }
 
             return doDefault();
@@ -388,5 +398,15 @@ public abstract class AddMavenProjectAction
         {
             return false;
         }
+    }
+
+    public List<String> getErrorMessages()
+    {
+        return errorMessages;
+    }
+
+    public void setErrorMessages( List<String> errorMessages )
+    {
+        this.errorMessages = errorMessages;
     }
 }

@@ -31,10 +31,15 @@
                 <h3><ww:text name="add.m2.project.section.title"/></h3>
                 <div class="axial">
                     <ww:form method="post" action="addMavenTwoProject.action" name="addMavenTwoProject" enctype="multipart/form-data">
-                        <c:if test="${!empty actionErrors}">
+                        <c:if test="${!empty actionErrors || !empty errorMessages}">
                           <div class="errormessage">
                             <c:forEach items="${actionErrors}" var="actionError">
-                              <p><ww:text name="${actionError}"/></p>
+                              <p>
+                                <ww:text name="${actionError}">${actionError}</ww:text>
+                              </p>
+                            </c:forEach>
+                            <c:forEach items="${errorMessages}" var="errorMessage">
+                              <p>${errorMessage}</p>
                             </c:forEach>
                           </div>
                         </c:if>
