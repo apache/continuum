@@ -21,6 +21,7 @@ package org.apache.maven.continuum.execution;
 
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 
 import java.io.File;
 import java.util.List;
@@ -51,4 +52,8 @@ public interface ContinuumBuildExecutor
 
     //TODO: Move as a plugin
     void backupTestFiles( Project project, int buildId );
+
+    boolean shouldBuild( List<ChangeSet> changes, Project continuumProject, File workingDirectory,
+                         BuildDefinition buildDefinition )
+        throws ContinuumBuildExecutorException;
 }
