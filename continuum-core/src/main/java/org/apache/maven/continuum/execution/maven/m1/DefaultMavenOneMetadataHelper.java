@@ -36,7 +36,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -234,12 +233,10 @@ public class DefaultMavenOneMetadataHelper
         {
             Xpp3Dom[] developersList = developers.getChildren();
 
-            List cds = new ArrayList();
+            List<ProjectDeveloper> cds = new ArrayList<ProjectDeveloper>();
 
-            for ( int i = 0; i < developersList.length; i++ )
+            for ( Xpp3Dom developer : developersList )
             {
-                Xpp3Dom developer = developersList[i];
-
                 ProjectDeveloper cd = new ProjectDeveloper();
 
                 cd.setScmId( getValue( developer, "id", null ) );
@@ -264,12 +261,10 @@ public class DefaultMavenOneMetadataHelper
         {
             Xpp3Dom[] dependenciesList = dependencies.getChildren();
 
-            List deps = new ArrayList();
+            List<ProjectDependency> deps = new ArrayList<ProjectDependency>();
 
-            for ( int i = 0; i < dependenciesList.length; i++ )
+            for ( Xpp3Dom dependency : dependenciesList )
             {
-                Xpp3Dom dependency = dependenciesList[i];
-
                 ProjectDependency cd = new ProjectDependency();
 
                 if ( getValue( dependency, "groupId", null ) != null )
@@ -299,7 +294,7 @@ public class DefaultMavenOneMetadataHelper
 
         Xpp3Dom build = mavenProject.getChild( "build" );
 
-        List notifiers = new ArrayList();
+        List<ProjectNotifier> notifiers = new ArrayList<ProjectNotifier>();
 
         // Add project Notifier
         if ( build != null )
@@ -325,10 +320,8 @@ public class DefaultMavenOneMetadataHelper
         // Add all user notifiers
         if ( project.getNotifiers() != null && !project.getNotifiers().isEmpty() )
         {
-            for ( Iterator i = project.getNotifiers().iterator(); i.hasNext(); )
+            for ( ProjectNotifier notif : (List<ProjectNotifier>) project.getNotifiers() )
             {
-                ProjectNotifier notif = (ProjectNotifier) i.next();
-
                 if ( notif.isFromUser() )
                 {
                     notifiers.add( notif );
