@@ -60,7 +60,7 @@ public class BuildProjectTaskViabilityEvaluator
      * @param tasks A list of queued tasks to evaluate
      * @return a list of tasks with duplicates removed
      */
-    public Collection evaluate( Collection tasks )
+    public Collection<BuildProjectTask> evaluate( Collection tasks )
     {
         // ----------------------------------------------------------------------
         // This code makes a Map with Lists with one list per project. For each
@@ -69,19 +69,17 @@ public class BuildProjectTaskViabilityEvaluator
         // checked for validity and a list of tasks to remove is returned.
         // ----------------------------------------------------------------------
 
-        Map projects = new HashMap();
+        Map<Integer, List<BuildProjectTask>> projects = new HashMap<Integer, List<BuildProjectTask>>();
 
-        for ( Iterator it = tasks.iterator(); it.hasNext(); )
+        for ( BuildProjectTask task : (Collection<BuildProjectTask>) tasks )
         {
-            BuildProjectTask task = (BuildProjectTask) it.next();
-
             Integer key = new Integer( task.getProjectId() );
 
-            List projectTasks = (List) projects.get( key );
+            List<BuildProjectTask> projectTasks = (List<BuildProjectTask>) projects.get( key );
 
             if ( projectTasks == null )
             {
-                projectTasks = new ArrayList();
+                projectTasks = new ArrayList<BuildProjectTask>();
 
                 projects.put( key, projectTasks );
             }
@@ -89,7 +87,7 @@ public class BuildProjectTaskViabilityEvaluator
             projectTasks.add( task );
         }
 
-        List toBeRemoved = new ArrayList();
+        List<BuildProjectTask> toBeRemoved = new ArrayList<BuildProjectTask>();
 
         for ( Iterator it = projects.values().iterator(); it.hasNext(); )
         {
@@ -103,18 +101,14 @@ public class BuildProjectTaskViabilityEvaluator
     //
     // ----------------------------------------------------------------------
 
-    private List checkTasks( List list )
+    private List<BuildProjectTask> checkTasks( List<BuildProjectTask> list )
     {
-        List toBeRemoved = new ArrayList();
+        List<BuildProjectTask> toBeRemoved = new ArrayList<BuildProjectTask>();
 
-        for ( Iterator it = list.iterator(); it.hasNext(); )
+        for ( BuildProjectTask buildProjectTask : list )
         {
-            BuildProjectTask buildProjectTask = (BuildProjectTask) it.next();
-
-            for ( Iterator it2 = list.iterator(); it2.hasNext(); )
+            for ( BuildProjectTask task : list )
             {
-                BuildProjectTask task = (BuildProjectTask) it2.next();
-
                 // check if it's the same task
                 if ( buildProjectTask == task ||
                     buildProjectTask.getBuildDefinitionId() != task.getBuildDefinitionId() )

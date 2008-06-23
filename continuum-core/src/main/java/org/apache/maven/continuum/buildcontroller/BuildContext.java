@@ -22,6 +22,7 @@ package org.apache.maven.continuum.buildcontroller;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ScmResult;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class BuildContext
 
     private BuildResult buildResult;
 
-    private List modifiedDependencies;
+    private List<ProjectDependency> modifiedDependencies;
 
     public void setStartTime( long startTime )
     {
@@ -145,16 +146,16 @@ public class BuildContext
         this.trigger = trigger;
     }
 
-    public List getModifiedDependencies()
+    public List<ProjectDependency> getModifiedDependencies()
     {
         if ( modifiedDependencies == null )
         {
-            modifiedDependencies = new ArrayList();
+            modifiedDependencies = new ArrayList<ProjectDependency>();
         }
         return modifiedDependencies;
     }
 
-    public void setModifiedDependencies( List modifiedDependencies )
+    public void setModifiedDependencies( List<ProjectDependency> modifiedDependencies )
     {
         this.modifiedDependencies = modifiedDependencies;
     }
