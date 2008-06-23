@@ -31,6 +31,8 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ChangeFile;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
@@ -47,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -207,28 +208,12 @@ public class MavenTwoBuildExecutor
         return f;
     }
 
+    @Override
     public List getDeployableArtifacts( Project continuumProject, File workingDirectory,
                                         BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException
     {
-        File f = getPomFile( getBuildFileForProject( continuumProject, buildDefinition ), workingDirectory );
-
-        if ( !f.exists() )
-        {
-            throw new ContinuumBuildExecutorException( "Could not find Maven project descriptor '" + f + "'." );
-        }
-
-        MavenProject project;
-
-        ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
-
-        project = builderHelper.getMavenProject( result, f );
-
-        if ( result.hasErrors() )
-        {
-            throw new ContinuumBuildExecutorException(
-                "Unable to read the Maven project descriptor '" + f + "': " + result.getErrorsAsString() );
-        }
+        MavenProject project = getMavenProject( continuumProject, workingDirectory, buildDefinition );
 
         // Maven could help us out a lot more here by knowing how to get the deployment artifacts from a project.
         // TODO: this is currently quite lame
@@ -301,24 +286,47 @@ public class MavenTwoBuildExecutor
             }
         }
 
-        List attachedArtifacts = project.getAttachedArtifacts();
+        List<Artifact> attachedArtifacts = project.getAttachedArtifacts();
 
-        List artifacts = new ArrayList( attachedArtifacts.size() + 1 );
+        List<Artifact> artifacts = new ArrayList<Artifact>( attachedArtifacts.size() + 1 );
 
         if ( artifact.getFile().exists() )
         {
             artifacts.add( artifact );
         }
 
-        for ( Iterator iterator = attachedArtifacts.iterator(); iterator.hasNext(); )
+        for ( Artifact attachedArtifact : attachedArtifacts )
         {
-            Artifact attachedArtifact = (Artifact) iterator.next();
             artifacts.add( attachedArtifact );
         }
 
         return artifacts;
     }
 
+    private MavenProject getMavenProject( Project continuumProject, File workingDirectory,
+                                          BuildDefinition buildDefinition )
+        throws ContinuumBuildExecutorException
+    {
+        ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
+
+        File f = getPomFile( getBuildFileForProject( continuumProject, buildDefinition ), workingDirectory );
+
+        if ( !f.exists() )
+        {
+            throw new ContinuumBuildExecutorException( "Could not find Maven project descriptor '" + f + "'." );
+        }
+
+        MavenProject project = builderHelper.getMavenProject( result, f );
+
+        if ( result.hasErrors() )
+        {
+            throw new ContinuumBuildExecutorException(
+                "Unable to read the Maven project descriptor '" + f + "': " + result.getErrorsAsString() );
+        }
+        return project;
+    }
+
+    @Override
     public void backupTestFiles( Project project, int buildId )
     {
         File backupDirectory = null;
@@ -367,6 +375,76 @@ public class MavenTwoBuildExecutor
         }
     }
 
+    /**
+     * @return true if changes are in the current project, not only in sub-modules and in non-recursive mode
+     * @see org.apache.maven.continuum.execution.ContinuumBuildExecutor#shouldBuild(java.util.List, org.apache.maven.continuum.model.project.Project, java.io.File, org.apache.maven.continuum.model.project.BuildDefinition)
+     */
+    @Override
+    public boolean shouldBuild( List<ChangeSet> changes, Project continuumProject, File workingDirectory,
+                                BuildDefinition buildDefinition )
+        throws ContinuumBuildExecutorException
+    {
+        //Check if it's a recursive build
+        boolean isRecursive = StringUtils.isNotEmpty( buildDefinition.getArguments() ) && !(
+            buildDefinition.getArguments().indexOf( "-N" ) < 0 ||
+                buildDefinition.getArguments().indexOf( "--non-recursive" ) < 0 );
+
+        if ( isRecursive )
+        {
+            if ( getLogger().isDebugEnabled() )
+            {
+                getLogger().debug( "isRecursive --> shouldBuild = true" );
+            }
+            return true;
+        }
+
+        //check if changes are only in sub-modules or not
+        MavenProject project = getMavenProject( continuumProject, workingDirectory, buildDefinition );
+        List<String> modules = project.getModules();
+
+        List<ChangeFile> files = new ArrayList<ChangeFile>();
+        for ( ChangeSet changeSet : changes )
+        {
+            files.addAll( changeSet.getFiles() );
+        }
+        int i = 0;
+        while ( i <= files.size() - 1 )
+        {
+            ChangeFile file = files.get( i );
+            boolean found = false;
+            for ( String module : modules )
+            {
+                if ( file.getName().indexOf( module ) > 0 )
+                {
+                    files.remove( file );
+                    found = true;
+                    break;
+                }
+            }
+            if ( !found )
+            {
+                i++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        boolean shouldBuild = !files.isEmpty();
+
+        if ( !shouldBuild )
+        {
+            getLogger().info( "Changes are only in sub-modules." );
+        }
+        if ( getLogger().isDebugEnabled() )
+        {
+            getLogger().debug( "shoulbuild = " + shouldBuild );
+        }
+        return shouldBuild;
+    }
+
+    @Override
     protected Map<String, String> getEnvironments( BuildDefinition buildDefinition )
     {
         Profile profile = buildDefinition.getProfile();

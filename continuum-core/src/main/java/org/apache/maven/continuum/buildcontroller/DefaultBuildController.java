@@ -20,6 +20,8 @@ package org.apache.maven.continuum.buildcontroller;
  */
 
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -75,6 +77,11 @@ public class DefaultBuildController
      * @plexus.requirement
      */
     private WorkingDirectoryService workingDirectoryService;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildExecutorManager buildExecutorManager;
 
     // ----------------------------------------------------------------------
     // BuildController Implementation
@@ -155,7 +162,7 @@ public class DefaultBuildController
             {
                 try
                 {
-                    context.setBuildResult( store.getBuildResult( Integer.valueOf( s ).intValue() ) );
+                    context.setBuildResult( store.getBuildResult( Integer.valueOf( s ) ) );
                 }
                 catch ( NumberFormatException e )
                 {
@@ -201,7 +208,7 @@ public class DefaultBuildController
 
                     if ( s != null )
                     {
-                        BuildResult buildResult = store.getBuildResult( Integer.valueOf( s ).intValue() );
+                        BuildResult buildResult = store.getBuildResult( Integer.valueOf( s ) );
                         project.setState( buildResult.getState() );
                     }
                     else
@@ -342,18 +349,17 @@ public class DefaultBuildController
 
         Map actionContext = context.getActionContext();
 
-        actionContext.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
+        actionContext.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
 
         actionContext.put( AbstractContinuumAction.KEY_PROJECT, context.getProject() );
 
-        actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, new Integer( buildDefinitionId ) );
+        actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
 
         actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, context.getBuildDefinition() );
 
-        actionContext.put( AbstractContinuumAction.KEY_TRIGGER, new Integer( trigger ) );
+        actionContext.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
 
-        actionContext.put( AbstractContinuumAction.KEY_FIRST_RUN,
-                           Boolean.valueOf( context.getOldBuildResult() == null ) );
+        actionContext.put( AbstractContinuumAction.KEY_FIRST_RUN, context.getOldBuildResult() == null );
 
         return context;
     }
@@ -532,32 +538,43 @@ public class DefaultBuildController
             }
         }
 
+        // Check changes
+        if ( !shouldBuild && !context.getScmResult().getChanges().isEmpty() )
+        {
+            try
+            {
+                ContinuumBuildExecutor executor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
+                shouldBuild = executor.shouldBuild( context.getScmResult().getChanges(), project,
+                                                    workingDirectoryService.getWorkingDirectory( project ),
+                                                    context.getBuildDefinition() );
+            }
+            catch ( Exception e )
+            {
+                //nothing to do
+            }
+        }
+
         if ( shouldBuild )
         {
-            getLogger().info( "Changes found, building" );
+            getLogger().info( "Changes found in the current project, building" );
         }
         else
         {
-            getLogger().info( "No changes, not building" );
+            getLogger().info( "No changes in the current project, not building" );
 
         }
+
         return shouldBuild;
     }
 
-    private boolean checkAllChangesUnknown( List changes )
+    private boolean checkAllChangesUnknown( List<ChangeSet> changes )
     {
-        for ( Iterator iterChanges = changes.iterator(); iterChanges.hasNext(); )
+        for ( ChangeSet changeSet : changes )
         {
-            ChangeSet changeSet = (ChangeSet) iterChanges.next();
+            List<ChangeFile> changeFiles = changeSet.getFiles();
 
-            List changeFiles = changeSet.getFiles();
-
-            Iterator iterFiles = changeFiles.iterator();
-
-            while ( iterFiles.hasNext() )
+            for ( ChangeFile changeFile : changeFiles )
             {
-                ChangeFile changeFile = (ChangeFile) iterFiles.next();
-
                 if ( !"unknown".equalsIgnoreCase( changeFile.getStatus() ) )
                 {
                     return false;
@@ -578,7 +595,7 @@ public class DefaultBuildController
         {
             for ( Iterator<String> i = messages.iterator(); i.hasNext(); )
             {
-                message.append( (String) i.next() );
+                message.append( i.next() );
 
                 if ( i.hasNext() )
                 {
@@ -599,11 +616,11 @@ public class DefaultBuildController
         try
         {
             Project project = store.getProjectWithAllDetails( context.getProject().getId() );
-            List dependencies = project.getDependencies();
+            List<ProjectDependency> dependencies = project.getDependencies();
 
             if ( dependencies == null )
             {
-                dependencies = new ArrayList();
+                dependencies = new ArrayList<ProjectDependency>();
             }
 
             if ( project.getParent() != null )
@@ -616,11 +633,10 @@ public class DefaultBuildController
                 return;
             }
 
-            List modifiedDependencies = new ArrayList();
+            List<ProjectDependency> modifiedDependencies = new ArrayList<ProjectDependency>();
 
-            for ( Iterator i = dependencies.iterator(); i.hasNext(); )
+            for ( ProjectDependency dep : dependencies )
             {
-                ProjectDependency dep = (ProjectDependency) i.next();
                 Project dependencyProject = store.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
 
                 if ( dependencyProject != null )
@@ -746,28 +762,24 @@ public class DefaultBuildController
 
     private ScmResult getOldScmResult( int projectId, long fromDate )
     {
-        List results = store.getBuildResultsForProject( projectId, fromDate );
+        List<BuildResult> results = store.getBuildResultsForProject( projectId, fromDate );
 
         ScmResult res = new ScmResult();
 
         if ( results != null )
         {
-            for ( Iterator i = results.iterator(); i.hasNext(); )
+            for ( BuildResult result : results )
             {
-                BuildResult result = (BuildResult) i.next();
-
                 ScmResult scmResult = result.getScmResult();
 
                 if ( scmResult != null )
                 {
-                    List changes = scmResult.getChanges();
+                    List<ChangeSet> changes = scmResult.getChanges();
 
                     if ( changes != null )
                     {
-                        for ( Iterator j = changes.iterator(); j.hasNext(); )
+                        for ( ChangeSet changeSet : changes )
                         {
-                            ChangeSet changeSet = (ChangeSet) j.next();
-
                             if ( changeSet.getDate() < fromDate )
                             {
                                 continue;
@@ -788,6 +800,8 @@ public class DefaultBuildController
 
     /**
      * Merges scm results so we'll have all changes since last execution of current build definition
+     *
+     * @param context The build context
      */
     private void mergeScmResults( BuildContext context )
     {
@@ -802,14 +816,12 @@ public class DefaultBuildController
             }
             else
             {
-                List oldChanges = oldScmResult.getChanges();
+                List<ChangeSet> oldChanges = oldScmResult.getChanges();
 
-                List newChanges = newScmResult.getChanges();
+                List<ChangeSet> newChanges = newScmResult.getChanges();
 
-                for ( Iterator i = newChanges.iterator(); i.hasNext(); )
+                for ( ChangeSet change : newChanges )
                 {
-                    ChangeSet change = (ChangeSet) i.next();
-
                     if ( !oldChanges.contains( change ) )
                     {
                         oldChanges.add( change );
@@ -824,6 +836,8 @@ public class DefaultBuildController
     /**
      * Check to see if there was a error while checking out/updating the project
      *
+     * @param context The build context
+     * @return true if scm result is ok
      * @throws TaskExecutionException
      */
     private boolean checkScmResult( BuildContext context )

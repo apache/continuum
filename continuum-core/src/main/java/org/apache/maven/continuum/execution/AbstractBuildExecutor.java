@@ -22,6 +22,7 @@ package org.apache.maven.continuum.execution;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -52,6 +53,7 @@ public abstract class AbstractBuildExecutor
     implements ContinuumBuildExecutor, Initializable
 {
     private static final String SUDO_EXECUTABLE = "sudo";
+
     private static final String CHROOT_EXECUTABLE = "chroot";
 
     // ----------------------------------------------------------------------
@@ -177,9 +179,12 @@ public abstract class AbstractBuildExecutor
 
     /**
      * Find the actual executable path to be used
-     * @param defaultExecutable 
+     *
+     * @param defaultExecutable
+     * @return The executable path
      */
-    protected String findExecutable( Project project, String executable, String defaultExecutable, boolean resolveExecutable, File workingDirectory )
+    protected String findExecutable( Project project, String executable, String defaultExecutable,
+                                     boolean resolveExecutable, File workingDirectory )
     {
         // ----------------------------------------------------------------------
         // If we're not searching the path for the executable, prefix the
@@ -230,7 +235,7 @@ public abstract class AbstractBuildExecutor
         {
             actualExecutable = executable;
         }
-        
+
         return actualExecutable;
     }
 
@@ -255,9 +260,6 @@ public abstract class AbstractBuildExecutor
             {
                 StringBuilder sb = new StringBuilder();
                 sb.append( CHROOT_EXECUTABLE );
-                // TODO see CONTINUUM-1731
-                //sb.append( "su" );
-                //sb.append( username );
                 sb.append( " " );
                 sb.append( new File( chrootJailDirectory, project.getGroupId() ) );
                 sb.append( " " );
@@ -274,9 +276,9 @@ public abstract class AbstractBuildExecutor
                 workingDirectory = chrootJailDirectory; // not really used but must exist
             }
 
-            ExecutionResult result =
-                getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable, arguments, output,
-                                                             project.getId(), environments );
+            ExecutionResult result = getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable,
+                                                                                  arguments, output, project.getId(),
+                                                                                  environments );
 
             getLogger().info( "Exit code: " + result.getExitCode() );
 
@@ -312,8 +314,8 @@ public abstract class AbstractBuildExecutor
         }
         else
         {
-            throw new IllegalArgumentException( "Working directory is not inside the chroot jail " + chrootBase +
-                " , " + path );
+            throw new IllegalArgumentException(
+                "Working directory is not inside the chroot jail " + chrootBase + " , " + path );
         }
     }
 
@@ -339,6 +341,16 @@ public abstract class AbstractBuildExecutor
         //Nothing to do, by default
     }
 
+    /**
+     * By default, we return true because with a change, the projet must be rebuilt.
+     */
+    public boolean shouldBuild( List<ChangeSet> changes, Project continuumProject, File workingDirectory,
+                                BuildDefinition buildDefinition )
+        throws ContinuumBuildExecutorException
+    {
+        return true;
+    }
+
     protected Map<String, String> getEnvironmentVariables( BuildDefinition buildDefinition )
     {
         Profile profile = buildDefinition.getProfile();
@@ -352,9 +364,8 @@ public abstract class AbstractBuildExecutor
         {
             return envVars;
         }
-        for ( Iterator<Installation> iterator = environmentVariables.iterator(); iterator.hasNext(); )
+        for ( Installation installation : environmentVariables )
         {
-            Installation installation = iterator.next();
             envVars.put( installation.getVarName(), installation.getVarValue() );
         }
         return envVars;
@@ -388,7 +399,8 @@ public abstract class AbstractBuildExecutor
 
     public boolean isBuilding( Project project )
     {
-        return project.getState() == ContinuumProjectState.BUILDING || getShellCommandHelper().isRunning( project.getId() );
+        return project.getState() == ContinuumProjectState.BUILDING ||
+            getShellCommandHelper().isRunning( project.getId() );
     }
 
     public void killProcess( Project project )
