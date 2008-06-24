@@ -460,9 +460,9 @@ public class JdoContinuumStore
 
             query.setFilter( "this.project.id == projectId && this.project.latestBuildId == this.id" );
 
-            List result = (List) query.execute( projectId );
+            List<BuildResult> result = (List<BuildResult>) query.execute( projectId );
 
-            result = (List) pm.detachCopyAll( result );
+            result = (List<BuildResult>) pm.detachCopyAll( result );
 
             tx.commit();
 
@@ -501,9 +501,9 @@ public class JdoContinuumStore
             params[0] = projectId;
             params[1] = buildDefinitionId;
 
-            List result = (List) query.executeWithArray( params );
+            List<BuildResult> result = (List<BuildResult>) query.executeWithArray( params );
 
-            result = (List) pm.detachCopyAll( result );
+            result = (List<BuildResult>) pm.detachCopyAll( result );
 
             tx.commit();
 
@@ -519,7 +519,7 @@ public class JdoContinuumStore
         return null;
     }
 
-    public Map getLatestBuildResultsByProjectGroupId( int projectGroupId )
+    public Map<Integer, BuildResult> getLatestBuildResultsByProjectGroupId( int projectGroupId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -577,7 +577,7 @@ public class JdoContinuumStore
         return null;
     }
 
-    public Map getLatestBuildResults()
+    public Map<Integer, BuildResult> getLatestBuildResults()
     {
         return getLatestBuildResultsByProjectGroupId( -1 );
     }
@@ -1681,7 +1681,7 @@ public class JdoContinuumStore
         return results;
     }
 
-    public Map getBuildResultsInSuccessByProjectGroupId( int projectGroupId )
+    public Map<Integer, BuildResult> getBuildResultsInSuccessByProjectGroupId( int projectGroupId )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -1740,7 +1740,7 @@ public class JdoContinuumStore
         return null;
     }
 
-    public Map getBuildResultsInSuccess()
+    public Map<Integer, BuildResult> getBuildResultsInSuccess()
     {
         return getBuildResultsInSuccessByProjectGroupId( -1 );
     }

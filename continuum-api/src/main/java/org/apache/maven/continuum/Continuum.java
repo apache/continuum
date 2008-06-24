@@ -131,13 +131,13 @@ public interface Continuum
 
     BuildResult getLatestBuildResultForProject( int projectId );
 
-    Map getLatestBuildResults( int projectGroupId );
+    Map<Integer, BuildResult> getLatestBuildResults( int projectGroupId );
 
-    Map getLatestBuildResults();
+    Map<Integer, BuildResult> getLatestBuildResults();
 
-    Map getBuildResultsInSuccess( int projectGroupId );
+    Map<Integer, BuildResult> getBuildResultsInSuccess( int projectGroupId );
 
-    Map getBuildResultsInSuccess();
+    Map<Integer, BuildResult> getBuildResultsInSuccess();
 
     // ----------------------------------------------------------------------
     // Queues

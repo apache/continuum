@@ -401,49 +401,49 @@ public class DefaultContinuum
         return store.getAllProjectsByNameWithDependencies();
     }
 
-    public Map getLatestBuildResults( int projectGroupId )
+    public Map<Integer, BuildResult> getLatestBuildResults( int projectGroupId )
     {
-        Map result = store.getLatestBuildResultsByProjectGroupId( projectGroupId );
+        Map<Integer, BuildResult> result = store.getLatestBuildResultsByProjectGroupId( projectGroupId );
 
         if ( result == null )
         {
-            result = new HashMap();
+            result = new HashMap<Integer, BuildResult>();
         }
 
         return result;
     }
 
-    public Map getLatestBuildResults()
+    public Map<Integer, BuildResult> getLatestBuildResults()
     {
-        Map result = store.getLatestBuildResults();
+        Map<Integer, BuildResult> result = store.getLatestBuildResults();
 
         if ( result == null )
         {
-            result = new HashMap();
+            result = new HashMap<Integer, BuildResult>();
         }
 
         return result;
     }
 
-    public Map getBuildResultsInSuccess( int projectGroupId )
+    public Map<Integer, BuildResult> getBuildResultsInSuccess( int projectGroupId )
     {
-        Map result = store.getBuildResultsInSuccessByProjectGroupId( projectGroupId );
+        Map<Integer, BuildResult> result = store.getBuildResultsInSuccessByProjectGroupId( projectGroupId );
 
         if ( result == null )
         {
-            result = new HashMap();
+            result = new HashMap<Integer, BuildResult>();
         }
 
         return result;
     }
 
-    public Map getBuildResultsInSuccess()
+    public Map<Integer, BuildResult> getBuildResultsInSuccess()
     {
-        Map result = store.getBuildResultsInSuccess();
+        Map<Integer, BuildResult> result = store.getBuildResultsInSuccess();
 
         if ( result == null )
         {
-            result = new HashMap();
+            result = new HashMap<Integer, BuildResult>();
         }
 
         return result;
@@ -1071,14 +1071,12 @@ public class DefaultContinuum
 
         for ( Project project : projectsList )
         {
-            List buildDefIds = (List) projectsMap.get( new Integer( project.getId() ) );
+            List<Integer> buildDefIds = (List<Integer>) projectsMap.get( new Integer( project.getId() ) );
 
             if ( buildDefIds != null && !buildDefIds.isEmpty() )
             {
-                for ( Iterator buildDefinitionIterator = buildDefIds.iterator(); buildDefinitionIterator.hasNext(); )
+                for ( Integer buildDefId : buildDefIds )
                 {
-                    Integer buildDefId = (Integer) buildDefinitionIterator.next();
-
                     if ( buildDefId != null && !isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
                         !isInCheckoutQueue( project.getId() ) )
                     {
@@ -1302,7 +1300,7 @@ public class DefaultContinuum
 
         Collections.reverse( buildResults );
 
-        Iterator buildResultsIterator = buildResults.iterator();
+        Iterator<BuildResult> buildResultsIterator = buildResults.iterator();
 
         boolean stop = false;
 
@@ -1746,7 +1744,7 @@ public class DefaultContinuum
         }
 
         // ----------------------------------------------------------------------
-        // Save any new project groups that we've found. Currenly all projects
+        // Save any new project groups that we've found. Currently all projects
         // will go into the first project group in the list.
         // ----------------------------------------------------------------------
 
@@ -2193,8 +2191,9 @@ public class DefaultContinuum
 
         for ( BuildDefinition bd : buildDefinitions )
         {
-            if ( buildDefinition.getId() == buildDefinitionId )
+            if ( bd.getId() == buildDefinitionId )
             {
+            	buildDefinition = bd;
                 break;
             }
         }
@@ -2736,14 +2735,10 @@ public class DefaultContinuum
 
         getLogger().info( "Showing all projects: " );
 
-        for ( Iterator it = store.getAllProjectsByNameWithBuildDetails().iterator(); it.hasNext(); )
+        for ( Project project : store.getAllProjectsByNameWithBuildDetails() )
         {
-            Project project = (Project) it.next();
-
-            for ( Iterator notifierIt = project.getNotifiers().iterator(); notifierIt.hasNext(); )
+            for ( ProjectNotifier notifier : (List<ProjectNotifier>)project.getNotifiers() )
             {
-                ProjectNotifier notifier = (ProjectNotifier) notifierIt.next();
-
                 if ( StringUtils.isEmpty( notifier.getType() ) )
                 {
                     try
@@ -3128,7 +3123,7 @@ public class DefaultContinuum
 
     public Collection<ProjectGroup> getAllProjectGroupsWithProjects()
     {
-        // todo check why this interface isn't throwing exceptions on this guy
+        //TODO: check why this interface isn't throwing exceptions on this guy
         return store.getAllProjectGroupsWithProjects();
     }
 
@@ -3174,11 +3169,6 @@ public class DefaultContinuum
     // ----------------------------------------------------------------------
     // Private Utilities
     // ----------------------------------------------------------------------
-
-    private boolean convertBoolean( String value )
-    {
-        return "true".equalsIgnoreCase( value ) || "on".equalsIgnoreCase( value ) || "yes".equalsIgnoreCase( value );
-    }
 
     private void startMessage()
     {
