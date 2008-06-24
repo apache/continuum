@@ -311,9 +311,9 @@ public interface ContinuumStore
 
     List<BuildResult> getBuildResultsForProject( int projectId, long fromDate );
 
-    Map getLatestBuildResultsByProjectGroupId( int projectGroupId );
+    Map<Integer, BuildResult> getLatestBuildResultsByProjectGroupId( int projectGroupId );
 
-    Map getLatestBuildResults();
+    Map<Integer, BuildResult> getLatestBuildResults();
 
     List<BuildResult> getBuildResultByBuildNumber( int projectId, int buildNumber );
 
@@ -322,9 +322,9 @@ public interface ContinuumStore
     List<BuildResult> getBuildResultsByBuildDefinition( int projectId, int buildDefinitionId, long startIndex,
                                                         long endIndex );
 
-    Map getBuildResultsInSuccess();
+    Map<Integer, BuildResult> getBuildResultsInSuccess();
 
-    Map getBuildResultsInSuccessByProjectGroupId( int projectGroupId );
+    Map<Integer, BuildResult> getBuildResultsInSuccessByProjectGroupId( int projectGroupId );
 
     void addBuildResult( Project project, BuildResult build )
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
