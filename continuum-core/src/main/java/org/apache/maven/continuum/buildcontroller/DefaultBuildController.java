@@ -550,7 +550,7 @@ public class DefaultBuildController
             }
             catch ( Exception e )
             {
-                //nothing to do
+                throw new TaskExecutionException("Can't determine if the project should build or not", e);
             }
         }
 
