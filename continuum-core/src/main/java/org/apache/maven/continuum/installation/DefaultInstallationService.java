@@ -365,9 +365,8 @@ public class DefaultInstallationService
         }
         if ( profile.getEnvironmentVariables() != null )
         {
-            for ( Iterator iterator = profile.getEnvironmentVariables().iterator(); iterator.hasNext(); )
+            for ( Installation installation: (List<Installation>)profile.getEnvironmentVariables() )
             {
-                Installation installation = (Installation) iterator.next();
                 environnments.put( installation.getVarName(), installation.getVarValue() );
             }
         }

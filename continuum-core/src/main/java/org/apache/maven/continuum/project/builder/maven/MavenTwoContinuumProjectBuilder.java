@@ -44,7 +44,6 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -78,7 +77,7 @@ public class MavenTwoContinuumProjectBuilder
     /**
      * @plexus.configuration
      */
-    private List excludedPackagingTypes = new ArrayList();
+    private List<String> excludedPackagingTypes = new ArrayList<String>();
 
     // ----------------------------------------------------------------------
     // AbstractContinuumProjectBuilder Implementation
@@ -279,7 +278,7 @@ public class MavenTwoContinuumProjectBuilder
             result.addProject( continuumProject, MavenTwoBuildExecutor.ID );
         }
 
-        List modules = mavenProject.getModules();
+        List<String> modules = mavenProject.getModules();
 
         String prefix = url.toExternalForm();
 
@@ -303,10 +302,8 @@ public class MavenTwoContinuumProjectBuilder
         prefix = prefix.substring( 0, lastSlash );
         if ( loadRecursiveProjects )
         {
-            for ( Iterator it = modules.iterator(); it.hasNext(); )
+            for ( String module : modules )
             {
-                String module = (String) it.next();
-
                 if ( StringUtils.isNotEmpty( module ) )
                 {
                     String urlString = prefix + "/" + module + POM_PART + suffix;
@@ -345,9 +342,8 @@ public class MavenTwoContinuumProjectBuilder
         throws ContinuumProjectBuilderException, BuildDefinitionServiceException
     {
         List<BuildDefinition> buildDefinitions = new ArrayList<BuildDefinition>();
-        for ( Iterator<BuildDefinition> iterator = template.getBuildDefinitions().iterator(); iterator.hasNext(); )
+        for ( BuildDefinition buildDefinition : (List<BuildDefinition>)template.getBuildDefinitions() )
         {
-            BuildDefinition buildDefinition = iterator.next();
             // due to CONTINUUM-1207 CONTINUUM-1436 user can do what they want with arguments
             // we must remove if exists --non-recursive or -N
             if ( !loadRecursiveProjects )
