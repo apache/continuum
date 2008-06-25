@@ -489,7 +489,7 @@ public class ContinuumStoreTest
         firstEnvVar = store.addInstallation( firstEnvVar );
         secondEnvVar = store.addInstallation( secondEnvVar );
 
-        List envVars = new ArrayList<Installation>( 2 );
+        List<Installation> envVars = new ArrayList<Installation>( 2 );
         envVars.add( firstEnvVar );
         envVars.add( secondEnvVar );
 

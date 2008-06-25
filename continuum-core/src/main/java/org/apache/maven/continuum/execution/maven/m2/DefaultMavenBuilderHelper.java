@@ -209,12 +209,10 @@ public class DefaultMavenBuilderHelper
 
         if ( mavenProject.getDevelopers() != null )
         {
-            List developers = new ArrayList();
+            List<ProjectDeveloper> developers = new ArrayList<ProjectDeveloper>();
 
-            for ( Iterator i = mavenProject.getDevelopers().iterator(); i.hasNext(); )
+            for ( Developer d : (List<Developer>)mavenProject.getDevelopers() )
             {
-                Developer d = (Developer) i.next();
-
                 ProjectDeveloper cd = new ProjectDeveloper();
 
                 cd.setScmId( d.getId() );
@@ -252,12 +250,10 @@ public class DefaultMavenBuilderHelper
         // Dependencies
         // ----------------------------------------------------------------------
 
-        List dependencies = new ArrayList();
+        List<ProjectDependency> dependencies = new ArrayList<ProjectDependency>();
 
-        for ( Iterator i = mavenProject.getDependencies().iterator(); i.hasNext(); )
+        for ( Dependency dependency : (List<Dependency>)mavenProject.getDependencies() )
         {
-            Dependency dependency = (Dependency) i.next();
-
             ProjectDependency cd = new ProjectDependency();
 
             cd.setGroupId( dependency.getGroupId() );
@@ -269,10 +265,8 @@ public class DefaultMavenBuilderHelper
             dependencies.add( cd );
         }
 
-        for ( Iterator i = mavenProject.getBuildPlugins().iterator(); i.hasNext(); )
+        for ( Plugin dependency : (List<Plugin>)mavenProject.getBuildPlugins() )
         {
-            Plugin dependency = (Plugin) i.next();
-
             ProjectDependency cd = new ProjectDependency();
 
             cd.setGroupId( dependency.getGroupId() );
@@ -284,10 +278,8 @@ public class DefaultMavenBuilderHelper
             dependencies.add( cd );
         }
 
-        for ( Iterator i = mavenProject.getReportPlugins().iterator(); i.hasNext(); )
+        for ( ReportPlugin dependency : (List<ReportPlugin>)mavenProject.getReportPlugins() )
         {
-            ReportPlugin dependency = (ReportPlugin) i.next();
-
             ProjectDependency cd = new ProjectDependency();
 
             cd.setGroupId( dependency.getGroupId() );
@@ -299,10 +291,8 @@ public class DefaultMavenBuilderHelper
             dependencies.add( cd );
         }
 
-        for ( Iterator i = mavenProject.getBuildExtensions().iterator(); i.hasNext(); )
+        for ( Extension dependency : (List<Extension>)mavenProject.getBuildExtensions() )
         {
-            Extension dependency = (Extension) i.next();
-
             ProjectDependency cd = new ProjectDependency();
 
             cd.setGroupId( dependency.getGroupId() );
@@ -320,7 +310,7 @@ public class DefaultMavenBuilderHelper
         // Notifiers
         // ----------------------------------------------------------------------
 
-        List userNotifiers = new ArrayList();
+        List<ProjectNotifier> userNotifiers = new ArrayList<ProjectNotifier>();
 
         if ( continuumProject.getNotifiers() != null )
         {
@@ -355,16 +345,14 @@ public class DefaultMavenBuilderHelper
             }
         }
 
-        List notifiers = getNotifiers( result, mavenProject, continuumProject );
+        List<ProjectNotifier> notifiers = getNotifiers( result, mavenProject, continuumProject );
         if ( notifiers != null )
         {
             continuumProject.setNotifiers( notifiers );
         }
 
-        for ( Iterator i = userNotifiers.iterator(); i.hasNext(); )
+        for ( ProjectNotifier notifier : userNotifiers )
         {
-            ProjectNotifier notifier = (ProjectNotifier) i.next();
-
             continuumProject.addNotifier( notifier );
         }
     }
@@ -418,9 +406,9 @@ public class DefaultMavenBuilderHelper
 
                 if ( validationResult != null && validationResult.getMessageCount() > 0 )
                 {
-                    for ( Iterator i = validationResult.getMessages().iterator(); i.hasNext(); )
+                    for ( Iterator<String> i = validationResult.getMessages().iterator(); i.hasNext(); )
                     {
-                        String valmsg = (String) i.next();
+                        String valmsg = i.next();
                         result.addError( ContinuumProjectBuildingResult.ERROR_VALIDATION, valmsg );
                         messages.append( valmsg );
                         messages.append( "\n" );
@@ -517,17 +505,15 @@ public class DefaultMavenBuilderHelper
         return project.getScm().getConnection();
     }
 
-    private List getNotifiers( ContinuumProjectBuildingResult result, MavenProject mavenProject,
+    private List<ProjectNotifier> getNotifiers( ContinuumProjectBuildingResult result, MavenProject mavenProject,
                                Project continuumProject )
     {
-        List notifiers = new ArrayList();
+        List<ProjectNotifier> notifiers = new ArrayList<ProjectNotifier>();
 
         if ( mavenProject.getCiManagement() != null && mavenProject.getCiManagement().getNotifiers() != null )
         {
-            for ( Iterator i = mavenProject.getCiManagement().getNotifiers().iterator(); i.hasNext(); )
+            for ( Notifier projectNotifier : (List<Notifier>)mavenProject.getCiManagement().getNotifiers() )
             {
-                Notifier projectNotifier = (Notifier) i.next();
-
                 ProjectNotifier notifier = new ProjectNotifier();
 
                 if ( StringUtils.isEmpty( projectNotifier.getType() ) )
@@ -668,7 +654,7 @@ public class DefaultMavenBuilderHelper
 
     private void writeActiveProfileStatement( MavenProject project )
     {
-        List profiles = project.getActiveProfiles();
+        List<Profile> profiles = project.getActiveProfiles();
 
         StringBuffer message = new StringBuffer();
 
@@ -687,10 +673,8 @@ public class DefaultMavenBuilderHelper
         {
             message.append( "The following profiles are active:\n" );
 
-            for ( Iterator it = profiles.iterator(); it.hasNext(); )
+            for ( Profile profile : profiles )
             {
-                Profile profile = (Profile) it.next();
-
                 message.append( "\n - " ).append( profile.getId() ).append( " (source: " )
                     .append( profile.getSource() ).append( ")" );
             }
@@ -729,9 +713,9 @@ public class DefaultMavenBuilderHelper
                                        proxy.getPassword(), proxy.getNonProxyHosts() );
             }
 
-            for ( Iterator i = settings.getServers().iterator(); i.hasNext(); )
+            for ( Iterator<Server> i = settings.getServers().iterator(); i.hasNext(); )
             {
-                Server server = (Server) i.next();
+                Server server = i.next();
 
                 wagonManager.addAuthenticationInfo( server.getId(), server.getUsername(), server.getPassword(),
                                                     server.getPrivateKey(), server.getPassphrase() );
@@ -745,9 +729,9 @@ public class DefaultMavenBuilderHelper
                 }
             }
 
-            for ( Iterator i = settings.getMirrors().iterator(); i.hasNext(); )
+            for ( Iterator<Mirror> i = settings.getMirrors().iterator(); i.hasNext(); )
             {
-                Mirror mirror = (Mirror) i.next();
+                Mirror mirror = i.next();
 
                 wagonManager.addMirror( mirror.getId(), mirror.getMirrorOf(), mirror.getUrl() );
             }

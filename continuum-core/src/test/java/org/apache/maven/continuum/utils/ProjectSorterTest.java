@@ -43,7 +43,7 @@ public class ProjectSorterTest
     public void testBasicNestedProjectStructure()
         throws Exception
     {
-        List list = new ArrayList();
+        List<Project> list = new ArrayList<Project>();
 
         Project top = getNewProject( "top" );
         list.add( top );
@@ -57,7 +57,7 @@ public class ProjectSorterTest
         c2.setDependencies( Collections.singletonList( generateProjectDependency( c1 ) ) );
         list.add( c2 );
 
-        List sortedList = ProjectSorter.getSortedProjects( list, null );
+        List<Project> sortedList = ProjectSorter.getSortedProjects( list, null );
 
         assertNotNull( sortedList );
 
@@ -78,7 +78,7 @@ public class ProjectSorterTest
     public void testIncompleteNestedProjectStructure()
         throws Exception
     {
-        List list = new ArrayList();
+        List<Project> list = new ArrayList<Project>();
 
         Project top = getNewProject( "top" );
         list.add( top );
@@ -92,7 +92,7 @@ public class ProjectSorterTest
         c2.setDependencies( Collections.singletonList( generateProjectDependency( c1 ) ) );
         list.add( c2 );
 
-        List sortedList = ProjectSorter.getSortedProjects( list, null );
+        List<Project> sortedList = ProjectSorter.getSortedProjects( list, null );
 
         assertNotNull( sortedList );
 

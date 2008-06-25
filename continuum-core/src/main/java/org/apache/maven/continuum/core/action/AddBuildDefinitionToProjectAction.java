@@ -33,7 +33,6 @@ import java.util.Map;
 public class AddBuildDefinitionToProjectAction
     extends AbstractBuildDefinitionContinuumAction
 {
-
     public void execute( Map map )
         throws Exception
     {

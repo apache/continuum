@@ -30,7 +30,9 @@ import org.codehaus.plexus.taskqueue.Task;
 public class BuildProjectTask
     implements Task, Serializable
 {    
-    private int projectId;
+	private static final long serialVersionUID = 3647734422022017812L;
+
+	private int projectId;
 
     private int buildDefinitionId;
 

@@ -19,7 +19,6 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.continuum.ContinuumException;
@@ -142,17 +141,15 @@ public abstract class AbstractBuildDefinitionContinuumAction
      * @param buildDefinition
      * @throws ContinuumException
      */
-    protected BuildDefinition updateBuildDefinitionInList( List buildDefinitions, BuildDefinition buildDefinition )
+    protected BuildDefinition updateBuildDefinitionInList( List<BuildDefinition> buildDefinitions, BuildDefinition buildDefinition )
         throws ContinuumException
     {
         try
         {
             BuildDefinition storedDefinition = null;
 
-            for ( Iterator i = buildDefinitions.iterator(); i.hasNext(); )
+            for ( BuildDefinition bd : buildDefinitions )
             {
-                BuildDefinition bd = (BuildDefinition) i.next();
-
                 if ( bd.getId() == buildDefinition.getId() )
                 {
                     storedDefinition = bd;
