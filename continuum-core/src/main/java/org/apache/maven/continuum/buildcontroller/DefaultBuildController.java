@@ -472,8 +472,6 @@ public class DefaultBuildController
             return true;
         }
 
-        boolean shouldBuild = true;
-
         Project project = context.getProject();
 
         //CONTINUUM-1428
@@ -484,13 +482,17 @@ public class DefaultBuildController
             return true;
         }
 
+        boolean shouldBuild = false;
+
+        boolean allChangesUnknown = true;
+
         if ( project.getOldState() != ContinuumProjectState.NEW &&
             project.getOldState() != ContinuumProjectState.CHECKEDOUT &&
             context.getTrigger() != ContinuumProjectState.TRIGGER_FORCED &&
             project.getState() != ContinuumProjectState.NEW && project.getState() != ContinuumProjectState.CHECKEDOUT )
         {
             // Check SCM changes
-            boolean allChangesUnknown = checkAllChangesUnknown( context.getScmResult().getChanges() );
+            allChangesUnknown = checkAllChangesUnknown( context.getScmResult().getChanges() );
 
             if ( allChangesUnknown )
             {
@@ -504,42 +506,18 @@ public class DefaultBuildController
                     getLogger().info(
                         "The project was not built because no changes were detected in sources since the last build." );
                 }
-
-                project.setState( project.getOldState() );
-
-                project.setOldState( 0 );
-
-                try
-                {
-                    store.updateProject( project );
-                }
-                catch ( ContinuumStoreException e )
-                {
-                    throw new TaskExecutionException( "Error storing project", e );
-                }
-
-                shouldBuild = false;
-
-                // Check dependencies changes
-                if ( context.getModifiedDependencies() != null && !context.getModifiedDependencies().isEmpty() )
-                {
-                    getLogger().info( "Found dependencies changes, building" );
-                    shouldBuild = true;
-                }
             }
-            else
+
+            // Check dependencies changes
+            if ( context.getModifiedDependencies() != null && !context.getModifiedDependencies().isEmpty() )
             {
-                // Check dependencies changes
-                if ( context.getModifiedDependencies() != null && !context.getModifiedDependencies().isEmpty() )
-                {
-                    getLogger().info( "Found dependencies changes, building" );
-                    shouldBuild = true;
-                }
+                getLogger().info( "Found dependencies changes, building" );
+                shouldBuild = true;
             }
         }
 
         // Check changes
-        if ( !shouldBuild && !context.getScmResult().getChanges().isEmpty() )
+        if ( !shouldBuild && !allChangesUnknown && !context.getScmResult().getChanges().isEmpty() )
         {
             try
             {
@@ -560,6 +538,18 @@ public class DefaultBuildController
         }
         else
         {
+            project.setState( project.getOldState() );
+
+            project.setOldState( 0 );
+
+            try
+            {
+                store.updateProject( project );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new TaskExecutionException( "Error storing project", e );
+            }
             getLogger().info( "No changes in the current project, not building" );
 
         }
