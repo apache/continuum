@@ -67,7 +67,7 @@ public abstract class AbstractContinuumTest
 
         setUpConfigurationService( (ConfigurationService) lookup( ConfigurationService.ROLE ) );
 
-        Collection projectGroups = store.getAllProjectGroupsWithProjects();
+        Collection<ProjectGroup> projectGroups = store.getAllProjectGroupsWithProjects();
 
         assertEquals( 0, projectGroups.size() );
 
@@ -225,7 +225,7 @@ public abstract class AbstractContinuumTest
 
         makeProject( project, name, version );
 
-        List notifiers = createMailNotifierList( emailAddress );
+        List<ProjectNotifier> notifiers = createMailNotifierList( emailAddress );
 
         project.setNotifiers( notifiers );
 
@@ -259,7 +259,7 @@ public abstract class AbstractContinuumTest
         return project;
     }
 
-    protected static List createMailNotifierList( String emailAddress )
+    protected static List<ProjectNotifier> createMailNotifierList( String emailAddress )
     {
         if ( emailAddress == null )
         {
@@ -276,7 +276,7 @@ public abstract class AbstractContinuumTest
 
         notifier.setConfiguration( props );
 
-        List notifiers = new ArrayList();
+        List<ProjectNotifier> notifiers = new ArrayList<ProjectNotifier>();
 
         notifiers.add( notifier );
 
@@ -349,7 +349,7 @@ public abstract class AbstractContinuumTest
         assertProjectEquals( name, createMailNotifierList( emailAddress ), version, actual );
     }
 
-    public void assertProjectEquals( String name, List notifiers, String version, Project actual )
+    public void assertProjectEquals( String name, List<ProjectNotifier> notifiers, String version, Project actual )
     {
         assertEquals( "project.name", name, actual.getName() );
 

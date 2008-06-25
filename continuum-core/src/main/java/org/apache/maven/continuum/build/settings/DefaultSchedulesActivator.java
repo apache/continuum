@@ -37,7 +37,6 @@ import org.quartz.SchedulerException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -66,12 +65,10 @@ public class DefaultSchedulesActivator
     {
         getLogger().info( "Activating schedules ..." );
 
-        Collection schedules = store.getAllSchedulesByName();
+        Collection<Schedule> schedules = store.getAllSchedulesByName();
 
-        for ( Iterator i = schedules.iterator(); i.hasNext(); )
+        for ( Schedule schedule : schedules )
         {
-            Schedule schedule = (Schedule) i.next();
-
             if ( StringUtils.isEmpty( schedule.getCronExpression() ) )
             {
                 // TODO: this can possibly be removed but it's here now to

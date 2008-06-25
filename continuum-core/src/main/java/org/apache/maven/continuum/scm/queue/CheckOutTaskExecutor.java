@@ -78,7 +78,7 @@ public class CheckOutTaskExecutor
 
         String workingDirectory = task.getWorkingDirectory().getAbsolutePath();
 
-        Map context = new HashMap();
+        Map<String, Object> context = new HashMap<String, Object>();
 
         context.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
 

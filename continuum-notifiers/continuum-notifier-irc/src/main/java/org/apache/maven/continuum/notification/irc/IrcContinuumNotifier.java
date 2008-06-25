@@ -84,7 +84,7 @@ public class IrcContinuumNotifier
      */
     private Map<String, IRCConnection> hostConnections = new HashMap<String, IRCConnection>();
 
-    private Map<String, List> channelConnections = new HashMap<String, List>();
+    private Map<String, List<String>> channelConnections = new HashMap<String, List<String>>();
 
 
     // ----------------------------------------------------------------------
@@ -170,12 +170,11 @@ public class IrcContinuumNotifier
             }
 
             //join to all channels
-            List channels = channelConnections.get( key );
+            List<String> channels = channelConnections.get( key );
             if ( channels != null )
             {
-                for ( Iterator i = channels.iterator(); i.hasNext(); )
+                for ( String channel : channels )
                 {
-                    String channel = (String) i.next();
                     connectToChannel( conn, channel );
                 }
             }
@@ -184,20 +183,19 @@ public class IrcContinuumNotifier
 
     private void checkChannel( IRCConnection conn, String key, String channel )
     {
-        List channels = channelConnections.get( key );
+        List<String> channels = channelConnections.get( key );
         if ( channels == null )
         {
             connectToChannel( conn, channel );
-            channels = new ArrayList();
+            channels = new ArrayList<String>();
             channels.add( channel );
             channelConnections.put( key, channels );
         }
         else
         {
             boolean found = false;
-            for ( Iterator i = channels.iterator(); i.hasNext(); )
+            for ( String c : channels )
             {
-                String c = (String) i.next();
                 if ( c.equalsIgnoreCase( channel ) )
                 {
                     found = true;

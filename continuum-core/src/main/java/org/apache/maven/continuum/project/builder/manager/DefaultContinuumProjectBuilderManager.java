@@ -37,7 +37,7 @@ public class DefaultContinuumProjectBuilderManager
     /**
      * @plexus.requirement role="org.apache.maven.continuum.project.builder.ContinuumProjectBuilder"
      */
-    private Map projectBuilders;
+    private Map<String, ContinuumProjectBuilder> projectBuilders;
 
     // ----------------------------------------------------------------------
     // ProjectCreatorManager Implementation

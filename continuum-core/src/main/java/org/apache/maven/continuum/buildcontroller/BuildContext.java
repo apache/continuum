@@ -47,7 +47,7 @@ public class BuildContext
 
     private ScmResult oldScmResult;
 
-    private Map actionContext;
+    private Map<String, Object> actionContext;
 
     private ScmResult scmResult;
 
@@ -127,11 +127,11 @@ public class BuildContext
         return scmResult;
     }
 
-    public Map getActionContext()
+    public Map<String, Object> getActionContext()
     {
         if ( actionContext == null )
         {
-            actionContext = new HashMap();
+            actionContext = new HashMap<String, Object>();
         }
         return actionContext;
     }
