@@ -477,7 +477,7 @@ public abstract class AbstractContinuumStoreTestCase
         assertScheduleEquals( testSchedule2, store.getSchedule( testSchedule2.getId() ) );
         assertScheduleEquals( testSchedule3, store.getSchedule( testSchedule3.getId() ) );
 
-        Iterator iterator = store.getAllInstallations().iterator();
+        Iterator<Installation> iterator = store.getAllInstallations().iterator();
         assertInstallationEquals( testInstallationJava13, (Installation) iterator.next() );
         assertInstallationEquals( testInstallationJava14, (Installation) iterator.next() );
         assertInstallationEquals( testInstallationMaven20a3, (Installation) iterator.next() );
@@ -692,7 +692,7 @@ public abstract class AbstractContinuumStoreTestCase
     protected static ProjectNotifier createTestNotifier( int recipientType, boolean sendOnError, boolean sendOnFailure,
                                                          boolean sendOnSuccess, String type )
     {
-        Map configuration = new HashMap();
+        Map<String, String> configuration = new HashMap<String, String>();
         configuration.put( "key1", "value1" );
         configuration.put( "key2", "value2" );
 
@@ -721,7 +721,7 @@ public abstract class AbstractContinuumStoreTestCase
         scmResult.setProviderMessage( providerMessage );
         scmResult.setSuccess( success );
 
-        List changes = new ArrayList();
+        List<ChangeSet> changes = new ArrayList<ChangeSet>();
         changes.add( createTestChangeSet( "author" + base + ".1", "comment" + base + ".1", base + ".1" ) );
         changes.add( createTestChangeSet( "author" + base + ".2", "comment" + base + ".2", base + ".2" ) );
         scmResult.setChanges( changes );
@@ -734,7 +734,7 @@ public abstract class AbstractContinuumStoreTestCase
         changeSet.setAuthor( author );
         changeSet.setComment( comment );
         changeSet.setDate( System.currentTimeMillis() );
-        List files = new ArrayList();
+        List<ChangeFile> files = new ArrayList<ChangeFile>();
         files.add( createTestChangeFile( "name" + base + ".1", "rev" + base + ".1" ) );
         files.add( createTestChangeFile( "name" + base + ".2", "rev" + base + ".2" ) );
         files.add( createTestChangeFile( "name" + base + ".3", "rev" + base + ".3" ) );
@@ -824,7 +824,7 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected static Profile createTestProfile( String name, String description, int scmMode,
                                                 boolean buildWithoutChanges, boolean active, Installation jdk,
-                                                Installation builder, List envVars )
+                                                Installation builder, List<Installation> envVars )
     {
         Profile profile = new Profile();
         profile.setActive( active );
@@ -991,11 +991,11 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare change file result - revision", expected.getRevision(), actual.getRevision() );
     }
 
-    protected static void assertNotifiersEqual( List expected, List actual )
+    protected static void assertNotifiersEqual( List<ProjectNotifier> expected, List<ProjectNotifier> actual )
     {
         for ( int i = 0; i < actual.size(); i++ )
         {
-            assertNotifierEquals( (ProjectNotifier) expected.get( i ), (ProjectNotifier) actual.get( i ) );
+            assertNotifierEquals( expected.get( i ), actual.get( i ) );
         }
     }
 
@@ -1009,12 +1009,13 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare notifier - send on error", expected.isSendOnError(), actual.isSendOnError() );
     }
 
-    protected static void assertBuildDefinitionsEqual( List expectedBuildDefinitions, List actualBuildDefinitions )
+    protected static void assertBuildDefinitionsEqual( List<BuildDefinition> expectedBuildDefinitions,
+    												   List<BuildDefinition> actualBuildDefinitions )
     {
         for ( int i = 0; i < expectedBuildDefinitions.size(); i++ )
         {
-            BuildDefinition expectedBuildDefinition = (BuildDefinition) expectedBuildDefinitions.get( i );
-            BuildDefinition actualBuildDefinition = (BuildDefinition) actualBuildDefinitions.get( i );
+            BuildDefinition expectedBuildDefinition = expectedBuildDefinitions.get( i );
+            BuildDefinition actualBuildDefinition = actualBuildDefinitions.get( i );
             assertBuildDefinitionEquals( expectedBuildDefinition, actualBuildDefinition );
             assertScheduleEquals( expectedBuildDefinition.getSchedule(), actualBuildDefinition.getSchedule() );
             assertProfileEquals( expectedBuildDefinition.getProfile(), actualBuildDefinition.getProfile() );
@@ -1036,7 +1037,8 @@ public abstract class AbstractContinuumStoreTestCase
                       actualBuildDefinition.isDefaultForProject() );
     }
 
-    protected static void assertDevelopersEqual( List expectedDevelopers, List actualDevelopers )
+    protected static void assertDevelopersEqual( List<ProjectDeveloper> expectedDevelopers,
+    		                                     List<ProjectDeveloper> actualDevelopers )
     {
         for ( int i = 0; i < actualDevelopers.size(); i++ )
         {
@@ -1054,7 +1056,8 @@ public abstract class AbstractContinuumStoreTestCase
             .getContinuumId() );
     }
 
-    protected static void assertDependenciesEqual( List expectedDependencies, List actualDependencies )
+    protected static void assertDependenciesEqual( List<ProjectDependency> expectedDependencies,
+    		                                       List<ProjectDependency> actualDependencies )
     {
         for ( int i = 0; i < actualDependencies.size(); i++ )
         {
