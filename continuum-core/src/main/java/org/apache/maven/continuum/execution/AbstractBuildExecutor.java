@@ -19,6 +19,7 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -39,7 +40,6 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -189,7 +189,7 @@ public abstract class AbstractBuildExecutor
         // ----------------------------------------------------------------------
         // If we're not searching the path for the executable, prefix the
         // executable with the working directory to make sure the path is
-        // absolute and thus won't be tried resoled by using the PATH
+        // absolute and thus won't be tried resolved by using the PATH
         // ----------------------------------------------------------------------
 
         String actualExecutable;
@@ -200,7 +200,7 @@ public abstract class AbstractBuildExecutor
         }
         else
         {
-            List path = executableResolver.getDefaultPath();
+            List<String> path = executableResolver.getDefaultPath();
 
             if ( StringUtils.isEmpty( executable ) )
             {
@@ -213,10 +213,8 @@ public abstract class AbstractBuildExecutor
             {
                 getLogger().warn( "Could not find the executable '" + executable + "' in this path: " );
 
-                for ( Iterator it = path.iterator(); it.hasNext(); )
+                for ( String element : path )
                 {
-                    String element = (String) it.next();
-
                     getLogger().warn( element );
                 }
 
@@ -342,7 +340,7 @@ public abstract class AbstractBuildExecutor
     }
 
     /**
-     * By default, we return true because with a change, the projet must be rebuilt.
+     * By default, we return true because with a change, the project must be rebuilt.
      */
     public boolean shouldBuild( List<ChangeSet> changes, Project continuumProject, File workingDirectory,
                                 BuildDefinition buildDefinition )
@@ -408,7 +406,7 @@ public abstract class AbstractBuildExecutor
         getShellCommandHelper().killProcess( project.getId() );
     }
 
-    public List getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
+    public List<Artifact> getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException
     {
         // Not supported by this builder
