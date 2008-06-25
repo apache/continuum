@@ -19,6 +19,7 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeSet;
@@ -47,7 +48,7 @@ public interface ContinuumBuildExecutor
     void killProcess( Project project );
 
     // TODO: are these part of the builder interface, or a separate project/build definition interface?
-    List getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
+    List<Artifact> getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException;
 
     //TODO: Move as a plugin

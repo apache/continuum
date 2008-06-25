@@ -19,6 +19,17 @@ package org.apache.maven.continuum.execution.maven.m2;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.continuum.configuration.ConfigurationException;
@@ -42,16 +53,6 @@ import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -209,7 +210,7 @@ public class MavenTwoBuildExecutor
     }
 
     @Override
-    public List getDeployableArtifacts( Project continuumProject, File workingDirectory,
+    public List<Artifact> getDeployableArtifacts( Project continuumProject, File workingDirectory,
                                         BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException
     {
@@ -407,6 +408,7 @@ public class MavenTwoBuildExecutor
         {
             files.addAll( changeSet.getFiles() );
         }
+
         int i = 0;
         while ( i <= files.size() - 1 )
         {
@@ -437,6 +439,7 @@ public class MavenTwoBuildExecutor
         {
             getLogger().info( "Changes are only in sub-modules." );
         }
+
         if ( getLogger().isDebugEnabled() )
         {
             getLogger().debug( "shoulbuild = " + shouldBuild );

@@ -102,14 +102,12 @@ public class DeployArtifactContinuumAction
             {
                 BuildDefinition buildDefinition = getBuildDefinition( context );
 
-                List artifacts = buildExecutor.getDeployableArtifacts( project,
+                List<Artifact> artifacts = buildExecutor.getDeployableArtifacts( project,
                                                                        workingDirectoryService.getWorkingDirectory(
                                                                            project ), buildDefinition );
 
-                for ( Iterator i = artifacts.iterator(); i.hasNext(); )
+                for ( Artifact artifact : artifacts )
                 {
-                    Artifact artifact = (Artifact) i.next();
-
                     ArtifactRepository localRepository = builderHelper.getLocalRepository();
 
                     ArtifactRepositoryLayout repositoryLayout = new DefaultRepositoryLayout();
