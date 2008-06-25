@@ -26,7 +26,9 @@ package org.apache.maven.continuum.configuration;
 public class ConfigurationException
     extends Exception
 {
-    public ConfigurationException( String message )
+	private static final long serialVersionUID = 5598659641431851660L;
+
+	public ConfigurationException( String message )
     {
         super( message );
     }

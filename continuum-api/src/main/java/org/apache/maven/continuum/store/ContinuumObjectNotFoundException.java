@@ -26,7 +26,9 @@ package org.apache.maven.continuum.store;
 public class ContinuumObjectNotFoundException
     extends ContinuumStoreException
 {
-    public ContinuumObjectNotFoundException( String message )
+	private static final long serialVersionUID = 6022595625968612620L;
+
+	public ContinuumObjectNotFoundException( String message )
     {
         super( message );
     }

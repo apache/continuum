@@ -26,7 +26,9 @@ package org.apache.maven.continuum.execution.maven.m1;
 public class MavenOneMetadataHelperException
     extends Exception
 {
-    public MavenOneMetadataHelperException( String message )
+	private static final long serialVersionUID = -5868938464601717160L;
+
+	public MavenOneMetadataHelperException( String message )
     {
         super( message );
     }

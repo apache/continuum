@@ -26,7 +26,9 @@ package org.apache.maven.continuum.execution.manager;
 public class BuildExecutorNotFoundException
     extends Exception
 {
-    public BuildExecutorNotFoundException( String message )
+	private static final long serialVersionUID = 2709593430202284107L;
+
+	public BuildExecutorNotFoundException( String message )
     {
         super( message );
     }

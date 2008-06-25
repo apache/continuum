@@ -26,7 +26,9 @@ package org.apache.maven.continuum.initialization;
 public class ContinuumInitializationException
     extends Exception
 {
-    public ContinuumInitializationException( String message )
+	private static final long serialVersionUID = 7629046230318917696L;
+
+	public ContinuumInitializationException( String message )
     {
         super( message );
     }

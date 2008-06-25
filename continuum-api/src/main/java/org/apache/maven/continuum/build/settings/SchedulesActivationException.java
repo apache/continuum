@@ -26,7 +26,12 @@ package org.apache.maven.continuum.build.settings;
 public class SchedulesActivationException
     extends Exception
 {
-    public SchedulesActivationException( String message )
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7901082128754563858L;
+
+	public SchedulesActivationException( String message )
     {
         super( message );
     }
