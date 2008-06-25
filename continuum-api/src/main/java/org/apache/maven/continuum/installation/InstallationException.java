@@ -26,7 +26,9 @@ package org.apache.maven.continuum.installation;
 public class InstallationException
     extends Exception
 {
-    public InstallationException( String message )
+	private static final long serialVersionUID = 5055136446336281496L;
+
+	public InstallationException( String message )
     {
         super( message );
     }

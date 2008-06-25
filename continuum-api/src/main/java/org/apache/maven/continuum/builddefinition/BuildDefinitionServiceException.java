@@ -26,8 +26,9 @@ package org.apache.maven.continuum.builddefinition;
 public class BuildDefinitionServiceException
     extends Exception
 {
+	private static final long serialVersionUID = -399833410192238226L;
 
-    /**
+	/**
      * 
      */
     public BuildDefinitionServiceException()

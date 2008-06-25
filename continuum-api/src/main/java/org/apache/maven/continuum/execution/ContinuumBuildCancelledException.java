@@ -26,7 +26,9 @@ package org.apache.maven.continuum.execution;
 public class ContinuumBuildCancelledException
     extends ContinuumBuildExecutorException
 {
-    public ContinuumBuildCancelledException( String message )
+	private static final long serialVersionUID = 6658199253278756183L;
+
+	public ContinuumBuildCancelledException( String message )
     {
         super( message );
     }

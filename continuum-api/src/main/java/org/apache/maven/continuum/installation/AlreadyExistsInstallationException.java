@@ -29,8 +29,9 @@ import org.apache.maven.continuum.ContinuumException;
 public class AlreadyExistsInstallationException
     extends ContinuumException
 {
+	private static final long serialVersionUID = -7673670059441370868L;
 
-    /**
+	/**
      * @param message
      */
     public AlreadyExistsInstallationException( String message )

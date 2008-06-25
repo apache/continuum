@@ -29,8 +29,9 @@ import org.apache.maven.continuum.ContinuumException;
 public class AlreadyExistsProfileException
     extends ContinuumException
 {
+	private static final long serialVersionUID = -3827218055154032672L;
 
-    /**
+	/**
      * @param message
      */
     public AlreadyExistsProfileException( String message )
