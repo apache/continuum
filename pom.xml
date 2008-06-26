@@ -35,6 +35,16 @@
     <maven>2.0.7</maven>
   </prerequisites>
 
+  <ciManagement>
+    <system>continuum</system>
+    <url>http://vmbuild.apache.org</url>
+    <notifiers>
+      <notifier>
+        <address>notifications@continuum.apache.org</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/trunk/</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk/</developerConnection>
