@@ -26,15 +26,57 @@
   <defaults>
     <default>
       <key>package</key>
-      <value>org.apache.maven.continuum.configuration</value>
+      <value>org.apache.continuum.configuration</value>
     </default>
   </defaults>
   <classes>
     <class rootElement="true" xml.tagName="configuration">
       <name>Configuration</name>
-      <version>1.1.0+</version>
+      <version>1.2.0+</version>
       <fields>
-        <!-- Reserved for future configuration -->
+        <field>
+          <name>generalConfiguration</name>
+          <version>1.2.0+</version>
+          <required>false</required>
+          <association>
+            <type>GeneralConfiguration</type>
+            <multiplicity>1</multiplicity>
+          </association>          
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>GeneralConfiguration</name>
+      <version>1.2.0+</version>
+      <fields>
+        <field>
+          <name>workingDirectory</name>
+          <type>String</type>
+          <required>false</required>
+          <version>1.2.0+</version>
+          <description>Directory where continuum will checkout projects.</description>
+        </field>      
+        <field>
+          <name>buildOutputDirectory</name>
+          <type>String</type>
+          <required>false</required>
+          <version>1.2.0+</version>
+          <description>Directory where continuum will build results projects (console output, junit results ..).</description>
+        </field> 
+        <field>
+          <name>deploymentRepositoryDirectory</name>
+          <type>String</type>
+          <required>false</required>
+          <version>1.2.0+</version>
+          <description>Directory where continuum will maven2 artifacts.</description>
+        </field> 
+        <field>
+          <name>baseUrl</name>
+          <type>String</type>
+          <required>false</required>
+          <version>1.2.0+</version>
+          <description>base url of the continuum instance.</description>
+        </field>                      
       </fields>
     </class>
   </classes>
