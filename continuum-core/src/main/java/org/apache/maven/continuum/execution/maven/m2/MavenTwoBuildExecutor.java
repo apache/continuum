@@ -427,10 +427,6 @@ public class MavenTwoBuildExecutor
             {
                 i++;
             }
-            else
-            {
-                break;
-            }
         }
 
         boolean shouldBuild = !files.isEmpty();
