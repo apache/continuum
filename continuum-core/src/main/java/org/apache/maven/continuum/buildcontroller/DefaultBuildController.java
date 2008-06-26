@@ -485,7 +485,7 @@ public class DefaultBuildController
         if ( context.getTrigger() != ContinuumProjectState.TRIGGER_FORCED )
         {
             getLogger().info( "The project build is forced, building" );
-            return true
+            return true;
         }
 
         boolean shouldBuild = false;
