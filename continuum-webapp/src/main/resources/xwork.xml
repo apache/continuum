@@ -337,7 +337,7 @@
 
     <action name="addProjectGroup" class="addProjectGroup">
       <result name="input">/WEB-INF/jsp/projectGroupAdd.jsp</result>
-      <result name="success" type="chain">groupSummary</result>
+      <result name="success" type="redirect-action">groupSummary</result>
     </action>
 
     <action name="editProjectGroup" class="projectGroup" method="edit">
