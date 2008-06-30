@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.configuration;
+package org.apache.continuum.configuration;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,14 +27,14 @@ package org.apache.maven.continuum.configuration;
 public interface ContinuumConfiguration
 {
     GeneralConfiguration getGeneralConfiguration()
-        throws ConfigurationException;
+        throws ContinuumConfigurationException;
 
      void setGeneralConfiguration( GeneralConfiguration generalConfiguration )
-        throws ConfigurationException;
+        throws ContinuumConfigurationException;
     
     void save()
-        throws ConfigurationException;
+        throws ContinuumConfigurationException;
 
     void reload()
-        throws ConfigurationException;
+        throws ContinuumConfigurationException;
 }

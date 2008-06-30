@@ -153,6 +153,7 @@
   </build>
   <modules>
     <module>continuum-api</module>
+    <module>continuum-base</module>    
     <module>continuum-commons</module>
     <module>continuum-security</module>
     <!-- module>continuum-core-it</module -->    <!-- TODO RE-ADD it when continuum-plexus-application will be back -->
@@ -166,11 +167,9 @@
     <module>continuum-xmlrpc</module>
     <module>continuum-release</module>
     <module>continuum-data-management</module>
-    <module>continuum-configuration</module>
     <module>maven-continuum-plugin</module>
     <module>continuum-docs</module>
     <module>continuum-jetty</module>
-    <module>continuum-base</module>
   </modules>
   <repositories>
     <repository>

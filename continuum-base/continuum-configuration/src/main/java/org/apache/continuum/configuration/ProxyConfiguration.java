@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.configuration;
+package org.apache.continuum.configuration;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
