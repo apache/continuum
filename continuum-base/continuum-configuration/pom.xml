@@ -37,6 +37,10 @@ under the License.
               <name>appserver.base</name>
               <value>${project.build.directory}/test-classes/</value>    
             </property>
+            <property>
+              <name>user.home</name>
+              <value>${project.build.directory}/test-classes/</value>    
+            </property>            
           </systemProperties>
         </configuration>
       </plugin>
