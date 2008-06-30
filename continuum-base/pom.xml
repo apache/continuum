@@ -11,5 +11,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>continuum-scm</module>
+    <module>continuum-configuration</module>
   </modules>
 </project>

@@ -21,9 +21,9 @@ package org.apache.continuum.configuration;
 
 import java.io.File;
 
-import org.apache.maven.continuum.configuration.ContinuumConfiguration;
-import org.apache.maven.continuum.configuration.GeneralConfiguration;
-import org.apache.maven.continuum.configuration.ProxyConfiguration;
+import org.apache.continuum.configuration.ContinuumConfiguration;
+import org.apache.continuum.configuration.GeneralConfiguration;
+import org.apache.continuum.configuration.ProxyConfiguration;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
@@ -58,10 +58,6 @@ public class TestDefaultContinuumConfiguration
     public void testLoad()
         throws Exception
     {
-
-        
-        
-        
         ContinuumConfiguration configuration = (ContinuumConfiguration) lookup( ContinuumConfiguration.class, "default" );
         assertNotNull( configuration );
         GeneralConfiguration generalConfiguration = configuration.getGeneralConfiguration();

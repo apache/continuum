@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.configuration;
+package org.apache.continuum.configuration;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

@@ -26,10 +26,6 @@ import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.DefaultConfigurationBuilder;
 import org.apache.commons.configuration.FileConfiguration;
-import org.apache.maven.continuum.configuration.ConfigurationException;
-import org.apache.maven.continuum.configuration.ContinuumConfiguration;
-import org.apache.maven.continuum.configuration.GeneralConfiguration;
-import org.apache.maven.continuum.configuration.ProxyConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -129,13 +125,13 @@ public class DefaultContinuumConfiguration
 
 
     public void reload()
-        throws ConfigurationException
+        throws ContinuumConfigurationException
     {
         this.initialize();
     }
 
     public void save()
-        throws ConfigurationException
+        throws ContinuumConfigurationException
     {
         FileConfiguration fileConfiguration = (FileConfiguration) configuration;
         try
@@ -144,7 +140,7 @@ public class DefaultContinuumConfiguration
         }
         catch ( org.apache.commons.configuration.ConfigurationException e )
         {
-            throw new ConfigurationException( e.getMessage(), e );
+            throw new ContinuumConfigurationException( e.getMessage(), e );
         }
     }
 
@@ -155,13 +151,13 @@ public class DefaultContinuumConfiguration
      * @see org.apache.maven.continuum.configuration.ContinuumConfiguration#getGeneralConfiguration()
      */
     public GeneralConfiguration getGeneralConfiguration()
-        throws ConfigurationException
+        throws ContinuumConfigurationException
     {
         return this.generalConfiguration;
     }
     
     public void setGeneralConfiguration( GeneralConfiguration generalConfiguration )
-        throws ConfigurationException
+        throws ContinuumConfigurationException
     {
         this.generalConfiguration = generalConfiguration;
         this.configuration.setProperty( BASE_URL_KEY, generalConfiguration.getBaseUrl() );
