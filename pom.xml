@@ -731,7 +731,7 @@ under the License.
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-quartz</artifactId>
-        <version>1.0-alpha-3</version>
+        <version>1.0-alpha-4-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
