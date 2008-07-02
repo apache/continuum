@@ -53,7 +53,7 @@ public class DefaultSchedulesActivator
     private ContinuumStore store;
 
     /**
-     * @plexus.requirement
+     * @plexus.requirement role-hint="default"
      */
     private Scheduler scheduler;
 

@@ -342,7 +342,7 @@ public class MavenTwoContinuumProjectBuilder
         throws ContinuumProjectBuilderException, BuildDefinitionServiceException
     {
         List<BuildDefinition> buildDefinitions = new ArrayList<BuildDefinition>();
-        for ( BuildDefinition buildDefinition : (List<BuildDefinition>)template.getBuildDefinitions() )
+        for ( BuildDefinition buildDefinition : (List<BuildDefinition>) template.getBuildDefinitions() )
         {
             // due to CONTINUUM-1207 CONTINUUM-1436 user can do what they want with arguments
             // we must remove if exists --non-recursive or -N
