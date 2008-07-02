@@ -1825,6 +1825,7 @@ public class DefaultContinuum
             projectGroup.addProject( project );
         }
 
+
         try
         {
             store.updateProjectGroup( projectGroup );
@@ -1851,7 +1852,10 @@ public class DefaultContinuum
                     project.setScmPassword( scmPassword );
                     context.put( AbstractContinuumAction.KEY_SCM_PASSWORD, scmPassword );
                 }
-                context.put( AbstractContinuumAction.KEY_PROJECT, project );
+                // FIXME
+                // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup ); 
+                // remove object data -> we don't display the project name in the build queue
+                context.put( AbstractContinuumAction.KEY_PROJECT, store.getProject( project.getId() )  );
                 executeAction( "add-project-to-checkout-queue", context );
             }
         }
