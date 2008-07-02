@@ -157,7 +157,6 @@ under the License.
     <module>continuum-base</module>    
     <module>continuum-commons</module>
     <module>continuum-security</module>
-    <!-- module>continuum-core-it</module -->    <!-- TODO RE-ADD it when continuum-plexus-application will be back -->
     <module>continuum-store</module>    
     <module>continuum-reports</module>    
     <module>continuum-core</module>
