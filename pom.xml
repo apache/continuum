@@ -913,7 +913,7 @@ under the License.
     <spring.version>2.5.4</spring.version>
     <wagon.version>1.0-beta-2</wagon.version>
     <maven-scm.version>1.1-SNAPSHOT</maven-scm.version>
-    <redback.version>1.0.2-SNAPSHOT</redback.version>
+    <redback.version>1.0.2</redback.version>
     <mail-sender.version>1.0-alpha-7</mail-sender.version>
   </properties>
 </project>
