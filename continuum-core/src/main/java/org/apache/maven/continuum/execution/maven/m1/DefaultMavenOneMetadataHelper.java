@@ -23,7 +23,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectDeveloper;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.notification.ContinuumRecipientSource;
+import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
@@ -305,7 +305,7 @@ public class DefaultMavenOneMetadataHelper
             {
                 Properties props = new Properties();
 
-                props.put( ContinuumRecipientSource.ADDRESS_FIELD, nagEmailAddress );
+                props.put( AbstractContinuumNotifier.ADDRESS_FIELD, nagEmailAddress );
 
                 ProjectNotifier notifier = new ProjectNotifier();
 

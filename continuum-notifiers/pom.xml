@@ -39,9 +39,5 @@ under the License.
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-notification</artifactId>
-    </dependency>
   </dependencies>
 </project>

@@ -22,19 +22,20 @@ package org.apache.maven.continuum.notification.mail;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
+import org.apache.maven.continuum.notification.MessageContext;
+import org.apache.maven.continuum.notification.Notifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.mailsender.MailMessage;
 import org.codehaus.plexus.mailsender.MailSender;
 import org.codehaus.plexus.mailsender.test.MockMailSender;
-import org.codehaus.plexus.notification.notifier.Notifier;
 import org.codehaus.plexus.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -46,6 +47,9 @@ public class MailContinuumNotifierTest
     public void testSuccessfulBuild()
         throws Exception
     {
+        MailContinuumNotifier notifier = (MailContinuumNotifier) lookup( Notifier.class.getName(), "mail" );
+        notifier.setToOverride( "recipient@host.com" );
+
         Project project = makeStubProject( "Test Project" );
         project.setGroupId( "foo.bar" );
 
@@ -54,8 +58,8 @@ public class MailContinuumNotifierTest
         MailMessage mailMessage = sendNotificationAndGetMessage( project, build, "lots out build output" );
 
         assertEquals( "[continuum] BUILD SUCCESSFUL: foo.bar Test Project", mailMessage.getSubject() );
-        
-        dumpContent( mailMessage );
+
+        dumpContent( mailMessage, "recipient@host.com" );
     }
 
     public void testFailedBuild()
@@ -90,9 +94,23 @@ public class MailContinuumNotifierTest
         dumpContent( mailMessage );
     }
 
-
     private void dumpContent( MailMessage mailMessage )
+        throws Exception
     {
+        dumpContent( mailMessage, null );
+    }
+
+    private void dumpContent( MailMessage mailMessage, String toOverride )
+        throws Exception
+    {
+        if ( toOverride != null )
+        {
+            assertEquals( toOverride, ( (MailMessage.Address) mailMessage.getToAddresses().get( 0 ) ).getMailbox() );
+        }
+        else
+        {
+            assertEquals( "foo@bar", ( (MailMessage.Address) mailMessage.getToAddresses().get( 0 ) ).getMailbox() );
+        }
         assertTrue( "The template isn't loaded correctly.",
                     mailMessage.getContent().indexOf( "#shellBuildResult()" ) < 0 );
         assertTrue( "The template isn't loaded correctly.",
@@ -111,27 +129,34 @@ public class MailContinuumNotifierTest
     private MailMessage sendNotificationAndGetMessage( Project project, BuildResult build, String buildOutput )
         throws Exception
     {
-        Set recipients = new HashSet();
+        MessageContext context = new MessageContext();
 
-        recipients.add( "foo@bar" );
+        context.setProject( project );
 
-        Map context = new HashMap();
+        context.setBuildResult( build );
 
-        context.put( ContinuumNotificationDispatcher.CONTEXT_PROJECT, project );
+        ProjectNotifier projectNotifier = new ProjectNotifier();
+        projectNotifier.setType( "mail" );
+        Map<String, String> config = new HashMap<String, String>();
+        config.put( MailContinuumNotifier.ADDRESS_FIELD, "foo@bar" );
+        projectNotifier.setConfiguration( config );
+        List<ProjectNotifier> projectNotifiers = new ArrayList<ProjectNotifier>();
+        projectNotifiers.add( projectNotifier );
+        context.setNotifier( projectNotifiers );
 
-        context.put( ContinuumNotificationDispatcher.CONTEXT_BUILD, build );
+        //context.put( ContinuumNotificationDispatcher.CONTEXT_BUILD_OUTPUT, buildOutput );
 
-        context.put( ContinuumNotificationDispatcher.CONTEXT_BUILD_OUTPUT, buildOutput );
-
-        context.put( "buildHost", "foo.bar.com" );
+        //context.put( "buildHost", "foo.bar.com" );
 
         // ----------------------------------------------------------------------
         //
         // ----------------------------------------------------------------------
 
-        Notifier notifier = (Notifier) lookup( Notifier.ROLE, "mail" );
+        Notifier notifier = (Notifier) lookup( Notifier.class.getName(), "mail" );
 
-        notifier.sendNotification( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE, recipients, context );
+        ( (MailContinuumNotifier) notifier ).setBuildHost( "foo.bar.com" );
+
+        notifier.sendMessage( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE, context );
 
         // ----------------------------------------------------------------------
         //
@@ -157,7 +182,7 @@ public class MailContinuumNotifierTest
 
         assertEquals( 1, to.size() );
 
-        assertEquals( "foo@bar", ( (MailMessage.Address) to.get( 0 ) ).getMailbox() );
+        //assertEquals( "foo@bar", ( (MailMessage.Address) to.get( 0 ) ).getMailbox() );
 
         assertNull( ( (MailMessage.Address) to.get( 0 ) ).getName() );
 

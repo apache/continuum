@@ -32,10 +32,6 @@ under the License.
       <artifactId>maven-project</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-notification</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-core</artifactId>
       <version>${pom.version}</version>

@@ -27,12 +27,17 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
+import org.apache.maven.continuum.notification.MessageContext;
+import org.apache.maven.continuum.notification.NotificationException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.msn.MsnClient;
 import org.codehaus.plexus.msn.MsnException;
-import org.codehaus.plexus.notification.NotificationException;
+import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -44,6 +49,8 @@ import java.util.Set;
 public class MsnContinuumNotifier
     extends AbstractContinuumNotifier
 {
+    private Logger log = LoggerFactory.getLogger( getClass() );
+
     // ----------------------------------------------------------------------
     // Requirements
     // ----------------------------------------------------------------------
@@ -80,18 +87,21 @@ public class MsnContinuumNotifier
     // Notifier Implementation
     // ----------------------------------------------------------------------
 
-    public void sendNotification( String source, Set recipients, Map configuration, Map context )
+    public String getType()
+    {
+        return "irc";
+    }
+
+    public void sendMessage( String messageId, MessageContext context )
         throws NotificationException
     {
-        Project project = (Project) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT );
+        Project project = context.getProject();
 
-        ProjectNotifier projectNotifier =
-            (ProjectNotifier) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT_NOTIFIER );
+        List<ProjectNotifier> notifiers = context.getNotifiers();
 
-        BuildDefinition buildDefinition = (BuildDefinition) context
-            .get( ContinuumNotificationDispatcher.CONTEXT_BUILD_DEFINITION );
+        BuildDefinition buildDefinition = context.getBuildDefinition();
 
-        BuildResult build = (BuildResult) context.get( ContinuumNotificationDispatcher.CONTEXT_BUILD );
+        BuildResult build = context.getBuildResult();
 
         // ----------------------------------------------------------------------
         // If there wasn't any building done, don't notify
@@ -106,9 +116,18 @@ public class MsnContinuumNotifier
         //
         // ----------------------------------------------------------------------
 
+        List<String> recipients = new ArrayList<String>();
+        for ( ProjectNotifier notifier : notifiers )
+        {
+            Map<String, String> configuration = notifier.getConfiguration();
+            if ( configuration != null && StringUtils.isNotEmpty( configuration.get( ADDRESS_FIELD ) ) )
+            {
+                recipients.add( configuration.get( ADDRESS_FIELD ) );
+            }
+        }
         if ( recipients.size() == 0 )
         {
-            getLogger().info( "No MSN recipients for '" + project.getName() + "'." );
+            log.info( "No MSN recipients for '" + project.getName() + "'." );
 
             return;
         }
@@ -117,9 +136,12 @@ public class MsnContinuumNotifier
         //
         // ----------------------------------------------------------------------
 
-        if ( source.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
+        if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
         {
-            buildComplete( project, projectNotifier, build, recipients, buildDefinition, configuration );
+            for ( ProjectNotifier notifier : notifiers )
+            {
+                buildComplete( project, notifier, build, buildDefinition );
+            }
         }
     }
 
@@ -153,7 +175,7 @@ public class MsnContinuumNotifier
         }
         else
         {
-            getLogger().warn( "Unknown build state " + state + " for project " + project.getId() );
+            log.warn( "Unknown build state " + state + " for project " + project.getId() );
 
             message = "ERROR: Unknown build state " + state + " for " + project.getName() + " project";
         }
@@ -161,8 +183,7 @@ public class MsnContinuumNotifier
         return message + " " + getReportUrl( project, build, configurationService );
     }
 
-    private void buildComplete( Project project, ProjectNotifier projectNotifier, BuildResult build, Set recipients,
-                                BuildDefinition buildDef, Map configuration )
+    private void buildComplete( Project project, ProjectNotifier notifier, BuildResult build, BuildDefinition buildDef )
         throws NotificationException
     {
         String message;
@@ -173,7 +194,7 @@ public class MsnContinuumNotifier
 
         BuildResult previousBuild = getPreviousBuild( project, buildDef, build );
 
-        if ( !shouldNotify( build, previousBuild, projectNotifier ) )
+        if ( !shouldNotify( build, previousBuild, notifier ) )
         {
             return;
         }
@@ -187,19 +208,23 @@ public class MsnContinuumNotifier
             throw new NotificationException( "Can't generate the message.", e );
         }
 
-        msnClient.setLogin( getUsername( configuration ) );
+        msnClient.setLogin( getUsername( notifier.getConfiguration() ) );
 
-        msnClient.setPassword( getPassword( configuration ) );
+        msnClient.setPassword( getPassword( notifier.getConfiguration() ) );
 
         try
         {
             msnClient.login();
 
-            for ( Iterator i = recipients.iterator(); i.hasNext(); )
+            if ( notifier.getConfiguration() != null &&
+                StringUtils.isNotEmpty( (String) notifier.getConfiguration().get( ADDRESS_FIELD ) ) )
             {
-                String recipient = (String) i.next();
-
-                msnClient.sendMessage( recipient, message );
+                String address = (String) notifier.getConfiguration().get( ADDRESS_FIELD );
+                String[] recipients = StringUtils.split( address, "," );
+                for ( String recipient : recipients )
+                {
+                    msnClient.sendMessage( recipient, message );
+                }
             }
         }
         catch ( MsnException e )
@@ -217,15 +242,6 @@ public class MsnContinuumNotifier
 
             }
         }
-    }
-
-    /**
-     * @see org.codehaus.plexus.notification.notifier.Notifier#sendNotification(java.lang.String,java.util.Set,java.util.Properties)
-     */
-    public void sendNotification( String arg0, Set arg1, Properties arg2 )
-        throws NotificationException
-    {
-        throw new NotificationException( "Not implemented." );
     }
 
     private String getUsername( Map configuration )

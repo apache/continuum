@@ -21,7 +21,7 @@ package org.apache.maven.continuum.web.action.notifier;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.notification.ContinuumRecipientSource;
+import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.HashMap;
@@ -45,14 +45,15 @@ public class MailProjectNotifierEditAction
 
     protected void initConfiguration( Map configuration )
     {
-        if ( StringUtils.isNotEmpty( (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD ) ) )
+        if ( StringUtils.isNotEmpty( (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD ) ) )
         {
-            address = (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD );
+            address = (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
         }
 
-        if ( StringUtils.isNotEmpty( (String) configuration.get( ContinuumRecipientSource.COMMITTER_FIELD ) ) )
+        if ( StringUtils.isNotEmpty( (String) configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) ) )
         {
-            committers = Boolean.parseBoolean( (String) configuration.get( ContinuumRecipientSource.COMMITTER_FIELD ) );
+            committers =
+                Boolean.parseBoolean( (String) configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) );
         }
     }
 
@@ -62,10 +63,10 @@ public class MailProjectNotifierEditAction
 
         if ( StringUtils.isNotEmpty( address ) )
         {
-            configuration.put( ContinuumRecipientSource.ADDRESS_FIELD, address );
+            configuration.put( AbstractContinuumNotifier.ADDRESS_FIELD, address );
         }
 
-        configuration.put( ContinuumRecipientSource.COMMITTER_FIELD, String.valueOf( committers ) );
+        configuration.put( AbstractContinuumNotifier.COMMITTER_FIELD, String.valueOf( committers ) );
 
         notifier.setConfiguration( configuration );
     }

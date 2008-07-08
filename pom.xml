@@ -709,11 +709,6 @@ under the License.
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-notification</artifactId>
-        <version>1.0-alpha-5</version>
-      </dependency>
-      <dependency>
-        <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-taskqueue</artifactId>
         <version>1.0-alpha-8</version>
       </dependency>

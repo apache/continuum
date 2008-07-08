@@ -27,15 +27,18 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
+import org.apache.maven.continuum.notification.MessageContext;
+import org.apache.maven.continuum.notification.NotificationException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.jabber.JabberClient;
 import org.codehaus.plexus.jabber.JabberClientException;
-import org.codehaus.plexus.notification.NotificationException;
+import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -44,6 +47,8 @@ import java.util.Set;
 public class JabberContinuumNotifier
     extends AbstractContinuumNotifier
 {
+    private Logger log = LoggerFactory.getLogger( getClass() );
+
     // ----------------------------------------------------------------------
     // Requirements
     // ----------------------------------------------------------------------
@@ -96,19 +101,19 @@ public class JabberContinuumNotifier
     // Notifier Implementation
     // ----------------------------------------------------------------------
 
-    public void sendNotification( String source, Set recipients, Map configuration, Map context )
+    public String getType()
+    {
+        return "jabber";
+    }
+
+    public void sendMessage( String messageId, MessageContext context )
         throws NotificationException
     {
-        Project project = (Project) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT );
+        Project project = context.getProject();
 
-        ProjectNotifier projectNotifier =
-            (ProjectNotifier) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT_NOTIFIER );
-
-        BuildDefinition buildDefinition = (BuildDefinition) context
-            .get( ContinuumNotificationDispatcher.CONTEXT_BUILD_DEFINITION );
-
-        BuildResult build = (BuildResult) context.get( ContinuumNotificationDispatcher.CONTEXT_BUILD );
-
+        List<ProjectNotifier> notifiers = context.getNotifiers();
+        BuildDefinition buildDefinition = context.getBuildDefinition();
+        BuildResult build = context.getBuildResult();
         // ----------------------------------------------------------------------
         // If there wasn't any building done, don't notify
         // ----------------------------------------------------------------------
@@ -122,9 +127,19 @@ public class JabberContinuumNotifier
         //
         // ----------------------------------------------------------------------
 
+        List<String> recipients = new ArrayList<String>();
+        for ( ProjectNotifier notifier : notifiers )
+        {
+            Map<String, String> configuration = notifier.getConfiguration();
+            if ( configuration != null && StringUtils.isNotEmpty( configuration.get( ADDRESS_FIELD ) ) )
+            {
+                recipients.add( configuration.get( ADDRESS_FIELD ) );
+            }
+        }
+
         if ( recipients.size() == 0 )
         {
-            getLogger().info( "No Jabber recipients for '" + project.getName() + "'." );
+            log.info( "No Jabber recipients for '" + project.getName() + "'." );
 
             return;
         }
@@ -133,9 +148,12 @@ public class JabberContinuumNotifier
         //
         // ----------------------------------------------------------------------
 
-        if ( source.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
+        if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
         {
-            sendMessage( project, projectNotifier, build, recipients, buildDefinition, configuration );
+            for ( ProjectNotifier notifier : notifiers )
+            {
+                sendMessage( project, notifier, build, buildDefinition );
+            }
         }
     }
 
@@ -169,7 +187,7 @@ public class JabberContinuumNotifier
         }
         else
         {
-            getLogger().warn( "Unknown build state " + state + " for project " + project.getId() );
+            log.warn( "Unknown build state " + state + " for project " + project.getId() );
 
             message = "ERROR: Unknown build state " + state + " for " + project.getName() + " project";
         }
@@ -177,8 +195,7 @@ public class JabberContinuumNotifier
         return message + " " + getReportUrl( project, build, configurationService );
     }
 
-    private void sendMessage( Project project, ProjectNotifier projectNotifier, BuildResult build, Set recipients,
-                              BuildDefinition buildDef, Map configuration )
+    private void sendMessage( Project project, ProjectNotifier notifier, BuildResult build, BuildDefinition buildDef )
         throws NotificationException
     {
         String message;
@@ -189,7 +206,7 @@ public class JabberContinuumNotifier
 
         BuildResult previousBuild = getPreviousBuild( project, buildDef, build );
 
-        if ( !shouldNotify( build, previousBuild, projectNotifier ) )
+        if ( !shouldNotify( build, previousBuild, notifier ) )
         {
             return;
         }
@@ -203,17 +220,17 @@ public class JabberContinuumNotifier
             throw new NotificationException( "Can't generate the message.", e );
         }
 
-        jabberClient.setHost( getHost( configuration ) );
+        jabberClient.setHost( getHost( notifier.getConfiguration() ) );
 
-        jabberClient.setPort( getPort( configuration ) );
+        jabberClient.setPort( getPort( notifier.getConfiguration() ) );
 
-        jabberClient.setUser( getUsername( configuration ) );
+        jabberClient.setUser( getUsername( notifier.getConfiguration() ) );
 
-        jabberClient.setPassword( getPassword( configuration ) );
+        jabberClient.setPassword( getPassword( notifier.getConfiguration() ) );
 
-        jabberClient.setImDomainName( getImDomainName( configuration ) );
+        jabberClient.setImDomainName( getImDomainName( notifier.getConfiguration() ) );
 
-        jabberClient.setSslConnection( isSslConnection( configuration ) );
+        jabberClient.setSslConnection( isSslConnection( notifier.getConfiguration() ) );
 
         try
         {
@@ -221,17 +238,21 @@ public class JabberContinuumNotifier
 
             jabberClient.logon();
 
-            for ( Iterator i = recipients.iterator(); i.hasNext(); )
+            if ( notifier.getConfiguration() != null &&
+                StringUtils.isNotEmpty( (String) notifier.getConfiguration().get( ADDRESS_FIELD ) ) )
             {
-                String recipient = (String) i.next();
-
-                if ( isGroup( configuration ) )
+                String address = (String) notifier.getConfiguration().get( ADDRESS_FIELD );
+                String[] recipients = StringUtils.split( address, "," );
+                for ( String recipient : recipients )
                 {
-                    jabberClient.sendMessageToGroup( recipient, message );
-                }
-                else
-                {
-                    jabberClient.sendMessageToUser( recipient, message );
+                    if ( isGroup( notifier.getConfiguration() ) )
+                    {
+                        jabberClient.sendMessageToGroup( recipient, message );
+                    }
+                    else
+                    {
+                        jabberClient.sendMessageToUser( recipient, message );
+                    }
                 }
             }
         }
@@ -250,12 +271,6 @@ public class JabberContinuumNotifier
 
             }
         }
-    }
-
-    public void sendNotification( String arg0, Set arg1, Properties arg2 )
-        throws NotificationException
-    {
-        throw new NotificationException( "Not implemented." );
     }
 
     private String getHost( Map configuration )
@@ -290,7 +305,7 @@ public class JabberContinuumNotifier
             }
             catch ( NumberFormatException e )
             {
-                getLogger().error( "jabber port isn't a number.", e );
+                log.error( "jabber port isn't a number.", e );
             }
         }
 
@@ -357,25 +372,11 @@ public class JabberContinuumNotifier
 
     private boolean isGroup( Map configuration )
     {
-        if ( configuration.containsKey( "isGroup" ) )
-        {
-            return convertBoolean( (String) configuration.get( "isGroup" ) );
-        }
-        else
-        {
-            return false;
-        }
+        return configuration.containsKey( "isGroup" ) && convertBoolean( (String) configuration.get( "isGroup" ) );
     }
 
     private boolean convertBoolean( String value )
     {
-        if ( "true".equalsIgnoreCase( value ) || "on".equalsIgnoreCase( value ) || "yes".equalsIgnoreCase( value ) )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return "true".equalsIgnoreCase( value ) || "on".equalsIgnoreCase( value ) || "yes".equalsIgnoreCase( value );
     }
 }

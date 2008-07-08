@@ -16,4 +16,10 @@ public class MemoryJdoFactory
     {
         this.otherProperties = otherProperties;
     }
+
+    public void reconfigure()
+    {
+        configured = Boolean.FALSE;
+        getPersistenceManagerFactory();
+    }
 }

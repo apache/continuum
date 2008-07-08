@@ -23,7 +23,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.notification.ContinuumRecipientSource;
+import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
@@ -102,7 +102,7 @@ public class DeleteProjectNotifierAction
         if ( ( "mail".equals( notifierType ) ) || ( "msn".equals( notifierType ) ) ||
             ( "jabber".equals( notifierType ) ) )
         {
-            recipient = (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD );
+            recipient = (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
         }
 
         if ( "irc".equals( notifierType ) )

@@ -20,7 +20,8 @@
         p:persistenceManagerFactoryClass="org.jpox.PersistenceManagerFactoryImpl"
         p:driverName="org.hsqldb.jdbcDriver"
         p:userName="sa"
-        p:password="">
+        p:password=""
+        p:url="jdbc:hsqldb:mem:test">
 
 <!-- 
         <property name="persistenceManagerFactoryClass" value="org.jpox.PersistenceManagerFactoryImpl"/>
