@@ -32,16 +32,14 @@ under the License.
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <!-- FIXME  remove with this module will be really used -->
-          <skipTests>true</skipTests>
           <systemProperties>
             <property>
               <name>appserver.base</name>
-              <value>${project.build.directory}/test-classes/</value>    
+              <value>${basedir}/target/test-classes/</value>    
             </property>
             <property>
               <name>user.home</name>
-              <value>${project.build.directory}/test-classes/</value>    
+              <value>${basedir}/target/test-classes/</value>    
             </property>            
           </systemProperties>
         </configuration>
