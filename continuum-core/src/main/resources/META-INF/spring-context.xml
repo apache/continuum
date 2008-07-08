@@ -28,4 +28,10 @@
 
   <bean id="workingDirectoryService" class="org.apache.maven.continuum.utils.DefaultWorkingDirectoryService" autowire="byName"/>
 
+  <bean id="notifierManager"
+    class="org.apache.maven.continuum.notification.manager.DefaultNotifierManager">
+    <property name="notifiers">
+      <bean class="org.apache.maven.continuum.notification.manager.spring.NotifierFactoryBean"/>
+    </property>
+  </bean>
 </beans>

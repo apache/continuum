@@ -20,6 +20,7 @@ package org.apache.maven.continuum.notification;
  */
 
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -29,14 +30,25 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.notification.NotificationException;
-import org.codehaus.plexus.notification.notifier.AbstractNotifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public abstract class AbstractContinuumNotifier
-    extends AbstractNotifier
+    implements Notifier
 {
+    public static String ADDRESS_FIELD = "address";
+
+    public static String COMMITTER_FIELD = "committers";
+
+    private Logger log = LoggerFactory.getLogger( getClass() );
+
+    /**
+     * @plexus.requirement
+     */
+    private ConfigurationService configurationService;
+
     /**
      * @plexus.requirement role-hint="jdo"
      */
@@ -46,6 +58,27 @@ public abstract class AbstractContinuumNotifier
      * @plexus.configuration
      */
     private boolean alwaysSend = false;
+
+    protected String getBuildOutput( Project project, BuildResult buildResult )
+    {
+        try
+        {
+            if ( buildResult.getEndTime() != 0 )
+            {
+                return configurationService.getBuildOutput( buildResult.getId(), project.getId() );
+            }
+            else
+            {
+                return "";
+            }
+        }
+        catch ( ConfigurationException e )
+        {
+            String msg = "Error while population the notification context.";
+            log.error( msg, e );
+            return msg;
+        }
+    }
 
     /**
      * Returns url of the last build
@@ -149,8 +182,11 @@ public abstract class AbstractContinuumNotifier
         }
 
         // Send if the state has changed
-        getLogger().debug(
-            "Current build state: " + build.getState() + ", previous build state: " + previousBuild.getState() );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug(
+                "Current build state: " + build.getState() + ", previous build state: " + previousBuild.getState() );
+        }
 
         if ( build.getState() != previousBuild.getState() )
         {
@@ -177,7 +213,7 @@ public abstract class AbstractContinuumNotifier
             return true;
         }
 
-        getLogger().info( "Same state, not sending message." );
+        log.info( "Same state, not sending message." );
 
         return false;
     }
@@ -190,7 +226,8 @@ public abstract class AbstractContinuumNotifier
         {
             if ( buildDef != null )
             {
-                builds = getContinuumStore().getBuildResultsByBuildDefinition( project.getId(), buildDef.getId(), 0, 2 );
+                builds =
+                    getContinuumStore().getBuildResultsByBuildDefinition( project.getId(), buildDef.getId(), 0, 2 );
 
                 if ( builds.size() < 2 )
                 {

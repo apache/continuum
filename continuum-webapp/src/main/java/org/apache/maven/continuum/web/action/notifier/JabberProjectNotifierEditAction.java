@@ -21,7 +21,7 @@ package org.apache.maven.continuum.web.action.notifier;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.notification.ContinuumRecipientSource;
+import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +68,7 @@ public class JabberProjectNotifierEditAction
 
         domainName = (String) configuration.get( "domainName" );
 
-        address = (String) configuration.get( ContinuumRecipientSource.ADDRESS_FIELD );
+        address = (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
 
         sslConnection = Boolean.valueOf( (String) configuration.get( "sslConnection" ) ).booleanValue();
 
@@ -89,7 +89,7 @@ public class JabberProjectNotifierEditAction
 
         configuration.put( "domainName", domainName );
 
-        configuration.put( ContinuumRecipientSource.ADDRESS_FIELD, address );
+        configuration.put( AbstractContinuumNotifier.ADDRESS_FIELD, address );
 
         configuration.put( "sslConnection", String.valueOf( sslConnection ) );
 

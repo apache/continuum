@@ -27,9 +27,10 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
+import org.apache.maven.continuum.notification.MessageContext;
+import org.apache.maven.continuum.notification.NotificationException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStore;
-import org.codehaus.plexus.notification.NotificationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.util.StringUtils;
 import org.schwering.irc.lib.IRCConnection;
@@ -39,27 +40,28 @@ import org.schwering.irc.lib.IRCModeParser;
 import org.schwering.irc.lib.IRCUser;
 import org.schwering.irc.lib.ssl.SSLDefaultTrustManager;
 import org.schwering.irc.lib.ssl.SSLIRCConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * <b>This implementation assumes there aren't concurrent acces to the IRCConnection</b>
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.codehaus.plexus.notification.notifier.Notifier" role-hint="irc"
+ * @plexus.component role="org.apache.maven.continuum.notification.Notifier" role-hint="irc"
  */
 public class IrcContinuumNotifier
     extends AbstractContinuumNotifier
     implements Disposable
 {
+    private Logger log = LoggerFactory.getLogger( getClass() );
+
     // ----------------------------------------------------------------------
     // Requirements
     // ----------------------------------------------------------------------
@@ -67,8 +69,8 @@ public class IrcContinuumNotifier
     /**
      * @plexus.requirement role-hint="jdo"
      */
-    private ContinuumStore store;    
-    
+    private ContinuumStore store;
+
     /**
      * @plexus.requirement
      */
@@ -93,9 +95,8 @@ public class IrcContinuumNotifier
     public void dispose()
     {
         // cleanup connections
-        for ( Iterator<String> keys = hostConnections.keySet().iterator(); keys.hasNext(); )
+        for ( String key : hostConnections.keySet() )
         {
-            String key = keys.next();
             IRCConnection connection = hostConnections.get( key );
             if ( connection.isConnected() )
             {
@@ -221,19 +222,21 @@ public class IrcContinuumNotifier
     // Notifier Implementation
     // ----------------------------------------------------------------------
 
+    public String getType()
+    {
+        return "irc";
+    }
 
-    public void sendNotification( String source, Set recipients, Map configuration, Map context )
+    public void sendMessage( String messageId, MessageContext context )
         throws NotificationException
     {
-        Project project = (Project) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT );
+        Project project = context.getProject();
 
-        ProjectNotifier projectNotifier =
-            (ProjectNotifier) context.get( ContinuumNotificationDispatcher.CONTEXT_PROJECT_NOTIFIER );
+        List<ProjectNotifier> notifiers = context.getNotifiers();
 
-        BuildDefinition buildDefinition = (BuildDefinition) context
-            .get( ContinuumNotificationDispatcher.CONTEXT_BUILD_DEFINITION );
+        BuildDefinition buildDefinition = context.getBuildDefinition();
 
-        BuildResult build = (BuildResult) context.get( ContinuumNotificationDispatcher.CONTEXT_BUILD );
+        BuildResult build = context.getBuildResult();
 
         // ----------------------------------------------------------------------
         // If there wasn't any building done, don't notify
@@ -250,9 +253,12 @@ public class IrcContinuumNotifier
 
         try
         {
-            if ( source.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
+            if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
             {
-                buildComplete( project, projectNotifier, build, buildDefinition, configuration );
+                for ( ProjectNotifier notifier : notifiers )
+                {
+                    buildComplete( project, notifier, build, buildDefinition );
+                }
             }
         }
         catch ( ContinuumException e )
@@ -262,7 +268,7 @@ public class IrcContinuumNotifier
     }
 
     private void buildComplete( Project project, ProjectNotifier projectNotifier, BuildResult build,
-                                BuildDefinition buildDef, Map configuration )
+                                BuildDefinition buildDef )
         throws ContinuumException, NotificationException
     {
         // ----------------------------------------------------------------------
@@ -270,6 +276,7 @@ public class IrcContinuumNotifier
         // ----------------------------------------------------------------------
 
         BuildResult previousBuild = getPreviousBuild( project, buildDef, build );
+        Map<String, String> configuration = projectNotifier.getConfiguration();
 
         if ( !shouldNotify( build, previousBuild, projectNotifier ) )
         {
@@ -280,47 +287,47 @@ public class IrcContinuumNotifier
         // Gather configuration values
         // ----------------------------------------------------------------------
 
-        String host = (String) configuration.get( "host" );
+        String host = configuration.get( "host" );
 
-        String portAsString = (String) configuration.get( "port" );
+        String portAsString = configuration.get( "port" );
         int port = defaultPort;
         if ( portAsString != null )
         {
             port = Integer.parseInt( portAsString );
         }
-        String channel = (String) configuration.get( "channel" );
+        String channel = configuration.get( "channel" );
 
-        String nickName = (String) configuration.get( "nick" );
+        String nickName = configuration.get( "nick" );
 
         if ( StringUtils.isEmpty( nickName ) )
         {
             nickName = "continuum";
         }
 
-        String alternateNickName = (String) configuration.get( "alternateNick" );
+        String alternateNickName = configuration.get( "alternateNick" );
 
         if ( StringUtils.isEmpty( alternateNickName ) )
         {
             alternateNickName = "continuum_";
         }
 
-        String userName = (String) configuration.get( "username" );
+        String userName = configuration.get( "username" );
 
         if ( StringUtils.isEmpty( userName ) )
         {
             userName = nickName;
         }
 
-        String fullName = (String) configuration.get( "fullName" );
+        String fullName = configuration.get( "fullName" );
 
         if ( StringUtils.isEmpty( fullName ) )
         {
             fullName = nickName;
         }
 
-        String password = (String) configuration.get( "password" );
+        String password = configuration.get( "password" );
 
-        boolean isSsl = Boolean.parseBoolean( (String) configuration.get( "ssl" ) );
+        boolean isSsl = Boolean.parseBoolean( configuration.get( "ssl" ) );
 
         try
         {
@@ -360,21 +367,12 @@ public class IrcContinuumNotifier
         }
         else
         {
-            getLogger().warn( "Unknown build state " + state + " for project " + project.getId() );
+            log.warn( "Unknown build state " + state + " for project " + project.getId() );
 
             message = "ERROR: Unknown build state " + state + " for " + project.getName() + " project";
         }
 
         return message + " " + getReportUrl( project, build, configurationService );
-    }
-
-    /**
-     * @see org.codehaus.plexus.notification.notifier.Notifier#sendNotification(java.lang.String,java.util.Set,java.util.Properties)
-     */
-    public void sendNotification( String arg0, Set arg1, Properties arg2 )
-        throws NotificationException
-    {
-        throw new NotificationException( "Not implemented." );
     }
 
     /**
@@ -398,27 +396,27 @@ public class IrcContinuumNotifier
 
         public void onRegistered()
         {
-            getLogger().info( "Connected" );
+            log.info( "Connected" );
         }
 
         public void onDisconnected()
         {
-            getLogger().info( "Disconnected" );
+            log.info( "Disconnected" );
         }
 
         public void onError( String msg )
         {
-            getLogger().error( "Error: " + msg );
+            log.error( "Error: " + msg );
         }
 
         public void onError( int num, String msg )
         {
-            getLogger().error( "Error #" + num + ": " + msg );
+            log.error( "Error #" + num + ": " + msg );
             if ( num == IRCConstants.ERR_NICKNAMEINUSE )
             {
                 if ( alternateNick != null )
                 {
-                    getLogger().info( "reconnection with alternate nick: '" + alternateNick + "'" );
+                    log.info( "reconnection with alternate nick: '" + alternateNick + "'" );
                     try
                     {
                         boolean ssl = false;
@@ -441,77 +439,113 @@ public class IrcContinuumNotifier
 
         public void onInvite( String chan, IRCUser u, String nickPass )
         {
-            getLogger().debug( chan + "> " + u.getNick() + " invites " + nickPass );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( chan + "> " + u.getNick() + " invites " + nickPass );
+            }
         }
 
         public void onJoin( String chan, IRCUser u )
         {
-            getLogger().debug( chan + "> " + u.getNick() + " joins" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( chan + "> " + u.getNick() + " joins" );
+            }
         }
 
         public void onKick( String chan, IRCUser u, String nickPass, String msg )
         {
-            getLogger().debug( chan + "> " + u.getNick() + " kicks " + nickPass );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( chan + "> " + u.getNick() + " kicks " + nickPass );
+            }
         }
 
         public void onMode( IRCUser u, String nickPass, String mode )
         {
-            getLogger().debug( "Mode: " + u.getNick() + " sets modes " + mode + " " + nickPass );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Mode: " + u.getNick() + " sets modes " + mode + " " + nickPass );
+            }
         }
 
         public void onMode( String chan, IRCUser u, IRCModeParser mp )
         {
-            getLogger().debug( chan + "> " + u.getNick() + " sets mode: " + mp.getLine() );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( chan + "> " + u.getNick() + " sets mode: " + mp.getLine() );
+            }
         }
 
         public void onNick( IRCUser u, String nickNew )
         {
-            getLogger().debug( "Nick: " + u.getNick() + " is now known as " + nickNew );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Nick: " + u.getNick() + " is now known as " + nickNew );
+            }
         }
 
         public void onNotice( String target, IRCUser u, String msg )
         {
-            getLogger().info( target + "> " + u.getNick() + " (notice): " + msg );
+            log.info( target + "> " + u.getNick() + " (notice): " + msg );
         }
 
         public void onPart( String chan, IRCUser u, String msg )
         {
-            getLogger().debug( chan + "> " + u.getNick() + " parts" );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( chan + "> " + u.getNick() + " parts" );
+            }
         }
 
         public void onPrivmsg( String chan, IRCUser u, String msg )
         {
-            getLogger().debug( chan + "> " + u.getNick() + ": " + msg );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( chan + "> " + u.getNick() + ": " + msg );
+            }
         }
 
         public void onQuit( IRCUser u, String msg )
         {
-            getLogger().debug( "Quit: " + u.getNick() );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Quit: " + u.getNick() );
+            }
         }
 
         public void onReply( int num, String value, String msg )
         {
-            getLogger().info( "Reply #" + num + ": " + value + " " + msg );
+            log.info( "Reply #" + num + ": " + value + " " + msg );
         }
 
         public void onTopic( String chan, IRCUser u, String topic )
         {
-            getLogger().debug( chan + "> " + u.getNick() + " changes topic into: " + topic );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( chan + "> " + u.getNick() + " changes topic into: " + topic );
+            }
         }
 
         public void onPing( String p )
         {
-            getLogger().debug( "Ping:" + p );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "Ping:" + p );
+            }
         }
 
         public void unknown( String a, String b, String c, String d )
         {
-            getLogger().debug( "UNKNOWN: " + a + " b " + c + " " + d );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "UNKNOWN: " + a + " b " + c + " " + d );
+            }
         }
     }
 
     protected ContinuumStore getContinuumStore()
     {
         return this.store;
-    }    
+    }
 }

@@ -26,15 +26,7 @@
     </component>
 
     <component>
-      <role>org.codehaus.plexus.notification.RecipientSource</role>
-      <implementation>org.apache.maven.continuum.notification.ContinuumRecipientSource</implementation>
-      <configuration>
-        <toOverride>nobody@localhost</toOverride>
-      </configuration>
-    </component>
-
-    <component>
-      <role>org.codehaus.plexus.notification.notifier.Notifier</role>
+      <role>org.apache.maven.continuum.notification.Notifier</role>
       <role-hint>mail</role-hint>
       <implementation>org.apache.maven.continuum.notification.mail.MailContinuumNotifier</implementation>
       <requirements>

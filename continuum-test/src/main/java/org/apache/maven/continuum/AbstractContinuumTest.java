@@ -19,16 +19,6 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -44,6 +34,15 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -69,11 +68,12 @@ public abstract class AbstractContinuumTest
 
         Collection<ProjectGroup> projectGroups = store.getAllProjectGroupsWithProjects();
 
-        assertEquals( 0, projectGroups.size() );
+        if ( projectGroups.size() == 0 ) //if ContinuumInitializer is loaded by Spring at startup, size == 1
+        {
+            createDefaultProjectGroup();
 
-        createDefaultProjectGroup();
-
-        projectGroups = store.getAllProjectGroupsWithProjects();
+            projectGroups = store.getAllProjectGroupsWithProjects();
+        }
 
         assertEquals( 1, projectGroups.size() );
     }
@@ -148,6 +148,8 @@ public abstract class AbstractContinuumTest
         String url = "jdbc:hsqldb:mem:" + getClass().getName() + "." + getName();
 
         jdoFactory.setUrl( url );
+
+        jdoFactory.reconfigure();
 
 //        jdoFactory.setUserName( "sa" );
 //
@@ -363,7 +365,7 @@ public abstract class AbstractContinuumTest
 
             for ( int i = 0; i < notifiers.size(); i++ )
             {
-                ProjectNotifier notifier = (ProjectNotifier) notifiers.get( i );
+                ProjectNotifier notifier = notifiers.get( i );
 
                 ProjectNotifier actualNotifier = (ProjectNotifier) actual.getNotifiers().get( i );
 

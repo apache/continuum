@@ -50,7 +50,7 @@
     </component>
     
     <component>
-      <role>org.codehaus.plexus.notification.notifier.Notifier</role>
+      <role>org.apache.maven.continuum.notification.Notifier</role>
       <role-hint>wagon</role-hint>
       <implementation>org.apache.maven.continuum.notification.wagon.WagonContinuumNotifier</implementation>
       <requirements>

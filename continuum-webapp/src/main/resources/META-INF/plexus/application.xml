@@ -92,7 +92,7 @@
     | The mail notifier
     |-->
     <component>
-      <role>org.codehaus.plexus.notification.notifier.Notifier</role>
+      <role>org.apache.maven.continuum.notification.Notifier</role>
       <role-hint>mail</role-hint>
       <implementation>org.apache.maven.continuum.notification.mail.MailContinuumNotifier</implementation>
       <requirements>
@@ -173,7 +173,7 @@
     | The jabber notifier
     |-->
     <component>
-      <role>org.codehaus.plexus.notification.notifier.Notifier</role>
+      <role>org.apache.maven.continuum.notification.Notifier</role>
       <role-hint>jabber</role-hint>
       <implementation>org.apache.maven.continuum.notification.jabber.JabberContinuumNotifier</implementation>
       <requirements>
@@ -207,7 +207,7 @@
     | The MSN notifier
     |-->
     <component>
-      <role>org.codehaus.plexus.notification.notifier.Notifier</role>
+      <role>org.apache.maven.continuum.notification.Notifier</role>
       <role-hint>msn</role-hint>
       <implementation>org.apache.maven.continuum.notification.msn.MsnContinuumNotifier</implementation>
       <requirements>
