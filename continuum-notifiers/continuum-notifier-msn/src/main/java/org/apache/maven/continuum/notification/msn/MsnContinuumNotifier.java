@@ -89,7 +89,7 @@ public class MsnContinuumNotifier
 
     public String getType()
     {
-        return "irc";
+        return "msn";
     }
 
     public void sendMessage( String messageId, MessageContext context )
