@@ -21,17 +21,17 @@ package org.apache.continuum.configuration;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 17 juin 2008
  * @version $Id$
+ * @since 17 juin 2008
  */
 public interface ContinuumConfiguration
 {
     GeneralConfiguration getGeneralConfiguration()
         throws ContinuumConfigurationException;
 
-     void setGeneralConfiguration( GeneralConfiguration generalConfiguration )
+    void setGeneralConfiguration( GeneralConfiguration generalConfiguration )
         throws ContinuumConfigurationException;
-    
+
     void save()
         throws ContinuumConfigurationException;
 

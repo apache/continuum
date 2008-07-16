@@ -1,7 +1,5 @@
 package org.apache.continuum.configuration;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,21 +19,23 @@ import org.apache.commons.lang.builder.ReflectionToStringBuilder;
  * under the License.
  */
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 24 juin 2008
  * @version $Id$
+ * @since 24 juin 2008
  */
 public class ProxyConfiguration
 {
     private String proxyHost;
 
     private int proxyPort;
-    
+
     private String proxyUser;
-    
+
     private String proxyPassword;
-    
+
     public ProxyConfiguration()
     {
         // nothing here
@@ -80,10 +80,10 @@ public class ProxyConfiguration
     {
         this.proxyPassword = proxyPassword;
     }
-    
+
     @Override
     public String toString()
     {
         return ReflectionToStringBuilder.toString( this );
-    }    
+    }
 }
