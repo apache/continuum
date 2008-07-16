@@ -19,35 +19,32 @@ package org.apache.continuum.configuration;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
-
+import java.io.File;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 17 juin 2008
  * @version $Id$
+ * @since 17 juin 2008
  */
 public class GeneralConfiguration
 {
-
     private File workingDirectory;
 
     private File buildOutputDirectory;
-    
+
     private File deploymentRepositoryDirectory;
-    
-    private String baseUrl;    
-    
+
+    private String baseUrl;
+
     private ProxyConfiguration proxyConfiguration;
-    
+
     public GeneralConfiguration()
     {
         // nothing here
     }
-    
+
     public File getWorkingDirectory()
     {
         return workingDirectory;
@@ -104,5 +101,5 @@ public class GeneralConfiguration
         return ReflectionToStringBuilder.toString( this );
     }
 
-    
+
 }

@@ -2,5 +2,6 @@
 <configuration>
   <continuum>
     <baseUrl>http://test</baseUrl>
+    <buildOutputDirectory>myBuildOutputDir</buildOutputDirectory>
   </continuum>
 </configuration>
