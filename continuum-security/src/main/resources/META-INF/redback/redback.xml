@@ -306,7 +306,7 @@
   			  </role>
   		    <role>
   		      <id>continuum-manage-build-templates</id>
-  		      <name>continuum-manage-build-templates</name>
+  		      <name>Continuum Manage Build Templates</name>
   		      <assignable>true</assignable>
   		      <permanent>true</permanent>
   		      <permissions>
@@ -321,7 +321,7 @@
   		    </role>    
   		    <role>
   		      <id>continuum-manage-queues</id>
-  		      <name>continuum-manage-queues</name>
+  		      <name>Continuum Manage Queues</name>
   		      <assignable>true</assignable>
   		      <permanent>true</permanent>
   		      <permissions>
