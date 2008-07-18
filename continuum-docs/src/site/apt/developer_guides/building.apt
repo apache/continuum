@@ -23,7 +23,7 @@ Guide to build Continuum
 * Checking out the sources
 
   All of the source code for Maven and its related libraries is in {{{http://subversion.tigris.org/} Subversion}}.
-  You can {{{http://svn.apache.org/viewvc/maven/continuum/} browse the repository}}, or checkout specific modules directly.
+  You can {{{http://svn.apache.org/viewvc/continuum/} browse the repository}}, or checkout specific modules directly.
 
   All SVN instructions are available in {{{../../../source-repository.html}Source Repository page}}.
 
