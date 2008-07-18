@@ -16,13 +16,13 @@ Guide to use XML-RPC with Continuum
 
 * {Requirements}
 
-    To connect to a Continuum instance, you must use the {{{http://repo1.maven.org/maven2/org/apache/maven/continuum/continuum-xmlrpc-client/}continuum-xmlrpc-client}} jar.
+    To connect to a Continuum instance, you must use the {{{http://repo1.maven.org/maven2/org/apache/continuum/continuum-xmlrpc-client/}continuum-xmlrpc-client}} jar.
 
     This library have some others jars as dependencies, so the best way to start the development of a Continuum xmlrpc client is to create a maven2 project with the following dependencies:
 
 +--------------------------+
     <dependency>
-      <groupId>org.apache.maven.continuum</groupId>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-xmlrpc-client</artifactId>
       <version>YOUR_CONTINUUM_VERSION</version>
     </dependency>
