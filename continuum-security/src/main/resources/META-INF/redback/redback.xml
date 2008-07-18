@@ -276,13 +276,13 @@
   		    </role>
   		    <role>
   		      <id>continuum-manage-profiles</id>
-  		      <name>Continuum Manage Profiles</name>
+  		      <name>Continuum Manage Build Environments</name>
   		      <assignable>true</assignable>
   		      <permanent>true</permanent>
   		      <permissions>
   		        <permission>
   		          <id>continuum-manage-profiles</id>
-  		          <name>Manage Continuum Profiles</name>
+  		          <name>Manage Continuum Build Environments</name>
   		          <permanent>true</permanent>
   		          <operation>continuum-manage-profiles</operation>
   		          <resource>global</resource>
