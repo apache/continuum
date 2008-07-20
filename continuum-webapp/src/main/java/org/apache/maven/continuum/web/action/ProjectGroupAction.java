@@ -111,6 +111,8 @@ public class ProjectGroupAction
     private int buildDefinitionId;
 
     private String preferredExecutor = "maven2";
+    
+    private String url;
 
     public String summary()
         throws ContinuumException
@@ -176,6 +178,11 @@ public class ProjectGroupAction
                     else if ( "shell".equals( p.getExecutorId() ) )
                     {
                         nbShellProjects += 1;
+                    }
+                    
+                    if( p.getId() == 1 )
+                    {
+                    	url = p.getUrl();
                     }
                 }
 
@@ -847,4 +854,14 @@ public class ProjectGroupAction
     {
         return preferredExecutor;
     }
+
+	public String getUrl() 
+	{
+		return url;
+	}
+
+	public void setUrl(String url) 
+	{
+		this.url = url;
+	}
 }
