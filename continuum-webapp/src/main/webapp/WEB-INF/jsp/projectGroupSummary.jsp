@@ -88,6 +88,10 @@
         <c1:data label="%{getText('projectGroup.name.label')}" name="projectGroup.name"/>
         <c1:data label="%{getText('projectGroup.groupId.label')}" name="projectGroup.groupId"/>
         <c1:data label="%{getText('projectGroup.description.label')}" name="projectGroup.description"/>
+        <c:if test="${url != null}">
+            <ww:url id="projectHomepageUrl" value="${url}" includeContext="false" includeParams="none"/>
+        	<c1:data label="%{getText('projectGroup.url.label')}" name="url" valueLink="%{'${projectHomepageUrl}'}"/>  
+        </c:if>
       </table>
     </div>
 
