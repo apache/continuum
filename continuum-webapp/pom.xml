@@ -561,7 +561,7 @@ under the License.
       <scope>provided</scope>
     </dependency>
   </dependencies>
-      <profiles>
+  <profiles>
     <profile>
       <id>postgres</id>
       <dependencies>
