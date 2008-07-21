@@ -61,6 +61,10 @@ public abstract class AbstractContinuumNotifier
 
     protected String getBuildOutput( Project project, BuildResult buildResult )
     {
+        if ( buildResult == null )
+        {
+            return "";
+        }
         try
         {
             if ( buildResult.getEndTime() != 0 )
