@@ -26,8 +26,6 @@
          class="org.apache.maven.continuum.execution.shell.ShellBuildExecutor" autowire="byName">
   </bean>
 
-  <bean id="workingDirectoryService" class="org.apache.maven.continuum.utils.DefaultWorkingDirectoryService" autowire="byName"/>
-
   <bean id="notifierManager"
     class="org.apache.maven.continuum.notification.manager.DefaultNotifierManager">
     <property name="notifiers">

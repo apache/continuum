@@ -48,6 +48,10 @@ under the License.
   </build>
   <dependencies>
     <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
     </dependency>

@@ -57,6 +57,7 @@ public abstract class AbstractContinuumTest
     //
     // ----------------------------------------------------------------------
 
+    @Override
     protected void setUp()
         throws Exception
     {
@@ -64,7 +65,7 @@ public abstract class AbstractContinuumTest
 
         getStore();
 
-        setUpConfigurationService( (ConfigurationService) lookup( ConfigurationService.ROLE ) );
+        setUpConfigurationService( (ConfigurationService) lookup( "configurationService" ) );
 
         Collection<ProjectGroup> projectGroups = store.getAllProjectGroupsWithProjects();
 
@@ -76,6 +77,14 @@ public abstract class AbstractContinuumTest
         }
 
         assertEquals( 1, projectGroups.size() );
+    }
+
+    @Override
+    protected void tearDown()
+        throws Exception
+    {
+        store.eraseDatabase();
+        super.tearDown();
     }
 
     protected void createDefaultProjectGroup()
@@ -104,8 +113,6 @@ public abstract class AbstractContinuumTest
     public static void setUpConfigurationService( ConfigurationService configurationService )
         throws Exception
     {
-        configurationService.load();
-
         configurationService.setBuildOutputDirectory( getTestFile( "target/build-output" ) );
 
         configurationService.setWorkingDirectory( getTestFile( "target/working-directory" ) );

@@ -19,10 +19,11 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
-import java.io.File;
-
+import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.io.File;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -33,7 +34,7 @@ public interface ConfigurationService
     String ROLE = ConfigurationService.class.getName();
 
     public static final String DEFAULT_SCHEDULE_NAME = "DEFAULT_SCHEDULE";
-    
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -83,12 +84,12 @@ public interface ConfigurationService
 
     boolean isLoaded();
 
-    void load()
-        throws ConfigurationLoadingException;
+    void reload()
+        throws ConfigurationLoadingException, ContinuumConfigurationException;
 
     void store()
-        throws ConfigurationStoringException;
-    
+        throws ConfigurationStoringException, ContinuumConfigurationException;
+
     Schedule getDefaultSchedule()
-        throws ContinuumStoreException, ConfigurationLoadingException;
+        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException;
 }

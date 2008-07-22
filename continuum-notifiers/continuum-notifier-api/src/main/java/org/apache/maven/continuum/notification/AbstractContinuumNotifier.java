@@ -19,6 +19,7 @@ package org.apache.maven.continuum.notification;
  * under the License.
  */
 
+import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
@@ -100,7 +101,7 @@ public abstract class AbstractContinuumNotifier
         {
             if ( !configurationService.isLoaded() )
             {
-                configurationService.load();
+                configurationService.reload();
             }
 
             StringBuffer buf = new StringBuffer( configurationService.getUrl() );
@@ -119,6 +120,10 @@ public abstract class AbstractContinuumNotifier
             return buf.toString();
         }
         catch ( ConfigurationLoadingException e )
+        {
+            throw new ContinuumException( "Can't obtain the base url from configuration.", e );
+        }
+        catch ( ContinuumConfigurationException e )
         {
             throw new ContinuumException( "Can't obtain the base url from configuration.", e );
         }
