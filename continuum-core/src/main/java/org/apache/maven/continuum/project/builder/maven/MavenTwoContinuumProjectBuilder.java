@@ -36,8 +36,10 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -137,9 +139,12 @@ public class MavenTwoContinuumProjectBuilder
 
         MavenProject mavenProject;
 
+        File pomFile = null;
+        
         try
         {
-            mavenProject = builderHelper.getMavenProject( result, createMetadataFile( url, username, password ) );
+            pomFile = createMetadataFile( url, username, password );
+            mavenProject = builderHelper.getMavenProject( result, pomFile );
 
             if ( result.hasErrors() )
             {
@@ -178,6 +183,13 @@ public class MavenTwoContinuumProjectBuilder
             getLogger().info( "Error adding project: Unknown error downloading from " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
             return;
+        }
+        finally
+        {
+            if ( pomFile != null && pomFile.exists() )
+            {
+                pomFile.delete();
+            }
         }
         getLogger().debug( "groupPom " + groupPom );
         if ( groupPom )
