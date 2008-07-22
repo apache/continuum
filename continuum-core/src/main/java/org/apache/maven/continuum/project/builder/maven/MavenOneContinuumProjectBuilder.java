@@ -125,6 +125,13 @@ public class MavenOneContinuumProjectBuilder
 
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
+        finally
+        {
+            if ( pomFile != null && pomFile.exists() )
+            {
+                pomFile.delete();
+            }
+        }        
 
         ProjectGroup projectGroup = new ProjectGroup();
 
