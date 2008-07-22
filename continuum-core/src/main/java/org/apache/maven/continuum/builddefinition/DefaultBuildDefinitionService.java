@@ -18,10 +18,7 @@
  */
 package org.apache.maven.continuum.builddefinition;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -37,12 +34,16 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 15 sept. 07
  * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.builddefinition.BuildDefinitionService"
  * @TODO some cache mechanism ?
+ * @since 15 sept. 07
  */
 public class DefaultBuildDefinitionService
     extends AbstractLogEnabled
@@ -78,19 +79,17 @@ public class DefaultBuildDefinitionService
      * @plexus.configuration default-value="--batch-mode --non-recursive"
      */
     private String defaultM2Arguments;
-    
-    
-    
+
+
     /**
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
-    
+
     /**
      * @plexus.requirement role-hint="default"
-     */    
+     */
     private ConfigurationService configurationService;
-    
 
     // -----------------------------------------------
     //  Plexus Lifecycle
@@ -107,8 +106,8 @@ public class DefaultBuildDefinitionService
         {
             throw new InitializationException( e.getMessage(), e );
         }
-    } 
-    
+    }
+
     private void initializeDefaultContinuumBuildDefintions()
         throws BuildDefinitionServiceException
     {
@@ -116,8 +115,8 @@ public class DefaultBuildDefinitionService
         this.getDefaultMavenOneBuildDefinitionTemplate();
         this.getDefaultMavenTwoBuildDefinitionTemplate();
         this.getDefaultShellBuildDefinitionTemplate();
-    }        
-    
+    }
+
     public BuildDefinition getBuildDefinition( int buildDefinitionId )
         throws BuildDefinitionServiceException
     {
@@ -148,7 +147,7 @@ public class DefaultBuildDefinitionService
         }
     }
 
-    
+
     public void removeBuildDefinition( BuildDefinition buildDefinition )
         throws BuildDefinitionServiceException
     {
@@ -199,8 +198,8 @@ public class DefaultBuildDefinitionService
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
     }
-    
-    
+
+
     public List<BuildDefinition> getAllTemplates()
         throws BuildDefinitionServiceException
     {
@@ -211,10 +210,10 @@ public class DefaultBuildDefinitionService
         catch ( ContinuumStoreException e )
         {
             throw new BuildDefinitionServiceException( e.getMessage(), e );
-        }        
+        }
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.builddefinition.BuildDefinitionService#cloneBuildDefinition(org.apache.maven.continuum.model.project.BuildDefinition)
      */
     public BuildDefinition cloneBuildDefinition( BuildDefinition buildDefinition )
@@ -233,8 +232,7 @@ public class DefaultBuildDefinitionService
         cloned.setTemplate( buildDefinition.isTemplate() );
         return cloned;
     }
-    
-    
+
 
     public BuildDefinitionTemplate getContinuumDefaultWithType( String type )
         throws BuildDefinitionServiceException
@@ -252,7 +250,8 @@ public class DefaultBuildDefinitionService
     public BuildDefinitionTemplate getDefaultAntBuildDefinitionTemplate()
         throws BuildDefinitionServiceException
     {
-        BuildDefinitionTemplate template = getContinuumDefaultWithType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
+        BuildDefinitionTemplate template =
+            getContinuumDefaultWithType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
         if ( template != null )
         {
             return template;
@@ -261,7 +260,7 @@ public class DefaultBuildDefinitionService
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
         template.setName( "Default Ant Template" );
-        template.setType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR  );
+        template.setType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
 
         template = addBuildDefinitionTemplate( template );
 
@@ -278,9 +277,9 @@ public class DefaultBuildDefinitionService
         bd.setSchedule( getDefaultSchedule() );
 
         bd.setDescription( "Default Ant Build Definition" );
-        
+
         bd.setTemplate( true );
-        
+
         bd.setType( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
         return addBuildDefinitionInTemplate( template, bd, true );
     }
@@ -288,7 +287,8 @@ public class DefaultBuildDefinitionService
     public BuildDefinitionTemplate getDefaultMavenOneBuildDefinitionTemplate()
         throws BuildDefinitionServiceException
     {
-        BuildDefinitionTemplate template = getContinuumDefaultWithType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
+        BuildDefinitionTemplate template =
+            getContinuumDefaultWithType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
         if ( template != null )
         {
             getLogger().debug( "found default maven template " + template.getType() );
@@ -298,10 +298,10 @@ public class DefaultBuildDefinitionService
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
         template.setName( "Default Maven 1 Template" );
-        template.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR  );
-        
+        template.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
+
         template = addBuildDefinitionTemplate( template );
-        
+
         BuildDefinition bd = new BuildDefinition();
 
         bd.setDefaultForProject( true );
@@ -317,16 +317,17 @@ public class DefaultBuildDefinitionService
         bd.setType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
 
         bd.setDescription( "Default Maven 1 Build Definition" );
-        
+
         bd.setTemplate( true );
-        
+
         return addBuildDefinitionInTemplate( template, bd, true );
     }
 
     public BuildDefinitionTemplate getDefaultMavenTwoBuildDefinitionTemplate()
-        throws  BuildDefinitionServiceException
+        throws BuildDefinitionServiceException
     {
-        BuildDefinitionTemplate template = getContinuumDefaultWithType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+        BuildDefinitionTemplate template =
+            getContinuumDefaultWithType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
         if ( template != null )
         {
             return template;
@@ -335,10 +336,10 @@ public class DefaultBuildDefinitionService
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
         template.setName( "Default Maven 2 Template" );
-        template.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR  );
-        
-        template = addBuildDefinitionTemplate( template );        
-        
+        template.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
+
+        template = addBuildDefinitionTemplate( template );
+
         BuildDefinition bd = new BuildDefinition();
 
         bd.setDefaultForProject( true );
@@ -354,16 +355,17 @@ public class DefaultBuildDefinitionService
         bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
 
         bd.setDescription( "Default Maven 2 Build Definition" );
-        
+
         bd.setTemplate( true );
-        
+
         return addBuildDefinitionInTemplate( template, bd, true );
     }
 
     public BuildDefinitionTemplate getDefaultShellBuildDefinitionTemplate()
         throws BuildDefinitionServiceException
     {
-        BuildDefinitionTemplate template = getContinuumDefaultWithType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
+        BuildDefinitionTemplate template =
+            getContinuumDefaultWithType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
         if ( template != null )
         {
             return template;
@@ -372,10 +374,10 @@ public class DefaultBuildDefinitionService
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
         template.setName( "Default Shell Template" );
-        template.setType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR  );
-        
-        template = addBuildDefinitionTemplate( template );        
-        
+        template.setType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
+
+        template = addBuildDefinitionTemplate( template );
+
         BuildDefinition bd = new BuildDefinition();
 
         bd.setDefaultForProject( true );
@@ -385,12 +387,12 @@ public class DefaultBuildDefinitionService
         bd.setType( ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
 
         bd.setTemplate( true );
-        
+
         bd.setDescription( "Default Shell Build Definition" );
-        
+
         return addBuildDefinitionInTemplate( template, bd, true );
     }
-    
+
     private Schedule getDefaultSchedule()
         throws BuildDefinitionServiceException
     {
@@ -406,9 +408,12 @@ public class DefaultBuildDefinitionService
         {
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
+        catch ( ContinuumConfigurationException e )
+        {
+            throw new BuildDefinitionServiceException( e.getMessage(), e );
+        }
     }
 
-    
     // ------------------------------------------------------
     //  BuildDefinitionTemplate
     // ------------------------------------------------------    
@@ -484,7 +489,7 @@ public class DefaultBuildDefinitionService
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
     }
-    
+
     public BuildDefinitionTemplate addBuildDefinitionInTemplate( BuildDefinitionTemplate buildDefinitionTemplate,
                                                                  BuildDefinition buildDefinition, boolean template )
         throws BuildDefinitionServiceException
@@ -494,7 +499,7 @@ public class DefaultBuildDefinitionService
             BuildDefinitionTemplate stored = getBuildDefinitionTemplate( buildDefinitionTemplate.getId() );
             stored.setName( buildDefinitionTemplate.getName() );
             BuildDefinition storedBuildDefinition = getBuildDefinition( buildDefinition.getId() );
-            if (storedBuildDefinition != null)
+            if ( storedBuildDefinition != null )
             {
                 buildDefinition = storedBuildDefinition;
             }
@@ -507,7 +512,7 @@ public class DefaultBuildDefinitionService
         {
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
-    }    
+    }
 
     public BuildDefinitionTemplate removeBuildDefinitionFromTemplate( BuildDefinitionTemplate buildDefinitionTemplate,
                                                                       BuildDefinition buildDefinition )
@@ -518,13 +523,13 @@ public class DefaultBuildDefinitionService
             BuildDefinitionTemplate stored = getBuildDefinitionTemplate( buildDefinitionTemplate.getId() );
             stored.setName( buildDefinitionTemplate.getName() );
             List<BuildDefinition> buildDefinitions = new ArrayList<BuildDefinition>();
-            for (int i = 0,size = stored.getBuildDefinitions().size();i<size;i++)
+            for ( int i = 0, size = stored.getBuildDefinitions().size(); i < size; i++ )
             {
                 BuildDefinition buildDef = (BuildDefinition) stored.getBuildDefinitions().get( i );
                 if ( buildDef.getId() != buildDefinition.getId() )
                 {
                     buildDefinitions.add( getBuildDefinition( buildDef.getId() ) );
-                }                
+                }
             }
             stored.setBuildDefinitions( buildDefinitions );
             return store.updateBuildDefinitionTemplate( stored );
@@ -565,8 +570,7 @@ public class DefaultBuildDefinitionService
         }
     }
 
-    public ProjectGroup addBuildDefinitionTemplateToProjectGroup( int projectGroupId,
-                                                                             BuildDefinitionTemplate template )
+    public ProjectGroup addBuildDefinitionTemplateToProjectGroup( int projectGroupId, BuildDefinitionTemplate template )
         throws BuildDefinitionServiceException, ContinuumObjectNotFoundException
     {
         try
@@ -592,7 +596,7 @@ public class DefaultBuildDefinitionService
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
     }
-    
+
     public List<BuildDefinitionTemplate> getBuildDefinitionTemplatesWithType( String type )
         throws BuildDefinitionServiceException
     {

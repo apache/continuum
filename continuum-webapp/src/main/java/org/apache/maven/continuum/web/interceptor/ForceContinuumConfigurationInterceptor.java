@@ -80,7 +80,7 @@ public class ForceContinuumConfigurationInterceptor
             return invocation.invoke();
         }
 
-        configuration.load();
+        configuration.reload();
 
         if ( configuration.isInitialized() )
         {

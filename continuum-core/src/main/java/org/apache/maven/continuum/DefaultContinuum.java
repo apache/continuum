@@ -20,6 +20,7 @@ package org.apache.maven.continuum;
  */
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -28,7 +29,6 @@ import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
-import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.core.action.CreateProjectsFromMetadataAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -181,7 +181,7 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private BuildExecutorManager executorManager;
-    
+
     private PlexusContainer container;
 
 
@@ -549,7 +549,7 @@ public class DefaultContinuum
             throw new ContinuumException( "Error while getting the checkout queue.", e );
         }
     }
-    
+
     public TaskQueueExecutor getBuildTaskQueueExecutor()
         throws ContinuumException
     {
@@ -575,8 +575,8 @@ public class DefaultContinuum
             }
         }
         return -1;
-    }    
-    
+    }
+
     public boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
         throws ContinuumException
     {
@@ -744,9 +744,9 @@ public class DefaultContinuum
             {
                 removeProjectFromBuildingQueue( projectId );
             }
-            
+
             // cancel it if currently building
-            
+
             if ( getCurrentProjectIdBuilding() == projectId )
             {
                 Task currentTask = getBuildTaskQueueExecutor().getCurrentTask();
@@ -791,7 +791,7 @@ public class DefaultContinuum
         }
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.Continuum#checkoutProject(int)
      */
     public void checkoutProject( int projectId )
@@ -1539,7 +1539,7 @@ public class DefaultContinuum
     // Shell projects
     // ----------------------------------------------------------------------
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.Continuum#addProject(org.apache.maven.continuum.model.project.Project, java.lang.String)
      */
     public int addProject( Project project, String executorId )
@@ -1554,7 +1554,7 @@ public class DefaultContinuum
         return addProject( project, executorId, groupId, -1 );
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.Continuum#addProject(org.apache.maven.continuum.model.project.Project, java.lang.String, int, int)
      */
     public int addProject( Project project, String executorId, int groupId, int buildDefintionTemplateId )
@@ -1633,7 +1633,7 @@ public class DefaultContinuum
         context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, projectGroup );
 
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
-        
+
         executeAction( "validate-project", context );
 
         executeAction( "store-project", context );
@@ -1656,16 +1656,17 @@ public class DefaultContinuum
                                                        false, false, buildDefintionTemplateId );
     }
 
-    
+
     protected ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
                                                                                      String projectBuilderId,
                                                                                      int projectGroupId,
                                                                                      boolean checkProtocol,
                                                                                      boolean useCredentialsCache,
                                                                                      boolean loadRecursiveProjects,
-                                                                                     int buildDefintionTemplateId, boolean addAssignableRoles )
-          throws ContinuumException
-      {
+                                                                                     int buildDefintionTemplateId,
+                                                                                     boolean addAssignableRoles )
+        throws ContinuumException
+    {
         if ( checkProtocol )
         {
             try
@@ -1807,11 +1808,11 @@ public class DefaultContinuum
 
         String scmUserName = null;
         String scmPassword = null;
-        
+
         for ( Project project : projects )
         {
             project.setScmUseCache( useCredentialsCache );
-            
+
             // values backup for first checkout
             scmUserName = project.getScmUsername();
             scmPassword = project.getScmPassword();
@@ -1821,10 +1822,9 @@ public class DefaultContinuum
                 project.setScmUsername( null );
                 project.setScmPassword( null );
             }
-    
+
             projectGroup.addProject( project );
         }
-
 
         try
         {
@@ -1855,7 +1855,7 @@ public class DefaultContinuum
                 // FIXME
                 // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup ); 
                 // remove object data -> we don't display the project name in the build queue
-                context.put( AbstractContinuumAction.KEY_PROJECT, store.getProject( project.getId() )  );
+                context.put( AbstractContinuumAction.KEY_PROJECT, store.getProject( project.getId() ) );
                 executeAction( "add-project-to-checkout-queue", context );
             }
         }
@@ -1871,15 +1871,15 @@ public class DefaultContinuum
             executeAction( "add-assignable-roles", context );
         }
         return result;
-      }
-    
+    }
+
     protected ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
-                                                                                   String projectBuilderId,
-                                                                                   int projectGroupId,
-                                                                                   boolean checkProtocol,
-                                                                                   boolean useCredentialsCache,
-                                                                                   boolean loadRecursiveProjects,
-                                                                                   int buildDefintionTemplateId )
+                                                                                     String projectBuilderId,
+                                                                                     int projectGroupId,
+                                                                                     boolean checkProtocol,
+                                                                                     boolean useCredentialsCache,
+                                                                                     boolean loadRecursiveProjects,
+                                                                                     int buildDefintionTemplateId )
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol,
@@ -2197,7 +2197,7 @@ public class DefaultContinuum
         {
             if ( bd.getId() == buildDefinitionId )
             {
-            	buildDefinition = bd;
+                buildDefinition = bd;
                 break;
             }
         }
@@ -2690,7 +2690,7 @@ public class DefaultContinuum
 
             configurationService.store();
         }
-        catch ( ConfigurationStoringException e )
+        catch ( Exception e )
         {
             throw new ContinuumException( "Can't store configuration.", e );
         }
@@ -2701,9 +2701,9 @@ public class DefaultContinuum
     {
         try
         {
-            configurationService.load();
+            configurationService.reload();
         }
-        catch ( ConfigurationLoadingException e )
+        catch ( Exception e )
         {
             throw new ContinuumException( "Can't reload configuration.", e );
         }
@@ -2741,7 +2741,7 @@ public class DefaultContinuum
 
         for ( Project project : store.getAllProjectsByNameWithBuildDetails() )
         {
-            for ( ProjectNotifier notifier : (List<ProjectNotifier>)project.getNotifiers() )
+            for ( ProjectNotifier notifier : (List<ProjectNotifier>) project.getNotifiers() )
             {
                 if ( StringUtils.isEmpty( notifier.getType() ) )
                 {
@@ -2791,7 +2791,7 @@ public class DefaultContinuum
                 project.getExecutorId() );
         }
     }
-    
+
     // --------------------------------
     //  Plexus Lifecycle
     // --------------------------------
@@ -2812,9 +2812,13 @@ public class DefaultContinuum
         {
             initializer.initialize();
 
-            configurationService.load();
+            configurationService.reload();
         }
         catch ( ConfigurationLoadingException e )
+        {
+            throw new StartingException( "Error loading the Continuum configuration.", e );
+        }
+        catch ( ContinuumConfigurationException e )
         {
             throw new StartingException( "Error loading the Continuum configuration.", e );
         }
@@ -2836,7 +2840,7 @@ public class DefaultContinuum
             getLogger().error( "Error activating schedules.", e );
         }
     }
-    
+
     public void stop()
         throws StoppingException
     {
@@ -2850,7 +2854,6 @@ public class DefaultContinuum
             store.closeStore();
         }
     }
-
 
 
     public void startup()
@@ -2881,7 +2884,7 @@ public class DefaultContinuum
                 configurationService.store();
             }
         }
-        catch ( ConfigurationStoringException e )
+        catch ( Exception e )
         {
             getLogger().info( "Error storing the Continuum configuration.", e );
         }

@@ -28,6 +28,7 @@ import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
@@ -93,7 +94,7 @@ public class ConfigurationAction
     }
 
     public String save()
-        throws ConfigurationStoringException, ContinuumStoreException
+        throws ConfigurationStoringException, ContinuumStoreException, ContinuumConfigurationException
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
 

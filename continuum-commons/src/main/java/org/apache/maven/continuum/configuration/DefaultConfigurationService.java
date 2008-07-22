@@ -19,25 +19,29 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-
+import org.apache.continuum.configuration.ContinuumConfiguration;
+import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.continuum.configuration.GeneralConfiguration;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.configuration.ConfigurationService"
  */
 public class DefaultConfigurationService
-    extends AbstractLogEnabled
     implements ConfigurationService
 {
+    private Logger log = LoggerFactory.getLogger( this.getClass() );
 
     // when adding requirement the template in application.xml must be updated CONTINUUM-1207
 
@@ -46,11 +50,17 @@ public class DefaultConfigurationService
      */
     private File applicationHome;
 
-
     /**
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
+
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumConfiguration configuration;
+
+    private GeneralConfiguration generalConfiguration;
 
     // ----------------------------------------------------------------------
     //
@@ -59,14 +69,16 @@ public class DefaultConfigurationService
     private SystemConfiguration systemConf;
 
     private boolean loaded = false;
-    
 
-    
-    
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
+    public void initialize()
+        throws ConfigurationLoadingException, ContinuumConfigurationException
+    {
+        loadData();
+    }
 
     public void setStore( ContinuumStore store )
     {
@@ -78,9 +90,24 @@ public class DefaultConfigurationService
         return store;
     }
 
+    public ContinuumConfiguration getConfiguration()
+    {
+        return configuration;
+    }
+
+    public void setConfiguration( ContinuumConfiguration configuration )
+    {
+        this.configuration = configuration;
+    }
+
     public File getApplicationHome()
     {
         return applicationHome;
+    }
+
+    public void setApplicationHome( File applicationHome )
+    {
+        this.applicationHome = applicationHome;
     }
 
     public void setInitialized( boolean initialized )
@@ -95,24 +122,29 @@ public class DefaultConfigurationService
 
     public String getUrl()
     {
-        if ( systemConf.getBaseUrl() != null )
+        String baseUrl = generalConfiguration.getBaseUrl();
+        if ( StringUtils.isEmpty( baseUrl ) )
         {
-            return systemConf.getBaseUrl();
+            baseUrl = systemConf.getBaseUrl();
+            setUrl( baseUrl );
         }
-        else
-        {
-            return "";
-        }
+        return baseUrl != null ? baseUrl : "";
     }
 
     public void setUrl( String url )
     {
-        systemConf.setBaseUrl( url );
+        generalConfiguration.setBaseUrl( url );
     }
 
     public File getBuildOutputDirectory()
     {
-        return getFile( systemConf.getBuildOutputDirectory() );
+        File buildOutputDirectory = generalConfiguration.getBuildOutputDirectory();
+        if ( buildOutputDirectory == null )
+        {
+            buildOutputDirectory = getFile( systemConf.getBuildOutputDirectory() );
+            setBuildOutputDirectory( buildOutputDirectory );
+        }
+        return buildOutputDirectory;
     }
 
     public void setBuildOutputDirectory( File buildOutputDirectory )
@@ -125,12 +157,18 @@ public class DefaultConfigurationService
         catch ( IOException e )
         {
         }
-        systemConf.setBuildOutputDirectory( f.getAbsolutePath() );
+        generalConfiguration.setBuildOutputDirectory( f );
     }
 
     public File getWorkingDirectory()
     {
-        return getFile( systemConf.getWorkingDirectory() );
+        File workingDirectory = generalConfiguration.getWorkingDirectory();
+        if ( workingDirectory == null )
+        {
+            workingDirectory = getFile( systemConf.getWorkingDirectory() );
+            setWorkingDirectory( workingDirectory );
+        }
+        return workingDirectory;
     }
 
     public void setWorkingDirectory( File workingDirectory )
@@ -144,18 +182,23 @@ public class DefaultConfigurationService
         {
         }
 
-        systemConf.setWorkingDirectory( f.getAbsolutePath() );
+        generalConfiguration.setWorkingDirectory( f );
     }
 
     public File getDeploymentRepositoryDirectory()
     {
-        return getFile( systemConf.getDeploymentRepositoryDirectory() );
+        File deploymentDirectory = generalConfiguration.getDeploymentRepositoryDirectory();
+        if ( deploymentDirectory == null )
+        {
+            deploymentDirectory = getFile( systemConf.getDeploymentRepositoryDirectory() );
+            setDeploymentRepositoryDirectory( deploymentDirectory );
+        }
+        return deploymentDirectory;
     }
 
     public void setDeploymentRepositoryDirectory( File deploymentRepositoryDirectory )
     {
-        systemConf.setDeploymentRepositoryDirectory(
-            deploymentRepositoryDirectory != null ? deploymentRepositoryDirectory.getAbsolutePath() : null );
+        generalConfiguration.setDeploymentRepositoryDirectory( deploymentRepositoryDirectory );
     }
 
     public String getBuildOutput( int buildId, int projectId )
@@ -176,7 +219,7 @@ public class DefaultConfigurationService
         }
         catch ( IOException e )
         {
-            getLogger().warn( "Error reading build output for build '" + buildId + "'.", e );
+            log.warn( "Error reading build output for build '" + buildId + "'.", e );
 
             return null;
         }
@@ -268,9 +311,12 @@ public class DefaultConfigurationService
         return loaded;
     }
 
-    public void load()
-        throws ConfigurationLoadingException
+
+    private void loadData()
+        throws ConfigurationLoadingException, ContinuumConfigurationException
     {
+        generalConfiguration = configuration.getGeneralConfiguration();
+
         try
         {
             systemConf = getStore().getSystemConfiguration();
@@ -290,9 +336,18 @@ public class DefaultConfigurationService
         }
     }
 
-    public void store()
-        throws ConfigurationStoringException
+    public void reload()
+        throws ConfigurationLoadingException, ContinuumConfigurationException
     {
+        configuration.reload();
+        loadData();
+    }
+
+    public void store()
+        throws ConfigurationStoringException, ContinuumConfigurationException
+    {
+        configuration.setGeneralConfiguration( generalConfiguration );
+        configuration.save();
         try
         {
             getStore().updateSystemConfiguration( systemConf );
@@ -302,9 +357,9 @@ public class DefaultConfigurationService
             throw new ConfigurationStoringException( "Error writting configuration to database.", e );
         }
     }
-    
+
     public Schedule getDefaultSchedule()
-        throws ContinuumStoreException, ConfigurationLoadingException
+        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException
     {
         // Schedule
         Schedule defaultSchedule = getStore().getScheduleByName( DEFAULT_SCHEDULE_NAME );
@@ -324,18 +379,19 @@ public class DefaultConfigurationService
     // ----------------------------------------------------------------------
 
     private Schedule createDefaultSchedule()
-        throws ConfigurationLoadingException
+        throws ConfigurationLoadingException, ContinuumConfigurationException
     {
-        
-        getLogger().info( "create Default Schedule" );
-        
+
+        log.info( "create Default Schedule" );
+
         Schedule schedule = new Schedule();
 
         schedule.setName( DEFAULT_SCHEDULE_NAME );
 
+        //It shouldn't be possible
         if ( systemConf == null )
         {
-            this.load();
+            this.reload();
         }
 
         schedule.setDescription( systemConf.getDefaultScheduleDescription() );

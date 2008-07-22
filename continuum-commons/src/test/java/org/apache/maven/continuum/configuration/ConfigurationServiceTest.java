@@ -19,8 +19,10 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
-import org.apache.maven.continuum.AbstractContinuumTest;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -29,37 +31,72 @@ import java.io.File;
  * @version $Id$
  */
 public class ConfigurationServiceTest
-    extends AbstractContinuumTest
+    extends PlexusInSpringTestCase
 {
+    private Logger log = LoggerFactory.getLogger( getClass() );
+
+    private String confFile = "target/test-classes/conf/continuum.xml";
+
+    @Override
     protected void setUp()
         throws Exception
     {
+        File originalConf = new File( getBasedir(), "src/test/resources/conf/continuum.xml" );
+
+        File confUsed = new File( getBasedir(), confFile );
+        if ( confUsed.exists() )
+        {
+            confUsed.delete();
+        }
+        FileUtils.copyFile( originalConf, confUsed );
         super.setUp();
+    }
 
-        File templateConfiguration = new File( getBasedir(), "src/test/resources/configuration.xml" );
+    public void testLoad()
+        throws Exception
+    {
+        ConfigurationService service = (ConfigurationService) lookup( "configurationService" );
+        assertNotNull( service );
 
-        File testConfiguration = new File( getBasedir(), "target/configuration.xml" );
-
-        FileUtils.copyFile( templateConfiguration, testConfiguration );
+        assertNotNull( service.getUrl() );
+        assertEquals( "http://test", service.getUrl() );
+        log.info( service.getFile( "myBuildOutputDir" ).getAbsolutePath() );
+        log.info( service.getBuildOutputDirectory().getAbsolutePath() );
+        assertEquals( service.getFile( "myBuildOutputDir" ).getAbsolutePath(),
+                      service.getBuildOutputDirectory().getAbsolutePath() );
     }
 
     public void testConfigurationService()
         throws Exception
     {
-        ConfigurationService service = (ConfigurationService) lookup( ConfigurationService.ROLE );
+        File conf = new File( getBasedir(), confFile );
+        if ( conf.exists() )
+        {
+            conf.delete();
+        }
 
-        service.load();
+        ConfigurationService service = (ConfigurationService) lookup( "configurationService" );
 
-        assertEquals( "build-output", service.getBuildOutputDirectory().getName() );
+        assertNotNull( service );
 
-        assertEquals( "working-directory", service.getWorkingDirectory().getName() );
+//        service.load();
+
+//        assertEquals( "http://test", service.getUrl() );
+
+//        assertEquals( "build-output-directory", service.getBuildOutputDirectory().getName() );
+
+//        assertEquals( "working-directory", service.getWorkingDirectory().getName() );
+
+        service.setUrl( "http://test/zloug" );
+        service.setBuildOutputDirectory( new File( "testBuildOutputDir" ) );
 
         service.store();
 
-        // ----------------------------------------------------------------------
-        //
-        // ----------------------------------------------------------------------
+        String contents = FileUtils.fileRead( conf );
+        //assertTrue( contents.indexOf( "http://test/zloug" ) > 0 );
 
-        service.load();
+        service.reload();
+
+        assertEquals( "http://test/zloug", service.getUrl() );
     }
 }

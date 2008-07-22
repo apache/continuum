@@ -19,15 +19,11 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Map;
-
-import org.apache.maven.continuum.configuration.ConfigurationException;
-import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
-import org.apache.maven.continuum.configuration.ConfigurationService;
-import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * Mock class for testing WagonContinuumNotifier's call to ConfigurationService.getBuildOutputFile()
@@ -182,7 +178,7 @@ public class ConfigurationServiceMock
         return false;
     }
 
-    public void load()
+    public void reload()
         throws ConfigurationLoadingException
     {
     }
@@ -208,7 +204,7 @@ public class ConfigurationServiceMock
     public void setChrootJailDirectory( File chrootJailDirectory )
     {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

@@ -18,34 +18,6 @@
   ~ under the License.
   -->
 <plexus>
-  <!-- 
-    Not supported with plexus-spring
-  <load-on-start>
-    <component>
-      <role>org.apache.maven.continuum.Continuum</role>
-    </component>
-    <component>
-      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
-      <role-hint>build-project</role-hint>
-    </component>
-    <component>
-      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
-      <role-hint>check-out-project</role-hint>
-    </component>
-    <component>
-      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
-      <role-hint>prepare-release</role-hint>
-    </component>
-    <component>
-      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
-      <role-hint>perform-release</role-hint>
-    </component>
-    <component>
-      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
-      <role-hint>rollback-release</role-hint>
-    </component>
-  </load-on-start>
-  -->
   <components>
     <component>
       <role>org.codehaus.plexus.registry.Registry</role>
@@ -55,31 +27,10 @@
         <properties>
           <system/>
           <jndi prefix="java:comp/env" config-optional="true"/>
-          <xml fileName="${appserver.base}/conf/continuum.xml" config-optional="true"
-               config-at="org.apache.maven.continuum" config-forceCreate="true"/>
           <xml fileName="${appserver.base}/conf/shared.xml" config-optional="true"
                config-name="org.apache.maven.shared.app.user" config-at="org.apache.maven.shared.app"
                config-forceCreate="true"/>
-          <xml fileName="${appserver.base}/conf/shared.xml" config-optional="true"
-               config-name="org.apache.maven.shared.app.base" config-at="org.apache.maven.shared.app"/>
-          <xml fileName="${appserver.base}/conf/common.xml" config-optional="true"/>
           <properties fileName="${appserver.base}/conf/security.properties" config-optional="true"
-                      config-at="org.codehaus.plexus.redback"/>
-          <xml fileName="${appserver.home}/conf/continuum.xml" config-optional="true"
-               config-at="org.apache.maven.continuum" config-name="org.apache.maven.continuum.user"
-               config-forceCreate="true"/>
-          <xml fileName="${appserver.home}/conf/shared.xml" config-optional="true"
-               config-at="org.apache.maven.shared.app" />
-          <xml fileName="${appserver.home}/conf/common.xml" config-optional="true"/>
-          <properties fileName="${appserver.home}/conf/security.properties" config-optional="true"
-                      config-at="org.codehaus.plexus.redback"/>
-          <!-- Previous settings, deprecated -->
-          <xml fileName="${user.home}/.m2/continuum.xml" config-optional="true" 
-               config-at="org.apache.maven.continuum" />
-          <xml fileName="${user.home}/.m2/shared.xml" config-optional="true"/>
-          <properties fileName="${user.home}/.m2/security.properties" config-optional="true"
-                      config-at="org.codehaus.plexus.redback"/>
-          <properties fileName="${user.home}/.m2/continuum.properties" config-optional="true"
                       config-at="org.codehaus.plexus.redback"/>
           <!-- Defaults -->
           <properties fileName="org/apache/maven/continuum/security.properties" config-at="org.codehaus.plexus.redback"/>
@@ -418,8 +369,8 @@
           </property>
         </properties>
       </configuration>
-    </component>    
-    
+    </component>
+
     <!--
      | Logger manager
      -->
