@@ -44,6 +44,8 @@
                 <ww:textfield label="%{getText('projectGroup.name.label')}" name="name"  required="true"/>
                 <ww:textfield label="%{getText('projectGroup.groupId.label')}" name="groupId" required="true"/>
                 <ww:textfield label="%{getText('projectGroup.description.label')}" name="description"/>
+                <ww:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories"
+                		   listKey="id" listValue="name"/>
               </tbody>
             </table>
             <div class="functnbar3">

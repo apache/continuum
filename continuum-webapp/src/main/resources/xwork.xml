@@ -747,6 +747,84 @@
       </result>      
     </action>    
     
+    <!--
+    * Local Repository actions
+    -->
+    
+    <action name="repositoryList" class="localRepository" method="list">
+      <result name="success">/WEB-INF/jsp/admin/localRepositoriesList.jsp</result>
+    </action>
+    
+    <action name="editRepository" class="localRepository" method="input">
+      <result name="error">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
+    </action>
+    
+    <action name="saveRepository" class="localRepository" method="save">
+      <result name="error">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+      </result>
+    </action>
+    
+    <action name="removeRepository" class="localRepository" method="remove">
+      <result name="error" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteLocalRepository.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+      </result>
+    </action>
+    
+    <action name="purgeRepository" class="localRepository" method="doPurge">
+      <result name="success" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+      </result>
+      <result name="error" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+    </action>
+    
+    <!--
+    * Purge actions
+    -->
+    
+    <action name="purgeConfigList" class="purgeConfiguration" method="list">
+      <result name="success">/WEB-INF/jsp/admin/purgeConfigurationsList.jsp</result>
+    </action>
+    
+    <action name="editPurgeConfig" class="purgeConfiguration" method="input">
+      <result name="error">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
+    </action>
+    
+    <action name="savePurgeConfig" class="purgeConfiguration" method="save">
+      <result name="input">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+      </result>
+    </action>
+    
+    <action name="removePurgeConfig" class="purgeConfiguration" method="remove">
+      <result name="success" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+      </result>
+    </action>
+    
+    <action name="doPurge" class="purgeConfiguration" method="purge">
+      <result name="success" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+      </result>
+      <result name="error" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+    </action>
+    
   </package>
 
   <package name="component" extends="default">
@@ -934,6 +1012,6 @@
       <result name="input">/WEB-INF/jsp/notifier/notifierWagon.jsp</result>
       <result name="success" type="chain">projectGroupNotifier</result>
     </action>
-
+    
   </package>
 </xwork>

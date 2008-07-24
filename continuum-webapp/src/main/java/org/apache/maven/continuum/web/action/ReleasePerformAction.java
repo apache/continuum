@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
@@ -112,12 +113,16 @@ public class ReleasePerformAction
 
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
+        Project project = getContinuum().getProject( projectId );
+
         //todo should be configurable
         File performDirectory = new File( getContinuum().getConfiguration().getWorkingDirectory(),
                                           "releases-" + System.currentTimeMillis() );
         performDirectory.mkdirs();
-
-        releaseManager.perform( releaseId, performDirectory, goals, useReleaseProfile, listener );
+        
+        LocalRepository repository = project.getProjectGroup().getLocalRepository();
+        
+        releaseManager.perform( releaseId, performDirectory, goals, useReleaseProfile, listener, repository );
 
         return SUCCESS;
     }

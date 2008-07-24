@@ -37,6 +37,10 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 
+import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
+import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -102,6 +106,8 @@ public class JdoContinuumStore
 
     private static final String BUILD_TEMPLATE_BUILD_DEFINITIONS = "build-template-build-definitions";
 
+    private static final String LOCALREPOSITORY_PURGE_CONFIGS = "localrepository-purge-configs";
+    
     // ----------------------------------------------------------------------
     // ContinuumStore Implementation
     // ----------------------------------------------------------------------
@@ -2002,7 +2008,424 @@ public class JdoContinuumStore
             return (SystemConfiguration) systemConfs.get( 0 );
         }
     }
+    
+    public LocalRepository addLocalRepository( LocalRepository repository )
+        throws ContinuumStoreException
+    {
+        return ( LocalRepository ) addObject( repository );
+    }
+    
+    public void updateLocalRepository( LocalRepository repository )
+        throws ContinuumStoreException
+    {
+        updateObject( repository );
+    }
+    
+    public void removeLocalRepository( LocalRepository repository )
+        throws ContinuumStoreException
+    {
+        removeObject( repository );
+    }
+    
+    public List<LocalRepository> getAllLocalRepositories()
+    {
+        return getAllObjectsDetached( LocalRepository.class );
+    }
+    
+    public List<LocalRepository> getLocalRepositoriesByLayout( String layout )
+    {
+        PersistenceManager pm = getPersistenceManager();
+        
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( LocalRepository.class, true );
+    
+            Query query = pm.newQuery( extent );
+    
+            query.declareImports( "import java.lang.String" );
+            
+            query.declareParameters( "String layout" );
+    
+            query.setFilter( "this.layout == layout" );
+    
+            List result = (List) query.execute( layout );
+    
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+    
+            rollback( tx );
+        }
+    }
+    
+    public LocalRepository getLocalRepository( int repositoryId )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        return (LocalRepository) getObjectById( LocalRepository.class, repositoryId );
+    }
+    
+    public LocalRepository getLocalRepositoryByName( String name )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        PersistenceManager pm = getPersistenceManager();
+    
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( LocalRepository.class, true );
+    
+            Query query = pm.newQuery( extent );
+    
+            query.declareImports( "import java.lang.String" );
+    
+            query.declareParameters( "String name" );
+    
+            query.setFilter( "this.name == name" );
+    
+            Collection result = (Collection) query.execute( name );
+    
+            if ( result.size() == 0 )
+            {
+                tx.commit();
+    
+                return null;
+            }
+    
+            Object object = pm.detachCopy( result.iterator().next() );
+    
+            tx.commit();
+    
+            return (LocalRepository) object;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+    
+    public LocalRepository getLocalRepositoryByLocation( String location )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        PersistenceManager pm = getPersistenceManager();
+    
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( LocalRepository.class, true );
+    
+            Query query = pm.newQuery( extent );
+    
+            query.declareImports( "import java.lang.String" );
+    
+            query.declareParameters( "String location" );
+    
+            query.setFilter( "this.location == location" );
+    
+            Collection result = (Collection) query.execute( location );
+    
+            if ( result.size() == 0 )
+            {
+                tx.commit();
+    
+                return null;
+            }
+    
+            Object object = pm.detachCopy( result.iterator().next() );
+    
+            tx.commit();
+    
+            return (LocalRepository) object;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+    
+    public List<RepositoryPurgeConfiguration> getAllRepositoryPurgeConfigurations()
+    {
+        return getAllObjectsDetached( RepositoryPurgeConfiguration.class );
+    }
+    
+    public List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsBySchedule( int scheduleId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+        
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( RepositoryPurgeConfiguration.class, true );
+    
+            Query query = pm.newQuery( extent );
+    
+            query.declareParameters( "int scheduleId" );
+    
+            query.setFilter( "this.schedule.id == scheduleId" );
+    
+            List result = (List) query.execute( new Integer( scheduleId ) );
+    
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+    
+            rollback( tx );
+        }
+    }
+    
+    public List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsByLocalRepository( int repositoryId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+        
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( RepositoryPurgeConfiguration.class, true );
+    
+            Query query = pm.newQuery( extent );
+    
+            query.declareParameters( "int repositoryId" );
+    
+            query.setFilter( "this.repository.id == repositoryId" );
+    
+            List result = (List) query.execute( new Integer( repositoryId ) );
+    
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+    
+            rollback( tx );
+        }
+    }
+    
+    public RepositoryPurgeConfiguration getRepositoryPurgeConfiguration( int configurationId )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        return (RepositoryPurgeConfiguration) getObjectById( RepositoryPurgeConfiguration.class, configurationId );
+    }
+    
+    public RepositoryPurgeConfiguration addRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException
+    {
+        return (RepositoryPurgeConfiguration) addObject( purgeConfiguration );
+    }
+    
+    public void updateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException
+    {
+        updateObject( purgeConfiguration );
+    }
+    
+    public void removeRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException
+    {
+        removeObject( purgeConfiguration );
+    }
+    
+    public List<DirectoryPurgeConfiguration> getAllDirectoryPurgeConfigurations()
+    {
+        return getAllObjectsDetached( DirectoryPurgeConfiguration.class );
+    }
+    
+    public List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsBySchedule( int scheduleId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+        
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( DirectoryPurgeConfiguration.class, true );
+    
+            Query query = pm.newQuery( extent );
+    
+            query.declareParameters( "int scheduleId" );
+    
+            query.setFilter( "this.schedule.id == scheduleId" );
+    
+            List result = (List) query.execute( new Integer( scheduleId ) );
+    
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+    
+            rollback( tx );
+        }
+    }
+    
+    public List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsByLocation( String location )
+    {
+        PersistenceManager pm = getPersistenceManager();
+        
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( DirectoryPurgeConfiguration.class, true );
+    
+            Query query = pm.newQuery( extent );
+    
+            query.declareImports( "import java.lang.String" );
+            
+            query.declareParameters( "String location" );
+    
+            query.setFilter( "this.location == location" );
+    
+            List result = (List) query.execute( location );
+    
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+    
+            rollback( tx );
+        }
+    }
+    
+    public List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsByType( String type )
+    {
+        PersistenceManager pm = getPersistenceManager();
+        
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( DirectoryPurgeConfiguration.class, true );
+    
+            Query query = pm.newQuery( extent );
+    
+            query.declareImports( "import java.lang.String" );
+            
+            query.declareParameters( "String type" );
+    
+            query.setFilter( "this.directoryType == type" );
+    
+            List result = (List) query.execute( type );
+    
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+    
+            rollback( tx );
+        }
+    }
+    
+    public DirectoryPurgeConfiguration getDirectoryPurgeConfiguration( int configurationId )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException
+    {
+        return (DirectoryPurgeConfiguration) getObjectById( DirectoryPurgeConfiguration.class, configurationId );
+    }
+    
+    public DirectoryPurgeConfiguration addDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException
+    {
+        return (DirectoryPurgeConfiguration) addObject( purgeConfiguration );
+    }
+    
+    public void updateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException
+    {
+        updateObject( purgeConfiguration );
+    }
+    
+    public void removeDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException
+    {
+        removeObject( purgeConfiguration );
+    }
+    
+    public List<BuildDefinition> getBuildDefinitionsBySchedule( int scheduleId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+        
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( BuildDefinition.class, true );
+    
+            Query query = pm.newQuery( extent );
+    
+            query.declareParameters( "int scheduleId" );
+    
+            query.setFilter( "this.schedule.id == scheduleId" );
+    
+            List result = (List) query.execute( new Integer( scheduleId ) );
+    
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+    
+            rollback( tx );
+        }
+    }
+    
+    public List<ProjectGroup> getProjectGroupByRepository( int repositoryId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+        
+        Transaction tx = pm.currentTransaction();
+    
+        try
+        {
+            tx.begin();
+    
+            Extent extent = pm.getExtent( ProjectGroup.class, true );
+    
+            Query query = pm.newQuery( extent );
 
+            query.declareParameters( "int repositoryId" );
+    
+            query.setFilter( "this.localRepository.id == repositoryId" );
+    
+            List result = (List) query.execute( new Integer( repositoryId ) );
+            
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+            
+            rollback( tx );
+        }
+    }
+    
     private PersistenceManager getPersistenceManager()
     {
         return getPersistenceManager( getContinuumPersistenceManagerFactory() );
@@ -2040,6 +2463,9 @@ public class JdoContinuumStore
         PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectGroup.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Project.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinition.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), RepositoryPurgeConfiguration.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), LocalRepository.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), DirectoryPurgeConfiguration.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Schedule.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Profile.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Installation.class );

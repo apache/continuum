@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.purge.ContinuumPurgeManager;
+import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -96,6 +98,8 @@ public interface Continuum
     public ProjectGroup getProjectGroupByGroupIdWithBuildDetails( String groupId )
         throws ContinuumException;
 
+    public List<ProjectGroup> getAllProjectGroupsWithRepository( int repositoryId );
+    
     // ----------------------------------------------------------------------
     // Project
     // ----------------------------------------------------------------------
@@ -632,6 +636,15 @@ public interface Continuum
 
     BuildDefinitionService getBuildDefinitionService();
     
+    // ----------------------------------------------------------------------
+    // Continuum Purge
+    // ----------------------------------------------------------------------
+    ContinuumPurgeManager getPurgeManager();
+    
+    // ----------------------------------------------------------------------
+    // Repository Service
+    // ----------------------------------------------------------------------
+    RepositoryService getRepositoryService();
     
     public void startup()
         throws ContinuumException;

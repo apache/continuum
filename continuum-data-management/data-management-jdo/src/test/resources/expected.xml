@@ -349,6 +349,7 @@
           <profile id="1"></profile>
         </buildDefinition>
       </buildDefinitions>
+      <localRepository id="1"></localRepository>
     </projectGroup>
     <projectGroup>
       <id>2</id>
@@ -390,6 +391,7 @@
           <goals>deploy</goals>
         </buildDefinition>
       </buildDefinitions>
+      <localRepository id="2"></localRepository>
     </projectGroup>
   </projectGroups>
   <systemConfiguration>
@@ -481,4 +483,61 @@
       <builder installationId="2"></builder>
     </profile>
   </profiles>
+  <localRepositories>
+    <localRepository>
+      <id>1</id>
+      <name>name1</name>
+      <location>location1</location>
+      <layout>layout1</layout>
+    </localRepository>
+    <localRepository>
+      <id>2</id>
+      <name>name2</name>
+      <location>location2</location>
+      <layout>layout2</layout>
+    </localRepository>
+    <localRepository>
+      <id>3</id>
+      <name>name3</name>
+      <location>location3</location>
+      <layout>layout3</layout>
+    </localRepository>
+  </localRepositories>
+  <repositoryPurgeConfigurations>
+    <repositoryPurgeConfiguration>
+      <repository id="1"></repository>
+      <id>1</id>
+      <deleteAll>true</deleteAll>
+      <retentionCount>5</retentionCount>
+      <daysOlder>50</daysOlder>
+      <schedule id="1"></schedule>
+    </repositoryPurgeConfiguration>
+    <repositoryPurgeConfiguration>
+      <repository id="2"></repository>
+      <deleteReleasedSnapshots>true</deleteReleasedSnapshots>
+      <id>2</id>
+      <retentionCount>10</retentionCount>
+      <daysOlder>200</daysOlder>
+      <schedule id="2"></schedule>
+    </repositoryPurgeConfiguration>
+    <repositoryPurgeConfiguration>
+      <repository id="1"></repository>
+      <deleteReleasedSnapshots>true</deleteReleasedSnapshots>
+      <id>3</id>
+      <retentionCount>10</retentionCount>
+      <daysOlder>200</daysOlder>
+      <schedule id="1"></schedule>
+    </repositoryPurgeConfiguration>
+  </repositoryPurgeConfigurations>
+  <directoryPurgeConfigurations>
+    <directoryPurgeConfiguration>
+      <location>location1</location>
+      <directoryType>directoryType1</directoryType>
+      <id>4</id>
+      <deleteAll>true</deleteAll>
+      <retentionCount>10</retentionCount>
+      <daysOlder>50</daysOlder>
+      <schedule id="1"></schedule>
+    </directoryPurgeConfiguration>
+  </directoryPurgeConfigurations>
 </continuumDatabase>

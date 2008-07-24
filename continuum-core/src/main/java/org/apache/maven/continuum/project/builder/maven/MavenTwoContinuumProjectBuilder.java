@@ -19,6 +19,7 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -415,6 +416,21 @@ public class MavenTwoContinuumProjectBuilder
 
         projectGroup.setDescription( mavenProject.getDescription() );
 
+        // ----------------------------------------------------------------------
+        // Local Repository
+        // ----------------------------------------------------------------------
+        
+        try
+        {
+            LocalRepository repository = store.getLocalRepositoryByName( "DEFAULT" );
+        
+            projectGroup.setLocalRepository( repository );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            getLogger().warn( "Can't get default repository.", e );
+        }
+        
         return projectGroup;
     }
 

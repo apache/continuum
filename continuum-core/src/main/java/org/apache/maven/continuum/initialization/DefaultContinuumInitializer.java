@@ -19,15 +19,23 @@ package org.apache.maven.continuum.initialization;
  * under the License.
  */
 
+import java.io.IOException;
+
+import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
+import org.apache.maven.continuum.execution.maven.m2.SettingsConfigurationException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.settings.MavenSettingsBuilder;
+import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jpox.SchemaTool;
 
 /**
@@ -55,6 +63,11 @@ public class DefaultContinuumInitializer
      */
     private BuildDefinitionService buildDefinitionService;
 
+    /**
+     * @plexus.requirement
+     */
+    private MavenSettingsBuilder mavenSettingsBuilder;
+    
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -90,6 +103,8 @@ public class DefaultContinuumInitializer
                 systemConf = store.addSystemConfiguration( systemConf );
             }
 
+            createDefaultLocalRepository();
+            
             createDefaultProjectGroup();
         }
         catch ( ContinuumStoreException e )
@@ -126,10 +141,76 @@ public class DefaultContinuumInitializer
 
             group.setDescription( "Contains all projects that do not have a group of their own" );
 
+            LocalRepository localRepository = store.getLocalRepositoryByName( "DEFAULT" );
+            
+            group.setLocalRepository( localRepository );
+            
             group.getBuildDefinitions().addAll(
                 buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions() );
 
             group = store.addProjectGroup( group );
+        }
+    }
+    
+    private void createDefaultLocalRepository()
+        throws ContinuumStoreException, ContinuumInitializationException
+    {
+        LocalRepository repository;
+        
+        repository = store.getLocalRepositoryByName( "DEFAULT" );
+        
+        Settings settings = getSettings();
+        
+        if ( repository == null )
+        {
+            getLogger().info( "create Default Local Repository" );
+            
+            repository = new LocalRepository();
+            
+            repository.setName( "DEFAULT" );
+            
+            repository.setLocation( settings.getLocalRepository() );
+            
+            repository = store.addLocalRepository( repository );
+            
+            createDefaultPurgeConfiguration( repository );
+        }
+        else if ( !repository.getLocation().equals( settings.getLocalRepository() ) )
+        {
+            getLogger().info( "updating location of Default Local Repository" );
+            
+            repository.setLocation( settings.getLocalRepository() );
+            
+            store.updateLocalRepository( repository );
+        }
+    }
+    
+    private void createDefaultPurgeConfiguration( LocalRepository repository )
+        throws ContinuumStoreException
+    {
+        RepositoryPurgeConfiguration repoPurge = new RepositoryPurgeConfiguration();
+        
+        repoPurge.setRepository( repository );
+        
+        repoPurge.setDefaultPurge( true );
+        
+        store.addRepositoryPurgeConfiguration( repoPurge );
+    }
+    
+    private Settings getSettings()
+        throws ContinuumInitializationException
+    {
+        try
+        {
+            return mavenSettingsBuilder.buildSettings( false );
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumInitializationException( "Error reading settings file", e );
+        }
+        catch ( XmlPullParserException e )
+        {
+            throw new ContinuumInitializationException( e.getMessage(), e );
         }
     }
 }

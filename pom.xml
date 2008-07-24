@@ -170,6 +170,7 @@ under the License.
     <module>maven-continuum-plugin</module>
     <module>continuum-docs</module>
     <module>continuum-jetty</module>
+    <module>continuum-purge</module>
   </modules>
   <repositories>
     <repository>
@@ -861,6 +862,21 @@ under the License.
         <artifactId>spring-web</artifactId>
         <version>${spring.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-purge</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.archiva</groupId>
+	<artifactId>archiva-common</artifactId>
+        <version>${archiva.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.archiva</groupId>
+        <artifactId>archiva-repository-layer</artifactId>
+        <version>${archiva.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -910,5 +926,6 @@ under the License.
     <maven-scm.version>1.1-SNAPSHOT</maven-scm.version>
     <redback.version>1.0.2</redback.version>
     <mail-sender.version>1.0-alpha-7</mail-sender.version>
+    <archiva.version>1.1</archiva.version>
   </properties>
 </project>

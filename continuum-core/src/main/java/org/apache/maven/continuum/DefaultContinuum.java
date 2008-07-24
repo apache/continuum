@@ -21,6 +21,8 @@ package org.apache.maven.continuum;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.continuum.purge.ContinuumPurgeManager;
+import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -192,6 +194,16 @@ public class DefaultContinuum
 
     private boolean stopped = false;
 
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumPurgeManager purgeManager;
+    
+    /**
+     * @plexus.requirement
+     */
+    private RepositoryService repositoryService;
+    
     public DefaultContinuum()
     {
         Runtime.getRuntime().addShutdownHook( new Thread()
@@ -223,6 +235,16 @@ public class DefaultContinuum
     public ActionManager getActionManager()
     {
         return actionManager;
+    }
+    
+    public ContinuumPurgeManager getPurgeManager()
+    {
+        return purgeManager;
+    }
+    
+    public RepositoryService getRepositoryService()
+    {
+        return repositoryService;
     }
 
     // ----------------------------------------------------------------------
@@ -383,6 +405,11 @@ public class DefaultContinuum
         {
             throw new ContinuumException( "Error retrieving", e );
         }
+    }
+    
+    public List<ProjectGroup> getAllProjectGroupsWithRepository( int repositoryId )
+    {
+        return store.getProjectGroupByRepository( repositoryId );
     }
 
     // ----------------------------------------------------------------------

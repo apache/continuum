@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.deployer.ArtifactDeployer;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -106,10 +107,14 @@ public class DeployArtifactContinuumAction
                                                                        workingDirectoryService.getWorkingDirectory(
                                                                            project ), buildDefinition );
 
+                LocalRepository repository = project.getProjectGroup().getLocalRepository();
+                
+                builderHelper.setLocalRepository( repository );
+                
+                ArtifactRepository localRepository = builderHelper.getLocalRepository();
+                
                 for ( Artifact artifact : artifacts )
                 {
-                    ArtifactRepository localRepository = builderHelper.getLocalRepository();
-
                     ArtifactRepositoryLayout repositoryLayout = new DefaultRepositoryLayout();
 
                     if ( !deploymentRepositoryDirectory.exists() )

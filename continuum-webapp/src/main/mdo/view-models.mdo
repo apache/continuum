@@ -254,6 +254,21 @@
           <type>int</type>
           <defaultValue>-1</defaultValue>
         </field>
+        <field>
+          <name>repositoryId</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>local repository id of the project group</description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>repositoryName</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>local repository name of the project group</description>
+          <type>String</type>
+        </field>
       </fields>
     </class>
     <class>
