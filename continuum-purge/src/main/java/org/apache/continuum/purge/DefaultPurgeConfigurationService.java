@@ -41,6 +41,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
  * DefaultPurgeConfigurationService
  * 
  * @author Maria Catherine Tan
+ * @version $Id$
+ * @since 25 jul 07
  * @plexus.component role="org.apache.continuum.purge.PurgeConfigurationService" role-hint="default"
  */
 public class DefaultPurgeConfigurationService

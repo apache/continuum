@@ -51,6 +51,8 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
  * DefaultContinuumPurgeManager
  * 
  * @author Maria Catherine Tan
+ * @version $Id$
+ * @since 25 jul 07
  * @plexus.component role="org.apache.continuum.purge.ContinuumPurgeManager" role-hint="default"
  */
 public class DefaultContinuumPurgeManager

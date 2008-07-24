@@ -21,6 +21,8 @@ package org.apache.continuum.purge;
 
 /**
  * @author Maria Catherine Tan
+ * @version $Id$
+ * @since 25 jul 07
  */
 public class ContinuumPurgeManagerException
     extends Exception

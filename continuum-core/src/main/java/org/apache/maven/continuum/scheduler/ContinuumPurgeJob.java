@@ -30,6 +30,8 @@ import org.quartz.JobExecutionContext;
 
 /**
  * @author Maria Catherine Tan
+ * @version $Id$
+ * @since 25 jul 07
  */
 public class ContinuumPurgeJob
     extends AbstractJob

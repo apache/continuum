@@ -42,6 +42,8 @@ import com.opensymphony.xwork.Preparable;
 
 /**
  * @author Maria Catherine Tan
+ * @version $Id$
+ * @since 25 jul 07
  * @plexus.component role="com.opensymphony.xwork.Action" role-hint="localRepository"
  */
 public class LocalRepositoryAction

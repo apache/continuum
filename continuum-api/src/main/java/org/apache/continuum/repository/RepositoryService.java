@@ -25,6 +25,8 @@ import org.apache.continuum.model.repository.LocalRepository;
 
 /**
  * @author Maria Catherine Tan
+ * @version $Id$
+ * @since 25 jul 07
  */
 public interface RepositoryService
 {

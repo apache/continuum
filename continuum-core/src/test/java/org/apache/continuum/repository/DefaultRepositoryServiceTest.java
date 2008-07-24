@@ -29,6 +29,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 
 /**
  * @author Maria Catherine Tan
+ * @version $Id$
+ * @since 25 jul 07
  */
 public class DefaultRepositoryServiceTest
     extends AbstractContinuumTest

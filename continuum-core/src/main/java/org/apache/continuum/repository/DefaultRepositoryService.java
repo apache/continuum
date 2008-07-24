@@ -37,6 +37,8 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  * DefaultRepositoryService
  * 
  * @author Maria Catherine Tan
+ * @version $Id$
+ * @since 25 jul 07
  * @plexus.component role="org.apache.continuum.repository.RepositoryService" role-hint="default"
  */
 public class DefaultRepositoryService

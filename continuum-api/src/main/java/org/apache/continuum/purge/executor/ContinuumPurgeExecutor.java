@@ -22,6 +22,8 @@ package org.apache.continuum.purge.executor;
 
 /**
  * @author Maria Catherine Tan
+ * @version $Id$
+ * @since 25 jul 07
  */
 public interface ContinuumPurgeExecutor
 {
