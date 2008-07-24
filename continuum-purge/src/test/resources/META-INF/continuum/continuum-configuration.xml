@@ -22,8 +22,8 @@
 <configuration>
   <system/>
   <jndi prefix="java:comp/env" config-optional="true"/>  
-  <xml fileName="${appserver.base}/conf/continuum.xml" config-optional="true"
+  <xml fileName="target/conf/continuum.xml" config-optional="true"
        config-forceCreate="true" config-name="org.apache.continuum"/>
-  <xml fileName="${user.home}/.m2/continuum.xml" config-optional="true"
+  <xml fileName="target/.m2/continuum.xml" config-optional="true"
        config-forceCreate="true" config-name="org.apache.continuum.user"/>  
 </configuration>
