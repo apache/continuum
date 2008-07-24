@@ -1,0 +1,31 @@
+ ------
+ Managing Jdk
+ ------
+ Olivier Lamy
+ ------
+ Oct 11 2007
+ ------
+ 
+Managing Jdk
+
+  From the menu, choose the 'Installations' entry 
+  
+[../../../images/installations.png] Installations
+
+  Here you must choose the Installation Type you want to add (here a Tool)
+
+[../../../images/installation-type-choice.png] Installation Type Choice
+
+  You must configure the tool you want to add
+
+[../../../images/add-jdk.png] Tool Setup
+
+  You can use the checkbox if you want to add a Profile with the same name as your jdk name.
+  
+  The value 'Value/Path' field must contains the jdk path (as a JAVA_HOME value).
+  
+  The value will validated with testing path/bin/java -version
+  
+  It the the test, the following error will be displayed 
+  
+[../../../images/jdk-validation-failed.png] Jdk validation failed   

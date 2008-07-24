@@ -1,0 +1,26 @@
+ ------
+ Building Projects
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+ ------
+
+Building Projects
+
+    For Ant, maven 1/2 builds the following system properties will be added via -D command line :
+    
+    * continuum.project.group.name
+    
+    * continuum.project.lastBuild.state : last build state int flag
+    
+    * continuum.project.lastBuild.number
+    
+    * continuum.project.nextBuild.number
+    
+    * continuum.project.id
+    
+    * continuum.project.name
+    
+    * continuum.project.version 
+    

@@ -1,0 +1,457 @@
+<model>
+  <id>continuum-view-models</id>
+  <name>ContinuumViewModels</name>
+  <defaults>
+    <default>
+      <key>package</key>
+      <value>org.apache.maven.continuum.web.model</value>
+    </default>
+  </defaults>
+  <classes>
+    <class rootElement="true">
+      <name>ContinuumViewModels</name>
+      <version>1.0.0</version>
+      <fields>
+        <field>
+          <name>projectSummarys</name>
+          <version>1.0.0</version>
+          <description></description>
+          <required>true</required>
+          <association>
+            <type>ProjectSummary</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+         <field>
+          <name>groupSummarys</name>
+          <version>1.0.0</version>
+          <description></description>
+          <required>true</required>
+          <association>
+            <type>GroupSummary</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+         <field>
+          <name>buildDefinitionSummarys</name>
+          <version>1.0.0</version>
+          <description></description>
+          <required>true</required>
+          <association>
+            <type>BuildDefinitionSummary</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>notifierSummarys</name>
+          <version>1.0.0</version>
+          <description></description>
+          <required>false</required>
+          <association>
+            <type>NotifierSummary</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>ProjectSummary</name>
+      <version>1.0.0</version>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>project id of the project</description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>name of the project</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>version</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>version of the project</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projectGroupId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>id of the project group this project is a member of</description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>projectGroupName</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>name of the project group this project is a member of</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>latestBuildId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>latest build id of the project</description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>buildInSuccessId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description></description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>buildNumber</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description></description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>state</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>lifecycle state of the project</description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>inBuildingQueue</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>true/false depending on if the project is in the build queue or not</description>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+        </field>
+        <field>
+          <name>inCheckoutQueue</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>true/false depending on if the project is in the checkout queue or not</description>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+        </field>
+        <field>
+          <name>lastBuildDateTime</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>last build dateTime of the project</description>
+          <type>long</type>
+        </field>
+        <field>
+          <name>lastBuildDuration</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>last build duration of the project</description>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>GroupSummary</name>
+      <version>1.0.0</version>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>internal continuum group id</description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>name of the project group</description>
+          <type>String</type>
+        </field>
+         <field>
+          <name>groupId</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>maven groupId of the project group</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>description of the project group</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>numProjects</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>the number of projects in the project group</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectType</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>the type of project, maven2/maven1/ant/shell</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>statusMessage</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>a status message like, (building project X)</description>
+          <type>String</type>
+        </field>
+        <field>
+         <name>nextScheduledBuild</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>timestamp for the next scheduled build</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projects</name>
+          <version>1.0.0</version>
+          <description></description>
+          <required>true</required>
+          <association>
+            <type>ProjectSummary</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>numSuccesses</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>number of successful builds in the project group</description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>numFailures</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>number of failed builds in the project group</description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+        <field>
+          <name>numErrors</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>number of errored builds in the project group</description>
+          <type>int</type>
+          <defaultValue>-1</defaultValue>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>BuildDefinitionSummary</name>
+      <version>1.0.0+</version>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>id of the build definition</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectId</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>project id of the project containing the build definition</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectGroupId</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>project group id of the project group with the build definition</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>goals</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>goals for build definition</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>arguments</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>arguments for build definition</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildFile</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>goals for build definition</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>isBuildFresh</name>
+          <version>1.0.0</version>
+          <description>if the build is to be smoked and checked back out from the scm each build</description>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>isDefault</name>
+          <version>1.0.0</version>
+          <description>if the build definition is used in default cases</description>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>scheduleId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>id of the schedule for build definition</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>scheduleName</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>name of the schedule for build definition</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>from</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>source of build definition, project or project group lvl</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>profileName</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>name of the profile for the build definition</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projectName</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>if project lvl, then the name of the project using the definition</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>profileId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>id of the profile for build definition</description>
+          <type>int</type>
+        </field> 
+        <field>
+          <name>description</name>
+          <version>1.0.0</version>
+          <type>String</type>
+          <description>description of the buid defintion</description>
+        </field>
+        <field>
+          <name>type</name>
+          <version>1.0.0</version>
+          <type>String</type>
+          <description>type of the buid defintion</description>
+        </field>   
+        <field>
+          <name>alwaysBuild</name>
+          <version>1.0.0</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>true if the build had to be forced even if there is no scm change</description>
+        </field>                    
+      </fields>
+    </class>
+    <class>
+      <name>NotifierSummary</name>
+      <version>1.0.0+</version>
+       <fields>
+        <field>
+          <name>id</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>id of the notifier</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectId</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>project id of the project containing the notifier</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectName</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>project name of the project containing the notifier</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projectGroupId</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>project group id of the project group with the notifier</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>type</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>Type of notifier - mail, IRC, jabber etc.</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>fromProject</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>The origin of the notifier (pom or user).</description>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>events</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>Events that trigger this notifier</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>recipient</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>Recipient for notifications generated by the notifier</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>sender</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>Sender of the notifications</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>enabled</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>Determines if the notifier is enabled</description>
+          <type>boolean</type>
+        </field>
+      </fields>
+    </class>    
+  </classes>
+</model>

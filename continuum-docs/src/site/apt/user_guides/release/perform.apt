@@ -1,0 +1,17 @@
+ ------
+ Perform Release
+ ------
+
+Perform Release
+
+ Choose "Perform Release" and the version number
+
+[./../../images/release-choose-perform-goal.png]
+
+ Fill in the form and click Submit
+
+[./../../images/release-perform-parameters.png]
+
+ Wait for the process to complete, then click Done.
+
+[./../../images/release-perform-executing.png]

@@ -1,0 +1,19 @@
+ ------
+ Installation/Upgrade Guides
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+ ------
+
+Installation/Upgrade Guides
+
+    In this section, you'll find informations about Continuum installations:
+
+    * {{{requirements.html}System Requirements}}
+
+    * {{{installation.html}Installation in different environment (standalone, webapp, service)}}
+
+    * {{{release-notes.html}Release Notes}}
+
+    * {{{upgrade.html}How to upgrade from a previous version?}}

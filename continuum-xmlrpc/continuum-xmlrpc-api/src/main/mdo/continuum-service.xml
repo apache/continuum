@@ -1,0 +1,1206 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<model>
+  <id>continuum-client</id>
+  <name>Continuum Client</name>
+  <description>Continuum's remote client object model.</description>
+  <defaults>
+    <default>
+      <key>package</key>
+      <value>org.apache.maven.continuum.xmlrpc.project</value>
+    </default>
+  </defaults>
+
+  <classes>
+    <class>
+      <name>ProjectGroupSummary</name>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.0+</version>
+          <required>true</required>
+          <type>int</type>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>groupId</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>ProjectGroup</name>
+      <version>1.1.0+</version>
+      <superClass>ProjectGroupSummary</superClass>
+      <fields>
+        <field>
+          <name>projects</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectSummary</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>notifiers</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectNotifier</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>buildDefinitions</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>BuildDefinition</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>ProjectSummary</name>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>id</name>
+          <required>true</required>
+          <identifier>true</identifier>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>groupId</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>artifactId</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>executorId</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>url</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>scmUrl</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>scmTag</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>scmUsername</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>scmPassword</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>scmUseCache</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>version</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <!-- TODO: should these 3 just be queried from the builds list? -->
+        <field>
+          <name>state</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+          <defaultValue>1</defaultValue>
+        </field>
+        <field>
+          <name>oldState</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <!-- TODO: maybe buildresult itself? -->
+        <field>
+          <name>latestBuildId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>buildNumber</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>workingDirectory</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>relativePath</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projectGroup</name>
+          <version>1.1.0+</version>
+          <required>true</required>
+          <association xml.reference="true">
+            <type>ProjectGroupSummary</type>
+          </association>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>Project</name>
+      <version>1.1.0+</version>
+      <superClass>ProjectSummary</superClass>
+      <fields>
+        <field>
+          <name>parent</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectDependency</type>
+          </association>
+        </field>
+        <field>
+          <name>developers</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectDeveloper</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>dependencies</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectDependency</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>notifiers</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectNotifier</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>buildDefinitions</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>BuildDefinition</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>ProjectNotifier</name>
+      <version>1.1.0+</version>
+      <description>
+        Configures one method for notifying users/developers when a build breaks.
+      </description>
+      <fields>
+        <field>
+          <name>id</name>
+          <required>true</required>
+          <identifier>true</identifier>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>type</name>
+          <version>1.1.0+</version>
+          <defaultValue>mail</defaultValue>
+          <type>String</type>
+          <description>The mechanism used to deliver notifications.</description>
+        </field>
+        <field>
+          <name>from</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+          <description>The origin of the notifier (pom or user).</description>
+        </field>
+        <field>
+          <name>enabled</name>
+          <version>1.1.0+</version>
+          <defaultValue>true</defaultValue>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>recipientType</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>sendOnSuccess</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>true</defaultValue>
+        </field>
+        <field>
+          <name>sendOnFailure</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>true</defaultValue>
+        </field>
+        <field>
+          <name>sendOnError</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>true</defaultValue>
+        </field>
+        <field>
+          <name>sendOnWarning</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>true</defaultValue>
+        </field>
+        <field>
+          <name>configuration</name>
+          <version>1.1.0+</version>
+          <description>Extended configuration specific to this notifier goes here.</description>
+          <type>Map</type>
+          <association xml.mapStyle="inline">
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>1.1.0+</version>
+          <code><![CDATA[
+
+              public static final int FROM_PROJECT = 1;
+
+              public static final int FROM_USER = 2;
+
+              public boolean isFromProject()
+              {
+                  return from == FROM_PROJECT;
+              }
+
+              public boolean isFromUser()
+              {
+                  return from == FROM_USER;
+              }
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+
+    <class>
+      <name>ProjectDeveloper</name>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>scmId</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>email</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>continuumId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>ProjectDependency</name>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>groupId</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>artifactId</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>version</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>BuildResultSummary</name>
+      <version>1.1.0+</version>
+      <description><![CDATA[
+        This class is a summary of a single continuum build.
+      ]]></description>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>buildNumber</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>state</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>startTime</name>
+          <version>1.1.0+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>endTime</name>
+          <version>1.1.0+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>success</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>exitCode</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>error</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>trigger</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>project</name>
+          <version>1.1.0+</version>
+          <required>true</required>
+          <association xml.reference="true">
+            <type>ProjectSummary</type>
+          </association>
+        </field>
+        <field>
+          <name>buildDefinition</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true">
+            <type>BuildDefinition</type>
+          </association>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>BuildResult</name>
+      <version>1.1.0+</version>
+      <superClass>BuildResultSummary</superClass>
+      <description><![CDATA[
+        This class is a summary of a single continuum build.
+      ]]></description>
+      <fields>
+        <field>
+          <name>scmResult</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ScmResult</type>
+          </association>
+        </field>
+        <field>
+          <name>modifiedDependencies</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectDependency</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>AddingResult</name>
+      <version>1.1.0+</version>
+      <description><![CDATA[
+        This class is the result of add maven project action.
+      ]]></description>
+      <fields>
+        <field>
+          <name>projects</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectSummary</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
+          <name>projectGroups</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ProjectGroupSummary</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+      <codeSegments>
+        <codeSegment>
+           <version>1.1.0+</version>
+           <code><![CDATA[
+            private java.util.List errors = new java.util.ArrayList();
+
+            /**
+             * Add an error that happened during adding the project to Continuum.
+             *
+             * @param errorKey error id (so it can be internationalized later)
+             */
+            public void addError( String errorKey )
+            {
+                errors.add( errorKey );
+            }
+
+            /**
+             * Get the errors that happened during adding the project to Continuum.
+             * There is an entry with the error key (so it can be internationalized later) for each error.
+             *
+             * @return {@link java.util.List} &lt; {@link String} >
+             */
+            public java.util.List getErrors()
+            {
+                return errors;
+            }
+
+            /**
+             * Quick check to see if there are any errors.
+             *
+             * @return boolean indicating if there are any errors.
+             */
+            public boolean hasErrors()
+            {
+                return ( errors != null ) && ( !errors.isEmpty() );
+            }
+
+            /**
+             * Returns a string representation of the errors.
+             *
+             * @return a string representation of the errors.
+             */
+            public String getErrorsAsString()
+            {
+                if ( !hasErrors() )
+                {
+                    return null;
+                }
+
+                StringBuffer message = new StringBuffer();
+                for ( java.util.Iterator i = errors.iterator(); i.hasNext(); )
+                {
+                    String error = (String) i.next();
+                    message.append( error );
+                    message.append( "\n" );
+                }
+                return message.toString();
+            }
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+
+    <class>
+      <name>ScmResult</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.scm</packageName>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>success</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>commandLine</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>providerMessage</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>commandOutput</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>exception</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>changes</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ChangeSet</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>ChangeSet</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.scm</packageName>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <identity>true</identity>
+        </field>
+        <field>
+          <name>author</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field stash.maxSize="8192">
+          <name>comment</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>date</name>
+          <version>1.1.0+</version>
+          <!-- TODO: Because JPOX persists as UTC and pulls back using the local time, we have to take over -->
+          <type>long</type>
+        </field>
+        <field>
+          <name>files</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>ChangeFile</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>1.1.0+</version>
+          <code><![CDATA[
+            /**
+             * @return Returns string representation of the changeset
+             */
+            public String toString()
+            {
+                String result = author + "\n" + date + "\n";
+
+                if ( files != null )
+                {
+                    for ( java.util.Iterator i = files.iterator(); i.hasNext(); )
+                    {
+                        ChangeFile file = (ChangeFile) i.next();
+
+                        result += file + "\n";
+                    }
+                }
+
+                result += comment;
+
+                return result;
+            }
+
+            /**
+             * @see java.lang.Object#equals(java.lang.Object)
+             */
+            public boolean equals( Object obj )
+            {
+                if ( obj instanceof ChangeSet )
+                {
+                    ChangeSet changeSet = (ChangeSet) obj;
+
+                    if ( toString().equals( changeSet.toString() ) )
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            public java.util.Date getDateAsDate()
+            {
+                if ( date > 0 )
+                {
+                    return new java.util.Date( date );
+                }
+
+                return null;
+            }
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+
+    <class>
+      <name>ChangeFile</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.scm</packageName>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>revision</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>status</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+      </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>1.1.0+</version>
+          <code><![CDATA[
+            /**
+             * Provide a version of the object as a string for debugging purposes
+             *
+             * @return a {@link String}made up of the properties of the object
+             */
+            public String toString()
+            {
+                StringBuffer buffer = new StringBuffer( getName() );
+
+                if ( getRevision() != null )
+                {
+                    buffer.append( ", " ).append( getRevision() );
+                }
+
+                return buffer.toString();
+            }
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+
+    <class>
+      <name>BuildDefinition</name>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>id</name>
+          <required>true</required>
+          <identifier>true</identifier>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>defaultForProject</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+        </field>
+        <field>
+          <name>goals</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>arguments</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildFile</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildFresh</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if the build is to be smoked and checked back out from the scm each build
+          </description>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>description of the buid defintion</description>
+        </field>
+        <field>
+          <name>type</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>type of the buid defintion</description>          
+        </field>                
+        <field>
+          <name>schedule</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true">
+            <type>Schedule</type>
+          </association>
+        </field>
+        <field>
+          <name>profile</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true">
+            <type>Profile</type>
+          </association>
+        </field>
+        <field>
+          <name>alwaysBuild</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if the build had to be forced even if there is no scm change
+          </description>
+        </field>
+        <field>
+          <name>template</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if this buildDefinition is a template
+          </description>
+        </field>         
+      </fields>
+    </class>
+    <class>
+      <name>BuildDefinitionTemplate</name>
+      <version>1.1.0+</version>
+      <description>Template which contains some buildDefinitions</description>
+      <fields>
+        <field>
+          <name>id</name>
+          <identifier>true</identifier>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <required>true</required>
+        </field>
+        <field>
+          <name>continuumDefault</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            true if this definition is a continuum default build def (cannot be removed)
+          </description>
+        </field>
+        <field>
+          <name>type</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+          <description>type of the buid BuildDefinitionTemplate use for default</description>          
+        </field>                                
+        <field xml.reference="true" stash.part="true">
+          <name>buildDefinitions</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true" stash.part="true">
+            <type>BuildDefinition</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>Schedule</name>
+      <version>1.1.0+</version>
+      <description><![CDATA[
+        Schedule for a project.
+      ]]></description>
+      <fields>
+        <field>
+          <name>id</name>
+          <identifier>true</identifier>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>active</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>delay</name>
+          <description><![CDATA[
+            Delay in seconds.
+          ]]></description>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>maxJobExecutionTime</name>
+          <description>
+            Maximum execution time of a job in seconds before it's
+            terminated.
+          </description>
+          <version>1.1.0+</version>
+          <type>int</type>
+          <defaultValue>3600</defaultValue>
+        </field>
+        <field>
+          <name>cronExpression</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>
+
+    <class>
+      <name>Profile</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.system</packageName>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>id</name>
+          <identifier>true</identifier>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>active</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>scmMode</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>buildWithoutChanges</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>jdk</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true">
+            <type>Installation</type>
+          </association>
+        </field>
+        <field>
+          <name>builder</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true">
+            <type>Installation</type>
+          </association>
+        </field>
+        <field>
+          <name>environmentVariables</name>
+          <version>1.1.0+</version>
+          <association xml.reference="true">
+            <type>Installation</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>          
+      </fields>
+    </class>
+
+    <class>
+      <name>Installation</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.system</packageName>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>type</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>varValue</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>varName</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>          
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>installationId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+          <identifier>true</identifier>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>SystemConfiguration</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.system</packageName>
+      <version>1.0.9+</version>
+      <fields>
+        <field>
+          <name>guestAccountEnabled</name>
+          <version>1.0.9+</version>
+          <type>boolean</type>
+          <defaultValue>true</defaultValue>
+        </field>
+        <field>
+          <name>defaultScheduleDescription</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+          <defaultValue>Run hourly</defaultValue>
+        </field>
+        <field>
+          <name>defaultScheduleCronExpression</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+          <defaultValue>0 0 * * * ?</defaultValue>
+        </field>
+        <field>
+          <name>workingDirectory</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+          <defaultValue>working-directory</defaultValue>
+        </field>
+        <field>
+          <name>buildOutputDirectory</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+          <defaultValue>build-output-directory</defaultValue>
+        </field>
+        <field>
+          <name>deploymentRepositoryDirectory</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>baseUrl</name>
+          <version>1.0.9+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>initialized</name>
+          <version>1.0.9+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+        </field>
+      </fields>
+    </class>
+
+    <!-- TODO: this isn't really appropriate to generate with Modello -->
+    <class>
+      <name>ContinuumProjectState</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.project</packageName>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>name</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+      </fields>
+      <codeSegments>
+        <codeSegment>
+           <version>1.1.0+</version>
+           <code><![CDATA[
+    public final static int NEW = 1;
+    public final static int OK = 2;
+    public final static int FAILED = 3;
+    public final static int ERROR = 4;
+    public final static int BUILDING = 6;
+    public final static int CHECKING_OUT = 7;
+    public final static int UPDATING = 8;
+    public final static int WARNING = 9;
+    public final static int CHECKEDOUT = 10;
+
+    // TODO: maybe move these to another class
+    public static final int TRIGGER_FORCED = 1;
+
+    // TODO: remove
+    public static final int TRIGGER_SCHEDULED = 0;
+
+    public static final int TRIGGER_UNKNOWN = TRIGGER_SCHEDULED;
+
+    public String getI18nKey()
+    {
+        return "org.apache.maven.continuum.project.state." + name;
+    }
+
+    public boolean equals( Object object )
+    {
+        if ( !( object instanceof ContinuumProjectState ) )
+        {
+            return false;
+        }
+
+        ContinuumProjectState other = (ContinuumProjectState) object;
+
+        return name.equals( other.name );
+    }
+
+    public int hashCode()
+    {
+        return name.hashCode();
+    }
+
+    public String toString()
+    {
+        return name;
+    }
+           ]]></code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+
+    <class>
+      <name>BuildProjectTask</name>
+      <packageName>org.apache.maven.continuum.xmlrpc.project</packageName>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>projectId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>buildDefinitionId</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>timestamp</name>
+          <version>1.1.0+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>trigger</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>maxExecutionTime</name>
+          <version>1.1.0+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>projectName</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildDefinitionLabel</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class>    
+    
+  </classes>
+</model>
