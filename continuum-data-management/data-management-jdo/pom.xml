@@ -66,6 +66,18 @@
       <!-- Temporary while we have the OID patch in there
             <scope>test</scope>
       -->
+      <exclusions>
+        <exclusion>
+          <groupId>javax.transaction</groupId>
+          <artifactId>jta</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.5.0</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>hsqldb</groupId>
