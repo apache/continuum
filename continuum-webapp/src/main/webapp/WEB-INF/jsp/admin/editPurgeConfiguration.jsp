@@ -56,15 +56,7 @@
             <c:if test="${purgeType == 'repository'}">
               <ww:checkbox label="%{getText('purgeConfig.deleteReleasedSnapshots.label')}" name="deleteReleasedSnapshots"/>
             </c:if>
-            <c:choose>
-              <c:when test="${defaultPurgeConfiguration == true}">
-                <ww:hidden name="defaultPurgeConfiguration"/>
-                <ww:label label="%{getText('purgeConfig.defaultPurge.label')}" value="true"/>
-              </c:when>
-              <c:otherwise>
-                <ww:checkbox label="%{getText('purgeConfig.defaultPurge.label')}" name="defaultPurgeConfiguration" value="defaultPurgeConfiguration" fieldValue="true"/>
-              </c:otherwise>
-            </c:choose>
+            <ww:checkbox label="%{getText('purgeConfig.defaultPurge.label')}" name="defaultPurgeConfiguration" value="defaultPurgeConfiguration" fieldValue="true"/>
             <ww:select label="%{getText('purgeConfig.schedule.label')}" name="scheduleId" list="schedules"
                        headerKey="-1" headerValue=""/>
             <ww:textfield label="%{getText('purgeConfig.description.label')}" name="description"/>

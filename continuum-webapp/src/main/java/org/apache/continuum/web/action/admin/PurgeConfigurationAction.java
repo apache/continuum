@@ -163,7 +163,7 @@ public class PurgeConfigurationAction
             if ( purgeConfig instanceof RepositoryPurgeConfiguration )
             {
                 RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
-                
+
                 this.purgeType = PURGE_TYPE_REPOSITORY;
                 this.daysOlder = repoPurge.getDaysOlder();
                 this.retentionCount = repoPurge.getRetentionCount();
