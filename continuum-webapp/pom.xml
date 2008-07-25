@@ -549,6 +549,11 @@ under the License.
       <artifactId>commons-configuration</artifactId>
     </dependency>    
     <dependency>
+      <groupId>jmock</groupId>
+      <artifactId>jmock</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
       <version>1.4</version>
