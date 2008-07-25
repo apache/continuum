@@ -12,7 +12,7 @@ Guide to Install Continuum on Geronimo
 
     Sections:
 
-%{toc|section=0}
+~~%{toc|section=0}
 
 * {Datasource Configuration}
 

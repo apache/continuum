@@ -10,6 +10,6 @@ Remove a Project
 
     To remove a project, go to the project group summary and use the <<delete>> icon.
 
-[./../../../../images/delete.gif] Delete icon
+[../../images/delete.gif] Delete icon
 
     You can also use the <<<'Delete group'>>> button in the project group summary to remove the whole project group.
