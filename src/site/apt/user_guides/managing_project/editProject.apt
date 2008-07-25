@@ -9,7 +9,7 @@
 
 Edit a Project
 
-%{toc|section=0}
+~~%{toc|section=0}
 
 * {Project View}
 
@@ -28,7 +28,7 @@ Edit a Project
 
   []
 
-[../../../../images/project-view-top.png] Project View Top
+[../../images/project-view-top.png] Project View Top
 
   With the <<<'Edit'>>> button, you can change some project informations like the scm url if your project was moved.
   With the <<<'Build Now'>>> button, you build the project manually with the default build definition.
@@ -43,7 +43,7 @@ Edit a Project
 
   []
 
-[../../../../images/project-view-bottom.png] Project View Bottom
+[../../images/project-view-bottom.png] Project View Bottom
 
 * {Build Results}
 
@@ -51,7 +51,7 @@ Edit a Project
   You will see all build results summary : start/end Time, result.
   It's possible to delete some build results with checkboxes
 
-[../../../../images/build-results.png] Build Results
+[../../images/build-results.png] Build Results
 
   Now you can edit a build result
 
@@ -69,7 +69,7 @@ Edit a Project
 
   []
 
-[../../../../images/build-result.png] Build Result
+[../../images/build-result.png] Build Result
 
 
 
