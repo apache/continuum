@@ -10,14 +10,14 @@ Build Definition Template
 
   From the menu, choose the 'Build Definition Templates' entry
     
-[./../../../../images/builddefinition-templates.png] Build Definition Templates
+[../images/builddefinition-templates.png] Build Definition Templates
 
   You will see all build definition templates and the build definitions which can be added in templates.
   In this screen you can add/edit/update/delete a build definition (<<the Continuum defaults can be deleted>>)
   
-[./../../../../images/builddefinition-templates-list.png] Build Definition Templates
+[../images/builddefinition-templates-list.png] Build Definition Templates
 
   In the build definition template edit screen, you can easily one or more build definitions.
 
-[./../../../../images/builddefinition-template-edit.png] Build Definition Template Edit 
+[../images/builddefinition-template-edit.png] Build Definition Template Edit 
   
