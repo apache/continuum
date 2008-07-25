@@ -13,7 +13,7 @@ Guide to Install Continuum on GlassFish V2
 
     Sections:
 
-%{toc|section=0}
+~~%{toc|section=0}
 
 * {Datasource Configuration}
 
