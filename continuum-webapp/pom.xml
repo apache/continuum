@@ -276,16 +276,13 @@ under the License.
   </build>
   <dependencies>
     <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-configuration</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.plexus.registry</groupId>
       <artifactId>plexus-registry-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus.registry</groupId>
       <artifactId>plexus-registry-commons</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
@@ -327,17 +324,12 @@ under the License.
       <groupId>opensymphony</groupId>
       <artifactId>sitemesh</artifactId>
       <version>2.2.1</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.extremecomponents</groupId>
       <artifactId>extremecomponents</artifactId>
       <version>1.0.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-collections</groupId>
-          <artifactId>commons-collections</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -347,6 +339,7 @@ under the License.
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
@@ -361,80 +354,103 @@ under the License.
       <groupId>commons-fileupload</groupId>
       <artifactId>commons-fileupload</artifactId>
       <version>1.2.1</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>taglibs</groupId>
       <artifactId>standard</artifactId>
       <version>1.1.2</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>1.1.2</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-bazaar</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-clearcase</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-cvsjava</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-cvsexe</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-hg</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-local</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-perforce</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-starteam</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-svn-commons</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-svnexe</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-synergy</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-vss</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-irc</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-jabber</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-msn</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-wagon</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-xmlrpc-server</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -486,25 +502,13 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus.redback</groupId>
       <artifactId>redback-taglib</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache</artifactId>
+      <scope>runtime</scope>
     </dependency>    
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-jdo2</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xercesImpl</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xmlParserAPIs</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <dependency>
       <groupId>geronimo-spec</groupId>
       <artifactId>geronimo-spec-jta</artifactId>
@@ -514,6 +518,7 @@ under the License.
     <dependency>
       <groupId>jpox</groupId>
       <artifactId>jpox</artifactId>
+      <scope>runtime</scope>
       <exclusions>
         <!-- targeting JDK 1.4 we don't need this -->
         <exclusion>
@@ -526,12 +531,6 @@ under the License.
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
-    <!-- 3.2 is required by plexus-registry -->
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2</version>
-    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-spring</artifactId>
@@ -539,15 +538,12 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-mail-sender-javamail</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
     </dependency>
-    <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
-    </dependency>    
     <dependency>
       <groupId>jmock</groupId>
       <artifactId>jmock</artifactId>
