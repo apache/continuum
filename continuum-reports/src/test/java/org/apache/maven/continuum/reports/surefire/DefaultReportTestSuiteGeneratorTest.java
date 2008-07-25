@@ -21,7 +21,7 @@ package org.apache.maven.continuum.reports.surefire;
 import java.io.File;
 import java.util.List;
 
-import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -29,7 +29,7 @@ import org.codehaus.plexus.PlexusTestCase;
  * @version $Id$
  */
 public class DefaultReportTestSuiteGeneratorTest
-    extends PlexusTestCase
+    extends PlexusInSpringTestCase
 {
 
     private File getReportsDirectory( String pathDir )

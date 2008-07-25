@@ -99,5 +99,9 @@ under the License.
       <artifactId>stax-api</artifactId>
       <version>1.0.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
   </dependencies>
 </project>

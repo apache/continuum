@@ -26,13 +26,13 @@ import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
 import org.apache.maven.continuum.notification.Notifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 /**
  * @author <a href="mailto:nramirez@exist">Napoleon Esmundo C. Ramirez</a>
  */
 public class WagonContinuumNotifierTest
-    extends PlexusTestCase
+    extends PlexusInSpringTestCase
 {
     private ServletServer server;
 

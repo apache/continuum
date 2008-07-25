@@ -34,9 +34,9 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
-import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +48,7 @@ import java.util.Map;
  * Base class for tests using the continuum store.
  */
 public abstract class AbstractContinuumStoreTestCase
-    extends PlexusTestCase
+    extends PlexusInSpringTestCase
 {
     protected ContinuumStore store;
 

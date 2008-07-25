@@ -79,6 +79,12 @@ under the License.
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-command-line</artifactId>
       <version>1.0-alpha-2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-container-default</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -112,6 +118,12 @@ under the License.
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-action</artifactId>
       <version>1.0-alpha-6</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-container-default</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -124,15 +136,6 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-store</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-manager-plexus</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>velocity</groupId>
-      <artifactId>velocity</artifactId>
-      <version>1.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -214,7 +217,7 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-log4j-logging</artifactId>
+      <artifactId>plexus-slf4j-logging</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
