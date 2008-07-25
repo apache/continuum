@@ -96,7 +96,11 @@ public abstract class AbstractContinuumProjectBuilder
 
         File continuumTmpDir = new File( TMP_DIR, "continuum" );
 
+        // FIXME should deleted after has been reading
         File uploadDirectory = new File( continuumTmpDir, baseDirectory );
+        
+        uploadDirectory.deleteOnExit();
+        
         // resolve any '..' as it will cause issues
         uploadDirectory = uploadDirectory.getCanonicalFile();
 
