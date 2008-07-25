@@ -370,6 +370,11 @@ under the License.
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-svn-commons</artifactId>
+        <version>${maven-scm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-svnexe</artifactId>
         <version>${maven-scm.version}</version>
       </dependency>
