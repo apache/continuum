@@ -82,12 +82,28 @@
   </redback:ifAuthorized>
 
 
-  <redback:ifAnyAuthorized permissions="continuum-manage-build-templates,continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users,continuum-manage-installations,continuum-manage-profiles,continuum-view-queues">
+  <redback:ifAnyAuthorized permissions="continuum-manage-build-templates,continuum-manage-schedules,continuum-manage-configuration,continuum-manage-users,continuum-manage-installations,continuum-manage-profiles,continuum-view-queues,continuum-manage-repositories,continuum-manage-purging">
     <div id="projectmenu" class="toolgroup">
       <div class="label">
         <ww:text name="menu.administration"/>
       </div>
       <div>
+        <redback:ifAuthorized permission="continuum-manage-repositories">
+          <ww:url id="repositoryListUrl" action="repositoryList" namespace="/admin" includeParams="none"/>
+          <div class="body">
+            <ww:a href="%{repositoryListUrl}">
+              <ww:text name="menu.administration.repositories"/>
+            </ww:a>
+          </div>
+        </redback:ifAuthorized>
+        <redback:ifAuthorized permission="continuum-manage-purging">
+          <ww:url id="purgeConfigListUrl" action="purgeConfigList" namespace="/admin" includeParams="none"/>
+          <div class="body">
+            <ww:a href="%{purgeConfigListUrl}">
+              <ww:text name="menu.administration.purge"/>
+            </ww:a>
+          </div>
+        </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-schedules">
           <ww:url id="scheduleUrl" namespace="/" action="schedules" includeParams="none"/>
           <div class="body">

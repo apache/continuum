@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -379,6 +381,44 @@ public class DefaultContinuumTest
         assertEquals( 2, project.getBuildDefinitions().size() );
         assertEquals( 4, service.getAllBuildDefinitionTemplate().size() );
         assertEquals( 6, service.getAllBuildDefinitions().size() );
+    }
+    
+    public void testRemoveProjectGroupWithRepository()
+        throws Exception
+    {
+        Continuum continuum = getContinuum();
+        RepositoryService service = (RepositoryService) lookup( RepositoryService.ROLE );
+        
+        LocalRepository repository = new LocalRepository();
+        repository.setName( "defaultRepo" );
+        repository.setLocation( getTestFile( "target/default-repository" ).getAbsolutePath() );
+        repository = service.addLocalRepository( repository );
+        
+        ProjectGroup group = new ProjectGroup();
+        group.setGroupId( "testGroup" );
+        group.setName( "testGroup" );
+        group.setLocalRepository( repository );
+        continuum.addProjectGroup( group );
+        
+        ProjectGroup retrievedDefaultProjectGroup = continuum
+        .getProjectGroupByGroupId( "testGroup" );
+        assertNotNull( retrievedDefaultProjectGroup.getLocalRepository() );
+        
+        continuum.removeProjectGroup( retrievedDefaultProjectGroup.getId() );
+        
+        try
+        {
+            continuum.getProjectGroupByGroupId( "testGroup" );
+            fail( "project group was not deleted" );
+        }
+        catch ( Exception e )
+        {
+            // should fail. do nothing.
+        }
+        
+        LocalRepository retrievedRepository = service.getLocalRepository( repository.getId() );
+        assertNotNull( retrievedRepository );
+        assertEquals( repository, retrievedRepository );
     }
     
     private Continuum getContinuum()

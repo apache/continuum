@@ -19,6 +19,9 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -109,6 +112,8 @@ public interface ContinuumStore
 
     List<BuildDefinition> getAllTemplates()
         throws ContinuumStoreException;
+    
+    List<BuildDefinition> getBuildDefinitionsBySchedule ( int scheduleId );
 
     // ------------------------------------------------------
     //  BuildDefinitionTemplate
@@ -163,7 +168,9 @@ public interface ContinuumStore
 
     public ProjectGroup getProjectGroupByProjectId( int projectId )
         throws ContinuumObjectNotFoundException;
-
+    
+    public List<ProjectGroup> getProjectGroupByRepository( int repositoryId );
+    
     void updateProjectGroup( ProjectGroup group )
         throws ContinuumStoreException;
 
@@ -348,4 +355,77 @@ public interface ContinuumStore
     Collection<ProjectGroup> getAllProjectGroupsWithTheLot();
 
     void eraseDatabase();
+    
+    // ----------------------------------------------------------------
+    // LocalRepository
+    // ----------------------------------------------------------------
+    
+    List<LocalRepository> getAllLocalRepositories();
+
+    List<LocalRepository> getLocalRepositoriesByLayout( String layout );
+
+    LocalRepository getLocalRepository( int repositoryId )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
+
+    LocalRepository getLocalRepositoryByName( String repositoryName )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
+    
+    LocalRepository getLocalRepositoryByLocation( String location )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
+    
+    LocalRepository addLocalRepository( LocalRepository repository )
+        throws ContinuumStoreException;
+    
+    void updateLocalRepository( LocalRepository repository )
+        throws ContinuumStoreException;
+    
+    void removeLocalRepository( LocalRepository repository )
+        throws ContinuumStoreException;
+    
+    // ----------------------------------------------------------------
+    // RepositoryPurgeConfiguration
+    // ----------------------------------------------------------------
+    
+    List<RepositoryPurgeConfiguration> getAllRepositoryPurgeConfigurations();
+    
+    List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsBySchedule( int scheduleId );
+
+    List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsByLocalRepository( int repositoryId );
+    
+    RepositoryPurgeConfiguration getRepositoryPurgeConfiguration( int configurationId )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
+    
+    RepositoryPurgeConfiguration addRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException;
+    
+    void updateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException;
+    
+    void removeRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException;
+
+    
+    // ----------------------------------------------------------------
+    // DirectoryPurgeConfiguration
+    // ----------------------------------------------------------------
+    
+    List<DirectoryPurgeConfiguration> getAllDirectoryPurgeConfigurations();
+    
+    List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsBySchedule( int scheduleId );
+    
+    List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsByLocation( String location );
+    
+    List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsByType( String type );
+    
+    DirectoryPurgeConfiguration getDirectoryPurgeConfiguration( int configurationId )
+        throws ContinuumStoreException, ContinuumObjectNotFoundException;
+    
+    DirectoryPurgeConfiguration addDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException;
+    
+    void updateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException;
+    
+    void removeDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfiguration )
+        throws ContinuumStoreException;
 }

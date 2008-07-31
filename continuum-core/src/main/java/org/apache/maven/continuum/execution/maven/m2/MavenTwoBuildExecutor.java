@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.continuum.configuration.ConfigurationException;
@@ -157,8 +158,15 @@ public class MavenTwoBuildExecutor
             arguments.append( "\"-D" ).append( name ).append( "=" ).append( value ).append( "\" " );
         }
 
+        // append -Dmaven.repo.local if project group has a local repository
+        LocalRepository repository = project.getProjectGroup().getLocalRepository();
+        if ( repository != null )
+        {
+            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean(repository.getLocation() ) ).append( "\" " );
+        }
+        
         arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
-
+        
         Map<String, String> environments = getEnvironments( buildDefinition );
         String m2Home = environments.get( getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ) );
         if ( StringUtils.isNotEmpty( m2Home ) )

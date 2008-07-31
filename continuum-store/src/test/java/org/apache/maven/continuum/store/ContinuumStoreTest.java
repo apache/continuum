@@ -24,9 +24,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.JDODetachedFieldAccessException;
 
+import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -69,7 +73,8 @@ public class ContinuumStoreTest
         String name = "testAddProjectGroup";
         String description = "testAddProjectGroup description";
         String groupId = "org.apache.maven.continuum.test";
-        ProjectGroup group = createTestProjectGroup( name, description, groupId );
+        LocalRepository repository = store.getLocalRepository( testLocalRepository3.getId() );
+        ProjectGroup group = createTestProjectGroup( name, description, groupId, repository );
 
         ProjectGroup copy = createTestProjectGroup( group );
         store.addProjectGroup( group );
@@ -77,6 +82,7 @@ public class ContinuumStoreTest
 
         ProjectGroup retrievedGroup = store.getProjectGroup( group.getId() );
         assertProjectGroupEquals( copy, retrievedGroup );
+        assertLocalRepositoryEquals( testLocalRepository3, retrievedGroup.getLocalRepository() );
     }
 
     public void testGetProjectGroup()
@@ -84,6 +90,7 @@ public class ContinuumStoreTest
     {
         ProjectGroup retrievedGroup = store.getProjectGroupWithProjects( defaultProjectGroup.getId() );
         assertProjectGroupEquals( defaultProjectGroup, retrievedGroup );
+        assertLocalRepositoryEquals( testLocalRepository1, retrievedGroup.getLocalRepository() );
 
         List projects = retrievedGroup.getProjects();
         assertEquals( "Check number of projects", 2, projects.size() );
@@ -134,7 +141,7 @@ public class ContinuumStoreTest
 
         ProjectGroup retrievedGroup = store.getProjectGroup( testProjectGroup2.getId() );
         assertProjectGroupEquals( copy, retrievedGroup );
-
+        assertLocalRepositoryEquals( testLocalRepository2, retrievedGroup.getLocalRepository() );
     }
 
     public void testUpdateUndetachedGroup()
@@ -172,11 +179,13 @@ public class ContinuumStoreTest
             if ( group.getId() == testProjectGroup2.getId() )
             {
                 assertProjectGroupEquals( testProjectGroup2, group );
+                assertLocalRepositoryEquals( testLocalRepository2, group.getLocalRepository() );
                 assertTrue( "check no projects", projects.isEmpty() );
             }
             else if ( group.getId() == defaultProjectGroup.getId() )
             {
                 assertProjectGroupEquals( defaultProjectGroup, group );
+                assertLocalRepositoryEquals( testLocalRepository1, group.getLocalRepository() );
                 assertEquals( "Check number of projects", 2, projects.size() );
                 assertTrue( "Check existence of project 1", projects.contains( testProject1 ) );
                 assertTrue( "Check existence of project 2", projects.contains( testProject2 ) );
@@ -1094,6 +1103,132 @@ public class ContinuumStoreTest
         assertEquals( 1, template.getBuildDefinitions().size() );
         
         assertEquals( 1, store.getAllBuildDefinitionTemplate().size() );
+    }
+    
+    public void testAddLocalRepository()
+        throws Exception
+    {
+        String name = "testAddLocalRepository";
+        String directory = "testAddLocalRepositoryDirectory";
+        String layout = "default";
+        
+        LocalRepository repository = createTestLocalRepository( name, directory, layout );
+    
+        LocalRepository copy = createTestLocalRepository( repository );
+        store.addLocalRepository( repository );
+        copy.setId( repository.getId() );
+    
+        LocalRepository retrievedRepository = store.getLocalRepository( repository.getId() );
+        assertLocalRepositoryEquals( copy, retrievedRepository );
+    }
+    
+    public void testRemoveLocalRepository()
+        throws Exception
+    {
+        LocalRepository repository = store.getLocalRepositoryByName( testLocalRepository2.getName() );
+
+        ProjectGroup projectGroup = store.getProjectGroupByGroupId( testProjectGroup2.getGroupId() );
+        assertLocalRepositoryEquals( testLocalRepository2, projectGroup.getLocalRepository() );
+        projectGroup.setLocalRepository( null );
+    
+        ProjectGroup copy = createTestProjectGroup( projectGroup );
+        store.updateProjectGroup( projectGroup );
+    
+        projectGroup = store.getProjectGroup( testProjectGroup2.getId() );
+        assertNull( "check local repository" , projectGroup.getLocalRepository() );
+        
+        List<RepositoryPurgeConfiguration> repoPurgeList = 
+            store.getRepositoryPurgeConfigurationsByLocalRepository( repository.getId() );
+        
+        assertEquals( "check # repo purge config", 1, repoPurgeList.size() );
+        store.removeRepositoryPurgeConfiguration( repoPurgeList.get( 0 ) );
+        store.removeLocalRepository( repository );
+    
+        List<LocalRepository> localRepositories = store.getAllLocalRepositories();
+        assertEquals( "check # local repositories", 2, localRepositories.size() );
+        assertFalse( "check not there", localRepositories.contains( repository ) );
+    }
+    
+    public void testGetAllLocalRepositories()
+        throws Exception
+    {
+        List<LocalRepository> localRepositories = store.getAllLocalRepositories();
+    
+        assertEquals( "check # local repositories", 3, localRepositories.size() );
+        assertLocalRepositoryEquals( testLocalRepository1, localRepositories.get( 0 ) );
+        assertLocalRepositoryEquals( testLocalRepository2, localRepositories.get( 1 ) );
+        assertLocalRepositoryEquals( testLocalRepository3, localRepositories.get( 2 ) );
+    }
+    
+    public void testAddRepositoryPurgeConfiguration()
+        throws Exception
+    {
+        LocalRepository repository = store.getLocalRepository( testLocalRepository3.getId() );
+        Schedule schedule = store.getSchedule( testSchedule1.getId() );
+        
+        RepositoryPurgeConfiguration repoPurge = createTestRepositoryPurgeConfiguration( true, 2, 100, false, schedule, true, repository );
+        
+        RepositoryPurgeConfiguration copy = createTestRepositoryPurgeConfiguration( repoPurge );
+        store.addRepositoryPurgeConfiguration( repoPurge );
+        copy.setId( repoPurge.getId() );
+        
+        RepositoryPurgeConfiguration retrieved = store.getRepositoryPurgeConfiguration( repoPurge.getId() );
+        assertRepositoryPurgeConfigurationEquals( copy, retrieved );
+        assertLocalRepositoryEquals( testLocalRepository3, retrieved.getRepository() );
+        assertScheduleEquals( testSchedule1, retrieved.getSchedule() );
+    }
+    
+    public void testRemoveRepositoryPurgeConfiguration()
+        throws Exception
+    {
+        RepositoryPurgeConfiguration repoPurge = store.getRepositoryPurgeConfiguration( testRepoPurgeConfiguration2.getId() );
+        store.removeRepositoryPurgeConfiguration( repoPurge );
+        
+        List<RepositoryPurgeConfiguration> repoPurgeList = store.getAllRepositoryPurgeConfigurations();
+        assertEquals( "check # repo purge configurations", 2, repoPurgeList.size() );
+        assertFalse( "check not there", repoPurgeList.contains( repoPurge ) );
+    }
+    
+    public void testAddDirectoryPurgeConfiguration()
+        throws Exception
+    {
+        String location = "release-directory";
+        String directoryType = "release";
+        
+        Schedule schedule = store.getSchedule( testSchedule1.getId() );
+        DirectoryPurgeConfiguration dirPurge = createTestDirectoryPurgeConfiguration( location, directoryType, false, 2, 100, schedule, true );
+        
+        DirectoryPurgeConfiguration copy = createTestDirectoryPurgeConfiguration( dirPurge );
+        store.addDirectoryPurgeConfiguration( dirPurge );
+        copy.setId( dirPurge.getId() );
+        
+        DirectoryPurgeConfiguration retrieved = store.getDirectoryPurgeConfiguration( dirPurge.getId() );
+        assertDirectoryPurgeConfigurationEquals( copy, retrieved );
+        assertScheduleEquals( testSchedule1, retrieved.getSchedule() );
+    }
+    
+    public void testRemoveDirectoryPurgeConfiguration()
+        throws Exception
+    {
+        DirectoryPurgeConfiguration dirPurge = store.getDirectoryPurgeConfiguration( testDirectoryPurgeConfig.getId() );
+        store.removeDirectoryPurgeConfiguration( dirPurge );
+        
+        List<DirectoryPurgeConfiguration> dirPurgeList = store.getAllDirectoryPurgeConfigurations();
+        assertEquals( "check #  dir purge configurations", 0, dirPurgeList.size() );
+    }
+    
+    public void testGetPurgeConfigurationsBySchedule()
+        throws Exception
+    {
+        List<RepositoryPurgeConfiguration> repoPurgeList = store.getRepositoryPurgeConfigurationsBySchedule( testSchedule2.getId() );
+        List<DirectoryPurgeConfiguration> dirPurgeList = store.getDirectoryPurgeConfigurationsBySchedule( testSchedule2.getId() );
+        
+        assertEquals( "check # repo purge configurations", 2, repoPurgeList.size() );
+        assertEquals( "check # dir purge configurations", 1, dirPurgeList.size() );
+        
+        assertRepositoryPurgeConfigurationEquals( testRepoPurgeConfiguration1, repoPurgeList.get( 0 ) );
+        assertRepositoryPurgeConfigurationEquals( testRepoPurgeConfiguration3, repoPurgeList.get( 1 ) );
+        assertDirectoryPurgeConfigurationEquals( testDirectoryPurgeConfig, dirPurgeList.get( 0 ) );
     }
     
     // ----------------------------------------------------------------------

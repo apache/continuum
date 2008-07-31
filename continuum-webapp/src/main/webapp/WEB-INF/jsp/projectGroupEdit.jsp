@@ -50,6 +50,8 @@
                 <ww:textfield label="%{getText('projectGroup.name.label')}" name="name" required="true" disabled="%{projectInCOQueue}"/>
                 <c1:data label="%{getText('projectGroup.groupId.label')}" name="projectGroup.groupId"/>
                 <ww:textfield label="%{getText('projectGroup.description.label')}" name="description" disabled="%{projectInCOQueue}"/>
+                <ww:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories" 
+                           listKey="id" listValue="name"/> 
               </tbody>
             </table>
             

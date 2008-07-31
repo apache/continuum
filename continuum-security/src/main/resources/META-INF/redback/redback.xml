@@ -155,6 +155,16 @@
   		      <name>continuum-manage-profiles</name>
   		      <description>Continuum Manage Installations</description>
   		    </operation>        
+  		    <operation>
+  		      <id>continuum-manage-repositories</id>
+  		      <name>continuum-manage-repositories</name>
+  		      <description>Continuum Manage Repositories</description>
+  		    </operation>
+  		    <operation>
+  		      <id>continuum-manage-purging</id>
+  		      <name>continuum-manage-purging</name>
+  		      <description>Continuum Manage Purging</description>
+  		    </operation>
   		  </operations>
   		  <roles>
   		    <role>
@@ -181,6 +191,8 @@
   		        <childRole>continuum-manage-schedules</childRole>
   		        <childRole>continuum-manage-build-templates</childRole>
   		        <childRole>continuum-manage-queues</childRole>
+  		        <childRole>continuum-manage-repositories</childRole>
+  		        <childRole>continuum-manage-purging</childRole>
   		      </childRoles>
   		    </role>
   		    <role>
@@ -341,6 +353,36 @@
 		        </permission>
   		      </permissions>
   		    </role>   
+  		    <role>
+  		      <id>continuum-manage-repositories</id>
+  		      <name>continuum-manage-repositories</name>
+  		      <assignable>true</assignable>
+  		      <permanent>true</permanent>
+  		      <permissions>
+  		        <permission>
+  		          <id>continuum-manage-repositories</id>
+  		          <name>Manage Continuum Local Repositories</name>
+  		          <permanent>true</permanent>
+  		          <operation>continuum-manage-repositories</operation>
+  		          <resource>global</resource>
+  		        </permission>
+  		      </permissions>
+  		    </role>
+  		    <role>
+  		      <id>continuum-manage-purging</id>
+  		      <name>continuum-manage-purging</name>
+  		      <assignable>true</assignable>
+  		      <permanent>true</permanent>
+  		      <permissions>
+  		        <permission>
+  		          <id>continuum-manage-purging</id>
+  		          <name>Manage Continuum Purging</name>
+  		          <permanent>true</permanent>
+  		          <operation>continuum-manage-purging</operation>
+  		          <resource>global</resource>
+  		        </permission>
+  		      </permissions>
+  		    </role>
   		  </roles>
   		  <templates>
   		  	<template>
@@ -365,6 +407,18 @@
   		          <name>Continuum Grant Group Roles</name>
   		          <operation>user-management-role-grant</operation>
   		          <resource>${resource}</resource>
+  		        </permission>
+  		        <permission>
+  		          <id>continuum-manage-repositories</id>
+  		          <name>Manage Continuum Local Repositories</name>
+  		          <operation>continuum-manage-repositories</operation>
+  		          <resource>global</resource>
+  		        </permission>
+  		        <permission>
+  		          <id>continuum-manage-purging</id>
+  		          <name>Manage Continuum Purging</name>
+  		          <operation>continuum-manage-purging</operation>
+  		          <resource>global</resource>
   		        </permission>
   		  	  </permissions>
   		  	  <childTemplates>

@@ -19,6 +19,7 @@ package org.apache.maven.continuum.execution.maven.m2;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
@@ -110,6 +111,8 @@ public class DefaultMavenBuilderHelper
 
     private PlexusContainer container;
 
+    private LocalRepository repository;
+    
     // ----------------------------------------------------------------------
     // MavenBuilderHelper Implementation
     // ----------------------------------------------------------------------
@@ -585,7 +588,15 @@ public class DefaultMavenBuilderHelper
 
         String localRepo = localRepository;
 
-        if ( !( StringUtils.isEmpty( settings.getLocalRepository() ) ) )
+        if ( repository != null )
+        {
+            return artifactRepositoryFactory.createArtifactRepository( repository.getName(), 
+                                                                       "file://" + repository.getLocation(), 
+                                                                       repositoryLayout,
+                                                                       null, 
+                                                                       null );
+        }
+        else if ( !( StringUtils.isEmpty( settings.getLocalRepository() ) ) )
         {
             localRepo = settings.getLocalRepository();
         }
@@ -765,5 +776,10 @@ public class DefaultMavenBuilderHelper
         {
             throw new InitializationException( "Can't initialize '" + getClass().getName() + "'", e );
         }
+    }
+    
+    public void setLocalRepository( LocalRepository repository )
+    {
+        this.repository = repository;
     }
 }
