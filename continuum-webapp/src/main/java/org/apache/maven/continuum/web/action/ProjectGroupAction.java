@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -114,6 +115,10 @@ public class ProjectGroupAction
     
     private String url;
 
+    private int repositoryId;
+    
+    private List<LocalRepository> repositories;
+    
     public String summary()
         throws ContinuumException
     {
@@ -291,7 +296,7 @@ public class ProjectGroupAction
         name = projectGroup.getName();
 
         description = projectGroup.getDescription();
-
+        
         projectList = projectGroup.getProjects();
 
         if ( projectList != null )
@@ -316,11 +321,22 @@ public class ProjectGroupAction
             projectGroups.put( new Integer( pg.getId() ), pg.getName() );
         }
 
+        if ( projectGroup.getLocalRepository() != null)
+        {
+            repositoryId = projectGroup.getLocalRepository().getId();
+        }
+        else
+        {
+            repositoryId = -1;
+        }
+        
+        repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
+        
         return SUCCESS;
     }
 
     public String save()
-        throws ContinuumException
+        throws Exception
     {
         try
         {
@@ -384,7 +400,17 @@ public class ProjectGroupAction
         }
 
         projectGroup.setDescription( description );
-
+        
+        if ( repositoryId > 0 )
+        {
+            LocalRepository repository = getContinuum().getRepositoryService().getLocalRepository( repositoryId );
+            projectGroup.setLocalRepository( repository );
+        }
+        else
+        {
+            projectGroup.setLocalRepository( null );
+        }
+        
         getContinuum().updateProjectGroup( projectGroup );
 
         Iterator keys = projects.keySet().iterator();
@@ -863,5 +889,25 @@ public class ProjectGroupAction
 	public void setUrl(String url) 
 	{
 		this.url = url;
+	}
+	
+	public int getRepositoryId()
+	{
+	    return repositoryId;
+	}
+	
+	public void setRepositoryId( int repositoryId )
+	{
+	    this.repositoryId = repositoryId;
+	}
+	
+	public List<LocalRepository> getRepositories()
+	{
+	    return repositories;
+	}
+	
+	public void setRepositories( List<LocalRepository> repositories )
+	{
+	    this.repositories = repositories;
 	}
 }

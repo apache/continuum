@@ -157,6 +157,20 @@ under the License.
       <groupId>org.codehaus.plexus.redback</groupId>
       <artifactId>redback-rbac-role-manager</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-purge</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.archiva</groupId>
+      <artifactId>archiva-common</artifactId>
+      <version>${archiva.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.archiva</groupId>
+      <artifactId>archiva-repository-layer</artifactId>
+      <version>${archiva.version}</version>
+    </dependency>
     <!-- === Testing Dependencies === -->
     <dependency>
       <groupId>hsqldb</groupId>
@@ -238,7 +252,7 @@ under the License.
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
       <scope>test</scope>
-    </dependency>            
+    </dependency>
     <dependency>
       <groupId>jmock</groupId>
       <artifactId>jmock</artifactId>

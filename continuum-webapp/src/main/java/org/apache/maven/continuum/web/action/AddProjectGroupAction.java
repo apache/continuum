@@ -20,7 +20,10 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.util.Iterator;
+import java.util.List;
 
+import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.repository.RepositoryServiceException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -40,6 +43,10 @@ public class AddProjectGroupAction
     private String groupId;
 
     private String description;
+    
+    private int repositoryId;
+    
+    private List<LocalRepository> repositories;
 
     public void validate()
     {
@@ -109,6 +116,21 @@ public class AddProjectGroupAction
         projectGroup.setGroupId( groupId );
 
         projectGroup.setDescription( description );
+        
+        try
+        {
+            if ( repositoryId > 0 )
+            {
+                LocalRepository repository = getContinuum().getRepositoryService().getLocalRepository( repositoryId );
+                projectGroup.setLocalRepository( repository );
+            }
+        }
+        catch ( RepositoryServiceException e )
+        {
+            getLogger().error( "Error adding project group" + e.getLocalizedMessage() );
+            
+            return ERROR;
+        }
 
         try
         {
@@ -130,6 +152,8 @@ public class AddProjectGroupAction
         {
             checkAddProjectGroupAuthorization();
 
+            repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
+            
             return INPUT;
         }
         catch ( AuthorizationRequiredException authzE )
@@ -167,5 +191,25 @@ public class AddProjectGroupAction
     public void setName( String name )
     {
         this.name = name;
+    }
+    
+    public int getRepositoryId()
+    {
+        return repositoryId;
+    }
+    
+    public void setRepositoryId( int repositoryId )
+    {
+        this.repositoryId = repositoryId;
+    }
+    
+    public List<LocalRepository> getRepositories()
+    {
+        return repositories;
+    }
+    
+    public void setRepositories( List<LocalRepository> repositories )
+    {
+        this.repositories = repositories;
     }
 }

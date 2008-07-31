@@ -59,5 +59,15 @@ under the License.
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.archiva</groupId>
+      <artifactId>archiva-common</artifactId>
+      <version>${archiva.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.archiva</groupId>
+      <artifactId>archiva-repository-layer</artifactId>
+      <version>${archiva.version}</version>
+    </dependency>
   </dependencies>
 </project>

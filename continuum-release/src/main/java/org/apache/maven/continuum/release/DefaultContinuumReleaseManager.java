@@ -19,6 +19,7 @@ package org.apache.maven.continuum.release;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
@@ -113,10 +114,17 @@ public class DefaultContinuumReleaseManager
                          ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
+        perform( releaseId, buildDirectory, goals, useReleaseProfile, listener, null );
+    }
+    
+    public void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
+                         ContinuumReleaseManagerListener listener, LocalRepository repository )
+        throws ContinuumReleaseException
+    {
         ReleaseDescriptor descriptor = (ReleaseDescriptor) getPreparedReleases().get( releaseId );
         if ( descriptor != null )
         {
-            perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener );
+            perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener, repository );
         }
     }
 
@@ -126,11 +134,11 @@ public class DefaultContinuumReleaseManager
     {
         ReleaseDescriptor descriptor = readReleaseDescriptor( workingDirectory );
 
-        perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener );
+        perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener, null );
     }
 
     private void perform( String releaseId, ReleaseDescriptor descriptor, File buildDirectory, String goals,
-                          boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
+                          boolean useReleaseProfile, ContinuumReleaseManagerListener listener, LocalRepository repository )
         throws ContinuumReleaseException
     {
         try
@@ -139,7 +147,8 @@ public class DefaultContinuumReleaseManager
 
             performReleaseQueue.put( new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory, goals,
                                                                     useReleaseProfile,
-                                                                    (ReleaseManagerListener) listener ) );
+                                                                    (ReleaseManagerListener) listener,
+                                                                    repository ) );
         }
         catch ( TaskQueueException e )
         {
@@ -206,7 +215,14 @@ public class DefaultContinuumReleaseManager
         descriptor.setReleaseVersions( relVersions );
         descriptor.setDevelopmentVersions( devVersions );
         descriptor.setPreparationGoals( releaseProperties.getProperty( "prepareGoals" ) );
-
+        
+        LocalRepository repository = project.getProjectGroup().getLocalRepository();
+        
+        if ( repository != null )
+        {
+            descriptor.setAdditionalArguments( "\"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
+        }
+        
         //other properties
         if ( releaseProperties.containsKey( "username" ) )
         {

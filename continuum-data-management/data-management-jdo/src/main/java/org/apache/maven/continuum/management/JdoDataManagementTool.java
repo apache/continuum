@@ -19,6 +19,7 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ContinuumDatabase;
 import org.apache.maven.continuum.model.project.Project;
@@ -100,6 +101,10 @@ public class JdoDataManagementTool
         database.setSchedules( store.getAllSchedulesByName() );
         database.setProfiles( store.getAllProfilesByName() );
 
+        database.setLocalRepositories( store.getAllLocalRepositories() );
+        database.setRepositoryPurgeConfigurations( store.getAllRepositoryPurgeConfigurations() );
+        database.setDirectoryPurgeConfigurations( store.getAllDirectoryPurgeConfigurations() );
+        
         ContinuumStaxWriter writer = new ContinuumStaxWriter();
 
         File backupFile = new File( backupDirectory, BUILDS_XML );
@@ -195,18 +200,31 @@ public class JdoDataManagementTool
             profiles.put( Integer.valueOf( profile.getId() ), profile );
         }
 
+        Map<Integer, LocalRepository> localRepositories = new HashMap<Integer, LocalRepository>();
+        for ( LocalRepository localRepository : (List<LocalRepository>) database.getLocalRepositories() )
+        {
+            localRepository = (LocalRepository) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), localRepository );
+            localRepositories.put( Integer.valueOf( localRepository.getId() ), localRepository );
+        }
+        
         for ( Iterator i = database.getProjectGroups().iterator(); i.hasNext(); )
         {
             ProjectGroup projectGroup = (ProjectGroup) i.next();
 
             // first, we must map up any schedules, etc.
-            processBuildDefinitions( projectGroup.getBuildDefinitions(), schedules, profiles );
+            processBuildDefinitions( projectGroup.getBuildDefinitions(), schedules, profiles, localRepositories );
 
             for ( Iterator j = projectGroup.getProjects().iterator(); j.hasNext(); )
             {
                 Project project = (Project) j.next();
 
-                processBuildDefinitions( project.getBuildDefinitions(), schedules, profiles );
+                processBuildDefinitions( project.getBuildDefinitions(), schedules, profiles, localRepositories );
+            }
+            
+            if ( projectGroup.getLocalRepository() != null )
+            {
+                projectGroup.setLocalRepository( localRepositories.get( 
+                                                 Integer.valueOf( projectGroup.getLocalRepository().getId() ) ) );
             }
 
             PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectGroup );
@@ -214,7 +232,8 @@ public class JdoDataManagementTool
     }
 
     private static void processBuildDefinitions( List buildDefinitions, Map<Integer, Schedule> schedules,
-                                                 Map<Integer, Profile> profiles )
+                                                 Map<Integer, Profile> profiles, 
+                                                 Map<Integer, LocalRepository> localRepositories )
     {
         for ( Iterator i = buildDefinitions.iterator(); i.hasNext(); )
         {

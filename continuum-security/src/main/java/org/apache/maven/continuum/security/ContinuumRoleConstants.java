@@ -117,4 +117,8 @@ public class ContinuumRoleConstants
     public static final String CONTINUUM_MANAGE_QUEUES = "continuum-manage-queues";
     
     public static final String CONTINUUM_VIEW_QUEUES = "continuum-view-queues";
+    
+    public static final String CONTINUUM_MANAGE_REPOSITORIES = "continuum-manage-repositories";
+    
+    public static final String CONTINUUM_MANAGE_PURGING = "continuum-manage-purging";
 }
