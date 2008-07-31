@@ -18,8 +18,6 @@
  */
 package org.apache.maven.continuum.builddefinition;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -27,15 +25,17 @@ import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 15 sept. 07
  * @version $Id$
+ * @since 15 sept. 07
  */
 public class DefaultBuildDefinitionServiceTest
     extends AbstractContinuumTest
 {
-    
+
     private Logger logger = Logger.getLogger( getClass() );
 
     private ProjectGroup projectGroup;
@@ -43,7 +43,7 @@ public class DefaultBuildDefinitionServiceTest
     private Project project;
 
     private BuildDefinition buildDefinition;
-    
+
     private BuildDefinitionTemplate buildDefinitionTemplate;
 
     protected void setUp()
@@ -54,14 +54,14 @@ public class DefaultBuildDefinitionServiceTest
 
         projectGroup = new ProjectGroup();
         projectGroup.setName( "test" );
-        projectGroup = getStore().addProjectGroup( projectGroup );
+        projectGroup = getProjectGroupDao().addProjectGroup( projectGroup );
 
         project = new Project();
         project.setGroupId( "foo" );
         project.setArtifactId( "bar" );
         project.setVersion( "0.1-alpha-1-SNAPSHOT" );
         projectGroup.addProject( project );
-        getStore().updateProjectGroup( projectGroup );
+        getProjectGroupDao().updateProjectGroup( projectGroup );
 
         buildDefinition = new BuildDefinition();
         buildDefinition.setTemplate( true );
@@ -70,13 +70,13 @@ public class DefaultBuildDefinitionServiceTest
         buildDefinition.setBuildFile( "pom.xml" );
         buildDefinition.setDescription( "desc template" );
         buildDefinition = getBuildDefinitionService().addBuildDefinition( buildDefinition );
-        
+
         buildDefinitionTemplate = new BuildDefinitionTemplate();
         buildDefinitionTemplate.setName( "test" );
         buildDefinitionTemplate = getBuildDefinitionService().addBuildDefinitionTemplate( buildDefinitionTemplate );
-        buildDefinitionTemplate = getBuildDefinitionService().addBuildDefinitionInTemplate( buildDefinitionTemplate,
-                                                                                            buildDefinition, false );
-        
+        buildDefinitionTemplate =
+            getBuildDefinitionService().addBuildDefinitionInTemplate( buildDefinitionTemplate, buildDefinition, false );
+
 
     }
 
@@ -94,7 +94,7 @@ public class DefaultBuildDefinitionServiceTest
             List<BuildDefinitionTemplate> templates = getBuildDefinitionService().getAllBuildDefinitionTemplate();
             assertEquals( 5, templates.size() );
             assertEquals( 5, getBuildDefinitionService().getAllBuildDefinitions().size() );
-            
+
             getBuildDefinitionService().addTemplateInProject( buildDefinitionTemplate.getId(), project );
             project = getStore().getProjectWithAllDetails( project.getId() );
             templates = getBuildDefinitionService().getAllBuildDefinitionTemplate();
@@ -119,8 +119,8 @@ public class DefaultBuildDefinitionServiceTest
             throw e;
         }
     }
-   
-    
+
+
     public void testGetDefaultBuildDef()
         throws Exception
     {
@@ -137,9 +137,9 @@ public class DefaultBuildDefinitionServiceTest
         assertNotNull( bd );
         assertEquals( "pom.xml", bd.getBuildFile() );
         assertEquals( "clean install", bd.getGoals() );
-    }    
-    
-    
+    }
+
+
     public void testAddBuildDefinitionTemplate()
         throws Exception
     {
@@ -165,6 +165,6 @@ public class DefaultBuildDefinitionServiceTest
         assertEquals( 0, template.getBuildDefinitions().size() );
         all = getBuildDefinitionService().getAllBuildDefinitions();
         assertEquals( 5, all.size() );
-        
+
     }
 }

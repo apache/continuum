@@ -19,6 +19,7 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -51,6 +52,8 @@ public abstract class AbstractContinuumStoreTestCase
     extends PlexusTestCase
 {
     protected ContinuumStore store;
+
+    protected ProjectGroupDao projectGroupDao;
 
     protected ProjectGroup defaultProjectGroup;
 
@@ -118,6 +121,8 @@ public abstract class AbstractContinuumStoreTestCase
         super.setUp();
 
         store = createStore();
+
+        projectGroupDao = (ProjectGroupDao) lookup( ProjectGroupDao.class.getName() );
     }
 
     protected void createBuildDatabase()
@@ -394,7 +399,7 @@ public abstract class AbstractContinuumStoreTestCase
 
         if ( addToStore )
         {
-            store.addProjectGroup( group );
+            projectGroupDao.addProjectGroup( group );
             defaultProjectGroup.setId( group.getId() );
             testProject1.setId( project1.getId() );
             testProject2.setId( project2.getId() );
@@ -430,7 +435,7 @@ public abstract class AbstractContinuumStoreTestCase
 
         if ( addToStore )
         {
-            store.addProjectGroup( group );
+            projectGroupDao.addProjectGroup( group );
             testProjectGroup2.setId( group.getId() );
         }
         else
@@ -467,8 +472,8 @@ public abstract class AbstractContinuumStoreTestCase
     protected void assertBuildDatabase()
         throws ContinuumStoreException
     {
-        assertProjectGroupEquals( defaultProjectGroup, store.getProjectGroup( defaultProjectGroup.getId() ) );
-        assertProjectGroupEquals( testProjectGroup2, store.getProjectGroup( testProjectGroup2.getId() ) );
+        assertProjectGroupEquals( defaultProjectGroup, projectGroupDao.getProjectGroup( defaultProjectGroup.getId() ) );
+        assertProjectGroupEquals( testProjectGroup2, projectGroupDao.getProjectGroup( testProjectGroup2.getId() ) );
 
         assertProjectEquals( testProject1, store.getProject( testProject1.getId() ) );
         assertProjectEquals( testProject2, store.getProject( testProject2.getId() ) );
@@ -655,7 +660,7 @@ public abstract class AbstractContinuumStoreTestCase
     {
         assertEquals( 0, store.getAllInstallations().size() );
         assertEquals( 0, store.getAllProfilesByName().size() );
-        assertEquals( 0, store.getAllProjectGroups().size() );
+        assertEquals( 0, projectGroupDao.getAllProjectGroups().size() );
         assertEquals( 0, store.getAllProjectsByName().size() );
         assertNull( store.getSystemConfiguration() );
     }
@@ -1010,7 +1015,7 @@ public abstract class AbstractContinuumStoreTestCase
     }
 
     protected static void assertBuildDefinitionsEqual( List<BuildDefinition> expectedBuildDefinitions,
-    												   List<BuildDefinition> actualBuildDefinitions )
+                                                       List<BuildDefinition> actualBuildDefinitions )
     {
         for ( int i = 0; i < expectedBuildDefinitions.size(); i++ )
         {
@@ -1038,7 +1043,7 @@ public abstract class AbstractContinuumStoreTestCase
     }
 
     protected static void assertDevelopersEqual( List<ProjectDeveloper> expectedDevelopers,
-    		                                     List<ProjectDeveloper> actualDevelopers )
+                                                 List<ProjectDeveloper> actualDevelopers )
     {
         for ( int i = 0; i < actualDevelopers.size(); i++ )
         {
@@ -1057,7 +1062,7 @@ public abstract class AbstractContinuumStoreTestCase
     }
 
     protected static void assertDependenciesEqual( List<ProjectDependency> expectedDependencies,
-    		                                       List<ProjectDependency> actualDependencies )
+                                                   List<ProjectDependency> actualDependencies )
     {
         for ( int i = 0; i < actualDependencies.size(); i++ )
         {

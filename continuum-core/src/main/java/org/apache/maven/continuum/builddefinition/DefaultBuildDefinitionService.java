@@ -19,6 +19,7 @@
 package org.apache.maven.continuum.builddefinition;
 
 import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -85,6 +86,11 @@ public class DefaultBuildDefinitionService
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
 
     /**
      * @plexus.requirement role-hint="default"
@@ -575,7 +581,8 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            ProjectGroup projectGroup = store.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
+            ProjectGroup projectGroup =
+                projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
             if ( template.getBuildDefinitions().isEmpty() )
             {
                 return null;
@@ -587,7 +594,7 @@ public class DefaultBuildDefinitionService
                 bd = store.addBuildDefinition( cloneBuildDefinition( bd ) );
                 projectGroup.addBuildDefinition( bd );
             }
-            store.updateProjectGroup( projectGroup );
+            projectGroupDao.updateProjectGroup( projectGroup );
             return projectGroup;
 
         }

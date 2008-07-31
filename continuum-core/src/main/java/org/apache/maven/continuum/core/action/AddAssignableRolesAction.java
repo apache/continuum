@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumStore;
@@ -44,6 +45,11 @@ public class AddAssignableRolesAction
     private ContinuumStore store;
 
     /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
+
+    /**
      * @plexus.requirement role-hint="default"
      */
     private RoleManager roleManager;
@@ -53,7 +59,7 @@ public class AddAssignableRolesAction
     {
         int projectGroupId = getProjectGroupId( context );
 
-        ProjectGroup projectGroup = store.getProjectGroup( projectGroupId );
+        ProjectGroup projectGroup = projectGroupDao.getProjectGroup( projectGroupId );
 
         // TODO: make the resource the name of the project group and hide the id from the user
 

@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumStore;
@@ -40,6 +41,11 @@ public class StoreProjectGroupAction
      */
     private ContinuumStore store;
 
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
+
     public void execute( Map context )
         throws ContinuumException, ContinuumStoreException
     {
@@ -49,7 +55,7 @@ public class StoreProjectGroupAction
         //
         // ----------------------------------------------------------------------
 
-        projectGroup = store.addProjectGroup( projectGroup );
+        projectGroup = projectGroupDao.addProjectGroup( projectGroup );
 
         context.put( KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
     }

@@ -19,6 +19,7 @@ package org.apache.maven.continuum.initialization;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -49,6 +50,11 @@ public class DefaultContinuumInitializer
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
 
     /**
      * @plexus.requirement
@@ -110,7 +116,7 @@ public class DefaultContinuumInitializer
         ProjectGroup group;
         try
         {
-            group = store.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+            group = projectGroupDao.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
             getLogger().info( "Default Project Group exists" );
         }
         catch ( ContinuumObjectNotFoundException e )
@@ -129,7 +135,7 @@ public class DefaultContinuumInitializer
             group.getBuildDefinitions().addAll(
                 buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions() );
 
-            group = store.addProjectGroup( group );
+            group = projectGroupDao.addProjectGroup( group );
         }
     }
 }

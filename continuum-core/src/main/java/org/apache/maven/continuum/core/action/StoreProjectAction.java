@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -36,6 +37,10 @@ import java.util.Map;
 public class StoreProjectAction
     extends AbstractContinuumAction
 {
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
 
     /**
      * @plexus.requirement role-hint="jdo"
@@ -61,10 +66,10 @@ public class StoreProjectAction
             project.setScmPassword( null );
             project.setScmUseCache( false );
         }
-        
+
         projectGroup.addProject( project );
 
-        store.updateProjectGroup( projectGroup );
+        projectGroupDao.updateProjectGroup( projectGroup );
 
         context.put( KEY_PROJECT_ID, new Integer( project.getId() ) );
 

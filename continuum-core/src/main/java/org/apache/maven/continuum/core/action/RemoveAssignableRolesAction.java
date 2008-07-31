@@ -23,6 +23,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 
@@ -44,6 +45,11 @@ public class RemoveAssignableRolesAction
     private ContinuumStore store;
 
     /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
+
+    /**
      * @plexus.requirement role-hint="default"
      */
     private RoleManager roleManager;
@@ -53,7 +59,7 @@ public class RemoveAssignableRolesAction
     {
         int projectGroupId = getProjectGroupId( context );
 
-        ProjectGroup projectGroup = store.getProjectGroup( projectGroupId );
+        ProjectGroup projectGroup = projectGroupDao.getProjectGroup( projectGroupId );
 
         try
         {

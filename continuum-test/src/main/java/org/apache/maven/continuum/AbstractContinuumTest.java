@@ -19,6 +19,7 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -53,6 +54,8 @@ public abstract class AbstractContinuumTest
 {
     private ContinuumStore store;
 
+    private ProjectGroupDao projectGroupDao;
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -65,15 +68,17 @@ public abstract class AbstractContinuumTest
 
         getStore();
 
+        getProjectGroupDao();
+
         setUpConfigurationService( (ConfigurationService) lookup( "configurationService" ) );
 
-        Collection<ProjectGroup> projectGroups = store.getAllProjectGroupsWithProjects();
+        Collection<ProjectGroup> projectGroups = projectGroupDao.getAllProjectGroupsWithProjects();
 
         if ( projectGroups.size() == 0 ) //if ContinuumInitializer is loaded by Spring at startup, size == 1
         {
             createDefaultProjectGroup();
 
-            projectGroups = store.getAllProjectGroupsWithProjects();
+            projectGroups = projectGroupDao.getAllProjectGroupsWithProjects();
         }
 
         assertEquals( 1, projectGroups.size() );
@@ -106,7 +111,7 @@ public abstract class AbstractContinuumTest
 
             group.setDescription( "Contains all projects that do not have a group of their own" );
 
-            store.addProjectGroup( group );
+            projectGroupDao.addProjectGroup( group );
         }
     }
 
@@ -123,7 +128,7 @@ public abstract class AbstractContinuumTest
     protected ProjectGroup getDefaultProjectGroup()
         throws ContinuumStoreException
     {
-        return store.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        return projectGroupDao.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
     }
 
     // ----------------------------------------------------------------------
@@ -205,6 +210,14 @@ public abstract class AbstractContinuumTest
         return store;
     }
 
+    protected ProjectGroupDao getProjectGroupDao()
+    {
+        if ( projectGroupDao == null )
+        {
+            projectGroupDao = (ProjectGroupDao) lookup( ProjectGroupDao.class.getName() );
+        }
+        return projectGroupDao;
+    }
     // ----------------------------------------------------------------------
     // Build Executor
     // ----------------------------------------------------------------------
@@ -316,9 +329,11 @@ public abstract class AbstractContinuumTest
         project.setCheckoutResult( scmResult );
 
         defaultProjectGroup.addProject( project );
-        store.updateProjectGroup( defaultProjectGroup );
+
+        projectGroupDao.updateProjectGroup( defaultProjectGroup );
 
         project = store.getProject( project.getId() );
+
         assertNotNull( "project group == null", project.getProjectGroup() );
 
         return project;

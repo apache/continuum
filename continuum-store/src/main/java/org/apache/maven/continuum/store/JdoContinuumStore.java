@@ -19,24 +19,7 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.jdo.Extent;
-import javax.jdo.FetchPlan;
-import javax.jdo.JDOHelper;
-import javax.jdo.JDOUserException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-
+import org.apache.continuum.dao.AbstractDao;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -54,11 +37,26 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
-import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
-import org.codehaus.plexus.jdo.PlexusStoreException;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jdo.Extent;
+import javax.jdo.JDOHelper;
+import javax.jdo.JDOUserException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -68,39 +66,10 @@ import org.codehaus.plexus.util.StringUtils;
  * role-hint="jdo"
  */
 public class JdoContinuumStore
-    extends AbstractContinuumStore
+    extends AbstractDao
     implements ContinuumStore
 {
-    /**
-     * @plexus.requirement role-hint="continuum"
-     */
-    private JdoFactory continuumJdoFactory;
-
-    // ----------------------------------------------------------------------
-    //
-    // ----------------------------------------------------------------------
-
-    private PersistenceManagerFactory continuumPersistenceManagerFactory;
-
-    // ----------------------------------------------------------------------
-    // Fetch Groups
-    // ----------------------------------------------------------------------
-
-    private static final String PROJECT_WITH_BUILDS_FETCH_GROUP = "project-with-builds";
-
-    private static final String PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP = "project-with-checkout-result";
-
-    private static final String BUILD_RESULT_WITH_DETAILS_FETCH_GROUP = "build-result-with-details";
-
-    private static final String PROJECT_BUILD_DETAILS_FETCH_GROUP = "project-build-details";
-
-    private static final String PROJECT_ALL_DETAILS_FETCH_GROUP = "project-all-details";
-
-    private static final String PROJECT_DEPENDENCIES_FETCH_GROUP = "project-dependencies";
-
-    private static final String PROJECTGROUP_PROJECTS_FETCH_GROUP = "projectgroup-projects";
-
-    private static final String BUILD_TEMPLATE_BUILD_DEFINITIONS = "build-template-build-definitions";
+    private static Logger log = LoggerFactory.getLogger( JdoContinuumStore.class );
 
     // ----------------------------------------------------------------------
     // ContinuumStore Implementation
@@ -617,7 +586,7 @@ public class JdoContinuumStore
         catch ( ContinuumObjectNotFoundException cne )
         {
             // ignore since we will try the project group
-            getLogger().debug( "no default build definition on project, trying project group" );
+            log.debug( "no default build definition on project, trying project group" );
         }
 
         // project group should have default build definition defined
@@ -641,6 +610,22 @@ public class JdoContinuumStore
 
         return bd;
     }
+
+    private ProjectGroup getProjectGroupByProjectId( int projectId )
+        throws ContinuumObjectNotFoundException
+    {
+        try
+        {
+            return getProject( projectId ).getProjectGroup();
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumObjectNotFoundException(
+                "unable to find project group containing project with id: " + projectId );
+
+        }
+    }
+
 
     public BuildDefinition getDefaultBuildDefinitionForProject( int projectId )
         throws ContinuumStoreException, ContinuumObjectNotFoundException
@@ -693,6 +678,13 @@ public class JdoContinuumStore
 
         return bds;
     }
+
+    private ProjectGroup getProjectGroupWithBuildDetailsByProjectGroupId( int projectGroupId )
+        throws ContinuumStoreException
+    {
+        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
+    }
+
 
     public Map getDefaultBuildDefinitions()
     {
@@ -987,23 +979,6 @@ public class JdoContinuumStore
         return PlexusJdoUtils.makePersistent( pm, object, detach );
     }
 
-    private Object getObjectFromQuery( Class clazz, String idField, String id, String fetchGroup )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        try
-        {
-            return PlexusJdoUtils.getObjectFromQuery( getPersistenceManager(), clazz, idField, id, fetchGroup );
-        }
-        catch ( PlexusObjectNotFoundException e )
-        {
-            throw new ContinuumObjectNotFoundException( e.getMessage() );
-        }
-        catch ( PlexusStoreException e )
-        {
-            throw new ContinuumStoreException( e.getMessage(), e );
-        }
-    }
-
     private void attachAndDelete( Object object )
     {
         PlexusJdoUtils.attachAndDelete( getPersistenceManager(), object );
@@ -1012,75 +987,6 @@ public class JdoContinuumStore
     // ----------------------------------------------------------------------
     // Transaction Management
     // ----------------------------------------------------------------------
-
-    private void rollback( Transaction tx )
-    {
-        PlexusJdoUtils.rollbackIfActive( tx );
-    }
-
-    public ProjectGroup getProjectGroup( int projectGroupId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId );
-    }
-
-    private Object getObjectById( Class clazz, int id )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        return getObjectById( clazz, id, null );
-    }
-
-    private Object getObjectById( Class clazz, int id, String fetchGroup )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        try
-        {
-            return PlexusJdoUtils.getObjectById( getPersistenceManager(), clazz, id, fetchGroup );
-        }
-        catch ( PlexusObjectNotFoundException e )
-        {
-            throw new ContinuumObjectNotFoundException( e.getMessage() );
-        }
-        catch ( PlexusStoreException e )
-        {
-            throw new ContinuumStoreException( e.getMessage(), e );
-        }
-    }
-
-    public void updateProjectGroup( ProjectGroup group )
-        throws ContinuumStoreException
-    {
-        updateObject( group );
-    }
-
-    private void updateObject( Object object )
-        throws ContinuumStoreException
-    {
-        updateObject( getPersistenceManager(), object );
-    }
-
-    private void updateObject( PersistenceManager pmf, Object object )
-        throws ContinuumStoreException
-    {
-        try
-        {
-            PlexusJdoUtils.updateObject( pmf, object );
-        }
-        catch ( PlexusStoreException e )
-        {
-            throw new ContinuumStoreException( e.getMessage(), e );
-        }
-    }
-
-    public Collection<ProjectGroup> getAllProjectGroupsWithProjects()
-    {
-        return getAllObjectsDetached( ProjectGroup.class, "name ascending", PROJECTGROUP_PROJECTS_FETCH_GROUP );
-    }
-
-    public Collection<ProjectGroup> getAllProjectGroups()
-    {
-        return getAllObjectsDetached( ProjectGroup.class, "name ascending", null );
-    }
 
     public List<Project> getAllProjectsByName()
     {
@@ -1750,31 +1656,6 @@ public class JdoContinuumStore
         removeObject( project );
     }
 
-    public void removeProjectGroup( ProjectGroup projectGroup )
-    {
-        ProjectGroup pg = null;
-        try
-        {
-            pg = getProjectGroupWithProjects( projectGroup.getId() );
-        }
-        catch ( Exception e )
-        {
-            // Do nothing
-        }
-
-        if ( pg != null )
-        {
-            // TODO: why do we need to do this? if not - build results are not
-            // removed and a integrity constraint is violated. I assume its
-            // because of the fetch groups
-            for ( Project p : (List<Project>) pg.getProjects() )
-            {
-                removeProject( p );
-            }
-            removeObject( pg );
-        }
-    }
-
     public List<Project> getProjectsInGroup( int projectGroupId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
@@ -1841,18 +1722,6 @@ public class JdoContinuumStore
         }
     }
 
-    public ProjectGroup getProjectGroupWithProjects( int projectGroupId )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException
-    {
-        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECTGROUP_PROJECTS_FETCH_GROUP );
-    }
-
-    public ProjectGroup getProjectGroupWithBuildDetailsByProjectGroupId( int projectGroupId )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException
-    {
-        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
-    }
-
     public List<ProjectGroup> getAllProjectGroupsWithBuildDetails()
     {
         return getAllObjectsDetached( ProjectGroup.class, "name ascending", PROJECT_BUILD_DETAILS_FETCH_GROUP );
@@ -1881,11 +1750,6 @@ public class JdoContinuumStore
         return (Profile) getObjectById( Profile.class, profileId );
     }
 
-    private void removeObject( Object o )
-    {
-        PlexusJdoUtils.removeObject( getPersistenceManager(), o );
-    }
-
     private List getAllObjectsDetached( Class clazz )
     {
         return getAllObjectsDetached( clazz, null );
@@ -1894,11 +1758,6 @@ public class JdoContinuumStore
     private List getAllObjectsDetached( Class clazz, String fetchGroup )
     {
         return getAllObjectsDetached( clazz, null, fetchGroup );
-    }
-
-    private List getAllObjectsDetached( Class clazz, String ordering, String fetchGroup )
-    {
-        return getAllObjectsDetached( getPersistenceManager(), clazz, ordering, fetchGroup );
     }
 
     private List getAllObjectsDetached( PersistenceManager pmf, Class clazz )
@@ -1911,65 +1770,10 @@ public class JdoContinuumStore
         return getAllObjectsDetached( pmf, clazz, null, fetchGroup );
     }
 
-    private List getAllObjectsDetached( PersistenceManager pmf, Class clazz, String ordering, String fetchGroup )
-    {
-        return PlexusJdoUtils.getAllObjectsDetached( pmf, clazz, ordering, fetchGroup );
-    }
-
-    public ProjectGroup addProjectGroup( ProjectGroup group )
-    {
-        return (ProjectGroup) addObject( group );
-    }
-
-    private Object addObject( Object object )
-    {
-        return addObject( getPersistenceManager(), object );
-    }
-
-    private Object addObject( PersistenceManager pmf, Object object )
-    {
-        return PlexusJdoUtils.addObject( pmf, object );
-    }
-
-    public ProjectGroup getProjectGroupByGroupId( String groupId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", groupId, null );
-    }
-
-    public ProjectGroup getProjectGroupByGroupIdWithBuildDetails( String groupId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", groupId,
-                                                  PROJECT_BUILD_DETAILS_FETCH_GROUP );
-    }
-
-    public ProjectGroup getProjectGroupByGroupIdWithProjects( String groupId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        return (ProjectGroup) getObjectFromQuery( ProjectGroup.class, "groupId", groupId,
-                                                  PROJECTGROUP_PROJECTS_FETCH_GROUP );
-    }
-
     public Project getProjectWithBuildDetails( int projectId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
         return (Project) getObjectById( Project.class, projectId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
-    }
-
-    public ProjectGroup getProjectGroupByProjectId( int projectId )
-        throws ContinuumObjectNotFoundException
-    {
-        try
-        {
-            return getProject( projectId ).getProjectGroup();
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new ContinuumObjectNotFoundException(
-                "unable to find project group containing project with id: " + projectId );
-
-        }
     }
 
     public SystemConfiguration addSystemConfiguration( SystemConfiguration systemConf )
@@ -2001,21 +1805,6 @@ public class JdoContinuumStore
         {
             return (SystemConfiguration) systemConfs.get( 0 );
         }
-    }
-
-    private PersistenceManager getPersistenceManager()
-    {
-        return getPersistenceManager( getContinuumPersistenceManagerFactory() );
-    }
-
-    private PersistenceManager getPersistenceManager( PersistenceManagerFactory pmf )
-    {
-        PersistenceManager pm = pmf.getPersistenceManager();
-
-        pm.getFetchPlan().setMaxFetchDepth( -1 );
-        pm.getFetchPlan().setDetachmentOptions( FetchPlan.DETACH_LOAD_FIELDS );
-
-        return pm;
     }
 
     public void closeStore()
@@ -2093,14 +1882,5 @@ public class JdoContinuumStore
                 }
             }
         }
-    }
-
-    private PersistenceManagerFactory getContinuumPersistenceManagerFactory()
-    {
-        if ( continuumPersistenceManagerFactory == null )
-        {
-            continuumPersistenceManagerFactory = continuumJdoFactory.getPersistenceManagerFactory();
-        }
-        return continuumPersistenceManagerFactory;
     }
 }

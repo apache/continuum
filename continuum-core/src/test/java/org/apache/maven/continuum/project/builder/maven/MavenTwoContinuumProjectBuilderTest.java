@@ -373,7 +373,7 @@ public class MavenTwoContinuumProjectBuilderTest
         logger.debug( "templates number " + service.getAllBuildDefinitionTemplate().size() );
 
         ContinuumStore store = (ContinuumStore) lookup( ContinuumStore.class , "jdo" );
-        logger.debug( "projectGroups number " + store.getAllProjectGroups().size() );        
+        logger.debug( "projectGroups number " + getProjectGroupDao().getAllProjectGroups().size() );        
         
         int all = service.getAllBuildDefinitions().size();
         

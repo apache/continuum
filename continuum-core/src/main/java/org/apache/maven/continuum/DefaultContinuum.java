@@ -21,6 +21,7 @@ package org.apache.maven.continuum;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -122,6 +123,11 @@ public class DefaultContinuum
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
 
     /**
      * @plexus.requirement
@@ -233,7 +239,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectGroup( projectGroupId );
+            return projectGroupDao.getProjectGroup( projectGroupId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -250,7 +256,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectGroupWithProjects( projectGroupId );
+            return projectGroupDao.getProjectGroupWithProjects( projectGroupId );
         }
         catch ( ContinuumStoreException e )
         {
@@ -263,7 +269,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectGroupByProjectId( projectId );
+            return projectGroupDao.getProjectGroupByProjectId( projectId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -290,7 +296,7 @@ public class DefaultContinuum
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
         executeAction( "remove-assignable-roles", context );
 
-        store.removeProjectGroup( projectGroup );
+        projectGroupDao.removeProjectGroup( projectGroup );
     }
 
     public void addProjectGroup( ProjectGroup projectGroup )
@@ -300,7 +306,7 @@ public class DefaultContinuum
 
         try
         {
-            pg = store.getProjectGroupByGroupId( projectGroup.getGroupId() );
+            pg = projectGroupDao.getProjectGroupByGroupId( projectGroup.getGroupId() );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -318,7 +324,7 @@ public class DefaultContinuum
             projectGroup.setName( projectGroup.getName().trim() );
             try
             {
-                ProjectGroup new_pg = store.addProjectGroup( projectGroup );
+                ProjectGroup new_pg = projectGroupDao.addProjectGroup( projectGroup );
 
                 buildDefinitionService.addBuildDefinitionTemplateToProjectGroup( new_pg.getId(), buildDefinitionService
                     .getDefaultMavenTwoBuildDefinitionTemplate() );
@@ -348,7 +354,7 @@ public class DefaultContinuum
 
     public List<ProjectGroup> getAllProjectGroups()
     {
-        return new ArrayList<ProjectGroup>( store.getAllProjectGroups() );
+        return new ArrayList<ProjectGroup>( projectGroupDao.getAllProjectGroups() );
     }
 
     public ProjectGroup getProjectGroupByGroupId( String groupId )
@@ -356,7 +362,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectGroupByGroupId( groupId );
+            return projectGroupDao.getProjectGroupByGroupId( groupId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -373,7 +379,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectGroupByGroupIdWithBuildDetails( groupId );
+            return projectGroupDao.getProjectGroupByGroupIdWithBuildDetails( groupId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -1762,7 +1768,7 @@ public class DefaultContinuum
             {
                 try
                 {
-                    projectGroup = store.getProjectGroupByGroupId( projectGroup.getGroupId() );
+                    projectGroup = projectGroupDao.getProjectGroupByGroupId( projectGroup.getGroupId() );
 
                     projectGroupId = projectGroup.getId();
 
@@ -1788,7 +1794,7 @@ public class DefaultContinuum
                 }
             }
 
-            projectGroup = store.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
+            projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
 
             /* add the project group loaded from database, which has more info, like id */
             result.getProjectGroups().remove( 0 );
@@ -1828,7 +1834,7 @@ public class DefaultContinuum
 
         try
         {
-            store.updateProjectGroup( projectGroup );
+            projectGroupDao.updateProjectGroup( projectGroup );
 
             for ( Project project : projects )
             {
@@ -1965,7 +1971,7 @@ public class DefaultContinuum
 
         try
         {
-            store.updateProjectGroup( projectGroup );
+            projectGroupDao.updateProjectGroup( projectGroup );
         }
         catch ( ContinuumStoreException cse )
         {
@@ -2073,7 +2079,7 @@ public class DefaultContinuum
         projectGroup.addNotifier( notif );
         try
         {
-            store.updateProjectGroup( projectGroup );
+            projectGroupDao.updateProjectGroup( projectGroup );
         }
         catch ( ContinuumStoreException cse )
         {
@@ -2164,7 +2170,7 @@ public class DefaultContinuum
 
                 try
                 {
-                    store.updateProjectGroup( projectGroup );
+                    projectGroupDao.updateProjectGroup( projectGroup );
                 }
                 catch ( ContinuumStoreException cse )
                 {
@@ -3016,7 +3022,7 @@ public class DefaultContinuum
         projectGroup.setName( projectGroup.getName().trim() );
         try
         {
-            store.updateProjectGroup( projectGroup );
+            projectGroupDao.updateProjectGroup( projectGroup );
         }
         catch ( ContinuumStoreException cse )
         {
@@ -3099,7 +3105,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
+            return projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -3131,12 +3137,12 @@ public class DefaultContinuum
     public Collection<ProjectGroup> getAllProjectGroupsWithProjects()
     {
         //TODO: check why this interface isn't throwing exceptions on this guy
-        return store.getAllProjectGroupsWithProjects();
+        return projectGroupDao.getAllProjectGroupsWithProjects();
     }
 
     public List<ProjectGroup> getAllProjectGroupsWithBuildDetails()
     {
-        return store.getAllProjectGroupsWithBuildDetails();
+        return projectGroupDao.getAllProjectGroupsWithBuildDetails();
     }
 
     public Collection<Project> getProjectsInGroup( int projectGroupId )
@@ -3241,7 +3247,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+            return projectGroupDao.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
