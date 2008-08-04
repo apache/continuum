@@ -20,6 +20,7 @@ package org.apache.maven.continuum.store;
  */
 
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.BuildDefinitionTemplateDao;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -52,12 +53,9 @@ import java.util.List;
 public class ContinuumStoreTest
     extends AbstractContinuumStoreTestCase
 {
-
     private static final int INVALID_ID = 15000;
 
-    // ----------------------------------------------------------------------
-    //
-    // ----------------------------------------------------------------------
+    private BuildDefinitionTemplateDao buildDefinitionTemplateDao;
 
     protected BuildDefinitionDao buildDefinitionDao;
 
@@ -1082,26 +1080,26 @@ public class ContinuumStoreTest
         template.setName( "test" );
         template.setContinuumDefault( true );
         template.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
-        template = store.addBuildDefinitionTemplate( template );
+        template = buildDefinitionTemplateDao.addBuildDefinitionTemplate( template );
         buildDefinition = buildDefinitionDao.addBuildDefinition( buildDefinition );
 
         template.addBuildDefinition( buildDefinition );
 
-        template = store.updateBuildDefinitionTemplate( template );
+        template = buildDefinitionTemplateDao.updateBuildDefinitionTemplate( template );
 
         assertEquals( "test", template.getName() );
         assertTrue( template.isContinuumDefault() );
         assertEquals( 1, template.getBuildDefinitions().size() );
         assertEquals( all + 1, buildDefinitionDao.getAllBuildDefinitions().size() );
-        assertEquals( 1, store.getAllBuildDefinitionTemplate().size() );
+        assertEquals( 1, buildDefinitionTemplateDao.getAllBuildDefinitionTemplate().size() );
 
-        template = store
+        template = buildDefinitionTemplateDao
             .getContinuumBuildDefinitionTemplateWithType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
 
         assertNotNull( template );
         assertEquals( 1, template.getBuildDefinitions().size() );
 
-        assertEquals( 1, store.getAllBuildDefinitionTemplate().size() );
+        assertEquals( 1, buildDefinitionTemplateDao.getAllBuildDefinitionTemplate().size() );
     }
 
     // ----------------------------------------------------------------------
@@ -1165,6 +1163,8 @@ public class ContinuumStoreTest
         super.setUp();
 
         buildDefinitionDao = (BuildDefinitionDao) lookup( BuildDefinitionDao.class.getName() );
+
+        buildDefinitionTemplateDao = (BuildDefinitionTemplateDao) lookup( BuildDefinitionTemplateDao.class.getName() );
 
         createBuildDatabase();
     }

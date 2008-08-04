@@ -141,7 +141,7 @@ public class AbstractDao
         return getAllObjectsDetached( clazz, null );
     }
 
-    private List getAllObjectsDetached( Class clazz, String fetchGroup )
+    protected List getAllObjectsDetached( Class clazz, String fetchGroup )
     {
         return getAllObjectsDetached( clazz, null, fetchGroup );
     }

@@ -20,7 +20,6 @@ package org.apache.maven.continuum.store;
  */
 
 import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 
@@ -56,43 +55,6 @@ public interface ContinuumStore
     //  BuildDefinitionTemplate
     // ------------------------------------------------------
 
-    List<BuildDefinitionTemplate> getAllBuildDefinitionTemplate()
-        throws ContinuumStoreException;
-
-    BuildDefinitionTemplate getBuildDefinitionTemplate( int id )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException;
-
-    BuildDefinitionTemplate addBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
-        throws ContinuumStoreException;
-
-    BuildDefinitionTemplate updateBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
-        throws ContinuumStoreException;
-
-    void removeBuildDefinitionTemplate( BuildDefinitionTemplate buildDefinitionTemplate )
-        throws ContinuumStoreException;
-
-    public List<BuildDefinitionTemplate> getBuildDefinitionTemplatesWithType( String type )
-        throws ContinuumStoreException;
-
-    public List<BuildDefinitionTemplate> getContinuumBuildDefinitionTemplates()
-        throws ContinuumStoreException;
-
-    /**
-     * @param type
-     * @return BuildDefinitionTemplate null if not found
-     * @throws ContinuumStoreException
-     */
-    BuildDefinitionTemplate getContinuumBuildDefinitionTemplateWithType( String type )
-        throws ContinuumStoreException;
-
-    /**
-     * the list returned will contains only continuumDefaults {@link BuildDefinition}
-     *
-     * @return List<BuildDefinitionTemplate>
-     * @throws ContinuumStoreException
-     */
-    List<BuildDefinitionTemplate> getContinuumDefaultdDefinitions()
-        throws ContinuumStoreException;
 
     List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
 
