@@ -27,7 +27,6 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.manager.NotifierManager;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +51,6 @@ public class DefaultContinuumNotificationDispatcher
      * @plexus.requirement
      */
     private NotifierManager notifierManager;
-
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
 
     /**
      * @plexus.requirement

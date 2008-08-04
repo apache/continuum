@@ -27,7 +27,6 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
@@ -51,11 +50,6 @@ public class UpdateProjectFromWorkingDirectoryContinuumAction
      * @plexus.requirement
      */
     private BuildExecutorManager buildExecutorManager;
-
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
 
     /**
      * @plexus.requirement

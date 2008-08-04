@@ -29,7 +29,6 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
@@ -53,8 +52,6 @@ public class BuildProjectTaskExecutorTest
 
     private TaskQueueExecutor taskQueueExecutor;
 
-    private ContinuumStore continuumStore;
-
     private ActionManager actionManager;
 
     public void setUp()
@@ -70,8 +67,6 @@ public class BuildProjectTaskExecutorTest
             buildQueue = (TaskQueue) lookup( TaskQueue.ROLE, "build-project" );
 
             taskQueueExecutor = (TaskQueueExecutor) lookup( TaskQueueExecutor.ROLE, "build-project" );
-
-            continuumStore = (ContinuumStore) lookup( ContinuumStore.ROLE, "jdo" );
 
             actionManager = (ActionManager) lookup( ActionManager.ROLE );
         }

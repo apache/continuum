@@ -22,7 +22,6 @@ package org.apache.maven.continuum.core.action;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import java.util.Map;
@@ -36,11 +35,6 @@ import java.util.Map;
 public class StoreProjectGroupAction
     extends AbstractContinuumAction
 {
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
-
     /**
      * @plexus.requirement
      */

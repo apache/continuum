@@ -372,7 +372,6 @@ public class MavenTwoContinuumProjectBuilderTest
         assertEquals( 5, service.getAllBuildDefinitionTemplate().size() );
         logger.debug( "templates number " + service.getAllBuildDefinitionTemplate().size() );
 
-        ContinuumStore store = (ContinuumStore) lookup( ContinuumStore.class , "jdo" );
         logger.debug( "projectGroups number " + getProjectGroupDao().getAllProjectGroups().size() );        
         
         int all = service.getAllBuildDefinitions().size();

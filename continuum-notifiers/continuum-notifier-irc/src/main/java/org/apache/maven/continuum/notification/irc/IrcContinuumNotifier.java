@@ -30,7 +30,6 @@ import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
 import org.apache.maven.continuum.notification.NotificationException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.util.StringUtils;
 import org.schwering.irc.lib.IRCConnection;
@@ -65,11 +64,6 @@ public class IrcContinuumNotifier
     // ----------------------------------------------------------------------
     // Requirements
     // ----------------------------------------------------------------------
-
-    /**
-     * @plexus.requirement role-hint="jdo"
-     */
-    private ContinuumStore store;
 
     /**
      * @plexus.requirement
@@ -542,10 +536,5 @@ public class IrcContinuumNotifier
                 log.debug( "UNKNOWN: " + a + " b " + c + " " + d );
             }
         }
-    }
-
-    protected ContinuumStore getContinuumStore()
-    {
-        return this.store;
     }
 }

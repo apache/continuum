@@ -19,8 +19,8 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -29,7 +29,6 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUtils;
 import org.apache.maven.scm.ScmException;
