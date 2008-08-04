@@ -20,6 +20,7 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -42,14 +43,14 @@ public abstract class AbstractBuildDefinitionContinuumAction
     extends AbstractContinuumAction
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    protected ContinuumStore store;
+    private BuildDefinitionDao buildDefinitionDao;
 
     /**
      * @plexus.requirement
      */
-    private BuildDefinitionDao buildDefinitionDao;
+    private ScheduleDao scheduleDao;
 
     protected void resolveDefaultBuildDefinitionsForProject( BuildDefinition buildDefinition, Project project )
         throws ContinuumException
@@ -179,7 +180,7 @@ public abstract class AbstractBuildDefinitionContinuumAction
                 {
                     try
                     {
-                        schedule = store.getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
+                        schedule = scheduleDao.getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
                     }
                     catch ( ContinuumStoreException e )
                     {
@@ -188,7 +189,7 @@ public abstract class AbstractBuildDefinitionContinuumAction
                 }
                 else
                 {
-                    schedule = store.getSchedule( buildDefinition.getSchedule().getId() );
+                    schedule = scheduleDao.getSchedule( buildDefinition.getSchedule().getId() );
                 }
 
                 storedDefinition.setSchedule( schedule );

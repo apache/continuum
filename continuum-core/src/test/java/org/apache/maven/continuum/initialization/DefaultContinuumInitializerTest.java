@@ -52,7 +52,7 @@ public class DefaultContinuumInitializerTest
     public void testDefaultSchedule()
         throws Exception
     {
-        Schedule schedule = getContinuumStore().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
+        Schedule schedule = getScheduleDao().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
         assertNotNull( schedule );
     }
 

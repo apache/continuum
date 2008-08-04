@@ -67,7 +67,7 @@ public class DefaultContinuumTest
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
 
-        int projectCount = getStore().getAllProjectsByName().size();
+        int projectCount = getProjectDao().getAllProjectsByName().size();
 
         int projectGroupCount = getProjectGroupDao().getAllProjectGroupsWithProjects().size();
 
@@ -83,19 +83,19 @@ public class DefaultContinuumTest
 
         assertEquals( "result.projectGroups.size", 1, result.getProjectGroups().size() );
 
-        System.err.println( "number of projects: " + getStore().getAllProjectsByName().size() );
+        System.err.println( "number of projects: " + getProjectDao().getAllProjectsByName().size() );
 
         System.err.println(
             "number of project groups: " + getProjectGroupDao().getAllProjectGroupsWithProjects().size() );
 
-        assertEquals( "Total project count", projectCount + 3, getStore().getAllProjectsByName().size() );
+        assertEquals( "Total project count", projectCount + 3, getProjectDao().getAllProjectsByName().size() );
 
         assertEquals( "Total project group count.", projectGroupCount + 1,
                       getProjectGroupDao().getAllProjectGroupsWithProjects().size() );
 
         Map projects = new HashMap();
 
-        for ( Iterator i = getStore().getAllProjectsByName().iterator(); i.hasNext(); )
+        for ( Iterator i = getProjectDao().getAllProjectsByName().iterator(); i.hasNext(); )
         {
             Project project = (Project) i.next();
 
@@ -197,7 +197,7 @@ public class DefaultContinuumTest
         nbd.setGoals( "clean" );
         nbd.setArguments( "" );
         nbd.setDefaultForProject( true );
-        nbd.setSchedule( getStore().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME ) );
+        nbd.setSchedule( getScheduleDao().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME ) );
 
         continuum.addBuildDefinitionToProject( project.getId(), nbd );
 

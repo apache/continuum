@@ -19,6 +19,7 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -33,10 +34,8 @@ import org.apache.maven.continuum.project.builder.AbstractContinuumProjectBuilde
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -67,9 +66,9 @@ public class MavenTwoContinuumProjectBuilder
     private MavenBuilderHelper builderHelper;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ScheduleDao scheduleDao;
 
     /**
      * @plexus.requirement
@@ -140,7 +139,7 @@ public class MavenTwoContinuumProjectBuilder
         MavenProject mavenProject;
 
         File pomFile = null;
-        
+
         try
         {
             pomFile = createMetadataFile( url, username, password );
@@ -223,7 +222,8 @@ public class MavenTwoContinuumProjectBuilder
                     {
                         try
                         {
-                            Schedule schedule = store.getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
+                            Schedule schedule =
+                                scheduleDao.getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
 
                             buildDefinition.setSchedule( schedule );
                         }

@@ -19,8 +19,11 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.dao.InstallationDao;
+import org.apache.continuum.dao.ProfileDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -54,9 +57,15 @@ public abstract class AbstractContinuumStoreTestCase
 {
     protected ContinuumStore store;
 
+    protected InstallationDao installationDao;
+
+    protected ProfileDao profileDao;
+
     protected ProjectGroupDao projectGroupDao;
 
     protected ProjectDao projectDao;
+
+    protected ScheduleDao scheduleDao;
 
     protected ProjectGroup defaultProjectGroup;
 
@@ -125,9 +134,15 @@ public abstract class AbstractContinuumStoreTestCase
 
         store = createStore();
 
+        installationDao = (InstallationDao) lookup( InstallationDao.class.getName() );
+
+        profileDao = (ProfileDao) lookup( ProfileDao.class.getName() );
+
         projectGroupDao = (ProjectGroupDao) lookup( ProjectGroupDao.class.getName() );
 
         projectDao = (ProjectDao) lookup( ProjectDao.class.getName() );
+
+        scheduleDao = (ScheduleDao) lookup( ScheduleDao.class.getName() );
     }
 
     protected void createBuildDatabase()
@@ -207,7 +222,7 @@ public abstract class AbstractContinuumStoreTestCase
         Schedule schedule2 = createTestSchedule( testSchedule2 );
         if ( addToStore )
         {
-            schedule2 = store.addSchedule( schedule2 );
+            schedule2 = scheduleDao.addSchedule( schedule2 );
             testSchedule2.setId( schedule2.getId() );
         }
         else
@@ -219,7 +234,7 @@ public abstract class AbstractContinuumStoreTestCase
         Schedule schedule1 = createTestSchedule( testSchedule1 );
         if ( addToStore )
         {
-            schedule1 = store.addSchedule( schedule1 );
+            schedule1 = scheduleDao.addSchedule( schedule1 );
             testSchedule1.setId( schedule1.getId() );
         }
         else
@@ -231,7 +246,7 @@ public abstract class AbstractContinuumStoreTestCase
         Schedule schedule3 = createTestSchedule( testSchedule3 );
         if ( addToStore )
         {
-            schedule3 = store.addSchedule( schedule3 );
+            schedule3 = scheduleDao.addSchedule( schedule3 );
             testSchedule3.setId( schedule3.getId() );
         }
         else
@@ -243,7 +258,7 @@ public abstract class AbstractContinuumStoreTestCase
         Installation installationJava14 = createTestInstallation( testInstallationJava14 );
         if ( addToStore )
         {
-            installationJava14 = store.addInstallation( installationJava14 );
+            installationJava14 = installationDao.addInstallation( installationJava14 );
         }
         else
         {
@@ -253,7 +268,7 @@ public abstract class AbstractContinuumStoreTestCase
         Installation installationMaven20a3 = createTestInstallation( testInstallationMaven20a3 );
         if ( addToStore )
         {
-            installationMaven20a3 = store.addInstallation( installationMaven20a3 );
+            installationMaven20a3 = installationDao.addInstallation( installationMaven20a3 );
         }
         else
         {
@@ -263,7 +278,7 @@ public abstract class AbstractContinuumStoreTestCase
         Installation installationJava13 = createTestInstallation( testInstallationJava13 );
         if ( addToStore )
         {
-            installationJava13 = store.addInstallation( installationJava13 );
+            installationJava13 = installationDao.addInstallation( installationJava13 );
         }
         else
         {
@@ -280,7 +295,7 @@ public abstract class AbstractContinuumStoreTestCase
         Profile profile1 = createTestProfile( testProfile1 );
         if ( addToStore )
         {
-            profile1 = store.addProfile( profile1 );
+            profile1 = profileDao.addProfile( profile1 );
             testProfile1.setId( profile1.getId() );
         }
         else
@@ -291,7 +306,7 @@ public abstract class AbstractContinuumStoreTestCase
         Profile profile2 = createTestProfile( testProfile2 );
         if ( addToStore )
         {
-            profile2 = store.addProfile( profile2 );
+            profile2 = profileDao.addProfile( profile2 );
             testProfile2.setId( profile2.getId() );
         }
         else
@@ -302,7 +317,7 @@ public abstract class AbstractContinuumStoreTestCase
         Profile profile3 = createTestProfile( testProfile3 );
         if ( addToStore )
         {
-            profile3 = store.addProfile( profile3 );
+            profile3 = profileDao.addProfile( profile3 );
             testProfile3.setId( profile3.getId() );
         }
         else
@@ -483,11 +498,11 @@ public abstract class AbstractContinuumStoreTestCase
         assertProjectEquals( testProject1, projectDao.getProject( testProject1.getId() ) );
         assertProjectEquals( testProject2, projectDao.getProject( testProject2.getId() ) );
 
-        assertScheduleEquals( testSchedule1, store.getSchedule( testSchedule1.getId() ) );
-        assertScheduleEquals( testSchedule2, store.getSchedule( testSchedule2.getId() ) );
-        assertScheduleEquals( testSchedule3, store.getSchedule( testSchedule3.getId() ) );
+        assertScheduleEquals( testSchedule1, scheduleDao.getSchedule( testSchedule1.getId() ) );
+        assertScheduleEquals( testSchedule2, scheduleDao.getSchedule( testSchedule2.getId() ) );
+        assertScheduleEquals( testSchedule3, scheduleDao.getSchedule( testSchedule3.getId() ) );
 
-        Iterator<Installation> iterator = store.getAllInstallations().iterator();
+        Iterator<Installation> iterator = installationDao.getAllInstallations().iterator();
         assertInstallationEquals( testInstallationJava13, (Installation) iterator.next() );
         assertInstallationEquals( testInstallationJava14, (Installation) iterator.next() );
         assertInstallationEquals( testInstallationMaven20a3, (Installation) iterator.next() );
@@ -663,10 +678,10 @@ public abstract class AbstractContinuumStoreTestCase
     protected void assertEmpty()
         throws ContinuumStoreException
     {
-        assertEquals( 0, store.getAllInstallations().size() );
-        assertEquals( 0, store.getAllProfilesByName().size() );
+        assertEquals( 0, installationDao.getAllInstallations().size() );
+        assertEquals( 0, profileDao.getAllProfilesByName().size() );
         assertEquals( 0, projectGroupDao.getAllProjectGroups().size() );
-        assertEquals( 0, store.getAllProjectsByName().size() );
+        assertEquals( 0, projectDao.getAllProjectsByName().size() );
         assertNull( store.getSystemConfiguration() );
     }
 

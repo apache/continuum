@@ -19,6 +19,10 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
+import org.apache.continuum.dao.InstallationDao;
+import org.apache.continuum.dao.ProfileDao;
+import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ContinuumDatabase;
 import org.apache.maven.continuum.model.project.Project;
@@ -66,6 +70,26 @@ public class JdoDataManagementTool
      */
     private ContinuumStore store;
 
+    /**
+     * @plexus.requirement
+     */
+    private InstallationDao installationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProfileDao profileDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ScheduleDao scheduleDao;
+
     protected static final String BUILDS_XML = "builds.xml";
 
     /**
@@ -87,18 +111,18 @@ public class JdoDataManagementTool
         }
 
         // TODO: need these to lazy load to conserve memory while we stream out the model
-        Collection projectGroups = store.getAllProjectGroupsWithTheLot();
+        Collection projectGroups = projectGroupDao.getAllProjectGroupsWithTheLot();
         database.setProjectGroups( new ArrayList( projectGroups ) );
         try
         {
-            database.setInstallations( store.getAllInstallations() );
+            database.setInstallations( installationDao.getAllInstallations() );
         }
         catch ( ContinuumStoreException e )
         {
             throw new DataManagementException( e );
         }
-        database.setSchedules( store.getAllSchedulesByName() );
-        database.setProfiles( store.getAllProfilesByName() );
+        database.setSchedules( scheduleDao.getAllSchedulesByName() );
+        database.setProfiles( profileDao.getAllProfilesByName() );
 
         ContinuumStaxWriter writer = new ContinuumStaxWriter();
 

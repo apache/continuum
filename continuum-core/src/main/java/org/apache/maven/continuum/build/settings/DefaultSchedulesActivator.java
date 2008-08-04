@@ -19,11 +19,11 @@ package org.apache.maven.continuum.build.settings;
  * under the License.
  */
 
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.scheduler.ContinuumBuildJob;
 import org.apache.maven.continuum.scheduler.ContinuumSchedulerConstants;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.scheduler.AbstractJob;
@@ -48,9 +48,9 @@ public class DefaultSchedulesActivator
     implements SchedulesActivator
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ScheduleDao scheduleDao;
 
     /**
      * @plexus.requirement role-hint="default"
@@ -65,7 +65,7 @@ public class DefaultSchedulesActivator
     {
         getLogger().info( "Activating schedules ..." );
 
-        Collection<Schedule> schedules = store.getAllSchedulesByName();
+        Collection<Schedule> schedules = scheduleDao.getAllSchedulesByName();
 
         for ( Schedule schedule : schedules )
         {
@@ -90,7 +90,7 @@ public class DefaultSchedulesActivator
 
                 try
                 {
-                    store.storeSchedule( schedule );
+                    scheduleDao.storeSchedule( schedule );
                 }
                 catch ( ContinuumStoreException e1 )
                 {

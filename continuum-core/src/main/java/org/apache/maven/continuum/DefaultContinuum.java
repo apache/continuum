@@ -24,6 +24,7 @@ import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -140,6 +141,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private ProjectGroupDao projectGroupDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ScheduleDao scheduleDao;
 
     /**
      * @plexus.requirement
@@ -410,13 +416,13 @@ public class DefaultContinuum
     public Collection<Project> getProjects()
         throws ContinuumException
     {
-        return store.getAllProjectsByName();
+        return projectDao.getAllProjectsByName();
     }
 
     public Collection<Project> getProjectsWithDependencies()
         throws ContinuumException
     {
-        return store.getAllProjectsByNameWithDependencies();
+        return projectDao.getAllProjectsByNameWithDependencies();
     }
 
     public Map<Integer, BuildResult> getLatestBuildResults( int projectGroupId )
@@ -851,7 +857,7 @@ public class DefaultContinuum
     public Collection<Project> getAllProjects( int start, int end )
         throws ContinuumException
     {
-        return store.getAllProjectsByName();
+        return projectDao.getAllProjectsByName();
     }
 
     // ----------------------------------------------------------------------
@@ -2405,7 +2411,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getSchedule( scheduleId );
+            return scheduleDao.getSchedule( scheduleId );
         }
         catch ( Exception ex )
         {
@@ -2418,7 +2424,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getScheduleByName( scheduleName );
+            return scheduleDao.getScheduleByName( scheduleName );
         }
         catch ( ContinuumStoreException e )
         {
@@ -2429,7 +2435,7 @@ public class DefaultContinuum
     public Collection<Schedule> getSchedules()
         throws ContinuumException
     {
-        return store.getAllSchedulesByName();
+        return scheduleDao.getAllSchedulesByName();
     }
 
     public void addSchedule( Schedule schedule )
@@ -2444,7 +2450,7 @@ public class DefaultContinuum
             throw logAndCreateException( "Can't create schedule. A schedule with the same name already exists.", null );
         }
 
-        s = store.addSchedule( schedule );
+        s = scheduleDao.addSchedule( schedule );
 
         try
         {
@@ -2524,7 +2530,7 @@ public class DefaultContinuum
 
         try
         {
-            store.removeSchedule( schedule );
+            scheduleDao.removeSchedule( schedule );
         }
         catch ( Exception e )
         {
@@ -2547,7 +2553,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.storeSchedule( schedule );
+            return scheduleDao.storeSchedule( schedule );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -2757,7 +2763,7 @@ public class DefaultContinuum
 
         getLogger().info( "Showing all projects: " );
 
-        for ( Project project : store.getAllProjectsByNameWithBuildDetails() )
+        for ( Project project : projectDao.getAllProjectsByNameWithBuildDetails() )
         {
             for ( ProjectNotifier notifier : (List<ProjectNotifier>) project.getNotifiers() )
             {

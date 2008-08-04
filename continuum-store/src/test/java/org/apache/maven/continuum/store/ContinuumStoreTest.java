@@ -276,7 +276,7 @@ public class ContinuumStoreTest
 
     public void testGetAllProjects()
     {
-        List projects = store.getAllProjectsByName();
+        List projects = projectDao.getAllProjectsByName();
         assertEquals( "check items", Arrays.asList( new Project[]{testProject1, testProject2} ), projects );
 
         Project project = (Project) projects.get( 1 );
@@ -289,10 +289,10 @@ public class ContinuumStoreTest
     {
         Schedule newSchedule = createTestSchedule( "testAddSchedule", "testAddSchedule desc", 10, "cron test", false );
         Schedule copy = createTestSchedule( newSchedule );
-        store.addSchedule( newSchedule );
+        scheduleDao.addSchedule( newSchedule );
         copy.setId( newSchedule.getId() );
 
-        List schedules = store.getAllSchedulesByName();
+        List schedules = scheduleDao.getAllSchedulesByName();
         Schedule retrievedSchedule = (Schedule) schedules.get( schedules.size() - 1 );
         assertScheduleEquals( copy, retrievedSchedule );
     }
@@ -300,34 +300,34 @@ public class ContinuumStoreTest
     public void testEditSchedule()
         throws ContinuumStoreException
     {
-        Schedule newSchedule = (Schedule) store.getAllSchedulesByName().get( 0 );
+        Schedule newSchedule = (Schedule) scheduleDao.getAllSchedulesByName().get( 0 );
         newSchedule.setName( "name1.1" );
         newSchedule.setDescription( "testEditSchedule updated description" );
 
         Schedule copy = createTestSchedule( newSchedule );
         copy.setId( newSchedule.getId() );
-        store.updateSchedule( newSchedule );
+        scheduleDao.updateSchedule( newSchedule );
 
-        Schedule retrievedSchedule = (Schedule) store.getAllSchedulesByName().get( 0 );
+        Schedule retrievedSchedule = (Schedule) scheduleDao.getAllSchedulesByName().get( 0 );
         assertScheduleEquals( copy, retrievedSchedule );
     }
 
     public void testRemoveSchedule()
     {
-        Schedule schedule = (Schedule) store.getAllSchedulesByName().get( 2 );
+        Schedule schedule = (Schedule) scheduleDao.getAllSchedulesByName().get( 2 );
 
         // TODO: test if it has any attachments
 
-        store.removeSchedule( schedule );
+        scheduleDao.removeSchedule( schedule );
 
-        List schedules = store.getAllSchedulesByName();
+        List schedules = scheduleDao.getAllSchedulesByName();
         assertEquals( "check size", 2, schedules.size() );
         assertFalse( "check not there", schedules.contains( schedule ) );
     }
 
     public void testGetAllSchedules()
     {
-        List schedules = store.getAllSchedulesByName();
+        List schedules = scheduleDao.getAllSchedulesByName();
 
         assertEquals( "check item count", 3, schedules.size() );
 
@@ -343,15 +343,15 @@ public class ContinuumStoreTest
     public void testAddProfile()
         throws Exception
     {
-        List installations = store.getAllInstallations();
+        List installations = installationDao.getAllInstallations();
         Profile newProfile = createTestProfile( "testAddProfile", "testAddProfile desc", 5, false, false,
                                                 (Installation) installations.get( 1 ), (Installation) installations
             .get( 2 ) );
         Profile copy = createTestProfile( newProfile );
-        store.addProfile( newProfile );
+        profileDao.addProfile( newProfile );
         copy.setId( newProfile.getId() );
 
-        List profiles = store.getAllProfilesByName();
+        List profiles = profileDao.getAllProfilesByName();
         Profile retrievedProfile = (Profile) profiles.get( profiles.size() - 1 );
         assertProfileEquals( copy, retrievedProfile );
         assertInstallationEquals( testInstallationMaven20a3, retrievedProfile.getBuilder() );
@@ -361,15 +361,15 @@ public class ContinuumStoreTest
     public void testEditProfile()
         throws ContinuumStoreException
     {
-        Profile newProfile = (Profile) store.getAllProfilesByName().get( 0 );
+        Profile newProfile = (Profile) profileDao.getAllProfilesByName().get( 0 );
         newProfile.setName( "name1.1" );
         newProfile.setDescription( "testEditProfile updated description" );
 
         Profile copy = createTestProfile( newProfile );
         copy.setId( newProfile.getId() );
-        store.updateProfile( newProfile );
+        profileDao.updateProfile( newProfile );
 
-        Profile retrievedProfile = (Profile) store.getAllProfilesByName().get( 0 );
+        Profile retrievedProfile = (Profile) profileDao.getAllProfilesByName().get( 0 );
         assertProfileEquals( copy, retrievedProfile );
         assertInstallationEquals( copy.getBuilder(), retrievedProfile.getBuilder() );
         assertInstallationEquals( copy.getJdk(), retrievedProfile.getJdk() );
@@ -378,20 +378,20 @@ public class ContinuumStoreTest
 
     public void testRemoveProfile()
     {
-        Profile profile = (Profile) store.getAllProfilesByName().get( 2 );
+        Profile profile = (Profile) profileDao.getAllProfilesByName().get( 2 );
 
         // TODO: test if it has any attachments
 
-        store.removeProfile( profile );
+        profileDao.removeProfile( profile );
 
-        List profiles = store.getAllProfilesByName();
+        List profiles = profileDao.getAllProfilesByName();
         assertEquals( "check size", 2, profiles.size() );
         assertFalse( "check not there", profiles.contains( profile ) );
     }
 
     public void testGetAllProfiles()
     {
-        List profiles = store.getAllProfilesByName();
+        List profiles = profileDao.getAllProfilesByName();
 
         assertEquals( "check item count", 3, profiles.size() );
 
@@ -421,7 +421,7 @@ public class ContinuumStoreTest
     public void testGetAllInstallations()
         throws Exception
     {
-        List installations = store.getAllInstallations();
+        List installations = installationDao.getAllInstallations();
 
         assertEquals( "check item count", 3, installations.size() );
 
@@ -439,16 +439,16 @@ public class ContinuumStoreTest
     {
         String name = "installationTest";
         Installation testOne = createTestInstallation( name, InstallationService.JDK_TYPE, "varName", "varValue" );
-        testOne = store.addInstallation( testOne );
+        testOne = installationDao.addInstallation( testOne );
 
-        Installation fromStore = store.getInstallation( testOne.getInstallationId() );
+        Installation fromStore = installationDao.getInstallation( testOne.getInstallationId() );
         assertInstallationEquals( testOne, fromStore );
 
         fromStore.setVarName( "JAVA_HOME" );
         fromStore.setVarValue( "/usr/local/jdk1.5.0_08" );
-        store.updateInstallation( fromStore );
+        installationDao.updateInstallation( fromStore );
 
-        Installation updatedFromStore = store.getInstallation( testOne.getInstallationId() );
+        Installation updatedFromStore = installationDao.getInstallation( testOne.getInstallationId() );
 
         assertInstallationEquals( fromStore, updatedFromStore );
     }
@@ -458,10 +458,10 @@ public class ContinuumStoreTest
     {
         String name = "installationTestRemove";
         Installation testOne = createTestInstallation( name, InstallationService.JDK_TYPE, "varName", "varValue" );
-        testOne = store.addInstallation( testOne );
+        testOne = installationDao.addInstallation( testOne );
 
-        store.removeInstallation( testOne );
-        Installation fromStore = store.getInstallation( testOne.getInstallationId() );
+        installationDao.removeInstallation( testOne );
+        Installation fromStore = installationDao.getInstallation( testOne.getInstallationId() );
         assertNull( fromStore );
     }
 
@@ -485,11 +485,11 @@ public class ContinuumStoreTest
         Installation secondEnvVar =
             createTestInstallation( nameSecondEnvVar, InstallationService.MAVEN2_TYPE, "varName", "varValue" );
 
-        testOne = store.addInstallation( testOne );
-        testTwo = store.addInstallation( testTwo );
+        testOne = installationDao.addInstallation( testOne );
+        testTwo = installationDao.addInstallation( testTwo );
 
-        firstEnvVar = store.addInstallation( firstEnvVar );
-        secondEnvVar = store.addInstallation( secondEnvVar );
+        firstEnvVar = installationDao.addInstallation( firstEnvVar );
+        secondEnvVar = installationDao.addInstallation( secondEnvVar );
 
         List<Installation> envVars = new ArrayList<Installation>( 2 );
         envVars.add( firstEnvVar );
@@ -499,11 +499,11 @@ public class ContinuumStoreTest
 
         Profile secondProfile = createTestProfile( "first", "", 1, true, true, testOne, testTwo, envVars );
 
-        firstProfile = store.addProfile( firstProfile );
-        secondProfile = store.addProfile( secondProfile );
+        firstProfile = profileDao.addProfile( firstProfile );
+        secondProfile = profileDao.addProfile( secondProfile );
 
-        Profile firstGetted = store.getProfile( firstProfile.getId() );
-        Profile secondGetted = store.getProfile( secondProfile.getId() );
+        Profile firstGetted = profileDao.getProfile( firstProfile.getId() );
+        Profile secondGetted = profileDao.getProfile( secondProfile.getId() );
 
         assertNotNull( firstGetted );
         assertNotNull( firstGetted.getJdk() );
@@ -521,13 +521,13 @@ public class ContinuumStoreTest
         assertEquals( nameSecondInst, secondGetted.getBuilder().getName() );
         assertEquals( 2, secondGetted.getEnvironmentVariables().size() );
 
-        store.removeInstallation( testOne );
+        installationDao.removeInstallation( testOne );
 
-        Installation fromStore = store.getInstallation( testOne.getInstallationId() );
+        Installation fromStore = installationDao.getInstallation( testOne.getInstallationId() );
         assertNull( fromStore );
 
-        firstGetted = store.getProfile( firstProfile.getId() );
-        secondGetted = store.getProfile( secondProfile.getId() );
+        firstGetted = profileDao.getProfile( firstProfile.getId() );
+        secondGetted = profileDao.getProfile( secondProfile.getId() );
         assertNotNull( firstGetted );
         assertNull( firstGetted.getJdk() );
         assertNotNull( firstGetted.getBuilder() );
@@ -537,10 +537,10 @@ public class ContinuumStoreTest
         assertNotNull( secondGetted.getBuilder() );
         assertEquals( 2, secondGetted.getEnvironmentVariables().size() );
         // removing builder
-        store.removeInstallation( testTwo );
+        installationDao.removeInstallation( testTwo );
 
-        firstGetted = store.getProfile( firstProfile.getId() );
-        secondGetted = store.getProfile( secondProfile.getId() );
+        firstGetted = profileDao.getProfile( firstProfile.getId() );
+        secondGetted = profileDao.getProfile( secondProfile.getId() );
 
         assertNotNull( firstGetted );
         assertNull( firstGetted.getJdk() );
@@ -553,9 +553,9 @@ public class ContinuumStoreTest
         assertEquals( 2, secondGetted.getEnvironmentVariables().size() );
 
         // removing firstEnvVar
-        store.removeInstallation( firstEnvVar );
-        firstGetted = store.getProfile( firstProfile.getId() );
-        secondGetted = store.getProfile( secondProfile.getId() );
+        installationDao.removeInstallation( firstEnvVar );
+        firstGetted = profileDao.getProfile( firstProfile.getId() );
+        secondGetted = profileDao.getProfile( secondProfile.getId() );
         assertNotNull( firstGetted );
         assertNull( firstGetted.getJdk() );
         assertNull( firstGetted.getBuilder() );
@@ -571,9 +571,9 @@ public class ContinuumStoreTest
         assertEquals( nameSecondEnvVar, env.getName() );
 
         // removing secondEnvVar
-        store.removeInstallation( secondEnvVar );
-        firstGetted = store.getProfile( firstProfile.getId() );
-        secondGetted = store.getProfile( secondProfile.getId() );
+        installationDao.removeInstallation( secondEnvVar );
+        firstGetted = profileDao.getProfile( firstProfile.getId() );
+        secondGetted = profileDao.getProfile( secondProfile.getId() );
         assertNotNull( firstGetted );
         assertNull( firstGetted.getJdk() );
         assertNull( firstGetted.getBuilder() );
@@ -899,8 +899,8 @@ public class ContinuumStoreTest
     {
         Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
 
-        Profile profile = store.getProfile( testProfile1.getId() );
-        Schedule schedule = store.getSchedule( testSchedule1.getId() );
+        Profile profile = profileDao.getProfile( testProfile1.getId() );
+        Schedule schedule = scheduleDao.getSchedule( testSchedule1.getId() );
         BuildDefinition buildDefinition = createTestBuildDefinition( "TABDTP arguments", "TABDTP buildFile",
                                                                      "TABDTP goals", profile, schedule, false, false );
         BuildDefinition copy = createTestBuildDefinition( buildDefinition );
@@ -1015,8 +1015,8 @@ public class ContinuumStoreTest
         ProjectGroup projectGroup =
             projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( defaultProjectGroup.getId() );
 
-        Profile profile = store.getProfile( testProfile1.getId() );
-        Schedule schedule = store.getSchedule( testSchedule1.getId() );
+        Profile profile = profileDao.getProfile( testProfile1.getId() );
+        Schedule schedule = scheduleDao.getSchedule( testSchedule1.getId() );
         BuildDefinition buildDefinition = createTestBuildDefinition( "TABDTPG arguments", "TABDTPG buildFile",
                                                                      "TABDTPG goals", profile, schedule, false, false );
         BuildDefinition copy = createTestBuildDefinition( buildDefinition );

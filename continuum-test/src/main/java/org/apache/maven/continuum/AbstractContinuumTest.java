@@ -21,6 +21,7 @@ package org.apache.maven.continuum;
 
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -59,6 +60,8 @@ public abstract class AbstractContinuumTest
 
     private ProjectGroupDao projectGroupDao;
 
+    private ScheduleDao scheduleDao;
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -74,6 +77,8 @@ public abstract class AbstractContinuumTest
         getProjectDao();
 
         getProjectGroupDao();
+
+        getScheduleDao();
 
         setUpConfigurationService( (ConfigurationService) lookup( "configurationService" ) );
 
@@ -232,6 +237,16 @@ public abstract class AbstractContinuumTest
         }
         return projectGroupDao;
     }
+
+    protected ScheduleDao getScheduleDao()
+    {
+        if ( scheduleDao == null )
+        {
+            scheduleDao = (ScheduleDao) lookup( ScheduleDao.class.getName() );
+        }
+        return scheduleDao;
+    }
+
     // ----------------------------------------------------------------------
     // Build Executor
     // ----------------------------------------------------------------------

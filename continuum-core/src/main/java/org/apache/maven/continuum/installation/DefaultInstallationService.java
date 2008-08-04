@@ -19,13 +19,13 @@ package org.apache.maven.continuum.installation;
  * under the License.
  */
 
+import org.apache.continuum.dao.InstallationDao;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -58,9 +58,9 @@ public class DefaultInstallationService
     implements InstallationService, Initializable
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private InstallationDao installationDao;
 
     /**
      * @plexus.requirement role-hint="default"
@@ -111,8 +111,8 @@ public class DefaultInstallationService
     {
         if ( alreadyExistInstallationName( installation ) )
         {
-            throw new AlreadyExistsInstallationException( "Installation with name " + installation.getName()
-                + " already exists" );
+            throw new AlreadyExistsInstallationException(
+                "Installation with name " + installation.getName() + " already exists" );
         }
         // TODO must be done in the same transaction
         Installation storedOne = null;
@@ -124,7 +124,7 @@ public class DefaultInstallationService
             {
                 installation.setVarName( envVarName );
             }
-            storedOne = store.addInstallation( installation );
+            storedOne = installationDao.addInstallation( installation );
         }
         catch ( ContinuumStoreException e )
         {
@@ -155,7 +155,7 @@ public class DefaultInstallationService
     {
         try
         {
-            store.removeInstallation( installation );
+            installationDao.removeInstallation( installation );
         }
         catch ( ContinuumStoreException e )
         {
@@ -173,7 +173,7 @@ public class DefaultInstallationService
     {
         try
         {
-            List installations = store.getAllInstallations();
+            List installations = installationDao.getAllInstallations();
             return installations == null ? Collections.EMPTY_LIST : installations;
         }
         catch ( ContinuumStoreException e )
@@ -190,7 +190,7 @@ public class DefaultInstallationService
     {
         try
         {
-            return store.getInstallation( installationId );
+            return installationDao.getInstallation( installationId );
         }
         catch ( ContinuumStoreException e )
         {
@@ -225,7 +225,7 @@ public class DefaultInstallationService
                 stored.setVarName( installation.getVarName() );
             }
             stored.setVarValue( installation.getVarValue() );
-            store.updateInstallation( stored );
+            installationDao.updateInstallation( stored );
         }
         catch ( ContinuumStoreException e )
         {
@@ -365,7 +365,7 @@ public class DefaultInstallationService
         }
         if ( profile.getEnvironmentVariables() != null )
         {
-            for ( Installation installation: (List<Installation>)profile.getEnvironmentVariables() )
+            for ( Installation installation : (List<Installation>) profile.getEnvironmentVariables() )
             {
                 environnments.put( installation.getVarName(), installation.getVarValue() );
             }
@@ -441,7 +441,7 @@ public class DefaultInstallationService
             throw new InstallationException( e.getMessage(), e );
         }
     }
-    
+
     private boolean alreadyExistInstallationName( Installation installation )
         throws InstallationException
     {

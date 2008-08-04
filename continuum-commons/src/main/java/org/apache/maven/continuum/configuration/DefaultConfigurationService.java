@@ -22,6 +22,7 @@ package org.apache.maven.continuum.configuration;
 import org.apache.continuum.configuration.ContinuumConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.configuration.GeneralConfiguration;
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStore;
@@ -58,6 +59,11 @@ public class DefaultConfigurationService
     /**
      * @plexus.requirement
      */
+    private ScheduleDao scheduleDao;
+
+    /**
+     * @plexus.requirement
+     */
     private ContinuumConfiguration configuration;
 
     private GeneralConfiguration generalConfiguration;
@@ -88,6 +94,16 @@ public class DefaultConfigurationService
     public ContinuumStore getStore()
     {
         return store;
+    }
+
+    public ScheduleDao getScheduleDao()
+    {
+        return scheduleDao;
+    }
+
+    public void setScheduleDao( ScheduleDao scheduleDao )
+    {
+        this.scheduleDao = scheduleDao;
     }
 
     public ContinuumConfiguration getConfiguration()
@@ -362,13 +378,13 @@ public class DefaultConfigurationService
         throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException
     {
         // Schedule
-        Schedule defaultSchedule = getStore().getScheduleByName( DEFAULT_SCHEDULE_NAME );
+        Schedule defaultSchedule = scheduleDao.getScheduleByName( DEFAULT_SCHEDULE_NAME );
 
         if ( defaultSchedule == null )
         {
             defaultSchedule = createDefaultSchedule();
 
-            defaultSchedule = getStore().addSchedule( defaultSchedule );
+            defaultSchedule = scheduleDao.addSchedule( defaultSchedule );
         }
 
         return defaultSchedule;

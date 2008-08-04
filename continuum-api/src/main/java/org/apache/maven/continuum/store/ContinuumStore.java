@@ -23,14 +23,10 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -107,60 +103,6 @@ public interface ContinuumStore
     List<BuildDefinitionTemplate> getContinuumDefaultdDefinitions()
         throws ContinuumStoreException;
 
-    // ------------------------------------------------------
-    //  Project Group
-    // ------------------------------------------------------
-
-    List<Project> getAllProjectsByName();
-
-    List<Project> getAllProjectsByNameWithDependencies();
-
-    List<Project> getAllProjectsByNameWithBuildDetails();
-
-    List<Schedule> getAllSchedulesByName();
-
-    Schedule addSchedule( Schedule schedule );
-
-    Schedule getScheduleByName( String name )
-        throws ContinuumStoreException;
-
-    Schedule storeSchedule( Schedule schedule )
-        throws ContinuumStoreException;
-
-    // ----------------------------------------------------------------
-    // Profile
-    // ----------------------------------------------------------------    
-    List<Profile> getAllProfilesByName();
-
-    Profile addProfile( Profile profile );
-
-    Installation addInstallation( Installation installation )
-        throws ContinuumStoreException;
-
-    Profile getProfile( int profileId )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException;
-
-    void updateProfile( Profile profile )
-        throws ContinuumStoreException;
-
-    void removeProfile( Profile profile );
-
-    // ----------------------------------------------------------------
-    // Installation
-    // ----------------------------------------------------------------  
-
-    List<Installation> getAllInstallations()
-        throws ContinuumStoreException;
-
-    void removeInstallation( Installation installation )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException;
-
-    void updateInstallation( Installation installation )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException;
-
-    Installation getInstallation( int installationId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException;
-
     List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
 
     Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
@@ -172,18 +114,10 @@ public interface ContinuumStore
     public Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
         throws ContinuumStoreException;
 
-    void updateSchedule( Schedule schedule )
-        throws ContinuumStoreException;
-
-    void removeSchedule( Schedule schedule );
-
     BuildResult getBuildResult( int buildId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     void removeBuildResult( BuildResult buildResult );
-
-    Schedule getSchedule( int scheduleId )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException;
 
     BuildResult getLatestBuildResultForProject( int projectId );
 
@@ -229,8 +163,6 @@ public interface ContinuumStore
         throws ContinuumStoreException;
 
     void closeStore();
-
-    Collection<ProjectGroup> getAllProjectGroupsWithTheLot();
 
     void eraseDatabase();
 }
