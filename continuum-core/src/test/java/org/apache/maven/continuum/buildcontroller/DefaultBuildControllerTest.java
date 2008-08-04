@@ -54,7 +54,7 @@ public class DefaultBuildControllerTest
         project1.setState( ContinuumProjectState.OK );
         projectId1 = addProject( getStore(), project1 ).getId();
         buildDefinitionId1 = getStore().getDefaultBuildDefinition( projectId1 ).getId();
-        project1 = getStore().getProject( projectId1 );
+        project1 = getProjectDao().getProject( projectId1 );
         BuildResult buildResult1 = new BuildResult();
         buildResult1.setStartTime( Calendar.getInstance().getTimeInMillis() );
         buildResult1.setEndTime( Calendar.getInstance().getTimeInMillis() );
@@ -140,13 +140,13 @@ public class DefaultBuildControllerTest
     public void testWithNewProjects()
         throws Exception
     {
-        Project p1 = getStore().getProject( projectId1 );
+        Project p1 = getProjectDao().getProject( projectId1 );
         p1.setState( ContinuumProjectState.NEW );
-        getStore().updateProject( p1 );
+        getProjectDao().updateProject( p1 );
 
-        Project p2 = getStore().getProject( projectId2 );
+        Project p2 = getProjectDao().getProject( projectId2 );
         p2.setState( ContinuumProjectState.NEW );
-        getStore().updateProject( p2 );
+        getProjectDao().updateProject( p2 );
 
         BuildContext context = getContext();
         controller.checkProjectDependencies( context );

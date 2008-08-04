@@ -23,7 +23,6 @@ import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumStore;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -38,11 +37,9 @@ public class ContinuumNotificationDispatcherTest
         ContinuumNotificationDispatcher notificationDispatcher =
             (ContinuumNotificationDispatcher) lookup( ContinuumNotificationDispatcher.ROLE );
 
-        ContinuumStore store = getStore();
+        Project project = addProject( getStore(), "Notification Dispatcher Test Project" );
 
-        Project project = addProject( store, "Notification Dispatcher Test Project" );
-
-        project = store.getProjectWithBuildDetails( project.getId() );
+        project = getProjectDao().getProjectWithBuildDetails( project.getId() );
 
         BuildResult build = new BuildResult();
 
@@ -52,9 +49,9 @@ public class ContinuumNotificationDispatcherTest
 
         build.setTrigger( ContinuumProjectState.TRIGGER_SCHEDULED );
 
-        store.addBuildResult( project, build );
+        getStore().addBuildResult( project, build );
 
-        build = store.getBuildResult( build.getId() );
+        build = getStore().getBuildResult( build.getId() );
 
         notificationDispatcher.buildComplete( project, null, build );
     }

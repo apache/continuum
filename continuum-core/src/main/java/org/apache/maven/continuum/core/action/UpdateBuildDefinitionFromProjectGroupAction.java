@@ -41,7 +41,6 @@ public class UpdateBuildDefinitionFromProjectGroupAction
      */
     private ProjectGroupDao projectGroupDao;
 
-
     public void execute( Map map )
         throws Exception
     {

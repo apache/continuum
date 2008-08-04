@@ -19,6 +19,7 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -54,6 +55,8 @@ public abstract class AbstractContinuumStoreTestCase
     protected ContinuumStore store;
 
     protected ProjectGroupDao projectGroupDao;
+
+    protected ProjectDao projectDao;
 
     protected ProjectGroup defaultProjectGroup;
 
@@ -123,6 +126,8 @@ public abstract class AbstractContinuumStoreTestCase
         store = createStore();
 
         projectGroupDao = (ProjectGroupDao) lookup( ProjectGroupDao.class.getName() );
+
+        projectDao = (ProjectDao) lookup( ProjectDao.class.getName() );
     }
 
     protected void createBuildDatabase()
@@ -475,8 +480,8 @@ public abstract class AbstractContinuumStoreTestCase
         assertProjectGroupEquals( defaultProjectGroup, projectGroupDao.getProjectGroup( defaultProjectGroup.getId() ) );
         assertProjectGroupEquals( testProjectGroup2, projectGroupDao.getProjectGroup( testProjectGroup2.getId() ) );
 
-        assertProjectEquals( testProject1, store.getProject( testProject1.getId() ) );
-        assertProjectEquals( testProject2, store.getProject( testProject2.getId() ) );
+        assertProjectEquals( testProject1, projectDao.getProject( testProject1.getId() ) );
+        assertProjectEquals( testProject2, projectDao.getProject( testProject2.getId() ) );
 
         assertScheduleEquals( testSchedule1, store.getSchedule( testSchedule1.getId() ) );
         assertScheduleEquals( testSchedule2, store.getSchedule( testSchedule2.getId() ) );

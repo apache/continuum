@@ -19,11 +19,8 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -40,6 +37,11 @@ import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -60,25 +62,30 @@ public class CheckoutProjectContinuumAction
     private ContinuumScm scm;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private BuildDefinitionDao buildDefinitionDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
 
     public void execute( Map context )
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
-        Project project = store.getProject( getProject( context ).getId() );
+        Project project = projectDao.getProject( getProject( context ).getId() );
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
         if ( buildDefinition != null )
         {
-            buildDefinition = store.getBuildDefinition( buildDefinition.getId() );
+            buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinition.getId() );
         }
 
         project.setState( ContinuumProjectState.CHECKING_OUT );
 
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
         File workingDirectory = getWorkingDirectory( context );
 
@@ -92,13 +99,12 @@ public class CheckoutProjectContinuumAction
         {
             String scmUserName = getString( context, KEY_SCM_USERNAME, "" );
             String scmPassword = getString( context, KEY_SCM_PASSWORD, "" );
-            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
+            ContinuumScmConfiguration config =
+                createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
 
             String tag = config.getTag();
-            getLogger().info(
-                              "Checking out project: '" + project.getName() + "', id: '" + project.getId() + "' "
-                                  + "to '" + workingDirectory + "'"
-                                  + ( tag != null ? " with branch/tag " + tag + "." : "." ) );
+            getLogger().info( "Checking out project: '" + project.getName() + "', id: '" + project.getId() + "' " +
+                "to '" + workingDirectory + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." ) );
 
             CheckOutScmResult checkoutResult = scm.checkout( config );
             if ( StringUtils.isNotEmpty( checkoutResult.getRelativePathProjectDirectory() ) )
@@ -111,10 +117,9 @@ public class CheckoutProjectContinuumAction
             {
                 // TODO: is it more appropriate to return this in the converted result so that it can be presented to
                 // the user?
-                String msg =
-                    "Error while checking out the code for project: '" + project.getName() + "', id: '"
-                        + project.getId() + "' to '" + workingDirectory.getAbsolutePath() + "'"
-                        + ( tag != null ? " with branch/tag " + tag + "." : "." );
+                String msg = "Error while checking out the code for project: '" + project.getName() + "', id: '" +
+                    project.getId() + "' to '" + workingDirectory.getAbsolutePath() + "'" +
+                    ( tag != null ? " with branch/tag " + tag + "." : "." );
                 getLogger().warn( msg );
 
                 getLogger().warn( "Command output: " + checkoutResult.getCommandOutput() );
@@ -135,8 +140,8 @@ public class CheckoutProjectContinuumAction
             result.setSuccess( false );
 
             result.setProviderMessage( e.getMessage() + ": " + getValidationMessages( e ) );
-            
-            getLogger().error( e.getMessage(), e);
+
+            getLogger().error( e.getMessage(), e );
         }
         catch ( NoSuchScmProviderException e )
         {
@@ -146,8 +151,8 @@ public class CheckoutProjectContinuumAction
             result.setSuccess( false );
 
             result.setProviderMessage( e.getMessage() );
-            
-            getLogger().error( e.getMessage(), e);
+
+            getLogger().error( e.getMessage(), e );
         }
         catch ( ScmException e )
         {
@@ -156,8 +161,8 @@ public class CheckoutProjectContinuumAction
             result.setSuccess( false );
 
             result.setException( ContinuumUtils.throwableMessagesToString( e ) );
-            
-            getLogger().error( e.getMessage(), e);
+
+            getLogger().error( e.getMessage(), e );
         }
         catch ( Throwable t )
         {
@@ -168,8 +173,8 @@ public class CheckoutProjectContinuumAction
             result.setSuccess( false );
 
             result.setException( ContinuumUtils.throwableMessagesToString( t ) );
-            
-            getLogger().error( t.getMessage(), t);
+
+            getLogger().error( t.getMessage(), t );
         }
         finally
         {
@@ -179,11 +184,11 @@ public class CheckoutProjectContinuumAction
                 project.setRelativePath( relativePath );
             }
 
-            project = store.getProject( project.getId() );
+            project = projectDao.getProject( project.getId() );
 
             project.setState( ContinuumProjectState.CHECKEDOUT );
 
-            store.updateProject( project );
+            projectDao.updateProject( project );
 
             notifier.checkoutComplete( project, buildDefinition );
         }

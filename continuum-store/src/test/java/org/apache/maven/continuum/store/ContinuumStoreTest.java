@@ -19,6 +19,7 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -57,6 +58,8 @@ public class ContinuumStoreTest
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
+
+    protected BuildDefinitionDao buildDefinitionDao;
 
     // ----------------------------------------------------------------------
     //  TEST METHODS
@@ -192,7 +195,7 @@ public class ContinuumStoreTest
     public void testGetProject()
         throws ContinuumStoreException
     {
-        Project retrievedProject = store.getProject( testProject1.getId() );
+        Project retrievedProject = projectDao.getProject( testProject1.getId() );
         assertProjectEquals( testProject1, retrievedProject );
         checkProjectDefaultFetchGroup( retrievedProject );
     }
@@ -200,7 +203,7 @@ public class ContinuumStoreTest
     public void testGetProjectWithDetails()
         throws ContinuumStoreException
     {
-        Project retrievedProject = store.getProjectWithAllDetails( testProject1.getId() );
+        Project retrievedProject = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertProjectEquals( testProject1, retrievedProject );
         checkProjectFetchGroup( retrievedProject, false, false, true, true );
 
@@ -213,7 +216,7 @@ public class ContinuumStoreTest
     public void testGetProjectWithCheckoutResult()
         throws ContinuumStoreException
     {
-        Project retrievedProject = store.getProjectWithCheckoutResult( testProject1.getId() );
+        Project retrievedProject = projectDao.getProjectWithCheckoutResult( testProject1.getId() );
         assertProjectEquals( testProject1, retrievedProject );
         assertScmResultEquals( testCheckoutResult1, retrievedProject.getCheckoutResult() );
         checkProjectFetchGroup( retrievedProject, true, false, false, false );
@@ -224,7 +227,7 @@ public class ContinuumStoreTest
     {
         try
         {
-            store.getProject( INVALID_ID );
+            projectDao.getProject( INVALID_ID );
             fail( "Should not find project with invalid ID" );
         }
         catch ( ContinuumObjectNotFoundException expected )
@@ -236,7 +239,7 @@ public class ContinuumStoreTest
     public void testEditProject()
         throws ContinuumStoreException
     {
-        Project newProject = store.getProject( testProject2.getId() );
+        Project newProject = projectDao.getProject( testProject2.getId() );
 
         newProject.setName( "testEditProject2" );
         newProject.setDescription( "testEditProject updated description" );
@@ -244,9 +247,9 @@ public class ContinuumStoreTest
 
         Project copy = createTestProject( newProject );
         copy.setId( newProject.getId() );
-        store.updateProject( newProject );
+        projectDao.updateProject( newProject );
 
-        Project retrievedProject = store.getProject( testProject2.getId() );
+        Project retrievedProject = projectDao.getProject( testProject2.getId() );
         assertProjectEquals( copy, retrievedProject );
 
     }
@@ -261,7 +264,7 @@ public class ContinuumStoreTest
 
         try
         {
-            store.updateProject( newProject );
+            projectDao.updateProject( newProject );
             fail( "Should not have succeeded" );
         }
         catch ( ContinuumStoreException expected )
@@ -585,9 +588,9 @@ public class ContinuumStoreTest
     public void testDeleteProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithBuilds( testProject1.getId() );
+        Project project = projectDao.getProjectWithBuilds( testProject1.getId() );
 
-        store.removeProject( project );
+        projectDao.removeProject( project );
 
         ProjectGroup projectGroup = projectGroupDao.getProjectGroupWithProjects( defaultProjectGroup.getId() );
         assertEquals( "check size is now 1", 1, projectGroup.getProjects().size() );
@@ -620,7 +623,7 @@ public class ContinuumStoreTest
     public void testDeleteBuildResult()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithBuilds( testProject1.getId() );
+        Project project = projectDao.getProjectWithBuilds( testProject1.getId() );
 
         for ( Iterator i = project.getBuildResults().iterator(); i.hasNext(); )
         {
@@ -630,9 +633,9 @@ public class ContinuumStoreTest
                 i.remove();
             }
         }
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithBuilds( testProject1.getId() );
+        project = projectDao.getProjectWithBuilds( testProject1.getId() );
         assertEquals( "check size is now 1", 1, project.getBuildResults().size() );
         assertBuildResultEquals( testBuildResult2, (BuildResult) project.getBuildResults().get( 0 ) );
 
@@ -753,14 +756,14 @@ public class ContinuumStoreTest
     public void testAddDeveloperToProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
 
         ProjectDeveloper developer = createTestDeveloper( 11, "email TADTP", "name TADTP", "scmId TADTP" );
         ProjectDeveloper copy = createTestDeveloper( developer );
         project.addDeveloper( developer );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check # devs", 2, project.getDevelopers().size() );
         assertDeveloperEquals( copy, (ProjectDeveloper) project.getDevelopers().get( 1 ) );
     }
@@ -768,16 +771,16 @@ public class ContinuumStoreTest
     public void testEditDeveloper()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
 
         ProjectDeveloper newDeveloper = (ProjectDeveloper) project.getDevelopers().get( 0 );
         newDeveloper.setName( "name1.1" );
         newDeveloper.setEmail( "email1.1" );
 
         ProjectDeveloper copy = createTestDeveloper( newDeveloper );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check # devs", 1, project.getDevelopers().size() );
         assertDeveloperEquals( copy, (ProjectDeveloper) project.getDevelopers().get( 0 ) );
     }
@@ -785,11 +788,11 @@ public class ContinuumStoreTest
     public void testDeleteDeveloper()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         project.getDevelopers().remove( 0 );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check size is now 0", 0, project.getDevelopers().size() );
 
         // !! These actually aren't happening !!
@@ -799,14 +802,14 @@ public class ContinuumStoreTest
     public void testAddDependencyToProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
 
         ProjectDependency dependency = createTestDependency( "TADTP groupId", "TADTP artifactId", "TADTP version" );
         ProjectDependency copy = createTestDependency( dependency );
         project.addDependency( dependency );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check # deps", 3, project.getDependencies().size() );
         assertDependencyEquals( copy, (ProjectDependency) project.getDependencies().get( 2 ) );
     }
@@ -814,16 +817,16 @@ public class ContinuumStoreTest
     public void testEditDependency()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
 
         ProjectDependency newDependency = (ProjectDependency) project.getDependencies().get( 0 );
         newDependency.setGroupId( "groupId1.1" );
         newDependency.setArtifactId( "artifactId1.1" );
 
         ProjectDependency copy = createTestDependency( newDependency );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check # deps", 2, project.getDependencies().size() );
         assertDependencyEquals( copy, (ProjectDependency) project.getDependencies().get( 0 ) );
     }
@@ -831,12 +834,12 @@ public class ContinuumStoreTest
     public void testDeleteDependency()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         ProjectDependency dependency = (ProjectDependency) project.getDependencies().get( 1 );
         project.getDependencies().remove( 0 );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check size is now 1", 1, project.getDependencies().size() );
         assertDependencyEquals( dependency, (ProjectDependency) project.getDependencies().get( 0 ) );
 
@@ -847,14 +850,14 @@ public class ContinuumStoreTest
     public void testAddNotifierToProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
 
         ProjectNotifier notifier = createTestNotifier( 13, true, false, true, "TADNTP type" );
         ProjectNotifier copy = createTestNotifier( notifier );
         project.addNotifier( notifier );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check # notifiers", 2, project.getNotifiers().size() );
         assertNotifierEquals( copy, (ProjectNotifier) project.getNotifiers().get( 1 ) );
     }
@@ -862,7 +865,7 @@ public class ContinuumStoreTest
     public void testEditNotifier()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
 
         ProjectNotifier newNotifier = (ProjectNotifier) project.getNotifiers().get( 0 );
         // If we use "type1.1", jpox-rc2 store "type11", weird
@@ -870,9 +873,9 @@ public class ContinuumStoreTest
         newNotifier.setType( type );
 
         ProjectNotifier copy = createTestNotifier( newNotifier );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check # notifiers", 1, project.getNotifiers().size() );
         assertNotifierEquals( copy, (ProjectNotifier) project.getNotifiers().get( 0 ) );
     }
@@ -880,11 +883,11 @@ public class ContinuumStoreTest
     public void testDeleteNotifier()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         project.getNotifiers().remove( 0 );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check size is now 0", 0, project.getNotifiers().size() );
 
         // !! These actually aren't happening !!
@@ -894,7 +897,7 @@ public class ContinuumStoreTest
     public void testAddBuildDefinitionToProject()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
 
         Profile profile = store.getProfile( testProfile1.getId() );
         Schedule schedule = store.getSchedule( testSchedule1.getId() );
@@ -902,9 +905,9 @@ public class ContinuumStoreTest
                                                                      "TABDTP goals", profile, schedule, false, false );
         BuildDefinition copy = createTestBuildDefinition( buildDefinition );
         project.addBuildDefinition( buildDefinition );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check # build defs", 3, project.getBuildDefinitions().size() );
         BuildDefinition retrievedBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 2 );
         assertBuildDefinitionEquals( copy, retrievedBuildDefinition );
@@ -915,7 +918,7 @@ public class ContinuumStoreTest
     public void testEditBuildDefinition()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
 
         BuildDefinition newBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 0 );
         newBuildDefinition.setBuildFresh( true );
@@ -924,9 +927,9 @@ public class ContinuumStoreTest
         newBuildDefinition.setArguments( arguments );
 
         BuildDefinition copy = createTestBuildDefinition( newBuildDefinition );
-        store.storeBuildDefinition( newBuildDefinition );
+        buildDefinitionDao.storeBuildDefinition( newBuildDefinition );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check # build defs", 2, project.getBuildDefinitions().size() );
         BuildDefinition retrievedBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 0 );
         assertBuildDefinitionEquals( copy, retrievedBuildDefinition );
@@ -937,12 +940,12 @@ public class ContinuumStoreTest
     public void testDeleteBuildDefinition()
         throws ContinuumStoreException
     {
-        Project project = store.getProjectWithAllDetails( testProject1.getId() );
+        Project project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         BuildDefinition buildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 1 );
         project.getBuildDefinitions().remove( 0 );
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
-        project = store.getProjectWithAllDetails( testProject1.getId() );
+        project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check size is now 1", 1, project.getBuildDefinitions().size() );
         BuildDefinition retrievedBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 0 );
         assertBuildDefinitionEquals( buildDefinition, retrievedBuildDefinition );
@@ -1070,7 +1073,7 @@ public class ContinuumStoreTest
         throws Exception
     {
 
-        int all = store.getAllBuildDefinitions().size();
+        int all = buildDefinitionDao.getAllBuildDefinitions().size();
         BuildDefinition buildDefinition = new BuildDefinition();
         buildDefinition.setBuildFile( "pom.xml" );
         buildDefinition.setGoals( "clean" );
@@ -1080,7 +1083,7 @@ public class ContinuumStoreTest
         template.setContinuumDefault( true );
         template.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
         template = store.addBuildDefinitionTemplate( template );
-        buildDefinition = store.addBuildDefinition( buildDefinition );
+        buildDefinition = buildDefinitionDao.addBuildDefinition( buildDefinition );
 
         template.addBuildDefinition( buildDefinition );
 
@@ -1089,7 +1092,7 @@ public class ContinuumStoreTest
         assertEquals( "test", template.getName() );
         assertTrue( template.isContinuumDefault() );
         assertEquals( 1, template.getBuildDefinitions().size() );
-        assertEquals( all + 1, store.getAllBuildDefinitions().size() );
+        assertEquals( all + 1, buildDefinitionDao.getAllBuildDefinitions().size() );
         assertEquals( 1, store.getAllBuildDefinitionTemplate().size() );
 
         template = store
@@ -1110,7 +1113,7 @@ public class ContinuumStoreTest
     {
         try
         {
-            store.getProject( project.getId() );
+            projectDao.getProject( project.getId() );
             fail( "Project should no longer exist" );
         }
         catch ( ContinuumObjectNotFoundException expected )
@@ -1160,6 +1163,8 @@ public class ContinuumStoreTest
         throws Exception
     {
         super.setUp();
+
+        buildDefinitionDao = (BuildDefinitionDao) lookup( BuildDefinitionDao.class.getName() );
 
         createBuildDatabase();
     }

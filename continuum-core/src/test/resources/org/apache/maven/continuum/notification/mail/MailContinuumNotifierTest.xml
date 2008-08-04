@@ -38,6 +38,9 @@
           <role-hint>jdo</role-hint>
         </requirement>
         <requirement>
+          <role>org.apache.continuum.dao.ProjectDao</role>
+        </requirement>
+        <requirement>
           <role>org.codehaus.plexus.mailsender.MailSender</role>
         </requirement>
         <requirement>

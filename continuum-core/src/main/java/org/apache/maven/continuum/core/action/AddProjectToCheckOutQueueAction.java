@@ -19,13 +19,13 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
-import java.util.Map;
-
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.taskqueue.TaskQueue;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -47,19 +47,19 @@ public class AddProjectToCheckOutQueueAction
     private TaskQueue checkOutQueue;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
-    
+    private ProjectDao projectDao;
+
     @SuppressWarnings("unchecked")
     public void execute( Map context )
         throws Exception
     {
-        
+
         Project project = (Project) getObject( context, KEY_PROJECT, null );
-        if (project == null)
+        if ( project == null )
         {
-            project = store.getProject( getProjectId( context ) );
+            project = projectDao.getProject( getProjectId( context ) );
         }
 
         CheckOutTask checkOutTask = new CheckOutTask( project.getId(), workingDirectoryService

@@ -20,6 +20,7 @@ package org.apache.maven.continuum.notification;
  */
 
 import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
@@ -49,6 +50,11 @@ public abstract class AbstractContinuumNotifier
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
 
     /**
      * @plexus.requirement role-hint="jdo"
@@ -260,7 +266,7 @@ public abstract class AbstractContinuumNotifier
                 //Normally, it isn't possible, buildDef should be != null
                 if ( project.getId() > 0 )
                 {
-                    project = getContinuumStore().getProjectWithBuilds( project.getId() );
+                    project = projectDao.getProjectWithBuilds( project.getId() );
                 }
                 builds = project.getBuildResults();
 

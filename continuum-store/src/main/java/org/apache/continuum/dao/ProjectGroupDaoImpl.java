@@ -22,7 +22,6 @@ package org.apache.continuum.dao;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 
@@ -40,9 +39,9 @@ public class ProjectGroupDaoImpl
     implements ProjectGroupDao
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement role=org.apache.continuum.dao.ProjectDao"
      */
-    private ContinuumStore store;
+    private ProjectDao projectDao;
 
     public ProjectGroup addProjectGroup( ProjectGroup group )
     {
@@ -68,7 +67,7 @@ public class ProjectGroupDaoImpl
             // because of the fetch groups
             for ( Project p : (List<Project>) pg.getProjects() )
             {
-                store.removeProject( p );
+                projectDao.removeProject( p );
             }
             removeObject( pg );
         }
@@ -105,7 +104,7 @@ public class ProjectGroupDaoImpl
     {
         try
         {
-            return store.getProject( projectId ).getProjectGroup();
+            return projectDao.getProject( projectId ).getProjectGroup();
         }
         catch ( ContinuumStoreException e )
         {

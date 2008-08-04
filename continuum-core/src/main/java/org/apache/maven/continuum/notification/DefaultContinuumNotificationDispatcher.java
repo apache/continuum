@@ -19,6 +19,7 @@ package org.apache.maven.continuum.notification;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -56,6 +57,11 @@ public class DefaultContinuumNotificationDispatcher
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
 
     /**
      * @plexus.requirement
@@ -117,7 +123,7 @@ public class DefaultContinuumNotificationDispatcher
             // Here we need to get all the project details
             //  - builds are used to detect if the state has changed (TODO: maybe previousState field is better)
             //  - notifiers are used to send the notification
-            project = store.getProjectWithAllDetails( project.getId() );
+            project = projectDao.getProjectWithAllDetails( project.getId() );
 
             ProjectGroup projectGroup =
                 projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( project.getProjectGroup().getId() );

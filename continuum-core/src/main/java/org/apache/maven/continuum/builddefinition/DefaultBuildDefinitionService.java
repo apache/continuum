@@ -19,7 +19,9 @@
 package org.apache.maven.continuum.builddefinition;
 
 import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -81,11 +83,20 @@ public class DefaultBuildDefinitionService
      */
     private String defaultM2Arguments;
 
-
     /**
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildDefinitionDao buildDefinitionDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
 
     /**
      * @plexus.requirement
@@ -128,7 +139,7 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            return store.getBuildDefinition( buildDefinitionId );
+            return buildDefinitionDao.getBuildDefinition( buildDefinitionId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -145,7 +156,7 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            return store.addBuildDefinition( buildDefinition );
+            return buildDefinitionDao.addBuildDefinition( buildDefinition );
         }
         catch ( ContinuumStoreException e )
         {
@@ -159,7 +170,7 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            store.removeBuildDefinition( buildDefinition );
+            buildDefinitionDao.removeBuildDefinition( buildDefinition );
         }
         catch ( ContinuumStoreException e )
         {
@@ -172,7 +183,7 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            BuildDefinition storedBuildDefinition = store.getBuildDefinition( buildDefinition.getId() );
+            BuildDefinition storedBuildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinition.getId() );
             storedBuildDefinition.setBuildFresh( buildDefinition.isBuildFresh() );
             storedBuildDefinition.setAlwaysBuild( buildDefinition.isAlwaysBuild() );
             storedBuildDefinition.setArguments( buildDefinition.getArguments() );
@@ -183,7 +194,7 @@ public class DefaultBuildDefinitionService
             storedBuildDefinition.setProfile( buildDefinition.getProfile() );
             storedBuildDefinition.setSchedule( buildDefinition.getSchedule() );
             storedBuildDefinition.setType( buildDefinition.getType() );
-            store.storeBuildDefinition( storedBuildDefinition );
+            buildDefinitionDao.storeBuildDefinition( storedBuildDefinition );
         }
         catch ( ContinuumStoreException e )
         {
@@ -197,7 +208,7 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            return store.getAllBuildDefinitions();
+            return buildDefinitionDao.getAllBuildDefinitions();
         }
         catch ( ContinuumStoreException e )
         {
@@ -211,7 +222,7 @@ public class DefaultBuildDefinitionService
     {
         try
         {
-            return store.getAllTemplates();
+            return buildDefinitionDao.getAllTemplates();
         }
         catch ( ContinuumStoreException e )
         {
@@ -557,17 +568,17 @@ public class DefaultBuildDefinitionService
             {
                 return;
             }
-            project = store.getProjectWithBuildDetails( project.getId() );
+            project = projectDao.getProjectWithBuildDetails( project.getId() );
             List<BuildDefinition> buildDefs = new ArrayList<BuildDefinition>();
             for ( Iterator<BuildDefinition> iterator = template.getBuildDefinitions().iterator(); iterator.hasNext(); )
             {
                 BuildDefinition bd = iterator.next();
                 bd = cloneBuildDefinition( bd );
                 bd.setTemplate( false );
-                bd = store.addBuildDefinition( bd );
+                bd = buildDefinitionDao.addBuildDefinition( bd );
                 project.addBuildDefinition( bd );
             }
-            store.updateProject( project );
+            projectDao.updateProject( project );
 
         }
         catch ( ContinuumStoreException e )
@@ -591,7 +602,7 @@ public class DefaultBuildDefinitionService
             for ( Iterator<BuildDefinition> iterator = template.getBuildDefinitions().iterator(); iterator.hasNext(); )
             {
                 BuildDefinition bd = iterator.next();
-                bd = store.addBuildDefinition( cloneBuildDefinition( bd ) );
+                bd = buildDefinitionDao.addBuildDefinition( cloneBuildDefinition( bd ) );
                 projectGroup.addBuildDefinition( bd );
             }
             projectGroupDao.updateProjectGroup( projectGroup );

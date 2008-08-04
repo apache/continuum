@@ -19,6 +19,8 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
@@ -55,16 +57,26 @@ public class UpdateProjectFromWorkingDirectoryContinuumAction
      */
     private ContinuumStore store;
 
+    /**
+     * @plexus.requirement
+     */
+    private BuildDefinitionDao buildDefinitionDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
+
     public void execute( Map context )
         throws ContinuumStoreException, ContinuumException, ContinuumBuildExecutorException
     {
         Project project = getProject( context );
 
-        project = store.getProjectWithAllDetails( project.getId() );
+        project = projectDao.getProjectWithAllDetails( project.getId() );
 
         getLogger().info( "Updating project '" + project.getName() + "' from checkout." );
 
-        BuildDefinition buildDefinition = store.getBuildDefinition( getBuildDefinitionId( context ) );
+        BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( getBuildDefinitionId( context ) );
 
         // ----------------------------------------------------------------------
         // Make a new descriptor
@@ -79,6 +91,6 @@ public class UpdateProjectFromWorkingDirectoryContinuumAction
         // Store the new descriptor
         // ----------------------------------------------------------------------
 
-        store.updateProject( project );
+        projectDao.updateProject( project );
     }
 }

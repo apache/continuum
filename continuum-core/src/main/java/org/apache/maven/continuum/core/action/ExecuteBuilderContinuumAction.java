@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -64,6 +65,11 @@ public class ExecuteBuilderContinuumAction
     /**
      * @plexus.requirement
      */
+    private ProjectDao projectDao;
+
+    /**
+     * @plexus.requirement
+     */
     private ContinuumNotificationDispatcher notifier;
 
     public void execute( Map context )
@@ -73,7 +79,7 @@ public class ExecuteBuilderContinuumAction
         // Get parameters from the context
         // ----------------------------------------------------------------------
 
-        Project project = store.getProject( getProject( context ).getId() );
+        Project project = projectDao.getProject( getProject( context ).getId() );
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
@@ -133,7 +139,7 @@ public class ExecuteBuilderContinuumAction
         {
             buildResult.setEndTime( new Date().getTime() );
 
-            project = store.getProject( project.getId() );
+            project = projectDao.getProject( project.getId() );
 
             if ( buildResult.getState() == ContinuumProjectState.OK )
             {
@@ -162,8 +168,8 @@ public class ExecuteBuilderContinuumAction
             buildResult = store.getBuildResult( buildResult.getId() );
 
             context.put( KEY_PROJECT, project );
-            
-            store.updateProject( project );
+
+            projectDao.updateProject( project );
 
             notifier.goalsCompleted( project, buildDefinition, buildResult );
 

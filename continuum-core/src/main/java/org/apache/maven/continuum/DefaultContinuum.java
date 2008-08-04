@@ -21,6 +21,8 @@ package org.apache.maven.continuum;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
@@ -123,6 +125,16 @@ public class DefaultContinuum
      * @plexus.requirement role-hint="jdo"
      */
     private ContinuumStore store;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildDefinitionDao buildDefinitionDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
 
     /**
      * @plexus.requirement
@@ -785,7 +797,7 @@ public class DefaultContinuum
 
             FileUtils.deleteDirectory( buildOutputDirectory );
 
-            store.removeProject( store.getProject( projectId ) );
+            projectDao.removeProject( projectDao.getProject( projectId ) );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -815,7 +827,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProject( projectId );
+            return projectDao.getProject( projectId );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -828,7 +840,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectWithBuildDetails( projectId );
+            return projectDao.getProjectWithBuildDetails( projectId );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -976,7 +988,7 @@ public class DefaultContinuum
 
         try
         {
-            projectsList = getProjectsInBuildOrder( store.getProjectsWithDependenciesByGroupId( projectGroupId ) );
+            projectsList = getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
         }
         catch ( CycleDetectedException e )
         {
@@ -1006,7 +1018,7 @@ public class DefaultContinuum
                 BuildDefinition projectDefaultBD = null;
                 try
                 {
-                    projectDefaultBD = store.getDefaultBuildDefinitionForProject( project.getId() );
+                    projectDefaultBD = buildDefinitionDao.getDefaultBuildDefinitionForProject( project.getId() );
                 }
                 catch ( ContinuumObjectNotFoundException e )
                 {
@@ -1142,7 +1154,7 @@ public class DefaultContinuum
 
         try
         {
-            project = store.getProject( projectId );
+            project = projectDao.getProject( projectId );
         }
         catch ( ContinuumStoreException e )
         {
@@ -1189,18 +1201,18 @@ public class DefaultContinuum
 
                     project.setState( ContinuumProjectState.ERROR );
 
-                    store.updateProject( project );
+                    projectDao.updateProject( project );
 
-                    project = store.getProject( project.getId() );
+                    project = projectDao.getProject( project.getId() );
                 }
             }
             else
             {
                 project.setOldState( project.getState() );
 
-                store.updateProject( project );
+                projectDao.updateProject( project );
 
-                project = store.getProject( project.getId() );
+                project = projectDao.getProject( project.getId() );
             }
 
             BuildDefinition buildDefinition = getBuildDefinition( buildDefinitionId );
@@ -1216,7 +1228,7 @@ public class DefaultContinuum
             BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project
                 .getName(), buildDefinitionLabel );
 
-            task.setMaxExecutionTime( store.getBuildDefinition( buildDefinitionId ).getSchedule()
+            task.setMaxExecutionTime( buildDefinitionDao.getBuildDefinition( buildDefinitionId ).getSchedule()
                 .getMaxJobExecutionTime() * 1000 );
 
             buildQueue.put( task );
@@ -1861,7 +1873,7 @@ public class DefaultContinuum
                 // FIXME
                 // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup ); 
                 // remove object data -> we don't display the project name in the build queue
-                context.put( AbstractContinuumAction.KEY_PROJECT, store.getProject( project.getId() ) );
+                context.put( AbstractContinuumAction.KEY_PROJECT, projectDao.getProject( project.getId() ) );
                 executeAction( "add-project-to-checkout-queue", context );
             }
         }
@@ -2234,7 +2246,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
+            return buildDefinitionDao.getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
         }
         catch ( ContinuumObjectNotFoundException cne )
         {
@@ -2253,7 +2265,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getBuildDefinition( buildDefinitionId );
+            return buildDefinitionDao.getBuildDefinition( buildDefinitionId );
         }
         catch ( ContinuumObjectNotFoundException cne )
         {
@@ -2376,7 +2388,7 @@ public class DefaultContinuum
     {
         try
         {
-            store.removeBuildDefinition( buildDefinition );
+            buildDefinitionDao.removeBuildDefinition( buildDefinition );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -2552,7 +2564,7 @@ public class DefaultContinuum
     {
         try
         {
-            return workingDirectoryService.getWorkingDirectory( store.getProject( projectId ) );
+            return workingDirectoryService.getWorkingDirectory( projectDao.getProject( projectId ) );
         }
         catch ( ContinuumStoreException e )
         {
@@ -2778,9 +2790,9 @@ public class DefaultContinuum
                     getLogger().info( "Fix project state for project " + project.getId() + ":" + project.getName() +
                         ":" + project.getVersion() );
 
-                    store.updateProject( project );
+                    projectDao.updateProject( project );
 
-                    Project p = store.getProject( project.getId() );
+                    Project p = projectDao.getProject( project.getId() );
 
                     if ( state == p.getState() )
                     {
@@ -2971,7 +2983,7 @@ public class DefaultContinuum
         {
             boolean removeWorkingDirectory = false;
 
-            Project p = store.getProject( project.getId() );
+            Project p = projectDao.getProject( project.getId() );
 
             if ( !p.getScmUrl().equals( project.getScmUrl() ) )
             {
@@ -3003,7 +3015,7 @@ public class DefaultContinuum
                 project.setScmTag( null );
             }
 
-            store.updateProject( project );
+            projectDao.updateProject( project );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -3066,7 +3078,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectWithCheckoutResult( projectId );
+            return projectDao.getProjectWithCheckoutResult( projectId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -3080,7 +3092,7 @@ public class DefaultContinuum
 
     public List<Project> getAllProjectsWithAllDetails( int start, int end )
     {
-        return store.getAllProjectsWithAllDetails();
+        return projectDao.getAllProjectsWithAllDetails();
     }
 
     public Project getProjectWithAllDetails( int projectId )
@@ -3088,7 +3100,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectWithAllDetails( projectId );
+            return projectDao.getProjectWithAllDetails( projectId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -3122,7 +3134,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectWithBuilds( projectId );
+            return projectDao.getProjectWithBuilds( projectId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -3150,7 +3162,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectsInGroup( projectGroupId );
+            return projectDao.getProjectsInGroup( projectGroupId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -3167,7 +3179,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getProjectsInGroupWithDependencies( projectGroupId );
+            return projectDao.getProjectsInGroupWithDependencies( projectGroupId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {

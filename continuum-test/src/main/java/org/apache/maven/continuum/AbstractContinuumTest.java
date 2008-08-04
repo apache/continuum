@@ -19,6 +19,7 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -54,6 +55,8 @@ public abstract class AbstractContinuumTest
 {
     private ContinuumStore store;
 
+    private ProjectDao projectDao;
+
     private ProjectGroupDao projectGroupDao;
 
     // ----------------------------------------------------------------------
@@ -67,6 +70,8 @@ public abstract class AbstractContinuumTest
         super.setUp();
 
         getStore();
+
+        getProjectDao();
 
         getProjectGroupDao();
 
@@ -210,6 +215,15 @@ public abstract class AbstractContinuumTest
         return store;
     }
 
+    protected ProjectDao getProjectDao()
+    {
+        if ( projectDao == null )
+        {
+            projectDao = (ProjectDao) lookup( ProjectDao.class.getName() );
+        }
+        return projectDao;
+    }
+
     protected ProjectGroupDao getProjectGroupDao()
     {
         if ( projectGroupDao == null )
@@ -332,7 +346,7 @@ public abstract class AbstractContinuumTest
 
         projectGroupDao.updateProjectGroup( defaultProjectGroup );
 
-        project = store.getProject( project.getId() );
+        project = projectDao.getProject( project.getId() );
 
         assertNotNull( "project group == null", project.getProjectGroup() );
 
@@ -351,13 +365,13 @@ public abstract class AbstractContinuumTest
         return addProject( store, makeProject( name, nagEmailAddress, version ) );
     }
 
-    public static void setCheckoutDone( ContinuumStore store, Project project, ScmResult scmResult )
+    /*public static void setCheckoutDone( ContinuumStore store, Project project, ScmResult scmResult )
         throws ContinuumStoreException
     {
         project.setCheckoutResult( scmResult );
 
         store.updateProject( project );
-    }
+    }*/
 
     // ----------------------------------------------------------------------
     // Assertions

@@ -35,7 +35,6 @@ import java.util.List;
 public class DefaultBuildDefinitionServiceTest
     extends AbstractContinuumTest
 {
-
     private Logger logger = Logger.getLogger( getClass() );
 
     private ProjectGroup projectGroup;
@@ -96,7 +95,7 @@ public class DefaultBuildDefinitionServiceTest
             assertEquals( 5, getBuildDefinitionService().getAllBuildDefinitions().size() );
 
             getBuildDefinitionService().addTemplateInProject( buildDefinitionTemplate.getId(), project );
-            project = getStore().getProjectWithAllDetails( project.getId() );
+            project = getProjectDao().getProjectWithAllDetails( project.getId() );
             templates = getBuildDefinitionService().getAllBuildDefinitionTemplate();
             assertEquals( 1, project.getBuildDefinitions().size() );
             assertEquals( 5, templates.size() );
@@ -105,7 +104,7 @@ public class DefaultBuildDefinitionServiceTest
 
             getBuildDefinitionService().addTemplateInProject( buildDefinitionTemplate.getId(), project );
 
-            project = getStore().getProjectWithAllDetails( project.getId() );
+            project = getProjectDao().getProjectWithAllDetails( project.getId() );
             templates = getBuildDefinitionService().getAllBuildDefinitionTemplate();
             assertEquals( 2, project.getBuildDefinitions().size() );
             assertEquals( 5, templates.size() );

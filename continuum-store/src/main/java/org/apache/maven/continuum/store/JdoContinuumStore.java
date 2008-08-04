@@ -75,49 +75,74 @@ public class JdoContinuumStore
     // ContinuumStore Implementation
     // ----------------------------------------------------------------------
 
-    public Project getProjectByName( String name )
+    private ProjectGroup getProjectGroupWithBuildDetailsByProjectGroupId( int projectGroupId )
         throws ContinuumStoreException
     {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            Extent extent = pm.getExtent( Project.class, true );
-
-            Query query = pm.newQuery( extent );
-
-            query.declareImports( "import java.lang.String" );
-
-            query.declareParameters( "String name" );
-
-            query.setFilter( "this.name == name" );
-
-            Collection result = (Collection) query.execute( name );
-
-            if ( result.size() == 0 )
-            {
-                tx.commit();
-
-                return null;
-            }
-
-            Object object = pm.detachCopy( result.iterator().next() );
-
-            tx.commit();
-
-            return (Project) object;
-        }
-        finally
-        {
-            rollback( tx );
-        }
+        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
     }
 
-    public Project getProject( String groupId, String artifactId, String version )
+    private List<BuildDefinition> getDefaultBuildDefinitionsForProjectGroup( int projectGroupId )
+        throws ContinuumStoreException
+    {
+        ProjectGroup projectGroup = getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
+
+        List<BuildDefinition> bds = new ArrayList<BuildDefinition>();
+
+        for ( Iterator i = projectGroup.getBuildDefinitions().iterator(); i.hasNext(); )
+        {
+            BuildDefinition bd = (BuildDefinition) i.next();
+
+            // also applies to project group membership
+            if ( bd.isDefaultForProject() )
+            {
+                bds.add( bd );
+            }
+        }
+
+        return bds;
+/*        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( ProjectGroup.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareImports( "import " + BuildDefinition.class.getName() );
+
+            query.declareParameters( "int projectGroupId" );
+
+            query.setFilter(
+                "this.id == projectGroupId && this.buildDefinitions.contains(buildDef) && buildDef.defaultForProject == true" );
+
+            query.declareVariables( "BuildDefinition buildDef" );
+
+            query.setResult( "buildDef" );
+
+            List<BuildDefinition> result = (List<BuildDefinition>) query.execute( projectGroupId );
+
+            pm.detachCopyAll( result );
+
+            tx.commit();
+
+            if ( result != null )
+            {
+                return result;
+            }
+        }
+        finally
+        {
+            rollback( tx );
+        }
+
+        return new ArrayList<BuildDefinition>();*/
+    }
+
+    private BuildDefinition getDefaultBuildDefinitionForProject( int projectId )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -128,40 +153,40 @@ public class JdoContinuumStore
         {
             tx.begin();
 
-            Extent extent = pm.getExtent( Project.class, true );
+            Extent extent = pm.getExtent( BuildDefinition.class, true );
 
             Query query = pm.newQuery( extent );
 
-            query.declareImports( "import java.lang.String" );
+            query.declareImports( "import " + Project.class.getName() );
 
-            query.declareParameters( "String groupId, String artifactId, String version" );
+            query.declareParameters( "int projectId" );
 
-            query.setFilter( "this.groupId == groupId && this.artifactId == artifactId && this.version == version" );
+            query.setFilter(
+                "project.id == projectId && project.buildDefinitions.contains(this) && this.defaultForProject == true" );
 
-            Object[] params = new Object[3];
-            params[0] = groupId;
-            params[1] = artifactId;
-            params[2] = version;
+            query.declareVariables( "Project project" );
 
-            Collection result = (Collection) query.executeWithArray( params );
+            query.setResult( "this" );
 
-            if ( result.size() == 0 )
-            {
-                tx.commit();
+            query.setUnique( true );
 
-                return null;
-            }
+            BuildDefinition result = (BuildDefinition) query.execute( projectId );
 
-            Object object = pm.detachCopy( result.iterator().next() );
+            pm.detachCopy( result );
 
             tx.commit();
 
-            return (Project) object;
+            if ( result != null )
+            {
+                return result;
+            }
         }
         finally
         {
             rollback( tx );
         }
+
+        throw new ContinuumObjectNotFoundException( "no default build definition declared for project " + projectId );
     }
 
     /**
@@ -626,66 +651,6 @@ public class JdoContinuumStore
         }
     }
 
-
-    public BuildDefinition getDefaultBuildDefinitionForProject( int projectId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        Project project;
-
-        try
-        {
-            project = getProjectWithBuildDetails( projectId );
-        }
-        catch ( Exception e )
-        {
-            project = null;
-        }
-
-        // check if the project has a default build definition defined
-        if ( project != null && project.getBuildDefinitions() != null )
-        {
-            for ( Iterator i = project.getBuildDefinitions().iterator(); i.hasNext(); )
-            {
-                BuildDefinition bd = (BuildDefinition) i.next();
-
-                if ( bd.isDefaultForProject() )
-                {
-                    return bd;
-                }
-            }
-        }
-
-        throw new ContinuumObjectNotFoundException( "no default build definition declared for project " + projectId );
-    }
-
-    public List<BuildDefinition> getDefaultBuildDefinitionsForProjectGroup( int projectGroupId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        ProjectGroup projectGroup = getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
-
-        List<BuildDefinition> bds = new ArrayList<BuildDefinition>();
-
-        for ( Iterator i = projectGroup.getBuildDefinitions().iterator(); i.hasNext(); )
-        {
-            BuildDefinition bd = (BuildDefinition) i.next();
-
-            // also applies to project group membership
-            if ( bd.isDefaultForProject() )
-            {
-                bds.add( bd );
-            }
-        }
-
-        return bds;
-    }
-
-    private ProjectGroup getProjectGroupWithBuildDetailsByProjectGroupId( int projectGroupId )
-        throws ContinuumStoreException
-    {
-        return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
-    }
-
-
     public Map getDefaultBuildDefinitions()
     {
         PersistenceManager pm = getPersistenceManager();
@@ -796,86 +761,6 @@ public class JdoContinuumStore
 
             rollback( tx );
         }
-    }
-
-    public List<BuildDefinition> getAllTemplates()
-        throws ContinuumStoreException
-    {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            Extent extent = pm.getExtent( BuildDefinition.class, true );
-
-            Query query = pm.newQuery( extent );
-            query.setFilter( "this.template == true" );
-            List result = (List) query.execute();
-            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
-        }
-        finally
-        {
-            tx.commit();
-
-            rollback( tx );
-        }
-    }
-
-    public List<BuildDefinition> getAllBuildDefinitions()
-        throws ContinuumStoreException
-    {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            Extent extent = pm.getExtent( BuildDefinition.class, true );
-
-            Query query = pm.newQuery( extent );
-
-            List result = (List) query.execute();
-
-            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
-        }
-        finally
-        {
-            tx.commit();
-
-            rollback( tx );
-        }
-    }
-
-    public BuildDefinition getBuildDefinition( int buildDefinitionId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        return (BuildDefinition) getObjectById( BuildDefinition.class, buildDefinitionId );
-    }
-
-    public void removeBuildDefinition( BuildDefinition buildDefinition )
-        throws ContinuumStoreException
-    {
-        removeObject( buildDefinition );
-    }
-
-    public BuildDefinition storeBuildDefinition( BuildDefinition buildDefinition )
-        throws ContinuumStoreException
-    {
-        updateObject( buildDefinition );
-
-        return buildDefinition;
-    }
-
-
-    public BuildDefinition addBuildDefinition( BuildDefinition buildDefinition )
-        throws ContinuumStoreException
-    {
-        return (BuildDefinition) addObject( buildDefinition );
     }
 
     // ------------------------------------------------------
@@ -1339,12 +1224,6 @@ public class JdoContinuumStore
         return (Project) getObjectById( Project.class, projectId );
     }
 
-    public void updateProject( Project project )
-        throws ContinuumStoreException
-    {
-        updateObject( project );
-    }
-
     public void updateProfile( Profile profile )
         throws ContinuumStoreException
     {
@@ -1357,12 +1236,6 @@ public class JdoContinuumStore
         updateObject( schedule );
     }
 
-    public Project getProjectWithBuilds( int projectId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException
-    {
-        return (Project) getObjectById( Project.class, projectId, PROJECT_WITH_BUILDS_FETCH_GROUP );
-    }
-
     public void removeProfile( Profile profile )
     {
         removeObject( profile );
@@ -1371,12 +1244,6 @@ public class JdoContinuumStore
     public void removeSchedule( Schedule schedule )
     {
         removeObject( schedule );
-    }
-
-    public Project getProjectWithCheckoutResult( int projectId )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException
-    {
-        return (Project) getObjectById( Project.class, projectId, PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP );
     }
 
     public BuildResult getBuildResult( int buildId )
@@ -1685,57 +1552,6 @@ public class JdoContinuumStore
         {
             rollback( tx );
         }
-    }
-
-    public List<Project> getProjectsInGroupWithDependencies( int projectGroupId )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException
-    {
-        PersistenceManager pm = getPersistenceManager();
-
-        Transaction tx = pm.currentTransaction();
-
-        try
-        {
-            tx.begin();
-
-            Extent extent = pm.getExtent( Project.class, true );
-
-            Query query = pm.newQuery( extent, "projectGroup.id == " + projectGroupId );
-
-            query.setOrdering( "name ascending" );
-
-            pm.getFetchPlan().addGroup( PROJECT_DEPENDENCIES_FETCH_GROUP );
-
-            pm.getFetchPlan().addGroup( PROJECTGROUP_PROJECTS_FETCH_GROUP );
-
-            List result = (List) query.execute();
-
-            result = (List) pm.detachCopyAll( result );
-
-            tx.commit();
-
-            return result;
-        }
-        finally
-        {
-            rollback( tx );
-        }
-    }
-
-    public List<ProjectGroup> getAllProjectGroupsWithBuildDetails()
-    {
-        return getAllObjectsDetached( ProjectGroup.class, "name ascending", PROJECT_BUILD_DETAILS_FETCH_GROUP );
-    }
-
-    public List<Project> getAllProjectsWithAllDetails()
-    {
-        return getAllObjectsDetached( Project.class, "name ascending", PROJECT_ALL_DETAILS_FETCH_GROUP );
-    }
-
-    public Project getProjectWithAllDetails( int projectId )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException
-    {
-        return (Project) getObjectById( Project.class, projectId, PROJECT_ALL_DETAILS_FETCH_GROUP );
     }
 
     public Schedule getSchedule( int scheduleId )

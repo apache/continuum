@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -41,7 +42,6 @@ import org.apache.maven.scm.repository.ScmRepositoryException;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -73,11 +73,16 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
      */
     private ContinuumStore store;
 
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
+
     public void execute( Map context )
         throws ScmRepositoryException, NoSuchScmProviderException, ScmException, ContinuumObjectNotFoundException,
         ContinuumStoreException
     {
-        Project project = store.getProject( getProject( context ).getId() );
+        Project project = projectDao.getProject( getProject( context ).getId() );
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
@@ -85,7 +90,7 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
 
         project.setState( ContinuumProjectState.UPDATING );
 
-        store.updateProject( project );
+        projectDao.updateProject( project );
 
         UpdateScmResult scmResult;
 
@@ -109,9 +114,8 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
             config.setLatestUpdateDate( latestUpdateDate );
             String tag = config.getTag();
-            String msg =
-                project.getName() + "', id: '" + project.getId() + "' to '" + workingDirectory.getAbsolutePath() + "'"
-                    + ( tag != null ? " with branch/tag " + tag + "." : "." );
+            String msg = project.getName() + "', id: '" + project.getId() + "' to '" +
+                workingDirectory.getAbsolutePath() + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." );
             getLogger().info( "Updating project: " + msg );
             scmResult = scm.update( config );
 
@@ -137,11 +141,11 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             // TODO: transient states!
             try
             {
-                project = store.getProject( project.getId() );
+                project = projectDao.getProject( project.getId() );
 
                 project.setState( state );
 
-                store.updateProject( project );
+                projectDao.updateProject( project );
             }
             catch ( Exception e )
             {

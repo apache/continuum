@@ -19,9 +19,9 @@ package org.apache.maven.continuum.scm.queue;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -48,9 +48,9 @@ public class CheckOutTaskExecutor
     private ActionManager actionManager;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ProjectDao projectDao;
 
     // ----------------------------------------------------------------------
     // TaskExecutor Implementation
@@ -67,7 +67,7 @@ public class CheckOutTaskExecutor
 
         try
         {
-            project = store.getProjectWithBuildDetails( projectId );
+            project = projectDao.getProjectWithBuildDetails( projectId );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -85,11 +85,10 @@ public class CheckOutTaskExecutor
         context.put( AbstractContinuumAction.KEY_PROJECT, project );
 
         context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, workingDirectory );
-        
+
         context.put( AbstractContinuumAction.KEY_SCM_USERNAME, task.getScmUserName() );
-        
+
         context.put( AbstractContinuumAction.KEY_SCM_PASSWORD, task.getScmPassword() );
-        
 
         try
         {

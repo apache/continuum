@@ -19,6 +19,8 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
@@ -58,6 +60,16 @@ public class DefaultBuildController
     extends AbstractLogEnabled
     implements BuildController
 {
+    /**
+     * @plexus.requirement
+     */
+    private BuildDefinitionDao buildDefinitionDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
+
     /**
      * @plexus.requirement role-hint="jdo"
      */
@@ -216,7 +228,7 @@ public class DefaultBuildController
                         project.setState( ContinuumProjectState.ERROR );
                     }
 
-                    store.updateProject( project );
+                    projectDao.updateProject( project );
                 }
                 catch ( ContinuumStoreException e )
                 {
@@ -263,7 +275,7 @@ public class DefaultBuildController
 
         try
         {
-            store.updateProject( context.getProject() );
+            projectDao.updateProject( context.getProject() );
         }
         catch ( ContinuumStoreException e )
         {
@@ -296,7 +308,7 @@ public class DefaultBuildController
 
         try
         {
-            store.updateProject( project );
+            projectDao.updateProject( project );
         }
         catch ( ContinuumStoreException e )
         {
@@ -327,9 +339,9 @@ public class DefaultBuildController
 
         try
         {
-            context.setProject( store.getProject( projectId ) );
+            context.setProject( projectDao.getProject( projectId ) );
 
-            BuildDefinition buildDefinition = store.getBuildDefinition( buildDefinitionId );
+            BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
 
             context.setBuildDefinition( buildDefinition );
 
@@ -534,7 +546,7 @@ public class DefaultBuildController
             }
             catch ( Exception e )
             {
-                throw new TaskExecutionException("Can't determine if the project should build or not", e);
+                throw new TaskExecutionException( "Can't determine if the project should build or not", e );
             }
         }
 
@@ -550,7 +562,7 @@ public class DefaultBuildController
 
             try
             {
-                store.updateProject( project );
+                projectDao.updateProject( project );
             }
             catch ( ContinuumStoreException e )
             {
@@ -611,7 +623,7 @@ public class DefaultBuildController
 
         try
         {
-            Project project = store.getProjectWithAllDetails( context.getProject().getId() );
+            Project project = projectDao.getProjectWithAllDetails( context.getProject().getId() );
             List<ProjectDependency> dependencies = project.getDependencies();
 
             if ( dependencies == null )
@@ -633,7 +645,8 @@ public class DefaultBuildController
 
             for ( ProjectDependency dep : dependencies )
             {
-                Project dependencyProject = store.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
+                Project dependencyProject =
+                    projectDao.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
 
                 if ( dependencyProject != null )
                 {
@@ -854,7 +867,7 @@ public class DefaultBuildController
 
                 project.setState( build.getState() );
 
-                store.updateProject( project );
+                projectDao.updateProject( project );
 
                 return false;
             }

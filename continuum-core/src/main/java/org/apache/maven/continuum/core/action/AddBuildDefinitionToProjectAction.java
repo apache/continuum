@@ -15,6 +15,7 @@ package org.apache.maven.continuum.core.action;
  * the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
@@ -33,11 +34,16 @@ import java.util.Map;
 public class AddBuildDefinitionToProjectAction
     extends AbstractBuildDefinitionContinuumAction
 {
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
+
     public void execute( Map map )
         throws Exception
     {
         int projectId = getProjectId( map );
-        Project project = store.getProjectWithAllDetails( projectId );
+        Project project = projectDao.getProjectWithAllDetails( projectId );
 
         BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( map );
 
@@ -51,7 +57,7 @@ public class AddBuildDefinitionToProjectAction
 
                 project.addBuildDefinition( buildDefinition );
 
-                store.updateProject( project );
+                projectDao.updateProject( project );
                 if ( buildDefinition.isDefaultForProject() )
                 {
                     map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
@@ -65,7 +71,7 @@ public class AddBuildDefinitionToProjectAction
 
             project.addBuildDefinition( buildDefinition );
 
-            store.updateProject( project );
+            projectDao.updateProject( project );
             map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
         }
 
