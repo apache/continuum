@@ -136,6 +136,16 @@ public class AbstractDao
         }
     }
 
+    protected List getAllObjectsDetached( Class clazz )
+    {
+        return getAllObjectsDetached( clazz, null );
+    }
+
+    private List getAllObjectsDetached( Class clazz, String fetchGroup )
+    {
+        return getAllObjectsDetached( clazz, null, fetchGroup );
+    }
+
     protected List getAllObjectsDetached( Class clazz, String ordering, String fetchGroup )
     {
         return getAllObjectsDetached( getPersistenceManager(), clazz, ordering, fetchGroup );
@@ -151,6 +161,10 @@ public class AbstractDao
         PlexusJdoUtils.rollbackIfActive( tx );
     }
 
+    protected void attachAndDelete( Object object )
+    {
+        PlexusJdoUtils.attachAndDelete( getPersistenceManager(), object );
+    }
 
     protected PersistenceManager getPersistenceManager()
     {

@@ -22,6 +22,7 @@ package org.apache.maven.continuum;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.NotifierDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ScheduleDao;
@@ -131,6 +132,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private BuildDefinitionDao buildDefinitionDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private NotifierDao notifierDao;
 
     /**
      * @plexus.requirement
@@ -3053,7 +3059,7 @@ public class DefaultContinuum
     {
         try
         {
-            store.removeNotifier( notifier );
+            notifierDao.removeNotifier( notifier );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -3066,7 +3072,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.storeNotifier( notifier );
+            return notifierDao.storeNotifier( notifier );
         }
         catch ( ContinuumStoreException ex )
         {

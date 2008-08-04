@@ -574,20 +574,6 @@ public class JdoContinuumStore
         removeObject( buildResult );
     }
 
-    public void removeNotifier( ProjectNotifier notifier )
-        throws ContinuumStoreException
-    {
-        attachAndDelete( notifier );
-    }
-
-    public ProjectNotifier storeNotifier( ProjectNotifier notifier )
-        throws ContinuumStoreException
-    {
-        updateObject( notifier );
-
-        return notifier;
-    }
-
     // ------------------------------------------------------
     //  BuildDefinition
     // ------------------------------------------------------    
@@ -855,11 +841,6 @@ public class JdoContinuumStore
     private Object makePersistent( PersistenceManager pm, Object object, boolean detach )
     {
         return PlexusJdoUtils.makePersistent( pm, object, detach );
-    }
-
-    private void attachAndDelete( Object object )
-    {
-        PlexusJdoUtils.attachAndDelete( getPersistenceManager(), object );
     }
 
     public List<BuildResult> getAllBuildsForAProjectByDate( int projectId )
@@ -1207,11 +1188,6 @@ public class JdoContinuumStore
         }
     }
 
-    private List getAllObjectsDetached( Class clazz )
-    {
-        return getAllObjectsDetached( clazz, null );
-    }
-
     private List getAllObjectsDetached( Class clazz, String fetchGroup )
     {
         return getAllObjectsDetached( clazz, null, fetchGroup );
@@ -1221,37 +1197,6 @@ public class JdoContinuumStore
         throws ContinuumObjectNotFoundException, ContinuumStoreException
     {
         return (Project) getObjectById( Project.class, projectId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
-    }
-
-    public SystemConfiguration addSystemConfiguration( SystemConfiguration systemConf )
-    {
-        return (SystemConfiguration) addObject( systemConf );
-    }
-
-    public void updateSystemConfiguration( SystemConfiguration systemConf )
-        throws ContinuumStoreException
-    {
-        updateObject( systemConf );
-    }
-
-    public SystemConfiguration getSystemConfiguration()
-        throws ContinuumStoreException
-    {
-        List systemConfs = getAllObjectsDetached( SystemConfiguration.class );
-
-        if ( systemConfs == null || systemConfs.isEmpty() )
-        {
-            return null;
-        }
-        else if ( systemConfs.size() > 1 )
-        {
-            throw new ContinuumStoreException(
-                "Database is corrupted. There are more than one systemConfiguration object." );
-        }
-        else
-        {
-            return (SystemConfiguration) systemConfs.get( 0 );
-        }
     }
 
     public void closeStore()

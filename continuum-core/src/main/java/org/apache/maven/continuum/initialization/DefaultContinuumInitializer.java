@@ -20,13 +20,13 @@ package org.apache.maven.continuum.initialization;
  */
 
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.jpox.SchemaTool;
@@ -47,14 +47,14 @@ public class DefaultContinuumInitializer
     // ----------------------------------------------------------------------
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ProjectGroupDao projectGroupDao;
 
     /**
      * @plexus.requirement
      */
-    private ProjectGroupDao projectGroupDao;
+    private SystemConfigurationDao systemConfigurationDao;
 
     /**
      * @plexus.requirement
@@ -87,13 +87,13 @@ public class DefaultContinuumInitializer
         try
         {
             // System Configuration
-            SystemConfiguration systemConf = store.getSystemConfiguration();
+            SystemConfiguration systemConf = systemConfigurationDao.getSystemConfiguration();
 
             if ( systemConf == null )
             {
                 systemConf = new SystemConfiguration();
 
-                systemConf = store.addSystemConfiguration( systemConf );
+                systemConf = systemConfigurationDao.addSystemConfiguration( systemConf );
             }
 
             createDefaultProjectGroup();

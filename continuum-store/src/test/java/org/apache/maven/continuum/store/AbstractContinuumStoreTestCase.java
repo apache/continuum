@@ -24,6 +24,7 @@ import org.apache.continuum.dao.ProfileDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -67,6 +68,8 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected ScheduleDao scheduleDao;
 
+    protected SystemConfigurationDao systemConfigurationDao;
+
     protected ProjectGroup defaultProjectGroup;
 
     protected ProjectGroup testProjectGroup2;
@@ -101,30 +104,6 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected ScmResult testCheckoutResult1;
 
-    private ProjectNotifier testGroupNotifier1;
-
-    private ProjectNotifier testGroupNotifier2;
-
-    private ProjectNotifier testGroupNotifier3;
-
-    private ProjectNotifier testNotifier1;
-
-    private ProjectNotifier testNotifier2;
-
-    private ProjectNotifier testNotifier3;
-
-    private ProjectDeveloper testDeveloper1;
-
-    private ProjectDeveloper testDeveloper2;
-
-    private ProjectDeveloper testDeveloper3;
-
-    private ProjectDependency testDependency1;
-
-    private ProjectDependency testDependency2;
-
-    private ProjectDependency testDependency3;
-
     private SystemConfiguration systemConfiguration;
 
     protected void setUp()
@@ -143,6 +122,8 @@ public abstract class AbstractContinuumStoreTestCase
         projectDao = (ProjectDao) lookup( ProjectDao.class.getName() );
 
         scheduleDao = (ScheduleDao) lookup( ScheduleDao.class.getName() );
+
+        systemConfigurationDao = (SystemConfigurationDao) lookup( SystemConfigurationDao.class.getName() );
     }
 
     protected void createBuildDatabase()
@@ -178,21 +159,21 @@ public abstract class AbstractContinuumStoreTestCase
         testInstallationMaven20a3 = createTestInstallation( "Maven 2.0 alpha 3", InstallationService.MAVEN2_TYPE,
                                                             "M2_HOME", "/usr/local/maven-2.0-alpha-3" );
 
-        testGroupNotifier1 = createTestNotifier( 1, true, false, true, "type1" );
-        testGroupNotifier2 = createTestNotifier( 2, false, true, false, "type2" );
-        testGroupNotifier3 = createTestNotifier( 3, true, false, false, "type3" );
+        ProjectNotifier testGroupNotifier1 = createTestNotifier( 1, true, false, true, "type1" );
+        ProjectNotifier testGroupNotifier2 = createTestNotifier( 2, false, true, false, "type2" );
+        ProjectNotifier testGroupNotifier3 = createTestNotifier( 3, true, false, false, "type3" );
 
-        testNotifier1 = createTestNotifier( 11, true, true, false, "type11" );
-        testNotifier2 = createTestNotifier( 12, false, false, true, "type12" );
-        testNotifier3 = createTestNotifier( 13, false, true, false, "type13" );
+        ProjectNotifier testNotifier1 = createTestNotifier( 11, true, true, false, "type11" );
+        ProjectNotifier testNotifier2 = createTestNotifier( 12, false, false, true, "type12" );
+        ProjectNotifier testNotifier3 = createTestNotifier( 13, false, true, false, "type13" );
 
-        testDeveloper1 = createTestDeveloper( 1, "email1", "name1", "scmId1" );
-        testDeveloper2 = createTestDeveloper( 2, "email2", "name2", "scmId2" );
-        testDeveloper3 = createTestDeveloper( 3, "email3", "name3", "scmId3" );
+        ProjectDeveloper testDeveloper1 = createTestDeveloper( 1, "email1", "name1", "scmId1" );
+        ProjectDeveloper testDeveloper2 = createTestDeveloper( 2, "email2", "name2", "scmId2" );
+        ProjectDeveloper testDeveloper3 = createTestDeveloper( 3, "email3", "name3", "scmId3" );
 
-        testDependency1 = createTestDependency( "groupId1", "artifactId1", "version1" );
-        testDependency2 = createTestDependency( "groupId2", "artifactId2", "version2" );
-        testDependency3 = createTestDependency( "groupId3", "artifactId3", "version3" );
+        ProjectDependency testDependency1 = createTestDependency( "groupId1", "artifactId1", "version1" );
+        ProjectDependency testDependency2 = createTestDependency( "groupId2", "artifactId2", "version2" );
+        ProjectDependency testDependency3 = createTestDependency( "groupId3", "artifactId3", "version3" );
 
         // TODO: simplify by deep copying the relationships in createTest... ?
         long baseTime = System.currentTimeMillis();
@@ -475,7 +456,7 @@ public abstract class AbstractContinuumStoreTestCase
 
         if ( addToStore )
         {
-            systemConfiguration = store.addSystemConfiguration( systemConfiguration );
+            systemConfiguration = systemConfigurationDao.addSystemConfiguration( systemConfiguration );
         }
     }
 
@@ -503,9 +484,9 @@ public abstract class AbstractContinuumStoreTestCase
         assertScheduleEquals( testSchedule3, scheduleDao.getSchedule( testSchedule3.getId() ) );
 
         Iterator<Installation> iterator = installationDao.getAllInstallations().iterator();
-        assertInstallationEquals( testInstallationJava13, (Installation) iterator.next() );
-        assertInstallationEquals( testInstallationJava14, (Installation) iterator.next() );
-        assertInstallationEquals( testInstallationMaven20a3, (Installation) iterator.next() );
+        assertInstallationEquals( testInstallationJava13, iterator.next() );
+        assertInstallationEquals( testInstallationJava14, iterator.next() );
+        assertInstallationEquals( testInstallationMaven20a3, iterator.next() );
 
 /*
         // TODO!!! -- definitely need to test the changeset stuff since it uses modello.refid
@@ -659,7 +640,7 @@ public abstract class AbstractContinuumStoreTestCase
         testProjectGroup2.setId( group.getId() );
 */
 
-        assertSystemConfiguration( systemConfiguration, store.getSystemConfiguration() );
+        assertSystemConfiguration( systemConfiguration, systemConfigurationDao.getSystemConfiguration() );
     }
 
     private void assertSystemConfiguration( SystemConfiguration expected, SystemConfiguration actual )
@@ -682,7 +663,7 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( 0, profileDao.getAllProfilesByName().size() );
         assertEquals( 0, projectGroupDao.getAllProjectGroups().size() );
         assertEquals( 0, projectDao.getAllProjectsByName().size() );
-        assertNull( store.getSystemConfiguration() );
+        assertNull( systemConfigurationDao.getSystemConfiguration() );
     }
 
     protected static BuildDefinition createTestBuildDefinition( BuildDefinition buildDefinition )
@@ -1067,7 +1048,7 @@ public abstract class AbstractContinuumStoreTestCase
     {
         for ( int i = 0; i < actualDevelopers.size(); i++ )
         {
-            assertDeveloperEquals( (ProjectDeveloper) expectedDevelopers.get( i ), (ProjectDeveloper) actualDevelopers
+            assertDeveloperEquals( expectedDevelopers.get( i ), actualDevelopers
                 .get( i ) );
         }
     }
@@ -1086,8 +1067,7 @@ public abstract class AbstractContinuumStoreTestCase
     {
         for ( int i = 0; i < actualDependencies.size(); i++ )
         {
-            assertDependencyEquals( (ProjectDependency) expectedDependencies.get( i ),
-                                    (ProjectDependency) actualDependencies.get( i ) );
+            assertDependencyEquals( expectedDependencies.get( i ), actualDependencies.get( i ) );
         }
     }
 

@@ -23,6 +23,7 @@ import org.apache.continuum.dao.InstallationDao;
 import org.apache.continuum.dao.ProfileDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ContinuumDatabase;
 import org.apache.maven.continuum.model.project.Project;
@@ -90,6 +91,11 @@ public class JdoDataManagementTool
      */
     private ScheduleDao scheduleDao;
 
+    /**
+     * @plexus.requirement
+     */
+    private SystemConfigurationDao systemConfigurationDao;
+
     protected static final String BUILDS_XML = "builds.xml";
 
     /**
@@ -103,7 +109,7 @@ public class JdoDataManagementTool
         ContinuumDatabase database = new ContinuumDatabase();
         try
         {
-            database.setSystemConfiguration( store.getSystemConfiguration() );
+            database.setSystemConfiguration( systemConfigurationDao.getSystemConfiguration() );
         }
         catch ( ContinuumStoreException e )
         {

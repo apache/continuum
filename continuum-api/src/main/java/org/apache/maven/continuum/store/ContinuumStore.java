@@ -23,9 +23,6 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectNotifier;
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.model.system.SystemConfiguration;
 
 import java.util.List;
 import java.util.Map;
@@ -38,12 +35,6 @@ import java.util.Map;
 public interface ContinuumStore
 {
     String ROLE = ContinuumStore.class.getName();
-
-    void removeNotifier( ProjectNotifier notifier )
-        throws ContinuumStoreException;
-
-    ProjectNotifier storeNotifier( ProjectNotifier notifier )
-        throws ContinuumStoreException;
 
     Map getDefaultBuildDefinitions();
 
@@ -152,14 +143,6 @@ public interface ContinuumStore
         throws ContinuumStoreException, ContinuumObjectNotFoundException;
 
     void updateBuildResult( BuildResult build )
-        throws ContinuumStoreException;
-
-    SystemConfiguration addSystemConfiguration( SystemConfiguration systemConf );
-
-    void updateSystemConfiguration( SystemConfiguration systemConf )
-        throws ContinuumStoreException;
-
-    SystemConfiguration getSystemConfiguration()
         throws ContinuumStoreException;
 
     void closeStore();
