@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.store;
+package org.apache.continuum.dao;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,15 +19,27 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
-import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import javax.jdo.PersistenceManagerFactory;
+import java.util.Map;
 
 /**
- * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
+ * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @todo remove this class - these methods belong in the build class or similar
  */
-public abstract class AbstractContinuumStore
-    extends AbstractLogEnabled
-    implements ContinuumStore
+public interface DaoUtils
 {
+    void closeStore();
+
+    void eraseDatabase();
+
+    Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+        throws ContinuumStoreException;
+
+    Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+        throws ContinuumStoreException;
+
+    Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+        throws ContinuumStoreException;
 }

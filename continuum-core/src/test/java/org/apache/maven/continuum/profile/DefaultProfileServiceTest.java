@@ -1,11 +1,10 @@
 package org.apache.maven.continuum.profile;
 
+import org.apache.continuum.dao.DaoUtils;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ import java.util.List;
 public class DefaultProfileServiceTest
     extends AbstractContinuumTest
 {
-    
+
     Installation jdk1;
 
     String jdk1Name = "jdk1";
@@ -73,7 +72,8 @@ public class DefaultProfileServiceTest
         throws Exception
     {
         super.setUp();
-        getStore().eraseDatabase();
+        DaoUtils daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
+        daoUtils.eraseDatabase();
 
         jdk1 = new Installation();
         jdk1.setType( InstallationService.JDK_TYPE );
@@ -174,8 +174,8 @@ public class DefaultProfileServiceTest
             // we must be here
         }
         assertEquals( 3, getProfileService().getAllProfiles().size() );
-    }    
-    
+    }
+
     public void testDeleteProfile()
         throws Exception
     {
@@ -210,7 +210,7 @@ public class DefaultProfileServiceTest
         assertNotNull( getted );
         assertEquals( newName, getted.getName() );
     }
-    
+
     public void testupdateProfileDuplicateName()
         throws Exception
     {
@@ -230,7 +230,7 @@ public class DefaultProfileServiceTest
         Profile getted = getProfileService().getProfile( jdk1mvn205.getId() );
         assertNotNull( getted );
         assertEquals( jdk1mvn205Name, getted.getName() );
-    }    
+    }
 
     public void testsetJdkInProfile()
         throws Exception
@@ -275,7 +275,7 @@ public class DefaultProfileServiceTest
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
         installationService.delete( jdk2 );
     }
-    
+
     public void testRemoveEnvVarFromProfile()
         throws Exception
     {
@@ -287,24 +287,24 @@ public class DefaultProfileServiceTest
         profile = getProfileService().getProfile( jdk1mvn205.getId() );
         assertNotNull( profile.getJdk() );
         assertEquals( 2, profile.getEnvironmentVariables().size() );
-        
+
         getProfileService().removeInstallationFromProfile( profile, mvnOpts1 );
-        
+
         profile = getProfileService().getProfile( jdk1mvn205.getId() );
         assertNotNull( profile.getJdk() );
         assertEquals( 1, profile.getEnvironmentVariables().size() );
-        
+
         getProfileService().removeInstallationFromProfile( profile, jdk2 );
-        
+
         profile = getProfileService().getProfile( jdk1mvn205.getId() );
         assertNull( profile.getJdk() );
         assertEquals( 1, profile.getEnvironmentVariables().size() );
-        
+
         getProfileService().removeInstallationFromProfile( profile, mvnOpts2 );
         profile = getProfileService().getProfile( jdk1mvn205.getId() );
         assertNull( profile.getJdk() );
         assertEquals( 0, profile.getEnvironmentVariables().size() );
     }
-    
+
 
 }

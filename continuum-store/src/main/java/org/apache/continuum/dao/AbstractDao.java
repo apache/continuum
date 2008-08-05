@@ -185,4 +185,10 @@ public class AbstractDao
     {
         return storeUtilities.getContinuumPersistenceManagerFactory();
     }
+
+    protected Object makePersistent( PersistenceManager pm, Object object, boolean detach )
+    {
+        return PlexusJdoUtils.makePersistent( pm, object, detach );
+    }
+
 }

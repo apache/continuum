@@ -19,6 +19,8 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.BuildResultDao;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -48,12 +50,16 @@ public class DefaultBuildControllerTest
     {
         super.setUp();
 
+        BuildDefinitionDao buildDefinitionDao = (BuildDefinitionDao) lookup( BuildDefinitionDao.class.getName() );
+
+        BuildResultDao buildResultDao = (BuildResultDao) lookup( BuildResultDao.class.getName() );
+
         Project project1 = createProject( "project1" );
         BuildDefinition bd1 = createBuildDefinition();
         project1.addBuildDefinition( bd1 );
         project1.setState( ContinuumProjectState.OK );
-        projectId1 = addProject( getStore(), project1 ).getId();
-        buildDefinitionId1 = getStore().getDefaultBuildDefinition( projectId1 ).getId();
+        projectId1 = addProject( project1 ).getId();
+        buildDefinitionId1 = buildDefinitionDao.getDefaultBuildDefinition( projectId1 ).getId();
         project1 = getProjectDao().getProject( projectId1 );
         BuildResult buildResult1 = new BuildResult();
         buildResult1.setStartTime( Calendar.getInstance().getTimeInMillis() );
@@ -61,14 +67,14 @@ public class DefaultBuildControllerTest
         buildResult1.setState( ContinuumProjectState.OK );
         buildResult1.setSuccess( true );
         buildResult1.setBuildDefinition( bd1 );
-        getStore().addBuildResult( project1, buildResult1 );
+        buildResultDao.addBuildResult( project1, buildResult1 );
         BuildResult buildResult2 = new BuildResult();
         buildResult2.setStartTime( Calendar.getInstance().getTimeInMillis() - 7200000 );
         buildResult2.setEndTime( Calendar.getInstance().getTimeInMillis() - 7200000 );
         buildResult2.setSuccess( true );
         buildResult2.setState( ContinuumProjectState.OK );
         buildResult2.setBuildDefinition( bd1 );
-        getStore().addBuildResult( project1, buildResult2 );
+        buildResultDao.addBuildResult( project1, buildResult2 );
 
         Project project2 = createProject( "project2" );
         ProjectDependency dep1 = new ProjectDependency();
@@ -84,8 +90,8 @@ public class DefaultBuildControllerTest
         BuildDefinition bd2 = createBuildDefinition();
         project2.addBuildDefinition( bd2 );
         project2.setState( ContinuumProjectState.OK );
-        projectId2 = addProject( getStore(), project2 ).getId();
-        buildDefinitionId2 = getStore().getDefaultBuildDefinition( projectId2 ).getId();
+        projectId2 = addProject( project2 ).getId();
+        buildDefinitionId2 = buildDefinitionDao.getDefaultBuildDefinition( projectId2 ).getId();
 
         controller = (DefaultBuildController) lookup( BuildController.ROLE );
     }

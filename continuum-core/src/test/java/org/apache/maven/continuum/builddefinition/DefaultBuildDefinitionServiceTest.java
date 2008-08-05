@@ -24,6 +24,7 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.continuum.dao.DaoUtils;
 
 import java.util.List;
 
@@ -49,7 +50,8 @@ public class DefaultBuildDefinitionServiceTest
         throws Exception
     {
         super.setUp();
-        getStore().eraseDatabase();
+        DaoUtils daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
+        daoUtils.eraseDatabase();
 
         projectGroup = new ProjectGroup();
         projectGroup.setName( "test" );

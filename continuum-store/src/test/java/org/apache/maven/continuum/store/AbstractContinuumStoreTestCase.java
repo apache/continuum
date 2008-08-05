@@ -19,6 +19,7 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.InstallationDao;
 import org.apache.continuum.dao.ProfileDao;
 import org.apache.continuum.dao.ProjectDao;
@@ -56,7 +57,7 @@ import java.util.Map;
 public abstract class AbstractContinuumStoreTestCase
     extends PlexusTestCase
 {
-    protected ContinuumStore store;
+    protected DaoUtils daoUtilsImpl;
 
     protected InstallationDao installationDao;
 
@@ -111,7 +112,7 @@ public abstract class AbstractContinuumStoreTestCase
     {
         super.setUp();
 
-        store = createStore();
+        createStore();
 
         installationDao = (InstallationDao) lookup( InstallationDao.class.getName() );
 
@@ -465,9 +466,9 @@ public abstract class AbstractContinuumStoreTestCase
     {
         super.tearDown();
 
-        store.eraseDatabase();
+        daoUtilsImpl.eraseDatabase();
 
-        store.closeStore();
+        daoUtilsImpl.closeStore();
     }
 
     protected void assertBuildDatabase()
@@ -1115,7 +1116,7 @@ public abstract class AbstractContinuumStoreTestCase
      *
      * @todo push down to a Jdo specific test
      */
-    protected ContinuumStore createStore()
+    protected void createStore()
         throws Exception
     {
         DefaultConfigurableJdoFactory jdoFactory =
@@ -1123,6 +1124,6 @@ public abstract class AbstractContinuumStoreTestCase
 
         jdoFactory.setUrl( "jdbc:hsqldb:mem:" + getName() );
 
-        return (ContinuumStore) lookup( ContinuumStore.ROLE, "jdo" );
+        daoUtilsImpl = (DaoUtils) lookup( DaoUtils.class.getName() );
     }
 }

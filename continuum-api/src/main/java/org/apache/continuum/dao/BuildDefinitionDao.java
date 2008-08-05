@@ -100,6 +100,21 @@ public interface BuildDefinitionDao
     BuildDefinition getDefaultBuildDefinitionForProject( Project project )
         throws ContinuumStoreException;
 
+    /**
+     * returns the default build definition of the project, if the project
+     * doesn't have on declared the default of the project group will be
+     * returned <p/> this should be the most common usage of the default build
+     * definition accessing methods
+     *
+     * @param projectId
+     * @return
+     * @throws ContinuumStoreException
+     * @throws org.apache.maven.continuum.store.ContinuumObjectNotFoundException
+     *
+     */
+    BuildDefinition getDefaultBuildDefinition( int projectId )
+        throws ContinuumStoreException;
+
     List<BuildDefinition> getAllTemplates()
         throws ContinuumStoreException;
 }

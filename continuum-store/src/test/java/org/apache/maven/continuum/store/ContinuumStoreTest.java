@@ -21,6 +21,7 @@ package org.apache.maven.continuum.store;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildDefinitionTemplateDao;
+import org.apache.continuum.dao.BuildResultDao;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -58,6 +59,8 @@ public class ContinuumStoreTest
     private BuildDefinitionTemplateDao buildDefinitionTemplateDao;
 
     protected BuildDefinitionDao buildDefinitionDao;
+
+    protected BuildResultDao buildResultDao;
 
     // ----------------------------------------------------------------------
     //  TEST METHODS
@@ -637,7 +640,7 @@ public class ContinuumStoreTest
         assertEquals( "check size is now 1", 1, project.getBuildResults().size() );
         assertBuildResultEquals( testBuildResult2, (BuildResult) project.getBuildResults().get( 0 ) );
 
-        List results = store.getAllBuildsForAProjectByDate( testProject1.getId() );
+        List results = buildResultDao.getAllBuildsForAProjectByDate( testProject1.getId() );
         assertEquals( "check item count", 1, results.size() );
         assertBuildResultEquals( testBuildResult2, (BuildResult) results.get( 0 ) );
 
@@ -652,7 +655,7 @@ public class ContinuumStoreTest
     {
         try
         {
-            store.getBuildResult( INVALID_ID );
+            buildResultDao.getBuildResult( INVALID_ID );
             fail( "Should not find build result with invalid ID" );
         }
         catch ( ContinuumObjectNotFoundException expected )
@@ -663,7 +666,7 @@ public class ContinuumStoreTest
 
     public void testGetAllBuildsForAProject()
     {
-        List results = store.getAllBuildsForAProjectByDate( testProject1.getId() );
+        List results = buildResultDao.getAllBuildsForAProjectByDate( testProject1.getId() );
 
         assertEquals( "check item count", 2, results.size() );
 
@@ -681,7 +684,7 @@ public class ContinuumStoreTest
     public void testGetBuildResult()
         throws ContinuumStoreException
     {
-        BuildResult buildResult = store.getBuildResult( testBuildResult3.getId() );
+        BuildResult buildResult = buildResultDao.getBuildResult( testBuildResult3.getId() );
         assertBuildResultEquals( testBuildResult3, buildResult );
         assertScmResultEquals( testBuildResult3.getScmResult(), buildResult.getScmResult() );
         assertProjectEquals( testProject2, buildResult.getProject() );
@@ -1165,6 +1168,8 @@ public class ContinuumStoreTest
         buildDefinitionDao = (BuildDefinitionDao) lookup( BuildDefinitionDao.class.getName() );
 
         buildDefinitionTemplateDao = (BuildDefinitionTemplateDao) lookup( BuildDefinitionTemplateDao.class.getName() );
+
+        buildResultDao = (BuildResultDao) lookup( BuildResultDao.class.getName() );
 
         createBuildDatabase();
     }

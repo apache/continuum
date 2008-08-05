@@ -19,11 +19,15 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
@@ -44,6 +48,18 @@ public class BuildDefinitionDaoImpl
     extends AbstractDao
     implements BuildDefinitionDao
 {
+    private static Logger log = LoggerFactory.getLogger( BuildDefinitionDaoImpl.class );
+
+    /**
+     * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
+     */
+    private ProjectDao projectDao;
+
+    /**
+     * @plexus.requirement role="org.apache.continuum.dao.ProjectGroupDao"
+     */
+    private ProjectGroupDao projectGroupDao;
+
     public BuildDefinition getBuildDefinition( int buildDefinitionId )
         throws ContinuumStoreException
     {
@@ -98,7 +114,7 @@ public class BuildDefinitionDaoImpl
         }
     }
 
-    public Map getDefaultBuildDefinitions()
+    public Map<Integer, Integer> getDefaultBuildDefinitions()
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -124,7 +140,7 @@ public class BuildDefinitionDaoImpl
 
             // result = (List) pm.detachCopyAll( result );
 
-            Map builds = new HashMap();
+            Map<Integer, Integer> builds = new HashMap<Integer, Integer>();
 
             if ( result != null && !result.isEmpty() )
             {
@@ -248,6 +264,44 @@ public class BuildDefinitionDaoImpl
         throws ContinuumStoreException
     {
         return getDefaultBuildDefinitionForProject( project.getId() );
+    }
+
+    public BuildDefinition getDefaultBuildDefinition( int projectId )
+        throws ContinuumStoreException
+    {
+        //TODO: Move this method to a service class
+        BuildDefinition bd = null;
+
+        try
+        {
+            bd = getDefaultBuildDefinitionForProject( projectId );
+        }
+        catch ( ContinuumObjectNotFoundException cne )
+        {
+            // ignore since we will try the project group
+            log.debug( "no default build definition on project, trying project group" );
+        }
+
+        // project group should have default build definition defined
+        if ( bd == null )
+        {
+            ProjectGroup projectGroup = projectGroupDao.getProjectGroupByProjectId( projectId );
+
+            Project p = projectDao.getProject( projectId );
+
+            List<BuildDefinition> bds = getDefaultBuildDefinitionsForProjectGroup( projectGroup.getId() );
+
+            for ( BuildDefinition bdef : bds )
+            {
+                if ( p.getExecutorId().equals( bdef.getType() ) || ( StringUtils.isEmpty( bdef.getType() ) &&
+                    ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( p.getExecutorId() ) ) )
+                {
+                    return bdef;
+                }
+            }
+        }
+
+        return bd;
     }
 
     public List<BuildDefinition> getAllTemplates()

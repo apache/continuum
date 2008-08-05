@@ -19,6 +19,7 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
+import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.InstallationDao;
 import org.apache.continuum.dao.ProfileDao;
 import org.apache.continuum.dao.ProjectGroupDao;
@@ -33,7 +34,6 @@ import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxReader;
 import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxWriter;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.ConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
@@ -67,9 +67,9 @@ public class JdoDataManagementTool
     implements DataManagementTool
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private DaoUtils daoUtils;
 
     /**
      * @plexus.requirement
@@ -155,7 +155,7 @@ public class JdoDataManagementTool
 
     public void eraseDatabase()
     {
-        store.eraseDatabase();
+        daoUtils.eraseDatabase();
     }
 
     public void restoreDatabase( File backupDirectory )

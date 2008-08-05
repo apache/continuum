@@ -19,6 +19,7 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ScheduleDao;
@@ -32,7 +33,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
@@ -54,7 +54,7 @@ import java.util.Properties;
 public abstract class AbstractContinuumTest
     extends PlexusInSpringTestCase
 {
-    private ContinuumStore store;
+    private DaoUtils daoUtils;
 
     private ProjectDao projectDao;
 
@@ -72,7 +72,7 @@ public abstract class AbstractContinuumTest
     {
         super.setUp();
 
-        getStore();
+        init();
 
         getProjectDao();
 
@@ -98,7 +98,7 @@ public abstract class AbstractContinuumTest
     protected void tearDown()
         throws Exception
     {
-        store.eraseDatabase();
+        daoUtils.eraseDatabase();
         super.tearDown();
     }
 
@@ -145,14 +145,9 @@ public abstract class AbstractContinuumTest
     // Store
     // ----------------------------------------------------------------------
 
-    protected ContinuumStore getStore()
+    private void init()
         throws Exception
     {
-        if ( store != null )
-        {
-            return store;
-        }
-
         // ----------------------------------------------------------------------
         // Set up the JDO factory
         // ----------------------------------------------------------------------
@@ -215,9 +210,7 @@ public abstract class AbstractContinuumTest
         //
         // ----------------------------------------------------------------------
 
-        store = (ContinuumStore) lookup( ContinuumStore.ROLE, "jdo" );
-
-        return store;
+        daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
     }
 
     protected ProjectDao getProjectDao()
@@ -338,7 +331,7 @@ public abstract class AbstractContinuumTest
     // Public utility methods
     // ----------------------------------------------------------------------
 
-    public Project addProject( ContinuumStore store, Project project )
+    public Project addProject( Project project )
         throws Exception
     {
         ProjectGroup defaultProjectGroup = getDefaultProjectGroup();
@@ -368,25 +361,11 @@ public abstract class AbstractContinuumTest
         return project;
     }
 
-    public Project addProject( ContinuumStore store, String name )
+    public Project addProject( String name )
         throws Exception
     {
-        return addProject( store, makeStubProject( name ) );
+        return addProject( makeStubProject( name ) );
     }
-
-    public Project addProject( ContinuumStore store, String name, String nagEmailAddress, String version )
-        throws Exception
-    {
-        return addProject( store, makeProject( name, nagEmailAddress, version ) );
-    }
-
-    /*public static void setCheckoutDone( ContinuumStore store, Project project, ScmResult scmResult )
-        throws ContinuumStoreException
-    {
-        project.setCheckoutResult( scmResult );
-
-        store.updateProject( project );
-    }*/
 
     // ----------------------------------------------------------------------
     // Assertions

@@ -19,6 +19,7 @@ package org.apache.maven.continuum.notification;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildResultDao;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -31,13 +32,23 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 public class ContinuumNotificationDispatcherTest
     extends AbstractContinuumTest
 {
+    private BuildResultDao buildResultDao;
+
+    @Override
+    protected void setUp()
+        throws Exception
+    {
+        super.setUp();
+        buildResultDao = (BuildResultDao) lookup( BuildResultDao.class.getName() );
+    }
+
     public void testNotificationDispatcher()
         throws Exception
     {
         ContinuumNotificationDispatcher notificationDispatcher =
             (ContinuumNotificationDispatcher) lookup( ContinuumNotificationDispatcher.ROLE );
 
-        Project project = addProject( getStore(), "Notification Dispatcher Test Project" );
+        Project project = addProject( "Notification Dispatcher Test Project" );
 
         project = getProjectDao().getProjectWithBuildDetails( project.getId() );
 
@@ -49,9 +60,9 @@ public class ContinuumNotificationDispatcherTest
 
         build.setTrigger( ContinuumProjectState.TRIGGER_SCHEDULED );
 
-        getStore().addBuildResult( project, build );
+        buildResultDao.addBuildResult( project, build );
 
-        build = getStore().getBuildResult( build.getId() );
+        build = buildResultDao.getBuildResult( build.getId() );
 
         notificationDispatcher.buildComplete( project, null, build );
     }

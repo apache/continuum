@@ -19,13 +19,13 @@ package org.apache.maven.continuum.scm;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildResultDao;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.ScmFile;
@@ -68,9 +68,9 @@ public class DefaultContinuumScm
     private WorkingDirectoryService workingDirectoryService;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private BuildResultDao buildResultDao;
 
     /**
      * @plexus.configuration
@@ -319,7 +319,7 @@ public class DefaultContinuumScm
     {
         try
         {
-            BuildResult result = store.getLatestBuildResultForProject( project.getId() );
+            BuildResult result = buildResultDao.getLatestBuildResultForProject( project.getId() );
 
             return new Date( result.getStartTime() );
         }

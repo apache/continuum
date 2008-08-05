@@ -45,7 +45,7 @@ public class BuildQueueTest
     public void testTestTheQueueWithASingleProject()
         throws Exception
     {
-        Project project = addProject( getStore(), "Build Queue Project 1" );
+        Project project = addProject( "Build Queue Project 1" );
 
         int projectId = project.getId();
 
@@ -70,9 +70,9 @@ public class BuildQueueTest
     public void testTheQueueWithMultipleProjects()
         throws Exception
     {
-        int projectId1 = addProject( getStore(), "Build Queue Project 2" ).getId();
+        int projectId1 = addProject( "Build Queue Project 2" ).getId();
 
-        int projectId2 = addProject( getStore(), "Build Queue Project 3" ).getId();
+        int projectId2 = addProject( "Build Queue Project 3" ).getId();
 
         buildProject( projectId1, ContinuumProjectState.TRIGGER_SCHEDULED );
 
@@ -101,7 +101,7 @@ public class BuildQueueTest
     {
         String name = "Build Queue Project 4";
 
-        int projectId = addProject( getStore(), name ).getId();
+        int projectId = addProject( name ).getId();
 
         buildProject( projectId, ContinuumProjectState.TRIGGER_FORCED );
 

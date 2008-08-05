@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.store;
+package org.apache.continuum.dao;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,56 +19,27 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
+ * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @todo remove old stuff
  */
-public interface ContinuumStore
+public interface BuildResultDao
 {
-    String ROLE = ContinuumStore.class.getName();
-
-    Map getDefaultBuildDefinitions();
-
-    /**
-     * returns the default build definition of the project, if the project
-     * doesn't have on declared the default of the project group will be
-     * returned <p/> this should be the most common usage of the default build
-     * definition accessing methods
-     *
-     * @param projectId
-     * @return
-     * @throws ContinuumStoreException
-     * @throws ContinuumObjectNotFoundException
-     *
-     */
-    BuildDefinition getDefaultBuildDefinition( int projectId )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException;
-
-    //  BuildDefinitionTemplate
-    // ------------------------------------------------------
-
-
-    List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
-
-    Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
-        throws ContinuumStoreException;
-
-    Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
-        throws ContinuumStoreException;
-
-    public Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
-        throws ContinuumStoreException;
-
     BuildResult getBuildResult( int buildId )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException;
+        throws ContinuumStoreException;
+
+    void addBuildResult( Project project, BuildResult build )
+        throws ContinuumStoreException;
+
+    void updateBuildResult( BuildResult build )
+        throws ContinuumStoreException;
 
     void removeBuildResult( BuildResult buildResult );
 
@@ -101,13 +72,5 @@ public interface ContinuumStore
 
     Map<Integer, BuildResult> getBuildResultsInSuccessByProjectGroupId( int projectGroupId );
 
-    void addBuildResult( Project project, BuildResult build )
-        throws ContinuumStoreException, ContinuumObjectNotFoundException;
-
-    void updateBuildResult( BuildResult build )
-        throws ContinuumStoreException;
-
-    void closeStore();
-
-    void eraseDatabase();
+    List<BuildResult> getAllBuildsForAProjectByDate( int projectId );
 }

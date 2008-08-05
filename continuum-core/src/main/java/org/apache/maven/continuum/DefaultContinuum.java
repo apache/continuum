@@ -22,6 +22,8 @@ package org.apache.maven.continuum;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.BuildResultDao;
+import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.NotifierDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
@@ -59,7 +61,6 @@ import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProject
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.PlexusContainerManager;
 import org.apache.maven.continuum.utils.ProjectSorter;
@@ -124,14 +125,19 @@ public class DefaultContinuum
     private ConfigurationService configurationService;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private DaoUtils daoUtils;
 
     /**
      * @plexus.requirement
      */
     private BuildDefinitionDao buildDefinitionDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildResultDao buildResultDao;
 
     /**
      * @plexus.requirement
@@ -433,7 +439,7 @@ public class DefaultContinuum
 
     public Map<Integer, BuildResult> getLatestBuildResults( int projectGroupId )
     {
-        Map<Integer, BuildResult> result = store.getLatestBuildResultsByProjectGroupId( projectGroupId );
+        Map<Integer, BuildResult> result = buildResultDao.getLatestBuildResultsByProjectGroupId( projectGroupId );
 
         if ( result == null )
         {
@@ -445,7 +451,7 @@ public class DefaultContinuum
 
     public Map<Integer, BuildResult> getLatestBuildResults()
     {
-        Map<Integer, BuildResult> result = store.getLatestBuildResults();
+        Map<Integer, BuildResult> result = buildResultDao.getLatestBuildResults();
 
         if ( result == null )
         {
@@ -457,7 +463,7 @@ public class DefaultContinuum
 
     public Map<Integer, BuildResult> getBuildResultsInSuccess( int projectGroupId )
     {
-        Map<Integer, BuildResult> result = store.getBuildResultsInSuccessByProjectGroupId( projectGroupId );
+        Map<Integer, BuildResult> result = buildResultDao.getBuildResultsInSuccessByProjectGroupId( projectGroupId );
 
         if ( result == null )
         {
@@ -469,7 +475,7 @@ public class DefaultContinuum
 
     public Map<Integer, BuildResult> getBuildResultsInSuccess()
     {
-        Map<Integer, BuildResult> result = store.getBuildResultsInSuccess();
+        Map<Integer, BuildResult> result = buildResultDao.getBuildResultsInSuccess();
 
         if ( result == null )
         {
@@ -481,13 +487,13 @@ public class DefaultContinuum
 
     public BuildResult getLatestBuildResultForProject( int projectId )
     {
-        return store.getLatestBuildResultForProject( projectId );
+        return buildResultDao.getLatestBuildResultForProject( projectId );
     }
 
     public BuildResult getBuildResultByBuildNumber( int projectId, int buildNumber )
         throws ContinuumException
     {
-        List<BuildResult> builds = store.getBuildResultByBuildNumber( projectId, buildNumber );
+        List<BuildResult> builds = buildResultDao.getBuildResultByBuildNumber( projectId, buildNumber );
 
         if ( builds.isEmpty() )
         {
@@ -797,7 +803,7 @@ public class DefaultContinuum
                 BuildResult br = (BuildResult) o;
                 //Remove all modified dependencies to prevent SQL errors
                 br.setModifiedDependencies( null );
-                store.updateBuildResult( br );
+                buildResultDao.updateBuildResult( br );
                 removeBuildResult( br );
             }
 
@@ -910,7 +916,7 @@ public class DefaultContinuum
 
             try
             {
-                buildDefId = new Integer( store.getDefaultBuildDefinition( project.getId() ).getId() );
+                buildDefId = new Integer( buildDefinitionDao.getDefaultBuildDefinition( project.getId() ).getId() );
             }
             catch ( ContinuumStoreException e )
             {
@@ -1077,7 +1083,7 @@ public class DefaultContinuum
 
         try
         {
-            projectsMap = store.getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( schedule.getId() );
+            projectsMap = daoUtils.getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( schedule.getId() );
 
             if ( projectsMap == null || projectsMap.size() == 0 )
             {
@@ -1260,7 +1266,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getBuildResult( buildId );
+            return buildResultDao.getBuildResult( buildId );
         }
         catch ( ContinuumStoreException e )
         {
@@ -1279,7 +1285,7 @@ public class DefaultContinuum
     private void removeBuildResult( BuildResult buildResult )
         throws ContinuumException
     {
-        store.removeBuildResult( buildResult );
+        buildResultDao.removeBuildResult( buildResult );
 
         // cleanup some files
         try
@@ -1326,7 +1332,7 @@ public class DefaultContinuum
         throws ContinuumException
     {
         ArrayList<BuildResult> buildResults =
-            new ArrayList<BuildResult>( store.getBuildResultsForProject( projectId, 0 ) );
+            new ArrayList<BuildResult>( buildResultDao.getBuildResultsForProject( projectId, 0 ) );
 
         Collections.reverse( buildResults );
 
@@ -2240,7 +2246,7 @@ public class DefaultContinuum
     {
         try
         {
-            return store.getDefaultBuildDefinition( projectId );
+            return buildDefinitionDao.getDefaultBuildDefinition( projectId );
         }
         catch ( ContinuumObjectNotFoundException cne )
         {
@@ -2879,9 +2885,9 @@ public class DefaultContinuum
 
     private void closeStore()
     {
-        if ( store != null )
+        if ( daoUtils != null )
         {
-            store.closeStore();
+            daoUtils.closeStore();
         }
     }
 
@@ -2928,13 +2934,13 @@ public class DefaultContinuum
 
     public long getNbBuildResultsForProject( int projectId )
     {
-        return store.getNbBuildResultsForProject( projectId );
+        return buildResultDao.getNbBuildResultsForProject( projectId );
     }
 
     public Collection<BuildResult> getBuildResultsForProject( int projectId )
         throws ContinuumException
     {
-        return store.getBuildResultsForProject( projectId );
+        return buildResultDao.getBuildResultsForProject( projectId );
     }
 
     // ----------------------------------------------------------------------
