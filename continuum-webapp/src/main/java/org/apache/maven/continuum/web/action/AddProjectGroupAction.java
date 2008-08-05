@@ -48,6 +48,14 @@ public class AddProjectGroupAction
     
     private List<LocalRepository> repositories;
 
+    public void prepare()
+        throws Exception
+    {
+        super.prepare();
+        
+        repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
+    }
+    
     public void validate()
     {
         clearErrorsAndMessages();
@@ -152,8 +160,6 @@ public class AddProjectGroupAction
         {
             checkAddProjectGroupAuthorization();
 
-            repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
-            
             return INPUT;
         }
         catch ( AuthorizationRequiredException authzE )
