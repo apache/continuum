@@ -41,6 +41,11 @@ under the License.
               <name>user.home</name>
               <value>${basedir}/target/test-classes/</value>    
             </property>            
+            <property>
+              <!-- java.io.tmpdir is a shared directory on solaris and cause permission issues -->
+              <name>java.io.tmpdir</name>
+              <value>./target</value>
+            </property>
           </systemProperties>
         </configuration>
       </plugin>
