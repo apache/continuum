@@ -19,6 +19,7 @@ package org.apache.maven.continuum.release;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.model.project.Project;
 
 import java.io.File;
@@ -94,4 +95,8 @@ public interface ContinuumReleaseManager
     Map getReleaseResults();
 
     Map getListeners();
+    
+    void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
+                  ContinuumReleaseManagerListener listener, LocalRepository repository )
+        throws ContinuumReleaseException;
 }

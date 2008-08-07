@@ -6,20 +6,20 @@ Prepare for Release
 
  Navigate to the Project Group Summary and click the Release button or icon.
 
-[./../../images/release-project-group-summary.png] Release
+[../../images/release-project-group-summary.png] Release
 
  Choose "Prepare project for release" and click "Submit"
 
-[./../../images/release-choose-prepare-goal.png] Release
+[../../images/release-choose-prepare-goal.png] Release
 
  Complete the form, providing the scm tag name, etc.
 
-[./../../images/release-prepare-parameters.png] Release Prepare parameters
+[../../images/release-prepare-parameters.png] Release Prepare parameters
 
  Wait for the process to complete, then click Done.
 
-[./../../images/release-prepare-executing.png]
+[../../images/release-prepare-executing.png]
 
  You will be returned to this page to make another selection
 
-[./../../images/release-choose-perform-goal.png]
+[../../images/release-choose-perform-goal.png]

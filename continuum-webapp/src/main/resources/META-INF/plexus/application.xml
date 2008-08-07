@@ -337,6 +337,11 @@
             <name>org.jpox.rdbms.stringDefaultLength</name>
             <value>255</value>
           </property>
+          <property>
+            <name>org.jpox.autoCreateColumns</name>
+            <value>true</value>
+          </property>
+			
 <!--
           <property>
             <name>org.jpox.identifier.case</name>

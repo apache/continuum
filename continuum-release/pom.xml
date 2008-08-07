@@ -72,8 +72,8 @@ under the License.
       <version>1.0-alpha-3</version>
       <exclusions>
         <exclusion>
-          <groupId>classworlds</groupId>
-          <artifactId>classworlds</artifactId>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-container-default</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -84,11 +84,6 @@ under the License.
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-api</artifactId>
-      <version>${maven-scm.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-manager-plexus</artifactId>
       <version>${maven-scm.version}</version>
     </dependency>
     <dependency>

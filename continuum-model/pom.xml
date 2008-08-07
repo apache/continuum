@@ -63,7 +63,7 @@ under the License.
           </execution>
         </executions>
         <configuration>
-          <version>1.1.0</version>
+          <version>1.1.1</version>
           <packageWithVersion>false</packageWithVersion>
           <model>src/main/mdo/continuum.xml</model>
         </configuration>
@@ -98,6 +98,10 @@ under the License.
       <groupId>stax</groupId>
       <artifactId>stax-api</artifactId>
       <version>1.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
     </dependency>
   </dependencies>
 </project>

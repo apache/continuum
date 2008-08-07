@@ -19,6 +19,7 @@ package org.apache.maven.continuum.release.executors;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
@@ -65,6 +66,8 @@ public class PerformReleaseTaskExecutor
     private ProfileManager profileManager;
 
     private PlexusContainer container;
+    
+    private LocalRepository repository;
 
     public void execute( ReleaseProjectTask task )
         throws TaskExecutionException
@@ -77,7 +80,9 @@ public class PerformReleaseTaskExecutor
         descriptor.setUseReleaseProfile( performTask.isUseReleaseProfile() );
         descriptor.setPerformGoals( performTask.getGoals() );
         descriptor.setCheckoutDirectory( performTask.getBuildDirectory().getAbsolutePath() );
-
+        
+        repository = performTask.getLocalRepository();
+        
         List reactorProjects = getReactorProjects( performTask );
 
         ReleaseResult result = releaseManager.performWithResult( descriptor, settings, reactorProjects, listener );
@@ -206,8 +211,16 @@ public class PerformReleaseTaskExecutor
 
     private ArtifactRepository getLocalRepository()
     {
-        return new DefaultArtifactRepository( "local-repository", "file://" + settings.getLocalRepository(),
-                                              new DefaultRepositoryLayout() );
+        if ( repository == null )
+        {
+            return new DefaultArtifactRepository( "local-repository", "file://" + settings.getLocalRepository(),
+                                                  new DefaultRepositoryLayout() );
+        }
+        else
+        {
+            return new DefaultArtifactRepository( repository.getName(), "file://" + repository.getLocation(),
+                                                  new DefaultRepositoryLayout() );
+        }
     }
 
     private ProfileManager getProfileManager( Settings settings )

@@ -8,7 +8,7 @@
 
 Installing Continuum Standalone
 
-%{toc|section=0}
+~~%{toc|section=0}
 
 * {Basics & Fundamentals}
 
@@ -126,7 +126,7 @@ echo "Creating file ${INITD_SCRIPT}"
 cat >> ${INITD_SCRIPT} <<EOF
 #! /bin/sh
 # chkconfig: 345 90 10
-# description: Maven Continuum server
+# description: Apache Continuum server
 
 # uncoment to set JAVA_HOME as the value present when Continuum installed
 #export JAVA_HOME=${JAVA_HOME}

@@ -19,6 +19,7 @@ package org.apache.maven.continuum.execution.maven.m1;
  * under the License.
  */
 
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -103,6 +104,13 @@ public class MavenOneBuildExecutor
             arguments.append( "\"-D" ).append( name ).append( "=" ).append( value ).append( "\" " );
         }
 
+        // append -Dmaven.repo.local if project group has a local repository
+        LocalRepository repository = project.getProjectGroup().getLocalRepository();
+        if ( repository != null )
+        {
+            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean(repository.getLocation() ) ).append( "\" " );
+        }
+        
         arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
 
         Map<String, String> environments = getEnvironments( buildDefinition );

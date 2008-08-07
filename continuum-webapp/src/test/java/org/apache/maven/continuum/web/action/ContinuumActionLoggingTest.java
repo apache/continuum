@@ -19,14 +19,14 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.codehaus.plexus.PlexusTestCase;
-
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 /**
  * TestContinuumActionLogging:
@@ -35,7 +35,7 @@ import java.io.PrintStream;
  * @version $Id$
  */
 public class ContinuumActionLoggingTest
-    extends PlexusTestCase
+    extends PlexusInSpringTestCase
 {
 
     StringBuffer testOutput = new StringBuffer();

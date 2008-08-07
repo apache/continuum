@@ -19,7 +19,9 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
+import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -59,6 +61,11 @@ public class MavenTwoContinuumProjectBuilder
     public static final String ID = "maven-two-builder";
 
     private static final String POM_PART = "/pom.xml";
+
+    /**
+     * @plexus.requirement
+     */
+    private LocalRepositoryDao localRepositoryDao;
 
     /**
      * @plexus.requirement
@@ -414,6 +421,21 @@ public class MavenTwoContinuumProjectBuilder
         // ----------------------------------------------------------------------
 
         projectGroup.setDescription( mavenProject.getDescription() );
+
+        // ----------------------------------------------------------------------
+        // Local Repository
+        // ----------------------------------------------------------------------
+
+        try
+        {
+            LocalRepository repository = localRepositoryDao.getLocalRepositoryByName( "DEFAULT" );
+
+            projectGroup.setLocalRepository( repository );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            getLogger().warn( "Can't get default repository.", e );
+        }
 
         return projectGroup;
     }

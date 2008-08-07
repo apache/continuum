@@ -57,6 +57,17 @@
           <a href="<ww:url  action="projectGroupSummary" namespace="/"><ww:param name="projectGroupId" value="%{'${group.id}'}"/></ww:url>">${group.name}</a>
         </ec:column>
         <ec:column property="groupId" title="groups.table.groupId" width="20%"/>
+        <ec:column property="repositoryName" title="groups.table.repositoryName" width="20%">
+          <redback:ifAuthorized permission="continuum-manage-repositories">
+            <ww:url id="editRepositoryUrl" action="editRepository" namespace="/admin" includeParams="none">
+              <ww:param name="repository.id">${pageScope.group.repositoryId}</ww:param>
+            </ww:url>
+            <ww:a href="%{editRepositoryUrl}">${pageScope.group.repositoryName}</ww:a> 
+          </redback:ifAuthorized>
+          <redback:elseAuthorized>
+            ${pageScope.group.repositoryName}
+          </redback:elseAuthorized>
+        </ec:column>
         <ec:column property="numSuccesses" title="&nbsp;" format="0" width="2%" style="text-align: right" headerClass="calcHeaderSucces" calc="total" calcTitle="groups.table.summary"/>
         <ec:column property="numFailures" title="&nbsp;" format="0" width="2%" style="text-align: right" headerClass="calcHeaderFailure" calc="total" />
         <ec:column property="numErrors" title="&nbsp;" format="0" width="2%" style="text-align: right" headerClass="calcHeaderError" calc="total"/>

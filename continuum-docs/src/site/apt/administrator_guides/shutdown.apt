@@ -15,11 +15,11 @@ Shutdown Continuum
 
     From the menu, choose the 'Queues' link
 
-[../../../images/queues-menu.png] Queues
+[../images/queues-menu.png] Queues
 
     Then you'll get the Queues page
 
-[../../../images/queues.png] Queues
+[../images/queues-view.png] Queues
 
     In this page you can see the current build, projects in the build queue, the current checkout and projects in the checkout queue.
     For each line, you can cancel the process

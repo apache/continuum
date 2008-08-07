@@ -166,4 +166,6 @@ public interface ProjectGroupDao
      */
     ProjectGroup getProjectGroupWithBuildDetailsByProjectGroupId( int projectGroupId )
         throws ContinuumStoreException;
+
+    List<ProjectGroup> getProjectGroupByRepository( int repositoryId );
 }

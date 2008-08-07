@@ -28,6 +28,8 @@ import org.apache.continuum.dao.NotifierDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.purge.ContinuumPurgeManager;
+import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -62,7 +64,6 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.apache.maven.continuum.utils.PlexusContainerManager;
 import org.apache.maven.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.PlexusConstants;
@@ -228,6 +229,16 @@ public class DefaultContinuum
 
     private boolean stopped = false;
 
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumPurgeManager purgeManager;
+
+    /**
+     * @plexus.requirement
+     */
+    private RepositoryService repositoryService;
+
     public DefaultContinuum()
     {
         Runtime.getRuntime().addShutdownHook( new Thread()
@@ -259,6 +270,16 @@ public class DefaultContinuum
     public ActionManager getActionManager()
     {
         return actionManager;
+    }
+
+    public ContinuumPurgeManager getPurgeManager()
+    {
+        return purgeManager;
+    }
+
+    public RepositoryService getRepositoryService()
+    {
+        return repositoryService;
     }
 
     // ----------------------------------------------------------------------
@@ -419,6 +440,11 @@ public class DefaultContinuum
         {
             throw new ContinuumException( "Error retrieving", e );
         }
+    }
+
+    public List<ProjectGroup> getAllProjectGroupsWithRepository( int repositoryId )
+    {
+        return projectGroupDao.getProjectGroupByRepository( repositoryId );
     }
 
     // ----------------------------------------------------------------------
@@ -2836,7 +2862,6 @@ public class DefaultContinuum
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
 
-        PlexusContainerManager.getInstance().setContainer( container );
     }
 
     public void start()

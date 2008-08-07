@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.utils;
+package org.apache.continuum.repository;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,40 +19,26 @@ package org.apache.maven.continuum.utils;
  * under the License.
  */
 
-import org.codehaus.plexus.PlexusContainer;
-
 /**
- * TODO this class can be removed ?
- * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
+ * @author Maria Catherine Tan
  * @version $Id$
+ * @since 25 jul 07
  */
-public class PlexusContainerManager
+public class RepositoryServiceException
+    extends Exception
 {
-    private PlexusContainer container;
-
-    private static PlexusContainerManager instance;
-
-    private PlexusContainerManager()
+    public RepositoryServiceException( String message )
     {
+        super( message );
     }
-
-    public static synchronized PlexusContainerManager getInstance()
+    
+    public RepositoryServiceException( Throwable cause )
     {
-        if ( instance == null )
-        {
-            instance = new PlexusContainerManager();
-        }
-
-        return instance;
+        super( cause );
     }
-
-    public PlexusContainer getContainer()
+    
+    public RepositoryServiceException( String message, Throwable cause )
     {
-        return container;
-    }
-
-    public void setContainer( PlexusContainer container )
-    {
-        this.container = container;
+        super( message, cause );
     }
 }

@@ -12,7 +12,7 @@ Guide to Install Continuum on Geronimo
 
     Sections:
 
-%{toc|section=0}
+~~%{toc|section=0}
 
 * {Datasource Configuration}
 
@@ -31,9 +31,9 @@ Guide to Install Continuum on Geronimo
     xmlns="http://geronimo.apache.org/xml/ns/j2ee/web-1.1">
     <environment>
         <moduleId>
-            <groupId>org.apache.maven.continuum</artifactId>
+            <groupId>org.apache.continuum</artifactId>
             <artifactId>continuum</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </moduleId>
         <dependencies>
             <dependency>

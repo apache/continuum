@@ -25,8 +25,13 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -162,4 +167,35 @@ public class ProjectGroupDaoImpl
     {
         return (ProjectGroup) getObjectById( ProjectGroup.class, projectGroupId, PROJECT_BUILD_DETAILS_FETCH_GROUP );
     }
+
+    public List<ProjectGroup> getProjectGroupByRepository( int repositoryId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( ProjectGroup.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int repositoryId" );
+
+            query.setFilter( "this.localRepository.id == repositoryId" );
+
+            List result = (List) query.execute( new Integer( repositoryId ) );
+
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+
+            rollback( tx );
+        }
+    }
+
 }

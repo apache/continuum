@@ -19,10 +19,17 @@ package org.apache.maven.continuum.build.settings;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.Continuum;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.scheduler.ContinuumBuildJob;
+import org.apache.maven.continuum.scheduler.ContinuumPurgeJob;
 import org.apache.maven.continuum.scheduler.ContinuumSchedulerConstants;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -37,6 +44,7 @@ import org.quartz.SchedulerException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -47,6 +55,21 @@ public class DefaultSchedulesActivator
     extends AbstractLogEnabled
     implements SchedulesActivator
 {
+    /**
+     * @plexus.requirement
+     */
+    private DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildDefinitionDao buildDefinitionDao;
+
     /**
      * @plexus.requirement
      */
@@ -80,7 +103,16 @@ public class DefaultSchedulesActivator
 
             try
             {
-                schedule( schedule, continuum );
+                // check schedule job class
+                if ( isScheduleFromBuildJob( schedule ) )
+                {
+                    schedule( schedule, continuum, ContinuumBuildJob.class );
+                }
+
+                if ( isScheduleFromPurgeJob( schedule ) )
+                {
+                    schedule( schedule, continuum, ContinuumPurgeJob.class );
+                }
             }
             catch ( SchedulesActivationException e )
             {
@@ -106,7 +138,15 @@ public class DefaultSchedulesActivator
     {
         getLogger().info( "Activating schedule " + schedule.getName() );
 
-        schedule( schedule, continuum );
+        if ( isScheduleFromBuildJob( schedule ) )
+        {
+            schedule( schedule, continuum, ContinuumBuildJob.class );
+        }
+
+        if ( isScheduleFromPurgeJob( schedule ) )
+        {
+            schedule( schedule, continuum, ContinuumPurgeJob.class );
+        }
     }
 
     public void unactivateSchedule( Schedule schedule, Continuum continuum )
@@ -117,7 +157,7 @@ public class DefaultSchedulesActivator
         unschedule( schedule, continuum );
     }
 
-    protected void schedule( Schedule schedule, Continuum continuum )
+    protected void schedule( Schedule schedule, Continuum continuum, Class jobClass )
         throws SchedulesActivationException
     {
         if ( !schedule.isActive() )
@@ -137,8 +177,7 @@ public class DefaultSchedulesActivator
 
         //the name + group makes the job unique
 
-        JobDetail jobDetail =
-            new JobDetail( schedule.getName(), org.quartz.Scheduler.DEFAULT_GROUP, ContinuumBuildJob.class );
+        JobDetail jobDetail = new JobDetail( schedule.getName(), org.quartz.Scheduler.DEFAULT_GROUP, jobClass );
 
         jobDetail.setJobDataMap( dataMap );
 
@@ -173,7 +212,7 @@ public class DefaultSchedulesActivator
         }
         catch ( SchedulerException e )
         {
-            throw new SchedulesActivationException( "Cannot schedule build job.", e );
+            throw new SchedulesActivationException( "Cannot schedule job ->" + jobClass.getName(), e );
         }
     }
 
@@ -195,5 +234,32 @@ public class DefaultSchedulesActivator
         {
             throw new SchedulesActivationException( "Cannot unschedule build job \"" + schedule.getName() + "\".", e );
         }
+    }
+
+    private boolean isScheduleFromBuildJob( Schedule schedule )
+    {
+        List<BuildDefinition> buildDef = buildDefinitionDao.getBuildDefinitionsBySchedule( schedule.getId() );
+
+        if ( buildDef.size() > 0 )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isScheduleFromPurgeJob( Schedule schedule )
+    {
+        List<RepositoryPurgeConfiguration> repoPurgeConfigs =
+            repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
+        List<DirectoryPurgeConfiguration> dirPurgeConfigs =
+            directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
+
+        if ( repoPurgeConfigs.size() > 0 || dirPurgeConfigs.size() > 0 )
+        {
+            return true;
+        }
+
+        return false;
     }
 }

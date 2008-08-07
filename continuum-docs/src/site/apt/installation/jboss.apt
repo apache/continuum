@@ -12,7 +12,7 @@ Guide to Install Continuum on JBoss
 
     Sections:
 
-%{toc|section=0}
+~~%{toc|section=0}
 
 * {Datasource Configuration}
 

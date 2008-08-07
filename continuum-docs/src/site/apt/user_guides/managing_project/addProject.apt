@@ -9,20 +9,20 @@
 
 Add a Project
 
-%{toc|section=0}
+~~%{toc|section=0}
 
 * {Maven 2 project}
 
   From the menu, choose the 'Maven 2.0.x Project' entry
     
-[./../../../../images/add-m2-project-menu.png] Add a maven2 project
+[../../images/add-m2-project-menu.png] Add a maven2 project
 
   The pom.xml file must be available through one of the following format : http, https and ftp 
   (file protocol is off by default for security and must enabled manually).
     
   Or it can be uploaded (Note this doesn't support multi modules project).
     
-[./../../../../images/add-m2-project.png] Add a maven2 project
+[../../images/add-m2-project.png] Add a maven2 project
 
   You can define username/password if the POM URL require an authentication.
 
@@ -38,7 +38,7 @@ Add a Project
     
   From the menu, choose the 'Maven 1.x Project' entry
     
-[./../../../../images/add-m1-project-menu.png] Add a maven1 project
+[../../images/add-m1-project-menu.png] Add a maven1 project
 
   The project.xml file must be available through one of the following format : http, https and ftp 
   (file protocol is off by default for security and must enabled manually).
@@ -47,7 +47,7 @@ Add a Project
 
   The project you're adding can't use a parent.
     
-[./../../../../images/add-m1-project.png] Add a maven1 project
+[../../images/add-m1-project.png] Add a maven1 project
 
   You can define username/password if the POM URL require an authentication.
 
@@ -61,27 +61,27 @@ Add a Project
 
   From the menu, choose the 'Ant Project' entry
     
-[./../../../../images/add-ant-project-menu.png] Add a ANT project
+[../../images/add-ant-project-menu.png] Add a ANT project
 
     TO WRITE
 
-[./../../../../images/add-ant-project.png] Add a ANT project
+[../../images/add-ant-project.png] Add a ANT project
 
 * {Shell Project}
 
   From the menu, choose the 'Shell Project' entry
     
-[./../../../../images/add-shell-project-menu.png] Add a shell project
+[../../images/add-shell-project-menu.png] Add a shell project
 
     TO WRITE
 
-[./../../../../images/add-shell-project.png] Add a shell script project
+[../../images/add-shell-project.png] Add a shell script project
 
 * {Add a project from the Project Group}
 
     From the Project Group, you can add a project without to use the menu. With this operation, the Project Group will be set to the current group.
 
-[./../../../../images/add-project-from-group.png] Add a project from a project group
+[../../images/add-project-from-group.png] Add a project from a project group
 
 * {Scm hints}
 

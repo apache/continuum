@@ -117,4 +117,6 @@ public interface BuildDefinitionDao
 
     List<BuildDefinition> getAllTemplates()
         throws ContinuumStoreException;
+
+    List<BuildDefinition> getBuildDefinitionsBySchedule( int scheduleId );
 }

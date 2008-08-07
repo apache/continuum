@@ -8,7 +8,7 @@
  
 Configure Appearance
  
-%{toc|section=0}
+~~%{toc|section=0}
  
 * {Banner}
 
@@ -27,15 +27,15 @@ Configure Appearance
 
   From the menu, choose the 'Appearance' entry :
   
-[../../../images/configure-appearance.png] Appearance
+[../images/configure-appearance.png] Appearance
 
   Use the 'Select a Company POM' link :
   
-[../../../images/select-company-pom.png] 'Select a Company POM'   
+[../images/select-company-pom.png] 'Select a Company POM'   
 
   The result will be display (here using org.apache:apache) :
   
-[../../../images/selected-company-pom.png] 'Selected a Company POM'  
+[../images/selected-company-pom.png] 'Selected a Company POM'  
 
   Note : the pom is searched in central repository and the repositories available for the active profiles from you ${user.home}/.m2/settings.xml 
  
@@ -43,7 +43,7 @@ Configure Appearance
  
   You can configure the footer with writing your own html content from the 'Appearance' entry of the menu.
  
-[../../../images/configuration-footer.png] 'Configure footer'
+[../images/configuration-footer.png] 'Configure footer'
 
   The default value is :
     

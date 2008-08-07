@@ -30,6 +30,11 @@ under the License.
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-xmlrpc-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-xmlrpc-client</artifactId>
       <version>${project.version}</version>
     </dependency>

@@ -21,7 +21,6 @@ package org.apache.maven.continuum.web.action;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.continuum.ContinuumException;
@@ -61,6 +60,12 @@ public class GroupSummaryAction
                 groupModel.setGroupId( projectGroup.getGroupId() );
                 groupModel.setName( projectGroup.getName() );
                 groupModel.setDescription( projectGroup.getDescription() );
+                
+                if ( projectGroup.getLocalRepository() != null )
+                {
+                    groupModel.setRepositoryId( projectGroup.getLocalRepository().getId() );
+                    groupModel.setRepositoryName( projectGroup.getLocalRepository().getName() );
+                }
 
                 //TODO: Create a summary jpox request so code will be more simple and performance will be better
                 Collection<Project> projects = projectGroup.getProjects();

@@ -329,4 +329,35 @@ public class BuildDefinitionDaoImpl
             rollback( tx );
         }
     }
+
+    public List<BuildDefinition> getBuildDefinitionsBySchedule( int scheduleId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildDefinition.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int scheduleId" );
+
+            query.setFilter( "this.schedule.id == scheduleId" );
+
+            List result = (List) query.execute( new Integer( scheduleId ) );
+
+            return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
+        }
+        finally
+        {
+            tx.commit();
+
+            rollback( tx );
+        }
+    }
+
 }

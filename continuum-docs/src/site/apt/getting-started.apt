@@ -12,6 +12,6 @@ Getting Started
     When you start continuum for the first time (without existing database), the first you will
     have to do is the admin account creation and the {{{administrator_guides/configuration.html}general configuration}}
     
-[../../images/admin-account-creation.png] Admin account creation
+[images/admin-account-creation.png] Admin account creation
 
     After admin account creation, you can log as an admin and create users, {{{user_guides/managing_project/addProject.html}add projects}} etc...

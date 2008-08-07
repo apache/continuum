@@ -19,8 +19,12 @@ package org.apache.maven.continuum.initialization;
  * under the License.
  */
 
+import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -28,8 +32,13 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.settings.MavenSettingsBuilder;
+import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jpox.SchemaTool;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -49,6 +58,16 @@ public class DefaultContinuumInitializer
     /**
      * @plexus.requirement
      */
+    private LocalRepositoryDao localRepositoryDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
     private ProjectGroupDao projectGroupDao;
 
     /**
@@ -60,6 +79,11 @@ public class DefaultContinuumInitializer
      * @plexus.requirement
      */
     private BuildDefinitionService buildDefinitionService;
+
+    /**
+     * @plexus.requirement
+     */
+    private MavenSettingsBuilder mavenSettingsBuilder;
 
     // ----------------------------------------------------------------------
     //
@@ -95,6 +119,8 @@ public class DefaultContinuumInitializer
 
                 systemConf = systemConfigurationDao.addSystemConfiguration( systemConf );
             }
+
+            createDefaultLocalRepository();
 
             createDefaultProjectGroup();
         }
@@ -132,10 +158,76 @@ public class DefaultContinuumInitializer
 
             group.setDescription( "Contains all projects that do not have a group of their own" );
 
+            LocalRepository localRepository = localRepositoryDao.getLocalRepositoryByName( "DEFAULT" );
+
+            group.setLocalRepository( localRepository );
+
             group.getBuildDefinitions().addAll(
                 buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions() );
 
             group = projectGroupDao.addProjectGroup( group );
+        }
+    }
+
+    private void createDefaultLocalRepository()
+        throws ContinuumStoreException, ContinuumInitializationException
+    {
+        LocalRepository repository;
+
+        repository = localRepositoryDao.getLocalRepositoryByName( "DEFAULT" );
+
+        Settings settings = getSettings();
+
+        if ( repository == null )
+        {
+            getLogger().info( "create Default Local Repository" );
+
+            repository = new LocalRepository();
+
+            repository.setName( "DEFAULT" );
+
+            repository.setLocation( settings.getLocalRepository() );
+
+            repository = localRepositoryDao.addLocalRepository( repository );
+
+            createDefaultPurgeConfiguration( repository );
+        }
+        else if ( !repository.getLocation().equals( settings.getLocalRepository() ) )
+        {
+            getLogger().info( "updating location of Default Local Repository" );
+
+            repository.setLocation( settings.getLocalRepository() );
+
+            localRepositoryDao.updateLocalRepository( repository );
+        }
+    }
+
+    private void createDefaultPurgeConfiguration( LocalRepository repository )
+        throws ContinuumStoreException
+    {
+        RepositoryPurgeConfiguration repoPurge = new RepositoryPurgeConfiguration();
+
+        repoPurge.setRepository( repository );
+
+        repoPurge.setDefaultPurge( true );
+
+        repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( repoPurge );
+    }
+
+    private Settings getSettings()
+        throws ContinuumInitializationException
+    {
+        try
+        {
+            return mavenSettingsBuilder.buildSettings( false );
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumInitializationException( "Error reading settings file", e );
+        }
+        catch ( XmlPullParserException e )
+        {
+            throw new ContinuumInitializationException( e.getMessage(), e );
         }
     }
 }
