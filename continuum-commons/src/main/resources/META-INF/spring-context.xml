@@ -26,7 +26,8 @@
   <bean id="configurationService" class="org.apache.maven.continuum.configuration.DefaultConfigurationService"
         init-method="initialize">
     <property name="applicationHome" value="target"/>
-    <property name="store" ref="continuumStore#jdo"/>
+    <property name="scheduleDao" ref="scheduleDao"/>
+    <property name="systemConfigurationDao" ref="systemConfigurationDao"/>
     <property name="configuration" ref="continuumConfiguration"/>
   </bean>
   <bean id="workingDirectoryService" class="org.apache.maven.continuum.utils.DefaultWorkingDirectoryService">

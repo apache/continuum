@@ -1,11 +1,11 @@
 package org.apache.continuum.purge.executor;
 
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
-
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -36,67 +36,67 @@ public class RetentionCountDirectoryPurgeExecutorTest
         throws Exception
     {
         super.setUp();
-        
+
         purgeReleasesDirTask = getRetentionCountReleasesDirPurgeTask();
-        
+
         purgeBuildOutputDirTask = getRetentionCountBuildOutputDirPurgeTask();
     }
-    
+
     public void testReleasesDirPurging()
         throws Exception
     {
         populateReleasesDirectory();
-        
+
         String dirPath = getReleasesDirectoryLocation().getAbsolutePath();
         FilenameFilter filter = new ArtifactFilenameFilter( "releases-" );
-        
+
         File[] workingDir = new File( dirPath ).listFiles();
         File[] releasesDir = new File( dirPath ).listFiles( filter );
-        
+
         assertEquals( "# of folders inside working directory", 4, workingDir.length );
         assertEquals( "# of releases folders inside working directory", 3, releasesDir.length );
         assertExists( dirPath + "/1" );
-        
+
         purgeExecutor.executeTask( purgeReleasesDirTask );
-        
+
         workingDir = new File( dirPath ).listFiles();
         releasesDir = new File( dirPath ).listFiles( filter );
-        
+
         assertEquals( "# of folders inside working directory", 3, workingDir.length );
         assertEquals( "# of releases folders inside working directory", 2, releasesDir.length );
         assertExists( dirPath + "/1" );
     }
-    
+
     public void testBuildOutputDirPurging()
         throws Exception
     {
         populateBuildOutputDirectory();
-        
+
         String dirPath = getBuildOutputDirectoryLocation().getAbsolutePath();
-        
+
         File projectPath1 = new File( dirPath, "1" );
         File projectPath2 = new File( dirPath, "2" );
-        
+
         FileFilter filter = DirectoryFileFilter.DIRECTORY;
         File[] files1 = projectPath1.listFiles( filter );
         File[] files2 = projectPath2.listFiles( filter );
-        
+
         assertEquals( "check # of build output dir", 3, files1.length );
         assertEquals( "check # of build output dir", 3, files2.length );
-        
+
         purgeExecutor.executeTask( purgeBuildOutputDirTask );
-        
+
         files1 = projectPath1.listFiles( filter );
         files2 = projectPath2.listFiles( filter );
-        
+
         assertEquals( "check # of build output dir", 2, files1.length );
         assertEquals( "check # of build output dir", 2, files2.length );
-        
+
         for ( File file : files1 )
         {
             assertExists( file.getAbsolutePath() + ".log.txt" );
         }
-        
+
         for ( File file : files2 )
         {
             assertExists( file.getAbsolutePath() + ".log.txt" );

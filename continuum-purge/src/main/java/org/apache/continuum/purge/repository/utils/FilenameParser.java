@@ -19,10 +19,10 @@ package org.apache.continuum.purge.repository.utils;
  * under the License.
  */
 
+import org.apache.maven.archiva.common.utils.VersionUtil;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.maven.archiva.common.utils.VersionUtil;
 
 /**
  * Codes were taken from Archiva's FilenameParser
@@ -30,11 +30,11 @@ import org.apache.maven.archiva.common.utils.VersionUtil;
 public class FilenameParser
 {
     private String name;
-    
+
     private String extension;
-    
+
     private int offset;
-    
+
     private static final Pattern mavenPluginPattern = Pattern.compile( "(maven-.*-plugin)|(.*-maven-plugin)" );
 
     private static final Pattern extensionPattern =
@@ -47,7 +47,7 @@ public class FilenameParser
     public FilenameParser( String filename )
     {
         this.name = filename;
-        
+
         Matcher mat = extensionPattern.matcher( name );
         if ( mat.find() )
         {
@@ -59,12 +59,12 @@ public class FilenameParser
 
         reset();
     }
-    
+
     public void reset()
     {
         offset = 0;
     }
-    
+
     public String next()
     {
         // Past the end of the string.
@@ -84,7 +84,7 @@ public class FilenameParser
         // Nothing to return.
         return null;
     }
-    
+
     protected String remaining()
     {
         if ( offset >= name.length() )
@@ -136,7 +136,7 @@ public class FilenameParser
 
         return ver.toString();
     }
-    
+
     public String getExtension()
     {
         return extension;

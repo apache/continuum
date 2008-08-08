@@ -28,38 +28,38 @@ public class PurgeTask
     implements Task
 {
     private int purgeConfigurationId;
-    
+
     private long timestamp;
-    
+
     private long maxExecutionTime;
 
     public PurgeTask( int purgeConfigurationId )
     {
         this.purgeConfigurationId = purgeConfigurationId;
-        
+
         this.timestamp = System.currentTimeMillis();
     }
-    
+
     public int getPurgeConfigurationId()
     {
         return purgeConfigurationId;
     }
-    
+
     public void setPurgeConfigurationId( int purgeConfigurationId )
     {
         this.purgeConfigurationId = purgeConfigurationId;
     }
-    
+
     public void setMaxExecutionTime( long maxExecutionTime )
     {
         this.maxExecutionTime = maxExecutionTime;
     }
-    
+
     public long getMaxExecutionTime()
     {
         return maxExecutionTime;
     }
-    
+
     public long getTimestamp()
     {
         return timestamp;

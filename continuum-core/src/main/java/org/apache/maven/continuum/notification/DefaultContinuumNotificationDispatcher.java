@@ -19,13 +19,14 @@ package org.apache.maven.continuum.notification;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.manager.NotifierManager;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +53,14 @@ public class DefaultContinuumNotificationDispatcher
     private NotifierManager notifierManager;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ProjectDao projectDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
 
     // ----------------------------------------------------------------------
     // ContinuumNotificationDispatcher Implementation
@@ -111,10 +117,10 @@ public class DefaultContinuumNotificationDispatcher
             // Here we need to get all the project details
             //  - builds are used to detect if the state has changed (TODO: maybe previousState field is better)
             //  - notifiers are used to send the notification
-            project = store.getProjectWithAllDetails( project.getId() );
+            project = projectDao.getProjectWithAllDetails( project.getId() );
 
             ProjectGroup projectGroup =
-                store.getProjectGroupWithBuildDetailsByProjectGroupId( project.getProjectGroup().getId() );
+                projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( project.getProjectGroup().getId() );
 
             Map<String, List<ProjectNotifier>> notifiersMap = new HashMap<String, List<ProjectNotifier>>();
             // perform the project level notifications

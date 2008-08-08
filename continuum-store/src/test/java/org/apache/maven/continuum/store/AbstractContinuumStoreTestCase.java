@@ -19,6 +19,16 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.dao.DaoUtils;
+import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.InstallationDao;
+import org.apache.continuum.dao.LocalRepositoryDao;
+import org.apache.continuum.dao.ProfileDao;
+import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
+import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
@@ -53,7 +63,25 @@ import java.util.Map;
 public abstract class AbstractContinuumStoreTestCase
     extends PlexusInSpringTestCase
 {
-    protected ContinuumStore store;
+    protected DaoUtils daoUtilsImpl;
+
+    protected DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
+
+    protected LocalRepositoryDao localRepositoryDao;
+
+    protected RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
+    protected InstallationDao installationDao;
+
+    protected ProfileDao profileDao;
+
+    protected ProjectGroupDao projectGroupDao;
+
+    protected ProjectDao projectDao;
+
+    protected ScheduleDao scheduleDao;
+
+    protected SystemConfigurationDao systemConfigurationDao;
 
     protected ProjectGroup defaultProjectGroup;
 
@@ -88,53 +116,50 @@ public abstract class AbstractContinuumStoreTestCase
     protected BuildResult testBuildResult3;
 
     protected ScmResult testCheckoutResult1;
-    
+
     protected LocalRepository testLocalRepository1;
-    
+
     protected LocalRepository testLocalRepository2;
-    
+
     protected LocalRepository testLocalRepository3;
-    
+
     protected RepositoryPurgeConfiguration testRepoPurgeConfiguration1;
-    
+
     protected RepositoryPurgeConfiguration testRepoPurgeConfiguration2;
-    
+
     protected RepositoryPurgeConfiguration testRepoPurgeConfiguration3;
-    
+
     protected DirectoryPurgeConfiguration testDirectoryPurgeConfig;
-
-    private ProjectNotifier testGroupNotifier1;
-
-    private ProjectNotifier testGroupNotifier2;
-
-    private ProjectNotifier testGroupNotifier3;
-
-    private ProjectNotifier testNotifier1;
-
-    private ProjectNotifier testNotifier2;
-
-    private ProjectNotifier testNotifier3;
-
-    private ProjectDeveloper testDeveloper1;
-
-    private ProjectDeveloper testDeveloper2;
-
-    private ProjectDeveloper testDeveloper3;
-
-    private ProjectDependency testDependency1;
-
-    private ProjectDependency testDependency2;
-
-    private ProjectDependency testDependency3;
 
     private SystemConfiguration systemConfiguration;
 
+    @Override
     protected void setUp()
         throws Exception
     {
         super.setUp();
 
-        store = createStore();
+        createStore();
+
+        directoryPurgeConfigurationDao =
+            (DirectoryPurgeConfigurationDao) lookup( DirectoryPurgeConfigurationDao.class.getName() );
+
+        localRepositoryDao = (LocalRepositoryDao) lookup( LocalRepositoryDao.class.getName() );
+
+        repositoryPurgeConfigurationDao =
+            (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class.getName() );
+
+        installationDao = (InstallationDao) lookup( InstallationDao.class.getName() );
+
+        profileDao = (ProfileDao) lookup( ProfileDao.class.getName() );
+
+        projectGroupDao = (ProjectGroupDao) lookup( ProjectGroupDao.class.getName() );
+
+        projectDao = (ProjectDao) lookup( ProjectDao.class.getName() );
+
+        scheduleDao = (ScheduleDao) lookup( ScheduleDao.class.getName() );
+
+        systemConfigurationDao = (SystemConfigurationDao) lookup( SystemConfigurationDao.class.getName() );
     }
 
     protected void createBuildDatabase()
@@ -148,11 +173,11 @@ public abstract class AbstractContinuumStoreTestCase
     {
         // Setting up test data
         testLocalRepository1 = createTestLocalRepository( "name1", "location1", "layout1" );
-        
+
         LocalRepository localRepository1 = createTestLocalRepository( testLocalRepository1 );
         if ( addToStore )
         {
-            localRepository1 = store.addLocalRepository( localRepository1 );
+            localRepository1 = localRepositoryDao.addLocalRepository( localRepository1 );
             testLocalRepository1.setId( localRepository1.getId() );
         }
         else
@@ -160,13 +185,13 @@ public abstract class AbstractContinuumStoreTestCase
             localRepository1.setId( 1 );
             testLocalRepository1.setId( 1 );
         }
-        
+
         testLocalRepository2 = createTestLocalRepository( "name2", "location2", "layout2" );
-        
+
         LocalRepository localRepository2 = createTestLocalRepository( testLocalRepository2 );
         if ( addToStore )
         {
-            localRepository2 = store.addLocalRepository( localRepository2 );
+            localRepository2 = localRepositoryDao.addLocalRepository( localRepository2 );
             testLocalRepository2.setId( localRepository2.getId() );
         }
         else
@@ -174,13 +199,13 @@ public abstract class AbstractContinuumStoreTestCase
             localRepository2.setId( 2 );
             testLocalRepository2.setId( 2 );
         }
-        
+
         testLocalRepository3 = createTestLocalRepository( "name3", "location3", "layout3" );
-        
+
         LocalRepository localRepository3 = createTestLocalRepository( testLocalRepository3 );
         if ( addToStore )
         {
-            localRepository3 = store.addLocalRepository( localRepository3 );
+            localRepository3 = localRepositoryDao.addLocalRepository( localRepository3 );
             testLocalRepository3.setId( localRepository3.getId() );
         }
         else
@@ -188,13 +213,12 @@ public abstract class AbstractContinuumStoreTestCase
             localRepository3.setId( 3 );
             testLocalRepository3.setId( 3 );
         }
-        
-        defaultProjectGroup =
-            createTestProjectGroup( "Default Group", "The Default Group", "org.apache.maven.test.default",
-                                    localRepository1);
 
-        testProjectGroup2 = createTestProjectGroup( "test group 2", "test group 2 desc", "test group 2 groupId",
-                                                    localRepository2);
+        defaultProjectGroup = createTestProjectGroup( "Default Group", "The Default Group",
+                                                      "org.apache.maven.test.default", localRepository1 );
+
+        testProjectGroup2 =
+            createTestProjectGroup( "test group 2", "test group 2 desc", "test group 2 groupId", localRepository2 );
 
         testProject1 = createTestProject( "artifactId1", 1, "description1", defaultProjectGroup.getGroupId(), "name1",
                                           "scmUrl1", 1, "url1", "version1", "workingDirectory1" );
@@ -214,21 +238,21 @@ public abstract class AbstractContinuumStoreTestCase
         testInstallationMaven20a3 = createTestInstallation( "Maven 2.0 alpha 3", InstallationService.MAVEN2_TYPE,
                                                             "M2_HOME", "/usr/local/maven-2.0-alpha-3" );
 
-        testGroupNotifier1 = createTestNotifier( 1, true, false, true, "type1" );
-        testGroupNotifier2 = createTestNotifier( 2, false, true, false, "type2" );
-        testGroupNotifier3 = createTestNotifier( 3, true, false, false, "type3" );
+        ProjectNotifier testGroupNotifier1 = createTestNotifier( 1, true, false, true, "type1" );
+        ProjectNotifier testGroupNotifier2 = createTestNotifier( 2, false, true, false, "type2" );
+        ProjectNotifier testGroupNotifier3 = createTestNotifier( 3, true, false, false, "type3" );
 
-        testNotifier1 = createTestNotifier( 11, true, true, false, "type11" );
-        testNotifier2 = createTestNotifier( 12, false, false, true, "type12" );
-        testNotifier3 = createTestNotifier( 13, false, true, false, "type13" );
+        ProjectNotifier testNotifier1 = createTestNotifier( 11, true, true, false, "type11" );
+        ProjectNotifier testNotifier2 = createTestNotifier( 12, false, false, true, "type12" );
+        ProjectNotifier testNotifier3 = createTestNotifier( 13, false, true, false, "type13" );
 
-        testDeveloper1 = createTestDeveloper( 1, "email1", "name1", "scmId1" );
-        testDeveloper2 = createTestDeveloper( 2, "email2", "name2", "scmId2" );
-        testDeveloper3 = createTestDeveloper( 3, "email3", "name3", "scmId3" );
+        ProjectDeveloper testDeveloper1 = createTestDeveloper( 1, "email1", "name1", "scmId1" );
+        ProjectDeveloper testDeveloper2 = createTestDeveloper( 2, "email2", "name2", "scmId2" );
+        ProjectDeveloper testDeveloper3 = createTestDeveloper( 3, "email3", "name3", "scmId3" );
 
-        testDependency1 = createTestDependency( "groupId1", "artifactId1", "version1" );
-        testDependency2 = createTestDependency( "groupId2", "artifactId2", "version2" );
-        testDependency3 = createTestDependency( "groupId3", "artifactId3", "version3" );
+        ProjectDependency testDependency1 = createTestDependency( "groupId1", "artifactId1", "version1" );
+        ProjectDependency testDependency2 = createTestDependency( "groupId2", "artifactId2", "version2" );
+        ProjectDependency testDependency3 = createTestDependency( "groupId3", "artifactId3", "version3" );
 
         // TODO: simplify by deep copying the relationships in createTest... ?
         long baseTime = System.currentTimeMillis();
@@ -258,7 +282,7 @@ public abstract class AbstractContinuumStoreTestCase
         Schedule schedule2 = createTestSchedule( testSchedule2 );
         if ( addToStore )
         {
-            schedule2 = store.addSchedule( schedule2 );
+            schedule2 = scheduleDao.addSchedule( schedule2 );
             testSchedule2.setId( schedule2.getId() );
         }
         else
@@ -270,7 +294,7 @@ public abstract class AbstractContinuumStoreTestCase
         Schedule schedule1 = createTestSchedule( testSchedule1 );
         if ( addToStore )
         {
-            schedule1 = store.addSchedule( schedule1 );
+            schedule1 = scheduleDao.addSchedule( schedule1 );
             testSchedule1.setId( schedule1.getId() );
         }
         else
@@ -282,7 +306,7 @@ public abstract class AbstractContinuumStoreTestCase
         Schedule schedule3 = createTestSchedule( testSchedule3 );
         if ( addToStore )
         {
-            schedule3 = store.addSchedule( schedule3 );
+            schedule3 = scheduleDao.addSchedule( schedule3 );
             testSchedule3.setId( schedule3.getId() );
         }
         else
@@ -294,7 +318,7 @@ public abstract class AbstractContinuumStoreTestCase
         Installation installationJava14 = createTestInstallation( testInstallationJava14 );
         if ( addToStore )
         {
-            installationJava14 = store.addInstallation( installationJava14 );
+            installationJava14 = installationDao.addInstallation( installationJava14 );
         }
         else
         {
@@ -304,7 +328,7 @@ public abstract class AbstractContinuumStoreTestCase
         Installation installationMaven20a3 = createTestInstallation( testInstallationMaven20a3 );
         if ( addToStore )
         {
-            installationMaven20a3 = store.addInstallation( installationMaven20a3 );
+            installationMaven20a3 = installationDao.addInstallation( installationMaven20a3 );
         }
         else
         {
@@ -314,7 +338,7 @@ public abstract class AbstractContinuumStoreTestCase
         Installation installationJava13 = createTestInstallation( testInstallationJava13 );
         if ( addToStore )
         {
-            installationJava13 = store.addInstallation( installationJava13 );
+            installationJava13 = installationDao.addInstallation( installationJava13 );
         }
         else
         {
@@ -331,7 +355,7 @@ public abstract class AbstractContinuumStoreTestCase
         Profile profile1 = createTestProfile( testProfile1 );
         if ( addToStore )
         {
-            profile1 = store.addProfile( profile1 );
+            profile1 = profileDao.addProfile( profile1 );
             testProfile1.setId( profile1.getId() );
         }
         else
@@ -342,7 +366,7 @@ public abstract class AbstractContinuumStoreTestCase
         Profile profile2 = createTestProfile( testProfile2 );
         if ( addToStore )
         {
-            profile2 = store.addProfile( profile2 );
+            profile2 = profileDao.addProfile( profile2 );
             testProfile2.setId( profile2.getId() );
         }
         else
@@ -353,7 +377,7 @@ public abstract class AbstractContinuumStoreTestCase
         Profile profile3 = createTestProfile( testProfile3 );
         if ( addToStore )
         {
-            profile3 = store.addProfile( profile3 );
+            profile3 = profileDao.addProfile( profile3 );
             testProfile3.setId( profile3.getId() );
         }
         else
@@ -361,46 +385,54 @@ public abstract class AbstractContinuumStoreTestCase
             profile3.setId( 3 );
         }
 
-        testRepoPurgeConfiguration1 = createTestRepositoryPurgeConfiguration( true, 5, 50, false, schedule2, true, localRepository1 );
+        testRepoPurgeConfiguration1 =
+            createTestRepositoryPurgeConfiguration( true, 5, 50, false, schedule2, true, localRepository1 );
         if ( addToStore )
         {
-            testRepoPurgeConfiguration1 = store.addRepositoryPurgeConfiguration( testRepoPurgeConfiguration1 );
+            testRepoPurgeConfiguration1 =
+                repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( testRepoPurgeConfiguration1 );
         }
         else
         {
             testRepoPurgeConfiguration1.setId( 1 );
         }
-        
-        testRepoPurgeConfiguration2 = createTestRepositoryPurgeConfiguration( false, 10, 200, true, schedule1, true, localRepository2 );
+
+        testRepoPurgeConfiguration2 =
+            createTestRepositoryPurgeConfiguration( false, 10, 200, true, schedule1, true, localRepository2 );
         if ( addToStore )
         {
-            testRepoPurgeConfiguration2 = store.addRepositoryPurgeConfiguration( testRepoPurgeConfiguration2 );
+            testRepoPurgeConfiguration2 =
+                repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( testRepoPurgeConfiguration2 );
         }
         else
         {
             testRepoPurgeConfiguration2.setId( 2 );
         }
-        
-        testRepoPurgeConfiguration3 = createTestRepositoryPurgeConfiguration( false, 10, 200, true, schedule2, true, localRepository1 );
+
+        testRepoPurgeConfiguration3 =
+            createTestRepositoryPurgeConfiguration( false, 10, 200, true, schedule2, true, localRepository1 );
         if ( addToStore )
         {
-            testRepoPurgeConfiguration3 = store.addRepositoryPurgeConfiguration( testRepoPurgeConfiguration3 );
+            testRepoPurgeConfiguration3 =
+                repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( testRepoPurgeConfiguration3 );
         }
         else
         {
             testRepoPurgeConfiguration3.setId( 3 );
         }
-        
-        testDirectoryPurgeConfig = createTestDirectoryPurgeConfiguration( "location1", "directoryType1", true, 10, 50, schedule2, true );
+
+        testDirectoryPurgeConfig =
+            createTestDirectoryPurgeConfiguration( "location1", "directoryType1", true, 10, 50, schedule2, true );
         if ( addToStore )
         {
-            testDirectoryPurgeConfig = store.addDirectoryPurgeConfiguration( testDirectoryPurgeConfig );
+            testDirectoryPurgeConfig =
+                directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration( testDirectoryPurgeConfig );
         }
         else
         {
             testDirectoryPurgeConfig.setId( 1 );
         }
-        
+
         BuildDefinition testGroupBuildDefinition1 =
             createTestBuildDefinition( "arguments1", "buildFile1", "goals1", profile1, schedule2, false, false );
         BuildDefinition testGroupBuildDefinition2 =
@@ -495,7 +527,7 @@ public abstract class AbstractContinuumStoreTestCase
 
         if ( addToStore )
         {
-            store.addProjectGroup( group );
+            projectGroupDao.addProjectGroup( group );
             defaultProjectGroup.setId( group.getId() );
             testProject1.setId( project1.getId() );
             testProject2.setId( project2.getId() );
@@ -531,7 +563,7 @@ public abstract class AbstractContinuumStoreTestCase
 
         if ( addToStore )
         {
-            store.addProjectGroup( group );
+            projectGroupDao.addProjectGroup( group );
             testProjectGroup2.setId( group.getId() );
         }
         else
@@ -551,37 +583,38 @@ public abstract class AbstractContinuumStoreTestCase
 
         if ( addToStore )
         {
-            systemConfiguration = store.addSystemConfiguration( systemConfiguration );
+            systemConfiguration = systemConfigurationDao.addSystemConfiguration( systemConfiguration );
         }
     }
 
+    @Override
     protected void tearDown()
         throws Exception
     {
         super.tearDown();
 
-        store.eraseDatabase();
+        daoUtilsImpl.eraseDatabase();
 
-        store.closeStore();
+        daoUtilsImpl.closeStore();
     }
 
     protected void assertBuildDatabase()
         throws ContinuumStoreException
     {
-        assertProjectGroupEquals( defaultProjectGroup, store.getProjectGroup( defaultProjectGroup.getId() ) );
-        assertProjectGroupEquals( testProjectGroup2, store.getProjectGroup( testProjectGroup2.getId() ) );
+        assertProjectGroupEquals( defaultProjectGroup, projectGroupDao.getProjectGroup( defaultProjectGroup.getId() ) );
+        assertProjectGroupEquals( testProjectGroup2, projectGroupDao.getProjectGroup( testProjectGroup2.getId() ) );
 
-        assertProjectEquals( testProject1, store.getProject( testProject1.getId() ) );
-        assertProjectEquals( testProject2, store.getProject( testProject2.getId() ) );
+        assertProjectEquals( testProject1, projectDao.getProject( testProject1.getId() ) );
+        assertProjectEquals( testProject2, projectDao.getProject( testProject2.getId() ) );
 
-        assertScheduleEquals( testSchedule1, store.getSchedule( testSchedule1.getId() ) );
-        assertScheduleEquals( testSchedule2, store.getSchedule( testSchedule2.getId() ) );
-        assertScheduleEquals( testSchedule3, store.getSchedule( testSchedule3.getId() ) );
+        assertScheduleEquals( testSchedule1, scheduleDao.getSchedule( testSchedule1.getId() ) );
+        assertScheduleEquals( testSchedule2, scheduleDao.getSchedule( testSchedule2.getId() ) );
+        assertScheduleEquals( testSchedule3, scheduleDao.getSchedule( testSchedule3.getId() ) );
 
-        Iterator<Installation> iterator = store.getAllInstallations().iterator();
-        assertInstallationEquals( testInstallationJava13, (Installation) iterator.next() );
-        assertInstallationEquals( testInstallationJava14, (Installation) iterator.next() );
-        assertInstallationEquals( testInstallationMaven20a3, (Installation) iterator.next() );
+        Iterator<Installation> iterator = installationDao.getAllInstallations().iterator();
+        assertInstallationEquals( testInstallationJava13, iterator.next() );
+        assertInstallationEquals( testInstallationJava14, iterator.next() );
+        assertInstallationEquals( testInstallationMaven20a3, iterator.next() );
 
 /*
         // TODO!!! -- definitely need to test the changeset stuff since it uses modello.refid
@@ -735,7 +768,7 @@ public abstract class AbstractContinuumStoreTestCase
         testProjectGroup2.setId( group.getId() );
 */
 
-        assertSystemConfiguration( systemConfiguration, store.getSystemConfiguration() );
+        assertSystemConfiguration( systemConfiguration, systemConfigurationDao.getSystemConfiguration() );
     }
 
     private void assertSystemConfiguration( SystemConfiguration expected, SystemConfiguration actual )
@@ -754,11 +787,11 @@ public abstract class AbstractContinuumStoreTestCase
     protected void assertEmpty()
         throws ContinuumStoreException
     {
-        assertEquals( 0, store.getAllInstallations().size() );
-        assertEquals( 0, store.getAllProfilesByName().size() );
-        assertEquals( 0, store.getAllProjectGroups().size() );
-        assertEquals( 0, store.getAllProjectsByName().size() );
-        assertNull( store.getSystemConfiguration() );
+        assertEquals( 0, installationDao.getAllInstallations().size() );
+        assertEquals( 0, profileDao.getAllProfilesByName().size() );
+        assertEquals( 0, projectGroupDao.getAllProjectGroups().size() );
+        assertEquals( 0, projectDao.getAllProjectsByName().size() );
+        assertNull( systemConfigurationDao.getSystemConfiguration() );
     }
 
     protected static BuildDefinition createTestBuildDefinition( BuildDefinition buildDefinition )
@@ -941,11 +974,11 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected static ProjectGroup createTestProjectGroup( ProjectGroup group )
     {
-        return createTestProjectGroup( group.getName(), group.getDescription(), group.getGroupId(), 
+        return createTestProjectGroup( group.getName(), group.getDescription(), group.getGroupId(),
                                        group.getLocalRepository() );
     }
 
-    protected static ProjectGroup createTestProjectGroup( String name, String description, String groupId, 
+    protected static ProjectGroup createTestProjectGroup( String name, String description, String groupId,
                                                           LocalRepository repository )
     {
         ProjectGroup group = new ProjectGroup();
@@ -1114,7 +1147,7 @@ public abstract class AbstractContinuumStoreTestCase
     }
 
     protected static void assertBuildDefinitionsEqual( List<BuildDefinition> expectedBuildDefinitions,
-    												   List<BuildDefinition> actualBuildDefinitions )
+                                                       List<BuildDefinition> actualBuildDefinitions )
     {
         for ( int i = 0; i < expectedBuildDefinitions.size(); i++ )
         {
@@ -1142,11 +1175,11 @@ public abstract class AbstractContinuumStoreTestCase
     }
 
     protected static void assertDevelopersEqual( List<ProjectDeveloper> expectedDevelopers,
-    		                                     List<ProjectDeveloper> actualDevelopers )
+                                                 List<ProjectDeveloper> actualDevelopers )
     {
         for ( int i = 0; i < actualDevelopers.size(); i++ )
         {
-            assertDeveloperEquals( (ProjectDeveloper) expectedDevelopers.get( i ), (ProjectDeveloper) actualDevelopers
+            assertDeveloperEquals( expectedDevelopers.get( i ), actualDevelopers
                 .get( i ) );
         }
     }
@@ -1161,12 +1194,11 @@ public abstract class AbstractContinuumStoreTestCase
     }
 
     protected static void assertDependenciesEqual( List<ProjectDependency> expectedDependencies,
-    		                                       List<ProjectDependency> actualDependencies )
+                                                   List<ProjectDependency> actualDependencies )
     {
         for ( int i = 0; i < actualDependencies.size(); i++ )
         {
-            assertDependencyEquals( (ProjectDependency) expectedDependencies.get( i ),
-                                    (ProjectDependency) actualDependencies.get( i ) );
+            assertDependencyEquals( expectedDependencies.get( i ), actualDependencies.get( i ) );
         }
     }
 
@@ -1213,7 +1245,7 @@ public abstract class AbstractContinuumStoreTestCase
     {
         return createTestLocalRepository( repository.getName(), repository.getLocation(), repository.getLayout() );
     }
-    
+
     protected static LocalRepository createTestLocalRepository( String name, String location, String layout )
     {
         LocalRepository repository = new LocalRepository();
@@ -1222,15 +1254,24 @@ public abstract class AbstractContinuumStoreTestCase
         repository.setLayout( layout );
         return repository;
     }
-    
-    protected static RepositoryPurgeConfiguration createTestRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfig )
+
+    protected static RepositoryPurgeConfiguration createTestRepositoryPurgeConfiguration(
+        RepositoryPurgeConfiguration purgeConfig )
     {
-        return createTestRepositoryPurgeConfiguration( purgeConfig.isDeleteAll(), purgeConfig.getRetentionCount(), purgeConfig.getDaysOlder(),
-                                             purgeConfig.isDeleteReleasedSnapshots(), purgeConfig.getSchedule(), purgeConfig.isEnabled(), purgeConfig.getRepository() );
+        return createTestRepositoryPurgeConfiguration( purgeConfig.isDeleteAll(), purgeConfig.getRetentionCount(),
+                                                       purgeConfig.getDaysOlder(),
+                                                       purgeConfig.isDeleteReleasedSnapshots(),
+                                                       purgeConfig.getSchedule(), purgeConfig.isEnabled(),
+                                                       purgeConfig.getRepository() );
     }
-    
-    protected static RepositoryPurgeConfiguration createTestRepositoryPurgeConfiguration( boolean deleteAllArtifacts, int retentionCount, int daysOlder, 
-                                                                      boolean deleteReleasedSnapshots, Schedule schedule, boolean enabled, LocalRepository repository )
+
+    protected static RepositoryPurgeConfiguration createTestRepositoryPurgeConfiguration( boolean deleteAllArtifacts,
+                                                                                          int retentionCount,
+                                                                                          int daysOlder,
+                                                                                          boolean deleteReleasedSnapshots,
+                                                                                          Schedule schedule,
+                                                                                          boolean enabled,
+                                                                                          LocalRepository repository )
     {
         RepositoryPurgeConfiguration purgeConfig = new RepositoryPurgeConfiguration();
         purgeConfig.setDeleteAll( deleteAllArtifacts );
@@ -1242,15 +1283,23 @@ public abstract class AbstractContinuumStoreTestCase
         purgeConfig.setRepository( repository );
         return purgeConfig;
     }
-    
-    protected static DirectoryPurgeConfiguration createTestDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfig )
+
+    protected static DirectoryPurgeConfiguration createTestDirectoryPurgeConfiguration(
+        DirectoryPurgeConfiguration purgeConfig )
     {
-        return createTestDirectoryPurgeConfiguration( purgeConfig.getLocation(), purgeConfig.getDirectoryType(), purgeConfig.isDeleteAll(), purgeConfig.getRetentionCount(),
-                                                      purgeConfig.getDaysOlder(), purgeConfig.getSchedule(), purgeConfig.isEnabled() );
+        return createTestDirectoryPurgeConfiguration( purgeConfig.getLocation(), purgeConfig.getDirectoryType(),
+                                                      purgeConfig.isDeleteAll(), purgeConfig.getRetentionCount(),
+                                                      purgeConfig.getDaysOlder(), purgeConfig.getSchedule(),
+                                                      purgeConfig.isEnabled() );
     }
-    
-    protected static DirectoryPurgeConfiguration createTestDirectoryPurgeConfiguration( String location, String directoryType, boolean deleteAllDirectories, 
-                                                                                        int retentionCount, int daysOlder, Schedule schedule, boolean enabled )
+
+    protected static DirectoryPurgeConfiguration createTestDirectoryPurgeConfiguration( String location,
+                                                                                        String directoryType,
+                                                                                        boolean deleteAllDirectories,
+                                                                                        int retentionCount,
+                                                                                        int daysOlder,
+                                                                                        Schedule schedule,
+                                                                                        boolean enabled )
     {
         DirectoryPurgeConfiguration purgeConfig = new DirectoryPurgeConfiguration();
         purgeConfig.setDaysOlder( daysOlder );
@@ -1262,8 +1311,9 @@ public abstract class AbstractContinuumStoreTestCase
         purgeConfig.setSchedule( schedule );
         return purgeConfig;
     }
-    
-    protected static void assertLocalRepositoryEquals( LocalRepository expectedRepository, LocalRepository actualRepository )
+
+    protected static void assertLocalRepositoryEquals( LocalRepository expectedRepository,
+                                                       LocalRepository actualRepository )
     {
         assertEquals( expectedRepository, actualRepository );
         if ( expectedRepository != null )
@@ -1271,42 +1321,53 @@ public abstract class AbstractContinuumStoreTestCase
             assertNotSame( expectedRepository, actualRepository );
             assertEquals( "compare local repository - id", expectedRepository.getId(), actualRepository.getId() );
             assertEquals( "compare local repository - name", expectedRepository.getName(), actualRepository.getName() );
-            assertEquals( "compare local repository - location", expectedRepository.getLocation(), 
+            assertEquals( "compare local repository - location", expectedRepository.getLocation(),
                           actualRepository.getLocation() );
-            assertEquals( "compare local repository - layout", expectedRepository.getLayout(), actualRepository.getLayout() );
+            assertEquals( "compare local repository - layout", expectedRepository.getLayout(),
+                          actualRepository.getLayout() );
         }
     }
-    
-    protected static void assertRepositoryPurgeConfigurationEquals( RepositoryPurgeConfiguration expectedConfig, RepositoryPurgeConfiguration actualConfig )
+
+    protected static void assertRepositoryPurgeConfigurationEquals( RepositoryPurgeConfiguration expectedConfig,
+                                                                    RepositoryPurgeConfiguration actualConfig )
     {
         assertEquals( "compare repository purge configuration - id", expectedConfig.getId(), actualConfig.getId() );
-        assertEquals( "compare repository purge configuration - deleteAll", expectedConfig.isDeleteAll(), actualConfig.isDeleteAll() );
-        assertEquals( "compare repository purge configuration - retentionCount", expectedConfig.getRetentionCount(), 
+        assertEquals( "compare repository purge configuration - deleteAll", expectedConfig.isDeleteAll(),
+                      actualConfig.isDeleteAll() );
+        assertEquals( "compare repository purge configuration - retentionCount", expectedConfig.getRetentionCount(),
                       actualConfig.getRetentionCount() );
-        assertEquals( "compare repository purge configuration - daysOlder", expectedConfig.getDaysOlder(), actualConfig.getDaysOlder() );
-        assertEquals( "compare repository purge configuration - deleteReleasedSnapshots", expectedConfig.isDeleteReleasedSnapshots(), 
-                      actualConfig.isDeleteReleasedSnapshots() );
-        assertEquals( "compare repository purge configuration - enabled", expectedConfig.isEnabled(), actualConfig.isEnabled() );
+        assertEquals( "compare repository purge configuration - daysOlder", expectedConfig.getDaysOlder(),
+                      actualConfig.getDaysOlder() );
+        assertEquals( "compare repository purge configuration - deleteReleasedSnapshots",
+                      expectedConfig.isDeleteReleasedSnapshots(), actualConfig.isDeleteReleasedSnapshots() );
+        assertEquals( "compare repository purge configuration - enabled", expectedConfig.isEnabled(),
+                      actualConfig.isEnabled() );
     }
-    
-    protected static void assertDirectoryPurgeConfigurationEquals( DirectoryPurgeConfiguration expectedConfig, DirectoryPurgeConfiguration actualConfig )
+
+    protected static void assertDirectoryPurgeConfigurationEquals( DirectoryPurgeConfiguration expectedConfig,
+                                                                   DirectoryPurgeConfiguration actualConfig )
     {
         assertEquals( "compare directory purge configuration - id", expectedConfig.getId(), actualConfig.getId() );
-        assertEquals( "compare directory purge configuration - location", expectedConfig.getLocation(), actualConfig.getLocation() );
-        assertEquals( "compare directory purge configuration - directoryType", expectedConfig.getDirectoryType(), actualConfig.getDirectoryType() );
-        assertEquals( "compare directory purge configuration - deleteAll", expectedConfig.isDeleteAll(), actualConfig.isDeleteAll() );
-        assertEquals( "compare directory purge configuration - retentionCount", expectedConfig.getRetentionCount(), 
+        assertEquals( "compare directory purge configuration - location", expectedConfig.getLocation(),
+                      actualConfig.getLocation() );
+        assertEquals( "compare directory purge configuration - directoryType", expectedConfig.getDirectoryType(),
+                      actualConfig.getDirectoryType() );
+        assertEquals( "compare directory purge configuration - deleteAll", expectedConfig.isDeleteAll(),
+                      actualConfig.isDeleteAll() );
+        assertEquals( "compare directory purge configuration - retentionCount", expectedConfig.getRetentionCount(),
                       actualConfig.getRetentionCount() );
-        assertEquals( "compare directory purge configuration - daysOlder", expectedConfig.getDaysOlder(), actualConfig.getDaysOlder() );
-        assertEquals( "compare directory purge configuration - enabled", expectedConfig.isEnabled(), actualConfig.isEnabled() );
+        assertEquals( "compare directory purge configuration - daysOlder", expectedConfig.getDaysOlder(),
+                      actualConfig.getDaysOlder() );
+        assertEquals( "compare directory purge configuration - enabled", expectedConfig.isEnabled(),
+                      actualConfig.isEnabled() );
     }
-    
+
     /**
      * Setup JDO Factory
      *
      * @todo push down to a Jdo specific test
      */
-    protected ContinuumStore createStore()
+    protected void createStore()
         throws Exception
     {
         DefaultConfigurableJdoFactory jdoFactory =
@@ -1314,6 +1375,6 @@ public abstract class AbstractContinuumStoreTestCase
 
         jdoFactory.setUrl( "jdbc:hsqldb:mem:" + getName() );
 
-        return (ContinuumStore) lookup( ContinuumStore.ROLE, "jdo" );
+        daoUtilsImpl = (DaoUtils) lookup( DaoUtils.class.getName() );
     }
 }

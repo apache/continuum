@@ -19,6 +19,8 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildResultDao;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
@@ -29,7 +31,6 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.utils.ContinuumUtils;
 
 import java.io.File;
@@ -57,9 +58,14 @@ public class ExecuteBuilderContinuumAction
     private BuildExecutorManager buildExecutorManager;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private BuildResultDao buildResultDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
 
     /**
      * @plexus.requirement
@@ -73,7 +79,7 @@ public class ExecuteBuilderContinuumAction
         // Get parameters from the context
         // ----------------------------------------------------------------------
 
-        Project project = store.getProject( getProject( context ).getId() );
+        Project project = projectDao.getProject( getProject( context ).getId() );
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
@@ -103,11 +109,11 @@ public class ExecuteBuilderContinuumAction
 
         buildResult.setBuildDefinition( getBuildDefinition( context ) );
 
-        store.addBuildResult( project, buildResult );
+        buildResultDao.addBuildResult( project, buildResult );
 
         context.put( KEY_BUILD_ID, Integer.toString( buildResult.getId() ) );
 
-        buildResult = store.getBuildResult( buildResult.getId() );
+        buildResult = buildResultDao.getBuildResult( buildResult.getId() );
 
         try
         {
@@ -133,7 +139,7 @@ public class ExecuteBuilderContinuumAction
         {
             buildResult.setEndTime( new Date().getTime() );
 
-            project = store.getProject( project.getId() );
+            project = projectDao.getProject( project.getId() );
 
             if ( buildResult.getState() == ContinuumProjectState.OK )
             {
@@ -157,13 +163,13 @@ public class ExecuteBuilderContinuumAction
             // Copy over the buildResult result
             // ----------------------------------------------------------------------
 
-            store.updateBuildResult( buildResult );
+            buildResultDao.updateBuildResult( buildResult );
 
-            buildResult = store.getBuildResult( buildResult.getId() );
+            buildResult = buildResultDao.getBuildResult( buildResult.getId() );
 
             context.put( KEY_PROJECT, project );
-            
-            store.updateProject( project );
+
+            projectDao.updateProject( project );
 
             notifier.goalsCompleted( project, buildDefinition, buildResult );
 

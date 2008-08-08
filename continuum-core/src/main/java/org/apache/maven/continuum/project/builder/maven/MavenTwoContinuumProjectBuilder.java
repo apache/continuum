@@ -19,15 +19,8 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
+import org.apache.continuum.dao.LocalRepositoryDao;
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -43,10 +36,18 @@ import org.apache.maven.continuum.project.builder.AbstractContinuumProjectBuilde
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -64,12 +65,17 @@ public class MavenTwoContinuumProjectBuilder
     /**
      * @plexus.requirement
      */
+    private LocalRepositoryDao localRepositoryDao;
+
+    /**
+     * @plexus.requirement
+     */
     private MavenBuilderHelper builderHelper;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ScheduleDao scheduleDao;
 
     /**
      * @plexus.requirement
@@ -140,7 +146,7 @@ public class MavenTwoContinuumProjectBuilder
         MavenProject mavenProject;
 
         File pomFile = null;
-        
+
         try
         {
             pomFile = createMetadataFile( url, username, password );
@@ -223,7 +229,8 @@ public class MavenTwoContinuumProjectBuilder
                     {
                         try
                         {
-                            Schedule schedule = store.getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
+                            Schedule schedule =
+                                scheduleDao.getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
 
                             buildDefinition.setSchedule( schedule );
                         }
@@ -418,18 +425,18 @@ public class MavenTwoContinuumProjectBuilder
         // ----------------------------------------------------------------------
         // Local Repository
         // ----------------------------------------------------------------------
-        
+
         try
         {
-            LocalRepository repository = store.getLocalRepositoryByName( "DEFAULT" );
-        
+            LocalRepository repository = localRepositoryDao.getLocalRepositoryByName( "DEFAULT" );
+
             projectGroup.setLocalRepository( repository );
         }
         catch ( ContinuumStoreException e )
         {
             getLogger().warn( "Can't get default repository.", e );
         }
-        
+
         return projectGroup;
     }
 

@@ -19,21 +19,20 @@ package org.apache.continuum.purge.repository.scanner;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.purge.controller.PurgeController;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
-import org.apache.continuum.purge.repository.scanner.RepositoryScannerInstance;
 import org.apache.continuum.purge.repository.utils.FileTypes;
 import org.codehaus.plexus.util.DirectoryWalker;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Codes were taken from Archiva and made some changes.
- * 
+ *
  * @plexus.component role="org.apache.continuum.purge.repository.scanner.RepositoryScanner" role-hint="repository-scanner"
  */
 public class DefaultRepositoryScanner
@@ -43,32 +42,31 @@ public class DefaultRepositoryScanner
      * @plexus.requirement role-hint="file-types"
      */
     private FileTypes filetypes;
-    
+
     public void scan( LocalRepository repository, PurgeController purgeController )
         throws ContinuumPurgeExecutorException
     {
         List<String> ignoredPatterns = filetypes.getIgnoredFileTypePatterns();
         scan( repository, purgeController, ignoredPatterns );
     }
-    
-    public void scan( LocalRepository repository, PurgeController purgeController,  
-                      List<String> ignoredContentPatterns )
+
+    public void scan( LocalRepository repository, PurgeController purgeController, List<String> ignoredContentPatterns )
         throws ContinuumPurgeExecutorException
     {
-        File repositoryBase = new File ( repository.getLocation() );
-        
+        File repositoryBase = new File( repository.getLocation() );
+
         if ( !repositoryBase.exists() )
         {
-            throw new UnsupportedOperationException( "Unable to scan a repository, directory "
-                + repositoryBase.getAbsolutePath() + " does not exist." );
+            throw new UnsupportedOperationException(
+                "Unable to scan a repository, directory " + repositoryBase.getAbsolutePath() + " does not exist." );
         }
 
         if ( !repositoryBase.isDirectory() )
         {
-            throw new UnsupportedOperationException( "Unable to scan a repository, path "
-                + repositoryBase.getAbsolutePath() + " is not a directory." );
+            throw new UnsupportedOperationException(
+                "Unable to scan a repository, path " + repositoryBase.getAbsolutePath() + " is not a directory." );
         }
-        
+
         // Setup Includes / Excludes.
 
         List<String> allExcludes = new ArrayList<String>();
@@ -91,7 +89,7 @@ public class DefaultRepositoryScanner
         dirWalker.setExcludes( allExcludes );
 
         RepositoryScannerInstance scannerInstance = new RepositoryScannerInstance( repository, purgeController );
-        
+
         dirWalker.addDirectoryWalkListener( scannerInstance );
 
         // Execute scan.

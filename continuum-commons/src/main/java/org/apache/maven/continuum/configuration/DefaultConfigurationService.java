@@ -22,9 +22,10 @@ package org.apache.maven.continuum.configuration;
 import org.apache.continuum.configuration.ContinuumConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.configuration.GeneralConfiguration;
+import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
@@ -51,9 +52,14 @@ public class DefaultConfigurationService
     private File applicationHome;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ScheduleDao scheduleDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private SystemConfigurationDao systemConfigurationDao;
 
     /**
      * @plexus.requirement
@@ -80,14 +86,24 @@ public class DefaultConfigurationService
         loadData();
     }
 
-    public void setStore( ContinuumStore store )
+    public ScheduleDao getScheduleDao()
     {
-        this.store = store;
+        return scheduleDao;
     }
 
-    public ContinuumStore getStore()
+    public void setScheduleDao( ScheduleDao scheduleDao )
     {
-        return store;
+        this.scheduleDao = scheduleDao;
+    }
+
+    public SystemConfigurationDao getSystemConfigurationDao()
+    {
+        return systemConfigurationDao;
+    }
+
+    public void setSystemConfigurationDao( SystemConfigurationDao systemConfigurationDao )
+    {
+        this.systemConfigurationDao = systemConfigurationDao;
     }
 
     public ContinuumConfiguration getConfiguration()
@@ -319,13 +335,13 @@ public class DefaultConfigurationService
 
         try
         {
-            systemConf = getStore().getSystemConfiguration();
+            systemConf = getSystemConfigurationDao().getSystemConfiguration();
 
             if ( systemConf == null )
             {
                 systemConf = new SystemConfiguration();
 
-                systemConf = getStore().addSystemConfiguration( systemConf );
+                systemConf = getSystemConfigurationDao().addSystemConfiguration( systemConf );
             }
 
             loaded = true;
@@ -350,7 +366,7 @@ public class DefaultConfigurationService
         configuration.save();
         try
         {
-            getStore().updateSystemConfiguration( systemConf );
+            getSystemConfigurationDao().updateSystemConfiguration( systemConf );
         }
         catch ( ContinuumStoreException e )
         {
@@ -362,13 +378,13 @@ public class DefaultConfigurationService
         throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException
     {
         // Schedule
-        Schedule defaultSchedule = getStore().getScheduleByName( DEFAULT_SCHEDULE_NAME );
+        Schedule defaultSchedule = scheduleDao.getScheduleByName( DEFAULT_SCHEDULE_NAME );
 
         if ( defaultSchedule == null )
         {
             defaultSchedule = createDefaultSchedule();
 
-            defaultSchedule = getStore().addSchedule( defaultSchedule );
+            defaultSchedule = scheduleDao.addSchedule( defaultSchedule );
         }
 
         return defaultSchedule;

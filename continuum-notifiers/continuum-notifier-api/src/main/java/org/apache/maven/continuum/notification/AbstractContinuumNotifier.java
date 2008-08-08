@@ -20,6 +20,8 @@ package org.apache.maven.continuum.notification;
  */
 
 import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.continuum.dao.BuildResultDao;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
@@ -29,7 +31,6 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,9 +52,14 @@ public abstract class AbstractContinuumNotifier
     private ConfigurationService configurationService;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private BuildResultDao buildResultDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
 
     /**
      * @plexus.configuration
@@ -235,8 +241,7 @@ public abstract class AbstractContinuumNotifier
         {
             if ( buildDef != null )
             {
-                builds =
-                    getContinuumStore().getBuildResultsByBuildDefinition( project.getId(), buildDef.getId(), 0, 2 );
+                builds = buildResultDao.getBuildResultsByBuildDefinition( project.getId(), buildDef.getId(), 0, 2 );
 
                 if ( builds.size() < 2 )
                 {
@@ -260,7 +265,7 @@ public abstract class AbstractContinuumNotifier
                 //Normally, it isn't possible, buildDef should be != null
                 if ( project.getId() > 0 )
                 {
-                    project = getContinuumStore().getProjectWithBuilds( project.getId() );
+                    project = projectDao.getProjectWithBuilds( project.getId() );
                 }
                 builds = project.getBuildResults();
 
@@ -285,10 +290,5 @@ public abstract class AbstractContinuumNotifier
         {
             throw new NotificationException( "Unable to obtain project builds", e );
         }
-    }
-
-    protected ContinuumStore getContinuumStore()
-    {
-        return this.store;
     }
 }

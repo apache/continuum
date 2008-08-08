@@ -35,7 +35,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
  * DefaultPurgeController
- * 
+ *
  * @author Maria Catherine Tan
  * @plexus.component role="org.apache.continuum.purge.controller.PurgeController" role-hint="purge-repository"
  */
@@ -44,61 +44,64 @@ public class RepositoryPurgeController
     implements PurgeController
 {
     private ContinuumPurgeExecutor purgeExecutor;
-    
+
     private ContinuumPurgeExecutor purgeReleasedSnapshotsExecutor;
-    
+
     /**
      * @plexus.requirement
      */
     private PurgeConfigurationService purgeConfigurationService;
-    
+
     private boolean deleteReleasedSnapshots = false;
-    
+
     public void initializeExecutors( AbstractPurgeConfiguration purgeConfig )
         throws ContinuumPurgeExecutorException
     {
         RepositoryManagedContent repositoryContent;
-     
+
         RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
-        
+
         try
         {
-            repositoryContent = purgeConfigurationService.getManagedRepositoryContent( repoPurge.getRepository().getId() );
+            repositoryContent =
+                purgeConfigurationService.getManagedRepositoryContent( repoPurge.getRepository().getId() );
         }
-        catch( PurgeConfigurationServiceException e )
+        catch ( PurgeConfigurationServiceException e )
         {
             throw new ContinuumPurgeExecutorException( "Error while initializing purge executors", e );
         }
-            
+
         if ( repoPurge.isDeleteAll() )
         {
             purgeExecutor = new CleanAllPurgeExecutor( ContinuumPurgeConstants.PURGE_REPOSITORY );
         }
-        else 
-        {    
+        else
+        {
             if ( repoPurge.getDaysOlder() > 0 )
             {
-                purgeExecutor = new DaysOldRepositoryPurgeExecutor( repositoryContent, repoPurge.getDaysOlder(), repoPurge.getRetentionCount() );
+                purgeExecutor = new DaysOldRepositoryPurgeExecutor( repositoryContent, repoPurge.getDaysOlder(),
+                                                                    repoPurge.getRetentionCount() );
             }
             else
             {
-                purgeExecutor = new RetentionCountRepositoryPurgeExecutor( repositoryContent, repoPurge.getRetentionCount() );
+                purgeExecutor =
+                    new RetentionCountRepositoryPurgeExecutor( repositoryContent, repoPurge.getRetentionCount() );
             }
-            
+
             purgeReleasedSnapshotsExecutor = new ReleasedSnapshotsRepositoryPurgeExecutor( repositoryContent );
             deleteReleasedSnapshots = repoPurge.isDeleteReleasedSnapshots();
         }
     }
-    
+
     public void doPurge( String path )
     {
-        try 
+        try
         {
-            if ( deleteReleasedSnapshots)
+            if ( deleteReleasedSnapshots )
             {
                 purgeReleasedSnapshotsExecutor.purge( path );
             }
-            
+
             purgeExecutor.purge( path );
         }
         catch ( ContinuumPurgeExecutorException e )

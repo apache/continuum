@@ -19,11 +19,6 @@ package org.apache.continuum.purge.repository.content;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -33,19 +28,23 @@ import org.apache.maven.archiva.common.utils.VersionUtil;
 import org.apache.maven.archiva.model.ArtifactReference;
 import org.apache.maven.archiva.model.ProjectReference;
 import org.apache.maven.archiva.model.VersionedReference;
+import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.content.ArtifactExtensionMapping;
 import org.apache.maven.archiva.repository.content.DefaultPathParser;
 import org.apache.maven.archiva.repository.content.PathParser;
-import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.layout.LayoutException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Taken from Archiva's ManagedDefaultRepositoryContent and made some few changes.
- * 
- * @plexus.component 
- *      role="org.apache.continuum.purge.repository.content.RepositoryManagedContent"
- *      role-hint="default"
- *      instantiation-strategy="per-lookup"
+ *
+ * @plexus.component role="org.apache.continuum.purge.repository.content.RepositoryManagedContent"
+ * role-hint="default"
+ * instantiation-strategy="per-lookup"
  */
 public class ManagedDefaultRepositoryContent
     implements RepositoryManagedContent
@@ -57,24 +56,24 @@ public class ManagedDefaultRepositoryContent
     protected static final char GROUP_SEPARATOR = '.';
 
     protected static final char ARTIFACT_SEPARATOR = '-';
-    
+
     private PathParser defaultPathParser = new DefaultPathParser();
 
     /**
      * @plexus.requirement role-hint="file-types"
      */
     private FileTypes filetypes;
-    
+
     private LocalRepository repository;
-    
+
     public void deleteVersion( VersionedReference reference )
         throws ContentNotFoundException
     {
         String path = toMetadataPath( reference );
         File projectPath = new File( getRepoRoot(), path );
-        
+
         File projectDir = projectPath.getParentFile();
-        if( projectDir.exists() && projectDir.isDirectory() )
+        if ( projectDir.exists() && projectDir.isDirectory() )
         {
             try
             {
@@ -86,7 +85,7 @@ public class ManagedDefaultRepositoryContent
             }
         }
     }
-    
+
     public int getId()
     {
         return repository.getId();
@@ -97,21 +96,21 @@ public class ManagedDefaultRepositoryContent
     {
         File artifactFile = toFile( reference );
         File repoDir = artifactFile.getParentFile();
-    
+
         if ( !repoDir.exists() )
         {
-            throw new ContentNotFoundException( "Unable to get related artifacts using a non-existant directory: "
-                + repoDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get related artifacts using a non-existant directory: " + repoDir.getAbsolutePath() );
         }
-    
+
         if ( !repoDir.isDirectory() )
         {
-            throw new ContentNotFoundException( "Unable to get related artifacts using a non-directory: "
-                + repoDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get related artifacts using a non-directory: " + repoDir.getAbsolutePath() );
         }
-    
+
         Set<ArtifactReference> foundArtifacts = new HashSet<ArtifactReference>();
-    
+
         // First gather up the versions found as artifacts in the managed repository.
         File repoFiles[] = repoDir.listFiles();
         for ( int i = 0; i < repoFiles.length; i++ )
@@ -121,42 +120,42 @@ public class ManagedDefaultRepositoryContent
                 // Skip it. it's a directory.
                 continue;
             }
-    
+
             String relativePath = PathUtil.getRelative( repository.getLocation(), repoFiles[i] );
-    
+
             if ( filetypes.matchesArtifactPattern( relativePath ) )
             {
                 ArtifactReference artifact = toArtifactReference( relativePath );
-                
+
                 // Test for related, groupId / artifactId / version must match.
-                if ( artifact.getGroupId().equals( reference.getGroupId() )
-                    && artifact.getArtifactId().equals( reference.getArtifactId() )
-                    && artifact.getVersion().equals( reference.getVersion() ) )
+                if ( artifact.getGroupId().equals( reference.getGroupId() ) &&
+                    artifact.getArtifactId().equals( reference.getArtifactId() ) &&
+                    artifact.getVersion().equals( reference.getVersion() ) )
                 {
                     foundArtifacts.add( artifact );
                 }
             }
         }
-    
+
         return foundArtifacts;
     }
-    
+
     public String getRepoRoot()
     {
         return repository.getLocation();
     }
-    
+
     public LocalRepository getRepository()
     {
         return repository;
     }
-    
+
     /**
      * Gather the Available Versions (on disk) for a specific Project Reference, based on filesystem
      * information.
      *
      * @return the Set of available versions, based on the project reference.
-     * @throws LayoutException 
+     * @throws LayoutException
      * @throws LayoutException
      */
     public Set<String> getVersions( ProjectReference reference )
@@ -174,14 +173,14 @@ public class ManagedDefaultRepositoryContent
 
         if ( !repoDir.exists() )
         {
-            throw new ContentNotFoundException( "Unable to get Versions on a non-existant directory: "
-                + repoDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get Versions on a non-existant directory: " + repoDir.getAbsolutePath() );
         }
 
         if ( !repoDir.isDirectory() )
         {
-            throw new ContentNotFoundException( "Unable to get Versions on a non-directory: "
-                + repoDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get Versions on a non-directory: " + repoDir.getAbsolutePath() );
         }
 
         Set<String> foundVersions = new HashSet<String>();
@@ -227,14 +226,14 @@ public class ManagedDefaultRepositoryContent
 
         if ( !repoDir.exists() )
         {
-            throw new ContentNotFoundException( "Unable to get versions on a non-existant directory: "
-                + repoDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get versions on a non-existant directory: " + repoDir.getAbsolutePath() );
         }
 
         if ( !repoDir.isDirectory() )
         {
-            throw new ContentNotFoundException( "Unable to get versions on a non-directory: "
-                + repoDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get versions on a non-directory: " + repoDir.getAbsolutePath() );
         }
 
         Set<String> foundVersions = new HashSet<String>();
@@ -268,22 +267,22 @@ public class ManagedDefaultRepositoryContent
         return foundVersions;
     }
 
-    
+
     public String toMetadataPath( ProjectReference reference )
     {
         StringBuffer path = new StringBuffer();
-    
+
         path.append( formatAsDirectory( reference.getGroupId() ) ).append( PATH_SEPARATOR );
         path.append( reference.getArtifactId() ).append( PATH_SEPARATOR );
         path.append( MAVEN_METADATA );
-    
+
         return path.toString();
     }
-    
+
     public String toMetadataPath( VersionedReference reference )
     {
         StringBuffer path = new StringBuffer();
-    
+
         path.append( formatAsDirectory( reference.getGroupId() ) ).append( PATH_SEPARATOR );
         path.append( reference.getArtifactId() ).append( PATH_SEPARATOR );
         if ( reference.getVersion() != null )
@@ -292,17 +291,17 @@ public class ManagedDefaultRepositoryContent
             path.append( VersionUtil.getBaseVersion( reference.getVersion() ) ).append( PATH_SEPARATOR );
         }
         path.append( MAVEN_METADATA );
-    
+
         return path.toString();
     }
-    
+
     public String toPath( ArtifactReference reference )
     {
         if ( reference == null )
         {
             throw new IllegalArgumentException( "Artifact reference cannot be null" );
         }
-    
+
         String baseVersion = VersionUtil.getBaseVersion( reference.getVersion() );
         return toPath( reference.getGroupId(), reference.getArtifactId(), baseVersion, reference.getVersion(),
                        reference.getClassifier(), reference.getType() );
@@ -315,7 +314,7 @@ public class ManagedDefaultRepositoryContent
 
     /**
      * Convert a path to an artifact reference.
-     * 
+     *
      * @param path the path to convert. (relative or full location path)
      * @throws LayoutException if the path cannot be converted to an artifact reference.
      */
@@ -360,14 +359,14 @@ public class ManagedDefaultRepositoryContent
 
         if ( !repoDir.exists() )
         {
-            throw new IOException( "Unable to gather the list of snapshot versions on a non-existant directory: "
-                + repoDir.getAbsolutePath() );
+            throw new IOException( "Unable to gather the list of snapshot versions on a non-existant directory: " +
+                repoDir.getAbsolutePath() );
         }
 
         if ( !repoDir.isDirectory() )
         {
-            throw new IOException( "Unable to gather the list of snapshot versions on a non-directory: "
-                + repoDir.getAbsolutePath() );
+            throw new IOException(
+                "Unable to gather the list of snapshot versions on a non-directory: " + repoDir.getAbsolutePath() );
         }
 
         File repoFiles[] = repoDir.listFiles();
@@ -405,36 +404,36 @@ public class ManagedDefaultRepositoryContent
             return false;
         }
     }
-    
+
     private String formatAsDirectory( String directory )
     {
         return directory.replace( GROUP_SEPARATOR, PATH_SEPARATOR );
     }
-    
+
     private String toPath( String groupId, String artifactId, String baseVersion, String version, String classifier,
                            String type )
     {
         StringBuffer path = new StringBuffer();
-    
+
         path.append( formatAsDirectory( groupId ) ).append( PATH_SEPARATOR );
         path.append( artifactId ).append( PATH_SEPARATOR );
-    
+
         if ( baseVersion != null )
         {
             path.append( baseVersion ).append( PATH_SEPARATOR );
             if ( ( version != null ) && ( type != null ) )
             {
                 path.append( artifactId ).append( ARTIFACT_SEPARATOR ).append( version );
-    
+
                 if ( StringUtils.isNotBlank( classifier ) )
                 {
                     path.append( ARTIFACT_SEPARATOR ).append( classifier );
                 }
-    
+
                 path.append( GROUP_SEPARATOR ).append( ArtifactExtensionMapping.getExtension( type ) );
             }
         }
-    
+
         return path.toString();
     }
 }

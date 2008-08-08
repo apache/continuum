@@ -19,6 +19,10 @@ package org.apache.maven.continuum.build.settings;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.Continuum;
@@ -27,7 +31,6 @@ import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.scheduler.ContinuumBuildJob;
 import org.apache.maven.continuum.scheduler.ContinuumPurgeJob;
 import org.apache.maven.continuum.scheduler.ContinuumSchedulerConstants;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.scheduler.AbstractJob;
@@ -53,9 +56,24 @@ public class DefaultSchedulesActivator
     implements SchedulesActivator
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildDefinitionDao buildDefinitionDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ScheduleDao scheduleDao;
 
     /**
      * @plexus.requirement role-hint="default"
@@ -70,7 +88,7 @@ public class DefaultSchedulesActivator
     {
         getLogger().info( "Activating schedules ..." );
 
-        Collection<Schedule> schedules = store.getAllSchedulesByName();
+        Collection<Schedule> schedules = scheduleDao.getAllSchedulesByName();
 
         for ( Schedule schedule : schedules )
         {
@@ -90,7 +108,7 @@ public class DefaultSchedulesActivator
                 {
                     schedule( schedule, continuum, ContinuumBuildJob.class );
                 }
-                
+
                 if ( isScheduleFromPurgeJob( schedule ) )
                 {
                     schedule( schedule, continuum, ContinuumPurgeJob.class );
@@ -104,7 +122,7 @@ public class DefaultSchedulesActivator
 
                 try
                 {
-                    store.storeSchedule( schedule );
+                    scheduleDao.storeSchedule( schedule );
                 }
                 catch ( ContinuumStoreException e1 )
                 {
@@ -124,7 +142,7 @@ public class DefaultSchedulesActivator
         {
             schedule( schedule, continuum, ContinuumBuildJob.class );
         }
-        
+
         if ( isScheduleFromPurgeJob( schedule ) )
         {
             schedule( schedule, continuum, ContinuumPurgeJob.class );
@@ -159,8 +177,7 @@ public class DefaultSchedulesActivator
 
         //the name + group makes the job unique
 
-        JobDetail jobDetail =
-            new JobDetail( schedule.getName(), org.quartz.Scheduler.DEFAULT_GROUP, jobClass );
+        JobDetail jobDetail = new JobDetail( schedule.getName(), org.quartz.Scheduler.DEFAULT_GROUP, jobClass );
 
         jobDetail.setJobDataMap( dataMap );
 
@@ -218,29 +235,31 @@ public class DefaultSchedulesActivator
             throw new SchedulesActivationException( "Cannot unschedule build job \"" + schedule.getName() + "\".", e );
         }
     }
-    
+
     private boolean isScheduleFromBuildJob( Schedule schedule )
     {
-        List<BuildDefinition> buildDef = store.getBuildDefinitionsBySchedule( schedule.getId() );
-        
+        List<BuildDefinition> buildDef = buildDefinitionDao.getBuildDefinitionsBySchedule( schedule.getId() );
+
         if ( buildDef.size() > 0 )
         {
             return true;
         }
-        
+
         return false;
     }
-    
+
     private boolean isScheduleFromPurgeJob( Schedule schedule )
     {
-        List<RepositoryPurgeConfiguration> repoPurgeConfigs = store.getRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
-        List<DirectoryPurgeConfiguration> dirPurgeConfigs = store.getDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
-        
+        List<RepositoryPurgeConfiguration> repoPurgeConfigs =
+            repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsBySchedule( schedule.getId() );
+        List<DirectoryPurgeConfiguration> dirPurgeConfigs =
+            directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
+
         if ( repoPurgeConfigs.size() > 0 || dirPurgeConfigs.size() > 0 )
         {
             return true;
         }
-        
+
         return false;
     }
 }

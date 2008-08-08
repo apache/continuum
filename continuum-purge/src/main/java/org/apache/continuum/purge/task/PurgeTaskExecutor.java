@@ -49,38 +49,40 @@ public class PurgeTaskExecutor
      * @plexus.requirement
      */
     private PurgeConfigurationService purgeConfigurationService;
-    
+
     /**
      * @plexus.requirement
      */
     private RepositoryScanner scanner;
-    
+
     private PlexusContainer container;
-    
+
     public void executeTask( Task task )
         throws TaskExecutionException
     {
         PurgeTask purgeTask = (PurgeTask) task;
-        
-        AbstractPurgeConfiguration purgeConfig = purgeConfigurationService.getPurgeConfiguration( purgeTask.getPurgeConfigurationId() );
-        
+
+        AbstractPurgeConfiguration purgeConfig =
+            purgeConfigurationService.getPurgeConfiguration( purgeTask.getPurgeConfigurationId() );
+
         try
         {
             if ( purgeConfig != null && purgeConfig instanceof RepositoryPurgeConfiguration )
             {
                 RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
-                
+
                 LocalRepository repository = repoPurge.getRepository();
-                
+
                 if ( repository == null )
                 {
-                    throw new TaskExecutionException( "Error while executing purge repository task: no repository set" );
+                    throw new TaskExecutionException(
+                        "Error while executing purge repository task: no repository set" );
                 }
-        
+
                 purgeController = (PurgeController) container.lookup( PurgeController.ROLE, "purge-repository" );
-                
+
                 purgeController.initializeExecutors( repoPurge );
-                
+
                 if ( repoPurge.isDeleteAll() )
                 {
                     purgeController.doPurge( repository.getLocation() );
@@ -93,14 +95,14 @@ public class PurgeTaskExecutor
             else if ( purgeConfig != null && purgeConfig instanceof DirectoryPurgeConfiguration )
             {
                 DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
-                
+
                 purgeController = (PurgeController) container.lookup( PurgeController.ROLE, "purge-directory" );
-                
+
                 purgeController.initializeExecutors( dirPurge );
-                
-                purgeController.doPurge( dirPurge.getLocation() );            
+
+                purgeController.doPurge( dirPurge.getLocation() );
             }
-            
+
         }
         catch ( ComponentLookupException e )
         {

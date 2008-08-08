@@ -1,24 +1,15 @@
 package org.apache.maven.continuum.management;
 
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
+import org.apache.continuum.dao.DaoUtils;
+import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.InstallationDao;
+import org.apache.continuum.dao.LocalRepositoryDao;
+import org.apache.continuum.dao.ProfileDao;
+import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
+import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ContinuumDatabase;
@@ -29,7 +20,6 @@ import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxReader;
 import org.apache.maven.continuum.model.project.io.stax.ContinuumStaxWriter;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.ConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
@@ -63,9 +53,49 @@ public class JdoDataManagementTool
     implements DataManagementTool
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private DaoUtils daoUtils;
+
+    /**
+     * @plexus.requirement
+     */
+    private LocalRepositoryDao localRepositoryDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private InstallationDao installationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProfileDao profileDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ScheduleDao scheduleDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private SystemConfigurationDao systemConfigurationDao;
 
     protected static final String BUILDS_XML = "builds.xml";
 
@@ -80,7 +110,7 @@ public class JdoDataManagementTool
         ContinuumDatabase database = new ContinuumDatabase();
         try
         {
-            database.setSystemConfiguration( store.getSystemConfiguration() );
+            database.setSystemConfiguration( systemConfigurationDao.getSystemConfiguration() );
         }
         catch ( ContinuumStoreException e )
         {
@@ -88,23 +118,24 @@ public class JdoDataManagementTool
         }
 
         // TODO: need these to lazy load to conserve memory while we stream out the model
-        Collection projectGroups = store.getAllProjectGroupsWithTheLot();
+        Collection projectGroups = projectGroupDao.getAllProjectGroupsWithTheLot();
         database.setProjectGroups( new ArrayList( projectGroups ) );
         try
         {
-            database.setInstallations( store.getAllInstallations() );
+            database.setInstallations( installationDao.getAllInstallations() );
         }
         catch ( ContinuumStoreException e )
         {
             throw new DataManagementException( e );
         }
-        database.setSchedules( store.getAllSchedulesByName() );
-        database.setProfiles( store.getAllProfilesByName() );
+        database.setSchedules( scheduleDao.getAllSchedulesByName() );
+        database.setProfiles( profileDao.getAllProfilesByName() );
 
-        database.setLocalRepositories( store.getAllLocalRepositories() );
-        database.setRepositoryPurgeConfigurations( store.getAllRepositoryPurgeConfigurations() );
-        database.setDirectoryPurgeConfigurations( store.getAllDirectoryPurgeConfigurations() );
-        
+        database.setLocalRepositories( localRepositoryDao.getAllLocalRepositories() );
+        database.setRepositoryPurgeConfigurations(
+            repositoryPurgeConfigurationDao.getAllRepositoryPurgeConfigurations() );
+        database.setDirectoryPurgeConfigurations( directoryPurgeConfigurationDao.getAllDirectoryPurgeConfigurations() );
+
         ContinuumStaxWriter writer = new ContinuumStaxWriter();
 
         File backupFile = new File( backupDirectory, BUILDS_XML );
@@ -130,7 +161,7 @@ public class JdoDataManagementTool
 
     public void eraseDatabase()
     {
-        store.eraseDatabase();
+        daoUtils.eraseDatabase();
     }
 
     public void restoreDatabase( File backupDirectory )
@@ -203,10 +234,11 @@ public class JdoDataManagementTool
         Map<Integer, LocalRepository> localRepositories = new HashMap<Integer, LocalRepository>();
         for ( LocalRepository localRepository : (List<LocalRepository>) database.getLocalRepositories() )
         {
-            localRepository = (LocalRepository) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), localRepository );
+            localRepository =
+                (LocalRepository) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), localRepository );
             localRepositories.put( Integer.valueOf( localRepository.getId() ), localRepository );
         }
-        
+
         for ( Iterator i = database.getProjectGroups().iterator(); i.hasNext(); )
         {
             ProjectGroup projectGroup = (ProjectGroup) i.next();
@@ -227,12 +259,18 @@ public class JdoDataManagementTool
                                                  Integer.valueOf( projectGroup.getLocalRepository().getId() ) ) );
             }
 
+            if ( projectGroup.getLocalRepository() != null )
+            {
+                projectGroup.setLocalRepository(
+                    localRepositories.get( Integer.valueOf( projectGroup.getLocalRepository().getId() ) ) );
+            }
+
             PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectGroup );
         }
     }
 
     private static void processBuildDefinitions( List buildDefinitions, Map<Integer, Schedule> schedules,
-                                                 Map<Integer, Profile> profiles, 
+                                                 Map<Integer, Profile> profiles,
                                                  Map<Integer, LocalRepository> localRepositories )
     {
         for ( Iterator i = buildDefinitions.iterator(); i.hasNext(); )

@@ -1,11 +1,11 @@
 package org.apache.continuum.purge.executor;
 
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
-
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -36,63 +36,63 @@ public class CleanAllPurgeExecutorTest
         throws Exception
     {
         super.setUp();
-        
+
         purgeDefaultRepoTask = getCleanAllDefaultRepoPurgeTask();
-        
+
         purgeReleasesDirTask = getCleanAllReleasesDirPurgeTask();
-        
+
         purgeBuildOutputDirTask = getCleanAllBuildOutputDirPurgeTask();
     }
-    
+
     public void testCleanAllRepositoryPurging()
         throws Exception
     {
         populateDefaultRepository();
-        
+
         purgeExecutor.executeTask( purgeDefaultRepoTask );
-        
+
         assertIsEmpty( getDefaultRepositoryLocation() );
     }
-    
+
     public void testCleanAllReleasesPurging()
         throws Exception
     {
         populateReleasesDirectory();
-        
+
         File workingDir = getReleasesDirectoryLocation();
-        
+
         FilenameFilter filter = new ArtifactFilenameFilter( "releases-" );
-        
+
         File[] releasesDir = workingDir.listFiles( filter );
-        
+
         assertExists( workingDir.getAbsolutePath() + "/1" );
-        
+
         assertEquals( "check # of releases directory", 3, releasesDir.length );
-        
+
         purgeExecutor.executeTask( purgeReleasesDirTask );
-        
+
         // check if no releases dir
-        
+
         releasesDir = workingDir.listFiles( filter );
-        
+
         assertEquals( "releases directory must be empty", 0, releasesDir.length );
-        
+
         assertExists( workingDir.getAbsolutePath() + "/1" );
     }
-    
+
     public void testCleanAllBuildOutputPurging()
         throws Exception
     {
         populateBuildOutputDirectory();
-        
+
         File buildOutputDir = getBuildOutputDirectoryLocation();
-        
+
         purgeExecutor.executeTask( purgeBuildOutputDirTask );
-        
+
         FileFilter filter = DirectoryFileFilter.DIRECTORY;
-        
+
         File[] projectsDir = buildOutputDir.listFiles( filter );
-        
+
         for ( File projectDir : projectsDir )
         {
             assertIsEmpty( projectDir );

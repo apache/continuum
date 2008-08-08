@@ -19,14 +19,15 @@ package org.apache.maven.continuum.installation;
  * under the License.
  */
 
-import java.util.List;
-
+import org.apache.continuum.dao.DaoUtils;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -46,7 +47,8 @@ public class DefaultInstallationServiceTest
         throws Exception
     {
         super.setUp();
-        getStore().eraseDatabase();
+        DaoUtils daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
+        daoUtils.eraseDatabase();
         /*if ( getInstallationService().getAllInstallations().isEmpty() )
         {
             defaultInstallation = createDefault();
@@ -95,7 +97,7 @@ public class DefaultInstallationServiceTest
         assertEquals( "bar", getted.getVarValue() );
         assertEquals( 1, getInstallationService().getAllInstallations().size() );
     }
-    
+
     public void testAddDuplicateInstallation()
         throws Exception
     {
@@ -114,7 +116,7 @@ public class DefaultInstallationServiceTest
             // we must be here
         }
         assertEquals( 1, getInstallationService().getAllInstallations().size() );
-    }    
+    }
 
     public void testRemove()
         throws Exception
@@ -214,9 +216,9 @@ public class DefaultInstallationServiceTest
         assertEquals( "automaticJdk", profile.getName() );
         Installation jdk = profile.getJdk();
         assertNotNull( jdk );
-        assertEquals("automaticJdk", jdk.getName());
+        assertEquals( "automaticJdk", jdk.getName() );
     }
-    
+
     public void testUpdateName()
         throws Exception
     {
@@ -226,13 +228,13 @@ public class DefaultInstallationServiceTest
         installation.setVarName( "automaticvarName" );
         installation.setVarValue( "automaticvarValue" );
         installation = getInstallationService().add( installation, true );
-        
+
         installation.setName( "new name here" );
         getInstallationService().update( installation );
-        
+
         Installation getted = getInstallationService().getInstallation( installation.getInstallationId() );
         assertEquals( "new name here", getted.getName() );
-        
+
 
     }
 }

@@ -26,26 +26,6 @@ under the License.
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-configuration</artifactId>
   <name>Continuum Configuration</name>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemProperties>
-            <property>
-              <name>appserver.base</name>
-              <value>${basedir}/target/test-classes/</value>    
-            </property>
-            <property>
-              <name>user.home</name>
-              <value>${basedir}/target/test-classes/</value>    
-            </property>            
-          </systemProperties>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>

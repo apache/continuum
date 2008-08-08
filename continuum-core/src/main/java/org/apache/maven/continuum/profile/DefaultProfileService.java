@@ -19,16 +19,16 @@ package org.apache.maven.continuum.profile;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
+import org.apache.continuum.dao.ProfileDao;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -40,11 +40,10 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 public class DefaultProfileService
     implements ProfileService
 {
-
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ProfileDao profileDao;
 
     /**
      * @see org.apache.maven.continuum.profile.ProfileService#updateProfile(org.apache.maven.continuum.model.system.Profile)
@@ -52,14 +51,14 @@ public class DefaultProfileService
     public void updateProfile( Profile profile )
         throws ProfileException, AlreadyExistsProfileException
     {
-        
+
         // already exists check should be done in the same transaction
         // but we assume we don't have a huge load and a lot of concurrent access ;-)
         if ( alreadyExistsProfileName( profile ) )
         {
             throw new AlreadyExistsProfileException( "profile with name " + profile.getName() + " already exists" );
-        }        
-        
+        }
+
         try
         {
             Profile stored = getProfile( profile.getId() );
@@ -70,14 +69,14 @@ public class DefaultProfileService
             stored.setJdk( profile.getJdk() );
             stored.setName( profile.getName() );
             stored.setEnvironmentVariables( profile.getEnvironmentVariables() );
-            store.updateProfile( stored );
+            profileDao.updateProfile( stored );
         }
         catch ( ContinuumStoreException e )
         {
             throw new ProfileException( e.getMessage(), e );
         }
     }
-    
+
     public void updateProfileCheckDuplicateName( Profile profile, boolean checkDuplicateName )
         throws ProfileException, AlreadyExistsProfileException
     {
@@ -100,13 +99,13 @@ public class DefaultProfileService
             stored.setJdk( profile.getJdk() );
             stored.setName( profile.getName() );
             stored.setEnvironmentVariables( profile.getEnvironmentVariables() );
-            store.updateProfile( stored );
+            profileDao.updateProfile( stored );
         }
         catch ( ContinuumStoreException e )
         {
             throw new ProfileException( e.getMessage(), e );
         }
-    }    
+    }
 
     /**
      * @see org.apache.maven.continuum.profile.ProfileService#addProfile(org.apache.maven.continuum.model.system.Profile)
@@ -123,16 +122,16 @@ public class DefaultProfileService
         profile.setBuilder( null );
         profile.setJdk( null );
         profile.setEnvironmentVariables( null );
-        return store.addProfile( profile );
+        return profileDao.addProfile( profile );
     }
-    
+
     /**
      * @see org.apache.maven.continuum.profile.ProfileService#deleteProfile(int)
      */
     public void deleteProfile( int profileId )
         throws ProfileException
     {
-        store.removeProfile( getProfile( profileId ) );
+        profileDao.removeProfile( getProfile( profileId ) );
     }
 
     /**
@@ -141,7 +140,7 @@ public class DefaultProfileService
     public List<Profile> getAllProfiles()
         throws ProfileException
     {
-        return store.getAllProfilesByName();
+        return profileDao.getAllProfilesByName();
     }
 
     /**
@@ -152,7 +151,7 @@ public class DefaultProfileService
     {
         try
         {
-            return store.getProfile( profileId );
+            return profileDao.getProfile( profileId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -175,7 +174,7 @@ public class DefaultProfileService
         stored.setBuilder( builder );
         try
         {
-            store.updateProfile( stored );
+            profileDao.updateProfile( stored );
         }
         catch ( ContinuumStoreException e )
         {
@@ -193,7 +192,7 @@ public class DefaultProfileService
         stored.setJdk( jdk );
         try
         {
-            store.updateProfile( stored );
+            profileDao.updateProfile( stored );
         }
         catch ( ContinuumStoreException e )
         {
@@ -211,7 +210,7 @@ public class DefaultProfileService
         stored.addEnvironmentVariable( envVar );
         try
         {
-            store.updateProfile( stored );
+            profileDao.updateProfile( stored );
         }
         catch ( ContinuumStoreException e )
         {
@@ -226,9 +225,9 @@ public class DefaultProfileService
         {
             setJdkInProfile( profile, installation );
         }
-        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() )
-            || InstallationService.MAVEN2_TYPE.equals( installation.getType() )
-            || InstallationService.ANT_TYPE.equals( installation.getType() ) )
+        else if ( InstallationService.MAVEN1_TYPE.equals( installation.getType() ) ||
+            InstallationService.MAVEN2_TYPE.equals( installation.getType() ) ||
+            InstallationService.ANT_TYPE.equals( installation.getType() ) )
         {
             setBuilderInProfile( profile, installation );
         }
@@ -275,7 +274,7 @@ public class DefaultProfileService
         {
             // normally cannot happend here but anyway we throw the exception
             throw new ProfileException( e.getMessage(), e );
-        }        
+        }
     }
 
 
@@ -302,6 +301,6 @@ public class DefaultProfileService
         throws ProfileException
     {
         return getProfileWithName( profile.getName() ) != null;
-    }    
-    
+    }
+
 }

@@ -19,12 +19,6 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.common.utils.VersionComparator;
 import org.apache.maven.archiva.common.utils.VersionUtil;
@@ -33,9 +27,15 @@ import org.apache.maven.archiva.model.VersionedReference;
 import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.layout.LayoutException;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Codes were taken from Archiva's RetentionCountRepository Purge and made some few changes.
- * 
+ *
  * @author Maria Catherine Tan
  */
 public class RetentionCountRepositoryPurgeExecutor
@@ -43,7 +43,7 @@ public class RetentionCountRepositoryPurgeExecutor
     implements ContinuumPurgeExecutor
 {
     private int retentionCount;
-    
+
     private RepositoryManagedContent repository;
 
     public RetentionCountRepositoryPurgeExecutor( RepositoryManagedContent repository, int retentionCount )
@@ -51,7 +51,7 @@ public class RetentionCountRepositoryPurgeExecutor
         this.repository = repository;
         this.retentionCount = retentionCount;
     }
-    
+
     public void purge( String path )
         throws ContinuumPurgeExecutorException
     {
@@ -63,7 +63,7 @@ public class RetentionCountRepositoryPurgeExecutor
             {
                 return;
             }
-                                                                     
+
             ArtifactReference artifact = repository.toArtifactReference( path );
 
             if ( VersionUtil.isSnapshot( artifact.getVersion() ) )
@@ -116,7 +116,7 @@ public class RetentionCountRepositoryPurgeExecutor
         artifact.setVersion( version );
         artifact.setClassifier( reference.getClassifier() );
         artifact.setType( reference.getType() );
-        
+
         try
         {
             Set<ArtifactReference> related = repository.getRelatedArtifacts( artifact );

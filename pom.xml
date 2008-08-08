@@ -180,6 +180,41 @@ under the License.
           </archive>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>JAVA_HOME</name>
+              <value>${java.home}</value>    
+            </property>     
+            <property>
+              <name>M2_HOME</name>
+              <value>${maven.home}</value>    
+            </property>    
+            <property>
+              <name>plexus.home</name>
+              <!-- ${project.build.directory} is not evaluated see surefire documentation -->
+              <!--value>${project.build.directory}</value-->
+              <value>./target</value>
+            </property>                           
+            <property>
+              <name>appserver.base</name>
+              <value>${basedir}/target/test-classes/</value>
+            </property>
+            <property>
+              <name>user.home</name>
+              <value>${basedir}/target/test-classes/</value>
+            </property>
+            <property>
+              <!-- java.io.tmpdir is a shared directory on solaris and cause permission issues -->
+              <name>java.io.tmpdir</name>
+              <value>./target</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <modules>
