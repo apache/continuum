@@ -30,7 +30,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
  * DirectoryPurgeController
- * 
+ *
  * @author Maria Catherine Tan
  * @plexus.component role="org.apache.continuum.purge.controller.PurgeController" role-hint="purge-directory"
  */
@@ -39,10 +39,10 @@ public class DirectoryPurgeController
     implements PurgeController
 {
     private ContinuumPurgeExecutor purgeExecutor;
-    
-    public void doPurge( String path ) 
+
+    public void doPurge( String path )
     {
-        try 
+        try
         {
             purgeExecutor.purge( path );
         }
@@ -56,18 +56,20 @@ public class DirectoryPurgeController
         throws ContinuumPurgeExecutorException
     {
         DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
-        
+
         if ( dirPurge.isDeleteAll() )
         {
             purgeExecutor = new CleanAllPurgeExecutor( dirPurge.getDirectoryType() );
         }
         else if ( dirPurge.getDaysOlder() > 0 )
         {
-            purgeExecutor = new DaysOldDirectoryPurgeExecutor( dirPurge.getDaysOlder(), dirPurge.getRetentionCount(), dirPurge.getDirectoryType() );
+            purgeExecutor = new DaysOldDirectoryPurgeExecutor( dirPurge.getDaysOlder(), dirPurge.getRetentionCount(),
+                                                               dirPurge.getDirectoryType() );
         }
         else
         {
-            purgeExecutor = new RetentionCountDirectoryPurgeExecutor( dirPurge.getRetentionCount(), dirPurge.getDirectoryType() );
+            purgeExecutor =
+                new RetentionCountDirectoryPurgeExecutor( dirPurge.getRetentionCount(), dirPurge.getDirectoryType() );
         }
     }
 }

@@ -19,14 +19,9 @@ package org.apache.maven.continuum.xmlrpc.server;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import net.sf.dozer.util.mapping.DozerBeanMapperSingletonWrapper;
 import net.sf.dozer.util.mapping.MapperIF;
-
+import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -34,7 +29,6 @@ import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
@@ -55,6 +49,11 @@ import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
@@ -71,9 +70,9 @@ public class ContinuumServiceImpl
     private Continuum continuum;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private SystemConfigurationDao systemConfigurationDao;
 
     /**
      * @plexus.requirement role-hint="default"
@@ -223,7 +222,8 @@ public class ContinuumServiceImpl
     protected String getProjectGroupName( int projectGroupId )
         throws ContinuumException
     {
-        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId );
+        org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
+            continuum.getProjectGroup( projectGroupId );
         return projectGroup == null ? null : projectGroup.getName();
     }
 
@@ -765,7 +765,7 @@ public class ContinuumServiceImpl
     }
 
     // ----------------------------------------------------------------------
-    // SystemConfiguration
+    // SystemConfigurationDao
     // ----------------------------------------------------------------------
 
     public SystemConfiguration getSystemConfiguration()
@@ -774,12 +774,13 @@ public class ContinuumServiceImpl
         checkManageConfigurationAuthorization();
         try
         {
-            org.apache.maven.continuum.model.system.SystemConfiguration sysConf = store.getSystemConfiguration();
+            org.apache.maven.continuum.model.system.SystemConfiguration sysConf =
+                systemConfigurationDao.getSystemConfiguration();
             return populateSystemConfiguration( sysConf );
         }
         catch ( ContinuumStoreException e )
         {
-            throw new ContinuumException( "Can't get SystemConfiguration.", e );
+            throw new ContinuumException( "Can't get SystemConfigurationDao.", e );
         }
     }
 
@@ -805,7 +806,7 @@ public class ContinuumServiceImpl
     // ----------------------------------------------------------------------
 
     private List<BuildProjectTask> populateBuildProjectTaskList(
-                                               List<org.apache.maven.continuum.buildqueue.BuildProjectTask> buildProjectTasks )
+        List<org.apache.maven.continuum.buildqueue.BuildProjectTask> buildProjectTasks )
     {
         List<BuildProjectTask> responses = new ArrayList<BuildProjectTask>();
         for ( org.apache.maven.continuum.buildqueue.BuildProjectTask buildProjectTask : buildProjectTasks )
@@ -815,7 +816,7 @@ public class ContinuumServiceImpl
         }
         return responses;
     }
-    
+
     private ProjectSummary populateProjectSummary( org.apache.maven.continuum.model.project.Project project )
     {
         return (ProjectSummary) mapper.map( project, ProjectSummary.class );

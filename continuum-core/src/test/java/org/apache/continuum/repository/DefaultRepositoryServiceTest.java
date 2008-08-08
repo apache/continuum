@@ -19,13 +19,13 @@ package org.apache.continuum.repository;
  * under the License.
  */
 
-import java.util.List;
-
+import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
-import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+
+import java.util.List;
 
 /**
  * @author Maria Catherine Tan
@@ -35,38 +35,42 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 public class DefaultRepositoryServiceTest
     extends AbstractContinuumTest
 {
+    private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
     private RepositoryService repositoryService;
-    
+
     private LocalRepository repository;
-    
-    private RepositoryPurgeConfiguration repoConfig;
-    
+
+    @Override
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        
+
+        repositoryPurgeConfigurationDao =
+            (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class.getName() );
+
         repositoryService = (RepositoryService) lookup( RepositoryService.ROLE );
-        
+
         setupDefaultRepository();
     }
-    
+
     public void testRemoveRepository()
         throws Exception
     {
         repositoryService.removeLocalRepository( repository.getId() );
-        
+
         List<LocalRepository> repositories = repositoryService.getAllLocalRepositories();
         assertEquals( "check # repositories", 0, repositories.size() );
-        
+
         ProjectGroup group = getDefaultProjectGroup();
         assertNull( group.getLocalRepository() );
-        
-        List<RepositoryPurgeConfiguration> purgeConfigs = 
-            getStore().getRepositoryPurgeConfigurationsByLocalRepository( repository.getId() );
+
+        List<RepositoryPurgeConfiguration> purgeConfigs =
+            repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsByLocalRepository( repository.getId() );
         assertEquals( "check # purge configs of repository", 0, purgeConfigs.size() );
     }
-    
+
     private void setupDefaultRepository()
         throws Exception
     {
@@ -74,25 +78,25 @@ public class DefaultRepositoryServiceTest
         repository.setName( "DefaultRepo" );
         repository.setLocation( getTestFile( "target/default-repo" ).getAbsolutePath() );
         repository = repositoryService.addLocalRepository( repository );
-        
+
         ProjectGroup group = getDefaultProjectGroup();
         group.setLocalRepository( repository );
-        getStore().updateProjectGroup( group );
-        
-        repoConfig = new RepositoryPurgeConfiguration();
+        getProjectGroupDao().updateProjectGroup( group );
+
+        RepositoryPurgeConfiguration repoConfig = new RepositoryPurgeConfiguration();
         repoConfig.setRepository( repository );
-        repoConfig = getStore().addRepositoryPurgeConfiguration( repoConfig );
-        
+        repoConfig = repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( repoConfig );
+
         List<LocalRepository> repositories = repositoryService.getAllLocalRepositories();
         assertEquals( "check # repositories", 1, repositories.size() );
         assertTrue( "check if repository was added", repositories.contains( repository ) );
-        
+
         ProjectGroup retrievedGroup = getDefaultProjectGroup();
         assertNotNull( retrievedGroup.getLocalRepository() );
         assertEquals( "check if repository is the same", repository, retrievedGroup.getLocalRepository() );
-        
-        List<RepositoryPurgeConfiguration> purgeConfigs = 
-            getStore().getRepositoryPurgeConfigurationsByLocalRepository( repository.getId() );
+
+        List<RepositoryPurgeConfiguration> purgeConfigs =
+            repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsByLocalRepository( repository.getId() );
         assertEquals( "check # purge configs found", 1, purgeConfigs.size() );
         assertEquals( "check if purge configuration is the same", repoConfig, purgeConfigs.get( 0 ) );
     }

@@ -19,6 +19,10 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import org.apache.continuum.dao.DaoUtils;
+import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -29,7 +33,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
@@ -51,7 +54,13 @@ import java.util.Properties;
 public abstract class AbstractContinuumTest
     extends PlexusInSpringTestCase
 {
-    private ContinuumStore store;
+    private DaoUtils daoUtils;
+
+    private ProjectDao projectDao;
+
+    private ProjectGroupDao projectGroupDao;
+
+    private ScheduleDao scheduleDao;
 
     // ----------------------------------------------------------------------
     //
@@ -63,17 +72,23 @@ public abstract class AbstractContinuumTest
     {
         super.setUp();
 
-        getStore();
+        init();
+
+        getProjectDao();
+
+        getProjectGroupDao();
+
+        getScheduleDao();
 
         setUpConfigurationService( (ConfigurationService) lookup( "configurationService" ) );
 
-        Collection<ProjectGroup> projectGroups = store.getAllProjectGroupsWithProjects();
+        Collection<ProjectGroup> projectGroups = projectGroupDao.getAllProjectGroupsWithProjects();
 
         if ( projectGroups.size() == 0 ) //if ContinuumInitializer is loaded by Spring at startup, size == 1
         {
             createDefaultProjectGroup();
 
-            projectGroups = store.getAllProjectGroupsWithProjects();
+            projectGroups = projectGroupDao.getAllProjectGroupsWithProjects();
         }
 
         assertEquals( 1, projectGroups.size() );
@@ -83,7 +98,7 @@ public abstract class AbstractContinuumTest
     protected void tearDown()
         throws Exception
     {
-        store.eraseDatabase();
+        daoUtils.eraseDatabase();
         super.tearDown();
     }
 
@@ -106,7 +121,7 @@ public abstract class AbstractContinuumTest
 
             group.setDescription( "Contains all projects that do not have a group of their own" );
 
-            store.addProjectGroup( group );
+            projectGroupDao.addProjectGroup( group );
         }
     }
 
@@ -123,21 +138,16 @@ public abstract class AbstractContinuumTest
     protected ProjectGroup getDefaultProjectGroup()
         throws ContinuumStoreException
     {
-        return store.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        return projectGroupDao.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
     }
 
     // ----------------------------------------------------------------------
     // Store
     // ----------------------------------------------------------------------
 
-    protected ContinuumStore getStore()
+    private void init()
         throws Exception
     {
-        if ( store != null )
-        {
-            return store;
-        }
-
         // ----------------------------------------------------------------------
         // Set up the JDO factory
         // ----------------------------------------------------------------------
@@ -200,9 +210,34 @@ public abstract class AbstractContinuumTest
         //
         // ----------------------------------------------------------------------
 
-        store = (ContinuumStore) lookup( ContinuumStore.ROLE, "jdo" );
+        daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
+    }
 
-        return store;
+    protected ProjectDao getProjectDao()
+    {
+        if ( projectDao == null )
+        {
+            projectDao = (ProjectDao) lookup( ProjectDao.class.getName() );
+        }
+        return projectDao;
+    }
+
+    protected ProjectGroupDao getProjectGroupDao()
+    {
+        if ( projectGroupDao == null )
+        {
+            projectGroupDao = (ProjectGroupDao) lookup( ProjectGroupDao.class.getName() );
+        }
+        return projectGroupDao;
+    }
+
+    protected ScheduleDao getScheduleDao()
+    {
+        if ( scheduleDao == null )
+        {
+            scheduleDao = (ScheduleDao) lookup( ScheduleDao.class.getName() );
+        }
+        return scheduleDao;
     }
 
     // ----------------------------------------------------------------------
@@ -296,7 +331,7 @@ public abstract class AbstractContinuumTest
     // Public utility methods
     // ----------------------------------------------------------------------
 
-    public Project addProject( ContinuumStore store, Project project )
+    public Project addProject( Project project )
         throws Exception
     {
         ProjectGroup defaultProjectGroup = getDefaultProjectGroup();
@@ -316,32 +351,20 @@ public abstract class AbstractContinuumTest
         project.setCheckoutResult( scmResult );
 
         defaultProjectGroup.addProject( project );
-        store.updateProjectGroup( defaultProjectGroup );
 
-        project = store.getProject( project.getId() );
+        projectGroupDao.updateProjectGroup( defaultProjectGroup );
+
+        project = projectDao.getProject( project.getId() );
+
         assertNotNull( "project group == null", project.getProjectGroup() );
 
         return project;
     }
 
-    public Project addProject( ContinuumStore store, String name )
+    public Project addProject( String name )
         throws Exception
     {
-        return addProject( store, makeStubProject( name ) );
-    }
-
-    public Project addProject( ContinuumStore store, String name, String nagEmailAddress, String version )
-        throws Exception
-    {
-        return addProject( store, makeProject( name, nagEmailAddress, version ) );
-    }
-
-    public static void setCheckoutDone( ContinuumStore store, Project project, ScmResult scmResult )
-        throws ContinuumStoreException
-    {
-        project.setCheckoutResult( scmResult );
-
-        store.updateProject( project );
+        return addProject( makeStubProject( name ) );
     }
 
     // ----------------------------------------------------------------------

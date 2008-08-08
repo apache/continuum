@@ -19,6 +19,15 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.apache.maven.archiva.common.utils.VersionComparator;
+import org.apache.maven.archiva.common.utils.VersionUtil;
+import org.apache.maven.archiva.model.ArtifactReference;
+import org.apache.maven.archiva.model.VersionedReference;
+import org.apache.maven.archiva.repository.ContentNotFoundException;
+import org.apache.maven.archiva.repository.layout.LayoutException;
+
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,18 +39,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
-import org.apache.maven.archiva.common.utils.VersionComparator;
-import org.apache.maven.archiva.common.utils.VersionUtil;
-import org.apache.maven.archiva.model.ArtifactReference;
-import org.apache.maven.archiva.model.VersionedReference;
-import org.apache.maven.archiva.repository.ContentNotFoundException;
-import org.apache.maven.archiva.repository.layout.LayoutException;
-
 /**
  * Codes were taken from  Archiva's DaysOldRepositoryPurge and made some few changes.
- * 
+ *
  * @author Maria Catherine Tan
  */
 public class DaysOldRepositoryPurgeExecutor
@@ -49,13 +49,13 @@ public class DaysOldRepositoryPurgeExecutor
     implements ContinuumPurgeExecutor
 {
     private int daysOlder;
-    
+
     private int retentionCount;
-    
+
     private RepositoryManagedContent repository;
-    
+
     private SimpleDateFormat timestampParser;
-    
+
     public DaysOldRepositoryPurgeExecutor( RepositoryManagedContent repository, int daysOlder, int retentionCount )
     {
         this.repository = repository;
@@ -64,55 +64,55 @@ public class DaysOldRepositoryPurgeExecutor
         timestampParser = new SimpleDateFormat( "yyyyMMdd.HHmmss" );
         timestampParser.setTimeZone( DateUtils.UTC_TIME_ZONE );
     }
-    
+
     public void purge( String path )
         throws ContinuumPurgeExecutorException
     {
         try
         {
             File artifactFile = new File( repository.getRepoRoot(), path );
-    
+
             if ( !artifactFile.exists() )
             {
                 return;
             }
-    
+
             ArtifactReference artifact = repository.toArtifactReference( path );
-    
+
             Calendar olderThanThisDate = Calendar.getInstance( DateUtils.UTC_TIME_ZONE );
             olderThanThisDate.add( Calendar.DATE, -daysOlder );
-    
+
             // respect retention count
             VersionedReference reference = new VersionedReference();
             reference.setGroupId( artifact.getGroupId() );
             reference.setArtifactId( artifact.getArtifactId() );
             reference.setVersion( artifact.getVersion() );
-    
+
             List<String> versions = new ArrayList<String>( repository.getVersions( reference ) );
-    
+
             Collections.sort( versions, VersionComparator.getInstance() );
-    
+
             if ( retentionCount > versions.size() )
             {
                 // Done. nothing to do here. skip it.
                 return;
             }
-    
+
             int countToPurge = versions.size() - retentionCount;
-    
+
             for ( String version : versions )
             {
                 if ( countToPurge <= 0 )
                 {
                     break;
                 }
-    
+
                 ArtifactReference newArtifactReference =
                     repository.toArtifactReference( artifactFile.getAbsolutePath() );
                 newArtifactReference.setVersion( version );
-    
+
                 File newArtifactFile = repository.toFile( newArtifactReference );
-    
+
                 // Is this a generic snapshot "1.0-SNAPSHOT" ?
                 if ( VersionUtil.isGenericSnapshot( newArtifactReference.getVersion() ) )
                 {
@@ -126,7 +126,7 @@ public class DaysOldRepositoryPurgeExecutor
                 else if ( VersionUtil.isUniqueSnapshot( newArtifactReference.getVersion() ) )
                 {
                     Calendar timestampCal = uniqueSnapshotToCalendar( newArtifactReference.getVersion() );
-    
+
                     if ( timestampCal.getTimeInMillis() < olderThanThisDate.getTimeInMillis() )
                     {
                         doPurgeAllRelated( newArtifactReference );
@@ -149,12 +149,12 @@ public class DaysOldRepositoryPurgeExecutor
             throw new ContinuumPurgeExecutorException( e.getMessage(), e );
         }
     }
-    
+
     private Calendar uniqueSnapshotToCalendar( String version )
     {
         // The latestVersion will contain the full version string "1.0-alpha-5-20070821.213044-8"
         // This needs to be broken down into ${base}-${timestamp}-${build_number}
-    
+
         Matcher m = VersionUtil.UNIQUE_SNAPSHOT_PATTERN.matcher( version );
         if ( m.matches() )
         {
@@ -163,14 +163,14 @@ public class DaysOldRepositoryPurgeExecutor
             {
                 String tsDate = mtimestamp.group( 1 );
                 String tsTime = mtimestamp.group( 2 );
-    
+
                 Date versionDate;
                 try
                 {
                     versionDate = timestampParser.parse( tsDate + "." + tsTime );
                     Calendar cal = Calendar.getInstance( DateUtils.UTC_TIME_ZONE );
                     cal.setTime( versionDate );
-    
+
                     return cal;
                 }
                 catch ( ParseException e )
@@ -182,7 +182,7 @@ public class DaysOldRepositoryPurgeExecutor
         }
         return null;
     }
-    
+
     private void doPurgeAllRelated( ArtifactReference reference )
         throws LayoutException
     {

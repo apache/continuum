@@ -19,10 +19,10 @@ package org.apache.continuum.purge.repository.utils;
  * under the License.
  */
 
+import org.codehaus.plexus.util.SelectorUtils;
+
 import java.util.Arrays;
 import java.util.List;
-
-import org.codehaus.plexus.util.SelectorUtils;
 
 /**
  * Codes were taken from Archiva and made some changes.
@@ -30,28 +30,28 @@ import org.codehaus.plexus.util.SelectorUtils;
 public class FileTypes
 {
     private List<String> artifactFileTypePatterns;
-    
+
     private List<String> ignoredFileTypePatterns;
-    
+
     public static final List<String> DEFAULT_EXCLUSIONS = Arrays.asList( "**/maven-metadata.xml",
-                                                                          "**/maven-metadata-*.xml", "**/*.sha1",
-                                                                          "**/*.asc", "**/*.md5", "**/*.pgp" );
-    
+                                                                         "**/maven-metadata-*.xml", "**/*.sha1",
+                                                                         "**/*.asc", "**/*.md5", "**/*.pgp" );
+
     public List<String> getIgnoredFileTypePatterns()
     {
         if ( ignoredFileTypePatterns == null )
         {
             ignoredFileTypePatterns = DEFAULT_EXCLUSIONS;
         }
-        
+
         return ignoredFileTypePatterns;
     }
-    
+
     public List<String> getArtifactFileTypePatterns()
     {
         return artifactFileTypePatterns;
     }
-    
+
     public synchronized boolean matchesArtifactPattern( String relativePath )
     {
         // Correct the slash pattern.
@@ -62,7 +62,7 @@ public class FileTypes
             return false;
         }
 
-        for ( String pattern : (List<String>)artifactFileTypePatterns )
+        for ( String pattern : (List<String>) artifactFileTypePatterns )
         {
             if ( SelectorUtils.matchPath( pattern, relativePath, false ) )
             {
@@ -91,5 +91,5 @@ public class FileTypes
 
         // No match.
         return false;
-    }    
+    }
 }

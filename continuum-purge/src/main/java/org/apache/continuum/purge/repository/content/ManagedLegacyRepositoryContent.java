@@ -26,9 +26,9 @@ import org.apache.maven.archiva.common.utils.PathUtil;
 import org.apache.maven.archiva.model.ArtifactReference;
 import org.apache.maven.archiva.model.ProjectReference;
 import org.apache.maven.archiva.model.VersionedReference;
+import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.content.ArtifactExtensionMapping;
 import org.apache.maven.archiva.repository.content.PathParser;
-import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.layout.LayoutException;
 
 import java.io.File;
@@ -39,11 +39,10 @@ import java.util.Set;
 
 /**
  * Taken from Archiva's ManagedLegacyRepositoryContent and made some few changes
- * 
- * @plexus.component 
- *      role="org.apache.continuum.purge.repository.content.RepositoryManagedContent"
- *      role-hint="legacy"
- *      instantiation-strategy="per-lookup"
+ *
+ * @plexus.component role="org.apache.continuum.purge.repository.content.RepositoryManagedContent"
+ * role-hint="legacy"
+ * instantiation-strategy="per-lookup"
  */
 public class ManagedLegacyRepositoryContent
     implements RepositoryManagedContent
@@ -67,31 +66,31 @@ public class ManagedLegacyRepositoryContent
      * @plexus.requirement role-hint="legacy-parser"
      */
     private PathParser legacyPathParser;
-    
+
     /**
      * @plexus.requirement role-hint="file-types"
      */
     private FileTypes filetypes;
-    
+
     private LocalRepository repository;
-    
+
     public void deleteVersion( VersionedReference reference )
         throws ContentNotFoundException
     {
         File groupDir = new File( repository.getLocation(), reference.getGroupId() );
-    
+
         if ( !groupDir.exists() )
         {
-            throw new ContentNotFoundException( "Unable to get versions using a non-existant groupId directory: "
-                + groupDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get versions using a non-existant groupId directory: " + groupDir.getAbsolutePath() );
         }
-    
+
         if ( !groupDir.isDirectory() )
         {
-            throw new ContentNotFoundException( "Unable to get versions using a non-directory: "
-                + groupDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get versions using a non-directory: " + groupDir.getAbsolutePath() );
         }
-    
+
         // First gather up the versions found as artifacts in the managed repository.
         File typeDirs[] = groupDir.listFiles();
         for ( File typeDir : typeDirs )
@@ -101,16 +100,16 @@ public class ManagedLegacyRepositoryContent
                 // Skip it, we only care about directories.
                 continue;
             }
-    
+
             if ( !typeDir.getName().endsWith( "s" ) )
             {
                 // Skip it, we only care about directories that end in "s".
             }
-    
+
             deleteVersions( typeDir, reference );
         }
     }
-    
+
     private void deleteVersions( File typeDir, VersionedReference reference )
     {
         File repoFiles[] = typeDir.listFiles();
@@ -121,16 +120,16 @@ public class ManagedLegacyRepositoryContent
                 // Skip it. it's a directory.
                 continue;
             }
-    
+
             String relativePath = PathUtil.getRelative( repository.getLocation(), repoFile );
-    
+
             if ( filetypes.matchesArtifactPattern( relativePath ) )
             {
                 try
                 {
                     ArtifactReference artifact = toArtifactReference( relativePath );
-                    if ( StringUtils.equals( artifact.getArtifactId(), reference.getArtifactId() )
-                        && StringUtils.equals( artifact.getVersion(), reference.getVersion() ) )
+                    if ( StringUtils.equals( artifact.getArtifactId(), reference.getArtifactId() ) &&
+                        StringUtils.equals( artifact.getVersion(), reference.getVersion() ) )
                     {
                         repoFile.delete();
                         deleteSupportFiles( repoFile );
@@ -151,7 +150,7 @@ public class ManagedLegacyRepositoryContent
         deleteSupportFile( repoFile, ".asc" );
         deleteSupportFile( repoFile, ".gpg" );
     }
-    
+
     private void deleteSupportFile( File repoFile, String supportExtension )
     {
         File supportFile = new File( repoFile.getAbsolutePath() + supportExtension );
@@ -160,32 +159,32 @@ public class ManagedLegacyRepositoryContent
             supportFile.delete();
         }
     }
-    
+
     public int getId()
     {
         return repository.getId();
     }
-    
+
     public Set<ArtifactReference> getRelatedArtifacts( ArtifactReference reference )
         throws ContentNotFoundException, LayoutException
     {
         File artifactFile = toFile( reference );
         File repoDir = artifactFile.getParentFile();
-    
+
         if ( !repoDir.exists() )
         {
-            throw new ContentNotFoundException( "Unable to get related artifacts using a non-existant directory: "
-                + repoDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get related artifacts using a non-existant directory: " + repoDir.getAbsolutePath() );
         }
-    
+
         if ( !repoDir.isDirectory() )
         {
-            throw new ContentNotFoundException( "Unable to get related artifacts using a non-directory: "
-                + repoDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get related artifacts using a non-directory: " + repoDir.getAbsolutePath() );
         }
-    
+
         Set<ArtifactReference> foundArtifacts = new HashSet<ArtifactReference>();
-    
+
         // First gather up the versions found as artifacts in the managed repository.
         File projectParentDir = repoDir.getParentFile();
         File typeDirs[] = projectParentDir.listFiles();
@@ -196,47 +195,47 @@ public class ManagedLegacyRepositoryContent
                 // Skip it, we only care about directories.
                 continue;
             }
-    
+
             if ( !typeDir.getName().endsWith( "s" ) )
             {
                 // Skip it, we only care about directories that end in "s".
             }
-    
+
             getRelatedArtifacts( typeDir, reference, foundArtifacts );
         }
-    
+
         return foundArtifacts;
     }
-    
+
     public String getRepoRoot()
     {
         return repository.getLocation();
     }
-    
+
     public LocalRepository getRepository()
     {
         return repository;
     }
-    
+
     public Set<String> getVersions( ProjectReference reference )
         throws ContentNotFoundException
     {
         File groupDir = new File( repository.getLocation(), reference.getGroupId() );
-    
+
         if ( !groupDir.exists() )
         {
-            throw new ContentNotFoundException( "Unable to get versions using a non-existant groupId directory: "
-                + groupDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get versions using a non-existant groupId directory: " + groupDir.getAbsolutePath() );
         }
-    
+
         if ( !groupDir.isDirectory() )
         {
-            throw new ContentNotFoundException( "Unable to get versions using a non-directory: "
-                + groupDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get versions using a non-directory: " + groupDir.getAbsolutePath() );
         }
-    
+
         Set<String> foundVersions = new HashSet<String>();
-    
+
         // First gather up the versions found as artifacts in the managed repository.
         File typeDirs[] = groupDir.listFiles();
         for ( File typeDir : typeDirs )
@@ -246,37 +245,37 @@ public class ManagedLegacyRepositoryContent
                 // Skip it, we only care about directories.
                 continue;
             }
-    
+
             if ( !typeDir.getName().endsWith( "s" ) )
             {
                 // Skip it, we only care about directories that end in "s".
             }
-    
+
             getProjectVersions( typeDir, reference, foundVersions );
         }
-    
+
         return foundVersions;
     }
-    
+
     public Set<String> getVersions( VersionedReference reference )
         throws ContentNotFoundException
     {
         File groupDir = new File( repository.getLocation(), reference.getGroupId() );
-    
+
         if ( !groupDir.exists() )
         {
-            throw new ContentNotFoundException( "Unable to get versions using a non-existant groupId directory: "
-                + groupDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get versions using a non-existant groupId directory: " + groupDir.getAbsolutePath() );
         }
-    
+
         if ( !groupDir.isDirectory() )
         {
-            throw new ContentNotFoundException( "Unable to get versions using a non-directory: "
-                + groupDir.getAbsolutePath() );
+            throw new ContentNotFoundException(
+                "Unable to get versions using a non-directory: " + groupDir.getAbsolutePath() );
         }
-    
+
         Set<String> foundVersions = new HashSet<String>();
-    
+
         // First gather up the versions found as artifacts in the managed repository.
         File typeDirs[] = groupDir.listFiles();
         for ( File typeDir : typeDirs )
@@ -286,21 +285,21 @@ public class ManagedLegacyRepositoryContent
                 // Skip it, we only care about directories.
                 continue;
             }
-    
+
             if ( !typeDir.getName().endsWith( "s" ) )
             {
                 // Skip it, we only care about directories that end in "s".
             }
-    
+
             getVersionedVersions( typeDir, reference, foundVersions );
         }
-    
+
         return foundVersions;
     }
 
     /**
      * Convert a path to an artifact reference.
-     * 
+     *
      * @param path the path to convert. (relative or full location path)
      * @throws LayoutException if the path cannot be converted to an artifact reference.
      */
@@ -311,27 +310,27 @@ public class ManagedLegacyRepositoryContent
         {
             return legacyPathParser.toArtifactReference( path.substring( repository.getLocation().length() ) );
         }
-    
+
         return legacyPathParser.toArtifactReference( path );
     }
-    
+
     public File toFile( ArtifactReference reference )
     {
         return new File( repository.getLocation(), toPath( reference ) );
     }
-    
+
     public String toMetadataPath( ProjectReference reference )
     {
         // No metadata present in legacy repository.
         return null;
     }
-    
+
     public String toMetadataPath( VersionedReference reference )
     {
         // No metadata present in legacy repository.
         return null;
     }
-    
+
     public String toPath( ArtifactReference reference )
     {
         if ( reference == null )
@@ -342,12 +341,12 @@ public class ManagedLegacyRepositoryContent
         return toPath( reference.getGroupId(), reference.getArtifactId(), reference.getVersion(), reference
             .getClassifier(), reference.getType() );
     }
-    
+
     public void setRepository( LocalRepository repo )
     {
         this.repository = repo;
     }
-    
+
     private void getProjectVersions( File typeDir, ProjectReference reference, Set<String> foundVersions )
     {
         File repoFiles[] = typeDir.listFiles();
@@ -358,9 +357,9 @@ public class ManagedLegacyRepositoryContent
                 // Skip it. it's a directory.
                 continue;
             }
-    
+
             String relativePath = PathUtil.getRelative( repository.getLocation(), repoFile );
-    
+
             if ( filetypes.matchesArtifactPattern( relativePath ) )
             {
                 try
@@ -378,7 +377,7 @@ public class ManagedLegacyRepositoryContent
             }
         }
     }
-    
+
     private void getRelatedArtifacts( File typeDir, ArtifactReference reference, Set<ArtifactReference> foundArtifacts )
     {
         File repoFiles[] = typeDir.listFiles();
@@ -389,16 +388,16 @@ public class ManagedLegacyRepositoryContent
                 // Skip it. it's a directory.
                 continue;
             }
-    
+
             String relativePath = PathUtil.getRelative( repository.getLocation(), repoFiles[i] );
-    
+
             if ( filetypes.matchesArtifactPattern( relativePath ) )
             {
                 try
                 {
                     ArtifactReference artifact = toArtifactReference( relativePath );
-                    if ( StringUtils.equals( artifact.getArtifactId(), reference.getArtifactId() )
-                        && artifact.getVersion().startsWith( reference.getVersion() ) )
+                    if ( StringUtils.equals( artifact.getArtifactId(), reference.getArtifactId() ) &&
+                        artifact.getVersion().startsWith( reference.getVersion() ) )
                     {
                         foundArtifacts.add( artifact );
                     }
@@ -410,7 +409,7 @@ public class ManagedLegacyRepositoryContent
             }
         }
     }
-    
+
     private void getVersionedVersions( File typeDir, VersionedReference reference, Set<String> foundVersions )
     {
         File repoFiles[] = typeDir.listFiles();
@@ -421,16 +420,16 @@ public class ManagedLegacyRepositoryContent
                 // Skip it. it's a directory.
                 continue;
             }
-    
+
             String relativePath = PathUtil.getRelative( repository.getLocation(), repoFiles[i] );
-    
+
             if ( filetypes.matchesArtifactPattern( relativePath ) )
             {
                 try
                 {
                     ArtifactReference artifact = toArtifactReference( relativePath );
-                    if ( StringUtils.equals( artifact.getArtifactId(), reference.getArtifactId() )
-                        && artifact.getVersion().startsWith( reference.getVersion() ) )
+                    if ( StringUtils.equals( artifact.getArtifactId(), reference.getArtifactId() ) &&
+                        artifact.getVersion().startsWith( reference.getVersion() ) )
                     {
                         foundVersions.add( artifact.getVersion() );
                     }

@@ -19,61 +19,71 @@ package org.apache.continuum.repository;
  * under the License.
  */
 
-import java.util.List;
-
+import org.apache.continuum.dao.LocalRepositoryDao;
+import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
-import org.apache.continuum.repository.RepositoryService;
-import org.apache.continuum.repository.RepositoryServiceException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
+import java.util.List;
+
 /**
  * DefaultRepositoryService
- * 
+ *
  * @author Maria Catherine Tan
  * @version $Id$
- * @since 25 jul 07
  * @plexus.component role="org.apache.continuum.repository.RepositoryService" role-hint="default"
+ * @since 25 jul 07
  */
 public class DefaultRepositoryService
     extends AbstractLogEnabled
     implements RepositoryService
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
-    
+    private LocalRepositoryDao localRepositoryDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
+
     /**
      * @plexus.requirement
      */
     private ContinuumPurgeManager purgeManager;
-    
+
     public LocalRepository addLocalRepository( LocalRepository localRepository )
         throws RepositoryServiceException
     {
         LocalRepository repository = null;
-        
+
         try
         {
             localRepository.setName( localRepository.getName().trim() );
             localRepository.setLocation( localRepository.getLocation().trim() );
-            
-            repository = store.addLocalRepository( localRepository );
-            
+
+            repository = localRepositoryDao.addLocalRepository( localRepository );
+
             getLogger().info( "Added new local repository: " + repository.getName() );
         }
         catch ( ContinuumStoreException e )
         {
             throw new RepositoryServiceException( "Unable to add the requested local repository", e );
         }
-        
+
         return repository;
     }
 
@@ -83,30 +93,30 @@ public class DefaultRepositoryService
         try
         {
             LocalRepository repository = getLocalRepository( repositoryId );
-            
+
             if ( purgeManager.isRepositoryInUse( repositoryId ) )
             {
                 return;
             }
-            
+
             if ( purgeManager.isRepositoryInPurgeQueue( repositoryId ) )
             {
                 purgeManager.removeRepositoryFromPurgeQueue( repositoryId );
             }
-            
+
             getLogger().info( "Remove purge configurations of " + repository.getName() );
             removePurgeConfigurationsOfRepository( repositoryId );
-            
-            List<ProjectGroup> groups = store.getProjectGroupByRepository( repositoryId );
-            
-            for( ProjectGroup group : groups )
+
+            List<ProjectGroup> groups = projectGroupDao.getProjectGroupByRepository( repositoryId );
+
+            for ( ProjectGroup group : groups )
             {
                 group.setLocalRepository( null );
-                store.updateProjectGroup( group );
+                projectGroupDao.updateProjectGroup( group );
             }
-            
-            store.removeLocalRepository( repository );
-            
+
+            localRepositoryDao.removeLocalRepository( repository );
+
             getLogger().info( "Removed local repository: " + repository.getName() );
         }
         catch ( ContinuumPurgeManagerException e )
@@ -115,7 +125,7 @@ public class DefaultRepositoryService
         }
         catch ( ContinuumStoreException e )
         {
-            throw new RepositoryServiceException( "Unable to delete the requested local repository", e ); 
+            throw new RepositoryServiceException( "Unable to delete the requested local repository", e );
         }
     }
 
@@ -124,16 +134,16 @@ public class DefaultRepositoryService
     {
         localRepository.setName( localRepository.getName().trim() );
         localRepository.setLocation( localRepository.getLocation().trim() );
-        
+
         try
         {
             if ( purgeManager.isRepositoryInUse( localRepository.getId() ) )
             {
                 return;
             }
-            
-            store.updateLocalRepository( localRepository );
-            
+
+            localRepositoryDao.updateLocalRepository( localRepository );
+
             getLogger().info( "Updated local repository: " + localRepository.getName() );
         }
         catch ( ContinuumPurgeManagerException e )
@@ -145,15 +155,15 @@ public class DefaultRepositoryService
             throw new RepositoryServiceException( "Unable to update the requested local repository", e );
         }
     }
-    
+
     public List<LocalRepository> getAllLocalRepositories()
     {
-        return store.getAllLocalRepositories();
+        return localRepositoryDao.getAllLocalRepositories();
     }
 
     public List<LocalRepository> getLocalRepositoriesByLayout( String layout )
     {
-        return store.getLocalRepositoriesByLayout( layout );
+        return localRepositoryDao.getLocalRepositoriesByLayout( layout );
     }
 
     public LocalRepository getLocalRepositoryByLocation( String location )
@@ -161,7 +171,7 @@ public class DefaultRepositoryService
     {
         try
         {
-            return store.getLocalRepositoryByLocation( location );
+            return localRepositoryDao.getLocalRepositoryByLocation( location );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -172,13 +182,13 @@ public class DefaultRepositoryService
             throw new RepositoryServiceException( "Unable to retrieve local repository by location: " + location, e );
         }
     }
-    
+
     public LocalRepository getLocalRepository( int repositoryId )
         throws RepositoryServiceException
     {
         try
         {
-            return store.getLocalRepository( repositoryId );
+            return localRepositoryDao.getLocalRepository( repositoryId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -189,18 +199,18 @@ public class DefaultRepositoryService
             throw new RepositoryServiceException( "Unable to retrieve local repository: " + repositoryId, e );
         }
     }
-    
+
     private void removePurgeConfigurationsOfRepository( int repositoryId )
         throws RepositoryServiceException
     {
         try
         {
-            List<RepositoryPurgeConfiguration> purgeConfigs = 
-                store.getRepositoryPurgeConfigurationsByLocalRepository( repositoryId );
-            
-            for( RepositoryPurgeConfiguration purgeConfig : purgeConfigs )
+            List<RepositoryPurgeConfiguration> purgeConfigs =
+                repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsByLocalRepository( repositoryId );
+
+            for ( RepositoryPurgeConfiguration purgeConfig : purgeConfigs )
             {
-                store.removeRepositoryPurgeConfiguration( purgeConfig );
+                repositoryPurgeConfigurationDao.removeRepositoryPurgeConfiguration( purgeConfig );
             }
         }
         catch ( ContinuumObjectNotFoundException e )
@@ -209,8 +219,8 @@ public class DefaultRepositoryService
         }
         catch ( ContinuumStoreException e )
         {
-            throw new RepositoryServiceException( "Error while removing purge configurations of local repository: " 
-                                                  + repositoryId, e );
+            throw new RepositoryServiceException(
+                "Error while removing purge configurations of local repository: " + repositoryId, e );
         }
     }
 }

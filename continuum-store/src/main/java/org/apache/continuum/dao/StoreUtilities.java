@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.store;
+package org.apache.continuum.dao;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,15 +19,30 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
-import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.jdo.JdoFactory;
+
+import javax.jdo.PersistenceManagerFactory;
 
 /**
- * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
+ * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @todo remove this class - these methods belong in the build class or similar
+ * @plexus.component role="org.apache.continuum.dao.StoreUtilities"
  */
-public abstract class AbstractContinuumStore
-    extends AbstractLogEnabled
-    implements ContinuumStore
+public class StoreUtilities
 {
+    /**
+     * @plexus.requirement role-hint="continuum"
+     */
+    private JdoFactory continuumJdoFactory;
+
+    private PersistenceManagerFactory continuumPersistenceManagerFactory;
+
+    public PersistenceManagerFactory getContinuumPersistenceManagerFactory()
+    {
+        if ( continuumPersistenceManagerFactory == null )
+        {
+            continuumPersistenceManagerFactory = continuumJdoFactory.getPersistenceManagerFactory();
+        }
+        return continuumPersistenceManagerFactory;
+    }
 }

@@ -28,19 +28,19 @@ import org.apache.maven.archiva.repository.layout.LayoutException;
 
 /**
  * Codes were taken from Archiva's LegacyPathParser and made some few changes.
- * 
+ *
  * @plexus.component role="org.apache.maven.archiva.repository.content.PathParser" role-hint="legacy-parser"
  */
 public class LegacyPathParser
     implements PathParser
 {
     private static final String INVALID_ARTIFACT_PATH = "Invalid path to Artifact: ";
-    
+
     public ArtifactReference toArtifactReference( String path )
         throws LayoutException
     {
         ArtifactReference artifact = new ArtifactReference();
-    
+
         String normalizedPath = StringUtils.replace( path, "\\", "/" );
 
         String pathParts[] = StringUtils.split( normalizedPath, '/' );
@@ -56,11 +56,10 @@ public class LegacyPathParser
         if ( pathParts.length != 3 )
         {
             // Illegal Path Parts Length.
-            throw new LayoutException( INVALID_ARTIFACT_PATH
-                    + "legacy paths should only have 3 parts [groupId]/[type]s/[artifactId]-[version].[type], found "
-                    + pathParts.length + " instead." );
+            throw new LayoutException( INVALID_ARTIFACT_PATH +
+                "legacy paths should only have 3 parts [groupId]/[type]s/[artifactId]-[version].[type], found " +
+                pathParts.length + " instead." );
         }
-
 
         // The Group ID.
         artifact.setGroupId( pathParts[0] );
@@ -71,8 +70,8 @@ public class LegacyPathParser
         // Sanity Check: expectedType should end in "s".
         if ( !expectedType.endsWith( "s" ) )
         {
-            throw new LayoutException( INVALID_ARTIFACT_PATH
-                    + "legacy paths should have an expected type ending in [s] in the second part of the path." );
+            throw new LayoutException( INVALID_ARTIFACT_PATH +
+                "legacy paths should have an expected type ending in [s] in the second part of the path." );
         }
 
         // The Filename.
@@ -135,9 +134,10 @@ public class LegacyPathParser
         if ( classifier != null )
         {
             String version = artifact.getVersion();
-            if ( ! version.endsWith( "-" + classifier ) )
+            if ( !version.endsWith( "-" + classifier ) )
             {
-                throw new LayoutException( INVALID_ARTIFACT_PATH + expectedType + " artifacts must use the classifier " + classifier );
+                throw new LayoutException(
+                    INVALID_ARTIFACT_PATH + expectedType + " artifacts must use the classifier " + classifier );
             }
             version = version.substring( 0, version.length() - classifier.length() - 1 );
             artifact.setVersion( version );
@@ -169,9 +169,9 @@ public class LegacyPathParser
 
             if ( !expectedExtension.equals( extension ) )
             {
-                throw new LayoutException( INVALID_ARTIFACT_PATH + "mismatch on extension [" + extension
-                    + "] and layout specified type [" + artifact.getType() + "] (which maps to extension: ["
-                    + expectedExtension + "]) on path [" + path + "]" );
+                throw new LayoutException( INVALID_ARTIFACT_PATH + "mismatch on extension [" + extension +
+                    "] and layout specified type [" + artifact.getType() + "] (which maps to extension: [" +
+                    expectedExtension + "]) on path [" + path + "]" );
             }
         }
 

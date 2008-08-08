@@ -51,8 +51,10 @@
           <role>org.codehaus.plexus.velocity.VelocityComponent</role>
         </requirement>
         <requirement>
-          <role>org.apache.maven.continuum.store.ContinuumStore</role>
-          <role-hint>jdo</role-hint>
+          <role>org.apache.continuum.dao.ProjectDao</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.dao.BuildResultDao</role>
         </requirement>
         <requirement>
           <role>org.codehaus.plexus.mailsender.MailSender</role>
@@ -135,8 +137,10 @@
           <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
         </requirement>
         <requirement>
-          <role>org.apache.maven.continuum.store.ContinuumStore</role>
-          <role-hint>jdo</role-hint>
+          <role>org.apache.continuum.dao.ProjectDao</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.dao.BuildResultDao</role>
         </requirement>
       </requirements>
       <configuration>
@@ -169,8 +173,10 @@
           <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
         </requirement>
         <requirement>
-          <role>org.apache.maven.continuum.store.ContinuumStore</role>
-          <role-hint>jdo</role-hint>
+          <role>org.apache.continuum.dao.ProjectDao</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.dao.BuildResultDao</role>
         </requirement>
       </requirements>
       <configuration>

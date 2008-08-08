@@ -19,6 +19,9 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.BuildResultDao;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
@@ -32,7 +35,6 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
@@ -59,9 +61,19 @@ public class DefaultBuildController
     implements BuildController
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private BuildDefinitionDao buildDefinitionDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildResultDao buildResultDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
 
     /**
      * @plexus.requirement
@@ -162,7 +174,7 @@ public class DefaultBuildController
             {
                 try
                 {
-                    context.setBuildResult( store.getBuildResult( Integer.valueOf( s ) ) );
+                    context.setBuildResult( buildResultDao.getBuildResult( Integer.valueOf( s ) ) );
                 }
                 catch ( NumberFormatException e )
                 {
@@ -208,7 +220,7 @@ public class DefaultBuildController
 
                     if ( s != null )
                     {
-                        BuildResult buildResult = store.getBuildResult( Integer.valueOf( s ) );
+                        BuildResult buildResult = buildResultDao.getBuildResult( Integer.valueOf( s ) );
                         project.setState( buildResult.getState() );
                     }
                     else
@@ -216,7 +228,7 @@ public class DefaultBuildController
                         project.setState( ContinuumProjectState.ERROR );
                     }
 
-                    store.updateProject( project );
+                    projectDao.updateProject( project );
                 }
                 catch ( ContinuumStoreException e )
                 {
@@ -247,9 +259,9 @@ public class DefaultBuildController
 
             try
             {
-                store.updateBuildResult( build );
+                buildResultDao.updateBuildResult( build );
 
-                build = store.getBuildResult( build.getId() );
+                build = buildResultDao.getBuildResult( build.getId() );
 
                 context.setBuildResult( build );
             }
@@ -263,7 +275,7 @@ public class DefaultBuildController
 
         try
         {
-            store.updateProject( context.getProject() );
+            projectDao.updateProject( context.getProject() );
         }
         catch ( ContinuumStoreException e )
         {
@@ -296,7 +308,7 @@ public class DefaultBuildController
 
         try
         {
-            store.updateProject( project );
+            projectDao.updateProject( project );
         }
         catch ( ContinuumStoreException e )
         {
@@ -327,13 +339,14 @@ public class DefaultBuildController
 
         try
         {
-            context.setProject( store.getProject( projectId ) );
+            context.setProject( projectDao.getProject( projectId ) );
 
-            BuildDefinition buildDefinition = store.getBuildDefinition( buildDefinitionId );
+            BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
 
             context.setBuildDefinition( buildDefinition );
 
-            BuildResult oldBuildResult = store.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+            BuildResult oldBuildResult =
+                buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
 
             context.setOldBuildResult( oldBuildResult );
 
@@ -534,7 +547,7 @@ public class DefaultBuildController
             }
             catch ( Exception e )
             {
-                throw new TaskExecutionException("Can't determine if the project should build or not", e);
+                throw new TaskExecutionException( "Can't determine if the project should build or not", e );
             }
         }
 
@@ -550,7 +563,7 @@ public class DefaultBuildController
 
             try
             {
-                store.updateProject( project );
+                projectDao.updateProject( project );
             }
             catch ( ContinuumStoreException e )
             {
@@ -611,7 +624,7 @@ public class DefaultBuildController
 
         try
         {
-            Project project = store.getProjectWithAllDetails( context.getProject().getId() );
+            Project project = projectDao.getProjectWithAllDetails( context.getProject().getId() );
             List<ProjectDependency> dependencies = project.getDependencies();
 
             if ( dependencies == null )
@@ -633,12 +646,13 @@ public class DefaultBuildController
 
             for ( ProjectDependency dep : dependencies )
             {
-                Project dependencyProject = store.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
+                Project dependencyProject =
+                    projectDao.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
 
                 if ( dependencyProject != null )
                 {
-                    List buildResults = store.getBuildResultsInSuccessForProject( dependencyProject.getId(),
-                                                                                  context.getOldBuildResult().getEndTime() );
+                    List buildResults = buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
+                                                                                           context.getOldBuildResult().getEndTime() );
                     if ( buildResults != null && !buildResults.isEmpty() )
                     {
                         getLogger().debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
@@ -742,9 +756,9 @@ public class DefaultBuildController
 
         try
         {
-            store.addBuildResult( context.getProject(), build );
+            buildResultDao.addBuildResult( context.getProject(), build );
 
-            build = store.getBuildResult( build.getId() );
+            build = buildResultDao.getBuildResult( build.getId() );
 
             context.setBuildResult( build );
 
@@ -758,7 +772,7 @@ public class DefaultBuildController
 
     private ScmResult getOldScmResult( int projectId, long fromDate )
     {
-        List<BuildResult> results = store.getBuildResultsForProject( projectId, fromDate );
+        List<BuildResult> results = buildResultDao.getBuildResultsForProject( projectId, fromDate );
 
         ScmResult res = new ScmResult();
 
@@ -854,7 +868,7 @@ public class DefaultBuildController
 
                 project.setState( build.getState() );
 
-                store.updateProject( project );
+                projectDao.updateProject( project );
 
                 return false;
             }

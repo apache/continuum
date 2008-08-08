@@ -19,16 +19,15 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
+import org.apache.continuum.dao.LocalRepositoryDao;
+import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.model.repository.AbstractPurgeConfiguration;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -37,29 +36,42 @@ import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * DefaultPurgeConfigurationService
- * 
+ *
  * @author Maria Catherine Tan
  * @version $Id$
- * @since 25 jul 07
  * @plexus.component role="org.apache.continuum.purge.PurgeConfigurationService" role-hint="default"
+ * @since 25 jul 07
  */
 public class DefaultPurgeConfigurationService
     implements PurgeConfigurationService, Contextualizable
 {
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
- 
+    private DirectoryPurgeConfigurationDao directoryPurgeConfigurationDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private LocalRepositoryDao localRepositoryDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private RepositoryPurgeConfigurationDao repositoryPurgeConfigurationDao;
+
     private PlexusContainer container;
- 
+
     public AbstractPurgeConfiguration addPurgeConfiguration( AbstractPurgeConfiguration purgeConfig )
         throws PurgeConfigurationServiceException
     {
         AbstractPurgeConfiguration purgeConfiguration = null;
-        
+
         if ( purgeConfig instanceof RepositoryPurgeConfiguration )
         {
             purgeConfiguration = addRepositoryPurgeConfiguration( (RepositoryPurgeConfiguration) purgeConfig );
@@ -68,10 +80,10 @@ public class DefaultPurgeConfigurationService
         {
             purgeConfiguration = addDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) purgeConfig );
         }
-        
+
         return purgeConfiguration;
     }
-    
+
     public void updatePurgeConfiguration( AbstractPurgeConfiguration purgeConfig )
         throws PurgeConfigurationServiceException
     {
@@ -84,12 +96,12 @@ public class DefaultPurgeConfigurationService
             updateDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) purgeConfig );
         }
     }
-    
+
     public void removePurgeConfiguration( int purgeConfigId )
         throws PurgeConfigurationServiceException
     {
         AbstractPurgeConfiguration purgeConfig = getPurgeConfiguration( purgeConfigId );
-        
+
         if ( purgeConfig instanceof RepositoryPurgeConfiguration )
         {
             removeRepositoryPurgeConfiguration( (RepositoryPurgeConfiguration) purgeConfig );
@@ -99,45 +111,45 @@ public class DefaultPurgeConfigurationService
             removeDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) purgeConfig );
         }
     }
-    
+
     public DirectoryPurgeConfiguration addDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException
     {
         DirectoryPurgeConfiguration dirPurgeConfig = null;
-        
+
         try
         {
-            dirPurgeConfig = store.addDirectoryPurgeConfiguration( dirPurge );
+            dirPurgeConfig = directoryPurgeConfigurationDao.addDirectoryPurgeConfiguration( dirPurge );
         }
         catch ( ContinuumStoreException e )
         {
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
-        
+
         return dirPurgeConfig;
     }
-    
+
     public RepositoryPurgeConfiguration addRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
         throws PurgeConfigurationServiceException
     {
         RepositoryPurgeConfiguration repoPurgeConfig = null;
-        
+
         try
         {
-            repoPurgeConfig = store.addRepositoryPurgeConfiguration( repoPurge );
+            repoPurgeConfig = repositoryPurgeConfigurationDao.addRepositoryPurgeConfiguration( repoPurge );
         }
         catch ( ContinuumStoreException e )
         {
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
-        
+
         return repoPurgeConfig;
     }
-    
+
     public RepositoryPurgeConfiguration getDefaultPurgeConfigurationForRepository( int repositoryId )
     {
         List<RepositoryPurgeConfiguration> purgeConfigs = getRepositoryPurgeConfigurationsByRepository( repositoryId );
-        
+
         for ( RepositoryPurgeConfiguration purgeConfig : purgeConfigs )
         {
             if ( purgeConfig.isDefaultPurge() )
@@ -145,37 +157,38 @@ public class DefaultPurgeConfigurationService
                 return purgeConfig;
             }
         }
-        
+
         return null;
     }
-    
+
     public List<DirectoryPurgeConfiguration> getAllDirectoryPurgeConfigurations()
     {
-        return store.getAllDirectoryPurgeConfigurations();
+        return directoryPurgeConfigurationDao.getAllDirectoryPurgeConfigurations();
     }
-    
+
     public List<RepositoryPurgeConfiguration> getAllRepositoryPurgeConfigurations()
     {
-        return store.getAllRepositoryPurgeConfigurations();
+        return repositoryPurgeConfigurationDao.getAllRepositoryPurgeConfigurations();
     }
-    
+
     public List<AbstractPurgeConfiguration> getAllPurgeConfigurations()
     {
         List<RepositoryPurgeConfiguration> repoPurge = getAllRepositoryPurgeConfigurations();
         List<DirectoryPurgeConfiguration> dirPurge = getAllDirectoryPurgeConfigurations();
-        
+
         List<AbstractPurgeConfiguration> allPurgeConfigs = new ArrayList<AbstractPurgeConfiguration>();
-        
+
         allPurgeConfigs.addAll( repoPurge );
         allPurgeConfigs.addAll( dirPurge );
-        
+
         return allPurgeConfigs;
     }
-    
+
     public DirectoryPurgeConfiguration getDefaultPurgeConfigurationForDirectoryType( String directoryType )
     {
-        List<DirectoryPurgeConfiguration> purgeConfigs = store.getDirectoryPurgeConfigurationsByType( directoryType );
-        
+        List<DirectoryPurgeConfiguration> purgeConfigs =
+            directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsByType( directoryType );
+
         for ( DirectoryPurgeConfiguration purgeConfig : purgeConfigs )
         {
             if ( purgeConfig.isDefaultPurge() )
@@ -183,88 +196,88 @@ public class DefaultPurgeConfigurationService
                 return purgeConfig;
             }
         }
-        
+
         return null;
     }
-    
+
     public List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsByLocation( String location )
     {
-        return store.getDirectoryPurgeConfigurationsByLocation( location );
+        return directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsByLocation( location );
     }
-    
+
     public List<DirectoryPurgeConfiguration> getDirectoryPurgeConfigurationsBySchedule( int scheduleId )
     {
-        return store.getDirectoryPurgeConfigurationsBySchedule( scheduleId );
+        return directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsBySchedule( scheduleId );
     }
-    
+
     public List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsByRepository( int repositoryId )
     {
-        return store.getRepositoryPurgeConfigurationsByLocalRepository( repositoryId );
+        return repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsByLocalRepository( repositoryId );
     }
-    
+
     public List<RepositoryPurgeConfiguration> getRepositoryPurgeConfigurationsBySchedule( int scheduleId )
     {
-        return store.getRepositoryPurgeConfigurationsBySchedule( scheduleId );
+        return repositoryPurgeConfigurationDao.getRepositoryPurgeConfigurationsBySchedule( scheduleId );
     }
-    
+
     public void removeDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfig )
         throws PurgeConfigurationServiceException
     {
         try
         {
-            store.removeDirectoryPurgeConfiguration( purgeConfig );
+            directoryPurgeConfigurationDao.removeDirectoryPurgeConfiguration( purgeConfig );
         }
         catch ( ContinuumStoreException e )
         {
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
     }
-    
+
     public void removeRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfig )
         throws PurgeConfigurationServiceException
     {
         try
         {
-            store.removeRepositoryPurgeConfiguration( purgeConfig );
+            repositoryPurgeConfigurationDao.removeRepositoryPurgeConfiguration( purgeConfig );
         }
         catch ( ContinuumStoreException e )
         {
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
     }
-    
+
     public void updateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration purgeConfig )
         throws PurgeConfigurationServiceException
     {
         try
         {
-            store.updateDirectoryPurgeConfiguration( purgeConfig );
+            directoryPurgeConfigurationDao.updateDirectoryPurgeConfiguration( purgeConfig );
         }
         catch ( ContinuumStoreException e )
         {
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
     }
-    
+
     public void updateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration purgeConfig )
         throws PurgeConfigurationServiceException
     {
         try
         {
-            store.updateRepositoryPurgeConfiguration( purgeConfig );
+            repositoryPurgeConfigurationDao.updateRepositoryPurgeConfiguration( purgeConfig );
         }
         catch ( ContinuumStoreException e )
         {
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
     }
-    
+
     public DirectoryPurgeConfiguration getDirectoryPurgeConfiguration( int purgeConfigId )
         throws PurgeConfigurationServiceException
     {
         try
         {
-            return store.getDirectoryPurgeConfiguration( purgeConfigId );
+            return directoryPurgeConfigurationDao.getDirectoryPurgeConfiguration( purgeConfigId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -275,13 +288,13 @@ public class DefaultPurgeConfigurationService
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
     }
-    
+
     public RepositoryPurgeConfiguration getRepositoryPurgeConfiguration( int purgeConfigId )
         throws PurgeConfigurationServiceException
     {
         try
         {
-            return store.getRepositoryPurgeConfiguration( purgeConfigId );
+            return repositoryPurgeConfigurationDao.getRepositoryPurgeConfiguration( purgeConfigId );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
@@ -292,11 +305,11 @@ public class DefaultPurgeConfigurationService
             throw new PurgeConfigurationServiceException( e.getMessage(), e );
         }
     }
-    
+
     public AbstractPurgeConfiguration getPurgeConfiguration( int purgeConfigId )
     {
         AbstractPurgeConfiguration purgeConfig = null;
-        
+
         try
         {
             purgeConfig = getRepositoryPurgeConfiguration( purgeConfigId );
@@ -305,7 +318,7 @@ public class DefaultPurgeConfigurationService
         {
             // purgeConfigId is not of type repository purge configuration
         }
-        
+
         if ( purgeConfig == null )
         {
             try
@@ -317,38 +330,42 @@ public class DefaultPurgeConfigurationService
                 // purgeConfigId is not of type directory purge configuration
             }
         }
-        
+
         return purgeConfig;
     }
-    
+
     public RepositoryManagedContent getManagedRepositoryContent( int repositoryId )
         throws PurgeConfigurationServiceException
     {
         try
         {
-            LocalRepository repository = store.getLocalRepository( repositoryId );
-            
+            LocalRepository repository = localRepositoryDao.getLocalRepository( repositoryId );
+
             RepositoryManagedContent repoContent;
-            
-            repoContent = (RepositoryManagedContent) container.lookup( RepositoryManagedContent.class, repository.getLayout() );
+
+            repoContent =
+                (RepositoryManagedContent) container.lookup( RepositoryManagedContent.class, repository.getLayout() );
             repoContent.setRepository( repository );
-            
+
             return repoContent;
         }
         catch ( ContinuumObjectNotFoundException e )
         {
-            throw new PurgeConfigurationServiceException( "Error retrieving managed repository content for: " + repositoryId, e );
+            throw new PurgeConfigurationServiceException(
+                "Error retrieving managed repository content for: " + repositoryId, e );
         }
         catch ( ContinuumStoreException e )
         {
-            throw new PurgeConfigurationServiceException( "Error retrieving managed repository content for: " + repositoryId, e );
+            throw new PurgeConfigurationServiceException(
+                "Error retrieving managed repository content for: " + repositoryId, e );
         }
         catch ( ComponentLookupException e )
         {
-            throw new PurgeConfigurationServiceException( "Error retrieving managed repository content for: " + repositoryId, e );
+            throw new PurgeConfigurationServiceException(
+                "Error retrieving managed repository content for: " + repositoryId, e );
         }
     }
-    
+
     public void contextualize( Context context )
         throws ContextException
     {

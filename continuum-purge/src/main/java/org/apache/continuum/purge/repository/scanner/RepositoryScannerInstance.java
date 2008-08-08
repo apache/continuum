@@ -19,14 +19,14 @@ package org.apache.continuum.purge.repository.scanner;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.purge.controller.PurgeController;
 import org.apache.maven.archiva.common.utils.BaseFile;
 import org.codehaus.plexus.util.DirectoryWalkListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  * Codes were taken from Archiva and made some few changes
@@ -35,17 +35,17 @@ public class RepositoryScannerInstance
     implements DirectoryWalkListener
 {
     private Logger log = LoggerFactory.getLogger( RepositoryScannerInstance.class );
-    
+
     private LocalRepository repository;
-    
+
     private PurgeController purgeController;
-    
+
     public RepositoryScannerInstance( LocalRepository repository, PurgeController purgeController )
     {
         this.repository = repository;
         this.purgeController = purgeController;
     }
-    
+
     public void debug( String message )
     {
         log.debug( "Repository Scanner: " + message );

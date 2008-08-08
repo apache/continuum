@@ -19,13 +19,13 @@
 
 <component-set>
   <components>
-  
+
     <!--
-     |
-     | Purge Task Queue
-     |
-     |-->
-    
+    |
+    | Purge Task Queue
+    |
+    |-->
+
     <component>
       <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
       <role-hint>purge</role-hint>
@@ -40,7 +40,7 @@
         </task-viability-evaluators>
       </configuration>
     </component>
-    
+
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
       <role-hint>purge</role-hint>
@@ -56,7 +56,7 @@
         </requirement>
       </requirements>
     </component>
-    
+
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>purge</role-hint>
@@ -76,7 +76,7 @@
         <name>purge</name>
       </configuration>
     </component>
-    
+
     <component>
       <role>org.apache.continuum.purge.repository.utils.FileTypes</role>
       <role-hint>file-types</role-hint>

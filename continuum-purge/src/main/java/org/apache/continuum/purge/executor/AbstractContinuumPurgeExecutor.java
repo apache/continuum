@@ -19,16 +19,17 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Set;
-
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 import org.apache.maven.archiva.model.ArtifactReference;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Set;
+
 /**
  * Some codes were taken from Archiva.
+ *
  * @author Maria Catherine Tan
  */
 public abstract class AbstractContinuumPurgeExecutor
@@ -36,7 +37,7 @@ public abstract class AbstractContinuumPurgeExecutor
 {
     public void purge( Set<ArtifactReference> references, RepositoryManagedContent repository )
     {
-        if( references != null && !references.isEmpty() )
+        if ( references != null && !references.isEmpty() )
         {
             for ( ArtifactReference reference : references )
             {
@@ -48,7 +49,7 @@ public abstract class AbstractContinuumPurgeExecutor
             }
         }
     }
-    
+
     /**
      * <p>
      * This find support files for the artifactFile and deletes them.
@@ -56,7 +57,7 @@ public abstract class AbstractContinuumPurgeExecutor
      * <p>
      * Support Files are things like ".sha1", ".md5", ".asc", etc.
      * </p>
-     * 
+     *
      * @param artifactFile the file to base off of.
      */
     protected void purgeSupportFiles( File artifactFile, String filename )

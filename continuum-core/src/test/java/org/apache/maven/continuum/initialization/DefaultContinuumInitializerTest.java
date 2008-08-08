@@ -19,10 +19,10 @@ package org.apache.maven.continuum.initialization;
  * under the License.
  */
 
+import org.apache.continuum.dao.DaoUtils;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
-import org.apache.maven.continuum.store.ContinuumStore;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -32,27 +32,21 @@ import org.apache.maven.continuum.store.ContinuumStore;
 public class DefaultContinuumInitializerTest
     extends AbstractContinuumTest
 {
-
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        getContinuumStore().eraseDatabase();
+        DaoUtils daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
+        daoUtils.eraseDatabase();
         ContinuumInitializer continuumInitializer =
             (ContinuumInitializer) lookup( ContinuumInitializer.ROLE, "default" );
         continuumInitializer.initialize();
     }
 
-    public ContinuumStore getContinuumStore()
-        throws Exception
-    {
-        return (ContinuumStore) lookup( ContinuumStore.ROLE, "jdo" );
-    }
-
     public void testDefaultSchedule()
         throws Exception
     {
-        Schedule schedule = getContinuumStore().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
+        Schedule schedule = getScheduleDao().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME );
         assertNotNull( schedule );
     }
 

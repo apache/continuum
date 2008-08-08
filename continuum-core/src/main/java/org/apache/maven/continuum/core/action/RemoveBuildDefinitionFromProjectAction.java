@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 
@@ -35,6 +36,10 @@ import java.util.Map;
 public class RemoveBuildDefinitionFromProjectAction
     extends AbstractBuildDefinitionContinuumAction
 {
+    /**
+     * @plexus.requirement
+     */
+    private ProjectDao projectDao;
 
     public void execute( Map map )
         throws Exception
@@ -42,13 +47,13 @@ public class RemoveBuildDefinitionFromProjectAction
         BuildDefinition buildDefinition = getBuildDefinition( map );
         int projectId = getProjectId( map );
 
-        Project project = store.getProjectWithAllDetails( projectId );
+        Project project = projectDao.getProjectWithAllDetails( projectId );
 
         // removing build definition from project doesn't effect anything if it is the default for the proejct, the
         // default will just change automatically to the default build definition of the project group.
 
         project.removeBuildDefinition( buildDefinition );
 
-        store.updateProject( project );
+        projectDao.updateProject( project );
     }
 }

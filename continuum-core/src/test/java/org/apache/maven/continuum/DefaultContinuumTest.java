@@ -19,13 +19,8 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -38,6 +33,13 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -69,9 +71,9 @@ public class DefaultContinuumTest
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
 
-        int projectCount = getStore().getAllProjectsByName().size();
+        int projectCount = getProjectDao().getAllProjectsByName().size();
 
-        int projectGroupCount = getStore().getAllProjectGroupsWithProjects().size();
+        int projectGroupCount = getProjectGroupDao().getAllProjectGroupsWithProjects().size();
 
         File rootPom = getTestFile( "src/test/resources/projects/continuum/continuum-notifiers/pom.xml" );
 
@@ -85,18 +87,19 @@ public class DefaultContinuumTest
 
         assertEquals( "result.projectGroups.size", 1, result.getProjectGroups().size() );
 
-        System.err.println( "number of projects: " + getStore().getAllProjectsByName().size() );
+        System.err.println( "number of projects: " + getProjectDao().getAllProjectsByName().size() );
 
-        System.err.println( "number of project groups: " + getStore().getAllProjectGroupsWithProjects().size() );
+        System.err.println(
+            "number of project groups: " + getProjectGroupDao().getAllProjectGroupsWithProjects().size() );
 
-        assertEquals( "Total project count", projectCount + 3, getStore().getAllProjectsByName().size() );
+        assertEquals( "Total project count", projectCount + 3, getProjectDao().getAllProjectsByName().size() );
 
         assertEquals( "Total project group count.", projectGroupCount + 1,
-                      getStore().getAllProjectGroupsWithProjects().size() );
+                      getProjectGroupDao().getAllProjectGroupsWithProjects().size() );
 
         Map projects = new HashMap();
 
-        for ( Iterator i = getStore().getAllProjectsByName().iterator(); i.hasNext(); )
+        for ( Iterator i = getProjectDao().getAllProjectsByName().iterator(); i.hasNext(); )
         {
             Project project = (Project) i.next();
 
@@ -104,7 +107,7 @@ public class DefaultContinuumTest
 
             // validate project in project group
             assertTrue( "project not in project group",
-                        getStore().getProjectGroupByProjectId( project.getId() ) != null );
+                        getProjectGroupDao().getProjectGroupByProjectId( project.getId() ) != null );
         }
 
         assertTrue( "no irc notifier", projects.containsKey( "Continuum IRC Notifier" ) );
@@ -169,9 +172,9 @@ public class DefaultContinuumTest
         // reattach
         project = continuum.getProject( project.getId() );
 
-        ProjectGroup projectGroup = getStore().getProjectGroupByProjectId( project.getId() );
+        ProjectGroup projectGroup = getProjectGroupDao().getProjectGroupByProjectId( project.getId() );
 
-        projectGroup = getStore().getProjectGroupWithBuildDetailsByProjectGroupId( projectGroup.getId() );
+        projectGroup = getProjectGroupDao().getProjectGroupWithBuildDetailsByProjectGroupId( projectGroup.getId() );
 
         List buildDefs = projectGroup.getBuildDefinitions();
 
@@ -198,7 +201,7 @@ public class DefaultContinuumTest
         nbd.setGoals( "clean" );
         nbd.setArguments( "" );
         nbd.setDefaultForProject( true );
-        nbd.setSchedule( getStore().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME ) );
+        nbd.setSchedule( getScheduleDao().getScheduleByName( ConfigurationService.DEFAULT_SCHEDULE_NAME ) );
 
         continuum.addBuildDefinitionToProject( project.getId(), nbd );
 
@@ -350,9 +353,11 @@ public class DefaultContinuumTest
 
         Project project = (Project) projects.get( 0 );
 
-        assertTrue( "project missing from the checkout queue", continuum.removeProjectFromCheckoutQueue( project.getId() ) );
+        assertTrue( "project missing from the checkout queue",
+                    continuum.removeProjectFromCheckoutQueue( project.getId() ) );
 
-        assertFalse( "project still exist on the checkout queue", continuum.removeProjectFromCheckoutQueue( project.getId() ) );
+        assertFalse( "project still exist on the checkout queue",
+                     continuum.removeProjectFromCheckoutQueue( project.getId() ) );
     }
 
     public void testAddAntProjectWithdefaultBuildDef()
@@ -367,11 +372,11 @@ public class DefaultContinuumTest
         assertEquals( 1, continuum.getProjectGroupWithProjects( defaultProjectGroup.getId() ).getProjects().size() );
         project = continuum.getProjectWithAllDetails( projectId );
         assertNotNull( project );
-        
+
         BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
         assertEquals( 4, service.getAllBuildDefinitionTemplate().size() );
         assertEquals( 5, service.getAllBuildDefinitions().size() );
-        
+
         BuildDefinition buildDef = (BuildDefinition) service.getDefaultAntBuildDefinitionTemplate()
             .getBuildDefinitions().get( 0 );
         buildDef = service.cloneBuildDefinition( buildDef );
@@ -382,7 +387,7 @@ public class DefaultContinuumTest
         assertEquals( 4, service.getAllBuildDefinitionTemplate().size() );
         assertEquals( 6, service.getAllBuildDefinitions().size() );
     }
-    
+
     public void testRemoveProjectGroupWithRepository()
         throws Exception
     {
@@ -426,6 +431,6 @@ public class DefaultContinuumTest
     {
         return (Continuum) lookup( Continuum.ROLE );
     }
-    
+
 
 }

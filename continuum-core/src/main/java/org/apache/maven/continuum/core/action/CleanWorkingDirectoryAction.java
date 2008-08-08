@@ -19,12 +19,11 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
-import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.util.Map;
@@ -44,14 +43,14 @@ public class CleanWorkingDirectoryAction
     private WorkingDirectoryService workingDirectoryService;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ProjectDao projectDao;
 
     public void execute( Map context )
         throws Exception
     {
-        Project project = store.getProject( getProjectId( context ) );
+        Project project = projectDao.getProject( getProjectId( context ) );
 
         File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
 

@@ -19,8 +19,8 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
 import java.io.File;
@@ -41,14 +41,14 @@ public class CheckWorkingDirectoryAction
     private WorkingDirectoryService workingDirectoryService;
 
     /**
-     * @plexus.requirement role-hint="jdo"
+     * @plexus.requirement
      */
-    private ContinuumStore store;
+    private ProjectDao projectDao;
 
     public void execute( Map context )
         throws Exception
     {
-        Project project = store.getProject( getProjectId( context ) );
+        Project project = projectDao.getProject( getProjectId( context ) );
 
         File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
 

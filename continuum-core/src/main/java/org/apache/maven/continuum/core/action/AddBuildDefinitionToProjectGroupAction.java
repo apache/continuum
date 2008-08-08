@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -37,12 +38,17 @@ import java.util.Map;
 public class AddBuildDefinitionToProjectGroupAction
     extends AbstractBuildDefinitionContinuumAction
 {
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
+
 
     public void execute( Map map )
         throws Exception
     {
         int projectGroupId = getProjectGroupId( map );
-        ProjectGroup projectGroup = store.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
+        ProjectGroup projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
         BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( map );
         if ( buildDefinitionTemplate != null )
         {
@@ -54,7 +60,7 @@ public class AddBuildDefinitionToProjectGroupAction
 
                 projectGroup.addBuildDefinition( buildDefinition );
 
-                store.updateProjectGroup( projectGroup );
+                projectGroupDao.updateProjectGroup( projectGroup );
             }
         }
         else
@@ -65,7 +71,7 @@ public class AddBuildDefinitionToProjectGroupAction
 
             projectGroup.addBuildDefinition( buildDefinition );
 
-            store.updateProjectGroup( projectGroup );
+            projectGroupDao.updateProjectGroup( projectGroup );
         }
         //map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
     }

@@ -19,12 +19,6 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
-import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -37,8 +31,13 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.apache.maven.continuum.store.ContinuumStore;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -47,7 +46,7 @@ import org.codehaus.plexus.util.StringUtils;
 public class MavenTwoContinuumProjectBuilderTest
     extends AbstractContinuumTest
 {
-    
+
     private Logger logger = Logger.getLogger( getClass() );
 
     /*
@@ -186,9 +185,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         URL url = getClass().getClassLoader().getResource( "projects/continuum/pom.xml" );
 
-
         ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( url, null, null );
-
 
         assertNotNull( result );
 
@@ -343,8 +340,7 @@ public class MavenTwoContinuumProjectBuilderTest
     public void testCreateProjectWithoutModules()
         throws Exception
     {
-        
-        
+
         ContinuumProjectBuilder projectBuilder =
             (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
 
@@ -361,9 +357,9 @@ public class MavenTwoContinuumProjectBuilderTest
         bd.setBuildFile( "pom.xml" );
 
         bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
-        
+
         BuildDefinitionService service = (BuildDefinitionService) lookup( BuildDefinitionService.class );
-        
+
         bd = service.addBuildDefinition( bd );
         BuildDefinitionTemplate bdt = new BuildDefinitionTemplate();
         bdt.setName( "maven2" );
@@ -372,19 +368,18 @@ public class MavenTwoContinuumProjectBuilderTest
         assertEquals( 5, service.getAllBuildDefinitionTemplate().size() );
         logger.debug( "templates number " + service.getAllBuildDefinitionTemplate().size() );
 
-        ContinuumStore store = (ContinuumStore) lookup( ContinuumStore.class , "jdo" );
-        logger.debug( "projectGroups number " + store.getAllProjectGroups().size() );        
-        
+        logger.debug( "projectGroups number " + getProjectGroupDao().getAllProjectGroups().size() );
+
         int all = service.getAllBuildDefinitions().size();
-        
+
         ContinuumProjectBuildingResult result;
-        
+
         result = projectBuilder.buildProjectsFromMetadata( url, null, null, false, bdt );
 
         assertEquals( 5, service.getAllBuildDefinitionTemplate().size() );
 
         assertEquals( all + 1, service.getAllBuildDefinitions().size() );
-        
+
         assertNotNull( result );
 
         assertNotNull( result.getErrors() );
@@ -435,7 +430,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertFalse( true );
     }
-    
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------

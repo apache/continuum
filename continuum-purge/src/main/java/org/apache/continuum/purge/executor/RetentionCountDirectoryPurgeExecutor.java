@@ -19,17 +19,17 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.Arrays;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author Maria Catherine Tan
@@ -37,18 +37,18 @@ import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter
 public class RetentionCountDirectoryPurgeExecutor
     extends AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
-{    
+{
     private int retentionCount;
-    
+
     private String directoryType;
-    
+
     public RetentionCountDirectoryPurgeExecutor( int retentionCount, String directoryType )
     {
         this.retentionCount = retentionCount;
-        
+
         this.directoryType = directoryType;
     }
-    
+
     public void purge( String path )
         throws ContinuumPurgeExecutorException
     {
@@ -59,33 +59,33 @@ public class RetentionCountDirectoryPurgeExecutor
         else if ( directoryType.equals( ContinuumPurgeConstants.PURGE_DIRECTORY_BUILDOUTPUT ) )
         {
             purgeBuildOutputDirectory( path );
-        }        
+        }
     }
-    
+
     private void purgeReleaseDirectory( String path )
     {
         File releaseDir = new File( path );
-        
+
         FilenameFilter filter = new ArtifactFilenameFilter( "releases-" );
-        
+
         File[] files = releaseDir.listFiles( filter );
-        
+
         if ( retentionCount > files.length )
         {
             return;
         }
-    
+
         Arrays.sort( files, LastModifiedFileComparator.LASTMODIFIED_COMPARATOR );
-        
+
         int countToPurge = files.length - retentionCount;
-        
+
         for ( File file : files )
         {
             if ( countToPurge-- <= 0 )
             {
                 break;
             }
-            
+
             try
             {
                 FileUtils.deleteDirectory( file );
@@ -97,43 +97,43 @@ public class RetentionCountDirectoryPurgeExecutor
             }
         }
     }
-    
+
     private void purgeBuildOutputDirectory( String path )
     {
         File buildOutputDir = new File( path );
-        
+
         FileFilter filter = DirectoryFileFilter.DIRECTORY;
-        
+
         File[] projectsDir = buildOutputDir.listFiles( filter );
-        
+
         for ( File projectDir : projectsDir )
         {
             File[] buildsDir = projectDir.listFiles( filter );
-            
+
             if ( retentionCount > buildsDir.length )
             {
                 continue;
             }
-        
+
             Arrays.sort( buildsDir, LastModifiedFileComparator.LASTMODIFIED_COMPARATOR );
-            
+
             int countToPurge = buildsDir.length - retentionCount;
-            
+
             for ( File buildDir : buildsDir )
             {
                 if ( countToPurge-- <= 0 )
                 {
                     break;
                 }
-                
+
                 try
                 {
                     FileUtils.deleteDirectory( buildDir );
-                    File logFile = new File ( buildDir.getAbsoluteFile() + ".log.txt" );
-                    
+                    File logFile = new File( buildDir.getAbsoluteFile() + ".log.txt" );
+
                     if ( logFile.exists() )
                     {
-                        logFile.delete();   
+                        logFile.delete();
                     }
                 }
                 catch ( IOException e )
