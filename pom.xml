@@ -186,6 +186,20 @@ under the License.
         <configuration>
           <systemProperties>
             <property>
+              <name>JAVA_HOME</name>
+              <value>${java.home}</value>    
+            </property>     
+            <property>
+              <name>M2_HOME</name>
+              <value>${maven.home}</value>    
+            </property>    
+            <property>
+              <name>plexus.home</name>
+              <!-- ${project.build.directory} is not evaluated see surefire documentation -->
+              <!--value>${project.build.directory}</value-->
+              <value>./target</value>
+            </property>                           
+            <property>
               <name>appserver.base</name>
               <value>${basedir}/target/test-classes/</value>
             </property>

@@ -83,6 +83,10 @@ public abstract class AbstractPurgeTest
 
         localRepositoryDao = (LocalRepositoryDao) lookup( LocalRepositoryDao.class.getName() );
 
+        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class );
+        
+        directoryPurgeConfigurationDao = (DirectoryPurgeConfigurationDao) lookup( DirectoryPurgeConfigurationDao.class );
+        
         if ( localRepositoryDao.getAllLocalRepositories().size() == 0 )
         {
             createDefaultRepository();
