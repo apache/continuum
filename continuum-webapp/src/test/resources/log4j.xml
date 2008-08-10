@@ -20,8 +20,12 @@
   </logger>
 
   <logger name="org.apache.maven.scm">
-    <level value="info" />
+    <level value="debug" />
   </logger>
+  
+  <logger name="org.apache.continuum.scm.manager.Slf4jScmLogger">
+    <level value="debug" />
+  </logger>  
 
   <logger name="org.codehaus.plexus.redback">
     <level value="info"/>
