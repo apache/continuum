@@ -379,6 +379,11 @@ under the License.
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-accurev</artifactId>
+        <version>${maven-scm.version}</version>
+      </dependency>      
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-bazaar</artifactId>
         <version>${maven-scm.version}</version>
       </dependency>
@@ -397,6 +402,11 @@ under the License.
         <artifactId>maven-scm-provider-cvsexe</artifactId>
         <version>${maven-scm.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-gitexe</artifactId>
+        <version>${maven-scm.version}</version>
+      </dependency>      
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-hg</artifactId>
