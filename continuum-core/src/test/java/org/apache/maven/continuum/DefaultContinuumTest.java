@@ -36,8 +36,11 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.continuum.utils.ContinuumUrlValidator;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -46,6 +49,8 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 public class DefaultContinuumTest
     extends AbstractContinuumTest
 {
+    protected Logger log = LoggerFactory.getLogger( getClass() );
+    
     public void testContinuumConfiguration()
         throws Exception
     {
@@ -75,7 +80,15 @@ public class DefaultContinuumTest
 
         File rootPom = getTestFile( "src/test/resources/projects/continuum/continuum-notifiers/pom.xml" );
 
-        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( rootPom.toURL().toExternalForm() );
+        assertTrue( rootPom.exists() );
+        
+        ContinuumUrlValidator validator = (ContinuumUrlValidator) lookup( ContinuumUrlValidator.class, "continuumUrl" );
+        
+        String fileUrl = rootPom.toURL().toExternalForm();
+        
+        //assertTrue( validator.validate( fileUrl ) );
+        
+        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( fileUrl );
 
         assertNotNull( result );
 
@@ -85,9 +98,9 @@ public class DefaultContinuumTest
 
         assertEquals( "result.projectGroups.size", 1, result.getProjectGroups().size() );
 
-        System.err.println( "number of projects: " + getProjectDao().getAllProjectsByName().size() );
+        log.info( "number of projects: " + getProjectDao().getAllProjectsByName().size() );
 
-        System.err.println(
+        log.info(
             "number of project groups: " + getProjectGroupDao().getAllProjectGroupsWithProjects().size() );
 
         assertEquals( "Total project count", projectCount + 3, getProjectDao().getAllProjectsByName().size() );

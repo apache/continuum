@@ -1,6 +1,8 @@
 package org.apache.maven.continuum.utils;
 
-import junit.framework.TestCase;
+import java.io.File;
+
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -26,94 +28,117 @@ import junit.framework.TestCase;
  * @version $Id$
  */
 public class ContinuumUrlValidatorTest
-    extends TestCase
+    extends PlexusInSpringTestCase
 {
+    
+    protected ContinuumUrlValidator getContinuumUrlValidator()
+        throws Exception
+    {
+        return getContinuumUrlValidator( "continuumUrl" );
+    }
+
+    protected ContinuumUrlValidator getContinuumUrlValidator( String roleHint )
+        throws Exception
+    {
+        return (ContinuumUrlValidator) lookup( ContinuumUrlValidator.class, roleHint );
+    }    
 
     public void testSuccessHttp()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator().validate( "http://svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
+        assertTrue( getContinuumUrlValidator().validate( "http://svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
     public void testFailureHttp()
         throws Exception
     {
-        assertFalse( new ContinuumUrlValidator().validate( "ttp://svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
+        assertFalse( getContinuumUrlValidator().validate( "ttp://svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
     public void testSuccessHttpWithAuth()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator()
+        assertTrue( getContinuumUrlValidator()
             .validate( "https://username:password@svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
     public void testFailureHttpWithAuth()
         throws Exception
     {
-        assertFalse( new ContinuumUrlValidator()
+        assertFalse( getContinuumUrlValidator()
             .validate( "http://username:passwordsvn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
     public void testFailureHttpWithFile()
         throws Exception
     {
-        assertFalse( new ContinuumUrlValidator().validate( "file:///home/zloug/pom.xml" ) );
+        assertFalse( getContinuumUrlValidator( "continuumUrlWithoutFile" ).validate( "file:///home/zloug/pom.xml" ) );
     }
 
     public void testSuccessHttps()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator().validate( "https://svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
+        assertTrue( getContinuumUrlValidator().validate( "https://svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
     public void testSuccessHttpsWithAuth()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator()
+        assertTrue( getContinuumUrlValidator()
             .validate( "https://username:password@svn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 
     public void testSuccessHttpviewvc()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator()
+        assertTrue( getContinuumUrlValidator()
             .validate( "http://svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
     }
 
     public void testSuccessHttpviewvcWithAuth()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator()
-            .validate( "http://username:password@svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
+        assertTrue( getContinuumUrlValidator()
+            .validate(
+                       "http://username:password@svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
     }
 
     public void testSuccessHttpsviewvc()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator()
-            .validate( "https://svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
+        assertTrue( getContinuumUrlValidator()
+            .validate(
+                       "https://svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
     }
 
     public void testSuccessHttpsviewvcWithAuth()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator()
-            .validate( "https://username:password@svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
+        assertTrue( getContinuumUrlValidator()
+            .validate(
+                       "https://username:password@svn.apache.org/viewvc/continuum/trunk/pom.xml?revision=681492&content-type=text%2Fplain" ) );
     }
 
     public void testSuccessHttpfisheye()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator()
+        assertTrue( getContinuumUrlValidator()
             .validate( "http://fisheye6.atlassian.com/browse/~raw,r=680040/continuum/trunk/pom.xml" ) );
     }
 
     public void testSuccessHttpsfisheye()
         throws Exception
     {
-        assertTrue( new ContinuumUrlValidator()
+        assertTrue( getContinuumUrlValidator()
             .validate( "https://fisheye6.atlassian.com/browse/~raw,r=680040/continuum/trunk/pom.xml" ) );
+    }
+
+    public void testValidateFile()
+        throws Exception
+    {
+        File rootPom = getTestFile( "src/test/resources/log4j.xml" );
+        assertTrue( rootPom.exists() );
+        assertTrue( getContinuumUrlValidator().validate( rootPom.toURL().toExternalForm() ) );
     }
    
 }

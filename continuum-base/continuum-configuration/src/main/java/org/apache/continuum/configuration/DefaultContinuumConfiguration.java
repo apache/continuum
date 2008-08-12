@@ -84,7 +84,7 @@ public class DefaultContinuumConfiguration
 
             this.generalConfiguration = new GeneralConfiguration();
             this.generalConfiguration.setBaseUrl( getConfigurationString( BASE_URL_KEY ) );
-            log.info( "BaseUrl=" +this.generalConfiguration.getBaseUrl() );
+            log.info( "BaseUrl=" + this.generalConfiguration.getBaseUrl() );
             // TODO check if files exists ?
             String buildOutputDirectory = getConfigurationString( BUILDOUTPUT_DIR_KEY );
             if ( buildOutputDirectory != null )
@@ -124,7 +124,10 @@ public class DefaultContinuumConfiguration
 
     private String getConfigurationString( String key )
     {
-        log.info( "Configuration=" + configuration );
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Configuration=" + configuration );
+        }
         return configuration.getString( key );
     }
 
