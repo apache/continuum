@@ -35,7 +35,7 @@ import org.codehaus.plexus.util.StringUtils;
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @since 27 mars 2008
  * @version $Id$
- * @plexus.component
+ * @plexus.component role="org.apache.maven.continuum.utils.ContinuumUrlValidator"
  *   role-hint="continuumUrl"
  */
 public class ContinuumUrlValidator
@@ -77,8 +77,6 @@ public class ContinuumUrlValidator
      * This expression derived/taken from the BNF for URI (RFC2396).
      */
     private static final String URL_PATTERN = "/^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?/";
-
-    //                                                                      12            3  4          5       6   7        8 9
 
     /**
      * Schema/Protocol (ie. http:, ftp:, file:, etc).

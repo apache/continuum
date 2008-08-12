@@ -119,6 +119,10 @@ under the License.
       <artifactId>plexus-formica</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>    
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-action</artifactId>
       <version>1.0-alpha-6</version>

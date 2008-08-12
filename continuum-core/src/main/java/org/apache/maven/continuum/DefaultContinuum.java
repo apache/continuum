@@ -64,6 +64,7 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.continuum.utils.ContinuumUrlValidator;
 import org.apache.maven.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.PlexusConstants;
@@ -223,9 +224,9 @@ public class DefaultContinuum
 
 
     /**
-     * @plexus.requirement role-hint="url"
+     * @plexus.requirement role-hint="continuumUrl"
      */
-    private Validator urlValidator;
+    private ContinuumUrlValidator urlValidator;
 
     private boolean stopped = false;
 
@@ -1731,18 +1732,11 @@ public class DefaultContinuum
     {
         if ( checkProtocol )
         {
-            try
-            {
                 if ( !urlValidator.validate( metadataUrl ) )
-                {
-                    ContinuumProjectBuildingResult res = new ContinuumProjectBuildingResult();
-                    res.addError( ContinuumProjectBuildingResult.ERROR_PROTOCOL_NOT_ALLOWED );
-                    return res;
-                }
-            }
-            catch ( FormicaException e )
             {
-                //can't be thrown
+                ContinuumProjectBuildingResult res = new ContinuumProjectBuildingResult();
+                res.addError( ContinuumProjectBuildingResult.ERROR_PROTOCOL_NOT_ALLOWED );
+                return res;
             }
         }
 
