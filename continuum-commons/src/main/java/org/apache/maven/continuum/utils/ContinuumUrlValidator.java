@@ -101,8 +101,6 @@ public class ContinuumUrlValidator
 
     private static final String AUTHORITY_PATTERN = "/^([" + AUTHORITY_CHARS + "]*)(:\\d*)?(.*)?/";
 
-    //                                                                            1                          2  3       4
-
     private static final int PARSE_AUTHORITY_HOST_IP = 1;
 
     private static final int PARSE_AUTHORITY_PORT = 2;
@@ -252,24 +250,26 @@ public class ContinuumUrlValidator
         {
             String authority = matchUrlPat.group( PARSE_URL_AUTHORITY );
 
-            if ( authority.indexOf( "@" ) != -1 )
+            if ( authority != null )
             {
-                String userPassword = authority.substring( 0, authority.indexOf( "@" ) );
+                if ( authority.indexOf( "@" ) != -1 )
+                {
+                    String userPassword = authority.substring( 0, authority.indexOf( "@" ) );
 
-                authority = authority.substring( authority.indexOf( "@" ) + 1 );
+                    authority = authority.substring( authority.indexOf( "@" ) + 1 );
 
-                if ( userPassword.indexOf( ":" ) == -1 ||
-                     userPassword.indexOf( ":" ) == 0 ||
-                     userPassword.indexOf( ":" ) == userPassword.length() - 1 )
+                    if ( userPassword.indexOf( ":" ) == -1 || userPassword.indexOf( ":" ) == 0
+                        || userPassword.indexOf( ":" ) == userPassword.length() - 1 )
+                    {
+                        return false;
+                    }
+                }
+                if ( !isValidAuthority( authority ) )
                 {
                     return false;
-                }
+                }                
             }
 
-            if ( !isValidAuthority( authority ) )
-            {
-                return false;
-            }
 
             if ( !isValidQuery( matchUrlPat.group( PARSE_URL_QUERY ) ) )
             {

@@ -115,4 +115,5 @@ public class ContinuumUrlValidatorTest
         assertTrue( new ContinuumUrlValidator()
             .validate( "https://fisheye6.atlassian.com/browse/~raw,r=680040/continuum/trunk/pom.xml" ) );
     }
+   
 }
