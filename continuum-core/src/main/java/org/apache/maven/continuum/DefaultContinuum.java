@@ -1732,7 +1732,7 @@ public class DefaultContinuum
     {
         if ( checkProtocol )
         {
-                if ( !urlValidator.validate( metadataUrl ) )
+            if ( !urlValidator.validate( metadataUrl ) )
             {
                 ContinuumProjectBuildingResult res = new ContinuumProjectBuildingResult();
                 res.addError( ContinuumProjectBuildingResult.ERROR_PROTOCOL_NOT_ALLOWED );

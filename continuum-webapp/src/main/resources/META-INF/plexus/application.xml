@@ -221,8 +221,8 @@
     </component>
 
     <component>
-      <role>org.codehaus.plexus.formica.validation.Validator</role>
-      <role-hint>url</role-hint>
+      <role>org.apache.maven.continuum.utils.ContinuumUrlValidator</role>
+      <role-hint>continuumUrl</role-hint>
       <implementation>org.apache.maven.continuum.utils.ContinuumUrlValidator</implementation>
       <configuration>
         <allowedSchemes>
