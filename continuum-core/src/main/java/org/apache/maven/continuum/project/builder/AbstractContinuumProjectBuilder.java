@@ -19,20 +19,41 @@ package org.apache.maven.continuum.project.builder;
  * under the License.
  */
 
-import org.codehaus.plexus.formica.util.MungedHttpsURL;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.StringUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpException;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnPerRouteBean;
+import org.apache.http.conn.params.HttpConnectionManagerParams;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -40,22 +61,62 @@ import java.net.UnknownHostException;
  */
 public abstract class AbstractContinuumProjectBuilder
     extends AbstractLogEnabled
-    implements ContinuumProjectBuilder
+    implements ContinuumProjectBuilder, Initializable
 {
 
     private static final String TMP_DIR = System.getProperty( "java.io.tmpdir" );
+    
+    private HttpClient httpClient;
+    
+    
+    public void initialize()
+        throws InitializationException
+    {
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        // http scheme
+        schemeRegistry.register( new Scheme( "http",  PlainSocketFactory.getSocketFactory(), 80 ) );
+        
+        // https scheme
+        schemeRegistry.register( new Scheme( "https", SSLSocketFactory.getSocketFactory(), 443 ) );
+        
+        HttpParams params = new BasicHttpParams();
+        // TODO put this values to a configuration way ???
+        HttpConnectionManagerParams.setMaxTotalConnections( params, 30 );
+        HttpConnectionManagerParams.setMaxConnectionsPerRoute( params, new ConnPerRouteBean( 30 ) );
+        HttpProtocolParams.setVersion( params, HttpVersion.HTTP_1_1 );
+        
+        ClientConnectionManager cm = new ThreadSafeClientConnManager( params, schemeRegistry );
+        httpClient = new DefaultHttpClient( cm, params );
 
-    protected File createMetadataFile( URL metadata, String username, String password )
-        throws IOException
+        
+    }
+
+    protected File createMetadataFile( URL metadata, String username, String password, ContinuumProjectBuildingResult result )
+        throws IOException, URISyntaxException, HttpException
     {
         getLogger().info( "Downloading " + metadata.toExternalForm() );
 
         InputStream is = null;
-
+        
         if ( metadata.getProtocol().startsWith( "http" ) )
         {
-            is =
-                new MungedHttpsURL( metadata.toExternalForm(), username, password ).getURLConnection().getInputStream();
+            HttpGet httpGet = new HttpGet( metadata.toURI() );
+            HttpResponse httpResponse = httpClient.execute( httpGet );
+
+            // TODO check http return code 
+            int res = httpResponse.getStatusLine().getStatusCode();
+            switch (res)
+            {
+                case 401:
+                    getLogger().debug( "Error adding project: Unauthorized " + metadata, null );
+                    result.addError( ContinuumProjectBuildingResult.ERROR_UNAUTHORIZED );
+                    return null;
+                default :
+            }
+            is = IOUtils.toInputStream( EntityUtils.toString( httpResponse.getEntity(), EntityUtils
+                .getContentCharSet( httpResponse.getEntity() ) ) );
+            //is =
+            //    new MungedHttpsURL( metadata.toExternalForm(), username, password ).getURLConnection().getInputStream();
         }
         else
         {
@@ -137,7 +198,7 @@ public abstract class AbstractContinuumProjectBuilder
     {
         try
         {
-            return createMetadataFile( metadata, username, password );
+            return createMetadataFile( metadata, username, password, result );
         }
         catch ( FileNotFoundException e )
         {
@@ -149,6 +210,11 @@ public abstract class AbstractContinuumProjectBuilder
             getLogger().info( "Malformed URL: " + metadata, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
         }
+        catch ( URISyntaxException e )
+        {
+            getLogger().info( "Malformed URL: " + metadata, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
+        }        
         catch ( UnknownHostException e )
         {
             getLogger().info( "Unknown host: " + metadata, e );
@@ -159,6 +225,11 @@ public abstract class AbstractContinuumProjectBuilder
             getLogger().warn( "Could not download the URL: " + metadata, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
+        catch ( HttpException e )
+        {
+            getLogger().warn( "Could not download the URL: " + metadata, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
+        }        
         return null;
     }
 

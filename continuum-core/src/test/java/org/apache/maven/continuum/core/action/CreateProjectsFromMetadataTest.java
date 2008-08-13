@@ -87,6 +87,7 @@ public class CreateProjectsFromMetadataTest
         return bdt;
     }
     
+    @SuppressWarnings("unchecked")
     public void testExecuteWithNonRecursiveMode()
         throws Exception
     {

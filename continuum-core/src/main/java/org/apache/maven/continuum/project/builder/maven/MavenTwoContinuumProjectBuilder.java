@@ -19,9 +19,20 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.http.HttpException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -39,15 +50,6 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -149,7 +151,7 @@ public class MavenTwoContinuumProjectBuilder
 
         try
         {
-            pomFile = createMetadataFile( url, username, password );
+            pomFile = createMetadataFile( url, username, password, result );
             mavenProject = builderHelper.getMavenProject( result, pomFile );
 
             if ( result.hasErrors() )
@@ -163,6 +165,12 @@ public class MavenTwoContinuumProjectBuilder
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
             return;
         }
+        catch ( URISyntaxException e )
+        {
+            getLogger().debug( "Error adding project: Malformed URL " + url, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
+            return;
+        }        
         catch ( FileNotFoundException e )
         {
             getLogger().debug( "Error adding project: File not found " + url, e );
@@ -177,19 +185,16 @@ public class MavenTwoContinuumProjectBuilder
         }
         catch ( IOException e )
         {
-            if ( e.getMessage() != null )
-            {
-                if ( e.getMessage().indexOf( "Server returned HTTP response code: 401" ) >= 0 )
-                {
-                    getLogger().debug( "Error adding project: Unauthorized " + url, e );
-                    result.addError( ContinuumProjectBuildingResult.ERROR_UNAUTHORIZED );
-                    return;
-                }
-            }
             getLogger().info( "Error adding project: Unknown error downloading from " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
             return;
         }
+        catch ( HttpException e )
+        {
+            getLogger().info( "Error adding project: Unknown error downloading from " + url, e );
+            result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
+            return;
+        }        
         finally
         {
             if ( pomFile != null && pomFile.exists() )
