@@ -83,7 +83,7 @@
         <item name="External databases" href="administrator_guides/external-db.html"/>
         <item name="Monitoring Continuum" href="administrator_guides/monitoring.html"/>
         <item name="Appearance Configuration" href="administrator_guides/appearance.html"/>
-        <item name="Build Definition Template" href="documentation/1_1/administrator_guides/builddefTemplate.html"/>        
+        <item name="Build Definition Template" href="/administrator_guides/builddefTemplate.html"/>        
         <item name="Shutdown Continuum" href="administrator_guides/shutdown.html"/>
       </item>
       <item name="Developer's Guides" href="developer_guides/index.html" collapse="true">
