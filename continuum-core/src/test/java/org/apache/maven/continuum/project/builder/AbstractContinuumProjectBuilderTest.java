@@ -58,7 +58,7 @@ public abstract class AbstractContinuumProjectBuilderTest
         URL url = new URL( "https://someurl/pom.xml" );
         String username = "myusername";
         String password = "mypassword";
-        builder.createMetadataFile( url, username, password );
+        builder.createMetadataFile( url, username, password, new ContinuumProjectBuildingResult() );
     }
 
     private class ContinuumProjectBuilder
