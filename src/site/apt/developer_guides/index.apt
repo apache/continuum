@@ -8,4 +8,6 @@
 
 Developer's Guides
 
-    To write
+ * {{{building.html}Building Continuum}}
+
+ * {{{xmlrpc.html}XML-RPC}}
