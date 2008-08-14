@@ -14,4 +14,9 @@ Getting Started
     
 [images/admin-account-creation.png] Admin account creation
 
-    After admin account creation, you can log as an admin and create users, {{{user_guides/managing_project/addProject.html}add projects}} etc...
+    After admin account creation, you can log as an admin.  The next thing you will see is the General Configuration
+    page.
+
+[images/configuration.png] General Configuration
+
+    You may also create users, {{{user_guides/managing_project/addProject.html}add projects}}, etc.

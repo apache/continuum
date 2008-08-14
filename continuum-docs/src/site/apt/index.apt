@@ -32,13 +32,17 @@ Documentation
 
     {{{installation/upgrade.html} How to upgrade from a previous versions?}}
 
-* User's Guides
+* User's Guide
+
+    {{{user_guides/index.html} User's Guide}}
 
 * Knowledge Base
 
     {{{../../faqs.html} Frequently Asked Questions}}
 
 * Administrator's Guide
+
+    {{{administrator_guides/index.html} Administrator's Guide}}
 
 * Developer's Guide
 
