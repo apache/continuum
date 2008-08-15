@@ -21,7 +21,7 @@
 <project name="Apache Continuum">
   <body>
     <breadcrumbs>
-      <item name="1.1" href="/" />
+      <item name="1.2" href="/" />
     </breadcrumbs>
     <menu name="Documentation">
       <item name="Index (category)" href="index.html"/>
@@ -65,9 +65,6 @@
           <item name="Forced Build" href="user_guides/building_project/index.html#Forced Build"/>
         </item>
         <item name="Release Management" href="user_guides/release/index.html"/>
-      </item>
-      <item name="Knowledge Base" href="knowledge_base/index.html" collapse="true">
-        <item name="FAQs" href="faqs.html"/>
       </item>
       <item name="Administrator's Guides" href="administrator_guides/index.html" collapse="true">
         <item name="Managing Users and Security" href="administrator_guides/security/index.html" collapse="true">
