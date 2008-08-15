@@ -36,10 +36,6 @@ Documentation
 
     {{{user_guides/index.html} User's Guide}}
 
-* Knowledge Base
-
-    {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
-
 * Administrator's Guide
 
     {{{administrator_guides/index.html} Administrator's Guide}}
@@ -47,3 +43,9 @@ Documentation
 * Developer's Guide
 
     {{{developer_guides/building.html}Guide to build Continuum}}
+
+* Knowledge Base
+
+    {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
+
+    {{{http://docs.codehaus.org/display/CONTINUUMUSER/Home}Wiki}}
