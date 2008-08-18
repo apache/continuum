@@ -125,7 +125,7 @@ $dep.groupId:$dep.artifactId:$dep.version
 
 #if ( $build.buildDefinition )
 ****************************************************************************
-Build Defintion:
+Build Definition:
 ****************************************************************************
 #if ( $build.buildDefinition.type )
 #if ( $build.buildDefinition.type == 'ant' )
