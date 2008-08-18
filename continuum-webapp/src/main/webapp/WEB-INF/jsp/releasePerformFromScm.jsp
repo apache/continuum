@@ -35,7 +35,7 @@
             <ww:textfield label="SCM Username" name="scmUsername"/>
             <ww:password label="SCM Password" name="scmPassword"/>
             <ww:textfield label="SCM Tag" name="scmTag"/>
-            <c:if test="${!empty(scmTagBase)}">
+            <c:if test="${!empty (scmTagBase)}">
               <ww:textfield label="SCM Tag Base" name="scmTagBase"/>
             </c:if>
             <ww:textfield label="Maven Arguments" name="goals" value="clean deploy"/>

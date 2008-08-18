@@ -35,7 +35,7 @@
             <ww:textfield label="SCM Username" name="scmUsername" required="true"/>
             <ww:password label="SCM Password" name="scmPassword" required="true"/>
             <ww:textfield label="SCM Tag" name="scmTag" required="true"/>
-            <c:if test="${!empty(scmTagBase)}">
+            <c:if test="${!empty (scmTagBase)}">
               <ww:textfield label="SCM Tag Base" name="scmTagBase"/>
             </c:if>
             <ww:textfield label="Preparation Goals" name="prepareGoals" required="true"/>
