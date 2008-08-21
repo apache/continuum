@@ -25,15 +25,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnPerRouteBean;
@@ -42,6 +49,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -55,6 +63,7 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -66,7 +75,7 @@ public abstract class AbstractContinuumProjectBuilder
 
     private static final String TMP_DIR = System.getProperty( "java.io.tmpdir" );
     
-    private HttpClient httpClient;
+    private DefaultHttpClient httpClient;
     
     
     public void initialize()
@@ -75,9 +84,33 @@ public abstract class AbstractContinuumProjectBuilder
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         // http scheme
         schemeRegistry.register( new Scheme( "http",  PlainSocketFactory.getSocketFactory(), 80 ) );
-        
         // https scheme
-        schemeRegistry.register( new Scheme( "https", SSLSocketFactory.getSocketFactory(), 443 ) );
+        SSLSocketFactory sslSocketFactory =  SSLSocketFactory.getSocketFactory();
+        // ignore cert
+        sslSocketFactory.setHostnameVerifier( new X509HostnameVerifier(){
+
+            public boolean verify( String arg0, SSLSession arg1 )
+            {
+                return true;
+            }
+
+            public void verify( String arg0, SSLSocket arg1 )
+                throws IOException
+            {
+            }
+
+            public void verify( String arg0, String[] arg1, String[] arg2 )
+                throws SSLException
+            {
+            }
+
+            public void verify( String arg0, X509Certificate arg1 )
+                throws SSLException
+            {
+            }
+            
+        });
+        schemeRegistry.register( new Scheme( "https", sslSocketFactory, 443 ) );
         
         HttpParams params = new BasicHttpParams();
         // TODO put this values to a configuration way ???
@@ -100,23 +133,35 @@ public abstract class AbstractContinuumProjectBuilder
         
         if ( metadata.getProtocol().startsWith( "http" ) )
         {
-            HttpGet httpGet = new HttpGet( metadata.toURI() );
+            URI uri = metadata.toURI();
+            HttpGet httpGet = new HttpGet( uri );
+            
+            // basic auth
+            if ( username != null && password != null )
+            {
+                httpClient.getCredentialsProvider()
+                    .setCredentials( new AuthScope( uri.getHost(), uri.getPort() ),
+                                     new UsernamePasswordCredentials( username, password ) );
+            }
+            
             HttpResponse httpResponse = httpClient.execute( httpGet );
+            
+            // basic auth 
 
-            // TODO check http return code 
             int res = httpResponse.getStatusLine().getStatusCode();
             switch (res)
             {
+                case 200 :
+                    break;
                 case 401:
-                    getLogger().debug( "Error adding project: Unauthorized " + metadata, null );
+                    getLogger().error( "Error adding project: Unauthorized " + metadata, null );
                     result.addError( ContinuumProjectBuildingResult.ERROR_UNAUTHORIZED );
                     return null;
                 default :
+                    getLogger().warn( "skip non handled http return code " + res );
             }
             is = IOUtils.toInputStream( EntityUtils.toString( httpResponse.getEntity(), EntityUtils
                 .getContentCharSet( httpResponse.getEntity() ) ) );
-            //is =
-            //    new MungedHttpsURL( metadata.toExternalForm(), username, password ).getURLConnection().getInputStream();
         }
         else
         {
