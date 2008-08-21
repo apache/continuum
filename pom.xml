@@ -155,7 +155,7 @@ under the License.
         <version>1.0-beta-1</version>
         <executions>
           <execution>
-            <phase>validate</phase>
+            <phase>generate-resources</phase>
             <goals>
               <goal>create</goal>
             </goals>
@@ -379,72 +379,13 @@ under the License.
       </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-accurev</artifactId>
+        <artifactId>maven-scm-providers-standard</artifactId>
         <version>${maven-scm.version}</version>
+        <type>pom</type>
       </dependency>      
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-bazaar</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-clearcase</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-cvsjava</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-cvsexe</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-gitexe</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>      
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-hg</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
       <dependency>
         <groupId>org.apache.maven.scm</groupId>
         <artifactId>maven-scm-provider-local</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-perforce</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-starteam</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-svn-commons</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-svnexe</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-synergy</artifactId>
-        <version>${maven-scm.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven.scm</groupId>
-        <artifactId>maven-scm-provider-vss</artifactId>
         <version>${maven-scm.version}</version>
       </dependency>
       <dependency>

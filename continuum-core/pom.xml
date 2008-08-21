@@ -60,10 +60,6 @@ under the License.
       <artifactId>file-management</artifactId>
     </dependency>    
     <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-provider-svnexe</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-velocity</artifactId>
     </dependency>
