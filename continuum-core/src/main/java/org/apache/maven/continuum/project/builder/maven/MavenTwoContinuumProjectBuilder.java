@@ -152,6 +152,12 @@ public class MavenTwoContinuumProjectBuilder
         try
         {
             pomFile = createMetadataFile( url, username, password, result );
+            
+            if ( result.hasErrors() )
+            {
+                return;
+            }
+            
             mavenProject = builderHelper.getMavenProject( result, pomFile );
 
             if ( result.hasErrors() )
