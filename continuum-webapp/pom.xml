@@ -375,6 +375,14 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-cvs-commons</artifactId>
+    </dependency>    
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-svn-commons</artifactId>
+    </dependency>    
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-provider-local</artifactId>
       <scope>runtime</scope>
     </dependency>
