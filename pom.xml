@@ -389,6 +389,16 @@ under the License.
         <version>${maven-scm.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-cvs-commons</artifactId>
+        <version>${maven-scm.version}</version>
+      </dependency>    
+      <dependency>
+        <groupId>org.apache.maven.scm</groupId>
+        <artifactId>maven-scm-provider-svn-commons</artifactId>
+        <version>${maven-scm.version}</version>
+      </dependency>         
+      <dependency>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-provider-api</artifactId>
         <version>${wagon.version}</version>

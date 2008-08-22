@@ -89,7 +89,15 @@ under the License.
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-providers-standard</artifactId>
       <type>pom</type>
-    </dependency>     
+    </dependency>  
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-cvs-commons</artifactId>
+    </dependency>    
+    <dependency>
+      <groupId>org.apache.maven.scm</groupId>
+      <artifactId>maven-scm-provider-svn-commons</artifactId>
+    </dependency>       
     <!-- === Testing Dependencies === -->
     <dependency>
       <groupId>hsqldb</groupId>
