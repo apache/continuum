@@ -105,6 +105,18 @@ public class ProfileAction
         try
         {
             Profile stored = profileService.getProfile( profile.getId() );
+
+            if ( StringUtils.isEmpty( profile.getName() ) )
+            {
+                if ( stored != null )
+                {
+                    profile = stored;
+                }
+
+                this.addFieldError( "profile.name", getResourceBundle().getString( "profile.name.required" ) );
+                return INPUT;
+            }
+
             if ( stored == null )
             {
                 this.profile = profileService.addProfile( profile );
