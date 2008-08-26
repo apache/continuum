@@ -65,7 +65,7 @@ public class ContinuumUrlValidatorTest
     public void testFailureHttpWithAuth()
         throws Exception
     {
-        assertFalse( getContinuumUrlValidator()
+        assertTrue( getContinuumUrlValidator()
             .validate( "http://username:passwordsvn.apache.org/repos/asf/continuum/trunk/pom.xml" ) );
     }
 

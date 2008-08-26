@@ -39,6 +39,10 @@ under the License.
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-configuration</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-spring</artifactId>
+    </dependency>    
     <!-- === Testing Dependencies === -->
     <dependency>
       <groupId>hsqldb</groupId>
@@ -50,11 +54,6 @@ under the License.
       <artifactId>continuum-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-spring</artifactId>
-      <scope>test</scope>
-    </dependency>  
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
