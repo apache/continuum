@@ -28,10 +28,6 @@ under the License.
   <name>Continuum API</name>
   <dependencies>
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-formica</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-model</artifactId>
     </dependency>
