@@ -19,17 +19,19 @@ package org.apache.maven.continuum.utils;
  * under the License.
  */
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.oro.text.perl.Perl5Util;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
 import org.codehaus.plexus.formica.validation.AbstractValidator;
 import org.codehaus.plexus.formica.validation.util.Flags;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Configurable;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -223,7 +225,7 @@ public class ContinuumUrlValidator
             return true;
         }
 
-        value = replace( value, " ", "%20" );
+        value = StringUtils.replace( value, " ", "%20" );
 
         Perl5Util matchUrlPat = new Perl5Util();
         Perl5Util matchAsciiPat = new Perl5Util();
@@ -432,7 +434,7 @@ public class ContinuumUrlValidator
         }
 
         String extra = authorityMatcher.group( PARSE_AUTHORITY_EXTRA );
-        if ( !isBlankOrNull( extra ) )
+        if ( !StringUtils.isBlank( extra ) )
         {
             return false;
         }
@@ -521,31 +523,48 @@ public class ContinuumUrlValidator
         }
         return count;
     }
-
-    private static boolean isBlankOrNull( String value )
+    
+    /**
+     * @param url
+     * @return URLUserInfo cannot be null
+     * @throws URISyntaxException
+     */
+    public URLUserInfo extractURLUserInfo( String url )
+        throws URISyntaxException
     {
-        return ( ( value == null ) || ( value.trim().length() == 0 ) );
+        URI uri = new URI( url );
+        // can contains user:password
+        String userInfoRaw = uri.getUserInfo();
+        URLUserInfo urlUserInfo = new URLUserInfo();
+
+        if ( !StringUtils.isEmpty( userInfoRaw ) )
+        {
+            int index = userInfoRaw.indexOf( ':' );
+            if ( index >= 0 )
+            {
+                urlUserInfo.setUsername( userInfoRaw.substring( 0, index ) );
+                urlUserInfo.setPassword( userInfoRaw.substring( index + 1, userInfoRaw.length() ) );
+            }
+            else
+            {
+                urlUserInfo.setUsername( userInfoRaw );
+            }
+        }
+        return urlUserInfo;
     }
 
-    public static String replace( String text, String repl, String with )
+    
+    /**
+     * remove auth from an url
+     * @param url
+     * @return https://username:password@svn.apache.org/repos -> https://svn.apache.org/repos
+     */
+    /*
+    public String removeURLUserInfo(String url)
     {
-        if ( text == null || repl == null || with == null || repl.length() == 0 )
-        {
-            return text;
-        }
-
-        StringBuffer buf = new StringBuffer( text.length() );
-        int start = 0, end = 0;
-        while ( ( end = text.indexOf( repl, start ) ) != -1 )
-        {
-            buf.append( text.substring( start, end ) ).append( with );
-            start = end + repl.length();
-        }
-
-        buf.append( text.substring( start ) );
-        return buf.toString();
-    }
-
+        
+    }*/
+    
     public void configure( PlexusConfiguration plexusConfiguration )
         throws PlexusConfigurationException
     {

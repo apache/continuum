@@ -29,11 +29,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpException;
@@ -49,7 +44,6 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -86,30 +80,9 @@ public abstract class AbstractContinuumProjectBuilder
         schemeRegistry.register( new Scheme( "http",  PlainSocketFactory.getSocketFactory(), 80 ) );
         // https scheme
         SSLSocketFactory sslSocketFactory =  SSLSocketFactory.getSocketFactory();
+        
         // ignore cert
-        sslSocketFactory.setHostnameVerifier( new X509HostnameVerifier(){
-
-            public boolean verify( String arg0, SSLSession arg1 )
-            {
-                return true;
-            }
-
-            public void verify( String arg0, SSLSocket arg1 )
-                throws IOException
-            {
-            }
-
-            public void verify( String arg0, String[] arg1, String[] arg2 )
-                throws SSLException
-            {
-            }
-
-            public void verify( String arg0, X509Certificate arg1 )
-                throws SSLException
-            {
-            }
-            
-        });
+        sslSocketFactory.setHostnameVerifier( SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER );
         schemeRegistry.register( new Scheme( "https", sslSocketFactory, 443 ) );
         
         HttpParams params = new BasicHttpParams();
