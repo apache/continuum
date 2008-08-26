@@ -552,18 +552,6 @@ public class ContinuumUrlValidator
         }
         return urlUserInfo;
     }
-
-    
-    /**
-     * remove auth from an url
-     * @param url
-     * @return https://username:password@svn.apache.org/repos -> https://svn.apache.org/repos
-     */
-    /*
-    public String removeURLUserInfo(String url)
-    {
-        
-    }*/
     
     public void configure( PlexusConfiguration plexusConfiguration )
         throws PlexusConfigurationException
