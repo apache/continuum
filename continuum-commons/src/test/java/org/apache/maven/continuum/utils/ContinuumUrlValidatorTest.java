@@ -141,4 +141,34 @@ public class ContinuumUrlValidatorTest
         assertTrue( getContinuumUrlValidator().validate( rootPom.toURL().toExternalForm() ) );
     }
    
+    
+    public void testExtractUserNamePwd()
+        throws Exception
+    {
+        ContinuumUrlValidator continuumUrlValidator = new ContinuumUrlValidator();
+        URLUserInfo usrInfo = continuumUrlValidator
+            .extractURLUserInfo( "https://username:password@svn.apache.org/repos/asf/continuum/trunk/pom.xml" );
+        assertEquals( "username", usrInfo.getUsername() );
+        assertEquals( "password", usrInfo.getPassword() );
+    }
+    
+    public void testExtractUserNameEmptyPwd()
+        throws Exception
+    {
+        ContinuumUrlValidator continuumUrlValidator = new ContinuumUrlValidator();
+        URLUserInfo usrInfo = continuumUrlValidator
+            .extractURLUserInfo( "https://username@svn.apache.org/repos/asf/continuum/trunk/pom.xml" );
+        assertEquals( "username", usrInfo.getUsername() );
+        assertNull( usrInfo.getPassword() );
+    }
+    
+    public void testExtractEmptyUserNameEmptyPwd()
+        throws Exception
+    {
+        ContinuumUrlValidator continuumUrlValidator = new ContinuumUrlValidator();
+        URLUserInfo usrInfo = continuumUrlValidator
+            .extractURLUserInfo( "https://svn.apache.org/repos/asf/continuum/trunk/pom.xml" );
+        assertNull( usrInfo.getUsername() );
+        assertNull( usrInfo.getPassword() );
+    }     
 }

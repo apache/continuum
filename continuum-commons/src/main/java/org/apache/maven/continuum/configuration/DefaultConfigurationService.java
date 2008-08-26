@@ -152,6 +152,9 @@ public class DefaultConfigurationService
         generalConfiguration.setBaseUrl( url );
     }
 
+    /** 
+     * @see org.apache.maven.continuum.configuration.ConfigurationService#getBuildOutputDirectory()
+     */
     public File getBuildOutputDirectory()
     {
         File buildOutputDirectory = generalConfiguration.getBuildOutputDirectory();

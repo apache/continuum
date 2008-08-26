@@ -28,6 +28,7 @@ import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.manager.ContinuumProjectBuilderManager;
+import org.apache.maven.continuum.utils.ContinuumUrlValidator;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.logging.Logger;
@@ -52,7 +53,7 @@ public class CreateProjectsFromMetadataTest
         mavenSettingsBuilderMock = mock( MavenSettingsBuilder.class );
         action.setProjectBuilderManager( (ContinuumProjectBuilderManager) projectBuilderManagerMock.proxy() );
         action.setMavenSettingsBuilder( (MavenSettingsBuilder) mavenSettingsBuilderMock.proxy() );
-
+        action.setUrlValidator( new ContinuumUrlValidator() );
         projectBuilder = mock( ContinuumProjectBuilder.class );
 
         projectBuilderManagerMock.expects( once() ).method( "getProjectBuilder" )
@@ -68,7 +69,7 @@ public class CreateProjectsFromMetadataTest
     }
 
     private BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
-    throws Exception
+        throws Exception
     {
         BuildDefinition bd = new BuildDefinition();
 
@@ -81,7 +82,7 @@ public class CreateProjectsFromMetadataTest
         bd.setBuildFile( "pom.xml" );
 
         bd.setType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
-        
+
         BuildDefinitionTemplate bdt = new BuildDefinitionTemplate();
         bdt.addBuildDefinition( bd );
         return bdt;

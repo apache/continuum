@@ -19,6 +19,12 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Map;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.maven.m2.SettingsConfigurationException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -27,16 +33,12 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderExcepti
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.project.builder.manager.ContinuumProjectBuilderManager;
 import org.apache.maven.continuum.project.builder.manager.ContinuumProjectBuilderManagerException;
+import org.apache.maven.continuum.utils.ContinuumUrlValidator;
+import org.apache.maven.continuum.utils.URLUserInfo;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
-import org.codehaus.plexus.formica.util.MungedHttpsURL;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
 
 /**
  * Resolve the project url being passed in and gather authentication information
@@ -65,6 +67,11 @@ public class CreateProjectsFromMetadataAction
      * @plexus.requirement
      */
     private MavenSettingsBuilder mavenSettingsBuilder;
+    
+    /**
+     * @plexus.requirement role-hint="continuumUrl"
+     */
+    private ContinuumUrlValidator urlValidator;    
 
     public static final String KEY_URL = "url";
 
@@ -122,25 +129,15 @@ public class CreateProjectsFromMetadataAction
                     getLogger().warn( "problem with settings file, disabling scm resolution of username and password" );
                 }
 
-                MungedHttpsURL mungedURL;
-
                 if ( username == null )
                 {
-                    mungedURL = new MungedHttpsURL( curl );
-                    username = mungedURL.getUsername();
-                    password = mungedURL.getPassword();
-                }
-                else
-                {
-                    mungedURL = new MungedHttpsURL( curl, username, password );
+                    URLUserInfo urlUserInfo = urlValidator.extractURLUserInfo( curl );
+                    username = urlUserInfo.getUsername();
+                    password = urlUserInfo.getPassword();
                 }
 
-                mungedURL.setLogger( getLogger() );
-
-                if ( mungedURL.isValid() )
+                if ( urlValidator.isValid( curl ) )
                 {
-                    url = mungedURL.getURL();
-
                     BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( context );
                     if ( buildDefinitionTemplate == null )
                     {
@@ -160,6 +157,12 @@ public class CreateProjectsFromMetadataAction
 
         }
         catch ( MalformedURLException e )
+        {
+            getLogger().info( "Malformed URL: " + hidePasswordInUrl( curl ), e );
+            result = new ContinuumProjectBuildingResult();
+            result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
+        }
+        catch ( URISyntaxException e )
         {
             getLogger().info( "Malformed URL: " + hidePasswordInUrl( curl ), e );
             result = new ContinuumProjectBuildingResult();
@@ -222,5 +225,15 @@ public class CreateProjectsFromMetadataAction
     public void setMavenSettingsBuilder( MavenSettingsBuilder mavenSettingsBuilder )
     {
         this.mavenSettingsBuilder = mavenSettingsBuilder;
+    }
+
+    public ContinuumUrlValidator getUrlValidator()
+    {
+        return urlValidator;
+    }
+
+    public void setUrlValidator( ContinuumUrlValidator urlValidator )
+    {
+        this.urlValidator = urlValidator;
     }
 }

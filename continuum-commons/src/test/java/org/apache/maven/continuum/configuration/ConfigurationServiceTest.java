@@ -60,10 +60,11 @@ public class ConfigurationServiceTest
 
         assertNotNull( service.getUrl() );
         assertEquals( "http://test", service.getUrl() );
-        log.info( service.getFile( "myBuildOutputDir" ).getAbsolutePath() );
-        log.info( service.getBuildOutputDirectory().getAbsolutePath() );
-        assertEquals( service.getFile( "myBuildOutputDir" ).getAbsolutePath(),
-                      service.getBuildOutputDirectory().getAbsolutePath() );
+        log.info( "myBuildOutputDir " + new File( getBasedir(), "target/myBuildOutputDir" ).getAbsolutePath() );
+
+        log.info( "getBuildOutputDirectory " + service.getBuildOutputDirectory().getAbsolutePath() );
+        assertEquals( new File( getBasedir(), "target/myBuildOutputDir" ).getAbsolutePath(), service
+            .getBuildOutputDirectory().getAbsolutePath() );
     }
 
     public void testConfigurationService()
