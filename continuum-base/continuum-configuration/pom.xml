@@ -25,7 +25,7 @@ under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-configuration</artifactId>
-  <name>Continuum Configuration</name>
+  <name>Continuum :: Configuration</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>

@@ -25,7 +25,7 @@ under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-notifier-jabber</artifactId>
-  <name>Continuum Jabber Notifier</name>
+  <name>Continuum :: Jabber Notifier</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>

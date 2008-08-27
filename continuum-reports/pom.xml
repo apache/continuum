@@ -25,7 +25,7 @@ under the License.
     <version>1.2-SNAPSHOT</version>
   </parent>
   <artifactId>continuum-reports</artifactId>
-  <name>Continuum Reports</name>
+  <name>Continuum :: Reports</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>

@@ -6,7 +6,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>redback-legacy</artifactId>
-  <name>Redback Legacy Model</name>
+  <name>Continuum :: Redback :: Legacy Model</name>
   <build>
     <plugins>
       <plugin>

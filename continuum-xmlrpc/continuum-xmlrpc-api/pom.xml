@@ -25,7 +25,7 @@ under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-xmlrpc-api</artifactId>
-  <name>Continuum XMLRPC :: API</name>
+  <name>Continuum :: XMLRPC :: API</name>
 
   <dependencies>
     <dependency>

@@ -25,7 +25,7 @@ under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-notifier-api</artifactId>
-  <name>Continuum Notifier API</name>
+  <name>Continuum :: Notifier API</name>
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
