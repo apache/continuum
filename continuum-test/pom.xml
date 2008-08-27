@@ -25,7 +25,7 @@ under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-test</artifactId>
-  <name>Continuum Test</name>
+  <name>Continuum :: Test</name>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>

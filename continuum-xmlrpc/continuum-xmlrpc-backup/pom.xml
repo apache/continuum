@@ -25,7 +25,7 @@ under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-xmlrpc-backup</artifactId>
-  <name>Continuum XMLRPC :: Backup Tool</name>
+  <name>Continuum :: XMLRPC :: Backup Tool</name>
 
   <dependencies>
     <dependency>

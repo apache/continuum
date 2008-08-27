@@ -25,7 +25,7 @@ under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-notifier-msn</artifactId>
-  <name>Continuum MSN Notifier</name>
+  <name>Continuum :: MSN Notifier</name>
   <dependencies>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>

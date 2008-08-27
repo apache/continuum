@@ -25,7 +25,7 @@ under the License.
     <version>1.2-SNAPSHOT</version>
   </parent>
   <artifactId>continuum-release</artifactId>
-  <name>Continuum Release System</name>
+  <name>Continuum :: Release System</name>
   <description>
     Take a release descriptor created by the Maven Release Plugin and use that to perform the actual
     release.

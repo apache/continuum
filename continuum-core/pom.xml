@@ -25,7 +25,7 @@ under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-core</artifactId>
-  <name>Continuum Core</name>
+  <name>Continuum :: Core</name>
   <dependencies>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>

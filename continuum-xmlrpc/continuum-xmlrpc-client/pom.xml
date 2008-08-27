@@ -25,7 +25,7 @@ under the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-xmlrpc-client</artifactId>
-  <name>Continuum XMLRPC :: Client</name>
+  <name>Continuum :: XMLRPC :: Client</name>
 
   <dependencies>
     <dependency>
