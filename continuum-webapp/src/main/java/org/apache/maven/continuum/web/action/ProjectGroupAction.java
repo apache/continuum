@@ -500,6 +500,8 @@ public class ProjectGroupAction
 
         boolean allBuildsOk = true;
 
+        boolean allMavenTwo = true;
+        
         projectList = getContinuum().getProjectsInGroupWithDependencies( projectGroupId );
 
         if ( projectList != null )
@@ -529,6 +531,11 @@ public class ProjectGroupAction
                         return INPUT;
                     }
                 }
+                
+                if ( !"maven2".equals( p.getExecutorId() ) )
+                {
+                    allMavenTwo = false;
+                }
             }
         }
 
@@ -540,7 +547,7 @@ public class ProjectGroupAction
 
         releaseProjectId = parent.getId();
 
-        if ( allBuildsOk )
+        if ( allBuildsOk && allMavenTwo )
         {
             return SUCCESS;
         }

@@ -187,7 +187,7 @@
       <ec:column property="releaseAction" title="&nbsp;" width="1%" sortable="false">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
         <c:choose>
-          <c:when test="${pageScope.project.state == 2}">
+          <c:when test="${pageScope.project.state == 2 && pageScope.project.projectType == 'maven2'}">
             <ww:url id="releaseProjectUrl" action="releasePromptGoal" namespace="/">
               <ww:param name="projectId" value="${project.id}"/>
             </ww:url>
