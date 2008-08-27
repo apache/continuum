@@ -157,6 +157,13 @@
           <description>last build duration of the project</description>
           <type>String</type>
         </field>
+        <field>
+          <name>projectType</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>type of the project</description>
+          <type>String</type>
+        </field>
       </fields>
     </class>
     <class>

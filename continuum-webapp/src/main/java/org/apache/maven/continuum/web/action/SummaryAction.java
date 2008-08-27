@@ -100,6 +100,8 @@ public class SummaryAction
 
             model.setProjectGroupName( project.getProjectGroup().getName() );
 
+            model.setProjectType( project.getExecutorId() );
+            
             if ( getContinuum().isInBuildingQueue( project.getId() ) )
             {
                 model.setInBuildingQueue( true );
