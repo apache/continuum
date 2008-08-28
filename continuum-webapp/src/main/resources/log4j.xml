@@ -102,6 +102,10 @@
     <level value="error"/>
   </logger>
 
+  <logger name="net.sf.dozer.util.mapping.util.XMLParser">
+    <level value="warn"/>
+  </logger>
+
   <root>
     <priority value="info" />
     <appender-ref ref="rolling" />
