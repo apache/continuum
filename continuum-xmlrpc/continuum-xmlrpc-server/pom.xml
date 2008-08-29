@@ -41,11 +41,11 @@ under the License.
       <artifactId>continuum-security</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus.redback</groupId>
+      <groupId>org.codehaus.redback</groupId>
       <artifactId>redback-rbac-role-manager</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus.redback</groupId>
+      <groupId>org.codehaus.redback</groupId>
       <artifactId>redback-system</artifactId>
     </dependency>
     <dependency>
