@@ -165,6 +165,12 @@
               <ww:text name="menu.administration.users"/>
             </ww:a>
           </div>
+          <ww:url id="roleListUrl" action="roles" namespace="/security" includeParams="none"/>
+          <div class="body">
+            <ww:a href="%{roleListUrl}">
+              <ww:text name="menu.administration.roles"/>
+            </ww:a>
+          </div>
         </redback:ifAuthorized>
       </div>
     </div>
