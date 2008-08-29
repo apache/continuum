@@ -41,7 +41,7 @@
       <artifactId>redback-legacy</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus.redback</groupId>
+      <groupId>org.codehaus.redback</groupId>
       <artifactId>redback-data-management</artifactId>
     </dependency>
   </dependencies>
