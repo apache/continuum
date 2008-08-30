@@ -26,7 +26,8 @@ Administrator's Guides
 
  * {{{monitoring.html}Monitoring Continuum}}
 
- * {{{appearance.html}Appearance Configuration}}
+~~ TODO:  CONTINUUM-1831 NPE in Appearance configuration
+~~ * {{{appearance.html}Appearance Configuration}}
 
  * {{{builddefTemplate.html}Build Definition Templates}}
 
