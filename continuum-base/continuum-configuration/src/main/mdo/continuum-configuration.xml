@@ -1,0 +1,93 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<model>
+  <id>continuum-configuration</id>
+  <name>ContinuumConfigurationModel</name>
+  <description>Continuum Configuration object model.</description>
+  <defaults>
+    <default>
+      <key>package</key>
+      <value>org.apache.continuum.configuration.model</value>
+    </default>
+  </defaults>
+
+  <classes>
+    <class rootElement="true" xml.tagName="continuum-configuration">
+      <name>ContinuumConfigurationModel</name>
+      <version>1.0.0+</version>
+      <fields>
+        <field>
+          <name>baseUrl</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildOutputDirectory</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>deploymentRepositoryDirectory</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>   
+        <field>
+          <name>workingDirectory</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>proxyConfiguration</name>
+          <version>1.0.0+</version>
+          <association>
+            <type>ProxyConfiguration</type>
+            <multiplicity>1</multiplicity>
+          </association>          
+        </field>                     
+      </fields>
+    </class>
+    <class xml.tagName="proxy-configuration">
+      <name>ProxyConfiguration</name>
+      <version>1.0.0+</version>
+      <fields>
+        <field>
+          <name>proxyHost</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>proxyPort</name>
+          <version>1.0.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>proxyUser</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>   
+        <field>
+          <name>proxyPassword</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>                     
+      </fields>
+    </class>    
+  </classes>
+</model>

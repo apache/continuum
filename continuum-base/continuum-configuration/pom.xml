@@ -26,14 +26,53 @@ under the License.
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-configuration</artifactId>
   <name>Continuum :: Configuration</name>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.modello</groupId>
+        <artifactId>modello-maven-plugin</artifactId>
+        <configuration>
+          <models>
+            <model>src/main/mdo/continuum-configuration.xml</model>
+          </models>
+          <version>1.0.0</version>
+        </configuration>
+        <executions>
+          <execution>
+            <id>continuum-modello</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java</goal>
+              <goal>xpp3-reader</goal>
+              <goal>xpp3-writer</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>site-docs</id>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>xdoc</goal>
+              <goal>xsd</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>generate-xsd</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>xsd</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/META-INF/continuum/xsd</outputDirectory>
+            </configuration>
+          </execution>                    
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>

@@ -38,8 +38,8 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.conn.params.ConnPerRouteBean;
-import org.apache.http.conn.params.HttpConnectionManagerParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -87,11 +87,12 @@ public abstract class AbstractContinuumProjectBuilder
         
         HttpParams params = new BasicHttpParams();
         // TODO put this values to a configuration way ???
-        HttpConnectionManagerParams.setMaxTotalConnections( params, 30 );
-        HttpConnectionManagerParams.setMaxConnectionsPerRoute( params, new ConnPerRouteBean( 30 ) );
+        params.setParameter( ConnManagerPNames.MAX_TOTAL_CONNECTIONS, new Integer( 30 ) );
+        params.setParameter( ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRouteBean( 30 ) );
         HttpProtocolParams.setVersion( params, HttpVersion.HTTP_1_1 );
-        
+
         ClientConnectionManager cm = new ThreadSafeClientConnManager( params, schemeRegistry );
+        
         httpClient = new DefaultHttpClient( cm, params );
 
         

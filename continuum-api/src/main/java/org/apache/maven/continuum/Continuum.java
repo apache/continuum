@@ -615,9 +615,6 @@ public interface Continuum
 
     ConfigurationService getConfiguration();
 
-    void updateConfiguration( Map<String, Object> parameters )
-        throws ContinuumException;
-
     void reloadConfiguration()
         throws ContinuumException;
 
