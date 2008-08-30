@@ -19,16 +19,19 @@ package org.apache.continuum.configuration;
  * under the License.
  */
 
-import org.apache.commons.configuration.CombinedConfiguration;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.DefaultConfigurationBuilder;
-import org.apache.commons.configuration.FileConfiguration;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.continuum.configuration.model.ContinuumConfigurationModel;
+import org.apache.continuum.configuration.model.io.xpp3.ContinuumConfigurationModelXpp3Reader;
+import org.apache.continuum.configuration.model.io.xpp3.ContinuumConfigurationModelXpp3Writer;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -40,27 +43,9 @@ public class DefaultContinuumConfiguration
 {
     private Logger log = LoggerFactory.getLogger( getClass() );
 
-    private ClassPathResource classPathResource;
-
-    private Configuration configuration;
+    private File configurationFile;
 
     private GeneralConfiguration generalConfiguration;
-
-    public static final String BASE_URL_KEY = "continuum.baseUrl";
-
-    public static final String BUILDOUTPUT_DIR_KEY = "continuum.buildOutputDirectory";
-
-    public static final String DEPLOYMENT_REPOSITORY_DIR_KEY = "continuum.deploymentRepositoryDirectory";
-
-    public static final String WORKING_DIR_KEY = "continuum.workingDirectory";
-
-    public static final String PROXY_HOST_KEY = "continuum.proxyHost";
-
-    public static final String PROXY_PORT_KEY = "continuum.proxyPort";
-
-    public static final String PROXY_USER_KEY = "continuum.proxyUser";
-
-    public static final String PROXY_PASSWORD_KEY = "continuum.proxyPassword";
 
     //----------------------------------------------------
     //  Initialize method configured in the Spring xml 
@@ -70,70 +55,25 @@ public class DefaultContinuumConfiguration
     {
         if ( log.isDebugEnabled() )
         {
-            log.debug( "classPathResource null " + ( classPathResource == null ) );
+            log.debug( "configurationFile null " + ( configurationFile.getPath() == null ) );
         }
-
-        try
+        if ( configurationFile != null && configurationFile.exists() )
         {
-            DefaultConfigurationBuilder defaultConfigurationBuilder =
-                new DefaultConfigurationBuilder( classPathResource.getURL() );
-            defaultConfigurationBuilder.load( classPathResource.getInputStream() );
-
-            CombinedConfiguration combinedConfiguration = defaultConfigurationBuilder.getConfiguration( false );
-            configuration = combinedConfiguration.getConfiguration( "org.apache.continuum" );
-
+            try
+            {
+                reload( configurationFile );
+            }
+            catch ( ContinuumConfigurationException e )
+            {
+                // skip this and only log a warn
+                log.warn( " error on loading configuration from file " + configurationFile.getPath() );
+            }
+        }
+        else
+        {
+            log.info( "configuration file not exists" );
             this.generalConfiguration = new GeneralConfiguration();
-            this.generalConfiguration.setBaseUrl( getConfigurationString( BASE_URL_KEY ) );
-            log.info( "BaseUrl=" + this.generalConfiguration.getBaseUrl() );
-            // TODO check if files exists ?
-            String buildOutputDirectory = getConfigurationString( BUILDOUTPUT_DIR_KEY );
-            if ( buildOutputDirectory != null )
-            {
-                this.generalConfiguration.setBuildOutputDirectory( new File( buildOutputDirectory ) );
-            }
-            String deploymentRepositoryDirectory = getConfigurationString( DEPLOYMENT_REPOSITORY_DIR_KEY );
-            if ( deploymentRepositoryDirectory != null )
-            {
-                this.generalConfiguration.setDeploymentRepositoryDirectory( new File( deploymentRepositoryDirectory ) );
-            }
-            String workingDirectory = getConfigurationString( WORKING_DIR_KEY );
-            if ( workingDirectory != null )
-            {
-                this.generalConfiguration.setWorkingDirectory( new File( workingDirectory ) );
-            }
-
-            this.generalConfiguration.setProxyConfiguration( new ProxyConfiguration() );
-            this.generalConfiguration.getProxyConfiguration().setProxyHost( getConfigurationString( PROXY_HOST_KEY ) );
-            this.generalConfiguration.getProxyConfiguration().setProxyPort(
-                getConfigurationValue( PROXY_PORT_KEY, 0 ) );
-            this.generalConfiguration.getProxyConfiguration().setProxyUser( getConfigurationString( PROXY_USER_KEY ) );
-            this.generalConfiguration.getProxyConfiguration().setProxyPassword( configuration
-                .getString( PROXY_PASSWORD_KEY ) );
         }
-        catch ( org.apache.commons.configuration.ConfigurationException e )
-        {
-            log.error( e.getMessage(), e );
-            throw new RuntimeException( e.getMessage(), e );
-        }
-        catch ( IOException e )
-        {
-            log.error( e.getMessage(), e );
-            throw new RuntimeException( e.getMessage(), e );
-        }
-    }
-
-    private String getConfigurationString( String key )
-    {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug( "Configuration=" + configuration );
-        }
-        return configuration.getString( key );
-    }
-
-    private int getConfigurationValue( String key, int defaultValue )
-    {
-        return configuration.getInt( key, defaultValue );
     }
 
     public void reload()
@@ -145,15 +85,11 @@ public class DefaultContinuumConfiguration
     public void save()
         throws ContinuumConfigurationException
     {
-        FileConfiguration fileConfiguration = (FileConfiguration) configuration;
-        try
+        if ( !configurationFile.exists() )
         {
-            fileConfiguration.save();
+            configurationFile.getParentFile().mkdir();
         }
-        catch ( org.apache.commons.configuration.ConfigurationException e )
-        {
-            throw new ContinuumConfigurationException( e.getMessage(), e );
-        }
+        save( configurationFile );
     }
 
     /**
@@ -169,44 +105,124 @@ public class DefaultContinuumConfiguration
         throws ContinuumConfigurationException
     {
         this.generalConfiguration = generalConfiguration;
-        this.configuration.setProperty( BASE_URL_KEY, generalConfiguration.getBaseUrl() );
-        if ( generalConfiguration.getBuildOutputDirectory() != null )
+    }
+    
+    public void reload( File file )
+        throws ContinuumConfigurationException
+    {
+        try
         {
-            this.configuration.setProperty( BUILDOUTPUT_DIR_KEY, generalConfiguration.getBuildOutputDirectory()
-                .getPath() );
+            ContinuumConfigurationModelXpp3Reader configurationXpp3Reader = new ContinuumConfigurationModelXpp3Reader();
+            ContinuumConfigurationModel configuration = configurationXpp3Reader
+                .read( new InputStreamReader( new FileInputStream( file ) ) );
+
+            this.generalConfiguration = new GeneralConfiguration();
+            this.generalConfiguration.setBaseUrl( configuration.getBaseUrl() );
+            if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
+            {
+                // TODO take care if file exists ?
+                this.generalConfiguration.setBuildOutputDirectory( new File( configuration
+                    .getBuildOutputDirectory() ) );
+            }
+            if ( StringUtils.isNotEmpty( configuration.getDeploymentRepositoryDirectory() ) )
+            {
+                // TODO take care if file exists ?
+                this.generalConfiguration.setDeploymentRepositoryDirectory( new File( configuration
+                    .getDeploymentRepositoryDirectory() ) );
+            }
+            if ( StringUtils.isNotEmpty( configuration.getWorkingDirectory() ) )
+            {
+                // TODO take care if file exists ?
+                this.generalConfiguration.setWorkingDirectory( new File( configuration.getWorkingDirectory() ) );
+            }
+            if ( configuration.getProxyConfiguration() != null )
+            {
+                ProxyConfiguration proxyConfiguration = new ProxyConfiguration( configuration
+                    .getProxyConfiguration().getProxyHost(), configuration.getProxyConfiguration()
+                    .getProxyPassword(), configuration.getProxyConfiguration().getProxyPort(), configuration
+                    .getProxyConfiguration().getProxyUser() );
+                this.generalConfiguration.setProxyConfiguration( proxyConfiguration );
+            }
         }
-        if ( generalConfiguration.getDeploymentRepositoryDirectory() != null )
+        catch ( IOException e )
         {
-            this.configuration.setProperty( DEPLOYMENT_REPOSITORY_DIR_KEY, generalConfiguration
-                .getDeploymentRepositoryDirectory().getPath() );
+            log.error( e.getMessage(), e );
+            throw new RuntimeException( e.getMessage(), e );
         }
-        if ( generalConfiguration.getWorkingDirectory() != null )
+        catch ( XmlPullParserException e )
         {
-            this.configuration.setProperty( WORKING_DIR_KEY, generalConfiguration.getWorkingDirectory().getPath() );
+            log.error( e.getMessage(), e );
+            throw new RuntimeException( e.getMessage(), e );
         }
-        ProxyConfiguration proxyConfiguration = this.generalConfiguration.getProxyConfiguration();
-        if ( proxyConfiguration != null )
-        {
-            this.configuration.setProperty( PROXY_HOST_KEY, proxyConfiguration.getProxyHost() );
-            this.configuration.setProperty( PROXY_PORT_KEY, proxyConfiguration.getProxyPort() );
-            this.configuration.setProperty( PROXY_USER_KEY, proxyConfiguration.getProxyUser() );
-            this.configuration.setProperty( PROXY_PASSWORD_KEY, proxyConfiguration.getProxyPassword() );
-        }
+        
     }
 
+    public void save( File file )
+        throws ContinuumConfigurationException
+    {
+        try
+        {
+            ContinuumConfigurationModel configurationModel = new ContinuumConfigurationModel();
+            configurationModel.setBaseUrl( this.generalConfiguration.getBaseUrl() );
+            // normally not null but NPE free is better !
+            if ( this.generalConfiguration.getBuildOutputDirectory() != null )
+            {
+                configurationModel.setBuildOutputDirectory( this.generalConfiguration.getBuildOutputDirectory()
+                    .getPath() );
+            }
+            if ( this.generalConfiguration.getWorkingDirectory() != null )
+            {
+                configurationModel.setWorkingDirectory( this.generalConfiguration.getWorkingDirectory().getPath() );
+            }
+            if ( this.generalConfiguration.getDeploymentRepositoryDirectory() != null )
+            {
+                configurationModel.setDeploymentRepositoryDirectory( this.generalConfiguration
+                    .getDeploymentRepositoryDirectory().getPath() );
+            }
+            if ( this.generalConfiguration.getProxyConfiguration() != null )
+            {
+                configurationModel
+                    .setProxyConfiguration( new org.apache.continuum.configuration.model.ProxyConfiguration() );
+                configurationModel.getProxyConfiguration().setProxyHost(
+                                                                         this.generalConfiguration
+                                                                             .getProxyConfiguration().getProxyHost() );
+                configurationModel.getProxyConfiguration().setProxyPassword(
+                                                                             this.generalConfiguration
+                                                                                 .getProxyConfiguration()
+                                                                                 .getProxyPassword() );
+                configurationModel.getProxyConfiguration().setProxyPort(
+                                                                         this.generalConfiguration
+                                                                             .getProxyConfiguration().getProxyPort() );
+                configurationModel.getProxyConfiguration().setProxyHost(
+                                                                         this.generalConfiguration
+                                                                             .getProxyConfiguration().getProxyHost() );
+            }
+
+            ContinuumConfigurationModelXpp3Writer writer = new ContinuumConfigurationModelXpp3Writer();
+            FileWriter fileWriter = new FileWriter( file );
+            writer.write( fileWriter, configurationModel );
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumConfigurationException( e.getMessage(), e );
+        }
+        
+    }
+    
+    
     // ----------------------------------------
     //  Spring injection
     // ----------------------------------------
 
-    public ClassPathResource getClassPathResource()
+
+    public File getConfigurationFile()
     {
-        return classPathResource;
+        return configurationFile;
     }
 
-
-    public void setClassPathResource( ClassPathResource classPathResource )
+    public void setConfigurationFile( File configurationFile )
     {
-        this.classPathResource = classPathResource;
+        this.configurationFile = configurationFile;
     }
-
+    
 }

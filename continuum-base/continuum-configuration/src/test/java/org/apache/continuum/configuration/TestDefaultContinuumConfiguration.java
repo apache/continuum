@@ -42,14 +42,17 @@ public class TestDefaultContinuumConfiguration
     protected void setUp()
         throws Exception
     {
+        log.info( "appserver.base : " + System.getProperty( "appserver.base" ) );
+        
         File originalConf = new File( getBasedir(), "src/test/resources/conf/continuum.xml" );
-
+        
         File confUsed = new File( getBasedir(), confFile );
         if ( confUsed.exists() )
         {
             confUsed.delete();
         }
         FileUtils.copyFile( originalConf, confUsed );
+        
         super.setUp();
     }
 
@@ -82,6 +85,8 @@ public class TestDefaultContinuumConfiguration
         generalConfiguration.setProxyConfiguration( new ProxyConfiguration() );
         generalConfiguration.getProxyConfiguration().setProxyHost( "localhost" );
         generalConfiguration.getProxyConfiguration().setProxyPort( 8080 );
+        File targetDir = new File(getBasedir(), "target");
+        generalConfiguration.setBuildOutputDirectory( targetDir );
         configuration.setGeneralConfiguration( generalConfiguration );
         configuration.save();
 
@@ -94,6 +99,7 @@ public class TestDefaultContinuumConfiguration
         assertEquals( "http://test/zloug", configuration.getGeneralConfiguration().getBaseUrl() );
         assertEquals( "localhost", configuration.getGeneralConfiguration().getProxyConfiguration().getProxyHost() );
         assertEquals( 8080, configuration.getGeneralConfiguration().getProxyConfiguration().getProxyPort() );
+        assertEquals(targetDir.getPath(), configuration.getGeneralConfiguration().getBuildOutputDirectory().getPath());
         log.info( "generalConfiguration " + configuration.getGeneralConfiguration().toString() );
     }
 }

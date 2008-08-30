@@ -26,6 +26,31 @@ under the License.
   <modelVersion>4.0.0</modelVersion>
   <artifactId>continuum-configuration</artifactId>
   <name>Continuum :: Configuration</name>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.modello</groupId>
+        <artifactId>modello-maven-plugin</artifactId>
+        <configuration>
+          <models>
+            <model>src/main/mdo/continuum-configuration.xml</model>
+          </models>
+          <version>1.0.0</version>
+        </configuration>
+        <executions>
+          <execution>
+            <id>continuum-modello</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java</goal>
+              <goal>xpp3-reader</goal>
+              <goal>xpp3-writer</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>

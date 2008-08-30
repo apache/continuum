@@ -2702,54 +2702,6 @@ public class DefaultContinuum
         return configurationService;
     }
 
-    public void updateConfiguration( Map<String, Object> configuration )
-        throws ContinuumException
-    {
-        try
-        {
-            if ( configuration.get( "conf.workingDirectory" ) != null )
-            {
-                configurationService.setWorkingDirectory( configurationService.getFile( (String) configuration
-                    .get( "conf.workingDirectory" ) ) );
-            }
-            else
-            {
-                throw new ContinuumException( "working directory can't be null" );
-            }
-
-            if ( configuration.get( "conf.buildOutputDirectory" ) != null )
-            {
-                configurationService.setBuildOutputDirectory( configurationService.getFile( (String) configuration
-                    .get( "conf.buildOutputDirectory" ) ) );
-            }
-            else
-            {
-                throw new ContinuumException( "build output directory can't be null" );
-            }
-
-            if ( configuration.get( "conf.deploymentRepositoryDirectory" ) != null )
-            {
-                configurationService.setDeploymentRepositoryDirectory( configurationService
-                    .getFile( (String) configuration.get( "conf.deploymentRepositoryDirectory" ) ) );
-            }
-
-            if ( configuration.get( "conf.url" ) != null )
-            {
-                configurationService.setUrl( (String) configuration.get( "conf.url" ) );
-            }
-            else
-            {
-                throw new ContinuumException( "base url can't be null" );
-            }
-
-            configurationService.store();
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "Can't store configuration.", e );
-        }
-    }
-
     public void reloadConfiguration()
         throws ContinuumException
     {

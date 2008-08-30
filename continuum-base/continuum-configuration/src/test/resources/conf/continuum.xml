@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-  <continuum>
-    <baseUrl>http://test</baseUrl>
-    <buildOutputDirectory>myBuildOutputDir</buildOutputDirectory>
-  </continuum>
-</configuration>
+<continuum-configuration>
+  <baseUrl>http://test</baseUrl>
+  <buildOutputDirectory>myBuildOutputDir</buildOutputDirectory>
+</continuum-configuration>
