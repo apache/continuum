@@ -176,6 +176,18 @@ under the License.
               <goal>java</goal>
             </goals>
           </execution>
+          <execution>
+            <id>appearence model classes</id>
+            <configuration>
+              <model>src/main/mdo/appearance-models.mdo</model>
+              <version>1.0.0</version>
+            </configuration>
+            <goals>
+              <goal>java</goal>
+              <goal>xpp3-reader</goal>
+              <goal>xpp3-writer</goal>
+            </goals>
+          </execution>          
         </executions>
       </plugin>
       <plugin>
