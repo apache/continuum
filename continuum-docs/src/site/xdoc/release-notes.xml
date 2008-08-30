@@ -136,6 +136,8 @@
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1828'>CONTINUUM-1828</a>] -         Downloaded maven files (pom and project.xml) are not deleted
 </li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1831'>CONTINUUM-1831</a>] -         When click &quot;save&quot; or &quot;cancel&quot; button on the Appearance page (with or without making changes), get java.lang.NullPointerException error
+</li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1836'>CONTINUUM-1836</a>] -         Validation for Build Environment doesn't work
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1839'>CONTINUUM-1839</a>] -         [French] &quot;Construction en &#xEC;hec&quot; instead of &quot;Construction en &#xE9;chec&quot;
@@ -143,6 +145,8 @@
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1841'>CONTINUUM-1841</a>] -         Error when adding project group with null values
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1844'>CONTINUUM-1844</a>] -         EL Expression failed with empty/not functions
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1863'>CONTINUUM-1863</a>] -         NPE when clicking Appearance menu item
 </li>
 </ul>
 
@@ -156,6 +160,8 @@
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1186'>CONTINUUM-1186</a>] -         Application should unpack to apache-continuum-${version}
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1213'>CONTINUUM-1213</a>] -         Patch to easily run continuum jetty with postgres
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1252'>CONTINUUM-1252</a>] -         General Configuration should be pre-configurable in XML
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1344'>CONTINUUM-1344</a>] -         New Guide to Building Continuum from Source
 </li>
