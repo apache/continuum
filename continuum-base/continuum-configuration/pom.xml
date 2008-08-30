@@ -47,6 +47,24 @@ under the License.
               <goal>xpp3-writer</goal>
             </goals>
           </execution>
+          <execution>
+            <id>site-docs</id>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>xdoc</goal>
+              <goal>xsd</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>generate-xsd</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>xsd</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/META-INF/continuum/xsd</outputDirectory>
+            </configuration>
+          </execution>                    
         </executions>
       </plugin>
     </plugins>
@@ -55,10 +73,6 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
