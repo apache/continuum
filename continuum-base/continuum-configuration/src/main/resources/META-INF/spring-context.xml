@@ -25,6 +25,6 @@
 
   <bean id="continuumConfiguration" class="org.apache.continuum.configuration.DefaultContinuumConfiguration"
         init-method="initialize">
-    <property name="classPathResource" value="classpath:META-INF/continuum/continuum-configuration.xml"/>
+    <property name="configurationFile" value="file:${appserver.base}/conf/continuum.xml"/>
   </bean>
 </beans>
