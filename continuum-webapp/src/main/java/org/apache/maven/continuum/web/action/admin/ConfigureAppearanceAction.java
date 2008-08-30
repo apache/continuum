@@ -138,13 +138,16 @@ public class ConfigureAppearanceAction
             for ( String profileId : profileIds )
             {
                 Profile profile = profilesAsMap.get( profileId );
-                List<Repository> repos = profile.getRepositories();
-                if ( repos != null && !repos.isEmpty() )
+                if (profile != null)
                 {
-                    for ( Repository repo : repos )
+                    List<Repository> repos = profile.getRepositories();
+                    if ( repos != null && !repos.isEmpty() )
                     {
+                        for ( Repository repo : repos )
+                        {
                         remoteRepositories.add( artifactRepositoryFactory.createArtifactRepository( repo.getId(), repo
                             .getUrl(), layout, null, null ) );
+                        }
                     }
                 }
             }
