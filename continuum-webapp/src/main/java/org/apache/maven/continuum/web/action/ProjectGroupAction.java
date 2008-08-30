@@ -38,6 +38,7 @@ import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.users.User;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -158,18 +159,35 @@ public class ProjectGroupAction
         }
 
         if ( projectGroup != null )
-        {
+        {        	
             if ( projectGroup.getProjects() != null && projectGroup.getProjects().size() > 0 )
             {
                 int nbMaven2Projects = 0;
                 int nbMaven1Projects = 0;
                 int nbAntProjects = 0;
                 int nbShellProjects = 0;
+                
+                // get the projects according to build order (first project in the group is the root project)            
+                try
+                {                	
+                	Project rootProject =
+                            ( getContinuum().getProjectsInBuildOrder( getContinuum().getProjectsInGroupWithDependencies(
+                                projectGroupId ) ) ).get( 0 );
+                	if( "maven2".equals( rootProject.getExecutorId() ) || "maven-1".equals( rootProject.getExecutorId() ) )
+                	{
+                		url = rootProject.getUrl();
+                	}
+                }
+                catch ( CycleDetectedException e ) 
+                {
+                    // ignore. url won't be displayed if null
+                }
+                
                 for ( Object o : projectGroup.getProjects() )
                 {
                     Project p = (Project) o;
                     if ( "maven2".equals( p.getExecutorId() ) )
-                    {
+                    {   
                         nbMaven2Projects += 1;
                     }
                     else if ( "maven-1".equals( p.getExecutorId() ) )
@@ -183,11 +201,6 @@ public class ProjectGroupAction
                     else if ( "shell".equals( p.getExecutorId() ) )
                     {
                         nbShellProjects += 1;
-                    }
-                    
-                    if( p.getId() == 1 )
-                    {
-                    	url = p.getUrl();
                     }
                 }
 
