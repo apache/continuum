@@ -18,6 +18,8 @@
  */
 package org.apache.maven.continuum.web.appareance;
 
+import java.io.IOException;
+
 import org.codehaus.plexus.registry.RegistryException;
 
 /**
@@ -33,7 +35,7 @@ public interface AppareanceConfiguration
      * @throws RegistryException
      */
     public void saveFooter( String footerHtmlContent )
-        throws RegistryException;
+        throws IOException;
 
     /**
      * If no user configuration a default one will be user 

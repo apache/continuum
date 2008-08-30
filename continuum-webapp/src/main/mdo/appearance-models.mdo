@@ -1,0 +1,25 @@
+<model>
+  <id>continuum-appearance-models</id>
+  <name>ContinuumAppearanceModels</name>
+  <defaults>
+    <default>
+      <key>package</key>
+      <value>org.apache.continuum.web.appearance</value>
+    </default>
+  </defaults>
+  <classes>
+    <class rootElement="true">
+      <name>ContinuumAppearance</name>
+      <version>1.0.0</version>
+      <fields>
+        <field>
+          <name>footer</name>
+          <version>1.0.0</version>
+          <description></description>
+          <type>String</type>
+          <required>false</required>
+        </field>
+      </fields>
+    </class>
+  </classes>
+</model>

@@ -18,9 +18,10 @@
  */
 package org.apache.maven.continuum.web.action.admin;
 
+import java.io.IOException;
+
 import org.apache.maven.continuum.web.action.component.AbstractFooterAction;
 import org.apache.maven.continuum.web.appareance.AppareanceConfiguration;
-import org.codehaus.plexus.registry.RegistryException;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -38,7 +39,7 @@ public class ConfigureFooterAction
     private AppareanceConfiguration appareanceConfiguration;
 
     public String saveFooter()
-        throws RegistryException
+        throws IOException
     {
         appareanceConfiguration.saveFooter( getFooter() );
         return SUCCESS;
