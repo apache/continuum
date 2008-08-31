@@ -274,7 +274,7 @@
   
   
   <!-- continuum configuration -->
-	<!-- START SNIPPET: mail -->
+  <!-- START SNIPPET: mail -->
   <New id="validation_mail" class="org.mortbay.jetty.plus.naming.Resource">
     <Arg>mail/Session</Arg>
     <Arg>
