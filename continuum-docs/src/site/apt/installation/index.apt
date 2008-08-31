@@ -14,6 +14,6 @@ Installation/Upgrade Guides
 
     * {{{installation.html}Installation in different environment (standalone, webapp, service)}}
 
-    * {{{release-notes.html}Release Notes}}
+    * {{{../release-notes.html}Release Notes}}
 
     * {{{upgrade.html}How to upgrade from a previous version?}}
