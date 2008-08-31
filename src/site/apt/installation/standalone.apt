@@ -3,7 +3,7 @@
  ------
  Emmanuel Venisse
  ------
- Oct 9 2007
+ 2008-09-01
  ------
 
 Installing Continuum Standalone
@@ -63,7 +63,7 @@ continuum.bat install
 ------------------
 #!/bin/sh
 
-CONTINUUM_HOME=/opt/continuum-1.1
+CONTINUUM_HOME=/opt/continuum-1.2
 su - continuum_user -c "$CONTINUUM_HOME/bin/continuum console $@ &"
 ------------------
 

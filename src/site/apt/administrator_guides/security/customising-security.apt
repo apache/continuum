@@ -1,6 +1,7 @@
  -----
  Continuum Security Configuration
  -----
+ 2008-09-01
 
 Continuum Security Configuration
 
@@ -15,7 +16,7 @@ Continuum Security Configuration
 
  (In the above list, <<<~>>> is the home directory of the user who is running
  Continuum, and <<<$CONTINUUM_HOME>>> is the directory where Continuum is installed,
- such as <<</opt/continuum-1.1>>>.)
+ such as <<</opt/continuum-1.2>>>.)
 
 ~~TODO: Link to Redback documentation when available
 
