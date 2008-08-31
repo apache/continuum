@@ -1,11 +1,11 @@
 <document>
 <body>
 
-<h1>New in Continuum 1.2.0</h1>	
+<h1>New in Continuum 1.2</h1>	
 <h2>Using Spring</h2>
   <p>Continuum now uses the Spring Framework as it's underlying container instead of Plexus. This results in a boost in performance and stability for the web application in particular.</p>	
 	
-<h1>Release Notes - Continuum - Version 1.2.0</h1>
+<h1>Release Notes - Continuum - Version 1.2</h1>
 
 <h2>Bug</h2>
 <ul>
