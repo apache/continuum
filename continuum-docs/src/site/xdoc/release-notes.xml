@@ -227,6 +227,8 @@
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1858'>CONTINUUM-1858</a>] -         Add rolesList page in the menu from redback
 </li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1465'>CONTINUUM-1465</a>] -         Project groups should probably get their own local maven repo
+</li>  
 </ul>
 
 <h2>New Feature</h2>
