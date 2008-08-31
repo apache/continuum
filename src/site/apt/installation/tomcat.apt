@@ -4,7 +4,7 @@
  Joakim Erdfelt
  Emmanuel Venisse
  ------
- Oct 30 2007
+ 2008-09-01
  ------
 
 Guide to Install Continuum on Tomcat
@@ -82,7 +82,7 @@ Guide to Install Continuum on Tomcat
 
 ** {The Apache Derby JAR files}
 
-    <<Note:>>Continuum 1.1 has been tested with Apache Derby 10.1.3.1
+    <<Note:>>Continuum 1.2 has been tested with Apache Derby 10.1.3.1
 
     Default installation of Continuum utilizes the Apache Derby 100% Java Database to maintain Continuum specific information, and also the Users / Security Database.
 
@@ -117,7 +117,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
 
     Tested on Tomcat v5.0.28
 
-    These instructions explain how to deploy the Continuum 1.1 web application in an existing installation of Tomcat 5.0.x.
+    These instructions explain how to deploy the Continuum 1.2 web application in an existing installation of Tomcat 5.0.x.
 
     <<Extra Jars:>>
 
@@ -127,7 +127,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
         the internal JAXP implementation in JDK 1.5, we recommend that you remove the files in <<<$CATALINA_HOME/common/endorsed/>>>.
 
 ------------------------------------------
-<Context path="/continuum" docBase="/path/to/continuum-webapp-1.1.war" debug="0">
+<Context path="/continuum" docBase="/path/to/continuum-webapp-1.2.war" debug="0">
 
   <!-- JNDI Datasource for User/Security Database (REQUIRED) -->
   <Resource name="jdbc/users" auth="Container" type="javax.sql.DataSource"/>
@@ -197,7 +197,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
 
 ------------------------------------------
 <Context path="/continuum"
-         docBase="/path/to/continuum-webapp-1.1.war">
+         docBase="/path/to/continuum-webapp-1.2.war">
 
   <Resource name="jdbc/users"
             auth="Container"
@@ -231,7 +231,7 @@ export CATALINA_OPTS="-Dappserver.home=$CATALINA_HOME -Dappserver.base=$CATALINA
 
 ------------------------------------------
 <Context path="/continuum"
-         docBase="/path/to/continuum-webapp-1.1.war">
+         docBase="/path/to/continuum-webapp-1.2.war">
 
   <Resource name="jdbc/users"
             auth="Container"
