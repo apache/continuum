@@ -22,6 +22,8 @@
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1433'>CONTINUUM-1433</a>] -         Wrong path in descripton on how to allow the file protocol.
 </li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1489'>CONTINUUM-1489</a>] -         replace use of MungedHttpsURL with apache httpclient (4.0-beta1)
+</li>	
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1515'>CONTINUUM-1515</a>] -         SCM Tag does not have a default value
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1521'>CONTINUUM-1521</a>] -         NullPointerException in StarTeam changelog command
