@@ -1,10 +1,13 @@
 <document>
 <body>
 
+<h1>New in Continuum 1.2.0</h1>	
+<h2>Using Spring</h2>
+  <p>Archiva now uses the Spring Framework as it's underlying container instead of Plexus. This results in a boost in performance and stability for the web application in particular.</p>	
+	
 <h1>Release Notes - Continuum - Version 1.2.0</h1>
 
-<h2>        Bug
-</h2>
+<h2>Bug</h2>
 <ul>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-860'>CONTINUUM-860</a>] -         multiple email addresses delimited with commas causes AddressException
 </li>
@@ -152,8 +155,7 @@
 </li>
 </ul>
 
-<h2>        Improvement
-</h2>
+<h2>Improvement</h2>
 <ul>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-515'>CONTINUUM-515</a>] -         Add a wait page when adding a project
 </li>
@@ -227,8 +229,7 @@
 </li>
 </ul>
 
-<h2>        New Feature
-</h2>
+<h2>New Feature</h2>
 <ul>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-782'>CONTINUUM-782</a>] -         Add a feature to allow cleaning the m2 local repo once every N days
 </li>
@@ -244,8 +245,7 @@
 </li>
 </ul>
 
-<h2>        Task
-</h2>
+<h2>Task</h2>
 <ul>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1614'>CONTINUUM-1614</a>] -         release maven-scm 1.1
 </li>
@@ -255,8 +255,7 @@
 </li>
 </ul>
 
-<h2>        Wish
-</h2>
+<h2>Wish</h2>
 <ul>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1638'>CONTINUUM-1638</a>] -         Documentation for Release Management
 </li>
