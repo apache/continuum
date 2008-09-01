@@ -6,7 +6,7 @@
 	
 	
 <h2>Release Notes - Continuum - Version 1.2</h2>
-The Continuum team is pleased to announce Apache Continuum 1.2
+The Apache Continuum team is pleased to announce Apache Continuum 1.2
 <h3>New in Continuum 1.2</h3> 
 <h4>Using Spring</h4>
   <p>Continuum now uses the Spring Framework as it's underlying container instead of Plexus. This results in a boost in performance and stability for the web application in particular.</p>
@@ -267,6 +267,11 @@ The Continuum team is pleased to announce Apache Continuum 1.2
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1638'>CONTINUUM-1638</a>] -         Documentation for Release Management
 </li>
 </ul>
+  
+Have Fun !
+<br/><br/>
+--
+The Apache Continuum Team  
 
 </body>
 </document>
