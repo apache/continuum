@@ -19,6 +19,8 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -53,6 +55,11 @@ public class SummaryAction
 
     private GroupSummary groupSummary = new GroupSummary();
 
+    /**
+     * @plexus.requirement
+     */
+    private TaskQueueManager taskQueueManager;
+    
     public String execute()
         throws ContinuumException
     {
@@ -101,19 +108,26 @@ public class SummaryAction
             model.setProjectGroupName( project.getProjectGroup().getName() );
 
             model.setProjectType( project.getExecutorId() );
-            
-            if ( getContinuum().isInBuildingQueue( project.getId() ) )
+
+            try
             {
-                model.setInBuildingQueue( true );
+                if ( taskQueueManager.isInBuildingQueue( project.getId() ) )
+                {
+                    model.setInBuildingQueue( true );
+                }
+                else if ( taskQueueManager.isInCheckoutQueue( project.getId() ) )
+                {
+                    model.setInCheckoutQueue( true );
+                }
+                else
+                {
+                    model.setInBuildingQueue( false );
+                    model.setInCheckoutQueue( false );
+                }
             }
-            else if ( getContinuum().isInCheckoutQueue( project.getId() ) )
+            catch ( TaskQueueManagerException e )
             {
-                model.setInCheckoutQueue( true );
-            }
-            else
-            {
-                model.setInBuildingQueue( false );
-                model.setInCheckoutQueue( false );
+                throw new ContinuumException( e.getMessage(), e );
             }
 
             model.setState( project.getState() );

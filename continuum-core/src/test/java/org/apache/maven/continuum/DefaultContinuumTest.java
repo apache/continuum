@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryService;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -350,6 +351,8 @@ public class DefaultContinuumTest
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
 
+        TaskQueueManager taskQueueManager = (TaskQueueManager) lookup( TaskQueueManager.ROLE );
+        
         String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
 
         ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
@@ -365,10 +368,10 @@ public class DefaultContinuumTest
         Project project = (Project) projects.get( 0 );
 
         assertTrue( "project missing from the checkout queue",
-                    continuum.removeProjectFromCheckoutQueue( project.getId() ) );
+                    taskQueueManager.removeProjectFromCheckoutQueue( project.getId() ) );
 
         assertFalse( "project still exist on the checkout queue",
-                     continuum.removeProjectFromCheckoutQueue( project.getId() ) );
+                     taskQueueManager.removeProjectFromCheckoutQueue( project.getId() ) );
     }
 
     public void testAddAntProjectWithdefaultBuildDef()

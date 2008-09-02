@@ -22,6 +22,7 @@ package org.apache.maven.continuum.web.action.admin;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
@@ -76,6 +77,11 @@ public class QueuesAction
     private int trigger;
 
     private String projectName;
+    
+    /**
+     * @plexus.requirement
+     */
+    private TaskQueueManager taskQueueManager;
 
     // -----------------------------------------------------
     //  webwork
@@ -121,7 +127,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
             
-        getContinuum().removeProjectFromCheckoutQueue( projectId );
+        taskQueueManager.removeProjectFromCheckoutQueue( projectId );
         return SUCCESS;
     }
 
@@ -150,9 +156,9 @@ public class QueuesAction
         throws Exception
     {
         this.setCurrentBuildProjectTask( (BuildProjectTask) taskQueueExecutor.getCurrentTask() );        
-        this.setBuildProjectTasks( getContinuum().getProjectsInBuildQueue() );
+        this.setBuildProjectTasks( taskQueueManager.getProjectsInBuildQueue() );
         this.setCurrentCheckOutTask( (CheckOutTask) checkoutTaskQueueExecutor.getCurrentTask() );
-        this.setCurrentCheckOutTasks( getContinuum().getCheckOutTasksInQueue() );
+        this.setCurrentCheckOutTasks( taskQueueManager.getCheckOutTasksInQueue() );
         return SUCCESS;
     }
 
@@ -174,7 +180,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
         
-        getContinuum().removeFromBuildingQueue( projectId, buildDefinitionId, trigger, projectName );
+        taskQueueManager.removeFromBuildingQueue( projectId, buildDefinitionId, trigger, projectName );
         Project project = getContinuum().getProject( projectId );
         project.setState( project.getOldState() );
         getContinuum().updateProject( project );
@@ -200,7 +206,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
         
-        getContinuum().removeProjectsFromBuildingQueueWithHashCodes( listToIntArray(this.getSelectedBuildTaskHashCodes()) );
+        taskQueueManager.removeProjectsFromBuildingQueueWithHashCodes( listToIntArray(this.getSelectedBuildTaskHashCodes()) );
         return SUCCESS;
     }
 
@@ -222,7 +228,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
         
-        getContinuum()
+        taskQueueManager
             .removeTasksFromCheckoutQueueWithHashCodes( listToIntArray( this.getSelectedCheckOutTaskHashCodes() ) );
         return SUCCESS;
     }

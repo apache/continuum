@@ -24,8 +24,8 @@ import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
-import org.apache.continuum.purge.ContinuumPurgeManager;
-import org.apache.continuum.purge.ContinuumPurgeManagerException;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -59,11 +59,11 @@ public class DefaultRepositoryService
      * @plexus.requirement
      */
     private ProjectGroupDao projectGroupDao;
-
+    
     /**
      * @plexus.requirement
      */
-    private ContinuumPurgeManager purgeManager;
+    private TaskQueueManager taskQueueManager;
 
     public LocalRepository addLocalRepository( LocalRepository localRepository )
         throws RepositoryServiceException
@@ -94,14 +94,14 @@ public class DefaultRepositoryService
         {
             LocalRepository repository = getLocalRepository( repositoryId );
 
-            if ( purgeManager.isRepositoryInUse( repositoryId ) )
+            if ( taskQueueManager.isRepositoryInUse( repositoryId ) )
             {
                 return;
             }
 
-            if ( purgeManager.isRepositoryInPurgeQueue( repositoryId ) )
+            if ( taskQueueManager.isRepositoryInPurgeQueue( repositoryId ) )
             {
-                purgeManager.removeRepositoryFromPurgeQueue( repositoryId );
+                taskQueueManager.removeRepositoryFromPurgeQueue( repositoryId );
             }
 
             getLogger().info( "Remove purge configurations of " + repository.getName() );
@@ -119,7 +119,7 @@ public class DefaultRepositoryService
 
             getLogger().info( "Removed local repository: " + repository.getName() );
         }
-        catch ( ContinuumPurgeManagerException e )
+        catch ( TaskQueueManagerException e )
         {
             // swallow?
         }
@@ -137,7 +137,7 @@ public class DefaultRepositoryService
 
         try
         {
-            if ( purgeManager.isRepositoryInUse( localRepository.getId() ) )
+            if ( taskQueueManager.isRepositoryInUse( localRepository.getId() ) )
             {
                 return;
             }
@@ -146,7 +146,7 @@ public class DefaultRepositoryService
 
             getLogger().info( "Updated local repository: " + localRepository.getName() );
         }
-        catch ( ContinuumPurgeManagerException e )
+        catch ( TaskQueueManagerException e )
         {
             // swallow?
         }

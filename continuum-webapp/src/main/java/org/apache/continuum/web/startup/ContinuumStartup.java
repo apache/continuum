@@ -78,6 +78,9 @@ public class ContinuumStartup
         
         TaskQueueExecutor purge = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "purge" ) );
+        
+        TaskQueueExecutor prepareBuildProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
+            .buildSpringId( TaskQueueExecutor.class, "prepare-build-project" ) );
     }
 
 }

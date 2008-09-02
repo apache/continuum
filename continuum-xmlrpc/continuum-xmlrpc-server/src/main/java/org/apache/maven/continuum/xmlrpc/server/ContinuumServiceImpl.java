@@ -22,6 +22,8 @@ package org.apache.maven.continuum.xmlrpc.server;
 import net.sf.dozer.util.mapping.DozerBeanMapperSingletonWrapper;
 import net.sf.dozer.util.mapping.MapperIF;
 import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -78,6 +80,11 @@ public class ContinuumServiceImpl
      * @plexus.requirement role-hint="default"
      */
     private RoleManager roleManager;
+    
+    /**
+     * @plexus.requirement
+     */
+    private TaskQueueManager taskQueueManager;
 
     public boolean ping()
         throws ContinuumException
@@ -792,13 +799,27 @@ public class ContinuumServiceImpl
     public boolean isProjectInBuildingQueue( int projectId )
         throws ContinuumException
     {
-        return continuum.isInBuildingQueue( projectId );
+        try
+        {
+            return taskQueueManager.isInBuildingQueue( projectId );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
 
     public List<BuildProjectTask> getProjectsInBuildQueue()
         throws ContinuumException
     {
-        return populateBuildProjectTaskList( continuum.getProjectsInBuildQueue() );
+        try
+        {
+            return populateBuildProjectTaskList( taskQueueManager.getProjectsInBuildQueue() );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
 
     // ----------------------------------------------------------------------

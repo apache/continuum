@@ -22,6 +22,7 @@ package org.apache.maven.continuum.web.action;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.web.action.admin.AbstractBuildQueueAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -62,7 +63,7 @@ public class CancelBuildAction
     }
 
     public String cancelBuilds()
-        throws ContinuumException
+        throws Exception
     {
         if ( getSelectedProjects() == null || getSelectedProjects().isEmpty() )
         {
@@ -74,7 +75,10 @@ public class CancelBuildAction
             int projectId = Integer.parseInt( selectedProjectId );
             projectsId = ArrayUtils.add( projectsId, projectId );
         }
-        getContinuum().removeProjectsFromBuildingQueue( projectsId );
+        
+        TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
+        taskQueueManager.removeProjectsFromBuildingQueue( projectsId );
+        
         // now we must check if the current build is one of this
         int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
         if ( index > 0 )

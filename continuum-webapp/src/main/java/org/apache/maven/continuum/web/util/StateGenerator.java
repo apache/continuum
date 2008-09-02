@@ -49,7 +49,7 @@ public class StateGenerator
         {
             return NEW;
         }
-        else if ( state == ContinuumProjectState.OK )
+        else if ( state == ContinuumProjectState.OK || state == ContinuumProjectState.UPDATED )
         {
             return "<img src=\"" + contextPath + "/images/icon_success_sml.gif\" alt=\"" + SUCCESS + "\" title=\"" +
                 SUCCESS + "\" border=\"0\" />";

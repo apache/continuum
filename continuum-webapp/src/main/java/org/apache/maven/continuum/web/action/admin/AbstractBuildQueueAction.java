@@ -20,6 +20,8 @@ package org.apache.maven.continuum.web.action.admin;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.taskqueue.Task;
@@ -52,6 +54,7 @@ public abstract class AbstractBuildQueueAction
                 if ( ( (BuildProjectTask) task ).getProjectId() == projectId )
                 {
                     getLogger().info( "Cancelling task for project " + projectId );
+                    
                     return getTaskQueueExecutor().cancelTask( task );
                 }
                 else

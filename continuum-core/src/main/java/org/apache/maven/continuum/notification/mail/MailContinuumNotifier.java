@@ -323,8 +323,7 @@ public class MailContinuumNotifier
 
                 context.put( "project", project );
 
-                context.put( "changesSinceLastSuccess", continuum.getChangesSinceLastSuccess( project.getId(), build
-                    .getId() ) );
+                context.put( "changesSinceLastSuccess", continuum.getChangesSinceLastUpdate( project.getId() ) );
 
                 context.put( "previousBuild", previousBuild );
 

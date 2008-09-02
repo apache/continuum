@@ -32,6 +32,7 @@ import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -273,6 +274,7 @@ public class PurgeConfigurationAction
         throws Exception
     {
         ContinuumPurgeManager purgeManager = getContinuum().getPurgeManager();
+        TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
         
         if ( purgeConfigId > 0 )
         {
@@ -283,7 +285,7 @@ public class PurgeConfigurationAction
                 RepositoryPurgeConfiguration repoPurge = (RepositoryPurgeConfiguration) purgeConfig;
                 
                 // check if repository is in use
-                if ( purgeManager.isRepositoryInUse( repoPurge.getRepository().getId() ) )
+                if ( taskQueueManager.isRepositoryInUse( repoPurge.getRepository().getId() ) )
                 {
                     message = "repository.error.purge.in.use";
                     return ERROR;

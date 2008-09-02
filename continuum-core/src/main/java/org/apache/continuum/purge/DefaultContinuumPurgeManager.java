@@ -19,29 +19,21 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.task.PurgeTask;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
-import org.apache.maven.continuum.model.project.Project;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.Schedule;
-import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.codehaus.plexus.taskqueue.Task;
-import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,25 +45,28 @@ import java.util.List;
  * @since 25 jul 07
  */
 public class DefaultContinuumPurgeManager
-    implements ContinuumPurgeManager, Contextualizable
+    implements ContinuumPurgeManager
 {
     /**
      * @plexus.requirement
      */
     private ProjectDao projectDao;
-
+/*
     /**
      * @plexus.requirement role-hint="purge"
      */
-    private TaskQueue purgeQueue;
+//    private TaskQueue purgeQueue;
 
     /**
      * @plexus.requirement
      */
     private PurgeConfigurationService purgeConfigurationService;
 
-    private PlexusContainer container;
-
+    /**
+     * @plexus.requirement
+     */
+    private TaskQueueManager taskQueueManager;
+    
     public void purge( Schedule schedule )
         throws ContinuumPurgeManagerException
     {
@@ -97,7 +92,7 @@ public class DefaultContinuumPurgeManager
             }
         }
     }
-
+/*
     public boolean isRepositoryInPurgeQueue( int repositoryId )
         throws ContinuumPurgeManagerException
     {
@@ -106,9 +101,16 @@ public class DefaultContinuumPurgeManager
 
         for ( RepositoryPurgeConfiguration repoPurge : repoPurgeConfigs )
         {
-            if ( isInPurgeQueue( repoPurge.getId() ) )
+            try
             {
-                return true;
+                if ( taskQueueManager.isInPurgeQueue( repoPurge.getId() ) )
+                {
+                    return true;
+                }
+            }
+            catch ( TaskQueueManagerException e )
+            {
+                throw new ContinuumPurgeManagerException( e.getMessage(), e );
             }
         }
         return false;
@@ -203,7 +205,7 @@ public class DefaultContinuumPurgeManager
         }
         return false;
     }
-
+*/
     public void purgeRepository( RepositoryPurgeConfiguration repoPurge )
         throws ContinuumPurgeManagerException
     {
@@ -212,14 +214,19 @@ public class DefaultContinuumPurgeManager
             LocalRepository repository = repoPurge.getRepository();
 
             // do not purge if repository is in use and if repository is already in purge queue
-            if ( !isRepositoryInUse( repository.getId() ) && !isInPurgeQueue( repoPurge.getId() ) )
+            if ( !taskQueueManager.isRepositoryInUse( repository.getId() ) && 
+                 !taskQueueManager.isInPurgeQueue( repoPurge.getId() ) )
             {
-                purgeQueue.put( new PurgeTask( repoPurge.getId() ) );
+                taskQueueManager.getPurgeQueue().put( new PurgeTask( repoPurge.getId() ) );
             }
         }
         catch ( TaskQueueException e )
         {
             throw new ContinuumPurgeManagerException( "Error while enqueuing repository", e );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumPurgeManagerException( e.getMessage(), e );
         }
     }
 
@@ -231,17 +238,19 @@ public class DefaultContinuumPurgeManager
             if ( "releases".equals( dirPurge.getDirectoryType() ) )
             {
                 // do not purge if release in progress
-                if ( !releaseInProgress() && !isInPurgeQueue( dirPurge.getId() ) )
+                if ( !taskQueueManager.releaseInProgress() && 
+                     !taskQueueManager.isInPurgeQueue( dirPurge.getId() ) )
                 {
-                    purgeQueue.put( new PurgeTask( dirPurge.getId() ) );
+                    taskQueueManager.getPurgeQueue().put( new PurgeTask( dirPurge.getId() ) );
                 }
             }
             else if ( "buildOutput".equals( dirPurge.getDirectoryType() ) )
             {
                 // do not purge if build in progress
-                if ( !buildInProgress() && !isInPurgeQueue( dirPurge.getId() ) )
+                if ( !taskQueueManager.buildInProgress() && 
+                     !taskQueueManager.isInPurgeQueue( dirPurge.getId() ) )
                 {
-                    purgeQueue.put( new PurgeTask( dirPurge.getId() ) );
+                    taskQueueManager.getPurgeQueue().put( new PurgeTask( dirPurge.getId() ) );
                 }
             }
 
@@ -250,14 +259,13 @@ public class DefaultContinuumPurgeManager
         {
             throw new ContinuumPurgeManagerException( "Error while enqueuing repository", e );
         }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumPurgeManagerException( e.getMessage(), e );
+        }
     }
 
-    public void contextualize( Context context )
-        throws ContextException
-    {
-        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
-    }
-
+/*
     private boolean isInPurgeQueue( int purgeConfigId )
         throws ContinuumPurgeManagerException
     {
@@ -324,5 +332,5 @@ public class DefaultContinuumPurgeManager
         }
 
         return false;
-    }
+    }*/
 }

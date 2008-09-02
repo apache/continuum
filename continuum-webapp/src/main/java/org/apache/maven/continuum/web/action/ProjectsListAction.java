@@ -20,8 +20,10 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -146,8 +148,8 @@ public class ProjectsListAction
                 Project p = getContinuum().getProjectWithAllDetails( projectId );
                 projectsList.add( p );
             }
-
-            List sortedProjects;
+            
+            List<Project> sortedProjects;
             try
             {
                 sortedProjects = getContinuum().getProjectsInBuildOrder( projectsList );
@@ -157,6 +159,25 @@ public class ProjectsListAction
                 sortedProjects = projectsList;
             }
 
+            Map<Integer, Integer> projectsBuildDefsMap = getProjectsBuildDefsMap( sortedProjects );
+            
+            for ( Project project : sortedProjects )
+            {
+                getContinuum().prepareBuildProjects( projectsBuildDefsMap );
+                
+                if ( this.getBuildDefinitionId() <= 0 )
+                {
+                    getContinuum().buildProject( project.getId(), projectsBuildDefsMap.get( project.getId() ),
+                                                 ContinuumProjectState.TRIGGER_FORCED );
+                }
+                else
+                {
+                    getContinuum().buildProject( project.getId(), this.getBuildDefinitionId(),
+                                                 ContinuumProjectState.TRIGGER_FORCED );
+                }
+            }
+            
+            /*
             //TODO : Change this part because it's a duplicate of DefaultContinuum.buildProjectGroup*
             List<BuildDefinition> groupDefaultBDs = null;
 
@@ -164,6 +185,8 @@ public class ProjectsListAction
             {
                 groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
             }
+          
+            
             for ( Iterator i = sortedProjects.iterator(); i.hasNext(); )
             {
                 Project project = (Project) i.next();
@@ -212,10 +235,37 @@ public class ProjectsListAction
                                                  ContinuumProjectState.TRIGGER_FORCED );
                 }
             }
-
+            */
         }
 
         return SUCCESS;
+    }
+    
+    private Map<Integer, Integer> getProjectsBuildDefsMap( List<Project> projects )
+        throws ContinuumException
+    {
+        Map<Integer, Integer> projectsBuildDefsMap = new HashMap<Integer, Integer>();
+        
+        if ( this.getBuildDefinitionId() <= 0 )
+        {
+            boolean checkDefaultBuildDefinitionForProject = false;
+            
+            if ( this.getBuildDefinitionId() == -1 )
+            {
+                checkDefaultBuildDefinitionForProject = true;
+            }
+            
+            List<BuildDefinition> groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
+            
+            return getContinuum().getProjectsAndBuildDefinitionsMap( projects, 
+                                                                     groupDefaultBDs, 
+                                                                     checkDefaultBuildDefinitionForProject );
+        }
+        else
+        {
+            return getContinuum().getProjectsAndBuildDefinitionsMap( projects,
+                                                                     this.getBuildDefinitionId() );
+        }
     }
 
     public String getProjectGroupName()

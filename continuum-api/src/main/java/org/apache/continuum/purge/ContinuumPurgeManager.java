@@ -55,7 +55,7 @@ public interface ContinuumPurgeManager
      */
     void purgeDirectory( DirectoryPurgeConfiguration dirPurgeConfig )
         throws ContinuumPurgeManagerException;
-    
+    /*
     /**
      * Check if the repository is already in the purging queue
      * 
@@ -63,7 +63,7 @@ public interface ContinuumPurgeManager
      * @return true if the repository is in the purging queue, otherwise false
      * @throws ContinuumPurgeManagerException
      */
-    boolean isRepositoryInPurgeQueue( int repositoryId )
+/*    boolean isRepositoryInPurgeQueue( int repositoryId )
         throws ContinuumPurgeManagerException;
     
     /**
@@ -73,7 +73,7 @@ public interface ContinuumPurgeManager
      * @return true if the repository is in use, otherwise false
      * @throws ContinuumPurgeManagerException
      */
-    boolean isRepositoryInUse( int repositoryId )
+/*    boolean isRepositoryInUse( int repositoryId )
         throws ContinuumPurgeManagerException;
 
     /**
@@ -82,7 +82,7 @@ public interface ContinuumPurgeManager
      * @param repositoryId the id of the local repository
      * @throws ContinuumPurgeManagerException
      */
-    void removeRepositoryFromPurgeQueue( int repositoryId )
+/*    void removeRepositoryFromPurgeQueue( int repositoryId )
         throws ContinuumPurgeManagerException;
     
     /**
@@ -92,7 +92,7 @@ public interface ContinuumPurgeManager
      * @return true if the purge configuration was successfully removed from the purge queue, otherwise false
      * @throws ContinuumPurgeManagerException
      */
-    boolean removeFromPurgeQueue( int purgeConfigId )
+/*    boolean removeFromPurgeQueue( int purgeConfigId )
         throws ContinuumPurgeManagerException;
     
     /**
@@ -102,6 +102,6 @@ public interface ContinuumPurgeManager
      * @return true if the purge configurations were successfully removed from the purge queue, otherwise false
      * @throws ContinuumPurgeManagerException
      */
-    boolean removeFromPurgeQueue( int[] purgeConfigIds )
-        throws ContinuumPurgeManagerException;
+/*    boolean removeFromPurgeQueue( int[] purgeConfigIds )
+        throws ContinuumPurgeManagerException;*/
 }

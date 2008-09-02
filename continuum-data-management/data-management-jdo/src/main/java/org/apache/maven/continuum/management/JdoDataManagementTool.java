@@ -6,10 +6,10 @@ import org.apache.continuum.dao.InstallationDao;
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ProfileDao;
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.dao.SystemConfigurationDao;
-import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ContinuumDatabase;
@@ -96,6 +96,11 @@ public class JdoDataManagementTool
      * @plexus.requirement
      */
     private SystemConfigurationDao systemConfigurationDao;
+    
+    /**
+     * @plexus.requirement
+     */
+    private ProjectScmRootDao projectScmRootDao;
 
     protected static final String BUILDS_XML = "builds.xml";
 
@@ -136,6 +141,8 @@ public class JdoDataManagementTool
             repositoryPurgeConfigurationDao.getAllRepositoryPurgeConfigurations() );
         database.setDirectoryPurgeConfigurations( directoryPurgeConfigurationDao.getAllDirectoryPurgeConfigurations() );
 
+        database.setProjectScmRoots( projectScmRootDao.getAllProjectScmRoots() );
+        
         ContinuumStaxWriter writer = new ContinuumStaxWriter();
 
         File backupFile = new File( backupDirectory, BUILDS_XML );
@@ -239,10 +246,11 @@ public class JdoDataManagementTool
             localRepositories.put( Integer.valueOf( localRepository.getId() ), localRepository );
         }
 
+        Map<Integer, ProjectGroup> projectGroups = new HashMap<Integer, ProjectGroup>();
         for ( Iterator i = database.getProjectGroups().iterator(); i.hasNext(); )
         {
             ProjectGroup projectGroup = (ProjectGroup) i.next();
-
+            
             // first, we must map up any schedules, etc.
             processBuildDefinitions( projectGroup.getBuildDefinitions(), schedules, profiles, localRepositories );
 
@@ -258,14 +266,9 @@ public class JdoDataManagementTool
                 projectGroup.setLocalRepository( localRepositories.get( 
                                                  Integer.valueOf( projectGroup.getLocalRepository().getId() ) ) );
             }
-
-            if ( projectGroup.getLocalRepository() != null )
-            {
-                projectGroup.setLocalRepository(
-                    localRepositories.get( Integer.valueOf( projectGroup.getLocalRepository().getId() ) ) );
-            }
-
-            PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectGroup );
+            
+            projectGroup = (ProjectGroup) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectGroup );
+            projectGroups.put( Integer.valueOf( projectGroup.getId() ), projectGroup );
         }
     }
 

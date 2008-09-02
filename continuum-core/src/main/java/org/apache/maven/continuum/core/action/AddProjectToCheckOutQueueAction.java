@@ -20,6 +20,7 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
@@ -40,17 +41,22 @@ public class AddProjectToCheckOutQueueAction
      * @plexus.requirement
      */
     private WorkingDirectoryService workingDirectoryService;
-
+/*
     /**
      * @plexus.requirement role-hint="check-out-project"
      */
-    private TaskQueue checkOutQueue;
+//    private TaskQueue checkOutQueue;
 
     /**
      * @plexus.requirement
      */
     private ProjectDao projectDao;
 
+    /**
+     * @plexus.requirement
+     */
+    private TaskQueueManager taskQueueManager;
+    
     @SuppressWarnings("unchecked")
     public void execute( Map context )
         throws Exception
@@ -65,6 +71,6 @@ public class AddProjectToCheckOutQueueAction
         CheckOutTask checkOutTask = new CheckOutTask( project.getId(), workingDirectoryService
             .getWorkingDirectory( project ), project.getName(), project.getScmUsername(), project.getScmPassword() );
 
-        checkOutQueue.put( checkOutTask );
+        taskQueueManager.getCheckoutQueue().put( checkOutTask );
     }
 }

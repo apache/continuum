@@ -96,6 +96,8 @@ public class CheckoutProjectContinuumAction
 
         try
         {
+            notifier.checkoutStarted( project, buildDefinition );
+            
             String scmUserName = getString( context, KEY_SCM_USERNAME, "" );
             String scmPassword = getString( context, KEY_SCM_PASSWORD, "" );
             ContinuumScmConfiguration config =
@@ -157,10 +159,16 @@ public class CheckoutProjectContinuumAction
         {
             result = new ScmResult();
 
-            result.setSuccess( false );
-
-            result.setException( ContinuumUtils.throwableMessagesToString( e ) );
-
+            if ( e.getCause() instanceof InterruptedException )
+            {
+                result.setSuccess( true );
+            }
+            else
+            {
+                result.setSuccess( false );
+    
+                result.setException( ContinuumUtils.throwableMessagesToString( e ) );
+            }
             getLogger().error( e.getMessage(), e );
         }
         catch ( Throwable t )
@@ -193,6 +201,7 @@ public class CheckoutProjectContinuumAction
         }
 
         context.put( KEY_CHECKOUT_SCM_RESULT, result );
+        context.put( KEY_PROJECT, project );
     }
 
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory,

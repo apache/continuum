@@ -57,6 +57,9 @@ public interface ProjectDao
     Project getProjectWithCheckoutResult( int projectId )
         throws ContinuumStoreException;
 
+    Project getProjectWithScmResult( int projectId )
+        throws ContinuumStoreException;
+
     List<Project> getProjectsInGroup( int projectGroupId )
         throws ContinuumStoreException;
 
