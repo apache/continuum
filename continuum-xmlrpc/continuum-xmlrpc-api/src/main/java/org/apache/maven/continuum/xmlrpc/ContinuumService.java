@@ -20,6 +20,7 @@ package org.apache.maven.continuum.xmlrpc;
  */
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
@@ -30,6 +31,7 @@ import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
+import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
@@ -58,6 +60,17 @@ public interface ContinuumService
     List<ProjectSummary> getProjects( int projectGroupId )
         throws Exception;
 
+    
+   /**
+    * Same method but compatible with standard XMLRPC
+    * 
+    * @param projectGroupId The project group Id
+    * @return List of {@link ProjectSummary} as RPC value
+    * @throws Exception
+    */
+   List<Object> getProjectsRPC(int projectGroupId)throws Exception;   
+    
+    
     /**
      * Get a project.
      *
@@ -69,6 +82,15 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param projectId the project id
+     * @return The project summary as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> getProjectSummaryRPC(int projectId)throws Exception;   
+    
+    /**
      * Get a project with all details.
      *
      * @param projectId The project id
@@ -78,6 +100,15 @@ public interface ContinuumService
     Project getProjectWithAllDetails( int projectId )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param projectId the project id
+     * @return The project as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> getProjectWithAllDetailsRPC(int projectId)throws Exception;   
+    
     /**
      * Remove a project.
      *
@@ -96,10 +127,36 @@ public interface ContinuumService
     ProjectSummary updateProject( ProjectSummary project )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param project The project to update
+     * @return The project as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> updateProjectRPC(Map<String,Object> project)throws Exception;
     // ----------------------------------------------------------------------
     // Projects Groups
     // ----------------------------------------------------------------------
 
+    /**
+     * Get a project groups.
+     * 
+     * @param projectGroupId the id
+     * @return project group
+     * @throws Exception
+     */
+    ProjectGroup getProjectGroup(int projectGroupId) throws Exception;
+    
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param projectGroupId the id
+     * @return project group as RPC value
+     * @throws Exception
+     */
+    Map<String, Object> getProjectGroupRPC(int projectGroupId) throws Exception;
+    
     /**
      * Get all project groups.
      *
@@ -110,6 +167,14 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @return List of {@link ProjectGroupSummary} as RPC value
+     * @throws Exception
+     */
+    List<Object> getAllProjectGroupsRPC()throws Exception;   
+    
+    /**
      * Get all project groups with all details (project summaries, notifiers, build definitions).
      *
      * @return All project groups
@@ -118,6 +183,14 @@ public interface ContinuumService
     List<ProjectGroup> getAllProjectGroupsWithAllDetails()
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @return List of {@link ProjectGroup} as RPC value
+     * @throws Exception
+     */
+    List<Object> getAllProjectGroupsWithAllDetailsRPC()throws Exception;   
+    
     /**
      * Get all project groups with all details.
      *
@@ -139,6 +212,15 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param projectGroupId The project group id
+     * @return The project group summary as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> getProjectGroupSummaryRPC(int projectGroupId)throws Exception;   
+    
+    /**
      * Get a project group with all details.
      *
      * @param projectGroupId The project group id
@@ -148,6 +230,15 @@ public interface ContinuumService
     ProjectGroup getProjectGroupWithProjects( int projectGroupId )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param projectGroupId The project group id
+     * @return The project group as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> getProjectGroupWithProjectsRPC(int projectGroupId)throws Exception;   
+    
     /**
      * Remove a project group.
      *
@@ -167,6 +258,15 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param projectGroup The project group to update
+     * @return The project group as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> updateProjectGroupRPC(Map<String,Object> projectGroup)throws Exception;   
+    
+    /**
      * Add a project Group.
      *
      * @param groupName   The project group name
@@ -177,7 +277,48 @@ public interface ContinuumService
      */
     ProjectGroupSummary addProjectGroup( String groupName, String groupId, String description )
         throws Exception;
-
+    
+    int removeBuildDefinitionFromProjectGroup(int projectGroupId, int buildDefinitionId) throws Exception;
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param groupName   The project group name
+     * @param groupId     The project group id
+     * @param description The project group description
+     * @return the project group summary of the created project group as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> addProjectGroupRPC( String groupName, String groupId, String description )
+        throws Exception;
+    
+    ProjectNotifier getNotifier(int projectid, int notifierId) throws Exception;
+  
+    Map<String, Object> getNotifierRPC(int projectid, int notifierId) throws Exception;
+    
+    ProjectNotifier getGroupNotifier(int projectgroupid, int notifierId) throws Exception;
+    
+    Map<String, Object> getGroupNotifierRPC(int projectgroupid, int notifierId) throws Exception;
+    
+    ProjectNotifier updateGroupNotifier(int projectgroupid, ProjectNotifier newNotifier) throws Exception;
+    
+    Map<String, Object> updateGroupNotifierRPC(int projectgroupid, Map<String, Object> newNotifier) throws Exception;
+    
+    ProjectNotifier updateNotifier(int projectid, ProjectNotifier newNotifier) throws Exception;
+    
+    Map<String, Object> updateNotifierRPC(int projectid, Map<String, Object> newNotifier) throws Exception;
+    
+    int removeGroupNotifier(int projectgroupid, int notifierId) throws Exception;
+    
+    int removeNotifier(int projectid, int notifierId) throws Exception;
+    
+    ProjectNotifier addNotifier(int projectid, ProjectNotifier newNotifier) throws Exception;
+    
+    ProjectNotifier addGroupNotifier(int projectgroupid, ProjectNotifier newNotifier) throws Exception;
+    
+    Map<String, Object> addNotifierRPC(int projectid, Map<String, Object> newNotifier) throws Exception;
+    
+    Map<String, Object> addGroupNotifierRPC(int projectgroupid, Map<String, Object> newNotifier) throws Exception;
+    
     // ----------------------------------------------------------------------
     // Build Definitions
     // ----------------------------------------------------------------------
@@ -193,6 +334,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectId The project id
+     * @return The build definitions list as RPC value
+     * @throws Exception
+     */
+    List<Object> getBuildDefinitionsForProjectRPC( int projectId )
+        throws Exception;
+    
+    /**
      * Get the build definitions list of the project group.
      *
      * @param projectGroupId The project group id
@@ -203,6 +354,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectGroupId The project group id
+     * @return The build definitions list as RPC value
+     * @throws Exception
+     */
+    List<Object> getBuildDefinitionsForProjectGroupRPC( int projectGroupId )
+        throws Exception;
+    
+    /**
      * Update a project build definition.
      *
      * @param projectId The project id
@@ -211,6 +372,17 @@ public interface ContinuumService
      * @throws Exception
      */
     BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDef )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectId The project id
+     * @param buildDef  The build defintion to update
+     * @return the updated build definition as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> updateBuildDefinitionForProjectRPC( int projectId, Map<String,Object> buildDef )
         throws Exception;
 
     /**
@@ -225,6 +397,17 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectGroupId The project group id
+     * @param buildDef  The build defintion to update
+     * @return the updated build definition as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> updateBuildDefinitionForProjectGroupRPC( int projectGroupId, Map<String,Object> buildDef )
+        throws Exception;
+    
+    /**
      * Add a project build definition.
      *
      * @param projectId The project id
@@ -235,6 +418,17 @@ public interface ContinuumService
     BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDef )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectId The project id
+     * @param buildDef  The build defintion to update
+     * @return the added build definition as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> addBuildDefinitionToProjectRPC( int projectId, Map<String,Object> buildDef )
+        throws Exception;
+    
     /**
      * Add a project group buildDefinition.
      *
@@ -247,6 +441,17 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectGroupId The project group id
+     * @param buildDef  The build defintion to update
+     * @return the added build definition as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> addBuildDefinitionToProjectGroupRPC( int projectGroupId, Map<String,Object> buildDef )
+        throws Exception;
+    
+    /**
      * Get the build definition templates list.
      *
      * @return The build definitions templates list
@@ -255,6 +460,14 @@ public interface ContinuumService
     List<BuildDefinitionTemplate> getBuildDefinitionTemplates()
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @return The build definitions templates list as RPC value
+     * @throws Exception
+     */
+    List<Object> getBuildDefinitionTemplatesRPC()
+        throws Exception;
     // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
@@ -330,6 +543,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectId The project id
+     * @return The build result as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> getLatestBuildResultRPC( int projectId )
+        throws Exception;
+    
+    /**
      * Returns the build result.
      *
      * @param projectId The project id
@@ -341,6 +564,17 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectId The project id
+     * @param buildId   The build id
+     * @return The build result as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> getBuildResultRPC( int projectId, int buildId )
+        throws Exception;
+    
+    /**
      * Returns the project build result summary list.
      *
      * @param projectId The project id
@@ -351,6 +585,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectId The project id
+     * @return The build result list as RPC value
+     * @throws Exception
+     */
+    List<Object> getBuildResultsForProjectRPC( int projectId )
+        throws Exception;
+    
+    /**
      * Remove the project build result.
      *
      * @param br The project build result
@@ -360,6 +604,16 @@ public interface ContinuumService
     int removeBuildResult( BuildResult br )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param br The project build result
+     * @return 0
+     * @throws Exception
+     */
+    int removeBuildResultRPC( Map<String,Object> br )
+        throws Exception;
+    
     /**
      * Returns the build output.
      *
@@ -386,6 +640,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param url The POM url
+     * @return The result of the action with the list of projects created as RPC value
+     * @throws Exception
+     */
+    Map<String,Object>  addMavenTwoProjectRPC( String url )
+        throws Exception;
+        
+    /**
      * Add a maven 2.x project from an url.
      *
      * @param url            The POM url
@@ -394,6 +658,17 @@ public interface ContinuumService
      * @throws Exception
      */
     AddingResult addMavenTwoProject( String url, int projectGroupId )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param url The POM url
+     * @param projectGroupId The id of the group where projects will be stored
+     * @return The result of the action with the list of projects created as RPC value
+     * @throws Exception
+     */
+    Map<String,Object>  addMavenTwoProjectRPC( String url, int projectGroupId )
         throws Exception;
 
     // ----------------------------------------------------------------------
@@ -411,6 +686,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param url The POM url
+     * @return The result of the action with the list of projects created as RPC value
+     * @throws Exception
+     */
+    Map<String,Object>  addMavenOneProjectRPC( String url )
+        throws Exception;
+
+    /**
      * Add a maven 1.x project from an url.
      *
      * @param url            The POM url
@@ -421,6 +706,17 @@ public interface ContinuumService
     AddingResult addMavenOneProject( String url, int projectGroupId )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param url The POM url
+     * @param projectGroupId The id of the group where projects will be stored
+     * @return The result of the action with the list of projects created as RPC value
+     * @throws Exception
+     */
+    Map<String,Object>  addMavenOneProjectRPC( String url, int projectGroupId )
+        throws Exception;
+    
     // ----------------------------------------------------------------------
     // Maven ANT projects
     // ----------------------------------------------------------------------
@@ -436,6 +732,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param project The project to add. name, version and scm informations are required
+     * @return The project populated with the id as RPC value
+     * @throws Exception
+     */
+    Map<String,Object>  addAntProjectRPC( Map<String,Object> project)
+        throws Exception;
+    
+    /**
      * Add an ANT project in the specified group.
      *
      * @param project        The project to add. name, version and scm informations are required
@@ -446,6 +752,17 @@ public interface ContinuumService
     ProjectSummary addAntProject( ProjectSummary project, int projectGroupId )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param project        The project to add. name, version and scm informations are required
+     * @param projectGroupId The id of the group where projects will be stored
+     * @return The project populated with the id as RPC value
+     * @throws Exception
+     */
+    Map<String,Object>  addAntProjectRPC( Map<String,Object> project, int projectGroupId )
+        throws Exception;
+    
     // ----------------------------------------------------------------------
     // Maven Shell projects
     // ----------------------------------------------------------------------
@@ -461,6 +778,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param project The project to add. name, version and scm informations are required
+     * @return The project populated with the id as RPC value
+     * @throws Exception
+     */
+    Map<String,Object>  addShellProjectRPC( Map<String,Object> project )
+        throws Exception;
+    
+    /**
      * Add an shell project in the specified group.
      *
      * @param project        The project to add. name, version and scm informations are required
@@ -471,6 +798,17 @@ public interface ContinuumService
     ProjectSummary addShellProject( ProjectSummary project, int projectGroupId )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param project The project to add. name, version and scm informations are required
+     * @param projectGroupId The id of the group where projects will be stored
+     * @return The project populated with the id as RPC value
+     * @throws Exception
+     */
+    Map<String,Object>  addShellProjectRPC( Map<String,Object> project, int projectGroupId )
+        throws Exception;
+    
     // ----------------------------------------------------------------------
     // ADMIN TASKS
     // ----------------------------------------------------------------------
@@ -489,6 +827,15 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @return The schedule list as RPC value.
+     * @throws Exception
+     */
+    List<Object> getSchedulesRPC()
+        throws Exception;
+    
+    /**
      * Return the schedule defined by this id.
      *
      * @param scheduleId The schedule id
@@ -499,6 +846,16 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param scheduleId The schedule id
+     * @return The schedule as RPC value.
+     * @throws Exception
+     */
+    Map<String,Object> getScheduleRPC(int scheduleId)
+        throws Exception;
+    
+    /**
      * Add the schedule.
      *
      * @param schedule The schedule
@@ -506,6 +863,16 @@ public interface ContinuumService
      * @throws Exception
      */
     Schedule addSchedule( Schedule schedule )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param schedule The schedule
+     * @return The schedule as RPC value.
+     * @throws Exception
+     */
+    Map<String,Object> addScheduleRPC( Map<String,Object> schedule )
         throws Exception;
 
     /**
@@ -518,6 +885,16 @@ public interface ContinuumService
     Schedule updateSchedule( Schedule schedule )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param schedule The schedule
+     * @return The schedule as RPC value.
+     * @throws Exception
+     */
+    Map<String,Object> updateScheduleRPC( Map<String,Object> schedule )
+        throws Exception;
+    
     // ----------------------------------------------------------------------
     // Profiles
     // ----------------------------------------------------------------------
@@ -532,6 +909,15 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @return The profiles list as RPC value.
+     * @throws Exception
+     */
+    List<Object> getProfilesRPC()
+        throws Exception;
+    
+    /**
      * Return the profile defined by this id.
      *
      * @param profileId The profile id
@@ -541,6 +927,31 @@ public interface ContinuumService
     Profile getProfile( int profileId )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param profileId The profile id
+     * @return The profile.
+     * @throws Exception
+     */
+    Map<String,Object> getProfileRPC( int profileId )
+        throws Exception;
+    
+    Profile addProfile(Profile profile)
+        throws Exception;
+    
+    int updateProfile(Profile profile)
+        throws Exception;
+    
+    int deleteProfile(int profileId)
+        throws Exception;
+    
+    Map<String,Object> addProfileRPC(Map<String,Object> profile)
+        throws Exception;
+   
+    int updateProfileRPC(Map<String,Object> profile)
+        throws Exception;
+   
     // ----------------------------------------------------------------------
     // Installations
     // ----------------------------------------------------------------------
@@ -555,6 +966,15 @@ public interface ContinuumService
         throws Exception;
 
     /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @return The installations list.
+     * @throws Exception
+     */
+    List<Object> getInstallationsRPC()
+        throws Exception;
+    
+    /**
      * Return the installation defined by this id.
      *
      * @param installationId The installation id
@@ -564,12 +984,40 @@ public interface ContinuumService
     Installation getInstallation( int installationId )
         throws Exception;
 
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param installationId The installation id
+     * @return The installation.
+     * @throws Exception
+     */
+    Map<String,Object> getInstallationRPC( int installationId )
+        throws Exception;
+    
+    Installation addInstallation(Installation installation)
+        throws Exception;
+    
+    int updateInstallation(Installation installation)
+        throws Exception;
+    
+    int deleteInstallation(int installationId)
+        throws Exception;
+
+    Map<String,Object> addInstallationRPC(Map<String,Object> installation)
+        throws Exception;
+    
+    int updateInstallationRPC(Map<String,Object> installation)
+        throws Exception;
+    
     // ----------------------------------------------------------------------
     // SystemConfiguration
     // ----------------------------------------------------------------------
 
     SystemConfiguration getSystemConfiguration()
         throws Exception;
+
+    Map<String,Object> getSystemConfigurationRPC()
+       throws Exception;
     
     // ----------------------------------------------------------------------
     // Queue
