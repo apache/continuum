@@ -26,6 +26,7 @@ import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationException;
+import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -39,6 +40,7 @@ import org.apache.maven.continuum.xmlrpc.project.BuildResultSummary;
 import org.apache.maven.continuum.xmlrpc.project.Project;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroup;
 import org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary;
+import org.apache.maven.continuum.xmlrpc.project.ProjectNotifier;
 import org.apache.maven.continuum.xmlrpc.project.ProjectSummary;
 import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
@@ -49,10 +51,14 @@ import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -190,6 +196,25 @@ public class ContinuumServiceImpl
         return result;
     }
 
+    public ProjectGroup getProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        ProjectGroup result = null;
+        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId );
+        try
+        {
+            if ( isAuthorized( ContinuumRoleConstants.CONTINUUM_VIEW_GROUP_OPERATION, projectGroup.getName() ) )
+            {
+                result = populateProjectGroupWithAllDetails( projectGroup );
+            }
+        }
+        catch ( AuthorizationException e )
+        {
+            throw new ContinuumException( "error authorizing request." );
+        }
+        return result;
+    }
+
     public List<ProjectGroup> getAllProjectGroupsWithAllDetails()
         throws ContinuumException
     {
@@ -222,18 +247,16 @@ public class ContinuumServiceImpl
     protected String getProjectGroupName( int projectGroupId )
         throws ContinuumException
     {
-        org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
-            continuum.getProjectGroup( projectGroupId );
-        return projectGroup == null ? null : projectGroup.getName();
+        ProjectGroupSummary pgs = getPGSummary( projectGroupId );
+        return pgs.getName();
     }
 
     private ProjectGroupSummary getPGSummary( int projectGroupId )
         throws ContinuumException
     {
-        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
+        org.apache.maven.continuum.model.project.ProjectGroup projectGroup = continuum.getProjectGroup( projectGroupId );
 
-        org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
-            continuum.getProjectGroup( projectGroupId );
+        checkViewProjectGroupAuthorization( projectGroup.getName() );
         return populateProjectGroupSummary( projectGroup );
     }
 
@@ -324,6 +347,103 @@ public class ContinuumServiceImpl
         return populateProjectGroupSummary( continuum.getProjectGroupByGroupId( groupId ) );
     }
 
+    public ProjectNotifier getNotifier( int projectid, int notifierId )
+        throws ContinuumException
+    {
+        return populateProjectNotifier( continuum.getNotifier( projectid, notifierId ) );
+    }
+
+    public ProjectNotifier updateNotifier( int projectid, ProjectNotifier newNotifier )
+        throws ContinuumException
+    {
+
+        org.apache.maven.continuum.model.project.ProjectNotifier notifier =
+                        continuum.getNotifier( projectid, newNotifier.getId() );
+        notifier.setConfiguration( newNotifier.getConfiguration() );
+        notifier.setFrom( newNotifier.getFrom() );
+        notifier.setRecipientType( newNotifier.getRecipientType() );
+        notifier.setType( newNotifier.getType() );
+        notifier.setEnabled( newNotifier.isEnabled() );
+        notifier.setSendOnError( newNotifier.isSendOnError() );
+        notifier.setSendOnFailure( newNotifier.isSendOnFailure() );
+        notifier.setSendOnSuccess( newNotifier.isSendOnSuccess() );
+        notifier.setSendOnWarning( newNotifier.isSendOnWarning() );
+        return populateProjectNotifier( continuum.updateNotifier( projectid, notifier ) );
+    }
+
+    public ProjectNotifier addNotifier( int projectid, ProjectNotifier newNotifier )
+        throws ContinuumException
+    {
+
+        org.apache.maven.continuum.model.project.ProjectNotifier notifier =
+                        new org.apache.maven.continuum.model.project.ProjectNotifier();
+        notifier.setConfiguration( newNotifier.getConfiguration() );
+        notifier.setFrom( newNotifier.getFrom() );
+        notifier.setRecipientType( newNotifier.getRecipientType() );
+        notifier.setType( newNotifier.getType() );
+        notifier.setEnabled( newNotifier.isEnabled() );
+        notifier.setSendOnError( newNotifier.isSendOnError() );
+        notifier.setSendOnFailure( newNotifier.isSendOnFailure() );
+        notifier.setSendOnSuccess( newNotifier.isSendOnSuccess() );
+        notifier.setSendOnWarning( newNotifier.isSendOnWarning() );
+        return populateProjectNotifier( continuum.addNotifier( projectid, notifier ) );
+    }
+
+    public int removeNotifier( int projectid, int notifierId )
+        throws ContinuumException
+    {
+        continuum.removeNotifier( projectid, notifierId );
+        return 0;
+    }
+
+    public ProjectNotifier getGroupNotifier( int projectgroupid, int notifierId )
+        throws ContinuumException
+    {
+        return populateProjectNotifier( continuum.getGroupNotifier( projectgroupid, notifierId ) );
+    }
+
+    public ProjectNotifier updateGroupNotifier( int projectgroupid, ProjectNotifier newNotifier )
+        throws ContinuumException
+    {
+
+        org.apache.maven.continuum.model.project.ProjectNotifier notifier =
+                        continuum.getGroupNotifier( projectgroupid, newNotifier.getId() );
+        notifier.setConfiguration( newNotifier.getConfiguration() );
+        notifier.setFrom( newNotifier.getFrom() );
+        notifier.setRecipientType( newNotifier.getRecipientType() );
+        notifier.setType( newNotifier.getType() );
+        notifier.setEnabled( newNotifier.isEnabled() );
+        notifier.setSendOnError( newNotifier.isSendOnError() );
+        notifier.setSendOnFailure( newNotifier.isSendOnFailure() );
+        notifier.setSendOnSuccess( newNotifier.isSendOnSuccess() );
+        notifier.setSendOnWarning( newNotifier.isSendOnWarning() );
+        return populateProjectNotifier( continuum.updateGroupNotifier( projectgroupid, notifier ) );
+    }
+
+    public ProjectNotifier addGroupNotifier( int projectgroupid, ProjectNotifier newNotifier )
+        throws ContinuumException
+    {
+        org.apache.maven.continuum.model.project.ProjectNotifier notifier =
+                        new org.apache.maven.continuum.model.project.ProjectNotifier();
+        notifier.setConfiguration( newNotifier.getConfiguration() );
+        notifier.setFrom( newNotifier.getFrom() );
+        notifier.setRecipientType( newNotifier.getRecipientType() );
+        notifier.setType( newNotifier.getType() );
+        notifier.setEnabled( newNotifier.isEnabled() );
+        notifier.setSendOnError( newNotifier.isSendOnError() );
+        notifier.setSendOnFailure( newNotifier.isSendOnFailure() );
+        notifier.setSendOnSuccess( newNotifier.isSendOnSuccess() );
+        notifier.setSendOnWarning( newNotifier.isSendOnWarning() );
+        return populateProjectNotifier( continuum.addGroupNotifier( projectgroupid, notifier ) );
+    }
+
+    public int removeGroupNotifier( int projectgroupid, int notifierId )
+        throws ContinuumException
+    {
+        continuum.removeGroupNotifier( projectgroupid, notifierId );
+        return 0;
+    }
+
     // ----------------------------------------------------------------------
     // Build Definitions
     // ----------------------------------------------------------------------
@@ -362,14 +482,24 @@ public class ContinuumServiceImpl
         return result;
     }
 
+    public int removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
+        throws ContinuumException
+    {
+        checkRemoveGroupBuildDefinitionAuthorization( getProjectGroupName( projectGroupId ) );
+
+        continuum.removeBuildDefinitionFromProjectGroup( projectGroupId, buildDefinitionId );
+        return 0;
+    }
+
     public BuildDefinition updateBuildDefinitionForProject( int projectId, BuildDefinition buildDef )
         throws ContinuumException
     {
         ProjectSummary ps = getProjectSummary( projectId );
 
         checkModifyProjectBuildDefinitionAuthorization( ps.getProjectGroup().getName() );
-
-        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
+        org.apache.maven.continuum.model.project.BuildDefinition newbd =
+            continuum.getBuildDefinition( buildDef.getId() );
+        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef, newbd );
         bd = continuum.updateBuildDefinitionForProject( projectId, bd );
         return populateBuildDefinition( bd );
     }
@@ -378,8 +508,9 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkModifyGroupBuildDefinitionAuthorization( getProjectGroupName( projectGroupId ) );
-
-        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
+        org.apache.maven.continuum.model.project.BuildDefinition newbd =
+            continuum.getBuildDefinition( buildDef.getId() );
+        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef, newbd );
         bd = continuum.updateBuildDefinitionForProjectGroup( projectGroupId, bd );
         return populateBuildDefinition( bd );
     }
@@ -393,8 +524,9 @@ public class ContinuumServiceImpl
         {
             throw new ContinuumException( "The schedule can't be null." );
         }
-
-        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
+        org.apache.maven.continuum.model.project.BuildDefinition newbd =
+            new org.apache.maven.continuum.model.project.BuildDefinition();
+        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef, newbd );
         bd = continuum.addBuildDefinitionToProject( projectId, bd );
         return populateBuildDefinition( bd );
     }
@@ -408,8 +540,9 @@ public class ContinuumServiceImpl
         {
             throw new ContinuumException( "The schedule can't be null." );
         }
-
-        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef );
+        org.apache.maven.continuum.model.project.BuildDefinition newbd =
+            new org.apache.maven.continuum.model.project.BuildDefinition();
+        org.apache.maven.continuum.model.project.BuildDefinition bd = populateBuildDefinition( buildDef, newbd );
         bd = continuum.addBuildDefinitionToProjectGroup( projectGroupId, bd );
         return populateBuildDefinition( bd );
     }
@@ -610,9 +743,10 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkAddProjectGroupAuthorization();
-
+        org.apache.maven.continuum.model.project.Project newProject =
+                        new org.apache.maven.continuum.model.project.Project();
         int projectId =
-            continuum.addProject( populateProject( project ), ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
+            continuum.addProject( populateProject( project, newProject ), ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
         return getProjectSummary( projectId );
     }
 
@@ -620,9 +754,11 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkAddProjectGroupAuthorization();
-
-        int projectId = continuum.addProject( populateProject( project ),
-                                              ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR, projectGroupId );
+        org.apache.maven.continuum.model.project.Project newProject =
+                        new org.apache.maven.continuum.model.project.Project();
+        int projectId =
+                        continuum.addProject( populateProject( project, newProject ),
+                            ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR, projectGroupId );
         return getProjectSummary( projectId );
     }
 
@@ -634,9 +770,11 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkAddProjectGroupAuthorization();
-
+        org.apache.maven.continuum.model.project.Project newProject =
+                        new org.apache.maven.continuum.model.project.Project();
         int projectId =
-            continuum.addProject( populateProject( project ), ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
+                        continuum.addProject( populateProject( project, newProject ),
+                            ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR );
         return getProjectSummary( projectId );
     }
 
@@ -644,9 +782,11 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkAddProjectGroupAuthorization();
-
-        int projectId = continuum.addProject( populateProject( project ),
-                                              ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR, projectGroupId );
+        org.apache.maven.continuum.model.project.Project newProject =
+                        new org.apache.maven.continuum.model.project.Project();
+        int projectId =
+                        continuum.addProject( populateProject( project, newProject ),
+                            ContinuumBuildExecutorConstants.SHELL_BUILD_EXECUTOR, projectGroupId );
         return getProjectSummary( projectId );
     }
 
@@ -680,8 +820,16 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkManageSchedulesAuthorization();
-
-        continuum.updateSchedule( populateSchedule( schedule ) );
+        org.apache.maven.continuum.model.project.Schedule s = continuum.getSchedule( schedule.getId() );
+        org.apache.maven.continuum.model.project.Schedule newSchedule = populateSchedule( schedule, s );
+        org.apache.maven.continuum.model.project.Schedule storedSchedule = continuum.getSchedule( schedule.getId() );
+        storedSchedule.setActive( newSchedule.isActive() );
+        storedSchedule.setName( newSchedule.getName() );
+        storedSchedule.setDescription( newSchedule.getDescription() );
+        storedSchedule.setDelay( newSchedule.getDelay() );
+        storedSchedule.setCronExpression( newSchedule.getCronExpression() );
+        storedSchedule.setMaxJobExecutionTime( newSchedule.getMaxJobExecutionTime() );
+        continuum.updateSchedule( storedSchedule );
 
         return populateSchedule( continuum.getScheduleByName( schedule.getName() ) );
     }
@@ -690,10 +838,20 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkManageSchedulesAuthorization();
-
-        continuum.addSchedule( populateSchedule( schedule ) );
+        org.apache.maven.continuum.model.project.Schedule s = new org.apache.maven.continuum.model.project.Schedule();
+        continuum.addSchedule( populateSchedule( schedule, s ) );
 
         return populateSchedule( continuum.getScheduleByName( schedule.getName() ) );
+    }
+
+    public int removeSchedule( int scheduleId )
+        throws ContinuumException
+    {
+        checkManageSchedulesAuthorization();
+
+        continuum.removeSchedule( scheduleId );
+
+        return 0;
     }
 
     // ----------------------------------------------------------------------
@@ -720,6 +878,33 @@ public class ContinuumServiceImpl
     {
         checkManageProfilesAuthorization();
         return populateProfile( continuum.getProfileService().getProfile( profileId ) );
+    }
+
+    public Profile addProfile( Profile profile )
+        throws ContinuumException
+    {
+        org.apache.maven.continuum.model.system.Profile newProfile =
+                        new org.apache.maven.continuum.model.system.Profile();
+
+        return populateProfile( continuum.getProfileService().addProfile( populateProfile( profile, newProfile ) ) );
+    }
+
+    public int updateProfile( Profile profile )
+        throws ContinuumException
+    {
+        org.apache.maven.continuum.model.system.Profile newProfile =
+                        continuum.getProfileService().getProfile( profile.getId() );
+
+        continuum.getProfileService().updateProfile( populateProfile( profile, newProfile ) );
+        return 0;
+    }
+
+    public int deleteProfile( int profileId )
+        throws ContinuumException
+    {
+
+        continuum.getProfileService().deleteProfile( profileId );
+        return 0;
     }
 
     // ----------------------------------------------------------------------
@@ -761,6 +946,54 @@ public class ContinuumServiceImpl
         catch ( InstallationException e )
         {
             throw new ContinuumException( "Can't load installations", e );
+        }
+    }
+
+    public Installation addInstallation( Installation installation )
+        throws ContinuumException
+    {
+        try
+        {
+            org.apache.maven.continuum.model.system.Installation newInstallation =
+                            new org.apache.maven.continuum.model.system.Installation();
+            return populateInstallation( continuum.getInstallationService().add(
+                populateInstallation( installation, newInstallation ) ) );
+        }
+        catch ( InstallationException e )
+        {
+            throw new ContinuumException( "Can't delete installations", e );
+        }
+    }
+
+    public int updateInstallation( Installation installation )
+        throws ContinuumException
+    {
+        try
+        {
+            final org.apache.maven.continuum.model.system.Installation newInst =
+                            continuum.getInstallationService().getInstallation( installation.getInstallationId() );
+            continuum.getInstallationService().update( populateInstallation( installation, newInst ) );
+            return 0;
+        }
+        catch ( InstallationException e )
+        {
+            throw new ContinuumException( "Can't delete installations", e );
+        }
+    }
+
+    public int deleteInstallation( int installationId )
+        throws ContinuumException
+    {
+        try
+        {
+            org.apache.maven.continuum.model.system.Installation installationTODelete =
+                            continuum.getInstallationService().getInstallation( installationId );
+            continuum.getInstallationService().delete( installationTODelete );
+            return 0;
+        }
+        catch ( InstallationException e )
+        {
+            throw new ContinuumException( "Can't delete installations", e );
         }
     }
 
@@ -827,15 +1060,14 @@ public class ContinuumServiceImpl
         return (Project) mapper.map( project, Project.class );
     }
 
-    private org.apache.maven.continuum.model.project.Project populateProject( ProjectSummary projectSummary )
+    private org.apache.maven.continuum.model.project.Project populateProject( ProjectSummary projectSummary,
+                                                                              org.apache.maven.continuum.model.project.Project project )
+        throws ContinuumException
     {
         if ( projectSummary == null )
         {
             return null;
         }
-
-        org.apache.maven.continuum.model.project.Project project =
-            new org.apache.maven.continuum.model.project.Project();
         project.setArtifactId( projectSummary.getArtifactId() );
         project.setBuildNumber( projectSummary.getBuildNumber() );
         project.setDescription( projectSummary.getDescription() );
@@ -844,7 +1076,16 @@ public class ContinuumServiceImpl
         project.setId( projectSummary.getId() );
         project.setLatestBuildId( projectSummary.getLatestBuildId() );
         project.setName( projectSummary.getName() );
-        project.setProjectGroup( populateProjectGroupSummary( projectSummary.getProjectGroup() ) );
+        if ( projectSummary.getProjectGroup() != null )
+        {
+            org.apache.maven.continuum.model.project.ProjectGroup g =
+                            continuum.getProjectGroup( projectSummary.getProjectGroup().getId() );
+            project.setProjectGroup( populateProjectGroupSummary( projectSummary.getProjectGroup(), g ) );
+        }
+        else
+        {
+            project.setProjectGroup( null );
+        }
         project.setScmTag( projectSummary.getScmTag() );
         project.setScmUrl( projectSummary.getScmUrl() );
         project.setScmUseCache( projectSummary.isScmUseCache() );
@@ -856,22 +1097,24 @@ public class ContinuumServiceImpl
         return project;
     }
 
-    private ProjectGroupSummary populateProjectGroupSummary(
-        org.apache.maven.continuum.model.project.ProjectGroup group )
+    private ProjectNotifier populateProjectNotifier( org.apache.maven.continuum.model.project.ProjectNotifier notifier )
+    {
+        return (ProjectNotifier) mapper.map( notifier, ProjectNotifier.class );
+    }
+
+    private ProjectGroupSummary populateProjectGroupSummary( org.apache.maven.continuum.model.project.ProjectGroup group )
     {
         return (ProjectGroupSummary) mapper.map( group, ProjectGroupSummary.class );
     }
 
-    private org.apache.maven.continuum.model.project.ProjectGroup populateProjectGroupSummary(
-        ProjectGroupSummary group )
+    private org.apache.maven.continuum.model.project.ProjectGroup populateProjectGroupSummary( ProjectGroupSummary group,
+                                                                                               org.apache.maven.continuum.model.project.ProjectGroup g )
     {
         if ( group == null )
         {
             return null;
         }
 
-        org.apache.maven.continuum.model.project.ProjectGroup g =
-            new org.apache.maven.continuum.model.project.ProjectGroup();
         g.setDescription( group.getDescription() );
         g.setGroupId( group.getGroupId() );
         g.setId( group.getId() );
@@ -879,14 +1122,12 @@ public class ContinuumServiceImpl
         return g;
     }
 
-    private ProjectGroup populateProjectGroupWithAllDetails(
-        org.apache.maven.continuum.model.project.ProjectGroup group )
+    private ProjectGroup populateProjectGroupWithAllDetails( org.apache.maven.continuum.model.project.ProjectGroup group )
     {
         return (ProjectGroup) mapper.map( group, ProjectGroup.class );
     }
 
-    private BuildResultSummary populateBuildResultSummary(
-        org.apache.maven.continuum.model.project.BuildResult buildResult )
+    private BuildResultSummary populateBuildResultSummary( org.apache.maven.continuum.model.project.BuildResult buildResult )
     {
         return (BuildResultSummary) mapper.map( buildResult, BuildResultSummary.class );
     }
@@ -942,43 +1183,58 @@ public class ContinuumServiceImpl
         return (BuildDefinition) mapper.map( buildDef, BuildDefinition.class );
     }
 
-    private org.apache.maven.continuum.model.project.BuildDefinition populateBuildDefinition( BuildDefinition buildDef )
+    private org.apache.maven.continuum.model.project.BuildDefinition populateBuildDefinition( BuildDefinition buildDef,
+                                                                                              org.apache.maven.continuum.model.project.BuildDefinition bd )
+        throws ProfileException, ContinuumException
     {
         if ( buildDef == null )
         {
             return null;
         }
 
-        org.apache.maven.continuum.model.project.BuildDefinition bd =
-            new org.apache.maven.continuum.model.project.BuildDefinition();
         bd.setArguments( buildDef.getArguments() );
         bd.setBuildFile( buildDef.getBuildFile() );
+        bd.setType( buildDef.getType() );
         bd.setBuildFresh( buildDef.isBuildFresh() );
+        bd.setAlwaysBuild( buildDef.isAlwaysBuild() );
         bd.setDefaultForProject( buildDef.isDefaultForProject() );
         bd.setGoals( buildDef.getGoals() );
         bd.setId( buildDef.getId() );
-        bd.setProfile( populateProfile( buildDef.getProfile() ) );
-        bd.setSchedule( populateSchedule( buildDef.getSchedule() ) );
-        bd.setDescription( buildDef.getDescription() );
-        bd.setAlwaysBuild( buildDef.isAlwaysBuild() );
-        bd.setTemplate( buildDef.isTemplate() );
+        if ( buildDef.getProfile() != null )
+        {
+            bd.setProfile( populateProfile( buildDef.getProfile(), continuum.getProfileService().getProfile(
+                buildDef.getProfile().getId() ) ) );
+        }
+        else
+        {
+            bd.setProfile( null );
+        }
+        if ( buildDef.getSchedule() != null )
+        {
+            bd.setSchedule( populateSchedule( buildDef.getSchedule(), continuum.getSchedule( buildDef.getSchedule()
+                            .getId() ) ) );
+        }
+        else
+        {
+            bd.setSchedule( null );
+        }
+
         return bd;
     }
 
-    private BuildDefinitionTemplate populateBuildDefinitionTemplate(
-        org.apache.maven.continuum.model.project.BuildDefinitionTemplate bdt )
+    private BuildDefinitionTemplate populateBuildDefinitionTemplate( org.apache.maven.continuum.model.project.BuildDefinitionTemplate bdt )
     {
         return (BuildDefinitionTemplate) mapper.map( bdt, BuildDefinitionTemplate.class );
     }
 
-    private org.apache.maven.continuum.model.project.Schedule populateSchedule( Schedule schedule )
+    private org.apache.maven.continuum.model.project.Schedule populateSchedule( Schedule schedule,
+                                                                                org.apache.maven.continuum.model.project.Schedule s )
     {
         if ( schedule == null )
         {
             return null;
         }
 
-        org.apache.maven.continuum.model.project.Schedule s = new org.apache.maven.continuum.model.project.Schedule();
         s.setActive( schedule.isActive() );
         s.setCronExpression( schedule.getCronExpression() );
         s.setDelay( schedule.getDelay() );
@@ -994,33 +1250,65 @@ public class ContinuumServiceImpl
         return (Schedule) mapper.map( schedule, Schedule.class );
     }
 
-    private org.apache.maven.continuum.model.system.Profile populateProfile( Profile profile )
+    private org.apache.maven.continuum.model.system.Profile populateProfile( Profile profile,
+                                                                             org.apache.maven.continuum.model.system.Profile newProfile )
+        throws ContinuumException
     {
         if ( profile == null )
         {
             return null;
         }
 
-        org.apache.maven.continuum.model.system.Profile p = new org.apache.maven.continuum.model.system.Profile();
-        p.setActive( profile.isActive() );
-        p.setBuilder( populateInstallation( profile.getBuilder() ) );
-        p.setBuildWithoutChanges( profile.isBuildWithoutChanges() );
-        p.setDescription( profile.getDescription() );
-        if ( profile.getEnvironmentVariables() != null )
+        try
         {
-            List<org.apache.maven.continuum.model.system.Installation> envs =
-                new ArrayList<org.apache.maven.continuum.model.system.Installation>();
-            for ( Installation install : (List<Installation>) profile.getEnvironmentVariables() )
+            newProfile.setActive( profile.isActive() );
+            newProfile.setBuildWithoutChanges( profile.isBuildWithoutChanges() );
+            newProfile.setDescription( profile.getDescription() );
+            newProfile.setName( profile.getName() );
+            newProfile.setScmMode( profile.getScmMode() );
+            if ( profile.getBuilder() != null )
             {
-                envs.add( populateInstallation( install ) );
+                final org.apache.maven.continuum.model.system.Installation newBuilder =
+                                continuum.getInstallationService().getInstallation(
+                                    profile.getBuilder().getInstallationId() );
+                newProfile.setBuilder( populateInstallation( profile.getBuilder(), newBuilder ) );
+
             }
-            p.setEnvironmentVariables( envs );
+            else
+            {
+                newProfile.setBuilder( null );
+            }
+            if ( profile.getJdk() != null )
+            {
+                final org.apache.maven.continuum.model.system.Installation newJdk =
+                                continuum.getInstallationService().getInstallation(
+                                    profile.getJdk().getInstallationId() );
+                newProfile.setJdk( populateInstallation( profile.getJdk(), newJdk ) );
+
+            }
+            else
+            {
+                newProfile.setJdk( null );
+            }
+            newProfile.getEnvironmentVariables().clear();
+            if ( profile.getEnvironmentVariables() != null )
+            {
+                for ( Iterator it = profile.getEnvironmentVariables().iterator(); it.hasNext(); )
+                {
+                    final Installation varEnv = (Installation) it.next();
+
+                    final org.apache.maven.continuum.model.system.Installation newInst =
+                                    continuum.getInstallationService().getInstallation( varEnv.getInstallationId() );
+                    newProfile.getEnvironmentVariables().add( populateInstallation( varEnv, newInst ) );
+
+                }
+            }
+            return newProfile;
         }
-        p.setId( profile.getId() );
-        p.setJdk( populateInstallation( profile.getJdk() ) );
-        p.setName( profile.getName() );
-        p.setScmMode( profile.getScmMode() );
-        return p;
+        catch ( InstallationException e )
+        {
+            throw new ContinuumException( "Can't load installations", e );
+        }
     }
 
     private Profile populateProfile( org.apache.maven.continuum.model.system.Profile profile )
@@ -1028,15 +1316,14 @@ public class ContinuumServiceImpl
         return (Profile) mapper.map( profile, Profile.class );
     }
 
-    private org.apache.maven.continuum.model.system.Installation populateInstallation( Installation install )
+    private org.apache.maven.continuum.model.system.Installation populateInstallation( Installation install,
+                                                                                       org.apache.maven.continuum.model.system.Installation inst )
     {
         if ( install == null )
         {
             return null;
         }
 
-        org.apache.maven.continuum.model.system.Installation inst =
-            new org.apache.maven.continuum.model.system.Installation();
         inst.setName( install.getName() );
         inst.setType( install.getType() );
         inst.setVarName( install.getVarName() );
@@ -1049,9 +1336,707 @@ public class ContinuumServiceImpl
         return (Installation) mapper.map( install, Installation.class );
     }
 
-    private SystemConfiguration populateSystemConfiguration(
-        org.apache.maven.continuum.model.system.SystemConfiguration sysConf )
+    private SystemConfiguration populateSystemConfiguration( org.apache.maven.continuum.model.system.SystemConfiguration sysConf )
     {
         return (SystemConfiguration) mapper.map( sysConf, SystemConfiguration.class );
+    }
+
+    private Map<String, Object> serializeObject( Object o, final String ... ignore )
+    {
+        if ( o != null )
+        {
+            return serializeObject( o, o.getClass(), ignore );
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private Map<String, Object> serializeObject( Object o, Class clasz, final String ... ignore )
+    {
+
+        final List<String> ignoreList = ignore == null ? new ArrayList<String>() : Arrays.asList( ignore );
+        if ( o != null )
+        {
+            final Map<String, Object> retValue = new HashMap<String, Object>();
+            if ( !Object.class.equals( clasz.getSuperclass() ) )
+            {
+                retValue.putAll( serializeObject( o, clasz.getSuperclass(), ignore ) );
+            }
+
+            final Field[] fields = clasz.getDeclaredFields();
+
+            retValue.put( "__class", clasz.getName() );
+            for ( final Field field : fields )
+            {
+
+                if ( !ignoreList.contains( field.getName() ) )
+                {
+                    field.setAccessible( true );
+                    try
+                    {
+                        final Object tmpFO = field.get( o );
+                        final Object tmpNO = mapObject( tmpFO );
+
+                        retValue.put( field.getName(), tmpNO );
+                    }
+                    catch ( IllegalAccessException e )
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return retValue;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private Object mapObject( Object tmpFO )
+    {
+        final Object retValue;
+        if ( tmpFO instanceof String )
+        {
+            Object tmpNO = serializeObject( (String) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else if ( tmpFO instanceof Float )
+        {
+            Object tmpNO = serializeObject( (Float) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else if ( tmpFO instanceof Boolean )
+        {
+            Object tmpNO = serializeObject( (Boolean) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else if ( tmpFO instanceof Integer )
+        {
+            Object tmpNO = serializeObject( (Integer) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else if ( tmpFO instanceof Long )
+        {
+            Object tmpNO = serializeObject( (Long) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else if ( tmpFO instanceof Character )
+        {
+            Object tmpNO = serializeObject( (Character) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else if ( tmpFO instanceof Byte )
+        {
+            Object tmpNO = serializeObject( (Byte) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else if ( tmpFO instanceof Double )
+        {
+            Object tmpNO = serializeObject( (Double) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else if ( tmpFO instanceof List )
+        {
+            Object tmpNO = serializeObject( (List) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else if ( tmpFO instanceof Map )
+        {
+            Object tmpNO = serializeObject( (Map) tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        else
+        {
+            Object tmpNO = serializeObject( tmpFO );
+            if ( tmpNO == null )
+            {
+                tmpNO = "";
+            }
+            retValue = tmpNO;
+        }
+        return retValue;
+    }
+
+    private Map<String, Object> serializeObject( Map<Object, Object> map )
+    {
+        final Map<String, Object> retValue = new HashMap<String, Object>();
+
+        for ( Object key : map.keySet() )
+        {
+            final Object tmpKey = mapObject( key );
+
+            if ( tmpKey != null )
+            {
+                retValue.put( tmpKey.toString(), mapObject( map.get( key ) ) );
+            }
+        }
+        return retValue;
+    }
+
+    private List<Object> serializeObject( List list )
+    {
+        final List<Object> retValue = new ArrayList<Object>();
+
+        for ( Object o : list )
+        {
+            final Object tmpO = mapObject( o );
+            if ( tmpO == null )
+            {
+                retValue.add( "" );
+            }
+            else
+            {
+                retValue.add( tmpO );
+            }
+        }
+        return retValue;
+    }
+
+    private String serializeObject( String o )
+    {
+        return o;
+    }
+
+    private String serializeObject( Byte o )
+    {
+        return (o == null ? null : o.toString());
+    }
+
+    private String serializeObject( Character o )
+    {
+        return (o == null ? null : o.toString());
+    }
+
+    private Double serializeObject( Long o )
+    {
+        return (o == null ? null : o.doubleValue());
+    }
+
+    private Double serializeObject( Float o )
+    {
+        return (o == null ? null : o.doubleValue());
+    }
+
+    private Double serializeObject( Double o )
+    {
+        return o;
+    }
+
+    private Integer serializeObject( Integer o )
+    {
+        return o;
+    }
+
+    private Boolean serializeObject( Boolean o )
+    {
+        return o;
+    }
+
+    private Object unserializeObject( Map<String, Object> o )
+    {
+        Object retValue = null;
+        if ( o != null )
+        {
+            final String className = (String) o.remove( "__class" );
+
+            if ( className != null )
+            {
+                try
+                {
+                    final Class clasz = Class.forName( className );
+                    final Object tmpO = clasz.newInstance();
+                    for ( final String key : o.keySet() )
+                    {
+                        final Field field = clasz.getDeclaredField( key );
+                        field.setAccessible( true );
+                        final Object tmpFO = o.get( key );
+
+                        field.set( tmpO, unMapObject( tmpFO ) );
+                    }
+                    retValue = tmpO;
+                }
+                catch ( Exception e )
+                {
+                    e.printStackTrace();
+                    retValue = null;
+                }
+            }
+            else
+            {
+                // Not an object, it's a normal Map
+                Map<String, Object> tmpValue = new HashMap<String, Object>();
+
+                for ( String key : o.keySet() )
+                {
+                    tmpValue.put( key, unMapObject( o.get( key ) ) );
+                }
+                retValue = tmpValue;
+            }
+        }
+        return retValue;
+    }
+
+    private Object unMapObject( Object tmpFO )
+    {
+        final Object retValue;
+        if ( tmpFO instanceof String )
+        {
+            retValue = unserializeObject( (String) tmpFO );
+        }
+        else if ( tmpFO instanceof Float )
+        {
+            retValue = unserializeObject( (Float) tmpFO );
+        }
+        else if ( tmpFO instanceof Boolean )
+        {
+            retValue = unserializeObject( (Boolean) tmpFO );
+        }
+        else if ( tmpFO instanceof Integer )
+        {
+            retValue = unserializeObject( (Integer) tmpFO );
+        }
+        else if ( tmpFO instanceof Long )
+        {
+            retValue = unserializeObject( (Long) tmpFO );
+        }
+        else if ( tmpFO instanceof Character )
+        {
+            retValue = unserializeObject( (Character) tmpFO );
+        }
+        else if ( tmpFO instanceof Byte )
+        {
+            retValue = unserializeObject( (Byte) tmpFO );
+        }
+        else if ( tmpFO instanceof Double )
+        {
+            retValue = unserializeObject( (Double) tmpFO );
+        }
+        else if ( tmpFO instanceof List )
+        {
+            retValue = unserializeObject( (List) tmpFO );
+        }
+        else if ( tmpFO instanceof Map )
+        {
+            retValue = unserializeObject( (Map) tmpFO );
+        }
+        else if ( tmpFO instanceof Object[] )
+        {
+            retValue = unserializeObject( (Object[]) tmpFO );
+        }
+        else
+        {
+            retValue = unserializeObject( tmpFO );
+        }
+        return retValue;
+    }
+
+    private List<Object> unserializeObject( List list )
+    {
+        final List<Object> retValue = new ArrayList<Object>();
+
+        for ( Object o : list )
+        {
+            retValue.add( unMapObject( o ) );
+        }
+        return retValue;
+    }
+
+    private Object unserializeObject( Object o )
+    {
+        return o;
+    }
+
+    private Object unserializeObject( Object[] list )
+    {
+        final List<Object> retValue = new ArrayList<Object>();
+
+        for ( Object o : list )
+        {
+            retValue.add( unMapObject( o ) );
+        }
+        return retValue;
+    }
+
+    private String unserializeObject( String o )
+    {
+        return o;
+    }
+
+    private Byte unserializeObject( Byte o )
+    {
+        return o;
+    }
+
+    private Character unserializeObject( Character o )
+    {
+        return o;
+    }
+
+    private Long unserializeObject( Long o )
+    {
+        return o;
+    }
+
+    private Float unserializeObject( Float o )
+    {
+        return o;
+    }
+
+    private Double unserializeObject( Double o )
+    {
+        return o;
+    }
+
+    private Integer unserializeObject( Integer o )
+    {
+        return o;
+    }
+
+    private Boolean unserializeObject( Boolean o )
+    {
+        return o;
+    }
+
+    public Map<String, Object> addAntProjectRPC( Map<String, Object> project )
+        throws Exception
+    {
+        return serializeObject( this.addAntProject( (ProjectSummary) unserializeObject( project ) ) );
+    }
+
+    public Map<String, Object> addAntProjectRPC( Map<String, Object> project, int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.addAntProject( (ProjectSummary) unserializeObject( project ), projectGroupId ) );
+    }
+
+    public Map<String, Object> addBuildDefinitionToProjectGroupRPC( int projectGroupId, Map<String, Object> buildDef )
+        throws Exception
+    {
+        return serializeObject( this.addBuildDefinitionToProjectGroup( projectGroupId,
+            (BuildDefinition) unserializeObject( buildDef ) ) );
+    }
+
+    public Map<String, Object> addBuildDefinitionToProjectRPC( int projectId, Map<String, Object> buildDef )
+        throws Exception
+    {
+        return serializeObject( this.addBuildDefinitionToProject( projectId,
+            (BuildDefinition) unserializeObject( buildDef ) ) );
+    }
+
+    public Map<String, Object> addMavenOneProjectRPC( String url )
+        throws Exception
+    {
+        return serializeObject( this.addMavenOneProject( url ) );
+    }
+
+    public Map<String, Object> addMavenOneProjectRPC( String url, int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.addMavenOneProject( url, projectGroupId ) );
+    }
+
+    public Map<String, Object> addMavenTwoProjectRPC( String url )
+        throws Exception
+    {
+        return serializeObject( this.addMavenTwoProject( url ) );
+    }
+
+    public Map<String, Object> addMavenTwoProjectRPC( String url, int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.addMavenTwoProject( url, projectGroupId ) );
+    }
+
+    public Map<String, Object> addProjectGroupRPC( String groupName, String groupId, String description )
+        throws Exception
+    {
+        return serializeObject( this.addProjectGroup( groupName, groupId, description ) );
+    }
+
+    public Map<String, Object> addScheduleRPC( Map<String, Object> schedule )
+        throws Exception
+    {
+        return serializeObject( this.addSchedule( (Schedule) unserializeObject( schedule ) ) );
+    }
+
+    public Map<String, Object> addShellProjectRPC( Map<String, Object> project, int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.addShellProject( (ProjectSummary) unserializeObject( project ), projectGroupId ) );
+    }
+
+    public Map<String, Object> addShellProjectRPC( Map<String, Object> project )
+        throws Exception
+    {
+        return serializeObject( this.addShellProject( (ProjectSummary) unserializeObject( project ) ) );
+    }
+
+    public List<Object> getAllProjectGroupsRPC()
+        throws Exception
+    {
+        return serializeObject( this.getAllProjectGroups() );
+    }
+
+    public List<Object> getAllProjectGroupsWithAllDetailsRPC()
+        throws Exception
+    {
+        return serializeObject( this.getAllProjectGroupsWithAllDetails() );
+    }
+
+    public List<Object> getBuildDefinitionTemplatesRPC()
+        throws Exception
+    {
+        return serializeObject( this.getBuildDefinitionTemplates() );
+    }
+
+    public List<Object> getBuildDefinitionsForProjectGroupRPC( int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.getBuildDefinitionsForProjectGroup( projectGroupId ) );
+    }
+
+    public List<Object> getBuildDefinitionsForProjectRPC( int projectId )
+        throws Exception
+    {
+        return serializeObject( this.getBuildDefinitionsForProject( projectId ) );
+    }
+
+    public Map<String, Object> getBuildResultRPC( int projectId, int buildId )
+        throws Exception
+    {
+        return serializeObject( this.getBuildResult( projectId, buildId ) );
+    }
+
+    public List<Object> getBuildResultsForProjectRPC( int projectId )
+        throws Exception
+    {
+        return serializeObject( this.getBuildResultsForProject( projectId ) );
+    }
+
+    public Map<String, Object> getInstallationRPC( int installationId )
+        throws Exception
+    {
+        return serializeObject( this.getInstallation( installationId ) );
+    }
+
+    public List<Object> getInstallationsRPC()
+        throws Exception
+    {
+        return serializeObject( this.getInstallations() );
+    }
+
+    public Map<String, Object> getLatestBuildResultRPC( int projectId )
+        throws Exception
+    {
+        return serializeObject( this.getLatestBuildResult( projectId ) );
+    }
+
+    public Map<String, Object> getProfileRPC( int profileId )
+        throws Exception
+    {
+        return serializeObject( this.getProfile( profileId ) );
+    }
+
+    public List<Object> getProfilesRPC()
+        throws Exception
+    {
+        return serializeObject( this.getProfiles() );
+    }
+
+    public Map<String, Object> getProjectGroupSummaryRPC( int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.getProjectGroupSummary( projectGroupId ) );
+    }
+
+    public Map<String, Object> getProjectGroupWithProjectsRPC( int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.getProjectGroupWithProjects( projectGroupId ) );
+    }
+
+    public Map<String, Object> updateProjectGroupRPC( Map<String, Object> projectGroup )
+        throws Exception
+    {
+        return serializeObject( this.updateProjectGroup( (ProjectGroupSummary) unserializeObject( projectGroup ) ) );
+    }
+
+    public Map<String, Object> getProjectSummaryRPC( int projectId )
+        throws Exception
+    {
+        return serializeObject( this.getProjectSummary( projectId ) );
+    }
+
+    public Map<String, Object> getProjectWithAllDetailsRPC( int projectId )
+        throws Exception
+    {
+        return serializeObject( this.getProjectWithAllDetails( projectId ) );
+    }
+
+    public List<Object> getProjectsRPC( int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.getProjects( projectGroupId ) );
+    }
+
+    public Map<String, Object> getScheduleRPC( int scheduleId )
+        throws Exception
+    {
+        return serializeObject( this.getSchedule( scheduleId ) );
+    }
+
+    public List<Object> getSchedulesRPC()
+        throws Exception
+    {
+        return serializeObject( this.getSchedules() );
+    }
+
+    public Map<String, Object> getSystemConfigurationRPC()
+        throws Exception
+    {
+        return serializeObject( this.getSystemConfiguration() );
+    }
+
+    public int removeBuildResultRPC( Map<String, Object> br )
+        throws Exception
+    {
+        return serializeObject( this.removeBuildResult( (BuildResult) unserializeObject( br ) ) );
+    }
+
+    public Map<String, Object> updateBuildDefinitionForProjectGroupRPC( int projectGroupId, Map<String, Object> buildDef )
+        throws Exception
+    {
+        return serializeObject( this.updateBuildDefinitionForProjectGroup( projectGroupId,
+            (BuildDefinition) unserializeObject( buildDef ) ) );
+    }
+
+    public Map<String, Object> updateBuildDefinitionForProjectRPC( int projectId, Map<String, Object> buildDef )
+        throws Exception
+    {
+        return serializeObject( this.updateBuildDefinitionForProject( projectId,
+            (BuildDefinition) unserializeObject( buildDef ) ) );
+    }
+
+    public Map<String, Object> updateProjectRPC( Map<String, Object> project )
+        throws Exception
+    {
+        return serializeObject( this.updateProject( (ProjectSummary) unserializeObject( project ) ) );
+    }
+
+    public Map<String, Object> updateScheduleRPC( Map<String, Object> schedule )
+        throws Exception
+    {
+        return serializeObject( this.updateSchedule( (Schedule) unserializeObject( schedule ) ) );
+    }
+
+    public Map<String, Object> getProjectGroupRPC( int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.getProjectGroup( projectGroupId ), "projects" );
+    }
+
+    public Map<String, Object> getGroupNotifierRPC( int projectgroupid, int notifierId )
+        throws Exception
+    {
+        return serializeObject( this.getGroupNotifier( projectgroupid, notifierId ) );
+    }
+
+    public Map<String, Object> getNotifierRPC( int projectid, int notifierId )
+        throws Exception
+    {
+        return serializeObject( this.getNotifier( projectid, notifierId ) );
+    }
+
+    public Map<String, Object> updateGroupNotifierRPC( int projectgroupid, Map<String, Object> newNotifier )
+        throws Exception
+    {
+        return serializeObject( this.updateGroupNotifier( projectgroupid,
+            (ProjectNotifier) unserializeObject( newNotifier ) ) );
+    }
+
+    public Map<String, Object> updateNotifierRPC( int projectid, Map<String, Object> newNotifier )
+        throws Exception
+    {
+        return serializeObject( this.updateNotifier( projectid, (ProjectNotifier) unserializeObject( newNotifier ) ) );
+    }
+
+    public Map<String, Object> addGroupNotifierRPC( int projectgroupid, Map<String, Object> newNotifier )
+        throws Exception
+    {
+        return serializeObject( this.addGroupNotifier( projectgroupid,
+            (ProjectNotifier) unserializeObject( newNotifier ) ) );
+    }
+
+    public Map<String, Object> addNotifierRPC( int projectid, Map<String, Object> newNotifier )
+        throws Exception
+    {
+        return serializeObject( this.addNotifier( projectid, (ProjectNotifier) unserializeObject( newNotifier ) ) );
+    }
+
+    public Map<String, Object> addInstallationRPC( Map<String, Object> installation )
+        throws Exception
+    {
+        return serializeObject( this.addInstallation( (Installation) unserializeObject( installation ) ) );
+    }
+
+    public Map<String, Object> addProfileRPC( Map<String, Object> profile )
+        throws Exception
+    {
+        return serializeObject( this.addProfile( (Profile) unserializeObject( profile ) ) );
+    }
+
+    public int updateInstallationRPC( Map<String, Object> installation )
+        throws Exception
+    {
+        return this.updateInstallation( (Installation) unserializeObject( installation ) );
+    }
+
+    public int updateProfileRPC( Map<String, Object> profile )
+        throws Exception
+    {
+        return this.updateProfile( (Profile) unserializeObject( profile ) );
     }
 }
