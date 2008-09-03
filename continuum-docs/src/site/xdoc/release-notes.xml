@@ -57,6 +57,8 @@ The Apache Continuum team is pleased to announce Apache Continuum 1.2
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1593'>CONTINUUM-1593</a>] -         Requires Javamail 1.5? Should be 1.4?
 </li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1596'>CONTINUUM-1596</a>] -         The release perform doesn't work when a scm password is required
+</li>  
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1601'>CONTINUUM-1601</a>] -         Email address with '+' is not accepted in mail notifier
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1610'>CONTINUUM-1610</a>] -         Deployment Repository Directory does not work at all
