@@ -22,7 +22,7 @@ under the License.
   <parent>
     <artifactId>continuum</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
   </parent>
   <artifactId>continuum-jetty</artifactId>
   <packaging>pom</packaging>
@@ -263,7 +263,7 @@ under the License.
                 <copy todir="target/generated-resources/appassembler/jsw/continuum/conf">
                   <fileset dir="src/main/conf" />                  
                 </copy>
-                <mkdir dir="target/generated-resources/appassembler/jsw/continuum/logs"/>      
+                <mkdir dir="target/generated-resources/appassembler/jsw/continuum/logs" />      
               </tasks>
             </configuration>
             <goals>
