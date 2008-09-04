@@ -42,7 +42,7 @@ Guide to use XML-RPC with Continuum
     * password, the user's password
 
 +--------------------------+
-String url = "http://localhost:8080/continuum/xmlrpc";
+URL url = new URL( "http://localhost:8080/continuum/xmlrpc" );
 ContinuumXmlRpcClient client = new ContinuumXmlRpcClient( url, username, password );
 +--------------------------+
 
