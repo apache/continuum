@@ -149,7 +149,7 @@ under the License.
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>buildnumber-maven-plugin</artifactId>
         <version>1.0-beta-1</version>
@@ -165,7 +165,7 @@ under the License.
           <doCheck>false</doCheck>
           <doUpdate>false</doUpdate>
         </configuration>
-      </plugin>
+      </plugin-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -174,9 +174,11 @@ under the License.
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
+            <!--
             <manifestEntries>
               <SVN-Revision>${buildNumber}</SVN-Revision>
             </manifestEntries>
+            -->
           </archive>
         </configuration>
       </plugin>
