@@ -764,6 +764,7 @@
             /**
              * @return Returns string representation of the changeset
              */
+            // FIXME CONTINUUM-1871 use at least a StringBuilder here
             public String toString()
             {
                 String result = author + "\n" + date + "\n";
