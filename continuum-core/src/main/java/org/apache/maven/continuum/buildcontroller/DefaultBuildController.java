@@ -350,6 +350,10 @@ public class DefaultBuildController
 
             context.setOldBuildResult( oldBuildResult );
 
+            // FIXME CONTINUUM-1871 if continuum is killed the oldBuildResult will have a endTime 0
+            // and all ScmResult will be in memory and the contains method use toString from ChangeSet 
+            // which do a lot String concat
+            
             if ( oldBuildResult != null )
             {
                 context.setOldScmResult( getOldScmResult( projectId, oldBuildResult.getEndTime() ) );
