@@ -149,23 +149,6 @@ under the License.
           </execution>
         </executions>
       </plugin>
-      <!--plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.0-beta-1</version>
-        <executions>
-          <execution>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <doCheck>false</doCheck>
-          <doUpdate>false</doUpdate>
-        </configuration>
-      </plugin-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -174,11 +157,9 @@ under the License.
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
-            <!--
             <manifestEntries>
               <SVN-Revision>${buildNumber}</SVN-Revision>
             </manifestEntries>
-            -->
           </archive>
         </configuration>
       </plugin>
@@ -1008,6 +989,35 @@ under the License.
       <modules>
         <module>continuum-webapp-test</module>
       </modules>
+    </profile>
+    <profile>
+      <id>buildnumber</id>
+      <activation>
+        <file>
+          <exists>.svn</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>buildnumber-maven-plugin</artifactId>
+            <version>1.0-beta-1</version>
+            <executions>
+              <execution>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>create</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <doCheck>false</doCheck>
+              <doUpdate>false</doUpdate>
+            </configuration>
+          </plugin>        
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
