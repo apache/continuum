@@ -17,7 +17,8 @@ The Apache Continuum team is pleased to announce Apache Continuum 1.2
       <li>build output directory</li>
     </ul>
   </p>
-
+<h4>Maven plugin groupId and artifactId change</h4>
+<p>Now the maven plugin has the new groupId:artifactId org.apache.continuum:continuum-maven-plugin</p>
 <h3>Changes in Continuum 1.2</h3>    
 <h2>        Bug
 </h2>
@@ -171,6 +172,8 @@ The Apache Continuum team is pleased to announce Apache Continuum 1.2
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1863'>CONTINUUM-1863</a>] -         NPE when clicking Appearance menu item
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1869'>CONTINUUM-1869</a>] -         Correct type of url variable in 'Connection to Continuum' section on 'Guide to use XML-RPC with Continuum' page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1870'>CONTINUUM-1870</a>] -         changing groupId:artifactId of the maven plugin to org.apache.continuum:continuum-maven-plugin
 </li>
 </ul>
     
