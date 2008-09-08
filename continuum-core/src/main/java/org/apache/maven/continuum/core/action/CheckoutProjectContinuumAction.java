@@ -158,17 +158,11 @@ public class CheckoutProjectContinuumAction
         catch ( ScmException e )
         {
             result = new ScmResult();
+            
+            result.setSuccess( false );
 
-            if ( e.getCause() instanceof InterruptedException )
-            {
-                result.setSuccess( true );
-            }
-            else
-            {
-                result.setSuccess( false );
-    
-                result.setException( ContinuumUtils.throwableMessagesToString( e ) );
-            }
+            result.setException( ContinuumUtils.throwableMessagesToString( e ) );
+
             getLogger().error( e.getMessage(), e );
         }
         catch ( Throwable t )

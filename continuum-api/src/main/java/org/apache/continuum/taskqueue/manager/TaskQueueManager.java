@@ -18,9 +18,6 @@ public interface TaskQueueManager
 
     void cancelBuildTask( int projectId )
         throws TaskQueueManagerException;
-    
-    void cancelCheckoutTask( int projectId )
-        throws TaskQueueManagerException;
 
     TaskQueue getBuildQueue();
 

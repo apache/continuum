@@ -10,7 +10,6 @@ import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
-import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.purge.task.PurgeTask;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
@@ -34,7 +33,7 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
- * @author Maria Catherine Tan
+ * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
  * @plexus.component role="org.apache.continuum.taskqueue.manager.TaskQueueManager" role-hint="default"
  */
 public class DefaultTaskQueueManager
@@ -104,21 +103,6 @@ public class DefaultTaskQueueManager
                 getBuildTaskQueueExecutor().cancelTask( currentTask );
             }
         }
-    }
-    
-    public void cancelCheckoutTask( int projectId )
-        throws TaskQueueManagerException
-    {
-        Task currentTask = getCheckoutTaskQueueExecutor().getCurrentTask();
-
-        if ( currentTask instanceof CheckOutTask )
-        {
-            if ( ( (CheckOutTask) currentTask ).getProjectId() == projectId )
-            {
-                getLogger().info( "Cancelling task for project " + projectId );
-                getCheckoutTaskQueueExecutor().cancelTask( currentTask );
-            }
-        }    
     }
     
     public TaskQueue getBuildQueue()

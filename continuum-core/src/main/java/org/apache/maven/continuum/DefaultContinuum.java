@@ -1226,8 +1226,6 @@ public class DefaultContinuum
             {
                 taskQueueManager.removeProjectFromCheckoutQueue( projectId );
             }
-
-            taskQueueManager.cancelCheckoutTask( projectId );
         }
         catch ( TaskQueueManagerException e )
         {
@@ -1259,8 +1257,6 @@ public class DefaultContinuum
             {
                 return;
             }
-            
-            taskQueueManager.cancelCheckoutTask( projectId );
         }
         catch ( TaskQueueManagerException e )
         {
@@ -1326,7 +1322,7 @@ public class DefaultContinuum
             if ( project.getState() != ContinuumProjectState.NEW &&
                 project.getState() != ContinuumProjectState.CHECKEDOUT &&
                 project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
-                project.getState() != ContinuumProjectState.ERROR )
+                project.getState() != ContinuumProjectState.ERROR && project.getState() != ContinuumProjectState.CANCELLED )
             {
                 ContinuumBuildExecutor executor = executorManager.getBuildExecutor( project.getExecutorId() );
     
@@ -1385,7 +1381,7 @@ public class DefaultContinuum
         }
     }
 
-
+/*
     private synchronized void buildProject( Project project, int buildDefinitionId, int trigger, boolean checkQueues )
         throws ContinuumException
     {
@@ -1472,7 +1468,7 @@ public class DefaultContinuum
             throw logAndCreateException( "Error while creating enqueuing object.", e );
         }
     }
-
+*/
     public BuildResult getBuildResult( int buildId )
         throws ContinuumException
     {
@@ -3552,8 +3548,6 @@ public class DefaultContinuum
                 {
                     taskQueueManager.removeProjectFromCheckoutQueue( projectId );
                 }
-                
-                taskQueueManager.cancelCheckoutTask( projectId );
             }
             catch ( TaskQueueManagerException e )
             {
@@ -3639,8 +3633,6 @@ public class DefaultContinuum
                 {
                     taskQueueManager.removeProjectFromCheckoutQueue( projectId );
                 }
-                
-                taskQueueManager.cancelCheckoutTask( projectId );
             }
             catch ( TaskQueueManagerException e )
             {
