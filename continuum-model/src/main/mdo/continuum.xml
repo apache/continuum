@@ -764,24 +764,34 @@
             /**
              * @return Returns string representation of the changeset
              */
-            // FIXME CONTINUUM-1871 use at least a StringBuilder here
             public String toString()
             {
-                String result = author + "\n" + date + "\n";
+                StringBuilder result = new StringBuilder();
+                if ( author != null )
+                {
+                    result.append( author ).append( "\n" );
+                }
+                result.append( date ).append( "\n" );
 
                 if ( files != null )
                 {
                     for ( java.util.Iterator i = files.iterator(); i.hasNext(); )
                     {
                         ChangeFile file = (ChangeFile) i.next();
-
-                        result += file + "\n";
+                        
+                        if (file != null)
+                        {
+                            result.append( file ).append( "\n" );
+                        }
                     }
                 }
 
-                result += comment;
+                if ( comment != null )
+                {
+                    result.append( comment );
+                }
 
-                return result;
+                return result.toString();
             }
 
             /**
