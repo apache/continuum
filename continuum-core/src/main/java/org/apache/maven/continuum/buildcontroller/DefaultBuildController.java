@@ -776,8 +776,6 @@ public class DefaultBuildController
     private ScmResult getOldScmResults( int projectId, long startId, long fromDate )
         throws ContinuumStoreException
     {
-        // TODO CONTINUUM-1871 use a new method in dao : buildResultDao.getBuildResultsForProject( projectId, buildResultId )
-        // which load all buildResult with Id >= buildResultId
         List<BuildResult> results = buildResultDao.getBuildResultsForProjectFromId( projectId, startId );
 
         ScmResult res = new ScmResult();
