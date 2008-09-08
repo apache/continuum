@@ -54,6 +54,8 @@ public class ConfigurationAction
     private String deploymentRepositoryDirectory;
 
     private String baseUrl;
+    
+    private String releaseOutputDirectory;
 
     public void prepare()
     {
@@ -86,6 +88,12 @@ public class ConfigurationAction
                 request.getContextPath();
             getLogger().info( "baseUrl='" + baseUrl + "'" );
         }
+
+        File releaseOutputDirectoryFile = configuration.getReleaseOutputDirectory();
+        if ( releaseOutputDirectoryFile != null )
+        {
+            releaseOutputDirectory = releaseOutputDirectoryFile.getAbsolutePath();
+        }
     }
 
     public String input()
@@ -114,6 +122,8 @@ public class ConfigurationAction
         configuration.setUrl( baseUrl );
 
         configuration.setInitialized( true );
+
+        configuration.setReleaseOutputDirectory( new File( releaseOutputDirectory ) );
 
         configuration.store();
 
@@ -168,5 +178,15 @@ public class ConfigurationAction
         bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_CONFIGURATION, Resource.GLOBAL );
 
         return bundle;
+    }
+
+    public String getReleaseOutputDirectory()
+    {
+        return releaseOutputDirectory;
+    }
+
+    public void setReleaseOutputDirectory( String releaseOutputDirectory )
+    {
+        this.releaseOutputDirectory = releaseOutputDirectory;
     }
 }

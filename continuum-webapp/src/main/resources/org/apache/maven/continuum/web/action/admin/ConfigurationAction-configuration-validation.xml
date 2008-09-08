@@ -40,4 +40,9 @@
       <message key="configuration.baseUrl.invalid"/>
     </field-validator>
   </field>
+  <field name="releaseOutputDirectory">
+    <field-validator type="requiredstring">
+      <message key="configuration.releaseOutputDirectory.required"/>
+    </field-validator>
+  </field>
 </validators>

@@ -244,6 +244,30 @@ public class DefaultConfigurationService
         }
     }
 
+    public File getReleaseOutputDirectory()
+    {
+        File releaseOutputDirectory = generalConfiguration.getReleaseOutputDirectory();
+        if ( releaseOutputDirectory == null )
+        {
+            releaseOutputDirectory = getFile( systemConf.getReleaseOutputDirectory() );
+            setReleaseOutputDirectory( releaseOutputDirectory );
+        }
+        return releaseOutputDirectory;
+    }
+
+    public void setReleaseOutputDirectory( File releaseOutputDirectory )
+    {
+        File f = releaseOutputDirectory;
+        try
+        {
+            f = f.getCanonicalFile();
+        }
+        catch ( IOException e )
+        {
+        }
+        generalConfiguration.setReleaseOutputDirectory( f );
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -286,6 +310,35 @@ public class DefaultConfigurationService
         }
 
         return new File( dir, buildId + ".log.txt" );
+    }
+
+    public File getReleaseOutputDirectory( int projectGroupId )
+    {
+        File dir = new File( getReleaseOutputDirectory(), Integer.toString( projectGroupId ) );
+        
+        try
+        {
+            dir = dir.getCanonicalFile();
+        }
+        catch ( IOException e )
+        {
+        }
+        
+        return dir;
+    }
+
+    public File getReleaseOutputFile( int projectGroupId, String name )
+        throws ConfigurationException
+    {
+        File dir = getReleaseOutputDirectory( projectGroupId );
+
+        if ( !dir.exists() && !dir.mkdirs() )
+        {
+            throw new ConfigurationException(
+                "Could not make the release output directory: " + "'" + dir.getAbsolutePath() + "'." );
+        }
+
+        return new File( dir, name + ".log.txt" );
     }
 
     // ----------------------------------------------------------------------

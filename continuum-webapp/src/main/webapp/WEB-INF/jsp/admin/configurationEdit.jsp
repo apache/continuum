@@ -61,6 +61,13 @@
               </p></ww:param>
             </ww:textfield>
 
+            <ww:textfield label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"
+                          required="true">
+              <ww:param name="desc"><p>
+                <ww:text name="configuration.releaseOutputDirectory.message"/>
+              </ww:param>
+            </ww:textfield>
+
             <ww:textfield label="%{getText('configuration.deploymentRepositoryDirectory.label')}"
                           name="deploymentRepositoryDirectory">
               <ww:param name="desc"><p>

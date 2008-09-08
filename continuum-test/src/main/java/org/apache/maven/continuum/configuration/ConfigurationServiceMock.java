@@ -207,4 +207,33 @@ public class ConfigurationServiceMock
 
     }
 
+    public File getReleaseOutputDirectory()
+    {
+        return new File( basedir, "src/test/resources" + "/" + "release-output-directory" );
+    }
+
+    public File getReleaseOutputDirectory( int projectGroupId )
+    {
+        return new File( getReleaseOutputDirectory(), Integer.toString( projectGroupId ) );
+    }
+
+    public File getReleaseOutputFile( int projectGroupId, String releaseName )
+        throws ConfigurationException
+    {
+        File dir = getReleaseOutputDirectory( projectGroupId );
+
+        if ( !dir.exists() && !dir.mkdirs() )
+        {
+            throw new ConfigurationException(
+                "Could not make the release output directory: " + "'" + dir.getAbsolutePath() + "'." );
+        }
+    
+        return new File( dir, releaseName + ".log.txt" );
+    }
+
+    public void setReleaseOutputDirectory( File releaseOutputDirectory )
+    {
+    }
+
+
 }

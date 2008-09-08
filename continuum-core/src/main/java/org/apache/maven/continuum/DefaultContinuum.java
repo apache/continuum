@@ -37,11 +37,13 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
+import org.apache.continuum.dao.ContinuumReleaseResultDao;
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.NotifierDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
@@ -158,6 +160,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private ScheduleDao scheduleDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumReleaseResultDao releaseResultDao;
 
     /**
      * @plexus.requirement
@@ -337,6 +344,27 @@ public class DefaultContinuum
             for ( Object o : projectGroup.getProjects() )
             {
                 removeProject( ( (Project) o ).getId() );
+            }
+            
+            List<ContinuumReleaseResult> releaseResults = releaseResultDao.getContinuumReleaseResultsByProjectGroup( projectGroupId );
+            
+            try
+            {
+                for ( ContinuumReleaseResult releaseResult : releaseResults )
+                {
+                    releaseResultDao.removeContinuumReleaseResult( releaseResult );
+                }
+                
+                File releaseOutputDirectory = configurationService.getReleaseOutputDirectory( projectGroupId );
+                FileUtils.deleteDirectory( releaseOutputDirectory );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( "Error while deleting continuum release result of project group", e );
+            }
+            catch ( IOException e )
+            {
+                throw logAndCreateException( "Error while deleting project group release output directory.", e );
             }
         }
 
@@ -3273,4 +3301,76 @@ public class DefaultContinuum
         return buildDefinitionService;
     }
 
+    public ContinuumReleaseResult addContinuumReleaseResult( ContinuumReleaseResult releaseResult )
+        throws ContinuumException
+    {
+        try
+        {
+            return releaseResultDao.addContinuumReleaseResult( releaseResult );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while adding continuumReleaseResult", e );
+        }
+    }
+
+    public void removeContinuumReleaseResult( int releaseResultId )
+        throws ContinuumException
+    {
+        ContinuumReleaseResult releaseResult = getContinuumReleaseResult( releaseResultId );
+
+        try
+        {
+            releaseResultDao.removeContinuumReleaseResult( releaseResult );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while deleting continuumReleaseResult: " + releaseResultId, e );
+        }
+
+        try
+        {
+            int projectGroupId = releaseResult.getProjectGroup().getId();
+
+            String name = "releases-" + releaseResult.getStartTime();
+
+            File releaseFile = getConfiguration().getReleaseOutputFile( projectGroupId, name );
+
+            if ( releaseFile.exists() )
+            {
+                releaseFile.delete();
+            }
+        }
+        catch ( ConfigurationException e )
+        {
+            getLogger().info( "skip error during cleanup release files " + e.getMessage(), e );
+        }
+    }
+
+    public ContinuumReleaseResult getContinuumReleaseResult( int releaseResultId )
+        throws ContinuumException
+    {
+        try
+        {
+            return releaseResultDao.getContinuumReleaseResult( releaseResultId );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            throw new ContinuumException( "No continuumReleaseResult found: " + releaseResultId );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while retrieving continuumReleaseResult: " + releaseResultId, e );
+        }
+    }
+
+    public List<ContinuumReleaseResult> getAllContinuumReleaseResults()
+    {
+        return releaseResultDao.getAllContinuumReleaseResults();
+    }
+
+    public List<ContinuumReleaseResult> getContinuumReleaseResultsByProjectGroup( int projectGroupId )
+    {
+        return releaseResultDao.getContinuumReleaseResultsByProjectGroup( projectGroupId );
+    }
 }
