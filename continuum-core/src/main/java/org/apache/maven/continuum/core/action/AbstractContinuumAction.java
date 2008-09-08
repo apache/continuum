@@ -247,7 +247,16 @@ public abstract class AbstractContinuumAction
 
     protected static int getInteger( Map context, String key )
     {
-        return ( (Integer) getObject( context, key, null ) ).intValue();
+        Object obj = getObject( context, key, null );
+        
+        if ( obj == null )
+        {
+            return 0;
+        }
+        else
+        {
+            return ( (Integer) obj ).intValue();
+        }
     }
 
     protected static Object getObject( Map context, String key )
