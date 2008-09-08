@@ -70,7 +70,8 @@ public class StateCell
                 {
                     String state = StateGenerator.generate( project.getState(), tableModel.getContext().getContextPath() );
     
-                    if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) )
+                    if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) 
+                         && project.getState() != ContinuumProjectState.UPDATING )
                     {
                         if ( isAuthorized( project.getProjectGroupName() ) )
                         {
@@ -156,7 +157,7 @@ public class StateCell
 
         params.put( "projectGroupId", new Integer( scmRoot.getProjectGroup().getId() ) );
 
-        params.put( "scmRootAddress", scmRoot.getScmRootAddress() );
+        params.put( "projectScmRootId", new Integer( scmRoot.getId() ) );
 
         String url = UrlHelper.buildUrl( "/" + action + ".action", ServletActionContext.getRequest(), 
                                          ServletActionContext.getResponse(), params );

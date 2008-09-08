@@ -1487,6 +1487,12 @@
       <packageName>org.apache.continuum.model.project</packageName>
       <fields>
         <field>
+          <name>id</name>
+          <version>1.1.2+</version>
+          <identifier>true</identifier>
+          <type>int</type>
+        </field>
+        <field>
           <name>scmRootAddress</name>
           <version>1.1.2+</version>
           <type>String</type>

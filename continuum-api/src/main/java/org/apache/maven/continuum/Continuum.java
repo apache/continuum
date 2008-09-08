@@ -667,6 +667,9 @@ public interface Continuum
     // ----------------------------------------------------------------------
     List<ProjectScmRoot> getProjectScmRootByProjectGroup( int projectGroupId );
 
+    ProjectScmRoot getProjectScmRoot( int projectScmRootId )
+        throws ContinuumException;
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------

@@ -68,54 +68,59 @@ public class PrepareBuildProjectsTaskExecutor
         Map<Integer, Integer> projectsBuildDefinitionsMap = prepareTask.getProjectsBuildDefinitionsMap();
         Set<Integer> projectsId = projectsBuildDefinitionsMap.keySet();
         Map context = new HashMap();
-        
-        for ( Integer projectId : projectsId )
+
+        try
         {
-            int buildDefinitionId = projectsBuildDefinitionsMap.get( projectId );
-            
-            getLogger().info( "Initializing prepare build" );
-            context = initializeContext( projectId, buildDefinitionId );
-            
-            getLogger().info( "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
-            startPrepareBuild( context );
-            
-            if ( !checkProjectScmRoot( context ) )
+            for ( Integer projectId : projectsId )
             {
-                break;
-            }
-            
-            try
-            {
-                if ( AbstractContinuumAction.getBuildDefinition( context ).isBuildFresh() )
+                int buildDefinitionId = projectsBuildDefinitionsMap.get( projectId );
+                
+                getLogger().info( "Initializing prepare build" );
+                context = initializeContext( projectId, buildDefinitionId );
+                
+                getLogger().info( "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
+                startPrepareBuild( context );
+                
+                if ( !checkProjectScmRoot( context ) )
                 {
-                    getLogger().info( "Purging existing working copy" );
-                    cleanWorkingDirectory( context );
+                    break;
                 }
                 
-                // ----------------------------------------------------------------------
-                // TODO: Centralize the error handling from the SCM related actions.
-                // ContinuumScmResult should return a ContinuumScmResult from all
-                // methods, even in a case of failure.
-                // ----------------------------------------------------------------------
-                getLogger().info( "Updating working dir" );
-                updateWorkingDirectory( context );
-        
-                getLogger().info( "Merging SCM results" );
-                //CONTINUUM-1393
-                if ( !AbstractContinuumAction.getBuildDefinition( context ).isBuildFresh() )
+                try
                 {
-                    mergeScmResults( context );
+                    if ( AbstractContinuumAction.getBuildDefinition( context ).isBuildFresh() )
+                    {
+                        getLogger().info( "Purging existing working copy" );
+                        cleanWorkingDirectory( context );
+                    }
+                    
+                    // ----------------------------------------------------------------------
+                    // TODO: Centralize the error handling from the SCM related actions.
+                    // ContinuumScmResult should return a ContinuumScmResult from all
+                    // methods, even in a case of failure.
+                    // ----------------------------------------------------------------------
+                    getLogger().info( "Updating working dir" );
+                    updateWorkingDirectory( context );
+            
+                    getLogger().info( "Merging SCM results" );
+                    //CONTINUUM-1393
+                    if ( !AbstractContinuumAction.getBuildDefinition( context ).isBuildFresh() )
+                    {
+                        mergeScmResults( context );
+                    }
+                }
+                finally
+                {
+                    getLogger().info( "Ending prepare build of project: " + AbstractContinuumAction.getProject( context).getName() );
+                    endProjectPrepareBuild( context );
                 }
             }
-            finally
-            {
-                getLogger().info( "Ending prepare build of project: " + AbstractContinuumAction.getProject( context).getName() );
-                endProjectPrepareBuild( context );
-            }
         }
-        
-        getLogger().info( "Ending prepare build" );
-        endPrepareBuild( context );
+        finally
+        {
+            getLogger().info( "Ending prepare build" );
+            endPrepareBuild( context );
+        }
     }
     
     private Map initializeContext( int projectId, int buildDefinitionId )

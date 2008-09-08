@@ -9,6 +9,7 @@ import javax.jdo.Query;
 import javax.jdo.Transaction;
 
 import org.apache.continuum.model.project.ProjectScmRoot;
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
 /**
@@ -117,4 +118,9 @@ public class ProjectScmRootDaoImpl
         }
     }
     
+    public ProjectScmRoot getProjectScmRoot( int projectScmRootId )
+        throws ContinuumObjectNotFoundException, ContinuumStoreException
+    {
+        return (ProjectScmRoot) getObjectById( ProjectScmRoot.class, projectScmRootId );
+    }
 }

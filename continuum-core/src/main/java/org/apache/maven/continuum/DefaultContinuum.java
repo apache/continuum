@@ -3507,6 +3507,23 @@ public class DefaultContinuum
         return projectScmRootDao.getProjectScmRootByProjectGroup( projectGroupId );
     }
 
+    public ProjectScmRoot getProjectScmRoot( int projectScmRootId )
+        throws ContinuumException
+    {
+        try
+        {
+            return projectScmRootDao.getProjectScmRoot( projectScmRootId );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            throw new ContinuumException( "No projectScmRoot found with the given id: " + projectScmRootId );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while retrieving projectScmRoot ", e );
+        }
+    }
+   
     public Map<Integer, Integer> getProjectsAndBuildDefinitionsMap( Collection<Project> projects, 
                                                                     List<BuildDefinition> bds,
                                                                     boolean checkDefaultBuildDefinitionForProject )

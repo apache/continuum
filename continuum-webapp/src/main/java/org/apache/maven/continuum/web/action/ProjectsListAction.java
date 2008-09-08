@@ -161,10 +161,10 @@ public class ProjectsListAction
 
             Map<Integer, Integer> projectsBuildDefsMap = getProjectsBuildDefsMap( sortedProjects );
             
+            getContinuum().prepareBuildProjects( projectsBuildDefsMap );
+            
             for ( Project project : sortedProjects )
             {
-                getContinuum().prepareBuildProjects( projectsBuildDefsMap );
-                
                 if ( this.getBuildDefinitionId() <= 0 )
                 {
                     getContinuum().buildProject( project.getId(), projectsBuildDefsMap.get( project.getId() ),
