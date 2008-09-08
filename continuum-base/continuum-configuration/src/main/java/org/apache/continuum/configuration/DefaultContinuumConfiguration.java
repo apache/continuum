@@ -143,6 +143,12 @@ public class DefaultContinuumConfiguration
                     .getProxyConfiguration().getProxyUser() );
                 this.generalConfiguration.setProxyConfiguration( proxyConfiguration );
             }
+            if ( StringUtils.isNotEmpty( configuration.getReleaseOutputDirectory() ) )
+            {
+                // TODO take care if file exists?
+                this.generalConfiguration.setReleaseOutputDirectory( new File( configuration
+                    .getReleaseOutputDirectory() ) );
+            }
         }
         catch ( IOException e )
         {
@@ -196,6 +202,11 @@ public class DefaultContinuumConfiguration
                 configurationModel.getProxyConfiguration().setProxyHost(
                                                                          this.generalConfiguration
                                                                              .getProxyConfiguration().getProxyHost() );
+            }
+            if ( this.generalConfiguration.getReleaseOutputDirectory() != null )
+            {
+                configurationModel.setReleaseOutputDirectory( this.generalConfiguration.getReleaseOutputDirectory()
+                    .getPath() );
             }
 
             ContinuumConfigurationModelXpp3Writer writer = new ContinuumConfigurationModelXpp3Writer();
