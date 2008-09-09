@@ -1498,6 +1498,11 @@
           <type>String</type>
           <required>true</required>
         </field>
+        <field>
+          <name>oldState</name>
+          <version>1.1.2+</version>
+          <type>int</type>
+        </field>
         <field jpox.column="scmRootState">
           <name>state</name>
           <version>1.1.2+</version>

@@ -216,10 +216,11 @@ public class PrepareBuildProjectsTaskExecutor
         throws TaskExecutionException
     {
         ProjectScmRoot projectScmRoot = AbstractContinuumAction.getProjectScmRoot( context );
-        if ( !( projectScmRoot.getState() == ContinuumProjectState.UPDATING ) )
+        if ( projectScmRoot.getState() != ContinuumProjectState.UPDATING )
         {
             try
             {
+                projectScmRoot.setOldState( projectScmRoot.getState() );
                 projectScmRoot.setState( ContinuumProjectState.UPDATING );
                 projectScmRootDao.updateProjectScmRoot( projectScmRoot );
             }

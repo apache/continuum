@@ -3021,6 +3021,27 @@ public class DefaultContinuum
             getLogger().info( " " + project.getId() + ":" + project.getName() + ":" + project.getVersion() + ":" +
                 project.getExecutorId() );
         }
+
+        for ( ProjectScmRoot projectScmRoot : projectScmRootDao.getAllProjectScmRoots() )
+        {
+            if ( projectScmRoot.getState() == ContinuumProjectState.UPDATING )
+            {
+                projectScmRoot.setState( projectScmRoot.getOldState() );
+
+                projectScmRoot.setOldState( 0 );
+
+                try
+                {
+                    getLogger().info( "Fix state for projectScmRoot " + projectScmRoot.getScmRootAddress() );
+                    
+                    projectScmRootDao.updateProjectScmRoot( projectScmRoot );
+                }
+                catch ( ContinuumStoreException e )
+                {
+                    throw new InitializationException( "Database is corrupted.", e );
+                }
+            }
+        }
     }
 
     // --------------------------------
