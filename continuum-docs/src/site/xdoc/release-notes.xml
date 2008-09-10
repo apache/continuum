@@ -177,6 +177,8 @@ The Apache Continuum team is pleased to announce Apache Continuum 1.2
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1870'>CONTINUUM-1870</a>] -         changing groupId:artifactId of the maven plugin to org.apache.continuum:continuum-maven-plugin
 </li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1871'>CONTINUUM-1871</a>] -         Continuum does not execute builds when last BUILDRESULT.END_TIME=0
+</li>
 </ul>
     
 <h2>        Improvement
@@ -270,6 +272,8 @@ The Apache Continuum team is pleased to announce Apache Continuum 1.2
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1691'>CONTINUUM-1691</a>] -         Ability to delete a project via XML RPC
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1692'>CONTINUUM-1692</a>] -         Ability to delete build results via XML RPC
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1830'>CONTINUUM-1830</a>] -         Ability to view release results after leaving page
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1843'>CONTINUUM-1843</a>] -         add new maven scm providers (accurev and git)
 </li>
