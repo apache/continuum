@@ -1254,7 +1254,7 @@ public class ContinuumStoreTest
         throws Exception
     {
         ProjectGroup projectGroup = projectGroupDao.getProjectGroup( testProjectGroup2.getId() );
-        ProjectScmRoot projectScmRoot = createTestProjectScmRoot( "scmUrl", 1, "", projectGroup );
+        ProjectScmRoot projectScmRoot = createTestProjectScmRoot( "scmRootAddress", 1, 0, "", projectGroup );
         
         projectScmRoot = projectScmRootDao.addProjectScmRoot( projectScmRoot );
         

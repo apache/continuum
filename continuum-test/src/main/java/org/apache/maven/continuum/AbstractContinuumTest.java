@@ -420,8 +420,33 @@ public abstract class AbstractContinuumTest
 
         projectGroup.setName( name );
 
+        projectGroup.setGroupId( name );
+        
         projectGroup.setDescription( description );
 
         return projectGroup;
+    }
+
+    public Project addProject( String name, ProjectGroup group )
+        throws Exception
+    {
+        Project project = makeStubProject( name );
+
+        project.setGroupId( group.getGroupId() );
+
+        group.addProject( project );
+
+        try
+        {
+            projectGroupDao.getProjectGroup( group.getId() );
+
+            projectGroupDao.updateProjectGroup( group );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            projectGroupDao.addProjectGroup( group );
+        }
+        
+        return projectDao.getProject( project.getId() );
     }
 }

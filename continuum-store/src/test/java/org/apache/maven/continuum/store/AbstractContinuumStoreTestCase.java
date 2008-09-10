@@ -594,7 +594,7 @@ public abstract class AbstractContinuumStoreTestCase
             systemConfiguration = systemConfigurationDao.addSystemConfiguration( systemConfiguration );
         }
         
-        testProjectScmRoot = createTestProjectScmRoot( "scmRootAddress1", 1, "error1", group );
+        testProjectScmRoot = createTestProjectScmRoot( "scmRootAddress1", 1, 0, "error1", group );
         
         if ( addToStore )
         {
@@ -1377,13 +1377,14 @@ public abstract class AbstractContinuumStoreTestCase
                       actualConfig.isEnabled() );
     }
     
-    protected static ProjectScmRoot createTestProjectScmRoot( String scmRootAddress, int state, 
+    protected static ProjectScmRoot createTestProjectScmRoot( String scmRootAddress, int state, int oldState,
                                                               String error, ProjectGroup group )
     {
         ProjectScmRoot projectScmRoot = new ProjectScmRoot();
         
         projectScmRoot.setScmRootAddress( scmRootAddress );
         projectScmRoot.setState( state );
+        projectScmRoot.setOldState( oldState );
         projectScmRoot.setError( error );
         projectScmRoot.setProjectGroup( group );
         
@@ -1392,9 +1393,11 @@ public abstract class AbstractContinuumStoreTestCase
     
     protected static void assertProjectScmRootEquals( ProjectScmRoot expectedConfig, ProjectScmRoot actualConfig )
     {
+        assertEquals( "compare project scm root - id", expectedConfig.getId(), actualConfig.getId() );
         assertEquals( "compare project scm root - scmUrl", expectedConfig.getScmRootAddress(), 
                                                            actualConfig.getScmRootAddress() );
         assertEquals( "compare project scm root - state", expectedConfig.getState(), actualConfig.getState() );
+        assertEquals( "compare project scm root - oldState", expectedConfig.getOldState(), actualConfig.getOldState() );
         assertEquals( "compare project scm root - error", expectedConfig.getError(), actualConfig.getError() );
     }
 

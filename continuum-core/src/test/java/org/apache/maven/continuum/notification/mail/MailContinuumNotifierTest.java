@@ -22,6 +22,7 @@ package org.apache.maven.continuum.notification.mail;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
@@ -50,8 +51,9 @@ public class MailContinuumNotifierTest
         MailContinuumNotifier notifier = (MailContinuumNotifier) lookup( Notifier.class.getName(), "mail" );
         notifier.setToOverride( "recipient@host.com" );
 
-        Project project = makeStubProject( "Test Project" );
-        project.setGroupId( "foo.bar" );
+        ProjectGroup group = createStubProjectGroup( "foo.bar", "" );
+
+        Project project = addProject( "Test Project", group );
 
         BuildResult build = makeBuild( ContinuumProjectState.OK );
 
@@ -65,8 +67,9 @@ public class MailContinuumNotifierTest
     public void testFailedBuild()
         throws Exception
     {
-        Project project = makeStubProject( "Test Project" );
-        project.setGroupId( "foo.bar" );
+        ProjectGroup group = createStubProjectGroup( "foo.bar", "" );
+
+        Project project = addProject( "Test Project", group );
 
         BuildResult build = makeBuild( ContinuumProjectState.FAILED );
 
@@ -80,8 +83,9 @@ public class MailContinuumNotifierTest
     public void testErrorenousBuild()
         throws Exception
     {
-        Project project = makeStubProject( "Test Project" );
-        project.setGroupId( "foo.bar" );
+        ProjectGroup group = createStubProjectGroup( "foo.bar", "" );
+
+        Project project = addProject( "Test Project", group );
 
         BuildResult build = makeBuild( ContinuumProjectState.ERROR );
 
