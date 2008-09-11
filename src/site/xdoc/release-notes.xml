@@ -179,6 +179,10 @@ The Apache Continuum team is pleased to announce Apache Continuum 1.2
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1871'>CONTINUUM-1871</a>] -         Continuum does not execute builds when last BUILDRESULT.END_TIME=0
 </li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1877'>CONTINUUM-1877</a>] -         Incorrect svn urls on site &quot;source repository&quot; page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1878'>CONTINUUM-1878</a>] -         MS SQL Server size of NVARCHAR defect
+</li>
 </ul>
     
 <h2>        Improvement
