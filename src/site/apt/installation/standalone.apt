@@ -58,7 +58,7 @@ continuum.bat install
     
 ** {Basic script in /etc/init.d}
 
-    * Create a <<<'continuum'>>> file under <<</etc/init.d/>>> with the following content:
+    * Create a <<<'continuum'>>> file under <<</etc/init.d/>>> with the following content (replacing <<<continuum_user>>> with the name of an account you have already created):
 
 ------------------
 #!/bin/sh
@@ -99,7 +99,8 @@ update-rc.d -n continuum defaults 80
 
     Configuring Continuum in a RedHat-based system (like Fedora Core) is slightly different: Instead of running update-rc.d, you need to add a new
     service using chkconfig. And in order to add Continuum to chkconfig, it is necessary to add some comments to the /etc/rc.d/init.d/continuum script
-    and run a couple of commands; these tasks are automatically executed by running the chkconfig_install.sh script:
+    and run a couple of commands; these tasks are automatically executed by running the chkconfig_install.sh script (note that _continuum_user_ needs to be
+    replaced by the name of an account you have already created):
 
 ------------------
 #! /bin/sh
