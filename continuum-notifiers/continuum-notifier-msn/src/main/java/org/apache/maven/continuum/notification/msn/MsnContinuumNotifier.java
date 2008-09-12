@@ -19,6 +19,7 @@ package org.apache.maven.continuum.notification.msn;
  * under the License.
  */
 
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -103,11 +104,21 @@ public class MsnContinuumNotifier
 
         BuildResult build = context.getBuildResult();
 
+        ProjectScmRoot projectScmRoot = context.getProjectScmRoot();
+
+        boolean isPrepareBuildComplete = 
+            messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_PREPARE_BUILD_COMPLETE );
+        
+        if ( projectScmRoot == null && isPrepareBuildComplete )
+        {
+            return;
+        }
+        
         // ----------------------------------------------------------------------
         // If there wasn't any building done, don't notify
         // ----------------------------------------------------------------------
 
-        if ( build == null )
+        if ( build == null && !isPrepareBuildComplete )
         {
             return;
         }
@@ -143,51 +154,22 @@ public class MsnContinuumNotifier
                 buildComplete( project, notifier, build, buildDefinition );
             }
         }
+        else if ( isPrepareBuildComplete )
+        {
+            for ( ProjectNotifier notifier : notifiers )
+            {
+                prepareBuildComplete( projectScmRoot, notifier );
+            }
+        }
     }
 
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
-    private String generateMessage( Project project, BuildResult build )
-        throws ContinuumException
-    {
-        int state = project.getState();
-
-        if ( build != null )
-        {
-            state = build.getState();
-        }
-
-        String message;
-
-        if ( state == ContinuumProjectState.OK )
-        {
-            message = "BUILD SUCCESSFUL: " + project.getName();
-        }
-        else if ( state == ContinuumProjectState.FAILED )
-        {
-            message = "BUILD FAILURE: " + project.getName();
-        }
-        else if ( state == ContinuumProjectState.ERROR )
-        {
-            message = "BUILD ERROR: " + project.getName();
-        }
-        else
-        {
-            log.warn( "Unknown build state " + state + " for project " + project.getId() );
-
-            message = "ERROR: Unknown build state " + state + " for " + project.getName() + " project";
-        }
-
-        return message + " " + getReportUrl( project, build, configurationService );
-    }
-
     private void buildComplete( Project project, ProjectNotifier notifier, BuildResult build, BuildDefinition buildDef )
         throws NotificationException
     {
-        String message;
-
         // ----------------------------------------------------------------------
         // Check if the message should be sent at all
         // ----------------------------------------------------------------------
@@ -199,27 +181,34 @@ public class MsnContinuumNotifier
             return;
         }
 
-        try
+        sendMessage( notifier.getConfiguration(), generateMessage( project, build, configurationService ) );
+    }
+    
+    private void prepareBuildComplete( ProjectScmRoot projectScmRoot, ProjectNotifier notifier )
+        throws NotificationException
+    {
+        if ( !shouldNotify( projectScmRoot, notifier ) )
         {
-            message = generateMessage( project, build );
+            return;
         }
-        catch ( ContinuumException e )
-        {
-            throw new NotificationException( "Can't generate the message.", e );
-        }
+        
+        sendMessage( notifier.getConfiguration(), generateMessage( projectScmRoot, configurationService ) );
+    }
+    
+    private void sendMessage( Map<String, String> configuration, String message )
+        throws NotificationException
+    {
+        msnClient.setLogin( getUsername( configuration ) );
 
-        msnClient.setLogin( getUsername( notifier.getConfiguration() ) );
-
-        msnClient.setPassword( getPassword( notifier.getConfiguration() ) );
+        msnClient.setPassword( getPassword( configuration ) );
 
         try
         {
             msnClient.login();
 
-            if ( notifier.getConfiguration() != null &&
-                StringUtils.isNotEmpty( (String) notifier.getConfiguration().get( ADDRESS_FIELD ) ) )
+            if ( configuration != null && StringUtils.isNotEmpty( (String) configuration.get( ADDRESS_FIELD ) ) )
             {
-                String address = (String) notifier.getConfiguration().get( ADDRESS_FIELD );
+                String address = (String) configuration.get( ADDRESS_FIELD );
                 String[] recipients = StringUtils.split( address, "," );
                 for ( String recipient : recipients )
                 {

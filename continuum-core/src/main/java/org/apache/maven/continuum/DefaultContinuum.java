@@ -2313,6 +2313,8 @@ public class DefaultContinuum
 
         notif.setSendOnWarning( notifier.isSendOnWarning() );
 
+        notif.setSendOnScmFailure( notifier.isSendOnScmFailure() );
+
         notif.setConfiguration( notifier.getConfiguration() );
 
         notif.setType( notifier.getType() );
@@ -2340,6 +2342,8 @@ public class DefaultContinuum
         notif.setSendOnError( notifier.isSendOnError() );
 
         notif.setSendOnWarning( notifier.isSendOnWarning() );
+
+        notif.setSendOnScmFailure( notifier.isSendOnScmFailure() );
 
         notif.setConfiguration( notifier.getConfiguration() );
 
@@ -3551,11 +3555,6 @@ public class DefaultContinuum
         for ( Project project : projects )
         {
             int projectId = project.getId();
-
-            if ( projectsAndBuildDefinitionsMap.containsKey( projectId ) )
-            {
-                continue;
-            }
             
             try
             {

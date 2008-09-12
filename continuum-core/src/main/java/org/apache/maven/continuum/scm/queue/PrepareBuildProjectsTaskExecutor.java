@@ -14,6 +14,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
+import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUtils;
@@ -59,7 +60,12 @@ public class PrepareBuildProjectsTaskExecutor
      * @plexus.requirement
      */
     private WorkingDirectoryService workingDirectoryService;
-    
+
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumNotificationDispatcher notifierDispatcher;
+
     public void executeTask( Task task )
         throws TaskExecutionException
     {
@@ -239,6 +245,7 @@ public class PrepareBuildProjectsTaskExecutor
         if ( projectScmRoot.getState() != ContinuumProjectState.ERROR )
         {
             projectScmRoot.setState( ContinuumProjectState.UPDATED );
+            projectScmRoot.setError( null );
             
             try
             {
@@ -249,6 +256,8 @@ public class PrepareBuildProjectsTaskExecutor
                 throw new TaskExecutionException( "Error persisting projectScmRoot", e );
             }
         }
+
+        notifierDispatcher.prepareBuildComplete( projectScmRoot );
     }
     
     /**
