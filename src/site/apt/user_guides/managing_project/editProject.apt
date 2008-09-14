@@ -13,8 +13,8 @@ Edit a Project
 
 * {Project View}
 
-  When you edit a project from the groupSummary, you will see basics informations.
-  First part of the page contains some informations regarding :
+  When you edit a project from the Group Summary page, you will see basic information.
+  The first part of the page contains information regarding:
 
   * project name
 
@@ -33,7 +33,7 @@ Edit a Project
   With the <<<'Edit'>>> button, you can change some project informations like the scm url if your project was moved.
   With the <<<'Build Now'>>> button, you build the project manually with the default build definition.
 
-  Second part contains informations regarding :
+  Second part contains information regarding:
 
   * project notifiers
 
