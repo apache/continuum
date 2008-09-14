@@ -53,7 +53,11 @@ public class ReleaseResultAction
     private ReleaseResult result;
     
     private boolean confirmed;
-    
+
+    private String projectName;
+
+    private String releaseGoal;
+
     public String list()
         throws ContinuumException
     {
@@ -131,7 +135,10 @@ public class ReleaseResultAction
         result.setStartTime( releaseResult.getStartTime() );
         result.setEndTime( releaseResult.getEndTime() );
         result.setResultCode( releaseResult.getResultCode() );
-        
+
+        releaseGoal = releaseResult.getReleaseGoal();
+        projectName = releaseResult.getProject().getName();
+
         try
         {
             File logFile = getContinuum().getConfiguration().getReleaseOutputFile( projectGroupId, "releases-" + releaseResult.getStartTime() );
@@ -254,5 +261,25 @@ public class ReleaseResultAction
     public void setConfirmed( boolean confirmed )
     {
         this.confirmed = confirmed;
+    }
+
+    public String getProjectName()
+    {
+        return projectName;
+    }
+
+    public void setProjectName( String projectName )
+    {
+        this.projectName = projectName;
+    }
+
+    public String getReleaseGoal()
+    {
+        return releaseGoal;
+    }
+
+    public void setReleaseGoal( String releaseGoal )
+    {
+        this.releaseGoal = releaseGoal;
     }
 }

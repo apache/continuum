@@ -54,6 +54,8 @@
                 <input type="checkbox" name="selectedReleaseResults" value="${result.id}" />
               </ec:column>
             </redback:ifAuthorized>
+            <ec:column property="project.name" title="releaseResults.project"/>
+            <ec:column property="releaseGoal" title="releaseResults.releaseGoal"/>
             <ec:column property="startTime" title="releaseResults.startTime" cell="date"/>
             <ec:column property="endTime" title="releaseResults.endTime" cell="date"/>
             <ec:column property="resultCode" title="releaseResults.state">

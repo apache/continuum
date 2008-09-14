@@ -470,6 +470,7 @@
         <param name="actionName">releaseInProgress</param>
         <param name="releaseId">${releaseId}</param>
         <param name="projectId">${projectId}</param>
+        <param name="releaseGoal">prepare</param>
       </result>
     </action>
 
@@ -483,6 +484,7 @@
         <param name="actionName">releaseInProgress</param>
         <param name="releaseId">${releaseId}</param>
         <param name="projectId">${projectId}</param>
+        <param name="releaseGoal">perform</param>
       </result>
     </action>
 
@@ -496,6 +498,7 @@
         <param name="actionName">releaseInProgress</param>
         <param name="projectId">${projectId}</param>
         <param name="releaseId">${releaseId}</param>
+        <param name="releaseGoal">perform</param>
       </result>
     </action>
 

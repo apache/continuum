@@ -43,6 +43,7 @@
             <ww:form action="releaseInProgress" method="post">
               <ww:hidden name="projectId"/>
               <ww:hidden name="releaseId"/>
+              <ww:hidden name="releaseGoal"/>
               <ww:submit value="Cancel"/>
             </ww:form>
           </td>

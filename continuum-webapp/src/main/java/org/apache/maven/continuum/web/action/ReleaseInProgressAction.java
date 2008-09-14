@@ -95,8 +95,11 @@ public class ReleaseInProgressAction
         {
             ReleaseResult result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
 
-            ContinuumReleaseResult releaseResult = createContinuumReleaseResult( result );
-            getContinuum().addContinuumReleaseResult( releaseResult );
+            if ( result != null && getContinuum().getContinuumReleaseResult( projectId, releaseGoal, result.getStartTime(), result.getEndTime() ) == null )
+            {
+                ContinuumReleaseResult releaseResult = createContinuumReleaseResult( result );
+                getContinuum().addContinuumReleaseResult( releaseResult );
+            }
         }
 
         return status;
@@ -209,6 +212,8 @@ public class ReleaseInProgressAction
         Project project = getContinuum().getProject( projectId );
         ProjectGroup projectGroup = project.getProjectGroup();
         releaseResult.setProjectGroup( projectGroup );
+        releaseResult.setProject( project );
+        releaseResult.setReleaseGoal( releaseGoal );
 
         String releaseName = "releases-" + result.getStartTime();
 
