@@ -254,12 +254,13 @@ public class DefaultTaskQueueManager
     
         return false;
     }
-    
-    public boolean isInPrepareBuildQueue( int projectId )
+
+    public boolean isInCurrentPrepareBuildTask( int projectId )
         throws TaskQueueManagerException
     {
         Task task = getPrepareBuildTaskQueueExecutor().getCurrentTask();
-        if ( task != null && task instanceof PrepareBuildProjectsTask )
+
+        if ( task != null &&  task instanceof PrepareBuildProjectsTask )
         {
             Map<Integer, Integer> map = ( (PrepareBuildProjectsTask) task).getProjectsBuildDefinitionsMap();
             
@@ -273,7 +274,41 @@ public class DefaultTaskQueueManager
                 }
             }
         }
+        
         return false;
+    }
+    
+    public boolean isInPrepareBuildQueue( int projectId )
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            List<PrepareBuildProjectsTask> queue = prepareBuildQueue.getQueueSnapshot();
+            
+            for ( PrepareBuildProjectsTask task : queue )
+            {
+                if ( task != null )
+                {
+                    Map<Integer, Integer> map = ( (PrepareBuildProjectsTask) task).getProjectsBuildDefinitionsMap();
+                    
+                    if ( map.size() > 0 )
+                    {
+                        Set<Integer> projectIds = map.keySet();
+                        
+                        if ( projectIds.contains( new Integer( projectId ) ) )
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+            return false;
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( "Error while getting the tasks in prepare build queue", e );
+        }
     }
     
     public boolean isInPurgeQueue( int purgeConfigId )

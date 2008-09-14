@@ -1005,15 +1005,19 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        Map<Integer, Integer> projectsAndBuildDefinitionsMap = getProjectsAndBuildDefinitionsMap( projectsList, null, true );
+        Collection<Map<Integer,Integer>> projectsAndBuildDefinitions = getProjectsAndBuildDefinitions( projectsList, null, true );
 
-        prepareBuildProjects( projectsAndBuildDefinitionsMap );
+        prepareBuildProjects( projectsAndBuildDefinitions );
 
         for ( Project project : projectsList )
         {
-            if ( projectsAndBuildDefinitionsMap.get( project.getId() ) != null )
+            for ( Map<Integer, Integer> map : projectsAndBuildDefinitions )
             {
-                buildProject( project, projectsAndBuildDefinitionsMap.get( project.getId() ), trigger );
+                if ( map.get( project.getId() ) != null )
+                {
+                    buildProject( project, map.get( project.getId() ), trigger );
+                    break;
+                }
             }
         }
     }
@@ -1041,15 +1045,19 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        Map<Integer, Integer> projectsAndBuildDefinitionsMap = getProjectsAndBuildDefinitionsMap( projectsList, buildDefinitionId );
+        Collection<Map<Integer, Integer>> projectsAndBuildDefinitions = getProjectsAndBuildDefinitions( projectsList, buildDefinitionId );
 
-        prepareBuildProjects( projectsAndBuildDefinitionsMap );
+        prepareBuildProjects( projectsAndBuildDefinitions );
         
         for ( Project project : projectsList )
         {
-            if ( projectsAndBuildDefinitionsMap.get( project.getId() ) != null )
+            for ( Map<Integer, Integer> map : projectsAndBuildDefinitions )
             {
-                buildProject( project, buildDefinitionId, trigger );
+                if ( map.get( project.getId() ) != null )
+                {
+                    buildProject( project, buildDefinitionId, trigger );
+                    break;
+                }
             }
         }
     }
@@ -1101,8 +1109,6 @@ public class DefaultContinuum
     {
         Collection<Project> projectsList;
 
-        Map<Integer, Integer> projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
-        
         try
         {
             projectsList = getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
@@ -1114,17 +1120,21 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        projectsAndBuildDefinitionsMap = getProjectsAndBuildDefinitionsMap( projectsList, 
-                                                                            bds, 
-                                                                            checkDefaultBuildDefinitionForProject );
+        Collection<Map<Integer, Integer>> projectsAndBuildDefinitions = getProjectsAndBuildDefinitions( projectsList, 
+                                                                                                        bds,
+                                                                                                        checkDefaultBuildDefinitionForProject );
 
-        prepareBuildProjects( projectsAndBuildDefinitionsMap );
+        prepareBuildProjects( projectsAndBuildDefinitions );
 
         for ( Project project : projectsList )
         {
-            if ( projectsAndBuildDefinitionsMap.get( project.getId() ) != null )
+            for ( Map<Integer, Integer> map : projectsAndBuildDefinitions )
             {
-                buildProject( project, projectsAndBuildDefinitionsMap.get( project.getId() ), ContinuumProjectState.TRIGGER_FORCED );
+                if ( map.get( project.getId() ) != null )
+                {
+                    buildProject( project, map.get( project.getId() ), ContinuumProjectState.TRIGGER_FORCED );
+                    break;
+                }
             }
         }
     }
@@ -1167,9 +1177,9 @@ public class DefaultContinuum
 
             projectsList = getProjects();
         }
-
-        Map<Integer, Integer> projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
         
+        Map<String, Map<Integer, Integer>> map = new HashMap<String, Map<Integer, Integer>>();
+
         for ( Project project : projectsList )
         {
             List<Integer> buildDefIds = (List<Integer>) projectsMap.get( new Integer( project.getId() ) );
@@ -1183,25 +1193,46 @@ public class DefaultContinuum
                         if ( buildDefId != null && !taskQueueManager.isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
                             !taskQueueManager.isInCheckoutQueue( project.getId() ) && !taskQueueManager.isInPrepareBuildQueue( project.getId() ) )
                         {
+                            Project proj = projectDao.getProjectWithScmDetails( project.getId() );
+
+                            String scmRootAddress = proj.getScmRootAddress();
+
+                            Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRootAddress );
+                            
+                            if ( projectsAndBuildDefinitionsMap == null )
+                            {
+                                projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
+                            }
+                            
                             projectsAndBuildDefinitionsMap.put( project.getId(), buildDefId );
+                            
+                            map.put( scmRootAddress, projectsAndBuildDefinitionsMap );
                         }
                     } 
                     catch ( TaskQueueManagerException e )
                     {
                         throw new ContinuumException( e.getMessage(), e );
                     }
+                    catch ( ContinuumStoreException e )
+                    {
+                        // do we throw this or skip it?
+                        throw new ContinuumException( "Error while retrieving project", e );
+                    }
                 }
             }
         }
-        
-        prepareBuildProjects( projectsAndBuildDefinitionsMap );
-        
+
+        prepareBuildProjects( map.values() );
+
         for ( Project project : projectsList )
         {
             //buildProject( project, projectsAndBuildDefinitionsMap.get( project.getId() ), ContinuumProjectState.TRIGGER_SCHEDULED, false );
-            if ( projectsAndBuildDefinitionsMap.get(  project.getId() ) != null )
+            for ( Map<Integer, Integer> aMap : map.values() )
             {
-                buildProject( project, projectsAndBuildDefinitionsMap.get( project.getId() ), ContinuumProjectState.TRIGGER_SCHEDULED );
+                if ( aMap.get(  project.getId() ) != null )
+                {
+                    buildProject( project, aMap.get( project.getId() ), ContinuumProjectState.TRIGGER_SCHEDULED );
+                }
             }
         }
     }
@@ -1231,11 +1262,11 @@ public class DefaultContinuum
         {
             throw new ContinuumException( e.getMessage(), e );
         }
-     
+
         Map<Integer, Integer> projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>( projectId, buildDefinitionId );
-        
+
         prepareBuildProjects( projectsAndBuildDefinitionsMap );
-        
+
         buildProject( projectId, buildDefinitionId, ContinuumProjectState.TRIGGER_FORCED );
     }
 
@@ -1264,9 +1295,9 @@ public class DefaultContinuum
         }
 
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>( projectId, buildDef.getId() );
-        
+
         prepareBuildProjects( projectsBuildDefinitionsMap );
-        
+
         //buildProject( projectId, buildDef.getId(), trigger, false );
 
         buildProject( projectId, buildDef.getId(), trigger );
@@ -1613,7 +1644,7 @@ public class DefaultContinuum
         
         try
         {
-            project = projectDao.getProjectWithScmResult( projectId );
+            project = projectDao.getProjectWithScmDetails( projectId );
         }
         catch ( ContinuumStoreException e )
         {
@@ -2019,6 +2050,8 @@ public class DefaultContinuum
 
         ProjectGroup projectGroup = (ProjectGroup) result.getProjectGroups().iterator().next();
 
+        ProjectScmRoot projectScmRoot;
+
         try
         {
             if ( projectGroupId == -1 )
@@ -2055,17 +2088,17 @@ public class DefaultContinuum
 
             String url = (String) context.get( CreateProjectsFromMetadataAction.KEY_URL );
             
-            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
+            projectScmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
             
-            if ( scmRoot == null )
+            if ( projectScmRoot == null )
             {
-                scmRoot = new ProjectScmRoot();
+                projectScmRoot = new ProjectScmRoot();
                 
-                scmRoot.setProjectGroup( projectGroup );
+                projectScmRoot.setProjectGroup( projectGroup );
                 
-                scmRoot.setScmRootAddress( url );
+                projectScmRoot.setScmRootAddress( url );
                 
-                projectScmRootDao.addProjectScmRoot( scmRoot );
+                projectScmRoot = projectScmRootDao.addProjectScmRoot( projectScmRoot );
 
             }
 
@@ -2102,6 +2135,7 @@ public class DefaultContinuum
                 project.setScmPassword( null );
             }
 
+            project.setScmRootAddress( projectScmRoot.getScmRootAddress() );
             projectGroup.addProject( project );
         }
 
@@ -3545,12 +3579,12 @@ public class DefaultContinuum
         }
     }
    
-    public Map<Integer, Integer> getProjectsAndBuildDefinitionsMap( Collection<Project> projects, 
+    public Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
                                                                     List<BuildDefinition> bds,
                                                                     boolean checkDefaultBuildDefinitionForProject )
         throws ContinuumException
     {
-        Map<Integer, Integer> projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
+        Map<String, Map<Integer, Integer>> map = new HashMap<String, Map<Integer, Integer>>();
 
         for ( Project project : projects )
         {
@@ -3620,26 +3654,41 @@ public class DefaultContinuum
                 continue;
             }
 
-            projectsAndBuildDefinitionsMap.put( projectId, buildDefId );
+            try
+            {
+                Project proj = projectDao.getProjectWithScmDetails( projectId );
+
+                String scmRootAddress = proj.getScmRootAddress();
+
+                Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRootAddress );
+
+                if ( projectsAndBuildDefinitionsMap == null )
+                {
+                    projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
+                }
+
+                projectsAndBuildDefinitionsMap.put( projectId, buildDefId );
+
+                map.put( scmRootAddress, projectsAndBuildDefinitionsMap );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( "Erro while retrieving project", e );
+            }
         }
 
-        return projectsAndBuildDefinitionsMap;
+        return map.values();
     }
 
-    public Map<Integer, Integer> getProjectsAndBuildDefinitionsMap( Collection<Project> projects, 
+    public Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
                                                                     int buildDefinitionId )
         throws ContinuumException
     {
-        Map<Integer, Integer> projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
+        Map<String, Map<Integer,Integer>> map = new HashMap<String, Map<Integer, Integer>>();
 
         for ( Project project : projects )
         {
             int projectId = project.getId();
-            
-            if ( projectsAndBuildDefinitionsMap.containsKey( projectId ) )
-            {
-                continue;
-            }
 
             try
             {
@@ -3653,16 +3702,42 @@ public class DefaultContinuum
                 {
                     taskQueueManager.removeProjectFromCheckoutQueue( projectId );
                 }
+                
+                Project proj = projectDao.getProjectWithScmDetails( projectId );
+                
+                String scmRootAddress = proj.getScmRootAddress();
+                
+                Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRootAddress );
+                
+                if ( projectsAndBuildDefinitionsMap == null )
+                {
+                    projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
+                }
+                
+                projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
+                
+                map.put( scmRootAddress, projectsAndBuildDefinitionsMap );
             }
             catch ( TaskQueueManagerException e )
             {
                 throw new ContinuumException( e.getMessage(), e );
             }
-
-            projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( "Error while retrieving project", e );
+            }
         }
 
-        return projectsAndBuildDefinitionsMap;
+        return map.values();
+    }
+
+    public void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsBuildDefinitions )
+        throws ContinuumException
+    {
+        for ( Map<Integer, Integer> map : projectsBuildDefinitions )
+        {
+            prepareBuildProjects( map );
+        }
     }
 
     public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap )

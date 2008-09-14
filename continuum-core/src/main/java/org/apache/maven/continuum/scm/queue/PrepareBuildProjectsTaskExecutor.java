@@ -28,7 +28,7 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
- * @author Maria Catherine Tan
+ * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
  * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
  * role-hint="prepare-build-project"
  */
@@ -136,7 +136,7 @@ public class PrepareBuildProjectsTaskExecutor
 
         try
         {
-            Project project = projectDao.getProjectWithScmResult( projectId );
+            Project project = projectDao.getProjectWithScmDetails( projectId );
             ProjectGroup projectGroup = project.getProjectGroup();
             
             List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( projectGroup.getId() );

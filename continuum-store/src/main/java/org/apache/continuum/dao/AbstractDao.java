@@ -57,7 +57,7 @@ public class AbstractDao
 
     protected static final String BUILD_TEMPLATE_BUILD_DEFINITIONS = "build-template-build-definitions";
     
-    protected static final String PROJECT_WITH_SCM_RESULT_FETCH_GROUP = "project-with-scm-result";
+    protected static final String PROJECT_WITH_SCM_DETAILS_FETCH_GROUP = "project-with-scm-details";
 
     /**
      * @plexus.requirement

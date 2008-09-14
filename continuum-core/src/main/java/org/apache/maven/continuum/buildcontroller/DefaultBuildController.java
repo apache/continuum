@@ -357,7 +357,7 @@ public class DefaultBuildController
 
         try
         {
-            Project project = projectDao.getProjectWithScmResult( projectId );
+            Project project = projectDao.getProjectWithScmDetails( projectId );
             
             context.setProject( project );
 

@@ -51,6 +51,9 @@ public interface TaskQueueManager
     boolean isInCheckoutQueue( int projectId )
         throws TaskQueueManagerException;
 
+    boolean isInCurrentPrepareBuildTask( int projectId )
+        throws TaskQueueManagerException;
+
     boolean isInPrepareBuildQueue( int projectId )
         throws TaskQueueManagerException;
 

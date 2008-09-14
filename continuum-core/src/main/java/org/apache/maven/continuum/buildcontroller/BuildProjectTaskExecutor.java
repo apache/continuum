@@ -21,7 +21,6 @@ package org.apache.maven.continuum.buildcontroller;
 
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.Task;
@@ -57,7 +56,8 @@ public class BuildProjectTaskExecutor
 
         try
         {
-            while ( taskQueueManager.isInPrepareBuildQueue( buildProjectTask.getProjectId() ) )
+            while ( taskQueueManager.isInPrepareBuildQueue( buildProjectTask.getProjectId() ) ||
+                    taskQueueManager.isInCurrentPrepareBuildTask( buildProjectTask.getProjectId() ) )
             {
                 Thread.sleep( 1000 );
             }

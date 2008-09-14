@@ -20,6 +20,7 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -159,16 +160,23 @@ public class ProjectsListAction
                 sortedProjects = projectsList;
             }
 
-            Map<Integer, Integer> projectsBuildDefsMap = getProjectsBuildDefsMap( sortedProjects );
+            Collection<Map<Integer, Integer>> projectsBuildDefs = getProjectsBuildDefsMap( sortedProjects );
             
-            getContinuum().prepareBuildProjects( projectsBuildDefsMap );
+            getContinuum().prepareBuildProjects( projectsBuildDefs );
             
             for ( Project project : sortedProjects )
             {
                 if ( this.getBuildDefinitionId() <= 0 )
                 {
-                    getContinuum().buildProject( project.getId(), projectsBuildDefsMap.get( project.getId() ),
-                                                 ContinuumProjectState.TRIGGER_FORCED );
+                    for ( Map<Integer, Integer> map : projectsBuildDefs )
+                    {
+                        if ( map.get( project.getId() ) != null )
+                        {
+                            getContinuum().buildProject( project.getId(), map.get( project.getId() ),
+                                                         ContinuumProjectState.TRIGGER_FORCED );
+                            break;
+                        }
+                    }
                 }
                 else
                 {
@@ -241,11 +249,9 @@ public class ProjectsListAction
         return SUCCESS;
     }
     
-    private Map<Integer, Integer> getProjectsBuildDefsMap( List<Project> projects )
+    private Collection<Map<Integer, Integer>> getProjectsBuildDefsMap( List<Project> projects )
         throws ContinuumException
     {
-        Map<Integer, Integer> projectsBuildDefsMap = new HashMap<Integer, Integer>();
-        
         if ( this.getBuildDefinitionId() <= 0 )
         {
             boolean checkDefaultBuildDefinitionForProject = false;
@@ -257,14 +263,14 @@ public class ProjectsListAction
             
             List<BuildDefinition> groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
             
-            return getContinuum().getProjectsAndBuildDefinitionsMap( projects, 
-                                                                     groupDefaultBDs, 
-                                                                     checkDefaultBuildDefinitionForProject );
+            return getContinuum().getProjectsAndBuildDefinitions( projects, 
+                                                                  groupDefaultBDs, 
+                                                                  checkDefaultBuildDefinitionForProject );
         }
         else
         {
-            return getContinuum().getProjectsAndBuildDefinitionsMap( projects,
-                                                                     this.getBuildDefinitionId() );
+            return getContinuum().getProjectsAndBuildDefinitions( projects,
+                                                                  this.getBuildDefinitionId() );
         }
     }
 

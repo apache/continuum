@@ -673,17 +673,20 @@ public interface Continuum
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
-    Map<Integer, Integer> getProjectsAndBuildDefinitionsMap( Collection<Project> projects, 
+    Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
                                                              List<BuildDefinition> bds,
                                                              boolean checkDefaultBuildDefinitionForProject )
         throws ContinuumException;
 
-    Map<Integer, Integer> getProjectsAndBuildDefinitionsMap( Collection<Project> projects, 
+    Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
                                                              int buildDefinitionId )
         throws ContinuumException;
 
-    void prepareBuildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap )
+    void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsAndBuildDefinitions )
         throws ContinuumException;
+    
+    //void prepareBuildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap )
+    //    throws ContinuumException;
 
     // ----------------------------------------------------------------------
     // Task Queue Manager
