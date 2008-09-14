@@ -292,6 +292,8 @@ The Apache Continuum team is pleased to announce Apache Continuum 1.2
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1821'>CONTINUUM-1821</a>] -         Remove references to Maven in continuum-docs
 </li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1885'>CONTINUUM-1885</a>] -         Clean up site documentation
+</li>
 </ul>
         
 <h2>        Wish
