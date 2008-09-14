@@ -11,7 +11,7 @@ Upgrade
 
 * Goal
 
-    When upgrading continuum, it could have some database model changes.  This tool exports data from old database model and imports the data into the new database model.
+    When upgrading Continuum, it could have some database model changes. This tool exports data from old database model and imports the data into the new database model.
 
     There are 2 databases that need to be converted, one for the builds and one for the users.
     
@@ -86,7 +86,7 @@ java -Xmx512m -jar data-management-cli-1.2-app.jar -usersJdbcUrl jdbc:derby:${ne
 
         * Start the new version of continuum.
 
-* Specific steps to do before to import
+* Specific steps to do before import
 
 ** 1.1 import
 

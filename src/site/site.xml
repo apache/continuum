@@ -74,7 +74,7 @@
         <item name="Adding Project Group" href="administrator_guides/projectgroup.html"/>
         <item name="Managing Builders" href="administrator_guides/builder.html"/>
         <item name="Managing JDKs" href="administrator_guides/jdk.html"/>
-        <item name="Managing Profiles" href="administrator_guides/profiles.html"/>
+        <item name="Managing Build Environments" href="administrator_guides/profiles.html"/>
         <item name="Managing Schedules" href="administrator_guides/schedules.html"/>
         <item name="Managing General Configuration" href="administrator_guides/configuration.html"/> <!-- (configuration and appearance) -->
         <item name="Managing Local Repositories" href="administrator_guides/localRepository.html"/>
