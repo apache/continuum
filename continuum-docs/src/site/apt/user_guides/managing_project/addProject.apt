@@ -17,22 +17,22 @@ Add a Project
     
 [../../images/add-m2-project-menu.png] Add a maven2 project
 
-  The pom.xml file must be available through one of the following format : http, https and ftp 
-  (file protocol is off by default for security and must enabled manually).
+  The pom.xml file must be available through one of the following protocols: http, https, or ftp 
+  (The file protocol is also supported but is disabled by default for security and must enabled manually).
     
-  Or it can be uploaded (Note this doesn't support multi modules project).
+  Or it can be uploaded from a local file (Note this doesn't support multi modules project).
     
 [../../images/add-m2-project.png] Add a maven2 project
 
-  You can define username/password if the POM URL require an authentication.
+  You can define username/password if the POM URL requires authentication.
 
-  If your SCM store credentials like CVS or SVN and you want to use the SCM Credentials cache, check the "Use SCM Credentials Cache" field.
+  If your SCM stores credentials like CVS or SVN and you want to use the SCM Credentials cache, check the "Use SCM Credentials Cache" field.
 
   You can define the group you want to use or "Defined by POM" in this case project.name will be use as Project Group.
 
-  By default Continuum add each sub-module POM as a Continuum Project. If you want to add only the root POM without sub-modules, check the "load only root as recursive build" field.
+  By default, Continuum adds each sub-module POM as an individual Continuum Project. If you want to add only the root POM without sub-modules, check the "load only root as recursive build" field.
   
-  You can choose a Build Definition Template which will be apply to your project.
+  You can choose a Build Definition Template which will be applied to your project.
 
 * {Maven 1 project}
     
@@ -53,19 +53,19 @@ Add a Project
 
   If your SCM store credentials like CVS or SVN and you want to use the SCM Credentials cache, check the "Use SCM Credentials Cache" field.
 
-  You can define the group you want to use or "Defined by POM" in this case project.name will be use as Project Group.
+  You can define the group you want to use or "Defined by POM." In this case project.name will be used as the Project Group.
   
-  You can choose a Build Definition Template which will be apply to your project.
+  You can choose a Build Definition Template which will be applied to your project.
 
 * {ANT Project}
 
   From the menu, choose the 'Ant Project' entry
     
-[../../images/add-ant-project-menu.png] Add a ANT project
+[../../images/add-ant-project-menu.png] Add a Ant project
 
     TO WRITE
 
-[../../images/add-ant-project.png] Add a ANT project
+[../../images/add-ant-project.png] Add a Ant project
 
 * {Shell Project}
 
@@ -79,15 +79,15 @@ Add a Project
 
 * {Add a project from the Project Group}
 
-    From the Project Group, you can add a project without to use the menu. With this operation, the Project Group will be set to the current group.
+    From the Project Group, you can add a project without using the menu. With this operation, the Project Group will be set to the current group.
 
 [../../images/add-project-from-group.png] Add a project from a project group
 
 * {Scm hints}
 
-** {Clearcase}
+** {ClearCase}
 
-    With Clearcase, you can configure SCM things in few ways. For example, you can use, in the scm url in your POM, the absolute path of your config spec file like this:
+    With ClearCase, you can configure SCM things in few ways. For example, you can use, in the scm URL in your POM, the absolute path of your config spec file like this:
 
 +----------------------------+
 <scm>
@@ -95,7 +95,7 @@ Add a Project
 </scm>
 +----------------------------+
 
-    The SCM URL format used for Clearcase is defined {{{http://maven.apache.org/scm/clearcase.html}here}}
+    The SCM URL format used for ClearCase is defined {{{http://maven.apache.org/scm/clearcase.html}here}}
 
     and you can create a <<<clearcase-settings.xml>>> file under <<<${user.home}/.scm/>>> with the following content:
 
@@ -106,5 +106,5 @@ Add a Project
 </clearcase-settings>
 +----------------------------+
 
-    This configuration won't work with each Clearcase installation because each Clearcase configuration is different, so we recommend to read the
-    {{{http://maven.apache.org/scm/clearcase.html}Clearcase page}} on the Maven-SCM site.
+    This configuration won't work with each ClearCase installation because each ClearCase configuration is different, so we recommend reading the
+    {{{http://maven.apache.org/scm/clearcase.html}ClearCase page}} on the Maven-SCM site.

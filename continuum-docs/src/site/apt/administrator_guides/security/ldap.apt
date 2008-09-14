@@ -8,7 +8,7 @@
 
 LDAP Configuration
 
-    Continuum support LDAP for authentication. To configure it, you should follow these steps:
+    Continuum supports LDAP for authentication. To configure it, you should follow these steps:
 
     * Shutdown Continuum
 

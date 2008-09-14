@@ -16,7 +16,7 @@ Installing Continuum Standalone
 
     * Extract the file
     
-    * Set a JAVA_HOME environnement variable which use a jdk >= 1.5 
+    * Set a JAVA_HOME environment variable which use a jdk >= 1.5 
 
 ** {Defining JNDI Resources}
 

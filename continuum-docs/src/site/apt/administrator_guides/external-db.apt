@@ -22,10 +22,10 @@ How to use an external database?
 
 ** Standalone version
 
-    To use an external database with Continuum standalone, you must configure datasources in <<<$CONTINUUM_HOME/conf/jetty.xml>>>
+    To use an external database with Continuum standalone, you must configure DataSources in <<<$CONTINUUM_HOME/conf/jetty.xml>>>
 
 %{snippet|id=datasources|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/conf/jetty.xml}
 
 ** Webapp
 
-    To use an external database with the Continuum webapp, you should configure the datasource in your container.
+    To use an external database with the Continuum webapp, you should configure the DataSource in your container.
