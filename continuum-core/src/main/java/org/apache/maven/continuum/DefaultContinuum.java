@@ -3373,4 +3373,17 @@ public class DefaultContinuum
     {
         return releaseResultDao.getContinuumReleaseResultsByProjectGroup( projectGroupId );
     }
+
+    public ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
+        throws ContinuumException
+    {
+        try
+        {
+            return releaseResultDao.getContinuumReleaseResult( projectId, releaseGoal, startTime, endTime );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while retrieving continuumReleaseResult of projectId " + projectId + " with releaseGoal: " + releaseGoal, e);
+        }
+    }
 }

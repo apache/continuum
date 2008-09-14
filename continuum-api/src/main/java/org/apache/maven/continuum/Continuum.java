@@ -659,4 +659,7 @@ public interface Continuum
     List<ContinuumReleaseResult> getContinuumReleaseResultsByProjectGroup( int projectGroupId );
 
     List<ContinuumReleaseResult> getAllContinuumReleaseResults();
+
+    ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
+        throws ContinuumException;
 }

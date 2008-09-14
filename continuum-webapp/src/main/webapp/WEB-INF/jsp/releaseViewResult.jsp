@@ -30,6 +30,12 @@
       <h4><ww:text name="releaseViewResult.summary"/></h4>
       <div class="axial">
         <table border="1" cellspacing="2" cellpadding="3" width="100%">
+          <c1:data label="%{getText('releaseViewResult.projectName')}">
+            <ww:param name="after"><ww:property value="projectName"/></ww:param>
+          </c1:data>
+          <c1:data label="%{getText('releaseViewResult.releaseGoal')}">
+            <ww:param name="after"><ww:property value="releaseGoal"/></ww:param>
+          </c1:data>
           <c1:data label="%{getText('releaseViewResult.startTime')}">
               <ww:param name="after"><c1:date name="result.startTime"/></ww:param>
           </c1:data>

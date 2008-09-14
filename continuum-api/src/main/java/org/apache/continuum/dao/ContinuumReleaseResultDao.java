@@ -42,4 +42,8 @@ public interface ContinuumReleaseResultDao
 
     ContinuumReleaseResult getContinuumReleaseResult( int releaseResultId )
         throws ContinuumObjectNotFoundException, ContinuumStoreException;
+    
+    ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
+        throws ContinuumStoreException;
+        
 }
