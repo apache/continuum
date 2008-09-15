@@ -8,7 +8,7 @@
 
 Building Projects
 
-    For Ant, maven 1/2 builds the following system properties will be added via -D command line :
+    For Ant and maven builds the following system properties will be added via -D command line:
     
     * continuum.project.group.name
     

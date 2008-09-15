@@ -39,6 +39,8 @@ public class GeneralConfiguration
     private String baseUrl;
 
     private ProxyConfiguration proxyConfiguration;
+    
+    private File releaseOutputDirectory;
 
     public GeneralConfiguration()
     {
@@ -101,5 +103,14 @@ public class GeneralConfiguration
         return ReflectionToStringBuilder.toString( this );
     }
 
+    public File getReleaseOutputDirectory()
+    {
+        return releaseOutputDirectory;
+    }
+    
+    public void setReleaseOutputDirectory( File releaseOutputDirectory )
+    {
+        this.releaseOutputDirectory = releaseOutputDirectory;
+    }
 
 }

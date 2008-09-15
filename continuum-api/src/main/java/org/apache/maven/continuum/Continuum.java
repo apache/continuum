@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -644,5 +645,21 @@ public interface Continuum
     RepositoryService getRepositoryService();
     
     public void startup()
+        throws ContinuumException;
+    
+    ContinuumReleaseResult addContinuumReleaseResult( ContinuumReleaseResult releaseResult )
+        throws ContinuumException;
+
+    void removeContinuumReleaseResult( int releaseResultId )
+        throws ContinuumException;
+
+    ContinuumReleaseResult getContinuumReleaseResult( int releaseResultId )
+        throws ContinuumException;
+
+    List<ContinuumReleaseResult> getContinuumReleaseResultsByProjectGroup( int projectGroupId );
+
+    List<ContinuumReleaseResult> getAllContinuumReleaseResults();
+
+    ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
         throws ContinuumException;
 }

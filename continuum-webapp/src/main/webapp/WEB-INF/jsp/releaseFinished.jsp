@@ -69,6 +69,7 @@
             <ww:form action="releaseRollbackWarning" method="post">
               <ww:hidden name="projectId"/>
               <ww:hidden name="releaseId"/>
+              <ww:hidden name="releaseGoal"/>
               <ww:submit value="Rollback Changes"/>
             </ww:form>
           </td>

@@ -1,0 +1,79 @@
+ ------
+ Purge Configuration
+ ------
+ 
+Purge Configuration
+
+	Click the <<Purge Configurations>> link under the <<Administration>> section.
+	
+[../images/purgeconfigurations.png] Purge Configurations
+
+    You will see all repository purge configurations and all directory purge configurations.
+
+[../images/purgeconfigurations-view.png]
+
+    Here you can add/edit/delete the purge configuration.
+    
+    You can also purge the repository or directory by clicking the corresponding purge icon of the purge configuration.
+    
+[../images/purgenow.gif] purge now icon
+
+
+* Adding / Editing Repository Purge Configuration
+
+	Specify the repository to purge.
+	
+[../images/repositorypurgeconfiguration-add.png]
+
+* Adding / Editing Directory Purge Configuration
+
+	There are two types of directory purge configuration:
+	
+	* releases - this will purge the working copies associated with releases.
+	
+	* buildOutput - this will purge the build output of each project.
+	
+[../images/directorypurgeconfiguration-add.png]
+	
+* Purging Repository
+
+	* Delete all - will delete the entire contents of the repository
+	
+	* Days Old - will delete the artifact if it's older than the number of days old but still satisfies the number of retention count. 
+	
+		Example: 
+		
+		Days_Old = 30 days   
+		
+		Retention_Count = 2
+		
+		If I have 5 artifacts that are older than 30 days, only 3 of them will be deleted because I have to retain any 2 artifacts (Retention count).
+		
+	* Retention Count - the number of artifacts to retain; all in excess will be deleted
+	
+	* Delete Released Snapshots - will delete all released snapshots
+	
+* Purging Directory
+
+	* Delete all
+	  
+		** Releases Directory - will delete all releases-* directories
+	
+		** Build Output Directory - will delete all build output of each project
+	
+	* Days Old - will delete the directory if it's older than the number of days old 
+	
+	* Retention Count - number of directories to retain
+
+* Steps in purging:
+	
+	* Perform Delete All purging if it is checked.
+	
+	* If delete all is not checked, then is days old has a value greater than 0? If it has then perform days old purging.
+	
+	* If days old is 0 then perform retention count purging.
+	
+	* Delete released snapshots purging will always be performed if it is checked, unless the Delete All is also checked or it's a directory purging.
+	
+	
+	       

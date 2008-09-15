@@ -6,9 +6,9 @@
  Oct 3 2007
  ------
 
-Notification
+Managing Notification
 
-  Notifiers can be attached to a project with adding them in a pom in the {{{http://maven.apache.org/pom.html#Continuous_Integration_Management}ciManagement section}}.
+  Notifiers can be attached to a Maven project by adding them to the pom in the {{{http://maven.apache.org/pom.html#Continuous_Integration_Management}ciManagement section}}.
   
 +-------------------------------+
   
@@ -31,23 +31,23 @@ Notification
   
 +-------------------------------+  
 
-  Or they can be added to a projectGroup with the Notifiers link :
+  Or they can be added to a Project Group with the Notifiers link:
   
 [../../images/notifiers-link-project-group.png] Notifiers Link  
   
-  Or to a project with the add button in the edit project page :
+  Or to a project with the Add button on the Edit Project page:
   
 [../../images/notifiers-button-project.png] Notifier Button 
 
-  Here you will the choice between notifiers implementation provided with continuum
+  Here you select between Notifier implementations provided with Continuum:
 
 [../../images/notifiers-type-choice.png] Notifier Type Choice
 
-  You have the following choices :
+  You have the following choices:
   
   * {{{mail.html}Mail}}
   
-  * {{{irc.html}Irc}}
+  * {{{irc.html}IRC}}
   
   * {{{jabber.html}Jabber}}
   

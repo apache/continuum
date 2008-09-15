@@ -470,6 +470,7 @@
         <param name="actionName">releaseInProgress</param>
         <param name="releaseId">${releaseId}</param>
         <param name="projectId">${projectId}</param>
+        <param name="releaseGoal">prepare</param>
       </result>
     </action>
 
@@ -483,6 +484,7 @@
         <param name="actionName">releaseInProgress</param>
         <param name="releaseId">${releaseId}</param>
         <param name="projectId">${projectId}</param>
+        <param name="releaseGoal">perform</param>
       </result>
     </action>
 
@@ -496,6 +498,7 @@
         <param name="actionName">releaseInProgress</param>
         <param name="projectId">${projectId}</param>
         <param name="releaseId">${releaseId}</param>
+        <param name="releaseGoal">perform</param>
       </result>
     </action>
 
@@ -526,6 +529,21 @@
       <result name="success">/WEB-INF/jsp/releaseViewResult.jsp</result>
     </action>
 
+    <action name="viewReleaseResult" class="releaseResult" method="viewResult">
+      <result name="success">/WEB-INF/jsp/releaseViewResult.jsp</result>
+    </action>
+
+    <action name="projectGroupReleaseResults" class="releaseResult" method="list">
+      <result name="success">/WEB-INF/jsp/projectGroupReleaseResults.jsp</result>
+    </action>
+
+    <action name="removeReleaseResults" class="releaseResult" method="remove">
+      <result name="confirm">/WEB-INF/jsp/confirmReleaseResultsRemoval.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupReleaseResults</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
   </package>
 
   <!--

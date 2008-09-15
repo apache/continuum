@@ -55,6 +55,15 @@ public interface BuildResultDao
 
     List<BuildResult> getBuildResultsForProject( int projectId, long startIndex, long endIndex );
 
+    /**
+     * @since 1.2
+     * @param projectId
+     * @param startIndex
+     * @return the returned list will contains all BuildResult for this project after the startId
+     */
+    List<BuildResult> getBuildResultsForProjectFromId( int projectId, long startId )
+        throws ContinuumStoreException;   
+    
     List<BuildResult> getBuildResultsForProject( int projectId, long fromDate );
 
     Map<Integer, BuildResult> getLatestBuildResultsByProjectGroupId( int projectGroupId );
