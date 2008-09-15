@@ -345,27 +345,6 @@ public class DefaultContinuum
             {
                 removeProject( ( (Project) o ).getId() );
             }
-            
-            List<ContinuumReleaseResult> releaseResults = releaseResultDao.getContinuumReleaseResultsByProjectGroup( projectGroupId );
-            
-            try
-            {
-                for ( ContinuumReleaseResult releaseResult : releaseResults )
-                {
-                    releaseResultDao.removeContinuumReleaseResult( releaseResult );
-                }
-                
-                File releaseOutputDirectory = configurationService.getReleaseOutputDirectory( projectGroupId );
-                FileUtils.deleteDirectory( releaseOutputDirectory );
-            }
-            catch ( ContinuumStoreException e )
-            {
-                throw new ContinuumException( "Error while deleting continuum release result of project group", e );
-            }
-            catch ( IOException e )
-            {
-                throw logAndCreateException( "Error while deleting project group release output directory.", e );
-            }
         }
 
         getLogger().info( "Remove project group " + projectGroup.getName() + "(" + projectGroup.getId() + ")" );
@@ -821,6 +800,27 @@ public class DefaultContinuum
         try
         {
             Project project = getProjectWithBuilds( projectId );
+
+            List<ContinuumReleaseResult> releaseResults = releaseResultDao.getContinuumReleaseResultsByProject( projectId );
+            
+            try
+            {
+                for ( ContinuumReleaseResult releaseResult : releaseResults )
+                {
+                    releaseResultDao.removeContinuumReleaseResult( releaseResult );
+                }
+                
+                File releaseOutputDirectory = configurationService.getReleaseOutputDirectory( project.getProjectGroup().getId() );
+                FileUtils.deleteDirectory( releaseOutputDirectory );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( "Error while deleting continuum release result of project group", e );
+            }
+            catch ( IOException e )
+            {
+                throw logAndCreateException( "Error while deleting project group release output directory.", e );
+            }
 
             getLogger().info( "Remove project " + project.getName() + "(" + projectId + ")" );
 

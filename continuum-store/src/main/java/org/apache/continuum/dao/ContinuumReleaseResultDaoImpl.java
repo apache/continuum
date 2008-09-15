@@ -133,6 +133,34 @@ public class ContinuumReleaseResultDaoImpl
         }
     }
 
+    public List<ContinuumReleaseResult> getContinuumReleaseResultsByProject( int projectId )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( ContinuumReleaseResult.class, true );
+
+            Query query = pm.newQuery( extent, "project.id == " + projectId );
+
+            List result = (List) query.execute();
+
+            result = (List) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            return result;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
     public void removeContinuumReleaseResult( ContinuumReleaseResult releaseResult )
         throws ContinuumStoreException
     {
