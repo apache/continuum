@@ -19,6 +19,7 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.dao.ContinuumReleaseResultDao;
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.InstallationDao;
@@ -29,6 +30,7 @@ import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
@@ -82,6 +84,8 @@ public abstract class AbstractContinuumStoreTestCase
     protected ScheduleDao scheduleDao;
 
     protected SystemConfigurationDao systemConfigurationDao;
+
+    protected ContinuumReleaseResultDao releaseResultDao;
 
     protected ProjectGroup defaultProjectGroup;
 
@@ -160,6 +164,8 @@ public abstract class AbstractContinuumStoreTestCase
         scheduleDao = (ScheduleDao) lookup( ScheduleDao.class.getName() );
 
         systemConfigurationDao = (SystemConfigurationDao) lookup( SystemConfigurationDao.class.getName() );
+
+        releaseResultDao = (ContinuumReleaseResultDao) lookup( ContinuumReleaseResultDao.class.getName() );
     }
 
     protected void createBuildDatabase()
@@ -1362,6 +1368,35 @@ public abstract class AbstractContinuumStoreTestCase
                       actualConfig.isEnabled() );
     }
 
+    protected static ContinuumReleaseResult createTestContinuumReleaseResult( ProjectGroup group, Project project, 
+                                                                              String releaseGoal, int resultCode,
+                                                                              long startTime, long endTime )
+    {
+        ContinuumReleaseResult releaseResult = new ContinuumReleaseResult();
+        releaseResult.setProjectGroup( group );
+        releaseResult.setProject( project );
+        releaseResult.setReleaseGoal( releaseGoal );
+        releaseResult.setResultCode( resultCode );
+        releaseResult.setStartTime( startTime );
+        releaseResult.setEndTime( endTime );
+        
+        return releaseResult;
+    }
+    
+    protected static void assertReleaseResultEquals( ContinuumReleaseResult expectedConfig, 
+                                                     ContinuumReleaseResult actualConfig )
+    {
+        assertEquals( "compare continuum release result - id", expectedConfig.getId(), actualConfig.getId() );
+        assertEquals( "compare continuum release result - releaseGoal", expectedConfig.getReleaseGoal(),
+                      actualConfig.getReleaseGoal() );
+        assertEquals( "compare continuum release result - resultCode", expectedConfig.getResultCode(), 
+                      actualConfig.getResultCode() );
+        assertEquals( "compare continuum release result - startTime", expectedConfig.getStartTime(), 
+                      actualConfig.getStartTime() );
+        assertEquals( "compare continuum release result - endTime", expectedConfig.getEndTime(),
+                      actualConfig.getEndTime() );
+    }
+    
     /**
      * Setup JDO Factory
      *

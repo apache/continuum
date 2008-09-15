@@ -37,7 +37,7 @@ public interface ContinuumReleaseResultDao
         throws ContinuumStoreException;
 
     List<ContinuumReleaseResult> getContinuumReleaseResultsByProjectGroup( int projectGroupId );
-
+    
     List<ContinuumReleaseResult> getAllContinuumReleaseResults();
 
     ContinuumReleaseResult getContinuumReleaseResult( int releaseResultId )
@@ -45,5 +45,6 @@ public interface ContinuumReleaseResultDao
     
     ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
         throws ContinuumStoreException;
-        
+
+    List<ContinuumReleaseResult> getContinuumReleaseResultsByProject( int projectId );
 }
