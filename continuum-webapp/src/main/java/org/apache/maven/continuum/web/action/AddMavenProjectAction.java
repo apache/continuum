@@ -27,6 +27,8 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
+import com.opensymphony.xwork.TextProviderSupport;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -161,6 +163,12 @@ public abstract class AddMavenProjectAction
             {
                 String cause = result.getErrorsWithCause().get( key );
                 String msg = getText( key, new String[] { cause } );
+
+                // olamy : weird getText(key, String[]) must do that something like bla bla {0}
+                if ( key.equals( ContinuumProjectBuildingResult.ERROR_MISSING_SCM ) )
+                {
+                    msg = getResourceBundle().getString( key ) + " " + cause;
+                }
                 if ( !StringUtils.equals( msg, key ) )
                 {
                     errorMessages.add( msg );
@@ -169,7 +177,7 @@ public abstract class AddMavenProjectAction
                 {
                     addActionError( msg );
                 }
-                
+
             }
 
             return doDefault();
