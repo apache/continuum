@@ -165,6 +165,7 @@ public abstract class AddMavenProjectAction
                 String msg = getText( key, new String[] { cause } );
 
                 // olamy : weird getText(key, String[]) must do that something like bla bla {0}
+                // here an ugly hack for CONTINUUM-1675
                 if ( key.equals( ContinuumProjectBuildingResult.ERROR_MISSING_SCM ) )
                 {
                     msg = getResourceBundle().getString( key ) + " " + cause;
