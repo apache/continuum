@@ -1,0 +1,55 @@
+ ------
+ Documentation
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+
+Documentation
+
+* Installation/Upgrade Guides
+
+** {{{installation/index.html}Installation}}
+
+*** Standalone version
+
+    {{{installation/standalone.html}Standard (Linux, Mac OSX, Solaris, Windows, others) as a service or not}}
+
+*** Webapp
+
+    {{{installation/tomcat.html}Tomcat}},
+    {{{installation/jetty.html}Jetty}},
+    {{{installation/jboss.html}JBoss}},
+    {{{installation/geronimo.html}Geronimo}},
+    {{{installation/glassfish.html}GlassFish}},
+    ...
+
+** Release Notes
+
+    {{{release-notes.html} Release Notes}}
+
+** Upgrade
+
+    {{{installation/upgrade.html} How to upgrade from a previous versions?}}
+
+* User's Guide
+
+    {{{user_guides/index.html} User's Guide}}
+
+* Administrator's Guide
+
+    {{{administrator_guides/index.html} Administrator's Guide}}
+
+* Developer's Guide
+
+    {{{developer_guides/building.html}Guide to build Continuum}}
+
+* Knowledge Base
+
+    {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
+
+    {{{http://docs.codehaus.org/display/CONTINUUMUSER/Home}Wiki}}
+    
+    {{{http://cwiki.apache.org/confluence/display/CONTINUUM}New Wiki}}
+    
+    {{{http://apache-continuum.blogspot.com/}Blog}}

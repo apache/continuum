@@ -1,0 +1,112 @@
+ ------
+ Upgrade
+ ------
+ Olivier Lamy
+ Emmanuel Venisse
+ ------
+ Sep 10 2008
+ ------
+
+Upgrade
+
+* Goal
+
+    When upgrading Continuum, it could have some database model changes. This tool exports data from old database model and imports the data into the new database model.
+
+    There are 2 databases that need to be converted, one for the builds and one for the users.
+    
+    <<Note>> If you are upgrading from 1.1 to 1.2, no upgrade tool is needed.
+    
+    Due the fix of {{{http://jira.codehaus.org/browse/CONTINUUM-1688}CONTINUUM-1688}} :
+    
+    * if you use mssql server : you have to uncomment lines in a file in the webapp (WEB-INF/classes/META-INF/plexus/application.xml) (search mssql support).
+    
+    * if you use a 1.1 database you have to change manually the size of a column (in order to have the fix) :
+    
++------------------------------------------+    
+-- command tested with derby database
+alter table CHANGESET alter column CHANGECOMMENT SET DATA TYPE varchar(8192)  
++------------------------------------------+   
+
+* Download The Tool
+
+    The tool is a standalone jar that you can download from the central repo.
+
+    You will need to download 2 versions of the tool, one for the export out of the old version and one for the import into the new version:
+
+        * {{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.1-beta-3/data-management-cli-1.1-beta-3-app.jar}}
+
+        * {{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.1-beta-4/data-management-cli-1.1-beta-4-app.jar}}
+
+        * {{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.1/data-management-cli-1.1-app.jar}}
+        
+        * {{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.2/data-management-cli-1.2-app.jar}}
+
+    The first version of this tool is 1.1-beta-2
+
+* Exporting Data from the old version
+
+    Follow these steps:
+
+        * Stop the old version of continuum
+
+        * Export the build and user data from the old version using the jar for the old version:
+
++------------------------------------------+
+java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -buildsJdbcUrl jdbc:derby:${old.continuum.home}/data/continuum/database -mode EXPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -usersJdbcUrl jdbc:derby:${old.continuum.home}/data/users/database -mode EXPORT -directory backups
++------------------------------------------+
+
+* Importing Data to the new version
+
+    Follow these steps:
+
+        * Start the new version continuum to create the new data model.
+
+        * Stop continuum
+
+        * Run the specific steps for your version, described below
+
+        * Import the build and user data into the new version using the jar for the new version:
+
++------------------------------------------+
+java -Xmx512m -jar data-management-cli-1.1-app.jar -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/continuum/database -mode IMPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.2-app.jar -usersJdbcUrl jdbc:derby:${new.continuum.home}/data/users/database -mode IMPORT -directory backups
++------------------------------------------+
+
+        * <<NEXT_VAL values in SEQUENCE_TABLE must be checked before restarting continuum>>
+
+            * Normally, the SEQUENCE_TABLE is ok but in some cases the values are wrong.
+
+            * Before starting Continuum for the first time after the import, connect to the db with a client like {{{http://squirrel-sql.sourceforge.net/}Squirrel SQL}} and check the values in the <<NEXT_VAL>> column.
+
+            * Values must be greater than the max id value in each table.
+
+            * For example, the next value of "org.apache.maven.continuum.model.Project" must be greater than the greatest id in Project table.
+
+        * Start the new version of continuum.
+
+* Specific steps to do before import
+
+** 1.1 import
+
+    Before to import from an older version (before 1.1-beta-4 to 1.1 final, you must open the builds.xml file under backup directory and remove all <<'testResults'>> tags.
+    You can remove them with the following XSL:
+
++------------------------------------------+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="xml"/>
+ <xsl:template match="testResult"/>
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+</xsl:stylesheet>
++------------------------------------------+
+
+    And you can run it with this command:
+
++------------------------------------------+
+xsltproc copy.xsl builds.xml > fixed-builds.xml
++------------------------------------------+

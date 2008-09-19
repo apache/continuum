@@ -1,0 +1,41 @@
+ ------
+ LDAP Configuration
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+ ------
+
+LDAP Configuration
+
+    Continuum supports LDAP for authentication. To configure it, you should follow these steps:
+
+    * Shutdown Continuum
+
+    * Open <<<apps/continuum/webapp/WEB-INF/classes/META-INF/plexus/application.xml>>> and uncomment the following xml
+
+    []
+
+%{snippet|id=ldap|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-webapp/src/main/resources/META-INF/plexus/application.xml}
+
+    All you need to configure is the ConfigurableLdapConnectionFactory and LdapUserMapper components
+
+    * Add a security.properties files under $CONTINUUM_HOME/conf/ with the following content:
+
+--------------------------------------------
+user.manager.impl=ldap
+ldap.bind.authenticator.enabled=true
+redback.default.admin=adminuser
+redback.default.guest=guestuser
+security.policy.password.expiration.enabled=false
+user.manager.impl=cached
+ldap.bind.authenticator.enabled=true
+--------------------------------------------
+
+    <<adminuser>> is a LDAP user and will be the default Continuum admin. <<guestuser>> is a LDAP user and will be used for the <<<guest>>> role, generally, it is an utility LDAP account.
+
+    * Restart Continuum
+
+* Other resources
+
+    {{{http://redback.codehaus.org/integration/ldap.html}Redback LDAP page}}

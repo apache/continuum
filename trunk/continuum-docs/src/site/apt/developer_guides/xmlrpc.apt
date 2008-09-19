@@ -1,0 +1,140 @@
+ ------
+ Guide to use XML-RPC with Continuum
+ ------
+ Emmanuel Venisse
+ ------
+ Nov 12 2007
+ ------
+
+Guide to use XML-RPC with Continuum
+
+~~%{toc|section=0}
+
+* {Introduction}
+
+    In this section, you'll learn how to connect to a Continuum instance and how to do some action on projects.
+
+* {Requirements}
+
+    To connect to a Continuum instance, you must use the {{{http://repo1.maven.org/maven2/org/apache/continuum/continuum-xmlrpc-client/}continuum-xmlrpc-client}} jar.
+
+    This library have some others jars as dependencies, so the best way to start the development of a Continuum xmlrpc client is to create a maven2 project with the following dependencies:
+
++--------------------------+
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-xmlrpc-client</artifactId>
+      <version>YOUR_CONTINUUM_VERSION</version>
+    </dependency>
++--------------------------+
+
+* {Connection to Continuum}
+
+    To connect to your Continuum with the client API, you must use the
+    {{{http://continuum.apache.org/ref/latest/apidocs/org/apache/maven/continuum/xmlrpc/client/ContinuumXmlRpcClient.html}ContinuumXmlRpcClient}} class.
+
+    The constructor use 3 parameters:
+    
+    * url, the url of the xmlrpc listener that is http://host:port/continuum/xmlrpc
+
+    * user, a Continuum user
+
+    * password, the user's password
+
++--------------------------+
+URL url = new URL( "http://localhost:8080/continuum/xmlrpc" );
+ContinuumXmlRpcClient client = new ContinuumXmlRpcClient( url, username, password );
++--------------------------+
+
+* {Getting project groups list}
+
+    You have two ways to get the project groups list. The first is to get only a summary of groups and the second returns groups with details.
+    If you don't need all informations, we recommend to use the first way, so you'll save time to get datas and memory on the server.
+    
++--------------------------+
+List<ProjectGroupSummary> pgs = client.getAllProjectGroups();
+List<ProjectGroup> pgs = client.getAllProjectGroupsWithProjects();
++--------------------------+
+
+* {Getting projects in a group}
+
++--------------------------+
+List<ProjectSummary> ps = client.getProjects( projectGroupId );
++--------------------------+
+
+    If you already have a ProjectGroup or ProjectGroupSummary object, you can access to the project group id with this:
+
++--------------------------+
+int projectGroupId = pg.getId();
++--------------------------+
+
+* {Building all projects in a group}
+
+    * With the default build definition
+
++--------------------------+
+client.buildGroup( projectGroupId );
++--------------------------+
+
+    * With a build definition
+
++--------------------------+
+client.buildGroup( projectGroupId, buildDefinitionId );
++--------------------------+
+
+* {Building a project}
+
+    * With the default build definition
+
++--------------------------+
+client.buildProject( project.getId() );
++--------------------------+
+
+    * With a build definition
+
++--------------------------+
+client.buildProject( project.getId(), buildDefinitionId );
++--------------------------+
+
+    <<Note:>> When you start a build, the project is put in the Continuum queue and will be built when all projects added previously in the queue will be built.
+
+* {Triggering a build}
+
+    In some case, users want to use the push build technique with a hook in their SCM, so when a developer will commit some files, a build will be triggered.
+    To do this, you can write a simple xmlrpc client that will use a project id as parameter and you'll use the <<<buildProject(...)>>> method described above.
+    
+    This method will start a forced build.
+
+* {Removing a project}
+
+    A project can be removed by supplying the project id.
+
++--------------------------+
+List<ProjectSummary> projects = client.getProjects( projectGroupId );
+...
+  client.removeProject( ps.getId() );
++--------------------------+
+
+* {Removing build results}
+
+    Currently, to remove a build result, you need the entire build result (rather than just the summary).
+
++--------------------------+
+List<BuildResultSummary> results = client.getBuildResultsForProject( ps.getId() );
+...
+  BuildResult br = client.getBuildResult( ps.getId(), brs.getId() );
+  client.removeBuildResult( br );
++--------------------------+
+
+* {Editing build queue}
+
+    You can edit all projects which are in the build queue or check if one project is currently in the build queue.
+
++--------------------------+
+List<BuildProjectTask> prjsInBuildQueue = client.getProjectsInBuildQueue();
+client.isProjectInBuildingQueue( int projectId );
++--------------------------+
+
+* {Backup}
+
+    With the Continuum xmlrpc client, you can backup a full Continuum instance (without users database, for the moment).

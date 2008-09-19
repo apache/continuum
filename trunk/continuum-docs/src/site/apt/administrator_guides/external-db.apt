@@ -1,0 +1,31 @@
+ ------
+ How to use an external database?
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 12 2007
+ ------
+
+How to use an external database?
+
+* Supported databases
+
+    * Derby
+
+    * MySQL
+
+    * MS SQL Server
+
+    * Oracle (not yet, but coming soon)
+
+* Configure Continuum
+
+** Standalone version
+
+    To use an external database with Continuum standalone, you must configure DataSources in <<<$CONTINUUM_HOME/conf/jetty.xml>>>
+
+%{snippet|id=datasources|url=http://svn.apache.org/repos/asf/continuum/trunk/continuum-jetty/src/main/conf/jetty.xml}
+
+** Webapp
+
+    To use an external database with the Continuum webapp, you should configure the DataSource in your container.

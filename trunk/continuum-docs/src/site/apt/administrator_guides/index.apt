@@ -1,0 +1,37 @@
+ ------
+ Administrator's Guides
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+ ------
+
+Administrator's Guides
+
+ * {{{security/index.html}Managing Users and Security}}
+
+ * {{{projectgroup.html}Adding a Project Group}}
+
+ * {{{builder.html}Managing Builders}}
+
+ * {{{jdk.html}Managing JDKs}}
+
+ * {{{profiles.html}Managing Build Environments}}
+
+ * {{{schedules.html}Managing Schedules}}
+
+ * {{{configuration.html}Managing General Configuration}}
+
+ * {{{localRepository.html}Managing Local Repositories}}
+
+ * {{{purgeConfiguration.html}Managing Purge Configuration}}
+
+ * {{{external-db.html}External Databases}}
+
+ * {{{monitoring.html}Monitoring Continuum}}
+
+ * {{{appearance.html}Appearance Configuration}}
+
+ * {{{builddefTemplate.html}Build Definition Templates}}
+
+ * {{{shutdown.html}Shutting Down Continuum}}

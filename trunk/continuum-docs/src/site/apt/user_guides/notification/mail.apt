@@ -1,0 +1,30 @@
+ ------
+ Mail Notification
+ ------
+ Olivier Lamy
+ ------
+ Oct 23 2007
+ ------
+
+Mail Notification
+
+  Email notification will be add automatically from reading pom (you can add as many notifier as you need) :
+    
++-------------------------------+
+  
+  <ciManagement>
+    <system>continuum</system>
+    <notifiers>
+      <notifier>
+        <configuration>
+          <address>email adress</address>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>  
+  
++-------------------------------+     
+
+  Or can you can add manually mail notifier to you project group and/or project
+  
+[../../images/notifier-mail-add.png] Add Email Notifier 
