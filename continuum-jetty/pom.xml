@@ -226,6 +226,7 @@ under the License.
                   <systemProperty>appserver.base=%APP_BASE%</systemProperty>
                   <systemProperty>derby.system.home=%APP_BASE%/logs</systemProperty>
                   <systemProperty>jetty.logs=%APP_BASE%/logs</systemProperty>
+                  <systemProperty>java.io.tmpdir=%APP_BASE%/tmp</systemProperty>
                 </systemProperties>
               </jvmSettings> 
             </daemon>
