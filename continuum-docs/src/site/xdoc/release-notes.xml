@@ -185,6 +185,8 @@ The Apache Continuum team is pleased to announce Apache Continuum 1.2
 </li>
 <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1878'>CONTINUUM-1878</a>] -         MS SQL Server size of NVARCHAR defect
 </li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1888'>CONTINUUM-1888</a>] -         Support for 64 bit architectures has been removed
+</li>
 </ul>
     
 <h2>        Improvement
