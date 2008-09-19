@@ -1,0 +1,317 @@
+<document>
+  <properties>
+    <title>Continuum 1.2 Release Note.</title>
+  </properties>  
+<body>
+	
+	
+<h2>Release Notes - Continuum - Version 1.2</h2>
+The Apache Continuum team is pleased to announce Apache Continuum 1.2
+<h3>New in Continuum 1.2</h3> 
+<h4>Using Spring</h4>
+  <p>Continuum now uses the Spring Framework as it's underlying container instead of Plexus. This results in a boost in performance and stability for the web application in particular.</p>
+<h4>Repository Purge</h4>
+  <p>It's now possible to add purges which will cleanup : 
+    <ul>
+      <li>m2 repositories (now it's possible to configure a local m2 repository per project group)</li>
+      <li>build output directory</li>
+    </ul>
+  </p>
+<h4>Maven plugin groupId and artifactId change</h4>
+<p>Now the maven plugin has the new groupId:artifactId org.apache.continuum:continuum-maven-plugin</p>
+<h4>New SCMs support</h4>
+<p>Now continuum two new providers : git and accurev.</p>  
+<h3>Changes in Continuum 1.2</h3>    
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-860'>CONTINUUM-860</a>] -         multiple email addresses delimited with commas causes AddressException
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1054'>CONTINUUM-1054</a>] -         IllegalStateException stack adding pom
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1200'>CONTINUUM-1200</a>] -         Password Characters Not Supported in SCM Checkout
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1322'>CONTINUUM-1322</a>] -         Attempt to store value with more than 256 chars
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1336'>CONTINUUM-1336</a>] -         upgrade quartz - we use a very old version
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1360'>CONTINUUM-1360</a>] -         Prepended semicolon in svn password does not work
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1371'>CONTINUUM-1371</a>] -         NullPointer when Releasing with Ant and Default Project Group
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1433'>CONTINUUM-1433</a>] -         Wrong path in descripton on how to allow the file protocol. 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1489'>CONTINUUM-1489</a>] -         replace use of MungedHttpsURL with apache httpclient (4.0-beta1)
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1515'>CONTINUUM-1515</a>] -         SCM Tag does not have a default value
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1521'>CONTINUUM-1521</a>] -         NullPointerException in StarTeam changelog command
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1525'>CONTINUUM-1525</a>] -         Can't release project with Continuum on Geronimo 2.0.1
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1528'>CONTINUUM-1528</a>] -         Continuum gets slower over time and eventually crashes
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1549'>CONTINUUM-1549</a>] -         LDAP Authenticated Continuum - NullPointerException when trying to see Members of a project group
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1575'>CONTINUUM-1575</a>] -         Confusing behavior when continuum can't construct MavenProject from pom
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1589'>CONTINUUM-1589</a>] -         updateBuildDefinitionForProjectGroup remove the description of the build definition
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1590'>CONTINUUM-1590</a>] -         updateBuildDefinitionForProjectGroup leads to a StackOverflowError
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1593'>CONTINUUM-1593</a>] -         Requires Javamail 1.5? Should be 1.4?
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1596'>CONTINUUM-1596</a>] -         The release perform doesn't work when a scm password is required
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1601'>CONTINUUM-1601</a>] -         Email address with '+' is not accepted in mail notifier
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1610'>CONTINUUM-1610</a>] -         Deployment Repository Directory does not work at all
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1623'>CONTINUUM-1623</a>] -         Checkbox not displaying when validation error in add Instalaction-&gt;Tool form
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1630'>CONTINUUM-1630</a>] -         Error attempting to delete project group
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1643'>CONTINUUM-1643</a>] -         Perform release page results to a blank page after submitted
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1644'>CONTINUUM-1644</a>] -         Test failures occur in tagged sources
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1646'>CONTINUUM-1646</a>] -         Empty recipient is allowed in mail notifier
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1647'>CONTINUUM-1647</a>] -         Incorrect alt and title text for releaseproject_disabled.gif
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1649'>CONTINUUM-1649</a>] -         Move Build Definition Template guide to Administrator's Guides
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1651'>CONTINUUM-1651</a>] -         Unable to delete user-created build definitions
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1659'>CONTINUUM-1659</a>] -         project admin cannot assign project roles to users
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1660'>CONTINUUM-1660</a>] -         Download page does not have source archives
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1672'>CONTINUUM-1672</a>] -         continuum plugin doesn't fails to add maven two projects
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1676'>CONTINUUM-1676</a>] -         deleting a project or group should cancel any current or scheduled builds, and prevent any from being queued
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1679'>CONTINUUM-1679</a>] -         Adding Null values for Project's Build Definition directs to a blank page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1688'>CONTINUUM-1688</a>] -         Maximum length for name column in object ChangeFile is too small
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1693'>CONTINUUM-1693</a>] -         Continuum fills our server disk with SNAPSHOTs.
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1701'>CONTINUUM-1701</a>] -         No field validation when adding Ant and Shell projects 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1713'>CONTINUUM-1713</a>] -         JDOFatalUserException '.-..column &quot;&quot;NAME&quot;&quot; that has maximum length of 255. Please correct your data!'
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1715'>CONTINUUM-1715</a>] -         no response when adding a project
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1725'>CONTINUUM-1725</a>] -         Using the Cancel Button without an selected project will produce NPE
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1734'>CONTINUUM-1734</a>] -         Loop in getProjects methode
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1738'>CONTINUUM-1738</a>] -         Add schedule page doesn't use its properties file
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1739'>CONTINUUM-1739</a>] -         Import of Maven2 project fails if 2.0.9 feature depMgm. scope&gt;import used
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1742'>CONTINUUM-1742</a>] -         Duplicate installations (environment variables) in Profile are accepted
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1746'>CONTINUUM-1746</a>] -         Duplicate Profile  names are accepted
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1748'>CONTINUUM-1748</a>] -         Duplicate Installation names are accepted
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1750'>CONTINUUM-1750</a>] -         unable to operate on a working directory that contains spaces
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1752'>CONTINUUM-1752</a>] -         Allowed duplication of group name when editing a project group
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1753'>CONTINUUM-1753</a>] -         Download As Text of build result output displays it on another page instead of downloading it
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1757'>CONTINUUM-1757</a>] -          continuum roles do not have user friendly names
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1758'>CONTINUUM-1758</a>] -         Error with group summary auto-refresh after adding a project group
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1760'>CONTINUUM-1760</a>] -          TextArea inside the Working Copy Section for a Project is editable
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1768'>CONTINUUM-1768</a>] -         NPE on Members tab with LDAP authentication 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1773'>CONTINUUM-1773</a>] -         unable to add a mail recipient address containing an ampersand (&amp;) in the local part of  the adress
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1782'>CONTINUUM-1782</a>] -         Rename 'Profiles' instances to 'Build Environments' in available roles.
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1784'>CONTINUUM-1784</a>] -         URLs with Query String appears not work properly
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1785'>CONTINUUM-1785</a>] -         Broken link
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1788'>CONTINUUM-1788</a>] -         JBoss installation documentation contains a &quot;Start Jetty&quot; section
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1789'>CONTINUUM-1789</a>] -         Unable to add project if its parent is not in server
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1792'>CONTINUUM-1792</a>] -         svn checkout with authentification doesn't work in 1.2 (trunk rev 663360)
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1795'>CONTINUUM-1795</a>] -         [regression] continuum application starts twice
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1796'>CONTINUUM-1796</a>] -         Project Information tab's Add/Edit Notifiers links contain leading whitespace
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1799'>CONTINUUM-1799</a>] -         Thread count for schedule is not configurable
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1804'>CONTINUUM-1804</a>] -         Wrong source code repository urls listed on Continuum public web
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1805'>CONTINUUM-1805</a>] -         Adding a project displays &quot;Adding your project is under process. Please wait ..&quot;
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1816'>CONTINUUM-1816</a>] -         Continuum trunk failed to start on unix os
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1825'>CONTINUUM-1825</a>] -         NPE when checkout project with trunk (rev 678311) 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1828'>CONTINUUM-1828</a>] -         Downloaded maven files (pom and project.xml) are not deleted
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1831'>CONTINUUM-1831</a>] -         When click &quot;save&quot; or &quot;cancel&quot; button on the Appearance page (with or without making changes), get java.lang.NullPointerException error
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1836'>CONTINUUM-1836</a>] -         Validation for Build Environment doesn't work
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1839'>CONTINUUM-1839</a>] -         [French] &quot;Construction en &#xEC;hec&quot; instead of &quot;Construction en &#xE9;chec&quot;
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1841'>CONTINUUM-1841</a>] -         Error when adding project group with null values
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1844'>CONTINUUM-1844</a>] -         EL Expression failed with empty/not functions
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1863'>CONTINUUM-1863</a>] -         NPE when clicking Appearance menu item
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1867'>CONTINUUM-1867</a>] -         Project group admin should not be able to grant system-wide roles to himself
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1869'>CONTINUUM-1869</a>] -         Correct type of url variable in 'Connection to Continuum' section on 'Guide to use XML-RPC with Continuum' page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1870'>CONTINUUM-1870</a>] -         changing groupId:artifactId of the maven plugin to org.apache.continuum:continuum-maven-plugin
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1871'>CONTINUUM-1871</a>] -         Continuum does not execute builds when last BUILDRESULT.END_TIME=0
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1877'>CONTINUUM-1877</a>] -         Incorrect svn urls on site &quot;source repository&quot; page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1878'>CONTINUUM-1878</a>] -         MS SQL Server size of NVARCHAR defect
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1888'>CONTINUUM-1888</a>] -         Support for 64 bit architectures has been removed
+</li>
+</ul>
+    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-515'>CONTINUUM-515</a>] -         Add a wait page when adding a project
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-801'>CONTINUUM-801</a>] -         Maven2: Add Project Homepage URL to the project group summary page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1186'>CONTINUUM-1186</a>] -         Application should unpack to apache-continuum-${version}
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1213'>CONTINUUM-1213</a>] -         Patch to easily run continuum jetty with postgres
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1252'>CONTINUUM-1252</a>] -         General Configuration should be pre-configurable in XML
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1344'>CONTINUUM-1344</a>] -         New Guide to Building Continuum from Source
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1465'>CONTINUUM-1465</a>] -         Project groups should probably get their own local maven repo
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1490'>CONTINUUM-1490</a>] -         Include data-management-cli jar in the distribution
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1511'>CONTINUUM-1511</a>] -         Improve error handling when not able to resolv artifacts
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1531'>CONTINUUM-1531</a>] -         set JSW to auto-restart if it crashes or hangs
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1605'>CONTINUUM-1605</a>] -         Continuum should not store the userid or password if 'use cached credentials' is checked
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1612'>CONTINUUM-1612</a>] -         Provide a sample security.properties file
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1613'>CONTINUUM-1613</a>] -         Add setting JAVA_HOME to the getting started documentation
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1619'>CONTINUUM-1619</a>] -         Project Ant : Adding a built-in property allowing to know wich project is under construction from the ant build script
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1639'>CONTINUUM-1639</a>] -         Ability to download files from the working copy
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1645'>CONTINUUM-1645</a>] -         Move images into continuum-docs module
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1675'>CONTINUUM-1675</a>] -         Improve error message when scm element is missing from a child pom
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1687'>CONTINUUM-1687</a>] -         Improve the template and build definition names
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1698'>CONTINUUM-1698</a>] -         Include svn revision number in the jar file manifest
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1703'>CONTINUUM-1703</a>] -         use plexus-spring in continuum-webapp
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1705'>CONTINUUM-1705</a>] -         Read-only view of the queues
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1711'>CONTINUUM-1711</a>] -         Rename Profile to Build Environment to avoid clash with Maven profiles
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1712'>CONTINUUM-1712</a>] -         improve the performance of the group summary page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1736'>CONTINUUM-1736</a>] -         Add the svn revision in the about action
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1741'>CONTINUUM-1741</a>] -         release.properties file containing scm credentials in plain text is visible through the Web UI
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1744'>CONTINUUM-1744</a>] -         Upgrade continuum to redback 1.0.1
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1745'>CONTINUUM-1745</a>] -         decouple SCM code from continuum model
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1759'>CONTINUUM-1759</a>] -         Ability to delete working copies associated with releases
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1762'>CONTINUUM-1762</a>] -         add confirmation page before deleting multiple projects at once
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1769'>CONTINUUM-1769</a>] -         add confirmation page before deleting a profile
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1775'>CONTINUUM-1775</a>] -         There is a typo on the Project Group Summary page. &quot;Project Group Informations&quot; should be &quot;Project Group Information&quot; - no &quot;s&quot; needed
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1793'>CONTINUUM-1793</a>] -         continuum.log needs human readable date and time stamps
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1807'>CONTINUUM-1807</a>] -         Improve performance on maven2 builds by building a pom project if changes are only in sub-modules
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1822'>CONTINUUM-1822</a>] -         Upgrade to Jetty 6.1.11
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1827'>CONTINUUM-1827</a>] -         XMPRPC Basic Compliance ( Call continuum XPMRPC Service from other language like Php )
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1846'>CONTINUUM-1846</a>] -         Split ContinuumStore to few dao classes
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1858'>CONTINUUM-1858</a>] -         Add rolesList page in the menu from redback
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-782'>CONTINUUM-782</a>] -         Add a feature to allow cleaning the m2 local repo once every N days
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1628'>CONTINUUM-1628</a>] -         2 new methods for editing building queue with xmlrpc
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1681'>CONTINUUM-1681</a>] -         Replace plexus-runtime with standalone jetty bundle
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1691'>CONTINUUM-1691</a>] -         Ability to delete a project via XML RPC
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1692'>CONTINUUM-1692</a>] -         Ability to delete build results via XML RPC
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1830'>CONTINUUM-1830</a>] -         Ability to view release results after leaving page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1843'>CONTINUUM-1843</a>] -         add new maven scm providers (accurev and git)
+</li>
+</ul>
+    
+<h2>        Task
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1614'>CONTINUUM-1614</a>] -         release maven-scm 1.1
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1617'>CONTINUUM-1617</a>] -         Update to JPOX 1.1.9
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1821'>CONTINUUM-1821</a>] -         Remove references to Maven in continuum-docs
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1885'>CONTINUUM-1885</a>] -         Clean up site documentation
+</li>
+</ul>
+        
+<h2>        Wish
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1638'>CONTINUUM-1638</a>] -         Documentation for Release Management
+</li>
+</ul>
+
+  
+Have Fun !
+<br/><br/>
+--<br/>
+The Apache Continuum Team  
+
+</body>
+</document>
