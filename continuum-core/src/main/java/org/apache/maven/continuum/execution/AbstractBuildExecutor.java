@@ -19,6 +19,8 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
+import org.apache.continuum.utils.shell.ExecutionResult;
+import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -28,8 +30,6 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
-import org.apache.maven.continuum.utils.shell.ExecutionResult;
-import org.apache.maven.continuum.utils.shell.ShellCommandHelper;
 import org.codehaus.plexus.commandline.ExecutableResolver;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;

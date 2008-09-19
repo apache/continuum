@@ -31,15 +31,17 @@
         <ww:hidden name="projectId"/>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <ww:textfield label="SCM Connection URL" name="scmUrl"/>
-            <ww:textfield label="SCM Username" name="scmUsername"/>
-            <ww:password label="SCM Password" name="scmPassword"/>
-            <ww:textfield label="SCM Tag" name="scmTag"/>
+            <ww:textfield label="%{getText('releasePerformFromScm.scmUrl.label')}" name="scmUrl"/>
+            <ww:textfield label="%{getText('releasePerformFromScm.scmUsername.label')}" name="scmUsername"/>
+            <ww:password label="%{getText('releasePerformFromScm.scmPassword.label')}" name="scmPassword"/>
+            <ww:textfield label="%{getText('releasePerformFromScm.scmTag.label')}" name="scmTag"/>
             <c:if test="${!empty (scmTagBase)}">
-              <ww:textfield label="SCM Tag Base" name="scmTagBase"/>
+              <ww:textfield label="%{getText('releasePerformFromScm.scmTagBase.label')}" name="scmTagBase"/>
             </c:if>
-            <ww:textfield label="Maven Arguments" name="goals" value="clean deploy"/>
-            <ww:checkbox label="Use Release Profile" name="useReleaseProfile" value="true"/>
+            <ww:textfield label="%{getText('releasePerformFromScm.goals.label')}" name="goals" value="clean deploy"/>
+            <ww:checkbox label="%{getText('releasePerformFromScm.useReleaseProfile.label')}" name="useReleaseProfile" value="true"/>
+            <ww:select label="%{getText('releasePerformFromScm.buildEnvironment.label')}" name="profileId" list="profiles" listValue="name" 
+                       listKey="id" headerKey="-1" headerValue=""/>
           </table>
         </div>
         <ww:submit/>

@@ -37,6 +37,7 @@ import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
 
+import com.opensymphony.webwork.ServletActionContext;
 import com.opensymphony.xwork.Preparable;
 
 /**
@@ -70,6 +71,8 @@ public class ProfileAction
 
     private List<Installation> profileInstallations;
 
+    private String message;
+
     // -------------------------------------------------------
     //  Webwork Methods
     // -------------------------------------------------------
@@ -84,6 +87,13 @@ public class ProfileAction
     public String list()
         throws Exception
     {
+        String errorMessage = ServletActionContext.getRequest().getParameter( "errorMessage" );
+
+        if ( errorMessage != null )
+        {
+            addActionError( errorMessage );
+        }
+        
         this.profiles = profileService.getAllProfiles();
         return SUCCESS;
     }
@@ -149,10 +159,18 @@ public class ProfileAction
 
     public String delete()
         throws Exception
-    {
-        profileService.deleteProfile( profile.getId() );
-        this.profiles = profileService.getAllProfiles();
-        return SUCCESS;
+    {   
+        try
+        {
+            profileService.deleteProfile( profile.getId() );
+            this.profiles = profileService.getAllProfiles();
+            return SUCCESS;
+        }
+        catch ( ProfileException e )
+        {
+            message = "profile.remove.error";
+            return ERROR;
+        }
     }
 
     public String confirmDelete()
@@ -282,5 +300,15 @@ public class ProfileAction
     public void setInstallationId( int installationId )
     {
         this.installationId = installationId;
+    }
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public void setMessage( String message )
+    {
+        this.message = message;
     }
 }
