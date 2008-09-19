@@ -217,7 +217,7 @@ public class DefaultMavenOneMetadataHelper
 
             if ( StringUtils.isEmpty( scmConnection ) )
             {
-                result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM );
+                result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM, name );
 
                 // Do not throw an exception or return here, gather up as many results as possible first.
             }
