@@ -98,6 +98,10 @@
         <include>LICENSE</include>
       </includes>
     </fileSet>
+    <fileSet>
+      <directory>src/main/tmp/</directory>
+      <outputDirectory>/tmp</outputDirectory>
+    </fileSet>
   </fileSets>
   <dependencySets>
     <dependencySet>
