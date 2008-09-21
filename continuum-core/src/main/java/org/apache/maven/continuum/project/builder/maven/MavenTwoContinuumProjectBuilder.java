@@ -300,7 +300,8 @@ public class MavenTwoContinuumProjectBuilder
                 scmUrl = continuumProject.getScmUrl();
             }
 
-            if ( !"HEAD".equals( mavenProject.getScm().getTag() ) )
+            //TODO:  This code is duplicated in DefaultMavenBuilderHelper
+            if ( mavenProject.getScm() != null && "HEAD".equals( mavenProject.getScm().getTag() ) )            
             {
                 continuumProject.setScmTag( mavenProject.getScm().getTag() );
             }
