@@ -454,29 +454,7 @@ public class DefaultMavenBuilderHelper
         // Validate the MavenProject using some Continuum rules
         // ----------------------------------------------------------------------
 
-        // SCM connection
-        Scm scm = project.getScm();
-
-        if ( scm == null )
-        {
-            result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM, getProjectName( project ) );
-
-            getLogger().error( "Missing 'scm' element in the " + getProjectName( project ) + " POM." );
-
-            return null;
-        }
-
-        String url = scm.getConnection();
-
-        if ( StringUtils.isEmpty( url ) )
-        {
-            result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM_CONNECTION, getProjectName( project ) );
-
-            getLogger().error(
-                "Missing 'connection' element in the 'scm' element in the " + getProjectName( project ) + " POM." );
-
-            return null;
-        }
+        // SCM connection should be optional -- we can get it from the pom url in many cases (CONTINUUM-1721)
 
         return project;
     }
