@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -2092,14 +2091,7 @@ public class DefaultContinuum
             
             if ( projectScmRoot == null )
             {
-                projectScmRoot = new ProjectScmRoot();
-                
-                projectScmRoot.setProjectGroup( projectGroup );
-                
-                projectScmRoot.setScmRootAddress( url );
-                
-                projectScmRoot = projectScmRootDao.addProjectScmRoot( projectScmRoot );
-
+                projectScmRoot = createProjectScmRoot( projectGroup, url );
             }
 
             /* add the project group loaded from database, which has more info, like id */
@@ -3010,6 +3002,18 @@ public class DefaultContinuum
 
         for ( Project project : projectDao.getAllProjectsByNameWithBuildDetails() )
         {
+            if ( project.getScmRootAddress() == null || StringUtils.isEmpty( project.getScmRootAddress() ) )
+            {
+                try
+                {
+                    setScmRootAddressForProject( project );
+                }
+                catch ( ContinuumException e )
+                {
+                    throw new InitializationException( "Database is corrupted.", e );
+                }
+            }
+            
             for ( ProjectNotifier notifier : (List<ProjectNotifier>) project.getNotifiers() )
             {
                 if ( StringUtils.isEmpty( notifier.getType() ) )
@@ -3751,6 +3755,80 @@ public class DefaultContinuum
         catch ( TaskQueueException e )
         {
             throw logAndCreateException( "Error while creating enqueuing object.", e );
+        }
+    }
+
+    private void setScmRootAddressForProject( Project project )
+        throws ContinuumException
+    {
+        boolean found = false;
+
+        ProjectGroup projectGroup = project.getProjectGroup();
+
+        List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( projectGroup.getId() );
+        
+        for ( ProjectScmRoot scmRoot : scmRoots )
+        {
+            if ( project.getScmUrl().startsWith( scmRoot.getScmRootAddress() ) )
+            {
+                project.setScmRootAddress( scmRoot.getScmRootAddress() );
+                found = true;
+                break;
+            }
+        }
+        
+        if ( !found )
+        {
+            createProjectScmRootForProjectGroup( projectGroup );
+            setScmRootAddressForProject( project );
+        }
+    }
+
+    private void createProjectScmRootForProjectGroup( ProjectGroup projectGroup )
+        throws ContinuumException
+    {
+        List<Project> projectsList;
+
+        try
+        {
+            projectsList = getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroup.getId() ) );
+        }
+        catch ( CycleDetectedException e )
+        {
+            throw new ContinuumException( "Error while retrieving projects", e );
+        }
+
+        int counter = 0;
+        String url = "";
+
+        for ( Project project : projectsList )
+        {
+            if ( counter == 0 || !project.getScmUrl().startsWith( url ) )
+            {
+                // this is a root
+                url = project.getScmUrl();
+                createProjectScmRoot( projectGroup, url );
+            }
+            counter++;
+        }
+    }
+    
+    private ProjectScmRoot createProjectScmRoot( ProjectGroup projectGroup, String url )
+        throws ContinuumException
+    {
+        ProjectScmRoot projectScmRoot = new ProjectScmRoot();
+        
+        projectScmRoot.setProjectGroup( projectGroup );
+        
+        projectScmRoot.setScmRootAddress( url );
+        
+        try
+        {
+            return projectScmRootDao.addProjectScmRoot( projectScmRoot );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while creating project scm root with scm root address:" + url );
         }
     }
 }
