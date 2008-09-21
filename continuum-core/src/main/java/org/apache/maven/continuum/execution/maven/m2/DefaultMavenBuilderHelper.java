@@ -481,9 +481,19 @@ public class DefaultMavenBuilderHelper
         return name;
     }
 
+  /**
+   * @return the scm connection url from the project, or null if none is present
+   */
     private String getScmUrl( MavenProject project )
     {
-        return project.getScm().getConnection();
+        if ( project != null && project.getScm() != null )
+        {
+            return project.getScm().getConnection();
+        }
+        return null;
+
+      //TODO:  What if the project has only a developerConnection (no anonymous access?)
+      //TODO:  Should this return an empty string instead of null if there is no url?
     }
 
     private List<ProjectNotifier> getNotifiers( ContinuumProjectBuildingResult result, MavenProject mavenProject,
