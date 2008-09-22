@@ -104,33 +104,7 @@ public abstract class AddMavenProjectAction
 
         if ( !StringUtils.isEmpty( pomUrl ) )
         {
-            try
-            {
-                URL url = new URL( pomUrl );
-                if ( pomUrl.startsWith( "http" ) && !StringUtils.isEmpty( scmUsername ) )
-                {
-                    StringBuffer urlBuffer = new StringBuffer();
-                    urlBuffer.append( url.getProtocol() ).append( "://" );
-                    urlBuffer.append( scmUsername ).append( ':' ).append( scmPassword ).append( '@' ).append(
-                        url.getHost() );
-                    if ( url.getPort() != -1 )
-                    {
-                        urlBuffer.append( ":" ).append( url.getPort() );
-                    }
-                    urlBuffer.append( url.getPath() );
-
-                    pom = urlBuffer.toString();
-                }
-                else
-                {
-                    pom = pomUrl;
-                }
-            }
-            catch ( MalformedURLException e )
-            {
-                addActionError( "add.project.unknown.error" );
-                return doDefault();
-            }
+          pom = pomUrl;
         }
         else
         {
