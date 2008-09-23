@@ -442,6 +442,12 @@
     -->
     <action name="releasePromptGoal" class="releaseProject" method="promptReleaseGoal">
       <result name="success">/WEB-INF/jsp/releaseProject.jsp</result>
+      <result name="releaseOutputDir-required" type="redirect-action">
+        <param name="actionName">configuration</param>
+        <param name="namespace">/admin</param>
+        <param name="method">input</param>
+        <param name="requireReleaseOutput">true</param>
+      </result>
     </action>
 
     <action name="releaseProject" class="releaseProject">
@@ -560,6 +566,7 @@
       <interceptor-ref name="unconfiguredContinuumStack"/>
       <result name="input">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/configuration.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
     </action>
 
     <action name="configureAppearance" class="configureAppearance" method="input">

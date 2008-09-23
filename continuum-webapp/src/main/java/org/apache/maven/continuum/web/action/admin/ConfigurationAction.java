@@ -57,6 +57,8 @@ public class ConfigurationAction
     
     private String releaseOutputDirectory;
 
+    private boolean requireReleaseOutput;
+
     public void prepare()
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
@@ -94,10 +96,18 @@ public class ConfigurationAction
         {
             releaseOutputDirectory = releaseOutputDirectoryFile.getAbsolutePath();
         }
+        
+        String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
+        setRequireReleaseOutput( new Boolean( requireRelease ) );
     }
 
     public String input()
     {
+        if ( isRequireReleaseOutput() )
+        {
+            addActionError( "configuration.releaseOutputDirectory.required" );
+        }
+        
         return INPUT;
     }
 
@@ -123,7 +133,19 @@ public class ConfigurationAction
 
         configuration.setInitialized( true );
 
-        configuration.setReleaseOutputDirectory( new File( releaseOutputDirectory ) );
+        if ( StringUtils.isNotEmpty( releaseOutputDirectory ) )
+        {
+            configuration.setReleaseOutputDirectory( new File( releaseOutputDirectory ) );
+        }
+        else if ( isRequireReleaseOutput() )
+        {
+            addActionError( "configuration.releaseOutputDirectory.required" );
+            return ERROR;
+        }
+        else
+        {
+            configuration.setReleaseOutputDirectory( null );
+        }
 
         configuration.store();
 
@@ -188,5 +210,15 @@ public class ConfigurationAction
     public void setReleaseOutputDirectory( String releaseOutputDirectory )
     {
         this.releaseOutputDirectory = releaseOutputDirectory;
+    }
+
+    public boolean isRequireReleaseOutput()
+    {
+        return requireReleaseOutput;
+    }
+    
+    public void setRequireReleaseOutput( boolean requireReleaseOutput )
+    {
+        this.requireReleaseOutput = requireReleaseOutput;
     }
 }
