@@ -247,16 +247,18 @@ public class DefaultConfigurationService
     public File getReleaseOutputDirectory()
     {
         File releaseOutputDirectory = generalConfiguration.getReleaseOutputDirectory();
-        if ( releaseOutputDirectory == null )
-        {
-            releaseOutputDirectory = getFile( systemConf.getReleaseOutputDirectory() );
-            setReleaseOutputDirectory( releaseOutputDirectory );
-        }
+
         return releaseOutputDirectory;
     }
 
     public void setReleaseOutputDirectory( File releaseOutputDirectory )
     {
+        if ( releaseOutputDirectory == null )
+        {
+            generalConfiguration.setReleaseOutputDirectory( releaseOutputDirectory );
+            return;
+        }
+
         File f = releaseOutputDirectory;
         try
         {
@@ -314,6 +316,11 @@ public class DefaultConfigurationService
 
     public File getReleaseOutputDirectory( int projectGroupId )
     {
+        if ( getReleaseOutputDirectory() == null )
+        {
+            return null;
+        }
+        
         File dir = new File( getReleaseOutputDirectory(), Integer.toString( projectGroupId ) );
         
         try
@@ -332,6 +339,11 @@ public class DefaultConfigurationService
     {
         File dir = getReleaseOutputDirectory( projectGroupId );
 
+        if ( dir == null )
+        {
+            return null;
+        }
+        
         if ( !dir.exists() && !dir.mkdirs() )
         {
             throw new ConfigurationException(
