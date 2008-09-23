@@ -112,14 +112,16 @@ public class ProjectGroupAction
 
     private int buildDefinitionId;
 
+    private boolean fromSummaryPage = false;
+
     private String preferredExecutor = "maven2";
-    
+
     private String url;
 
     private int repositoryId;
-    
+
     private List<LocalRepository> repositories;
-    
+
     public String summary()
         throws ContinuumException
     {
@@ -159,35 +161,35 @@ public class ProjectGroupAction
         }
 
         if ( projectGroup != null )
-        {        	
+        {
             if ( projectGroup.getProjects() != null && projectGroup.getProjects().size() > 0 )
             {
                 int nbMaven2Projects = 0;
                 int nbMaven1Projects = 0;
                 int nbAntProjects = 0;
                 int nbShellProjects = 0;
-                
+
                 // get the projects according to build order (first project in the group is the root project)            
                 try
-                {                	
-                	Project rootProject =
-                            ( getContinuum().getProjectsInBuildOrder( getContinuum().getProjectsInGroupWithDependencies(
-                                projectGroupId ) ) ).get( 0 );
-                	if( "maven2".equals( rootProject.getExecutorId() ) || "maven-1".equals( rootProject.getExecutorId() ) )
-                	{
-                		url = rootProject.getUrl();
-                	}
+                {
+                    Project rootProject = ( getContinuum().getProjectsInBuildOrder(
+                        getContinuum().getProjectsInGroupWithDependencies( projectGroupId ) ) ).get( 0 );
+                    if ( "maven2".equals( rootProject.getExecutorId() ) ||
+                        "maven-1".equals( rootProject.getExecutorId() ) )
+                    {
+                        url = rootProject.getUrl();
+                    }
                 }
-                catch ( CycleDetectedException e ) 
+                catch ( CycleDetectedException e )
                 {
                     // ignore. url won't be displayed if null
                 }
-                
+
                 for ( Object o : projectGroup.getProjects() )
                 {
                     Project p = (Project) o;
                     if ( "maven2".equals( p.getExecutorId() ) )
-                    {   
+                    {
                         nbMaven2Projects += 1;
                     }
                     else if ( "maven-1".equals( p.getExecutorId() ) )
@@ -309,7 +311,7 @@ public class ProjectGroupAction
         name = projectGroup.getName();
 
         description = projectGroup.getDescription();
-        
+
         projectList = projectGroup.getProjects();
 
         if ( projectList != null )
@@ -334,7 +336,7 @@ public class ProjectGroupAction
             projectGroups.put( new Integer( pg.getId() ), pg.getName() );
         }
 
-        if ( projectGroup.getLocalRepository() != null)
+        if ( projectGroup.getLocalRepository() != null )
         {
             repositoryId = projectGroup.getLocalRepository().getId();
         }
@@ -342,9 +344,9 @@ public class ProjectGroupAction
         {
             repositoryId = -1;
         }
-        
+
         repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
-        
+
         return SUCCESS;
     }
 
@@ -413,7 +415,7 @@ public class ProjectGroupAction
         }
 
         projectGroup.setDescription( description );
-        
+
         if ( repositoryId > 0 )
         {
             LocalRepository repository = getContinuum().getRepositoryService().getLocalRepository( repositoryId );
@@ -423,7 +425,7 @@ public class ProjectGroupAction
         {
             projectGroup.setLocalRepository( null );
         }
-        
+
         getContinuum().updateProjectGroup( projectGroup );
 
         Iterator keys = projects.keySet().iterator();
@@ -490,7 +492,15 @@ public class ProjectGroupAction
         {
             getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
         }
-        return SUCCESS;
+
+        if ( this.isFromSummaryPage() )
+        {
+            return "to_summary_page";
+        }
+        else
+        {
+            return SUCCESS;
+        }
     }
 
     public String release()
@@ -514,7 +524,7 @@ public class ProjectGroupAction
         boolean allBuildsOk = true;
 
         boolean allMavenTwo = true;
-        
+
         projectList = getContinuum().getProjectsInGroupWithDependencies( projectGroupId );
 
         if ( projectList != null )
@@ -544,7 +554,7 @@ public class ProjectGroupAction
                         return INPUT;
                     }
                 }
-                
+
                 if ( !"maven2".equals( p.getExecutorId() ) )
                 {
                     allMavenTwo = false;
@@ -896,38 +906,48 @@ public class ProjectGroupAction
         this.buildDefinitionId = buildDefinitionId;
     }
 
+    public boolean isFromSummaryPage()
+    {
+        return fromSummaryPage;
+    }
+
+    public void setFromSummaryPage( boolean fromSummaryPage )
+    {
+        this.fromSummaryPage = fromSummaryPage;
+    }
+
     public String getPreferredExecutor()
     {
         return preferredExecutor;
     }
 
-	public String getUrl() 
-	{
-		return url;
-	}
+    public String getUrl()
+    {
+        return url;
+    }
 
-	public void setUrl(String url) 
-	{
-		this.url = url;
-	}
-	
-	public int getRepositoryId()
-	{
-	    return repositoryId;
-	}
-	
-	public void setRepositoryId( int repositoryId )
-	{
-	    this.repositoryId = repositoryId;
-	}
-	
-	public List<LocalRepository> getRepositories()
-	{
-	    return repositories;
-	}
-	
-	public void setRepositories( List<LocalRepository> repositories )
-	{
-	    this.repositories = repositories;
-	}
+    public void setUrl( String url )
+    {
+        this.url = url;
+    }
+
+    public int getRepositoryId()
+    {
+        return repositoryId;
+    }
+
+    public void setRepositoryId( int repositoryId )
+    {
+        this.repositoryId = repositoryId;
+    }
+
+    public List<LocalRepository> getRepositories()
+    {
+        return repositories;
+    }
+
+    public void setRepositories( List<LocalRepository> repositories )
+    {
+        this.repositories = repositories;
+    }
 }
