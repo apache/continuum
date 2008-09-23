@@ -802,16 +802,20 @@ public class DefaultContinuum
             Project project = getProjectWithBuilds( projectId );
 
             List<ContinuumReleaseResult> releaseResults = releaseResultDao.getContinuumReleaseResultsByProject( projectId );
-            
+
             try
             {
                 for ( ContinuumReleaseResult releaseResult : releaseResults )
                 {
                     releaseResultDao.removeContinuumReleaseResult( releaseResult );
                 }
-                
+
                 File releaseOutputDirectory = configurationService.getReleaseOutputDirectory( project.getProjectGroup().getId() );
-                FileUtils.deleteDirectory( releaseOutputDirectory );
+
+                if ( releaseOutputDirectory != null )
+                {
+                    FileUtils.deleteDirectory( releaseOutputDirectory );
+                }
             }
             catch ( ContinuumStoreException e )
             {
