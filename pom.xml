@@ -38,9 +38,9 @@ under the License.
   </prerequisites>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk/</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/continuum/trunk/</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/branches/continuum-1.2.x/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/branches/continuum-1.2.x/</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/continuum/branches/continuum-1.2.x/</url>
   </scm>
   <distributionManagement>
     <site>
