@@ -626,6 +626,12 @@
         <param name="namespace">/admin</param>
         <param name="method">list</param>
       </result>
+      <result name="error" type="redirect-action">
+        <param name="actionName">buildEnvList</param>
+        <param name="namespace">/admin</param>
+        <param name="method">list</param>
+        <param name="errorMessage">${message}</param>
+      </result>
     </action>      
     
     <action name="confirmDeleteBuildEnv" class="profileAdministration" method="confirmDelete">

@@ -21,6 +21,7 @@ package org.apache.maven.continuum.release.executors;
 
 import java.io.File;
 
+import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
@@ -98,7 +99,7 @@ public class ReleaseTaskExecutorTest
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
         FileUtils.deleteDirectory( testDir );
 
-        ReleaseDescriptor descriptor = new ReleaseDescriptor();
+        ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setInteractive( false );
         descriptor.setScmSourceUrl( "scm:svn:file://localhost/" + scmPath + "/trunk" );
         descriptor.setWorkingDirectory( workDir.getAbsolutePath() );
@@ -140,7 +141,7 @@ public class ReleaseTaskExecutorTest
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
         FileUtils.deleteDirectory( testDir );
 
-        ReleaseDescriptor descriptor = new ReleaseDescriptor();
+        ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setInteractive( false );
         descriptor.setScmSourceUrl( "scm:svn:file://localhost/" + scmPath + "/trunk" );
         descriptor.setWorkingDirectory( workDir.getAbsolutePath() );
@@ -185,7 +186,7 @@ public class ReleaseTaskExecutorTest
         File testDir = new File( getBasedir(), "target/test-classes/test-dir" );
         FileUtils.deleteDirectory( testDir );
 
-        ReleaseDescriptor descriptor = new ReleaseDescriptor();
+        ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setInteractive( false );
         descriptor.setScmSourceUrl( "scm:svn:file://localhost/" + scmPath + "/trunk" );
         descriptor.setWorkingDirectory( workDir.getAbsolutePath() );
