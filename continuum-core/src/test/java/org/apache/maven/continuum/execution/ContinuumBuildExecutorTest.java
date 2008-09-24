@@ -25,14 +25,14 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.apache.continuum.utils.shell.ExecutionResult;
+import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.DefaultConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.utils.ChrootJailWorkingDirectoryService;
-import org.apache.maven.continuum.utils.shell.ExecutionResult;
-import org.apache.maven.continuum.utils.shell.ShellCommandHelper;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.jmock.Expectations;

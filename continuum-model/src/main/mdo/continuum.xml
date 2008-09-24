@@ -766,21 +766,32 @@
              */
             public String toString()
             {
-                String result = author + "\n" + date + "\n";
+                StringBuilder result = new StringBuilder();
+                if ( author != null )
+                {
+                    result.append( author ).append( "\n" );
+                }
+                result.append( date ).append( "\n" );
 
                 if ( files != null )
                 {
                     for ( java.util.Iterator i = files.iterator(); i.hasNext(); )
                     {
                         ChangeFile file = (ChangeFile) i.next();
-
-                        result += file + "\n";
+                        
+                        if (file != null)
+                        {
+                            result.append( file ).append( "\n" );
+                        }
                     }
                 }
 
-                result += comment;
+                if ( comment != null )
+                {
+                    result.append( comment );
+                }
 
-                return result;
+                return result.toString();
             }
 
             /**
@@ -1205,6 +1216,12 @@
           <type>boolean</type>
           <defaultValue>false</defaultValue>
         </field>
+        <field>
+          <name>releaseOutputDirectory</name>
+          <version>1.1.2+</version>
+          <type>String</type>
+          <defaultValue>release-output-directory</defaultValue>
+        </field>
       </fields>
     </class>
 
@@ -1462,6 +1479,53 @@
         </field>
       </fields>
     </class>
-        
+       
+    <class>
+      <name>ContinuumReleaseResult</name>
+      <version>1.1.2+</version>
+      <packageName>org.apache.continuum.model.release</packageName>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.2+</version>
+          <identifier>true</identifier>
+          <type>int</type>
+        </field>
+        <field>
+          <name>startTime</name>
+          <version>1.1.2+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>endTime</name>
+          <version>1.1.2+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>resultCode</name>
+          <version>1.1.2+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectGroup</name>
+          <version>1.1.2+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>ProjectGroup</type>
+          </association>
+        </field>
+        <field>
+          <name>project</name>
+          <version>1.1.2+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>Project</type>
+          </association>
+        </field>
+        <field>
+          <name>releaseGoal</name>
+          <version>1.1.2+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class> 
   </classes>
 </model>

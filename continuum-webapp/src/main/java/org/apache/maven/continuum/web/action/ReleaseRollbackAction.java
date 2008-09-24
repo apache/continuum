@@ -46,6 +46,8 @@ public class ReleaseRollbackAction
 
     private String projectGroupName = "";
 
+    private String releaseGoal;
+
     public String execute()
         throws Exception
     {
@@ -128,5 +130,15 @@ public class ReleaseRollbackAction
         }
 
         return projectGroupName;
+    }
+
+    public String getReleaseGoal()
+    {
+        return releaseGoal;
+    }
+
+    public void setReleaseGoal( String releaseGoal )
+    {
+        this.releaseGoal = releaseGoal;
     }
 }

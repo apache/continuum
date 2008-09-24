@@ -36,6 +36,7 @@
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
         <c1:data label="%{getText('configuration.workingDirectory.label')}" name="workingDirectory"/>
         <c1:data label="%{getText('configuration.buildOutputDirectory.label')}" name="buildOutputDirectory"/>
+        <c1:data label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"/>
         <c1:data label="%{getText('configuration.deploymentRepositoryDirectory.label')}"
                  name="deploymentRepositoryDirectory"/>
         <c1:data label="%{getText('configuration.baseUrl.label')}" name="baseUrl"/>

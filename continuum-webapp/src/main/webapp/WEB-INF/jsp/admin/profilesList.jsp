@@ -33,6 +33,14 @@
       <ww:text name="profilesList.section.title"/>
     </h3>
 
+    <c:if test="${!empty actionErrors}">
+      <div class="errormessage">
+        <c:forEach items="${actionErrors}" var="actionError">
+          <p><ww:text name="${actionError}"/></p>
+        </c:forEach>
+      </div>
+    </c:if>
+        
     <ww:if test="${not empty profiles}">
     <ec:table items="profiles"
               var="profile"

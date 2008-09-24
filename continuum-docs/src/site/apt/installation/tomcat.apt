@@ -23,7 +23,7 @@ Guide to Install Continuum on Tomcat
 
     [[1]] A defined \<Context\> xml section to define the JNDI resources.
 
-    [[1]] The Javamail / Activation JAR files.
+    [[1]] The JavaMail / Activation JAR files.
 
     [[1]] The Apache Derby JAR files.
 
@@ -31,7 +31,7 @@ Guide to Install Continuum on Tomcat
 
 ** {Defining JNDI Resources}.
 
-    Continuum will, on startup, ask the web container for a few JNDI configured resources, two jdbc datasources, and one javamail session.
+    Continuum will, on startup, ask the web container for a few JNDI configured resources, two JDBC DataSources, and one JavaMail session.
 
     To configure these JNDI resources in the Tomcat Web Container, you will need to specify a \<Context\> section that Tomcat can utilize for those requests coming from Continuum.
 
@@ -51,7 +51,7 @@ Guide to Install Continuum on Tomcat
 
     * <<<jdbc/users>>>
 
-    The individual techniques for describing these resources, and the parameters associated with them are specific to the Tomcat version, resource type, and even jdbc implementation type.
+    The individual techniques for describing these resources, and the parameters associated with them are specific to the Tomcat version, resource type, and even JDBC implementation type.
 
     For the purposes of this document, the following assumptions are made.
     
@@ -61,13 +61,13 @@ Guide to Install Continuum on Tomcat
 
     [[1]] You will be using the embedded Apache Derby database. (not an external database, that's another show)
 
-    [[1]] Details specific to Apache Tomcat, Javamail, or Apache Derby are left for the reader to research on those projects websites.
+    [[1]] Details specific to Apache Tomcat, JavaMail, or Apache Derby are left for the reader to research on those projects websites.
 
-** {The Javamail / Activation JAR files}
+** {The JavaMail / Activation JAR files}
 
-    <<Note:>> Continuum requires Javamail 1.4 (or later)
+    <<Note:>> Continuum requires JavaMail 1.4 (or later)
 
-    Apache Tomcat does not typically ship with a copy of the Javamail or Activation jar files. 
+    Apache Tomcat does not typically ship with a copy of the JavaMail or Activation jar files. 
     In your role as the Apache Tomcat administrator of your installation, you will need to obtain these jar files and place it into your preferred lib directory.
 
     The appropriate lib directory to choose is a personal preference, and we do not encourage or enforce a specific location for it, as all installations of Apache Tomcat are different.
@@ -76,7 +76,7 @@ Guide to Install Continuum on Tomcat
 
     Direct download links for these jar files.
 
-    * Java Mail 1.4 - {{{http://repo1.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar}mail-1.4.jar}}
+    * JavaMail 1.4 - {{{http://repo1.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar}mail-1.4.jar}}
 
     * Java Activation Framework 1.1 - {{{http://repo1.maven.org/maven2/javax/activation/activation/1.1/activation-1.1.jar}activation-1.1.jar}}
 
@@ -84,13 +84,13 @@ Guide to Install Continuum on Tomcat
 
     <<Note:>>Continuum 1.2 has been tested with Apache Derby 10.1.3.1
 
-    Default installation of Continuum utilizes the Apache Derby 100% Java Database to maintain Continuum specific information, and also the Users / Security Database.
+    The default installation of Continuum uses the Apache Derby 100% Java database to maintain Continuum-specific information, and also the Users / Security Database.
 
     You will need to obtain the derby.jar and derbytools.jar and place them into your preferred lib directory.
 
     We put them into the <<<$CATALINA_HOME/common/lib/>>> directory.
 
-    Direct download links for these jar files.
+    Direct download links for these jar files:
 
     * {{{http://repo1.maven.org/maven2/org/apache/derby/derby/10.1.3.1/derby-10.1.3.1.jar}derby-10.1.3.1.jar}}
 

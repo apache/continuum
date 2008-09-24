@@ -315,6 +315,7 @@
         <param name="actionName">projectGroupSummary</param>
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
+      <result name="to_summary_page" type="chain">groupSummary</result>
     </action>
 
     <action name="removeProjectGroup" class="projectGroup" method="remove">
@@ -442,6 +443,12 @@
     -->
     <action name="releasePromptGoal" class="releaseProject" method="promptReleaseGoal">
       <result name="success">/WEB-INF/jsp/releaseProject.jsp</result>
+      <result name="releaseOutputDir-required" type="redirect-action">
+        <param name="actionName">configuration</param>
+        <param name="namespace">/admin</param>
+        <param name="method">input</param>
+        <param name="requireReleaseOutput">true</param>
+      </result>
     </action>
 
     <action name="releaseProject" class="releaseProject">
@@ -470,6 +477,7 @@
         <param name="actionName">releaseInProgress</param>
         <param name="releaseId">${releaseId}</param>
         <param name="projectId">${projectId}</param>
+        <param name="releaseGoal">prepare</param>
       </result>
     </action>
 
@@ -483,6 +491,7 @@
         <param name="actionName">releaseInProgress</param>
         <param name="releaseId">${releaseId}</param>
         <param name="projectId">${projectId}</param>
+        <param name="releaseGoal">perform</param>
       </result>
     </action>
 
@@ -496,6 +505,7 @@
         <param name="actionName">releaseInProgress</param>
         <param name="projectId">${projectId}</param>
         <param name="releaseId">${releaseId}</param>
+        <param name="releaseGoal">perform</param>
       </result>
     </action>
 
@@ -526,6 +536,21 @@
       <result name="success">/WEB-INF/jsp/releaseViewResult.jsp</result>
     </action>
 
+    <action name="viewReleaseResult" class="releaseResult" method="viewResult">
+      <result name="success">/WEB-INF/jsp/releaseViewResult.jsp</result>
+    </action>
+
+    <action name="projectGroupReleaseResults" class="releaseResult" method="list">
+      <result name="success">/WEB-INF/jsp/projectGroupReleaseResults.jsp</result>
+    </action>
+
+    <action name="removeReleaseResults" class="releaseResult" method="remove">
+      <result name="confirm">/WEB-INF/jsp/confirmReleaseResultsRemoval.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupReleaseResults</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
   </package>
 
   <!--
@@ -542,6 +567,7 @@
       <interceptor-ref name="unconfiguredContinuumStack"/>
       <result name="input">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/configuration.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
     </action>
 
     <action name="configureAppearance" class="configureAppearance" method="input">
@@ -599,6 +625,12 @@
         <param name="actionName">buildEnvList</param>
         <param name="namespace">/admin</param>
         <param name="method">list</param>
+      </result>
+      <result name="error" type="redirect-action">
+        <param name="actionName">buildEnvList</param>
+        <param name="namespace">/admin</param>
+        <param name="method">list</param>
+        <param name="errorMessage">${message}</param>
       </result>
     </action>      
     

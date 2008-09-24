@@ -350,9 +350,12 @@ public class DefaultBuildController
 
             context.setOldBuildResult( oldBuildResult );
 
+            // CONTINUUM-1871 olamy if continuum is killed during building oldBuildResult will have a endTime 0
+            // this means all changes since the project has been loaded in continuum will be in memory
+            // now we will load all BuildResult with an Id bigger or equals than the oldBuildResult one
             if ( oldBuildResult != null )
             {
-                context.setOldScmResult( getOldScmResult( projectId, oldBuildResult.getEndTime() ) );
+                context.setOldScmResult( getOldScmResults( projectId, oldBuildResult.getBuildNumber(), oldBuildResult.getEndTime() ) );
             }
         }
         catch ( ContinuumStoreException e )
@@ -770,9 +773,10 @@ public class DefaultBuildController
         }
     }
 
-    private ScmResult getOldScmResult( int projectId, long fromDate )
+    private ScmResult getOldScmResults( int projectId, long startId, long fromDate )
+        throws ContinuumStoreException
     {
-        List<BuildResult> results = buildResultDao.getBuildResultsForProject( projectId, fromDate );
+        List<BuildResult> results = buildResultDao.getBuildResultsForProjectFromId( projectId, startId );
 
         ScmResult res = new ScmResult();
 
@@ -793,8 +797,7 @@ public class DefaultBuildController
                             if ( changeSet.getDate() < fromDate )
                             {
                                 continue;
-                            }
-
+                            }                            
                             if ( !res.getChanges().contains( changeSet ) )
                             {
                                 res.addChange( changeSet );

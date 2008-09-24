@@ -31,16 +31,16 @@ under the License.
   <packaging>pom</packaging>
   <name>Continuum :: Project</name>
   <url>http://continuum.apache.org</url>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.2.1-SNAPSHOT</version>
 
   <prerequisites>
     <maven>2.0.7</maven>
   </prerequisites>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/branches/continuum-1.2.x</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/branches/continuum-1.2.x</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/continuum/branches/continuum-1.2.x/</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/trunk/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk/</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/continuum/trunk/</url>
   </scm>
   <distributionManagement>
     <site>
@@ -150,23 +150,6 @@ under the License.
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.0-beta-1</version>
-        <executions>
-          <execution>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <doCheck>false</doCheck>
-          <doUpdate>false</doUpdate>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
@@ -267,6 +250,17 @@ under the License.
       <id>apache.snapshots</id>
       <name>Apache Snapshot Repository</name>
       <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>    
+    <repository>
+      <id>codehaus.snapshots</id>
+      <name>Codehaus Snapshot Repository</name>
+      <url>http://snapshots.repository.codehaus.org</url>
       <releases>
         <enabled>false</enabled>
       </releases>
@@ -811,7 +805,7 @@ under the License.
         Plexus Redback Dependencies
         -->
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-rbac-memory</artifactId>
         <version>${redback.version}</version>
         <scope>test</scope>
@@ -823,29 +817,29 @@ under the License.
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-users-memory</artifactId>
         <version>${redback.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-keys-memory</artifactId>
         <version>${redback.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-rbac-model</artifactId>
         <version>${redback.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-authorization-rbac</artifactId>
         <version>${redback.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-rbac-role-manager</artifactId>
         <version>${redback.version}</version>
         <exclusions>
@@ -856,12 +850,12 @@ under the License.
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-users-configurable</artifactId>
         <version>${redback.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-system</artifactId>
         <version>${redback.version}</version>
         <exclusions>
@@ -872,7 +866,7 @@ under the License.
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-taglib</artifactId>
         <version>${redback.version}</version>
         <exclusions>
@@ -883,13 +877,13 @@ under the License.
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-xwork-content</artifactId>
         <version>${redback.version}</version>
         <type>war</type>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-xwork-integration</artifactId>
         <version>${redback.version}</version>
         <exclusions>
@@ -900,7 +894,7 @@ under the License.
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.plexus.redback</groupId>
+        <groupId>org.codehaus.redback</groupId>
         <artifactId>redback-data-management</artifactId>
         <version>${redback.version}</version>
       </dependency>
@@ -996,6 +990,35 @@ under the License.
         <module>continuum-webapp-test</module>
       </modules>
     </profile>
+    <profile>
+      <id>buildnumber</id>
+      <activation>
+        <file>
+          <exists>.svn</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>buildnumber-maven-plugin</artifactId>
+            <version>1.0-beta-1</version>
+            <executions>
+              <execution>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>create</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <doCheck>false</doCheck>
+              <doUpdate>false</doUpdate>
+            </configuration>
+          </plugin>        
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <properties>
@@ -1004,7 +1027,7 @@ under the License.
     <spring.version>2.5.4</spring.version>
     <wagon.version>1.0-beta-2</wagon.version>
     <maven-scm.version>1.1</maven-scm.version>
-    <redback.version>1.0.2</redback.version>
+    <redback.version>1.1.1</redback.version>
     <mail-sender.version>1.0-alpha-7</mail-sender.version>
     <archiva.version>1.1</archiva.version>
   </properties>

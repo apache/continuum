@@ -39,6 +39,9 @@
         <ww:url id="projectGroupNotifierUrl" action="projectGroupNotifier" includeParams="none">
           <ww:param name="projectGroupId" value="projectGroupId"/>
         </ww:url>
+        <ww:url id="projectGroupReleaseResultsUrl" action="projectGroupReleaseResults" includeParams="none">
+          <ww:param name="projectGroupId" value="projectGroupId"/>
+        </ww:url>
 
         <ww:set name="tabName" value="tabName"/>
         <c:choose>
@@ -74,6 +77,15 @@
             </c:when>
             <c:otherwise>
                 <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><ww:text name="projectGroup.tab.notifiers"/></b>
+            </c:otherwise>
+        </c:choose>
+        
+        <c:choose>
+            <c:when test="${tabName != 'ReleaseResults'}">
+                <a style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em; text-decoration: none;" href="${projectGroupReleaseResultsUrl}"><ww:text name="projectGroup.tab.releaseResults"/></a>
+            </c:when>
+            <c:otherwise>
+                <b style="border: 1px solid #DFDEDE; padding-left: 1em; padding-right: 1em;"><ww:text name="projectGroup.tab.releaseResults"/></b>
             </c:otherwise>
         </c:choose>
       </p>

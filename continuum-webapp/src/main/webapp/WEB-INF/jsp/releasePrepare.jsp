@@ -32,14 +32,16 @@
         <input type="hidden" name="projectId" value="<ww:property value="projectId"/>"/>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <ww:textfield label="SCM Username" name="scmUsername" required="true"/>
-            <ww:password label="SCM Password" name="scmPassword" required="true"/>
-            <ww:textfield label="SCM Tag" name="scmTag" required="true"/>
+            <ww:textfield label="%{getText('releasePrepare.scmUsername.label')}" name="scmUsername" required="true"/>
+            <ww:password label="%{getText('releasePrepare.scmPassword.label')}" name="scmPassword" required="true"/>
+            <ww:textfield label="%{getText('releasePrepare.scmTag.label')}" name="scmTag" required="true"/>
             <c:if test="${!empty (scmTagBase)}">
-              <ww:textfield label="SCM Tag Base" name="scmTagBase"/>
+              <ww:textfield label="%{getText('releasePrepare.scmTagBase.label')}" name="scmTagBase"/>
             </c:if>
-            <ww:textfield label="Preparation Goals" name="prepareGoals" required="true"/>
-           </table>
+            <ww:textfield label="%{getText('releasePrepare.prepareGoals.label')}" name="prepareGoals" required="true"/>
+            <ww:select label="%{getText('releasePrepare.buildEnvironment.label')}" name="profileId" list="profiles" listValue="name" 
+                       listKey="id" headerKey="-1" headerValue=""/>
+          </table>
         </div>
 
         <ww:iterator value="projects">

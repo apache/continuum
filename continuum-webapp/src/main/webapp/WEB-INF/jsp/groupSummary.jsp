@@ -68,6 +68,47 @@
             ${pageScope.group.repositoryName}
           </redback:elseAuthorized>
         </ec:column>
+        <ec:column property="buildGroupNowAction" title="&nbsp;" width="1%">
+          <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
+            <ww:url id="buildProjectGroupUrl" action="buildProjectGroup" namespace="/" includeParams="none">
+              <ww:param name="projectGroupId" value="${group.id}"/>
+              <ww:param name="buildDefinitionId" value="-1"/>
+              <ww:param name="fromSummaryPage" value="true"/>
+            </ww:url>
+            <ww:a href="%{buildProjectGroupUrl}">
+              <img src="<ww:url value='/images/buildnow.gif'/>" alt="<ww:text name="projectGroup.buildGroup"/>" title="<ww:text name="projectGroup.buildGroup"/>" border="0">
+            </ww:a>
+          </redback:ifAuthorized>
+          <redback:elseAuthorized>
+            <img src="<ww:url value='/images/buildnow_disabled.gif'/>" alt="<ww:text name="projectGroup.buildGroup"/>" title="<ww:text name="projectGroup.buildGroup"/>" border="0">
+          </redback:elseAuthorized>
+        </ec:column>
+        <ec:column property="releaseProjectGroupAction" title="&nbsp;" width="1%">
+          <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
+            <ww:url id="releaseProjectGroupUrl" action="releaseProjectGroup" namespace="/" includeParams="none">
+              <ww:param name="projectGroupId" value="${group.id}"/>
+            </ww:url>
+            <ww:a href="%{releaseProjectGroupUrl}">
+              <img src="<ww:url value='/images/releaseproject.gif'/>" alt="<ww:text name="projectGroup.releaseNow"/>" title="<ww:text name="projectGroup.releaseNow"/>" border="0">
+            </ww:a>
+          </redback:ifAuthorized>
+          <redback:elseAuthorized>
+            <img src="<ww:url value='/images/releaseproject_disabled.gif'/>" alt="<ww:text name="projectGroup.releaseNow"/>" title="<ww:text name="projectGroup.releaseNow"/>" border="0">
+          </redback:elseAuthorized>
+        </ec:column>
+        <ec:column property="removeProjectGroupAction" title="&nbsp;" width="1%">
+          <redback:ifAuthorized permission="continuum-remove-group" resource="${group.name}">
+            <ww:url id="removeProjectGroupUrl" action="removeProjectGroup" namespace="/" includeParams="none">
+              <ww:param name="projectGroupId" value="${group.id}"/>
+            </ww:url>
+            <ww:a href="%{removeProjectGroupUrl}">
+              <img src="<ww:url value='/images/delete.gif'/>" alt="<ww:text name="projectGroup.deleteGroup"/>" title="<ww:text name="projectGroup.deleteGroup"/>" border="0">
+            </ww:a>
+          </redback:ifAuthorized>
+          <redback:elseAuthorized>
+            <img src="<ww:url value='/images/delete_disabled.gif'/>" alt="<ww:text name="projectGroup.deleteGroup"/>" title="<ww:text name="projectGroup.deleteGroup"/>" border="0">
+          </redback:elseAuthorized>
+        </ec:column>
         <ec:column property="numSuccesses" title="&nbsp;" format="0" width="2%" style="text-align: right" headerClass="calcHeaderSucces" calc="total" calcTitle="groups.table.summary"/>
         <ec:column property="numFailures" title="&nbsp;" format="0" width="2%" style="text-align: right" headerClass="calcHeaderFailure" calc="total" />
         <ec:column property="numErrors" title="&nbsp;" format="0" width="2%" style="text-align: right" headerClass="calcHeaderError" calc="total"/>

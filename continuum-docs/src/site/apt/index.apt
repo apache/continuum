@@ -5,7 +5,7 @@
  ------
  Oct 3 2007
 
-Continuum 1.2 Documentation
+Documentation
 
 * Installation/Upgrade Guides
 
@@ -49,3 +49,7 @@ Continuum 1.2 Documentation
     {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
 
     {{{http://docs.codehaus.org/display/CONTINUUMUSER/Home}Wiki}}
+    
+    {{{http://cwiki.apache.org/confluence/display/CONTINUUM}New Wiki}}
+    
+    {{{http://apache-continuum.blogspot.com/}Blog}}

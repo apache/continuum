@@ -21,6 +21,7 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
@@ -85,6 +86,10 @@ public class ReleasePrepareAction
 
     private String projectGroupName = "";
 
+    private List<Profile> profiles;
+
+    private int profileId;
+
     public String input()
         throws Exception
     {
@@ -137,6 +142,8 @@ public class ReleasePrepareAction
         getReleasePluginParameters( workingDirectory, "pom.xml" );
 
         processProject( workingDirectory, "pom.xml" );
+
+        profiles = this.getContinuum().getProfileService().getAllProfiles();
 
         return SUCCESS;
     }
@@ -210,11 +217,18 @@ public class ReleasePrepareAction
         {
             name = project.getArtifactId();
         }
+        
+        Profile profile = null;
+        
+        if ( profileId != -1 )
+        {
+            profile = getContinuum().getProfileService().getProfile( profileId );
+        }
 
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
         releaseId =
-            releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), listener );
+            releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), listener, profile );
 
         return SUCCESS;
     }
@@ -525,5 +539,25 @@ public class ReleasePrepareAction
         }
 
         return projectGroupName;
+    }
+
+    public List<Profile> getProfiles()
+    {
+        return profiles;
+    }
+
+    public void setProfiles( List<Profile> profiles )
+    {
+        this.profiles = profiles;
+    }
+
+    public int getProfileId()
+    {
+        return profileId;
+    }
+
+    public void setProfileId( int profileId )
+    {
+        this.profileId = profileId;
     }
 }

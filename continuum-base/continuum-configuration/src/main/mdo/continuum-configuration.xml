@@ -60,7 +60,12 @@
             <type>ProxyConfiguration</type>
             <multiplicity>1</multiplicity>
           </association>          
-        </field>                     
+        </field>     
+        <field>
+          <name>releaseOutputDirectory</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>                
       </fields>
     </class>
     <class xml.tagName="proxy-configuration">

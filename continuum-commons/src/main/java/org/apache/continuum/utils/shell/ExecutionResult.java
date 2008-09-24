@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.utils.shell;
+package org.apache.continuum.utils.shell;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,26 +19,21 @@ package org.apache.maven.continuum.utils.shell;
  * under the License.
  */
 
-import java.io.File;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public interface ShellCommandHelper
+public class ExecutionResult
 {
-    String ROLE = ShellCommandHelper.class.getName();
+    private int exitCode;
 
-    ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
-                                         long idCommand, Map<String, String> environments )
-        throws Exception;
+    public ExecutionResult( int exitCode )
+    {
+        this.exitCode = exitCode;
+    }
 
-    ExecutionResult executeShellCommand( File workingDirectory, String executable, String[] arguments, File output,
-                                         long idCommand, Map<String, String> environments )
-        throws Exception;
-
-    boolean isRunning( long idCommand );
-
-    void killProcess( long idCommand );
+    public int getExitCode()
+    {
+        return exitCode;
+    }
 }

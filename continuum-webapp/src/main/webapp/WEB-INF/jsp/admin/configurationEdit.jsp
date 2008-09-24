@@ -19,6 +19,7 @@
 
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="continuum" prefix="c1" %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
 <ww:i18n name="localization.Continuum">
   <head>
@@ -35,12 +36,13 @@
 
     <ww:form action="configuration!save" method="post">
 
-      <ww:if test="hasActionErrors()">
-        <h3>Action Error</h3>
-      </ww:if>
-      <p>
-        <ww:actionerror/>
-      </p>
+      <c:if test="${!empty actionErrors}">
+        <div class="errormessage">
+          <c:forEach items="${actionErrors}" var="actionError">
+            <p><ww:text name="${actionError}"/></p>
+          </c:forEach>
+        </div>
+      </c:if>
 
       <div class="axial">
 
@@ -61,6 +63,13 @@
               </p></ww:param>
             </ww:textfield>
 
+            <ww:textfield label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"
+            			  required="${requireReleaseOutput}">
+              <ww:param name="desc"><p>
+                <ww:text name="configuration.releaseOutputDirectory.message"/>
+              </ww:param>
+            </ww:textfield>
+
             <ww:textfield label="%{getText('configuration.deploymentRepositoryDirectory.label')}"
                           name="deploymentRepositoryDirectory">
               <ww:param name="desc"><p>
@@ -74,6 +83,7 @@
               </p></ww:param>
             </ww:textfield>
 
+            <ww:hidden name="requireReleaseOutput"/>
           </tbody>
         </table>
         <div class="functnbar3">

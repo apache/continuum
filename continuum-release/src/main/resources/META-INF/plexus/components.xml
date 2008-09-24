@@ -240,7 +240,7 @@
         </requirement>
         <requirement>
           <role>org.apache.maven.shared.release.config.ReleaseDescriptorStore</role>
-          <role-hint>properties</role-hint>
+          <role-hint>continuum-release-properties</role-hint>
           <field-name>configStore</field-name>
         </requirement>
         <requirement>
@@ -260,7 +260,7 @@
           <phase>map-development-versions</phase>
           <phase>rewrite-poms-for-release</phase>
           <phase>generate-release-poms</phase>
-          <phase>run-preparation-goals</phase>
+          <phase>run-release-prepare-goals</phase>
           <phase>scm-commit-release</phase>
           <phase>scm-tag</phase>
           <phase>rewrite-poms-for-development</phase>
@@ -271,7 +271,7 @@
         <performPhases>
           <phase>verify-completed-prepare-phases</phase>
           <phase>checkout-project-from-scm</phase>
-          <phase>run-perform-goals</phase>
+          <phase>run-release-perform-goals</phase>
         </performPhases>
         <rollbackPhases>
           <phase>generate-reactor-projects</phase>
@@ -304,7 +304,27 @@
         </requirement>
       </requirements>
     </component>
-
+    <component>
+      <role>org.apache.maven.shared.release.phase.ReleasePhase</role>
+      <role-hint>run-release-prepare-goals</role-hint>
+      <implementation>org.apache.continuum.release.phase.RunPrepareGoalsPhase</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.continuum.utils.shell.ShellCommandHelper</role>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>org.apache.maven.shared.release.phase.ReleasePhase</role>
+      <role-hint>run-release-perform-goals</role-hint>
+      <implementation>org.apache.continuum.release.phase.RunPerformGoalsPhase</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.continuum.utils.shell.ShellCommandHelper</role>
+        </requirement>
+      </requirements>
+    </component>
+    
     <!-- This needs to be removed once we can upgrade maven-project to 2.1-SNAPSHOT or later. -->
     <component>
       <role>org.apache.maven.artifact.metadata.ArtifactMetadataSource</role>
@@ -318,12 +338,16 @@
           <role>org.apache.maven.artifact.factory.ArtifactFactory</role>
         </requirement>
         <requirement>
-          <role>org.apache.maven.artifact.repository.metadata.RepositoryMetadataManager</role
->
+          <role>org.apache.maven.artifact.repository.metadata.RepositoryMetadataManager</role>
         </requirement>
       </requirements>
     </component>
 
+    <component>
+      <role>org.apache.maven.shared.release.config.ReleaseDescriptorStore</role>
+      <role-hint>continuum-release-properties</role-hint>
+      <implementation>org.apache.continuum.release.config.ContinuumPropertiesReleaseDescriptorStore</implementation>
+    </component>
   </components>
 
 </component-set>
