@@ -131,7 +131,14 @@ public class DefaultProfileService
     public void deleteProfile( int profileId )
         throws ProfileException
     {
-        profileDao.removeProfile( getProfile( profileId ) );
+        try
+        {
+            profileDao.removeProfile( getProfile( profileId ) );
+        }
+        catch ( Exception e )
+        {
+            throw new ProfileException( "Cannot remove the profile", e );
+        }
     }
 
     /**

@@ -19,6 +19,7 @@ package org.apache.maven.continuum.release.tasks;
  * under the License.
  */
 
+import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.codehaus.plexus.taskqueue.Task;
@@ -37,11 +38,15 @@ public abstract class AbstractReleaseProjectTask
 
     private long maxExecutionTime;
 
-    public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener )
+    private Profile profile;
+
+    public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener,
+                                       Profile profile )
     {
         this.releaseId = releaseId;
         this.descriptor = descriptor;
         this.listener = listener;
+        this.profile = profile;
     }
 
     public ReleaseDescriptor getDescriptor()
@@ -82,5 +87,15 @@ public abstract class AbstractReleaseProjectTask
     public void setMaxExecutionTime( long maxTime )
     {
         this.maxExecutionTime = maxTime;
+    }
+
+    public Profile getProfile()
+    {
+        return profile;
+    }
+
+    public void setProfile( Profile profile )
+    {
+        this.profile = profile;
     }
 }
