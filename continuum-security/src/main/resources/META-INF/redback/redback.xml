@@ -408,18 +408,6 @@
   		          <operation>user-management-role-grant</operation>
   		          <resource>${resource}</resource>
   		        </permission>
-  		        <permission>
-  		          <id>continuum-manage-repositories</id>
-  		          <name>Manage Continuum Local Repositories</name>
-  		          <operation>continuum-manage-repositories</operation>
-  		          <resource>global</resource>
-  		        </permission>
-  		        <permission>
-  		          <id>continuum-manage-purging</id>
-  		          <name>Manage Continuum Purging</name>
-  		          <operation>continuum-manage-purging</operation>
-  		          <resource>global</resource>
-  		        </permission>
   		  	  </permissions>
   		  	  <childTemplates>
   		  	  	<childTemplate>project-developer</childTemplate>

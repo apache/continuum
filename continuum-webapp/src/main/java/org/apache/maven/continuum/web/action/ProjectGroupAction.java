@@ -28,6 +28,7 @@ import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.bean.ProjectGroupUserBean;
+import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.redback.rbac.RBACManager;
 import org.codehaus.plexus.redback.rbac.RbacManagerException;
@@ -121,6 +122,8 @@ public class ProjectGroupAction
     private int repositoryId;
 
     private List<LocalRepository> repositories;
+
+    private boolean disabledRepositories = true;
 
     public String summary()
         throws ContinuumException
@@ -304,6 +307,16 @@ public class ProjectGroupAction
         {
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
+        }
+
+        try
+        {
+            checkManageLocalRepositoriesAuthorization();
+            disabledRepositories = false;
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            // do nothing
         }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
@@ -949,5 +962,15 @@ public class ProjectGroupAction
     public void setRepositories( List<LocalRepository> repositories )
     {
         this.repositories = repositories;
+    }
+
+    public boolean isDisabledRepositories()
+    {
+        return disabledRepositories;
+    }
+
+    public void setDisabledRepositories( boolean disabledRepositories )
+    {
+        this.disabledRepositories = disabledRepositories;
     }
 }
