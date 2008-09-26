@@ -356,7 +356,8 @@ public class DefaultBuildController
             // now we will load all BuildResult with an Id bigger or equals than the oldBuildResult one
             if ( oldBuildResult != null )
             {
-                context.setOldScmResult( getOldScmResults( projectId, oldBuildResult.getBuildNumber(), oldBuildResult.getEndTime() ) );
+                context.setOldScmResult(
+                    getOldScmResults( projectId, oldBuildResult.getBuildNumber(), oldBuildResult.getEndTime() ) );
             }
         }
         catch ( ContinuumStoreException e )
@@ -478,6 +479,11 @@ public class DefaultBuildController
         throws TaskExecutionException
     {
         BuildDefinition buildDefinition = context.getBuildDefinition();
+        if ( buildDefinition.isBuildFresh() )
+        {
+            getLogger().info( "FreshBuild configured, building" );
+            return true;
+        }
         if ( buildDefinition.isAlwaysBuild() )
         {
             getLogger().info( "AlwaysBuild configured, building" );
@@ -799,7 +805,7 @@ public class DefaultBuildController
                             if ( changeSet.getDate() < fromDate )
                             {
                                 continue;
-                            }                            
+                            }
                             if ( !res.getChanges().contains( changeSet ) )
                             {
                                 res.addChange( changeSet );
