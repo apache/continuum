@@ -34,6 +34,14 @@ public class AddMavenTwoProject
     extends AbstractContinuumMojo
 {
     /**
+     * POM file name.
+     *
+     * @parameter expression="${pomFilename}" default-value="pom.xml"
+     * @required
+     */
+    private String pomFilename;
+
+    /**
      * POM Url.
      *
      * @parameter expression="${projectUrl}" default-value="${project.scm.url}"
@@ -54,7 +62,16 @@ public class AddMavenTwoProject
         AddingResult addingResult = null;
         try
         {
+            if ( !projectUrl.endsWith( pomFilename ) )
+            {
+                if ( !projectUrl.endsWith( "/" ) )
+                {
+                    projectUrl += "/";
+                }
+                projectUrl += pomFilename;
+            }
 
+            getLog().info( "Adding M2 project from " + projectUrl );
             if ( projectGroupId != null && projectGroupId.length() > 0 )
             {
                 addingResult = getClient().addMavenTwoProject( projectUrl, Integer.parseInt( projectGroupId ) );
@@ -68,6 +85,8 @@ public class AddMavenTwoProject
                 getLog().error( "fail to add mavenTwo project " + addingResult.getErrorsAsString() );
                 throw new MojoExecutionException( "fail to add mavenTwo project " + addingResult.getErrorsAsString() );
             }
+            //TODO: print projects/project groups added
+            //addingResult.getProjects();
         }
         catch ( MojoExecutionException e )
         {
