@@ -466,7 +466,7 @@ public class ProjectGroupAction
             ProjectGroup newProjectGroup =
                 getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() );
 
-            if ( newProjectGroup.getId() != projectGroup.getId() )
+            if ( newProjectGroup.getId() != projectGroup.getId() && isAuthorized( newProjectGroup.getName() ) )
             {
                 getLogger().info(
                     "Moving project " + project.getName() + " to project group " + newProjectGroup.getName() );
