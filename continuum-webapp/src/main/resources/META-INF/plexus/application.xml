@@ -57,7 +57,8 @@
           <role>org.apache.continuum.dao.BuildResultDao</role>
         </requirement>
         <requirement>
-          <role>org.codehaus.plexus.mailsender.MailSender</role>
+          <role>mailSender</role>
+          <role-hint>continuum</role-hint>
         </requirement>
         <requirement>
           <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
@@ -113,7 +114,8 @@
         <to-override></to-override>
       </configuration>
     </component>
-
+  
+    <!-- TODO remove when redback will not use anymore plexus-mail -->
     <component>
       <role>org.codehaus.plexus.mailsender.MailSender</role>
       <implementation>org.codehaus.plexus.mailsender.javamail.JndiJavamailMailSender</implementation>

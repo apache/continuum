@@ -19,6 +19,17 @@ package org.apache.maven.continuum.notification.mail;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
+
+import org.apache.continuum.notification.mail.MockJavaMailSender;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -27,15 +38,9 @@ import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
 import org.apache.maven.continuum.notification.Notifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.mailsender.MailMessage;
-import org.codehaus.plexus.mailsender.MailSender;
-import org.codehaus.plexus.mailsender.test.MockMailSender;
-import org.codehaus.plexus.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.javamail.JavaMailSender;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -44,18 +49,22 @@ import java.util.Map;
 public class MailContinuumNotifierTest
     extends AbstractContinuumTest
 {
+    
+    protected Logger logger = LoggerFactory.getLogger( getClass() );
+    
     public void testSuccessfulBuild()
         throws Exception
     {
         MailContinuumNotifier notifier = (MailContinuumNotifier) lookup( Notifier.class.getName(), "mail" );
-        notifier.setToOverride( "recipient@host.com" );
+        String toOverride = "recipient@host.com";
+        notifier.setToOverride( toOverride );
 
         Project project = makeStubProject( "Test Project" );
         project.setGroupId( "foo.bar" );
 
         BuildResult build = makeBuild( ContinuumProjectState.OK );
 
-        MailMessage mailMessage = sendNotificationAndGetMessage( project, build, "lots out build output" );
+        MimeMessage mailMessage = sendNotificationAndGetMessage( project, build, "lots out build output", toOverride );
 
         assertEquals( "[continuum] BUILD SUCCESSFUL: foo.bar Test Project", mailMessage.getSubject() );
 
@@ -70,7 +79,7 @@ public class MailContinuumNotifierTest
 
         BuildResult build = makeBuild( ContinuumProjectState.FAILED );
 
-        MailMessage mailMessage = sendNotificationAndGetMessage( project, build, "output" );
+        MimeMessage mailMessage = sendNotificationAndGetMessage( project, build, "output", null );
 
         assertEquals( "[continuum] BUILD FAILURE: foo.bar Test Project", mailMessage.getSubject() );
 
@@ -87,38 +96,39 @@ public class MailContinuumNotifierTest
 
         build.setError( "Big long error message" );
 
-        MailMessage mailMessage = sendNotificationAndGetMessage( project, build, "lots of stack traces" );
+        MimeMessage mailMessage = sendNotificationAndGetMessage( project, build, "lots of stack traces", null );
 
         assertEquals( "[continuum] BUILD ERROR: foo.bar Test Project", mailMessage.getSubject() );
 
         dumpContent( mailMessage );
     }
 
-    private void dumpContent( MailMessage mailMessage )
+    private void dumpContent( MimeMessage mailMessage )
         throws Exception
     {
         dumpContent( mailMessage, null );
     }
 
-    private void dumpContent( MailMessage mailMessage, String toOverride )
+    private void dumpContent( MimeMessage mailMessage, String toOverride )
         throws Exception
     {
+        Address[] tos  = mailMessage.getRecipients( RecipientType.TO );
         if ( toOverride != null )
         {
-            assertEquals( toOverride, ( (MailMessage.Address) mailMessage.getToAddresses().get( 0 ) ).getMailbox() );
+            assertEquals( toOverride, ( (InternetAddress) tos[ 0 ] ).getAddress() );
         }
         else
         {
-            assertEquals( "foo@bar", ( (MailMessage.Address) mailMessage.getToAddresses().get( 0 ) ).getMailbox() );
+            assertEquals( "foo@bar", ( (InternetAddress) tos[ 0 ] ).getAddress() );
         }
         assertTrue( "The template isn't loaded correctly.",
-                    mailMessage.getContent().indexOf( "#shellBuildResult()" ) < 0 );
+                    ((String)mailMessage.getContent()).indexOf( "#shellBuildResult()" ) < 0 );
         assertTrue( "The template isn't loaded correctly.",
-                    mailMessage.getContent().indexOf( "Build statistics" ) > 0 );
+                    ((String)mailMessage.getContent()).indexOf( "Build statistics" ) > 0 );
 
         if ( true )
         {
-            System.err.println( mailMessage.getContent() );
+            logger.info( ((String)mailMessage.getContent()) );
         }
     }
 
@@ -126,7 +136,7 @@ public class MailContinuumNotifierTest
     //
     // ----------------------------------------------------------------------
 
-    private MailMessage sendNotificationAndGetMessage( Project project, BuildResult build, String buildOutput )
+    private MimeMessage sendNotificationAndGetMessage( Project project, BuildResult build, String buildOutput, String toOverride )
         throws Exception
     {
         MessageContext context = new MessageContext();
@@ -162,29 +172,27 @@ public class MailContinuumNotifierTest
         //
         // ----------------------------------------------------------------------
 
-        MockMailSender mailSender = (MockMailSender) lookup( MailSender.ROLE );
+        MockJavaMailSender mailSender = (MockJavaMailSender) lookup( JavaMailSender.class, "continuum" );
 
-        assertEquals( 1, mailSender.getReceivedEmailSize() );
+        assertEquals( 1, mailSender.getReceivedEmails().size() );
 
-        List mails = CollectionUtils.iteratorToList( mailSender.getReceivedEmail() );
+        List<MimeMessage> mails = mailSender.getReceivedEmails();
 
-        MailMessage mailMessage = (MailMessage) mails.get( 0 );
+        MimeMessage mailMessage = (MimeMessage) mails.get( 0 );
 
         // ----------------------------------------------------------------------
         //
         // ----------------------------------------------------------------------
 
-        assertEquals( "continuum@localhost", mailMessage.getFrom().getMailbox() );
+        assertEquals( "continuum@localhost", ((InternetAddress) mailMessage.getFrom()[0]).getAddress() );
 
-        assertEquals( "Continuum", mailMessage.getFrom().getName() );
+        assertEquals( "Continuum", ((InternetAddress) mailMessage.getFrom()[0]).getPersonal() );
 
-        List to = mailMessage.getToAddresses();
+        Address[] tos  = mailMessage.getRecipients( RecipientType.TO );
 
-        assertEquals( 1, to.size() );
+        assertEquals( 1, tos.length );
 
-        //assertEquals( "foo@bar", ( (MailMessage.Address) to.get( 0 ) ).getMailbox() );
-
-        assertNull( ( (MailMessage.Address) to.get( 0 ) ).getName() );
+        assertEquals(toOverride == null ? "foo@bar" : toOverride, ( (InternetAddress) tos[0] ).getAddress() );
 
         return mailMessage;
     }
