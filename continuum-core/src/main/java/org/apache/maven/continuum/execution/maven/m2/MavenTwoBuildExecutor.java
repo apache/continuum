@@ -407,8 +407,25 @@ public class MavenTwoBuildExecutor
             return true;
         }
 
-        //check if changes are only in sub-modules or not
         MavenProject project = getMavenProject( continuumProject, workingDirectory, buildDefinition );
+
+        //CONTINUUM-1815: additional check for projects recently released
+        if ( !continuumProject.getVersion().equals( project.getVersion() ) )
+        {
+            getLogger().info( "Found changes in project's version ( maybe project was recently released ), building" );
+            return true;
+        }
+        
+        if ( changes.isEmpty() )
+        {
+            if ( getLogger().isDebugEnabled() )
+            {
+                getLogger().info( "Found no changes, not building" );
+            }
+            return false;
+        }
+        
+        //check if changes are only in sub-modules or not
         List<String> modules = project.getModules();
 
         List<ChangeFile> files = new ArrayList<ChangeFile>();
