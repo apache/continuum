@@ -27,6 +27,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -138,6 +140,8 @@ public abstract class AddMavenProjectAction
                 {
                     pom = pomFile.toURL().toString();
                     checkProtocol = false;
+                    // CONTINUUM-1897
+                    // File.c copyFile to tmp one
                 }
                 catch ( MalformedURLException e )
                 {
