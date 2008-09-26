@@ -19,6 +19,23 @@ package org.apache.maven.continuum.notification.mail;
  * under the License.
  */
 
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
@@ -45,23 +62,12 @@ import org.apache.maven.continuum.reports.surefire.ReportTestResult;
 import org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.exception.ResourceNotFoundException;
-import org.codehaus.plexus.mailsender.MailMessage;
-import org.codehaus.plexus.mailsender.MailSender;
-import org.codehaus.plexus.mailsender.MailSenderException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.velocity.VelocityComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.StringWriter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.mail.javamail.JavaMailSender;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -93,9 +99,9 @@ public class MailContinuumNotifier
     private Continuum continuum;
 
     /**
-     * @plexus.configuration
+     * @plexus.requirement
      */
-    private MailSender mailSender;
+    private JavaMailSender javaMailSender;
 
     /**
      * @plexus.requirement
@@ -538,23 +544,26 @@ public class MailContinuumNotifier
             return;
         }
 
-        MailMessage message = new MailMessage();
 
-        message.addHeader( "X-Continuum-Build-Host", buildHost );
-
-        message.addHeader( "X-Continuum-Project-Id", Integer.toString( project.getId() ) );
-
-        message.addHeader( "X-Continuum-Project-Name", project.getName() );
 
         try
         {
+            
+            MimeMessage message = javaMailSender.createMimeMessage();
+            
+            message.addHeader( "X-Continuum-Build-Host", buildHost );
+
+            message.addHeader( "X-Continuum-Project-Id", Integer.toString( project.getId() ) );
+
+            message.addHeader( "X-Continuum-Project-Name", project.getName() );            
+            
             message.setSubject( subject );
 
             log.info( "Message Subject: '" + subject + "'." );
 
-            message.setContent( content );
+            message.setText( content );
 
-            MailMessage.Address from = new MailMessage.Address( fromMailbox, fromName );
+            InternetAddress from = new InternetAddress( fromMailbox, fromName );
 
             message.setFrom( from );
 
@@ -572,18 +581,19 @@ public class MailContinuumNotifier
                         if ( StringUtils.isNotEmpty( addressField ) )
                         {
                             String[] addresses = StringUtils.split( addressField, "," );
-
+                            List<Address> recipients = new ArrayList<Address>();
                             for ( String address : addresses )
                             {
                                 // TODO: set a proper name
-                                MailMessage.Address to = new MailMessage.Address( address.trim() );
+                            	InternetAddress to = new InternetAddress( address.trim() );
 
                                 log.info( "Recipient: To '" + to + "'." );
 
-                                message.addTo( to );
+                                recipients.add( to );
                             }
+                            message.setRecipients(Message.RecipientType.TO, recipients.toArray(new Address[recipients.size()]));
                         }
-
+                        
                         String committerField = (String) notifier.getConfiguration().get( COMMITTER_FIELD );
                         if ( StringUtils.isNotEmpty( committerField ) && context.getBuildResult() != null )
                         {
@@ -620,11 +630,10 @@ public class MailContinuumNotifier
                                             else
                                             {
                                                 // TODO: set a proper name
-                                                MailMessage.Address to = new MailMessage.Address( email.trim() );
-
+                                                InternetAddress to = new InternetAddress( email.trim() );
                                                 log.info( "Recipient: To '" + to + "'." );
 
-                                                message.addTo( to );
+                                                message.addRecipient( Message.RecipientType.TO, to );
                                             }
                                         }
                                     }
@@ -638,19 +647,27 @@ public class MailContinuumNotifier
             {
                 // TODO: use configuration file instead of to load it fron component configuration
                 // TODO: set a proper name
-                MailMessage.Address to = new MailMessage.Address( toOverride.trim() );
-
+                InternetAddress to = new InternetAddress( toOverride.trim() );
                 log.info( "Recipient: To '" + to + "'." );
 
-                message.addTo( to );
+                message.addRecipient( Message.RecipientType.TO, to );
             }
 
-            mailSender.send( message );
+            javaMailSender.send( message );
+            //mailSender.send( message );
         }
-        catch ( MailSenderException ex )
+        catch ( AddressException ex )
         {
             throw new NotificationException( "Exception while sending message.", ex );
         }
+        catch ( MessagingException ex )
+        {
+            throw new NotificationException( "Exception while sending message.", ex );
+        }
+        catch ( UnsupportedEncodingException ex )
+        {
+            throw new NotificationException( "Exception while sending message.", ex );
+        }         
     }
 
     private Map<String, String> mapDevelopersToRecipients( List<ProjectDeveloper> developers )

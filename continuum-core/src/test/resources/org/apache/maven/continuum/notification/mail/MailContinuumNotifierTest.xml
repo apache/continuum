@@ -21,8 +21,9 @@
   <components>
 
     <component>
-      <role>org.codehaus.plexus.mailsender.MailSender</role>
-      <implementation>org.codehaus.plexus.mailsender.test.MockMailSender</implementation>
+      <role>org.springframework.mail.javamail.JavaMailSender</role>
+      <implementation>org.apache.continuum.notification.mail.MockJavaMailSender</implementation>
+      <role-hint>continuum</role-hint>
     </component>
 
     <component>
@@ -40,7 +41,9 @@
           <role>org.apache.continuum.dao.BuildResultDao</role>
         </requirement>
         <requirement>
-          <role>org.codehaus.plexus.mailsender.MailSender</role>
+          <field-name>javaMailSender</field-name>
+          <role>javaMailSender</role>
+          <role-hint>continuum</role-hint>
         </requirement>
         <requirement>
           <role>org.apache.maven.continuum.Continuum</role>
