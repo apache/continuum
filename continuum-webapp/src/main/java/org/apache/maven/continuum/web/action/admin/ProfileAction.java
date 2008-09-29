@@ -116,7 +116,7 @@ public class ProfileAction
         {
             Profile stored = profileService.getProfile( profile.getId() );
 
-            if ( StringUtils.isEmpty( profile.getName() ) )
+            if ( StringUtils.isBlank( profile.getName() ) )
             {
                 if ( stored != null )
                 {
