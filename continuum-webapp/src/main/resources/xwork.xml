@@ -178,7 +178,11 @@
     
     <action name="addMavenTwoProject" class="addMavenTwoProject">
       <interceptor-ref name="configuredContinuumStack"/>
-      <interceptor-ref name="execAndWait"/> 
+      <interceptor-ref name="fileUpload"/>
+      <interceptor-ref name="execAndWait">
+        <param name="delay">200</param>
+        <param name="delaySleepInterval">50</param>
+      </interceptor-ref> 
       <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>     
       <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
       <result name="success" type="chain">groupSummary</result>
