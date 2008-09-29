@@ -138,7 +138,7 @@ public class ProjectGroupAction
         }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
-
+       
         List<BuildDefinition> projectGroupBuildDefs =
             getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
 
@@ -296,7 +296,7 @@ public class ProjectGroupAction
     }
 
     public String edit()
-        throws ContinuumException
+        throws ContinuumException, CycleDetectedException
     {
         try
         {
@@ -323,7 +323,7 @@ public class ProjectGroupAction
         name = projectGroup.getName();
 
         description = projectGroup.getDescription();
-
+       
         projectList = projectGroup.getProjects();
 
         if ( projectList != null )
@@ -362,6 +362,14 @@ public class ProjectGroupAction
 
         repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
 
+        Project rootProject = ( getContinuum().getProjectsInBuildOrder( getContinuum()
+            .getProjectsInGroupWithDependencies( projectGroup.getId() ) ) ).get( 0 );
+        
+        if (rootProject != null)
+        {
+            setUrl( rootProject.getUrl() );
+        }
+        
         return SUCCESS;
     }
 
@@ -443,6 +451,13 @@ public class ProjectGroupAction
 
         getContinuum().updateProjectGroup( projectGroup );
 
+        Project rootProject = ( getContinuum().getProjectsInBuildOrder( getContinuum()
+            .getProjectsInGroupWithDependencies( projectGroupId ) ) ).get( 0 );
+        
+        rootProject.setUrl( url );
+        
+        getContinuum().updateProject( rootProject );
+        
         Iterator keys = projects.keySet().iterator();
         while ( keys.hasNext() )
         {
