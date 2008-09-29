@@ -20,6 +20,7 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -138,14 +139,21 @@ public abstract class AddMavenProjectAction
             {
                 try
                 {
-                    pom = pomFile.toURL().toString();
+                    //pom = pomFile.toURL().toString();
                     checkProtocol = false;
                     // CONTINUUM-1897
                     // File.c copyFile to tmp one
+                    File tmpPom = File.createTempFile( "continuum_tmp", "tmp" );
+                    FileUtils.copyFile( pomFile, tmpPom );
+                    pom = tmpPom.toURL().toString();
                 }
                 catch ( MalformedURLException e )
                 {
                     // if local file can't be converted to url it's an internal error
+                    throw new RuntimeException( e );
+                }
+                catch ( IOException e )
+                {
                     throw new RuntimeException( e );
                 }
             }
