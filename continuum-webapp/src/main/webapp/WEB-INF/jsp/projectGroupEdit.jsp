@@ -52,6 +52,7 @@
                 <ww:textfield label="%{getText('projectGroup.description.label')}" name="description" disabled="%{projectInCOQueue}"/>
                 <ww:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories" 
                            listKey="id" listValue="name" disabled="%{disabledRepositories}"/> 
+                <ww:textfield label="%{getText('projectGroup.url.label')}" name="url" disabled="%{projectInCOQueue}"/>
               </tbody>
             </table>
             
