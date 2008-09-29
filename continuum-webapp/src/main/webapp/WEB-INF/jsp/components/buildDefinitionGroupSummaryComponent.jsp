@@ -92,14 +92,19 @@
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
         <center>
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <ww:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
-            <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
-            <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
-            <ww:param name="confirmed" value="false"/>
-          </ww:url>
-          <ww:a href="%{removeUrl}">
-            <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
-          </ww:a>
+          <ww:if test="${pageScope.buildDefinitionSummary.isDefault == true}">
+            <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
+          </ww:if>
+          <ww:else> 
+            <ww:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
+              <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
+              <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
+              <ww:param name="confirmed" value="false"/>
+            </ww:url>
+            <ww:a href="%{removeUrl}">
+              <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
+            </ww:a>
+          </ww:else>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
           <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
