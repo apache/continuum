@@ -19,23 +19,6 @@ package org.apache.maven.continuum.notification.mail;
  * under the License.
  */
 
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
@@ -68,6 +51,23 @@ import org.codehaus.plexus.velocity.VelocityComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
+
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -544,19 +544,17 @@ public class MailContinuumNotifier
             return;
         }
 
-
-
         try
         {
-            
+
             MimeMessage message = javaMailSender.createMimeMessage();
-            
+
             message.addHeader( "X-Continuum-Build-Host", buildHost );
 
             message.addHeader( "X-Continuum-Project-Id", Integer.toString( project.getId() ) );
 
-            message.addHeader( "X-Continuum-Project-Name", project.getName() );            
-            
+            message.addHeader( "X-Continuum-Project-Name", project.getName() );
+
             message.setSubject( subject );
 
             log.info( "Message Subject: '" + subject + "'." );
@@ -585,15 +583,16 @@ public class MailContinuumNotifier
                             for ( String address : addresses )
                             {
                                 // TODO: set a proper name
-                            	InternetAddress to = new InternetAddress( address.trim() );
+                                InternetAddress to = new InternetAddress( address.trim() );
 
                                 log.info( "Recipient: To '" + to + "'." );
 
                                 recipients.add( to );
                             }
-                            message.setRecipients(Message.RecipientType.TO, recipients.toArray(new Address[recipients.size()]));
+                            message.setRecipients( Message.RecipientType.TO,
+                                                   recipients.toArray( new Address[recipients.size()] ) );
                         }
-                        
+
                         String committerField = (String) notifier.getConfiguration().get( COMMITTER_FIELD );
                         if ( StringUtils.isNotEmpty( committerField ) && context.getBuildResult() != null )
                         {
@@ -653,6 +652,8 @@ public class MailContinuumNotifier
                 message.addRecipient( Message.RecipientType.TO, to );
             }
 
+            message.setSentDate( new Date() );
+
             javaMailSender.send( message );
             //mailSender.send( message );
         }
@@ -667,7 +668,7 @@ public class MailContinuumNotifier
         catch ( UnsupportedEncodingException ex )
         {
             throw new NotificationException( "Exception while sending message.", ex );
-        }         
+        }
     }
 
     private Map<String, String> mapDevelopersToRecipients( List<ProjectDeveloper> developers )
