@@ -292,6 +292,6 @@ under the License.
     </pluginRepository>
   </pluginRepositories>
   <properties>
-    <jetty.version>6.1.6</jetty.version>
+    <jetty.version>6.1.11</jetty.version>
   </properties>
 </project>
