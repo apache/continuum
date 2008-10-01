@@ -31,12 +31,12 @@ under the License.
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>jetty</artifactId>
-      <version>6.1.11</version>
+      <version>${jetty.version}</version>
     </dependency>
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>start</artifactId>
-      <version>6.1.11</version>
+      <version>${jetty.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -47,25 +47,25 @@ under the License.
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>jetty-naming</artifactId>
-      <version>6.1.11</version>
+      <version>${jetty.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>servlet-api-2.5</artifactId>
-      <version>6.1.11</version>
+      <version>${jetty.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>jsp-api-2.0</artifactId>
-      <version>6.1.11</version>
+      <version>${jetty.version}</version>
       <scope>runtime</scope>
     </dependency>    
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>jetty-plus</artifactId>
-      <version>6.1.11</version>
+      <version>${jetty.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -125,13 +125,13 @@ under the License.
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl104-over-slf4j</artifactId>
-      <version>1.0.1</version>
+      <version>1.5.0</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>1.0.1</version>
+      <version>1.5.0</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -178,24 +178,24 @@ under the License.
                       <value>TRUE</value>
                     </property>
                     <property>
-                      <name>set.default.APP_BASE</name>
-                      <value>%PWD%/..</value>
-                    </property>
-                    <property>
                       <name>set.default.REPO_DIR</name>
                       <value>lib</value>
                     </property>
                     <property>
                       <name>wrapper.logfile</name>
-                      <value>%APP_BASE%/logs/wrapper.log</value>
+                      <value>%CONTINUUM_BASE%/logs/wrapper.log</value>
                     </property>
                     <property>
                       <name>wrapper.app.parameter.2</name>
-                      <value>%APP_BASE%/conf/jetty.xml</value>
+                      <value>%CONTINUUM_BASE%/conf/jetty.xml</value>
                     </property>
                     <property>
                       <name>wrapper.app.parameter.3</name>
-                      <value>%APP_BASE%/conf/jetty-logging.xml</value>
+                      <value>%CONTINUUM_BASE%/conf/jetty-logging.xml</value>
+                    </property>
+                    <property>
+                      <name>app.base.envvar</name>
+                      <value>CONTINUUM_BASE</value>
                     </property>
                     <property>
                       <name>wrapper.on_exit.default</name>
@@ -223,10 +223,11 @@ under the License.
               </generatorConfigurations>
               <jvmSettings>
                 <systemProperties>
-                  <systemProperty>appserver.base=%APP_BASE%</systemProperty>
-                  <systemProperty>derby.system.home=%APP_BASE%/logs</systemProperty>
-                  <systemProperty>jetty.logs=%APP_BASE%/logs</systemProperty>
-                  <systemProperty>java.io.tmpdir=%APP_BASE%/tmp</systemProperty>
+                  <systemProperty>appserver.home=.</systemProperty>
+                  <systemProperty>appserver.base=%CONTINUUM_BASE%</systemProperty>
+                  <systemProperty>derby.system.home=%CONTINUUM_BASE%/logs</systemProperty>
+                  <systemProperty>jetty.logs=%CONTINUUM_BASE%/logs</systemProperty>
+                  <systemProperty>java.io.tmpdir=%CONTINUUM_BASE%/tmp</systemProperty>
                 </systemProperties>
               </jvmSettings> 
             </daemon>
@@ -290,4 +291,7 @@ under the License.
       <url>http://snapshots.repository.codehaus.org/</url>
     </pluginRepository>
   </pluginRepositories>
+  <properties>
+    <jetty.version>6.1.6</jetty.version>
+  </properties>
 </project>
