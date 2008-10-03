@@ -25,7 +25,7 @@
 
   <bean id="configurationService" class="org.apache.maven.continuum.configuration.DefaultConfigurationService"
         init-method="initialize">
-    <property name="applicationHome" value="target"/>
+    <property name="applicationHome" value="data"/>
     <property name="scheduleDao" ref="scheduleDao"/>
     <property name="systemConfigurationDao" ref="systemConfigurationDao"/>
     <property name="configuration" ref="continuumConfiguration"/>
