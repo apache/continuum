@@ -248,6 +248,11 @@ public class DefaultConfigurationService
     {
         File releaseOutputDirectory = generalConfiguration.getReleaseOutputDirectory();
 
+        if ( releaseOutputDirectory == null )
+        {
+            releaseOutputDirectory = getFile( systemConf.getReleaseOutputDirectory() );
+            setReleaseOutputDirectory( releaseOutputDirectory );
+        }
         return releaseOutputDirectory;
     }
 
