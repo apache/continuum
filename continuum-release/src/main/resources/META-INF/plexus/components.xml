@@ -46,6 +46,9 @@
         <requirement>
           <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.installation.InstallationService</role>
+        </requirement>
       </requirements>
     </component>
 
