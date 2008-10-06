@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.profile;
+package org.apache.continuum.profile;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,6 +24,9 @@ import org.apache.continuum.dao.ProfileDao;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
+import org.apache.maven.continuum.profile.ProfileException;
+import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
