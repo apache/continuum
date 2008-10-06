@@ -1,10 +1,12 @@
-package org.apache.maven.continuum.profile;
+package org.apache.continuum.profile;
 
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
+import org.apache.maven.continuum.profile.ProfileService;
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
+ * @version $Id: DefaultProfileServiceTest.java 684085 2008-08-08 20:48:14Z evenisse $
  * @since 15 juin 07
  */
 public class DefaultProfileServiceTest

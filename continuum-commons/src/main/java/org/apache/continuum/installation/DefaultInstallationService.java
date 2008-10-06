@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.installation;
+package org.apache.continuum.installation;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,6 +21,9 @@ package org.apache.maven.continuum.installation;
 
 import org.apache.continuum.dao.InstallationDao;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
+import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
+import org.apache.maven.continuum.installation.InstallationException;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
@@ -48,7 +51,7 @@ import java.util.Properties;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
+ * @version $Id: DefaultInstallationService.java 684085 2008-08-08 20:48:14Z evenisse $
  * @plexus.component role="org.apache.maven.continuum.installation.InstallationService"
  * TODO use some cache mechanism to prevent always reading from store ?
  * @since 13 juin 07

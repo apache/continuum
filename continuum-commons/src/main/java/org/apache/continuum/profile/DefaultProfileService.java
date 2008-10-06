@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.profile;
+package org.apache.continuum.profile;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,6 +24,9 @@ import org.apache.continuum.dao.ProfileDao;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
+import org.apache.maven.continuum.profile.ProfileException;
+import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
@@ -32,7 +35,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
- * @version $Id$
+ * @version $Id: DefaultProfileService.java 698412 2008-09-24 01:55:19Z ctan $
  * @plexus.component role="org.apache.maven.continuum.profile.ProfileService"
  * TODO use some cache mechanism to prevent always reading from store ?
  * @since 15 juin 07
