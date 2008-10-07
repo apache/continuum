@@ -26,7 +26,7 @@
       <requirements>
         <requirement>
           <role>org.apache.maven.shared.release.config.ReleaseDescriptorStore</role>
-          <role-hint>properties</role-hint>
+          <role-hint>continuum-release-properties</role-hint>
         </requirement>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.TaskQueue</role>

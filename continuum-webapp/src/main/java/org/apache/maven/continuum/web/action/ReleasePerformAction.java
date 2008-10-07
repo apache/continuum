@@ -30,7 +30,6 @@ import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
-import org.apache.maven.shared.release.config.ReleaseDescriptor;
 
 import java.io.File;
 import java.util.List;
