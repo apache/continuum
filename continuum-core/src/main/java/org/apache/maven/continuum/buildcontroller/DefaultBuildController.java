@@ -161,7 +161,9 @@ public class DefaultBuildController
             }
             catch ( TaskExecutionException e )
             {
-                //just log the error but don't stop the build from progressing in order not to suppress any build result messages there 
+                updateBuildResult( context, ContinuumUtils.throwableToString( e ) );
+
+                //just log the error but don't stop the build from progressing in order not to suppress any build result messages there
                 getLogger().error( "Error executing action update-project-from-working-directory '", e );
             }
 
@@ -546,8 +548,8 @@ public class DefaultBuildController
         }
 
         // Check changes
-        if ( !shouldBuild && ( ( !allChangesUnknown && !context.getScmResult().getChanges().isEmpty() )
-             || project.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) ) )
+        if ( !shouldBuild && ( ( !allChangesUnknown && !context.getScmResult().getChanges().isEmpty() ) ||
+            project.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) ) )
         {
             try
             {
@@ -558,6 +560,7 @@ public class DefaultBuildController
             }
             catch ( Exception e )
             {
+                updateBuildResult( context, ContinuumUtils.throwableToString( e ) );
                 throw new TaskExecutionException( "Can't determine if the project should build or not", e );
             }
         }
