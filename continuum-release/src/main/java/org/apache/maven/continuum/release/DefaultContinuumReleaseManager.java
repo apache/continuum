@@ -295,10 +295,10 @@ public class DefaultContinuumReleaseManager
         return descriptor;
     }
 
-    private ReleaseDescriptor readReleaseDescriptor( String workingDirectory )
+    private ContinuumReleaseDescriptor readReleaseDescriptor( String workingDirectory )
         throws ContinuumReleaseException
     {
-        ReleaseDescriptor descriptor = new ReleaseDescriptor();
+        ReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setWorkingDirectory( workingDirectory );
 
         try
@@ -310,7 +310,7 @@ public class DefaultContinuumReleaseManager
             throw new ContinuumReleaseException( "Failed to parse descriptor file.", e );
         }
 
-        return descriptor;
+        return (ContinuumReleaseDescriptor) descriptor;
     }
 
     public Map getListeners()
