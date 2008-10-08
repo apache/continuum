@@ -20,7 +20,6 @@ package org.apache.maven.continuum.release.executors;
  */
 
 import org.apache.continuum.model.repository.LocalRepository;
-import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
