@@ -19,7 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
@@ -85,7 +84,7 @@ public class ReleaseProjectAction
         Map preparedReleases = releaseManager.getPreparedReleases();
         if ( preparedReleases.containsKey( releaseId ) )
         {
-            ContinuumReleaseDescriptor descriptor = (ContinuumReleaseDescriptor) preparedReleases.get( releaseId );
+            ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
 
             preparedReleaseName = descriptor.getReleaseVersions().get( releaseId ).toString();
 
