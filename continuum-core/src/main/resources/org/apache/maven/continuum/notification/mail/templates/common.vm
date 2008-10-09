@@ -160,6 +160,11 @@ Test Summary:
 ****************************************************************************
 Tests: $testResult.testCount
 Failures: $testResult.failureCount
+Errors: $testResult.errorCount
+#if( $testResult.testCount != 0)
+#set( $successRate = (($testResult.testCount - ( $testResult.failureCount + $testResult.errorCount)) * 100) / $testResult.testCount)
+Success Rate: $successRate
+#end
 Total time: $testResult.totalTime
 
 #end

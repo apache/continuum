@@ -18,15 +18,15 @@
  */
 package org.apache.maven.continuum.reports.surefire;
 
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+
 import java.io.File;
 import java.util.List;
 
-import org.codehaus.plexus.spring.PlexusInSpringTestCase;
-
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 12 nov. 07
  * @version $Id$
+ * @since 12 nov. 07
  */
 public class DefaultReportTestSuiteGeneratorTest
     extends PlexusInSpringTestCase
@@ -34,8 +34,8 @@ public class DefaultReportTestSuiteGeneratorTest
 
     private File getReportsDirectory( String pathDir )
     {
-        return new File( getBasedir() + File.separatorChar + "src" + File.separatorChar + "test" + File.separatorChar
-            + "resources" + File.separatorChar + pathDir );
+        return new File( getBasedir() + File.separatorChar + "src" + File.separatorChar + "test" + File.separatorChar +
+            "resources" + File.separatorChar + pathDir );
     }
 
     public void testSimpleFile()
@@ -43,8 +43,8 @@ public class DefaultReportTestSuiteGeneratorTest
     {
         File testDirectory = getReportsDirectory( "simplereport" );
 
-        ReportTestSuiteGenerator generator = (ReportTestSuiteGenerator) lookup( ReportTestSuiteGenerator.class,
-                                                                                "default" );
+        ReportTestSuiteGenerator generator =
+            (ReportTestSuiteGenerator) lookup( ReportTestSuiteGenerator.class, "default" );
 
         List<ReportTestSuite> reports = generator.generateReports( testDirectory );
         assertEquals( 1, reports.size() );
@@ -59,16 +59,16 @@ public class DefaultReportTestSuiteGeneratorTest
     public void testContinuumCore()
         throws Exception
     {
-        ReportTestSuiteGenerator generator = (ReportTestSuiteGenerator) lookup( ReportTestSuiteGenerator.class,
-                                                                                "default" );
+        ReportTestSuiteGenerator generator =
+            (ReportTestSuiteGenerator) lookup( ReportTestSuiteGenerator.class, "default" );
         List<ReportTestSuite> reports = generator.generateReports( 1, 1 );
 
         assertEquals( 18, reports.size() );
 
         for ( ReportTestSuite report : reports )
         {
-            if ( report.getName().equals( "MailContinuumNotifierTest" )
-                && report.getPackageName().equals( "org.apache.maven.continuum.notification.mail" ) )
+            if ( report.getName().equals( "MailContinuumNotifierTest" ) &&
+                report.getPackageName().equals( "org.apache.maven.continuum.notification.mail" ) )
             {
                 assertEquals( 1, report.getNumberOfFailures() );
                 // don't test this because can plate forme dependant
@@ -88,15 +88,16 @@ public class DefaultReportTestSuiteGeneratorTest
 
         }
     }
-    
+
     public void testgenerateReportTestResult()
-    throws Exception
+        throws Exception
     {
-        ReportTestSuiteGenerator generator = (ReportTestSuiteGenerator) lookup( ReportTestSuiteGenerator.class,
-                                                                                "default" );
+        ReportTestSuiteGenerator generator =
+            (ReportTestSuiteGenerator) lookup( ReportTestSuiteGenerator.class, "default" );
         ReportTestResult reportTestResult = generator.generateReportTestResult( 1, 1 );
         assertEquals( 18, reportTestResult.getSuiteResults().size() );
         assertEquals( 1, reportTestResult.getFailureCount() );
-        assertEquals( 61, reportTestResult.getTestCount() );
+        assertEquals( 62, reportTestResult.getTestCount() );
+        assertEquals( 1, reportTestResult.getErrorCount() );
     }
 }
