@@ -403,6 +403,12 @@
   		          <resource>global</resource>
   		        </permission>
   		        <permission>
+  		          <id>continuum-remove-group</id>
+  		          <name>Continuum Remove Group</name>
+  		          <operation>continuum-remove-group</operation>
+  		          <resource>${resource}</resource>
+  		        </permission>
+  		        <permission>
   		          <id>continuum-group-role-grant</id>
   		          <name>Continuum Grant Group Roles</name>
   		          <operation>user-management-role-grant</operation>
@@ -425,12 +431,6 @@
   		          <id>continuum-build-group</id>
   		          <name>Continuum Build Group</name>
   		          <operation>continuum-build-group</operation>
-  		          <resource>${resource}</resource>
-  		        </permission>
-  		        <permission>
-  		          <id>continuum-remove-group</id>
-  		          <name>Continuum Remove Group</name>
-  		          <operation>continuum-remove-group</operation>
   		          <resource>${resource}</resource>
   		        </permission>
   		        <permission>
