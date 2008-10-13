@@ -165,7 +165,7 @@ Errors: $testResult.errorCount
 #set( $successRate = (($testResult.testCount - ( $testResult.failureCount + $testResult.errorCount)) * 100) / $testResult.testCount)
 Success Rate: $successRate
 #end
-Total time: $testResult.totalTime
+Total time: $testResult.totalTime s.
 
 #end
 #if ( $build.state == 4 )
