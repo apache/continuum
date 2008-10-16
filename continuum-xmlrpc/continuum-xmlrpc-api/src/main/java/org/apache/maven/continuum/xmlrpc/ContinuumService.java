@@ -22,6 +22,10 @@ package org.apache.maven.continuum.xmlrpc;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.xmlrpc.repository.LocalRepository;
+import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
+import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
@@ -528,6 +532,7 @@ public interface ContinuumService
      */
     int buildGroup( int projectGroupId, int buildDefinitionId )
         throws Exception;
+
     // ----------------------------------------------------------------------
     // Build Results
     // ----------------------------------------------------------------------
@@ -1041,6 +1046,25 @@ public interface ContinuumService
     public List<BuildProjectTask> getProjectsInBuildQueue()
         throws Exception;    
 
+    /**
+     * Remove projects from build queue
+     * 
+     * @param projectsId project id to be removed from the building queue
+     * @return
+     * @throws Exception
+     */
+    int removeProjectsFromBuildingQueue( int[] projectsId )
+        throws Exception;
+
+    /**
+     * Cancel the current project build
+     * 
+     * @return
+     * @throws Exception
+     */
+    boolean cancelCurrentBuild()
+        throws Exception;
+
     // ----------------------------------------------------------------------
     // TODO:Users
     // ----------------------------------------------------------------------
@@ -1050,5 +1074,357 @@ public interface ContinuumService
     // ----------------------------------------------------------------------
 
     boolean ping()
+        throws Exception;
+
+    // ----------------------------------------------------------------------
+    // Local Repository
+    // ----------------------------------------------------------------------
+
+    /**
+     * Add a local repository
+     * 
+     * @param repository the local repository to add
+     * @return
+     * @throws Exception
+     */
+    LocalRepository addLocalRepository( LocalRepository repository )
+        throws Exception;
+
+    /**
+     * Same method but compatible with the standard XMLRPC
+     * 
+     * @param repository the local repository to add
+     * @return
+     * @throws Exception
+     */
+    Map<String, Object> addLocalRepositoryRPC( Map<String, Object> repository )
+        throws Exception;
+
+    /**
+     * Update the local repository
+     * 
+     * @param repository the local repository to update
+     * @return
+     * @throws Exception
+     */
+    int updateLocalRepository( LocalRepository repository )
+        throws Exception;
+
+    /**
+     * Same method but compatible with the standard XMLRPC
+     * 
+     * @param repository the local repository to update
+     * @return
+     * @throws Exception
+     */
+    int updateLocalRepositoryRPC( Map<String, Object> repository )
+        throws Exception;
+
+    /**
+     * Remove the local repository
+     * 
+     * @param repositoryId
+     * @return
+     * @throws Exception
+     */
+    int removeLocalRepository( int repositoryId )
+        throws Exception;
+
+    /**
+     * Returns the local repository
+     * 
+     * @param repositoryId the local repository id
+     * @return
+     * @throws Exception
+     */
+    LocalRepository getLocalRepository( int repositoryId )
+        throws Exception;
+
+    /**
+     * Same method but compatible with the standard XMLRPC
+     * 
+     * @param repositoryId
+     * @return
+     * @throws Exception
+     */
+    Map<String, Object> getLocalRepositoryRPC( int repositoryId )
+        throws Exception;
+
+    /**
+     * Returns all local repositories
+     * 
+     * @return
+     * @throws Exception
+     */
+    List<LocalRepository> getAllLocalRepositories()
+        throws Exception;
+
+    /**
+     * Same method but compatible with the standard XMLRPC
+     * 
+     * @return
+     * @throws Exception
+     */
+    List<Object> getAllLocalRepositoriesRPC()
+        throws Exception;
+
+    // ----------------------------------------------------------------------
+    // Purging
+    // ----------------------------------------------------------------------
+
+    /**
+     * Add a repository purge configuration
+     * 
+     * @param repoPurge the repository purge configuration
+     * @return
+     * @throws Exception
+     */
+    RepositoryPurgeConfiguration addRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
+        throws Exception;
+
+    /**
+     * Same method but compatible with the standard XMLRPC
+     * 
+     * @param repoPurge the repository purge configuration
+     * @return
+     * @throws Exception
+     */
+    Map<String, Object> addRepositoryPurgeConfigurationRPC( Map<String, Object> repoPurge )
+        throws Exception;
+
+    /**
+     * Update the repository purge configuration
+     * 
+     * @param repoPurge the repository purge configuration
+     * @return
+     * @throws Exception
+     */
+    int updateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
+        throws Exception;
+
+    /**
+     * Same method but compatible with the standard XMLRPC
+     * 
+     * @param repoPurge the repository purge configuration
+     * @return
+     * @throws Exception
+     */
+    int updateRepositoryPurgeConfigurationRPC( Map<String, Object> repoPurge )
+        throws Exception;
+
+    /**
+     * Remove repository purge configuration
+     * 
+     * @param repoPurgeId the repository purge configuration id
+     * @return
+     * @throws Exception
+     */
+    int removeRepositoryPurgeConfiguration( int repoPurgeId )
+        throws Exception;
+
+    /**
+     * Returns the repository purge configuration
+     * 
+     * @param purgeConfigId the repository purge configuration id
+     * @return the repository purge configuration
+     * @throws Exception
+     */
+    RepositoryPurgeConfiguration getRepositoryPurgeConfiguration( int repoPurgeId )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param purgeConfigId the repository purge configuration id
+     * @return the repository purge configuration
+     * @throws Exception
+     */
+    Map<String, Object> getRepositoryPurgeConfigurationRPC( int purgeConfigId )
+        throws Exception;
+
+    /**
+     * Returns repository purge configurations list
+     * 
+     * @return list of repository purge configurations
+     * @throws Exception
+     */
+    List<RepositoryPurgeConfiguration> getAllRepositoryPurgeConfigurations()
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @return list of repository purge configurations
+     * @throws Exception
+     */
+    List<Object> getAllRepositoryPurgeConfigurationsRPC()
+        throws Exception;
+
+    /**
+     * Add a directory purge configuration
+     * 
+     * @param dirPurge the directory purge configuration
+     * @return
+     * @throws Exception
+     */
+    DirectoryPurgeConfiguration addDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
+        throws Exception;
+
+    /**
+     * Same method but compatible with the standard XMLRPC
+     * 
+     * @param dirPurge the directory purge configuration
+     * @return
+     * @throws Exception
+     */
+    Map<String, Object> addDirectoryPurgeConfigurationRPC( Map<String, Object> dirPurge )
+        throws Exception;
+
+    /**
+     * Update the directory purge configuration
+     * 
+     * @param dirPurge the directory purge configuration
+     * @return
+     * @throws Exception
+     */
+    int updateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
+        throws Exception;
+
+    /**
+     * Same method but compatible with the standard XMLRPC
+     * 
+     * @param dirPurge the directory purge configuration
+     * @return
+     * @throws Exception
+     */
+    int updateDirectoryPurgeConfigurationRPC( Map<String, Object> dirPurge )
+        throws Exception;
+
+    /**
+     * Removes the directory purge configuration
+     * 
+     * @param dirPurgeId the directory purge configuration id
+     * @return
+     * @throws Exception
+     */
+    int removeDirectoryPurgeConfiguration( int dirPurgeId )
+        throws Exception;
+
+    /**
+     * Returns the directory purge configuration
+     * 
+     * @param purgeConfigId the directory purge configuration id
+     * @return the directory purge configuration
+     * @throws Exception
+     */
+    DirectoryPurgeConfiguration getDirectoryPurgeConfiguration( int purgeConfigId )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @param purgeConfigId the directory purge configuration id
+     * @return the directory purge configuration
+     * @throws Exception
+     */
+    Map<String, Object> getDirectoryPurgeConfigurationRPC( int purgeConfigId )
+        throws Exception;
+
+    /**
+     * Returns directory purge configurations list
+     * 
+     * @return list of directory purge configurations
+     * @throws Exception
+     */
+    List<DirectoryPurgeConfiguration> getAllDirectoryPurgeConfigurations()
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     * 
+     * @return list of directory purge configurations
+     * @throws Exception
+     */
+    List<Object> getAllDirectoryPurgeConfigurationsRPC()
+        throws Exception;
+
+    void purgeLocalRepository( int repoPurgeId )
+        throws Exception;
+
+    void purgeDirectory( int dirPurgeId )
+        throws Exception;
+
+    // ----------------------------------------------------------------------
+    // Release Results
+    // ----------------------------------------------------------------------
+
+    /**
+     * Returns the release result.
+     *
+     * @param releaseId The release id
+     * @return The release result
+     * @throws Exception
+     */
+    ContinuumReleaseResult getReleaseResult( int releaseId )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param releaseId   The release id
+     * @return The release result as RPC value
+     * @throws Exception
+     */
+    Map<String,Object> getReleaseResultRPC( int releaseId )
+        throws Exception;
+    
+    /**
+     * Returns the project group release result list.
+     *
+     * @param projectGroupId The project group id
+     * @return The release result list
+     * @throws Exception
+     */
+    List<ContinuumReleaseResult> getReleaseResultsForProjectGroup( int projectGroupId )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param projectGroupId The project group id
+     * @return The release result list as RPC value
+     * @throws Exception
+     */
+    List<Object> getReleaseResultsForProjectGroupRPC( int projectGroupId )
+        throws Exception;
+
+    /**
+     * Remove the project release result.
+     *
+     * @param releaseResult The project release result
+     * @return 0
+     * @throws Exception
+     */
+    int removeReleaseResult( ContinuumReleaseResult releaseResult )
+        throws Exception;
+
+    /**
+     * Same method but compatible with standard XMLRPC
+     *
+     * @param rr The project release result
+     * @return 0
+     * @throws Exception
+     */
+    int removeReleaseResultRPC( Map<String,Object> rr )
+        throws Exception;
+    
+    /**
+     * Returns the release output.
+     *
+     * @param releaseId The release id
+     * @return The release output
+     * @throws Exception
+     */
+    String getReleaseOutput( int releaseId )
         throws Exception;
 }

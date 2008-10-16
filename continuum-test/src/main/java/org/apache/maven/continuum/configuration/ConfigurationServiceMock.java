@@ -235,5 +235,9 @@ public class ConfigurationServiceMock
     {
     }
 
+    public String getReleaseOutput( int projectGroupId, String name )
+    {
+        return null;
+    }
 
 }

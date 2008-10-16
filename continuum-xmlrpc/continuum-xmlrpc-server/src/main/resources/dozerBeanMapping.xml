@@ -5,6 +5,12 @@
   <mapping>
     <class-a>org.apache.maven.continuum.xmlrpc.project.ProjectGroupSummary</class-a>
     <class-b>org.apache.maven.continuum.model.project.ProjectGroup</class-b>
+    <field>
+      <a>localRepository</a>
+      <b>localRepository</b>
+      <a-hint>org.apache.continuum.xmlrpc.repository.LocalRepository</a-hint>
+      <b-hint>org.apache.continuum.model.repository.LocalRepository</b-hint>
+    </field>
   </mapping>
 
   <mapping>
@@ -199,5 +205,55 @@
   <mapping>
     <class-a>org.apache.maven.continuum.buildqueue.BuildProjectTask</class-a>
     <class-b>org.apache.maven.continuum.xmlrpc.project.BuildProjectTask</class-b>
-  </mapping>  
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.continuum.xmlrpc.repository.LocalRepository</class-a>
+    <class-b>org.apache.continuum.model.repository.LocalRepository</class-b>
+  </mapping>
+
+  <mapping>
+    <class-a>org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration</class-a>
+    <class-b>org.apache.continuum.model.repository.RepositoryPurgeConfiguration</class-b>
+    <field>
+      <a>repository</a>
+      <b>repository</b>
+      <a-hint>org.apache.continuum.xmlrpc.repository.LocalRepository</a-hint>
+      <b-hint>org.apache.continuum.model.repository.LocalRepository</b-hint>
+    </field>
+    <field>
+      <a>schedule</a>
+      <b>schedule</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.Schedule</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.Schedule</b-hint>
+    </field>
+  </mapping>
+  
+  <mapping>
+    <class-a>org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration</class-a>
+    <class-b>org.apache.continuum.model.repository.DirectoryPurgeConfiguration</class-b>
+    <field>
+      <a>schedule</a>
+      <b>schedule</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.Schedule</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.Schedule</b-hint>
+    </field>
+  </mapping>
+  
+  <mapping>
+    <class-a>org.apache.continuum.xmlrpc.release.ContinuumReleaseResult</class-a>
+    <class-b>org.apache.continuum.model.release.ContinuumReleaseResult</class-b>
+    <field>
+      <a>projectGroup</a>
+      <b>projectGroup</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.ProjectGroup</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.ProjectGroup</b-hint>
+    </field>
+    <field>
+      <a>project</a>
+      <b>project</b>
+      <a-hint>org.apache.maven.continuum.xmlrpc.project.Project</a-hint>
+      <b-hint>org.apache.maven.continuum.model.project.Project</b-hint>
+    </field>
+  </mapping>
 </mappings>

@@ -501,4 +501,51 @@ public abstract class AbstractContinuumSecureService
 
         checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_BUILD_TEMPLATES );
     }
+
+    protected void checkManageQueuesAuthorization()
+        throws ContinuumException
+    {
+        if ( !isAuthenticated() )
+        {
+            throw new ContinuumException( "Authentication required." );
+        }
+
+        checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_QUEUES );
+    }
+
+    protected void checkManagePurgingAuthorization()
+        throws ContinuumException
+    {
+        if ( !isAuthenticated() )
+        {
+            throw new ContinuumException( "Authentication required." );
+        }
+
+        try
+        {
+            checkAuthorization( ContinuumRoleConstants.SYSTEM_ADMINISTRATOR_ROLE );
+        }
+        catch ( ContinuumException e )
+        {
+            checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_PURGING );
+        }
+    }
+
+    protected void checkManageRepositoriesAuthorization()
+        throws ContinuumException
+    {
+        if ( !isAuthenticated() )
+        {
+            throw new ContinuumException( "Authentication required." );
+        }
+    
+        try
+        {
+            checkAuthorization( ContinuumRoleConstants.SYSTEM_ADMINISTRATOR_ROLE );
+        }
+        catch ( ContinuumException e )
+        {
+            checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_REPOSITORIES );
+        }
+    }
 }

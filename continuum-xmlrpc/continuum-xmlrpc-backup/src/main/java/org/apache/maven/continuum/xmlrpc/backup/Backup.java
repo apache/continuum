@@ -24,6 +24,10 @@ import com.sampullara.cli.Argument;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
+import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.xmlrpc.repository.LocalRepository;
+import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.xmlrpc.client.ContinuumXmlRpcClient;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinitionTemplate;
@@ -149,6 +153,9 @@ public class Backup
         backupAllProfiles();
         backupAllBuildDefinitionTemplates();
         backupAllProjectGroup();
+        backupAllLocalRepositories();
+        backupAllRepositoryPurgeConfigurations();
+        backupAllDirectoryPurgeConfigurations();
         endTag( "continuumDatabase", true );
         writer.close();
         LOGGER.info( "Done." );
@@ -339,6 +346,7 @@ public class Backup
             endTag( "notifiers", true );
         }
 
+        backupContinuumReleaseResultsForProjectGroup( pg.getId() );
         endTag( "projectGroup", true );
     }
 
@@ -666,5 +674,133 @@ public class Backup
         }
 
         return fields;
+    }
+
+    private static void backupAllLocalRepositories()
+        throws Exception
+    {
+        LOGGER.info( "Backup local repositories" );
+        List<LocalRepository> repos = client.getAllLocalRepositories();
+        if ( repos != null && !repos.isEmpty() )
+        {
+            startTag( "localRepositories", true );
+            for ( LocalRepository repo : repos )
+            {
+                LOGGER.debug( "Backup local repository " + repo.getName() );
+                writeObject( repo, "localRepository", true );
+            }
+            endTag( "localRepositories", true );
+        }
+    }
+
+    private static void backupAllRepositoryPurgeConfigurations()
+        throws Exception
+    {
+        LOGGER.info( "Backup repository purge configurations" );
+        List<RepositoryPurgeConfiguration> purgeConfigs = client.getAllRepositoryPurgeConfigurations();
+        if ( purgeConfigs != null && !purgeConfigs.isEmpty() )
+        {
+            startTag( "repositoryPurgeConfigurations", true );
+            for ( RepositoryPurgeConfiguration purgeConfig : purgeConfigs )
+            {
+                LOGGER.debug( "Backup repository purge configuration" );
+                backupRepositoryPurgeConfiguration( purgeConfig );
+            }
+            endTag( "repositoryPurgeConfigurations", true );
+        }
+    }
+
+    private static void backupRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
+        throws Exception
+    {
+        if ( repoPurge == null )
+        {
+            return;
+        }
+        startTag( "repositoryPurgeConfiguration", true );
+        writeSimpleFields( repoPurge );
+        
+        if ( repoPurge.getRepository() != null )
+        {
+            writeTagWithParameter( "repository", "id", String.valueOf( repoPurge.getRepository().getId() ) );
+        }
+
+        if ( repoPurge.getSchedule() != null )
+        {
+            writeTagWithParameter( "schedule", "id", String.valueOf( repoPurge.getSchedule().getId() ) );
+        }
+        endTag( "repositoryPurgeConfiguration", true );
+    }
+
+    private static void backupAllDirectoryPurgeConfigurations()
+        throws Exception
+    {
+        LOGGER.info( "Backup repository purge configurations" );
+        List<DirectoryPurgeConfiguration> purgeConfigs = client.getAllDirectoryPurgeConfigurations();
+        if ( purgeConfigs != null && !purgeConfigs.isEmpty() )
+        {
+            startTag( "directoryPurgeConfigurations", true );
+            for ( DirectoryPurgeConfiguration purgeConfig : purgeConfigs )
+            {
+                LOGGER.debug( "Backup directory purge configuration" );
+                backupDirectoryPurgeConfiguration( purgeConfig );
+            }
+            endTag( "directoryPurgeConfigurations", true );
+        }
+    }
+
+    private static void backupDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
+        throws Exception
+    {
+        if ( dirPurge == null )
+        {
+            return;
+        }
+        startTag( "directoryPurgeConfiguration", true);
+        writeSimpleFields( dirPurge );
+
+        if ( dirPurge.getSchedule() != null )
+        {
+            writeTagWithParameter( "schedule", "id", String.valueOf( dirPurge.getSchedule().getId() ) );
+        }
+        endTag( "directoryPurgeConfiguration", true );
+    }
+
+    private static void backupContinuumReleaseResultsForProjectGroup( int projectGroupId )
+        throws Exception
+    {
+        LOGGER.info( "Backup release results" );
+        List<ContinuumReleaseResult> results = client.getReleaseResultsForProjectGroup( projectGroupId );
+        if ( results != null && !results.isEmpty() )
+        {
+            startTag( "continuumReleaseResults", true );
+            for ( ContinuumReleaseResult result : results )
+            {
+                LOGGER.debug( "Backup release result" );
+                backupContinuumReleaseResult( result );
+            }
+            endTag( "continuumReleaseResults", true );
+        }
+    }
+
+    private static void backupContinuumReleaseResult( ContinuumReleaseResult result )
+        throws Exception
+    {
+        if ( result == null )
+        {
+            return;
+        }
+        startTag( "continuumReleaseResult", true );
+        writeSimpleFields( result );
+
+        if ( result.getProjectGroup() != null )
+        {
+            writeTagWithParameter( "projectGroup", "id", String.valueOf( result.getProjectGroup().getId() ) );
+        }
+        if ( result.getProject() != null )
+        {
+            writeTagWithParameter( "project", "id", String.valueOf( result.getProject().getId() ) );
+        }
+        endTag( "continuumReleaseResult", true );
     }
 }

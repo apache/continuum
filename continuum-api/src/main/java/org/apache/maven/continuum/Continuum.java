@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
+import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
@@ -189,6 +190,9 @@ public interface Continuum
     void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
         throws ContinuumException;
 
+    boolean cancelCurrentBuild()
+        throws ContinuumException;
+    
     // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
@@ -638,6 +642,8 @@ public interface Continuum
     // Continuum Purge
     // ----------------------------------------------------------------------
     ContinuumPurgeManager getPurgeManager();
+
+    PurgeConfigurationService getPurgeConfigurationService();
     
     // ----------------------------------------------------------------------
     // Repository Service
@@ -661,5 +667,8 @@ public interface Continuum
     List<ContinuumReleaseResult> getAllContinuumReleaseResults();
 
     ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
+        throws ContinuumException;
+    
+    String getReleaseOutput( int releaseResultId )
         throws ContinuumException;
 }

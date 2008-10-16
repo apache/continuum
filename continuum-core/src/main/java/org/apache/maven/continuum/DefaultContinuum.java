@@ -45,6 +45,7 @@ import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
+import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
@@ -245,6 +246,11 @@ public class DefaultContinuum
      */
     private RepositoryService repositoryService;
 
+    /**
+     * @plexus.requirement
+     */
+    private PurgeConfigurationService purgeConfigurationService;
+
     public DefaultContinuum()
     {
         Runtime.getRuntime().addShutdownHook( new Thread()
@@ -286,6 +292,11 @@ public class DefaultContinuum
     public RepositoryService getRepositoryService()
     {
         return repositoryService;
+    }
+
+    public PurgeConfigurationService getPurgeConfigurationService()
+    {
+        return purgeConfigurationService;
     }
 
     // ----------------------------------------------------------------------
@@ -787,6 +798,30 @@ public class DefaultContinuum
                 checkoutQueue.remove( task );
             }
         }
+    }
+
+    public boolean cancelCurrentBuild()
+        throws ContinuumException
+    {
+        Task task = getBuildTaskQueueExecutor().getCurrentTask();
+        
+        if ( task != null )
+        {
+            if ( task instanceof BuildProjectTask )
+            {
+                getLogger().info( "Cancelling current build task" );
+                return getBuildTaskQueueExecutor().cancelTask( task );
+            }
+            else
+            {
+                getLogger().warn( "Current task not a BuildProjectTask - not cancelling" );
+            }
+        }
+        else
+        {
+            getLogger().warn( "No task running - not cancelling" );
+        }
+        return false;
     }
 
     // ----------------------------------------------------------------------
@@ -3388,6 +3423,23 @@ public class DefaultContinuum
         catch ( ContinuumStoreException e )
         {
             throw new ContinuumException( "Error while retrieving continuumReleaseResult of projectId " + projectId + " with releaseGoal: " + releaseGoal, e);
+        }
+    }
+
+    public String getReleaseOutput( int releaseResultId )
+        throws ContinuumException
+    {
+        ContinuumReleaseResult releaseResult = getContinuumReleaseResult( releaseResultId );
+
+        ProjectGroup projectGroup = releaseResult.getProjectGroup();
+
+        try
+        {
+            return configurationService.getReleaseOutput( projectGroup.getId(), "releases-" + releaseResult.getStartTime() );
+        }
+        catch ( ConfigurationException e )
+        {
+            throw new ContinuumException( "Error while retrieving release output for release: " + releaseResultId );
         }
     }
 }
