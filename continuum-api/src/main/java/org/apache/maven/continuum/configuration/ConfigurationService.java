@@ -81,6 +81,9 @@ public interface ConfigurationService
     File getReleaseOutputFile( int projectGroupId, String releaseName )
         throws ConfigurationException;
 
+    String getReleaseOutput( int projectGroupId, String releaseName )
+        throws ConfigurationException;
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------

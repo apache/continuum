@@ -19,6 +19,10 @@ package org.apache.maven.continuum.xmlrpc.client;
  * under the License.
  */
 
+import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
+import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.xmlrpc.repository.LocalRepository;
+import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.xmlrpc.ContinuumService;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
@@ -525,6 +529,156 @@ public class ContinuumXmlRpcClient
         return continuum.isProjectInBuildingQueue( projectId );
     }
 
+    public int removeProjectsFromBuildingQueue( int[] projectsId )
+        throws Exception
+    {
+        return continuum.removeProjectsFromBuildingQueue( projectsId );
+    }
+
+    public boolean cancelCurrentBuild()
+        throws Exception
+    {
+        return continuum.cancelCurrentBuild();
+    }
+
+    // ----------------------------------------------------------------------
+    // Release Result
+    // ----------------------------------------------------------------------
+
+    public ContinuumReleaseResult getReleaseResult( int releaseId )
+        throws Exception
+    {
+        return continuum.getReleaseResult( releaseId );
+    }
+
+    public List<ContinuumReleaseResult> getReleaseResultsForProjectGroup( int projectGroupId )
+        throws Exception
+    {
+        return continuum.getReleaseResultsForProjectGroup( projectGroupId );
+    }
+
+    public int removeReleaseResult( ContinuumReleaseResult releaseResult )
+        throws Exception
+    {
+        return continuum.removeReleaseResult( releaseResult );
+    }
+
+    public String getReleaseOutput( int releaseId )
+        throws Exception
+    {
+        return continuum.getReleaseOutput( releaseId );
+    }
+
+    // ----------------------------------------------------------------------
+    // Purge Configuration
+    // ----------------------------------------------------------------------
+
+    public RepositoryPurgeConfiguration addRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
+        throws Exception
+    {
+        return continuum.addRepositoryPurgeConfiguration( repoPurge );
+    }
+
+    public int updateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
+        throws Exception
+    {
+        return continuum.updateRepositoryPurgeConfiguration( repoPurge );
+    }
+
+    public int removeRepositoryPurgeConfiguration( int repoPurgeId )
+        throws Exception
+    {
+        return continuum.removeRepositoryPurgeConfiguration( repoPurgeId );
+    }
+
+    public RepositoryPurgeConfiguration getRepositoryPurgeConfiguration( int repoPurgeId )
+        throws Exception
+    {
+        return continuum.getRepositoryPurgeConfiguration( repoPurgeId );
+    }
+
+    public List<RepositoryPurgeConfiguration> getAllRepositoryPurgeConfigurations()
+        throws Exception
+    {
+        return continuum.getAllRepositoryPurgeConfigurations();
+    }
+
+    public DirectoryPurgeConfiguration addDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
+        throws Exception
+    {
+        return continuum.addDirectoryPurgeConfiguration( dirPurge );
+    }
+
+    public int updateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
+        throws Exception
+    {
+        return continuum.updateDirectoryPurgeConfiguration( dirPurge );
+    }
+
+    public int removeDirectoryPurgeConfiguration( int dirPurgeId )
+        throws Exception
+    {
+        return continuum.removeDirectoryPurgeConfiguration( dirPurgeId );
+    }
+
+    public DirectoryPurgeConfiguration getDirectoryPurgeConfiguration( int dirPurgeId )
+        throws Exception
+    {
+        return continuum.getDirectoryPurgeConfiguration( dirPurgeId );
+    }
+
+    public List<DirectoryPurgeConfiguration> getAllDirectoryPurgeConfigurations()
+        throws Exception
+    {
+        return continuum.getAllDirectoryPurgeConfigurations();
+    }
+
+    public void purgeLocalRepository( int repoPurgeId )
+        throws Exception
+    {
+        continuum.purgeLocalRepository( repoPurgeId );
+    }
+
+    public void purgeDirectory( int dirPurgeId )
+        throws Exception
+    {
+        continuum.purgeDirectory( dirPurgeId );
+    }
+
+    // ----------------------------------------------------------------------
+    // Local Repository
+    // ----------------------------------------------------------------------
+
+    public LocalRepository addLocalRepository( LocalRepository repository )
+        throws Exception
+    {
+        return continuum.addLocalRepository( repository );
+    }
+
+    public int updateLocalRepository( LocalRepository repository )
+        throws Exception
+    {
+        return continuum.updateLocalRepository( repository );
+    }
+
+    public int removeLocalRepository( int repositoryId )
+        throws Exception
+    {
+        return continuum.removeLocalRepository( repositoryId );
+    }
+
+    public LocalRepository getLocalRepository( int repositoryId )
+        throws Exception
+    {
+        return continuum.getLocalRepository( repositoryId );
+    }
+
+    public List<LocalRepository> getAllLocalRepositories()
+        throws Exception
+    {
+        return continuum.getAllLocalRepositories();
+    }
+
     public Map<String, Object> addAntProjectRPC( Map<String, Object> project )
         throws Exception
     {
@@ -915,5 +1069,95 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.updateProfileRPC( profile );
+    }
+
+    public Map<String, Object> getReleaseResultRPC( int releaseId )
+        throws Exception
+    {
+        return continuum.getReleaseResultRPC( releaseId );
+    }
+
+    public List<Object> getReleaseResultsForProjectGroupRPC( int projectGroupId )
+        throws Exception
+    {
+        return continuum.getReleaseResultsForProjectGroupRPC( projectGroupId );
+    }
+
+    public int removeReleaseResultRPC( Map<String, Object> rr )
+        throws Exception
+    {
+        return continuum.removeReleaseResultRPC( rr );
+    }
+
+    public Map<String, Object> addRepositoryPurgeConfigurationRPC( Map<String, Object> repoPurge )
+        throws Exception
+    {
+        return continuum.addRepositoryPurgeConfigurationRPC( repoPurge );
+    }
+
+    public int updateRepositoryPurgeConfigurationRPC( Map<String, Object> repoPurge )
+        throws Exception
+    {
+        return continuum.updateRepositoryPurgeConfigurationRPC( repoPurge );
+    }
+
+    public Map<String, Object> getRepositoryPurgeConfigurationRPC( int repoPurgeId )
+        throws Exception
+    {
+        return continuum.getRepositoryPurgeConfigurationRPC( repoPurgeId );
+    }
+
+    public List<Object> getAllRepositoryPurgeConfigurationsRPC()
+        throws Exception
+    {
+        return continuum.getAllRepositoryPurgeConfigurationsRPC();
+    }
+
+    public Map<String, Object> addDirectoryPurgeConfigurationRPC( Map<String, Object> dirPurge )
+        throws Exception
+    {
+        return continuum.addDirectoryPurgeConfigurationRPC( dirPurge );
+    }
+
+    public int updateDirectoryPurgeConfigurationRPC( Map<String, Object> dirPurge )
+        throws Exception
+    {
+        return continuum.updateDirectoryPurgeConfigurationRPC( dirPurge );
+    }
+
+    public Map<String, Object> getDirectoryPurgeConfigurationRPC( int dirPurgeId )
+        throws Exception
+    {
+        return continuum.getDirectoryPurgeConfigurationRPC( dirPurgeId );
+    }
+
+    public List<Object> getAllDirectoryPurgeConfigurationsRPC()
+        throws Exception
+    {
+        return continuum.getAllDirectoryPurgeConfigurationsRPC();
+    }
+
+    public Map<String, Object> addLocalRepositoryRPC( Map<String, Object> repository )
+        throws Exception
+    {
+        return continuum.addLocalRepositoryRPC( repository );
+    }
+
+    public int updateLocalRepositoryRPC( Map<String, Object> repository )
+        throws Exception
+    {
+        return continuum.updateLocalRepositoryRPC( repository );
+    }
+
+    public Map<String, Object> getLocalRepositoryRPC( int repositoryId )
+        throws Exception
+    {
+        return continuum.getLocalRepositoryRPC( repositoryId );
+    }
+
+    public List<Object> getAllLocalRepositoriesRPC()
+        throws Exception
+    {
+        return continuum.getAllLocalRepositoriesRPC();
     }
 }

@@ -358,6 +358,29 @@ public class DefaultConfigurationService
         return new File( dir, name + ".log.txt" );
     }
 
+    public String getReleaseOutput( int projectGroupId, String name )
+        throws ConfigurationException
+    {
+        File file = getReleaseOutputFile( projectGroupId, name );
+
+        try
+        {
+            if ( file.exists() )
+            {
+                return FileUtils.fileRead( file.getAbsolutePath() );
+            }
+            else
+            {
+                return "There are no output for this release.";
+            }
+        }
+        catch ( IOException e )
+        {
+            log.warn( "Error reading release output for release '" + name + "'.", e );
+            return null;
+        }
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------

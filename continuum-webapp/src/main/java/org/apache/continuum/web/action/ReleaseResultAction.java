@@ -19,6 +19,7 @@ package org.apache.continuum.web.action;
  * under the License.
  */
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
@@ -26,6 +27,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -141,20 +143,13 @@ public class ReleaseResultAction
 
         try
         {
-            File logFile = getContinuum().getConfiguration().getReleaseOutputFile( projectGroupId, "releases-" + releaseResult.getStartTime() );
-            StringBuilder output = new StringBuilder();
-            
-            BufferedReader reader = new BufferedReader( new FileReader( logFile ) );
-            char[] buf = new char[1024];
-            int numRead=0;
-            
-            while( ( numRead = reader.read( buf ) ) != -1 )
+            File releaseOutputFile = getContinuum().getConfiguration().getReleaseOutputFile( projectGroupId, "releases-" + releaseResult.getStartTime() );
+
+            if ( releaseOutputFile.exists() )
             {
-                output.append( buf, 0, numRead );
+                String str = StringEscapeUtils.escapeHtml( FileUtils.fileRead( releaseOutputFile ) );
+                result.appendOutput( str );
             }
-            reader.close();
-            
-            result.appendOutput( output.toString() );
         }
         catch ( ConfigurationException e )
         {
