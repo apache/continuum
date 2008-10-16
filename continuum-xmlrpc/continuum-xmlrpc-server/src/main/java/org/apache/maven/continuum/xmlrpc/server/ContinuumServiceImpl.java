@@ -22,6 +22,13 @@ package org.apache.maven.continuum.xmlrpc.server;
 import net.sf.dozer.util.mapping.DozerBeanMapperSingletonWrapper;
 import net.sf.dozer.util.mapping.MapperIF;
 import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.purge.ContinuumPurgeManagerException;
+import org.apache.continuum.purge.PurgeConfigurationServiceException;
+import org.apache.continuum.repository.RepositoryServiceException;
+import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
+import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.xmlrpc.repository.LocalRepository;
+import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -331,6 +338,10 @@ public class ContinuumServiceImpl
 
         pg.setDescription( projectGroup.getDescription() );
 
+        org.apache.continuum.model.repository.LocalRepository repo = 
+            new org.apache.continuum.model.repository.LocalRepository();
+        pg.setLocalRepository( populateLocalRepository( projectGroup.getLocalRepository(), repo ) );
+        
         continuum.updateProjectGroup( pg );
         return getProjectGroupSummary( projectGroup.getId() );
     }
@@ -1034,6 +1045,378 @@ public class ContinuumServiceImpl
         return populateBuildProjectTaskList( continuum.getProjectsInBuildQueue() );
     }
 
+    public int removeProjectsFromBuildingQueue( int[] projectsId )
+        throws ContinuumException
+    {
+        checkManageQueuesAuthorization();
+        continuum.removeProjectsFromBuildingQueue( projectsId );
+        return 0;
+    }
+
+    public boolean cancelCurrentBuild()
+        throws ContinuumException
+    {
+        checkManageQueuesAuthorization();
+        return continuum.cancelCurrentBuild();
+    }
+
+    // ----------------------------------------------------------------------
+    // Release Results
+    // ----------------------------------------------------------------------
+
+    public ContinuumReleaseResult getReleaseResult( int releaseId )
+        throws ContinuumException
+    {
+        org.apache.continuum.model.release.ContinuumReleaseResult releaseResult = continuum.getContinuumReleaseResult( releaseId );
+        checkViewProjectGroupAuthorization( getProjectGroupName( releaseResult.getProjectGroup().getId() ) );
+        return populateReleaseResult( releaseResult );
+    }
+
+    public List<ContinuumReleaseResult> getReleaseResultsForProjectGroup( int projectGroupId )
+        throws ContinuumException
+    {
+        checkViewProjectGroupAuthorization( getProjectGroupName( projectGroupId ) );
+        Collection releaseResults = continuum.getContinuumReleaseResultsByProjectGroup( projectGroupId );
+        
+        List<ContinuumReleaseResult> r = new ArrayList<ContinuumReleaseResult>();
+        for ( Object releaseResult : releaseResults )
+        {
+            r.add( populateReleaseResult( (org.apache.continuum.model.release.ContinuumReleaseResult) releaseResult ) );
+        }
+        return r;
+    }
+
+    public int removeReleaseResult( ContinuumReleaseResult releaseResult )
+        throws ContinuumException
+    {
+        checkModifyProjectGroupAuthorization( getProjectGroupName( releaseResult.getProjectGroup().getId() ) );
+        continuum.removeContinuumReleaseResult( releaseResult.getId() );
+        return 0;
+    }
+
+    public String getReleaseOutput( int releaseId )
+        throws ContinuumException
+    {
+        org.apache.continuum.model.release.ContinuumReleaseResult releaseResult = continuum.getContinuumReleaseResult( releaseId );
+        checkViewProjectGroupAuthorization( getProjectGroupName( releaseResult.getProjectGroup().getId() ) );
+
+        return continuum.getReleaseOutput( releaseId );
+    }
+
+    // ----------------------------------------------------------------------
+    // Purge Configuration
+    // ----------------------------------------------------------------------
+
+    public RepositoryPurgeConfiguration addRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+        
+        try
+        {
+            org.apache.continuum.model.repository.RepositoryPurgeConfiguration newPurge = 
+                new org.apache.continuum.model.repository.RepositoryPurgeConfiguration();
+            return populateRepositoryPurgeConfiguration( continuum.getPurgeConfigurationService().
+                                                         addRepositoryPurgeConfiguration( populateRepositoryPurgeConfiguration( repoPurge, newPurge ) ) );
+        }
+        catch ( RepositoryServiceException e )
+        {
+            throw new ContinuumException( "Error while converting repository purge configuration", e );
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Can't add repositoryPurgeConfiguration", e );
+        }
+    }
+
+    public int updateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+        
+        try
+        {
+            org.apache.continuum.model.repository.RepositoryPurgeConfiguration purge = 
+                new org.apache.continuum.model.repository.RepositoryPurgeConfiguration();
+            continuum.getPurgeConfigurationService().updateRepositoryPurgeConfiguration( populateRepositoryPurgeConfiguration( repoPurge, purge ) );
+            return 0;
+        }
+        catch ( RepositoryServiceException e )
+        {
+            throw new ContinuumException( "Error while converting repository purge configuration", e );
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Cant' update repository PurgeException", e );
+        }
+    }
+
+    public int removeRepositoryPurgeConfiguration( int repoPurgeId )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+
+        try
+        {
+            org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurge = 
+                continuum.getPurgeConfigurationService().getRepositoryPurgeConfiguration( repoPurgeId );
+            continuum.getPurgeConfigurationService().removeRepositoryPurgeConfiguration( repoPurge );
+            return 0;
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Can't delete repository purge configuration", e );
+        }
+    }
+
+    public RepositoryPurgeConfiguration getRepositoryPurgeConfiguration( int repoPurgeId )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+
+        try
+        {
+            org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurgeConfig = 
+                continuum.getPurgeConfigurationService().getRepositoryPurgeConfiguration( repoPurgeId );
+            return populateRepositoryPurgeConfiguration( repoPurgeConfig );
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Error while retrieving repository purge configuration", e );
+        }
+    }
+
+    public List<RepositoryPurgeConfiguration> getAllRepositoryPurgeConfigurations()
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+        Collection repoPurgeConfigs = continuum.getPurgeConfigurationService().getAllRepositoryPurgeConfigurations();
+        
+        List<RepositoryPurgeConfiguration> r = new ArrayList<RepositoryPurgeConfiguration>();
+        for ( Object repoPurgeConfig : repoPurgeConfigs )
+        {
+            r.add( populateRepositoryPurgeConfiguration( ( org.apache.continuum.model.repository.RepositoryPurgeConfiguration ) repoPurgeConfig ) );
+        }
+        return r;
+    }
+
+    public DirectoryPurgeConfiguration addDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+
+        try
+        {
+            org.apache.continuum.model.repository.DirectoryPurgeConfiguration newPurge =
+                new org.apache.continuum.model.repository.DirectoryPurgeConfiguration();
+            return populateDirectoryPurgeConfiguration( continuum.getPurgeConfigurationService().
+                                                        addDirectoryPurgeConfiguration( populateDirectoryPurgeConfiguration( dirPurge, newPurge ) ) );
+        }
+        catch ( RepositoryServiceException e )
+        {
+            throw new ContinuumException( "Error while converting directory purge configuration", e );
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Can't add directory purge configuration", e );
+        }
+    }
+
+    public int updateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+
+        try
+        {
+            org.apache.continuum.model.repository.DirectoryPurgeConfiguration purge =
+                new org.apache.continuum.model.repository.DirectoryPurgeConfiguration();
+            continuum.getPurgeConfigurationService().updateDirectoryPurgeConfiguration( populateDirectoryPurgeConfiguration( dirPurge, purge ) );
+            return 0;
+        }
+        catch ( RepositoryServiceException e )
+        {
+            throw new ContinuumException( "Error while converting directory purge configuration", e );
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Can't add directory purge configuration", e );
+        }
+    }
+
+    public int removeDirectoryPurgeConfiguration( int dirPurgeId )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+        
+        try
+        {
+            org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurge =
+                continuum.getPurgeConfigurationService().getDirectoryPurgeConfiguration( dirPurgeId );
+            continuum.getPurgeConfigurationService().removeDirectoryPurgeConfiguration( dirPurge );
+            return 0;
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Can't delete directory purge configuration", e );
+        }
+    }
+
+    public DirectoryPurgeConfiguration getDirectoryPurgeConfiguration( int dirPurgeId )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+
+        try
+        {
+            org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurgeConfig = continuum.getPurgeConfigurationService().getDirectoryPurgeConfiguration( dirPurgeId );
+            return populateDirectoryPurgeConfiguration( dirPurgeConfig );
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Error while retrieving directory purge configuration", e );
+        }
+    }
+
+    public List<DirectoryPurgeConfiguration> getAllDirectoryPurgeConfigurations()
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+        Collection dirPurgeConfigs = continuum.getPurgeConfigurationService().getAllDirectoryPurgeConfigurations();
+
+        List<DirectoryPurgeConfiguration> d = new ArrayList<DirectoryPurgeConfiguration>();
+        for ( Object dirPurgeConfig : dirPurgeConfigs )
+        {
+            d.add( populateDirectoryPurgeConfiguration( ( org.apache.continuum.model.repository.DirectoryPurgeConfiguration ) dirPurgeConfig ) );
+        }
+        return d;
+    }
+    
+    public void purgeLocalRepository( int repoPurgeId )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+
+        try
+        {
+            org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurgeConfig = continuum.getPurgeConfigurationService().getRepositoryPurgeConfiguration( repoPurgeId );
+            continuum.getPurgeManager().purgeRepository( repoPurgeConfig );
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Error while retrieving repository purge configuration", e );
+        }
+        catch ( ContinuumPurgeManagerException e )
+        {
+            throw new ContinuumException( "Error while purging local repository", e );
+        }
+    }
+
+    public void purgeDirectory( int dirPurgeId )
+        throws ContinuumException
+    {
+        checkManagePurgingAuthorization();
+
+        try
+        {
+            org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurgeConfig = continuum.getPurgeConfigurationService().getDirectoryPurgeConfiguration( dirPurgeId );
+            continuum.getPurgeManager().purgeDirectory( dirPurgeConfig );
+        }
+        catch ( PurgeConfigurationServiceException e )
+        {
+            throw new ContinuumException( "Error while retrieving directory purge configuration", e );
+        }
+        catch ( ContinuumPurgeManagerException e )
+        {
+            throw new ContinuumException( "Error while purging directory", e );
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Local Repository
+    // ----------------------------------------------------------------------
+
+    public LocalRepository addLocalRepository( LocalRepository repository )
+        throws ContinuumException
+    {
+        checkManageRepositoriesAuthorization();
+
+        try
+        {
+            org.apache.continuum.model.repository.LocalRepository newRepository =
+                        new org.apache.continuum.model.repository.LocalRepository();
+            return populateLocalRepository( continuum.getRepositoryService().addLocalRepository(
+                                           populateLocalRepository( repository, newRepository ) ) );
+        }
+        catch ( RepositoryServiceException e )
+        {
+            throw new ContinuumException( "Unable to add repository", e );
+        }
+    }
+
+    public int updateLocalRepository( LocalRepository repository )
+        throws ContinuumException
+    {
+        checkManageRepositoriesAuthorization();
+
+        try
+        {
+            final org.apache.continuum.model.repository.LocalRepository newRepo =
+                            continuum.getRepositoryService().getLocalRepository( repository.getId() );
+            continuum.getRepositoryService().updateLocalRepository( populateLocalRepository( repository, newRepo ) );
+            return 0;
+        }
+        catch ( RepositoryServiceException e )
+        {
+            throw new ContinuumException( "Can't update repository", e );
+        }
+    }
+
+    public int removeLocalRepository( int repositoryId )
+        throws ContinuumException
+    {
+        checkManageRepositoriesAuthorization();
+
+        try
+        {
+            continuum.getRepositoryService().removeLocalRepository( repositoryId );
+            return 0;
+        }
+        catch ( RepositoryServiceException e)
+        {
+            throw new ContinuumException( "Can't delete repository", e );
+        }
+    }
+
+    public LocalRepository getLocalRepository( int repositoryId )
+        throws ContinuumException
+    {
+        checkManageRepositoriesAuthorization();
+        
+        try
+        {
+            return populateLocalRepository( continuum.getRepositoryService().getLocalRepository( repositoryId ) );
+        }
+        catch ( RepositoryServiceException e )
+        {
+            throw new ContinuumException( "Error while retrieving repository.", e);
+        }
+    }
+
+    public List<LocalRepository> getAllLocalRepositories()
+        throws ContinuumException
+    {
+        checkManageRepositoriesAuthorization();
+        Collection repos = continuum.getRepositoryService().getAllLocalRepositories();
+
+        List<LocalRepository> r = new ArrayList<LocalRepository>();
+        for ( Object repo : repos )
+        {
+            r.add( populateLocalRepository( (org.apache.continuum.model.repository.LocalRepository) repo ) );
+        }
+        return r;
+    }
+
     // ----------------------------------------------------------------------
     // Converters
     // ----------------------------------------------------------------------
@@ -1119,6 +1502,9 @@ public class ContinuumServiceImpl
         g.setGroupId( group.getGroupId() );
         g.setId( group.getId() );
         g.setName( group.getName() );
+        org.apache.continuum.model.repository.LocalRepository repo =
+            new org.apache.continuum.model.repository.LocalRepository();
+        g.setLocalRepository( populateLocalRepository( group.getLocalRepository(), repo ) );
         return g;
     }
 
@@ -1339,6 +1725,120 @@ public class ContinuumServiceImpl
     private SystemConfiguration populateSystemConfiguration( org.apache.maven.continuum.model.system.SystemConfiguration sysConf )
     {
         return (SystemConfiguration) mapper.map( sysConf, SystemConfiguration.class );
+    }
+
+    private ContinuumReleaseResult populateReleaseResult( org.apache.continuum.model.release.ContinuumReleaseResult releaseResult )
+    {
+        return (ContinuumReleaseResult) mapper.map( releaseResult, ContinuumReleaseResult.class );
+    }
+
+    private RepositoryPurgeConfiguration populateRepositoryPurgeConfiguration( org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurgeConfig )
+    {
+        return (RepositoryPurgeConfiguration) mapper.map( repoPurgeConfig, RepositoryPurgeConfiguration.class );
+    }
+
+    private org.apache.continuum.model.repository.RepositoryPurgeConfiguration populateRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurgeConfig,
+                                                                                                                     org.apache.continuum.model.repository.RepositoryPurgeConfiguration repoPurge )
+        throws RepositoryServiceException, ContinuumException
+    {
+        if ( repoPurgeConfig == null )
+        {
+            return null;
+        }
+
+        repoPurge.setDaysOlder( repoPurgeConfig.getDaysOlder() );
+        repoPurge.setDefaultPurge( repoPurgeConfig.isDefaultPurge() );
+        repoPurge.setDeleteAll( repoPurgeConfig.isDeleteAll() );
+        repoPurge.setDeleteReleasedSnapshots( repoPurgeConfig.isDeleteReleasedSnapshots() );
+        repoPurge.setDescription( repoPurgeConfig.getDescription() );
+        repoPurge.setEnabled( repoPurgeConfig.isEnabled() );
+        repoPurge.setRetentionCount( repoPurgeConfig.getRetentionCount() );
+        if ( repoPurgeConfig.getRepository() != null )
+        {
+            repoPurge.setRepository( populateLocalRepository( repoPurgeConfig.getRepository(), continuum.getRepositoryService().
+                                                              getLocalRepository( repoPurgeConfig.getRepository().getId() ) ) );
+        }
+        else
+        {
+            repoPurge.setRepository( null );
+        }
+        if ( repoPurgeConfig.getSchedule() != null )
+        {
+            repoPurge.setSchedule( populateSchedule( repoPurgeConfig.getSchedule(), continuum.getSchedule( repoPurgeConfig.getSchedule()
+                            .getId() ) ) );
+        }
+        else
+        {
+            repoPurge.setSchedule( null );
+        }
+
+        return repoPurge;
+    }
+
+    private DirectoryPurgeConfiguration populateDirectoryPurgeConfiguration( org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurgeConfig )
+    {
+        return (DirectoryPurgeConfiguration) mapper.map( dirPurgeConfig, DirectoryPurgeConfiguration.class );
+    }
+
+    private org.apache.continuum.model.repository.DirectoryPurgeConfiguration populateDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurgeConfig, 
+                                                                                                                   org.apache.continuum.model.repository.DirectoryPurgeConfiguration dirPurge )
+        throws RepositoryServiceException, ContinuumException
+    {
+        if ( dirPurgeConfig == null )
+        {
+            return null;
+        }
+
+        dirPurge.setDaysOlder( dirPurgeConfig.getDaysOlder() );
+        dirPurge.setDefaultPurge( dirPurgeConfig.isDefaultPurge() );
+        dirPurge.setDeleteAll( dirPurgeConfig.isDeleteAll() );
+        dirPurge.setDescription( dirPurgeConfig.getDescription() );
+        dirPurge.setDirectoryType( dirPurgeConfig.getDirectoryType() );
+        dirPurge.setEnabled( dirPurgeConfig.isEnabled() );
+
+        String path = "";
+
+        if ( dirPurge.getDirectoryType().equals( "releases" ) )
+        {
+            path = continuum.getConfiguration().getWorkingDirectory().getAbsolutePath();
+        }
+        else if ( dirPurge.getDirectoryType().equals( "buildOutput" ) )
+        {
+            path = continuum.getConfiguration().getBuildOutputDirectory().getAbsolutePath();
+        }
+        
+        dirPurge.setLocation( path );
+        dirPurge.setRetentionCount( dirPurgeConfig.getRetentionCount() );
+        if ( dirPurgeConfig.getSchedule() != null )
+        {
+            dirPurge.setSchedule( populateSchedule( dirPurgeConfig.getSchedule(), continuum.getSchedule( dirPurgeConfig.getSchedule()
+                            .getId() ) ) );
+        }
+        else
+        {
+            dirPurge.setSchedule( null );
+        }
+
+        return dirPurge;
+    }
+
+    private LocalRepository populateLocalRepository( org.apache.continuum.model.repository.LocalRepository localRepository )
+    {
+        return (LocalRepository) mapper.map( localRepository, LocalRepository.class );
+    }
+
+    private org.apache.continuum.model.repository.LocalRepository populateLocalRepository( LocalRepository repository,
+                                                                                           org.apache.continuum.model.repository.LocalRepository repo )
+    {
+        if ( repository == null )
+        {
+            return null;
+        }
+
+        repo.setLayout( repository.getLayout() );
+        repo.setLocation( repository.getLocation() );
+        repo.setName( repository.getName() );
+        return repo;
     }
 
     private Map<String, Object> serializeObject( Object o, final String ... ignore )
@@ -2038,5 +2538,95 @@ public class ContinuumServiceImpl
         throws Exception
     {
         return this.updateProfile( (Profile) unserializeObject( profile ) );
+    }
+
+    public Map<String,Object> getReleaseResultRPC( int releaseId )
+        throws Exception
+    {
+        return serializeObject( this.getReleaseResult( releaseId ) );
+    }
+
+    public List<Object> getReleaseResultsForProjectGroupRPC( int projectGroupId )
+        throws Exception
+    {
+        return serializeObject( this.getReleaseResultsForProjectGroup( projectGroupId ) );
+    }
+
+    public int removeReleaseResultRPC( Map<String, Object> rr )
+        throws Exception
+    {
+        return serializeObject( this.removeReleaseResult( (ContinuumReleaseResult) unserializeObject( rr ) ) );
+    }
+
+    public Map<String, Object> addRepositoryPurgeConfigurationRPC( Map<String, Object> repoPurge )
+        throws Exception
+    {
+        return serializeObject( this.addRepositoryPurgeConfiguration( (RepositoryPurgeConfiguration) unserializeObject( repoPurge ) ) );
+    }
+
+    public int updateRepositoryPurgeConfigurationRPC( Map<String, Object> repoPurge )
+        throws Exception
+    {
+        return serializeObject( this.updateRepositoryPurgeConfiguration( (RepositoryPurgeConfiguration) unserializeObject( repoPurge ) ) );
+    }
+
+    public Map<String, Object> getRepositoryPurgeConfigurationRPC( int repoPurgeId )
+        throws Exception
+    {
+        return serializeObject( this.getRepositoryPurgeConfiguration( repoPurgeId ) );
+    }
+
+    public List<Object> getAllRepositoryPurgeConfigurationsRPC()
+        throws Exception
+    {
+        return serializeObject( this.getAllDirectoryPurgeConfigurations() );
+    }
+
+    public Map<String, Object> addDirectoryPurgeConfigurationRPC( Map<String, Object> dirPurge )
+        throws Exception
+    {
+        return serializeObject( this.addDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) unserializeObject( dirPurge ) ) );
+    }
+
+    public int updateDirectoryPurgeConfigurationRPC( Map<String, Object> dirPurge )
+        throws Exception
+    {
+        return serializeObject( this.updateDirectoryPurgeConfiguration( (DirectoryPurgeConfiguration) unserializeObject( dirPurge ) ) );
+    }
+
+    public Map<String, Object> getDirectoryPurgeConfigurationRPC( int dirPurgeId )
+        throws Exception
+    {
+        return serializeObject( this.getDirectoryPurgeConfiguration( dirPurgeId ) );
+    }
+
+    public List<Object> getAllDirectoryPurgeConfigurationsRPC()
+        throws Exception
+    {
+        return serializeObject( this.getAllRepositoryPurgeConfigurations() );
+    }
+
+    public Map<String, Object> addLocalRepositoryRPC( Map<String, Object> repository )
+        throws Exception
+    {
+        return serializeObject( this.addLocalRepository( (LocalRepository) unserializeObject( repository ) ) );
+    }
+
+    public int updateLocalRepositoryRPC( Map<String, Object> repository )
+        throws Exception
+    {
+        return serializeObject( this.updateLocalRepository( (LocalRepository) unserializeObject( repository ) ) );
+    }
+
+    public Map<String, Object> getLocalRepositoryRPC( int repositoryId )
+        throws Exception
+    {
+        return serializeObject( this.getLocalRepository( repositoryId ) );
+    }
+
+    public List<Object> getAllLocalRepositoriesRPC()
+        throws Exception
+    {
+        return serializeObject( this.getAllLocalRepositories() );
     }
 }

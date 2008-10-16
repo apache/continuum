@@ -19,6 +19,9 @@ package org.apache.maven.continuum.xmlrpc.client;
  * under the License.
  */
 
+import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
+import org.apache.continuum.xmlrpc.repository.LocalRepository;
+import org.apache.continuum.xmlrpc.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.xmlrpc.project.AddingResult;
 import org.apache.maven.continuum.xmlrpc.project.BuildDefinition;
 import org.apache.maven.continuum.xmlrpc.project.BuildResult;
@@ -60,10 +63,7 @@ public class SampleClient
         {
             ProjectGroupSummary pg = (ProjectGroupSummary) i.next();
             projectGroupId = pg.getId();
-            System.out.println( "Id: " + pg.getId() );
-            System.out.println( "Group Id" + pg.getGroupId() );
-            System.out.println( "Name: " + pg.getName() );
-            System.out.println( "Description:" + pg.getDescription() );
+            printProjectGroupSummary( client.getProjectGroupSummary( projectGroupId ) );
         }
 
         System.out.println();
@@ -170,6 +170,70 @@ public class SampleClient
             "Removing Project Group '" + pg.getName() + "' - " + pg.getGroupId() + " (" + pg.getId() + ")'..." );
         client.removeProjectGroup( pg.getId() );
         System.out.println( "Done." );
+        System.out.println();
+
+        LocalRepository repository = new LocalRepository();
+        repository.setLocation( "/home/marica/repository" );
+        repository.setName( "Repository" );
+        repository.setLayout( "default" );
+        System.out.println( "Adding local repository..." );
+        repository = client.addLocalRepository( repository );
+        System.out.println();
+
+        System.out.println( "Repository list" );
+        System.out.println( "=====================" );
+        List<LocalRepository> repositories = client.getAllLocalRepositories();
+        for ( LocalRepository repo : repositories )
+        {
+            printLocalRepository( repo );
+            System.out.println();
+        }
+
+        DirectoryPurgeConfiguration dirPurgeConfig = new DirectoryPurgeConfiguration();
+        dirPurgeConfig.setDirectoryType( "buildOutput" );
+        System.out.println( "Adding Directory Purge Configuration..." );
+        dirPurgeConfig = client.addDirectoryPurgeConfiguration( dirPurgeConfig );
+        System.out.println();
+        
+        RepositoryPurgeConfiguration purgeConfig = new RepositoryPurgeConfiguration();
+        purgeConfig.setDeleteAll( true );
+        purgeConfig.setRepository( repository );
+        purgeConfig.setDescription( "Delete all artifacts from repository" );
+        System.out.println( "Adding Repository Purge Configuration..." );
+        purgeConfig = client.addRepositoryPurgeConfiguration( purgeConfig );
+        System.out.println();
+
+        System.out.println( "Repository Purge list" );
+        System.out.println( "=====================" );
+        List<RepositoryPurgeConfiguration> repoPurges = client.getAllRepositoryPurgeConfigurations();
+        for ( RepositoryPurgeConfiguration repoPurge : repoPurges )
+        {
+            printRepositoryPurgeConfiguration( repoPurge );
+        }
+        System.out.println();
+
+        System.out.println( "Remove local repository" );
+        System.out.println( "=====================" );
+        System.out.println( "Removing Local Repository '" + repository.getName() + "' (" + 
+                            repository.getId() + ")..." );
+        client.removeLocalRepository( repository.getId() );
+        System.out.println( "Done." );
+    }
+
+    public static void printProjectGroupSummary( ProjectGroupSummary pg )
+    {
+        System.out.println( "Id: " + pg.getId() );
+        System.out.println( "Group Id" + pg.getGroupId() );
+        System.out.println( "Name: " + pg.getName() );
+        System.out.println( "Description:" + pg.getDescription() );
+        if ( pg.getLocalRepository() != null )
+        {
+            System.out.println( "Local Repository:" + pg.getLocalRepository().getName() );
+        }
+        else
+        {
+            System.out.println( "Local Repository:" );
+        }
     }
 
     public static void printProjectSummary( ProjectSummary project )
@@ -262,4 +326,23 @@ public class SampleClient
         System.out.println( buildDef.isDefaultForProject() );
     }
 
+    public static void printLocalRepository( LocalRepository repo )
+    {
+        System.out.println( "Id: " +repo.getId() );
+        System.out.println( "Layout: " + repo.getLayout() );
+        System.out.println( "Location: " + repo.getLocation() );
+        System.out.println( "Name: " + repo.getName() );
+    }
+
+    public static void printRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
+    {
+        System.out.println( "Id: " + repoPurge.getId() );
+        System.out.println( "Description: " + repoPurge.getDescription() );
+        System.out.println( "Local Repository: " + repoPurge.getRepository().getName() );
+        System.out.println( "Days Older: " + repoPurge.getDaysOlder() );
+        System.out.println( "Retention Count: " + repoPurge.getRetentionCount() );
+        System.out.println( "Delete All: " + repoPurge.isDeleteAll() );
+        System.out.println( "Delete Released Snapshots: " + repoPurge.isDeleteReleasedSnapshots() );
+        System.out.println( "Default Purge: " + repoPurge.isDefaultPurge() );
+    }
 }
