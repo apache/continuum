@@ -831,8 +831,8 @@
       <packageName>org.apache.maven.continuum.model.scm</packageName>
       <version>1.0.9+</version>
       <fields>
-        <field>
-          <name stash.maxSize="1024">name</name>
+        <field stash.maxSize="1024">
+          <name>name</name>
           <version>1.0.9+</version>
           <type>String</type>
         </field>
