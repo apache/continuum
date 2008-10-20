@@ -365,7 +365,7 @@ public class ProjectGroupAction
         Collection<Project> projList = getContinuum().getProjectsInGroupWithDependencies( projectGroup.getId() );
         if ( projList != null && projList.size() > 0 )
         {
-            Project rootProject = ( getContinuum().getProjectsInBuildOrder( projects ) ).get( 0 );
+            Project rootProject = ( getContinuum().getProjectsInBuildOrder( projList ) ).get( 0 );
 
             if (rootProject != null)
             {
