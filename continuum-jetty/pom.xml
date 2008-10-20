@@ -225,7 +225,9 @@ under the License.
                 <systemProperties>
                   <systemProperty>appserver.home=.</systemProperty>
                   <systemProperty>appserver.base=%CONTINUUM_BASE%</systemProperty>
+                  <!-- can't set this at present, it moves the database if CONTINUUM_BASE is not set
                   <systemProperty>derby.system.home=%CONTINUUM_BASE%/logs</systemProperty>
+                  -->
                   <systemProperty>jetty.logs=%CONTINUUM_BASE%/logs</systemProperty>
                   <systemProperty>java.io.tmpdir=%CONTINUUM_BASE%/tmp</systemProperty>
                 </systemProperties>
