@@ -362,14 +362,16 @@ public class ProjectGroupAction
 
         repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
 
-        Project rootProject = ( getContinuum().getProjectsInBuildOrder( getContinuum()
-            .getProjectsInGroupWithDependencies( projectGroup.getId() ) ) ).get( 0 );
-        
-        if (rootProject != null)
+        Collection<Project> projects = getContinuum().getProjectsInGroupWithDependencies( projectGroup.getId() );
+        if ( projects != null && projects.size() > 0 )
         {
-            setUrl( rootProject.getUrl() );
-        }
+            Project rootProject = ( getContinuum().getProjectsInBuildOrder( projects ) ).get( 0 );
         
+            if (rootProject != null)
+            {
+                setUrl( rootProject.getUrl() );
+            }
+        }
         return SUCCESS;
     }
 
