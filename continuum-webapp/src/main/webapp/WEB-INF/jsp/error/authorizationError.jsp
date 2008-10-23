@@ -17,7 +17,7 @@
   ~ under the License.
   --%>
 
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
@@ -29,14 +29,14 @@
   <div id="h3">
     <h3>Authorization Error</h3>
     <div class="errors">
-      <ww:if test="hasActionErrors()">
-        <ww:actionerror/>
-      </ww:if>
+      <s:if test="hasActionErrors()">
+        <s:actionerror/>
+      </s:if>
 
-      <ww:else>
+      <s:else>
         You are not authorized to access this page.
         Please contact your administrator to be granted the appropriate permissions.
-      </ww:else>
+      </s:else>
     </div>
   </div>
 </body>

@@ -19,7 +19,7 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
-import com.opensymphony.xwork.ModelDriven;
+import com.opensymphony.xwork2.ModelDriven;
 import org.apache.maven.artifact.installer.ArtifactInstallationException;
 import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
@@ -33,16 +33,16 @@ import org.apache.maven.shared.app.configuration.CompanyPom;
 import org.apache.maven.shared.app.configuration.Configuration;
 import org.apache.maven.shared.app.configuration.MavenAppConfiguration;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureAction;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureActionBundle;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureActionException;
 
 import java.io.IOException;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id: ConfigurationAction.java 480950 2006-11-30 14:58:35Z evenisse $
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="editPom"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="editPom"
  */
 public class EditPomAction
     extends ContinuumActionSupport

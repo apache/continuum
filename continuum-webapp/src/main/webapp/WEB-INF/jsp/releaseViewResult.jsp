@@ -17,57 +17,57 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="releaseProject.page.title"/></title>
+        <title><s:text name="releaseProject.page.title"/></title>
     </head>
     <body>
-      <h2><ww:text name="releaseViewResult.section.title"/></h2>
+      <h2><s:text name="releaseViewResult.section.title"/></h2>
 
-      <h4><ww:text name="releaseViewResult.summary"/></h4>
+      <h4><s:text name="releaseViewResult.summary"/></h4>
       <div class="axial">
         <table border="1" cellspacing="2" cellpadding="3" width="100%">
           <c1:data label="%{getText('releaseViewResult.projectName')}">
-            <ww:param name="after"><ww:property value="projectName"/></ww:param>
+            <s:param name="after"><s:property value="projectName"/></s:param>
           </c1:data>
           <c1:data label="%{getText('releaseViewResult.releaseGoal')}">
-            <ww:param name="after"><ww:property value="releaseGoal"/></ww:param>
+            <s:param name="after"><s:property value="releaseGoal"/></s:param>
           </c1:data>
           <c1:data label="%{getText('releaseViewResult.startTime')}">
-              <ww:param name="after"><c1:date name="result.startTime"/></ww:param>
+              <s:param name="after"><c1:date name="result.startTime"/></s:param>
           </c1:data>
           <c1:data label="%{getText('releaseViewResult.endTime')}">
-              <ww:param name="after"><c1:date name="result.endTime"/></ww:param>
+              <s:param name="after"><c1:date name="result.endTime"/></s:param>
           </c1:data>
           <c1:data label="%{getText('releaseViewResult.state')}">
-            <ww:param name="after">
-              <ww:if test="result.resultCode == 0">
-                <ww:text name="releaseViewResult.success"/>
-              </ww:if>
-              <ww:else>
-                <ww:text name="releaseViewResult.error"/>
-              </ww:else>
-            </ww:param>
+            <s:param name="after">
+              <s:if test="result.resultCode == 0">
+                <s:text name="releaseViewResult.success"/>
+              </s:if>
+              <s:else>
+                <s:text name="releaseViewResult.error"/>
+              </s:else>
+            </s:param>
           </c1:data>
         </table>
       </div>
 
-      <h4><ww:text name="releaseViewResult.output"/></h4>
+      <h4><s:text name="releaseViewResult.output"/></h4>
       <p>
-        <ww:if test="result.output == ''">
-            <ww:text name="releaseViewResult.noOutput"/>
-        </ww:if>
-        <ww:else>
+        <s:if test="result.output == ''">
+            <s:text name="releaseViewResult.noOutput"/>
+        </s:if>
+        <s:else>
           <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
-            <pre><ww:property value="result.output"/></pre>
+            <pre><s:property value="result.output"/></pre>
           </div>
-        </ww:else>
+        </s:else>
       </p>
       <input type="button" value="Back" onClick="history.go(-1)">
 
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

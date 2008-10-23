@@ -17,16 +17,16 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
-<ww:i18n name="localization.Continuum">
+<s:i18n name="localization.Continuum">
 
-  <h3><ww:text name="buildDefinitionSummary.projectGroup.section.title"><ww:param>${projectGroup.name}</ww:param></ww:text></h3>
-  <ww:if test="${not empty groupBuildDefinitionSummaries}">
+  <h3><s:text name="buildDefinitionSummary.projectGroup.section.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
+  <s:if test="${not empty groupBuildDefinitionSummaries}">
   <ec:table items="groupBuildDefinitionSummaries"
             var="buildDefinitionSummary"
             showExports="false"
@@ -40,20 +40,20 @@
       <ec:column property="buildFile" title="projectView.buildDefinition.buildFile"/>
       <ec:column property="scheduleName" title="projectView.buildDefinition.schedule">
         <redback:ifAuthorized permission="continuum-manage-schedules">
-          <ww:url id="scheduleUrl" action="schedule" namespace="/" includeParams="none">
-            <ww:param name="id">${pageScope.buildDefinitionSummary.scheduleId}</ww:param>
-          </ww:url>
-          <ww:a href="%{scheduleUrl}">${pageScope.buildDefinitionSummary.scheduleName}</ww:a> 
+          <s:url id="scheduleUrl" action="schedule" namespace="/" includeParams="none">
+            <s:param name="id">${pageScope.buildDefinitionSummary.scheduleId}</s:param>
+          </s:url>
+          <s:a href="%{scheduleUrl}">${pageScope.buildDefinitionSummary.scheduleName}</s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
           ${pageScope.buildDefinitionSummary.scheduleName}
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="profileName" title="projectView.buildDefinition.profile">
-        <ww:url id="profileUrl" action="editBuildEnv!edit.action" namespace="/" includeParams="none">
-          <ww:param name="profile.id">${pageScope.buildDefinitionSummary.profileId}</ww:param>
-        </ww:url>    
-        <ww:a href="%{profileUrl}">${pageScope.buildDefinitionSummary.profileName}</ww:a>     
+        <s:url id="profileUrl" action="editBuildEnv!edit.action" namespace="/" includeParams="none">
+          <s:param name="profile.id">${pageScope.buildDefinitionSummary.profileId}</s:param>
+        </s:url>
+        <s:a href="%{profileUrl}">${pageScope.buildDefinitionSummary.profileName}</s:a>
       </ec:column>      
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isBuildFresh" title="projectView.buildDefinition.buildFresh"/>
@@ -63,67 +63,67 @@
       <ec:column property="alwaysBuild" title="projectView.buildDefinition.alwaysBuild"/>
       <ec:column property="buildAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
-          <ww:url id="buildUrl" action="buildProject" namespace="/">
-            <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
-            <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
-          </ww:url>
-          <ww:a href="%{buildUrl}"><img src="<ww:url value='/images/buildnow.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0"></ww:a>
+          <s:url id="buildUrl" action="buildProject" namespace="/">
+            <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
+            <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+          </s:url>
+          <s:a href="%{buildUrl}"><img src="<s:url value='/images/buildnow.gif' includeParams="none"/>" alt="<s:text name='build'/>" title="<s:text name='build'/>" border="0"></s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0" />
+          <img src="<s:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="<s:text name='build'/>" title="<s:text name='build'/>" border="0" />
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="editActions" title="&nbsp;" width="1%">
         <center>
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <ww:url id="editUrl" action="buildDefinition" method="input" namespace="/" includeParams="none">
-            <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
-            <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
-          </ww:url>
-          <ww:a href="%{editUrl}">
-              <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">
-          </ww:a>
+          <s:url id="editUrl" action="buildDefinition" method="input" namespace="/" includeParams="none">
+            <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
+            <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+          </s:url>
+          <s:a href="%{editUrl}">
+              <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0">
+          </s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">
+          <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0">
         </redback:elseAuthorized>
         </center>
       </ec:column>    
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
         <center>
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <ww:if test="${pageScope.buildDefinitionSummary.isDefault == true}">
-            <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
-          </ww:if>
-          <ww:else> 
-            <ww:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
-              <ww:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</ww:param>
-              <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
-              <ww:param name="confirmed" value="false"/>
-            </ww:url>
-            <ww:a href="%{removeUrl}">
-              <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
-            </ww:a>
-          </ww:else>
+          <s:if test="${pageScope.buildDefinitionSummary.isDefault == true}">
+            <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
+          </s:if>
+          <s:else>
+            <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
+              <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
+              <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+              <s:param name="confirmed" value="false"/>
+            </s:url>
+            <s:a href="%{removeUrl}">
+              <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
+            </s:a>
+          </s:else>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
+          <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
         </redback:elseAuthorized>
         </center>
       </ec:column>
     </ec:row>
   </ec:table>
-  </ww:if>
+  </s:if>
   <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
     <div class="functnbar3">
-      <ww:form action="buildDefinition" method="post">
-        <input type="hidden" name="projectGroupId" value="<ww:property value="projectGroupId"/>"/>
-        <ww:submit value="%{getText('add')}"/>
-      </ww:form>
+      <s:form action="buildDefinition" method="post">
+        <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
+        <s:submit value="%{getText('add')}"/>
+      </s:form>
     </div>
   </redback:ifAuthorized>
 
-  <ww:if test="${not empty projectBuildDefinitionSummaries}">
+  <s:if test="${not empty projectBuildDefinitionSummaries}">
   <h3>Project Build Definitions</h3>
 
   <ec:table items="projectBuildDefinitionSummaries"
@@ -135,30 +135,30 @@
             sortable="false">
     <ec:row>
       <ec:column property="projectName" title="Project">
-        <ww:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
-          <ww:param name="projectId" value="${pageScope.buildDefinitionSummary.projectId}"/>
-        </ww:url>
-        <ww:a href="%{projectUrl}">${pageScope.buildDefinitionSummary.projectName}</ww:a>
+        <s:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
+          <s:param name="projectId" value="${pageScope.buildDefinitionSummary.projectId}"/>
+        </s:url>
+        <s:a href="%{projectUrl}">${pageScope.buildDefinitionSummary.projectName}</s:a>
       </ec:column>
       <ec:column property="goals" title="projectView.buildDefinition.goals"/>
       <ec:column property="arguments" title="projectView.buildDefinition.arguments"/>
       <ec:column property="buildFile" title="projectView.buildDefinition.buildFile"/>
       <ec:column property="scheduleName" title="projectView.buildDefinition.schedule">
         <redback:ifAuthorized permission="continuum-manage-schedules">
-          <ww:url id="scheduleUrl" action="schedule" namespace="/" includeParams="none">
-            <ww:param name="id">${pageScope.buildDefinitionSummary.scheduleId}</ww:param>
-          </ww:url>
-          <ww:a href="%{scheduleUrl}">${pageScope.buildDefinitionSummary.scheduleName}</ww:a> 
+          <s:url id="scheduleUrl" action="schedule" namespace="/" includeParams="none">
+            <s:param name="id">${pageScope.buildDefinitionSummary.scheduleId}</s:param>
+          </s:url>
+          <s:a href="%{scheduleUrl}">${pageScope.buildDefinitionSummary.scheduleName}</s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
           ${pageScope.buildDefinitionSummary.scheduleName}
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="profileName" title="projectView.buildDefinition.profile">
-        <ww:url id="profileUrl" action="editBuildEnv!edit.action" namespace="/" includeParams="none">
-          <ww:param name="profile.id">${pageScope.buildDefinitionSummary.profileId}</ww:param>
-        </ww:url>
-        <ww:a href="%{profileUrl}">${pageScope.buildDefinitionSummary.profileName}</ww:a>        
+        <s:url id="profileUrl" action="editBuildEnv!edit.action" namespace="/" includeParams="none">
+          <s:param name="profile.id">${pageScope.buildDefinitionSummary.profileId}</s:param>
+        </s:url>
+        <s:a href="%{profileUrl}">${pageScope.buildDefinitionSummary.profileName}</s:a>
       </ec:column>      
       <ec:column property="from" title="projectView.buildDefinition.from"/>
       <ec:column property="isBuildFresh" title="projectView.buildDefinition.buildFresh"/>
@@ -168,50 +168,50 @@
       <ec:column property="alwaysBuild" title="projectView.buildDefinition.alwaysBuild"/>
       <ec:column property="buildNowAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-build-group" resource="${projectGroupName}">
-          <ww:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
-            <ww:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</ww:param>
-            <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
-          </ww:url>
-          <ww:a href="%{buildProjectUrl}">
-            <img src="<ww:url value='/images/buildnow.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0">
-          </ww:a>
+          <s:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
+            <s:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</s:param>
+            <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+          </s:url>
+          <s:a href="%{buildProjectUrl}">
+            <img src="<s:url value='/images/buildnow.gif' includeParams="none"/>" alt="<s:text name='build'/>" title="<s:text name='build'/>" border="0">
+          </s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="<ww:text name='build'/>" title="<ww:text name='build'/>" border="0" />
+          <img src="<s:url value='/images/buildnow_disabled.gif' includeParams="none"/>" alt="<s:text name='build'/>" title="<s:text name='build'/>" border="0" />
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="editAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <ww:url id="editUrl" action="buildDefinition" method="input" namespace="/">
-            <ww:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</ww:param>
-            <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
-          </ww:url>
-          <ww:a href="%{editUrl}">
-              <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">          
-          </ww:a>
+          <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
+            <s:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</s:param>
+            <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+          </s:url>
+          <s:a href="%{editUrl}">
+              <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0">
+          </s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-          <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0">
+          <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0">
         </redback:elseAuthorized>
       </ec:column>
       <ec:column property="removeAction" title="&nbsp;" width="1%">
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <ww:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
-            <ww:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</ww:param>
-            <ww:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</ww:param>
-            <ww:param name="confirmed" value="false"/>
-          </ww:url>
-          <ww:a href="%{removeUrl}">
-              <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
-          </ww:a>
+          <s:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
+            <s:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</s:param>
+            <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+            <s:param name="confirmed" value="false"/>
+          </s:url>
+          <s:a href="%{removeUrl}">
+              <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
+          </s:a>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
-           <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"> 
+           <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
         </redback:elseAuthorized>
       </ec:column>
     </ec:row>
   </ec:table>
 
-  </ww:if>
+  </s:if>
 
-</ww:i18n>
+</s:i18n>

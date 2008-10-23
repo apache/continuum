@@ -17,27 +17,27 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="buildDefinition.template.page.title"/></title>
+        <title><s:text name="buildDefinition.template.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
-        <h3><ww:text name="buildDefinition.template.section.title"/></h3>
+        <h3><s:text name="buildDefinition.template.section.title"/></h3>
 
         <div class="axial">
-          <ww:form action="saveBuildDefinitionTemplate" method="post" validate="true" name="buildDefinitionTemplate"
+          <s:form action="saveBuildDefinitionTemplate" method="post" validate="true" name="buildDefinitionTemplate"
                    onsubmit="customOnsubmit_saveBuildDefinitionTemplate();">
             <c:choose>
             
               <c:when test="${!empty actionErrors}">
                 <div class="errormessage">
                   <c:forEach items="${actionErrors}" var="actionError">
-                    <p><ww:text name="${actionError}"/></p>
+                    <p><s:text name="${actionError}"/></p>
                   </c:forEach>
                 </div>
                 <input type="button" value="Back" onClick="history.go(-1)">
@@ -46,8 +46,8 @@
               <c:when test="${empty actionErrors}">
                 <table>
                   <tbody>
-                    <ww:textfield label="%{getText('buildDefinitionTemplate.name')}" name="buildDefinitionTemplate.name" required="true"/>
-                    <ww:optiontransferselect 
+                    <s:textfield label="%{getText('buildDefinitionTemplate.name')}" name="buildDefinitionTemplate.name" required="true"/>
+                    <s:optiontransferselect
                         label="%{getText('buildDefinitionTemplate.builddefinitions.define')}"    
                         name="buildDefinitionIds"
                         list="buildDefinitions" 
@@ -71,14 +71,14 @@
                 <div class="functnbar3">
                   <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
                 </div>
-                <ww:hidden name="buildDefinitionTemplate.id"/>
-                <ww:hidden name="buildDefinitionTemplate.continuumDefault"/>
+                <s:hidden name="buildDefinitionTemplate.id"/>
+                <s:hidden name="buildDefinitionTemplate.continuumDefault"/>
               </c:when>
             
             </c:choose>
-          </ww:form>
+          </s:form>
         </div>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

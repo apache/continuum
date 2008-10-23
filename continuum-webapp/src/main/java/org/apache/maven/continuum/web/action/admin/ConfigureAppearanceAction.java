@@ -19,11 +19,7 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.opensymphony.xwork2.ModelDriven;
 import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
@@ -43,18 +39,21 @@ import org.apache.maven.shared.app.company.CompanyPomHandler;
 import org.apache.maven.shared.app.configuration.Configuration;
 import org.apache.maven.shared.app.configuration.MavenAppConfiguration;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureAction;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureActionBundle;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureActionException;
 import org.codehaus.plexus.registry.RegistryException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
-import com.opensymphony.xwork.ModelDriven;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id: ConfigurationAction.java 480950 2006-11-30 14:58:35Z evenisse $
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="configureAppearance"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="configureAppearance"
  */
 public class ConfigureAppearanceAction
     extends AbstractFooterAction
@@ -138,15 +137,16 @@ public class ConfigureAppearanceAction
             for ( String profileId : profileIds )
             {
                 Profile profile = profilesAsMap.get( profileId );
-                if (profile != null)
+                if ( profile != null )
                 {
                     List<Repository> repos = profile.getRepositories();
                     if ( repos != null && !repos.isEmpty() )
                     {
                         for ( Repository repo : repos )
                         {
-                        remoteRepositories.add( artifactRepositoryFactory.createArtifactRepository( repo.getId(), repo
-                            .getUrl(), layout, null, null ) );
+                            remoteRepositories.add(
+                                artifactRepositoryFactory.createArtifactRepository( repo.getId(), repo
+                                    .getUrl(), layout, null, null ) );
                         }
                     }
                 }
@@ -154,8 +154,8 @@ public class ConfigureAppearanceAction
         }
         configuration = appConfiguration.getConfiguration();
 
-        companyModel = companyPomHandler.getCompanyPomModel( configuration.getCompanyPom(),
-                                                             helper.getLocalRepository(), remoteRepositories );
+        companyModel = companyPomHandler.getCompanyPomModel( configuration.getCompanyPom(), helper.getLocalRepository(),
+                                                             remoteRepositories );
 
         this.setFooter( appareanceConfiguration.getFooter() );
     }

@@ -54,7 +54,7 @@ import java.util.Map;
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="projectGroup"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="projectGroup"
  */
 public class ProjectGroupAction
     extends ContinuumConfirmAction

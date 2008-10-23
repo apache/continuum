@@ -32,19 +32,19 @@ import org.apache.continuum.repository.RepositoryService;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
+import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureAction;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureActionBundle;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureActionException;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.xwork.Preparable;
+import com.opensymphony.xwork2.Preparable;
 
 /**
  * @author Maria Catherine Tan
  * @version $Id$
  * @since 25 jul 07
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="localRepository"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="localRepository"
  */
 public class LocalRepositoryAction
     extends ContinuumConfirmAction

@@ -19,8 +19,8 @@ package org.apache.maven.continuum.web.interceptor;
  * under the License.
  */
 
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.interceptor.Interceptor;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -30,7 +30,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
  * @version: $ID:$
- * @plexus.component role="com.opensymphony.xwork.interceptor.Interceptor"
+ * @plexus.component role="com.opensymphony.xwork2.interceptor.Interceptor"
  * role-hint="forceContinuumConfigurationInterceptor"
  */
 public class ForceContinuumConfigurationInterceptor

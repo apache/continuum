@@ -19,7 +19,7 @@ package org.apache.maven.continuum.web.action.component;
  * under the License.
  */
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
 import org.apache.maven.model.Model;
 import org.apache.maven.shared.app.company.CompanyPomHandler;
@@ -28,7 +28,7 @@ import org.apache.maven.shared.app.configuration.MavenAppConfiguration;
 /**
  * Stores the company information for displaying on the page.
  *
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="companyInfo"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="companyInfo"
  */
 public class CompanyInfoAction
     extends ActionSupport

@@ -36,7 +36,7 @@ import org.apache.maven.shared.release.ReleaseResult;
 
 /**
  * @author Edwin Punzalan
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="releaseInProgress"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseInProgress"
  */
 public class ReleaseInProgressAction
     extends ContinuumActionSupport

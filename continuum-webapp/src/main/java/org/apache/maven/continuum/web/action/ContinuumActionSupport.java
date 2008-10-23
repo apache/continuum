@@ -22,8 +22,8 @@ package org.apache.maven.continuum.web.action;
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.Preparable;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.Preparable;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
@@ -33,7 +33,6 @@ import org.codehaus.plexus.redback.system.SecuritySession;
 import org.codehaus.plexus.redback.system.SecuritySystem;
 import org.codehaus.plexus.redback.system.SecuritySystemConstants;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
  * ContinuumActionSupport

@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.web.view.jsp.ui;
+package org.apache.maven.continuum.web.action;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -9,7 +9,7 @@ package org.apache.maven.continuum.web.view.jsp.ui;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -19,38 +19,40 @@ package org.apache.maven.continuum.web.view.jsp.ui;
  * under the License.
  */
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.maven.continuum.web.components.SubmitCancel;
-import org.apache.struts2.components.Component;
-import org.apache.struts2.views.jsp.ui.SubmitTag;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.SessionAware;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
+ * LogEnabled and SessionAware ActionSupport
+ *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  */
-public class SubmitCancelTag
-    extends SubmitTag
+public abstract class PlexusActionSupport
+    extends ActionSupport
+    implements LogEnabled, SessionAware
 {
-    private String cancel;
+    protected Map session;
 
-    public Component getBean( OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res )
+    private Logger logger;
+
+    public void setSession( Map map )
     {
-        return new SubmitCancel( stack, req, res );
+        //noinspection AssignmentToCollectionOrArrayFieldFromParameter
+        this.session = map;
     }
 
-    protected void populateParams()
+    public void enableLogging( Logger logger )
     {
-        super.populateParams();
-
-        SubmitCancel submitCancel = ( (SubmitCancel) component );
-        submitCancel.setCancel( cancel );
+        this.logger = logger;
     }
 
-    public void setCancel( String cancel )
+    protected Logger getLogger()
     {
-        this.cancel = cancel;
+        return logger;
     }
 }

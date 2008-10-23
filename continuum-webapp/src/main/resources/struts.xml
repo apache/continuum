@@ -17,16 +17,17 @@
   ~ under the License.
   -->
 
-<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd"> 
 
-<xwork>
-  <include file="webwork-default.xml"/>
+<struts>
+  <include file="struts-default.xml"/>
 
   <!-- Include plexus-security xwork configurations. -->
-  <include file="xwork-security.xml"/>
+  <include file="struts-security.xml"/>
 
 
-  <package name="default" extends="webwork-default">
+  <package name="default" extends="struts-default">
 
     <interceptors>
       <interceptor name="exception-logging" class="exceptionLogging"/>
@@ -1050,4 +1051,4 @@
     </action>
     
   </package>
-</xwork>
+</struts>

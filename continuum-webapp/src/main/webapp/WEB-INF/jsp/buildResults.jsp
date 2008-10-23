@@ -17,14 +17,14 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="buildResults.page.title"/></title>
+        <title><s:text name="buildResults.page.title"/></title>
         <meta http-equiv="refresh" content="300"/>
     </head>
     <body>
@@ -35,14 +35,14 @@
         </jsp:include>
 
         <h3>
-            <ww:text name="buildResults.section.title">
-                <ww:param><ww:property value="project.name"/></ww:param>
-            </ww:text>
+            <s:text name="buildResults.section.title">
+                <s:param><s:property value="project.name"/></s:param>
+            </s:text>
         </h3>
         <form id="buildResultsForm" action="removeBuildResults.action" method="post">
-          <ww:hidden name="projectGroupId"/>
-          <ww:hidden name="projectId"/> 
-          <ww:set name="buildResults" value="buildResults" scope="request"/>
+          <s:hidden name="projectGroupId"/>
+          <s:hidden name="projectId"/>
+          <s:set name="buildResults" value="buildResults" scope="request"/>
           <ec:table items="buildResults"
                     var="buildResult"
                     showExports="false"
@@ -66,43 +66,43 @@
               <ec:column property="duration" title="&nbsp;">
                 <c:choose>
                   <c:when test="${buildResult.endTime gt 0}">
-                    <ww:text name="buildResults.duration"/> : ${buildResult.durationTime}
+                    <s:text name="buildResults.duration"/> : ${buildResult.durationTime}
                   </c:when>
                   <c:otherwise>
-                    <ww:text name="buildResults.startedSince"/> : ${buildResult.elapsedTime}
+                    <s:text name="buildResults.startedSince"/> : ${buildResult.elapsedTime}
                   </c:otherwise>
                 </c:choose>
               </ec:column>
               <ec:column property="state" title="buildResults.state" cell="org.apache.maven.continuum.web.view.buildresults.StateCell"/>
               <ec:column property="buildDefinition.description" title="buildResults.buildDefinition.description" />
               <ec:column property="actions" title="&nbsp;">
-                <ww:url id="buildResultUrl" action="buildResult">
-                  <ww:param name="projectId" value="${projectId}"/>
-                  <ww:param name="projectName" value="%{projectName}"/>
-                  <ww:param name="buildId" value="${buildResult.id}"/>
-                  <ww:param name="projectGroupId" value="${projectGroupId}"/>
-                </ww:url>
-                <ww:a href="%{buildResultUrl}"><ww:text name="buildResults.result"/></ww:a>
+                <s:url id="buildResultUrl" action="buildResult">
+                  <s:param name="projectId" value="${projectId}"/>
+                  <s:param name="projectName" value="%{projectName}"/>
+                  <s:param name="buildId" value="${buildResult.id}"/>
+                  <s:param name="projectGroupId" value="${projectGroupId}"/>
+                </s:url>
+                <s:a href="%{buildResultUrl}"><s:text name="buildResults.result"/></s:a>
               </ec:column>
             </ec:row>
           </ec:table>
-          <ww:if test="${not empty buildResults}">
+          <s:if test="${not empty buildResults}">
             <div class="functnbar3">
               <table>
                 <tbody>
                   <tr>
                     <td>
                       <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-                        <input type="button" name="delete-project" value="<ww:text name="delete"/>" onclick="document.forms.buildResultsForm.submit();" />
+                        <input type="button" name="delete-project" value="<s:text name="delete"/>" onclick="document.forms.buildResultsForm.submit();" />
                       </redback:ifAuthorized>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-          </ww:if>
+          </s:if>
         </form>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

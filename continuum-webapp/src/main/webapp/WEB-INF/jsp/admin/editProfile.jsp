@@ -17,43 +17,43 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
-<ww:i18n name="localization.Continuum">
+<s:i18n name="localization.Continuum">
   <head>
     <title>
-      <ww:text name="profile.page.title"/>
+      <s:text name="profile.page.title"/>
     </title>
   </head>
 
   <body>
     <div id="axial" class="h3">
       <h3>
-        <ww:text name="profile.section.title"/>
+        <s:text name="profile.section.title"/>
       </h3>
 
       <div class="axial">
-        <ww:if test="hasActionErrors()">
+        <s:if test="hasActionErrors()">
           <h3>Action Error</h3>
-        </ww:if>
+        </s:if>
         <p>
-          <ww:actionerror/>
+          <s:actionerror/>
         </p>      
       </div>
       <table>
         <tr>
           <td>
-          <ww:form action="saveBuildEnv!save" method="post">
+          <s:form action="saveBuildEnv!save" method="post">
 
             <div class="axial">
               <!--  if other fields are added ProfileAction#save must be changed  -->
               <table>
                 <tbody>
-                  <ww:hidden name="profile.id" />
-                  <ww:textfield label="%{getText('profile.name.label')}" name="profile.name"
+                  <s:hidden name="profile.id" />
+                  <s:textfield label="%{getText('profile.name.label')}" name="profile.name"
                                 required="true" />
                 </tbody>
               </table>
@@ -62,10 +62,10 @@
               </div>
 
             </div>
-          </ww:form>
+          </s:form>
           </td>
         </tr>
-        <ww:if test="profile.id != 0">
+        <s:if test="profile.id != 0">
           <tr>
             <td>
               <div class="axial">
@@ -92,7 +92,7 @@
                             <ec:column property="type" title="Type" style="white-space: nowrap" width="49%"/>
                             <ec:column property="id" title="&nbsp;" width="1%">
                               <a href="removeBuildEnvInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
-                                <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
+                                <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
                               </a>                    
                             </ec:column>        
                           </ec:row>
@@ -101,34 +101,34 @@
                     </tr>
                   </tbody>
                 </table>
-                <ww:if test="${!empty allInstallations}">
-                  <ww:form action="addInstallationBuildEnv!addInstallation.action" method="get">
-                    <ww:hidden name="profile.id" />
+                <s:if test="${!empty allInstallations}">
+                  <s:form action="addInstallationBuildEnv!addInstallation.action" method="get">
+                    <s:hidden name="profile.id" />
                     <div class="functnbar3">
                       <!-- can't use default profile to display this select -->
-                      <ww:select theme="profile" name="installationId" list="allInstallations" listKey="installationId" listValue="name" />
-                      <ww:submit value="%{getText('add')}"/>
+                      <s:select theme="profile" name="installationId" list="allInstallations" listKey="installationId" listValue="name" />
+                      <s:submit value="%{getText('add')}"/>
                     </div>
-                  </ww:form>
-                </ww:if>
-                <ww:else>
-                  <div class="warningmessage" style="color: red"><ww:text name="profile.no.installations" /></div>
-                </ww:else>
+                  </s:form>
+                </s:if>
+                <s:else>
+                  <div class="warningmessage" style="color: red"><s:text name="profile.no.installations" /></div>
+                </s:else>
               </div>              
             </td>
           </tr>
-        </ww:if>
-        <ww:else>
+        </s:if>
+        <s:else>
           <tr>
             <td>
-              <ww:if test="${empty allInstallations}">
-                <div class="warningmessage" style="color: red"><ww:text name="profile.no.installations" /></div>
-              </ww:if>
+              <s:if test="${empty allInstallations}">
+                <div class="warningmessage" style="color: red"><s:text name="profile.no.installations" /></div>
+              </s:if>
             </td>
           </tr> 
-        </ww:else>
+        </s:else>
       </table>
     </div>
   </body>
-</ww:i18n>
+</s:i18n>
 </html>

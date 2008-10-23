@@ -19,12 +19,12 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.views.util.UrlHelper;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.WorkingCopyContentGenerator;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.util.UrlHelper;
 import org.codehaus.plexus.util.StringUtils;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="workingCopy"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="workingCopy"
  */
 public class WorkingCopyAction
     extends ContinuumActionSupport
@@ -81,7 +81,7 @@ public class WorkingCopyAction
         {
             return REQUIRES_AUTHORIZATION;
         }
-        
+
         if ( "release.properties".equals( currentFile ) )
         {
             throw new ContinuumException( "release.properties is not accessible." );
@@ -176,7 +176,7 @@ public class WorkingCopyAction
     {
         this.currentFile = currentFile;
     }
-    
+
     public String getFile()
     {
         return currentFile;

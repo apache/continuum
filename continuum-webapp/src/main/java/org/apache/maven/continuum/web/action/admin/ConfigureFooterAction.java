@@ -27,7 +27,7 @@ import org.apache.maven.continuum.web.appareance.AppareanceConfiguration;
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @since 9 nov. 07
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="configureFooter"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="configureFooter"
  */
 public class ConfigureFooterAction
     extends AbstractFooterAction

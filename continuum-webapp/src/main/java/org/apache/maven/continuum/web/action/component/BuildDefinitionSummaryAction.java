@@ -36,7 +36,7 @@ import org.apache.maven.continuum.web.model.BuildDefinitionSummary;
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildDefinitionSummary"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildDefinitionSummary"
  */
 public class BuildDefinitionSummaryAction
     extends AbstractBuildDefinitionAction

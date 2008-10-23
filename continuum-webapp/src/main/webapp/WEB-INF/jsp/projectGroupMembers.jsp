@@ -17,31 +17,31 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-      <title><ww:text name="projectGroup.page.title"/></title>
+      <title><s:text name="projectGroup.page.title"/></title>
     </head>
 
     <body>
       <div id="h3">
 
-    <ww:action name="projectGroupTab" executeResult="true">
-      <ww:param name="tabName" value="'Members'"/>
-    </ww:action>
+    <s:action name="projectGroupTab" executeResult="true">
+      <s:param name="tabName" value="'Members'"/>
+    </s:action>
     <div class="axial">
       <!--
       Scan for new Projects?
       -->
     </div>
 
-    <h3><ww:text name="projectGroup.members.section.title"><ww:param>${projectGroup.name}</ww:param></ww:text></h3>
+    <h3><s:text name="projectGroup.members.section.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
 
     <ec:table items="groupProjects"
               var="project"
@@ -52,10 +52,10 @@
               sortable="false">
       <ec:row highlightRow="true">
         <ec:column property="name" title="summary.projectTable.name" width="48%">
-          <ww:url id="projectViewUrl" action="projectView">
-            <ww:param name="projectId" value="${pageScope.project.id}"/>
-          </ww:url>
-          <ww:a href="%{projectViewUrl}">${pageScope.project.name}</ww:a>
+          <s:url id="projectViewUrl" action="projectView">
+            <s:param name="projectId" value="${pageScope.project.id}"/>
+          </s:url>
+          <s:a href="%{projectViewUrl}">${pageScope.project.name}</s:a>
         </ec:column>
         <ec:column property="editAction" title="&nbsp;" width="1%" sortable="false">
           <center>
@@ -63,21 +63,21 @@
             <c:choose>
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
-                <ww:url id="editProjectUrl" action="projectEdit">
-                  <ww:param name="projectId" value="${pageScope.project.id}"/>
-                  <ww:param name="projectName" value="${project.name}"/>
-                </ww:url>
-                <ww:a href="%{editProjectUrl}">
-                  <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name="edit"/>" title="<ww:text name="edit"/>" border="0">
-                </ww:a>
+                <s:url id="editProjectUrl" action="projectEdit">
+                  <s:param name="projectId" value="${pageScope.project.id}"/>
+                  <s:param name="projectName" value="${project.name}"/>
+                </s:url>
+                <s:a href="%{editProjectUrl}">
+                  <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
+                </s:a>
               </c:when>
               <c:otherwise>
-                <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name="edit"/>" title="<ww:text name="edit"/>" border="0">
+                <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
               </c:otherwise>
             </c:choose>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
-                <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name="edit"/>" title="<ww:text name="edit"/>" border="0">
+                <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
             </redback:elseAuthorized>
           </center>
         </ec:column>
@@ -87,21 +87,21 @@
             <c:choose>
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
-                <ww:url id="removeProjectUrl" action="deleteProject!default.action">
-                  <ww:param name="projectId" value="${pageScope.project.id}"/>
-                  <ww:param name="projectName" value="${pageScope.project.name}"/>
-                </ww:url>
-                <ww:a href="%{removeProjectUrl}">
-                  <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
-                </ww:a>
+                <s:url id="removeProjectUrl" action="deleteProject!default.action">
+                  <s:param name="projectId" value="${pageScope.project.id}"/>
+                  <s:param name="projectName" value="${pageScope.project.name}"/>
+                </s:url>
+                <s:a href="%{removeProjectUrl}">
+                  <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
+                </s:a>
               </c:when>
               <c:otherwise>
-                <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
+                <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
               </c:otherwise>
             </c:choose>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
-                <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
+                <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
             </redback:elseAuthorized>
           </center>
         </ec:column>
@@ -109,15 +109,15 @@
     </ec:table>
     
   <redback:ifAuthorized permission="continuum-manage-users">
-  <h3><ww:text name="projectGroup.members.users.title"/></h3>
+  <h3><s:text name="projectGroup.members.users.title"/></h3>
     
-  <ww:form action="projectGroupMembers" theme="xhtml" method="post">
-    <ww:hidden name="ascending" />
-    <ww:hidden name="projectGroupId" />
+  <s:form action="projectGroupMembers" theme="xhtml" method="post">
+    <s:hidden name="ascending" />
+    <s:hidden name="projectGroupId" />
     <tr>
       <td nowrap="true">
         <table cellpadding="0" cellspacing="0">               
-          <ww:select label="%{getText('projectGroup.members.users.search.label')}"
+          <s:select label="%{getText('projectGroup.members.users.search.label')}"
                list="criteria"
                name="filterProperty"
                value="filterProperty" />
@@ -125,16 +125,16 @@
       </td>               
       <td>
         <table cellpadding="0" cellspacing="0">
-          <ww:textfield name="filterKey" />
+          <s:textfield name="filterKey" />
         </table>
       </td>  
       <td colspan="2" align="right">
         <table cellpadding="0" cellspacing="0">
-          <ww:submit value="%{getText('projectGroup.members.users.search.button')}"/>
+          <s:submit value="%{getText('projectGroup.members.users.search.button')}"/>
         </table>
       </td>
     </tr>             
-  </ww:form>
+  </s:form>
 
   <hr/>
   
@@ -142,60 +142,60 @@
     <thead>
       <tr>
         <th nowrap="true">
-          <ww:form id="sortlist" name="sortlist" action="projectGroupMembers" theme="xhtml" method="post">
-            <ww:if test="${ascending}">
-              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<ww:text name='sort.descending'/>" border="0"></ww:a> <ww:text name="user.username.label"/>
-            </ww:if>
-            <ww:else>
-              <ww:a href="javascript:document.forms['sortlist'].submit()"><img src="<ww:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<ww:text name='sort.ascending'/>" border="0"></ww:a> <ww:text name="user.username.label"/>
-            </ww:else>
-            <ww:hidden name="ascending" value="${!ascending}"/>
-            <ww:hidden name="projectGroupId" />
-            <ww:hidden name="filterProperty" />
-            <ww:hidden name="filterKey" />
-          </ww:form>
+          <s:form id="sortlist" name="sortlist" action="projectGroupMembers" theme="xhtml" method="post">
+            <s:if test="${ascending}">
+              <s:a href="javascript:document.forms['sortlist'].submit()"><img src="<s:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<s:text name='sort.descending'/>" border="0"></s:a> <s:text name="user.username.label"/>
+            </s:if>
+            <s:else>
+              <s:a href="javascript:document.forms['sortlist'].submit()"><img src="<s:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<s:text name='sort.ascending'/>" border="0"></s:a> <s:text name="user.username.label"/>
+            </s:else>
+            <s:hidden name="ascending" value="${!ascending}"/>
+            <s:hidden name="projectGroupId" />
+            <s:hidden name="filterProperty" />
+            <s:hidden name="filterKey" />
+          </s:form>
         </th>   
-        <th><ww:text name="user.fullName.label"/></th>
-        <th><ww:text name="user.email.label"/></th>
-        <th><ww:text name="projectGroup.members.user.role.administrator"/></th>
-        <th><ww:text name="projectGroup.members.user.role.developer"/></th>
-        <th><ww:text name="projectGroup.members.user.role.user"/></th>
+        <th><s:text name="user.fullName.label"/></th>
+        <th><s:text name="user.email.label"/></th>
+        <th><s:text name="projectGroup.members.user.role.administrator"/></th>
+        <th><s:text name="projectGroup.members.user.role.developer"/></th>
+        <th><s:text name="projectGroup.members.user.role.user"/></th>
       </tr>
     </thead>
     <tbody>
-      <ww:iterator value="projectGroupUsers">
+      <s:iterator value="projectGroupUsers">
         <tr>
           <td>
-            <ww:property value="username"/>
+            <s:property value="username"/>
           </td>
           <td>
-            <ww:property value="userFullName"/>
+            <s:property value="userFullName"/>
           </td>
           <td>
-            <ww:property value="userEmail"/>
+            <s:property value="userEmail"/>
           </td>
           <td>
-            <ww:if test="${administrator}">
-              <img src="<ww:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
-            </ww:if>
+            <s:if test="${administrator}">
+              <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
+            </s:if>
           </td>
           <td>
-            <ww:if test="${developer}">
-              <img src="<ww:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
-            </ww:if>
+            <s:if test="${developer}">
+              <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
+            </s:if>
           </td>
           <td>
-            <ww:if test="${user}">
-              <img src="<ww:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
-            </ww:if>
+            <s:if test="${user}">
+              <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
+            </s:if>
           </td>
         </tr>
-      </ww:iterator>
+      </s:iterator>
     </tbody>
   </table>
   </redback:ifAuthorized>
   
   </div>
   </body>
-</ww:i18n>
+</s:i18n>
 </html>

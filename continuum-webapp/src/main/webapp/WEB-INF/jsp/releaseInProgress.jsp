@@ -17,56 +17,56 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="releaseProject.page.title"/></title>
-        <meta http-equiv="refresh" content="10;url=<ww:url includeParams="all" />"/>
+        <title><s:text name="releaseProject.page.title"/></title>
+        <meta http-equiv="refresh" content="10;url=<s:url includeParams="all" />"/>
     </head>
     <body>
-      <h2><ww:text name="releaseInProgress.section.title"/></h2>
-      <h3><ww:property value="name"/></h3>
+      <h2><s:text name="releaseInProgress.section.title"/></h2>
+      <h3><s:property value="name"/></h3>
       <div class="axial">
         <table width="100%">
           <tr>
-            <th><ww:text name="releaseInProgress.status"/></th>
-            <th width="100%"><ww:text name="releaseInProgress.phase"/></th>
+            <th><s:text name="releaseInProgress.status"/></th>
+            <th width="100%"><s:text name="releaseInProgress.phase"/></th>
           </tr>
-          <ww:iterator value="listener.phases">
+          <s:iterator value="listener.phases">
             <tr>
               <td>
-              <ww:if test="listener.completedPhases.contains( top )">
-                <img src="<ww:url value='/images/icon_success_sml.gif' includeParams="none"/>"
+              <s:if test="listener.completedPhases.contains( top )">
+                <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>"
                      alt="Done" title="Done" border="0">
-              </ww:if>
-              <ww:elseif test="listener.inProgress.equals( top )">
-                <ww:if test="listener.error == null">
-                  <img src="<ww:url value='/images/building.gif' includeParams="none"/>"
+              </s:if>
+              <s:elseif test="listener.inProgress.equals( top )">
+                <s:if test="listener.error == null">
+                  <img src="<s:url value='/images/building.gif' includeParams="none"/>"
                        alt="In Progress" title="In Progress" border="0">
-                </ww:if>
-                <ww:else>
-                  <img src="<ww:url value='/images/icon_error_sml.gif' includeParams="none"/>"
+                </s:if>
+                <s:else>
+                  <img src="<s:url value='/images/icon_error_sml.gif' includeParams="none"/>"
                        alt="Error" title="Error" border="0">
-                </ww:else>
-              </ww:elseif>
-              <ww:else>
-                <img src="<ww:url value='/images/inqueue.gif' includeParams="none"/>"
+                </s:else>
+              </s:elseif>
+              <s:else>
+                <img src="<s:url value='/images/inqueue.gif' includeParams="none"/>"
                      alt="Queued" title="Queued" border="0">
-              </ww:else>
+              </s:else>
               </td>
-              <td><ww:property/></td>
+              <td><s:property/></td>
             </tr>
-          </ww:iterator>
+          </s:iterator>
         </table>
       </div>
 
-      <ww:form action="releaseInProgress" method="get">
-        <ww:hidden name="projectId"/>
-        <ww:hidden name="releaseId"/>
-        <ww:hidden name="releaseGoal"/>
-        <ww:submit value="Refresh"/>
-      </ww:form>
+      <s:form action="releaseInProgress" method="get">
+        <s:hidden name="projectId"/>
+        <s:hidden name="releaseId"/>
+        <s:hidden name="releaseGoal"/>
+        <s:submit value="Refresh"/>
+      </s:form>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

@@ -35,7 +35,7 @@ import org.codehaus.plexus.util.StringUtils;
  *
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="addGroupNotifier"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addGroupNotifier"
  * @since 1.1
  */
 public class AddGroupNotifierAction

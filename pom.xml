@@ -766,7 +766,7 @@ under the License.
         <artifactId>plexus-quartz</artifactId>
         <version>1.0-alpha-4</version>
       </dependency>
-      <dependency>
+      <!-- dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-xwork-integration</artifactId>
         <version>1.0-alpha-7</version>
@@ -780,7 +780,7 @@ under the License.
             <artifactId>plexus-container-default</artifactId>
           </exclusion>
         </exclusions>
-      </dependency>
+      </dependency -->
       <dependency>
         <groupId>commons-configuration</groupId>
         <artifactId>commons-configuration</artifactId>
@@ -801,6 +801,28 @@ under the License.
         <artifactId>commons-io</artifactId>
         <version>1.4</version>
       </dependency>      
+      <dependency>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-core</artifactId>
+        <version>2.0.11.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-spring-plugin</artifactId>
+        <version>2.0.11.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
       <!--
         Plexus Redback Dependencies
         -->
@@ -867,30 +889,48 @@ under the License.
       </dependency>
       <dependency>
         <groupId>org.codehaus.redback</groupId>
-        <artifactId>redback-taglib</artifactId>
+        <artifactId>redback-struts2-taglib</artifactId>
         <version>${redback.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-container-default</artifactId>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
       <dependency>
         <groupId>org.codehaus.redback</groupId>
-        <artifactId>redback-xwork-content</artifactId>
+        <artifactId>redback-struts2-content</artifactId>
         <version>${redback.version}</version>
         <type>war</type>
+        <exclusions>
+          <exclusion>
+            <groupId>classworlds</groupId>
+            <artifactId>classworlds</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.codehaus.redback</groupId>
-        <artifactId>redback-xwork-integration</artifactId>
+        <artifactId>redback-struts2-integration</artifactId>
         <version>${redback.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-container-default</artifactId>
+            <groupId>classworlds</groupId>
+            <artifactId>classworlds</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>velocity</groupId>
+            <artifactId>velocity-dep</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion> 
         </exclusions>
       </dependency>
       <dependency>
@@ -1032,7 +1072,7 @@ under the License.
     <spring.version>2.5.4</spring.version>
     <wagon.version>1.0-beta-2</wagon.version>
     <maven-scm.version>1.1</maven-scm.version>
-    <redback.version>1.1.2-SNAPSHOT</redback.version>
+    <redback.version>1.2-SNAPSHOT</redback.version>
     <mail-sender.version>1.0-alpha-7</mail-sender.version>
     <archiva.version>1.1</archiva.version>
   </properties>

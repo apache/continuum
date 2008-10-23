@@ -61,7 +61,7 @@ public class ContinuumActionLoggingTest
     public void testActionLogging()
         throws Exception
     {
-        TestAction testAction = (TestAction) lookup( "com.opensymphony.xwork.Action", "testAction" );
+        TestAction testAction = (TestAction) lookup( "com.opensymphony.xwork2.Action", "testAction" );
         String testString = "action test string";
         testAction.setTestString( testString );
 

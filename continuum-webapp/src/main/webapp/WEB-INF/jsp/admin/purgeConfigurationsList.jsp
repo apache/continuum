@@ -17,28 +17,28 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-      <title><ww:text name="purgeConfigs.page.title"/></title>
+      <title><s:text name="purgeConfigs.page.title"/></title>
     </head>
     <body>
       <div id="h3">
-        <h3><ww:text name="purgeConfigs.repo.section.title"/></h3>
+        <h3><s:text name="purgeConfigs.repo.section.title"/></h3>
         <c:if test="${!empty actionErrors}">
           <div class="errormessage">
             <c:forEach items="${actionErrors}" var="actionError">
-              <p><ww:text name="${actionError}"/></p>
+              <p><s:text name="${actionError}"/></p>
             </c:forEach>
           </div>
         </c:if>
-        <ww:set name="repoPurgeConfigs" value="repoPurgeConfigs" scope="request"/>
+        <s:set name="repoPurgeConfigs" value="repoPurgeConfigs" scope="request"/>
         <ec:table items="repoPurgeConfigs"
                   var="repoPurge"
                   showExports="false"
@@ -49,10 +49,10 @@
          <ec:row>
             <ec:column property="repository.name" title="purgeConfigs.table.repository">
               <redback:ifAuthorized permission="continuum-manage-repositories">
-                <ww:url id="editRepositoryUrl" action="editRepository" namespace="/admin" includeParams="none">
-                  <ww:param name="repository.id">${pageScope.repoPurge.repository.id}</ww:param>
-                </ww:url>
-                <ww:a href="%{editRepositoryUrl}">${pageScope.repoPurge.repository.name}</ww:a> 
+                <s:url id="editRepositoryUrl" action="editRepository" namespace="/admin" includeParams="none">
+                  <s:param name="repository.id">${pageScope.repoPurge.repository.id}</s:param>
+                </s:url>
+                <s:a href="%{editRepositoryUrl}">${pageScope.repoPurge.repository.name}</s:a>
               </redback:ifAuthorized>
               <redback:elseAuthorized>
                 ${pageScope.repoPurge.repository.name}
@@ -67,36 +67,36 @@
             <ec:column property="enabled" title="purgeConfigs.table.enabled"/>
             <ec:column property="description" title="purgeConfigs.table.description"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
-                <ww:url id="editPurgeConfigUrl" action="editPurgeConfig">
-                  <ww:param name="purgeConfigId" value="${pageScope.repoPurge.id}"/>
-                </ww:url>
-                <ww:a href="%{editPurgeConfigUrl}"><img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" /></ww:a>
+                <s:url id="editPurgeConfigUrl" action="editPurgeConfig">
+                  <s:param name="purgeConfigId" value="${pageScope.repoPurge.id}"/>
+                </s:url>
+                <s:a href="%{editPurgeConfigUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="purgeActions" title="&nbsp;" width="1%">
-                <ww:url id="purgeUrl" action="doPurge">
-                  <ww:param name="purgeConfigId" value="${pageScope.repoPurge.id}"/>
-                </ww:url>
-                <ww:a href="%{purgeUrl}"><img src="<ww:url value='/images/purgenow.gif' includeParams="none"/>" alt="<ww:text name='purge'/>" title="<ww:text name='purge'/>" border="0" /></ww:a>
+                <s:url id="purgeUrl" action="doPurge">
+                  <s:param name="purgeConfigId" value="${pageScope.repoPurge.id}"/>
+                </s:url>
+                <s:a href="%{purgeUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
-                <ww:url id="removePurgeConfigUrl" action="removePurgeConfig">
-                  <ww:param name="purgeConfigId" value="${pageScope.repoPurge.id}"/>                 
-                </ww:url>
-                <ww:a href="%{removePurgeConfigUrl}"><img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"></ww:a>
+                <s:url id="removePurgeConfigUrl" action="removePurgeConfig">
+                  <s:param name="purgeConfigId" value="${pageScope.repoPurge.id}"/>
+                </s:url>
+                <s:a href="%{removePurgeConfigUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </ec:column>
           </ec:row>
         </ec:table>
       </div>
       <div class="functnbar3">
-        <ww:form name="addRepoPurgeConfig" action="editPurgeConfig" method="post">
-          <ww:hidden name="purgeType" value="repository"/>
-          <ww:submit value="%{getText('add')}"/>
-        </ww:form>
+        <s:form name="addRepoPurgeConfig" action="editPurgeConfig" method="post">
+          <s:hidden name="purgeType" value="repository"/>
+          <s:submit value="%{getText('add')}"/>
+        </s:form>
       </div>
         
       <div id="h3">
-        <h3><ww:text name="purgeConfigs.dir.section.title"/></h3>
-        <ww:set name="dirPurgeConfigs" value="dirPurgeConfigs" scope="request"/>
+        <h3><s:text name="purgeConfigs.dir.section.title"/></h3>
+        <s:set name="dirPurgeConfigs" value="dirPurgeConfigs" scope="request"/>
         <ec:table items="dirPurgeConfigs"
                   var="dirPurge"
                   showExports="false"
@@ -114,32 +114,32 @@
             <ec:column property="enabled" title="purgeConfigs.table.enabled"/>
             <ec:column property="description" title="purgeConfigs.table.description"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
-                <ww:url id="editPurgeConfigUrl" action="editPurgeConfig">
-                  <ww:param name="purgeConfigId" value="${pageScope.dirPurge.id}"/>
-                </ww:url>
-                <ww:a href="%{editPurgeConfigUrl}"><img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" /></ww:a>
+                <s:url id="editPurgeConfigUrl" action="editPurgeConfig">
+                  <s:param name="purgeConfigId" value="${pageScope.dirPurge.id}"/>
+                </s:url>
+                <s:a href="%{editPurgeConfigUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="purgeActions" title="&nbsp;" width="1%">
-                <ww:url id="purgeUrl" action="doPurge">
-                  <ww:param name="purgeConfigId" value="${pageScope.dirPurge.id}"/>
-                </ww:url>
-                <ww:a href="%{purgeUrl}"><img src="<ww:url value='/images/purgenow.gif' includeParams="none"/>" alt="<ww:text name='purge'/>" title="<ww:text name='purge'/>" border="0" /></ww:a>
+                <s:url id="purgeUrl" action="doPurge">
+                  <s:param name="purgeConfigId" value="${pageScope.dirPurge.id}"/>
+                </s:url>
+                <s:a href="%{purgeUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
-                <ww:url id="removePurgeConfigUrl" action="removePurgeConfig">
-                  <ww:param name="purgeConfigId" value="${pageScope.dirPurge.id}"/>                 
-                </ww:url>
-                <ww:a href="%{removePurgeConfigUrl}"><img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0"></ww:a>
+                <s:url id="removePurgeConfigUrl" action="removePurgeConfig">
+                  <s:param name="purgeConfigId" value="${pageScope.dirPurge.id}"/>
+                </s:url>
+                <s:a href="%{removePurgeConfigUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </ec:column>
           </ec:row>
         </ec:table>
       </div>
       <div class="functnbar3">
-        <ww:form name="addDirPurgeConfig" action="editPurgeConfig" method="post">
-          <ww:hidden name="purgeType" value="directory"/>
-          <ww:submit value="%{getText('add')}"/>
-        </ww:form>
+        <s:form name="addDirPurgeConfig" action="editPurgeConfig" method="post">
+          <s:hidden name="purgeType" value="directory"/>
+          <s:submit value="%{getText('add')}"/>
+        </s:form>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

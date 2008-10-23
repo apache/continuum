@@ -17,16 +17,16 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="projectView.page.title"/></title>
+        <title><s:text name="projectView.page.title"/></title>
     </head>
     <body>
       <div id="h3">
@@ -35,7 +35,7 @@
           <jsp:param name="tab" value="view"/>
         </jsp:include>
 
-        <h3><ww:text name="projectView.section.title"/></h3>
+        <h3><s:text name="projectView.section.title"/></h3>
 
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
@@ -43,9 +43,9 @@
             <c1:data label="%{getText('projectView.project.version')}" name="project.version"/>
             <c1:data label="%{getText('projectView.project.scmUrl')}" name="project.scmUrl"/>
             <c1:data label="%{getText('projectView.project.scmTag')}" name="project.scmTag"/>
-            <ww:url id="projectGroupSummaryUrl" value="/projectGroupSummary.action">
-                <ww:param name="projectGroupId" value="%{project.projectGroup.id}"/>
-            </ww:url>            
+            <s:url id="projectGroupSummaryUrl" value="/projectGroupSummary.action">
+                <s:param name="projectGroupId" value="%{project.projectGroup.id}"/>
+            </s:url>
             <c1:data label="%{getText('projectView.project.group')}" name="project.projectGroup.name" valueLink="%{'${projectGroupSummaryUrl}'}"/>
             <c1:data label="%{getText('projectView.project.lastBuildDateTime')}" name="lastBuildDateTime" />
           </table>
@@ -57,15 +57,15 @@
               <tr>
                 <td>
                   <form action="projectEdit.action" method="post">
-                    <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
-                    <input type="submit" name="edit-project" value="<ww:text name="edit"/>"/>
+                    <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
+                    <input type="submit" name="edit-project" value="<s:text name="edit"/>"/>
                   </form>
                 </td>
                 <td>
                   <form method="post" action="buildProject.action">
-                    <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
+                    <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
                     <input type="hidden" name="fromProjectPage" value="true"/>
-                    <input type="submit" name="build-project" value="<ww:text name="summary.buildNow"/>"/>
+                    <input type="submit" name="build-project" value="<s:text name="summary.buildNow"/>"/>
                   </form>
                 </td>
               </tr>
@@ -75,26 +75,26 @@
           </redback:ifAuthorized>
         </div>
 
-        <h3><ww:text name="projectView.buildDefinitions"/></h3>
+        <h3><s:text name="projectView.buildDefinitions"/></h3>
 
-        <ww:action name="buildDefinitionSummary" id="summary" namespace="component" executeResult="true">
-          <ww:param name="projectId" value="%{project.id}" />
-          <ww:param name="projectGroupId" value="%{project.projectGroup.id}"/>
-        </ww:action>
+        <s:action name="buildDefinitionSummary" id="summary" namespace="component" executeResult="true">
+          <s:param name="projectId" value="%{project.id}" />
+          <s:param name="projectGroupId" value="%{project.projectGroup.id}"/>
+        </s:action>
 
         <div class="functnbar3">
            <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
-          <ww:form action="buildDefinition" method="post">
-            <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
-            <input type="hidden" name="projectGroupId" value="<ww:property value="project.projectGroup.id"/>"/>
-            <ww:submit value="%{getText('add')}"/>
-          </ww:form>
+          <s:form action="buildDefinition" method="post">
+            <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
+            <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>
+            <s:submit value="%{getText('add')}"/>
+          </s:form>
           </redback:ifAuthorized>
         </div>
 
-        <h3><ww:text name="projectView.notifiers"/></h3>
-        <ww:if test="${not empty project.notifiers}">
-          <ww:set name="notifiers" value="project.notifiers" scope="request"/>
+        <h3><s:text name="projectView.notifiers"/></h3>
+        <s:if test="${not empty project.notifiers}">
+          <s:set name="notifiers" value="project.notifiers" scope="request"/>
           <ec:table items="notifiers"
                     var="notifier"
                     showExports="false"
@@ -111,63 +111,63 @@
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
-                      <ww:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
-                        <ww:param name="notifierId" value="${notifier.id}"/>
-                        <ww:param name="projectId" value="project.id"/>
-                        <ww:param name="projectGroupId" value="${project.projectGroup.id}"/>
-                        <ww:param name="notifierType">${notifier.type}</ww:param>
-                      </ww:url>
-                      <ww:a href="%{editUrl}">
-                        <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name="edit"/>" title="<ww:text name="edit"/>" border="0">
-                      </ww:a>
+                      <s:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
+                        <s:param name="notifierId" value="${notifier.id}"/>
+                        <s:param name="projectId" value="project.id"/>
+                        <s:param name="projectGroupId" value="${project.projectGroup.id}"/>
+                        <s:param name="notifierType">${notifier.type}</s:param>
+                      </s:url>
+                      <s:a href="%{editUrl}">
+                        <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
+                      </s:a>
                     </c:when>
                     <c:otherwise>
-                      <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+                      <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
                     </c:otherwise>
                 </c:choose>
                 </redback:ifAuthorized>
                 <redback:elseAuthorized>
-                  <img src="<ww:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+                  <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
                 </redback:elseAuthorized>
               </ec:column>
               <ec:column property="deleteAction" title="&nbsp;" width="1%">
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
-                      <ww:url id="removeUrl" action="deleteProjectNotifier" namespace="/">
-                        <ww:param name="projectId" value="project.id"/>
-                        <ww:param name="projectGroupId" value="${project.projectGroup.id}"/>
-                        <ww:param name="notifierType">${notifier.type}</ww:param>
-                        <ww:param name="notifierId" value="${notifier.id}"/>
-                    </ww:url>
-                    <ww:a href="%{removeUrl}">
-                      <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name="delete"/>" title="<ww:text name="delete"/>" border="0">
-                    </ww:a>
+                      <s:url id="removeUrl" action="deleteProjectNotifier" namespace="/">
+                        <s:param name="projectId" value="project.id"/>
+                        <s:param name="projectGroupId" value="${project.projectGroup.id}"/>
+                        <s:param name="notifierType">${notifier.type}</s:param>
+                        <s:param name="notifierId" value="${notifier.id}"/>
+                    </s:url>
+                    <s:a href="%{removeUrl}">
+                      <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
+                    </s:a>
                     </c:when>
                     <c:otherwise>
-                      <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+                      <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
                     </c:otherwise>
                   </c:choose>
                 </redback:ifAuthorized>
                 <redback:elseAuthorized>
-                  <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+                  <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
                 </redback:elseAuthorized>
               </ec:column>
             </ec:row>
           </ec:table>
-        </ww:if>
+        </s:if>
         <div class="functnbar3">
            <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
-          <ww:form action="addProjectNotifier!default.action" method="post">
-            <input type="hidden" name="projectId" value="<ww:property value="project.id"/>"/>
-            <input type="hidden" name="projectGroupId" value="<ww:property value="project.projectGroup.id"/>"/>
-            <ww:submit value="%{getText('add')}"/>
-          </ww:form>
+          <s:form action="addProjectNotifier!default.action" method="post">
+            <input type="hidden" name="projectId" value="<s:property value="project.id"/>"/>
+            <input type="hidden" name="projectGroupId" value="<s:property value="project.projectGroup.id"/>"/>
+            <s:submit value="%{getText('add')}"/>
+          </s:form>
           </redback:ifAuthorized>
         </div>
 
-        <h3><ww:text name="projectView.dependencies"/></h3>
-        <ww:set name="dependencies" value="project.dependencies" scope="request"/>
+        <h3><s:text name="projectView.dependencies"/></h3>
+        <s:set name="dependencies" value="project.dependencies" scope="request"/>
         <ec:table items="dependencies"
                   var="dep"
                   showExports="false"
@@ -182,8 +182,8 @@
           </ec:row>
         </ec:table>
 
-        <h3><ww:text name="projectView.developers"/></h3>
-        <ww:set name="developers" value="project.developers" scope="request"/>
+        <h3><s:text name="projectView.developers"/></h3>
+        <s:set name="developers" value="project.developers" scope="request"/>
         <ec:table items="developers"
                   showExports="false"
                   showPagination="false"
@@ -198,5 +198,5 @@
 
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

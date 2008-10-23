@@ -32,7 +32,7 @@ import org.codehaus.plexus.util.StringUtils;
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id: AddNotifierAction.java 466640 2006-10-22 13:11:30Z jmcconnell $
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="addProjectNotifier"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addProjectNotifier"
  * @since 1.1
  */
 public class AddProjectNotifierAction

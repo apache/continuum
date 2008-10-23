@@ -28,7 +28,7 @@ import java.util.Collection;
 
 /**
  * @author Nik Gonzalez
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="schedule"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="schedule"
  */
 public class ScheduleAction
     extends ContinuumConfirmAction

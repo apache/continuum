@@ -30,7 +30,7 @@ import java.util.Map;
  * specified {@link Project}.
  *
  * @author <a href="mailto:hisidro@exist.com">Henry Isidro</a>
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="wagonProjectNotifierEdit"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="wagonProjectNotifierEdit"
  */
 
 public class WagonProjectNotifierEditAction

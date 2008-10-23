@@ -30,16 +30,16 @@ import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureAction;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureActionBundle;
+import org.codehaus.plexus.redback.struts2.interceptor.SecureActionException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="queues"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="queues"
  * @since 24 sept. 07
  */
 public class QueuesAction

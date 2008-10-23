@@ -17,42 +17,42 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="notifier.page.add.title"/></title>
+        <title><s:text name="notifier.page.add.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
       
-        <ww:if test="${projectId > 0}">            
-            <ww:url id="actionUrl" value="addProjectNotifier!execute" includeParams="none" />
-        </ww:if>
-        <ww:else>            
-            <ww:url id="actionUrl" value="addProjectGroupNotifier!execute" includeParams="none" />
-        </ww:else>
+        <s:if test="${projectId > 0}">
+            <s:url id="actionUrl" value="addProjectNotifier!execute" includeParams="none" />
+        </s:if>
+        <s:else>
+            <s:url id="actionUrl" value="addProjectGroupNotifier!execute" includeParams="none" />
+        </s:else>
        
-        <h3><ww:text name="notifier.section.add.title"/></h3>
+        <h3><s:text name="notifier.section.add.title"/></h3>
 
         <div class="axial">
                 
-          <ww:form action="%{actionUrl}" method="post">        
-            <ww:hidden name="projectId"/>
-            <ww:hidden name="projectGroupId"/>
+          <s:form action="%{actionUrl}" method="post">
+            <s:hidden name="projectId"/>
+            <s:hidden name="projectGroupId"/>
             <table>
               <tbody>
-                <ww:select label="%{getText('notifier.type.label')}" name="notifierType"
+                <s:select label="%{getText('notifier.type.label')}" name="notifierType"
                            list="#@java.util.LinkedHashMap@{'mail':'Mail', 'irc':'IRC', 'jabber':'Jabber', 'msn':'MSN', 'wagon':'Wagon'}"/>
               </tbody>
             </table>
             <div class="functnbar3">
               <c1:submitcancel value="%{getText('submit')}" cancel="%{getText('cancel')}"/>
             </div>
-          </ww:form>
+          </s:form>
         </div>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

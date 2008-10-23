@@ -37,7 +37,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="releaseResult"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseResult"
  */
 public class ReleaseResultAction
     extends ContinuumConfirmAction

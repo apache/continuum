@@ -17,24 +17,24 @@
   ~ under the License.
   --%>
 
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
   <title>Edit Company POM</title>
-  <ww:head/>
+  <s:head/>
 </head>
 
 <body>
 <h1>Company POM</h1>
 
-<ww:actionmessage/>
-<ww:form method="post" action="saveCompanyPom" namespace="/admin" validate="true" theme="xhtml">
-  <ww:label name="companyModel.groupId" label="Group ID"/>
-  <ww:label name="companyModel.artifactId" label="Artifact ID"/>
+<s:actionmessage/>
+<s:form method="post" action="saveCompanyPom" namespace="/admin" validate="true" theme="xhtml">
+  <s:label name="companyModel.groupId" label="Group ID"/>
+  <s:label name="companyModel.artifactId" label="Artifact ID"/>
   <tr>
     <td>Version</td>
     <td>
-      <ww:property value="companyModel.version"/>
+      <s:property value="companyModel.version"/>
       <i>(The version will automatically be incremented when you save this form)</i>
     </td>
   </tr>
@@ -42,12 +42,12 @@
     <td></td>
     <td><h2>Organization</h2></td>
   </tr>
-  <ww:textfield name="companyModel.organization.name" size="40" label="Name"/>
-  <ww:textfield name="companyModel.organization.url" size="70" label="URL"/>
+  <s:textfield name="companyModel.organization.name" size="40" label="Name"/>
+  <s:textfield name="companyModel.organization.url" size="70" label="URL"/>
   <%-- TODO: how to get it to be a string, not a String[]? --%>
-  <ww:textfield name="companyModel.properties['organization.logo']" size="70" label="Logo URL"/>
-  <ww:submit value="Save"/>
-</ww:form>
+  <s:textfield name="companyModel.properties['organization.logo']" size="70" label="Logo URL"/>
+  <s:submit value="Save"/>
+</s:form>
 
 </body>
 

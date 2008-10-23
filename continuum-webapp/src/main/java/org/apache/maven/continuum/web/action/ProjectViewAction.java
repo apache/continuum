@@ -30,7 +30,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="projectView"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="projectView"
  */
 public class ProjectViewAction
     extends ContinuumActionSupport

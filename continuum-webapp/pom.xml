@@ -134,11 +134,11 @@ under the License.
         <configuration>
           <roleDefaults>
             <roleDefault>
-              <role>com.opensymphony.xwork.Action</role>
+              <role>com.opensymphony.xwork2.Action</role>
               <instantiation-strategy>per-lookup</instantiation-strategy>
             </roleDefault>
             <roleDefault>
-              <role>com.opensymphony.xwork.validator.Validator</role>
+              <role>com.opensymphony.xwork2.validator.Validator</role>
               <instantiation-strategy>per-lookup</instantiation-strategy>
             </roleDefault>            
           </roleDefaults>
@@ -316,10 +316,6 @@ under the License.
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
     </dependency>
-    <!--dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-xwork-integration</artifactId>
-    </dependency-->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
@@ -457,22 +453,31 @@ under the License.
       <artifactId>wagon-webdav</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts2-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts2-spring-plugin</artifactId>
+      <scope>runtime</scope>
+    </dependency>
     <!--
-      Plexus Security Dependencies
+      Redback Dependencies
       -->
     <dependency>
       <groupId>org.codehaus.redback</groupId>
-      <artifactId>redback-xwork-content</artifactId>
+      <artifactId>redback-struts2-content</artifactId>
       <type>war</type>
       <scope>runtime</scope> 
     </dependency>
     <dependency>
       <groupId>org.codehaus.redback</groupId>
-      <artifactId>redback-xwork-integration</artifactId>
+      <artifactId>redback-struts2-integration</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.redback</groupId>
-      <artifactId>redback-taglib</artifactId>
+      <artifactId>redback-struts2-taglib</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>

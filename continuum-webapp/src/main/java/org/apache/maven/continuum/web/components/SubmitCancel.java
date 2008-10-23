@@ -19,8 +19,8 @@ package org.apache.maven.continuum.web.components;
  * under the License.
  */
 
-import com.opensymphony.webwork.components.Submit;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import org.apache.struts2.components.Submit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

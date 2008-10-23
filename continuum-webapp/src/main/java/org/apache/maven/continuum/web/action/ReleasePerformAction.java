@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * @author Edwin Punzalan
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="releasePerform"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releasePerform"
  */
 public class ReleasePerformAction
     extends ContinuumActionSupport

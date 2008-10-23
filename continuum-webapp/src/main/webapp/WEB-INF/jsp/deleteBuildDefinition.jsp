@@ -17,36 +17,36 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-      <title><ww:text name="deleteBuildDefinition.page.title"/></title>
+      <title><s:text name="deleteBuildDefinition.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
-        <h3><ww:text name="deleteBuildDefinition.section.title"/></h3>
+        <h3><s:text name="deleteBuildDefinition.section.title"/></h3>
         <div class="warningmessage">
           <p>
             <strong>
-              <ww:text name="deleteBuildDefinition.confirmation.message">
-          	  	<ww:param><ww:property value="buildDefinitionId"/></ww:param>
-          	  	<ww:param><ww:property value="description"/></ww:param>
-          	  	<ww:param><ww:property value="goals"/></ww:param>
-          	  </ww:text>
+              <s:text name="deleteBuildDefinition.confirmation.message">
+          	  	<s:param><s:property value="buildDefinitionId"/></s:param>
+          	  	<s:param><s:property value="description"/></s:param>
+          	  	<s:param><s:property value="goals"/></s:param>
+          	  </s:text>
             </strong>
           </p>
         </div>
         <div class="functnbar3">
-          <ww:form action="removeProjectBuildDefinition.action" method="post">
-            <ww:hidden name="projectId"/>
-            <ww:hidden name="buildDefinitionId"/>
-            <ww:hidden name="confirmed" value="true"/>
+          <s:form action="removeProjectBuildDefinition.action" method="post">
+            <s:hidden name="projectId"/>
+            <s:hidden name="buildDefinitionId"/>
+            <s:hidden name="confirmed" value="true"/>
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
-          </ww:form>
+          </s:form>
         </div>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

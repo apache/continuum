@@ -17,11 +17,11 @@
   ~ under the License.
   --%>
 
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
   <title>Configure Appearance</title>
-  <ww:head/>
+  <s:head/>
 </head>
 
 <body>
@@ -34,12 +34,12 @@
     from it.
   </p>
 
-  <ww:actionmessage/>
-  <ww:form method="post" action="saveAppearance" namespace="/admin" validate="true" theme="xhtml">
-    <ww:textfield name="companyPom.groupId" label="Group ID"/>
-    <ww:textfield name="companyPom.artifactId" label="Artifact ID"/>
-    <ww:submit value="Save"/>
-  </ww:form>
+  <s:actionmessage/>
+  <s:form method="post" action="saveAppearance" namespace="/admin" validate="true" theme="xhtml">
+    <s:textfield name="companyPom.groupId" label="Group ID"/>
+    <s:textfield name="companyPom.artifactId" label="Artifact ID"/>
+    <s:submit value="Save"/>
+  </s:form>
 </body>
 
 </html>
