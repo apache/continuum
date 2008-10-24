@@ -128,6 +128,35 @@ under the License.
           </execution>
         </executions>
       </plugin>
+		
+      <!-- 
+        here an hack to prevent multiple struts core in classpath
+        which prevent struts start 
+        and same struts.xml in the classpath too
+      -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>cleanup-struts-jar-in-webapp</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <delete includeemptydirs="true">
+                  <fileset dir="${basedir}/src/main/webapp/WEB-INF/lib" includes="**/struts2*.jar"/>
+                </delete>
+                <delete includeemptydirs="true">
+                  <fileset dir="${basedir}/src/main/webapp/WEB-INF/classes" includes="**/struts.*"/>
+                </delete>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>		
+
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-maven-plugin</artifactId>
@@ -458,9 +487,12 @@ under the License.
       <artifactId>struts2-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.opensymphony</groupId>
+      <artifactId>xwork</artifactId>
+    </dependency>    
+    <dependency>
       <groupId>org.apache.struts</groupId>
       <artifactId>struts2-spring-plugin</artifactId>
-      <scope>runtime</scope>
     </dependency>
     <!--
       Redback Dependencies

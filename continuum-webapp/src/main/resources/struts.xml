@@ -30,7 +30,6 @@
   <package name="default" extends="struts-default">
 
     <interceptors>
-      <interceptor name="exception-logging" class="exceptionLogging"/>
       <interceptor name="continuumConfigurationCheck" class="forceContinuumConfigurationInterceptor"/>
       <interceptor name="redbackForceAdminUser" class="redbackForceAdminUserInterceptor"/>
       <interceptor name="redbackSecureActions" class="redbackSecureActionInterceptor"/>
@@ -43,7 +42,6 @@
         <interceptor-ref name="redbackForceAdminUser"/>
         <interceptor-ref name="redbackAutoLogin"/>
         <interceptor-ref name="defaultStack"/>
-        <interceptor-ref name="exception-logging"/>
         <interceptor-ref name="redbackSecureActions"/>
         <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="continuumConfigurationCheck"/>
@@ -60,7 +58,6 @@
         <interceptor-ref name="redbackForceAdminUser"/>
         <interceptor-ref name="redbackAutoLogin"/>
         <interceptor-ref name="defaultStack"/>
-        <interceptor-ref name="exception-logging"/>
         <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="redbackSecureActions"/>
         <interceptor-ref name="validation">
