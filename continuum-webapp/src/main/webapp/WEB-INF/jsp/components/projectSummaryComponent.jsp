@@ -24,7 +24,7 @@
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <s:i18n name="localization.Continuum">
-<s:if test="${not empty projects}">
+<c:if test="${not empty projects}">
 
   <h3><s:text name="projectGroup.buildsStatut.title"/></h3>
   <table>
@@ -69,7 +69,7 @@
       <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
       <ec:column property="name" title="summary.projectTable.name" width="50%">
         <s:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
-          <s:param name="projectId" value="${project.id}"/>
+          <s:param name="projectId">${project.id}</s:param>
         </s:url>
         <s:a href="%{projectUrl}">${pageScope.project.name}</s:a>
       </ec:column>
@@ -79,10 +79,10 @@
           <c:when test="${project.buildNumber gt 0 && project.buildInSuccessId gt 0}">
             <redback:ifAuthorized permission="continuum-view-group" resource="${projectGroupName}">
               <s:url id="buildResult" action="buildResult">
-                <s:param name="projecGroupId" value="${project.projectGroupId}"/>
-                <s:param name="projectId" value="${project.id}"/>
-                <s:param name="projectName" value="${project.name}"/>
-                <s:param name="buildId" value="${project.buildInSuccessId}"/>
+                <s:param name="projecGroupId">${project.projectGroupId}</s:param>
+                <s:param name="projectId">${project.id}</s:param>
+                <s:param name="projectName">${project.name}</s:param>
+                <s:param name="buildId">${project.buildInSuccessId}</s:param>
               </s:url>
               <s:a href="%{buildResult}">${project.buildNumber}</s:a>
             </redback:ifAuthorized>
@@ -109,8 +109,8 @@
               <c:choose>
                 <c:when test="${projectIdle}">
                   <s:url id="buildProjectUrl" action="buildProject" namespace="/" includeParams="none">
-                    <s:param name="projectId" value="${project.id}"/>
-                    <s:param name="projectGroupId" value="${project.projectGroupId}"/>
+                    <s:param name="projectId">${project.id}</s:param>
+                    <s:param name="projectGroupId">${project.projectGroupId}</s:param>
                     <s:param name="fromGroupPage" value="true"/>
                   </s:url>
                   <s:a href="%{buildProjectUrl}">
@@ -119,7 +119,7 @@
                 </c:when>
                 <c:otherwise>
                   <s:url id="cancelBuildProjectUrl" action="cancelBuild" namespace="/" includeParams="none">
-                    <s:param name="projectId" value="${project.id}"/>
+                    <s:param name="projectId">${project.id}</s:param>
                   </s:url>
                   <c:choose>
                     <c:when test="${project.state != 8}">
@@ -152,7 +152,7 @@
         <c:choose>
           <c:when test="${pageScope.project.latestBuildId > 0}">
             <s:url id="buildResultsUrl" action="buildResults" namespace="/">
-              <s:param name="projectId" value="${project.id}"/>
+              <s:param name="projectId">${project.id}</s:param>
               <s:param name="projectName">${project.name}</s:param>
             </s:url>
             <s:a href="%{buildResultsUrl}"><img src="<s:url value='/images/buildhistory.gif' includeParams="none"/>" alt="<s:text name="legend.buildHistory"/>" title="<s:text name="legend.buildHistory"/>" border="0"></s:a>
@@ -171,7 +171,7 @@
         <c:choose>
           <c:when test="${pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4 || pageScope.project.state == 6}">
             <s:url id="workingCopyUrl" action="workingCopy" namespace="/">
-              <s:param name="projectId" value="${project.id}"/>
+              <s:param name="projectId">${project.id}</s:param>
             </s:url>
             <s:a href="%{workingCopyUrl}"><img src="<s:url value='/images/workingcopy.gif' includeParams="none"/>" alt="<s:text name="legend.workingCopy"/>" title="<s:text name="legend.workingCopy"/>" border="0"></s:a>
           </c:when>
@@ -189,7 +189,7 @@
         <c:choose>
           <c:when test="${pageScope.project.state == 2 && pageScope.project.projectType == 'maven2'}">
             <s:url id="releaseProjectUrl" action="releasePromptGoal" namespace="/">
-              <s:param name="projectId" value="${project.id}"/>
+              <s:param name="projectId">${project.id}</s:param>
             </s:url>
             <s:a href="%{releaseProjectUrl}">
               <img src="<s:url value='/images/releaseproject.gif' includeParams="none"/>" alt="<s:text name="legend.release"/>" title="<s:text name="legend.release"/>" border="0"/>
@@ -210,7 +210,7 @@
           <c:when
               test="${projectIdle}">
             <s:url id="deleteProjectUrl" value="deleteProject!default.action" namespace="/">
-              <s:param name="projectId" value="${project.id}"/>
+              <s:param name="projectId">${project.id}</s:param>
             </s:url>
             <s:a href="%{deleteProjectUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
@@ -227,7 +227,7 @@
       </ec:column>
     </ec:row>
   </ec:table>
-  <s:if test="${not empty projects}">
+  <c:if test="${not empty projects}">
     <div class="functnbar3">
       <table>
         <tbody>
@@ -246,7 +246,7 @@
         </tbody>
       </table>
     </div>
-  </s:if>
+  </c:if>
   </form>
-</s:if>
+</c:if>
 </s:i18n>

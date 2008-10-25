@@ -25,7 +25,7 @@
 <s:i18n name="localization.Continuum">
 
   <h3>Project Group Notifiers of ${projectGroup.name} group</h3>
-  <s:if test="${not empty projectGroupNotifierSummaries}">
+  <c:if test="${not empty projectGroupNotifierSummaries}">
   <ec:table items="projectGroupNotifierSummaries"
             var="projectGroupNotifierSummary"
             showExports="false"
@@ -71,7 +71,7 @@
       </ec:column>      
     </ec:row>
   </ec:table>
-  </s:if>
+  </c:if>
 
   <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
     <div class="functnbar3">
@@ -83,7 +83,7 @@
     </div>
   </redback:ifAuthorized>
 
-  <s:if test="${not empty projectNotifierSummaries}">
+  <c:if test="${not empty projectNotifierSummaries}">
     <h3>Project Notifiers</h3>
     <ec:table items="projectNotifierSummaries"
               var="projectNotifierSummary"
@@ -95,7 +95,7 @@
       <ec:row>
         <ec:column property="projectName" title="PROJECT NAME">
           <s:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
-            <s:param name="projectId" value="${pageScope.projectNotifierSummary.projectId}"/>
+            <s:param name="projectId">${pageScope.projectNotifierSummary.projectId}</s:param>
           </s:url>
         <s:a href="%{projectUrl}">${pageScope.projectNotifierSummary.projectName}</s:a>
         </ec:column>
@@ -153,5 +153,5 @@
         </ec:column>
       </ec:row>
     </ec:table>
-  </s:if>
+  </c:if>
 </s:i18n>

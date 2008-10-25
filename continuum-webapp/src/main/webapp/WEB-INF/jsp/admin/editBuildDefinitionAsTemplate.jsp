@@ -35,9 +35,9 @@
             
               <c:when test="${!empty actionErrors}">
                 <div class="errormessage">
-                  <c:forEach items="${actionErrors}" var="actionError">
-                    <p><s:text name="${actionError}"/></p>
-                  </c:forEach>
+                  <s:iterator value="actionErrors">
+                    <p><s:text name="<s:property/>" /></p>
+                  </s:iterator>
                 </div>
                 <input type="button" value="Back" onClick="history.go(-1)">
               </c:when>
@@ -45,9 +45,9 @@
               <c:when test="${empty actionErrors}">
                 <table>
                   <tbody>
-                    <s:if test="buildDefinition.type == 'ant'">
+                    <c:if test="buildDefinition.type == 'ant'">
                       <s:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildDefinition.buildFile"  required="true"/>
-                    </s:if>
+                    </c:if>
                     <s:elseif test="buildDefinition.type == 'shell'">
                       <s:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildDefinition.buildFile" required="true"/>
                     </s:elseif>
@@ -55,9 +55,9 @@
                       <s:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildDefinition.buildFile" required="true"/>
                     </s:else>
     
-                    <s:if test="buildDefinition.type == 'ant'">
+                    <c:if test="buildDefinition.type == 'ant'">
                       <s:textfield label="%{getText('buildDefinition.goals.ant.label')}" name="buildDefinition.goals"/>
-                    </s:if>
+                    </c:if>
                     <s:elseif test="buildDefinition.type == 'shell'">
                     </s:elseif>
                     <s:else>
@@ -70,10 +70,10 @@
                     <s:checkbox label="%{getText('buildDefinition.defaultForProject.label')}" name="buildDefinition.defaultForProject" />
                     <s:select label="%{getText('buildDefinition.schedule.label')}" name="buildDefinition.schedule.id" list="schedules" listValue="name"
                                listKey="id"/>
-                    <s:if test="buildDefinition.profile == null">
+                    <c:if test="buildDefinition.profile == null">
                       <s:select label="%{getText('buildDefinition.profile.label')}" name="buildDefinition.profile.id" list="profiles" listValue="name"
                                  value="-1" listKey="id" headerKey="-1" headerValue=""/>
-                    </s:if>
+                    </c:if>
                     <s:else>
                       <s:select label="%{getText('buildDefinition.profile.label')}" name="buildDefinition.profile.id" list="profiles" listValue="name"
                                  listKey="id" headerKey="-1" headerValue=""/>

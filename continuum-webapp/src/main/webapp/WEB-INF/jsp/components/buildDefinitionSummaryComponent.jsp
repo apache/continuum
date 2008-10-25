@@ -67,7 +67,7 @@
       </ec:column>
       <ec:column property="editAction" title="&nbsp;" width="1%">
         <%-- if the from is PROJECT then render the links differently --%>
-        <s:if test="${pageScope.buildDefinitionSummary.from == 'PROJECT'}">
+        <c:if test="${pageScope.buildDefinitionSummary.from == 'PROJECT'}">
           <redback:ifAuthorized permission="continuum-modify-project-build-definition" resource="${projectGroupName}">
             <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
               <s:param name="projectId">${projectId}</s:param>
@@ -78,7 +78,7 @@
           <redback:elseAuthorized>
             <img src="<s:url value='/images/edit_disabled.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
           </redback:elseAuthorized>
-        </s:if>
+        </c:if>
         <s:else>
           <redback:ifAuthorized permission="continuum-modify-group-build-definition" resource="${projectGroupName}">
             <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
@@ -95,7 +95,7 @@
       </ec:column>
       <ec:column property="deleteAction" title="&nbsp;" width="1%">
         <%-- if the from is PROJECT then render the links differently --%>
-        <s:if test="${pageScope.buildDefinitionSummary.from == 'PROJECT'}">
+        <c:if test="${pageScope.buildDefinitionSummary.from == 'PROJECT'}">
           <redback:ifAuthorized permission="continuum-remove-project-build-definition" resource="${projectGroupName}">
             <s:url id="removeUrl" action="removeProjectBuildDefinition" namespace="/">
               <s:param name="projectId">${projectId}</s:param>
@@ -107,7 +107,7 @@
           <redback:elseAuthorized>
             <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
           </redback:elseAuthorized>
-        </s:if>
+        </c:if>
         <s:else>
           <redback:ifAuthorized permission="continuum-remove-group-build-definition" resource="${projectGroupName}">
             <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">

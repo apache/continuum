@@ -36,9 +36,9 @@
             
               <c:when test="${!empty actionErrors}">
                 <div class="errormessage">
-                  <c:forEach items="${actionErrors}" var="actionError">
-                    <p><s:text name="${actionError}"/></p>
-                  </c:forEach>
+                  <s:iterator value="actionErrors">
+                    <p><s:text name="<s:property/>" /></p>
+                  </s:iterator>
                 </div>
                 <input type="button" value="Back" onClick="history.go(-1)">
               </c:when>

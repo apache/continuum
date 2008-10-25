@@ -38,9 +38,9 @@
 
       <c:if test="${!empty actionErrors}">
         <div class="errormessage">
-          <c:forEach items="${actionErrors}" var="actionError">
-            <p><s:text name="${actionError}"/></p>
-          </c:forEach>
+          <s:iterator value="actionErrors">
+            <p><s:text name="<s:property/>" /></p>
+          </s:iterator>
         </div>
       </c:if>
 
@@ -64,7 +64,7 @@
             </s:textfield>
 
             <s:textfield label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"
-            			  required="${requireReleaseOutput}">
+            			  required="%{#requireReleaseOutput}">
               <s:param name="desc"><p>
                 <s:text name="configuration.releaseOutputDirectory.message"/>
               </s:param>

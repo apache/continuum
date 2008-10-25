@@ -32,18 +32,18 @@
   <body>
   <div id="h3">
 
-    <s:if test="${infoMessage != null}">
+    <c:if test="${infoMessage != null}">
        <p>${infoMessage}</p>
-    </s:if>
+    </c:if>
     <s:else>
        <h3><s:text name="groups.page.section.title"/></h3>
     </s:else>
   
-    <s:if test="${empty groups}">
+    <c:if test="${empty groups}">
       <s:text name="groups.page.list.empty"/>
-    </s:if>
+    </c:if>
 
-    <s:if test="${not empty groups}">
+    <c:if test="${not empty groups}">
 
     <ec:table items="groups"
               var="group"
@@ -54,7 +54,7 @@
               filterable="false">
       <ec:row highlightRow="true">
         <ec:column property="name" title="groups.table.name" width="20%" style="white-space: nowrap">
-          <a href="<s:url  action="projectGroupSummary" namespace="/"><s:param name="projectGroupId" value="%{'${group.id}'}"/></s:url>">${group.name}</a>
+          <a href="<s:url  action="projectGroupSummary" namespace="/"><s:param name="projectGroupId">${group.id}</s:param></s:url>">${group.name}</a>
         </ec:column>
         <ec:column property="groupId" title="groups.table.groupId" width="20%"/>
         <ec:column property="repositoryName" title="groups.table.repositoryName" width="20%">
@@ -71,7 +71,7 @@
         <ec:column property="buildGroupNowAction" title="&nbsp;" width="1%">
           <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
             <s:url id="buildProjectGroupUrl" action="buildProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId" value="${group.id}"/>
+              <s:param name="projectGroupId">${group.id}</s:param>
               <s:param name="buildDefinitionId" value="-1"/>
               <s:param name="fromSummaryPage" value="true"/>
             </s:url>
@@ -86,7 +86,7 @@
         <ec:column property="releaseProjectGroupAction" title="&nbsp;" width="1%">
           <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
             <s:url id="releaseProjectGroupUrl" action="releaseProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId" value="${group.id}"/>
+              <s:param name="projectGroupId">${group.id}</s:param>
             </s:url>
             <s:a href="%{releaseProjectGroupUrl}">
               <img src="<s:url value='/images/releaseproject.gif'/>" alt="<s:text name="projectGroup.releaseNow"/>" title="<s:text name="projectGroup.releaseNow"/>" border="0">
@@ -99,7 +99,7 @@
         <ec:column property="removeProjectGroupAction" title="&nbsp;" width="1%">
           <redback:ifAuthorized permission="continuum-remove-group" resource="${group.name}">
             <s:url id="removeProjectGroupUrl" action="removeProjectGroup" namespace="/" includeParams="none">
-              <s:param name="projectGroupId" value="${group.id}"/>
+              <s:param name="projectGroupId">${group.id}</s:param>
             </s:url>
             <s:a href="%{removeProjectGroupUrl}">
               <img src="<s:url value='/images/delete.gif'/>" alt="<s:text name="projectGroup.deleteGroup"/>" title="<s:text name="projectGroup.deleteGroup"/>" border="0">
@@ -115,7 +115,7 @@
         <ec:column property="numProjects" title="groups.table.totalProjects" format="0" width="1%" style="text-align: right" headerStyle="text-align: center" calc="total"/>
       </ec:row>
     </ec:table>
-    </s:if>
+    </c:if>
     <redback:ifAuthorized permission="continuum-add-group">
       <div class="functnbar3">
         <table>

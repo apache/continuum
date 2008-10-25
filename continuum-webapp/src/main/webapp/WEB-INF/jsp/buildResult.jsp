@@ -48,7 +48,7 @@
             </c1:data>
             <c1:data label="%{getText('buildResult.duration')}">
                 <s:param name="after">
-                    <s:if test="${buildResult.endTime == 0}"><s:text name="buildResult.startedSince"/></s:if> <s:property value="buildResult.durationTime"/></s:param>
+                    <c:if test="${buildResult.endTime == 0}"><s:text name="buildResult.startedSince"/></c:if> <s:property value="buildResult.durationTime"/></s:param>
             </c1:data>
             <c1:data label="%{getText('buildResult.trigger')}">
                 <s:param name="after"><s:text name="buildResult.trigger.%{buildResult.trigger}"/></s:param>

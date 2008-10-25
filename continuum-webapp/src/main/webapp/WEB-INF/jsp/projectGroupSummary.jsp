@@ -90,7 +90,7 @@
         <c1:data label="%{getText('projectGroup.description.label')}" name="projectGroup.description"/>
         <c1:data label="%{getText('projectGroup.repository.label')}" name="projectGroup.localRepository.name"/>
         <c:if test="${url != null}">
-            <s:url id="projectHomepageUrl" value="${url}" includeContext="false" includeParams="none"/>
+            <s:url id="projectHomepageUrl" value="%{#url}" includeContext="false" includeParams="none"/>
         	<c1:data label="%{getText('projectGroup.url.label')}" name="url" valueLink="%{'${projectHomepageUrl}'}"/>  
         </c:if>
       </table>
@@ -101,9 +101,9 @@
 
       <c:if test="${!empty actionErrors}">
         <div class="errormessage">
-          <c:forEach items="${actionErrors}" var="actionError">
-            <p><s:text name="${actionError}"/></p>
-          </c:forEach>
+          <s:iterator value="actionErrors">
+            <p><s:text name="<s:property/>" /></p>
+          </s:iterator>
         </div>
       </c:if>
 
@@ -142,8 +142,8 @@
               <redback:ifAnyAuthorized permissions="continuum-add-project-to-group" resource="${projectGroup.name}">
                 <s:form name="addNewProject">
                   <s:hidden name="disableGroupSelection" value="true"/>
-                  <s:hidden name="selectedProjectGroup" value="${projectGroup.id}"/>
-                  <s:hidden name="projectGroupName" value="${projectGroup.name}"/>
+                  <s:hidden name="selectedProjectGroup">${projectGroup.id}</s:hidden>
+                  <s:hidden name="projectGroupName">${projectGroup.name}</s:hidden>
                   <s:hidden name="projectType" value=""/>
                 </s:form>
 
@@ -167,8 +167,8 @@
     </redback:ifAnyAuthorized>
 
     <s:action name="projectSummary" executeResult="true" namespace="component">
-      <s:param name="projectGroupId" value="%{projectGroupId}"/>
-      <s:param name="projectGroupName" value="%{projectGroup.name}"/>
+      <s:param name="projectGroupId">${projectGroupId}</s:param>
+      <s:param name="projectGroupName">${projectGroup.name}</s:param>
     </s:action>
 
   </div>

@@ -33,7 +33,7 @@
       <s:text name="installationsList.section.title"/>
     </h3>  
 
-    <s:if test="${not empty installations}">
+    <c:if test="${not empty installations}">
     <ec:table items="installations"
               var="installation"
               showExports="false"
@@ -59,7 +59,7 @@
         </ec:column>             
       </ec:row>
     </ec:table>
-    </s:if>
+    </c:if>
     <div class="functnbar3">
       <s:form action="installationsTypeChoice!listTypes.action" method="post">
         <s:submit value="%{getText('add')}"/>

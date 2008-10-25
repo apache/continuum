@@ -59,23 +59,23 @@
             <ec:column property="startTime" title="releaseResults.startTime" cell="date"/>
             <ec:column property="endTime" title="releaseResults.endTime" cell="date"/>
             <ec:column property="resultCode" title="releaseResults.state">
-              <s:if test="${pageScope.result.resultCode == 0}">
+              <c:if test="${pageScope.result.resultCode == 0}">
                 <s:text name="releaseViewResult.success"/>
-              </s:if>
+              </c:if>
               <s:else>
                 <s:text name="releaseViewResult.error"/>
               </s:else>
             </ec:column>
             <ec:column property="actions" title="&nbsp;">
                <s:url id="viewReleaseResultUrl" action="viewReleaseResult">
-                 <s:param name="releaseResultId" value="${pageScope.result.id}"/>
-                 <s:param name="projectGroupId" value="${projectGroupId}"/>
+                 <s:param name="releaseResultId">${pageScope.result.id}</s:param>
+                 <s:param name="projectGroupId">${projectGroupId}</s:param>
                </s:url>
                <s:a href="%{viewReleaseResultUrl}"><s:text name="releaseResults.viewResult"/></s:a>
              </ec:column>
           </ec:row>
         </ec:table>
-        <s:if test="${not empty releaseResults}">
+        <c:if test="${not empty releaseResults}">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -89,7 +89,7 @@
               </tbody>
             </table>
           </div>
-        </s:if>
+        </c:if>
       </form>
       </div>
     </body>

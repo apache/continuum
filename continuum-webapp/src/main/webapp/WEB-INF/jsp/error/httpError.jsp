@@ -28,7 +28,7 @@
   <title>
     <c:choose>
       <c:when test="${param.errorCode == 403 || param.errorCode == 404 || param.errorCode == 500}">
-        <s:text name="error.${param.errorCode}.title"/>
+        <s:text name="error.%{param.errorCode}.title"/>
       </c:when>
       <c:otherwise>
         <s:text name="error.page.title"/>
@@ -62,7 +62,7 @@
               <h3>
                 <c:choose>
                   <c:when test="${param.errorCode == 403 || param.errorCode == 404 || param.errorCode == 500}">
-                    <s:text name="error.${param.errorCode}.section.title"/>
+                    <s:text name="error.%{param.errorCode}.section.title"/>
                   </c:when>
                   <c:otherwise>
                     The URL requested results to an unknown error.
@@ -73,7 +73,7 @@
               <div class="errormessage">
                 <c:choose>
                   <c:when test="${param.errorCode == 403 || param.errorCode == 404 || param.errorCode == 500}">
-                    <s:text name="error.${param.errorCode}.message"/>
+                    <s:text name="error.%{param.errorCode}.message"/>
                   </c:when>
                   <c:otherwise>
                     The URL requested results to an unknown error.

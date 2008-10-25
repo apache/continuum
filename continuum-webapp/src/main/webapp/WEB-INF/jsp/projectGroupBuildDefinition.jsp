@@ -35,8 +35,8 @@
         </s:action>
 
         <s:action name="groupBuildDefinitionSummary" executeResult="true" namespace="component">
-          <s:param name="projectGroupId" value="%{projectGroupId}"/>
-          <s:param name="projectGroupName" value="%{projectGroup.name}"/>
+          <s:param name="projectGroupId">${projectGroupId}</s:param>
+          <s:param name="projectGroupName">${projectGroup.name}</s:param>
         </s:action>
       </div>
     </body>

@@ -35,7 +35,7 @@
         </s:action>
     
         <s:action name="projectGroupNotifierSummary" executeResult="true" namespace="component">
-          <s:param name="projectGroupId" value="%{projectGroupId}"/>
+          <s:param name="projectGroupId">${projectGroupId}</s:param>
         </s:action>
       </div>
     </body>

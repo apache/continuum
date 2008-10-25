@@ -30,9 +30,9 @@
         <h3><s:text name="repositories.section.title"/></h3>
         <c:if test="${!empty actionErrors}">
           <div class="errormessage">
-            <c:forEach items="${actionErrors}" var="actionError">
-              <p><s:text name="${actionError}"/></p>
-            </c:forEach>
+            <s:iterator value="actionErrors">
+              <p><s:text name="<s:property/>" /></p>
+            </s:iterator>
           </div>
         </c:if>
         <s:set name="repositories" value="repositories" scope="request"/>
@@ -49,7 +49,7 @@
             <ec:column property="layout" title="repositories.table.layout"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editRepositoryUrl" action="editRepository">
-                  <s:param name="repository.id" value="${pageScope.repository.id}"/>
+                  <s:param name="repository.id">${pageScope.repository.id}</s:param>
                 </s:url>
                 <c:choose>
                   <c:when test="${repository.name == 'DEFAULT'}">
@@ -65,7 +65,7 @@
               <c:choose>
                 <c:when test="${defaultPurgeMap[repositoryName]}">
                   <s:url id="purgeRepositoryUrl" action="purgeRepository">
-                    <s:param name="repository.id" value="${pageScope.repository.id}"/>
+                    <s:param name="repository.id">${pageScope.repository.id}</s:param>
                   </s:url>
                   <s:a href="%{purgeRepositoryUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
                 </c:when>
@@ -76,7 +76,7 @@
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
                 <s:url id="removeRepositoryUrl" action="removeRepository">
-                  <s:param name="repository.id" value="${pageScope.repository.id}"/>
+                  <s:param name="repository.id">${pageScope.repository.id}</s:param>
                 </s:url>
                 <c:choose>
                   <c:when test="${repository.name == 'DEFAULT'}">

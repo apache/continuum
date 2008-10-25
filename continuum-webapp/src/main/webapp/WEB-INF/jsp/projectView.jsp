@@ -44,7 +44,7 @@
             <c1:data label="%{getText('projectView.project.scmUrl')}" name="project.scmUrl"/>
             <c1:data label="%{getText('projectView.project.scmTag')}" name="project.scmTag"/>
             <s:url id="projectGroupSummaryUrl" value="/projectGroupSummary.action">
-                <s:param name="projectGroupId" value="%{project.projectGroup.id}"/>
+                <s:param name="projectGroupId">${project.projectGroup.id}</s:param>
             </s:url>
             <c1:data label="%{getText('projectView.project.group')}" name="project.projectGroup.name" valueLink="%{'${projectGroupSummaryUrl}'}"/>
             <c1:data label="%{getText('projectView.project.lastBuildDateTime')}" name="lastBuildDateTime" />
@@ -78,8 +78,8 @@
         <h3><s:text name="projectView.buildDefinitions"/></h3>
 
         <s:action name="buildDefinitionSummary" id="summary" namespace="component" executeResult="true">
-          <s:param name="projectId" value="%{project.id}" />
-          <s:param name="projectGroupId" value="%{project.projectGroup.id}"/>
+          <s:param name="projectId">${project.id}</s:param>
+          <s:param name="projectGroupId">${project.projectGroup.id}</s:param>
         </s:action>
 
         <div class="functnbar3">
@@ -93,7 +93,7 @@
         </div>
 
         <h3><s:text name="projectView.notifiers"/></h3>
-        <s:if test="${not empty project.notifiers}">
+        <c:if test="${not empty project.notifiers}">
           <s:set name="notifiers" value="project.notifiers" scope="request"/>
           <ec:table items="notifiers"
                     var="notifier"
@@ -112,9 +112,9 @@
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
                       <s:url id="editUrl" action="editProjectNotifier" namespace="/" includeParams="none">
-                        <s:param name="notifierId" value="${notifier.id}"/>
+                        <s:param name="notifierId">${notifier.id}</s:param>
                         <s:param name="projectId" value="project.id"/>
-                        <s:param name="projectGroupId" value="${project.projectGroup.id}"/>
+                        <s:param name="projectGroupId">${project.projectGroup.id}</s:param>
                         <s:param name="notifierType">${notifier.type}</s:param>
                       </s:url>
                       <s:a href="%{editUrl}">
@@ -136,9 +136,9 @@
                     <c:when test="${!pageScope.notifier.fromProject}">
                       <s:url id="removeUrl" action="deleteProjectNotifier" namespace="/">
                         <s:param name="projectId" value="project.id"/>
-                        <s:param name="projectGroupId" value="${project.projectGroup.id}"/>
+                        <s:param name="projectGroupId">${project.projectGroup.id}</s:param>
                         <s:param name="notifierType">${notifier.type}</s:param>
-                        <s:param name="notifierId" value="${notifier.id}"/>
+                        <s:param name="notifierId">${notifier.id}</s:param>
                     </s:url>
                     <s:a href="%{removeUrl}">
                       <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
@@ -155,7 +155,7 @@
               </ec:column>
             </ec:row>
           </ec:table>
-        </s:if>
+        </c:if>
         <div class="functnbar3">
            <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
           <s:form action="addProjectNotifier!default.action" method="post">

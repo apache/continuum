@@ -55,7 +55,7 @@
             </s:if>
             <s:if test="varNameUpdatable">
               <s:if test="varNameDisplayable">
-                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="${varNameUpdatable}" />
+                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="%{#varNameUpdatable}" />
               </s:if>
             </s:if>
             <s:else>
@@ -65,9 +65,9 @@
             </s:else>
             <s:textfield label="%{getText('installation.value.label')}" name="installation.varValue"
                           required="true"/>
-            <s:if test="(automaticProfileDisplayable && installation == null) ||  (installation.installationId == 0)">
+            <c:if test="(automaticProfileDisplayable && installation == null) ||  (installation.installationId == 0)">
               <s:checkbox label="%{getText('installation.automaticProfile.label')}" name="automaticProfile" />
-            </s:if>
+            </c:if>
           </tbody>
         </table>
         <div class="functnbar3">

@@ -36,7 +36,7 @@
             <s:text name="buildQueue.currentTask.section.title"/>
           </h3>  
           <table width="100%">
-            <s:if test="currentBuildProjectTask != null">
+            <c:if test="currentBuildProjectTask != null">
             <tbody>
               <tr>
                 <th><s:text name="buildQueue.currentTask.projectName"/></th>
@@ -59,7 +59,7 @@
                 </td>
               </tr>
             </tbody>
-            </s:if>
+            </c:if>
             <s:else>
               <s:text name="buildQueue.no.currentTaks" />
             </s:else>
@@ -69,7 +69,7 @@
           <h3>
             <s:text name="buildQueue.section.title"/>
           </h3>  
-            <s:if test="${not empty buildProjectTasks}">
+            <c:if test="${not empty buildProjectTasks}">
               <ec:table items="buildProjectTasks"
                         var="buildProjectTask"
                         showExports="false"
@@ -101,12 +101,12 @@
                   </ec:column>             
                 </ec:row>
               </ec:table>
-            </s:if>
+            </c:if>
             <s:else>
               <s:text name="buildQueue.empty"/>
             </s:else>
         </div>
-        <s:if test="${not empty buildProjectTasks}">
+        <c:if test="${not empty buildProjectTasks}">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -119,7 +119,7 @@
               </tbody>
             </table>
           </div>
-        </s:if>
+        </c:if>
         
         
         <!-- checkout queue -->
@@ -128,7 +128,7 @@
             <s:text name="checkoutQueue.currentTask.section.title"/>
           </h3>  
           <table width="100%">
-            <s:if test="currentCheckOutTask != null">
+            <c:if test="currentCheckOutTask != null">
             <tbody>
               <tr>
                 <th><s:text name="checkoutQueue.currentTask.projectName"/></th>
@@ -149,7 +149,7 @@
                 </td>
               </tr>
             </tbody>
-            </s:if>
+            </c:if>
             <s:else>
               <s:text name="checkoutQueue.no.currentTaks" />
             </s:else>
@@ -159,7 +159,7 @@
           <h3>
             <s:text name="checkoutQueue.section.title"/>
           </h3>  
-            <s:if test="${not empty currentCheckOutTasks}">
+            <c:if test="${not empty currentCheckOutTasks}">
               <ec:table items="currentCheckOutTasks"
                         var="currentCheckOutTask"
                         showExports="false"
@@ -187,12 +187,12 @@
                   </ec:column>             
                 </ec:row>
               </ec:table>
-            </s:if>
+            </c:if>
             <s:else>
               <s:text name="checkoutQueue.empty"/>
             </s:else>
         </div>
-        <s:if test="${not empty currentCheckOutTasks}">
+        <c:if test="${not empty currentCheckOutTasks}">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -207,7 +207,7 @@
               </tbody>
             </table>
           </div>
-        </s:if>
+        </c:if>
       </s:form>
     </body>
   </s:i18n>

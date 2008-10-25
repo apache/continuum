@@ -35,13 +35,13 @@
 
     <c:if test="${!empty actionErrors}">
       <div class="errormessage">
-        <c:forEach items="${actionErrors}" var="actionError">
-          <p><s:text name="${actionError}"/></p>
-        </c:forEach>
+        <s:iterator value="actionErrors">
+          <p><s:text name="<s:property/>" /></p>
+        </s:iterator>
       </div>
     </c:if>
         
-    <s:if test="${not empty profiles}">
+    <c:if test="${not empty profiles}">
     <ec:table items="profiles"
               var="profile"
               showExports="false"
@@ -78,7 +78,7 @@
         </ec:column>        
       </ec:row>
     </ec:table>
-    </s:if>
+    </c:if>
     <div class="functnbar3">
       <s:form action="addBuildEnv!input.action" method="post">
         <s:submit value="%{getText('add')}"/>

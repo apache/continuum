@@ -65,7 +65,7 @@
           </s:form>
           </td>
         </tr>
-        <s:if test="profile.id != 0">
+        <c:if test="profile.id != 0">
           <tr>
             <td>
               <div class="axial">
@@ -101,7 +101,7 @@
                     </tr>
                   </tbody>
                 </table>
-                <s:if test="${!empty allInstallations}">
+                <c:if test="${!empty allInstallations}">
                   <s:form action="addInstallationBuildEnv!addInstallation.action" method="get">
                     <s:hidden name="profile.id" />
                     <div class="functnbar3">
@@ -110,20 +110,20 @@
                       <s:submit value="%{getText('add')}"/>
                     </div>
                   </s:form>
-                </s:if>
+                </c:if>
                 <s:else>
                   <div class="warningmessage" style="color: red"><s:text name="profile.no.installations" /></div>
                 </s:else>
               </div>              
             </td>
           </tr>
-        </s:if>
+        </c:if>
         <s:else>
           <tr>
             <td>
-              <s:if test="${empty allInstallations}">
+              <c:if test="${empty allInstallations}">
                 <div class="warningmessage" style="color: red"><s:text name="profile.no.installations" /></div>
-              </s:if>
+              </c:if>
             </td>
           </tr> 
         </s:else>

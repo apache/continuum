@@ -39,9 +39,9 @@
               </c:if>
               <c:if test="${!empty actionErrors}">
               <div class="errormessage">
-                <c:forEach items="${actionErrors}" var="actionError">
-                  <p><s:text name="${actionError}"/></p>
-                </c:forEach>
+                <s:iterator value="actionErrors">
+                  <p><s:text name="<s:property/>" /></p>
+                </s:iterator>
               </div>
               </c:if>
             <table>
@@ -56,7 +56,7 @@
               </tbody>
             </table>
             
-            <s:if test="${!empty projectList}">
+            <c:if test="${!empty projectList}">
             <h3><s:text name="projectGroup.edit.section.projects.title"/></h3>
             <div class="eXtremeTable">
               <table id="projects_table" border="1" cellspacing="2" cellpadding="3" class="tableRegion" width="100%">
@@ -75,7 +75,7 @@
                 </tbody>
               </table>
             </div>
-            </s:if>
+            </c:if>
             <div class="functnbar3">
               <c:choose>
                 <c:when test="${!projectInCOQueue}">

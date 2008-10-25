@@ -77,16 +77,16 @@
               <ec:column property="buildDefinition.description" title="buildResults.buildDefinition.description" />
               <ec:column property="actions" title="&nbsp;">
                 <s:url id="buildResultUrl" action="buildResult">
-                  <s:param name="projectId" value="${projectId}"/>
-                  <s:param name="projectName" value="%{projectName}"/>
-                  <s:param name="buildId" value="${buildResult.id}"/>
-                  <s:param name="projectGroupId" value="${projectGroupId}"/>
+                  <s:param name="projectId">${projectId}</s:param>
+                  <s:param name="projectName">${projectName}</s:param>
+                  <s:param name="buildId">${buildResult.id}"</s:param>
+                  <s:param name="projectGroupId">${projectGroupId}</s:param>
                 </s:url>
                 <s:a href="%{buildResultUrl}"><s:text name="buildResults.result"/></s:a>
               </ec:column>
             </ec:row>
           </ec:table>
-          <s:if test="${not empty buildResults}">
+          <c:if test="${not empty buildResults}">
             <div class="functnbar3">
               <table>
                 <tbody>
@@ -100,7 +100,7 @@
                 </tbody>
               </table>
             </div>
-          </s:if>
+          </c:if>
         </form>
       </div>
     </body>

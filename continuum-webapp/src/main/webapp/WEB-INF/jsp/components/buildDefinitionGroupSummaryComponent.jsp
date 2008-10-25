@@ -26,7 +26,7 @@
 <s:i18n name="localization.Continuum">
 
   <h3><s:text name="buildDefinitionSummary.projectGroup.section.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
-  <s:if test="${not empty groupBuildDefinitionSummaries}">
+  <c:if test="${not empty groupBuildDefinitionSummaries}">
   <ec:table items="groupBuildDefinitionSummaries"
             var="buildDefinitionSummary"
             showExports="false"
@@ -92,9 +92,9 @@
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
         <center>
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <s:if test="${pageScope.buildDefinitionSummary.isDefault == true}">
+          <c:if test="${pageScope.buildDefinitionSummary.isDefault == true}">
             <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
-          </s:if>
+          </c:if>
           <s:else>
             <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
               <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
@@ -113,7 +113,7 @@
       </ec:column>
     </ec:row>
   </ec:table>
-  </s:if>
+  </c:if>
   <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
     <div class="functnbar3">
       <s:form action="buildDefinition" method="post">
@@ -123,7 +123,7 @@
     </div>
   </redback:ifAuthorized>
 
-  <s:if test="${not empty projectBuildDefinitionSummaries}">
+  <c:if test="${not empty projectBuildDefinitionSummaries}">
   <h3>Project Build Definitions</h3>
 
   <ec:table items="projectBuildDefinitionSummaries"
@@ -136,7 +136,7 @@
     <ec:row>
       <ec:column property="projectName" title="Project">
         <s:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
-          <s:param name="projectId" value="${pageScope.buildDefinitionSummary.projectId}"/>
+          <s:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</s:param>
         </s:url>
         <s:a href="%{projectUrl}">${pageScope.buildDefinitionSummary.projectName}</s:a>
       </ec:column>
@@ -212,6 +212,6 @@
     </ec:row>
   </ec:table>
 
-  </s:if>
+  </c:if>
 
 </s:i18n>

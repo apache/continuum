@@ -39,13 +39,13 @@
           </p>
         </div>
         <div class="functnbar3">
-          <s:if test="${projectId == -1}">
+          <c:if test="${projectId == -1}">
             <s:form action="deleteProjectGroupNotifier.action" method="post">
               <s:hidden name="notifierId"/>
               <s:hidden name="projectGroupId" />
               <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
             </s:form>
-          </s:if>
+          </c:if>
           <s:else>
             <s:form action="deleteProjectNotifier.action" method="post">
               <s:hidden name="notifierId"/>

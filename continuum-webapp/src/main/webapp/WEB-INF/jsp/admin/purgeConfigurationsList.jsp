@@ -33,9 +33,9 @@
         <h3><s:text name="purgeConfigs.repo.section.title"/></h3>
         <c:if test="${!empty actionErrors}">
           <div class="errormessage">
-            <c:forEach items="${actionErrors}" var="actionError">
-              <p><s:text name="${actionError}"/></p>
-            </c:forEach>
+            <s:iterator value="actionErrors">
+              <p><s:text name="<s:property/>" /></p>
+            </s:iterator>
           </div>
         </c:if>
         <s:set name="repoPurgeConfigs" value="repoPurgeConfigs" scope="request"/>
@@ -68,19 +68,19 @@
             <ec:column property="description" title="purgeConfigs.table.description"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editPurgeConfigUrl" action="editPurgeConfig">
-                  <s:param name="purgeConfigId" value="${pageScope.repoPurge.id}"/>
+                  <s:param name="purgeConfigId">${pageScope.repoPurge.id}</s:param>
                 </s:url>
                 <s:a href="%{editPurgeConfigUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="purgeActions" title="&nbsp;" width="1%">
                 <s:url id="purgeUrl" action="doPurge">
-                  <s:param name="purgeConfigId" value="${pageScope.repoPurge.id}"/>
+                  <s:param name="purgeConfigId">${pageScope.repoPurge.id}</s:param>
                 </s:url>
                 <s:a href="%{purgeUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
                 <s:url id="removePurgeConfigUrl" action="removePurgeConfig">
-                  <s:param name="purgeConfigId" value="${pageScope.repoPurge.id}"/>
+                  <s:param name="purgeConfigId">${pageScope.repoPurge.id}</s:param>
                 </s:url>
                 <s:a href="%{removePurgeConfigUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </ec:column>
@@ -115,19 +115,19 @@
             <ec:column property="description" title="purgeConfigs.table.description"/>
             <ec:column property="editActions" title="&nbsp;" width="1%">
                 <s:url id="editPurgeConfigUrl" action="editPurgeConfig">
-                  <s:param name="purgeConfigId" value="${pageScope.dirPurge.id}"/>
+                  <s:param name="purgeConfigId">${pageScope.dirPurge.id}</s:param>
                 </s:url>
                 <s:a href="%{editPurgeConfigUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="purgeActions" title="&nbsp;" width="1%">
                 <s:url id="purgeUrl" action="doPurge">
-                  <s:param name="purgeConfigId" value="${pageScope.dirPurge.id}"/>
+                  <s:param name="purgeConfigId">${pageScope.dirPurge.id}</s:param>
                 </s:url>
                 <s:a href="%{purgeUrl}"><img src="<s:url value='/images/purgenow.gif' includeParams="none"/>" alt="<s:text name='purge'/>" title="<s:text name='purge'/>" border="0" /></s:a>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
                 <s:url id="removePurgeConfigUrl" action="removePurgeConfig">
-                  <s:param name="purgeConfigId" value="${pageScope.dirPurge.id}"/>
+                  <s:param name="purgeConfigId">${pageScope.dirPurge.id}</s:param>
                 </s:url>
                 <s:a href="%{removePurgeConfigUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </ec:column>

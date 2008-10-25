@@ -53,7 +53,7 @@
       <ec:row highlightRow="true">
         <ec:column property="name" title="summary.projectTable.name" width="48%">
           <s:url id="projectViewUrl" action="projectView">
-            <s:param name="projectId" value="${pageScope.project.id}"/>
+            <s:param name="projectId">${pageScope.project.id}</s:param>
           </s:url>
           <s:a href="%{projectViewUrl}">${pageScope.project.name}</s:a>
         </ec:column>
@@ -64,8 +64,8 @@
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
                 <s:url id="editProjectUrl" action="projectEdit">
-                  <s:param name="projectId" value="${pageScope.project.id}"/>
-                  <s:param name="projectName" value="${project.name}"/>
+                  <s:param name="projectId">${pageScope.project.id}</s:param>
+                  <s:param name="projectName">${project.name}</s:param>
                 </s:url>
                 <s:a href="%{editProjectUrl}">
                   <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name="edit"/>" title="<s:text name="edit"/>" border="0">
@@ -88,8 +88,8 @@
               <c:when
                   test="${pageScope.project.state == 1 || pageScope.project.state == 10 || pageScope.project.state == 2 || pageScope.project.state == 3 || pageScope.project.state == 4}">
                 <s:url id="removeProjectUrl" action="deleteProject!default.action">
-                  <s:param name="projectId" value="${pageScope.project.id}"/>
-                  <s:param name="projectName" value="${pageScope.project.name}"/>
+                  <s:param name="projectId">${pageScope.project.id}</s:param>
+                  <s:param name="projectName">${pageScope.project.name}</s:param>
                 </s:url>
                 <s:a href="%{removeProjectUrl}">
                   <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
@@ -143,13 +143,13 @@
       <tr>
         <th nowrap="true">
           <s:form id="sortlist" name="sortlist" action="projectGroupMembers" theme="xhtml" method="post">
-            <s:if test="${ascending}">
+            <c:if test="${ascending}">
               <s:a href="javascript:document.forms['sortlist'].submit()"><img src="<s:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<s:text name='sort.descending'/>" border="0"></s:a> <s:text name="user.username.label"/>
-            </s:if>
+            </c:if>
             <s:else>
               <s:a href="javascript:document.forms['sortlist'].submit()"><img src="<s:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<s:text name='sort.ascending'/>" border="0"></s:a> <s:text name="user.username.label"/>
             </s:else>
-            <s:hidden name="ascending" value="${!ascending}"/>
+            <s:hidden name="ascending">${!ascending}</s:hidden>
             <s:hidden name="projectGroupId" />
             <s:hidden name="filterProperty" />
             <s:hidden name="filterKey" />
@@ -175,19 +175,19 @@
             <s:property value="userEmail"/>
           </td>
           <td>
-            <s:if test="${administrator}">
+            <c:if test="${administrator}">
               <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
-            </s:if>
+            </c:if>
           </td>
           <td>
-            <s:if test="${developer}">
+            <c:if test="${developer}">
               <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
-            </s:if>
+            </c:if>
           </td>
           <td>
-            <s:if test="${user}">
+            <c:if test="${user}">
               <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
-            </s:if>
+            </c:if>
           </td>
         </tr>
       </s:iterator>

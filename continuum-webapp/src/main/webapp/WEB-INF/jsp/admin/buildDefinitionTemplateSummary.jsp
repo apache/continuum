@@ -51,9 +51,9 @@
           </ec:column>  
           <!-- TODO list attached buildDefs -->
           <ec:column property="deleteAction" title="&nbsp;" width="1%">
-            <s:if test="${template.continuumDefault == true}">
+            <c:if test="${template.continuumDefault == true}">
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
-            </s:if>
+            </c:if>
             <s:else>
               <s:url id="deleteUrl" action="deleteDefinitionTemplate" method="delete" namespace="/">
                 <s:param name="buildDefinitionTemplate.id">${pageScope.template.id}</s:param>
@@ -96,9 +96,9 @@
             <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
           </ec:column>          
           <ec:column property="deleteAction" title="&nbsp;" width="1%">
-            <s:if test="${buildDefinitionSummary.isDefault == true}">
+            <c:if test="${buildDefinitionSummary.isDefault == true}">
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
-            </s:if>
+            </c:if>
             <s:else>
               <s:url id="deleteUrl" action="deleteBuildDefinitionAsTemplate" method="deleteBuildDefinition" namespace="/">
                 <s:param name="buildDefinition.id">${pageScope.buildDefinitionSummary.id}</s:param>
