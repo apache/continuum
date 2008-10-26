@@ -894,7 +894,7 @@ under the License.
       </dependency>
       <dependency>
         <groupId>org.codehaus.redback</groupId>
-        <artifactId>redback-struts2-taglib</artifactId>
+        <artifactId>redback-common-integrations</artifactId>
         <version>${redback.version}</version>
         <exclusions>
           <exclusion>
