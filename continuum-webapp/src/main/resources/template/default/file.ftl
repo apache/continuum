@@ -7,7 +7,7 @@
  size="100"<#rt/>
 </#if>
 <#if parameters.nameValue?exists>
- value="<@ww.property value="parameters.nameValue"/>"<#rt/>
+ value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
