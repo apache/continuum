@@ -1,12 +1,106 @@
 <document>
   <properties>
-    <title>Continuum 1.2 Release Note.</title>
+    <title>Release Notes</title>
   </properties>  
 <body>
 	
-	
-<h2>Release Notes - Continuum - Version 1.2</h2>
-The Apache Continuum team is pleased to announce Apache Continuum 1.2
+<h2>Release Notes - Continuum - Version 1.2.1</h2>
+
+<p>The Apache Continuum team is pleased to announce Apache Continuum 1.2.1</p>
+
+<p>Continuum 1.2.1 resolves a security issue in which scm passwords were exposed in plain text in the log files.
+	Users who have password protected scm repositories are encouraged to upgrade and take precautions to secure any
+	log files written by Continuum 1.2.</p>
+
+<p>In addition, Continuum 1.2.1 contains many fixes and improvements, including new configuration options and XML-RPC 
+	methods.  Please see the following for a complete list of changes:</p>
+		
+<h3>Changes in Continuum 1.2.1</h3>
+        
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1562'>CONTINUUM-1562</a>] -         NullPointerException when saving project
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1815'>CONTINUUM-1815</a>] -         Scheduled build loses track of proper reactor order after a release
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1832'>CONTINUUM-1832</a>] -         When giving registered user &quot;Project Administrator&quot; role to one of the created projects, he/she is able to change/alter the default user &quot;admin&quot; role
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1838'>CONTINUUM-1838</a>] -         If &quot;Fresh Build&quot; is used, &quot;Always build&quot;  should be implicit but it doesn't
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1857'>CONTINUUM-1857</a>] -         Stack trace appears on the pagewhen when deleting the default build definition of a project group
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1865'>CONTINUUM-1865</a>] -         Project group admin should not be able to see Local Repo and Purge configuration
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1874'>CONTINUUM-1874</a>] -         continuum:add-maven-two-project doesn't work
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1879'>CONTINUUM-1879</a>] -         Project group admin should not be able to change the local repository
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1881'>CONTINUUM-1881</a>] -         Accepts spaces when editing the Build Environment name
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1886'>CONTINUUM-1886</a>] -         NPE when deleting a project group when ReleaseOutputDirectory is not defined
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1889'>CONTINUUM-1889</a>] -         Project group admin should not be able to move a project into a group he does not have access to
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1897'>CONTINUUM-1897</a>] -         Error uploading maven 2 pom file
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1907'>CONTINUUM-1907</a>] -         wrapper.conf strange defect with %PWD%/..
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1914'>CONTINUUM-1914</a>] -         Passwords are exposed in continuum.log
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1919'>CONTINUUM-1919</a>] -         'Project Developer' role has rights to delete project group to which he is assign to.
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1931'>CONTINUUM-1931</a>] -         Upgrade Redback to 1.1.2
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1935'>CONTINUUM-1935</a>] -         JPOX exception storing ChangeFile: NAME column is too short
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1937'>CONTINUUM-1937</a>] -         Exception when trying to edit a project group
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1938'>CONTINUUM-1938</a>] -         Database files go under the logs directory by default
+</li>
+</ul>
+    
+<h2>        Improvement
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1488'>CONTINUUM-1488</a>] -         Add Build, Release and Delete icons/links to groupSummary page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1572'>CONTINUUM-1572</a>] -         Release should support Build Environments (formerly called Continuum Profiles)
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1694'>CONTINUUM-1694</a>] -         Adding Number of Errors and Test Success Rate to Notification Email
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1808'>CONTINUUM-1808</a>] -         Maven2 POM validation errors should end up in the Output text field of the Build results!
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1842'>CONTINUUM-1842</a>] -         Migration to Spring mail sender 
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1883'>CONTINUUM-1883</a>] -         Configuration should default to the 'data' directory, not 'target'
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1891'>CONTINUUM-1891</a>] -         don't use default java.io.tmpdir for jetty bundle (can causes issues on solaris)
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1895'>CONTINUUM-1895</a>] -         Project group page is not refreshing
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1913'>CONTINUUM-1913</a>] -         Missing default for release output directory on general configuration page
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1930'>CONTINUUM-1930</a>] -         Test summary is missing units of time
+</li>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1933'>CONTINUUM-1933</a>] -         Add new methods in webservices
+</li>
+</ul>
+    
+<h2>        New Feature
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1899'>CONTINUUM-1899</a>] -         Cannot edit Project Group homepage URL
+</li>
+</ul>
+        
+<h2>        Test
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1942'>CONTINUUM-1942</a>] -         Add some Selenium IDE tests
+</li>
+</ul>
+
 <h3>New in Continuum 1.2</h3> 
 <h4>Using Spring</h4>
   <p>Continuum now uses the Spring Framework as it's underlying container instead of Plexus. This results in a boost in performance and stability for the web application in particular.</p>
@@ -21,6 +115,7 @@ The Apache Continuum team is pleased to announce Apache Continuum 1.2
 <p>Now the maven plugin has the new groupId:artifactId org.apache.continuum:continuum-maven-plugin</p>
 <h4>New SCMs support</h4>
 <p>Now continuum two new providers : git and accurev.</p>  
+
 <h3>Changes in Continuum 1.2</h3>    
 <h2>        Bug
 </h2>
