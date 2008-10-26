@@ -19,24 +19,25 @@ package org.apache.maven.continuum.web.components;
  * under the License.
  */
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.struts2.components.Submit;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.components.UIBean;
+
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  */
 public class SubmitCancel
-    extends Submit
+    extends UIBean
 {
     private static final String TEMPLATE = "submitCancel";
 
     private String cancel;
 
-    public SubmitCancel( OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response )
+    public SubmitCancel( ValueStack stack, HttpServletRequest request, HttpServletResponse response )
     {
         super( stack, request, response );
     }
