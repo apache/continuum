@@ -86,8 +86,6 @@ public class ExecuteBuilderContinuumAction
 
         int trigger = getTrigger( context );
 
-        //ScmResult scmResult = getUpdateScmResult( context );
-
         List updatedDependencies = getUpdatedDependencies( context );
 
         ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
@@ -103,8 +101,6 @@ public class ExecuteBuilderContinuumAction
         buildResult.setState( ContinuumProjectState.BUILDING );
 
         buildResult.setTrigger( trigger );
-
-        //buildResult.setScmResult( scmResult );
 
         buildResult.setModifiedDependencies( updatedDependencies );
 

@@ -24,7 +24,6 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
-import org.codehaus.plexus.taskqueue.TaskQueue;
 
 import java.util.Map;
 
@@ -41,11 +40,6 @@ public class AddProjectToCheckOutQueueAction
      * @plexus.requirement
      */
     private WorkingDirectoryService workingDirectoryService;
-/*
-    /**
-     * @plexus.requirement role-hint="check-out-project"
-     */
-//    private TaskQueue checkOutQueue;
 
     /**
      * @plexus.requirement

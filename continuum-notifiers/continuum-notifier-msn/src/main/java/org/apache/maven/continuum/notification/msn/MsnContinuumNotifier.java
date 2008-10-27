@@ -20,7 +20,6 @@ package org.apache.maven.continuum.notification.msn;
  */
 
 import org.apache.continuum.model.project.ProjectScmRoot;
-import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -30,7 +29,6 @@ import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
 import org.apache.maven.continuum.notification.NotificationException;
-import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.msn.MsnClient;
 import org.codehaus.plexus.msn.MsnException;
 import org.codehaus.plexus.util.StringUtils;
@@ -40,8 +38,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
