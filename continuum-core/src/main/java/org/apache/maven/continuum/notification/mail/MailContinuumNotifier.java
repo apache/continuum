@@ -579,18 +579,15 @@ public class MailContinuumNotifier
                         if ( StringUtils.isNotEmpty( addressField ) )
                         {
                             String[] addresses = StringUtils.split( addressField, "," );
-                            List<Address> recipients = new ArrayList<Address>();
                             for ( String address : addresses )
                             {
                                 // TODO: set a proper name
                                 InternetAddress to = new InternetAddress( address.trim() );
 
                                 log.info( "Recipient: To '" + to + "'." );
-
-                                recipients.add( to );
+                                message.addRecipient( Message.RecipientType.TO, to );
                             }
-                            message.setRecipients( Message.RecipientType.TO,
-                                                   recipients.toArray( new Address[recipients.size()] ) );
+                            
                         }
 
                         String committerField = (String) notifier.getConfiguration().get( COMMITTER_FIELD );
