@@ -670,6 +670,9 @@ public interface Continuum
     ProjectScmRoot getProjectScmRoot( int projectScmRootId )
         throws ContinuumException;
 
+    ProjectScmRoot getProjectScmRootByProject( int projectId )
+        throws ContinuumException;
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -682,7 +685,7 @@ public interface Continuum
                                                              int buildDefinitionId )
         throws ContinuumException;
 
-    void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsAndBuildDefinitions )
+    void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsAndBuildDefinitions, int trigger )
         throws ContinuumException;
     
     //void prepareBuildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap )

@@ -351,11 +351,6 @@
             <type>ScmResult</type>
           </association>
         </field>
-        <field jpox.fetch-groups="project-all-details project-with-scm-details">
-          <name>scmRootAddress</name>
-          <version>1.1.2+</version>
-          <type>String</type>
-        </field>
       </fields>
     </class>
 

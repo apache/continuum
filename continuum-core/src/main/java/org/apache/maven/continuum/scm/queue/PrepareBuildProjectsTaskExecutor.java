@@ -18,6 +18,7 @@ import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUtils;
+import org.apache.maven.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
@@ -26,6 +27,7 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
@@ -72,6 +74,7 @@ public class PrepareBuildProjectsTaskExecutor
         PrepareBuildProjectsTask prepareTask = (PrepareBuildProjectsTask) task;
         
         Map<Integer, Integer> projectsBuildDefinitionsMap = prepareTask.getProjectsBuildDefinitionsMap();
+        int trigger = prepareTask.getTrigger();
         Set<Integer> projectsId = projectsBuildDefinitionsMap.keySet();
         Map context = new HashMap();
 
@@ -127,6 +130,9 @@ public class PrepareBuildProjectsTaskExecutor
             getLogger().info( "Ending prepare build" );
             endPrepareBuild( context );
         }
+
+        int projectGroupId = AbstractContinuumAction.getProjectGroupId( context );
+        buildProjects( projectGroupId, projectsBuildDefinitionsMap, trigger );
     }
     
     private Map initializeContext( int projectId, int buildDefinitionId )
@@ -150,7 +156,8 @@ public class PrepareBuildProjectsTaskExecutor
                     break;
                 }
             }
-            
+
+            context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, projectGroup.getId() );
             context.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
             context.put( AbstractContinuumAction.KEY_PROJECT, project );
     
@@ -414,6 +421,72 @@ public class PrepareBuildProjectsTaskExecutor
         catch ( ContinuumStoreException e )
         {
             throw new TaskExecutionException( "Error storing project scm root", e );
+        }
+    }
+
+    private void buildProjects( int projectGroupId, Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger )
+        throws TaskExecutionException
+    {
+        List<Project> projects = projectDao.getProjectsWithDependenciesByGroupId( projectGroupId );
+        List<Project> projectList;
+        
+        try
+        {
+            projectList = ProjectSorter.getSortedProjects( projects, getLogger() );
+        }
+        catch ( CycleDetectedException e )
+        {
+            projectList = projectDao.getAllProjectsByName();
+        }
+
+        for ( Project project : projectList )
+        {
+            boolean shouldBuild = false;
+            int buildDefinitionId = 0;
+            
+            if ( projectsAndBuildDefinitionsMap.get( project.getId() ) != null )
+            {
+                buildDefinitionId = projectsAndBuildDefinitionsMap.get( project.getId() );
+                shouldBuild = true;
+            }
+            else if ( project.getState() == ContinuumProjectState.CHECKEDOUT || project.getState() == ContinuumProjectState.NEW ) //check if no build result yet for project
+            {
+                try
+                {
+                    //get default build definition for project
+                    buildDefinitionId = buildDefinitionDao.getDefaultBuildDefinition( project.getId() ).getId();
+                }
+                catch ( ContinuumStoreException e )
+                {
+                    getLogger().error( "Error while creating build object", e );
+                    throw new TaskExecutionException( "Error while creating build object", e );
+                }
+                shouldBuild = true;
+            }
+
+            if ( shouldBuild )
+            {
+                try
+                {
+                    Map context = new HashMap();
+                    context.put( AbstractContinuumAction.KEY_PROJECT, project );
+                    context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
+                    context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
+                    
+                    getLogger().info( "Performing action create-build-project-task" );
+                    actionManager.lookup( "create-build-project-task" ).execute( context );
+                }
+                catch ( ActionNotFoundException e )
+                {
+                   getLogger().error( "Error looking up action 'build-project'" );
+                   throw new TaskExecutionException( "Error looking up action 'build-project'", e );
+                }
+                catch ( Exception e )
+                {
+                    getLogger().error( e.getMessage(), e );
+                    throw new TaskExecutionException( "Error executing action 'build-project'", e );
+                }
+            }
         }
     }
 }

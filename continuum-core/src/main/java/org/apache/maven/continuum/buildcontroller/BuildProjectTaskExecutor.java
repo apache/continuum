@@ -19,8 +19,6 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.Task;
@@ -39,11 +37,6 @@ public class BuildProjectTaskExecutor
      * @plexus.requirement
      */
     private BuildController controller;
-    
-    /**
-     * @plexus.requirement
-     */
-    private TaskQueueManager taskQueueManager;
 
     // ----------------------------------------------------------------------
     // TaskExecutor Implementation
@@ -53,23 +46,6 @@ public class BuildProjectTaskExecutor
         throws TaskExecutionException
     {
         BuildProjectTask buildProjectTask = (BuildProjectTask) task;
-
-        try
-        {
-            while ( taskQueueManager.isInPrepareBuildQueue( buildProjectTask.getProjectId() ) ||
-                    taskQueueManager.isInCurrentPrepareBuildTask( buildProjectTask.getProjectId() ) )
-            {
-                Thread.sleep( 1000 );
-            }
-        }
-        catch ( TaskQueueManagerException e )
-        {
-            throw new TaskExecutionException( e.getMessage(), e );
-        }
-        catch ( InterruptedException e )
-        {
-            throw new TaskExecutionException( e.getMessage(), e );
-        }
         
         controller.build( buildProjectTask.getProjectId(), buildProjectTask.getBuildDefinitionId(), buildProjectTask
             .getTrigger() );

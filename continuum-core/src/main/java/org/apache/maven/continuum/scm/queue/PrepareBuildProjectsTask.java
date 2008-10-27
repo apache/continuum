@@ -9,9 +9,12 @@ public class PrepareBuildProjectsTask
 {
     private Map<Integer, Integer> projectsBuildDefinitionsMap;
 
-    public PrepareBuildProjectsTask( Map<Integer, Integer> projectsBuildDefinitionsMap )
+    private int trigger;
+
+    public PrepareBuildProjectsTask( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
     {
         this.projectsBuildDefinitionsMap = projectsBuildDefinitionsMap;
+        this.trigger = trigger;
     }
     
     public long getMaxExecutionTime()
@@ -28,6 +31,16 @@ public class PrepareBuildProjectsTask
     public void setProjectsBuildDefinitionsMap( Map<Integer, Integer> projectsBuildDefinitionsMap )
     {
         this.projectsBuildDefinitionsMap = projectsBuildDefinitionsMap;
+    }
+
+    public int getTrigger()
+    {
+        return trigger;
+    }
+
+    public void setTrigger( int trigger )
+    {
+        this.trigger = trigger;
     }
     
     public int getHashCode()
