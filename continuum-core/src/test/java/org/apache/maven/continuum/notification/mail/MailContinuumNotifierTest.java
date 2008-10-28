@@ -28,6 +28,7 @@ import javax.mail.Address;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
+import javax.mail.Message;
 
 import org.apache.continuum.notification.mail.MockJavaMailSender;
 import org.apache.maven.continuum.AbstractContinuumTest;
@@ -101,6 +102,56 @@ public class MailContinuumNotifierTest
         assertEquals( "[continuum] BUILD ERROR: foo.bar Test Project", mailMessage.getSubject() );
 
         dumpContent( mailMessage );
+    }
+
+  /**
+   * When there are multiple notifiers in the pom, there should be multiple recipients on the email.
+   * @throws Exception
+   */
+    public void testMultipleNotifiers()
+        throws Exception
+    {
+        Project project = makeStubProject( "Test Project" );
+        project.setGroupId( "com.example" );
+
+        BuildResult build = makeBuild( ContinuumProjectState.ERROR );
+
+        MessageContext context = new MessageContext();
+        context.setProject( project );
+        context.setBuildResult( build );
+
+        List<ProjectNotifier> projectNotifiers = new ArrayList<ProjectNotifier>();
+
+        ProjectNotifier pn1 = new ProjectNotifier();
+        pn1.setType( "mail" );
+        Map<String, String> config1 = new HashMap<String, String>();
+        config1.put( MailContinuumNotifier.ADDRESS_FIELD, "foo@example.com" );
+        pn1.setConfiguration( config1 );
+        projectNotifiers.add( pn1 );
+
+        ProjectNotifier pn2 = new ProjectNotifier();
+        pn2.setType( "mail" );
+        Map<String, String> config2 = new HashMap<String, String>();
+        config2.put( MailContinuumNotifier.ADDRESS_FIELD, "bar@example.com" );
+        pn2.setConfiguration( config2 );
+        projectNotifiers.add( pn2 );
+
+        context.setNotifier( projectNotifiers );
+
+        Notifier notifier = (Notifier) lookup( Notifier.class.getName(), "mail" );
+
+        ( (MailContinuumNotifier) notifier ).setBuildHost( "foo.bar.com" );
+
+        notifier.sendMessage( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE, context );
+
+        MockJavaMailSender mailSender = (MockJavaMailSender) lookup( JavaMailSender.class, "continuum" );
+
+        // one email
+        assertEquals( 1, mailSender.getReceivedEmails().size() );
+
+        // two recipients
+        assertEquals( 2, mailSender.getReceivedEmails().get( 0 ).getRecipients( Message.RecipientType.TO ).length );
+
     }
 
     private void dumpContent( MimeMessage mailMessage )
