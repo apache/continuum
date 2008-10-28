@@ -68,5 +68,9 @@
   <bean name="mailSender#continuum" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="session" ref="mailSession"/>
   </bean>   
+	
+  <bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="session" ref="mailSession"/>
+  </bean>	
   
 </beans>
