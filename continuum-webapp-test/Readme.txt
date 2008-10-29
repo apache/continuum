@@ -3,6 +3,7 @@ Test with Firefox and Selenium IDE
  * Open Firefox and navigate to Continuum (it should be on the "Create Admin User" page.)
  * in Firefox, Tools -> Selenium IDE 
  * in Selenium IDE, File -> Open Test Suite and choose src/test/selenium-ide/continuum_test_suite.html
+ * in Selenium IDE, modify the Base URL if necessary (for example, http://localhost:8080/continuum)
  * in Selenium IDE, click the 'Play entire test suite' icon
 
 Test Continuum with Tomcat 5.x and firefox
