@@ -25,6 +25,7 @@
     </breadcrumbs>
     <menu name="Documentation">
       <item name="Index (category)" href="index.html"/>
+      <item name="Release Notes" href="release-notes.html"/>
       <item name="Getting Started" href="getting-started.html"/>
       <item name="Installation/Upgrade Guides" href="installation/index.html" collapse="true">
         <item name="System Requirements" href="installation/requirements.html"/>
@@ -36,7 +37,6 @@
           <item name="Geronimo" href="installation/geronimo.html"/>
           <item name="Glassfish" href="installation/glassfish.html"/>
         </item>
-        <item name="Release Notes" href="installation/release-notes.html"/>
         <item name="Upgrade" href="installation/upgrade.html"/>
       </item>
       <item name="User's Guides" collapse="true" href="user_guides/index.html">
