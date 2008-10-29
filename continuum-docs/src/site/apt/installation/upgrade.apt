@@ -111,7 +111,7 @@ java -Xmx512m -jar data-management-cli-1.2-app.jar -usersJdbcUrl jdbc:derby:${ne
 xsltproc copy.xsl builds.xml > fixed-builds.xml
 +------------------------------------------+
 
-* Upgrade Notes
-
-  Additional notes on upgrading are maintained in the {{{http://cwiki.apache.org/confluence/display/CONTINUUM/Continuum+Upgrade}wiki}}.
+~~* Upgrade Notes
+~~ TODO:  link to static export, not diectly to Confluence
+~~  Additional notes on upgrading are maintained in the {{{http://cwiki.apache.org/confluence/display/CONTINUUM/Continuum+Upgrade}wiki}}.
   
