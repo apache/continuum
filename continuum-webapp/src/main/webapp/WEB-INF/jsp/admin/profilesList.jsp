@@ -53,17 +53,17 @@
         <ec:column property="name" title="Name" style="white-space: nowrap" />
         <ec:column property="Installations" title="Installations" style="white-space: nowrap">
           <ul>
-            <c:if test='${profile.jdk != null}'>
+            <s:if test='profile.jdk != null'>
               <li><c:out value="${profile.jdk.name}"/> (<c:out value="${profile.jdk.type}"/>)</li>
-            </c:if>
-            <c:if test='${profile.builder != null}'>
+            </s:if>
+            <s:if test='profile.builder != null'>
               <li><c:out value="${profile.builder.name}"/> (<c:out value="${profile.builder.type}"/>)</li>
-            </c:if>
-            <c:if test='${profile.environmentVariables != null}'>
+            </s:if>
+            <s:if test='profile.environmentVariables != null'>
               <c:forEach var="envVar" items="${profile.environmentVariables}"> 
                 <li><c:out value="${envVar.name}" /></li>
               </c:forEach>
-            </c:if>
+            </s:if>
           <ul>
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">

@@ -36,7 +36,7 @@
             <s:text name="buildQueue.currentTask.section.title"/>
           </h3>  
           <table width="100%">
-            <c:if test="currentBuildProjectTask != null">
+            <s:if test="%{currentBuildProjectTask != null}">
             <tbody>
               <tr>
                 <th><s:text name="buildQueue.currentTask.projectName"/></th>
@@ -59,7 +59,7 @@
                 </td>
               </tr>
             </tbody>
-            </c:if>
+            </s:if>
             <s:else>
               <s:text name="buildQueue.no.currentTaks" />
             </s:else>
@@ -69,7 +69,7 @@
           <h3>
             <s:text name="buildQueue.section.title"/>
           </h3>  
-            <c:if test="${not empty buildProjectTasks}">
+            <s:if test="%{not empty buildProjectTasks}">
               <ec:table items="buildProjectTasks"
                         var="buildProjectTask"
                         showExports="false"
@@ -101,7 +101,7 @@
                   </ec:column>             
                 </ec:row>
               </ec:table>
-            </c:if>
+            </s:if>
             <s:else>
               <s:text name="buildQueue.empty"/>
             </s:else>
@@ -128,7 +128,7 @@
             <s:text name="checkoutQueue.currentTask.section.title"/>
           </h3>  
           <table width="100%">
-            <c:if test="currentCheckOutTask != null">
+            <s:if test="%{currentCheckOutTask != null}">
             <tbody>
               <tr>
                 <th><s:text name="checkoutQueue.currentTask.projectName"/></th>
@@ -149,7 +149,7 @@
                 </td>
               </tr>
             </tbody>
-            </c:if>
+            </s:if>
             <s:else>
               <s:text name="checkoutQueue.no.currentTaks" />
             </s:else>
@@ -159,7 +159,7 @@
           <h3>
             <s:text name="checkoutQueue.section.title"/>
           </h3>  
-            <c:if test="${not empty currentCheckOutTasks}">
+            <s:if test="%{!empty currentCheckOutTasks}">
               <ec:table items="currentCheckOutTasks"
                         var="currentCheckOutTask"
                         showExports="false"
@@ -187,7 +187,7 @@
                   </ec:column>             
                 </ec:row>
               </ec:table>
-            </c:if>
+            </s:if>
             <s:else>
               <s:text name="checkoutQueue.empty"/>
             </s:else>

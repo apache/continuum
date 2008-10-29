@@ -92,10 +92,11 @@
       <ec:column property="deleteActions" title="&nbsp;" width="1%">
         <center>
         <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroupName}">
-          <c:if test="${pageScope.buildDefinitionSummary.isDefault == true}">
+          <c:choose>
+          <c:when test="${pageScope.buildDefinitionSummary.isDefault == true}">
             <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
-          </c:if>
-          <s:else>
+          </c:when>
+          <c:otherwise>${pageScope.buildDefinitionSummary.isDefault}
             <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
               <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
               <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
@@ -104,7 +105,8 @@
             <s:a href="%{removeUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
             </s:a>
-          </s:else>
+          </c:otherwise>
+          </c:choose>
         </redback:ifAuthorized>
         <redback:elseAuthorized>
           <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">

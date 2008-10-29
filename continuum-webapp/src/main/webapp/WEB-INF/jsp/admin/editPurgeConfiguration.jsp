@@ -53,9 +53,9 @@
             <s:textfield label="%{getText('purgeConfig.daysOlder.label')}" name="daysOlder"/>
             <s:textfield label="%{getText('purgeConfig.retentionCount.label')}" name="retentionCount"/>
             <s:checkbox label="%{getText('purgeConfig.deleteAll.label')}" name="deleteAll"/>
-            <c:if test="${purgeType == 'repository'}">
+            <s:if test="purgeType == 'repository'">
               <s:checkbox label="%{getText('purgeConfig.deleteReleasedSnapshots.label')}" name="deleteReleasedSnapshots"/>
-            </c:if>
+            </s:if>
             <c:choose>
               <c:when test="${defaultPurgeConfiguration == true}">
                 <s:hidden name="defaultPurgeConfiguration"/>

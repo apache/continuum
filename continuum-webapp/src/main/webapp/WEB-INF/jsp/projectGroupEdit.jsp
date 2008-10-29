@@ -32,11 +32,11 @@
 
         <div class="axial">
           <s:form action="saveProjectGroup" method="post" validate="true">
-              <c:if test="${projectInCOQueue}">
+              <s:if test="projectInCOQueue">
                 <div class="label">
                     <p><s:text name="%{getText('project.in.checkout.queue.error')}"/></p>
                             </div >
-              </c:if>
+              </s:if>
               <c:if test="${!empty actionErrors}">
               <div class="errormessage">
                 <s:iterator value="actionErrors">

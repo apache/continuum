@@ -57,9 +57,9 @@
                 </ec:column>
               </redback:ifAuthorized>
               <ec:column property="buildNumberIfNotZero" title="buildResults.buildNumber">
-                  <c:if test="${pageScope.buildResult.state == 2}">
+                  <s:if test="pageScope.buildResult.state == 2">
                       <c:out value="${pageScope.buildResult.buildNumber}"/>
-                  </c:if>
+                  </s:if>
               </ec:column>
               <ec:column property="startTime" title="buildResults.startTime" cell="date"/>
               <ec:column property="endTime" title="buildResults.endTime" cell="date"/>

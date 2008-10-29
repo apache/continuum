@@ -30,9 +30,9 @@
     </head>
     <body>
       <div id="axial" class="h3">
-        <c:if test="${projectId > 0}">
+        <s:if test="projectId > 0">
             <s:url id="actionUrl" action="msnProjectNotifierSave" includeContext="false" includeParams="none" />
-        </c:if>
+        </s:if>
         <s:else>
             <s:url id="actionUrl" action="msnProjectGroupNotifierSave" includeContext="false" includeParams="none"/>
         </s:else>

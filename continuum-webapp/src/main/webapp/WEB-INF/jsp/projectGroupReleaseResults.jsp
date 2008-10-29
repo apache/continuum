@@ -59,9 +59,9 @@
             <ec:column property="startTime" title="releaseResults.startTime" cell="date"/>
             <ec:column property="endTime" title="releaseResults.endTime" cell="date"/>
             <ec:column property="resultCode" title="releaseResults.state">
-              <c:if test="${pageScope.result.resultCode == 0}">
+              <s:if test="pageScope.result.resultCode == 0">
                 <s:text name="releaseViewResult.success"/>
-              </c:if>
+              </s:if>
               <s:else>
                 <s:text name="releaseViewResult.error"/>
               </s:else>

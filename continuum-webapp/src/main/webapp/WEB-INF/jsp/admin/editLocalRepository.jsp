@@ -46,11 +46,11 @@
             <s:select label="%{getText('repository.layout.label')}" name="repository.layout" list="layouts" disabled="%{defaultRepo}"/>
           </table>
           <s:hidden name="repository.id"/>
-          <c:if test="${defaultRepo}">
+          <s:if test="defaultRepo">
             <s:hidden name="repository.name"/>
             <s:hidden name="repository.location"/>
             <s:hidden name="repository.layout"/>
-          </c:if>
+          </s:if>
           <div class="functnbar3">
             <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
           </div>

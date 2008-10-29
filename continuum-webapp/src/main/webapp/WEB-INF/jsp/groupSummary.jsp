@@ -32,9 +32,9 @@
   <body>
   <div id="h3">
 
-    <c:if test="${infoMessage != null}">
+    <s:if test="infoMessage != null">
        <p>${infoMessage}</p>
-    </c:if>
+    </s:if>
     <s:else>
        <h3><s:text name="groups.page.section.title"/></h3>
     </s:else>

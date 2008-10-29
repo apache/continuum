@@ -65,9 +65,9 @@
             </s:else>
             <s:textfield label="%{getText('installation.value.label')}" name="installation.varValue"
                           required="true"/>
-            <c:if test="(automaticProfileDisplayable && installation == null) ||  (installation.installationId == 0)">
+            <s:if test="%{(automaticProfileDisplayable && installation == null) || (installation.installationId == 0)}">
               <s:checkbox label="%{getText('installation.automaticProfile.label')}" name="automaticProfile" />
-            </c:if>
+            </s:if>
           </tbody>
         </table>
         <div class="functnbar3">

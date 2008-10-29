@@ -27,9 +27,9 @@
     <body>
       <div id="axial" class="h3">
       
-        <c:if test="${projectId > 0}">
+        <s:if test="projectId > 0">
             <s:url id="actionUrl" value="addProjectNotifier!execute" includeParams="none" />
-        </c:if>
+        </s:if>
         <s:else>
             <s:url id="actionUrl" value="addProjectGroupNotifier!execute" includeParams="none" />
         </s:else>

@@ -143,9 +143,9 @@
       <tr>
         <th nowrap="true">
           <s:form id="sortlist" name="sortlist" action="projectGroupMembers" theme="xhtml" method="post">
-            <c:if test="${ascending}">
+            <s:if test="ascending">
               <s:a href="javascript:document.forms['sortlist'].submit()"><img src="<s:url value='/images/icon_sortdown.gif' includeParams="none"/>" title="<s:text name='sort.descending'/>" border="0"></s:a> <s:text name="user.username.label"/>
-            </c:if>
+            </s:if>
             <s:else>
               <s:a href="javascript:document.forms['sortlist'].submit()"><img src="<s:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<s:text name='sort.ascending'/>" border="0"></s:a> <s:text name="user.username.label"/>
             </s:else>
@@ -175,19 +175,19 @@
             <s:property value="userEmail"/>
           </td>
           <td>
-            <c:if test="${administrator}">
+            <s:if test="administrator">
               <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
-            </c:if>
+            </s:if>
           </td>
           <td>
-            <c:if test="${developer}">
+            <s:if test="developer">
               <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
-            </c:if>
+            </s:if>
           </td>
           <td>
-            <c:if test="${user}">
+            <s:if test="user">
               <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>" border="0">
-            </c:if>
+            </s:if>
           </td>
         </tr>
       </s:iterator>

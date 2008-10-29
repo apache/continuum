@@ -45,9 +45,9 @@
               <c:when test="${empty actionErrors}">
                 <table>
                   <tbody>
-                    <c:if test="buildDefinition.type == 'ant'">
+                    <s:if test="buildDefinition.type == 'ant'">
                       <s:textfield label="%{getText('buildDefinition.buildFile.ant.label')}" name="buildDefinition.buildFile"  required="true"/>
-                    </c:if>
+                    </s:if>
                     <s:elseif test="buildDefinition.type == 'shell'">
                       <s:textfield label="%{getText('buildDefinition.buildFile.shell.label')}" name="buildDefinition.buildFile" required="true"/>
                     </s:elseif>
@@ -55,9 +55,9 @@
                       <s:textfield label="%{getText('buildDefinition.buildFile.maven.label')}" name="buildDefinition.buildFile" required="true"/>
                     </s:else>
     
-                    <c:if test="buildDefinition.type == 'ant'">
+                    <s:if test="buildDefinition.type == 'ant'">
                       <s:textfield label="%{getText('buildDefinition.goals.ant.label')}" name="buildDefinition.goals"/>
-                    </c:if>
+                    </s:if>
                     <s:elseif test="buildDefinition.type == 'shell'">
                     </s:elseif>
                     <s:else>
@@ -70,10 +70,10 @@
                     <s:checkbox label="%{getText('buildDefinition.defaultForProject.label')}" name="buildDefinition.defaultForProject" />
                     <s:select label="%{getText('buildDefinition.schedule.label')}" name="buildDefinition.schedule.id" list="schedules" listValue="name"
                                listKey="id"/>
-                    <c:if test="buildDefinition.profile == null">
+                    <s:if test="buildDefinition.profile == null">
                       <s:select label="%{getText('buildDefinition.profile.label')}" name="buildDefinition.profile.id" list="profiles" listValue="name"
                                  value="-1" listKey="id" headerKey="-1" headerValue=""/>
-                    </c:if>
+                    </s:if>
                     <s:else>
                       <s:select label="%{getText('buildDefinition.profile.label')}" name="buildDefinition.profile.id" list="profiles" listValue="name"
                                  listKey="id" headerKey="-1" headerValue=""/>
