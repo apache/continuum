@@ -478,6 +478,12 @@ public class ContinuumActionSupport
         checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_QUEUES );
     }
     
+    protected void checkManageLocalRepositoriesAuthorization()
+        throws AuthorizationRequiredException
+    {   
+        checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_REPOSITORIES );
+    }
+    
     /**
      * Get the security session
      *

@@ -54,6 +54,10 @@ public class ConfigurationAction
     private String deploymentRepositoryDirectory;
 
     private String baseUrl;
+    
+    private String releaseOutputDirectory;
+
+    private boolean requireReleaseOutput;
 
     public void prepare()
     {
@@ -86,10 +90,24 @@ public class ConfigurationAction
                 request.getContextPath();
             getLogger().info( "baseUrl='" + baseUrl + "'" );
         }
+
+        File releaseOutputDirectoryFile = configuration.getReleaseOutputDirectory();
+        if ( releaseOutputDirectoryFile != null )
+        {
+            releaseOutputDirectory = releaseOutputDirectoryFile.getAbsolutePath();
+        }
+
+        String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
+        setRequireReleaseOutput( new Boolean( requireRelease ) );
     }
 
     public String input()
     {
+        if ( isRequireReleaseOutput() )
+        {
+            addActionError( "configuration.releaseOutputDirectory.required" );
+        }
+
         return INPUT;
     }
 
@@ -114,6 +132,20 @@ public class ConfigurationAction
         configuration.setUrl( baseUrl );
 
         configuration.setInitialized( true );
+
+        if ( StringUtils.isNotEmpty( releaseOutputDirectory ) )
+        {
+            configuration.setReleaseOutputDirectory( new File( releaseOutputDirectory ) );
+        }
+        else if ( isRequireReleaseOutput() )
+        {
+            addActionError( "configuration.releaseOutputDirectory.required" );
+            return ERROR;
+        }
+        else
+        {
+            configuration.setReleaseOutputDirectory( null );
+        }
 
         configuration.store();
 
@@ -168,5 +200,25 @@ public class ConfigurationAction
         bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_CONFIGURATION, Resource.GLOBAL );
 
         return bundle;
+    }
+
+    public String getReleaseOutputDirectory()
+    {
+        return releaseOutputDirectory;
+    }
+
+    public void setReleaseOutputDirectory( String releaseOutputDirectory )
+    {
+        this.releaseOutputDirectory = releaseOutputDirectory;
+    }
+
+    public boolean isRequireReleaseOutput()
+    {
+        return requireReleaseOutput;
+    }
+
+    public void setRequireReleaseOutput( boolean requireReleaseOutput )
+    {
+        this.requireReleaseOutput = requireReleaseOutput;
     }
 }

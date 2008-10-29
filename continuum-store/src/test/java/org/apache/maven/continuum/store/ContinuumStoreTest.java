@@ -23,6 +23,7 @@ import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildDefinitionTemplateDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
+import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
@@ -1249,7 +1250,7 @@ public class ContinuumStoreTest
         assertRepositoryPurgeConfigurationEquals( testRepoPurgeConfiguration3, repoPurgeList.get( 1 ) );
         assertDirectoryPurgeConfigurationEquals( testDirectoryPurgeConfig, dirPurgeList.get( 0 ) );
     }
-    
+
     public void testAddProjectScmRoot()
         throws Exception
     {
@@ -1269,7 +1270,7 @@ public class ContinuumStoreTest
         assertProjectScmRootEquals( projectScmRoot, retrievedProjectScmRoot );
         assertProjectGroupEquals( projectScmRoot.getProjectGroup(), retrievedProjectScmRoot.getProjectGroup() );
     }
-    
+
     public void testRemoveProjectScmRoot()
         throws Exception
     {
@@ -1289,6 +1290,30 @@ public class ContinuumStoreTest
         assertEquals( "check # of project scm root", 0, projectScmRoots.size() );
     }
 
+	public void testRemoveProjectWithReleaseResult()
+        throws Exception
+    {
+        Project project = projectDao.getProject( testProject1.getId() );
+        ProjectGroup group = project.getProjectGroup();
+        
+        ContinuumReleaseResult releaseResult = createTestContinuumReleaseResult( group, project, "releaseGoal", 0, 0, 0 );
+        releaseResult = releaseResultDao.addContinuumReleaseResult( releaseResult );
+        
+        List<ContinuumReleaseResult> releaseResults = releaseResultDao.getAllContinuumReleaseResults();
+        assertEquals( "check size of continuum release results", 1, releaseResults.size() );
+        
+        ContinuumReleaseResult retrievedResult = releaseResults.get( 0 );
+        assertReleaseResultEquals( releaseResult, retrievedResult );
+        assertProjectGroupEquals( group, retrievedResult.getProjectGroup() );
+        assertProjectEquals( project, retrievedResult.getProject() );
+        
+        releaseResultDao.removeContinuumReleaseResult( releaseResult );
+        projectDao.removeProject( project );
+        assertFalse( projectDao.getProjectsInGroup( group.getId() ).contains( project ) );
+        
+        releaseResults = releaseResultDao.getAllContinuumReleaseResults();
+        assertEquals( "check size of continuum release results", 0, releaseResults.size() );
+    }
     // ----------------------------------------------------------------------
     //  HELPER METHODS
     // ----------------------------------------------------------------------

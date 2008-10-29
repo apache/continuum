@@ -30,7 +30,7 @@
     <title>
       <ww:text name="projectGroup.page.title"/>
     </title>
-    <meta http-equiv="refresh" content="300"/>
+    <meta http-equiv="refresh" content="30"/>
     <script type="text/javascript">
 
       <c:url var="addM2ProjectUrl" value="/addMavenTwoProjectInput!input.action" />

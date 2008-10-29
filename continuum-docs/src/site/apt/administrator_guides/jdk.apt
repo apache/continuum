@@ -1,12 +1,12 @@
  ------
- Managing Jdk
+ Managing JDKs
  ------
  Olivier Lamy
  ------
  Oct 11 2007
  ------
  
-Managing Jdk
+Managing JDKs
 
   From the menu, choose the 'Installations' entry 
   
@@ -22,10 +22,10 @@ Managing Jdk
 
   You can use the checkbox if you want to add a Profile with the same name as your jdk name.
   
-  The value 'Value/Path' field must contains the jdk path (as a JAVA_HOME value).
+  The value 'Value/Path' field must contain the jdk path (as a <<<JAVA_HOME>>> value).
   
-  The value will validated with testing path/bin/java -version
+  The value will validated by testing path<<</bin/java -version>>>
   
-  It the the test, the following error will be displayed 
+  If the test fails, the following error will be displayed
   
 [../images/jdk-validation-failed.png] Jdk validation failed   

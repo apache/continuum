@@ -6,29 +6,36 @@
   <package name="org.apache.maven.continuum.model.project">
     <class name="ProjectGroup">
       <field name="description">
-        <column length="8000" jdbc-type="VARCHAR"/>
+        <column length="4000" jdbc-type="VARCHAR"/>
       </field>
     </class>
     <class name="Project">
       <field name="description">
-        <column length="8000" jdbc-type="VARCHAR"/>
+        <column length="4000" jdbc-type="VARCHAR"/>
       </field>
     </class>
     <class name="BuildResult">
       <field name="error">
-        <column length="8000" jdbc-type="VARCHAR"/>
+        <column length="4000" jdbc-type="VARCHAR"/>
       </field>
     </class>
   </package>
   <package name="org.apache.maven.continuum.model.scm">
     <class name="ScmResult">
       <field name="exception">
-        <column name="exceptionstring" length="8000" jdbc-type="VARCHAR"/>
+        <column name="exceptionstring" length="4000" jdbc-type="VARCHAR"/>
       </field>
     </class>
     <class name="ChangeSet">
       <field name="comment">
-        <column name="changecomment" length="8000" jdbc-type="VARCHAR"/>
+        <column name="changecomment" length="4000" jdbc-type="VARCHAR"/>
+      </field>
+    </class>
+  </package>
+  <package name="org.apache.continuum.model.project">
+    <class name="ProjectScmRoot">
+      <field name="error">
+        <column length="4000" jdbc-type="VARCHAR"/>
       </field>
     </class>
   </package>

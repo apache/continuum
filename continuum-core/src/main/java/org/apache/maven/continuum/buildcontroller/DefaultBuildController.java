@@ -27,6 +27,7 @@ import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -34,7 +35,6 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
-//import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
@@ -47,7 +47,6 @@ import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
-//import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -151,16 +150,18 @@ public class DefaultBuildController
             }
             catch ( TaskExecutionException e )
             {
-                //just log the error but don't stop the build from progressing in order not to suppress any build result messages there 
+                updateBuildResult( context, ContinuumUtils.throwableToString( e ) );
+
+                //just log the error but don't stop the build from progressing in order not to suppress any build result messages there
                 getLogger().error( "Error executing action update-project-from-working-directory '", e );
             }
 
             performAction( "execute-builder", context );
-            
+
             performAction( "deploy-artifact", context );
 
             context.setCancelled( (Boolean) actionContext.get( AbstractContinuumAction.KEY_CANCELLED ) );
-            
+
             String s = (String) actionContext.get( AbstractContinuumAction.KEY_BUILD_ID );
 
             if ( s != null && !context.isCancelled() )
@@ -331,7 +332,7 @@ public class DefaultBuildController
         try
         {
             Project project = projectDao.getProjectWithScmDetails( projectId );
-            
+
             context.setProject( project );
 
             BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
@@ -342,7 +343,7 @@ public class DefaultBuildController
                 buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
 
             context.setOldBuildResult( oldBuildResult );
-            
+
             context.setScmResult( project.getScmResult() );
         }
         catch ( ContinuumStoreException e )
@@ -368,7 +369,7 @@ public class DefaultBuildController
         {
             actionContext.put( AbstractContinuumAction.KEY_OLD_BUILD_ID, context.getOldBuildResult().getId() );
         }
-        
+
         return context;
     }
 
@@ -430,6 +431,11 @@ public class DefaultBuildController
         throws TaskExecutionException
     {
         BuildDefinition buildDefinition = context.getBuildDefinition();
+        if ( buildDefinition.isBuildFresh() )
+        {
+            getLogger().info( "FreshBuild configured, building" );
+            return true;
+        }
         if ( buildDefinition.isAlwaysBuild() )
         {
             getLogger().info( "AlwaysBuild configured, building" );
@@ -492,7 +498,8 @@ public class DefaultBuildController
         }
 
         // Check changes
-        if ( !shouldBuild && !allChangesUnknown && !context.getScmResult().getChanges().isEmpty() )
+        if ( !shouldBuild && ( ( !allChangesUnknown && !context.getScmResult().getChanges().isEmpty() ) ||
+            project.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) ) )
         {
             try
             {
@@ -503,6 +510,7 @@ public class DefaultBuildController
             }
             catch ( Exception e )
             {
+                updateBuildResult( context, ContinuumUtils.throwableToString( e ) );
                 throw new TaskExecutionException( "Can't determine if the project should build or not", e );
             }
         }
@@ -693,9 +701,9 @@ public class DefaultBuildController
         throws TaskExecutionException
     {
         Project project = context.getProject();
-        
+
         int projectGroupId = project.getProjectGroup().getId();
-        
+
         List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( projectGroupId );
 
         for ( ProjectScmRoot projectScmRoot : scmRoots )
@@ -706,11 +714,11 @@ public class DefaultBuildController
                 {
                     return true;
                 }
-                
+
                 break;
             }
         }
-        
+
         return false;
     }
 

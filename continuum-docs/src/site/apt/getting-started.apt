@@ -9,12 +9,12 @@
 
 Getting Started
 
-    When you start continuum for the first time (without existing database), the first you will
-    have to do is the admin account creation and the {{{administrator_guides/configuration.html}general configuration}}
+    When you start Continuum for the first time (without an existing database), the first thing you will
+    do is create the admin account and perform the {{{administrator_guides/configuration.html}General Configuration}}.
     
 [images/admin-account-creation.png] Admin account creation
 
-    After admin account creation, you can log as an admin.  The next thing you will see is the General Configuration
+    After admin account creation, you can log as the admin. The next thing you will see is the General Configuration
     page.
 
 [images/configuration.png] General Configuration

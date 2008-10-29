@@ -55,6 +55,13 @@
           <version>1.1.0+</version>
           <type>String</type>
         </field>
+        <field>
+          <name>localRepository</name>
+          <version>1.1.1+</version>
+          <association>
+            <type>LocalRepository</type>
+          </association>
+        </field>
       </fields>
     </class>
 
@@ -1201,6 +1208,204 @@
         </field>
       </fields>
     </class>    
+
+    <class>
+      <name>LocalRepository</name>
+      <version>1.1.1+</version>
+      <packageName>org.apache.continuum.xmlrpc.repository</packageName>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.1+</version>
+          <type>int</type>
+          <identifier>true</identifier>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.1.1+</version>
+          <type>String</type>
+          <required>true</required>
+        </field>
+        <field jpox.column="repoLocation">
+          <name>location</name>
+          <version>1.1.1+</version>
+          <type>String</type>
+          <required>true</required>
+          <description>
+          The file system location for this repository
+          </description>
+        </field>
+        <field>
+          <name>layout</name>
+          <version>1.1.1+</version>
+          <type>String</type>
+          <defaultValue>default</defaultValue>
+          <description>
+          The layout of the repository. Valid values are "default" and "legacy"
+          </description>
+        </field>
+      </fields>
+    </class>
     
+    <class>
+      <name>AbstractPurgeConfiguration</name>
+      <version>1.1.1+</version>
+      <abstract>true</abstract>
+      <packageName>org.apache.continuum.xmlrpc.repository</packageName>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.1+</version>
+          <identifier>true</identifier>
+          <type>int</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.1.1+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>deleteAll</name>
+          <version>1.1.1+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+        </field>
+        <field>
+          <name>retentionCount</name>
+          <version>1.1.1+</version>
+          <type>int</type>
+          <defaultValue>2</defaultValue>
+          <description>
+          The total count of the artifact for each snapshot or the release/build output folder to be retained.
+          </description>
+        </field>
+        <field>
+          <name>daysOlder</name>
+          <version>1.1.1+</version>
+          <type>int</type>
+          <defaultValue>100</defaultValue>
+          <description>
+          The number of days old which will be the basis for removing a snapshot or a folder.
+          </description>
+        </field>
+        <field>
+          <name>enabled</name>
+          <version>1.1.1+</version>
+          <type>boolean</type>
+          <defaultValue>true</defaultValue>
+        </field>
+        <field>
+          <name>schedule</name>
+          <version>1.1.1+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>Schedule</type>
+          </association>
+        </field>
+        <field>
+          <name>defaultPurge</name>
+          <version>1.1.1+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>RepositoryPurgeConfiguration</name>
+      <version>1.1.1+</version>
+      <superClass>AbstractPurgeConfiguration</superClass>
+      <packageName>org.apache.continuum.xmlrpc.repository</packageName>
+      <fields>
+        <field>
+          <name>repository</name>
+          <version>1.1.1+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>LocalRepository</type>
+          </association>
+          <required>true</required>
+        </field>
+        <field>
+          <name>deleteReleasedSnapshots</name>
+          <version>1.1.1+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+          <description>
+            True if the released snapshots are to be removed from the repo during repository purge.
+          </description>
+        </field>
+      </fields>
+    </class>
+    <class>
+      <name>DirectoryPurgeConfiguration</name>
+      <version>1.1.1+</version>
+      <superClass>AbstractPurgeConfiguration</superClass>
+      <packageName>org.apache.continuum.xmlrpc.repository</packageName>
+      <fields>
+        <field jpox.column="directoryLocation">
+          <name>location</name>
+          <version>1.1.1+</version>
+          <type>String</type>
+          <description>
+            The file system path for this directory
+          </description>
+          <required>true</required>
+        </field>
+        <field>
+          <name>directoryType</name>
+          <version>1.1.1+</version>
+          <type>String</type>
+          <description>
+            The type of directory. Valid values are "releases" and "buildOutput"
+          </description>
+        </field>
+      </fields>
+    </class>
+       
+    <class>
+      <name>ContinuumReleaseResult</name>
+      <version>1.1.1+</version>
+      <packageName>org.apache.continuum.xmlrpc.release</packageName>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.1+</version>
+          <identifier>true</identifier>
+          <type>int</type>
+        </field>
+        <field>
+          <name>startTime</name>
+          <version>1.1.1+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>endTime</name>
+          <version>1.1.1+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>resultCode</name>
+          <version>1.1.1+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectGroup</name>
+          <version>1.1.1+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>ProjectGroup</type>
+          </association>
+        </field>
+        <field>
+          <name>project</name>
+          <version>1.1.1+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>Project</type>
+          </association>
+        </field>
+        <field>
+          <name>releaseGoal</name>
+          <version>1.1.1+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class> 
   </classes>
 </model>

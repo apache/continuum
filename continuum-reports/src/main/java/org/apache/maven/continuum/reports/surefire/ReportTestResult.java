@@ -23,32 +23,35 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 13 nov. 07
  * @version $Id$
+ * @since 13 nov. 07
  */
 public class ReportTestResult
 {
 
     private int testCount = 0;
-    
+
     private int failureCount = 0;
-    
+
+    private int errorCount = 0;
+
     private float totalTime = 0;
-    
+
     private List<ReportTestSuite> suiteResults;
 
-    public void addReportTestSuite(ReportTestSuite reportTestSuite)
+    public void addReportTestSuite( ReportTestSuite reportTestSuite )
     {
-        if (this.suiteResults == null)
+        if ( this.suiteResults == null )
         {
             this.suiteResults = new LinkedList<ReportTestSuite>();
         }
         this.suiteResults.add( reportTestSuite );
-        this.testCount = this.testCount + reportTestSuite.getNumberOfTests();
-        this.failureCount = this.failureCount + reportTestSuite.getNumberOfFailures();
-        this.totalTime = this.totalTime + reportTestSuite.getTimeElapsed();
+        this.testCount += reportTestSuite.getNumberOfTests();
+        this.failureCount += reportTestSuite.getNumberOfFailures();
+        this.errorCount += reportTestSuite.getNumberOfErrors();
+        this.totalTime += reportTestSuite.getTimeElapsed();
     }
-    
+
 
     public int getTestCount()
     {
@@ -70,6 +73,16 @@ public class ReportTestResult
         this.failureCount = failureCount;
     }
 
+    public int getErrorCount()
+    {
+        return errorCount;
+    }
+
+    public void setErrorCount( int errorCount )
+    {
+        this.errorCount = errorCount;
+    }
+
     public List<ReportTestSuite> getSuiteResults()
     {
         return suiteResults;
@@ -79,7 +92,7 @@ public class ReportTestResult
     {
         this.suiteResults = suiteResults;
     }
-    
+
     public float getTotalTime()
     {
         return totalTime;
@@ -88,6 +101,6 @@ public class ReportTestResult
     public void setTotalTime( float totalTime )
     {
         this.totalTime = totalTime;
-    }    
-    
+    }
+
 }

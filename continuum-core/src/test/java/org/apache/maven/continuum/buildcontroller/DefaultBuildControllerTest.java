@@ -30,7 +30,12 @@ import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 public class DefaultBuildControllerTest
     extends AbstractContinuumTest
@@ -75,6 +80,7 @@ public class DefaultBuildControllerTest
         buildResult2.setState( ContinuumProjectState.OK );
         buildResult2.setBuildDefinition( bd1 );
         buildResultDao.addBuildResult( project1, buildResult2 );
+        createPomFile( getProjectDao().getProjectWithAllDetails( projectId1 ) );
 
         Project project2 = createProject( "project2" );
         ProjectDependency dep1 = new ProjectDependency();
@@ -92,7 +98,8 @@ public class DefaultBuildControllerTest
         project2.setState( ContinuumProjectState.OK );
         projectId2 = addProject( project2 ).getId();
         buildDefinitionId2 = buildDefinitionDao.getDefaultBuildDefinition( projectId2 ).getId();
-
+        createPomFile( getProjectDao().getProjectWithAllDetails( projectId2 ) );
+        
         controller = (DefaultBuildController) lookup( BuildController.ROLE );
     }
 
@@ -175,5 +182,73 @@ public class DefaultBuildControllerTest
         controller.checkProjectDependencies( context );
         assertEquals( 1, context.getModifiedDependencies().size() );
         assertTrue( controller.shouldBuild( context ) );
+    }
+
+    private File getWorkingDirectory()
+        throws Exception
+    {
+        File workingDirectory = getTestFile( "target/working-directory" );
+        
+        if ( !workingDirectory.exists() )
+        {
+            workingDirectory.mkdir();
+        }
+        
+        return workingDirectory;
+    }
+    
+    private File getWorkingDirectory( Project project )
+        throws Exception
+    {
+        File projectDir = new File( getWorkingDirectory(), Integer.toString( project.getId() ) );
+
+        if ( !projectDir.exists() )
+        {
+            projectDir.mkdirs();
+            System.out.println( "projectdirectory created" + projectDir.getAbsolutePath() );
+        }
+
+        return projectDir;
+    }
+    
+    private void createPomFile( Project project )
+        throws Exception
+    {
+        File pomFile = new File( getWorkingDirectory( project ), "pom.xml" );
+        
+        BufferedWriter out = new BufferedWriter( new FileWriter( pomFile ) );
+        out.write( "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" " +
+        		   "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
+        		   "xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">\n" );
+        out.write( "<modelVersion>4.0.0</modelVersion>\n" );
+        out.write( "<groupId>" + project.getGroupId() + "</groupId>\n" );
+        out.write( "<artifactId>" + project.getArtifactId() + "</artifactId>\n" );
+        out.write( "<version>" + project.getVersion() + "</version>\n" );
+        out.write( "<scm>\n" );
+        out.write( "<connection>" + "scm:local|" + getWorkingDirectory().getAbsolutePath() + 
+                   "|" + project.getId() + "</connection>\n" );
+        out.write( "</scm>" );
+
+        if ( project.getDependencies().size() > 0 )
+        {
+            out.write( "<dependencies>\n" );
+
+            List<ProjectDependency> dependencies = project.getDependencies();
+
+            for ( ProjectDependency dependency : dependencies )
+            {
+                out.write( "<dependency>\n" );
+                out.write( "<groupId>" + dependency.getGroupId() + "</groupId>\n" );
+                out.write( "<artifactId>" + dependency.getArtifactId() + "</artifactId>\n" );
+                out.write( "<version>" + dependency.getVersion() + "</version>\n" );
+                out.write( "</dependency>\n" );
+            }
+            out.write( "</dependencies>\n" );
+        }
+
+        out.write( "</project>" );
+        out.close();
+        
+        System.out.println( "pom file created" );
     }
 }

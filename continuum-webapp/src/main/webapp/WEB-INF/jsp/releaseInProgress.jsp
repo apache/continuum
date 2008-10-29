@@ -64,6 +64,7 @@
       <ww:form action="releaseInProgress" method="get">
         <ww:hidden name="projectId"/>
         <ww:hidden name="releaseId"/>
+        <ww:hidden name="releaseGoal"/>
         <ww:submit value="Refresh"/>
       </ww:form>
     </body>

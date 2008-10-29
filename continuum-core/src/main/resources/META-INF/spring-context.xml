@@ -32,4 +32,5 @@
       <bean class="org.apache.maven.continuum.notification.manager.spring.NotifierFactoryBean"/>
     </property>
   </bean>
+  
 </beans>

@@ -55,6 +55,8 @@ public class ReleaseProjectAction
 
     private String projectGroupName = "";
 
+    protected static final String REQUIRES_CONFIGURATION = "releaseOutputDir-required";
+
     public String promptReleaseGoal()
         throws Exception
     {
@@ -67,6 +69,12 @@ public class ReleaseProjectAction
             return REQUIRES_AUTHORIZATION;
         }
 
+        // check if releaseOutputDirectory is already set
+        if ( getContinuum().getConfiguration().getReleaseOutputDirectory() == null )
+        {
+            return REQUIRES_CONFIGURATION;
+        }
+        
         project = getContinuum().getProjectWithAllDetails( projectId );
 
         String releaseId = ArtifactUtils.versionlessKey( project.getGroupId(), project.getArtifactId() );

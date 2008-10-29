@@ -33,18 +33,20 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
+import org.apache.continuum.dao.ContinuumReleaseResultDao;
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.NotifierDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.purge.ContinuumPurgeManager;
+import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
@@ -77,7 +79,6 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.project.builder.maven.MavenOneContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
-//import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -89,7 +90,6 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.action.Action;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
-//import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -99,10 +99,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
-//import org.codehaus.plexus.taskqueue.Task;
-//import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-//import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
@@ -165,6 +162,11 @@ public class DefaultContinuum
     /**
      * @plexus.requirement
      */
+    private ContinuumReleaseResultDao releaseResultDao;
+
+    /**
+     * @plexus.requirement
+     */
     private ProjectScmRootDao projectScmRootDao;
     
     /**
@@ -195,7 +197,7 @@ public class DefaultContinuum
     // ----------------------------------------------------------------------
     // Moved from core
     // ----------------------------------------------------------------------
-    
+
     /**
      * @plexus.requirement
      */
@@ -235,6 +237,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private RepositoryService repositoryService;
+
+	/**
+     * @plexus.requirement
+     */
+    private PurgeConfigurationService purgeConfigurationService;
 
     /**
      * @plexus.requirement
@@ -287,6 +294,11 @@ public class DefaultContinuum
     public TaskQueueManager getTaskQueueManager()
     {
         return taskQueueManager;
+    }
+
+    public PurgeConfigurationService getPurgeConfigurationService()
+    {
+        return purgeConfigurationService;
     }
 
     // ----------------------------------------------------------------------
@@ -563,6 +575,31 @@ public class DefaultContinuum
         {
             Project project = getProjectWithBuilds( projectId );
 
+			List<ContinuumReleaseResult> releaseResults = releaseResultDao.getContinuumReleaseResultsByProject( projectId );
+
+			try
+            {
+                for ( ContinuumReleaseResult releaseResult : releaseResults )
+                {
+                    releaseResultDao.removeContinuumReleaseResult( releaseResult );
+                }
+
+                File releaseOutputDirectory = configurationService.getReleaseOutputDirectory( project.getProjectGroup().getId() );
+
+                if ( releaseOutputDirectory != null )
+                {
+                    FileUtils.deleteDirectory( releaseOutputDirectory );
+                }
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( "Error while deleting continuum release result of project group", e );
+            }
+            catch ( IOException e )
+            {
+                throw logAndCreateException( "Error while deleting project group release output directory.", e );
+            }
+			
             getLogger().info( "Remove project " + project.getName() + "(" + projectId + ")" );
 
             try
@@ -3031,6 +3068,109 @@ public class DefaultContinuum
         return buildDefinitionService;
     }
 
+    public ContinuumReleaseResult addContinuumReleaseResult( ContinuumReleaseResult releaseResult )
+        throws ContinuumException
+    {
+        try
+        {
+            return releaseResultDao.addContinuumReleaseResult( releaseResult );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while adding continuumReleaseResult", e );
+        }
+    }
+    
+    public void removeContinuumReleaseResult( int releaseResultId )
+        throws ContinuumException
+    {
+        ContinuumReleaseResult releaseResult = getContinuumReleaseResult( releaseResultId );
+    
+        try
+        {
+            releaseResultDao.removeContinuumReleaseResult( releaseResult );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while deleting continuumReleaseResult: " + releaseResultId, e );
+        }
+    
+        try
+        {
+            int projectGroupId = releaseResult.getProjectGroup().getId();
+    
+            String name = "releases-" + releaseResult.getStartTime();
+    
+            File releaseFile = getConfiguration().getReleaseOutputFile( projectGroupId, name );
+    
+            if ( releaseFile.exists() )
+            {
+                releaseFile.delete();
+            }
+        }
+        catch ( ConfigurationException e )
+        {
+            getLogger().info( "skip error during cleanup release files " + e.getMessage(), e );
+        }
+    }
+    
+    public ContinuumReleaseResult getContinuumReleaseResult( int releaseResultId )
+        throws ContinuumException
+    {
+        try
+        {
+            return releaseResultDao.getContinuumReleaseResult( releaseResultId );
+        }
+        catch ( ContinuumObjectNotFoundException e )
+        {
+            throw new ContinuumException( "No continuumReleaseResult found: " + releaseResultId );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while retrieving continuumReleaseResult: " + releaseResultId, e );
+        }
+    }
+    
+    public List<ContinuumReleaseResult> getAllContinuumReleaseResults()
+    {
+        return releaseResultDao.getAllContinuumReleaseResults();
+    }
+    
+    public List<ContinuumReleaseResult> getContinuumReleaseResultsByProjectGroup( int projectGroupId )
+    {
+        return releaseResultDao.getContinuumReleaseResultsByProjectGroup( projectGroupId );
+    }
+    
+    public ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
+        throws ContinuumException
+    {
+        try
+        {
+            return releaseResultDao.getContinuumReleaseResult( projectId, releaseGoal, startTime, endTime );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while retrieving continuumReleaseResult of projectId " + projectId + " with releaseGoal: " + releaseGoal, e);
+        }
+    }
+    
+    public String getReleaseOutput( int releaseResultId )
+        throws ContinuumException
+    {
+        ContinuumReleaseResult releaseResult = getContinuumReleaseResult( releaseResultId );
+    
+        ProjectGroup projectGroup = releaseResult.getProjectGroup();
+    
+        try
+        {
+            return configurationService.getReleaseOutput( projectGroup.getId(), "releases-" + releaseResult.getStartTime() );
+        }
+        catch ( ConfigurationException e )
+        {
+            throw new ContinuumException( "Error while retrieving release output for release: " + releaseResultId );
+        }
+    }
+
     public List<ProjectScmRoot> getProjectScmRootByProjectGroup( int projectGroupId )
     {
         return projectScmRootDao.getProjectScmRootByProjectGroup( projectGroupId );
@@ -3072,8 +3212,8 @@ public class DefaultContinuum
     }
    
     public Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
-                                                                    List<BuildDefinition> bds,
-                                                                    boolean checkDefaultBuildDefinitionForProject )
+                                                                             List<BuildDefinition> bds,
+                                                                             boolean checkDefaultBuildDefinitionForProject )
         throws ContinuumException
     {
         Map<String, Map<Integer, Integer>> map = new HashMap<String, Map<Integer, Integer>>();
@@ -3170,7 +3310,7 @@ public class DefaultContinuum
     }
 
     public Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
-                                                                    int buildDefinitionId )
+                                                                             int buildDefinitionId )
         throws ContinuumException
     {
         Map<String, Map<Integer,Integer>> map = new HashMap<String, Map<Integer, Integer>>();

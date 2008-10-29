@@ -132,6 +132,8 @@ public abstract class AbstractContinuumTest
 
         configurationService.setWorkingDirectory( getTestFile( "target/working-directory" ) );
 
+        configurationService.setReleaseOutputDirectory( getTestFile( "target/release-outpur" ) );
+
         configurationService.store();
     }
 

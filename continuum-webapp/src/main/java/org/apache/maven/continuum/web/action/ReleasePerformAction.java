@@ -20,17 +20,19 @@ package org.apache.maven.continuum.web.action;
  */
 
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
-import org.apache.maven.shared.release.config.ReleaseDescriptor;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Edwin Punzalan
@@ -63,6 +65,10 @@ public class ReleasePerformAction
 
     private String projectGroupName = "";
 
+    private List<Profile> profiles;
+
+    private int profileId;
+
     public String inputFromScm()
         throws Exception
     {
@@ -78,6 +84,8 @@ public class ReleasePerformAction
         populateFromProject();
 
         releaseId = "";
+
+        profiles = this.getContinuum().getProfileService().getAllProfiles();
 
         return SUCCESS;
     }
@@ -132,12 +140,20 @@ public class ReleasePerformAction
     {
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
-        ReleaseDescriptor descriptor = new ReleaseDescriptor();
+        ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         descriptor.setScmSourceUrl( scmUrl );
         descriptor.setScmUsername( scmUsername );
         descriptor.setScmPassword( scmPassword );
         descriptor.setScmReleaseLabel( scmTag );
         descriptor.setScmTagBase( scmTagBase );
+        
+        Profile profile = null;
+        
+        if ( profileId != -1 )
+        {
+            profile = getContinuum().getProfileService().getProfile( profileId );
+            descriptor.setEnvironments( releaseManager.getEnvironments( profile ) );
+        }
 
         do
         {
@@ -291,4 +307,25 @@ public class ReleasePerformAction
 
         return projectGroupName;
     }
+
+    public List<Profile> getProfiles()
+    {
+        return profiles;
+    }
+
+    public void setProfiles( List<Profile> profiles )
+    {
+        this.profiles = profiles;
+    }
+
+    public int getProfileId()
+    {
+        return profileId;
+    }
+
+    public void setProfileId( int profileId )
+    {
+        this.profileId = profileId;
+    }
+    
 }

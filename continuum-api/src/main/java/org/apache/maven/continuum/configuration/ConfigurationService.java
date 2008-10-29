@@ -71,6 +71,18 @@ public interface ConfigurationService
 
     File getTestReportsDirectory( int buildId, int projectId )
         throws ConfigurationException;
+    
+    File getReleaseOutputDirectory();
+    
+    void setReleaseOutputDirectory( File releaseOutputDirectory );
+    
+    File getReleaseOutputDirectory( int projectGroupId );
+    
+    File getReleaseOutputFile( int projectGroupId, String releaseName )
+        throws ConfigurationException;
+
+    String getReleaseOutput( int projectGroupId, String releaseName )
+        throws ConfigurationException;
 
     // ----------------------------------------------------------------------
     //

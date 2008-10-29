@@ -24,8 +24,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.purge.ContinuumPurgeManager;
+import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -146,57 +148,6 @@ public interface Continuum
 
     Map<Integer, BuildResult> getBuildResultsInSuccess();
 
-    // ----------------------------------------------------------------------
-    // Queues
-    // ----------------------------------------------------------------------
-/*
-    public List<BuildProjectTask> getProjectsInBuildQueue()
-        throws ContinuumException;
-
-    boolean isInBuildingQueue( int projectId )
-        throws ContinuumException;
-
-    boolean isInBuildingQueue( int projectId, int buildDefinitionId )
-        throws ContinuumException;
-
-    boolean removeProjectsFromBuildingQueue( int[] projectsId )
-        throws ContinuumException;
-
-    /**
-     * @param hashCodes BuildProjectTask hashCodes
-     * @throws ContinuumException
-     */
-/*    void removeProjectsFromBuildingQueueWithHashCodes( int[] hashCodes )
-        throws ContinuumException;
-
-    boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
-        throws ContinuumException;
-
-    boolean isInCheckoutQueue( int projectId )
-        throws ContinuumException;
-
-    boolean removeProjectFromCheckoutQueue( int projectId )
-        throws ContinuumException;
-
-    List /* CheckOutTask *//*getCheckOutTasksInQueue()
-        throws ContinuumException;
-
-    boolean removeProjectsFromCheckoutQueue( int[] projectId )
-        throws ContinuumException;
-
-    /**
-     * @param hashCodes CheckOutTask hashCodes
-     * @throws ContinuumException
-     */
-/*    void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
-        throws ContinuumException;
-
-    TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
-        throws ContinuumException;
-    
-    boolean isProjectInPrepareBuild( int projectId )
-        throws ContinuumException;
-*/    
     // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
@@ -657,6 +608,8 @@ public interface Continuum
     // ----------------------------------------------------------------------
     ContinuumPurgeManager getPurgeManager();
 
+    PurgeConfigurationService getPurgeConfigurationService();
+    
     // ----------------------------------------------------------------------
     // Repository Service
     // ----------------------------------------------------------------------
@@ -687,9 +640,6 @@ public interface Continuum
 
     void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsAndBuildDefinitions, int trigger )
         throws ContinuumException;
-    
-    //void prepareBuildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap )
-    //    throws ContinuumException;
 
     // ----------------------------------------------------------------------
     // Task Queue Manager
@@ -697,5 +647,24 @@ public interface Continuum
     TaskQueueManager getTaskQueueManager();
 
     public void startup()
+        throws ContinuumException;
+
+    ContinuumReleaseResult addContinuumReleaseResult( ContinuumReleaseResult releaseResult )
+        throws ContinuumException;
+
+    void removeContinuumReleaseResult( int releaseResultId )
+        throws ContinuumException;
+
+    ContinuumReleaseResult getContinuumReleaseResult( int releaseResultId )
+        throws ContinuumException;
+
+    List<ContinuumReleaseResult> getContinuumReleaseResultsByProjectGroup( int projectGroupId );
+
+    List<ContinuumReleaseResult> getAllContinuumReleaseResults();
+
+    ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
+        throws ContinuumException;
+
+    String getReleaseOutput( int releaseResultId )
         throws ContinuumException;
 }

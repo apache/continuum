@@ -104,7 +104,31 @@ public class DefaultTaskQueueManager
             }
         }
     }
-    
+
+    public boolean cancelCurrentBuild()
+        throws TaskQueueManagerException
+    {
+        Task task = getBuildTaskQueueExecutor().getCurrentTask();
+        
+        if ( task != null )
+        {
+            if ( task instanceof BuildProjectTask )
+            {
+                getLogger().info( "Cancelling current build task" );
+                return getBuildTaskQueueExecutor().cancelTask( task );
+            }
+            else
+            {
+                getLogger().warn( "Current task not a BuildProjectTask - not cancelling" );
+            }
+        }
+        else
+        {
+            getLogger().warn( "No task running - not cancelling" );
+        }
+        return false;
+    }
+
     public TaskQueue getBuildQueue()
     {
         return buildQueue;
@@ -483,7 +507,7 @@ public class DefaultTaskQueueManager
                 }
             }
         }
-    
+
         for ( BuildProjectTask buildProjectTask : tasks )
         {
             getLogger().info( "cancel build for project " + buildProjectTask.getProjectId() );

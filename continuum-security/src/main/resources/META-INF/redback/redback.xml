@@ -403,22 +403,16 @@
   		          <resource>global</resource>
   		        </permission>
   		        <permission>
+  		          <id>continuum-remove-group</id>
+  		          <name>Continuum Remove Group</name>
+  		          <operation>continuum-remove-group</operation>
+  		          <resource>${resource}</resource>
+  		        </permission>
+  		        <permission>
   		          <id>continuum-group-role-grant</id>
   		          <name>Continuum Grant Group Roles</name>
   		          <operation>user-management-role-grant</operation>
   		          <resource>${resource}</resource>
-  		        </permission>
-  		        <permission>
-  		          <id>continuum-manage-repositories</id>
-  		          <name>Manage Continuum Local Repositories</name>
-  		          <operation>continuum-manage-repositories</operation>
-  		          <resource>global</resource>
-  		        </permission>
-  		        <permission>
-  		          <id>continuum-manage-purging</id>
-  		          <name>Manage Continuum Purging</name>
-  		          <operation>continuum-manage-purging</operation>
-  		          <resource>global</resource>
   		        </permission>
   		  	  </permissions>
   		  	  <childTemplates>
@@ -437,12 +431,6 @@
   		          <id>continuum-build-group</id>
   		          <name>Continuum Build Group</name>
   		          <operation>continuum-build-group</operation>
-  		          <resource>${resource}</resource>
-  		        </permission>
-  		        <permission>
-  		          <id>continuum-remove-group</id>
-  		          <name>Continuum Remove Group</name>
-  		          <operation>continuum-remove-group</operation>
   		          <resource>${resource}</resource>
   		        </permission>
   		        <permission>

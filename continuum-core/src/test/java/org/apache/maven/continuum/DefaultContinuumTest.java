@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
@@ -439,7 +440,41 @@ public class DefaultContinuumTest
         assertNotNull( retrievedRepository );
         assertEquals( repository, retrievedRepository );
     }
-    
+
+    public void testContinuumReleaseResult()
+        throws Exception
+    {
+        Continuum continuum = getContinuum();
+
+        ProjectGroup defaultProjectGroup = continuum.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+
+        assertEquals( 0, continuum.getAllContinuumReleaseResults().size() );
+
+        ContinuumReleaseResult releaseResult = new ContinuumReleaseResult();
+        releaseResult.setStartTime( System.currentTimeMillis() );
+
+        File logFile = continuum.getConfiguration().getReleaseOutputFile( defaultProjectGroup.getId(), 
+                                                                          "releases-" + releaseResult.getStartTime() );
+        logFile.mkdirs();
+
+        assertTrue( logFile.exists() );
+
+        releaseResult.setResultCode( 0 );
+        releaseResult.setEndTime( System.currentTimeMillis() );
+        releaseResult.setProjectGroup( defaultProjectGroup );
+
+        releaseResult = continuum.addContinuumReleaseResult( releaseResult );
+
+        List<ContinuumReleaseResult> releaseResults = continuum.getContinuumReleaseResultsByProjectGroup( defaultProjectGroup.getId() );
+        assertEquals( 1, releaseResults.size() );
+        assertEquals( releaseResult, releaseResults.get( 0 ) );
+
+        continuum.removeContinuumReleaseResult( releaseResult.getId() );
+        assertEquals( 0 , continuum.getAllContinuumReleaseResults().size() );
+        assertFalse( logFile.exists() );
+        assertEquals( defaultProjectGroup, continuum.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID ) );
+    }
+
     private Continuum getContinuum()
         throws Exception
     {

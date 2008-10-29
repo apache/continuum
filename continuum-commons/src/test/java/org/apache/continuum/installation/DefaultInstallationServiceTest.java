@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.installation;
+package org.apache.continuum.installation;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,6 +22,8 @@ package org.apache.maven.continuum.installation;
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
+import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.ProfileService;

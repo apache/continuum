@@ -59,4 +59,14 @@
       <bean class="org.apache.continuum.scm.manager.spring.ScmProviderFactoryBean"/>
     </property>
   </bean>
+  
+  <bean id="mailSession" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="java:comp/env/mail/Session">
+    </property>
+  </bean>  
+  
+  <bean name="mailSender#continuum" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="session" ref="mailSession"/>
+  </bean>   
+  
 </beans>

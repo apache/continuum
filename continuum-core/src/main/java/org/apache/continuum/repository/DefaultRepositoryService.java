@@ -72,6 +72,20 @@ public class DefaultRepositoryService
 
         try
         {
+            List<LocalRepository> repos = getAllLocalRepositories();
+            for ( LocalRepository repo : repos )
+            {
+                if ( repo.getName().equals( localRepository.getName() ) )
+                {
+                    throw new RepositoryServiceException( "Local repository name must be unique" );
+                }
+                
+                if ( repo.getLocation().equals( localRepository.getLocation() ) )
+                {
+                    throw new RepositoryServiceException( "Local repository location must be unique" );
+                }
+            }
+
             localRepository.setName( localRepository.getName().trim() );
             localRepository.setLocation( localRepository.getLocation().trim() );
 

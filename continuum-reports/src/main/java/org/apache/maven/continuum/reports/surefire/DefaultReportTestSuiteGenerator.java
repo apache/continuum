@@ -18,15 +18,6 @@
  */
 package org.apache.maven.continuum.reports.surefire;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -34,31 +25,37 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 12 nov. 07
  * @version $Id$
- * 
- * @plexus.component 
- *    role="org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator" role-hint="default"
+ * @plexus.component role="org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator" role-hint="default"
+ * @since 12 nov. 07
  */
 public class DefaultReportTestSuiteGenerator
     implements ReportTestSuiteGenerator, Initializable
 {
-    
+
     /**
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
 
     private List<String> defaultIncludes;
-    
+
     private List<String> defaultexcludes;
 
     // -----------------------------
     //  Plexus Lifecycle
     // -----------------------------
-    
+
     public void initialize()
         throws InitializationException
     {
@@ -68,7 +65,7 @@ public class DefaultReportTestSuiteGenerator
         defaultexcludes.add( "*.txt" );
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator#generateReports(java.io.File, java.util.List, java.util.List)
      */
     public List<ReportTestSuite> generateReports( File directory, List<String> includes, List<String> excludes )
@@ -83,7 +80,7 @@ public class DefaultReportTestSuiteGenerator
             return Collections.EMPTY_LIST;
         }
         List<ReportTestSuite> reportTestSuites = new LinkedList<ReportTestSuite>();
-        String[] includesArray = null;
+        String[] includesArray;
         if ( includes == null )
         {
             includesArray = new String[0];
@@ -92,7 +89,7 @@ public class DefaultReportTestSuiteGenerator
         {
             includesArray = includes.toArray( new String[includes.size()] );
         }
-        String[] excludesArray = null;
+        String[] excludesArray;
         if ( excludes == null )
         {
             excludesArray = new String[0];
@@ -103,19 +100,17 @@ public class DefaultReportTestSuiteGenerator
         }
         String[] xmlReportFiles = getIncludedFiles( directory, includesArray, excludesArray );
 
-        if (xmlReportFiles == null )
+        if ( xmlReportFiles == null )
         {
             return Collections.EMPTY_LIST;
         }
-        if (xmlReportFiles.length == 0)
+        if ( xmlReportFiles.length == 0 )
         {
             return Collections.EMPTY_LIST;
         }
-        for ( int index = 0; index < xmlReportFiles.length; index++ )
+        for ( String currentReport : xmlReportFiles )
         {
             ReportTestSuite testSuite = new ReportTestSuite();
-
-            String currentReport = xmlReportFiles[index];
 
             try
             {
@@ -139,7 +134,7 @@ public class DefaultReportTestSuiteGenerator
         return reportTestSuites;
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator#generateReports(java.io.File)
      */
     public List<ReportTestSuite> generateReports( File directory )
@@ -147,10 +142,8 @@ public class DefaultReportTestSuiteGenerator
     {
         return generateReports( directory, defaultIncludes, defaultexcludes );
     }
-    
-    
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator#generateReports(int, int)
      */
     public List<ReportTestSuite> generateReports( int buildId, int projectId )
@@ -166,16 +159,16 @@ public class DefaultReportTestSuiteGenerator
             throw new ReportTestSuiteGeneratorException( e.getMessage(), e );
         }
     }
-    
-    /** 
-     * @see org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator#generateTestResult(int, int)
+
+    /**
+     * @see org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator#generateReportTestResult(int, int)
      */
     public ReportTestResult generateReportTestResult( int buildId, int projectId )
         throws ReportTestSuiteGeneratorException
     {
         List<ReportTestSuite> reportTestSuites = generateReports( buildId, projectId );
         ReportTestResult reportTestResult = new ReportTestResult();
-        for (ReportTestSuite reportTestSuite : reportTestSuites)
+        for ( ReportTestSuite reportTestSuite : reportTestSuites )
         {
             reportTestResult.addReportTestSuite( reportTestSuite );
         }
@@ -196,5 +189,5 @@ public class DefaultReportTestSuiteGenerator
 
         return scanner.getIncludedFiles();
     }
-    
+
 }

@@ -21,6 +21,7 @@ package org.apache.maven.continuum.release;
 
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.system.Profile;
 
 import java.io.File;
 import java.util.Map;
@@ -49,6 +50,22 @@ public interface ContinuumReleaseManager
      */
     String prepare( Project project, Properties releaseProperties, Map releaseVersions, Map developmentVersions,
                     ContinuumReleaseManagerListener listener )
+        throws ContinuumReleaseException;
+    
+    /**
+     * Prepare a project for release
+     *
+     * @param project
+     * @param releaseProperties
+     * @param releaseVersions
+     * @param developmentVersions
+     * @param listener
+     * @param profile
+     * @return
+     * @throws ContinuumReleaseException
+     */
+    String prepare( Project project, Properties releaseProperties, Map releaseVersions, Map developmentVersions,
+                    ContinuumReleaseManagerListener listener, Profile profile )
         throws ContinuumReleaseException;
 
     /**
@@ -99,4 +116,6 @@ public interface ContinuumReleaseManager
     void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
                   ContinuumReleaseManagerListener listener, LocalRepository repository )
         throws ContinuumReleaseException;
+
+    Map<String, String> getEnvironments( Profile profile );
 }

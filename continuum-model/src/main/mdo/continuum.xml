@@ -101,7 +101,7 @@
         </field>
         <field>
           <name>projectScmRoots</name>
-          <version>1.1.2+</version>
+          <version>1.1.3+</version>
           <association>
             <type>ProjectScmRoot</type>
             <multiplicity>*</multiplicity>
@@ -346,7 +346,7 @@
         </field>     
         <field jpox.fetch-groups="project-all-details project-with-scm-details">
           <name>scmResult</name>
-          <version>1.1.2+</version>
+          <version>1.1.3+</version>
           <association>
             <type>ScmResult</type>
           </association>
@@ -435,7 +435,7 @@
         </field>
         <field>
           <name>sendOnScmFailure</name>
-          <version>1.1.2+</version>
+          <version>1.1.3+</version>
           <type>boolean</type>
           <defaultValue>false</defaultValue>
         </field>
@@ -788,21 +788,32 @@
              */
             public String toString()
             {
-                String result = author + "\n" + date + "\n";
+                StringBuilder result = new StringBuilder();
+                if ( author != null )
+                {
+                    result.append( author ).append( "\n" );
+                }
+                result.append( date ).append( "\n" );
 
                 if ( files != null )
                 {
                     for ( java.util.Iterator i = files.iterator(); i.hasNext(); )
                     {
                         ChangeFile file = (ChangeFile) i.next();
-
-                        result += file + "\n";
+                        
+                        if (file != null)
+                        {
+                            result.append( file ).append( "\n" );
+                        }
                     }
                 }
 
-                result += comment;
+                if ( comment != null )
+                {
+                    result.append( comment );
+                }
 
-                return result;
+                return result.toString();
             }
 
             /**
@@ -842,8 +853,8 @@
       <packageName>org.apache.maven.continuum.model.scm</packageName>
       <version>1.0.9+</version>
       <fields>
-        <field>
-          <name stash.maxSize="1024">name</name>
+        <field stash.maxSize="1024">
+          <name>name</name>
           <version>1.0.9+</version>
           <type>String</type>
         </field>
@@ -1227,6 +1238,12 @@
           <type>boolean</type>
           <defaultValue>false</defaultValue>
         </field>
+        <field>
+          <name>releaseOutputDirectory</name>
+          <version>1.1.2+</version>
+          <type>String</type>
+          <defaultValue>release-output-directory</defaultValue>
+        </field>
       </fields>
     </class>
 
@@ -1486,11 +1503,11 @@
         </field>
       </fields>
     </class>
-        
+       
     <class>
-      <name>ProjectScmRoot</name>
+      <name>ContinuumReleaseResult</name>
       <version>1.1.2+</version>
-      <packageName>org.apache.continuum.model.project</packageName>
+      <packageName>org.apache.continuum.model.release</packageName>
       <fields>
         <field>
           <name>id</name>
@@ -1499,29 +1516,76 @@
           <type>int</type>
         </field>
         <field>
-          <name>scmRootAddress</name>
+          <name>startTime</name>
           <version>1.1.2+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>endTime</name>
+          <version>1.1.2+</version>
+          <type>long</type>
+        </field>
+        <field>
+          <name>resultCode</name>
+          <version>1.1.2+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectGroup</name>
+          <version>1.1.2+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>ProjectGroup</type>
+          </association>
+        </field>
+        <field>
+          <name>project</name>
+          <version>1.1.2+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>Project</type>
+          </association>
+        </field>
+        <field>
+          <name>releaseGoal</name>
+          <version>1.1.2+</version>
+          <type>String</type>
+        </field>
+      </fields>
+    </class> 
+    <class>
+      <name>ProjectScmRoot</name>
+      <version>1.1.3+</version>
+      <packageName>org.apache.continuum.model.project</packageName>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.3+</version>
+          <identifier>true</identifier>
+          <type>int</type>
+        </field>
+        <field>
+          <name>scmRootAddress</name>
+          <version>1.1.3+</version>
           <type>String</type>
           <required>true</required>
         </field>
         <field>
           <name>oldState</name>
-          <version>1.1.2+</version>
+          <version>1.1.3+</version>
           <type>int</type>
         </field>
         <field jpox.column="scmRootState">
           <name>state</name>
-          <version>1.1.2+</version>
+          <version>1.1.3+</version>
           <type>int</type>
         </field>
         <field stash.maxSize="8192">
           <name>error</name>
-          <version>1.1.2+</version>
+          <version>1.1.3+</version>
           <type>String</type>
         </field>
         <field>
           <name>projectGroup</name>
-          <version>1.1.2+</version>
+          <version>1.1.3+</version>
           <association xml.reference="true" stash.part="true" jpox.dependent="false">
             <type>ProjectGroup</type>
           </association>

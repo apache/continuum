@@ -19,6 +19,9 @@ public interface TaskQueueManager
     void cancelBuildTask( int projectId )
         throws TaskQueueManagerException;
 
+    boolean cancelCurrentBuild()
+        throws TaskQueueManagerException;
+
     TaskQueue getBuildQueue();
 
     TaskQueueExecutor getBuildTaskQueueExecutor()

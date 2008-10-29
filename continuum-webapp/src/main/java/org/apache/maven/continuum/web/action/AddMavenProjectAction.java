@@ -19,6 +19,17 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -26,14 +37,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Action to add a Maven project to Continuum, either Maven 1 or Maven 2.
@@ -136,12 +139,21 @@ public abstract class AddMavenProjectAction
             {
                 try
                 {
-                    pom = pomFile.toURL().toString();
+                    //pom = pomFile.toURL().toString();
                     checkProtocol = false;
+                    // CONTINUUM-1897
+                    // File.c copyFile to tmp one
+                    File tmpPom = File.createTempFile( "continuum_tmp", "tmp" );
+                    FileUtils.copyFile( pomFile, tmpPom );
+                    pom = tmpPom.toURL().toString();
                 }
                 catch ( MalformedURLException e )
                 {
                     // if local file can't be converted to url it's an internal error
+                    throw new RuntimeException( e );
+                }
+                catch ( IOException e )
+                {
                     throw new RuntimeException( e );
                 }
             }
@@ -161,6 +173,13 @@ public abstract class AddMavenProjectAction
             {
                 String cause = result.getErrorsWithCause().get( key );
                 String msg = getText( key, new String[] { cause } );
+
+                // olamy : weird getText(key, String[]) must do that something like bla bla {0}
+                // here an ugly hack for CONTINUUM-1675
+                if ( key.equals( ContinuumProjectBuildingResult.ERROR_MISSING_SCM ) )
+                {
+                    msg = getResourceBundle().getString( key ) + " " + cause;
+                }
                 if ( !StringUtils.equals( msg, key ) )
                 {
                     errorMessages.add( msg );
@@ -169,7 +188,7 @@ public abstract class AddMavenProjectAction
                 {
                     addActionError( msg );
                 }
-                
+
             }
 
             return doDefault();

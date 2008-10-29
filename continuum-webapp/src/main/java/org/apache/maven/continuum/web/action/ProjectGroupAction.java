@@ -119,13 +119,17 @@ public class ProjectGroupAction
 
     private int buildDefinitionId;
 
+    private boolean fromSummaryPage = false;
+
     private String preferredExecutor = "maven2";
-    
+
     private String url;
 
     private int repositoryId;
 
     private List<LocalRepository> repositories;
+
+    private boolean disabledRepositories = true;
 
     private List<ProjectScmRoot> projectScmRoots;
 
@@ -168,35 +172,35 @@ public class ProjectGroupAction
         }
 
         if ( projectGroup != null )
-        {        	
+        {
             if ( projectGroup.getProjects() != null && projectGroup.getProjects().size() > 0 )
             {
                 int nbMaven2Projects = 0;
                 int nbMaven1Projects = 0;
                 int nbAntProjects = 0;
                 int nbShellProjects = 0;
-                
+
                 // get the projects according to build order (first project in the group is the root project)            
                 try
-                {                	
-                	Project rootProject =
-                            ( getContinuum().getProjectsInBuildOrder( getContinuum().getProjectsInGroupWithDependencies(
-                                projectGroupId ) ) ).get( 0 );
-                	if( "maven2".equals( rootProject.getExecutorId() ) || "maven-1".equals( rootProject.getExecutorId() ) )
-                	{
-                		url = rootProject.getUrl();
-                	}
+                {
+                    Project rootProject = ( getContinuum().getProjectsInBuildOrder(
+                        getContinuum().getProjectsInGroupWithDependencies( projectGroupId ) ) ).get( 0 );
+                    if ( "maven2".equals( rootProject.getExecutorId() ) ||
+                        "maven-1".equals( rootProject.getExecutorId() ) )
+                    {
+                        url = rootProject.getUrl();
+                    }
                 }
-                catch ( CycleDetectedException e ) 
+                catch ( CycleDetectedException e )
                 {
                     // ignore. url won't be displayed if null
                 }
-                
+
                 for ( Object o : projectGroup.getProjects() )
                 {
                     Project p = (Project) o;
                     if ( "maven2".equals( p.getExecutorId() ) )
-                    {   
+                    {
                         nbMaven2Projects += 1;
                     }
                     else if ( "maven-1".equals( p.getExecutorId() ) )
@@ -315,12 +319,22 @@ public class ProjectGroupAction
             return REQUIRES_AUTHORIZATION;
         }
 
+        try
+        {
+            checkManageLocalRepositoriesAuthorization();
+            disabledRepositories = false;
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            // do nothing
+        }
+
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
 
         name = projectGroup.getName();
 
         description = projectGroup.getDescription();
-        
+
         projectList = projectGroup.getProjects();
 
         if ( projectList != null )
@@ -342,10 +356,13 @@ public class ProjectGroupAction
         while ( proj_group.hasNext() )
         {
             ProjectGroup pg = (ProjectGroup) proj_group.next();
-            projectGroups.put( new Integer( pg.getId() ), pg.getName() );
+            if ( isAuthorized( projectGroup.getName() ) )
+            {
+                projectGroups.put( new Integer( pg.getId() ), pg.getName() );
+            }
         }
 
-        if ( projectGroup.getLocalRepository() != null)
+        if ( projectGroup.getLocalRepository() != null )
         {
             repositoryId = projectGroup.getLocalRepository().getId();
         }
@@ -353,9 +370,19 @@ public class ProjectGroupAction
         {
             repositoryId = -1;
         }
-        
+
         repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
-        
+
+        Collection<Project> projList = getContinuum().getProjectsInGroupWithDependencies( projectGroup.getId() );
+        if ( projList != null && projList.size() > 0 )
+        {
+            Project rootProject = ( getContinuum().getProjectsInBuildOrder( projList ) ).get( 0 );
+
+            if (rootProject != null)
+            {
+                setUrl( rootProject.getUrl() );
+            }
+        }
         return SUCCESS;
     }
 
@@ -424,7 +451,7 @@ public class ProjectGroupAction
         }
 
         projectGroup.setDescription( description );
-        
+
         if ( repositoryId > 0 )
         {
             LocalRepository repository = getContinuum().getRepositoryService().getLocalRepository( repositoryId );
@@ -434,8 +461,18 @@ public class ProjectGroupAction
         {
             projectGroup.setLocalRepository( null );
         }
-        
+
         getContinuum().updateProjectGroup( projectGroup );
+
+        Collection<Project> projectList = getContinuum().getProjectsInGroupWithDependencies( projectGroupId );
+        if ( projectList != null && projectList.size() > 0 )
+        {
+            Project rootProject = ( getContinuum().getProjectsInBuildOrder( projectList ) ).get( 0 );
+
+            rootProject.setUrl( url );
+
+            getContinuum().updateProject( rootProject );
+        }
 
         Iterator keys = projects.keySet().iterator();
         while ( keys.hasNext() )
@@ -460,7 +497,7 @@ public class ProjectGroupAction
             ProjectGroup newProjectGroup =
                 getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() );
 
-            if ( newProjectGroup.getId() != projectGroup.getId() )
+            if ( newProjectGroup.getId() != projectGroup.getId() && isAuthorized( newProjectGroup.getName() ) )
             {
                 getLogger().info(
                     "Moving project " + project.getName() + " to project group " + newProjectGroup.getName() );
@@ -501,7 +538,15 @@ public class ProjectGroupAction
         {
             getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
         }
-        return SUCCESS;
+
+        if ( this.isFromSummaryPage() )
+        {
+            return "to_summary_page";
+        }
+        else
+        {
+            return SUCCESS;
+        }
     }
 
     public String release()
@@ -525,7 +570,7 @@ public class ProjectGroupAction
         boolean allBuildsOk = true;
 
         boolean allMavenTwo = true;
-        
+
         projectList = getContinuum().getProjectsInGroupWithDependencies( projectGroupId );
 
         if ( projectList != null )
@@ -555,7 +600,7 @@ public class ProjectGroupAction
                         return INPUT;
                     }
                 }
-                
+
                 if ( !"maven2".equals( p.getExecutorId() ) )
                 {
                     allMavenTwo = false;
@@ -907,6 +952,16 @@ public class ProjectGroupAction
         this.buildDefinitionId = buildDefinitionId;
     }
 
+    public boolean isFromSummaryPage()
+    {
+        return fromSummaryPage;
+    }
+
+    public void setFromSummaryPage( boolean fromSummaryPage )
+    {
+        this.fromSummaryPage = fromSummaryPage;
+    }
+
     public String getPreferredExecutor()
     {
         return preferredExecutor;
@@ -951,4 +1006,27 @@ public class ProjectGroupAction
 	{
 	    this.projectScmRoots = projectScmRoots;
 	}
+
+	public boolean isDisabledRepositories()
+    {
+        return disabledRepositories;
+    }
+
+    public void setDisabledRepositories( boolean disabledRepositories )
+    {
+        this.disabledRepositories = disabledRepositories;
+    }
+
+    private boolean isAuthorized( String projectGroupName )
+    {
+        try
+        {
+            checkAddProjectToGroupAuthorization( projectGroupName );
+            return true;
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            return false;
+        }
+    }
 }

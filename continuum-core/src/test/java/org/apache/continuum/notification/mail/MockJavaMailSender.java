@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.utils.shell;
+package org.apache.continuum.notification.mail;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,21 +19,45 @@ package org.apache.maven.continuum.utils.shell;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+
 /**
- * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
+ * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @since 26 sept. 2008
  * @version $Id$
  */
-public class ExecutionResult
+public class MockJavaMailSender
+    extends JavaMailSenderImpl
+    implements JavaMailSender
 {
-    private int exitCode;
 
-    public ExecutionResult( int exitCode )
+    List<MimeMessage> receivedEmails = new ArrayList<MimeMessage>();
+    
+    /**
+     * 
+     */
+    public MockJavaMailSender()
     {
-        this.exitCode = exitCode;
+       
     }
 
-    public int getExitCode()
+    @Override
+    public void send( MimeMessage mimeMessage )
+        throws MailException
     {
-        return exitCode;
+        receivedEmails.add( mimeMessage );
     }
+    
+    public List<MimeMessage> getReceivedEmails()
+    {
+        return receivedEmails;
+    }
+
 }

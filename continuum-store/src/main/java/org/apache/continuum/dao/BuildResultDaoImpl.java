@@ -444,6 +444,47 @@ public class BuildResultDaoImpl
             rollback( tx );
         }
     }
+    
+    public List<BuildResult> getBuildResultsForProjectFromId( int projectId, long startId )
+        throws ContinuumStoreException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        pm.getFetchPlan().addGroup( BUILD_RESULT_WITH_DETAILS_FETCH_GROUP );
+        
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( BuildResult.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareParameters( "int projectId, int buildNumber" );
+           
+            query.setFilter( "this.project.id == projectId && this.buildNumber >= buildNumber" );
+            
+            query.setOrdering( "this.startTime descending" );
+
+            List result = (List) query.execute( projectId, startId );
+
+            result = (List) pm.detachCopyAll( result );
+
+            tx.commit();
+
+            return result;
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumStoreException( e.getMessage(), e );
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
 
     public List<BuildResult> getBuildResultsForProject( int projectId, long fromDate )
     {
