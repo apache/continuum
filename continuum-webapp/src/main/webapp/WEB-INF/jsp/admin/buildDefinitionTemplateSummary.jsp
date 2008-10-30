@@ -51,15 +51,17 @@
           </ec:column>  
           <!-- TODO list attached buildDefs -->
           <ec:column property="deleteAction" title="&nbsp;" width="1%">
-            <s:if test="template.continuumDefault == true">
+            <c:choose>
+            <c:when test="${template.continuumDefault == true}">
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
-            </s:if>
-            <s:else>
+            </c:when>
+            <c:otherwise>${template.continuumDefault}
               <s:url id="deleteUrl" action="deleteDefinitionTemplate" method="delete" namespace="/">
                 <s:param name="buildDefinitionTemplate.id">${pageScope.template.id}</s:param>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
-            </s:else>
+            </c:otherwise>
+            </c:choose>
           </ec:column>                     
         </ec:row>  
       </ec:table> 
@@ -96,15 +98,17 @@
             <s:a href="%{editUrl}"><img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"></s:a>
           </ec:column>          
           <ec:column property="deleteAction" title="&nbsp;" width="1%">
-            <s:if test="buildDefinitionSummary.isDefault == true">
+            <c:choose>
+            <c:when test="${buildDefinitionSummary.isDefault == true}">
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
-            </s:if>
-            <s:else>
+            </c:when>
+            <c:otherwise>
               <s:url id="deleteUrl" action="deleteBuildDefinitionAsTemplate" method="deleteBuildDefinition" namespace="/">
                 <s:param name="buildDefinition.id">${pageScope.buildDefinitionSummary.id}</s:param>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
-            </s:else>
+            </c:otherwise>
+            </c:choose>
           </ec:column>
         </ec:row>  
       </ec:table>      

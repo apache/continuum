@@ -90,7 +90,7 @@
         <c1:data label="%{getText('projectGroup.description.label')}" name="projectGroup.description"/>
         <c1:data label="%{getText('projectGroup.repository.label')}" name="projectGroup.localRepository.name"/>
         <s:if test="url != null">
-            <s:url id="projectHomepageUrl" value="%{#url}" includeContext="false" includeParams="none"/>
+            <s:url id="projectHomepageUrl" value="%{url}" includeContext="false" includeParams="none"/>
         	<c1:data label="%{getText('projectGroup.url.label')}" name="url" valueLink="%{'${projectHomepageUrl}'}"/>  
         </s:if>
       </table>
@@ -142,8 +142,8 @@
               <redback:ifAnyAuthorized permissions="continuum-add-project-to-group" resource="${projectGroup.name}">
                 <s:form name="addNewProject">
                   <s:hidden name="disableGroupSelection" value="true"/>
-                  <s:hidden name="selectedProjectGroup">${projectGroup.id}</s:hidden>
-                  <s:hidden name="projectGroupName">${projectGroup.name}</s:hidden>
+                  <s:hidden name="selectedProjectGroup" value="%{projectGroup.id}"/>
+                  <s:hidden name="projectGroupName" value="%{projectGroup.name}"/>
                   <s:hidden name="projectType" value=""/>
                 </s:form>
 

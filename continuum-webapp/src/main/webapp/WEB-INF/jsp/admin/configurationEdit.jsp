@@ -64,7 +64,7 @@
             </s:textfield>
 
             <s:textfield label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"
-            			  required="%{#requireReleaseOutput}">
+            			  required="%{requireReleaseOutput}">
               <s:param name="desc"><p>
                 <s:text name="configuration.releaseOutputDirectory.message"/>
               </s:param>

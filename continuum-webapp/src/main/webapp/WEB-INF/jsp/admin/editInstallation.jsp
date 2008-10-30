@@ -55,7 +55,7 @@
             </s:if>
             <s:if test="varNameUpdatable">
               <s:if test="varNameDisplayable">
-                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="%{#varNameUpdatable}" />
+                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true" />
               </s:if>
             </s:if>
             <s:else>

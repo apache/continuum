@@ -67,12 +67,14 @@
                     <s:textfield label="%{getText('buildDefinition.arguments.label')}" name="arguments"/>
                     <s:checkbox label="%{getText('buildDefinition.buildFresh.label')}" name="buildFresh" value="buildFresh" fieldValue="true"/>
                     <s:checkbox label="%{getText('buildDefinition.alwaysBuild.label')}" name="alwaysBuild" />
-                    <s:if test="defaultBuildDefinition == true">
+                    <c:choose>
+                    <c:when test="${defaultBuildDefinition == true}">
                       <s:label label="%{getText('buildDefinition.defaultForProject.label')}" value="true"/>
-                    </s:if>
-                    <s:else>
+                    </c:when>
+                    <c:otherwise>
                       <s:checkbox label="%{getText('buildDefinition.defaultForProject.label')}"  name="defaultBuildDefinition" value="defaultBuildDefinition" fieldValue="true"/>
-                    </s:else>
+                    </c:otherwise>
+                    </c:choose>
                     <s:select label="%{getText('buildDefinition.schedule.label')}" name="scheduleId" list="schedules"/>
                     <s:select label="%{getText('buildDefinition.profile.label')}" name="profileId" list="profiles" listValue="name"
                                listKey="id" headerKey="-1" headerValue=""/>
@@ -88,9 +90,11 @@
                 <s:hidden name="projectId"/>
                 <s:hidden name="projectGroupId"/>
                 <s:hidden name="groupBuildDefinition"/>
-                <s:if test="defaultBuildDefinition == true">
+                <c:choose>
+                <c:when test="${defaultBuildDefinition == true}">
                   <s:hidden name="defaultBuildDefinition" value="true"/>
-                </s:if>
+                </c:when>
+                </c:choose>
               </c:when>
             
             </c:choose>

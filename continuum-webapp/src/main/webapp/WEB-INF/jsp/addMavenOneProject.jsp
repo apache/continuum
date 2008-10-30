@@ -34,7 +34,7 @@
                         <c:if test="${!empty actionErrors}">
                           <div class="errormessage">
                             <s:iterator value="actionErrors">
-                              <p><s:text name="<s:property/>" /></p>
+                              <p><s:property/></p>
                             </s:iterator>
                           </div>
                         </c:if>
@@ -67,14 +67,16 @@
                             <s:file label="%{getText('add.m1.project.m1PomFile.label')}" name="m1PomFile">
                                 <s:param name="desc"><p><s:text name="add.m1.project.m1PomFile.message"/></p></s:param>
                             </s:file>
-                            <s:if test="disableGroupSelection == true">
+                            <c:choose>
+                            <c:when test="${disableGroupSelection == true}">
                               <s:hidden name="selectedProjectGroup"/>
                               <s:hidden name="disableGroupSelection"/>
                               <s:textfield label="%{getText('add.m1.project.projectGroup')}" name="projectGroupName" disabled="true"/>
-                            </s:if>
-                            <s:else>
+                            </c:when>
+                            <c:otherwise>
                               <s:select label="%{getText('add.m1.project.projectGroup')}" name="selectedProjectGroup" list="projectGroups" listKey="id" listValue="name"/>
-                            </s:else>
+                            </c:otherwise>
+                            </c:choose>
                             <s:select label="%{getText('add.m1.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
                                        list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
                                        headerValue="%{getText('add.m1.project.defaultBuildDefinition')}"/>                            

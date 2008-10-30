@@ -34,7 +34,7 @@
                         <c:if test="${!empty actionErrors || !empty errorMessages}">
                           <div class="errormessage">
                             <s:iterator value="actionErrors">
-                              <p><s:text name="<s:property/>">${actionError}</s:text></p>
+                              <p><s:property/></p>
                             </s:iterator>
                             <c:forEach items="${errorMessages}" var="errorMessage">
                               <p>${errorMessage}</p>
@@ -70,15 +70,17 @@
                             <s:file label="%{getText('add.m2.project.m2PomFile.label')}" name="m2PomFile">
                                 <s:param name="desc"><p><s:text name="add.m2.project.m2PomFile.message"/></p></s:param>
                             </s:file>
-                            <s:if test="disableGroupSelection == true">
+                            <c:choose>
+                            <c:when test="${disableGroupSelection == true}">
                               <s:hidden name="selectedProjectGroup"/>
                               <s:hidden name="disableGroupSelection"/>
                               <s:textfield label="%{getText('add.m2.project.projectGroup')}" name="projectGroupName" disabled="true"/>
-                            </s:if>
-                            <s:else>
+                            </c:when>
+                            <c:otherwise>
                               <s:select label="%{getText('add.m2.project.projectGroup')}" name="selectedProjectGroup"
                                          list="projectGroups" listKey="id" listValue="name"/>
-                            </s:else>
+                            </c:otherwise>
+                            </c:choose>
                             <s:checkbox label="%{getText('add.m2.project.nonRecursiveProject')}" name="nonRecursiveProject" />
                             <s:select label="%{getText('add.m2.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
                                        list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
