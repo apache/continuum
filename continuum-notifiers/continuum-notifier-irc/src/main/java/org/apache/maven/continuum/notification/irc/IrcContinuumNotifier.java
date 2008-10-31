@@ -19,7 +19,7 @@ package org.apache.maven.continuum.notification.irc;
  * under the License.
  */
 
-import org.apache.maven.continuum.ContinuumException;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -29,7 +29,6 @@ import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
 import org.apache.maven.continuum.notification.NotificationException;
-import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.util.StringUtils;
 import org.schwering.irc.lib.IRCConnection;
@@ -232,11 +231,21 @@ public class IrcContinuumNotifier
 
         BuildResult build = context.getBuildResult();
 
+        ProjectScmRoot projectScmRoot = context.getProjectScmRoot();
+
+        boolean isPrepareBuildComplete = 
+            messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_PREPARE_BUILD_COMPLETE );
+        
+        if ( projectScmRoot == null && isPrepareBuildComplete )
+        {
+            return;
+        }
+        
         // ----------------------------------------------------------------------
         // If there wasn't any building done, don't notify
         // ----------------------------------------------------------------------
 
-        if ( build == null )
+        if ( build == null && !isPrepareBuildComplete )
         {
             return;
         }
@@ -245,38 +254,58 @@ public class IrcContinuumNotifier
         // Generate and send message
         // ----------------------------------------------------------------------
 
-        try
+        if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
         {
-            if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
+            for ( ProjectNotifier notifier : notifiers )
             {
-                for ( ProjectNotifier notifier : notifiers )
-                {
-                    buildComplete( project, notifier, build, buildDefinition );
-                }
+                buildComplete( project, notifier, build, buildDefinition );
             }
         }
-        catch ( ContinuumException e )
+        else if ( isPrepareBuildComplete )
         {
-            throw new NotificationException( "Error while notifiying.", e );
+            for ( ProjectNotifier notifier : notifiers )
+            {
+                prepareBuildComplete( projectScmRoot, notifier );
+            }
         }
     }
 
     private void buildComplete( Project project, ProjectNotifier projectNotifier, BuildResult build,
                                 BuildDefinition buildDef )
-        throws ContinuumException, NotificationException
+        throws NotificationException
     {
         // ----------------------------------------------------------------------
         // Check if the message should be sent at all
         // ----------------------------------------------------------------------
 
         BuildResult previousBuild = getPreviousBuild( project, buildDef, build );
-        Map<String, String> configuration = projectNotifier.getConfiguration();
 
         if ( !shouldNotify( build, previousBuild, projectNotifier ) )
         {
             return;
         }
 
+        sendMessage( projectNotifier.getConfiguration(), generateMessage( project, build, configurationService ) );
+    }
+
+    private void prepareBuildComplete( ProjectScmRoot projectScmRoot, ProjectNotifier projectNotifier )
+        throws NotificationException
+    {
+        // ----------------------------------------------------------------------
+        // Check if the message should be sent at all
+        // ----------------------------------------------------------------------
+
+        if ( !shouldNotify( projectScmRoot, projectNotifier ) )
+        {
+            return;
+        }
+        
+        sendMessage( projectNotifier.getConfiguration(), generateMessage( projectScmRoot, configurationService ) );
+    }    
+
+    private void sendMessage( Map<String, String> configuration, String message )
+        throws NotificationException
+    {
         // ----------------------------------------------------------------------
         // Gather configuration values
         // ----------------------------------------------------------------------
@@ -327,46 +356,12 @@ public class IrcContinuumNotifier
         {
             IRCConnection ircConnection = getIRConnection( host, port, password, nickName, alternateNickName, userName,
                                                            fullName, channel, isSsl );
-            ircConnection.doPrivmsg( channel, generateMessage( project, build ) );
+            ircConnection.doPrivmsg( channel, message );
         }
         catch ( IOException e )
         {
             throw new NotificationException( "Exception while checkConnection to irc ." + host, e );
         }
-    }
-
-    private String generateMessage( Project project, BuildResult build )
-        throws ContinuumException
-    {
-        int state = project.getState();
-
-        if ( build != null )
-        {
-            state = build.getState();
-        }
-
-        String message;
-
-        if ( state == ContinuumProjectState.OK )
-        {
-            message = "BUILD SUCCESSFUL: " + project.getName();
-        }
-        else if ( state == ContinuumProjectState.FAILED )
-        {
-            message = "BUILD FAILURE: " + project.getName();
-        }
-        else if ( state == ContinuumProjectState.ERROR )
-        {
-            message = "BUILD ERROR: " + project.getName();
-        }
-        else
-        {
-            log.warn( "Unknown build state " + state + " for project " + project.getId() );
-
-            message = "ERROR: Unknown build state " + state + " for " + project.getName() + " project";
-        }
-
-        return message + " " + getReportUrl( project, build, configurationService );
     }
 
     /**

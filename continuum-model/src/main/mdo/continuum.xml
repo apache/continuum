@@ -99,6 +99,14 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
+        <field>
+          <name>projectScmRoots</name>
+          <version>1.1.3+</version>
+          <association>
+            <type>ProjectScmRoot</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
       </fields>
     </class>
 
@@ -128,7 +136,7 @@
           <version>1.0.9+</version>
           <type>String</type>
         </field>
-        <field jpox.mapped-by="projectGroup" jpox.fetch-groups="projectgroup-projects project-build-details">
+        <field jpox.mapped-by="projectGroup" jpox.fetch-groups="projectgroup-projects project-build-details project-with-scm-result">
           <name>projects</name>
           <version>1.0.9+</version>
           <association jpox.join="false">
@@ -335,7 +343,14 @@
             <type>BuildDefinition</type>
             <multiplicity>*</multiplicity>
           </association>
-        </field>        
+        </field>     
+        <field jpox.fetch-groups="project-all-details project-with-scm-details">
+          <name>scmResult</name>
+          <version>1.1.3+</version>
+          <association>
+            <type>ScmResult</type>
+          </association>
+        </field>
       </fields>
     </class>
 
@@ -417,6 +432,12 @@
             <type>String</type>
             <multiplicity>*</multiplicity>
           </association>
+        </field>
+        <field>
+          <name>sendOnScmFailure</name>
+          <version>1.1.3+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
         </field>
       </fields>
       <codeSegments>
@@ -572,6 +593,7 @@
           <version>1.0.9+</version>
           <type>int</type>
         </field>
+        <!-- TODO: remove -->
         <field jpox.fetch-groups="build-result-with-details">
           <name>scmResult</name>
           <version>1.0.9+</version>
@@ -1290,6 +1312,8 @@
     public final static int UPDATING = 8;
     public final static int WARNING = 9;
     public final static int CHECKEDOUT = 10;
+    public final static int UPDATED = 5;
+    public final static int CANCELLED = 11;
 
     // TODO: maybe move these to another class
     public static final int TRIGGER_FORCED = 1;
@@ -1527,5 +1551,49 @@
         </field>
       </fields>
     </class> 
+
+    <class>
+      <name>ProjectScmRoot</name>
+      <version>1.1.3+</version>
+      <packageName>org.apache.continuum.model.project</packageName>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.3+</version>
+          <identifier>true</identifier>
+          <type>int</type>
+        </field>
+        <field>
+          <name>scmRootAddress</name>
+          <version>1.1.3+</version>
+          <type>String</type>
+          <required>true</required>
+        </field>
+        <field>
+          <name>oldState</name>
+          <version>1.1.3+</version>
+          <type>int</type>
+        </field>
+        <field jpox.column="scmRootState">
+          <name>state</name>
+          <version>1.1.3+</version>
+          <type>int</type>
+        </field>
+        <field stash.maxSize="8192">
+          <name>error</name>
+          <version>1.1.3+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projectGroup</name>
+          <version>1.1.3+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>ProjectGroup</type>
+          </association>
+          <required>true</required>
+        </field>
+      </fields>
+    </class>
+    
   </classes>
 </model>

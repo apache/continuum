@@ -22,6 +22,8 @@ package org.apache.maven.continuum.notification;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.ProjectScmRootDao;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
@@ -29,6 +31,7 @@ import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -60,6 +63,11 @@ public abstract class AbstractContinuumNotifier
      * @plexus.requirement
      */
     private ProjectDao projectDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ProjectScmRootDao projectScmRootDao;
 
     /**
      * @plexus.configuration
@@ -135,6 +143,42 @@ public abstract class AbstractContinuumNotifier
         }
     }
 
+    public String getReportUrl( ProjectGroup projectGroup, ProjectScmRoot projectScmRoot, 
+                                ConfigurationService configurationService )
+        throws ContinuumException
+    {
+        try
+        {
+            if ( !configurationService.isLoaded() )
+            {
+                configurationService.reload();
+            }
+    
+            StringBuffer buf = new StringBuffer( configurationService.getUrl() );
+    
+            if ( projectGroup != null && projectScmRoot != null )
+            {
+                if ( !buf.toString().endsWith( "/" ) )                
+                {
+                    buf.append( "/" );
+                }
+
+                buf.append( "scmResult.action?projectScmRootId=" ).append( projectScmRoot.getId() )
+                   .append( "&projectGroupId=" ).append( projectGroup.getId() );
+            }
+    
+            return buf.toString();
+        }
+        catch ( ConfigurationLoadingException e )
+        {
+            throw new ContinuumException( "Can't obtain the base url from configuration.", e );
+        }
+        catch ( ContinuumConfigurationException e )
+        {
+            throw new ContinuumException( "Can't obtain the base url from configuration.", e );
+        }
+    }
+    
     /**
      * Determine if message must be sent
      *
@@ -233,6 +277,31 @@ public abstract class AbstractContinuumNotifier
         return false;
     }
 
+    public boolean shouldNotify( ProjectScmRoot projectScmRoot, ProjectNotifier projectNotifier )
+    {
+        if ( projectNotifier == null )
+        {
+            projectNotifier = new ProjectNotifier();
+        }
+
+        if ( projectScmRoot == null )
+        {
+            return false;
+        }
+
+        if ( alwaysSend )
+        {
+            return true;
+        }
+
+        if ( projectScmRoot.getState() == ContinuumProjectState.ERROR && projectNotifier.isSendOnScmFailure() )
+        {
+            return true;
+        }
+
+        return false;
+    }
+    
     protected BuildResult getPreviousBuild( Project project, BuildDefinition buildDef, BuildResult currentBuild )
         throws NotificationException
     {
@@ -289,6 +358,80 @@ public abstract class AbstractContinuumNotifier
         catch ( ContinuumStoreException e )
         {
             throw new NotificationException( "Unable to obtain project builds", e );
+        }
+    }
+    
+    protected String generateMessage( Project project, BuildResult build, ConfigurationService configurationService )
+        throws NotificationException
+    {
+        int state = project.getState();
+    
+        if ( build != null )
+        {
+            state = build.getState();
+        }
+    
+        String message;
+    
+        if ( state == ContinuumProjectState.OK )
+        {
+            message = "BUILD SUCCESSFUL: " + project.getName();
+        }
+        else if ( state == ContinuumProjectState.FAILED )
+        {
+            message = "BUILD FAILURE: " + project.getName();
+        }
+        else if ( state == ContinuumProjectState.ERROR )
+        {
+            message = "BUILD ERROR: " + project.getName();
+        }
+        else
+        {
+            log.warn( "Unknown build state " + state + " for project " + project.getId() );
+    
+            message = "ERROR: Unknown build state " + state + " for " + project.getName() + " project";
+        }
+    
+        try
+        {
+            return message + " " + getReportUrl( project, build, configurationService );
+        }
+        catch ( ContinuumException e )
+        {
+            throw new NotificationException( "Cannot generate message", e );
+        }
+    }
+    
+    protected String generateMessage( ProjectScmRoot projectScmRoot, ConfigurationService configurationService )
+        throws NotificationException
+    {
+        int state = projectScmRoot.getState();
+        String scmRootAddress = projectScmRoot.getScmRootAddress();
+    
+        String message;
+    
+        if ( state == ContinuumProjectState.UPDATED )
+        {
+            message = "PREPARE BUILD SUCCESSFUL: " + scmRootAddress;
+        }
+        else if ( state == ContinuumProjectState.ERROR )
+        {
+            message = "PREPARE BUILD ERROR: " + scmRootAddress;
+        }
+        else
+        {
+            log.warn( "Unknown prepare build state " + state + " for SCM root URL " + scmRootAddress );
+    
+            message = "ERROR: Unknown prepare build state " + state + " for SCM root URL" + scmRootAddress;
+        }
+    
+        try
+        {
+            return message + " " + getReportUrl( projectScmRoot.getProjectGroup(), projectScmRoot, configurationService );
+        }
+        catch ( ContinuumException e )
+        {
+            throw new NotificationException( "Cannot generate message", e );
         }
     }
 }

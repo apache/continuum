@@ -60,6 +60,9 @@
         <requirement>
           <role>org.apache.maven.continuum.buildcontroller.BuildController</role>
         </requirement>
+        <requirement>
+          <role>org.apache.continuum.taskqueue.manager.TaskQueueManager</role>
+        </requirement>
       </requirements>
     </component>
 
@@ -118,5 +121,39 @@
     </component>
 
 
+    <!--
+     |
+     | Prepare Build Project Task Queue
+     |
+     |-->
+     
+    <component>
+      <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+      <role-hint>prepare-build-project</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
+      <lifecycle-handler>plexus-configurable</lifecycle-handler>
+    </component>
+    
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
+      <role-hint>prepare-build-project</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <instantiation-strategy>singleton</instantiation-strategy>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+          <role-hint>prepare-build-project</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>prepare-build-project</role-hint>
+        </requirement>
+      </requirements>
+      <configuration>
+        <name>prepare-build-project</name>
+      </configuration>
+    </component>
+    
+    
   </components>
 </component-set>

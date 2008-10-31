@@ -22,6 +22,8 @@ package org.apache.maven.continuum.web.view;
 import com.opensymphony.webwork.ServletActionContext;
 import com.opensymphony.webwork.views.util.UrlHelper;
 import com.opensymphony.xwork.ActionContext;
+
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.model.ProjectSummary;
@@ -52,40 +54,81 @@ public class StateCell
 {
     protected String getCellValue( TableModel tableModel, Column column )
     {
-        ProjectSummary project = (ProjectSummary) tableModel.getCurrentRowBean();
-
-        switch ( project.getState() )
+        if ( tableModel.getCurrentRowBean() instanceof ProjectSummary )
         {
-            case ContinuumProjectState.NEW:
-            case ContinuumProjectState.OK:
-            case ContinuumProjectState.FAILED:
-            case ContinuumProjectState.ERROR:
-            case ContinuumProjectState.BUILDING:
-            case ContinuumProjectState.UPDATING:
-            case ContinuumProjectState.CHECKING_OUT:
-            {
-                String state = StateGenerator.generate( project.getState(), tableModel.getContext().getContextPath() );
+            ProjectSummary project = (ProjectSummary) tableModel.getCurrentRowBean();
 
-                if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) )
+            switch ( project.getState() )
+            {
+                case ContinuumProjectState.NEW:
+                case ContinuumProjectState.OK:
+                case ContinuumProjectState.FAILED:
+                case ContinuumProjectState.ERROR:
+                case ContinuumProjectState.BUILDING:
+                case ContinuumProjectState.UPDATING:
+                case ContinuumProjectState.CHECKING_OUT:
                 {
-                    if ( isAuthorized( project ) )
+                    String state = StateGenerator.generate( project.getState(), tableModel.getContext().getContextPath() );
+
+                    if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) 
+                         && project.getState() != ContinuumProjectState.UPDATING )
                     {
-                        return createActionLink( "buildResult", project, state );
+                        if ( isAuthorized( project.getProjectGroupName() ) )
+                        {
+                            return createActionLink( "buildResult", project, state );
+                        }
+                        else
+                        {
+                            return state;
+                        }
                     }
                     else
                     {
                         return state;
                     }
                 }
-                else
+
+                default:
                 {
-                    return state;
+                    return "&nbsp;";
                 }
             }
+        }
+        else 
+        {
+            ProjectScmRoot projectScmRoot = (ProjectScmRoot) tableModel.getCurrentRowBean();
 
-            default:
+            switch ( projectScmRoot.getState() )
             {
-                return "&nbsp;";
+                case ContinuumProjectState.UPDATING:
+                case ContinuumProjectState.UPDATED:
+                case ContinuumProjectState.ERROR:
+                {
+                    String state = StateGenerator.generate( projectScmRoot.getState(), 
+                                                            tableModel.getContext().getContextPath() );
+                    
+                    if ( !StateGenerator.NEW.equals( state ) )
+                    {
+                        if ( isAuthorized( projectScmRoot.getProjectGroup().getName() ) &&
+                             projectScmRoot.getState() == ContinuumProjectState.ERROR )
+                        {
+                            return createActionLink( "scmResult", projectScmRoot, state );
+                        }
+                        else
+                        {
+                            return state;
+                        }
+                    }
+                    else
+                    {
+                        return state;
+                    }
+                }
+
+                default:
+                {
+                    return "&nbsp;";
+                }
             }
         }
     }
@@ -107,8 +150,22 @@ public class StateCell
 
         return "<a href=\"" + url + "\">" + state + "</a>";
     }
+    
+    private static String createActionLink( String action, ProjectScmRoot scmRoot, String state )
+    {
+        HashMap params = new HashMap();
 
-    private boolean isAuthorized( ProjectSummary project )
+        params.put( "projectGroupId", new Integer( scmRoot.getProjectGroup().getId() ) );
+
+        params.put( "projectScmRootId", new Integer( scmRoot.getId() ) );
+
+        String url = UrlHelper.buildUrl( "/" + action + ".action", ServletActionContext.getRequest(), 
+                                         ServletActionContext.getResponse(), params );
+
+        return "<a href=\"" + url + "\">" + state + "</a>";
+    }
+
+    private boolean isAuthorized( String projectGroupName )
     {
         // do the authz bit
         ActionContext context = ActionContext.getContext();
@@ -122,7 +179,7 @@ public class StateCell
             SecuritySystem securitySystem = (SecuritySystem) container.lookup( SecuritySystem.ROLE );
 
             if ( !securitySystem.isAuthorized( securitySession, ContinuumRoleConstants.CONTINUUM_VIEW_GROUP_OPERATION,
-                                               project.getProjectGroupName() ) )
+                                               projectGroupName ) )
             {
                 return false;
             }

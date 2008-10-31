@@ -20,8 +20,10 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -147,7 +149,7 @@ public class ProjectsListAction
                 projectsList.add( p );
             }
 
-            List sortedProjects;
+            List<Project> sortedProjects;
             try
             {
                 sortedProjects = getContinuum().getProjectsInBuildOrder( projectsList );
@@ -157,65 +159,37 @@ public class ProjectsListAction
                 sortedProjects = projectsList;
             }
 
-            //TODO : Change this part because it's a duplicate of DefaultContinuum.buildProjectGroup*
-            List<BuildDefinition> groupDefaultBDs = null;
+            Collection<Map<Integer, Integer>> projectsBuildDefs = getProjectsBuildDefsMap( sortedProjects );
 
-            if ( getBuildDefinitionId() <= 0 )
-            {
-                groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
-            }
-            for ( Iterator i = sortedProjects.iterator(); i.hasNext(); )
-            {
-                Project project = (Project) i.next();
-                if ( this.getBuildDefinitionId() <= 0 )
-                {
-                    int buildDefId = -1;
-
-                    if ( groupDefaultBDs != null )
-                    {
-                        for ( BuildDefinition bd : groupDefaultBDs )
-                        {
-                            if ( project.getExecutorId().equals( bd.getType() ) )
-                            {
-                                buildDefId = bd.getId();
-                                break;
-                            }
-                        }
-                    }
-
-                    BuildDefinition projectDefaultBD = null;
-                    if ( this.getBuildDefinitionId() == -1 )
-                    {
-                        try
-                        {
-                            projectDefaultBD = getContinuum().getDefaultBuildDefinition( project.getId() );
-                        }
-                        catch ( ContinuumException e )
-                        {
-                            // here skip ObjectNotException
-                            getLogger().debug( e.getMessage() );
-                        }
-
-                        if ( projectDefaultBD != null )
-                        {
-                            buildDefId = projectDefaultBD.getId();
-                            getLogger().debug( "Project " + project.getId() +
-                                " has own default build definition, will use it instead of group's." );
-                        }
-                    }
-
-                    getContinuum().buildProject( project.getId(), buildDefId, ContinuumProjectState.TRIGGER_FORCED );
-                }
-                else
-                {
-                    getContinuum().buildProject( project.getId(), this.getBuildDefinitionId(),
-                                                 ContinuumProjectState.TRIGGER_FORCED );
-                }
-            }
-
+            getContinuum().prepareBuildProjects( projectsBuildDefs, ContinuumProjectState.TRIGGER_FORCED );
         }
 
         return SUCCESS;
+    }
+
+    private Collection<Map<Integer, Integer>> getProjectsBuildDefsMap( List<Project> projects )
+        throws ContinuumException
+    {
+        if ( this.getBuildDefinitionId() <= 0 )
+        {
+            boolean checkDefaultBuildDefinitionForProject = false;
+
+            if ( this.getBuildDefinitionId() == -1 )
+            {
+                checkDefaultBuildDefinitionForProject = true;
+            }
+
+            List<BuildDefinition> groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
+
+            return getContinuum().getProjectsAndBuildDefinitions( projects, 
+                                                                  groupDefaultBDs, 
+                                                                  checkDefaultBuildDefinitionForProject );
+        }
+        else
+        {
+            return getContinuum().getProjectsAndBuildDefinitions( projects,
+                                                                  this.getBuildDefinitionId() );
+        }
     }
 
     public String getProjectGroupName()

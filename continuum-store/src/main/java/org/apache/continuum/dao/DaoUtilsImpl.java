@@ -19,6 +19,7 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -77,6 +78,7 @@ public class DaoUtilsImpl
         PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinitionTemplate.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), BuildResult.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ContinuumReleaseResult.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectScmRoot.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ProjectGroup.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Project.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), BuildDefinition.class );

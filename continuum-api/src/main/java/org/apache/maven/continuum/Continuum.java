@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.model.release.ContinuumReleaseResult;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -42,6 +44,7 @@ import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 /**
@@ -146,54 +149,6 @@ public interface Continuum
     Map<Integer, BuildResult> getBuildResultsInSuccess();
 
     // ----------------------------------------------------------------------
-    // Queues
-    // ----------------------------------------------------------------------
-
-    public List<BuildProjectTask> getProjectsInBuildQueue()
-        throws ContinuumException;
-
-    boolean isInBuildingQueue( int projectId )
-        throws ContinuumException;
-
-    boolean isInBuildingQueue( int projectId, int buildDefinitionId )
-        throws ContinuumException;
-
-    boolean removeProjectsFromBuildingQueue( int[] projectsId )
-        throws ContinuumException;
-
-    /**
-     * @param hashCodes BuildProjectTask hashCodes
-     * @throws ContinuumException
-     */
-    void removeProjectsFromBuildingQueueWithHashCodes( int[] hashCodes )
-        throws ContinuumException;
-
-    boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
-        throws ContinuumException;
-
-    boolean isInCheckoutQueue( int projectId )
-        throws ContinuumException;
-
-    boolean removeProjectFromCheckoutQueue( int projectId )
-        throws ContinuumException;
-
-    List /* CheckOutTask */getCheckOutTasksInQueue()
-        throws ContinuumException;
-
-    boolean removeProjectsFromCheckoutQueue( int[] projectId )
-        throws ContinuumException;
-
-    /**
-     * @param hashCodes CheckOutTask hashCodes
-     * @throws ContinuumException
-     */
-    void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
-        throws ContinuumException;
-
-    boolean cancelCurrentBuild()
-        throws ContinuumException;
-    
-    // ----------------------------------------------------------------------
     // Building
     // ----------------------------------------------------------------------
 
@@ -267,6 +222,9 @@ public interface Continuum
     void removeBuildResult( int buildId )
         throws ContinuumException;
 
+    List<ChangeSet> getChangesSinceLastUpdate( int projectId )
+        throws ContinuumException;
+    
     // ----------------------------------------------------------------------
     // Projects
     // ----------------------------------------------------------------------
@@ -637,7 +595,7 @@ public interface Continuum
     ProfileService getProfileService();
 
     BuildDefinitionService getBuildDefinitionService();
-    
+
     // ----------------------------------------------------------------------
     // Continuum Purge
     // ----------------------------------------------------------------------
@@ -649,7 +607,38 @@ public interface Continuum
     // Repository Service
     // ----------------------------------------------------------------------
     RepositoryService getRepositoryService();
-    
+
+    // ----------------------------------------------------------------------
+    //
+    // ----------------------------------------------------------------------
+    List<ProjectScmRoot> getProjectScmRootByProjectGroup( int projectGroupId );
+
+    ProjectScmRoot getProjectScmRoot( int projectScmRootId )
+        throws ContinuumException;
+
+    ProjectScmRoot getProjectScmRootByProject( int projectId )
+        throws ContinuumException;
+
+    // ----------------------------------------------------------------------
+    //
+    // ----------------------------------------------------------------------
+    Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
+                                                             List<BuildDefinition> bds,
+                                                             boolean checkDefaultBuildDefinitionForProject )
+        throws ContinuumException;
+
+    Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
+                                                             int buildDefinitionId )
+        throws ContinuumException;
+
+    void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsAndBuildDefinitions, int trigger )
+        throws ContinuumException;
+
+    // ----------------------------------------------------------------------
+    // Task Queue Manager
+    // ----------------------------------------------------------------------
+    TaskQueueManager getTaskQueueManager();
+
     public void startup()
         throws ContinuumException;
     

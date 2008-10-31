@@ -19,7 +19,10 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -78,6 +81,11 @@ public class ProjectGroupAction
      */
     private RoleManager roleManager;
 
+    /**
+     * @plexus.requirement
+     */
+    private TaskQueueManager taskQueueManager;
+
     private int projectGroupId;
 
     private ProjectGroup projectGroup;
@@ -124,6 +132,8 @@ public class ProjectGroupAction
 
     private boolean disabledRepositories = true;
 
+    private List<ProjectScmRoot> projectScmRoots;
+
     public String summary()
         throws ContinuumException
     {
@@ -138,7 +148,7 @@ public class ProjectGroupAction
         }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
-       
+
         List<BuildDefinition> projectGroupBuildDefs =
             getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
 
@@ -224,6 +234,8 @@ public class ProjectGroupAction
                     preferredExecutor = "shell";
                 }
             }
+
+            projectScmRoots = getContinuum().getProjectScmRootByProjectGroup( projectGroup.getId() );
         }
 
         return SUCCESS;
@@ -323,7 +335,7 @@ public class ProjectGroupAction
         name = projectGroup.getName();
 
         description = projectGroup.getDescription();
-       
+
         projectList = projectGroup.getProjects();
 
         if ( projectList != null )
@@ -333,9 +345,16 @@ public class ProjectGroupAction
             while ( proj.hasNext() )
             {
                 Project p = (Project) proj.next();
-                if ( getContinuum().isInCheckoutQueue( p.getId() ) )
+                try
                 {
-                    projectInCOQueue = true;
+                    if ( taskQueueManager.isInCheckoutQueue( p.getId() ) )
+                    {
+                        projectInCOQueue = true;
+                    }
+                }
+                catch ( TaskQueueManagerException e )
+                {
+                    throw new ContinuumException( e.getMessage(), e );
                 }
                 projects.put( p, new Integer( p.getProjectGroup().getId() ) );
             }
@@ -994,6 +1013,16 @@ public class ProjectGroupAction
     public void setDisabledRepositories( boolean disabledRepositories )
     {
         this.disabledRepositories = disabledRepositories;
+    }
+
+    public List<ProjectScmRoot> getProjectScmRoots()
+    {
+        return projectScmRoots;
+    }
+
+    public void setProjectScmRoots( List<ProjectScmRoot> projectScmRoots )
+    {
+        this.projectScmRoots = projectScmRoots;
     }
 
     private boolean isAuthorized( String projectGroupName )
