@@ -343,6 +343,8 @@ public class DefaultMavenBuilderHelper
 
                     userNotifier.setSendOnWarning( notifier.isSendOnWarning() );
 
+                    userNotifier.setSendOnScmFailure( notifier.isSendOnScmFailure() );
+
                     userNotifiers.add( userNotifier );
                 }
             }
@@ -544,6 +546,8 @@ public class DefaultMavenBuilderHelper
                 notifier.setSendOnError( projectNotifier.isSendOnError() );
 
                 notifier.setSendOnWarning( projectNotifier.isSendOnWarning() );
+
+                notifier.setSendOnScmFailure( false );
 
                 notifiers.add( notifier );
             }

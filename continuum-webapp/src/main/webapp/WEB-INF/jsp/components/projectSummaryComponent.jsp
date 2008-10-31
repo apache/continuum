@@ -120,6 +120,7 @@
                 <c:otherwise>
                   <ww:url id="cancelBuildProjectUrl" action="cancelBuild" namespace="/" includeParams="none">
                     <ww:param name="projectId" value="${project.id}"/>
+                    <ww:param name="projectGroupId" value="${project.projectGroupId}"/>
                   </ww:url>
                   <c:choose>
                     <c:when test="${project.state != 8}">

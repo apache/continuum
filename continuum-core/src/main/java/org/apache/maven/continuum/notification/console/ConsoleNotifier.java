@@ -19,12 +19,14 @@ package org.apache.maven.continuum.notification.console;
  * under the License.
  */
 
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.notification.MessageContext;
 import org.apache.maven.continuum.notification.NotificationException;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +58,8 @@ public class ConsoleNotifier
 
         BuildResult build = context.getBuildResult();
 
+        ProjectScmRoot projectScmRoot = context.getProjectScmRoot();
+
         if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_STARTED ) )
         {
             buildStarted( project );
@@ -79,6 +83,10 @@ public class ConsoleNotifier
         else if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_BUILD_COMPLETE ) )
         {
             buildComplete( project, build );
+        }
+        else if ( messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_PREPARE_BUILD_COMPLETE ) )
+        {
+            prepareBuildComplete( projectScmRoot );
         }
         else
         {
@@ -134,6 +142,23 @@ public class ConsoleNotifier
         }
     }
 
+    private void prepareBuildStarted( ProjectScmRoot projectScmRoot )
+    {
+        out( projectScmRoot, "Prepare build started." );
+    }
+
+    private void prepareBuildComplete( ProjectScmRoot projectScmRoot )
+    {
+        if ( StringUtils.isEmpty( projectScmRoot.getError() ) )
+        {
+            out( projectScmRoot, "Prepare build complete. state: " + projectScmRoot.getState() );
+        }
+        else
+        {
+            out( projectScmRoot, "Prepare build complete." );
+        }
+    }
+
     private void out( Project project, BuildResult build, String msg )
     {
         System.out.println( "Build event for project '" + project.getName() + "':" + msg );
@@ -141,6 +166,19 @@ public class ConsoleNotifier
         if ( build != null && !StringUtils.isEmpty( build.getError() ) )
         {
             System.out.println( build.getError() );
+        }
+    }
+
+    private void out( ProjectScmRoot projectScmRoot, String msg )
+    {
+        if ( projectScmRoot != null )
+        {
+            System.out.println( "Prepare build event for '" + projectScmRoot.getScmRootAddress() + "':" + msg );
+
+            if ( !StringUtils.isEmpty( projectScmRoot.getError() ) )
+            {
+                System.out.println( projectScmRoot.getError() );
+            }
         }
     }
 }

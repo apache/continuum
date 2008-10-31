@@ -320,6 +320,14 @@ public class NotifierSummaryAction
             }
             sb.append( "Warning" );
         }
+        if ( notifier.isSendOnScmFailure() )
+        {
+            if ( sb.length() > 0 )
+            {
+                sb.append( '/' );
+            }
+            sb.append( "SCM Failure" );
+        }
         ns.setEvents( sb.toString() );
 
         ns.setEnabled( notifier.isEnabled() );

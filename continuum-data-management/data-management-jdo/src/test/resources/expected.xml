@@ -540,4 +540,13 @@
       <schedule id="1"></schedule>
     </directoryPurgeConfiguration>
   </directoryPurgeConfigurations>
+  <projectScmRoots>
+    <projectScmRoot>
+      <id>1</id>
+      <scmRootAddress>scmRootAddress1</scmRootAddress>
+      <state>1</state>
+      <error>error1</error>
+      <projectGroup id="2"></projectGroup>
+    </projectScmRoot>
+  </projectScmRoots>
 </continuumDatabase>

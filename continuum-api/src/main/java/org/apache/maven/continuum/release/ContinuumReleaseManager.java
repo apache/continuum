@@ -116,6 +116,6 @@ public interface ContinuumReleaseManager
     void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
                   ContinuumReleaseManagerListener listener, LocalRepository repository )
         throws ContinuumReleaseException;
-    
+
     Map<String, String> getEnvironments( Profile profile );
 }

@@ -193,6 +193,7 @@ public class CheckoutProjectContinuumAction
         }
 
         context.put( KEY_CHECKOUT_SCM_RESULT, result );
+        context.put( KEY_PROJECT, project );
     }
 
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory,

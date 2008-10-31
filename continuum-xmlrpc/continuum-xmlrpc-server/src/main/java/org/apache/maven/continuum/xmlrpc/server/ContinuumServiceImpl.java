@@ -25,6 +25,8 @@ import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -91,6 +93,11 @@ public class ContinuumServiceImpl
      * @plexus.requirement role-hint="default"
      */
     private RoleManager roleManager;
+
+    /**
+     * @plexus.requirement
+     */
+    private TaskQueueManager taskQueueManager;
 
     public boolean ping()
         throws ContinuumException
@@ -1036,20 +1043,41 @@ public class ContinuumServiceImpl
     public boolean isProjectInBuildingQueue( int projectId )
         throws ContinuumException
     {
-        return continuum.isInBuildingQueue( projectId );
+        try
+        {
+            return taskQueueManager.isInBuildingQueue( projectId );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
 
     public List<BuildProjectTask> getProjectsInBuildQueue()
         throws ContinuumException
     {
-        return populateBuildProjectTaskList( continuum.getProjectsInBuildQueue() );
+        try
+        {
+            return populateBuildProjectTaskList( taskQueueManager.getProjectsInBuildQueue() );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
 
     public int removeProjectsFromBuildingQueue( int[] projectsId )
         throws ContinuumException
     {
         checkManageQueuesAuthorization();
-        continuum.removeProjectsFromBuildingQueue( projectsId );
+        try
+        {
+            taskQueueManager.removeProjectsFromBuildingQueue( projectsId );
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
         return 0;
     }
 
@@ -1057,7 +1085,14 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkManageQueuesAuthorization();
-        return continuum.cancelCurrentBuild();
+        try
+        {
+            return taskQueueManager.cancelCurrentBuild();
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
 
     // ----------------------------------------------------------------------

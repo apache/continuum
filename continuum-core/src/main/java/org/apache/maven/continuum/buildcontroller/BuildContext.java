@@ -57,6 +57,8 @@ public class BuildContext
 
     private List<ProjectDependency> modifiedDependencies;
 
+    private boolean cancelled;
+
     public void setStartTime( long startTime )
     {
         this.startTime = startTime;
@@ -158,5 +160,15 @@ public class BuildContext
     public void setModifiedDependencies( List<ProjectDependency> modifiedDependencies )
     {
         this.modifiedDependencies = modifiedDependencies;
+    }
+
+    public boolean isCancelled()
+    {
+        return cancelled;
+    }
+
+    public void setCancelled( boolean cancelled )
+    {
+        this.cancelled = cancelled;
     }
 }

@@ -32,4 +32,11 @@
       </field>
     </class>
   </package>
+  <package name="org.apache.continuum.model.project">
+    <class name="ProjectScmRoot">
+      <field name="error">
+        <column length="4000" jdbc-type="VARCHAR"/>
+      </field>
+    </class>
+  </package>
 </orm>

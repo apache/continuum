@@ -27,9 +27,11 @@ import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ProfileDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -85,6 +87,8 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected SystemConfigurationDao systemConfigurationDao;
 
+    protected ProjectScmRootDao projectScmRootDao;
+
     protected ContinuumReleaseResultDao releaseResultDao;
 
     protected ProjectGroup defaultProjectGroup;
@@ -135,6 +139,8 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected DirectoryPurgeConfiguration testDirectoryPurgeConfig;
 
+    protected ProjectScmRoot testProjectScmRoot;
+
     private SystemConfiguration systemConfiguration;
 
     @Override
@@ -164,6 +170,8 @@ public abstract class AbstractContinuumStoreTestCase
         scheduleDao = (ScheduleDao) lookup( ScheduleDao.class.getName() );
 
         systemConfigurationDao = (SystemConfigurationDao) lookup( SystemConfigurationDao.class.getName() );
+
+        projectScmRootDao = (ProjectScmRootDao) lookup( ProjectScmRootDao.class.getName() );
 
         releaseResultDao = (ContinuumReleaseResultDao) lookup( ContinuumReleaseResultDao.class.getName() );
     }
@@ -569,7 +577,7 @@ public abstract class AbstractContinuumStoreTestCase
 
         if ( addToStore )
         {
-            projectGroupDao.addProjectGroup( group );
+            group = projectGroupDao.addProjectGroup( group );
             testProjectGroup2.setId( group.getId() );
         }
         else
@@ -590,6 +598,13 @@ public abstract class AbstractContinuumStoreTestCase
         if ( addToStore )
         {
             systemConfiguration = systemConfigurationDao.addSystemConfiguration( systemConfiguration );
+        }
+        
+        testProjectScmRoot = createTestProjectScmRoot( "scmRootAddress1", 1, 0, "error1", group );
+        
+        if ( addToStore )
+        {
+            projectScmRootDao.addProjectScmRoot( testProjectScmRoot );
         }
     }
 
@@ -1366,6 +1381,30 @@ public abstract class AbstractContinuumStoreTestCase
                       actualConfig.getDaysOlder() );
         assertEquals( "compare directory purge configuration - enabled", expectedConfig.isEnabled(),
                       actualConfig.isEnabled() );
+    }
+    
+    protected static ProjectScmRoot createTestProjectScmRoot( String scmRootAddress, int state, int oldState,
+                                                              String error, ProjectGroup group )
+    {
+        ProjectScmRoot projectScmRoot = new ProjectScmRoot();
+        
+        projectScmRoot.setScmRootAddress( scmRootAddress );
+        projectScmRoot.setState( state );
+        projectScmRoot.setOldState( oldState );
+        projectScmRoot.setError( error );
+        projectScmRoot.setProjectGroup( group );
+        
+        return projectScmRoot;
+    }
+
+    protected static void assertProjectScmRootEquals( ProjectScmRoot expectedConfig, ProjectScmRoot actualConfig )
+    {
+        assertEquals( "compare project scm root - id", expectedConfig.getId(), actualConfig.getId() );
+        assertEquals( "compare project scm root - scmUrl", expectedConfig.getScmRootAddress(), 
+                                                           actualConfig.getScmRootAddress() );
+        assertEquals( "compare project scm root - state", expectedConfig.getState(), actualConfig.getState() );
+        assertEquals( "compare project scm root - oldState", expectedConfig.getOldState(), actualConfig.getOldState() );
+        assertEquals( "compare project scm root - error", expectedConfig.getError(), actualConfig.getError() );
     }
 
     protected static ContinuumReleaseResult createTestContinuumReleaseResult( ProjectGroup group, Project project, 

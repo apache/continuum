@@ -26,6 +26,7 @@ import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.task.PurgeTask;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
@@ -52,6 +53,8 @@ public class DefaultContinuumPurgeManagerTest
 
     private DirectoryPurgeConfiguration dirPurge;
 
+    private TaskQueueManager taskQueueManager;
+
     @Override
     protected void setUp()
         throws Exception
@@ -69,6 +72,8 @@ public class DefaultContinuumPurgeManagerTest
         purgeManager = (ContinuumPurgeManager) lookup( ContinuumPurgeManager.ROLE );
 
         purgeQueue = (TaskQueue) lookup( TaskQueue.ROLE, "purge" );
+
+        taskQueueManager = (TaskQueueManager) lookup( TaskQueueManager.ROLE );
 
         setupDefaultPurgeConfigurations();
     }
@@ -124,14 +129,14 @@ public class DefaultContinuumPurgeManagerTest
 
         purgeManager.purgeRepository( repoPurge );
         purgeManager.purgeDirectory( dirPurge );
-        purgeManager.removeFromPurgeQueue( repoPurge.getId() );
+        taskQueueManager.removeFromPurgeQueue( repoPurge.getId() );
 
         assertNextBuildIs( dirPurge.getId() );
         assertNextBuildIsNull();
 
         purgeManager.purgeRepository( repoPurge );
         purgeManager.purgeDirectory( dirPurge );
-        purgeManager.removeFromPurgeQueue( dirPurge.getId() );
+        taskQueueManager.removeFromPurgeQueue( dirPurge.getId() );
 
         assertNextBuildIs( repoPurge.getId() );
         assertNextBuildIsNull();

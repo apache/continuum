@@ -33,6 +33,7 @@ import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.apache.maven.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.ScmFile;
@@ -42,6 +43,7 @@ import org.apache.maven.scm.repository.ScmRepositoryException;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -94,12 +96,15 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
 
         UpdateScmResult scmResult;
 
+        ScmResult result;
+
         Date latestUpdateDate = null;
+
         try
         {
-            BuildResult result = buildResultDao.getLatestBuildResultForProject( project.getId() );
+            BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( project.getId() );
 
-            latestUpdateDate = new Date( result.getStartTime() );
+            latestUpdateDate = new Date( buildResult.getStartTime() );
         }
         catch ( Exception e )
         {
@@ -133,7 +138,38 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
                 getLogger().info( "Updated " + scmResult.getUpdatedFiles().size() + " files." );
             }
 
-            context.put( KEY_UPDATE_SCM_RESULT, convertScmResult( scmResult ) );
+            result = convertScmResult( scmResult );
+        }
+        catch ( ScmRepositoryException e )
+        {
+            result = new ScmResult();
+
+            result.setSuccess( false );
+
+            result.setProviderMessage( e.getMessage() + ": " + getValidationMessages( e ) );
+            
+            getLogger().error( e.getMessage(), e);
+        }
+        catch ( NoSuchScmProviderException e )
+        {
+            // TODO: this is not making it back into a result of any kind - log it at least. Same is probably the case for ScmException
+            result = new ScmResult();
+
+            result.setSuccess( false );
+
+            result.setProviderMessage( e.getMessage() );
+            
+            getLogger().error( e.getMessage(), e);
+        }
+        catch ( ScmException e )
+        {
+            result = new ScmResult();
+
+            result.setSuccess( false );
+
+            result.setException( ContinuumUtils.throwableMessagesToString( e ) );
+            
+            getLogger().error( e.getMessage(), e);
         }
         finally
         {
@@ -155,6 +191,9 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
 
             notifier.checkoutComplete( project, buildDefinition );
         }
+        
+        context.put( KEY_UPDATE_SCM_RESULT, result );
+        context.put( KEY_PROJECT, project );
     }
 
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )
@@ -274,5 +313,26 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         }
 
         return cmd;
+    }
+    
+    private String getValidationMessages( ScmRepositoryException ex )
+    {
+        List<String> messages = ex.getValidationMessages();
+
+        StringBuffer message = new StringBuffer();
+
+        if ( messages != null && !messages.isEmpty() )
+        {
+            for ( Iterator<String> i = messages.iterator(); i.hasNext(); )
+            {
+                message.append( i.next() );
+
+                if ( i.hasNext() )
+                {
+                    message.append( System.getProperty( "line.separator" ) );
+                }
+            }
+        }
+        return message.toString();
     }
 }

@@ -183,6 +183,12 @@ public class ProjectDaoImpl
         return (Project) getObjectById( Project.class, projectId, PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP );
     }
 
+    public Project getProjectWithScmDetails( int projectId )
+        throws ContinuumStoreException
+    {
+        return (Project) getObjectById( Project.class, projectId, PROJECT_WITH_SCM_DETAILS_FETCH_GROUP );
+    }
+
     public List<Project> getProjectsInGroup( int projectGroupId )
         throws ContinuumStoreException
     {
