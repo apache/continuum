@@ -510,7 +510,6 @@ under the License.
     <dependency>
       <groupId>org.codehaus.redback</groupId>
       <artifactId>redback-common-integrations</artifactId>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>net.sf.ehcache</groupId>
@@ -629,6 +628,7 @@ under the License.
                 <configuration>
                   <tasks>
                     <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml" todir="${basedir}/src/main/webapp/WEB-INF/classes" />
+					<copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml" todir="${project.build.directory}/classes" />
                   </tasks>
                 </configuration>
               </execution>

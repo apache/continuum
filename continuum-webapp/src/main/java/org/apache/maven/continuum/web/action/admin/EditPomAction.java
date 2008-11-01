@@ -19,7 +19,8 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
-import com.opensymphony.xwork2.ModelDriven;
+import java.io.IOException;
+
 import org.apache.maven.artifact.installer.ArtifactInstallationException;
 import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper;
@@ -33,11 +34,11 @@ import org.apache.maven.shared.app.configuration.CompanyPom;
 import org.apache.maven.shared.app.configuration.Configuration;
 import org.apache.maven.shared.app.configuration.MavenAppConfiguration;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.redback.struts2.interceptor.SecureAction;
-import org.codehaus.plexus.redback.struts2.interceptor.SecureActionBundle;
-import org.codehaus.plexus.redback.struts2.interceptor.SecureActionException;
+import org.codehaus.redback.integration.interceptor.SecureAction;
+import org.codehaus.redback.integration.interceptor.SecureActionBundle;
+import org.codehaus.redback.integration.interceptor.SecureActionException;
 
-import java.io.IOException;
+import com.opensymphony.xwork2.ModelDriven;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
