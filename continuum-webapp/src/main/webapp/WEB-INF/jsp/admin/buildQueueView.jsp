@@ -69,7 +69,7 @@
           <h3>
             <s:text name="buildQueue.section.title"/>
           </h3>  
-            <s:if test="%{not empty buildProjectTasks}">
+            <c:if test="${not empty buildProjectTasks}">
               <ec:table items="buildProjectTasks"
                         var="buildProjectTask"
                         showExports="false"
@@ -101,10 +101,10 @@
                   </ec:column>             
                 </ec:row>
               </ec:table>
-            </s:if>
-            <s:else>
+            </c:if>
+            <c:if test="${empty buildProjectTasks}">
               <s:text name="buildQueue.empty"/>
-            </s:else>
+            </c:if>
         </div>
         <c:if test="${not empty buildProjectTasks}">
           <div class="functnbar3">
@@ -159,7 +159,7 @@
           <h3>
             <s:text name="checkoutQueue.section.title"/>
           </h3>  
-            <s:if test="%{!empty currentCheckOutTasks}">
+            <c:if test="${!empty currentCheckOutTasks}">
               <ec:table items="currentCheckOutTasks"
                         var="currentCheckOutTask"
                         showExports="false"
@@ -187,10 +187,10 @@
                   </ec:column>             
                 </ec:row>
               </ec:table>
-            </s:if>
-            <s:else>
+            </c:if>
+            <c:if test="${empty currentCheckOutTasks}">
               <s:text name="checkoutQueue.empty"/>
-            </s:else>
+            </c:if>
         </div>
         <c:if test="${not empty currentCheckOutTasks}">
           <div class="functnbar3">
