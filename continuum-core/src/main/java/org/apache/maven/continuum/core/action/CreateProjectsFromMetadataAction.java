@@ -23,11 +23,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.maven.m2.SettingsConfigurationException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
@@ -38,6 +40,7 @@ import org.apache.maven.continuum.utils.URLUserInfo;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /**
@@ -154,7 +157,11 @@ public class CreateProjectsFromMetadataAction
                     result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
                 }
             }
-
+     
+            if ( result.getProjects() != null )
+            {
+                context.put( KEY_URL, getScmRootUrl( result.getProjects() ) );
+            }
         }
         catch ( MalformedURLException e )
         {
@@ -206,6 +213,32 @@ public class CreateProjectsFromMetadataAction
         }
     }
 
+    private String getScmRootUrl( List<Project> projects )
+    {
+        String scmRootUrl = "";
+        
+        for ( Project project : projects )
+        {
+            String scmUrl = project.getScmUrl();
+            
+            scmRootUrl = getCommonPath( scmUrl, scmRootUrl );
+        }
+        
+        return scmRootUrl;
+    }
+
+    private String getCommonPath( String path1, String path2 )
+    {
+        if ( path2.equals( "" ) )
+        {
+            return path1;
+        }
+        else
+        {
+            int indexDiff = StringUtils.differenceAt( path1, path2 );
+            return path1.substring( 0, indexDiff );
+        }
+    }
 
     public ContinuumProjectBuilderManager getProjectBuilderManager()
     {

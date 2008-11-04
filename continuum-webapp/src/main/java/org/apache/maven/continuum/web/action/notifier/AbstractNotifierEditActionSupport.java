@@ -75,6 +75,13 @@ public abstract class AbstractNotifierEditActionSupport
     private boolean sendOnWarning;
 
     /**
+     * Detemines if the notifier should fire when prepare build resulted in any error(s).<p>
+     * <code>true</code> implies notifier executes when any error(s) is/are detected
+     * for the build.
+     */
+    private boolean sendOnScmFailure;
+
+    /**
      * Detemines if the save operation returns to the project group notifier page or not.<p>
      * <code>true</code> implies return to the project group notifier page.
      */
@@ -137,6 +144,8 @@ public abstract class AbstractNotifierEditActionSupport
 
         notifier.setSendOnWarning( isSendOnWarning() );
 
+        notifier.setSendOnScmFailure( isSendOnScmFailure() );
+
         setNotifierConfiguration( notifier );
 
         saveNotifier( notifier );
@@ -185,6 +194,8 @@ public abstract class AbstractNotifierEditActionSupport
         setSendOnError( notifier.isSendOnError() );
 
         setSendOnWarning( notifier.isSendOnWarning() );
+
+        setSendOnScmFailure( notifier.isSendOnScmFailure() );
 
         initConfiguration( notifier.getConfiguration() );
 
@@ -274,6 +285,16 @@ public abstract class AbstractNotifierEditActionSupport
     public void setSendOnWarning( boolean sendOnWarning )
     {
         this.sendOnWarning = sendOnWarning;
+    }
+
+    public boolean isSendOnScmFailure()
+    {
+        return sendOnScmFailure;
+    }
+
+    public void setSendOnScmFailure( boolean sendOnScmFailure )
+    {
+        this.sendOnScmFailure = sendOnScmFailure;
     }
 
     /**

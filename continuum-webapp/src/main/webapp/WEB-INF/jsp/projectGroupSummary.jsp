@@ -96,6 +96,20 @@
       </table>
     </div>
 
+    <h3><ww:text name="projectGroup.scmRoot.title"/></h3>
+    <ec:table items="projectScmRoots"
+              var="projectScmRoot"
+              showExports="false"
+              showPagination="false"
+              showStatusBar="false"
+              sortable="false"
+              filterable="false">
+      <ec:row highlightRow="true">
+        <ec:column property="state" title="&nbsp;" width="1%" cell="org.apache.maven.continuum.web.view.StateCell"/>
+        <ec:column property="scmRootAddress" title="projectGroup.scmRoot.label"/>  
+      </ec:row>
+    </ec:table>
+
     <redback:ifAnyAuthorized permissions="continuum-build-group,continuum-remove-group" resource="${projectGroup.name}">
       <h3><s:text name="projectGroup.actions.title"/></h3>
 

@@ -120,6 +120,7 @@
                 <c:otherwise>
                   <s:url id="cancelBuildProjectUrl" action="cancelBuild" namespace="/" includeParams="none">
                     <s:param name="projectId">${project.id}</s:param>
+                    <s:param name="projectGroupId">${project.projectGroupId}</s:param>
                   </s:url>
                   <c:choose>
                     <c:when test="${project.state != 8}">

@@ -29,6 +29,7 @@ import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
@@ -185,8 +186,8 @@ public class LocalRepositoryAction
         else
         {
             // check if repository is in use
-            ContinuumPurgeManager purgeManager = getContinuum().getPurgeManager();
-            if ( purgeManager.isRepositoryInUse( repository.getId() ) )
+            TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
+            if ( taskQueueManager.isRepositoryInUse( repository.getId() ) )
             {
                 addActionError( "repository.error.save.in.use" );
                 return ERROR;
@@ -207,8 +208,8 @@ public class LocalRepositoryAction
     public String remove()
         throws Exception
     {
-        ContinuumPurgeManager purgeManager = getContinuum().getPurgeManager();
-        if ( purgeManager.isRepositoryInUse( repository.getId() ) )
+        TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
+        if ( taskQueueManager.isRepositoryInUse( repository.getId() ) )
         {
             message = "repository.error.remove.in.use";
             return ERROR;
@@ -238,9 +239,10 @@ public class LocalRepositoryAction
         throws Exception
     {
         ContinuumPurgeManager purgeManager = getContinuum().getPurgeManager();
-    
+        TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
+
         // check if repository is in use
-        if ( purgeManager.isRepositoryInUse( repository.getId() ) )
+        if ( taskQueueManager.isRepositoryInUse( repository.getId() ) )
         {
             message = "repository.error.purge.in.use";
             return ERROR;

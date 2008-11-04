@@ -19,6 +19,7 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
@@ -81,6 +82,16 @@ public abstract class AbstractContinuumAction
     public static final String KEY_SCM_USERNAME = "scmUserName";
     
     public static final String KEY_SCM_PASSWORD = "scmUserPassword";
+
+    public static final String KEY_SCM_RESULT = "scmResult";
+
+    public static final String KEY_OLD_SCM_RESULT = "old-scmResult";
+
+    public static final String KEY_PROJECT_SCM_ROOT = "projectScmRoot";
+
+    public static final String KEY_OLD_BUILD_ID = "old-buildResult-id";
+
+    public static final String KEY_CANCELLED = "cancelled";
 
     // ----------------------------------------------------------------------
     // Utils
@@ -180,6 +191,36 @@ public abstract class AbstractContinuumAction
         return (List) getObject( context, KEY_UPDATE_DEPENDENCIES, defaultValue );
     }
 
+    public static ScmResult getScmResult( Map context )
+    {
+        return (ScmResult) getObject( context, KEY_SCM_RESULT );
+    }
+
+    public static ScmResult getScmResult( Map context, ScmResult defaultValue )
+    {
+        return (ScmResult) getObject( context, KEY_SCM_RESULT, defaultValue );
+    }
+
+    public static ScmResult getOldScmResult( Map context )
+    {
+        return (ScmResult) getObject( context, KEY_OLD_SCM_RESULT );
+    }
+
+    public static ScmResult getOldScmResult( Map context, ScmResult defaultValue )
+    {
+        return (ScmResult) getObject( context, KEY_OLD_SCM_RESULT, defaultValue );
+    }
+
+    public static ProjectScmRoot getProjectScmRoot( Map context )
+    {
+        return (ProjectScmRoot) getObject( context, KEY_PROJECT_SCM_ROOT );
+    }
+
+    public static int getOldBuildId( Map context )
+    {
+        return getInteger( context, KEY_OLD_BUILD_ID ); 
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -206,7 +247,16 @@ public abstract class AbstractContinuumAction
 
     protected static int getInteger( Map context, String key )
     {
-        return ( (Integer) getObject( context, key, null ) ).intValue();
+        Object obj = getObject( context, key, null );
+        
+        if ( obj == null )
+        {
+            return 0;
+        }
+        else
+        {
+            return ( (Integer) obj ).intValue();
+        }
     }
 
     protected static Object getObject( Map context, String key )
