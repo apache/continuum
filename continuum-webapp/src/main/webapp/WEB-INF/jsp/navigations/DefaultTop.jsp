@@ -17,19 +17,19 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
-<ww:i18n name="localization.Continuum">
+<s:i18n name="localization.Continuum">
   <div id="banner">
     <span id="bannerLeft">
       <a href="http://continuum.apache.org">
-        <img src="<ww:url value="/images/continuum_logo_75.gif" includeParams="none"/>" alt="Continuum" title="Continuum" border="0">
+        <img src="<s:url value="/images/continuum_logo_75.gif" includeParams="none"/>" alt="Continuum" title="Continuum" border="0">
       </a>
     </span>
     <span id="bannerRight">
-      <ww:action name="companyInfo" executeResult="true"/>
+      <s:action name="companyInfo" executeResult="true"/>
     </span>
 
     <div class="clear">
@@ -46,4 +46,4 @@
     </div>
     <%@ include file="/WEB-INF/jsp/redback/include/securityLinks.jsp" %>
   </div>
-</ww:i18n>
+</s:i18n>

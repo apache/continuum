@@ -19,8 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.codehaus.plexus.xwork.action.PlexusActionSupport;
-
 /**
  * TestAction:
  *

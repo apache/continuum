@@ -35,7 +35,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id: DeleteNotifierAction.java 467122 2006-10-23 20:50:19Z jmcconnell $
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="deleteProjectNotifier"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="deleteProjectNotifier"
  */
 public class DeleteProjectNotifierAction
     extends ContinuumActionSupport

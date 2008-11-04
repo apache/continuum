@@ -19,10 +19,10 @@ package org.apache.maven.continuum.web.view.jsp.ui;
  * under the License.
  */
 
-import com.opensymphony.webwork.views.jsp.ui.TextareaTag;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.TextProvider;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.views.jsp.ui.TextareaTag;
 
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
@@ -101,7 +101,7 @@ public class DateTag
     {
         actualName = findString( nameAttr );
         String msg = null;
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
         //find the name on the valueStack, and cast it to a date
         Object dateObj = stack.findValue( actualName );
 

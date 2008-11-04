@@ -17,30 +17,30 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
-<ww:i18n name="localization.Continuum">
+<s:i18n name="localization.Continuum">
   <head>
     <title>
-      <ww:text name="configuration.page.title"/>
+      <s:text name="configuration.page.title"/>
     </title>
   </head>
 
   <body>
   <div id="axial" class="h3">
     <h3>
-      <ww:text name="configuration.section.title"/>
+      <s:text name="configuration.section.title"/>
     </h3>
 
-    <ww:form action="configuration!save" method="post">
+    <s:form action="configuration!save" method="post">
 
       <c:if test="${!empty actionErrors}">
         <div class="errormessage">
-          <c:forEach items="${actionErrors}" var="actionError">
-            <p><ww:text name="${actionError}"/></p>
-          </c:forEach>
+          <s:iterator value="actionErrors">
+            <p><s:text name="<s:property/>" /></p>
+          </s:iterator>
         </div>
       </c:if>
 
@@ -49,41 +49,41 @@
         <table>
           <tbody>
 
-            <ww:textfield label="%{getText('configuration.workingDirectory.label')}" name="workingDirectory"
+            <s:textfield label="%{getText('configuration.workingDirectory.label')}" name="workingDirectory"
                           required="true">
-              <ww:param name="desc"><p>
-                <ww:text name="configuration.workingDirectory.message"/>
-              </p></ww:param>
-            </ww:textfield>
+              <s:param name="desc"><p>
+                <s:text name="configuration.workingDirectory.message"/>
+              </p></s:param>
+            </s:textfield>
 
-            <ww:textfield label="%{getText('configuration.buildOutputDirectory.label')}" name="buildOutputDirectory"
+            <s:textfield label="%{getText('configuration.buildOutputDirectory.label')}" name="buildOutputDirectory"
                           required="true">
-              <ww:param name="desc"><p>
-                <ww:text name="configuration.buildOutputDirectory.message"/>
-              </p></ww:param>
-            </ww:textfield>
+              <s:param name="desc"><p>
+                <s:text name="configuration.buildOutputDirectory.message"/>
+              </p></s:param>
+            </s:textfield>
 
-            <ww:textfield label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"
-            			  required="${requireReleaseOutput}">
-              <ww:param name="desc"><p>
-                <ww:text name="configuration.releaseOutputDirectory.message"/>
-              </ww:param>
-            </ww:textfield>
+            <s:textfield label="%{getText('configuration.releaseOutputDirectory.label')}" name="releaseOutputDirectory"
+            			  required="%{requireReleaseOutput}">
+              <s:param name="desc"><p>
+                <s:text name="configuration.releaseOutputDirectory.message"/>
+              </s:param>
+            </s:textfield>
 
-            <ww:textfield label="%{getText('configuration.deploymentRepositoryDirectory.label')}"
+            <s:textfield label="%{getText('configuration.deploymentRepositoryDirectory.label')}"
                           name="deploymentRepositoryDirectory">
-              <ww:param name="desc"><p>
-                <ww:text name="configuration.deploymentRepositoryDirectory.message"/>
-              </p></ww:param>
-            </ww:textfield>
+              <s:param name="desc"><p>
+                <s:text name="configuration.deploymentRepositoryDirectory.message"/>
+              </p></s:param>
+            </s:textfield>
 
-            <ww:textfield label="%{getText('configuration.baseUrl.label')}" name="baseUrl" required="true">
-              <ww:param name="desc"><p>
-                <ww:text name="configuration.baseUrl.message"/>
-              </p></ww:param>
-            </ww:textfield>
+            <s:textfield label="%{getText('configuration.baseUrl.label')}" name="baseUrl" required="true">
+              <s:param name="desc"><p>
+                <s:text name="configuration.baseUrl.message"/>
+              </p></s:param>
+            </s:textfield>
 
-            <ww:hidden name="requireReleaseOutput"/>
+            <s:hidden name="requireReleaseOutput"/>
           </tbody>
         </table>
         <div class="functnbar3">
@@ -91,8 +91,8 @@
         </div>
 
       </div>
-    </ww:form>
+    </s:form>
   </div>
   </body>
-</ww:i18n>
+</s:i18n>
 </html>

@@ -30,7 +30,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author Edwin Punzalan
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="releaseRollback"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseRollback"
  */
 public class ReleaseRollbackAction
     extends ContinuumActionSupport

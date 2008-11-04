@@ -17,19 +17,19 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
-<ww:i18n name="localization.Continuum">
+<s:i18n name="localization.Continuum">
   <head>
     <title>
-      <ww:text name="configuration.page.title"/>
+      <s:text name="configuration.page.title"/>
     </title>
   </head>
   <body>
   <div id="axial" class="h3">
     <h3>
-      <ww:text name="configuration.section.title"/>
+      <s:text name="configuration.section.title"/>
     </h3>
 
     <div class="axial">
@@ -42,12 +42,12 @@
         <c1:data label="%{getText('configuration.baseUrl.label')}" name="baseUrl"/>
       </table>
       <div class="functnbar3">
-        <ww:form action="configuration!input.action" method="post">
-          <ww:submit value="%{getText('edit')}"/>
-        </ww:form>
+        <s:form action="configuration!input.action" method="post">
+          <s:submit value="%{getText('edit')}"/>
+        </s:form>
       </div>
     </div>
   </div>
   </body>
-</ww:i18n>
+</s:i18n>
 </html>

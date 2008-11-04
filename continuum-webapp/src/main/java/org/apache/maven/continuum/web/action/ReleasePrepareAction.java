@@ -47,7 +47,7 @@ import java.util.Properties;
 
 /**
  * @author Edwin Punzalan
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="releasePrepare"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releasePrepare"
  */
 public class ReleasePrepareAction
     extends ContinuumActionSupport

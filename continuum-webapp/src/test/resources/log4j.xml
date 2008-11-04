@@ -56,17 +56,17 @@
     <level value="info"/>
   </logger>
 
-  <logger name="com.opensymphony.xwork">
+  <logger name="com.opensymphony.xwork2">
+    <level value="info"/>
+  </logger>
+	
+  <logger name="org.apache.struts2">
     <level value="info"/>
   </logger>
 
   <!-- CONTINUUM-1228 -->
-  <logger name="com.opensymphony.xwork.util.OgnlUtil">
+  <logger name="com.opensymphony.xwork2.util.OgnlUtil">
     <level value="error"/>
-  </logger>
-
-  <logger name="com.opensymphony.webwork">
-    <level value="info"/>
   </logger>
 
   <logger name="org.codehaus.plexus.PlexusContainer">

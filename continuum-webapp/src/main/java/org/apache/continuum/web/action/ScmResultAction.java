@@ -7,7 +7,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.StateGenerator;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.opensymphony.webwork.ServletActionContext;
+import org.apache.struts2.ServletActionContext;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>

@@ -28,11 +28,11 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 
-import com.opensymphony.xwork.Validateable;
+import com.opensymphony.xwork2.Validateable;
 
 /**
  * @author Henry Isidro <hisidro@exist.com>
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="addProjectGroup"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addProjectGroup"
  */
 public class AddProjectGroupAction
     extends ContinuumActionSupport

@@ -16,17 +16,17 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   --%>
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib prefix="c1" uri="continuum" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
         <title><ww:text name="scmResult.page.title"/></title>
     </head>
     <body>
       <div id="h3">
 
-        <ww:action name="projectGroupTab" executeResult="true"/>
+        <s:action name="projectGroupTab" executeResult="true"/>
 
         <h3>
             <ww:text name="scmResult.section.title"/>
@@ -52,5 +52,5 @@
         </div>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

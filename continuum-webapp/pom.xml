@@ -128,17 +128,46 @@ under the License.
           </execution>
         </executions>
       </plugin>
+		
+      <!-- 
+        here an hack to prevent multiple struts core in classpath
+        which prevent struts start 
+        and same struts.xml in the classpath too
+      -->
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>cleanup-struts-jar-in-webapp</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <delete includeemptydirs="true">
+                  <fileset dir="${basedir}/src/main/webapp/WEB-INF/lib" includes="**/struts2*.jar"/>
+                </delete>
+                <delete includeemptydirs="true">
+                  <fileset dir="${basedir}/src/main/webapp/WEB-INF/classes" includes="**/struts.*"/>
+                </delete>
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>		
+
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-maven-plugin</artifactId>
         <configuration>
           <roleDefaults>
             <roleDefault>
-              <role>com.opensymphony.xwork.Action</role>
+              <role>com.opensymphony.xwork2.Action</role>
               <instantiation-strategy>per-lookup</instantiation-strategy>
             </roleDefault>
             <roleDefault>
-              <role>com.opensymphony.xwork.validator.Validator</role>
+              <role>com.opensymphony.xwork2.validator.Validator</role>
               <instantiation-strategy>per-lookup</instantiation-strategy>
             </roleDefault>            
           </roleDefaults>
@@ -316,10 +345,6 @@ under the License.
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
     </dependency>
-    <!--dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-xwork-integration</artifactId>
-    </dependency-->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
@@ -457,23 +482,34 @@ under the License.
       <artifactId>wagon-webdav</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts2-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.opensymphony</groupId>
+      <artifactId>xwork</artifactId>
+    </dependency>    
+    <dependency>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts2-spring-plugin</artifactId>
+    </dependency>
     <!--
-      Plexus Security Dependencies
+      Redback Dependencies
       -->
     <dependency>
       <groupId>org.codehaus.redback</groupId>
-      <artifactId>redback-xwork-content</artifactId>
+      <artifactId>redback-struts2-content</artifactId>
       <type>war</type>
       <scope>runtime</scope> 
     </dependency>
     <dependency>
       <groupId>org.codehaus.redback</groupId>
-      <artifactId>redback-xwork-integration</artifactId>
+      <artifactId>redback-struts2-integration</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.redback</groupId>
-      <artifactId>redback-taglib</artifactId>
-      <scope>runtime</scope>
+      <artifactId>redback-common-integrations</artifactId>
     </dependency>
     <dependency>
       <groupId>net.sf.ehcache</groupId>
@@ -506,11 +542,6 @@ under the License.
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-spring</artifactId>
     </dependency>    
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-mail-sender-javamail</artifactId>
-      <scope>runtime</scope>
-    </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
@@ -597,6 +628,7 @@ under the License.
                 <configuration>
                   <tasks>
                     <copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml" todir="${basedir}/src/main/webapp/WEB-INF/classes" />
+					<copy overwrite="true" file="${basedir}/src/test/resources/log4j.xml" todir="${project.build.directory}/classes" />
                   </tasks>
                 </configuration>
               </execution>

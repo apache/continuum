@@ -17,19 +17,19 @@
   ~ under the License.
   -->
 
-<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd"> 
 
-<xwork>
-  <include file="webwork-default.xml"/>
+<struts>
+  <include file="struts-default.xml"/>
 
   <!-- Include plexus-security xwork configurations. -->
-  <include file="xwork-security.xml"/>
+  <include file="struts-security.xml"/>
 
 
-  <package name="default" extends="webwork-default">
+  <package name="default" extends="struts-default">
 
     <interceptors>
-      <interceptor name="exception-logging" class="exceptionLogging"/>
       <interceptor name="continuumConfigurationCheck" class="forceContinuumConfigurationInterceptor"/>
       <interceptor name="redbackForceAdminUser" class="redbackForceAdminUserInterceptor"/>
       <interceptor name="redbackSecureActions" class="redbackSecureActionInterceptor"/>
@@ -42,7 +42,6 @@
         <interceptor-ref name="redbackForceAdminUser"/>
         <interceptor-ref name="redbackAutoLogin"/>
         <interceptor-ref name="defaultStack"/>
-        <interceptor-ref name="exception-logging"/>
         <interceptor-ref name="redbackSecureActions"/>
         <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="continuumConfigurationCheck"/>
@@ -59,7 +58,6 @@
         <interceptor-ref name="redbackForceAdminUser"/>
         <interceptor-ref name="redbackAutoLogin"/>
         <interceptor-ref name="defaultStack"/>
-        <interceptor-ref name="exception-logging"/>
         <interceptor-ref name="redbackPolicyEnforcement"/>
         <interceptor-ref name="redbackSecureActions"/>
         <interceptor-ref name="validation">
@@ -81,7 +79,7 @@
       <result name="requires-authorization">/WEB-INF/jsp/error/authorizationError.jsp</result>
 
 
-        <result name="continuum-configuration-required" type="redirect-action">
+      <result name="continuum-configuration-required" type="redirect-action">
         <param name="actionName">configuration</param>
         <param name="namespace">/admin</param>
         <param name="method">input</param>
@@ -409,10 +407,6 @@
       </result>
     </action>
 
-    <action name="scmResult" class="scmResult">
-      <result name="success">/WEB-INF/jsp/scmResult.jsp</result>
-    </action>
-
     <!--
     * schedule actions
     -->
@@ -436,10 +430,7 @@
     </action>
 
     <action name="cancelBuild" class="cancelBuild">
-      <result name="success" type="redirect-action">
-        <param name="actionName">projectGroupSummary</param>
-        <param name="projectGroupId">${projectGroupId}</param>
-      </result>
+      <result name="success" type="chain">buildResults</result>
     </action>
     
     <action name="cancelBuilds" class="cancelBuild" method="cancelBuilds">
@@ -1057,4 +1048,4 @@
     </action>
     
   </package>
-</xwork>
+</struts>

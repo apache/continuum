@@ -17,11 +17,11 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<ww:set name="companyLogo" value="companyLogo"/>
+<s:set name="companyLogo" value="companyLogo"/>
 <c:if test="${!empty (companyLogo)}">
-  <ww:set name="companyUrl" value="companyUrl"/>
+  <s:set name="companyUrl" value="companyUrl"/>
   <c:choose>
     <c:when test="${!empty (companyUrl)}">
       <a href="${companyUrl}">

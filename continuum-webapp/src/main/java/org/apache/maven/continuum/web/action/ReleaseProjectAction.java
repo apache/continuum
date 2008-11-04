@@ -32,7 +32,7 @@ import java.util.Map;
 
 /**
  * @author Edwin Punzalan
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="releaseProject"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseProject"
  */
 public class ReleaseProjectAction
     extends ContinuumActionSupport

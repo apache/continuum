@@ -19,10 +19,10 @@ package org.apache.maven.continuum.web.view.jsp.ui;
  * under the License.
  */
 
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.views.jsp.ui.AbstractUITag;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.maven.continuum.web.components.Data;
+import org.apache.struts2.components.Component;
+import org.apache.struts2.views.jsp.ui.AbstractUITag;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +37,7 @@ public class DataTag
 
     protected String valueLink;
 
-    public Component getBean( OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res )
+    public Component getBean( ValueStack stack, HttpServletRequest req, HttpServletResponse res )
     {
         return new Data( stack, req, res );
     }

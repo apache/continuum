@@ -19,7 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import com.opensymphony.xwork.Validateable;
+import com.opensymphony.xwork2.Validateable;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * @author Nick Gonzalez
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="addProject"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addProject"
  */
 public class AddProjectAction
     extends ContinuumActionSupport

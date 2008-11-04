@@ -19,8 +19,8 @@ package org.apache.maven.continuum.web.validator;
  * under the License.
  */
 
-import com.opensymphony.xwork.validator.ValidationException;
-import com.opensymphony.xwork.validator.validators.ValidatorSupport;
+import com.opensymphony.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.validator.validators.ValidatorSupport;
 
 import java.net.MalformedURLException;
 import java.net.URL;

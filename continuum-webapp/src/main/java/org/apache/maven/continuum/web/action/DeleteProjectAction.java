@@ -26,7 +26,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="deleteProject"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="deleteProject"
  */
 public class DeleteProjectAction
     extends ContinuumActionSupport

@@ -30,7 +30,7 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
  * @author Nick Gonzalez
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="addMavenOneProject"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addMavenOneProject"
  */
 public class AddMavenOneProjectAction
     extends AddMavenProjectAction

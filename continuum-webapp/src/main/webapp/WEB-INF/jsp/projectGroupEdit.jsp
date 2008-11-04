@@ -18,77 +18,77 @@
   --%>
 
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="projectGroup.edit.page.title"/></title>
+        <title><s:text name="projectGroup.edit.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
-        <h3><ww:text name="projectGroup.edit.section.title"/></h3>
+        <h3><s:text name="projectGroup.edit.section.title"/></h3>
 
         <div class="axial">
-          <ww:form action="saveProjectGroup" method="post" validate="true">
-              <c:if test="${projectInCOQueue}">
+          <s:form action="saveProjectGroup" method="post" validate="true">
+              <s:if test="projectInCOQueue">
                 <div class="label">
-                    <p><ww:text name="%{getText('project.in.checkout.queue.error')}"/></p>
+                    <p><s:text name="%{getText('project.in.checkout.queue.error')}"/></p>
                             </div >
-              </c:if>
+              </s:if>
               <c:if test="${!empty actionErrors}">
               <div class="errormessage">
-                <c:forEach items="${actionErrors}" var="actionError">
-                  <p><ww:text name="${actionError}"/></p>
-                </c:forEach>
+                <s:iterator value="actionErrors">
+                  <p><s:text name="<s:property/>" /></p>
+                </s:iterator>
               </div>
               </c:if>
             <table>
               <tbody>
-                <ww:hidden name="projectGroupId"/>
-                <ww:textfield label="%{getText('projectGroup.name.label')}" name="name" required="true" disabled="%{projectInCOQueue}"/>
+                <s:hidden name="projectGroupId"/>
+                <s:textfield label="%{getText('projectGroup.name.label')}" name="name" required="true" disabled="%{projectInCOQueue}"/>
                 <c1:data label="%{getText('projectGroup.groupId.label')}" name="projectGroup.groupId"/>
-                <ww:textfield label="%{getText('projectGroup.description.label')}" name="description" disabled="%{projectInCOQueue}"/>
-                <ww:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories" 
+                <s:textfield label="%{getText('projectGroup.description.label')}" name="description" disabled="%{projectInCOQueue}"/>
+                <s:select label="%{getText('projectGroup.repository.label')}" name="repositoryId" list="repositories"
                            listKey="id" listValue="name" disabled="%{disabledRepositories}"/> 
-                <ww:textfield label="%{getText('projectGroup.url.label')}" name="url" disabled="%{projectInCOQueue}"/>
+                <s:textfield label="%{getText('projectGroup.url.label')}" name="url" disabled="%{projectInCOQueue}"/>
               </tbody>
             </table>
             
-            <ww:if test="${!empty projectList}">
-            <h3><ww:text name="projectGroup.edit.section.projects.title"/></h3>
+            <c:if test="${!empty projectList}">
+            <h3><s:text name="projectGroup.edit.section.projects.title"/></h3>
             <div class="eXtremeTable">
               <table id="projects_table" border="1" cellspacing="2" cellpadding="3" class="tableRegion" width="100%">
                 <thead>
                   <tr>
-                    <td class="tableHeader"><ww:text name="projectGroup.edit.project.name"/></td>
-                    <td class="tableHeader"><ww:text name="projectGroup.edit.move.to.group"/></td>
+                    <td class="tableHeader"><s:text name="projectGroup.edit.project.name"/></td>
+                    <td class="tableHeader"><s:text name="projectGroup.edit.move.to.group"/></td>
                   </tr>
                 </thead>
                 <tbody class="tableBody">
-                  <ww:iterator value="projectList" status="rowCounter">
-                    <tr class="<ww:if test="#rowCounter.odd == true">odd</ww:if><ww:else>even</ww:else>">
-                      <td><ww:select cssStyle="width:200px" label="%{name}" name="projects[%{id}]" list="projectGroups" value="%{projectGroup.id}" disabled="%{projectInCOQueue}"/></td>
+                  <s:iterator value="projectList" status="rowCounter">
+                    <tr class="<s:if test="#rowCounter.odd == true">odd</s:if><s:else>even</s:else>">
+                      <td><s:select cssStyle="width:200px" label="%{name}" name="projects[%{id}]" list="projectGroups" value="%{projectGroup.id}" disabled="%{projectInCOQueue}"/></td>
                     </tr>
-                  </ww:iterator>
+                  </s:iterator>
                 </tbody>
               </table>
             </div>
-            </ww:if>
+            </c:if>
             <div class="functnbar3">
               <c:choose>
                 <c:when test="${!projectInCOQueue}">
                   <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
                 </c:when>
                 <c:otherwise>
-                  <input type="button" value="<ww:text name="back"/>" onClick="history.go(-1)">
+                  <input type="button" value="<s:text name="back"/>" onClick="history.go(-1)">
                 </c:otherwise>
               </c:choose>
             </div>
-          </ww:form>
+          </s:form>
         </div>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

@@ -26,7 +26,7 @@ import org.codehaus.plexus.util.StringUtils;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildProject"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildProject"
  */
 public class BuildProjectAction
     extends ContinuumActionSupport

@@ -17,57 +17,57 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
-<ww:i18n name="localization.Continuum">
+<s:i18n name="localization.Continuum">
   <head>
     <title>
-      <ww:text name="installation.page.title"/>
+      <s:text name="installation.page.title"/>
     </title>
   </head>
 
   <body>
   <div id="axial" class="h3">
     <h3>
-      <ww:text name="installation.section.title"/>
+      <s:text name="installation.section.title"/>
     </h3>
 
-    <ww:form action="saveInstallation!save" method="post">
+    <s:form action="saveInstallation!save" method="post">
 
-      <ww:if test="hasActionErrors()">
+      <s:if test="hasActionErrors()">
         <h3>Action Error</h3>
-      </ww:if>
+      </s:if>
       <p>
-        <ww:actionerror/>
+        <s:actionerror/>
       </p>
 
       <div class="axial">
 
         <table>
           <tbody>
-            <ww:hidden name="installation.installationId" />
-            <ww:hidden name="installationType" />
-            <ww:textfield label="%{getText('installation.name.label')}" name="installation.name"
+            <s:hidden name="installation.installationId" />
+            <s:hidden name="installationType" />
+            <s:textfield label="%{getText('installation.name.label')}" name="installation.name"
                             required="true"/>
-            <ww:if test="displayTypes">
-              <ww:select label="%{getText('installation.type.label')}" name="installation.type" list="typesLabels" />
-            </ww:if>
-            <ww:if test="varNameUpdatable">
-              <ww:if test="varNameDisplayable">
-                <ww:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="${varNameUpdatable}" />
-              </ww:if>
-            </ww:if>
-            <ww:else>
-              <ww:if test="varNameDisplayable">
-                <ww:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true" readonly="true"/>
-              </ww:if>
-            </ww:else>
-            <ww:textfield label="%{getText('installation.value.label')}" name="installation.varValue"
+            <s:if test="displayTypes">
+              <s:select label="%{getText('installation.type.label')}" name="installation.type" list="typesLabels" />
+            </s:if>
+            <s:if test="varNameUpdatable">
+              <s:if test="varNameDisplayable">
+                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true" />
+              </s:if>
+            </s:if>
+            <s:else>
+              <s:if test="varNameDisplayable">
+                <s:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true" readonly="true"/>
+              </s:if>
+            </s:else>
+            <s:textfield label="%{getText('installation.value.label')}" name="installation.varValue"
                           required="true"/>
-            <ww:if test="(automaticProfileDisplayable && installation == null) ||  (installation.installationId == 0)">
-              <ww:checkbox label="%{getText('installation.automaticProfile.label')}" name="automaticProfile" />
-            </ww:if>
+            <s:if test="%{(automaticProfileDisplayable && installation == null) || (installation.installationId == 0)}">
+              <s:checkbox label="%{getText('installation.automaticProfile.label')}" name="automaticProfile" />
+            </s:if>
           </tbody>
         </table>
         <div class="functnbar3">
@@ -75,8 +75,8 @@
         </div>
 
       </div>
-    </ww:form>
+    </s:form>
   </div>
   </body>
-</ww:i18n>
+</s:i18n>
 </html>

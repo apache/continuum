@@ -26,7 +26,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 
 /**
  * @author Edwin Punzalan
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="releaseCleanup"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseCleanup"
  */
 public class ReleaseCleanupAction
     extends ContinuumActionSupport

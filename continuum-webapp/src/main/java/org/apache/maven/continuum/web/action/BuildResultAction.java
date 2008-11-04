@@ -19,11 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.maven.continuum.ContinuumException;
@@ -32,15 +27,20 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.StateGenerator;
+import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.opensymphony.webwork.ServletActionContext;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildResult"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildResult"
  */
 public class BuildResultAction
     extends AbstractBuildAction
@@ -60,7 +60,7 @@ public class BuildResultAction
     private String state;
 
     private String projectGroupName = "";
-    
+
     public String execute()
         throws ContinuumException, ConfigurationException, IOException
     {
@@ -80,7 +80,8 @@ public class BuildResultAction
         buildResult = getContinuum().getBuildResult( getBuildId() );
 
         // directory contains files ?
-        File surefireReportsDirectory = getContinuum().getConfiguration().getTestReportsDirectory( buildId, getProjectId() );
+        File surefireReportsDirectory =
+            getContinuum().getConfiguration().getTestReportsDirectory( buildId, getProjectId() );
         File[] files = surefireReportsDirectory.listFiles();
         if ( files == null )
         {
@@ -93,14 +94,15 @@ public class BuildResultAction
         changeSet = getContinuum().getChangesSinceLastUpdate( getProjectId() );
 
         buildOutput = getBuildOutputText();
-        
+
         state = StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
 
         this.setCanDelete( this.canRemoveBuildResult( buildResult ) );
         return SUCCESS;
     }
-    
-    public String remove() throws ContinuumException
+
+    public String remove()
+        throws ContinuumException
     {
         try
         {
@@ -126,9 +128,9 @@ public class BuildResultAction
         buildOutput = getBuildOutputText();
         return SUCCESS;
     }
-    
+
     public InputStream getBuildOutputInputStream()
-    throws ConfigurationException, IOException
+        throws ConfigurationException, IOException
     {
         String outputText = getBuildOutputText();
         return outputText == null ? null : IOUtils.toInputStream( outputText );
@@ -145,8 +147,8 @@ public class BuildResultAction
         }
         return null;
     }
-    
-    
+
+
     public int getBuildId()
     {
         return buildId;

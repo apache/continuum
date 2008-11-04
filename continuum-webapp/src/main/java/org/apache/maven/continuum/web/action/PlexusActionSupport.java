@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.web.components;
+package org.apache.maven.continuum.web.action;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -9,7 +9,7 @@ package org.apache.maven.continuum.web.components;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -19,46 +19,40 @@ package org.apache.maven.continuum.web.components;
  * under the License.
  */
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.interceptor.SessionAware;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 
-import org.apache.struts2.components.UIBean;
-
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.Map;
 
 /**
+ * LogEnabled and SessionAware ActionSupport
+ *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  */
-public class SubmitCancel
-    extends UIBean
+public abstract class PlexusActionSupport
+    extends ActionSupport
+    implements LogEnabled, SessionAware
 {
-    private static final String TEMPLATE = "submitCancel";
+    protected Map session;
 
-    private String cancel;
+    private Logger logger;
 
-    public SubmitCancel( ValueStack stack, HttpServletRequest request, HttpServletResponse response )
+    public void setSession( Map map )
     {
-        super( stack, request, response );
+        //noinspection AssignmentToCollectionOrArrayFieldFromParameter
+        this.session = map;
     }
 
-    protected String getDefaultTemplate()
+    public void enableLogging( Logger logger )
     {
-        return TEMPLATE;
+        this.logger = logger;
     }
 
-    public void evaluateParams()
+    protected Logger getLogger()
     {
-        super.evaluateParams();
-
-        if ( cancel != null )
-        {
-            addParameter( "cancel", findString( cancel ) );
-        }
-    }
-
-    public void setCancel( String cancel )
-    {
-        this.cancel = cancel;
+        return logger;
     }
 }

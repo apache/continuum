@@ -22,19 +22,16 @@ package org.apache.maven.continuum.web.action;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.opensymphony.xwork.util.LocalizedTextUtil;
-
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildResults"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildResults"
  */
 public class BuildResultsListAction
     extends AbstractBuildAction

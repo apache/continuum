@@ -19,9 +19,9 @@ package org.apache.maven.continuum.web.validator;
  * under the License.
  */
 
-import com.opensymphony.xwork.validator.ValidationException;
-import com.opensymphony.xwork.validator.ValidatorContext;
-import com.opensymphony.xwork.validator.validators.ValidatorSupport;
+import com.opensymphony.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.validator.ValidatorContext;
+import com.opensymphony.xwork2.validator.validators.ValidatorSupport;
 
 /**
  * Validator class for the cron expression in the continuum schedules.

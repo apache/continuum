@@ -36,7 +36,7 @@ import org.codehaus.plexus.util.dag.CycleDetectedException;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="projects"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="projects"
  */
 public class ProjectsListAction
     extends ContinuumActionSupport

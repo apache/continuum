@@ -19,8 +19,8 @@ package org.apache.maven.continuum.web.components;
  * under the License.
  */
 
-import com.opensymphony.webwork.components.UIBean;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.components.UIBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +36,7 @@ public class Data
 
     protected String valueLink;
 
-    public Data( OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response )
+    public Data( ValueStack stack, HttpServletRequest request, HttpServletResponse response )
     {
         super( stack, request, response );
     }

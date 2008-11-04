@@ -17,28 +17,28 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="releaseProject.page.title"/></title>
-        <meta http-equiv="refresh" content="10;url=<ww:url includeParams="all" />"/>
+        <title><s:text name="releaseProject.page.title"/></title>
+        <meta http-equiv="refresh" content="10;url=<s:url includeParams="all" />"/>
     </head>
     <body>
-      <h2><ww:text name="releaseInProgress.section.title"/></h2>
-      <h3><ww:property value="name"/></h3>
+      <h2><s:text name="releaseInProgress.section.title"/></h2>
+      <h3><s:property value="name"/></h3>
       <p>
         The release goal is currently initializing...
       </p>
       <p>
         Please wait while the server prepares your project for release.
       </p>
-      <ww:form action="releaseInProgress" method="get">
-        <ww:hidden name="projectId"/>
-        <ww:hidden name="releaseId"/>
-        <ww:hidden name="releaseGoal"/>
-        <ww:submit value="Refresh"/>
-      </ww:form>
+      <s:form action="releaseInProgress" method="get">
+        <s:hidden name="projectId"/>
+        <s:hidden name="releaseId"/>
+        <s:hidden name="releaseGoal"/>
+        <s:submit value="Refresh"/>
+      </s:form>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

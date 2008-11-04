@@ -19,22 +19,24 @@ package org.apache.maven.continuum.web.view;
  * under the License.
  */
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.views.util.UrlHelper;
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
+
+import org.apache.continuum.model.project.ProjectScmRoot;
 
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.apache.maven.continuum.web.util.StateGenerator;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.util.UrlHelper;
+import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.system.SecuritySession;
 import org.codehaus.plexus.redback.system.SecuritySystem;
 import org.codehaus.plexus.redback.system.SecuritySystemConstants;
-import org.codehaus.plexus.xwork.PlexusLifecycleListener;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
@@ -170,7 +172,7 @@ public class StateCell
         // do the authz bit
         ActionContext context = ActionContext.getContext();
 
-        PlexusContainer container = (PlexusContainer) context.getApplication().get( PlexusLifecycleListener.KEY );
+        PlexusContainer container = (PlexusContainer) context.getApplication().get( PlexusConstants.PLEXUS_KEY );
         SecuritySession securitySession =
             (SecuritySession) context.getSession().get( SecuritySystemConstants.SECURITY_SESSION_KEY );
 

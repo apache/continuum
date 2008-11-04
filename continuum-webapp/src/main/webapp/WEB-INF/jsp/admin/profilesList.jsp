@@ -18,30 +18,30 @@
   --%>
 
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 
 <html>
-<ww:i18n name="localization.Continuum">
+<s:i18n name="localization.Continuum">
   <head>
-    <title><ww:text name="profilesList.page.title"/></title>
+    <title><s:text name="profilesList.page.title"/></title>
   </head>
   
   <div id="h3">
     <h3>
-      <ww:text name="profilesList.section.title"/>
+      <s:text name="profilesList.section.title"/>
     </h3>
 
     <c:if test="${!empty actionErrors}">
       <div class="errormessage">
-        <c:forEach items="${actionErrors}" var="actionError">
-          <p><ww:text name="${actionError}"/></p>
-        </c:forEach>
+        <s:iterator value="actionErrors">
+          <p><s:text name="<s:property/>" /></p>
+        </s:iterator>
       </div>
     </c:if>
         
-    <ww:if test="${not empty profiles}">
+    <c:if test="${not empty profiles}">
     <ec:table items="profiles"
               var="profile"
               showExports="false"
@@ -53,38 +53,38 @@
         <ec:column property="name" title="Name" style="white-space: nowrap" />
         <ec:column property="Installations" title="Installations" style="white-space: nowrap">
           <ul>
-            <c:if test='${profile.jdk != null}'>
+            <s:if test='profile.jdk != null'>
               <li><c:out value="${profile.jdk.name}"/> (<c:out value="${profile.jdk.type}"/>)</li>
-            </c:if>
-            <c:if test='${profile.builder != null}'>
+            </s:if>
+            <s:if test='profile.builder != null'>
               <li><c:out value="${profile.builder.name}"/> (<c:out value="${profile.builder.type}"/>)</li>
-            </c:if>
-            <c:if test='${profile.environmentVariables != null}'>
+            </s:if>
+            <s:if test='profile.environmentVariables != null'>
               <c:forEach var="envVar" items="${profile.environmentVariables}"> 
                 <li><c:out value="${envVar.name}" /></li>
               </c:forEach>
-            </c:if>
+            </s:if>
           <ul>
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">
           <a href="editBuildEnv!edit.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
-            <img src="<ww:url value='/images/edit.gif' includeParams="none"/>" alt="<ww:text name='edit'/>" title="<ww:text name='edit'/>" border="0" />
+            <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
           </a>                    
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">
           <a href="confirmDeleteBuildEnv!confirmDelete.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
-            <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />
+            <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
           </a>                    
         </ec:column>        
       </ec:row>
     </ec:table>
-    </ww:if>
+    </c:if>
     <div class="functnbar3">
-      <ww:form action="addBuildEnv!input.action" method="post">
-        <ww:submit value="%{getText('add')}"/>
-      </ww:form>
+      <s:form action="addBuildEnv!input.action" method="post">
+        <s:submit value="%{getText('add')}"/>
+      </s:form>
     </div>    
   
   </div>
   
-</ww:i18n>
+</s:i18n>

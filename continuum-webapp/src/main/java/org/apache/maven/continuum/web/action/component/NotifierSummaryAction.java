@@ -43,7 +43,7 @@ import java.util.Map;
  *
  * @author <a href='mailto:rahul.thakur.xdev@gmail.com'>Rahul Thakur</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="notifierSummary"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="notifierSummary"
  */
 public class NotifierSummaryAction
     extends ContinuumActionSupport
