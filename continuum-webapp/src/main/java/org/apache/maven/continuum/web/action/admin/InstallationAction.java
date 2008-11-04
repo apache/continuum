@@ -12,11 +12,11 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
+import org.codehaus.redback.integration.interceptor.SecureAction;
+import org.codehaus.redback.integration.interceptor.SecureActionBundle;
+import org.codehaus.redback.integration.interceptor.SecureActionException;
 
-import com.opensymphony.xwork.Preparable;
+import com.opensymphony.xwork2.Preparable;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -39,7 +39,7 @@ import com.opensymphony.xwork.Preparable;
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="installation"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="installation"
  * @since 14 juin 07
  */
 public class InstallationAction

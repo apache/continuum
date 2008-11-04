@@ -17,72 +17,72 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="buildResult.delete.confirmation.page.title"/></title>
+        <title><s:text name="buildResult.delete.confirmation.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
-        <h3><ww:text name="buildResult.delete.confirmation.section.title"/></h3>
+        <h3><s:text name="buildResult.delete.confirmation.section.title"/></h3>
         <div class="axial">
-        <ww:if test="hasActionMessages()">
+        <s:if test="hasActionMessages()">
           <div class="warningmessage">
             <p>
-              <ww:actionmessage/>
+              <s:actionmessage/>
             </p>        
           </div>
-        </ww:if>
+        </s:if>
         <!-- in this case we come from the build result edit -->
-        <ww:if test="buildId">
+        <s:if test="buildId">
           <c:set var="action" value="removeBuildResult.action" />
-        </ww:if>
-        <ww:else>
+        </s:if>
+        <s:else>
           <c:set var="action" value="removeBuildResults.action" />
-        </ww:else>
+        </s:else>
         <form action="${action}" method="post">
-          <ww:hidden name="projectGroupId"/>
-          <ww:hidden name="projectId"/>
-          <ww:hidden name="buildId"/>
-          <ww:hidden name="confirmed" value="true"/>
-          <ww:if test="selectedBuildResults">
-          <ww:iterator value="selectedBuildResults">
-            <input type="hidden" value="<ww:property/>" name="selectedBuildResults" />
-          </ww:iterator>
-          </ww:if>
-          <ww:else>
-            <input type="hidden" value="<ww:property value="buildId"/>" name="selectedBuildResults" />
-          </ww:else>
+          <s:hidden name="projectGroupId"/>
+          <s:hidden name="projectId"/>
+          <s:hidden name="buildId"/>
+          <s:hidden name="confirmed" value="true"/>
+          <s:if test="selectedBuildResults">
+          <s:iterator value="selectedBuildResults">
+            <input type="hidden" value="<s:property/>" name="selectedBuildResults" />
+          </s:iterator>
+          </s:if>
+          <s:else>
+            <input type="hidden" value="<s:property value="buildId"/>" name="selectedBuildResults" />
+          </s:else>
           
-          <ww:actionerror/>
+          <s:actionerror/>
 
           <div class="warningmessage">
             <p>
               <strong>
-                <ww:text name="buildResult.delete.confirmation.message">
-                  <ww:param><ww:property value="%{selectedBuildResults.size}"/></ww:param>
-                </ww:text>
+                <s:text name="buildResult.delete.confirmation.message">
+                  <s:param><s:property value="%{selectedBuildResults.size}"/></s:param>
+                </s:text>
               </strong>
             </p>
           </div>
 
           <div class="functnbar3">
-            <ww:if test="buildId > 0">
+            <s:if test="buildId > 0">
               <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
-            </ww:if>
-            <ww:elseif test="selectedBuildResults.size > 0">
+            </s:if>
+            <s:elseif test="selectedBuildResults.size > 0">
               <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
-            </ww:elseif>
-            <ww:else>
-              <input type="submit" value="<ww:text name="cancel"/>" onClick="history.back()"/> 
-            </ww:else>
+            </s:elseif>
+            <s:else>
+              <input type="submit" value="<s:text name="cancel"/>" onClick="history.back()"/>
+            </s:else>
           </div>
         </form>
         </div>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

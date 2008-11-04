@@ -45,7 +45,7 @@ import org.codehaus.plexus.util.StringUtils;
  *
  * @author Jesse McConnell <jmcconnell@apache.org>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="buildDefinition"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildDefinition"
  */
 public class BuildDefinitionAction
     extends ContinuumConfirmAction

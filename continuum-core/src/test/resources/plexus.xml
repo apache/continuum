@@ -77,12 +77,8 @@
           </level>
           <level>
             <!-- CONTINUUM-1228 -->
-            <hierarchy>com.opensymphony.xwork.util.OgnlUtil</hierarchy>
+            <hierarchy>com.opensymphony.xwork2.util.OgnlUtil</hierarchy>
             <level>ERROR</level>
-          </level>
-          <level>
-            <hierarchy>com.opensymphony.webwork</hierarchy>
-            <level>INFO</level>
           </level>
           <level>
             <hierarchy>org.codehaus.plexus.PlexusContainer</hierarchy>

@@ -42,7 +42,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="summary"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="summary"
  */
 public class SummaryAction
     extends ContinuumActionSupport

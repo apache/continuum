@@ -19,8 +19,8 @@ package org.apache.maven.continuum.web.validator;
  * under the License.
  */
 
-import com.opensymphony.xwork.validator.ValidationException;
-import com.opensymphony.xwork.validator.validators.ValidatorSupport;
+import com.opensymphony.xwork2.validator.ValidationException;
+import com.opensymphony.xwork2.validator.validators.ValidatorSupport;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.validator.Validator" role-hint="org.apache.maven.continuum.web.validator.InstallationValidator"
+ * @plexus.component role="com.opensymphony.xwork2.validator.Validator" role-hint="org.apache.maven.continuum.web.validator.InstallationValidator"
  * @since 19 juin 07
  */
 public class InstallationValidator
@@ -51,7 +51,7 @@ public class InstallationValidator
     private InstallationService installationService;
 
     /**
-     * @see com.opensymphony.xwork.validator.Validator#validate(java.lang.Object)
+     * @see com.opensymphony.xwork2.validator.Validator#validate(java.lang.Object)
      */
     public void validate( Object object )
         throws ValidationException
@@ -63,7 +63,7 @@ public class InstallationValidator
         }
 
         String varValue = (String) this.getFieldValue( "installation.varValue", object );
-        if (StringUtils.isEmpty( varValue ))
+        if ( StringUtils.isEmpty( varValue ) )
         {
             return;
         }

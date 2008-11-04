@@ -17,37 +17,37 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="deleteProjects.page.title"/></title>
+        <title><s:text name="deleteProjects.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
-        <h3><ww:text name="deleteProjects.section.title"/></h3>
+        <h3><s:text name="deleteProjects.section.title"/></h3>
 
         <div class="warningmessage">
           <p>
             <strong>
-                <ww:text name="deleteProjects.confirmation.message">
-                    <ww:param><ww:property value="selectedProjectsNames"/></ww:param>
-                </ww:text>
+                <s:text name="deleteProjects.confirmation.message">
+                    <s:param><s:property value="selectedProjectsNames"/></s:param>
+                </s:text>
             </strong>
           </p>
         </div>
         <div class="functnbar3">
-          <ww:form action="ProjectsList.action" method="post">
-            <ww:iterator value="selectedProjects">
-              <input type="hidden" value="<ww:property/>" name="selectedProjects"/>
-            </ww:iterator>
+          <s:form action="ProjectsList.action" method="post">
+            <s:iterator value="selectedProjects">
+              <input type="hidden" value="<s:property/>" name="selectedProjects"/>
+            </s:iterator>
             <input type="hidden" name="projectGroupId" value="${projectGroupId}" />
             <input type="hidden" name="methodToCall" value="remove" />
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
-          </ww:form>
+          </s:form>
         </div>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

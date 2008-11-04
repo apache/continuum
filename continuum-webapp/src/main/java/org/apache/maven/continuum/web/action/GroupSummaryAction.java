@@ -32,7 +32,7 @@ import org.apache.maven.continuum.web.model.GroupSummary;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="groupSummary"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="groupSummary"
  */
 public class GroupSummaryAction
     extends ContinuumActionSupport

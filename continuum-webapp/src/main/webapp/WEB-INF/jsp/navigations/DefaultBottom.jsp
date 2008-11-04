@@ -17,10 +17,10 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ page import="java.util.Calendar" %>
-<ww:i18n name="localization.Continuum">
+<s:i18n name="localization.Continuum">
 <div id="footer">
-  <ww:property value="continuumFooter" escape="false"/>
+  <s:property value="continuumFooter" escape="false"/>
 </div>
-</ww:i18n>
+</s:i18n>

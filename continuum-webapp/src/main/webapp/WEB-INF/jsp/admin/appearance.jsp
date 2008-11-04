@@ -17,20 +17,20 @@
   ~ under the License.
   --%>
 
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
 <head>
   <title>Configure Appearance</title>
-  <ww:head/>
+  <s:head/>
 </head>
 
 <body>
 <h1>Appearance</h1>
 
 <div style="float: right">
-  <a href="<ww:url action='editAppearance' />">Edit</a>
+  <a href="<s:url action='editAppearance' />">Edit</a>
 </div>
 <h2>Company Details</h2>
 
@@ -38,31 +38,31 @@
   The logo in the top right of the screen is controlled by your selected 'company POM'.
 </p>
 
-<ww:set name="companyPom" value="companyPom"/>
+<s:set name="companyPom" value="companyPom"/>
 
 <c:if test="${empty (companyPom.groupId) || empty (companyPom.artifactId)}">
   <p>
-    You have not yet specified a company POM. <a href="<ww:url action='editAppearance' />">Select a Company POM</a>
+    You have not yet specified a company POM. <a href="<s:url action='editAppearance' />">Select a Company POM</a>
   </p>
 </c:if>
 
 <c:if test="${!empty (companyPom.groupId) && !empty (companyPom.artifactId)}">
   <p>
     Your selected company POM is below. If you would like to change the organization name, url or logo, you can
-    <a href="<ww:url action='editCompanyPom'/>">edit the POM</a>.
+    <a href="<s:url action='editCompanyPom'/>">edit the POM</a>.
   </p>
 
-  <ww:set name="companyModel" value="companyModel"/>
+  <s:set name="companyModel" value="companyModel"/>
   <table>
-    <ww:label name="companyPom.groupId" label="Group ID"/>
-    <ww:label name="companyPom.artifactId" label="Artifact ID"/>
+    <s:label name="companyPom.groupId" label="Group ID"/>
+    <s:label name="companyPom.artifactId" label="Artifact ID"/>
     <c:if test="${companyModel != null}">
-      <ww:label name="companyModel.version" label="Version"/>
+      <s:label name="companyModel.version" label="Version"/>
     </c:if>
   </table>
 
   <div style="float: right">
-    <a href="<ww:url action='editCompanyPom' />">Edit Company POM</a>
+    <a href="<s:url action='editCompanyPom' />">Edit Company POM</a>
   </div>
   <h3>POM Information</h3>
 
@@ -89,17 +89,17 @@
     </c:when>
     <c:otherwise>
       Company POM '${companyPom.groupId}:${companyPom.artifactId}' doesn't exist.
-      <a href="<ww:url action='editCompanyPom' />">Create company POM</a>
+      <a href="<s:url action='editCompanyPom' />">Create company POM</a>
     </c:otherwise>
   </c:choose>
 </c:if>
-<ww:form action="saveFooter!saveFooter.action" method="get" namespace="/admin">
+<s:form action="saveFooter!saveFooter.action" method="get" namespace="/admin">
   <div id="axial" class="h3">
     <h3>footer content</h3>
     <div class="axial">
       <table>
         <tbody>  
-          <ww:textarea cols="120" rows="3" label="HTML Content" name="footer" />
+          <s:textarea cols="120" rows="3" label="HTML Content" name="footer" />
         </tbody>
       </table>
       <div class="functnbar3">
@@ -107,7 +107,7 @@
       </div>      
     </div>
   </div>
-</ww:form>
+</s:form>
 </body>
 
 </html>

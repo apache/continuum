@@ -39,7 +39,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  * @author Nick Gonzalez
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="addMavenTwoProject"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addMavenTwoProject"
  */
 public class AddMavenTwoProjectAction
     extends AddMavenProjectAction

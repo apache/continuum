@@ -17,58 +17,58 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-      <title><ww:text name="releaseProject.page.title"/></title>
-      <ww:head />
+      <title><s:text name="releaseProject.page.title"/></title>
+      <s:head />
     </head>
     <body>
-      <h2><ww:text name="releasePrepare.section.title"/></h2>
-      <ww:form action="releasePrepare" method="post">
-        <h3><ww:text name="releasePrepare.parameters"/></h3>
-        <input type="hidden" name="projectId" value="<ww:property value="projectId"/>"/>
+      <h2><s:text name="releasePrepare.section.title"/></h2>
+      <s:form action="releasePrepare" method="post">
+        <h3><s:text name="releasePrepare.parameters"/></h3>
+        <input type="hidden" name="projectId" value="<s:property value="projectId"/>"/>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <ww:textfield label="%{getText('releasePrepare.scmUsername.label')}" name="scmUsername" required="true"/>
-            <ww:password label="%{getText('releasePrepare.scmPassword.label')}" name="scmPassword" required="true"/>
-            <ww:textfield label="%{getText('releasePrepare.scmTag.label')}" name="scmTag" required="true"/>
+            <s:textfield label="%{getText('releasePrepare.scmUsername.label')}" name="scmUsername" required="true"/>
+            <s:password label="%{getText('releasePrepare.scmPassword.label')}" name="scmPassword" required="true"/>
+            <s:textfield label="%{getText('releasePrepare.scmTag.label')}" name="scmTag" required="true"/>
             <c:if test="${!empty (scmTagBase)}">
-              <ww:textfield label="%{getText('releasePrepare.scmTagBase.label')}" name="scmTagBase"/>
+              <s:textfield label="%{getText('releasePrepare.scmTagBase.label')}" name="scmTagBase"/>
             </c:if>
-            <ww:textfield label="%{getText('releasePrepare.prepareGoals.label')}" name="prepareGoals" required="true"/>
-            <ww:select label="%{getText('releasePrepare.buildEnvironment.label')}" name="profileId" list="profiles" listValue="name" 
+            <s:textfield label="%{getText('releasePrepare.prepareGoals.label')}" name="prepareGoals" required="true"/>
+            <s:select label="%{getText('releasePrepare.buildEnvironment.label')}" name="profileId" list="profiles" listValue="name"
                        listKey="id" headerKey="-1" headerValue=""/>
           </table>
         </div>
 
-        <ww:iterator value="projects">
-          <h3><ww:property value="name"/></h3>
-          <input type="hidden" name="projectKeys" value="<ww:property value="key"/>">
+        <s:iterator value="projects">
+          <h3><s:property value="name"/></h3>
+          <input type="hidden" name="projectKeys" value="<s:property value="key"/>">
           <div class="axial">
             <table border="1" cellspacing="2" cellpadding="3" width="100%">
               <tr>
-                <th><ww:text name="releasePrepare.releaseVersion"/></th>
+                <th><s:text name="releasePrepare.releaseVersion"/></th>
                 <td>
                   <input type=text name="relVersions"
-                         value="<ww:property value="release"/>" size="100">
+                         value="<s:property value="release"/>" size="100">
                 </td>
               </tr>
               <tr>
-                <th><ww:text name="releasePrepare.nextDevelopmentVersion"/></th>
+                <th><s:text name="releasePrepare.nextDevelopmentVersion"/></th>
                 <td>
                   <input type=text name="devVersions"
-                         value="<ww:property value="dev"/>" size="100">
+                         value="<s:property value="dev"/>" size="100">
                 </td>
               </tr>
              </table>
            </div>
-        </ww:iterator>
+        </s:iterator>
 
-        <ww:submit/>
-      </ww:form>
+        <s:submit/>
+      </s:form>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

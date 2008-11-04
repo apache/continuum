@@ -17,11 +17,11 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="workingCopy.page.title"/></title>
+        <title><s:text name="workingCopy.page.title"/></title>
     </head>
     <body>
       <div id="h3">
@@ -31,29 +31,29 @@
         </jsp:include>
 
         <h3>
-            <ww:text name="workingCopy.section.title">
-                <ww:param><ww:property value="projectName"/></ww:param>
-            </ww:text>
+            <s:text name="workingCopy.section.title">
+                <s:param><s:property value="projectName"/></s:param>
+            </s:text>
         </h3>
 
-        <ww:property value="output" escape="false"/>
+        <s:property value="output" escape="false"/>
 
         <%
             if ( request.getParameter( "file" ) != null )
             {
         %>
         <p>
-        <ww:url id="workingCopyTextUrl" action="workingCopyFileText">
-          <ww:param name="projectId" value="projectId"/>
-          <ww:param name="projectName" value="projectName"/>
-          <ww:param name="userDirectory" value="userDirectory"/>
-          <ww:param name="file" value="file"/>
-        </ww:url>
-        <ww:a href="%{workingCopyTextUrl}"><ww:text name="workingCopy.currentFile.text"/></ww:a>
+        <s:url id="workingCopyTextUrl" action="workingCopyFileText">
+          <s:param name="projectId" value="projectId"/>
+          <s:param name="projectName" value="projectName"/>
+          <s:param name="userDirectory" value="userDirectory"/>
+          <s:param name="file" value="file"/>
+        </s:url>
+        <s:a href="%{workingCopyTextUrl}"><s:text name="workingCopy.currentFile.text"/></s:a>
         </p>
         
         <form>
-          <textarea rows="50" cols="100" readonly="true"><ww:property value="fileContent"/></textarea>
+          <textarea rows="50" cols="100" readonly="true"><s:property value="fileContent"/></textarea>
         </form>
         <%
             }
@@ -61,5 +61,5 @@
 
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

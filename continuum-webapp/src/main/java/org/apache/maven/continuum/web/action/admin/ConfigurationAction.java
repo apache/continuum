@@ -23,25 +23,25 @@ import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.configuration.ConfigurationStoringException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
-import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
-import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.redback.integration.interceptor.SecureAction;
+import org.codehaus.redback.integration.interceptor.SecureActionBundle;
+import org.codehaus.redback.integration.interceptor.SecureActionException;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.xwork.Preparable;
+import com.opensymphony.xwork2.Preparable;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="configuration"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="configuration"
  */
 public class ConfigurationAction
     extends ContinuumActionSupport

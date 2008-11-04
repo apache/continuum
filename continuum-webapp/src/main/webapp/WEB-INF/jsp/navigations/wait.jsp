@@ -17,16 +17,16 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-				<META HTTP-EQUIV="refresh" CONTENT="2;url=<ww:url includeParams="all"/>"/>
+				<META HTTP-EQUIV="refresh" CONTENT="2;url=<s:url includeParams="all"/>"/>
     </head>
     <body>
 			<img src="images/wait.gif">
-			<b><ww:text name="wait.addprocessing.processing"/></b>
+			<b><s:text name="wait.addprocessing.processing"/></b>
 		</body>
-	</ww:i18n>
+	</s:i18n>
 </html>

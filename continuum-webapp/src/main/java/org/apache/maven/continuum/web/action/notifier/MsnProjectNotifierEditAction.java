@@ -32,7 +32,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id: MsnNotifierEditAction.java 465060 2006-10-17 21:24:38Z jmcconnell $
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="msnProjectNotifierEdit"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="msnProjectNotifierEdit"
  * @since 1.1
  */
 public class MsnProjectNotifierEditAction

@@ -17,13 +17,13 @@
   ~ under the License.
   --%>
 
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
   <title>Error Occurred</title>
-  <ww:head />
+  <s:head />
   <script language=javascript type='text/javascript'>
     <!--
     var state = 'none';
@@ -61,12 +61,12 @@
     <h3>Error Occurred</h3>
 
     <div class="errormessage">
-      <ww:property value="exception"/>
+      <s:property value="exception"/>
     </div>
     <p><a href="#" onclick="showhide('stacktrace');">Show/hide Stack Trace</a></p>
     <div id="stacktrace" style="display: none;">
       <pre>
-        <ww:property value="exceptionStack"/>
+        <s:property value="exceptionStack"/>
       </pre>
     </div>
   </div>

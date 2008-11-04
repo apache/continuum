@@ -17,33 +17,33 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="deleteBuildEnv.page.title"/></title>
+        <title><s:text name="deleteBuildEnv.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
-        <h3><ww:text name="deleteBuildEnv.section.title"/></h3>
+        <h3><s:text name="deleteBuildEnv.section.title"/></h3>
 
         <div class="warningmessage">
           <p>
             <strong>
-                <ww:text name="deleteBuildEnv.confirmation.message">
-                    <ww:param><ww:property value="profile.name"/></ww:param>
-                </ww:text>
+                <s:text name="deleteBuildEnv.confirmation.message">
+                    <s:param><s:property value="profile.name"/></s:param>
+                </s:text>
             </strong>
           </p>
         </div>
         <div class="functnbar3">
-          <ww:form action="deleteBuildEnv!delete.action" method="post">
+          <s:form action="deleteBuildEnv!delete.action" method="post">
             <input type="hidden" name="profile.id" value="${profile.id}" />
             <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
-          </ww:form>
+          </s:form>
         </div>
       </div>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>

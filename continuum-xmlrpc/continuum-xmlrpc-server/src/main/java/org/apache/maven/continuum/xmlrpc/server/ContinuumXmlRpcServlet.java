@@ -38,7 +38,6 @@ import org.codehaus.plexus.redback.policy.AccountLockedException;
 import org.codehaus.plexus.redback.system.DefaultSecuritySession;
 import org.codehaus.plexus.redback.system.SecuritySystem;
 import org.codehaus.plexus.redback.users.UserNotFoundException;
-import org.codehaus.plexus.xwork.PlexusLifecycleListener;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -199,16 +198,6 @@ public class ContinuumXmlRpcServlet
         // TODO: unify this code with the lifecycle listener and application server
 
         ServletContext context = sc.getServletContext();
-
-        // Attempt to find it already loaded by xwork.
-        PlexusContainer xworkContainer = (PlexusContainer) context.getAttribute( PlexusLifecycleListener.KEY );
-
-        if ( xworkContainer != null )
-        {
-            context.setAttribute( PlexusConstants.PLEXUS_KEY, xworkContainer );
-
-            return;
-        }
 
         // Container not found.
 

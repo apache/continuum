@@ -17,38 +17,38 @@
   ~ under the License.
   --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-tags" prefix="s" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="releaseProject.page.title"/></title>
+        <title><s:text name="releaseProject.page.title"/></title>
     </head>
     <body>
       <h3>
-        <ww:text name="releaseProject.section.title">
-          <ww:param><ww:property value="projectName"/></ww:param>
-        </ww:text>
+        <s:text name="releaseProject.section.title">
+          <s:param><s:property value="projectName"/></s:param>
+        </s:text>
       </h3>
-      <ww:form action="releaseProject" method="post">
+      <s:form action="releaseProject" method="post">
         <p>
-          <input name="goal" type="radio" value="prepare" checked/><ww:text name="releaseProject.prepareReleaseOption"/>
+          <input name="goal" type="radio" value="prepare" checked/><s:text name="releaseProject.prepareReleaseOption"/>
           <br/>
-          <input name="goal" type="radio" value="perform"/><ww:text name="releaseProject.performReleaseOption"/>
+          <input name="goal" type="radio" value="perform"/><s:text name="releaseProject.performReleaseOption"/>
           <br/>
           &nbsp;&nbsp;&nbsp;
           <select name="preparedReleaseId">
-            <ww:if test="preparedReleaseName != null">
-              <option selected value="<ww:property value="preparedReleaseId"/>">
-                <ww:property value="preparedReleaseName"/>
+            <s:if test="preparedReleaseName != null">
+              <option selected value="<s:property value="preparedReleaseId"/>">
+                <s:property value="preparedReleaseName"/>
               </option>
-            </ww:if>
-            <option value=""><ww:text name="releaseProject.provideReleaseParameters"/></option>
+            </s:if>
+            <option value=""><s:text name="releaseProject.provideReleaseParameters"/></option>
           </select>
           <br/>
         </p>
-        <input name="projectId" type="hidden" value="<ww:property value="projectId"/>"/>
-        <ww:submit value="Submit"/>
-      </ww:form>
+        <input name="projectId" type="hidden" value="<s:property value="projectId"/>"/>
+        <s:submit value="Submit"/>
+      </s:form>
     </body>
-  </ww:i18n>
+  </s:i18n>
 </html>
