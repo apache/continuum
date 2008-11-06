@@ -8,7 +8,7 @@ Local Repository
 
 [../images/localrepositories.png] Local Repositories
 
-	You will see all the local repositories that has been created. 
+	You will see all the local repositories that have been created.
 	
 	To display:
 	
@@ -33,4 +33,11 @@ Local Repository
 
 [../images/localrepository-add.png]
 	
-	Adding a local repository will automatically create a default {{{purgeConfiguration.html} Purge Configuration}} for that repository. 
+	Adding a local repository will automatically create a default {{{purgeConfiguration.html} Purge Configuration}} for that repository.
+
+* Default
+
+~~ TODO:  Needs to be updated if CONTINUUM-1966 is implemented to allowe editing the local repo.
+
+    The default local repository location comes from the settings of the user running Continuum.  The location cannot be
+    edited within Continuum, but can be changed by specifying it in <<<~/.m2/settings.xml>>>.
