@@ -3394,18 +3394,16 @@ public class DefaultContinuum
             throw new ContinuumException( "Error while retrieving projects", e );
         }
 
-        int counter = 0;
         String url = "";
 
         for ( Project project : projectsList )
         {
-            if ( counter == 0 || !project.getScmUrl().startsWith( url ) )
+            if ( !project.getScmUrl().startsWith( url ) )
             {
                 // this is a root
                 url = project.getScmUrl();
                 createProjectScmRoot( projectGroup, url );
             }
-            counter++;
         }
     }
     
