@@ -160,7 +160,21 @@ public class CreateProjectsFromMetadataAction
      
             if ( result.getProjects() != null )
             {
-                context.put( KEY_URL, getScmRootUrl( result.getProjects() ) );
+                String scmRootUrl = getScmRootUrl( result.getProjects() );
+         
+                if ( scmRootUrl == null || scmRootUrl.equals( "" ) )
+                {
+                    if ( curl.indexOf( "pom.xml" ) > 0 )
+                    {
+                        scmRootUrl = curl.substring( 0, curl.indexOf( "pom.xml" ) - 1 );
+                    }
+                    else
+                    {
+                        scmRootUrl = curl;
+                    }
+                }
+
+                context.put( KEY_URL, scmRootUrl );
             }
         }
         catch ( MalformedURLException e )
@@ -229,7 +243,7 @@ public class CreateProjectsFromMetadataAction
 
     private String getCommonPath( String path1, String path2 )
     {
-        if ( path2.equals( "" ) )
+        if ( path2 == null || path2.equals( "" ) )
         {
             return path1;
         }
