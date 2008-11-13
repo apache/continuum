@@ -660,4 +660,7 @@ public interface Continuum
     
     String getReleaseOutput( int releaseResultId )
         throws ContinuumException;
+
+    void setDistributedBuildEnabled( boolean distributedBuildEnabled )
+        throws ContinuumException;
 }

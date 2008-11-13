@@ -22,6 +22,7 @@ package org.apache.continuum.configuration;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -41,6 +42,8 @@ public class GeneralConfiguration
     private ProxyConfiguration proxyConfiguration;
     
     private File releaseOutputDirectory;
+
+    private List<BuildAgentConfiguration> buildAgents;
 
     public GeneralConfiguration()
     {
@@ -113,4 +116,13 @@ public class GeneralConfiguration
         this.releaseOutputDirectory = releaseOutputDirectory;
     }
 
+    public List<BuildAgentConfiguration> getBuildAgents()
+    {
+        return buildAgents;
+    }
+
+    public void setBuildAgents( List<BuildAgentConfiguration> buildAgents )
+    {
+        this.buildAgents = buildAgents;
+    }
 }

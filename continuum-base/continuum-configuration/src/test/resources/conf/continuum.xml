@@ -2,4 +2,11 @@
 <continuum-configuration>
   <baseUrl>http://test</baseUrl>
   <buildOutputDirectory>myBuildOutputDir</buildOutputDirectory>
+  <buildAgents>
+    <buildAgent>
+      <url>http://buildagent/xmlrpc</url>
+      <operatingSystem>linux</operatingSystem>
+      <enabled>true</enabled>
+    </buildAgent>
+  </buildAgents>
 </continuum-configuration>

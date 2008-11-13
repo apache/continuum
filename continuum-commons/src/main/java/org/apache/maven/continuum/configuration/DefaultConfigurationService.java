@@ -19,6 +19,7 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.ContinuumConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.configuration.GeneralConfiguration;
@@ -34,6 +35,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -273,6 +276,59 @@ public class DefaultConfigurationService
         {
         }
         generalConfiguration.setReleaseOutputDirectory( f );
+    }
+
+    public List<BuildAgentConfiguration> getBuildAgents()
+    {
+        return generalConfiguration.getBuildAgents();
+    }
+
+    public void addBuildAgent( BuildAgentConfiguration buildAgent )
+        throws ConfigurationException
+    {
+        List<BuildAgentConfiguration> buildAgents = generalConfiguration.getBuildAgents();
+        if ( buildAgents == null )
+        {
+            buildAgents = new ArrayList<BuildAgentConfiguration>();
+        }
+
+        for ( BuildAgentConfiguration agent : buildAgents )
+        {
+            if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+            {
+                throw new ConfigurationException( "Unable to add build agent: build agent already exist" );
+            }
+        }
+
+        buildAgents.add( buildAgent );
+        generalConfiguration.setBuildAgents( buildAgents );
+    }
+
+    public void removeBuildAgent( BuildAgentConfiguration buildAgent )
+    {
+        List<BuildAgentConfiguration> buildAgents = getBuildAgents();
+        if ( buildAgents != null )
+        {
+            for ( BuildAgentConfiguration agent : buildAgents )
+            {
+                if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+                {
+                    buildAgents.remove( agent );
+                    break;
+                }
+            }
+            generalConfiguration.setBuildAgents( buildAgents );
+        }
+    }
+
+    public boolean isDistributedBuildEnabled()
+    {
+        return systemConf.isDistributedBuildEnabled();
+    }
+
+    public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
+    {
+        systemConf.setDistributedBuildEnabled( distributedBuildEnabled );
     }
 
     // ----------------------------------------------------------------------

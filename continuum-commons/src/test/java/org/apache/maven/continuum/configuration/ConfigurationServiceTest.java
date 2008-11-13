@@ -19,6 +19,7 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
@@ -88,8 +89,13 @@ public class ConfigurationServiceTest
 
 //        assertEquals( "working-directory", service.getWorkingDirectory().getName() );
 
+        assertEquals( "check # build agents", 1, service.getBuildAgents().size() );
+        
         service.setUrl( "http://test/zloug" );
         service.setBuildOutputDirectory( new File( "testBuildOutputDir" ) );
+
+        BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( "http://test/xmlrpc", "windows", false );
+        service.addBuildAgent( buildAgent );
 
         service.store();
 
@@ -99,5 +105,17 @@ public class ConfigurationServiceTest
         service.reload();
 
         assertEquals( "http://test/zloug", service.getUrl() );
+        assertEquals( "check # build agents", 2, service.getBuildAgents().size() );        
+        assertEquals( "http://test/xmlrpc", service.getBuildAgents().get( 1 ).getUrl() );
+        assertEquals( "windows", service.getBuildAgents().get( 1 ).getOperatingSystem() );
+
+        assertEquals( "http://test/xmlrpc", buildAgent.getUrl() );
+        service.removeBuildAgent( buildAgent );
+        service.store();
+        service.reload();
+
+        assertEquals( "check # build agents", 1, service.getBuildAgents().size() );
+        assertEquals( "http://buildagent/xmlrpc", service.getBuildAgents().get( 0 ).getUrl() );
+        assertEquals( "linux", service.getBuildAgents().get( 0 ).getOperatingSystem() );
     }
 }

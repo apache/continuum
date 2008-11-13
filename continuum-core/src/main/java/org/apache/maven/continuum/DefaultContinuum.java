@@ -3380,6 +3380,26 @@ public class DefaultContinuum
         }
     }
 
+    public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
+        throws ContinuumException
+    {
+        configurationService.setDistributedBuildEnabled( distributedBuildEnabled );
+
+        for ( ProjectGroup projectGroup : getAllProjectGroups() )
+        {
+            try
+            {
+                projectGroup.setDistributedBuildEnabled( distributedBuildEnabled );
+                projectGroupDao.updateProjectGroup( projectGroup );
+            }
+            catch ( ContinuumStoreException e )
+            {
+                throw new ContinuumException( "Error while enabling/disabling distributed build of project group " +
+                                              projectGroup.getName() );
+            }
+        }
+    }
+
     private void createProjectScmRootForProjectGroup( ProjectGroup projectGroup )
         throws ContinuumException
     {

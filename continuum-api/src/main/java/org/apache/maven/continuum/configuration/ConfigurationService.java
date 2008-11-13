@@ -19,11 +19,13 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -83,6 +85,17 @@ public interface ConfigurationService
 
     String getReleaseOutput( int projectGroupId, String releaseName )
         throws ConfigurationException;
+
+    List<BuildAgentConfiguration> getBuildAgents();
+
+    void addBuildAgent( BuildAgentConfiguration buildAgent )
+        throws ConfigurationException;
+
+    void removeBuildAgent( BuildAgentConfiguration buildAgent );
+
+    boolean isDistributedBuildEnabled();
+
+    void setDistributedBuildEnabled( boolean distributedBuildEnabled );
 
     // ----------------------------------------------------------------------
     //

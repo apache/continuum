@@ -475,6 +475,22 @@ public class DefaultContinuumTest
         assertEquals( defaultProjectGroup, continuum.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID ) );
     }
 
+    public void testDistributedBuild()
+        throws Exception
+    {
+        for ( ProjectGroup group : getContinuum().getAllProjectGroups() )
+        {
+            assertFalse( group.isDistributedBuildEnabled() );
+        }
+
+        getContinuum().setDistributedBuildEnabled( true );
+
+        for ( ProjectGroup group : getContinuum().getAllProjectGroups() )
+        {
+            assertTrue( group.isDistributedBuildEnabled() );
+        }
+    }
+
     private Continuum getContinuum()
         throws Exception
     {
