@@ -79,7 +79,7 @@
                 <s:url id="buildResultUrl" action="buildResult">
                   <s:param name="projectId">${projectId}</s:param>
                   <s:param name="projectName">${projectName}</s:param>
-                  <s:param name="buildId">${buildResult.id}"</s:param>
+                  <s:param name="buildId">${buildResult.id}</s:param>
                   <s:param name="projectGroupId">${projectGroupId}</s:param>
                 </s:url>
                 <s:a href="%{buildResultUrl}"><s:text name="buildResults.result"/></s:a>
