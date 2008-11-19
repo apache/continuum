@@ -4,7 +4,9 @@ public class BuildAgentConfiguration
 {
     private String url;
 
-    private String operatingSystem;
+    private String type;
+
+    private String description;
 
     private boolean enabled;
 
@@ -13,11 +15,17 @@ public class BuildAgentConfiguration
         // do nothing
     }
 
-    public BuildAgentConfiguration( String url, String operatingSystem, boolean enabled )
+    public BuildAgentConfiguration( String url, String type, boolean enabled )
+    {
+        this( url, type, null, enabled );
+    }
+
+    public BuildAgentConfiguration( String url, String type, String description, boolean enabled )
     {
         this.url = url;
-        this.operatingSystem = operatingSystem;
+        this.type = type;
         this.enabled = enabled;
+        this.description = description;
     }
 
     public String getUrl()
@@ -30,14 +38,24 @@ public class BuildAgentConfiguration
         this.url = url;
     }
 
-    public String getOperatingSystem()
+    public String getType()
     {
-        return operatingSystem;
+        return type;
     }
 
-    public void setOperatingSystem( String operatingSystem )
+    public void setType( String type )
     {
-        this.operatingSystem = operatingSystem;
+        this.type = type;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription( String description )
+    {
+        this.description = description;
     }
 
     public boolean isEnabled()

@@ -159,7 +159,8 @@ public class DefaultContinuumConfiguration
                 for ( org.apache.continuum.configuration.model.BuildAgentConfiguration agent : agents )
                 {
                     BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( agent.getUrl(), 
-                                                                                      agent.getOperatingSystem(),
+                                                                                      agent.getType(),
+                                                                                      agent.Description(),
                                                                                       agent.isEnabled() );
                     buildAgents.add( buildAgent );
                 }
@@ -234,8 +235,9 @@ public class DefaultContinuumConfiguration
                     org.apache.continuum.configuration.model.BuildAgentConfiguration buildAgent = 
                         new org.apache.continuum.configuration.model.BuildAgentConfiguration();
                     buildAgent.setUrl( agent.getUrl() );
-                    buildAgent.setOperatingSystem( agent.getOperatingSystem() );
+                    buildAgent.setDescription( agent.getDescription() );
                     buildAgent.setEnabled( agent.isEnabled() );
+                    buildAgent.setType( agent.getType() );
                     
                     buildAgents.add( buildAgent );
                 }

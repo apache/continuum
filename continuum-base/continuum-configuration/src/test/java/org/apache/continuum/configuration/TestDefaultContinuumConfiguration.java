@@ -72,7 +72,8 @@ public class TestDefaultContinuumConfiguration
         assertNotNull( generalConfiguration.getBuildAgents() );
         org.apache.continuum.configuration.BuildAgentConfiguration buildAgentConfig = generalConfiguration.getBuildAgents().get( 0 );
         assertEquals( "http://buildagent/xmlrpc", buildAgentConfig.getUrl() );
-        assertEquals( "linux", buildAgentConfig.getOperatingSystem() );
+        assertEquals( "linux", buildAgentConfig.getDescription() );
+        assertEquals( "remote", buildAgentConfig.getType() );
         assertTrue( buildAgentConfig.isEnabled() );
     }
 
@@ -96,8 +97,9 @@ public class TestDefaultContinuumConfiguration
         generalConfiguration.setBuildOutputDirectory( targetDir );
         BuildAgentConfiguration buildAgentConfiguration = new BuildAgentConfiguration();
         buildAgentConfiguration.setUrl( "http://buildagent/test" );
-        buildAgentConfiguration.setOperatingSystem( "windows xp" );
+        buildAgentConfiguration.setDescription( "windows xp" );
         buildAgentConfiguration.setEnabled( false );
+        buildAgentConfiguration.setType( "local" );
         List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
         buildAgents.add( buildAgentConfiguration );
         generalConfiguration.setBuildAgents( buildAgents );
@@ -110,13 +112,15 @@ public class TestDefaultContinuumConfiguration
         assertTrue( contents.indexOf( "8080" ) > 0 );
         assertTrue( contents.indexOf( "http://buildagent/test" ) > 0 );
         assertTrue( contents.indexOf( "windows xp" ) > 0 );
-
+        
         configuration.reload();
         assertEquals( "http://test/zloug", configuration.getGeneralConfiguration().getBaseUrl() );
         assertEquals( "localhost", configuration.getGeneralConfiguration().getProxyConfiguration().getProxyHost() );
         assertEquals( 8080, configuration.getGeneralConfiguration().getProxyConfiguration().getProxyPort() );
         assertEquals(targetDir.getPath(), configuration.getGeneralConfiguration().getBuildOutputDirectory().getPath());
         assertEquals( "http://buildagent/test", configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).getUrl() );
+        assertEquals( "local", configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).getType() );
+        assertFalse( configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).isEnabled() );
         log.info( "generalConfiguration " + configuration.getGeneralConfiguration().toString() );
     }
 }

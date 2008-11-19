@@ -5,8 +5,9 @@
   <buildAgents>
     <buildAgent>
       <url>http://buildagent/xmlrpc</url>
-      <operatingSystem>linux</operatingSystem>
+      <description>linux</description>
       <enabled>true</enabled>
+      <type>remote</type>
     </buildAgent>
   </buildAgents>
 </continuum-configuration>

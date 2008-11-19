@@ -112,7 +112,7 @@
           <type>String</type>
         </field>
         <field>
-          <name>operatingSystem</name>
+          <name>description</name>
           <version>1.0.1+</version>
           <type>String</type>
         </field>
@@ -120,6 +120,11 @@
           <name>enabled</name>
           <version>1.0.1+</version>
           <type>boolean</type>
+        </field>
+        <field jpox.column="buildagent_type">
+          <name>type</name>
+          <version>1.0.1+</version>
+          <type>String</type>
         </field>
       </fields>
     </class>    
