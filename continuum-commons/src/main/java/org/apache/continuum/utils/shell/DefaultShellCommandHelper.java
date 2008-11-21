@@ -102,11 +102,14 @@ public class DefaultShellCommandHelper
 
         cl.setWorkingDirectory( workingDirectory.getAbsolutePath() );
 
-        for ( int i = 0; i < arguments.length; i++ )
+        if ( arguments != null )
         {
-            String argument = arguments[i];
+            for ( int i = 0; i < arguments.length; i++ )
+            {
+                String argument = arguments[i];
 
-            cl.createArgument().setValue( argument );
+                cl.createArgument().setValue( argument );
+            }
         }
 
         return cl;
