@@ -73,7 +73,6 @@ public class TestDefaultContinuumConfiguration
         org.apache.continuum.configuration.BuildAgentConfiguration buildAgentConfig = generalConfiguration.getBuildAgents().get( 0 );
         assertEquals( "http://buildagent/xmlrpc", buildAgentConfig.getUrl() );
         assertEquals( "linux", buildAgentConfig.getDescription() );
-        assertEquals( "remote", buildAgentConfig.getType() );
         assertTrue( buildAgentConfig.isEnabled() );
     }
 
@@ -99,7 +98,6 @@ public class TestDefaultContinuumConfiguration
         buildAgentConfiguration.setUrl( "http://buildagent/test" );
         buildAgentConfiguration.setDescription( "windows xp" );
         buildAgentConfiguration.setEnabled( false );
-        buildAgentConfiguration.setType( "local" );
         List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
         buildAgents.add( buildAgentConfiguration );
         generalConfiguration.setBuildAgents( buildAgents );
@@ -119,7 +117,6 @@ public class TestDefaultContinuumConfiguration
         assertEquals( 8080, configuration.getGeneralConfiguration().getProxyConfiguration().getProxyPort() );
         assertEquals(targetDir.getPath(), configuration.getGeneralConfiguration().getBuildOutputDirectory().getPath());
         assertEquals( "http://buildagent/test", configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).getUrl() );
-        assertEquals( "local", configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).getType() );
         assertFalse( configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).isEnabled() );
         log.info( "generalConfiguration " + configuration.getGeneralConfiguration().toString() );
     }

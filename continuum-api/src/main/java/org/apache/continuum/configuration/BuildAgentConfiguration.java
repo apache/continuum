@@ -4,8 +4,6 @@ public class BuildAgentConfiguration
 {
     private String url;
 
-    private String type;
-
     private String description;
 
     private boolean enabled;
@@ -15,15 +13,9 @@ public class BuildAgentConfiguration
         // do nothing
     }
 
-    public BuildAgentConfiguration( String url, String type, boolean enabled )
-    {
-        this( url, type, null, enabled );
-    }
-
-    public BuildAgentConfiguration( String url, String type, String description, boolean enabled )
+    public BuildAgentConfiguration( String url, String description, boolean enabled )
     {
         this.url = url;
-        this.type = type;
         this.enabled = enabled;
         this.description = description;
     }
@@ -36,16 +28,6 @@ public class BuildAgentConfiguration
     public void setUrl( String url )
     {
         this.url = url;
-    }
-
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setType( String type )
-    {
-        this.type = type;
     }
 
     public String getDescription()

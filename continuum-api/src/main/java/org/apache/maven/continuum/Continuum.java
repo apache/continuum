@@ -31,7 +31,6 @@ import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -44,7 +43,6 @@ import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 /**
@@ -169,6 +167,12 @@ public interface Continuum
         throws ContinuumException;
 
     void buildProjectsWithBuildDefinition( int buildDefinitionId )
+        throws ContinuumException;
+
+    void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
+        throws ContinuumException;
+
+    void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
         throws ContinuumException;
 
     void buildProjects( int trigger )
@@ -617,21 +621,6 @@ public interface Continuum
         throws ContinuumException;
 
     ProjectScmRoot getProjectScmRootByProject( int projectId )
-        throws ContinuumException;
-
-    // ----------------------------------------------------------------------
-    //
-    // ----------------------------------------------------------------------
-    Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
-                                                             List<BuildDefinition> bds,
-                                                             boolean checkDefaultBuildDefinitionForProject )
-        throws ContinuumException;
-
-    Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
-                                                             int buildDefinitionId )
-        throws ContinuumException;
-
-    void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsAndBuildDefinitions, int trigger )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------

@@ -158,9 +158,8 @@ public class DefaultContinuumConfiguration
                 List<org.apache.continuum.configuration.model.BuildAgentConfiguration> agents = configuration.getBuildAgents();
                 for ( org.apache.continuum.configuration.model.BuildAgentConfiguration agent : agents )
                 {
-                    BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( agent.getUrl(), 
-                                                                                      agent.getType(),
-                                                                                      agent.Description(),
+                    BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( agent.getUrl(),
+                                                                                      agent.getDescription(),
                                                                                       agent.isEnabled() );
                     buildAgents.add( buildAgent );
                 }
@@ -237,7 +236,6 @@ public class DefaultContinuumConfiguration
                     buildAgent.setUrl( agent.getUrl() );
                     buildAgent.setDescription( agent.getDescription() );
                     buildAgent.setEnabled( agent.isEnabled() );
-                    buildAgent.setType( agent.getType() );
                     
                     buildAgents.add( buildAgent );
                 }

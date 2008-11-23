@@ -7,7 +7,6 @@
       <url>http://buildagent/xmlrpc</url>
       <description>linux</description>
       <enabled>true</enabled>
-      <type>remote</type>
     </buildAgent>
   </buildAgents>
   <distributedBuildEnabled>true</distributedBuildEnabled>

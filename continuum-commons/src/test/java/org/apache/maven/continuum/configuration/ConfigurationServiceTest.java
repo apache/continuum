@@ -94,7 +94,7 @@ public class ConfigurationServiceTest
         service.setUrl( "http://test/zloug" );
         service.setBuildOutputDirectory( new File( "testBuildOutputDir" ) );
 
-        BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( "http://test/xmlrpc", "local", "windows", false );
+        BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( "http://test/xmlrpc", "windows", false );
         service.addBuildAgent( buildAgent );
 
         service.store();
@@ -107,7 +107,6 @@ public class ConfigurationServiceTest
         assertEquals( "http://test/zloug", service.getUrl() );
         assertEquals( "check # build agents", 2, service.getBuildAgents().size() );        
         assertEquals( "http://test/xmlrpc", service.getBuildAgents().get( 1 ).getUrl() );
-        assertEquals( "local", service.getBuildAgents().get( 1 ).getType() );
         assertEquals( "windows", service.getBuildAgents().get( 1 ).getDescription() );
         assertFalse( service.getBuildAgents().get( 1 ).isEnabled() );
 
@@ -119,7 +118,6 @@ public class ConfigurationServiceTest
         assertEquals( "check # build agents", 1, service.getBuildAgents().size() );
         assertEquals( "http://buildagent/xmlrpc", service.getBuildAgents().get( 0 ).getUrl() );
         assertEquals( "linux", service.getBuildAgents().get( 0 ).getDescription() );
-        assertEquals( "remote", service.getBuildAgents().get( 0 ).getType() );
         assertTrue( service.getBuildAgents().get( 0 ).isEnabled() );
     }
 }
