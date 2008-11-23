@@ -5,6 +5,13 @@
  ------
  Oct 3 2007
 
+Welcome to Apache Continuum
+
+  Apache Continuum is an enterprise-ready continuous integration server with features such as automated builds,
+  release management, role-based security, and integration with popular build tools and source control management
+  systems. Whether you have a centralized build team or want to put control of releases in the hands of developers,
+  Continuum can help you improve quality and maintain a consistent build environment. 
+
 Documentation
 
 * Installation/Upgrade Guides
@@ -30,7 +37,7 @@ Documentation
 
 ** Upgrade
 
-    {{{installation/upgrade.html} How to upgrade from a previous versions?}}
+    {{{installation/upgrade.html} How to upgrade from a previous version}}
 
 * User's Guide
 
@@ -42,14 +49,14 @@ Documentation
 
 * Developer's Guide
 
-    {{{developer_guides/building.html}Guide to build Continuum}}
+    {{{developer_guides/building.html}Guide to building Continuum}}
 
 * Knowledge Base
 
     {{{http://continuum.apache.org/faqs.html}Frequently Asked Questions}}
 
-    {{{http://docs.codehaus.org/display/CONTINUUMUSER/Home}Wiki}}
-    
-    {{{http://cwiki.apache.org/confluence/display/CONTINUUM}New Wiki}}
-    
+    {{{http://cwiki.apache.org/confluence/display/CONTINUUM}Wiki}}
+
+    {{{http://docs.codehaus.org/display/CONTINUUMUSER/Home}Old Wiki}}
+
     {{{http://apache-continuum.blogspot.com/}Blog}}
