@@ -101,12 +101,14 @@ public class GenerateReactorProjectsPhase
         MavenProject project;
         try
         {
+            ArtifactRepository repository = getLocalRepository( descriptor.getAdditionalArguments() );
+
             project = projectBuilder.buildWithDependencies( getProjectDescriptorFile( descriptor ),
-                                                            getLocalRepository(), getProfileManager( getSettings() ) );
+                                                            repository, getProfileManager( getSettings() ) );
 
             reactorProjects.add( project );
 
-            addModules( reactorProjects, project );
+            addModules( reactorProjects, project, repository );
         }
         catch ( ProjectBuildingException e )
         {
@@ -137,7 +139,7 @@ public class GenerateReactorProjectsPhase
         return reactorProjects;
     }
 
-    private void addModules( List reactorProjects, MavenProject project )
+    private void addModules( List reactorProjects, MavenProject project, ArtifactRepository repository )
         throws ContinuumReleaseException
     {
         for ( Iterator modules = project.getModules().iterator(); modules.hasNext(); )
@@ -148,13 +150,13 @@ public class GenerateReactorProjectsPhase
 
             try
             {
-                MavenProject reactorProject = projectBuilder.buildWithDependencies( pomFile, getLocalRepository(),
+                MavenProject reactorProject = projectBuilder.buildWithDependencies( pomFile, repository,
                                                                                     getProfileManager(
                                                                                         getSettings() ) );
 
                 reactorProjects.add( reactorProject );
 
-                addModules( reactorProjects, reactorProject );
+                addModules( reactorProjects, reactorProject, repository );
             }
             catch ( ProjectBuildingException e )
             {
@@ -184,10 +186,35 @@ public class GenerateReactorProjectsPhase
         return new File( parentPath, pomFilename );
     }
 
-    private ArtifactRepository getLocalRepository()
+    private ArtifactRepository getLocalRepository( String arguments )
         throws ContinuumReleaseException
     {
-        return new DefaultArtifactRepository( "local-repository", "file://" + getSettings().getLocalRepository(),
+        String localRepository = null;
+
+        if ( arguments != null )
+        {
+            String[] args = arguments.split( " " );
+            
+            for ( int i = 0; i < args.length; i++ )
+            {
+                if ( args[i].contains( "-Dmaven.repo.local=" ) )
+                {
+                    localRepository = args[i].substring( args[i].indexOf( "=" ) + 1 );
+                    break;
+                }
+            }
+        }
+
+        if ( localRepository == null )
+        {
+            localRepository = getSettings().getLocalRepository();
+        }
+        else if ( localRepository.endsWith( "\"" ) )
+        {
+            localRepository = localRepository.substring( 0, localRepository.indexOf( "\"" ) );
+        }
+
+        return new DefaultArtifactRepository( "local-repository", "file://" + localRepository,
                                               new DefaultRepositoryLayout() );
     }
 
