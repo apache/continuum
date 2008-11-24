@@ -171,6 +171,12 @@ public interface Continuum
     void buildProjectsWithBuildDefinition( int buildDefinitionId )
         throws ContinuumException;
 
+    void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
+        throws ContinuumException;
+
+    void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
+        throws ContinuumException;
+
     void buildProjects( int trigger )
         throws ContinuumException;
 
@@ -617,21 +623,6 @@ public interface Continuum
         throws ContinuumException;
 
     ProjectScmRoot getProjectScmRootByProject( int projectId )
-        throws ContinuumException;
-
-    // ----------------------------------------------------------------------
-    //
-    // ----------------------------------------------------------------------
-    Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
-                                                             List<BuildDefinition> bds,
-                                                             boolean checkDefaultBuildDefinitionForProject )
-        throws ContinuumException;
-
-    Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
-                                                             int buildDefinitionId )
-        throws ContinuumException;
-
-    void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsAndBuildDefinitions, int trigger )
         throws ContinuumException;
 
     // ----------------------------------------------------------------------
