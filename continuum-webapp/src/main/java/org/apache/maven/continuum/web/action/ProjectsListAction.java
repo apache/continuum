@@ -159,37 +159,18 @@ public class ProjectsListAction
                 sortedProjects = projectsList;
             }
 
-            Collection<Map<Integer, Integer>> projectsBuildDefs = getProjectsBuildDefsMap( sortedProjects );
-
-            getContinuum().prepareBuildProjects( projectsBuildDefs, ContinuumProjectState.TRIGGER_FORCED );
+            if ( this.getBuildDefinitionId() <= 0 )
+            {
+                List<BuildDefinition> groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
+                getContinuum().buildProjectsWithBuildDefinition( sortedProjects, groupDefaultBDs );
+            }
+            else
+            {
+                getContinuum().buildProjectsWithBuildDefinition( sortedProjects, buildDefinitionId );
+            }
         }
 
         return SUCCESS;
-    }
-
-    private Collection<Map<Integer, Integer>> getProjectsBuildDefsMap( List<Project> projects )
-        throws ContinuumException
-    {
-        if ( this.getBuildDefinitionId() <= 0 )
-        {
-            boolean checkDefaultBuildDefinitionForProject = false;
-
-            if ( this.getBuildDefinitionId() == -1 )
-            {
-                checkDefaultBuildDefinitionForProject = true;
-            }
-
-            List<BuildDefinition> groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
-
-            return getContinuum().getProjectsAndBuildDefinitions( projects, 
-                                                                  groupDefaultBDs, 
-                                                                  checkDefaultBuildDefinitionForProject );
-        }
-        else
-        {
-            return getContinuum().getProjectsAndBuildDefinitions( projects,
-                                                                  this.getBuildDefinitionId() );
-        }
     }
 
     public String getProjectGroupName()

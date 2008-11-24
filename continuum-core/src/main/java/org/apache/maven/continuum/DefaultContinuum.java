@@ -715,6 +715,18 @@ public class DefaultContinuum
         buildProjects( ContinuumProjectState.TRIGGER_FORCED, buildDefinitionId );
     }
 
+    public void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
+        throws ContinuumException
+    {
+        prepareBuildProjects( projects, bds, true, ContinuumProjectState.TRIGGER_FORCED );
+    }
+
+    public void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
+        throws ContinuumException
+    {
+        prepareBuildProjects( projects, buildDefinitionId, ContinuumProjectState.TRIGGER_FORCED );
+    }
+
     /**
      * fire of the builds of all projects across all project groups using their default build definitions
      *
@@ -737,9 +749,7 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        Collection<Map<Integer,Integer>> projectsAndBuildDefinitions = getProjectsAndBuildDefinitions( projectsList, null, true );
-
-        prepareBuildProjects( projectsAndBuildDefinitions, trigger );
+        prepareBuildProjects( projectsList, null, true, trigger );
     }
 
     /**
@@ -765,9 +775,7 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        Collection<Map<Integer, Integer>> projectsAndBuildDefinitions = getProjectsAndBuildDefinitions( projectsList, buildDefinitionId );
-
-        prepareBuildProjects( projectsAndBuildDefinitions, trigger );
+        prepareBuildProjects( projectsList, buildDefinitionId, trigger );
     }
 
     /**
@@ -828,11 +836,7 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        Collection<Map<Integer, Integer>> projectsAndBuildDefinitions = getProjectsAndBuildDefinitions( projectsList, 
-                                                                                                        bds,
-                                                                                                        checkDefaultBuildDefinitionForProject );
-
-        prepareBuildProjects( projectsAndBuildDefinitions, ContinuumProjectState.TRIGGER_FORCED );
+        prepareBuildProjects( projectsList, bds, checkDefaultBuildDefinitionForProject, ContinuumProjectState.TRIGGER_FORCED );
     }
 
     /**
@@ -930,26 +934,7 @@ public class DefaultContinuum
     public void buildProjectWithBuildDefinition( int projectId, int buildDefinitionId )
         throws ContinuumException
     {
-        try
-        {
-            if ( taskQueueManager.isInBuildingQueue( projectId ) || taskQueueManager.isInPrepareBuildQueue( projectId ) )
-            {
-                return;
-            }
-
-            if ( taskQueueManager.isInCheckoutQueue( projectId ) )
-            {
-                taskQueueManager.removeProjectFromCheckoutQueue( projectId );
-            }
-        }
-        catch ( TaskQueueManagerException e )
-        {
-            throw new ContinuumException( e.getMessage(), e );
-        }
-
-        Map<Integer, Integer> projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>( projectId, buildDefinitionId );
-
-        prepareBuildProjects( projectsAndBuildDefinitionsMap, ContinuumProjectState.TRIGGER_FORCED );
+        buildProject( projectId, buildDefinitionId, ContinuumProjectState.TRIGGER_FORCED );
     }
 
     public void buildProject( int projectId, int trigger )
@@ -976,31 +961,33 @@ public class DefaultContinuum
             throw new ContinuumException( e.getMessage(), e );
         }
 
-        Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>( projectId, buildDef.getId() );
-
+        Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
+        projectsBuildDefinitionsMap.put( projectId, buildDef.getId() );
+        
         prepareBuildProjects( projectsBuildDefinitionsMap, trigger );
     }
 
     public void buildProject( int projectId, int buildDefinitionId, int trigger )
         throws ContinuumException
     {
-        Project project;
-
         try
         {
-            project = projectDao.getProject( projectId );
+            if ( taskQueueManager.isInBuildingQueue( projectId, buildDefinitionId ) || 
+                 taskQueueManager.isInCheckoutQueue( projectId ) ||
+                 taskQueueManager.isInPrepareBuildQueue( projectId ))
+            {
+                return;
+            }
         }
-        catch ( ContinuumStoreException e )
+        catch ( TaskQueueManagerException e )
         {
-            throw logAndCreateException( "Error while getting project " + projectId + ".", e );
+            throw new ContinuumException( e.getMessage(), e );
         }
 
-        Map context = new HashMap();
-        context.put( AbstractContinuumAction.KEY_PROJECT, project );
-        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
-        context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
-        
-        executeAction( "create-build-project-task", context );
+        Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
+        projectsBuildDefinitionsMap.put( projectId, buildDefinitionId );
+
+        prepareBuildProjects( projectsBuildDefinitionsMap, trigger );
     }
 
     public BuildResult getBuildResult( int buildId )
@@ -3208,9 +3195,8 @@ public class DefaultContinuum
         return null;
     }
    
-    public Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
-                                                                             List<BuildDefinition> bds,
-                                                                             boolean checkDefaultBuildDefinitionForProject )
+    private void prepareBuildProjects( Collection<Project> projects, List<BuildDefinition> bds,
+                                      boolean checkDefaultBuildDefinitionForProject, int trigger )
         throws ContinuumException
     {
         Map<String, Map<Integer, Integer>> map = new HashMap<String, Map<Integer, Integer>>();
@@ -3303,11 +3289,10 @@ public class DefaultContinuum
             map.put( scmRootAddress, projectsAndBuildDefinitionsMap );
         }
 
-        return map.values();
+        prepareBuildProjects( map.values(), trigger );
     }
 
-    public Collection<Map<Integer, Integer>> getProjectsAndBuildDefinitions( Collection<Project> projects, 
-                                                                             int buildDefinitionId )
+    private void prepareBuildProjects( Collection<Project> projects, int buildDefinitionId, int trigger )
         throws ContinuumException
     {
         Map<String, Map<Integer,Integer>> map = new HashMap<String, Map<Integer, Integer>>();
@@ -3354,10 +3339,10 @@ public class DefaultContinuum
             }
         }
 
-        return map.values();
+        prepareBuildProjects( map.values(), trigger );
     }
 
-    public void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsBuildDefinitions, int trigger )
+    private void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsBuildDefinitions, int trigger )
         throws ContinuumException
     {
         for ( Map<Integer, Integer> map : projectsBuildDefinitions )
@@ -3366,7 +3351,7 @@ public class DefaultContinuum
         }
     }
 
-    public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
+    private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
         throws ContinuumException
     {
         try
