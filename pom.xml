@@ -45,7 +45,7 @@ under the License.
   <distributionManagement>
     <site>
       <id>apache.website</id>
-      <url>scp://people.apache.org/www/maven.apache.org/continuum/ref/${project.version}</url>
+      <url>scp://people.apache.org/www/continuum.apache.org/ref/${project.version}</url>
     </site>
   </distributionManagement>
   <reporting>
