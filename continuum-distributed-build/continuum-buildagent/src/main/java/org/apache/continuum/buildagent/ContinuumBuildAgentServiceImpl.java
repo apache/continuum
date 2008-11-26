@@ -64,4 +64,10 @@ public class ContinuumBuildAgentServiceImpl
             throw new ContinuumBuildAgentException( "Unable to load build agent configuration", e );
         }
     }
+
+    public int getProjectCurrentlyBuilding()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

@@ -18,4 +18,6 @@ public interface ContinuumBuildAgentService
 
     Map getBuildResult( int projectId )
         throws ContinuumBuildAgentException;
+
+    int getProjectCurrentlyBuilding();
 }
