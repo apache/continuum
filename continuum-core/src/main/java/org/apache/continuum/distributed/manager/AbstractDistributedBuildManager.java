@@ -70,8 +70,6 @@ public abstract class AbstractDistributedBuildManager
 
     public static final String KEY_PREPARE_BUILD_FINISHED = "prepare-build-finished";
 
-    public static final String KEY_AGENT_URL = "agent-url";
-
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -135,11 +133,6 @@ public abstract class AbstractDistributedBuildManager
     public static boolean isPrepareBuildFinished( Map context )
     {
         return getBoolean( context, KEY_PREPARE_BUILD_FINISHED );
-    }
-
-    public static String getAgentUrl( Map context )
-    {
-        return getString( context, KEY_AGENT_URL );
     }
 
     // ----------------------------------------------------------------------

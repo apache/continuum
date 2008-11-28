@@ -49,7 +49,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Maria Catherine Tan
- * @plexus.component role="org.apache.continuum.distributed.DistributedBuildManager"
  */
 public class DefaultDistributedBuildManager
     extends AbstractDistributedBuildManager
@@ -94,30 +93,83 @@ public class DefaultDistributedBuildManager
             buildAgents = new ArrayList<BuildAgent>();
         }
         
-        for ( BuildAgentConfiguration agent : agents )
+        if ( agents != null )
         {
-            if ( agent.isEnabled() )
-            { 
-                boolean found = false;
-
-                for ( BuildAgent buildAgent : buildAgents )
-                {
-                    if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+            for ( BuildAgentConfiguration agent : agents )
+            {
+                if ( agent.isEnabled() )
+                { 
+                    boolean found = false;
+    
+                    for ( BuildAgent buildAgent : buildAgents )
                     {
-                        found = true;
-                        break;
+                        if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+                        {
+                            found = true;
+                            break;
+                        }
                     }
-                }
-
-                if ( !found )
-                {
-                    BuildAgent buildAgent = new BuildAgent();
-                    buildAgent.setUrl( agent.getUrl() );
-                    buildAgent.setBusy( false );
-                    buildAgents.add( buildAgent );
+    
+                    if ( !found )
+                    {
+                        BuildAgent buildAgent = new BuildAgent();
+                        buildAgent.setUrl( agent.getUrl() );
+                        buildAgent.setBusy( false );
+                        buildAgents.add( buildAgent );
+                    }
                 }
             }
         }
+    }
+
+    public ConfigurationService getConfigurationService()
+    {
+        return configurationService;
+    }
+
+    public void setConfigurationService( ConfigurationService configurationService )
+    {
+        this.configurationService = configurationService;
+    }
+
+    public ProjectDao getProjectDao()
+    {
+        return projectDao;
+    }
+
+    public void setProjectDao( ProjectDao projectDao )
+    {
+        this.projectDao = projectDao;
+    }
+
+    public BuildDefinitionDao getBuildDefinitionDao()
+    {
+        return buildDefinitionDao;
+    }
+
+    public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
+    {
+        this.buildDefinitionDao = buildDefinitionDao;
+    }
+
+    public BuildResultDao getBuildResultDao()
+    {
+        return buildResultDao;
+    }
+
+    public void setBuildResultDao( BuildResultDao buildResultDao )
+    {
+        this.buildResultDao = buildResultDao;
+    }
+
+    public ProjectScmRootDao getProjectScmRootDao()
+    {
+        return projectScmRootDao;
+    }
+
+    public void setProjectScmRootDao( ProjectScmRootDao projectScmRootDao )
+    {
+        this.projectScmRootDao = projectScmRootDao;
     }
 
     public void buildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger )
@@ -471,24 +523,21 @@ public class DefaultDistributedBuildManager
     {
         for ( BuildAgent buildAgent : buildAgents )
         {
-            if ( buildAgent.getUrl().equals( getAgentUrl( context ) ) )
+            for ( Project project : buildAgent.getProjects() )
             {
-                for ( Project project : buildAgent.getProjects() )
+                if ( project.getId() == getProjectId( context ) )
                 {
-                    if ( project.getId() == getProjectId( context ) )
+                    buildAgent.getProjects().remove( project );
+                    
+                    if ( buildAgent.isBusy() && ( buildAgent.getProjects() == null || buildAgent.getProjects().size() == 0 ) )
                     {
-                        buildAgent.getProjects().remove( project );
-                        break;
+                        buildAgent.setBusy( false );
                     }
-                }
 
-                if ( buildAgent.getProjects() == null || buildAgent.getProjects().size() == 0 )
-                {
-                    buildAgent.setBusy( false );
                     buildProjectsInQueue();
+                    return;
                 }
             }
         }
     }
-
 }
