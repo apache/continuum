@@ -32,5 +32,13 @@
       <bean class="org.apache.maven.continuum.notification.manager.spring.NotifierFactoryBean"/>
     </property>
   </bean>
-  
+
+  <bean id="distributedBuildManager"
+    class="org.apache.continuum.distributed.manager.DefaultDistributedBuildManager" init-method="initialize">
+    <property name="configurationService" ref="configurationService"/>
+    <property name="projectDao" ref="projectDao"/>
+    <property name="buildDefinitionDao" ref="buildDefinitionDao"/>
+    <property name="buildResultDao" ref="buildResultDao"/>
+    <property name="projectScmRootDao" ref="projectScmRootDao"/>
+  </bean>
 </beans>

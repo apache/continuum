@@ -19,10 +19,12 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -238,6 +240,29 @@ public class ConfigurationServiceMock
     public String getReleaseOutput( int projectGroupId, String name )
     {
         return null;
+    }
+
+    public void addBuildAgent( BuildAgentConfiguration buildAgent )
+        throws ConfigurationException
+    {    
+    }
+
+    public List<BuildAgentConfiguration> getBuildAgents()
+    {
+        return null;
+    }
+
+    public boolean isDistributedBuildEnabled()
+    {
+        return false;
+    }
+
+    public void removeBuildAgent( BuildAgentConfiguration buildAgent )
+    {   
+    }
+
+    public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
+    {
     }
 
 }

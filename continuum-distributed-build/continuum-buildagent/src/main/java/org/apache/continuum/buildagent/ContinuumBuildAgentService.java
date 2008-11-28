@@ -7,7 +7,7 @@ import org.apache.continuum.buildagent.model.Installation;
 
 public interface ContinuumBuildAgentService
 {
-    void buildProject( List<Map> projectsBuildContext )
+    void buildProjects( List<Map> projectsBuildContext )
         throws ContinuumBuildAgentException;
 
     List<Installation> getAvailableInstallations()

@@ -43,6 +43,7 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.dao.ScheduleDao;
+import org.apache.continuum.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
@@ -220,7 +221,6 @@ public class DefaultContinuum
 
     private PlexusContainer container;
 
-
     /**
      * @plexus.requirement role-hint="continuumUrl"
      */
@@ -247,6 +247,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private TaskQueueManager taskQueueManager;
+
+    /**
+     * @plexus.requirement
+     */
+    private DistributedBuildManager distributedBuildManager;
 
     public DefaultContinuum()
     {
@@ -3354,7 +3359,7 @@ public class DefaultContinuum
     {
         if ( configurationService.isDistributedBuildEnabled() )
         {
-            
+            distributedBuildManager.buildProjects( projectsBuildDefinitionsMap, trigger );
         }
         else
         {
