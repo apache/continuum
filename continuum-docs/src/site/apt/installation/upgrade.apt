@@ -40,7 +40,7 @@ alter table CHANGESET alter column CHANGECOMMENT SET DATA TYPE varchar(8192)
 
         * {{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.1/data-management-cli-1.1-app.jar}}
         
-        * {{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.2/data-management-cli-1.2-app.jar}}
+        * {{http://repo1.maven.org/maven2/org/apache/continuum/data-management-cli/1.2/data-management-cli-1.2-app.jar}}
 
     The first version of this tool is 1.1-beta-2
 
