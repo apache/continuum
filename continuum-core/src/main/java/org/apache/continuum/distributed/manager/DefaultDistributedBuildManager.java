@@ -540,4 +540,9 @@ public class DefaultDistributedBuildManager
             }
         }
     }
+
+    public List<BuildAgent> getBuildAgents()
+    {
+        return buildAgents;
+    }
 }

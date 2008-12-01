@@ -19,8 +19,10 @@ package org.apache.continuum.distributed.manager;
  * under the License.
  */
 
+import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.distributed.BuildAgent;
 import org.apache.maven.continuum.ContinuumException;
 
 /**
@@ -43,4 +45,6 @@ public interface DistributedBuildManager
 
     void updateBuildResult( Map context )
         throws ContinuumException;
+
+    List<BuildAgent> getBuildAgents();
 }
