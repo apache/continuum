@@ -165,6 +165,11 @@
   		      <name>continuum-manage-purging</name>
   		      <description>Continuum Manage Purging</description>
   		    </operation>
+  		    <operation>
+  		      <id>continuum-manage-distributed-builds</id>
+  		      <name>continuum-manage-distributed-builds</name>
+  		      <description>Continuum Manage Distributed Builds</description>
+  		    </operation>
   		  </operations>
   		  <roles>
   		    <role>
@@ -178,6 +183,13 @@
   		          <name>Manage Continuum Configuration</name>
   		          <permanent>true</permanent>
   		          <operation>continuum-manage-configuration</operation>
+  		          <resource>global</resource>
+  		        </permission>
+  		        <permission>
+  		          <id>continuum-manage-distributed-builds</id>
+  		          <name>Manage Distributed Builds</name>
+  		          <permanent>true</permanent>
+  		          <operation>continuum-manage-distributed-builds</operation>
   		          <resource>global</resource>
   		        </permission>
   		      </permissions>

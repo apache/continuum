@@ -158,6 +158,14 @@
             </s:a>
           </div>
         </redback:ifAuthorized>
+          <s:url id="buildAgentList" action="buildAgentList" namespace="/security" includeParams="none"/>
+          <div class="body">
+            <s:a href="%{buildAgentList}">
+              <s:text name="menu.administration.buildAgents"/>
+            </s:a>
+          </div>
+        <redback:ifAuthorized permission="continuum-manage-distributed-builds">
+        </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-users">
           <s:url id="userListUrl" action="userlist" namespace="/security" includeParams="none"/>
           <div class="body">

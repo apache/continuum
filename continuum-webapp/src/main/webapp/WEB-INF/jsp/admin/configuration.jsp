@@ -40,6 +40,7 @@
         <c1:data label="%{getText('configuration.deploymentRepositoryDirectory.label')}"
                  name="deploymentRepositoryDirectory"/>
         <c1:data label="%{getText('configuration.baseUrl.label')}" name="baseUrl"/>
+        <c1:data label="%{getText('configuration.distributedBuildEnabled.label')}" name="distributedBuildEnabled"/>
       </table>
       <div class="functnbar3">
         <s:form action="configuration!input.action" method="post">

@@ -20,12 +20,15 @@ package org.apache.continuum.web.action.admin;
  */
 
 import org.apache.continuum.configuration.BuildAgentConfiguration;
+import org.apache.continuum.distributed.BuildAgent;
+import org.apache.continuum.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.redback.rbac.Resource;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
@@ -40,6 +43,11 @@ public class BuildAgentAction
     extends ContinuumConfirmAction
     implements SecureAction
 {
+    /**
+     * @plexus.requirement
+     */
+    private DistributedBuildManager distributedBuildManager;
+    
     private List<BuildAgentConfiguration> buildAgents;
 
     private BuildAgentConfiguration buildAgent;
@@ -49,6 +57,25 @@ public class BuildAgentAction
     private boolean confirmed;
 
     private String message;
+
+    public String input()
+        throws Exception
+    {
+        if ( buildAgent != null && StringUtils.isBlank( buildAgent.getUrl() ) )
+        {
+            List<BuildAgentConfiguration> agents = getContinuum().getConfiguration().getBuildAgents();
+            
+            for ( BuildAgentConfiguration agent : agents )
+            {
+                if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+                {
+                    buildAgent = agent;
+                }
+            }
+        }
+
+        return INPUT;
+    }
 
     public String list()
         throws Exception
@@ -61,6 +88,7 @@ public class BuildAgentAction
         }
 
         this.buildAgents = getContinuum().getConfiguration().getBuildAgents();
+
         return SUCCESS;
     }
 
@@ -100,6 +128,8 @@ public class BuildAgentAction
 
         configuration.addBuildAgent( buildAgent );
 
+        distributedBuildManager.reload();
+
         return SUCCESS;
     }
 
@@ -110,7 +140,26 @@ public class BuildAgentAction
         {
             return CONFIRM;
         }
-        
+
+        List<BuildAgent> agents = distributedBuildManager.getBuildAgents();
+
+        for ( BuildAgent agent : agents )
+        {
+            if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+            {
+                if ( agent.isBusy() )
+                {
+                    message = "buildAgent.error.delete.busy";
+                    return ERROR;
+                }
+                else
+                {
+                    agents.remove( agent );
+                    break;
+                }
+            }
+        }
+
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )

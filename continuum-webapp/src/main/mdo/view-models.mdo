@@ -475,5 +475,49 @@
         </field>
       </fields>
     </class>    
+    <class>
+      <name>BuildAgentSummary</name>
+      <version>1.0.0+</version>
+      <fields>
+        <field>
+          <name>url</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>URL of the build agent</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.0.0</version>
+          <required>false</required>
+          <description>Description of the build agent</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>enabled</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>Determines if the build agent is enabled</description>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>busy</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>Determines if the build agent is busy</description>
+          <type>boolean</type>
+        </field>
+        <field>
+          <name>projects</name>
+          <version>1.0.0</version>
+          <description></description>
+          <required>false</required>
+          <association>
+            <type>ProjectSummary</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+      </fields>
+    </class>
   </classes>
 </model>

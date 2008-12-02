@@ -45,7 +45,7 @@
               <s:textfield label="%{getText('buildAgent.description.label')}" name="buildAgent.description"/>
               <s:checkbox label="%{getText('buildAgent.enabled.label')}" name="enabled" value="enabled" fieldValue="true"/>
             </table>
-          
+            <s:hidden name="buildAgent.url"/>
             <div class="functnbar3">
               <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
             </div>

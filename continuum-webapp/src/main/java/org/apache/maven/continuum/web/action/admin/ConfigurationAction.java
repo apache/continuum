@@ -59,6 +59,8 @@ public class ConfigurationAction
 
     private boolean requireReleaseOutput;
 
+    private boolean distributedBuildEnabled;
+
     public void prepare()
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
@@ -99,6 +101,8 @@ public class ConfigurationAction
         
         String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
         setRequireReleaseOutput( new Boolean( requireRelease ) );
+
+        distributedBuildEnabled = configuration.isDistributedBuildEnabled();
     }
 
     public String input()
@@ -146,6 +150,8 @@ public class ConfigurationAction
         {
             configuration.setReleaseOutputDirectory( null );
         }
+
+        configuration.setDistributedBuildEnabled( distributedBuildEnabled );
 
         configuration.store();
 
@@ -220,5 +226,15 @@ public class ConfigurationAction
     public void setRequireReleaseOutput( boolean requireReleaseOutput )
     {
         this.requireReleaseOutput = requireReleaseOutput;
+    }
+
+    public boolean isDistributedBuildEnabled()
+    {
+        return distributedBuildEnabled;
+    }
+
+    public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
+    {
+        this.distributedBuildEnabled = distributedBuildEnabled;
     }
 }

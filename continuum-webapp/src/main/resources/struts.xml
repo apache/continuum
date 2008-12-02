@@ -863,6 +863,11 @@
       <result name="success">/WEB-INF/jsp/admin/buildAgentsList.jsp</result>
     </action>
     
+    <action name="editBuildAgent" class="buildAgent" method="input">
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+    </action>
+    
     <action name="saveBuildAgent" class="buildAgent" method="save">
       <result name="input">/WEB-INF/jsp/admin/addBuildAgent.jsp</result>
       <result name="error">/WEB-INF/jsp/admin/addBuildAgent.jsp</result>

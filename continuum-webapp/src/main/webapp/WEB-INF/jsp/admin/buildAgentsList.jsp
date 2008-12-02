@@ -52,19 +52,27 @@
             </ec:column>
             <ec:column property="enabled" title="buildAgents.table.enabled"/>
             <ec:column property="description" title="buildAgents.table.description"/>
+            <ec:column property="editActions" title="&nbsp;" width="1%">
+              <s:url id="editBuildAgentUrl" action="editBuildAgent">
+                <s:param name="buildAgent.url">${pageScope.buildAgent.url}</s:param>
+              </s:url>
+              <s:a href="%{editBuildAgentUrl}">
+                <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0"/>
+              </s:a>
+            </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
               <s:url id="removeBuildAgentUrl" action="removeBuildAgent">
                 <s:param name="buildAgent.url">${pageScope.buildAgent.url}</s:param>
               </s:url>
               <s:a href="%{removeBuildAgentUrl}">
-                <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" border="0">
+                <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"/>
               </s:a>
             </ec:column>
           </ec:row>
         </ec:table>
       </div>
       <div class="functnbar3">
-        <s:form action="addBuildAgent" method="post">
+        <s:form name="addBuildAgent" action="editBuildAgent" method="post">
           <s:submit value="%{getText('add')}"/>
         </s:form>
       </div>

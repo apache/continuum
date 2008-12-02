@@ -112,6 +112,7 @@ public class DefaultDistributedBuildManager
     
                     if ( !found )
                     {
+                        // ping it 
                         BuildAgent buildAgent = new BuildAgent();
                         buildAgent.setUrl( agent.getUrl() );
                         buildAgent.setBusy( false );
@@ -202,7 +203,17 @@ public class DefaultDistributedBuildManager
                 List buildContext = initializeBuildContext( projectsAndBuildDefinitionsMap, trigger, buildAgent );
 
                 //BuildAgentXMLRpcClient client = new BuildAgentXmlRpcClient( buildAgent.getUrl(), null, null );
-                //client.buildProjects( buildContext );
+                
+                //try
+                //{
+                    //client.buildProjects( buildContext );
+                //}
+                //catch ( InterruptedException e )
+                //{
+                    //do something about the server Url
+                    //client.getServerUrl();
+                    //get projects of buildagent and set to build error the first project.
+                //}
                 log.info( "dispatched build to " + buildAgent.getUrl() );
                 found = true;
             }
