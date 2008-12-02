@@ -121,4 +121,6 @@ public class ContinuumRoleConstants
     public static final String CONTINUUM_MANAGE_REPOSITORIES = "continuum-manage-repositories";
     
     public static final String CONTINUUM_MANAGE_PURGING = "continuum-manage-purging";
+
+    public static final String CONTINUUM_MANAGE_DISTRIBUTED_BUILDS = "continuum-manage-distributed-builds";
 }

@@ -61,7 +61,7 @@
               </s:a>
             </ec:column>
             <ec:column property="deleteActions" title="&nbsp;" width="1%">
-              <s:url id="removeBuildAgentUrl" action="removeBuildAgent">
+              <s:url id="removeBuildAgentUrl" action="deleteBuildAgent">
                 <s:param name="buildAgent.url">${pageScope.buildAgent.url}</s:param>
               </s:url>
               <s:a href="%{removeBuildAgentUrl}">

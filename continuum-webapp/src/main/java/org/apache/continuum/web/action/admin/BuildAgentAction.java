@@ -117,12 +117,15 @@ public class BuildAgentAction
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
 
-        for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
+        if ( configuration.getBuildAgents() != null )
         {
-            if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+            for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
             {
-                addActionError( "buildAgent.error.exist" );
-                return ERROR;
+                if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+                {
+                    addActionError( getText( "buildAgent.error.exist" ) );
+                    return ERROR;
+                }
             }
         }
 
@@ -149,7 +152,7 @@ public class BuildAgentAction
             {
                 if ( agent.isBusy() )
                 {
-                    message = "buildAgent.error.delete.busy";
+                    message = getText( "buildAgent.error.delete.busy" );
                     return ERROR;
                 }
                 else
@@ -171,7 +174,7 @@ public class BuildAgentAction
             }
         }
 
-        message = "buildAgent.error.notfound";
+        message = getText( "buildAgent.error.notfound" );
         return ERROR;
     }
 
@@ -180,7 +183,7 @@ public class BuildAgentAction
     {
         SecureActionBundle bundle = new SecureActionBundle();
         bundle.setRequiresAuthentication( true );
-        bundle.addRequiredAuthorization( ContinuumRoleConstants.SYSTEM_ADMINISTRATOR_ROLE, Resource.GLOBAL );
+        bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_DISTRIBUTED_BUILDS, Resource.GLOBAL );
 
         return bundle;
     }

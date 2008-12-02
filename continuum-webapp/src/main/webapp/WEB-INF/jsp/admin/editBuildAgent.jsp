@@ -35,7 +35,7 @@
             <c:if test="${!empty actionErrors}">
               <div class="errormessage">
                 <s:iterator value="actionErrors">
-                  <p><s:text name="<s:property/>" /></p>
+                  <p><s:property/></p>
                 </s:iterator>
               </div>
             </c:if>
@@ -43,9 +43,8 @@
             <table>
               <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" required="true"/>
               <s:textfield label="%{getText('buildAgent.description.label')}" name="buildAgent.description"/>
-              <s:checkbox label="%{getText('buildAgent.enabled.label')}" name="enabled" value="enabled" fieldValue="true"/>
+              <s:checkbox label="%{getText('buildAgent.enabled.label')}" name="buildAgent.enabled" value="buildAgent.enabled" fieldValue="true"/>
             </table>
-            <s:hidden name="buildAgent.url"/>
             <div class="functnbar3">
               <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
             </div>

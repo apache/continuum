@@ -476,46 +476,29 @@
       </fields>
     </class>    
     <class>
-      <name>BuildAgentSummary</name>
+      <name>DistributedBuildSummary</name>
       <version>1.0.0+</version>
       <fields>
+        <field>
+          <name>projectId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>ID of the project</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectName</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>Name of the project</description>
+          <type>String</type>
+        </field>
         <field>
           <name>url</name>
           <version>1.0.0</version>
           <required>true</required>
           <description>URL of the build agent</description>
           <type>String</type>
-        </field>
-        <field>
-          <name>description</name>
-          <version>1.0.0</version>
-          <required>false</required>
-          <description>Description of the build agent</description>
-          <type>String</type>
-        </field>
-        <field>
-          <name>enabled</name>
-          <version>1.0.0</version>
-          <required>true</required>
-          <description>Determines if the build agent is enabled</description>
-          <type>boolean</type>
-        </field>
-        <field>
-          <name>busy</name>
-          <version>1.0.0</version>
-          <required>true</required>
-          <description>Determines if the build agent is busy</description>
-          <type>boolean</type>
-        </field>
-        <field>
-          <name>projects</name>
-          <version>1.0.0</version>
-          <description></description>
-          <required>false</required>
-          <association>
-            <type>ProjectSummary</type>
-            <multiplicity>*</multiplicity>
-          </association>
         </field>
       </fields>
     </class>

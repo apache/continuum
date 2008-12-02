@@ -83,11 +83,8 @@
               </p></s:param>
             </s:textfield>
 
-		    <s:checkbox label="%{getText('configuration.distributedBuildEnabled.label')}" name="distributedBuildEnabled">
-		      <s:param name="desc"><p>
-		        <s:text name="configuration.distributedBuildEnabled.label"/>
-		      </p></s:param>
-		    </s:checkbox>
+		    <s:checkbox label="%{getText('configuration.distributedBuildEnabled.label')}" name="distributedBuildEnabled"/>
+
             <s:hidden name="requireReleaseOutput"/>
           </tbody>
         </table>

@@ -19,15 +19,15 @@ package org.apache.continuum.web.action.admin;
  * under the License.
  */
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.continuum.distributed.BuildAgent;
 import org.apache.continuum.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.apache.maven.continuum.web.model.DistributedBuildSummary;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -46,13 +46,17 @@ public class DistributedBuildAction
      */
     DistributedBuildManager distributedBuildManager;
 
-    private Map<String, String> distributedBuilds;
+    private List<DistributedBuildSummary> distributedBuildSummary;
+
+    private int projectId;
+
+    private String buildAgentUrl;
 
     public String view()
     {
         List<BuildAgent> buildAgents = distributedBuildManager.getBuildAgents();
         
-        distributedBuilds = new LinkedHashMap<String, String>();
+        distributedBuildSummary = new ArrayList<DistributedBuildSummary>();
         
         for ( BuildAgent buildAgent : buildAgents )
         {
@@ -60,10 +64,22 @@ public class DistributedBuildAction
             {
                 for ( Project project : buildAgent.getProjects() )
                 {
-                    distributedBuilds.put( project.getName(), buildAgent.getUrl() );
+                    DistributedBuildSummary summary = new DistributedBuildSummary();
+                    summary.setProjectId( project.getId() );
+                    summary.setProjectName( project.getName() );
+                    summary.setUrl( buildAgent.getUrl() );
+                    
+                    distributedBuildSummary.add( summary );
                 }
             }
         }
+
+        return SUCCESS;
+    }
+
+    public String cancel()
+        throws Exception
+    {
         return SUCCESS;
     }
 
@@ -72,18 +88,38 @@ public class DistributedBuildAction
     {
         SecureActionBundle bundle = new SecureActionBundle();
         bundle.setRequiresAuthentication( true );
-        bundle.addRequiredAuthorization( ContinuumRoleConstants.SYSTEM_ADMINISTRATOR_ROLE, Resource.GLOBAL );
+        bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_QUEUES, Resource.GLOBAL );
 
         return bundle;
     }
 
-    public Map<String, String> getDistributedBuilds()
+    public List<DistributedBuildSummary> getDistributedBuildSummary()
     {
-        return distributedBuilds;
+        return distributedBuildSummary;
     }
 
-    public void setDistributedBuilds( Map<String, String> distributedBuilds )
+    public void setDistributedBuildSummary( List<DistributedBuildSummary> distributedBuildSummary )
     {
-        this.distributedBuilds = distributedBuilds;
+        this.distributedBuildSummary = distributedBuildSummary;
+    }
+
+    public int getProjectId()
+    {
+        return projectId;
+    }
+
+    public void setProjectId( int projectId )
+    {
+        this.projectId = projectId;
+    }
+
+    public String getBuildAgentUrl()
+    {
+        return buildAgentUrl;
+    }
+
+    public void setBuildAgentUrl( String buildAgentUrl )
+    {
+        this.buildAgentUrl = buildAgentUrl;
     }
 }

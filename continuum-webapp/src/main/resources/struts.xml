@@ -869,14 +869,14 @@
     </action>
     
     <action name="saveBuildAgent" class="buildAgent" method="save">
-      <result name="input">/WEB-INF/jsp/admin/addBuildAgent.jsp</result>
-      <result name="error">/WEB-INF/jsp/admin/addBuildAgent.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">buildAgentList</param>
       </result>
     </action>
     
-    <action name="removeBuildAgent" class="buildAgent" method="delete">
+    <action name="deleteBuildAgent" class="buildAgent" method="delete">
       <result name="error" type="redirect-action">
         <param name="actionName">buildAgentList</param>
         <param name="errorMessage">${message}</param>
@@ -891,7 +891,7 @@
       <result name="success">/WEB-INF/jsp/admin/viewBuildAgent.jsp</result>
     </action>
     
-    <action name="viewDistributedBuilds" class="distributedBuild" method="list">
+    <action name="viewDistributedBuilds" class="distributedBuild" method="view">
       <result name="success">/WEB-INF/jsp/admin/viewDistributedBuilds.jsp</result>
     </action>
   </package>
