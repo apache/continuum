@@ -36,6 +36,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collections;
@@ -52,6 +54,9 @@ public abstract class AbstractBuildExecutor
     extends AbstractLogEnabled
     implements ContinuumBuildExecutor, Initializable
 {
+    
+    protected Logger logger = LoggerFactory.getLogger( getClass() );
+    
     private static final String SUDO_EXECUTABLE = "sudo";
 
     private static final String CHROOT_EXECUTABLE = "chroot";

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -54,6 +53,8 @@ import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -63,6 +64,7 @@ public class MavenTwoBuildExecutor
     extends AbstractBuildExecutor
     implements ContinuumBuildExecutor
 {
+    
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -394,15 +396,17 @@ public class MavenTwoBuildExecutor
         throws ContinuumBuildExecutorException
     {
         //Check if it's a recursive build
-        boolean isRecursive = StringUtils.isNotEmpty( buildDefinition.getArguments() ) && !(
-            buildDefinition.getArguments().indexOf( "-N" ) < 0 ||
-                buildDefinition.getArguments().indexOf( "--non-recursive" ) < 0 );
-
-        if ( isRecursive )
-        {
-            if ( getLogger().isDebugEnabled() )
+        boolean isRecursive = false;
+        if (StringUtils.isNotEmpty( buildDefinition.getArguments() ) )
             {
-                getLogger().debug( "isRecursive --> shouldBuild = true" );
+            isRecursive =  buildDefinition.getArguments().indexOf( "-N" ) < 0 &&
+                buildDefinition.getArguments().indexOf( "--non-recursive" ) < 0 ;
+            }
+        if ( isRecursive && changes != null && !changes.isEmpty() )
+        {
+            if ( logger.isInfoEnabled() )
+            {
+                logger.info( "recursive build and changes found --> building" );
             }
             return true;
         }
@@ -412,15 +416,15 @@ public class MavenTwoBuildExecutor
         //CONTINUUM-1815: additional check for projects recently released
         if ( !continuumProject.getVersion().equals( project.getVersion() ) )
         {
-            getLogger().info( "Found changes in project's version ( maybe project was recently released ), building" );
+            logger.info( "Found changes in project's version ( maybe project was recently released ), building" );
             return true;
         }
         
         if ( changes.isEmpty() )
         {
-            if ( getLogger().isDebugEnabled() )
+            if ( logger.isInfoEnabled() )
             {
-                getLogger().info( "Found no changes, not building" );
+                logger.info( "Found no changes, not building" );
             }
             return false;
         }
@@ -438,14 +442,27 @@ public class MavenTwoBuildExecutor
         while ( i <= files.size() - 1 )
         {
             ChangeFile file = files.get( i );
+            if ( logger.isDebugEnabled() )
+            {
+                logger.debug( "changeFile.name " + file.getName() );
+                logger.debug( "check in modules " + modules );
+            }
             boolean found = false;
             for ( String module : modules )
             {
-                if ( file.getName().indexOf( module ) > 0 )
+                if ( file.getName().indexOf( module ) >= 0 )
                 {
+                    if ( logger.isDebugEnabled() )
+                    {
+                        logger.debug( "changeFile.name " + file.getName() + " removed because in a module" );
+                    }                    
                     files.remove( file );
                     found = true;
                     break;
+                }
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug( "no remving file " + file.getName() + " not in module " + module );
                 }
             }
             if ( !found )
@@ -458,12 +475,12 @@ public class MavenTwoBuildExecutor
 
         if ( !shouldBuild )
         {
-            getLogger().info( "Changes are only in sub-modules." );
+            logger.info( "Changes are only in sub-modules." );
         }
 
-        if ( getLogger().isDebugEnabled() )
+        if ( logger.isDebugEnabled() )
         {
-            getLogger().debug( "shoulbuild = " + shouldBuild );
+            logger.debug( "shoulbuild = " + shouldBuild );
         }
         return shouldBuild;
     }
