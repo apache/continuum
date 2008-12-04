@@ -11,7 +11,7 @@ import org.apache.struts2.ServletActionContext;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
- * @plexus.component role="com.opensymphony.xwork.Action" role-hint="scmResult"
+ * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="scmResult"
  */
 public class ScmResultAction
     extends ContinuumActionSupport
