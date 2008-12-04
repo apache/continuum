@@ -407,6 +407,10 @@
       </result>
     </action>
 
+    <action name="scmResult" class="scmResult">
+      <result name="success">/WEB-INF/jsp/scmResult.jsp</result>
+    </action>
+    
     <!--
     * schedule actions
     -->
