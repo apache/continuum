@@ -30,6 +30,7 @@
       <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
       <role-hint>build-project</role-hint>
       <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
       <lifecycle-handler>plexus-configurable</lifecycle-handler>
       <configuration>
         <task-entry-evaluators>
@@ -45,6 +46,7 @@
     <component>
       <role>org.codehaus.plexus.taskqueue.TaskViabilityEvaluator</role>
       <role-hint>build-project</role-hint>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
       <implementation>
         org.apache.maven.continuum.buildqueue.evaluator.BuildProjectTaskViabilityEvaluator</implementation>
       <configuration>

@@ -83,6 +83,10 @@ public interface ConfigurationService
 
     String getReleaseOutput( int projectGroupId, String releaseName )
         throws ConfigurationException;
+    
+    int getNumberOfBuildsInParallel();
+    
+    void setNumberOfBuildsInParallel( int num );
 
     // ----------------------------------------------------------------------
     //

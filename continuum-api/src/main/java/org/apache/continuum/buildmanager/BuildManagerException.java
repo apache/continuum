@@ -1,4 +1,4 @@
-package org.apache.continuum.taskqueue;
+package org.apache.continuum.buildmanager;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,16 +19,25 @@ package org.apache.continuum.taskqueue;
  * under the License.
  */
 
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.codehaus.plexus.taskqueue.Task;
-
-public interface OverallQueue
+/**
+ * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
+ * @version
+ */
+public class BuildManagerException
+    extends Exception
 {
-    public void addToCheckoutQueue( Task checkoutTask ) throws Exception;
-    
-    public void addToPrepareBuildProjectsQueue( Task prepareBuildTask ) throws Exception;
-    
-    public void addToBuildQueue( Task buildTask ) throws Exception;
-    
-    public TaskQueueManager getTaskQueueManager();    
+    public BuildManagerException( String message )
+    {
+        super( message );
+    }
+
+    public BuildManagerException( Throwable cause )
+    {
+        super( cause );
+    }
+
+    public BuildManagerException( String message, Throwable cause )
+    {
+        super( message, cause );
+    }
 }

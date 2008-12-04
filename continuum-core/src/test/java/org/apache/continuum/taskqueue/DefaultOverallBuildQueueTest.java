@@ -28,10 +28,10 @@ import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.scm.queue.PrepareBuildProjectsTask;
 
-public class DefaultOverallQueueTest
+public class DefaultOverallBuildQueueTest
     extends AbstractContinuumTest
 {    
-    private OverallQueue overallQueue;
+    private OverallBuildQueue overallQueue;
     
     @Override
     protected void setUp()
@@ -39,7 +39,7 @@ public class DefaultOverallQueueTest
     {
         super.setUp();
         
-        overallQueue = ( OverallQueue ) lookup( OverallQueue.class );
+        overallQueue = ( OverallBuildQueue ) lookup( OverallBuildQueue.class );
     }
     
     public void testAddToCheckoutQueue()
@@ -50,7 +50,7 @@ public class DefaultOverallQueueTest
         CheckOutTask task = new CheckOutTask( 1, workingDir, "continuum-test-project", "username", "password" );
         overallQueue.addToCheckoutQueue( task );
         
-        CheckOutTask queuedTask = ( CheckOutTask ) overallQueue.getTaskQueueManager().getCheckoutQueue().take();
+        CheckOutTask queuedTask = ( CheckOutTask ) overallQueue.getCheckoutQueue().take();
         assertNotNull( queuedTask );
         assertEquals( 1, queuedTask.getProjectId() );
         assertEquals( "continuum-test-project", queuedTask.getProjectName() );
@@ -62,7 +62,7 @@ public class DefaultOverallQueueTest
         BuildProjectTask buildTask = new BuildProjectTask( 1, 1, 1, "continuum-test-project", "build-def-label" );
         overallQueue.addToBuildQueue( buildTask );
         
-        BuildProjectTask queuedTask = ( BuildProjectTask ) overallQueue.getTaskQueueManager().getBuildQueue().take();
+        BuildProjectTask queuedTask = ( BuildProjectTask ) overallQueue.getBuildQueue().take();
         assertNotNull( queuedTask );
         assertEquals( 1, queuedTask.getProjectId() );
         assertEquals( "continuum-test-project", queuedTask.getProjectName() );
@@ -75,9 +75,9 @@ public class DefaultOverallQueueTest
         projectsBuildDefMap.put( new Integer( 1 ), new Integer( 1 ) ); 
         
         PrepareBuildProjectsTask prepareBuildTask = new PrepareBuildProjectsTask( projectsBuildDefMap, 1 );
-        overallQueue.addToPrepareBuildProjectsQueue( prepareBuildTask );
+        overallQueue.addToPrepareBuildQueue( prepareBuildTask );
         
-        PrepareBuildProjectsTask queuedTask = ( PrepareBuildProjectsTask ) overallQueue.getTaskQueueManager().getPrepareBuildQueue().take();
+        PrepareBuildProjectsTask queuedTask = ( PrepareBuildProjectsTask ) overallQueue.getPrepareBuildQueue().take();
         assertNotNull( queuedTask );
         assertEquals( 1, ( ( Integer )queuedTask.getProjectsBuildDefinitionsMap().get( new Integer( 1 ) ) ).intValue() );        
     }

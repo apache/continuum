@@ -380,6 +380,16 @@ public class DefaultConfigurationService
             return null;
         }
     }
+    
+    public int getNumberOfBuildsInParallel()
+    {
+        return generalConfiguration.getNumberOfBuildsInParallel();
+    }
+    
+    public void setNumberOfBuildsInParallel( int num )
+    {
+        generalConfiguration.setNumberOfBuildsInParallel( num );
+    }
 
     // ----------------------------------------------------------------------
     //

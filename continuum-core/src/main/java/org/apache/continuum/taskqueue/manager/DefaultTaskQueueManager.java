@@ -34,8 +34,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
- * @plexus.component role="org.apache.continuum.taskqueue.manager.TaskQueueManager" role-hint="default" 
- *          instantiation-strategy="per-lookup"
+ * @plexus.component role="org.apache.continuum.taskqueue.manager.TaskQueueManager" role-hint="default"
  */
 public class DefaultTaskQueueManager
     extends AbstractLogEnabled

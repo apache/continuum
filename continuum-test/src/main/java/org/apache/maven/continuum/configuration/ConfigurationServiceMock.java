@@ -240,4 +240,13 @@ public class ConfigurationServiceMock
         return null;
     }
 
+    public int getNumberOfBuildsInParallel()
+    {
+        return 1;
+    }
+    
+    public void setNumberOfBuildsInParallel( int num )
+    {
+        
+    }
 }

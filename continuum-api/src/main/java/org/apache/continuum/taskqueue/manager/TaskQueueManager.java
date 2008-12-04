@@ -10,7 +10,11 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
  */
 public interface TaskQueueManager
-{
+{    
+    //TODO: 
+    // - Remove all methods concerning the checkout, prepare build and build queues!!!
+    // - Point all objects using these methods to the "overall" build queue!    
+    
     String ROLE = TaskQueueManager.class.getName();
 
     boolean buildInProgress()
