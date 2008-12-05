@@ -36,6 +36,7 @@ import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 
 /**
@@ -72,11 +73,16 @@ public class DefaultBuildManager
 
     // should be invoked before adding anything in any of the queues!
     private synchronized OverallBuildQueue getOverallBuildQueue()
-        throws ComponentLookupException
+        throws ComponentLookupException, TaskQueueException
     {
         OverallBuildQueue overallBuildQueue = null;
                 
         int parallelBuildsNum = configurationService.getNumberOfBuildsInParallel();
+        if( parallelBuildsNum <= 0 )
+        {
+            parallelBuildsNum = 1;
+        }
+        
         if( overallBuildQueuesInUse.size() < parallelBuildsNum )
         {   
             overallBuildQueue = ( OverallBuildQueue ) container.lookup( OverallBuildQueue.class );            
@@ -85,10 +91,21 @@ public class DefaultBuildManager
             overallBuildQueuesInUse.add( overallBuildQueue );            
         }       
         else
-        {
-            // add logic for distributing work among the queues            
-            // - check whether the project is already in any of the queues
-            // - if not, always get the overall build queue with the least tasks queued to it
+        {            
+            int size = 0;            
+            for( OverallBuildQueue overallBuildQueueInUse : overallBuildQueuesInUse )
+            {   
+                // TODO: must differentiate between checkout, prepare-build & build queues!
+                List<TaskQueue> tasks = overallBuildQueueInUse.getBuildQueue().getQueueSnapshot();
+                if( tasks != null )
+                {   
+                    if( size == 0 || tasks.size() < size )
+                    {
+                        overallBuildQueue = overallBuildQueueInUse;
+                        size = tasks.size();
+                    }                    
+                }
+            }
         }
         
         return overallBuildQueue;

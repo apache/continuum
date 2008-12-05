@@ -91,20 +91,82 @@ public class DefaultBuildManagerTest
     
     public void testParallelBuildsLimitIsMaximized()
         throws Exception
-    {
-        // assert size of the overallBuildQueuesInUse!
+    {   
+        // set expectations
+        context.checking(new Expectations() {{
+            exactly( 3 ).of(configurationService).getNumberOfBuildsInParallel(); will( returnValue( 2 ) );
+        }});
+        
+        Schedule schedule = new Schedule();
+        schedule.setMaxJobExecutionTime( 100 );
+        
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( schedule );
+        
+        buildManager.addProjectToBuildQueue( 1, buildDef, 1, "continuum-test-project-1", "build-def-label" );
+        
+        buildManager.addProjectToBuildQueue( 2, buildDef, 1, "continuum-test-project-2", "build-def-label" );
+        
+        buildManager.addProjectToBuildQueue( 3, buildDef, 1, "continuum-test-project-3", "build-def-label" );
+        
+        // verify
+        context.assertIsSatisfied();
+        
+        // assert if the project is in the correct build queue!
+        OverallBuildQueue overallBuildQueue = buildManager.getOverallBuildQueueWhereProjectIsQueued( 1 );
+        assertEquals( 1, overallBuildQueue.getId() );
+        
+        overallBuildQueue = buildManager.getOverallBuildQueueWhereProjectIsQueued( 2 );
+        assertEquals( 2, overallBuildQueue.getId() );
+        
+        overallBuildQueue = buildManager.getOverallBuildQueueWhereProjectIsQueued( 3 );
+        assertEquals( 1, overallBuildQueue.getId() );
+        
+        assertEquals( 2, buildManager.getOverallBuildQueuesInUse().size() );
     }
     
     public void testParallelBuildsBuildIsCancelled()
         throws Exception
     {
-    
+        
     }
     
+    // project must not be queued!
     public void testParallelBuildsProjectAlreadyInBuildQueue()
         throws Exception
     {
-    
+        // set expectations
+        context.checking(new Expectations() {{
+            exactly( 2 ).of(configurationService).getNumberOfBuildsInParallel(); will( returnValue( 2 ) );
+        }});
+        
+        Schedule schedule = new Schedule();
+        schedule.setMaxJobExecutionTime( 100 );
+        
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( schedule );
+        
+        buildManager.addProjectToBuildQueue( 1, buildDef, 1, "continuum-test-project-1", "build-def-label" );
+        
+        buildManager.addProjectToBuildQueue( 2, buildDef, 1, "continuum-test-project-2", "build-def-label" );
+        
+        buildManager.addProjectToBuildQueue( 1, buildDef, 1, "continuum-test-project-1", "build-def-label" );
+        
+        // verify
+        context.assertIsSatisfied();
+        
+        // assert if the project is in the correct build queue!
+        OverallBuildQueue overallBuildQueue = buildManager.getOverallBuildQueueWhereProjectIsQueued( 1 );
+        assertEquals( 1, overallBuildQueue.getId() );
+        assertEquals( 1, overallBuildQueue.getBuildQueue().getQueueSnapshot().size() );
+        
+        overallBuildQueue = buildManager.getOverallBuildQueueWhereProjectIsQueued( 2 );
+        assertEquals( 2, overallBuildQueue.getId() );
+        assertEquals( 1, overallBuildQueue.getBuildQueue().getQueueSnapshot().size() );
+        
+        assertEquals( 2, buildManager.getOverallBuildQueuesInUse().size() );        
     }
     
     public void testParallelBuildsRemoveFromBuildQueue()
@@ -152,6 +214,68 @@ public class DefaultBuildManagerTest
     public void testSingleBuild()
         throws Exception
     {
+        // set expectations
+        context.checking(new Expectations() {{
+            exactly( 2 ).of(configurationService).getNumberOfBuildsInParallel(); will( returnValue( 1 ) );
+        }});
+        
+        Schedule schedule = new Schedule();
+        schedule.setMaxJobExecutionTime( 100 );
+        
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( schedule );
+        
+        buildManager.addProjectToBuildQueue( 1, buildDef, 1, "continuum-test-project-1", "build-def-label" );
+        
+        buildManager.addProjectToBuildQueue( 2, buildDef, 1, "continuum-test-project-2", "build-def-label" );
+        
+        // verify
+        context.assertIsSatisfied();
+        
+        // assert if the project is in the correct build queue!
+        OverallBuildQueue overallBuildQueue = buildManager.getOverallBuildQueueWhereProjectIsQueued( 1 );
+        assertEquals( 1, overallBuildQueue.getId() );
+        
+        overallBuildQueue = buildManager.getOverallBuildQueueWhereProjectIsQueued( 2 );
+        assertEquals( 1, overallBuildQueue.getId() );
+        
+        assertEquals( 1, buildManager.getOverallBuildQueuesInUse().size() );
+        
+        assertEquals( 2, buildManager.getOverallBuildQueuesInUse().get( 0 ).getBuildQueue().getQueueSnapshot().size() );
+    }
     
+    public void testNumberOfBuildInParallelConfigSetToZero()
+        throws Exception
+    {
+        // set expectations
+        context.checking(new Expectations() {{
+            exactly( 2 ).of(configurationService).getNumberOfBuildsInParallel(); will( returnValue( 0 ) );
+        }});
+        
+        Schedule schedule = new Schedule();
+        schedule.setMaxJobExecutionTime( 100 );
+        
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( schedule );
+        
+        buildManager.addProjectToBuildQueue( 1, buildDef, 1, "continuum-test-project-1", "build-def-label" );
+        
+        buildManager.addProjectToBuildQueue( 2, buildDef, 1, "continuum-test-project-2", "build-def-label" );
+        
+        // verify
+        context.assertIsSatisfied();
+        
+        // assert if the project is in the correct build queue!
+        OverallBuildQueue overallBuildQueue = buildManager.getOverallBuildQueueWhereProjectIsQueued( 1 );
+        assertEquals( 1, overallBuildQueue.getId() );
+        
+        overallBuildQueue = buildManager.getOverallBuildQueueWhereProjectIsQueued( 2 );
+        assertEquals( 1, overallBuildQueue.getId() );
+        
+        assertEquals( 1, buildManager.getOverallBuildQueuesInUse().size() );
+        
+        assertEquals( 2, buildManager.getOverallBuildQueuesInUse().get( 0 ).getBuildQueue().getQueueSnapshot().size() );
     }
 }
