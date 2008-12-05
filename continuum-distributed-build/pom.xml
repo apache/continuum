@@ -31,5 +31,6 @@ under the License.
   <name>Continuum :: Distributed Build</name>
   <modules>
     <module>continuum-buildagent</module>
+    <module>continuum-xmlrpc-distributed-builds</module>
   </modules>
 </project>

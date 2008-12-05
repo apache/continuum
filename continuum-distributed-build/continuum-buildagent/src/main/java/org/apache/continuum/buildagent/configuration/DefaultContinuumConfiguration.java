@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DefaultContinuumConfiguration
-    //implements ContinuumConfiguration
+    implements ContinuumConfiguration
 {
     private Logger log = LoggerFactory.getLogger( getClass() );
 
@@ -136,5 +136,15 @@ public class DefaultContinuumConfiguration
         throws ContinuumConfigurationException
     {
         this.buildAgentConfiguration = buildAgentConfiguration;
+    }
+
+    public File getConfigurationFile()
+    {
+        return configurationFile;
+    }
+
+    public void setConfigurationFile( File configurationFile )
+    {
+        this.configurationFile = configurationFile;
     }
 }

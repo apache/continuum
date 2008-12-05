@@ -265,4 +265,8 @@ public class ConfigurationServiceMock
     {
     }
 
+    public void updateBuildAgent( BuildAgentConfiguration buildAgent )
+    {
+    }
+
 }
