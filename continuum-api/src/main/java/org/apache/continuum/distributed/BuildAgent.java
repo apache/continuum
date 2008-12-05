@@ -10,6 +10,8 @@ public class BuildAgent
 
     boolean busy;
 
+    boolean enabled;
+
     List<Project> projects;
 
     public String getUrl()
@@ -30,6 +32,16 @@ public class BuildAgent
     public void setBusy( boolean busy )
     {
         this.busy = busy;
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+    public void setEnabled( boolean enabled )
+    {
+        this.enabled = enabled;
     }
 
     public List<Project> getProjects()

@@ -93,6 +93,8 @@ public interface ConfigurationService
 
     void removeBuildAgent( BuildAgentConfiguration buildAgent );
 
+    void updateBuildAgent( BuildAgentConfiguration buildAgent );
+
     boolean isDistributedBuildEnabled();
 
     void setDistributedBuildEnabled( boolean distributedBuildEnabled );

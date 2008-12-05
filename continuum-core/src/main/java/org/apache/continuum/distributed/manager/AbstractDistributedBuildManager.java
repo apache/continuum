@@ -58,8 +58,6 @@ public abstract class AbstractDistributedBuildManager
 
     public static final String KEY_BUILD_STATE = "build-state";
 
-    public static final String KEY_SCM_STATE = "scm-state";
-
     public static final String KEY_SCM_COMMAND_OUTPUT = "scm-command-output";
 
     public static final String KEY_SCM_COMMAND_LINE = "scm-command-line";
@@ -141,7 +139,16 @@ public abstract class AbstractDistributedBuildManager
 
     protected static String getString( Map context, String key )
     {
-        return (String) getObject( context, key );
+        Object obj = getObject( context, key, null );
+
+        if ( obj == null )
+        {
+            return null;
+        }
+        else
+        {
+            return (String) obj;
+        }
     }
 
     protected static String getString( Map context, String key, String defaultValue )
@@ -151,7 +158,16 @@ public abstract class AbstractDistributedBuildManager
 
     protected static boolean getBoolean( Map context, String key )
     {
-        return ( (Boolean) getObject( context, key ) ).booleanValue();
+        Object obj = getObject( context, key, null );
+        
+        if ( obj == null )
+        {
+            return false;
+        }
+        else
+        {
+            return ( (Boolean) obj ).booleanValue();
+        }
     }
     
     protected static boolean getBoolean( Map context, String key, boolean defaultValue )

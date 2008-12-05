@@ -321,6 +321,24 @@ public class DefaultConfigurationService
         }
     }
 
+    public void updateBuildAgent( BuildAgentConfiguration buildAgent )
+    {
+        List<BuildAgentConfiguration> buildAgents = getBuildAgents();
+        if ( buildAgents != null )
+        {
+            for ( BuildAgentConfiguration agent : buildAgents )
+            {
+                if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+                {
+                    agent.setDescription( buildAgent.getDescription() );
+                    agent.setEnabled( buildAgent.isEnabled() );
+                    
+                    return;
+                }
+            }
+        }
+    }
+
     public boolean isDistributedBuildEnabled()
     {
         return systemConf.isDistributedBuildEnabled();

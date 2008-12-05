@@ -80,7 +80,7 @@ public class DefaultDistributedBuildManager
      */
     private BuildResultDao buildResultDao;
 
-    private List<PrepareBuildProjectsTask> projectsBuildQueue;
+    private List<PrepareBuildProjectsTask> projectsBuildInQueue;
     
     private List<BuildAgent> buildAgents;
 
@@ -97,27 +97,25 @@ public class DefaultDistributedBuildManager
         {
             for ( BuildAgentConfiguration agent : agents )
             {
-                if ( agent.isEnabled() )
-                { 
-                    boolean found = false;
-    
-                    for ( BuildAgent buildAgent : buildAgents )
+                boolean found = false;
+
+                for ( BuildAgent buildAgent : buildAgents )
+                {
+                    if ( buildAgent.getUrl().equals( agent.getUrl() ) )
                     {
-                        if ( buildAgent.getUrl().equals( agent.getUrl() ) )
-                        {
-                            found = true;
-                            break;
-                        }
+                        found = true;
+                        buildAgent.setEnabled( agent.isEnabled() );
+                        break;
                     }
-    
-                    if ( !found )
-                    {
-                        // ping it 
-                        BuildAgent buildAgent = new BuildAgent();
-                        buildAgent.setUrl( agent.getUrl() );
-                        buildAgent.setBusy( false );
-                        buildAgents.add( buildAgent );
-                    }
+                }
+
+                if ( !found )
+                {
+                    BuildAgent buildAgent = new BuildAgent();
+                    buildAgent.setUrl( agent.getUrl() );
+                    buildAgent.setBusy( false );
+                    buildAgent.setEnabled( agent.isEnabled() );
+                    buildAgents.add( buildAgent );
                 }
             }
         }
@@ -182,7 +180,7 @@ public class DefaultDistributedBuildManager
     public void buildProjectsInQueue()
         throws ContinuumException
     {
-        for ( PrepareBuildProjectsTask task : projectsBuildQueue )
+        for ( PrepareBuildProjectsTask task : projectsBuildInQueue )
         {
             Map projectsAndBuildDefinitions = task.getProjectsBuildDefinitionsMap();
             int trigger = task.getTrigger();
@@ -198,7 +196,7 @@ public class DefaultDistributedBuildManager
         
         for ( BuildAgent buildAgent : buildAgents )
         {
-            if ( !buildAgent.isBusy() )
+            if ( !buildAgent.isBusy() && buildAgent.isEnabled() )
             {
                 List buildContext = initializeBuildContext( projectsAndBuildDefinitionsMap, trigger, buildAgent );
 
@@ -208,7 +206,7 @@ public class DefaultDistributedBuildManager
                 //{
                     //client.buildProjects( buildContext );
                 //}
-                //catch ( InterruptedException e )
+                //catch ( XmlRpcException e )
                 //{
                     //do something about the server Url
                     //client.getServerUrl();
@@ -222,13 +220,13 @@ public class DefaultDistributedBuildManager
         if ( !found && !inBuildQueue )
         {
             // all build agents are busy, put into projectBuildQueue for now
-            if ( projectsBuildQueue == null )
+            if ( projectsBuildInQueue == null )
             {
-                projectsBuildQueue = new ArrayList<PrepareBuildProjectsTask>();
+                projectsBuildInQueue = new ArrayList<PrepareBuildProjectsTask>();
             }
 
             PrepareBuildProjectsTask prepareBuildTask = new PrepareBuildProjectsTask( projectsAndBuildDefinitionsMap, trigger );
-            projectsBuildQueue.add( prepareBuildTask );
+            projectsBuildInQueue.add( prepareBuildTask );
         }
     }
 
@@ -282,6 +280,11 @@ public class DefaultDistributedBuildManager
                     }
                 }
             }
+
+            if ( error != null )
+            {
+                updateBuildAgent( project.getId(), true );
+            }
         }
         catch ( ContinuumStoreException e )
         {
@@ -297,13 +300,22 @@ public class DefaultDistributedBuildManager
             int projectId = getProjectId( context );
             int buildDefinitionId = getBuildDefinitionId( context );
 
-            Project project = projectDao.getProjectWithBuildDetails( projectId );
+            Project project = projectDao.getProjectWithAllDetails( projectId );
             BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
 
             BuildResult oldBuildResult =
                 buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
 
-            int buildNumber = project.getBuildNumber() + 1;
+            int buildNumber;
+
+            if ( getBuildState( context ) == ContinuumProjectState.OK )
+            {
+                buildNumber = project.getBuildNumber() + 1;
+            }
+            else
+            {
+                buildNumber = project.getBuildNumber();
+            }
 
             // ----------------------------------------------------------------------
             // Make the buildResult
@@ -318,7 +330,6 @@ public class DefaultDistributedBuildManager
             buildResult.setError( getBuildError( context ) );
             buildResult.setExitCode( getBuildExitCode( context ) );
             buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, context ) );
-            buildResult.setProject( project );
             buildResult.setState( getBuildState( context ) );
             buildResult.setTrigger( getTrigger( context ) );
             
@@ -331,7 +342,7 @@ public class DefaultDistributedBuildManager
 
             projectDao.updateProject( project );
 
-            updateBuildAgent( context );
+            updateBuildAgent( project.getId(), false );
         }
         catch ( ContinuumStoreException e )
         {
@@ -529,23 +540,33 @@ public class DefaultDistributedBuildManager
         return error;
     }
 
-    private void updateBuildAgent( Map context )
+    private void updateBuildAgent( int projectId, boolean removeAll )
         throws ContinuumException
     {
         for ( BuildAgent buildAgent : buildAgents )
         {
             for ( Project project : buildAgent.getProjects() )
             {
-                if ( project.getId() == getProjectId( context ) )
+                if ( project.getId() == projectId )
                 {
-                    buildAgent.getProjects().remove( project );
-                    
-                    if ( buildAgent.isBusy() && ( buildAgent.getProjects() == null || buildAgent.getProjects().size() == 0 ) )
+                    if ( removeAll )
                     {
+                        buildAgent.setProjects( null );
                         buildAgent.setBusy( false );
-                    }
 
-                    buildProjectsInQueue();
+                        buildProjectsInQueue();
+                    }
+                    else
+                    {
+                        buildAgent.getProjects().remove( project );
+
+                        if ( buildAgent.getProjects() == null || buildAgent.getProjects().size() == 0 )
+                        {
+                            buildAgent.setBusy( false );
+
+                            buildProjectsInQueue();
+                        }
+                    }
                     return;
                 }
             }

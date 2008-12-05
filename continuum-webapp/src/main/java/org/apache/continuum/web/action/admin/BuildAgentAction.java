@@ -123,13 +123,17 @@ public class BuildAgentAction
             {
                 if ( buildAgent.getUrl().equals( agent.getUrl() ) )
                 {
-                    addActionError( getText( "buildAgent.error.exist" ) );
-                    return ERROR;
+                    agent.setDescription( buildAgent.getDescription() );
+                    agent.setEnabled( buildAgent.isEnabled() );
+
+                    configuration.updateBuildAgent( agent );
+                }
+                else
+                {
+                    configuration.addBuildAgent( buildAgent );
                 }
             }
         }
-
-        configuration.addBuildAgent( buildAgent );
 
         distributedBuildManager.reload();
 
