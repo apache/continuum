@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+  <bean id="continuumDistributedBuildServer" class="org.apache.continuum.xmlrpc.distributed.server.DefaultContinuumDistributedBuildServer">
+    <property name="continuumBuildAgentService" ref="continuumBuildAgentService"/>
+  </bean>
+  
+  <bean id="continuumBuildAgentService" class="org.apache.continuum.buildagent.ContinuumBuildAgentServiceImpl">
+    <property name="configurationService" ref="configurationService"/>
+  </bean>
+  
+  <bean id="configurationService" class="org.apache.continuum.buildagent.configuration.DefaultConfigurationService">
+    <property name="configuration" ref="continuumBuildAgentConfiguration" />
+  </bean>
+  
+  <bean id="continuumBuildAgentConfiguration" class="org.apache.continuum.buildagent.configuration.DefaultContinuumConfiguration">
+    <property name="configurationFile" value="file:${appserver.base}/conf/continuum.xml" />
+  </bean>
+</beans>
