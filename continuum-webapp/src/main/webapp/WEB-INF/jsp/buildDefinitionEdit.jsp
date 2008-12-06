@@ -30,7 +30,7 @@
         <h3><ww:text name="buildDefinition.section.title"/></h3>
 
         <div class="axial">
-          <ww:form action="saveBuildDefinition" method="get" validate="true">
+          <ww:form action="saveBuildDefinition" method="get">
             <c:choose>
             
               <c:when test="${!empty actionErrors}">
