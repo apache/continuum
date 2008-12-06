@@ -41,7 +41,6 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
-import com.opensymphony.webwork.ServletActionContext;
 import com.opensymphony.webwork.interceptor.ServletRequestAware;
 
 /**
