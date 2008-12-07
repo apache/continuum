@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.continuum.builder.ContinuumBuilder;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
@@ -43,14 +44,15 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.dao.ScheduleDao;
-import org.apache.continuum.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
+import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -80,11 +82,9 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult
 import org.apache.maven.continuum.project.builder.maven.MavenOneContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilder;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
-import org.apache.maven.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUrlValidator;
-import org.apache.maven.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -249,9 +249,9 @@ public class DefaultContinuum
     private TaskQueueManager taskQueueManager;
 
     /**
-     * @plexus.requirement
+     * @plexus.requirement role-hint="distributedBuild"
      */
-    private DistributedBuildManager distributedBuildManager;
+    private ContinuumBuilder distributedBuilder;
 
     public DefaultContinuum()
     {
@@ -3359,7 +3359,7 @@ public class DefaultContinuum
     {
         if ( configurationService.isDistributedBuildEnabled() )
         {
-            distributedBuildManager.buildProjects( projectsBuildDefinitionsMap, trigger );
+            distributedBuilder.buildProjects( projectsBuildDefinitionsMap, trigger );
         }
         else
         {

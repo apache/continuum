@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.scm.queue;
+package org.apache.continuum.scm.queue;
 
 import java.util.Map;
 

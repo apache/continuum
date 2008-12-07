@@ -1,36 +1,25 @@
-package org.apache.continuum.distributed.manager;
+package org.apache.continuum.builder.distributed.manager;
 
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.builder.AbstractContinuumBuilder;
+import org.apache.continuum.builder.distributed.BuildAgentListener;
+import org.apache.continuum.builder.distributed.DefaultBuildAgentListener;
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
-import org.apache.continuum.distributed.BuildAgent;
 import org.apache.continuum.model.project.ProjectScmRoot;
+import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
+import org.apache.continuum.utils.ProjectSorter;
+//import org.apache.continuum.xmlrpc.distributed.client.ContinuumDistributedBuildClient;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -39,9 +28,9 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.apache.maven.continuum.utils.ProjectSorter;
+import org.apache.xmlrpc.XmlRpcException;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
@@ -51,7 +40,8 @@ import org.slf4j.LoggerFactory;
  * @author Maria Catherine Tan
  */
 public class DefaultDistributedBuildManager
-    extends AbstractDistributedBuildManager
+    extends AbstractContinuumBuilder
+    implements DistributedBuildManager
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
@@ -82,15 +72,15 @@ public class DefaultDistributedBuildManager
 
     private List<PrepareBuildProjectsTask> projectsBuildInQueue;
     
-    private List<BuildAgent> buildAgents;
+    private List<BuildAgentListener> listeners;
 
     public void initialize()
     {
         List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
 
-        if ( buildAgents == null )
+        if ( listeners == null )
         {
-            buildAgents = new ArrayList<BuildAgent>();
+            listeners = new ArrayList<BuildAgentListener>();
         }
         
         if ( agents != null )
@@ -99,23 +89,20 @@ public class DefaultDistributedBuildManager
             {
                 boolean found = false;
 
-                for ( BuildAgent buildAgent : buildAgents )
+                for ( BuildAgentListener listener : listeners )
                 {
-                    if ( buildAgent.getUrl().equals( agent.getUrl() ) )
+                    if ( listener.getUrl().equals( agent.getUrl() ) )
                     {
                         found = true;
-                        buildAgent.setEnabled( agent.isEnabled() );
+                        listener.setEnabled( agent.isEnabled() );
                         break;
                     }
                 }
 
                 if ( !found )
                 {
-                    BuildAgent buildAgent = new BuildAgent();
-                    buildAgent.setUrl( agent.getUrl() );
-                    buildAgent.setBusy( false );
-                    buildAgent.setEnabled( agent.isEnabled() );
-                    buildAgents.add( buildAgent );
+                    BuildAgentListener listener = new DefaultBuildAgentListener( agent.getUrl(), false, agent.isEnabled() );
+                    listeners.add( listener );
                 }
             }
         }
@@ -194,16 +181,33 @@ public class DefaultDistributedBuildManager
     {
         boolean found = false;
         
-        for ( BuildAgent buildAgent : buildAgents )
+        for ( BuildAgentListener listener : listeners )
         {
-            if ( !buildAgent.isBusy() && buildAgent.isEnabled() )
+            if ( !listener.isBusy() && listener.isEnabled() )
             {
-                List buildContext = initializeBuildContext( projectsAndBuildDefinitionsMap, trigger, buildAgent );
+                List buildContext = initializeBuildContext( projectsAndBuildDefinitionsMap, trigger, listener );
+/*
+                try
+                {
+                    ContinuumDistributedBuildClient client = new ContinuumDistributedBuildClient( new URL( listener.getUrl() ) );
+                    client.ping();
+                }
+                catch ( MalformedURLException e )
+                {
+                    throw new ContinuumException( "Invalid url", e );
+                }
+                catch ( XmlRpcException e )
+                {
+                    throw new ContinuumException( "", e );
+                }
+                catch ( Exception e )
+                {
+                    
+                }*/
 
-                //BuildAgentXMLRpcClient client = new BuildAgentXmlRpcClient( buildAgent.getUrl(), null, null );
-                
-                //try
                 //{
+                    //client.ping();
+                    //found = true; 
                     //client.buildProjects( buildContext );
                 //}
                 //catch ( XmlRpcException e )
@@ -212,7 +216,7 @@ public class DefaultDistributedBuildManager
                     //client.getServerUrl();
                     //get projects of buildagent and set to build error the first project.
                 //}
-                log.info( "dispatched build to " + buildAgent.getUrl() );
+                log.info( "dispatched build to " + listener.getUrl() );
                 found = true;
             }
         }
@@ -355,7 +359,8 @@ public class DefaultDistributedBuildManager
         this.initialize();
     }
 
-    private List initializeBuildContext( Map<Integer, Integer> projectsAndBuildDefinitions, int trigger, BuildAgent buildAgent )
+    private List initializeBuildContext( Map<Integer, Integer> projectsAndBuildDefinitions, 
+                                         int trigger, BuildAgentListener listener )
         throws ContinuumException
     {
         List buildContext = new ArrayList();
@@ -419,8 +424,8 @@ public class DefaultDistributedBuildManager
                 ctr++;
             }
             
-            buildAgent.setBusy( true );
-            buildAgent.setProjects( projects );
+            listener.setBusy( true );
+            listener.setProjects( projects );
 
             return buildContext;
         }
@@ -543,26 +548,26 @@ public class DefaultDistributedBuildManager
     private void updateBuildAgent( int projectId, boolean removeAll )
         throws ContinuumException
     {
-        for ( BuildAgent buildAgent : buildAgents )
+        for ( BuildAgentListener listener : listeners )
         {
-            for ( Project project : buildAgent.getProjects() )
+            for ( Project project : listener.getProjects() )
             {
                 if ( project.getId() == projectId )
                 {
                     if ( removeAll )
                     {
-                        buildAgent.setProjects( null );
-                        buildAgent.setBusy( false );
+                        listener.setProjects( null );
+                        listener.setBusy( false );
 
                         buildProjectsInQueue();
                     }
                     else
                     {
-                        buildAgent.getProjects().remove( project );
+                        listener.getProjects().remove( project );
 
-                        if ( buildAgent.getProjects() == null || buildAgent.getProjects().size() == 0 )
+                        if ( !listener.hasProjects() )
                         {
-                            buildAgent.setBusy( false );
+                            listener.setBusy( false );
 
                             buildProjectsInQueue();
                         }
@@ -573,8 +578,8 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public List<BuildAgent> getBuildAgents()
+    public List<BuildAgentListener> getBuildAgentListeners()
     {
-        return buildAgents;
+        return listeners;
     }
 }

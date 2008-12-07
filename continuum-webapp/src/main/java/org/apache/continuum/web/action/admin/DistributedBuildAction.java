@@ -22,8 +22,8 @@ package org.apache.continuum.web.action.admin;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.continuum.distributed.BuildAgent;
-import org.apache.continuum.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.builder.distributed.BuildAgentListener;
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
@@ -54,20 +54,18 @@ public class DistributedBuildAction
 
     public String view()
     {
-        List<BuildAgent> buildAgents = distributedBuildManager.getBuildAgents();
-        
         distributedBuildSummary = new ArrayList<DistributedBuildSummary>();
         
-        for ( BuildAgent buildAgent : buildAgents )
+        for ( BuildAgentListener listener : distributedBuildManager.getBuildAgentListeners() )
         {
-            if ( buildAgent.getProjects() != null )
+            if ( listener.hasProjects() )
             {
-                for ( Project project : buildAgent.getProjects() )
+                for ( Project project : listener.getProjects() )
                 {
                     DistributedBuildSummary summary = new DistributedBuildSummary();
                     summary.setProjectId( project.getId() );
                     summary.setProjectName( project.getName() );
-                    summary.setUrl( buildAgent.getUrl() );
+                    summary.setUrl( listener.getUrl() );
                     
                     distributedBuildSummary.add( summary );
                 }

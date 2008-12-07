@@ -1,8 +1,9 @@
-package org.apache.continuum.distributed.manager;
+package org.apache.continuum.builder.distributed.manager;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.continuum.builder.ContinuumBuilder;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectScmRootDao;

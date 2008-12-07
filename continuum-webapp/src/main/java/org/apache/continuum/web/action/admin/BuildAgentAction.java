@@ -20,8 +20,8 @@ package org.apache.continuum.web.action.admin;
  */
 
 import org.apache.continuum.configuration.BuildAgentConfiguration;
-import org.apache.continuum.distributed.BuildAgent;
-import org.apache.continuum.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.builder.distributed.BuildAgentListener;
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
@@ -148,20 +148,20 @@ public class BuildAgentAction
             return CONFIRM;
         }
 
-        List<BuildAgent> agents = distributedBuildManager.getBuildAgents();
+        List<BuildAgentListener> listeners = distributedBuildManager.getBuildAgentListeners();
 
-        for ( BuildAgent agent : agents )
+        for ( BuildAgentListener listener : listeners )
         {
-            if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+            if ( listener.getUrl().equals( buildAgent.getUrl() ) )
             {
-                if ( agent.isBusy() )
+                if ( listener.isBusy() )
                 {
                     message = getText( "buildAgent.error.delete.busy" );
                     return ERROR;
                 }
                 else
                 {
-                    agents.remove( agent );
+                    listeners.remove( listener );
                     break;
                 }
             }

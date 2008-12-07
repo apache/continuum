@@ -30,7 +30,6 @@ import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
-import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUtils;
@@ -88,11 +87,13 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
-        int state = project.getState();
+        // do not set state of project to updating
 
-        project.setState( ContinuumProjectState.UPDATING );
+        //int state = project.getState();
 
-        projectDao.updateProject( project );
+        //project.setState( ContinuumProjectState.UPDATING );
+
+        //projectDao.updateProject( project );
 
         UpdateScmResult scmResult;
 
@@ -175,19 +176,19 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
             // set back to the original state
             // TODO: transient states!
-            try
-            {
-                project = projectDao.getProject( project.getId() );
+            //try
+            //{
+            //    project = projectDao.getProject( project.getId() );
 
-                project.setState( state );
+            //    project.setState( state );
 
-                projectDao.updateProject( project );
-            }
-            catch ( Exception e )
-            {
+            //    projectDao.updateProject( project );
+            //}
+            //catch ( Exception e )
+            //{
                 // nasty nasty, but we're in finally, so just sacrifice the state to keep the original exception
-                getLogger().error( e.getMessage(), e );
-            }
+            //    getLogger().error( e.getMessage(), e );
+            //}
 
             notifier.checkoutComplete( project, buildDefinition );
         }

@@ -1,4 +1,4 @@
-package org.apache.continuum.distributed.manager;
+package org.apache.continuum.builder;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,32 +19,14 @@ package org.apache.continuum.distributed.manager;
  * under the License.
  */
 
-import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.distributed.BuildAgent;
 import org.apache.maven.continuum.ContinuumException;
 
-/**
- * @author Maria Catherine Tan
- */
-public interface DistributedBuildManager
+public interface ContinuumBuilder
 {
-    String ROLE = DistributedBuildManager.class.getName();
-
-    void reload();
+    String ROLE = ContinuumBuilder.class.getName();
 
     void buildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger )
         throws ContinuumException;
-
-    void buildProjectsInQueue()
-        throws ContinuumException;
-
-    void updateProjectScmRoot( Map context )
-        throws ContinuumException;
-
-    void updateBuildResult( Map context )
-        throws ContinuumException;
-
-    List<BuildAgent> getBuildAgents();
 }

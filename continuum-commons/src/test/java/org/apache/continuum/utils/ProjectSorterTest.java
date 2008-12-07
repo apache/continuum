@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.utils;
+package org.apache.continuum.utils;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

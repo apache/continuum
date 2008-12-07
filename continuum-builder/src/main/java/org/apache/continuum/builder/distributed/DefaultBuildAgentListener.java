@@ -1,18 +1,30 @@
-package org.apache.continuum.distributed;
+package org.apache.continuum.builder.distributed;
 
 import java.util.List;
 
 import org.apache.maven.continuum.model.project.Project;
 
-public class BuildAgent
+public class DefaultBuildAgentListener
+    implements BuildAgentListener
 {
-    String url;
+    private String url;
 
-    boolean busy;
+    private boolean busy;
 
-    boolean enabled;
+    private boolean enabled;
 
-    List<Project> projects;
+    private List<Project> projects;
+
+    public DefaultBuildAgentListener()
+    {
+    }
+
+    public DefaultBuildAgentListener( String url, boolean busy, boolean enabled )
+    {
+        this.url = url;
+        this.busy = busy;
+        this.enabled = enabled;
+    }
 
     public String getUrl()
     {
@@ -47,6 +59,16 @@ public class BuildAgent
     public List<Project> getProjects()
     {
         return projects;
+    }
+
+    public boolean hasProjects()
+    {
+        if ( projects != null || projects.size() > 0 )
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public void setProjects( List<Project> projects )
