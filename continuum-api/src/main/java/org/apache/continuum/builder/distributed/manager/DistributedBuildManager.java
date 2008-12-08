@@ -16,5 +16,6 @@ public interface DistributedBuildManager
 
     List<BuildAgentListener> getBuildAgentListeners();
 
-    void reload();
+    void reload()
+        throws ContinuumException;
 }

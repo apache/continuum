@@ -75,6 +75,7 @@ public class DefaultDistributedBuildManager
     private List<BuildAgentListener> listeners;
 
     public void initialize()
+        throws ContinuumException
     {
         List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
 
@@ -103,9 +104,12 @@ public class DefaultDistributedBuildManager
                 {
                     BuildAgentListener listener = new DefaultBuildAgentListener( agent.getUrl(), false, agent.isEnabled() );
                     listeners.add( listener );
+                    log.info( "add listener for build agent '" + agent.getUrl() + "'" );
                 }
             }
         }
+
+        buildProjectsInQueue();
     }
 
     public ConfigurationService getConfigurationService()
@@ -167,12 +171,15 @@ public class DefaultDistributedBuildManager
     public void buildProjectsInQueue()
         throws ContinuumException
     {
-        for ( PrepareBuildProjectsTask task : projectsBuildInQueue )
+        if ( projectsBuildInQueue != null )
         {
-            Map projectsAndBuildDefinitions = task.getProjectsBuildDefinitionsMap();
-            int trigger = task.getTrigger();
-            
-            buildProjects( projectsAndBuildDefinitions, trigger, true );
+            for ( PrepareBuildProjectsTask task : projectsBuildInQueue )
+            {
+                Map projectsAndBuildDefinitions = task.getProjectsBuildDefinitionsMap();
+                int trigger = task.getTrigger();
+                
+                buildProjects( projectsAndBuildDefinitions, trigger, true );
+            }
         }
     }
 
@@ -185,6 +192,7 @@ public class DefaultDistributedBuildManager
         {
             if ( !listener.isBusy() && listener.isEnabled() )
             {
+                log.info( "initializing buildContext" );
                 List buildContext = initializeBuildContext( projectsAndBuildDefinitionsMap, trigger, listener );
 /*
                 try
@@ -229,6 +237,7 @@ public class DefaultDistributedBuildManager
                 projectsBuildInQueue = new ArrayList<PrepareBuildProjectsTask>();
             }
 
+            log.info( "no build agent available, put in queue" );
             PrepareBuildProjectsTask prepareBuildTask = new PrepareBuildProjectsTask( projectsAndBuildDefinitionsMap, trigger );
             projectsBuildInQueue.add( prepareBuildTask );
         }
@@ -240,7 +249,8 @@ public class DefaultDistributedBuildManager
         try
         {
             int projectId = getProjectId( context );
-            
+        
+            log.info( "update scm result of project" + projectId );
             Project project = projectDao.getProjectWithScmDetails( projectId );
             
             ScmResult scmResult = new ScmResult();
@@ -287,6 +297,7 @@ public class DefaultDistributedBuildManager
 
             if ( error != null )
             {
+                log.info( "scm error, not building" );
                 updateBuildAgent( project.getId(), true );
             }
         }
@@ -303,6 +314,8 @@ public class DefaultDistributedBuildManager
         {
             int projectId = getProjectId( context );
             int buildDefinitionId = getBuildDefinitionId( context );
+
+            log.info( "update build result of project '" + projectId + "'" );
 
             Project project = projectDao.getProjectWithAllDetails( projectId );
             BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
@@ -355,6 +368,7 @@ public class DefaultDistributedBuildManager
     }
 
     public void reload()
+        throws ContinuumException
     {
         this.initialize();
     }
@@ -556,6 +570,8 @@ public class DefaultDistributedBuildManager
                 {
                     if ( removeAll )
                     {
+                        log.info( "available build agent '" + listener.getUrl() + "'" );
+
                         listener.setProjects( null );
                         listener.setBusy( false );
 
@@ -567,6 +583,8 @@ public class DefaultDistributedBuildManager
 
                         if ( !listener.hasProjects() )
                         {
+                            log.info( "available build agent '" + listener.getUrl() + "'" );
+                            
                             listener.setBusy( false );
 
                             buildProjectsInQueue();
