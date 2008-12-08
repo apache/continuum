@@ -4,18 +4,23 @@
   </properties>  
 <body>
 
-  <h2>Apache Continuum 1.3.0 Release Notes</h2>
+  <h2>Apache Continuum 1.3.1 Release Notes</h2>
   
-  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.3.0.</p>
+  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.3.1.</p>
 
-  <p>Apache Continuum 1.3.0 includes the following new features:</p>
+  <p>As the first public release in the 1.3 series, Apache Continuum 1.3.1 includes the following new features:</p>
 
   <p><b>Transient State</b> -- Continuum now separates transient errors such as an unreachable scm system from build failures.</p>
 
   <p><b>Migration to Struts 2</b> -- The web framework underlying Continuum has been changed from WebWork to Struts 2.0.12.
     For more information on the S2 framework, visit <a href="http://struts.apache.org">http://struts.apache.org</a>.</p>
 
-  <h2>Release Notes - Continuum - Version 1.3.0</h2>
+  <p>To learn more about how the Continuum dev team versions releases, see our
+      <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.</p>  
+
+  <h2>Release Notes - Continuum - Version 1.3.1</h2>    
+
+  <h2>Release Notes - Continuum - Version 1.3.0 (test build)</h2>
 
   <h2>        Improvement
   </h2>
