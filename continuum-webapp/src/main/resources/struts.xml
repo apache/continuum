@@ -444,6 +444,13 @@
       </result>
     </action>    
 
+    <action name="cancelGroupBuild" class="cancelBuild" method="cancelGroupBuild">
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
     <!--
     - continuum release
     -->

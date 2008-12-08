@@ -27,6 +27,7 @@ import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
+import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.logging.LogEnabled;
@@ -44,7 +45,7 @@ import org.codehaus.redback.integration.interceptor.SecureActionException;
  * @since 24 sept. 07
  */
 public class QueuesAction
-    extends AbstractBuildQueueAction
+    extends ContinuumActionSupport
     implements SecureAction, LogEnabled
 {
     
@@ -104,8 +105,9 @@ public class QueuesAction
             addActionError( e.getMessage() );
             return REQUIRES_AUTHENTICATION;
         }
-        
-        cancelBuild( projectId );
+
+        taskQueueManager.cancelBuildTask( projectId );
+
         return SUCCESS;
     }
     
@@ -132,6 +134,7 @@ public class QueuesAction
     }
 
     public String cancelCurrentCheckout()
+        throws Exception
     {
         try 
         {
@@ -148,7 +151,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
         
-        cancelCheckout( projectId );
+        taskQueueManager.cancelCheckout( projectId );
         return SUCCESS;
     }
     
@@ -261,39 +264,6 @@ public class QueuesAction
 
         return bundle;
     }
-    
-    private boolean cancelCheckout(int projectId)
-    {
-        Task task = getCheckoutTaskQueueExecutor().getCurrentTask();
-
-        if ( task != null )
-        {
-            if ( task instanceof CheckOutTask )
-            {
-                if ( ( (CheckOutTask) task ).getProjectId() == projectId )
-                {
-                    getLogger().info( "Cancelling checkout for project " + projectId );
-                    return getCheckoutTaskQueueExecutor().cancelTask( task );
-                }
-                else
-                {
-                    getLogger().warn(
-                                      "Current task is not for the given projectId (" + projectId + "): "
-                                          + ( (CheckOutTask) task ).getProjectId() + "; not cancelling checkout" );
-                }
-            }
-            else
-            {
-                getLogger().warn( "Current task not a CheckOutTask - not cancelling checkout" );
-            }
-        }
-        else
-        {
-            getLogger().warn( "No task running - not cancelling checkout" );
-        }
-        return false;
-    }
-    
 
     public List<BuildProjectTask> getBuildProjectTasks()
     {
@@ -414,8 +384,5 @@ public class QueuesAction
     public void setSelectedCheckOutTaskHashCodes( List<String> selectedCheckOutTaskHashCodes )
     {
         this.selectedCheckOutTaskHashCodes = selectedCheckOutTaskHashCodes;
-    }
-
-
-    
+    }    
 }

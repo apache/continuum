@@ -19,13 +19,16 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.web.action.admin.AbstractBuildQueueAction;
+import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -35,7 +38,7 @@ import org.codehaus.plexus.util.StringUtils;
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="cancelBuild"
  */
 public class CancelBuildAction
-    extends AbstractBuildQueueAction
+    extends ContinuumActionSupport
 {
 
     private int projectId;
@@ -52,13 +55,19 @@ public class CancelBuildAction
         try
         {
             checkBuildProjectInGroupAuthorization( getProjectGroupName() );
+
+            TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
+
+            taskQueueManager.cancelBuildTask( projectId );
         }
         catch ( AuthorizationRequiredException e )
         {
             return REQUIRES_AUTHORIZATION;
         }
-
-        cancelBuild( projectId );
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( "Error while canceling build", e );
+        }
 
         return SUCCESS;
     }
@@ -81,20 +90,65 @@ public class CancelBuildAction
         try
         {
             taskQueueManager.removeProjectsFromBuildingQueue( projectsId );
+            
+            // now we must check if the current build is one of this
+        	int index = ArrayUtils.indexOf( projectsId, taskQueueManager.getCurrentProjectIdBuilding() );
+        	if ( index > 0 )
+        	{
+            	taskQueueManager.cancelBuildTask( projectsId[index] );
+        	}
         }
         catch ( TaskQueueManagerException e )
         {
             throw new ContinuumException( "Unable to remove projects from building queue", e );
         }
-        // now we must check if the current build is one of this
-        int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
-        if ( index > 0 )
-        {
-            cancelBuild( projectsId[index] );
-        }
+
         return SUCCESS;
     }
 
+    public String cancelGroupBuild()
+        throws ContinuumException
+    {
+        try
+        {
+            checkBuildProjectInGroupAuthorization( getContinuum().getProjectGroup( projectGroupId).getName() );
+        }
+        catch ( AuthorizationRequiredException e )
+        {
+            return REQUIRES_AUTHORIZATION;
+        }
+
+        TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
+
+        List<ProjectScmRoot> scmRoots = getContinuum().getProjectScmRootByProjectGroup( projectGroupId );
+        
+        if ( scmRoots != null )
+        {
+            for ( ProjectScmRoot scmRoot : scmRoots )
+            {
+                try
+                {
+                    taskQueueManager.removeFromPrepareBuildQueue( projectGroupId, scmRoot.getScmRootAddress() );
+                }
+                catch ( TaskQueueManagerException e )
+                {
+                    throw new ContinuumException( "Unable to cancel group build", e );
+                }
+            }
+        }
+        Collection<Project> projects = getContinuum().getProjectsInGroup( projectGroupId );
+
+        List<String> projectIds = new ArrayList<String>();
+        
+        for ( Project project : projects )
+        {
+            projectIds.add( Integer.toString( project.getId() ) );
+        }
+
+        setSelectedProjects( projectIds );
+
+        return cancelBuilds();
+    }
 
     public void setProjectId( int projectId )
     {

@@ -878,7 +878,7 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        Map<String, Map<Integer, Integer>> map = new HashMap<String, Map<Integer, Integer>>();
+        Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
 
         for ( Project project : projectsList )
         {
@@ -895,14 +895,7 @@ public class DefaultContinuum
                         {
                             ProjectScmRoot scmRoot = getProjectScmRootByProject( project.getId() );
                             
-                            String scmRootAddress = "";
-
-                            if ( scmRoot != null )
-                            {
-                                scmRootAddress = scmRoot.getScmRootAddress();
-                            }
-
-                            Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRootAddress );
+                            Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
                             
                             if ( projectsAndBuildDefinitionsMap == null )
                             {
@@ -911,7 +904,7 @@ public class DefaultContinuum
                             
                             projectsAndBuildDefinitionsMap.put( project.getId(), buildDefId );
                             
-                            map.put( scmRootAddress, projectsAndBuildDefinitionsMap );
+                            map.put( scmRoot, projectsAndBuildDefinitionsMap );
                         }
                     } 
                     catch ( TaskQueueManagerException e )
@@ -922,7 +915,7 @@ public class DefaultContinuum
             }
         }
 
-        prepareBuildProjects( map.values(), ContinuumProjectState.TRIGGER_SCHEDULED );
+        prepareBuildProjects( map, ContinuumProjectState.TRIGGER_SCHEDULED );
     }
 
     public void buildProject( int projectId )
@@ -964,7 +957,8 @@ public class DefaultContinuum
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
         projectsBuildDefinitionsMap.put( projectId, buildDef.getId() );
         
-        prepareBuildProjects( projectsBuildDefinitionsMap, trigger );
+        ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
+        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), scmRoot.getProjectGroup().getId() );
     }
 
     public void buildProject( int projectId, int buildDefinitionId, int trigger )
@@ -987,7 +981,8 @@ public class DefaultContinuum
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
         projectsBuildDefinitionsMap.put( projectId, buildDefinitionId );
 
-        prepareBuildProjects( projectsBuildDefinitionsMap, trigger );
+        ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
+        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), scmRoot.getProjectGroup().getId() );
     }
 
     public BuildResult getBuildResult( int buildId )
@@ -3199,7 +3194,7 @@ public class DefaultContinuum
                                       boolean checkDefaultBuildDefinitionForProject, int trigger )
         throws ContinuumException
     {
-        Map<String, Map<Integer, Integer>> map = new HashMap<String, Map<Integer, Integer>>();
+        Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
 
         for ( Project project : projects )
         {
@@ -3271,13 +3266,7 @@ public class DefaultContinuum
 
             ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
 
-            String scmRootAddress = "";
-            if ( scmRoot != null )
-            {
-                scmRootAddress = scmRoot.getScmRootAddress();
-            }
-
-            Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRootAddress );
+            Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
 
             if ( projectsAndBuildDefinitionsMap == null )
             {
@@ -3286,16 +3275,16 @@ public class DefaultContinuum
 
             projectsAndBuildDefinitionsMap.put( projectId, buildDefId );
 
-            map.put( scmRootAddress, projectsAndBuildDefinitionsMap );
+            map.put( scmRoot, projectsAndBuildDefinitionsMap );
         }
 
-        prepareBuildProjects( map.values(), trigger );
+        prepareBuildProjects( map, trigger );
     }
 
     private void prepareBuildProjects( Collection<Project> projects, int buildDefinitionId, int trigger )
         throws ContinuumException
     {
-        Map<String, Map<Integer,Integer>> map = new HashMap<String, Map<Integer, Integer>>();
+        Map<ProjectScmRoot, Map<Integer,Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
 
         for ( Project project : projects )
         {
@@ -3315,14 +3304,8 @@ public class DefaultContinuum
                 }
                 
                 ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
-
-                String scmRootAddress = "";
-                if ( scmRoot != null )
-                {
-                    scmRootAddress = scmRoot.getScmRootAddress();
-                }
                 
-                Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRootAddress );
+                Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
                 
                 if ( projectsAndBuildDefinitionsMap == null )
                 {
@@ -3331,7 +3314,7 @@ public class DefaultContinuum
                 
                 projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
                 
-                map.put( scmRootAddress, projectsAndBuildDefinitionsMap );
+                map.put( scmRoot, projectsAndBuildDefinitionsMap );
             }
             catch ( TaskQueueManagerException e )
             {
@@ -3339,24 +3322,26 @@ public class DefaultContinuum
             }
         }
 
-        prepareBuildProjects( map.values(), trigger );
+        prepareBuildProjects( map, trigger );
     }
 
-    private void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsBuildDefinitions, int trigger )
+    private void prepareBuildProjects( Map<ProjectScmRoot, Map<Integer, Integer>> map, int trigger )
         throws ContinuumException
     {
-        for ( Map<Integer, Integer> map : projectsBuildDefinitions )
+        for ( ProjectScmRoot scmRoot : map.keySet() )
         {
-            prepareBuildProjects( map, trigger );
+            prepareBuildProjects( map.get( scmRoot ), trigger, scmRoot.getScmRootAddress(), scmRoot.getProjectGroup().getId() );
         }
     }
 
-    private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
+    private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, 
+                                       String scmRootAddress, int projectGroupId )
         throws ContinuumException
     {
         try
         {
-            PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger );
+            PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger,
+                                                                          projectGroupId, scmRootAddress );
             taskQueueManager.getPrepareBuildQueue().put( task );
         }
         catch ( TaskQueueException e )
