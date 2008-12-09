@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<!-- ===================================================================== -->
-<!-- Log4j Configuration -->
-<!-- ===================================================================== -->
 
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
-  debug="false">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
   <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-    <param name="Target" value="System.out"/>
     <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}.%M](%L) %m%n"/>
+      <param name="ConversionPattern" value="%d %-5p %c %x - %m%n"/>
     </layout>
   </appender>
 
   <!-- quiet spring loading :-) -->
-  <category name="org.springframework">
-    <priority value="ERROR"/>
-  </category>
-  <category name="org.codehaus.plexus">
-    <priority value="ERROR"/>
-  </category>
+  <logger name="org.springframework">
+    <level value="ERROR"/>
+  </logger>
+  <logger name="org.codehaus.plexus">
+    <level value="ERROR"/>
+  </logger>
   
-  <category name="org.apache.commons">
-    <priority value="ERROR"/>
-  </category>  
+  <logger name="org.apache.commons">
+    <level value="ERROR"/>
+  </logger>  
+  
+  <logger name="org.apache.maven.continuum.execution.maven.m2">
+    <level value="debug" />
+  </logger>
 
   <!-- JPOX -->
-  <category name="JPOX">
-    <priority value="WARN"/>
-  </category>
-  <category name="JPOX.RDBMS">
-    <priority value="ERROR"/>
-  </category>
+  <logger name="JPOX">
+    <level value="WARN"/>
+  </logger>
+  <logger name="JPOX.RDBMS">
+    <level value="ERROR"/>
+  </logger>
 
   <root>
-    <priority value="INFO"/>
+    <level value="INFO"/>
     <appender-ref ref="CONSOLE"/>
   </root>
 

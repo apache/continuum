@@ -407,6 +407,10 @@
       </result>
     </action>
 
+    <action name="scmResult" class="scmResult">
+      <result name="success">/WEB-INF/jsp/scmResult.jsp</result>
+    </action>
+    
     <!--
     * schedule actions
     -->
@@ -439,6 +443,13 @@
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
     </action>    
+
+    <action name="cancelGroupBuild" class="cancelBuild" method="cancelGroupBuild">
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
 
     <!--
     - continuum release

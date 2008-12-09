@@ -87,15 +87,15 @@ public class PrepareBuildProjectsTaskExecutor
                 
                 getLogger().info( "Initializing prepare build" );
                 context = initializeContext( projectId, buildDefinitionId );
-                
-                getLogger().info( "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
-                startPrepareBuild( context );
-                
+
                 if ( !checkProjectScmRoot( context ) )
                 {
                     break;
                 }
-                
+
+                getLogger().info( "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
+                startPrepareBuild( context );
+
                 try
                 {
                     if ( AbstractContinuumAction.getBuildDefinition( context ).isBuildFresh() )
@@ -103,7 +103,7 @@ public class PrepareBuildProjectsTaskExecutor
                         getLogger().info( "Purging existing working copy" );
                         cleanWorkingDirectory( context );
                     }
-                    
+
                     // ----------------------------------------------------------------------
                     // TODO: Centralize the error handling from the SCM related actions.
                     // ContinuumScmResult should return a ContinuumScmResult from all
@@ -111,7 +111,7 @@ public class PrepareBuildProjectsTaskExecutor
                     // ----------------------------------------------------------------------
                     getLogger().info( "Updating working dir" );
                     updateWorkingDirectory( context );
-            
+
                     getLogger().info( "Merging SCM results" );
                     //CONTINUUM-1393
                     if ( !AbstractContinuumAction.getBuildDefinition( context ).isBuildFresh() )
@@ -132,10 +132,13 @@ public class PrepareBuildProjectsTaskExecutor
             endPrepareBuild( context );
         }
 
-        int projectGroupId = AbstractContinuumAction.getProjectGroupId( context );
-        buildProjects( projectGroupId, projectsBuildDefinitionsMap, trigger );
+        if ( checkProjectScmRoot( context ) )
+        {
+            int projectGroupId = AbstractContinuumAction.getProjectGroupId( context );
+            buildProjects( projectGroupId, projectsBuildDefinitionsMap, trigger );
+        }
     }
-    
+
     private Map initializeContext( int projectId, int buildDefinitionId )
         throws TaskExecutionException
     {
@@ -288,7 +291,7 @@ public class PrepareBuildProjectsTaskExecutor
         try
         {
             project.setScmResult( scmResult );
-            
+
             projectDao.updateProject( project );
         }
         catch ( ContinuumStoreException e )
@@ -414,7 +417,7 @@ public class PrepareBuildProjectsTaskExecutor
         {
             projectScmRoot.setState( ContinuumProjectState.ERROR );
             projectScmRoot.setError( error );
-            
+
             projectScmRootDao.updateProjectScmRoot( projectScmRoot );
             
             context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );

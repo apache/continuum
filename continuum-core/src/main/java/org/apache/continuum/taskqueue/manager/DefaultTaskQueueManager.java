@@ -95,14 +95,62 @@ public class DefaultTaskQueueManager
     {
         Task currentTask = getBuildTaskQueueExecutor().getCurrentTask();
         
-        if ( currentTask instanceof BuildProjectTask )
+        if ( currentTask != null )
         {
-            if ( ( (BuildProjectTask) currentTask ).getProjectId() == projectId )
+            if ( currentTask instanceof BuildProjectTask )
             {
-                getLogger().info( "Cancelling task for project " + projectId );
-                getBuildTaskQueueExecutor().cancelTask( currentTask );
+                if ( ( (BuildProjectTask) currentTask ).getProjectId() == projectId )
+                {
+                    getLogger().info( "Cancelling task for project " + projectId );
+                    getBuildTaskQueueExecutor().cancelTask( currentTask );
+                }
+                else
+                {
+                    getLogger().warn( "Current task is not for the given projectId (" + projectId + "): "
+                                          + ( (BuildProjectTask) currentTask ).getProjectId() + "; not cancelling" );
+                }
+            }
+            else
+            {
+                getLogger().warn( "Current task not a BuildProjectTask - not cancelling" );
             }
         }
+        else
+        {
+            getLogger().warn( "No task running - not cancelling" );
+        }
+    }
+
+    public boolean cancelCheckout( int projectId )
+        throws TaskQueueManagerException
+    {
+        Task task = getCheckoutTaskQueueExecutor().getCurrentTask();
+
+        if ( task != null )
+        {
+            if ( task instanceof CheckOutTask )
+            {
+                if ( ( (CheckOutTask) task ).getProjectId() == projectId )
+                {
+                    getLogger().info( "Cancelling checkout for project " + projectId );
+                    return getCheckoutTaskQueueExecutor().cancelTask( task );
+                }
+                else
+                {
+                    getLogger().warn( "Current task is not for the given projectId (" + projectId + "): "
+                                          + ( (CheckOutTask) task ).getProjectId() + "; not cancelling checkout" );
+                }
+            }
+            else
+            {
+                getLogger().warn( "Current task not a CheckOutTask - not cancelling checkout" );
+            }
+        }
+        else
+        {
+            getLogger().warn( "No task running - not cancelling checkout" );
+        }
+        return false;
     }
 
     public boolean cancelCurrentBuild()
@@ -624,6 +672,28 @@ public class DefaultTaskQueueManager
         }
     }
 
+    public boolean removeFromPrepareBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            List<PrepareBuildProjectsTask> queue = prepareBuildQueue.getQueueSnapshot();
+            
+            for ( PrepareBuildProjectsTask task : queue )
+            {
+                if ( task != null && task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+                {
+                    return prepareBuildQueue.remove( task );
+                }
+            }
+            return false;
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( "Error while getting the prepare build projects task in queue", e );
+        }
+    }
+    
     public void contextualize( Context context )
         throws ContextException
     {

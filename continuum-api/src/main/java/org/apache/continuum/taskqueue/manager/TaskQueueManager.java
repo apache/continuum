@@ -19,6 +19,9 @@ public interface TaskQueueManager
     void cancelBuildTask( int projectId )
         throws TaskQueueManagerException;
 
+    boolean cancelCheckout( int projectId )
+        throws TaskQueueManagerException;
+
     boolean cancelCurrentBuild()
         throws TaskQueueManagerException;
 
@@ -87,6 +90,9 @@ public interface TaskQueueManager
         throws TaskQueueManagerException;
 
     boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+        throws TaskQueueManagerException;
+
+    boolean removeFromPrepareBuildQueue( int projectGroupId, String scmRootAddress )
         throws TaskQueueManagerException;
 
     /**

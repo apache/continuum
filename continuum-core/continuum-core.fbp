@@ -1,0 +1,4 @@
+<Project filename="&lt;&lt;unnamed project&gt;&gt;" projectName="Continuum">
+  <Jar>target/continuum-core-1.3.1-SNAPSHOT.jar</Jar>
+  <SrcDir>src/main/java</SrcDir>
+</Project>

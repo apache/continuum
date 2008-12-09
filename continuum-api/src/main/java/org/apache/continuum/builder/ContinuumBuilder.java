@@ -19,14 +19,13 @@ package org.apache.continuum.builder;
  * under the License.
  */
 
-import java.util.Map;
-
+import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.ContinuumException;
 
 public interface ContinuumBuilder
 {
     String ROLE = ContinuumBuilder.class.getName();
 
-    void buildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger )
+    void buildProjects( PrepareBuildProjectsTask task )
         throws ContinuumException;
 }

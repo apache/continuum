@@ -159,12 +159,11 @@ public class ProjectsListAction
             if ( this.getBuildDefinitionId() <= 0 )
             {
                 List<BuildDefinition> groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
-
                 getContinuum().buildProjectsWithBuildDefinition( sortedProjects, groupDefaultBDs );
             }
             else
             {
-                getContinuum().buildProjectsWithBuildDefinition( sortedProjects, this.getBuildDefinitionId() );
+                getContinuum().buildProjectsWithBuildDefinition( sortedProjects, buildDefinitionId );
             }
         }
 

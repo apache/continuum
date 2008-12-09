@@ -175,6 +175,14 @@
                 </form>
               </redback:ifAuthorized>
             </td>
+            <td>
+              <redback:ifAuthorized permission="continuum-build-project-in-group" resource="${projectGroup.name}">
+                <form action="cancelGroupBuild.action" method="post">
+                  <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
+                  <input type="submit" name="cancel" value="<s:text name="projectGroup.cancelGroupBuild"/>"/>
+                </form>
+              </redback:ifAuthorized>
+            </td>
           </tr>
         </table>
       </div>

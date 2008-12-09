@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.builder.AbstractContinuumBuilder;
 import org.apache.continuum.builder.distributed.BuildAgentListener;
 import org.apache.continuum.builder.distributed.DefaultBuildAgentListener;
-import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
@@ -40,8 +38,7 @@ import org.slf4j.LoggerFactory;
  * @author Maria Catherine Tan
  */
 public class DefaultDistributedBuildManager
-    extends AbstractContinuumBuilder
-    implements DistributedBuildManager
+    extends AbstractDistributedBuildManager
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
