@@ -754,6 +754,7 @@
     
     <action name="displayQueues" class="queues" method="display">
       <result name="success">/WEB-INF/jsp/admin/buildQueueView.jsp</result>
+      <result name="distributed-build-success">/WEB-INF/jsp/admin/viewDistributedBuilds.jsp</result>
     </action>
     
     <action name="removeBuildQueueEntry" class="queues" method="remove">
@@ -791,6 +792,12 @@
         <param name="actionName">displayQueues</param>
       </result>      
     </action>    
+    
+    <action name="cancelDistributedBuild" class="queues" method="cancelDistributedBuild">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
     
     <!--
     * Local Repository actions

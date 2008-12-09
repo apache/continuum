@@ -11,7 +11,10 @@ public interface DistributedBuildManager
 {
     void buildProjectsInQueue()
         throws ContinuumException;
-    
+
+    void cancelDistributedBuild( String buildAgentUrl, int projectId )
+        throws ContinuumException;
+
     void updateProjectScmRoot( Map context )
         throws ContinuumException;
 

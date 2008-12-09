@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.security.auth.login.Configuration;
+
 import org.apache.continuum.builder.distributed.BuildAgentListener;
 import org.apache.continuum.builder.distributed.DefaultBuildAgentListener;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
@@ -211,6 +213,28 @@ public class DefaultDistributedBuildManager
         {
             log.info( "no build agent configured" );
         }
+    }
+
+    public void cancelDistributedBuild( String buildAgentUrl, int projectId )
+    {
+        for ( BuildAgentListener listener : listeners )
+        {
+            if ( listener.getUrl().equals( buildAgentUrl ) )
+            {
+                // connect to client and cancel build or remove from queue
+                // if successful, remove to listener
+                for ( Project project : listener.getProjects() )
+                {
+                    if ( project.getId() == projectId )
+                    {
+                        log.info( "cancelled build of project " + projectId );
+                        return;
+                    }
+                }
+            }
+        }
+
+        log.info( "unable to cancel project build" );
     }
 
     public void updateProjectScmRoot( Map context )

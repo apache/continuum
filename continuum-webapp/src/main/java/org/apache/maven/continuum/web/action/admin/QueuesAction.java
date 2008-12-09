@@ -98,6 +98,8 @@ public class QueuesAction
 
     private String buildAgentUrl;
 
+    private List<Integer> selectedProjects;
+
     // -----------------------------------------------------
     //  webwork
     // -----------------------------------------------------     
@@ -275,6 +277,29 @@ public class QueuesAction
         return SUCCESS;
     }
 
+    public String cancelDistributedBuild()
+        throws Exception
+    {
+        try 
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        distributedBuildManager.cancelDistributedBuild( buildAgentUrl, projectId );
+
+        return SUCCESS;
+    }
+
     private int[] listToIntArray( List<String> strings )
     {
         if ( strings == null || strings.isEmpty() )
@@ -423,5 +448,35 @@ public class QueuesAction
     public void setSelectedCheckOutTaskHashCodes( List<String> selectedCheckOutTaskHashCodes )
     {
         this.selectedCheckOutTaskHashCodes = selectedCheckOutTaskHashCodes;
-    }    
+    }
+
+    public List<DistributedBuildSummary> getDistributedBuildSummary()
+    {
+        return distributedBuildSummary;
+    }
+
+    public void setDistributedBuildSummary( List<DistributedBuildSummary> distributedBuildSummary )
+    {
+        this.distributedBuildSummary = distributedBuildSummary;
+    }
+
+    public String getBuildAgentUrl()
+    {
+        return buildAgentUrl;
+    }
+
+    public void setBuildAgentUrl( String buildAgentUrl )
+    {
+        this.buildAgentUrl = buildAgentUrl;
+    }
+
+    public List<Integer> getSelectedProjects()
+    {
+        return selectedProjects;
+    }
+
+    public void setSelectedProjects( List<Integer> selectedProjects )
+    {
+        this.selectedProjects = selectedProjects;
+    }
 }
