@@ -61,7 +61,7 @@ public class BuildAgentAction
     public String input()
         throws Exception
     {
-        if ( buildAgent != null && StringUtils.isBlank( buildAgent.getUrl() ) )
+        if ( buildAgent != null && !StringUtils.isBlank( buildAgent.getUrl() ) )
         {
             List<BuildAgentConfiguration> agents = getContinuum().getConfiguration().getBuildAgents();
             

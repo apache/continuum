@@ -157,45 +157,59 @@ public class DefaultDistributedBuildManager
     {
         boolean found = false;
         
-        for ( BuildAgentListener listener : listeners )
+        if ( listeners.size() > 0 )
         {
-            if ( !listener.isBusy() && listener.isEnabled() )
+            for ( BuildAgentListener listener : listeners )
             {
-                log.info( "initializing buildContext" );
-                List buildContext = initializeBuildContext( projectsAndBuildDefinitionsMap, trigger, listener );
-/*
-                try
+                if ( !listener.isBusy() && listener.isEnabled() )
                 {
-                    ContinuumDistributedBuildClient client = new ContinuumDistributedBuildClient( new URL( listener.getUrl() ) );
-                    client.ping();
+                    log.info( "initializing buildContext" );
+                    List buildContext = initializeBuildContext( projectsAndBuildDefinitionsMap, trigger, listener );
+    
+/*                  try
+                    {
+                        ContinuumDistributedBuildClient client = new ContinuumDistributedBuildClient( new URL( listener.getUrl() ) );
+                        // ping client
+                        client.ping();
+                        
+                        // initialize buildcontext
+                    }
+                    catch ( MalformedURLException e )
+                    {
+                        throw new ContinuumException( "Invalid url", e );
+                    }
+                    catch ( XmlRpcException e )
+                    {
+                        throw new ContinuumException( "", e );
+                    }
+                    catch ( Exception e )
+                    {
+                        
+                    }*/
+    
+                    //{
+                        //client.ping();
+                        //found = true; 
+                        //client.buildProjects( buildContext );
+                    //}
+                    //catch ( XmlRpcException e )
+                    //{
+                        //do something about the server Url
+                        //client.getServerUrl();
+                        //get projects of buildagent and set to build error the first project.
+                    //}
+                    log.info( "dispatched build to " + listener.getUrl() );
+                    found = true;
                 }
-                catch ( MalformedURLException e )
+                else
                 {
-                    throw new ContinuumException( "Invalid url", e );
+                    log.info( "build agent '" + listener.getUrl() + "' currently busy or not enabled" );
                 }
-                catch ( XmlRpcException e )
-                {
-                    throw new ContinuumException( "", e );
-                }
-                catch ( Exception e )
-                {
-                    
-                }*/
-
-                //{
-                    //client.ping();
-                    //found = true; 
-                    //client.buildProjects( buildContext );
-                //}
-                //catch ( XmlRpcException e )
-                //{
-                    //do something about the server Url
-                    //client.getServerUrl();
-                    //get projects of buildagent and set to build error the first project.
-                //}
-                log.info( "dispatched build to " + listener.getUrl() );
-                found = true;
             }
+        }
+        else
+        {
+            log.info( "no build agent configured" );
         }
     }
 
