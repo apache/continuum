@@ -33,13 +33,4 @@
     </property>
   </bean>
 
-  <bean name="continuumBuilder#distributedBuild"
-        class="org.apache.continuum.builder.distributed.manager.DefaultDistributedBuildManager"
-        init-method="initialize">
-    <property name="configurationService" ref="configurationService"/>
-    <property name="projectDao" ref="projectDao"/>
-    <property name="buildDefinitionDao" ref="buildDefinitionDao"/>
-    <property name="buildResultDao" ref="buildResultDao"/>
-    <property name="projectScmRootDao" ref="projectScmRootDao"/>
-  </bean>
 </beans>

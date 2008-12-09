@@ -70,46 +70,24 @@ public class DefaultDistributedBuildManager
      */
     private BuildResultDao buildResultDao;
 
-    private List<PrepareBuildProjectsTask> projectsBuildInQueue;
+    private List<PrepareBuildProjectsTask> distributedBuildQueue;
     
     private List<BuildAgentListener> listeners;
 
     public void initialize()
         throws ContinuumException
     {
-        List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
-
         if ( listeners == null )
         {
             listeners = new ArrayList<BuildAgentListener>();
         }
-        
-        if ( agents != null )
+
+        if ( distributedBuildQueue == null )
         {
-            for ( BuildAgentConfiguration agent : agents )
-            {
-                boolean found = false;
-
-                for ( BuildAgentListener listener : listeners )
-                {
-                    if ( listener.getUrl().equals( agent.getUrl() ) )
-                    {
-                        found = true;
-                        listener.setEnabled( agent.isEnabled() );
-                        break;
-                    }
-                }
-
-                if ( !found )
-                {
-                    BuildAgentListener listener = new DefaultBuildAgentListener( agent.getUrl(), false, agent.isEnabled() );
-                    listeners.add( listener );
-                    log.info( "add listener for build agent '" + agent.getUrl() + "'" );
-                }
-            }
+            distributedBuildQueue = new ArrayList<PrepareBuildProjectsTask>();
         }
 
-        buildProjectsInQueue();
+        loadData();
     }
 
     public ConfigurationService getConfigurationService()
@@ -162,28 +140,22 @@ public class DefaultDistributedBuildManager
         this.projectScmRootDao = projectScmRootDao;
     }
 
-    public void buildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger )
-        throws ContinuumException
-    {
-        buildProjects( projectsAndBuildDefinitionsMap, trigger, false );
-    }
-
     public void buildProjectsInQueue()
         throws ContinuumException
     {
-        if ( projectsBuildInQueue != null )
+        if ( distributedBuildQueue != null )
         {
-            for ( PrepareBuildProjectsTask task : projectsBuildInQueue )
+            for ( PrepareBuildProjectsTask task : distributedBuildQueue )
             {
                 Map projectsAndBuildDefinitions = task.getProjectsBuildDefinitionsMap();
                 int trigger = task.getTrigger();
                 
-                buildProjects( projectsAndBuildDefinitions, trigger, true );
+                buildProjects( projectsAndBuildDefinitions, trigger );
             }
         }
     }
 
-    public synchronized void buildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger, boolean inBuildQueue )
+    public synchronized void buildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger )
         throws ContinuumException
     {
         boolean found = false;
@@ -227,19 +199,6 @@ public class DefaultDistributedBuildManager
                 log.info( "dispatched build to " + listener.getUrl() );
                 found = true;
             }
-        }
-
-        if ( !found && !inBuildQueue )
-        {
-            // all build agents are busy, put into projectBuildQueue for now
-            if ( projectsBuildInQueue == null )
-            {
-                projectsBuildInQueue = new ArrayList<PrepareBuildProjectsTask>();
-            }
-
-            log.info( "no build agent available, put in queue" );
-            PrepareBuildProjectsTask prepareBuildTask = new PrepareBuildProjectsTask( projectsAndBuildDefinitionsMap, trigger );
-            projectsBuildInQueue.add( prepareBuildTask );
         }
     }
 
@@ -370,7 +329,18 @@ public class DefaultDistributedBuildManager
     public void reload()
         throws ContinuumException
     {
-        this.initialize();
+        loadData();
+        buildProjectsInQueue();
+    }
+
+    public List<BuildAgentListener> getBuildAgentListeners()
+    {
+        return listeners;
+    }
+
+    public List<PrepareBuildProjectsTask> getDistributedBuildQueue()
+    {
+        return distributedBuildQueue;
     }
 
     private List initializeBuildContext( Map<Integer, Integer> projectsAndBuildDefinitions, 
@@ -596,8 +566,33 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public List<BuildAgentListener> getBuildAgentListeners()
+    private void loadData()
     {
-        return listeners;
+        List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
+
+        if ( agents != null )
+        {
+            for ( BuildAgentConfiguration agent : agents )
+            {
+                boolean found = false;
+
+                for ( BuildAgentListener listener : listeners )
+                {
+                    if ( listener.getUrl().equals( agent.getUrl() ) )
+                    {
+                        found = true;
+                        listener.setEnabled( agent.isEnabled() );
+                        break;
+                    }
+                }
+
+                if ( !found )
+                {
+                    BuildAgentListener listener = new DefaultBuildAgentListener( agent.getUrl(), false, agent.isEnabled() );
+                    listeners.add( listener );
+                    log.info( "add listener for build agent '" + agent.getUrl() + "'" );
+                }
+            }
+        }
     }
 }

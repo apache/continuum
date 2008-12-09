@@ -19,9 +19,12 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.continuum.builder.distributed.BuildAgentListener;
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
@@ -29,6 +32,7 @@ import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.continuum.web.model.DistributedBuildSummary;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.taskqueue.Task;
@@ -47,7 +51,8 @@ public class QueuesAction
     extends AbstractBuildQueueAction
     implements SecureAction, LogEnabled
 {
-    
+    private static final String DISTRIBUTED_BUILD_SUCCESS = "distributed-build-success";
+
     /**
      * @plexus.requirement role-hint='build-project'
      */
@@ -82,6 +87,15 @@ public class QueuesAction
      * @plexus.requirement
      */
     private TaskQueueManager taskQueueManager;
+
+    /**
+     * @plexus.requirement
+     */
+    DistributedBuildManager distributedBuildManager;
+
+    private List<DistributedBuildSummary> distributedBuildSummary;
+
+    private String buildAgentUrl;
 
     // -----------------------------------------------------
     //  webwork
@@ -155,11 +169,36 @@ public class QueuesAction
     public String display()
         throws Exception
     {
-        this.setCurrentBuildProjectTask( (BuildProjectTask) taskQueueExecutor.getCurrentTask() );        
-        this.setBuildProjectTasks( taskQueueManager.getProjectsInBuildQueue() );
-        this.setCurrentCheckOutTask( (CheckOutTask) checkoutTaskQueueExecutor.getCurrentTask() );
-        this.setCurrentCheckOutTasks( taskQueueManager.getCheckOutTasksInQueue() );
-        return SUCCESS;
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
+        {
+            distributedBuildSummary = new ArrayList<DistributedBuildSummary>();
+            
+            for ( BuildAgentListener listener : distributedBuildManager.getBuildAgentListeners() )
+            {
+                if ( listener.hasProjects() )
+                {
+                    for ( Project project : listener.getProjects() )
+                    {
+                        DistributedBuildSummary summary = new DistributedBuildSummary();
+                        summary.setProjectId( project.getId() );
+                        summary.setProjectName( project.getName() );
+                        summary.setUrl( listener.getUrl() );
+                        
+                        distributedBuildSummary.add( summary );
+                    }
+                }
+            }
+
+            return DISTRIBUTED_BUILD_SUCCESS;
+        }
+        else
+        {
+            this.setCurrentBuildProjectTask( (BuildProjectTask) taskQueueExecutor.getCurrentTask() );        
+            this.setBuildProjectTasks( taskQueueManager.getProjectsInBuildQueue() );
+            this.setCurrentCheckOutTask( (CheckOutTask) checkoutTaskQueueExecutor.getCurrentTask() );
+            this.setCurrentCheckOutTasks( taskQueueManager.getCheckOutTasksInQueue() );
+            return SUCCESS;
+        }
     }
 
     public String remove()

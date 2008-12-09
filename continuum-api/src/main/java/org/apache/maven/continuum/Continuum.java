@@ -649,5 +649,4 @@ public interface Continuum
     
     String getReleaseOutput( int releaseResultId )
         throws ContinuumException;
-
 }

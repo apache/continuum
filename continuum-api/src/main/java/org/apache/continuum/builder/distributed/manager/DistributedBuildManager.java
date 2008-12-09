@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.builder.distributed.BuildAgentListener;
+import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.ContinuumException;
 
 public interface DistributedBuildManager
 {
+    void buildProjectsInQueue()
+        throws ContinuumException;
+    
     void updateProjectScmRoot( Map context )
         throws ContinuumException;
 
@@ -15,6 +19,8 @@ public interface DistributedBuildManager
         throws ContinuumException;
 
     List<BuildAgentListener> getBuildAgentListeners();
+
+    List<PrepareBuildProjectsTask> getDistributedBuildQueue();
 
     void reload()
         throws ContinuumException;

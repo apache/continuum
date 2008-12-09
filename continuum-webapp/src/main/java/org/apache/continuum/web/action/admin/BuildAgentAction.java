@@ -115,6 +115,8 @@ public class BuildAgentAction
     public String save()
         throws Exception
     {
+        boolean found = false;
+
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         if ( configuration.getBuildAgents() != null )
@@ -127,12 +129,14 @@ public class BuildAgentAction
                     agent.setEnabled( buildAgent.isEnabled() );
 
                     configuration.updateBuildAgent( agent );
-                }
-                else
-                {
-                    configuration.addBuildAgent( buildAgent );
+                    found = true;
                 }
             }
+        }
+
+        if ( !found )
+        {
+            configuration.addBuildAgent( buildAgent );
         }
 
         distributedBuildManager.reload();
