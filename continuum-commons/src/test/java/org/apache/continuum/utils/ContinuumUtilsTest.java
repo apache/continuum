@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.utils;
+package org.apache.continuum.utils;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -18,6 +18,8 @@ package org.apache.maven.continuum.utils;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apache.continuum.utils.ContinuumUtils;
 
 import junit.framework.TestCase;
 

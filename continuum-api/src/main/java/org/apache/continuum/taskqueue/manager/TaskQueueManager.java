@@ -38,6 +38,8 @@ public interface TaskQueueManager
     int getCurrentProjectIdBuilding()
         throws TaskQueueManagerException;
 
+    TaskQueue getDistributedBuildQueue();
+
     TaskQueue getPrepareBuildQueue();
 
     TaskQueueExecutor getPrepareBuildTaskQueueExecutor()

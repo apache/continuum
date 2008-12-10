@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.continuum.builder.ContinuumBuilder;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
@@ -247,11 +246,6 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private TaskQueueManager taskQueueManager;
-
-    /**
-     * @plexus.requirement role-hint="distributedBuild"
-     */
-    private ContinuumBuilder distributedBuilder;
 
     public DefaultContinuum()
     {
@@ -3346,20 +3340,20 @@ public class DefaultContinuum
         PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger,
                                                                       projectGroupId, scmRootAddress );
 
-        if ( configurationService.isDistributedBuildEnabled() )
+        try
         {
-            distributedBuilder.buildProjects( task );
-        }
-        else
-        {
-            try
+            if ( configurationService.isDistributedBuildEnabled() )
+            {
+                taskQueueManager.getDistributedBuildQueue().put( task );
+            }
+            else
             {
                 taskQueueManager.getPrepareBuildQueue().put( task );
             }
-            catch ( TaskQueueException e )
-            {
-                throw logAndCreateException( "Error while creating enqueuing object.", e );
-            }
+        }
+        catch ( TaskQueueException e )
+        {
+            throw logAndCreateException( "Error while creating enqueuing object.", e );
         }
     }
 

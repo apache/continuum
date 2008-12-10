@@ -1,9 +1,8 @@
-package org.apache.continuum.builder.distributed.manager;
+package org.apache.continuum.builder.utils;
 
 import java.util.Map;
 
-public abstract class AbstractDistributedBuildManager
-    implements DistributedBuildManager
+public class ContinuumBuildConstant
 {
     public static final String KEY_PROJECT_ID = "project-id";
 

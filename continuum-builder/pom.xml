@@ -43,6 +43,10 @@ under the License.
       <artifactId>continuum-store</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-distributed-build-transport-master</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-spring</artifactId>
     </dependency>
@@ -67,7 +71,7 @@ under the License.
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <build>
+  <!-- build>
     <plugins>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
@@ -88,5 +92,5 @@ under the License.
         </executions>
       </plugin>
     </plugins>
-  </build>
+  </build -->
 </project>

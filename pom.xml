@@ -571,6 +571,11 @@ under the License.
         <version>${pom.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-distributed-build-transport-master</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
         <groupId>net.sf.ehcache</groupId>
         <artifactId>ehcache</artifactId>
         <version>1.5.0</version>

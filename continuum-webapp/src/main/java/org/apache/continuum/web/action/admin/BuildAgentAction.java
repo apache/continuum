@@ -102,9 +102,7 @@ public class BuildAgentAction
             if ( agent.getUrl().equals( buildAgent.getUrl() ) )
             {
                 buildAgent = agent;
-
-                // connect to BuildAgentXMLRPCCLIENT
-                // installations = client.getAvailableInstallations();
+                installations = distributedBuildManager.getAvailableInstallations( buildAgent.getUrl() );
                 break;
             }
         }
@@ -152,6 +150,16 @@ public class BuildAgentAction
             return CONFIRM;
         }
 
+        if ( distributedBuildManager.isBuildAgentBusy( buildAgent.getUrl() ) )
+        {
+            message = getText( "buildAgent.error.delete.busy" );
+            return ERROR;
+        }
+        else
+        {
+            distributedBuildManager.removeAgentFromTaskQueueExecutor( buildAgent.getUrl() );
+        }
+        /*
         List<BuildAgentListener> listeners = distributedBuildManager.getBuildAgentListeners();
 
         for ( BuildAgentListener listener : listeners )
@@ -169,8 +177,8 @@ public class BuildAgentAction
                     break;
                 }
             }
-        }
-
+        }*/
+        
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )

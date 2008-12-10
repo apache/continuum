@@ -21,6 +21,7 @@ package org.apache.maven.continuum.core.action;
 
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildCancelledException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
@@ -32,7 +33,6 @@ import org.apache.maven.continuum.model.project.Project;
 //import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.utils.ContinuumUtils;
 
 import java.io.File;
 import java.util.Date;

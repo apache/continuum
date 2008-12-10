@@ -77,6 +77,11 @@ public class DefaultTaskQueueManager
     
     private PlexusContainer container;
 
+    /**
+     * @plexus.requirement role-hint="distributed-build"
+     */
+    private TaskQueue distributedBuildQueue;
+
     public boolean buildInProgress()
         throws TaskQueueManagerException
     {
@@ -238,6 +243,11 @@ public class DefaultTaskQueueManager
             }
         }
         return -1;
+    }
+
+    public TaskQueue getDistributedBuildQueue()
+    {
+        return distributedBuildQueue;
     }
 
     public TaskQueue getPrepareBuildQueue()

@@ -3,16 +3,12 @@ package org.apache.continuum.builder.distributed.manager;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.builder.distributed.BuildAgentListener;
-import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.system.Installation;
 
 public interface DistributedBuildManager
 {
-    void buildProjectsInQueue()
-        throws ContinuumException;
-
-    void cancelDistributedBuild( String buildAgentUrl, int projectId )
+    void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
         throws ContinuumException;
 
     void updateProjectScmRoot( Map context )
@@ -21,10 +17,13 @@ public interface DistributedBuildManager
     void updateBuildResult( Map context )
         throws ContinuumException;
 
-    List<BuildAgentListener> getBuildAgentListeners();
-
-    List<PrepareBuildProjectsTask> getDistributedBuildQueue();
-
     void reload()
+        throws ContinuumException;
+    
+    void removeAgentFromTaskQueueExecutor( String buildAgentUrl );
+
+    boolean isBuildAgentBusy( String buildAgentUrl );
+
+    List<Installation> getAvailableInstallations( String buildAgentUrl )
         throws ContinuumException;
 }

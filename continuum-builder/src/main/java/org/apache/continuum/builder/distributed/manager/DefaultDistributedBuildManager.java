@@ -1,25 +1,21 @@
 package org.apache.continuum.builder.distributed.manager;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.security.auth.login.Configuration;
-
-import org.apache.continuum.builder.distributed.BuildAgentListener;
-import org.apache.continuum.builder.distributed.DefaultBuildAgentListener;
+import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
+import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
+import org.apache.continuum.distributed.transport.master.ProxySlaveAgentTransportService;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
-import org.apache.continuum.utils.ProjectSorter;
-//import org.apache.continuum.xmlrpc.distributed.client.ContinuumDistributedBuildClient;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -27,12 +23,18 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ScmResult;
+import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.apache.xmlrpc.XmlRpcException;
 
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +42,7 @@ import org.slf4j.LoggerFactory;
  * @author Maria Catherine Tan
  */
 public class DefaultDistributedBuildManager
-    extends AbstractDistributedBuildManager
+    implements DistributedBuildManager, Contextualizable
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
@@ -69,25 +71,9 @@ public class DefaultDistributedBuildManager
      */
     private BuildResultDao buildResultDao;
 
-    private List<PrepareBuildProjectsTask> distributedBuildQueue;
-    
-    private List<BuildAgentListener> listeners;
+    private PlexusContainer container;
 
-    public void initialize()
-        throws ContinuumException
-    {
-        if ( listeners == null )
-        {
-            listeners = new ArrayList<BuildAgentListener>();
-        }
-
-        if ( distributedBuildQueue == null )
-        {
-            distributedBuildQueue = new ArrayList<PrepareBuildProjectsTask>();
-        }
-
-        loadData();
-    }
+    private Map<String, DistributedBuildTaskQueueExecutor> taskQueueExecutors;
 
     public ConfigurationService getConfigurationService()
     {
@@ -139,102 +125,130 @@ public class DefaultDistributedBuildManager
         this.projectScmRootDao = projectScmRootDao;
     }
 
-    public void buildProjectsInQueue()
-        throws ContinuumException
+    // --------------------------------
+    //  Plexus Lifecycle
+    // --------------------------------
+    public void contextualize( Context context )
+        throws ContextException
     {
-        if ( distributedBuildQueue != null )
+        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
+    }
+
+    public void initialize()
+        throws ContinuumException, ComponentLookupException
+    {
+        taskQueueExecutors = new HashMap<String, DistributedBuildTaskQueueExecutor>();
+
+        List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
+
+        if ( agents != null )
         {
-            for ( PrepareBuildProjectsTask task : distributedBuildQueue )
+            for ( BuildAgentConfiguration agent : agents )
             {
-                Map projectsAndBuildDefinitions = task.getProjectsBuildDefinitionsMap();
-                int trigger = task.getTrigger();
-                
-                buildProjects( projectsAndBuildDefinitions, trigger );
+                if ( agent.isEnabled() )
+                {
+                    log.info( "agent is enabled, add TaskQueueExecutor for build agent '" + agent.getUrl() + "'" );
+                    addTaskQueueExecutor( agent.getUrl() );
+                }
             }
         }
     }
 
-    public synchronized void buildProjects( Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger )
+    public void reload()
         throws ContinuumException
     {
-        boolean found = false;
+        List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
         
-        if ( listeners.size() > 0 )
+        for ( BuildAgentConfiguration agent : agents )
         {
-            for ( BuildAgentListener listener : listeners )
+            if ( agent.isEnabled() && !taskQueueExecutors.containsKey( agent.getUrl() ) )
             {
-                if ( !listener.isBusy() && listener.isEnabled() )
+                log.info( "agent is enabled, add TaskQueueExecutor for build agent '" + agent.getUrl() + "'" );
+                addTaskQueueExecutor( agent.getUrl() );
+            }
+            else if ( !agent.isEnabled() && taskQueueExecutors.containsKey( agent.getUrl() ) )
+            {
+                log.info( "agent is disabled, remove TaskQueueExecutor for build agent '" + agent.getUrl() + "'" );
+                taskQueueExecutors.remove( agent.getUrl() );
+            }
+        }
+    }
+
+    public void removeAgentFromTaskQueueExecutor( String buildAgentUrl)
+    {
+        log.info( "remove TaskQueueExecutor for build agent '" + buildAgentUrl + "'" );
+        taskQueueExecutors.remove( buildAgentUrl );
+    }
+
+    public boolean isBuildAgentBusy( String buildAgentUrl )
+    {
+        TaskQueueExecutor executor = taskQueueExecutors.get( buildAgentUrl );
+        
+        if ( executor != null && executor.getCurrentTask() != null )
+        {
+            log.info( "build agent '" + buildAgentUrl + "' is busy" );
+            return true;
+        }
+
+        log.info( "build agent '" + buildAgentUrl + "' is not busy" );
+        return false;
+    }
+
+    private void addTaskQueueExecutor( String url )
+        throws ContinuumException
+    {
+        try
+        {
+            DistributedBuildTaskQueueExecutor taskQueueExecutor = (DistributedBuildTaskQueueExecutor) container.
+                                                                                lookup( DistributedBuildTaskQueueExecutor.class );
+            taskQueueExecutor.setBuildAgentUrl( url );
+            taskQueueExecutors.put( url, taskQueueExecutor );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ContinuumException( "Unable to lookup TaskQueueExecutor for distributed-build", e );
+        }
+    }
+
+    public void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
+    {
+        DistributedBuildTaskQueueExecutor taskQueueExecutor = taskQueueExecutors.get( buildAgentUrl );
+
+        if ( taskQueueExecutor != null )
+        {
+            if ( taskQueueExecutor.getCurrentTask() != null )
+            {
+                if ( taskQueueExecutor.getCurrentTask() instanceof PrepareBuildProjectsTask )
                 {
-                    log.info( "initializing buildContext" );
-                    List buildContext = initializeBuildContext( projectsAndBuildDefinitionsMap, trigger, listener );
-    
-/*                  try
+                    PrepareBuildProjectsTask currentTask = (PrepareBuildProjectsTask) taskQueueExecutor.getCurrentTask();
+                    
+                    if ( currentTask.getProjectGroupId() == projectGroupId && 
+                         currentTask.getScmRootAddress().equals( scmRootAddress ) )
                     {
-                        ContinuumDistributedBuildClient client = new ContinuumDistributedBuildClient( new URL( listener.getUrl() ) );
-                        // ping client
-                        client.ping();
-                        
-                        // initialize buildcontext
+                        log.info( "cancelling task for project group " + projectGroupId + 
+                                  " with scm root address " + scmRootAddress );
+                        taskQueueExecutor.cancelTask( currentTask );
                     }
-                    catch ( MalformedURLException e )
+                    else
                     {
-                        throw new ContinuumException( "Invalid url", e );
+                        log.info( "current task not for project group " + projectGroupId + 
+                                  " with scm root address " + scmRootAddress );
                     }
-                    catch ( XmlRpcException e )
-                    {
-                        throw new ContinuumException( "", e );
-                    }
-                    catch ( Exception e )
-                    {
-                        
-                    }*/
-    
-                    //{
-                        //client.ping();
-                        //found = true; 
-                        //client.buildProjects( buildContext );
-                    //}
-                    //catch ( XmlRpcException e )
-                    //{
-                        //do something about the server Url
-                        //client.getServerUrl();
-                        //get projects of buildagent and set to build error the first project.
-                    //}
-                    log.info( "dispatched build to " + listener.getUrl() );
-                    found = true;
                 }
                 else
                 {
-                    log.info( "build agent '" + listener.getUrl() + "' currently busy or not enabled" );
+                    log.info( "current task not a prepare build projects task, not cancelling" );
                 }
+            }
+            else
+            {
+                log.info( "no current task in build agent '" + buildAgentUrl + "'" );
             }
         }
         else
         {
-            log.info( "no build agent configured" );
+            log.info( "no task queue executor defined for build agent '" + buildAgentUrl + "'" );
         }
-    }
-
-    public void cancelDistributedBuild( String buildAgentUrl, int projectId )
-    {
-        for ( BuildAgentListener listener : listeners )
-        {
-            if ( listener.getUrl().equals( buildAgentUrl ) )
-            {
-                // connect to client and cancel build or remove from queue
-                // if successful, remove to listener
-                for ( Project project : listener.getProjects() )
-                {
-                    if ( project.getId() == projectId )
-                    {
-                        log.info( "cancelled build of project " + projectId );
-                        return;
-                    }
-                }
-            }
-        }
-
-        log.info( "unable to cancel project build" );
     }
 
     public void updateProjectScmRoot( Map context )
@@ -242,16 +256,16 @@ public class DefaultDistributedBuildManager
     {
         try
         {
-            int projectId = getProjectId( context );
+            int projectId = ContinuumBuildConstant.getProjectId( context );
         
             log.info( "update scm result of project" + projectId );
             Project project = projectDao.getProjectWithScmDetails( projectId );
             
             ScmResult scmResult = new ScmResult();
-            scmResult.setCommandLine( getScmCommandLine( context ) );
-            scmResult.setCommandOutput( getScmCommandOutput( context ) );
-            scmResult.setException( getScmException( context ) );
-            scmResult.setProviderMessage( getScmProviderMessage( context ) );
+            scmResult.setCommandLine( ContinuumBuildConstant.getScmCommandLine( context ) );
+            scmResult.setCommandOutput( ContinuumBuildConstant.getScmCommandOutput( context ) );
+            scmResult.setException( ContinuumBuildConstant.getScmException( context ) );
+            scmResult.setProviderMessage( ContinuumBuildConstant.getScmProviderMessage( context ) );
 
             String error = convertScmResultToError( scmResult );
 
@@ -267,7 +281,7 @@ public class DefaultDistributedBuildManager
             project.setScmResult( scmResult );
             projectDao.updateProject( project );
 
-            if ( error != null || isPrepareBuildFinished( context ) )
+            if ( error != null || ContinuumBuildConstant.isPrepareBuildFinished( context ) )
             {
                 List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( project.getProjectGroup().getId() );
                 
@@ -292,7 +306,6 @@ public class DefaultDistributedBuildManager
             if ( error != null )
             {
                 log.info( "scm error, not building" );
-                updateBuildAgent( project.getId(), true );
             }
         }
         catch ( ContinuumStoreException e )
@@ -306,8 +319,8 @@ public class DefaultDistributedBuildManager
     {
         try
         {
-            int projectId = getProjectId( context );
-            int buildDefinitionId = getBuildDefinitionId( context );
+            int projectId = ContinuumBuildConstant.getProjectId( context );
+            int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( context );
 
             log.info( "update build result of project '" + projectId + "'" );
 
@@ -319,7 +332,7 @@ public class DefaultDistributedBuildManager
 
             int buildNumber;
 
-            if ( getBuildState( context ) == ContinuumProjectState.OK )
+            if ( ContinuumBuildConstant.getBuildState( context ) == ContinuumProjectState.OK )
             {
                 buildNumber = project.getBuildNumber() + 1;
             }
@@ -334,26 +347,24 @@ public class DefaultDistributedBuildManager
 
             BuildResult buildResult = new BuildResult();
 
-            buildResult.setStartTime( getBuildStart( context ) );
-            buildResult.setEndTime( getBuildEnd( context ) );
+            buildResult.setStartTime( ContinuumBuildConstant.getBuildStart( context ) );
+            buildResult.setEndTime( ContinuumBuildConstant.getBuildEnd( context ) );
             buildResult.setBuildDefinition( buildDefinition );
             buildResult.setBuildNumber( buildNumber );
-            buildResult.setError( getBuildError( context ) );
-            buildResult.setExitCode( getBuildExitCode( context ) );
+            buildResult.setError( ContinuumBuildConstant.getBuildError( context ) );
+            buildResult.setExitCode( ContinuumBuildConstant.getBuildExitCode( context ) );
             buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, context ) );
-            buildResult.setState( getBuildState( context ) );
-            buildResult.setTrigger( getTrigger( context ) );
+            buildResult.setState( ContinuumBuildConstant.getBuildState( context ) );
+            buildResult.setTrigger( ContinuumBuildConstant.getTrigger( context ) );
             
             buildResultDao.addBuildResult( project, buildResult );
             
             project.setBuildNumber( buildNumber );
             project.setLatestBuildId( buildResult.getId() );
             project.setOldState( project.getState() );
-            project.setState( getBuildState( context ) );
+            project.setState( ContinuumBuildConstant.getBuildState( context ) );
 
             projectDao.updateProject( project );
-
-            updateBuildAgent( project.getId(), false );
         }
         catch ( ContinuumStoreException e )
         {
@@ -361,97 +372,21 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public void reload()
+    public List<Installation> getAvailableInstallations( String buildAgentUrl )
         throws ContinuumException
     {
-        loadData();
-        buildProjectsInQueue();
-    }
-
-    public List<BuildAgentListener> getBuildAgentListeners()
-    {
-        return listeners;
-    }
-
-    public List<PrepareBuildProjectsTask> getDistributedBuildQueue()
-    {
-        return distributedBuildQueue;
-    }
-
-    private List initializeBuildContext( Map<Integer, Integer> projectsAndBuildDefinitions, 
-                                         int trigger, BuildAgentListener listener )
-        throws ContinuumException
-    {
-        List buildContext = new ArrayList();
-        List<Project> projects = new ArrayList<Project>();
-
         try
         {
-            for ( Integer projectId : projectsAndBuildDefinitions.keySet() )
-            {
-                Project project = projectDao.getProjectWithDependencies( projectId );
-                projects.add( project );
-            }
-
-            try
-            {
-                projects = ProjectSorter.getSortedProjects( projects, null );
-            }
-            catch ( CycleDetectedException e )
-            {
-                log.info( "Cycle Detected" );
-            }
-
-            int ctr = 0;
+            ProxySlaveAgentTransportService client = new ProxySlaveAgentTransportService( new URL( buildAgentUrl ) );
             
-            for ( Project project : projects )
-            {
-                if ( ctr == 0 )
-                {
-                    List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( project.getProjectGroup().getId() );
-                    for ( ProjectScmRoot scmRoot : scmRoots )
-                    {
-                        if ( project.getScmUrl().startsWith( scmRoot.getScmRootAddress() ) )
-                        {
-                            scmRoot.setOldState( scmRoot.getState() );
-                            scmRoot.setState( ContinuumProjectState.UPDATING );
-                            projectScmRootDao.updateProjectScmRoot( scmRoot );
-                            break;
-                        }
-                    }
-                }
-                
-                int buildDefinitionId = projectsAndBuildDefinitions.get( project.getId() );
-                BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-                BuildResult oldBuildResult =
-                    buildResultDao.getLatestBuildResultForBuildDefinition( project.getId(), buildDefinitionId );
-
-                Map context = new HashMap();
-                context.put( KEY_PROJECT_ID, project.getId() );
-                context.put( KEY_EXECUTOR_ID, project.getExecutorId() );
-                context.put( KEY_SCM_URL, project.getScmUrl() );
-                context.put( KEY_SCM_USERNAME, project.getScmUsername() );
-                context.put( KEY_SCM_PASSWORD, project.getScmPassword() );
-                context.put( KEY_BUILD_DEFINITION_ID, buildDefinitionId );
-                context.put( KEY_BUILD_FILE, buildDef.getBuildFile() );
-                context.put( KEY_GOALS, buildDef.getGoals() );
-                context.put( KEY_ARGUMENTS, buildDef.getArguments() );
-                context.put( KEY_TRIGGER, trigger );
-                context.put( KEY_BUILD_FRESH, buildDef.isBuildFresh() );
-                
-                buildContext.add( context );
-                ctr++;
-            }
-            
-            listener.setBusy( true );
-            listener.setProjects( projects );
-
-            return buildContext;
+            //return client.getAvailableInstallations();
         }
-        catch ( ContinuumStoreException e )
+        catch ( Exception e )
         {
-            throw new ContinuumException( "Error while initializing build context", e );
+            throw new ContinuumException( "Unable to get available installations of build agent", e );
         }
+
+        return null;
     }
 
     private List<ProjectDependency> getModifiedDependencies( BuildResult oldBuildResult, Map context )
@@ -464,7 +399,7 @@ public class DefaultDistributedBuildManager
 
         try
         {
-            Project project = projectDao.getProjectWithAllDetails( getProjectId( context ) );
+            Project project = projectDao.getProjectWithAllDetails( ContinuumBuildConstant.getProjectId( context ) );
             List<ProjectDependency> dependencies = project.getDependencies();
 
             if ( dependencies == null )
@@ -562,72 +497,5 @@ public class DefaultDistributedBuildManager
         }
 
         return error;
-    }
-
-    private void updateBuildAgent( int projectId, boolean removeAll )
-        throws ContinuumException
-    {
-        for ( BuildAgentListener listener : listeners )
-        {
-            for ( Project project : listener.getProjects() )
-            {
-                if ( project.getId() == projectId )
-                {
-                    if ( removeAll )
-                    {
-                        log.info( "available build agent '" + listener.getUrl() + "'" );
-
-                        listener.setProjects( null );
-                        listener.setBusy( false );
-
-                        buildProjectsInQueue();
-                    }
-                    else
-                    {
-                        listener.getProjects().remove( project );
-
-                        if ( !listener.hasProjects() )
-                        {
-                            log.info( "available build agent '" + listener.getUrl() + "'" );
-                            
-                            listener.setBusy( false );
-
-                            buildProjectsInQueue();
-                        }
-                    }
-                    return;
-                }
-            }
-        }
-    }
-
-    private void loadData()
-    {
-        List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
-
-        if ( agents != null )
-        {
-            for ( BuildAgentConfiguration agent : agents )
-            {
-                boolean found = false;
-
-                for ( BuildAgentListener listener : listeners )
-                {
-                    if ( listener.getUrl().equals( agent.getUrl() ) )
-                    {
-                        found = true;
-                        listener.setEnabled( agent.isEnabled() );
-                        break;
-                    }
-                }
-
-                if ( !found )
-                {
-                    BuildAgentListener listener = new DefaultBuildAgentListener( agent.getUrl(), false, agent.isEnabled() );
-                    listeners.add( listener );
-                    log.info( "add listener for build agent '" + agent.getUrl() + "'" );
-                }
-            }
-        }
     }
 }
