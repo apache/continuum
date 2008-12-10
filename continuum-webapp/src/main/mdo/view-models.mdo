@@ -480,24 +480,31 @@
       <version>1.0.0+</version>
       <fields>
         <field>
-          <name>projectId</name>
-          <version>1.0.0</version>
-          <required>true</required>
-          <description>ID of the project</description>
-          <type>int</type>
-        </field>
-        <field>
-          <name>projectName</name>
-          <version>1.0.0</version>
-          <required>true</required>
-          <description>Name of the project</description>
-          <type>String</type>
-        </field>
-        <field>
           <name>url</name>
           <version>1.0.0</version>
           <required>true</required>
           <description>URL of the build agent</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projectGroupId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>ID of the project group</description>
+          <type>int</type>
+        </field>
+        <field>
+          <name>projectGroupName</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>Name of the project group</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>scmRootAddress</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>Scm root address of projects</description>
           <type>String</type>
         </field>
       </fields>

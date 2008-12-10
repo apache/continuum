@@ -603,6 +603,12 @@ public class DefaultContinuum
 
             try
             {
+                if ( taskQueueManager.isInPrepareBuildQueue( projectId ) )
+                {
+                    taskQueueManager.removeFromPrepareBuildQueue( project.getProjectGroup().getId(), 
+                                                                  getProjectScmRootByProject( projectId ).getScmRootAddress() );
+                }
+
                 if ( taskQueueManager.isInCheckoutQueue( projectId ) )
                 {
                     taskQueueManager.removeProjectFromCheckoutQueue( projectId );
@@ -3344,12 +3350,20 @@ public class DefaultContinuum
         {
             if ( configurationService.isDistributedBuildEnabled() )
             {
-                taskQueueManager.getDistributedBuildQueue().put( task );
+                // check if 
+                if ( !taskQueueManager.isInDistributedBuildQueue( projectGroupId, scmRootAddress ) )
+                {
+                    taskQueueManager.getDistributedBuildQueue().put( task );
+                }
             }
             else
             {
                 taskQueueManager.getPrepareBuildQueue().put( task );
             }
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw logAndCreateException( e.getMessage(), e );
         }
         catch ( TaskQueueException e )
         {

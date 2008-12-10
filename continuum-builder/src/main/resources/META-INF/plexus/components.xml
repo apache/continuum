@@ -19,6 +19,30 @@
 
 <component-set>
   <components>
+    
+    <component>
+      <role>org.apache.continuum.builder.distributed.manager.DistributedBuildManager</role>
+      <role-hint>default</role-hint>
+      <implementation>org.apache.continuum.builder.distributed.manager.DefaultDistributedBuildManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.dao.ProjectDao</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.dao.ProjectScmRootDao</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.dao.BuildResultDao</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.dao.BuildDefinitionDao</role>
+        </requirement>
+      </requirements>
+    </component>
+  
     <!--
      |
      | Distributed Build Task Queue
@@ -33,9 +57,9 @@
     </component>
 
     <component>
-      <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+      <role>org.apache.continuum.builder.distributed.executor.DistributedBuildTaskExecutor</role>
       <role-hint>distributed-build-project</role-hint>
-      <implementation>org.apache.continuum.builder.distributed.executor.DistributedBuildTaskExecutor</implementation>
+      <implementation>org.apache.continuum.builder.distributed.executor.DistributedBuildProjectTaskExecutor</implementation>
       <requirements>
         <requirement>
           <role>org.apache.continuum.dao.ProjectDao</role>
@@ -54,10 +78,16 @@
 
     <component>
       <role>org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor</role>
+      <role-hint>distributed-build-project</role-hint>
+      <implementation>org.apache.continuum.builder.distributed.executor.ThreadedDistributedBuildTaskQueueExecutor</implementation>
       <instantiation-strategy>per-lookup</instantiation-strategy>
 	  <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>distributed-build-project</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.builder.distributed.executor.DistributedBuildTaskExecutor</role>
           <role-hint>distributed-build-project</role-hint>
         </requirement>
       </requirements>

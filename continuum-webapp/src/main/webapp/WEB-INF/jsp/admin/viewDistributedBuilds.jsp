@@ -47,11 +47,13 @@
                     sortable="false"
                     filterable="false">
             <ec:row>
-              <ec:column property="projectName" title="distributedBuild.table.project"/>
+              <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
+              <ec:column property="scmRootAddress" title="distributedBuild.table.scmRootAddress"/>
               <ec:column property="url" title="distributedBuild.table.agentUrl"/>
               <ec:column property="cancelEntry" title="&nbsp;" width="1%">
                 <s:url id="cancelUrl" action="cancelDistributedBuild" method="cancelDistributedBuild" namespace="/">
-                  <s:param name="projectId">${pageScope.distributedBuild.projectId}</s:param>
+                  <s:param name="projectGroupId">${pageScope.distributedBuild.projectGroupId}</s:param>
+                  <s:param name="scmRootAddress">${pageScope.distributedBuild.scmRootAddress}</s:param>
                   <s:param name="buildAgentUrl">${pageScope.distributedBuild.url}</s:param>
                 </s:url>
                 <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>

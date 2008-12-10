@@ -1,5 +1,6 @@
 package org.apache.continuum.builder.distributed.manager;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
+import org.apache.continuum.builder.distributed.executor.ThreadedDistributedBuildTaskQueueExecutor;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -16,6 +18,7 @@ import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.distributed.transport.master.ProxySlaveAgentTransportService;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
+import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -33,7 +36,8 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * @author Maria Catherine Tan
  */
 public class DefaultDistributedBuildManager
-    implements DistributedBuildManager, Contextualizable
+    implements DistributedBuildManager, Contextualizable, Initializable
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
@@ -73,57 +77,7 @@ public class DefaultDistributedBuildManager
 
     private PlexusContainer container;
 
-    private Map<String, DistributedBuildTaskQueueExecutor> taskQueueExecutors;
-
-    public ConfigurationService getConfigurationService()
-    {
-        return configurationService;
-    }
-
-    public void setConfigurationService( ConfigurationService configurationService )
-    {
-        this.configurationService = configurationService;
-    }
-
-    public ProjectDao getProjectDao()
-    {
-        return projectDao;
-    }
-
-    public void setProjectDao( ProjectDao projectDao )
-    {
-        this.projectDao = projectDao;
-    }
-
-    public BuildDefinitionDao getBuildDefinitionDao()
-    {
-        return buildDefinitionDao;
-    }
-
-    public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
-    {
-        this.buildDefinitionDao = buildDefinitionDao;
-    }
-
-    public BuildResultDao getBuildResultDao()
-    {
-        return buildResultDao;
-    }
-
-    public void setBuildResultDao( BuildResultDao buildResultDao )
-    {
-        this.buildResultDao = buildResultDao;
-    }
-
-    public ProjectScmRootDao getProjectScmRootDao()
-    {
-        return projectScmRootDao;
-    }
-
-    public void setProjectScmRootDao( ProjectScmRootDao projectScmRootDao )
-    {
-        this.projectScmRootDao = projectScmRootDao;
-    }
+    private Map<String, ThreadedDistributedBuildTaskQueueExecutor> taskQueueExecutors;
 
     // --------------------------------
     //  Plexus Lifecycle
@@ -135,9 +89,9 @@ public class DefaultDistributedBuildManager
     }
 
     public void initialize()
-        throws ContinuumException, ComponentLookupException
+        throws InitializationException
     {
-        taskQueueExecutors = new HashMap<String, DistributedBuildTaskQueueExecutor>();
+        taskQueueExecutors = new HashMap<String, ThreadedDistributedBuildTaskQueueExecutor>();
 
         List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
 
@@ -147,8 +101,33 @@ public class DefaultDistributedBuildManager
             {
                 if ( agent.isEnabled() )
                 {
-                    log.info( "agent is enabled, add TaskQueueExecutor for build agent '" + agent.getUrl() + "'" );
-                    addTaskQueueExecutor( agent.getUrl() );
+                    try
+                    {
+                        ProxySlaveAgentTransportService client = new ProxySlaveAgentTransportService( new URL( agent.getUrl() ) );
+                        
+                        if ( client.ping() )
+                        {
+                            log.info( "agent is enabled, add TaskQueueExecutor for build agent '" + agent.getUrl() + "'" );
+                            addTaskQueueExecutor( agent.getUrl() );
+                        }
+                        else
+                        {
+                            log.info( "unable to ping build agent '" + agent.getUrl() + "'" );
+                        }
+                    }
+                    catch ( MalformedURLException e )
+                    {
+                        // do not throw exception, just log it
+                        log.info( "Invalid URL " + agent.getUrl() + ", not creating task queue executor" );
+                    }
+                    catch ( ContinuumException e )
+                    {
+                        throw new InitializationException( "Error while initializing distributed build task queue executors", e );
+                    }
+                    catch ( Exception e )
+                    {
+                        log.info( "unable to ping build agent '" + agent.getUrl() + "': " + ContinuumUtils.throwableToString( e ) );
+                    }
                 }
             }
         }
@@ -163,8 +142,29 @@ public class DefaultDistributedBuildManager
         {
             if ( agent.isEnabled() && !taskQueueExecutors.containsKey( agent.getUrl() ) )
             {
-                log.info( "agent is enabled, add TaskQueueExecutor for build agent '" + agent.getUrl() + "'" );
-                addTaskQueueExecutor( agent.getUrl() );
+                try
+                {
+                    ProxySlaveAgentTransportService client = new ProxySlaveAgentTransportService( new URL( agent.getUrl() ) );
+                    
+                    if ( client.ping() )
+                    {
+                        log.info( "agent is enabled, add TaskQueueExecutor for build agent '" + agent.getUrl() + "'" );
+                        addTaskQueueExecutor( agent.getUrl() );
+                    }
+                    else
+                    {
+                        log.info( "unable to ping build agent '" + agent.getUrl() + "'" );
+                    }
+                }
+                catch ( MalformedURLException e )
+                {
+                    // do not throw exception, just log it
+                    log.info( "Invalid URL " + agent.getUrl() + ", not creating task queue executor" );
+                }
+                catch ( Exception e )
+                {
+                    log.info( "unable to ping build agent '" + agent.getUrl() + "': " + ContinuumUtils.throwableToString( e ) );
+                }
             }
             else if ( !agent.isEnabled() && taskQueueExecutors.containsKey( agent.getUrl() ) )
             {
@@ -182,7 +182,7 @@ public class DefaultDistributedBuildManager
 
     public boolean isBuildAgentBusy( String buildAgentUrl )
     {
-        TaskQueueExecutor executor = taskQueueExecutors.get( buildAgentUrl );
+        ThreadedDistributedBuildTaskQueueExecutor executor = taskQueueExecutors.get( buildAgentUrl );
         
         if ( executor != null && executor.getCurrentTask() != null )
         {
@@ -198,21 +198,21 @@ public class DefaultDistributedBuildManager
         throws ContinuumException
     {
         try
-        {
-            DistributedBuildTaskQueueExecutor taskQueueExecutor = (DistributedBuildTaskQueueExecutor) container.
-                                                                                lookup( DistributedBuildTaskQueueExecutor.class );
+        {            
+            ThreadedDistributedBuildTaskQueueExecutor taskQueueExecutor = (ThreadedDistributedBuildTaskQueueExecutor) container.
+                                                                          lookup( DistributedBuildTaskQueueExecutor.class, "distributed-build-project" );
             taskQueueExecutor.setBuildAgentUrl( url );
             taskQueueExecutors.put( url, taskQueueExecutor );
         }
         catch ( ComponentLookupException e )
         {
-            throw new ContinuumException( "Unable to lookup TaskQueueExecutor for distributed-build", e );
+            throw new ContinuumException( "Unable to lookup TaskQueueExecutor for distributed-build-project", e );
         }
     }
 
     public void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
     {
-        DistributedBuildTaskQueueExecutor taskQueueExecutor = taskQueueExecutors.get( buildAgentUrl );
+        ThreadedDistributedBuildTaskQueueExecutor taskQueueExecutor = taskQueueExecutors.get( buildAgentUrl );
 
         if ( taskQueueExecutor != null )
         {
@@ -370,6 +370,25 @@ public class DefaultDistributedBuildManager
         {
             throw new ContinuumException( "Error while updating build result for project", e );
         }
+    }
+
+    public Map<String, PrepareBuildProjectsTask> getDistributedBuildProjects()
+    {
+        Map<String, PrepareBuildProjectsTask> map = new HashMap<String, PrepareBuildProjectsTask>();
+
+        for ( String url : taskQueueExecutors.keySet() )
+        {
+            ThreadedDistributedBuildTaskQueueExecutor taskQueueExecutor = taskQueueExecutors.get( url );
+
+            if ( taskQueueExecutor.getCurrentTask() != null )
+            {
+                PrepareBuildProjectsTask task = (PrepareBuildProjectsTask) taskQueueExecutor.getCurrentTask();
+                
+                map.put( url, task );
+            }
+        }
+
+        return map;
     }
 
     public List<Installation> getAvailableInstallations( String buildAgentUrl )

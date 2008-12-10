@@ -21,13 +21,19 @@ package org.apache.maven.continuum.web.action.admin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.builder.distributed.BuildAgentListener;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
@@ -98,11 +104,33 @@ public class QueuesAction
 
     private String buildAgentUrl;
 
-    private List<Integer> selectedProjects;
+    private int projectGroupId;
+
+    private String scmRootAddress;
 
     // -----------------------------------------------------
     //  webwork
     // -----------------------------------------------------     
+
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
+    }
+
+    public void setProjectGroupId( int projectGroupId )
+    {
+        this.projectGroupId = projectGroupId;
+    }
+
+    public String getScmRootAddress()
+    {
+        return scmRootAddress;
+    }
+
+    public void setScmRootAddress( String scmRootAddress )
+    {
+        this.scmRootAddress = scmRootAddress;
+    }
 
     public String cancelCurrent()
         throws Exception
@@ -174,24 +202,27 @@ public class QueuesAction
     public String display()
         throws Exception
     {
-        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
+        Continuum continuum = getContinuum();
+
+        if ( continuum.getConfiguration().isDistributedBuildEnabled() )
         {
             distributedBuildSummary = new ArrayList<DistributedBuildSummary>();
-            
-            for ( BuildAgentListener listener : distributedBuildManager.getBuildAgentListeners() )
+
+            Map<String, PrepareBuildProjectsTask> map = distributedBuildManager.getDistributedBuildProjects();
+
+            for ( String url : map.keySet() )
             {
-                if ( listener.hasProjects() )
-                {
-                    for ( Project project : listener.getProjects() )
-                    {
-                        DistributedBuildSummary summary = new DistributedBuildSummary();
-                        summary.setProjectId( project.getId() );
-                        summary.setProjectName( project.getName() );
-                        summary.setUrl( listener.getUrl() );
-                        
-                        distributedBuildSummary.add( summary );
-                    }
-                }
+               PrepareBuildProjectsTask task = map.get( url );
+               
+               ProjectGroup projectGroup = continuum.getProjectGroup( task.getProjectGroupId() );
+               
+               DistributedBuildSummary summary = new DistributedBuildSummary();
+               summary.setUrl( url );
+               summary.setProjectGroupId( task.getProjectGroupId() );
+               summary.setProjectGroupName( projectGroup.getName() );
+               summary.setScmRootAddress( task.getScmRootAddress() );
+
+               distributedBuildSummary.add( summary );
             }
 
             return DISTRIBUTED_BUILD_SUCCESS;
@@ -295,7 +326,7 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        distributedBuildManager.cancelDistributedBuild( buildAgentUrl, projectId );
+        distributedBuildManager.cancelDistributedBuild( buildAgentUrl, projectGroupId, scmRootAddress );
 
         return SUCCESS;
     }
@@ -468,15 +499,5 @@ public class QueuesAction
     public void setBuildAgentUrl( String buildAgentUrl )
     {
         this.buildAgentUrl = buildAgentUrl;
-    }
-
-    public List<Integer> getSelectedProjects()
-    {
-        return selectedProjects;
-    }
-
-    public void setSelectedProjects( List<Integer> selectedProjects )
-    {
-        this.selectedProjects = selectedProjects;
     }
 }

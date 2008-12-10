@@ -62,6 +62,9 @@ public interface TaskQueueManager
     boolean isInCurrentPrepareBuildTask( int projectId )
         throws TaskQueueManagerException;
 
+    boolean isInDistributedBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueManagerException;
+
     boolean isInPrepareBuildQueue( int projectId )
         throws TaskQueueManagerException;
 

@@ -78,7 +78,7 @@ public class DefaultTaskQueueManager
     private PlexusContainer container;
 
     /**
-     * @plexus.requirement role-hint="distributed-build"
+     * @plexus.requirement role-hint="distributed-build-project"
      */
     private TaskQueue distributedBuildQueue;
 
@@ -359,7 +359,33 @@ public class DefaultTaskQueueManager
         
         return false;
     }
-    
+
+    public boolean isInDistributedBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            List<PrepareBuildProjectsTask> queue = distributedBuildQueue.getQueueSnapshot();
+
+            for ( PrepareBuildProjectsTask task : queue )
+            {
+                if ( task != null )
+                {
+                    if ( task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( "Error while getting the tasks in distributed build queue", e );
+        }
+    }
+
     public boolean isInPrepareBuildQueue( int projectId )
         throws TaskQueueManagerException
     {
@@ -371,7 +397,7 @@ public class DefaultTaskQueueManager
             {
                 if ( task != null )
                 {
-                    Map<Integer, Integer> map = ( (PrepareBuildProjectsTask) task).getProjectsBuildDefinitionsMap();
+                    Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
                     
                     if ( map.size() > 0 )
                     {

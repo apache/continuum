@@ -3,11 +3,14 @@ package org.apache.continuum.builder.distributed.manager;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.system.Installation;
 
 public interface DistributedBuildManager
 {
+    String ROLE = DistributedBuildManager.class.getName();
+
     void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
         throws ContinuumException;
 
@@ -26,4 +29,6 @@ public interface DistributedBuildManager
 
     List<Installation> getAvailableInstallations( String buildAgentUrl )
         throws ContinuumException;
+
+    Map<String, PrepareBuildProjectsTask> getDistributedBuildProjects();
 }

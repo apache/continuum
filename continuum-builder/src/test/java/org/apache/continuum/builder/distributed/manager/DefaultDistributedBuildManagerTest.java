@@ -25,13 +25,9 @@ public class DefaultDistributedBuildManagerTest
     {
         super.setUp();
 
-        //distributedBuildManager = (DistributedBuildManager) lookup( "distributedBuildManager" );
+        distributedBuildManager = (DistributedBuildManager) lookup( DistributedBuildManager.class );
     }
 
-    public void testSomething()
-    {
-    }
-/*
     public void testUpdateScmResult()
         throws Exception
     {
@@ -133,5 +129,4 @@ public class DefaultDistributedBuildManagerTest
         assertEquals( expected.getException(), actual.getException() );
         assertEquals( expected.getProviderMessage(), actual.getProviderMessage() );
     }
-    */
 }
