@@ -125,7 +125,8 @@ public class DistributedBuildProjectTaskExecutor
             }
 
             int ctr = 0;
-            
+            String scmRootAddress = "";
+
             for ( Project project : projects )
             {
                 if ( ctr == 0 )
@@ -135,6 +136,7 @@ public class DistributedBuildProjectTaskExecutor
                     {
                         if ( project.getScmUrl().startsWith( scmRoot.getScmRootAddress() ) )
                         {
+                            scmRootAddress = scmRoot.getScmRootAddress();
                             scmRoot.setOldState( scmRoot.getState() );
                             scmRoot.setState( ContinuumProjectState.UPDATING );
                             projectScmRootDao.updateProjectScmRoot( scmRoot );
@@ -149,6 +151,8 @@ public class DistributedBuildProjectTaskExecutor
                     buildResultDao.getLatestBuildResultForBuildDefinition( project.getId(), buildDefinitionId );
 
                 Map context = new HashMap();
+                context.put( ContinuumBuildConstant.KEY_PROJECT_GROUP_ID, project.getProjectGroup().getId() );
+                context.put( ContinuumBuildConstant.KEY_SCM_ROOT_ADDRESS, scmRootAddress );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_ID, project.getId() );
                 context.put( ContinuumBuildConstant.KEY_EXECUTOR_ID, project.getExecutorId() );
                 context.put( ContinuumBuildConstant.KEY_SCM_URL, project.getScmUrl() );

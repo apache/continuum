@@ -46,6 +46,10 @@ public class ContinuumBuildConstant
 
     public static final String KEY_PREPARE_BUILD_FINISHED = "prepare-build-finished";
 
+    public static final String KEY_PROJECT_GROUP_ID = "project-group-id";
+
+    public static final String KEY_SCM_ROOT_ADDRESS = "scm-root-address";
+
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
