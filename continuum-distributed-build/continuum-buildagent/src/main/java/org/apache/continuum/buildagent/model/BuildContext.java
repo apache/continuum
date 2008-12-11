@@ -24,6 +24,30 @@ public class BuildContext
 
     private boolean buildFresh;
 
+    private int projectGroupId;
+
+    private String scmRootAddress;
+
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
+    }
+
+    public void setProjectGroupId( int projectGroupId )
+    {
+        this.projectGroupId = projectGroupId;
+    }
+
+    public String getScmRootAddress()
+    {
+        return scmRootAddress;
+    }
+
+    public void setScmRootAddress( String scmRootAddress )
+    {
+        this.scmRootAddress = scmRootAddress;
+    }
+
     public int getProjectId()
     {
         return projectId;

@@ -29,7 +29,7 @@ under the License.
   <artifactId>continuum-buildagent</artifactId>
   <packaging>jar</packaging>
   <name>Continuum :: Distributed Build :: Build Agent</name>
-
+  
   <build>
     <plugins>
       <plugin>
@@ -66,11 +66,9 @@ under the License.
               <goal>xsd</goal>
             </goals>
             <configuration>
-              <outputDirectory>
-                ${project.build.outputDirectory}/META-INF/continuum/xsd
-              </outputDirectory>
+              <outputDirectory>${project.build.outputDirectory}/META-INF/continuum/xsd</outputDirectory>
             </configuration>
-          </execution>
+          </execution>                    
         </executions>
       </plugin>
     </plugins>
@@ -93,50 +91,6 @@ under the License.
       <version>1.0.1</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.shared</groupId>
-      <artifactId>file-management</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-provider-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.scm</groupId>
-      <artifactId>maven-scm-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-project</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-scm</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-core</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
     </dependency>
@@ -144,26 +98,15 @@ under the License.
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
       <version>${spring.version}</version>
-    </dependency>
+    </dependency> 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-    </dependency>
+    </dependency>      
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-action</artifactId>
-      <version>1.0-alpha-6</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-container-default</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
 </project>

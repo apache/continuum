@@ -47,6 +47,10 @@ public abstract class AbstractContinuumBuildAgentService
 
     public static final String KEY_SCM_EXCEPTION = "scm-exception";
 
+    public static final String KEY_PROJECT_GROUP_ID = "project-group-id";
+
+    public static final String KEY_SCM_ROOT_ADDRESS = "scm-root-address";
+
     public static Integer getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -96,6 +100,17 @@ public abstract class AbstractContinuumBuildAgentService
     {
         return getBoolean( context, KEY_BUILD_FRESH );
     }
+
+    public static int getProjectGroupId( Map context )
+    {
+        return getInteger( context, KEY_PROJECT_GROUP_ID );
+    }
+
+    public static String getScmRootAddress( Map context )
+    {
+        return getString( context, KEY_SCM_ROOT_ADDRESS );
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
