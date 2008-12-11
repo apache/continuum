@@ -2,6 +2,7 @@ package org.apache.continuum.taskqueue.manager;
 
 import java.util.List;
 
+import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
@@ -39,6 +40,9 @@ public interface TaskQueueManager
         throws TaskQueueManagerException;
 
     TaskQueue getDistributedBuildQueue();
+
+    List<PrepareBuildProjectsTask> getDistributedBuildProjectsInQueue()
+        throws TaskQueueManagerException;
 
     TaskQueue getPrepareBuildQueue();
 

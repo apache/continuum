@@ -26,7 +26,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.xmlrpc.XmlRpcException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
-import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,17 +90,14 @@ public class DistributedBuildProjectTaskExecutor
         }
         catch ( MalformedURLException e )
         {
-            log.error( "Invalid URL " + buildAgentUrl, e );
-            endTime = System.currentTimeMillis();
-            createBuildResult( prepareBuildTask.getProjectsBuildDefinitionsMap(), prepareBuildTask.getTrigger(),
-                                    ContinuumUtils.throwableToString( e ) );
+            log.error( "Invalid URL " + buildAgentUrl + ", not building" );
+            throw new TaskExecutionException( "Invalid URL " + buildAgentUrl, e );
         }
         catch ( Exception e )
         {
-            log.error( "Error occurred while performing task", e );
+            log.error( "Error occurred while building task", e );
             endTime = System.currentTimeMillis();
-            createBuildResult( prepareBuildTask.getProjectsBuildDefinitionsMap(), prepareBuildTask.getTrigger(),
-                               ContinuumUtils.throwableToString( e ) );
+            createResult( prepareBuildTask, ContinuumUtils.throwableToString( e ) );
         }
     }
 
@@ -178,32 +174,45 @@ public class DistributedBuildProjectTaskExecutor
         }
     }
 
-    private void createBuildResult( Map<Integer, Integer> map, int trigger, String error )
+    private void createResult( PrepareBuildProjectsTask task, String error )
         throws TaskExecutionException
     {
         try
         {
-            for ( Integer projectId : map.keySet() )
+            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( task.getProjectGroupId(), task.getScmRootAddress() );
+
+            if ( scmRoot.getState() == ContinuumProjectState.UPDATING )
             {
-                int buildDefinitionId = map.get( projectId );
-                Project project = projectDao.getProject( projectId );
-                BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-
-                BuildResult latestBuildResult = buildResultDao.
-                                                    getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
-                if ( ( latestBuildResult.getStartTime() >= startTime && latestBuildResult.getEndTime() > 0 && 
-                       latestBuildResult.getEndTime() < endTime ) || latestBuildResult.getStartTime() < startTime )
+                scmRoot.setState( ContinuumProjectState.ERROR );
+                scmRoot.setError( error );
+                projectScmRootDao.updateProjectScmRoot( scmRoot );
+            }
+            else
+            {
+                Map<Integer, Integer> map = task.getProjectsBuildDefinitionsMap();
+                for ( Integer projectId : map.keySet() )
                 {
-                    BuildResult buildResult = new BuildResult();
-                    buildResult.setBuildDefinition( buildDef );
-                    buildResult.setError( error );
-                    buildResult.setState( ContinuumProjectState.ERROR );
-                    buildResult.setTrigger( trigger );
-                    buildResult.setStartTime( startTime );
-                    buildResult.setEndTime( endTime );
+                    int buildDefinitionId = map.get( projectId );
+                    Project project = projectDao.getProject( projectId );
+                    BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
 
-                    buildResultDao.addBuildResult( project, buildResult );
+                    BuildResult latestBuildResult = buildResultDao.
+                                                        getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+                    if ( ( latestBuildResult.getStartTime() >= startTime && latestBuildResult.getEndTime() > 0 && 
+                           latestBuildResult.getEndTime() < endTime ) || latestBuildResult.getStartTime() < startTime )
+                    {
+                        BuildResult buildResult = new BuildResult();
+                        buildResult.setBuildDefinition( buildDef );
+                        buildResult.setError( error );
+                        buildResult.setState( ContinuumProjectState.ERROR );
+                        buildResult.setTrigger( task.getTrigger() );
+                        buildResult.setStartTime( startTime );
+                        buildResult.setEndTime( endTime );
+
+                        buildResultDao.addBuildResult( project, buildResult );
+                    }
                 }
+
             }
         }
         catch ( ContinuumStoreException e )

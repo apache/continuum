@@ -3343,8 +3343,9 @@ public class DefaultContinuum
                                        String scmRootAddress, int projectGroupId )
         throws ContinuumException
     {
+        ProjectGroup group = getProjectGroup( projectGroupId );
         PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger,
-                                                                      projectGroupId, scmRootAddress );
+                                                                      projectGroupId, group.getName(), scmRootAddress );
 
         try
         {

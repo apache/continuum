@@ -60,6 +60,7 @@
       <role>org.apache.continuum.builder.distributed.executor.DistributedBuildTaskExecutor</role>
       <role-hint>distributed-build-project</role-hint>
       <implementation>org.apache.continuum.builder.distributed.executor.DistributedBuildProjectTaskExecutor</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
       <requirements>
         <requirement>
           <role>org.apache.continuum.dao.ProjectDao</role>

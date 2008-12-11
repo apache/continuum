@@ -13,14 +13,17 @@ public class PrepareBuildProjectsTask
 
     private int projectGroupId;
 
+    private String projectGroupName;
+
     private String scmRootAddress;
 
     public PrepareBuildProjectsTask( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger,
-                                     int projectGroupId, String scmRootAddress )
+                                     int projectGroupId, String projectGroupName, String scmRootAddress )
     {
         this.projectsBuildDefinitionsMap = projectsBuildDefinitionsMap;
         this.trigger = trigger;
         this.projectGroupId = projectGroupId;
+        this.projectGroupName = projectGroupName;
         this.scmRootAddress = scmRootAddress;
     }
     
@@ -63,6 +66,16 @@ public class PrepareBuildProjectsTask
     public void setProjectGroupId( int projectGroupId )
     {
         this.projectGroupId = projectGroupId;
+    }
+
+    public String getProjectGroupName()
+    {
+        return projectGroupName;
+    }
+
+    public void setProjectGroupName( String projectGroupName )
+    {
+        this.projectGroupName = projectGroupName;
     }
 
     public String getScmRootAddress()

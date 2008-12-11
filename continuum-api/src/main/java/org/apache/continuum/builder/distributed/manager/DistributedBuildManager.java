@@ -23,7 +23,8 @@ public interface DistributedBuildManager
     void reload()
         throws ContinuumException;
     
-    void removeAgentFromTaskQueueExecutor( String buildAgentUrl );
+    void removeAgentFromTaskQueueExecutor( String buildAgentUrl )
+        throws ContinuumException;
 
     boolean isBuildAgentBusy( String buildAgentUrl );
 

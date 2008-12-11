@@ -20,7 +20,6 @@ package org.apache.continuum.web.action.admin;
  */
 
 import org.apache.continuum.configuration.BuildAgentConfiguration;
-import org.apache.continuum.builder.distributed.BuildAgentListener;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.system.Installation;
@@ -159,26 +158,7 @@ public class BuildAgentAction
         {
             distributedBuildManager.removeAgentFromTaskQueueExecutor( buildAgent.getUrl() );
         }
-        /*
-        List<BuildAgentListener> listeners = distributedBuildManager.getBuildAgentListeners();
 
-        for ( BuildAgentListener listener : listeners )
-        {
-            if ( listener.getUrl().equals( buildAgent.getUrl() ) )
-            {
-                if ( listener.isBusy() )
-                {
-                    message = getText( "buildAgent.error.delete.busy" );
-                    return ERROR;
-                }
-                else
-                {
-                    listeners.remove( listener );
-                    break;
-                }
-            }
-        }*/
-        
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )

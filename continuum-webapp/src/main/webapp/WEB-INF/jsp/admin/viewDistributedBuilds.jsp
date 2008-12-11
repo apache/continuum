@@ -37,9 +37,9 @@
             </s:iterator>
           </div>
         </c:if>
-        <c:if test="${not empty distributedBuilds}">
-          <s:set name="distributedBuilds" value="distributedBuilds" scope="request"/>
-          <ec:table items="distributedBuilds"
+        <c:if test="${not empty distributedBuildSummary}">
+          <s:set name="distributedBuildSummary" value="distributedBuildSummary" scope="request"/>
+          <ec:table items="distributedBuildSummary"
                     var="distributedBuild"
                     showExports="false"
                     showPagination="false"
@@ -61,12 +61,35 @@
             </ec:row>
           </ec:table>
         </c:if>
-        <c:if test="${empty distributedBuilds}">
+        <c:if test="${empty distributedBuildSummary}">
           <s:text name="distributedBuilds.empty"/>
         </c:if>
       </div>
       <div id="h3">
-      
+        <h3>
+            <s:text name="distributedBuilds.buildQueue.section.title"/>
+          </h3>
+        <c:if test="${not empty distributedBuildQueues}">
+          <ec:table items="distributedBuildQueues"
+                    var="distributedBuildQueue"
+                    showExports="false"
+                    showPagination="false"
+                    showStatusBar="false"
+                    sortable="false"
+                    filterable="false">
+            <ec:row>
+              <ec:column property="projectGroupName" title="distributedBuild.table.projectGroupName"/>
+              <ec:column property="scmRootAddress" title="distributedBuild.table.scmRootAddress"/>
+              <ec:column property="cancelEntry" title="&nbsp;" width="1%">
+                <s:url id="cancelUrl" action="removeDistributedBuild" method="removeDistributedBuild" namespace="/">
+                  <s:param name="projectGroupId">${pageScope.distributedBuild.projectGroupId}</s:param>
+                  <s:param name="scmRootAddress">${pageScope.distributedBuild.scmRootAddress}</s:param>
+                </s:url>
+                <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
+              </ec:column>
+            </ec:row>
+          </ec:table>
+        </c:if>
       </div>
     </body>
   </s:i18n>

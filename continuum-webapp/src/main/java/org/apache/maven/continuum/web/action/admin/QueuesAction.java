@@ -24,10 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.continuum.builder.distributed.BuildAgentListener;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
-import org.apache.continuum.dao.ProjectDao;
-import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.Continuum;
@@ -42,7 +39,6 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.DistributedBuildSummary;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -101,6 +97,8 @@ public class QueuesAction
     DistributedBuildManager distributedBuildManager;
 
     private List<DistributedBuildSummary> distributedBuildSummary;
+
+    private List<PrepareBuildProjectsTask> distributedBuildQueues;
 
     private String buildAgentUrl;
 
@@ -224,6 +222,8 @@ public class QueuesAction
 
                distributedBuildSummary.add( summary );
             }
+
+            distributedBuildQueues = taskQueueManager.getDistributedBuildProjectsInQueue();
 
             return DISTRIBUTED_BUILD_SUCCESS;
         }
@@ -499,5 +499,15 @@ public class QueuesAction
     public void setBuildAgentUrl( String buildAgentUrl )
     {
         this.buildAgentUrl = buildAgentUrl;
+    }
+
+    public List<PrepareBuildProjectsTask> getDistributedBuildQueues()
+    {
+        return distributedBuildQueues;
+    }
+
+    public void setDistributedBuildQueues( List<PrepareBuildProjectsTask> distributedBuildQueues )
+    {
+        this.distributedBuildQueues = distributedBuildQueues;
     }
 }

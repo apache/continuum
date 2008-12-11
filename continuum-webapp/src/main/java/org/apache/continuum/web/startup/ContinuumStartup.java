@@ -21,6 +21,7 @@ package org.apache.continuum.web.startup;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.codehaus.plexus.spring.PlexusToSpringUtils;
@@ -81,6 +82,9 @@ public class ContinuumStartup
 
         TaskQueueExecutor prepareBuildProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "prepare-build-project" ) );
+
+        DistributedBuildManager distributedBuildManager = (DistributedBuildManager) wac.getBean( PlexusToSpringUtils
+            .buildSpringId( DistributedBuildManager.class ) );
     }
 
 }

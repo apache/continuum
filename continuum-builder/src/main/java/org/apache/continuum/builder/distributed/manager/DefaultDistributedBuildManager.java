@@ -38,6 +38,8 @@ import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,9 +177,23 @@ public class DefaultDistributedBuildManager
     }
 
     public void removeAgentFromTaskQueueExecutor( String buildAgentUrl)
+        throws ContinuumException
     {
         log.info( "remove TaskQueueExecutor for build agent '" + buildAgentUrl + "'" );
-        taskQueueExecutors.remove( buildAgentUrl );
+        ThreadedDistributedBuildTaskQueueExecutor executor = taskQueueExecutors.get( buildAgentUrl );
+
+        try
+        {
+            if ( taskQueueExecutors.remove( buildAgentUrl ) != null )
+            {
+                Startable startable = (Startable) executor;
+                executor.stop();
+            }
+        }
+        catch ( StoppingException e )
+        {
+            throw new ContinuumException( "", e );
+        }
     }
 
     public boolean isBuildAgentBusy( String buildAgentUrl )

@@ -250,6 +250,19 @@ public class DefaultTaskQueueManager
         return distributedBuildQueue;
     }
 
+    public List<PrepareBuildProjectsTask> getDistributedBuildProjectsInQueue()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            return distributedBuildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( "Error while getting the distributed building queue", e );
+        }
+    }
+
     public TaskQueue getPrepareBuildQueue()
     {
         return prepareBuildQueue;
