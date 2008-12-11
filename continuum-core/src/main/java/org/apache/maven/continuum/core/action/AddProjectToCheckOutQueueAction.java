@@ -56,6 +56,9 @@ public class AddProjectToCheckOutQueueAction
         throws Exception
     {
 
+        //TODO: deng parallel builds
+        // - get the default build definition from context and pass to parallel builds manager!
+        
         Project project = (Project) getObject( context, KEY_PROJECT, null );
         if ( project == null )
         {

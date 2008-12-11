@@ -464,6 +464,11 @@ public class PrepareBuildProjectsTaskExecutor
                 shouldBuild = true;
             }
 
+            // TODO: deng parallel builds.. 
+            // - add those projects which should be built into a list
+            //       and also add the build definition into a map of <projectId,build definition> 
+            // - set these in the context map 
+            // 
             if ( shouldBuild )
             {
                 try

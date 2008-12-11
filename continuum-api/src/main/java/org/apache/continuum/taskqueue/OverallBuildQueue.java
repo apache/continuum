@@ -39,6 +39,14 @@ public interface OverallBuildQueue
     
     void setId( int id );
     
+    /**
+     * Returns the name of the "overall" build queue
+     * @return
+     */
+    String getName();
+    
+    void setName( String name );
+    
     /* Checkout Queue */
     
     /**

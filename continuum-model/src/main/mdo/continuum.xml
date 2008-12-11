@@ -1030,6 +1030,27 @@
       </fields>
     </class>
     <class>
+      <name>BuildQueue</name>
+      <version>1.1.4+</version>    
+      <description><![CDATA[
+       Build queue.
+      ]]></description>
+      <fields>
+        <field>
+          <name>id</name>
+          <version>1.1.4+</version>
+          <identifier>true</identifier>
+          <type>int</type>
+        </field>
+        <field>
+          <name>name</name>
+          <version>1.1.4+</version>
+          <type>String</type>
+          <required>true</required>
+        </field>        
+      </fields>
+    </class>    
+    <class>
       <name>Schedule</name>
       <version>1.0.9+</version>
       <description><![CDATA[
@@ -1087,6 +1108,14 @@
           <name>cronExpression</name>
           <version>1.0.9+</version>
           <type>String</type>
+        </field>
+        <field jpox.fetch-groups="schedule-build-queues">
+          <name>buildQueues</name>
+          <version>1.1.4+</version>
+          <association xml.reference="true" stash.part="true" jpox.dependent="false">
+            <type>BuildQueue</type>
+            <multiplicity>*</multiplicity>
+          </association>
         </field>
       </fields>
     </class>
@@ -1593,7 +1622,6 @@
           <required>true</required>
         </field>
       </fields>
-    </class>
-    
+    </class>    
   </classes>
 </model>

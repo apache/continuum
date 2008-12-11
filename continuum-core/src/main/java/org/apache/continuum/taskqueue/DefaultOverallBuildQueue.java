@@ -56,6 +56,10 @@ public class DefaultOverallBuildQueue
     extends AbstractLogEnabled
     implements OverallBuildQueue, Contextualizable
 {
+    // TODO: deng parallel builds
+    // - might need to set a task queue executor for each task queue! 
+    //      change getXXXXTaskQueueExecutor() methods
+    
     // TODO:
     // - need to specify each task queue to be instantiated each time it is looked up!!!
 
@@ -83,6 +87,8 @@ public class DefaultOverallBuildQueue
     
     private int id;
     
+    private String name;
+    
     public int getId()
     {
         return id;
@@ -91,6 +97,16 @@ public class DefaultOverallBuildQueue
     public void setId( int id )
     {
         this.id = id;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+    
+    public void setName( String name )
+    {
+        this.name = name;
     }
 
     /* Checkout Queue */
@@ -291,7 +307,7 @@ public class DefaultOverallBuildQueue
     public TaskQueueExecutor getBuildTaskQueueExecutor()
         throws ComponentLookupException
     {        
-        return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "build-project" );        
+        return ( TaskQueueExecutor ) container.lookup( TaskQueueExecutor.class, "build-project" );        
     }
 
     public void addToBuildQueue( Task buildTask )

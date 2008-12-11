@@ -57,6 +57,7 @@
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
       <role-hint>build-project</role-hint>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
       <implementation>org.apache.maven.continuum.buildcontroller.BuildProjectTaskExecutor</implementation>
       <requirements>
         <requirement>
@@ -71,8 +72,8 @@
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>build-project</role-hint>
-      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
-      <instantiation-strategy>singleton</instantiation-strategy>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
+      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>      
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
@@ -99,6 +100,7 @@
       <role-hint>check-out-project</role-hint>
       <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
       <lifecycle-handler>plexus-configurable</lifecycle-handler>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
     </component>
 
 
@@ -106,7 +108,7 @@
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>check-out-project</role-hint>
       <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
-      <instantiation-strategy>singleton</instantiation-strategy>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
@@ -134,13 +136,14 @@
       <role-hint>prepare-build-project</role-hint>
       <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
       <lifecycle-handler>plexus-configurable</lifecycle-handler>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
     </component>
     
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>prepare-build-project</role-hint>
       <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
-      <instantiation-strategy>singleton</instantiation-strategy>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>

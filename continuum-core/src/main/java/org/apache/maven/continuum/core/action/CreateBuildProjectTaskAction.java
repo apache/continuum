@@ -65,6 +65,11 @@ public class CreateBuildProjectTaskAction
     public synchronized void execute( Map context )
         throws Exception
     {
+    // TODO: deng parallel builds
+    // - context now contains a "list" of projects and a "map" of projectId, build definition ket-value pair
+    // - update the list of projects
+    // - pass this updated list + map of build definitions to builds manager
+        
         Project project = AbstractContinuumAction.getProject( context );
         int buildDefinitionId = AbstractContinuumAction.getBuildDefinitionId( context );
         int trigger = AbstractContinuumAction.getTrigger( context );

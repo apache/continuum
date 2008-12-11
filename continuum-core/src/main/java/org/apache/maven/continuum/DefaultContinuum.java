@@ -664,6 +664,8 @@ public class DefaultContinuum
 
         context.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
 
+        // TODO: deng parallel builds 
+        // - add default build definition of project (schedule is attached to the build def) to context!
         executeAction( "add-project-to-checkout-queue", context );
     }
 
