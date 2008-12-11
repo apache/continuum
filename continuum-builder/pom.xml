@@ -57,11 +57,6 @@ under the License.
       <artifactId>continuum-distributed-build-transport-master</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.xmlrpc</groupId>
-      <artifactId>xmlrpc-server</artifactId>
-      <version>3.0</version>
-    </dependency>
-    <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <scope>test</scope>

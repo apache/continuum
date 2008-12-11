@@ -171,7 +171,7 @@ public class DefaultDistributedBuildManager
             else if ( !agent.isEnabled() && taskQueueExecutors.containsKey( agent.getUrl() ) )
             {
                 log.info( "agent is disabled, remove TaskQueueExecutor for build agent '" + agent.getUrl() + "'" );
-                taskQueueExecutors.remove( agent.getUrl() );
+                removeAgentFromTaskQueueExecutor( agent.getUrl() );
             }
         }
     }
@@ -192,7 +192,7 @@ public class DefaultDistributedBuildManager
         }
         catch ( StoppingException e )
         {
-            throw new ContinuumException( "", e );
+            throw new ContinuumException( "Error while stopping task queue executor", e );
         }
     }
 
