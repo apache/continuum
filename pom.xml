@@ -1,0 +1,17 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.continuum</groupId>
+  <artifactId>continuum-plugins</artifactId>
+  <version>1.4-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <modules>
+    <module>continuum-app</module>
+    <module>continuum-builder</module>
+    <module>continuum-model</module>
+    <module>continuum-plugin-api</module>
+    <module>continuum-plugin-manager</module>
+    <module>continuum-build-plugin</module>
+    <module>continuum-commandline-notification-plugin</module>
+  </modules>
+</project>

@@ -1,0 +1,48 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.continuum</groupId>
+    <artifactId>continuum-plugins</artifactId>
+    <version>1.4-SNAPSHOT</version>
+  </parent>
+  <artifactId>continuum-build-plugin</artifactId>
+  <packaging>bundle</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-plugin-api</artifactId>
+      <version>1.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>1.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.4.3</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>1.4.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Import-Package>org.apache.continuum.plugin.api*, org.apache.continuum.model*, org.osgi.framework*, org.slf4j*</Import-Package>
+            <Private-Package>org.apache.continuum.plugin.build*</Private-Package>
+            <Bundle-Activator>org.apache.continuum.plugin.build.Activator</Bundle-Activator>
+            <Bundle-Vendor>The Apache Software Foundation</Bundle-Vendor>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+

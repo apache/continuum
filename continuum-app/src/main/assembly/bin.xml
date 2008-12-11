@@ -1,0 +1,43 @@
+<assembly>
+  <id>continuum-app</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/lib</outputDirectory>
+      <includes>
+        <include>org.apache.continuum:continuum-plugin-manager</include>
+        <include>org.apache.felix:org.apache.felix.main</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/system</outputDirectory>
+      <includes>
+        <include>org.apache.continuum:continuum-plugin-api</include>
+        <include>org.apache.continuum:continuum-model</include>
+        <include>org.apache.continuum:continuum-builder</include>
+        <include>org.apache.felix:org.osgi.compendium</include>
+        <include>org.apache.felix:org.apache.felix.shell</include>
+        <include>org.apache.felix:org.apache.felix.shell.tui</include>
+        <include>org.slf4j:slf4j-api</include>
+        <include>org.slf4j:slf4j-simple</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/plugins</outputDirectory>
+      <includes>
+        <include>org.apache.continuum:continuum-build-plugin</include>
+        <include>org.apache.continuum:continuum-commandline-notification-plugin</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+  <fileSets>
+    <fileSet>
+      <directory>src/main/resources</directory>
+      <outputDirectory>/bin</outputDirectory>
+      <fileMode>0755</fileMode>
+    </fileSet>
+  </fileSets>
+</assembly>
+
