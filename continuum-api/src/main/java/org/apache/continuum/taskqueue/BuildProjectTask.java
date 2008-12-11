@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.buildqueue;
+package org.apache.continuum.taskqueue;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

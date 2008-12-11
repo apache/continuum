@@ -1,4 +1,4 @@
-package org.apache.continuum.scm.queue;
+package org.apache.continuum.taskqueue;
 
 import java.util.Map;
 

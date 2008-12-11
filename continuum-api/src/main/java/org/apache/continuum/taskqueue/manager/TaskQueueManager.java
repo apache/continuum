@@ -2,8 +2,8 @@ package org.apache.continuum.taskqueue.manager;
 
 import java.util.List;
 
-import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 

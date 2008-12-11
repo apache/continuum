@@ -1457,10 +1457,10 @@ public class ContinuumServiceImpl
     // ----------------------------------------------------------------------
 
     private List<BuildProjectTask> populateBuildProjectTaskList(
-        List<org.apache.maven.continuum.buildqueue.BuildProjectTask> buildProjectTasks )
+        List<org.apache.continuum.taskqueue.BuildProjectTask> buildProjectTasks )
     {
         List<BuildProjectTask> responses = new ArrayList<BuildProjectTask>();
-        for ( org.apache.maven.continuum.buildqueue.BuildProjectTask buildProjectTask : buildProjectTasks )
+        for ( org.apache.continuum.taskqueue.BuildProjectTask buildProjectTask : buildProjectTasks )
         {
 
             responses.add( (BuildProjectTask) mapper.map( buildProjectTask, BuildProjectTask.class ) );

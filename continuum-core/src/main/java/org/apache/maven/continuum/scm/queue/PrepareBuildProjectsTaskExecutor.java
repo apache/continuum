@@ -9,7 +9,7 @@ import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
-import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
+import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;

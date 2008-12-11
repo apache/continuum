@@ -19,7 +19,7 @@ package org.apache.maven.continuum.buildqueue.evaluator;
  * under the License.
  */
 
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.TaskViabilityEvaluator;

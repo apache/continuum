@@ -20,9 +20,9 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
 import java.util.Map;

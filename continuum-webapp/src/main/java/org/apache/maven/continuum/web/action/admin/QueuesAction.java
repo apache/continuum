@@ -25,13 +25,13 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
-import org.apache.continuum.scm.queue.PrepareBuildProjectsTask;
+import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.CheckOutTask;
+import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.Continuum;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;

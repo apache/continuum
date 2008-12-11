@@ -19,8 +19,8 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.AbstractContinuumTest;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;

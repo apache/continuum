@@ -18,7 +18,7 @@
  */
 package org.apache.maven.continuum.web.action;
 
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
