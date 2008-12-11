@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.continuum.dao.LocalRepositoryDao;
@@ -305,6 +306,12 @@ public class MavenTwoContinuumProjectBuilder
                 continuumProject.setScmTag( mavenProject.getScm().getTag() );
             }
 
+            // CONTINUUM-1953 add build def from build template def used
+            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator(); iterator
+                .hasNext(); )
+            {
+                continuumProject.addBuildDefinition( iterator.next() );
+            }
             result.addProject( continuumProject, MavenTwoBuildExecutor.ID );
         }
 
