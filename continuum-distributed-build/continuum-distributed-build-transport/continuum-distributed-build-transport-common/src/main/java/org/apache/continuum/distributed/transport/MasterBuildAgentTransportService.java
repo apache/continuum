@@ -2,6 +2,8 @@ package org.apache.continuum.distributed.transport;
 
 import java.util.Map;
 
+import com.atlassian.xmlrpc.ServiceObject;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,11 +26,12 @@ import java.util.Map;
 /**
  * MasterBuildAgentTransportService
  */
+@ServiceObject( "MasterBuildAgentTransportService" )
 public interface MasterBuildAgentTransportService
 {
-    void returnBuildResult( Map buildResult ) throws Exception;
+    public Boolean returnBuildResult( Map buildResult ) throws Exception;
     
-    void returnScmResult( Map scmResult ) throws Exception;
+    public Boolean returnScmResult( Map scmResult ) throws Exception;
     
-    boolean ping() throws Exception;
+    public Boolean ping() throws Exception;
 }

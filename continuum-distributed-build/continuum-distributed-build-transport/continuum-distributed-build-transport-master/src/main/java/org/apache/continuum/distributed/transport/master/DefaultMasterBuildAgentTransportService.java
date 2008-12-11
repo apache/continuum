@@ -33,23 +33,27 @@ public class DefaultMasterBuildAgentTransportService
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
-    public void returnBuildResult( Map buildResult )
+    public Boolean returnBuildResult( Map buildResult )
         throws Exception
     {
         log.info( "Build result returned." );
+        
+        return Boolean.TRUE;
     }
 
-    public void returnScmResult( Map scmResult )
+    public Boolean returnScmResult( Map scmResult )
         throws Exception
     {
         log.info( "SCM result returned." );
+        
+        return Boolean.TRUE;
     }
 
-    public boolean ping()
+    public Boolean ping()
         throws Exception
     {
-        log.info( "Ping" );
+        log.info( "Ping ok" );
         
-        return true;
+        return Boolean.TRUE;
     }
 }

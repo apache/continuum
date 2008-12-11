@@ -25,11 +25,13 @@ import java.util.Map;
 
 import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.distributed.transport.SlaveBuildAgentTransportService;
-import org.apache.xmlrpc.client.XmlRpcClient;
-import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.apache.xmlrpc.client.util.ClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.atlassian.xmlrpc.AuthenticationInfo;
+import com.atlassian.xmlrpc.Binder;
+import com.atlassian.xmlrpc.BindingException;
+import com.atlassian.xmlrpc.DefaultBinder;
 
 /**
  * ProxySlaveAgentTransportService
@@ -41,51 +43,46 @@ public class ProxySlaveAgentTransportService
     
     private SlaveBuildAgentTransportService slave;
     
-    private XmlRpcClient client;
-    
     public ProxySlaveAgentTransportService( URL serviceUrl )
+        throws Exception
     {
         this( serviceUrl, null, null );
     }
 
     public ProxySlaveAgentTransportService( URL serviceUrl, String login, String password )
-    {
-        XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl()
-        {
-            public boolean isEnabledForExtensions()
-            {
-                return true;
-            }
-        };
-
-        if ( login != null && !"".equals( login ) )
-        {
-            config.setBasicUserName( login );
-            config.setBasicPassword( password );
-        }
-        config.setServerURL( serviceUrl );
-
-        client = new XmlRpcClient();
-        client.setConfig( config );
-        ClientFactory factory = new ClientFactory( client );
-        slave = (SlaveBuildAgentTransportService) factory.newInstance( SlaveBuildAgentTransportService.class );
-    }
-
-    public void buildProjects( List<Map> projectsBuildContext )
         throws Exception
     {
+        Binder binder = new DefaultBinder();
+        AuthenticationInfo authnInfo = new AuthenticationInfo( login, password );
+        
         try
         {
-            //slave.buildProjects( projectsBuildContext );
+            slave = binder.bind( SlaveBuildAgentTransportService.class, serviceUrl, authnInfo );
+        }
+        catch ( BindingException e )
+        {
+            log.error( "Can't bind service interface " + SlaveBuildAgentTransportService.class.getName() + " to " + serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e );
+            throw new Exception( "Can't bind service interface " + SlaveBuildAgentTransportService.class.getName() + " to " + serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e);
+        }
+    }
+
+    public Boolean buildProjects( List<Map> projectsBuildContext )
+        throws Exception
+    {
+        Boolean result = null;
+        
+        try
+        {
+            result = slave.buildProjects( projectsBuildContext );
             log.info( "Building projects." );
-            Thread.sleep( 2000000 );
-            log.info( "Build finished" );
         }
         catch ( Exception e )
         {
             log.error( "Failed to build projects.", e );
             throw new Exception( "Failed to build projects.", e );
         }
+        
+        return result;
     }
 
     public List<Installation> getAvailableInstallations()
@@ -114,7 +111,7 @@ public class ProxySlaveAgentTransportService
         
         try
         {
-            slave.getBuildResult( projectId );
+            buildResult = slave.getBuildResult( projectId );
             log.info( "Build result for project " + projectId + " acquired." );
         }
         catch ( Exception e )
@@ -126,33 +123,59 @@ public class ProxySlaveAgentTransportService
         return buildResult;
     }
 
-    public int getProjectCurrentlyBuilding()
+    public Integer getProjectCurrentlyBuilding()
         throws Exception
     {
-        int projectId = slave.getProjectCurrentlyBuilding();
+        Integer projectId = null;
         
-        log.info( "Currently building project " + projectId );
+        try
+        {
+            projectId = slave.getProjectCurrentlyBuilding();
+            log.info( "Currently building project " + projectId );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to get the currently building project", e );
+            throw new Exception( "Failed to get the currently building project", e );
+        }
         
         return projectId;
     }
 
-    public boolean isBusy()
+    public Boolean isBusy()
         throws Exception
     {
-        boolean busy = slave.isBusy();
+        Boolean busy = null;
         
-        log.info( "Build agent is " + ( busy ? "" : "not" ) + " busy." );
+        try
+        {
+            busy = slave.isBusy();
+            log.info( "Build agent is " + ( busy.booleanValue() ? "" : "not" ) + " busy." );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to determine if the build agent is busy.", e );
+            throw new Exception( "Failed to determine if the build agent is busy.", e );
+        }
         
         return busy;
     }
 
-    public boolean ping()
+    public Boolean ping()
         throws Exception
     {
-        //boolean result = slave.ping();
-        boolean result = true;
-
-        log.info( "Ping " + (result ? "ok" : "failed") );
+        Boolean result = null;
+        
+        try
+        {
+            result = slave.ping();
+            log.info( "Ping " + ( result.booleanValue() ? "ok" : "failed" ) );
+        }
+        catch ( Exception e )
+        {
+            log.info( "Ping error" );
+            throw new Exception( "Ping error", e );
+        }
         
         return result;
     }

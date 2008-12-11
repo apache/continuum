@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.continuum.buildagent.model.Installation;
 
+import com.atlassian.xmlrpc.ServiceObject;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -27,17 +29,18 @@ import org.apache.continuum.buildagent.model.Installation;
 /**
  * SlaveBuildAgentTransportService
  */
+@ServiceObject( "SlaveBuildAgentTransportService" )
 public interface SlaveBuildAgentTransportService
 {
-    void buildProjects( List<Map> projectsBuildContext ) throws Exception;
+    public Boolean buildProjects( List<Map> projectsBuildContext ) throws Exception;
     
-    Map getBuildResult( int projectId ) throws Exception;
+    public Map getBuildResult( int projectId ) throws Exception;
     
-    int getProjectCurrentlyBuilding() throws Exception;
+    public Integer getProjectCurrentlyBuilding() throws Exception;
     
-    List<Installation> getAvailableInstallations() throws Exception;
+    public List<Installation> getAvailableInstallations() throws Exception;
     
-    boolean isBusy() throws Exception;
+    public Boolean isBusy() throws Exception;
     
-    boolean ping() throws Exception;
+    public Boolean ping() throws Exception;
 }

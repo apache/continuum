@@ -37,25 +37,31 @@ public class DefaultSlaveBuildAgentTransportService
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
     
-    private ContinuumBuildAgentService buildAgentService;
+    private ContinuumBuildAgentService continuumBuildAgentService;
     
-    public DefaultSlaveBuildAgentTransportService()
+    public DefaultSlaveBuildAgentTransportService( ContinuumBuildAgentService continuumBuildAgentService )
     {
-        log.info( "asdfasdfasdfasdf" );
+        this.continuumBuildAgentService = continuumBuildAgentService;
     }
     
-    public void buildProjects( List<Map> projectsBuildContext )
+    public Boolean buildProjects( List<Map> projectsBuildContext )
         throws Exception
     {
+        Boolean result = Boolean.FALSE;
+        
         try
         {
-            buildAgentService.buildProjects( projectsBuildContext );
+            continuumBuildAgentService.buildProjects( projectsBuildContext );
+            result = Boolean.TRUE;
+            
             log.info( "Building projects." );
         }
         catch ( ContinuumBuildAgentException e )
         {
             log.error( "Failed to build projects.", e );
         }
+        
+        return result;
     }
 
     public List<Installation> getAvailableInstallations()
@@ -65,7 +71,7 @@ public class DefaultSlaveBuildAgentTransportService
         
         try
         {
-            installations = buildAgentService.getAvailableInstallations();
+            installations = continuumBuildAgentService.getAvailableInstallations();
             log.info( "Available installations: " + installations.size() );
         }
         catch ( ContinuumBuildAgentException e )
@@ -83,7 +89,7 @@ public class DefaultSlaveBuildAgentTransportService
         
         try
         {
-            buildAgentService.getBuildResult( projectId );
+            continuumBuildAgentService.getBuildResult( projectId );
             log.info( "Build result for project " + projectId + " acquired." );
         }
         catch ( ContinuumBuildAgentException e )
@@ -94,41 +100,38 @@ public class DefaultSlaveBuildAgentTransportService
         return buildResult;
     }
 
-    public int getProjectCurrentlyBuilding()
+    public Integer getProjectCurrentlyBuilding()
         throws Exception
     {
-        int projectId = buildAgentService.getProjectCurrentlyBuilding();
+        Integer projectId = new Integer( continuumBuildAgentService.getProjectCurrentlyBuilding() );
         
-        log.info( "Currently building project " + projectId );
+        log.info( "Currently building project " + projectId.intValue() );
         
         return projectId;
     }
 
-    public boolean isBusy()
+    public Boolean isBusy()
         throws Exception
     {
-        boolean busy = buildAgentService.isBusy();
-        
-        log.info( "Build agent is " + ( busy ? "" : "not" ) + " busy." );
+        Boolean busy = null;
+        try
+        {
+            busy = new Boolean( continuumBuildAgentService.isBusy() );
+            log.info( "Build agent is " + ( busy ? "" : "not" ) + " busy." );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to determine if master is busy.", e );
+        }
         
         return busy;
     }
 
-    public boolean ping()
+    public Boolean ping()
         throws Exception
     {
         log.info( "Ping ok" );
         
-        return true;
-    }
-
-    public ContinuumBuildAgentService getBuildAgentService()
-    {
-        return buildAgentService;
-    }
-
-    public void setBuildAgentService( ContinuumBuildAgentService buildAgentService )
-    {
-        this.buildAgentService = buildAgentService;
+        return Boolean.TRUE;
     }
 }

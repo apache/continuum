@@ -23,11 +23,13 @@ import java.net.URL;
 import java.util.Map;
 
 import org.apache.continuum.distributed.transport.MasterBuildAgentTransportService;
-import org.apache.xmlrpc.client.XmlRpcClient;
-import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.apache.xmlrpc.client.util.ClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.atlassian.xmlrpc.AuthenticationInfo;
+import com.atlassian.xmlrpc.Binder;
+import com.atlassian.xmlrpc.BindingException;
+import com.atlassian.xmlrpc.DefaultBinder;
 
 /**
  * ProxyMasterAgentTransportService
@@ -40,53 +42,81 @@ public class ProxyMasterAgentTransportService
     MasterBuildAgentTransportService master;
     
     public ProxyMasterAgentTransportService( URL serviceUrl )
+        throws Exception
     {
         this( serviceUrl, null, null );
     }
 
     public ProxyMasterAgentTransportService( URL serviceUrl, String login, String password )
+        throws Exception
     {
-        XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl()
+        Binder binder = new DefaultBinder();
+        AuthenticationInfo authnInfo = new AuthenticationInfo( login, password );
+        
+        try
         {
-            public boolean isEnabledForExtensions()
-            {
-                return true;
-            }
-        };
-
-        if ( login != null && !"".equals( login ) )
-        {
-            config.setBasicUserName( login );
-            config.setBasicPassword( password );
+            master = binder.bind( MasterBuildAgentTransportService.class, serviceUrl, authnInfo );
         }
-        config.setServerURL( serviceUrl );
-
-        XmlRpcClient client = new XmlRpcClient();
-        client.setConfig( config );
-        ClientFactory factory = new ClientFactory( client );
-        master = (MasterBuildAgentTransportService) factory.newInstance( MasterBuildAgentTransportService.class );
+        catch ( BindingException e )
+        {
+            log.error( "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " + serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e );
+            throw new Exception( "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " + serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e);
+        }
     }
 
-    public void returnBuildResult( Map buildResult )
+    public Boolean returnBuildResult( Map buildResult )
         throws Exception
     {
-        master.returnBuildResult( buildResult );
-        log.info( "Returning the build result." );
+        Boolean result = null;
+        
+        try
+        {
+            result = master.returnBuildResult( buildResult );
+            log.info( "Returning the build result." );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to return the build result.", e );
+            throw new Exception( "Failed to return the build result", e);
+        }
+        
+        return result;
     }
 
-    public void returnScmResult( Map scmResult )
+    public Boolean returnScmResult( Map scmResult )
         throws Exception
     {
-        master.returnScmResult( scmResult );
-        log.info( "Returning the scm result." );
+        Boolean result = null;
+        
+        try
+        {
+            result = master.returnScmResult( scmResult );
+            log.info( "Returning the scm result." );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to return the SCM result.", e );
+            throw new Exception( "Failed to return the SCM result", e);
+        }
+        
+        return result;
     }
     
-    public boolean ping()
+    public Boolean ping()
         throws Exception
     {
-        boolean result = master.ping();
+        Boolean result = null;
         
-        log.info( "Ping " + (result ? "ok" : "failed") );
+        try
+        {
+            result = master.ping();
+            log.info( "Ping " + ( result.booleanValue() ? "ok" : "failed" ) );
+        }
+        catch ( Exception e )
+        {
+            log.info( "Ping error" );
+            throw new Exception( "Ping error", e );
+        }
         
         return result;
     }

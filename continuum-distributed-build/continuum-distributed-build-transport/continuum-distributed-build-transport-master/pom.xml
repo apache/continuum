@@ -33,29 +33,4 @@ under the License.
       <artifactId>continuum-distributed-build-transport-common</artifactId>
     </dependency>
   </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <executable>java</executable>
-          <mainClass>org.apache.continuum.distributed.transport.master.SampleClient</mainClass>
-          <arguments>
-            <argument>http://localhost:9191/xmlrpc</argument>
-            <argument>login</argument>
-            <argument>password</argument>
-          </arguments>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>
