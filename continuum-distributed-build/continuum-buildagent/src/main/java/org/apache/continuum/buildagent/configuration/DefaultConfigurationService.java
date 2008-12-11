@@ -20,6 +20,7 @@ public class DefaultConfigurationService
     private ContinuumConfiguration configuration;
 
     private ContinuumBuildAgentConfiguration buildAgentConfiguration;
+    
 
     public void initialize()
         throws ContinuumConfigurationException
