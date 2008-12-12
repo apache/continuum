@@ -305,13 +305,6 @@ public class MavenTwoContinuumProjectBuilder
             {
                 continuumProject.setScmTag( mavenProject.getScm().getTag() );
             }
-
-            // CONTINUUM-1953 add build def from build template def used
-            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator(); iterator
-                .hasNext(); )
-            {
-                continuumProject.addBuildDefinition( iterator.next() );
-            }
             result.addProject( continuumProject, MavenTwoBuildExecutor.ID );
         }
 
