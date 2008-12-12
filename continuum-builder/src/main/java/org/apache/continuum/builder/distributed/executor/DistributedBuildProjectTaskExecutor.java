@@ -89,12 +89,13 @@ public class DistributedBuildProjectTaskExecutor
                                                         prepareBuildTask.getScmRootAddress() );
 
             startTime = System.currentTimeMillis();
-            if ( client.buildProjects( buildContext ) )
-            {
-                scmRoot.setOldState( scmRoot.getState() );
-                scmRoot.setState( ContinuumProjectState.UPDATING );
-                projectScmRootDao.updateProjectScmRoot( scmRoot );
-            }
+
+            scmRoot.setOldState( scmRoot.getState() );
+            scmRoot.setState( ContinuumProjectState.UPDATING );
+            projectScmRootDao.updateProjectScmRoot( scmRoot );
+
+            client.buildProjects( buildContext );
+
             endTime = System.currentTimeMillis();
         }
         catch ( MalformedURLException e )
@@ -235,7 +236,7 @@ public class DistributedBuildProjectTaskExecutor
         }
         catch ( ContinuumStoreException e )
         {
-            throw new TaskExecutionException( "" );
+            throw new TaskExecutionException( "Error while creating result", e );
         }
     }
 }

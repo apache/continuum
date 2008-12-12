@@ -32,6 +32,7 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
@@ -186,10 +187,15 @@ public class DefaultDistributedBuildManager
         try
         {
             executor.stop();
+            container.release( executor );
         }
         catch ( StoppingException e )
         {
             throw new ContinuumException( "Error while stopping task queue executor", e );
+        }
+        catch ( ComponentLifecycleException e )
+        {
+            throw new ContinuumException( "Error while releasing task queue executor from container", e );
         }
 
         taskQueueExecutors.remove( buildAgentUrl );
@@ -226,6 +232,7 @@ public class DefaultDistributedBuildManager
     }
 
     public void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
+        throws ContinuumException
     {
         ThreadedDistributedBuildTaskQueueExecutor taskQueueExecutor = taskQueueExecutors.get( buildAgentUrl );
 
@@ -243,6 +250,17 @@ public class DefaultDistributedBuildManager
                         log.info( "cancelling task for project group " + projectGroupId + 
                                   " with scm root address " + scmRootAddress );
                         taskQueueExecutor.cancelTask( currentTask );
+
+                        try
+                        {
+                            ProxySlaveAgentTransportService client = new ProxySlaveAgentTransportService( new URL( buildAgentUrl ) );
+                            client.cancelBuild();
+                        }
+                        catch ( Exception e )
+                        {
+                            log.error( "Error while cancelling build in build agent '" + buildAgentUrl + "'" );
+                            throw new ContinuumException( "Error while cancelling build in build agent '" + buildAgentUrl + "'", e );
+                        }
                     }
                     else
                     {
