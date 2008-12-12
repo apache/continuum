@@ -290,7 +290,9 @@ public class DefaultDistributedBuildManager
         try
         {
             int projectId = ContinuumBuildConstant.getProjectId( context );
-        
+            int projectGroupId = ContinuumBuildConstant.getProjectGroupId( context );
+            String scmRootAddress = ContinuumBuildConstant.getScmRootAddress( context );
+
             log.info( "update scm result of project" + projectId );
             Project project = projectDao.getProjectWithScmDetails( projectId );
             
@@ -314,31 +316,22 @@ public class DefaultDistributedBuildManager
             project.setScmResult( scmResult );
             projectDao.updateProject( project );
 
-            if ( error != null || ContinuumBuildConstant.isPrepareBuildFinished( context ) )
-            {
-                List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( project.getProjectGroup().getId() );
-                
-                for ( ProjectScmRoot scmRoot : scmRoots )
-                {
-                    if ( project.getScmUrl().startsWith( scmRoot.getScmRootAddress() ) )
-                    {
-                        if ( error != null )
-                        {
-                            scmRoot.setError( error );
-                            scmRoot.setState( ContinuumProjectState.ERROR );
-                        }
-                        else
-                        {
-                            scmRoot.setState( ContinuumProjectState.UPDATED );
-                        }
-                        projectScmRootDao.updateProjectScmRoot( scmRoot );
-                    }
-                }
-            }
+            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroupId, scmRootAddress );
 
             if ( error != null )
             {
                 log.info( "scm error, not building" );
+                scmRoot.setError( error );
+                scmRoot.setState( ContinuumProjectState.ERROR );
+                projectScmRootDao.updateProjectScmRoot( scmRoot );
+            }
+            else if ( ContinuumBuildConstant.isPrepareBuildFinished( context ) )
+            {
+                log.info( "prepare build finished" );
+                scmRoot.setState( ContinuumProjectState.UPDATED );
+                projectScmRootDao.updateProjectScmRoot( scmRoot );
+
+                //TODO: set state of project to building
             }
         }
         catch ( ContinuumStoreException e )
@@ -398,6 +391,8 @@ public class DefaultDistributedBuildManager
             project.setState( ContinuumBuildConstant.getBuildState( context ) );
 
             projectDao.updateProject( project );
+
+            //TODO: set state of next project to building
         }
         catch ( ContinuumStoreException e )
         {

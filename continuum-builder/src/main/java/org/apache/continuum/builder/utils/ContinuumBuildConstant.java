@@ -115,6 +115,16 @@ public class ContinuumBuildConstant
         return getBoolean( context, KEY_PREPARE_BUILD_FINISHED );
     }
 
+    public static int getProjectGroupId( Map context )
+    {
+        return getInteger( context, KEY_PROJECT_GROUP_ID );
+    }
+
+    public static String getScmRootAddress( Map context )
+    {
+        return getString( context, KEY_SCM_ROOT_ADDRESS );
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------

@@ -47,6 +47,8 @@ public class DefaultDistributedBuildManagerTest
 
         Map context = new HashMap();
         context.put( "project-id", project.getId() );
+        context.put( "project-group-id", project.getProjectGroup().getId() );
+        context.put( "scm-root-address", scmRoot.getScmRootAddress() );
         context.put( "scm-command-line", null );
         context.put( "scm-command-output", null );
         context.put( "scm-exception", null );
