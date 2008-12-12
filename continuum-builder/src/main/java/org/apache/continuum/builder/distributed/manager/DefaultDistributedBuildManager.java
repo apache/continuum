@@ -127,6 +127,7 @@ public class DefaultDistributedBuildManager
                     }
                     catch ( Exception e )
                     {
+                        agent.setEnabled( false );
                         log.info( "unable to ping build agent '" + agent.getUrl() + "': " + ContinuumUtils.throwableToString( e ) );
                     }
                 }
@@ -164,6 +165,7 @@ public class DefaultDistributedBuildManager
                 }
                 catch ( Exception e )
                 {
+                    agent.setEnabled( false );
                     log.info( "unable to ping build agent '" + agent.getUrl() + "': " + ContinuumUtils.throwableToString( e ) );
                 }
             }
