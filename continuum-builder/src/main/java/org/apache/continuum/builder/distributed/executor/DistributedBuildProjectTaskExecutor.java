@@ -143,12 +143,12 @@ public class DistributedBuildProjectTaskExecutor
 
                 Map context = new HashMap();
                 
-                context.put( ContinuumBuildConstant.KEY_PROJECT_GROUP_ID, new Integer( project.getProjectGroup().getId() ).toString() );
+                context.put( ContinuumBuildConstant.KEY_PROJECT_GROUP_ID, new Integer( project.getProjectGroup().getId() ) );
                 context.put( ContinuumBuildConstant.KEY_SCM_ROOT_ADDRESS, scmRootAddress );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_ID, new Integer( project.getId() ) );
                 context.put( ContinuumBuildConstant.KEY_EXECUTOR_ID, project.getExecutorId() );
                 context.put( ContinuumBuildConstant.KEY_SCM_URL, project.getScmUrl() );
-                
+
                 if ( project.getScmUsername() == null )
                 {
                     context.put( ContinuumBuildConstant.KEY_SCM_USERNAME, "" );
