@@ -22,6 +22,7 @@ package org.apache.maven.continuum.web.action.admin;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
@@ -47,6 +48,9 @@ public class QueuesAction
     extends AbstractBuildQueueAction
     implements SecureAction, LogEnabled
 {
+    
+    // TODO: deng - parallel builds
+    // see TODO comments below!!!
     
     /**
      * @plexus.requirement role-hint='build-project'
@@ -82,6 +86,11 @@ public class QueuesAction
      * @plexus.requirement
      */
     private TaskQueueManager taskQueueManager;
+    
+    /**
+     * @plexus.requirement role-hint="parallel"
+     */
+    private BuildsManager parallelBuildsManager;
 
     // -----------------------------------------------------
     //  webwork
@@ -155,8 +164,13 @@ public class QueuesAction
     public String display()
         throws Exception
     {
+        // TODO: deng parallel builds
+        // - need to get all the build queues and their current tasks
+        // - need to get all the build queues and their queued tasks
+                
         this.setCurrentBuildProjectTask( (BuildProjectTask) taskQueueExecutor.getCurrentTask() );        
         this.setBuildProjectTasks( taskQueueManager.getProjectsInBuildQueue() );
+        
         this.setCurrentCheckOutTask( (CheckOutTask) checkoutTaskQueueExecutor.getCurrentTask() );
         this.setCurrentCheckOutTasks( taskQueueManager.getCheckOutTasksInQueue() );
         return SUCCESS;
@@ -180,7 +194,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
         
-        taskQueueManager.removeFromBuildingQueue( projectId, buildDefinitionId, trigger, projectName );
+        //taskQueueManager.removeFromBuildingQueue( projectId, buildDefinitionId, trigger, projectName );
+        parallelBuildsManager.removeProjectFromBuildQueue( projectId, buildDefinitionId, trigger, projectName );
         Project project = getContinuum().getProject( projectId );
         project.setState( project.getOldState() );
         getContinuum().updateProject( project );
@@ -206,6 +221,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
         
+        // TODO: deng parallel builds
+        // - implement delete with hashcodes in parallel builds manager! how to do this???
         taskQueueManager.removeProjectsFromBuildingQueueWithHashCodes( listToIntArray(this.getSelectedBuildTaskHashCodes()) );
         return SUCCESS;
     }
@@ -228,6 +245,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
         
+     // TODO: deng parallel builds
+        // - implement delete with hashcodes in parallel builds manager! how to do this???
         taskQueueManager
             .removeTasksFromCheckoutQueueWithHashCodes( listToIntArray( this.getSelectedCheckOutTaskHashCodes() ) );
         return SUCCESS;

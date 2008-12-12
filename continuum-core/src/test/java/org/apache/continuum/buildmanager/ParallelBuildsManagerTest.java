@@ -112,6 +112,16 @@ public class ParallelBuildsManagerTest
         assertEquals( 5, buildsManager.getOverallBuildQueues().size() );
     }
     
+    public void testContainer()
+        throws Exception
+    {
+        buildsManager.setContainer( getContainer() );
+        
+        buildsManager.isProjectInAnyCurrentBuild( 1 );
+        
+        assertTrue( true );
+    }
+    
 // start of tests...
     
     public void testBuildProjectNoProjectQueuedInAnyOverallBuildQueues()
@@ -296,7 +306,7 @@ public class ParallelBuildsManagerTest
         assertFalse( overallBuildQueues.get( 1 ).isInBuildQueue( 3, buildDef.getId() ) );
     }
 
-    public void testRemoveProjectFromBuildQueueProjectNotInAnyBuildQueue()
+    /*public void testRemoveProjectFromBuildQueueProjectNotInAnyBuildQueue()
         throws Exception
     {
         setupOverallBuildQueues();
@@ -310,7 +320,7 @@ public class ParallelBuildsManagerTest
         {
             assertEquals( "Project not found in any of the build queues.", e.getMessage() );
         }
-    }
+    }*/
     
     public void testRemoveProjectsFromBuildQueue()
         throws Exception
@@ -475,7 +485,7 @@ public class ParallelBuildsManagerTest
         assertFalse( overallBuildQueues.get( 1 ).isInCheckoutQueue( 3 ) );        
     }
     
-    public void testRemoveProjectFromCheckoutQueueProjectNotInAnyCheckoutQueue()
+    /*public void testRemoveProjectFromCheckoutQueueProjectNotInAnyCheckoutQueue()
         throws Exception
     {
         setupOverallBuildQueues();
@@ -489,7 +499,7 @@ public class ParallelBuildsManagerTest
         {
             assertEquals( "Project not found in any of the checkout queues.", e.getMessage() );
         }         
-    }
+    }*/
     
     public void testRemoveProjectsFromCheckoutQueue()
         throws Exception

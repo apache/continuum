@@ -90,7 +90,7 @@ public class DefaultTaskQueueManager
         return false;
     }
     
-    public void cancelBuildTask( int projectId )
+    /*public void cancelBuildTask( int projectId )
         throws TaskQueueManagerException
     {
         Task currentTask = getBuildTaskQueueExecutor().getCurrentTask();
@@ -103,7 +103,7 @@ public class DefaultTaskQueueManager
                 getBuildTaskQueueExecutor().cancelTask( currentTask );
             }
         }
-    }
+    }*/
 
     public boolean cancelCurrentBuild()
         throws TaskQueueManagerException
@@ -129,11 +129,11 @@ public class DefaultTaskQueueManager
         return false;
     }
 
-    public TaskQueue getBuildQueue()
+    /*public TaskQueue getBuildQueue()
     {
         return buildQueue;
     }
-
+*/
     public TaskQueueExecutor getBuildTaskQueueExecutor()
         throws TaskQueueManagerException
     {
@@ -147,7 +147,7 @@ public class DefaultTaskQueueManager
         }
     }
 
-    public TaskQueueExecutor getCheckoutTaskQueueExecutor()
+    /*public TaskQueueExecutor getCheckoutTaskQueueExecutor()
         throws TaskQueueManagerException
     {
         try
@@ -158,7 +158,7 @@ public class DefaultTaskQueueManager
         {
             throw new TaskQueueManagerException( e.getMessage(), e );
         }
-    }
+    }*/
 
     public TaskQueue getCheckoutQueue()
     {
@@ -178,7 +178,7 @@ public class DefaultTaskQueueManager
         }
     }
 
-    public int getCurrentProjectIdBuilding()
+    /*public int getCurrentProjectIdBuilding()
         throws TaskQueueManagerException
     {
         Task task = getBuildTaskQueueExecutor().getCurrentTask();
@@ -195,7 +195,7 @@ public class DefaultTaskQueueManager
     public TaskQueue getPrepareBuildQueue()
     {
         return prepareBuildQueue;
-    }   
+    }   */
 
     public TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
         throws TaskQueueManagerException
@@ -228,7 +228,7 @@ public class DefaultTaskQueueManager
         return purgeQueue;
     }
     
-    public boolean isInBuildingQueue( int projectId )
+    /*public boolean isInBuildingQueue( int projectId )
         throws TaskQueueManagerException
     {
         return isInBuildingQueue( projectId, -1 );
@@ -261,9 +261,9 @@ public class DefaultTaskQueueManager
         }
     
         return false;
-    }
+    }*/
     
-    public boolean isInCheckoutQueue( int projectId )
+    /*public boolean isInCheckoutQueue( int projectId )
         throws TaskQueueManagerException
     {
         List<CheckOutTask> queue = getCheckOutTasksInQueue();
@@ -301,8 +301,8 @@ public class DefaultTaskQueueManager
         
         return false;
     }
-    
-    public boolean isInPrepareBuildQueue( int projectId )
+*/    
+    /*public boolean isInPrepareBuildQueue( int projectId )
         throws TaskQueueManagerException
     {
         try
@@ -333,7 +333,7 @@ public class DefaultTaskQueueManager
         {
             throw new TaskQueueManagerException( "Error while getting the tasks in prepare build queue", e );
         }
-    }
+    }*/
     
     public boolean isInPurgeQueue( int purgeConfigId )
         throws TaskQueueManagerException
@@ -406,7 +406,7 @@ public class DefaultTaskQueueManager
         return false;
     }
 
-    public boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+    /*public boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
         throws TaskQueueManagerException
     {
         BuildDefinition buildDefinition;
@@ -428,7 +428,7 @@ public class DefaultTaskQueueManager
         BuildProjectTask buildProjectTask =
             new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName, buildDefinitionLabel );
         return this.buildQueue.remove( buildProjectTask );
-    }
+    }*/
 
     public boolean removeFromPurgeQueue( int purgeConfigId )
         throws TaskQueueManagerException
@@ -482,7 +482,7 @@ public class DefaultTaskQueueManager
         return false;
     }
     
-    public boolean removeProjectsFromBuildingQueue( int[] projectsId )
+    /*public boolean removeProjectsFromBuildingQueue( int[] projectsId )
         throws TaskQueueManagerException
     {
         if ( projectsId == null )
@@ -534,7 +534,7 @@ public class DefaultTaskQueueManager
         }
     
         return false;
-    }
+    }*/
     
     public boolean removeProjectsFromCheckoutQueue( int[] projectsId )
         throws TaskQueueManagerException

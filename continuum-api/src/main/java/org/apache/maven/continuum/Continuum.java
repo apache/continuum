@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.purge.ContinuumPurgeManager;
@@ -630,6 +631,11 @@ public interface Continuum
     // ----------------------------------------------------------------------
     TaskQueueManager getTaskQueueManager();
 
+    // ----------------------------------------------------------------------
+    // Builds Manager
+    // ----------------------------------------------------------------------
+    BuildsManager getBuildsManager();    
+    
     public void startup()
         throws ContinuumException;
     

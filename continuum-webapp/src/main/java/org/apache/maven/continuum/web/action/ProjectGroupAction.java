@@ -19,10 +19,10 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.repository.LocalRepository;
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -84,7 +84,12 @@ public class ProjectGroupAction
     /**
      * @plexus.requirement
      */
-    private TaskQueueManager taskQueueManager;
+    //private TaskQueueManager taskQueueManager;
+    
+    /**
+     * @plexus.requirement role-hint="parallel"
+     */
+    private BuildsManager parallelBuildsManager;
 
     private int projectGroupId;
 
@@ -347,15 +352,20 @@ public class ProjectGroupAction
                 Project p = (Project) proj.next();
                 try
                 {
-                    if ( taskQueueManager.isInCheckoutQueue( p.getId() ) )
+                    //if ( taskQueueManager.isInCheckoutQueue( p.getId() ) )
+                    if ( parallelBuildsManager.isInAnyCheckoutQueue( p.getId() ) )
                     {
                         projectInCOQueue = true;
                     }
                 }
-                catch ( TaskQueueManagerException e )
+                catch ( BuildManagerException e )
                 {
                     throw new ContinuumException( e.getMessage(), e );
                 }
+                /*catch ( TaskQueueManagerException e )
+                {
+                    throw new ContinuumException( e.getMessage(), e );
+                }*/
                 projects.put( p, new Integer( p.getProjectGroup().getId() ) );
             }
         }

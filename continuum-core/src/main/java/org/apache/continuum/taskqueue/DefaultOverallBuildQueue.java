@@ -21,40 +21,32 @@ package org.apache.continuum.taskqueue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.dao.BuildDefinitionDao;
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
-import org.apache.maven.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+import org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
- * "Overall" build queue which has a checkout queue, a prepare-build queue, and a build queue. All builds whether forced
- * or triggered will go through (or have to be added through) the "overall" build queue.
+ * "Overall" build queue which has a checkout queue and a build queue. 
  * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  * @plexus.component role="org.apache.continuum.taskqueue.OverallBuildQueue" instantiation-strategy="per-lookup"
  */
 public class DefaultOverallBuildQueue
     extends AbstractLogEnabled
-    implements OverallBuildQueue, Contextualizable
+    implements OverallBuildQueue
+    //, Contextualizable 
 {
     // TODO: deng parallel builds
     // - might need to set a task queue executor for each task queue! 
@@ -76,7 +68,7 @@ public class DefaultOverallBuildQueue
     /**
      * @plexus.requirement role-hint="prepare-build-project"
      */
-    private TaskQueue prepareBuildQueue;
+    //private TaskQueue prepareBuildQueue;
 
     /**
      * @plexus.requirement
@@ -111,7 +103,7 @@ public class DefaultOverallBuildQueue
 
     /* Checkout Queue */
 
-    public TaskQueueExecutor getCheckoutTaskQueueExecutor()
+    /*public TaskQueueExecutor getCheckoutTaskQueueExecutor()
         throws TaskQueueManagerException
     {
         try
@@ -122,7 +114,7 @@ public class DefaultOverallBuildQueue
         {
             throw new TaskQueueManagerException( e.getMessage(), e );
         }
-    }
+    }*/
 
     public void addToCheckoutQueue( Task checkoutTask )
         throws TaskQueueException
@@ -225,7 +217,7 @@ public class DefaultOverallBuildQueue
 
     /* Prepare-build-projects Queue */
 
-    public TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
+    /*public TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
         throws ComponentLookupException
     {        
         return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "prepare-build-project" );        
@@ -300,15 +292,15 @@ public class DefaultOverallBuildQueue
         }
         
         return false;
-    }
+    }*/
 
     /* Build Queue */
 
-    public TaskQueueExecutor getBuildTaskQueueExecutor()
+    /*public TaskQueueExecutor getBuildTaskQueueExecutor()
         throws ComponentLookupException
-    {        
+    {   
         return ( TaskQueueExecutor ) container.lookup( TaskQueueExecutor.class, "build-project" );        
-    }
+    }*/
 
     public void addToBuildQueue( Task buildTask )
         throws TaskQueueException
@@ -325,35 +317,13 @@ public class DefaultOverallBuildQueue
         }
     }
 
-    public int getProjectIdInCurrentBuild()
-        throws TaskQueueException
-    {
-        try
-        {
-            Task task = getBuildTaskQueueExecutor().getCurrentTask();
-            if ( task != null )
-            {
-                if ( task instanceof BuildProjectTask )
-                {
-                    return ( (BuildProjectTask) task ).getProjectId();
-                }
-            }
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new TaskQueueException( "Error occurred while looking up the build task queue executor. " );
-        }
-        
-        return -1;
-    }
-
     public List<BuildProjectTask> getProjectsInBuildQueue()
         throws TaskQueueException
     {   
         return buildQueue.getQueueSnapshot();        
     }
 
-    public boolean isBuildInProgress()
+    /*public boolean isBuildInProgress()
         throws TaskQueueException
     {
         try
@@ -372,7 +342,7 @@ public class DefaultOverallBuildQueue
         }
         
         return false;
-    }
+    }*/
 
     public boolean isInBuildQueue( int projectId )
         throws TaskQueueException
@@ -410,9 +380,29 @@ public class DefaultOverallBuildQueue
     }
 
     public void cancelBuildTask( int projectId )
-        throws TaskQueueException
-    {
-        try
+        throws ComponentLookupException
+    {  
+        getLogger().info( "\n========= [OverallBuildQueue] CANCEL BUILD TASK ============" );
+        List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
+        for( Object obj : objects )
+        {
+            getLogger().info( "\n object --> " + obj );
+            getLogger().info( "\n object class --> " + obj.getClass() );                
+            ThreadedTaskQueueExecutor executor = ( ThreadedTaskQueueExecutor ) obj;
+            Task task = executor.getCurrentTask();
+            if( task != null && task instanceof BuildProjectTask )
+            {
+                if( ( (BuildProjectTask) task ).getProjectId() == projectId )
+                {
+                    getLogger().info( "Cancelling task for project " + projectId );
+                    executor.cancelTask( task );
+                    getLogger().info( "current task is a BuildProjectTask." );
+                }
+            }
+        }            
+        
+        
+        /*try
         {
             Task currentTask = getBuildTaskQueueExecutor().getCurrentTask();
     
@@ -428,13 +418,30 @@ public class DefaultOverallBuildQueue
         catch ( ComponentLookupException e )
         {
             throw new TaskQueueException( e.getMessage() );
-        }
+        }*/
     }
 
     public boolean cancelCurrentBuild()
-        throws TaskQueueException
+        throws ComponentLookupException
     {
-        try
+        getLogger().info( "\n========= [OverallBuildQueue] CANCEL CURRENT BUILD ============" );
+        List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
+        for( Object obj : objects )
+        {
+            getLogger().info( "\n object --> " + obj );
+            getLogger().info( "\n object class --> " + obj.getClass() );                
+            ThreadedTaskQueueExecutor executor = ( ThreadedTaskQueueExecutor ) obj;
+            Task task = executor.getCurrentTask();
+            if( task != null && task instanceof BuildProjectTask )
+            {   
+                BuildProjectTask buildTask = (BuildProjectTask) task;
+                getLogger().info( "Cancelling build task for project '" + buildTask.getProjectId() );
+                executor.cancelTask( task );
+                getLogger().info( "current task is a BuildProjectTask." );
+            }
+        }
+        
+        /*try
         {
             Task task = getBuildTaskQueueExecutor().getCurrentTask();
     
@@ -458,7 +465,7 @@ public class DefaultOverallBuildQueue
         catch ( ComponentLookupException e )
         {
             throw new TaskQueueException( e.getMessage() );
-        }
+        }*/
         
         return false;
     }
@@ -468,6 +475,9 @@ public class DefaultOverallBuildQueue
     {
         BuildDefinition buildDefinition;
 
+        // TODO: deng - maybe we could just pass the label as a parameter to eliminate 
+        //          dependency to BuildDefinitionDAO?
+        
         try
         {
             buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
@@ -557,20 +567,15 @@ public class DefaultOverallBuildQueue
         }
     }
 
-    public void contextualize( Context context )
+    /*public void contextualize( Context context )
         throws ContextException
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
-    }
+    }*/
 
     public TaskQueue getCheckoutQueue()
     {
         return checkoutQueue;
-    }
-
-    public TaskQueue getPrepareBuildQueue()
-    {
-        return prepareBuildQueue;
     }
 
     public TaskQueue getBuildQueue()
@@ -578,10 +583,16 @@ public class DefaultOverallBuildQueue
         return buildQueue;
     }
 
-    private Task getCurrentTask( String task )
+    public void setContainer( PlexusContainer container )
+    {
+        this.container = container;
+    }
+    // TODO: change this!
+    /*private Task getCurrentTask( String task )
         throws ComponentLookupException
     {
+        
         TaskQueueExecutor executor = (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, task );
         return executor.getCurrentTask();       
-    }    
+    }    */
 }

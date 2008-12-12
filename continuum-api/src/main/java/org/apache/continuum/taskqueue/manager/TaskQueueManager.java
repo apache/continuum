@@ -20,13 +20,13 @@ public interface TaskQueueManager
     boolean buildInProgress()
         throws TaskQueueManagerException;
 
-    void cancelBuildTask( int projectId )
-        throws TaskQueueManagerException;
+    //void cancelBuildTask( int projectId )
+    //    throws TaskQueueManagerException;
 
     boolean cancelCurrentBuild()
         throws TaskQueueManagerException;
 
-    TaskQueue getBuildQueue();
+    //TaskQueue getBuildQueue();
 
     TaskQueueExecutor getBuildTaskQueueExecutor()
         throws TaskQueueManagerException;
@@ -36,10 +36,10 @@ public interface TaskQueueManager
     List /* CheckOutTask */getCheckOutTasksInQueue()
         throws TaskQueueManagerException;
 
-    int getCurrentProjectIdBuilding()
-        throws TaskQueueManagerException;
+    //int getCurrentProjectIdBuilding()
+     //   throws TaskQueueManagerException;
 
-    TaskQueue getPrepareBuildQueue();
+    //TaskQueue getPrepareBuildQueue();
 
     TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
         throws TaskQueueManagerException;
@@ -49,20 +49,20 @@ public interface TaskQueueManager
 
     TaskQueue getPurgeQueue();
 
-    boolean isInBuildingQueue( int projectId )
-        throws TaskQueueManagerException;
+    //boolean isInBuildingQueue( int projectId )
+      //  throws TaskQueueManagerException;
 
-    boolean isInBuildingQueue( int projectId, int buildDefinitionId )
-        throws TaskQueueManagerException;
+    //boolean isInBuildingQueue( int projectId, int buildDefinitionId )
+      //  throws TaskQueueManagerException;
 
-    boolean isInCheckoutQueue( int projectId )
-        throws TaskQueueManagerException;
+    //boolean isInCheckoutQueue( int projectId )
+     //   throws TaskQueueManagerException;
 
-    boolean isInCurrentPrepareBuildTask( int projectId )
-        throws TaskQueueManagerException;
+    //boolean isInCurrentPrepareBuildTask( int projectId )
+      //  throws TaskQueueManagerException;
 
-    boolean isInPrepareBuildQueue( int projectId )
-        throws TaskQueueManagerException;
+    //boolean isInPrepareBuildQueue( int projectId )
+      //  throws TaskQueueManagerException;
 
     boolean isInPurgeQueue( int purgeConfigurationId )
         throws TaskQueueManagerException;
@@ -90,8 +90,8 @@ public interface TaskQueueManager
     boolean releaseInProgress()
         throws TaskQueueManagerException;
 
-    boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
-        throws TaskQueueManagerException;
+    //boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
+      //  throws TaskQueueManagerException;
 
     /**
      * Remove local repository from the purge queue
@@ -113,11 +113,11 @@ public interface TaskQueueManager
     boolean removeFromPurgeQueue( int[] purgeConfigIds )
         throws TaskQueueManagerException;
 
-    boolean removeProjectFromBuildingQueue( int projectId )
-        throws TaskQueueManagerException;
+//    boolean removeProjectFromBuildingQueue( int projectId )
+  //      throws TaskQueueManagerException;
 
-    boolean removeProjectsFromBuildingQueue( int[] projectsId )
-        throws TaskQueueManagerException;
+    //boolean removeProjectsFromBuildingQueue( int[] projectsId )
+      //  throws TaskQueueManagerException;
 
     /**
      * @param hashCodes BuildProjectTask hashCodes

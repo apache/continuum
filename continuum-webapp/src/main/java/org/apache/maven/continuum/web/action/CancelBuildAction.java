@@ -22,8 +22,7 @@ package org.apache.maven.continuum.web.action;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.web.action.admin.AbstractBuildQueueAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -77,15 +76,9 @@ public class CancelBuildAction
             projectsId = ArrayUtils.add( projectsId, projectId );
         }
 
-        TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
-        try
-        {
-            taskQueueManager.removeProjectsFromBuildingQueue( projectsId );
-        }
-        catch ( TaskQueueManagerException e )
-        {
-            throw new ContinuumException( "Unable to remove projects from building queue", e );
-        }
+        BuildsManager parallelBuildsManager = getContinuum().getBuildsManager();
+        parallelBuildsManager.removeProjectsFromBuildQueue( projectsId );           
+        
         // now we must check if the current build is one of this
         int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
         if ( index > 0 )

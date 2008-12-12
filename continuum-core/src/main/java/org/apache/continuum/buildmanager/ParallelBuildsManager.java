@@ -33,40 +33,86 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
+import org.apache.maven.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+import org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Parallel builds manager.
+ * Parallel builds manager. 
  * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  * @plexus.component role="org.apache.continuum.buildmanager.BuildsManager" role-hint="parallel"
  */
 public class ParallelBuildsManager
-    implements BuildsManager
+    implements BuildsManager, Contextualizable
 {
+    // TODO: deng parallel builds
+    // - move prepare build queue to parallel builds manager instead of moving it back to the
+    //      task queue manager
+    // - prepare build queue must be a singleton, not per lookup, as we are maintaining only one
+    //      prepare build queue :) <-- changed my mind, prepare build queue should be here except it
+    //      should be a singleton and not added in the overallbuildqueue!
+    
+    // NOTE: maybe we could also use the default build definition template? 
+    // - take a look at AddProjectTest (add-projects-from-metadata)
+    
     private Logger log = LoggerFactory.getLogger( ParallelBuildsManager.class );
         
-    // map must be synchronized
+    // map must be synchronized!
     private Map<Integer, OverallBuildQueue> overallBuildQueues =
         Collections.synchronizedMap( new HashMap<Integer, OverallBuildQueue>() );
     
     private static final int BUILD_QUEUE = 1;
     
     private static final int CHECKOUT_QUEUE = 2;
-    
-    private static final int PREPARE_BUILD_QUEUE = 3;
-    
+        
     /**
      * @plexus.requirement
      */
     private BuildDefinitionDao buildDefinitionDao;
+    
+    /**
+     * @plexus.requirement role-hint="prepare-build-project"
+     */
+    private TaskQueue prepareBuildQueue;
+    
+    private PlexusContainer container;
         
+    public ParallelBuildsManager()
+    {
+        /*synchronized( overallBuildQueues )
+        {
+            try
+            {
+                OverallBuildQueue defaultOverallBuildQueue = ( OverallBuildQueue ) container.lookup( OverallBuildQueue.class );
+                defaultOverallBuildQueue.setId( 1 );
+                defaultOverallBuildQueue.setName( "DEFAULT_BUILD_QUEUE" );
+            }
+            catch ( ComponentLookupException e )
+            {
+                log.error( "Cannot create default build queue: " + e.getMessage() );
+            }
+        }*/
+        // - add a default OverallBuildQueue which cannot be deleted nor edited
+        // - this default overall build queue must be used whenever no build queue is found or configured
+        // NOTE: as a workaround for now.. just throw an exception when build or checkout is attempted without a 
+        //      build queue configured
+    }
+    
     // REQUIREMENTS:
     // UI:
     // - add a new page for adding a build queue. It should have a build queue name that 
@@ -94,7 +140,7 @@ public class ParallelBuildsManager
     {   
         try
         {
-            if( isInQueue( projectId, BUILD_QUEUE ) )
+            if( isInQueue( projectId, BUILD_QUEUE, -1 ) )
             {
                 log.warn( "Project already queued." );
                 return;
@@ -135,7 +181,7 @@ public class ParallelBuildsManager
         {
             try
             {
-                if( !isInQueue( project.getId(), BUILD_QUEUE ) )
+                if( !isInQueue( project.getId(), BUILD_QUEUE, -1 ) )
                 {
                     firstProjectId = project.getId();
                     break;
@@ -160,7 +206,7 @@ public class ParallelBuildsManager
                 {   
                     try
                     {
-                        if( isInQueue( project.getId(), BUILD_QUEUE ) )
+                        if( isInQueue( project.getId(), BUILD_QUEUE, -1 ) )
                         {
                             continue;
                         }
@@ -178,8 +224,10 @@ public class ParallelBuildsManager
                         buildDefinitionLabel = buildDefinition.getGoals();
                     }
                     
-                    Task buildTask = new BuildProjectTask( project.getId(), buildDefinition.getId(), trigger, project.getName(),
+                    BuildProjectTask buildTask = new BuildProjectTask( project.getId(), buildDefinition.getId(), trigger, project.getName(),
                                                              buildDefinitionLabel);
+                    buildTask.setMaxExecutionTime( buildDefinition.getSchedule().getMaxJobExecutionTime() * 1000 );
+                    
                     try
                     {   
                         overallBuildQueue.addToBuildQueue( buildTask );
@@ -215,12 +263,18 @@ public class ParallelBuildsManager
                     log.warn( "Project not found in any of the build queues." );
                 }
             }
-            catch ( TaskQueueException e )
+            /*catch ( TaskQueueException e )
             {
                 log.error( "Cannot cancel build on build queue '" + overallBuildQueue.getName() + "'." );
                 throw new BuildManagerException( "Cannot cancel build on build queue '" + overallBuildQueue.getName() +
                                  "': " + e.getMessage() );
-            }            
+            }   */
+            catch ( ComponentLookupException e )
+            {
+                log.error( e.getMessage() );
+                throw new BuildManagerException( e.getMessage() );
+            }
+            
             return true;
         }                
     }
@@ -240,12 +294,18 @@ public class ParallelBuildsManager
                     overallBuildQueue.cancelCurrentBuild();                
                 }
             }
-            catch ( TaskQueueException e )
+            /*catch ( TaskQueueException e )
             {
                 log.error( "Cannot cancel build on build queue '" + overallBuildQueue.getName() + "'." );
                 throw new BuildManagerException( "Cannot cancel build on build queue '" + overallBuildQueue.getName() +
                                  "': " + e.getMessage() );
-            }            
+            }  */         
+            catch ( ComponentLookupException e )
+            {
+                log.error( e.getMessage() );
+                throw new BuildManagerException( e.getMessage() );
+            }
+            
             return true;
         }
     }
@@ -262,24 +322,29 @@ public class ParallelBuildsManager
         return false;
     }*/
 
-    public boolean cancelBuild(int projectId) throws BuildManagerException
+    public boolean cancelBuild( int projectId ) throws BuildManagerException
     {   
         try
         {
-            OverallBuildQueue overallBuildQueue = getOverallBuildQueue( projectId, BUILD_QUEUE );
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, BUILD_QUEUE );
             if( overallBuildQueue != null )
             {
                 overallBuildQueue.cancelBuildTask(  projectId );
             }
             else
             {
-                throw new BuildManagerException( "Project not found in any of the build queues." );
+                log.info( "Project '" + projectId + "' not found in any of the builds queues." );
+                //throw new BuildManagerException( "Project not found in any of the build queues." );
             }
         }
         catch( TaskQueueException e )
         {
             throw new BuildManagerException( "Error occurred while cancelling build: " +
                  e.getMessage() );        
+        }
+        catch ( ComponentLookupException e )
+        {            
+            throw new BuildManagerException( e.getMessage() );
         }
         
         return true;
@@ -290,7 +355,7 @@ public class ParallelBuildsManager
     {
         try
         {
-            OverallBuildQueue overallBuildQueue = getOverallBuildQueue( projectId, CHECKOUT_QUEUE );
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, CHECKOUT_QUEUE );
             if( overallBuildQueue != null )
             {
                 //overallBuildQueue.getCheckoutQueue()
@@ -315,11 +380,13 @@ public class ParallelBuildsManager
         return false;
     }*/
 
-    public void checkoutProject( int projectId, String projectName, File workingDirectory, String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition ) throws BuildManagerException
+    public void checkoutProject( int projectId, String projectName, File workingDirectory, String scmUsername,
+                                 String scmPassword, BuildDefinition defaultBuildDefinition )
+        throws BuildManagerException
     {   
         try
         {
-            if( isInQueue( projectId, CHECKOUT_QUEUE ) )
+            if( isInQueue( projectId, CHECKOUT_QUEUE, -1 ) )
             {
                 log.warn( "Project already in checkout queue." );
                 return;
@@ -344,31 +411,145 @@ public class ParallelBuildsManager
             throw new BuildManagerException( "Error occurred while adding project to checkout queue: " + e.getMessage() );
         }        
     }
-
-    /*public void prepareBuildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger, int scheduleId )
+    
+    public boolean isInAnyBuildQueue( int projectId ) throws BuildManagerException
     {
-        // TODO Auto-generated method stub
-
-    }*/
-
-    /*public void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsBuildDefinitions, int trigger, int scheduleId )
+        try
+        {
+            return isInQueue( projectId, BUILD_QUEUE, -1 );
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( e.getMessage() );
+        }
+    }
+    
+    public boolean isInAnyBuildQueue( int projectId, int buildDefinitionId ) throws BuildManagerException
     {
-        // TODO Auto-generated method stub
-
-    }*/
+        try
+        {
+            return isInQueue( projectId, BUILD_QUEUE, buildDefinitionId );
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( e.getMessage() );
+        }
+    }
+    
+    public boolean isInAnyCheckoutQueue( int projectId ) throws BuildManagerException
+    {
+        try
+        {
+            return isInQueue( projectId, CHECKOUT_QUEUE, -1 );
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( e.getMessage() );
+        }
+    }
+    
+    public boolean isInPrepareBuildQueue( int projectId ) throws BuildManagerException
+    {
+        try
+        {
+            List<PrepareBuildProjectsTask> queue = prepareBuildQueue.getQueueSnapshot();    
+            for ( PrepareBuildProjectsTask task : queue )
+            {
+                if ( task != null )
+                {
+                    Map<Integer, Integer> map = ( (PrepareBuildProjectsTask) task ).getProjectsBuildDefinitionsMap();
+    
+                    if ( map.size() > 0 )
+                    {
+                        Set<Integer> projectIds = map.keySet();
+    
+                        if ( projectIds.contains( new Integer( projectId ) ) )
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( e.getMessage() );
+        }
+        
+        return false;        
+    }
+    
+    public boolean isProjectInAnyCurrentBuild( int projectId ) throws BuildManagerException
+    {
+        try
+        {
+            List<Object> objects = container.lookupList( TaskQueueExecutor.class );
+            for( Object obj : objects )
+            {
+                log.info( "\n object --> " + obj );
+                log.info( "\n object class --> " + obj.getClass() );                
+                ThreadedTaskQueueExecutor executor = ( ThreadedTaskQueueExecutor ) obj;
+                Task task = executor.getCurrentTask();
+                if( task instanceof BuildProjectTask )
+                {
+                    log.info( "current task is a BuildProjectTask." );
+                    return true;
+                }
+            }            
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new BuildManagerException( e.getMessage() );
+        }
+        
+        return false;
+        /*try
+        {
+            Task task = getBuildTaskQueueExecutor().getCurrentTask();
+            if ( task != null )
+            {
+                if ( task instanceof BuildProjectTask )
+                {
+                    return ( (BuildProjectTask) task ).getProjectId();
+                }
+            }
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new TaskQueueException( "Error occurred while looking up the build task queue executor. " );
+        }
+        
+        return -1;*/
+    }
+    
+    public void prepareBuildProject( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
+        throws BuildManagerException
+    {
+        try
+        {
+            PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger );
+            prepareBuildQueue.put( task );
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( "Error occurred while creating prepare-build-project task: " +
+                e.getMessage() );
+        }        
+    }
 
     public void removeProjectFromBuildQueue( int projectId ) throws BuildManagerException
     {
         try
         {
-            OverallBuildQueue overallBuildQueue = getOverallBuildQueue( projectId, BUILD_QUEUE );
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, BUILD_QUEUE );
             if( overallBuildQueue != null )
             {
                 overallBuildQueue.removeProjectFromBuildQueue( projectId );
             }
             else
             {
-                throw new BuildManagerException( "Project not found in any of the build queues." );
+                log.info( "Project '" + projectId + "' not found in any of the build queues." );
+                //throw new BuildManagerException( "Project not found in any of the build queues." );
             }
         }
         catch ( TaskQueueException e )
@@ -377,19 +558,42 @@ public class ParallelBuildsManager
                 e.getMessage() );
         }
     }
-
+    
+    public void removeProjectFromBuildQueue( int projectId, int buildDefinitionId, int trigger, String projectName ) throws BuildManagerException
+    {
+        try
+        {
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, BUILD_QUEUE );
+            if( overallBuildQueue != null )
+            {
+                overallBuildQueue.removeProjectFromBuildQueue( projectId, buildDefinitionId, trigger, projectName );
+            }
+            else
+            {
+                log.info( "Project '" + projectId + "' not found in any of the build queues." );
+                //throw new BuildManagerException( "Project not found in any of the build queues." );
+            }
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( "Error occurred while removing project from build queue: " +
+                e.getMessage() );
+        }
+    }
+        
     public void removeProjectFromCheckoutQueue( int projectId ) throws BuildManagerException
     {
         try
         {
-            OverallBuildQueue overallBuildQueue = getOverallBuildQueue( projectId, CHECKOUT_QUEUE );
+            OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, CHECKOUT_QUEUE );
             if( overallBuildQueue != null )
             {
                 overallBuildQueue.removeProjectFromCheckoutQueue( projectId );
             }
             else
             {
-                throw new BuildManagerException( "Project not found in any of the checkout queues." );
+                log.info( "Project '" + projectId + "' not found in any of the checkout queues." );
+                //throw new BuildManagerException( "Project not found in any of the checkout queues." );
             }
         }
         catch ( TaskQueueException e )
@@ -411,7 +615,7 @@ public class ParallelBuildsManager
         {
             try
             {
-                OverallBuildQueue overallBuildQueue = getOverallBuildQueue( projectIds[i], BUILD_QUEUE );
+                OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectIds[i], BUILD_QUEUE );
                 if( overallBuildQueue != null )
                 {
                     overallBuildQueue.removeProjectFromBuildQueue( projectIds[i] );
@@ -436,7 +640,7 @@ public class ParallelBuildsManager
         {
             try
             {
-                OverallBuildQueue overallBuildQueue = getOverallBuildQueue( projectIds[i], CHECKOUT_QUEUE );
+                OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectIds[i], CHECKOUT_QUEUE );
                 if( overallBuildQueue != null )
                 {
                     overallBuildQueue.removeProjectFromCheckoutQueue( projectIds[i] );
@@ -455,13 +659,17 @@ public class ParallelBuildsManager
         }
     }
 
-    public void removeProjectsFromPrepareBuildQueue( int[] projectIds )
+    /*public void removeProjectsFromPrepareBuildQueue( int[] projectIds )
     {
         // TODO Auto-generated method stub
-    }
+    }*/
     
     public void addOverallBuildQueue( OverallBuildQueue overallBuildQueue )
     {
+        // set the container which is used by overall build queue for getting the task queue executor
+        // trying to avoid implementing Contextualizable for the OverallBuildQueue! 
+        overallBuildQueue.setContainer( container );
+        
         synchronized( overallBuildQueues )
         {
             this.overallBuildQueues.put( overallBuildQueue.getId(), overallBuildQueue );
@@ -472,6 +680,11 @@ public class ParallelBuildsManager
     {
         List<BuildProjectTask> tasks = null;
         List<CheckOutTask> checkoutTasks = null;
+        
+        /*if( overallBuildQueueId == 1 )
+        {
+            throw new BuildManagerException( "Default build queue cannot be deleted." );
+        }*/
         
         synchronized( overallBuildQueues )        
         {   
@@ -484,12 +697,18 @@ public class ParallelBuildsManager
                 overallBuildQueue.getBuildQueue().removeAll( tasks );
                 overallBuildQueue.getCheckoutQueue().removeAll( checkoutTasks );
                  
-                overallBuildQueue = null;
+                container.release( overallBuildQueue );
             }
             catch ( TaskQueueException e )
             {
                 throw new BuildManagerException(
                          "Cannot remove build queue. An error occurred while retrieving queued tasks." );
+            }
+            catch ( ComponentLifecycleException e )
+            {
+                throw new BuildManagerException(
+                    "Cannot remove build queue. An error occurred while destroying the build queue: " + 
+                    e.getMessage() );
             }
                         
             this.overallBuildQueues.remove( overallBuildQueueId );
@@ -522,7 +741,7 @@ public class ParallelBuildsManager
         return overallBuildQueues;
     }
     
-    private boolean isInQueue( int projectId, int typeOfQueue )
+    private boolean isInQueue( int projectId, int typeOfQueue, int buildDefinitionId )
         throws TaskQueueException
     {   
         synchronized( overallBuildQueues )
@@ -533,9 +752,19 @@ public class ParallelBuildsManager
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
                 if( typeOfQueue == BUILD_QUEUE )
                 {
-                    if( overallBuildQueue.isInBuildQueue( projectId ) )
+                    if( buildDefinitionId < 0 )
                     {
-                        return true;
+                        if( overallBuildQueue.isInBuildQueue( projectId ) )
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if( overallBuildQueue.isInBuildQueue( projectId, buildDefinitionId ) )
+                        {
+                            return true;
+                        }
                     }
                 }
                 else if( typeOfQueue == CHECKOUT_QUEUE )
@@ -558,7 +787,8 @@ public class ParallelBuildsManager
         }
     }
     
-    private OverallBuildQueue getOverallBuildQueue( int projectId, int typeOfQueue )    
+    // get overall queue where project is queued
+    private OverallBuildQueue getOverallBuildQueueWhereProjectIsQueued( int projectId, int typeOfQueue )    
         throws TaskQueueException
     {
         synchronized( overallBuildQueues )
@@ -585,14 +815,6 @@ public class ParallelBuildsManager
                         break;
                     }
                 }
-                /*else if( typeOfQueue == PREPARE_BUILD_QUEUE )
-                {
-                    if( overallBuildQueue.isInPrepareBuildQueue( projectId ) )
-                    {
-                        whereQueued = overallBuildQueue;
-                        break;
-                    }
-                }*/
             }
             
             return whereQueued;
@@ -628,10 +850,6 @@ public class ParallelBuildsManager
                         {   
                             taskQueue = overallBuildQueue.getCheckoutQueue();
                         }
-                        /*else if( typeOfQueue == PREPARE_BUILD_QUEUE )
-                        {
-                            taskQueue = overallBuildQueue.getPrepareBuildQueue();
-                        }*/
                                                 
                         if( idx == 0 )
                         {
@@ -670,5 +888,16 @@ public class ParallelBuildsManager
     public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
     {
         this.buildDefinitionDao = buildDefinitionDao;
+    }
+    
+    public void contextualize( Context context )
+        throws ContextException
+    {
+        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
+    }
+
+    public void setContainer( PlexusContainer container )
+    {
+        this.container = container;
     }
 }

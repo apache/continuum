@@ -19,10 +19,10 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.ProjectDao;
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
 import java.util.Map;
@@ -49,7 +49,12 @@ public class AddProjectToCheckOutQueueAction
     /**
      * @plexus.requirement
      */
-    private TaskQueueManager taskQueueManager;
+    //private TaskQueueManager taskQueueManager;
+    
+    /**
+     * @plexus.requirement role-hint="parallel"
+     */
+    private BuildsManager parallelBuildsManager;
     
     @SuppressWarnings("unchecked")
     public void execute( Map context )
@@ -65,9 +70,14 @@ public class AddProjectToCheckOutQueueAction
             project = projectDao.getProject( getProjectId( context ) );
         }
 
-        CheckOutTask checkOutTask = new CheckOutTask( project.getId(), workingDirectoryService
+        BuildDefinition defaultBuildDefinition = ( BuildDefinition ) getBuildDefinition( context );
+        parallelBuildsManager.checkoutProject( project.getId(), project.getName(),
+                                               workingDirectoryService.getWorkingDirectory( project ),
+                                               project.getScmUsername(), project.getScmPassword(),
+                                               defaultBuildDefinition );
+        /*CheckOutTask checkOutTask = new CheckOutTask( project.getId(), workingDirectoryService
             .getWorkingDirectory( project ), project.getName(), project.getScmUsername(), project.getScmPassword() );
 
-        taskQueueManager.getCheckoutQueue().put( checkOutTask );
+        taskQueueManager.getCheckoutQueue().put( checkOutTask );*/
     }
 }

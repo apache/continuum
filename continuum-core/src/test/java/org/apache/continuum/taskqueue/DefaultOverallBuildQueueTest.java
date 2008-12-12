@@ -68,7 +68,7 @@ public class DefaultOverallBuildQueueTest
         assertEquals( "continuum-test-project", queuedTask.getProjectName() );
     }
     
-    public void testAddToPrepareBuildQueue()
+    /*public void testAddToPrepareBuildQueue()
         throws Exception
     {
         Map<Integer, Integer> projectsBuildDefMap = new HashMap<Integer, Integer>();
@@ -80,5 +80,5 @@ public class DefaultOverallBuildQueueTest
         PrepareBuildProjectsTask queuedTask = ( PrepareBuildProjectsTask ) overallQueue.getPrepareBuildQueue().take();
         assertNotNull( queuedTask );
         assertEquals( 1, ( ( Integer )queuedTask.getProjectsBuildDefinitionsMap().get( new Integer( 1 ) ) ).intValue() );        
-    }
+    }*/
 }

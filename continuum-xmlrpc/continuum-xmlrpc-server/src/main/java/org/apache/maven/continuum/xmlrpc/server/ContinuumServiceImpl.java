@@ -21,6 +21,9 @@ package org.apache.maven.continuum.xmlrpc.server;
 
 import net.sf.dozer.util.mapping.DozerBeanMapperSingletonWrapper;
 import net.sf.dozer.util.mapping.MapperIF;
+
+import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
@@ -98,6 +101,11 @@ public class ContinuumServiceImpl
      * @plexus.requirement
      */
     private TaskQueueManager taskQueueManager;
+    
+    /**
+     * @plexus.requirement role-hint="parallel"
+     */
+    private BuildsManager parallelBuildsManager;
 
     public boolean ping()
         throws ContinuumException
@@ -1045,12 +1053,17 @@ public class ContinuumServiceImpl
     {
         try
         {
-            return taskQueueManager.isInBuildingQueue( projectId );
+            return parallelBuildsManager.isInAnyBuildQueue( projectId );
+            //return taskQueueManager.isInBuildingQueue( projectId );
         }
-        catch ( TaskQueueManagerException e )
+        catch ( BuildManagerException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }
+        /*catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }*/
     }
 
     public List<BuildProjectTask> getProjectsInBuildQueue()
@@ -1058,6 +1071,8 @@ public class ContinuumServiceImpl
     {
         try
         {
+            //TODO: deng parallel builds
+            // implement this!
             return populateBuildProjectTaskList( taskQueueManager.getProjectsInBuildQueue() );
         }
         catch ( TaskQueueManagerException e )
@@ -1070,14 +1085,10 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkManageQueuesAuthorization();
-        try
-        {
-            taskQueueManager.removeProjectsFromBuildingQueue( projectsId );
-        }
-        catch ( TaskQueueManagerException e )
-        {
-            throw new ContinuumException( e.getMessage(), e );
-        }
+        
+        parallelBuildsManager.removeProjectsFromBuildQueue( projectsId );
+        //taskQueueManager.removeProjectsFromBuildingQueue( projectsId );
+        
         return 0;
     }
 
@@ -1087,6 +1098,8 @@ public class ContinuumServiceImpl
         checkManageQueuesAuthorization();
         try
         {
+            // TODO: deng parallel builds
+            // - implement this in BuildsManager!
             return taskQueueManager.cancelCurrentBuild();
         }
         catch ( TaskQueueManagerException e )

@@ -33,6 +33,8 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
@@ -247,6 +249,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private TaskQueueManager taskQueueManager;
+    
+    /**
+     * @plexus.requirement role-hint="parallel"
+     */
+    private BuildsManager parallelBuildsManager;
 
     public DefaultContinuum()
     {
@@ -299,6 +306,11 @@ public class DefaultContinuum
     public PurgeConfigurationService getPurgeConfigurationService()
     {
         return purgeConfigurationService;
+    }
+    
+    public BuildsManager getBuildsManager()
+    {
+        return parallelBuildsManager;
     }
 
     // ----------------------------------------------------------------------
@@ -603,8 +615,14 @@ public class DefaultContinuum
             getLogger().info( "Remove project " + project.getName() + "(" + projectId + ")" );
 
             try
-            {
-                if ( taskQueueManager.isInCheckoutQueue( projectId ) )
+            {                
+                parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
+                
+                parallelBuildsManager.removeProjectFromBuildQueue( projectId );                
+                
+                parallelBuildsManager.cancelBuild( projectId );
+                
+                /*if ( taskQueueManager.isInCheckoutQueue( projectId ) )
                 {
                     taskQueueManager.removeProjectFromCheckoutQueue( projectId );
                 }
@@ -612,15 +630,19 @@ public class DefaultContinuum
                 if ( taskQueueManager.isInBuildingQueue( projectId ) )
                 {
                     taskQueueManager.removeProjectFromBuildingQueue( projectId );
-                }
+                }*/
                 
                 // cancel if currently building
-                if ( taskQueueManager.getCurrentProjectIdBuilding() == projectId )
+                /*if ( taskQueueManager.getCurrentProjectIdBuilding() == projectId )
                 {
                     taskQueueManager.cancelBuildTask( projectId );
-                }
+                }*/
             }
-            catch ( TaskQueueManagerException e )
+            /*catch ( TaskQueueManagerException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }*/
+            catch ( BuildManagerException e )
             {
                 throw new ContinuumException( e.getMessage(), e );
             }
@@ -664,9 +686,19 @@ public class DefaultContinuum
 
         context.put( AbstractContinuumAction.KEY_PROJECT_ID, new Integer( projectId ) );
 
-        // TODO: deng parallel builds 
-        // - add default build definition of project (schedule is attached to the build def) to context!
-        executeAction( "add-project-to-checkout-queue", context );
+        try
+        {
+            BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( projectId );
+            context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
+            
+            // TODO: deng parallel builds 
+            // - add default build definition of project (schedule is attached to the build def) to context!
+            executeAction( "add-project-to-checkout-queue", context );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }
     }
 
     public Project getProject( int projectId )
@@ -892,8 +924,10 @@ public class DefaultContinuum
                 {
                     try
                     {
-                        if ( buildDefId != null && !taskQueueManager.isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
-                            !taskQueueManager.isInCheckoutQueue( project.getId() ) && !taskQueueManager.isInPrepareBuildQueue( project.getId() ) )
+                        //if ( buildDefId != null && !taskQueueManager.isInBuildingQueue( project.getId(), buildDefId.intValue() ) &&
+                        //    !taskQueueManager.isInCheckoutQueue( project.getId() ) && !taskQueueManager.isInPrepareBuildQueue( project.getId() ) )
+                        if ( buildDefId != null && !parallelBuildsManager.isInAnyBuildQueue( project.getId(), buildDefId.intValue() ) &&
+                                !parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) && !parallelBuildsManager.isInPrepareBuildQueue( project.getId() ) )
                         {
                             ProjectScmRoot scmRoot = getProjectScmRootByProject( project.getId() );
                             
@@ -916,7 +950,11 @@ public class DefaultContinuum
                             map.put( scmRootAddress, projectsAndBuildDefinitionsMap );
                         }
                     } 
-                    catch ( TaskQueueManagerException e )
+                    /*catch ( TaskQueueManagerException e )
+                    {
+                        throw new ContinuumException( e.getMessage(), e );
+                    }*/
+                    catch ( BuildManagerException e )
                     {
                         throw new ContinuumException( e.getMessage(), e );
                     }
@@ -951,14 +989,21 @@ public class DefaultContinuum
 
         try
         {
-            if ( taskQueueManager.isInBuildingQueue( projectId, buildDef.getId() ) || 
-                 taskQueueManager.isInCheckoutQueue( projectId ) ||
-                 taskQueueManager.isInPrepareBuildQueue( projectId ))
+            if ( parallelBuildsManager.isInAnyBuildQueue( projectId, buildDef.getId() ) || 
+                            parallelBuildsManager.isInAnyCheckoutQueue( projectId ) ||
+                            parallelBuildsManager.isInPrepareBuildQueue( projectId ) )
+            //if ( taskQueueManager.isInBuildingQueue( projectId, buildDef.getId() ) || 
+            //     taskQueueManager.isInCheckoutQueue( projectId ) ||
+            //     taskQueueManager.isInPrepareBuildQueue( projectId ))
             {
                 return;
             }
         }
-        catch ( TaskQueueManagerException e )
+        /*catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }*/
+        catch ( BuildManagerException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }
@@ -974,14 +1019,21 @@ public class DefaultContinuum
     {
         try
         {
-            if ( taskQueueManager.isInBuildingQueue( projectId, buildDefinitionId ) || 
+            if ( parallelBuildsManager.isInAnyBuildQueue( projectId, buildDefinitionId ) || 
+                            parallelBuildsManager.isInAnyCheckoutQueue( projectId ) ||
+                            parallelBuildsManager.isInPrepareBuildQueue( projectId ))
+            /*if ( taskQueueManager.isInBuildingQueue( projectId, buildDefinitionId ) || 
                  taskQueueManager.isInCheckoutQueue( projectId ) ||
-                 taskQueueManager.isInPrepareBuildQueue( projectId ))
+                 taskQueueManager.isInPrepareBuildQueue( projectId ))*/
             {
                 return;
             }
         }
-        catch ( TaskQueueManagerException e )
+        /*catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
+        }*/
+        catch ( BuildManagerException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }
@@ -3210,17 +3262,26 @@ public class DefaultContinuum
             try
             {
                 // check if project already in queue
-                if ( taskQueueManager.isInBuildingQueue( projectId ) || taskQueueManager.getCurrentProjectIdBuilding() == projectId )
+                //if ( taskQueueManager.isInBuildingQueue( projectId ) || taskQueueManager.getCurrentProjectIdBuilding() == projectId )
+                if ( parallelBuildsManager.isInAnyBuildQueue( projectId ) || parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) )
                 {
                     continue;
                 }
                 
-                if ( taskQueueManager.isInCheckoutQueue( projectId ) )
+                /*if ( taskQueueManager.isInCheckoutQueue( projectId ) )
                 {
                     taskQueueManager.removeProjectFromCheckoutQueue( projectId );
+                }*/
+                if ( parallelBuildsManager.isInAnyCheckoutQueue( projectId ) )
+                {
+                    parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
                 }
             }
-            catch ( TaskQueueManagerException e )
+            /*catch ( TaskQueueManagerException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }*/
+            catch ( BuildManagerException e )
             {
                 throw new ContinuumException( e.getMessage(), e );
             }
@@ -3306,14 +3367,20 @@ public class DefaultContinuum
             try
             {
                 // check if project already in queue
-                if ( taskQueueManager.isInBuildingQueue( projectId ) || taskQueueManager.getCurrentProjectIdBuilding() == projectId )
+                //if ( taskQueueManager.isInBuildingQueue( projectId ) || taskQueueManager.getCurrentProjectIdBuilding() == projectId )
+                if ( parallelBuildsManager.isInAnyBuildQueue( projectId ) || parallelBuildsManager.isProjectInAnyCurrentBuild( projectId ) )
                 {
                     continue;
                 }
                 
-                if ( taskQueueManager.isInCheckoutQueue( projectId ) )
+                /*if ( taskQueueManager.isInCheckoutQueue( projectId ) )
                 {
                     taskQueueManager.removeProjectFromCheckoutQueue( projectId );
+                }*/
+                
+                if ( parallelBuildsManager.isInAnyCheckoutQueue( projectId ) )
+                {
+                    parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
                 }
                 
                 ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
@@ -3335,7 +3402,11 @@ public class DefaultContinuum
                 
                 map.put( scmRootAddress, projectsAndBuildDefinitionsMap );
             }
-            catch ( TaskQueueManagerException e )
+            /*catch ( TaskQueueManagerException e )
+            {
+                throw new ContinuumException( e.getMessage(), e );
+            }*/
+            catch ( BuildManagerException e )
             {
                 throw new ContinuumException( e.getMessage(), e );
             }
@@ -3358,10 +3429,15 @@ public class DefaultContinuum
     {
         try
         {
-            PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger );
-            taskQueueManager.getPrepareBuildQueue().put( task );
+            parallelBuildsManager.prepareBuildProject( projectsBuildDefinitionsMap, trigger );
+            /*PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger );
+            taskQueueManager.getPrepareBuildQueue().put( task );*/
         }
-        catch ( TaskQueueException e )
+        /*catch ( TaskQueueException e )
+        {
+            throw logAndCreateException( "Error while creating enqueuing object.", e );
+        }*/
+        catch( BuildManagerException e )
         {
             throw logAndCreateException( "Error while creating enqueuing object.", e );
         }
