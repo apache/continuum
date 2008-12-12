@@ -21,5 +21,6 @@ public interface ContinuumBuildAgentService
 
     int getProjectCurrentlyBuilding();
 
-    void cancelBuild();
+    void cancelBuild()
+        throws ContinuumBuildAgentException;
 }

@@ -134,4 +134,23 @@ public class DefaultSlaveBuildAgentTransportService
         
         return Boolean.TRUE;
     }
+
+    public Boolean cancelBuild()
+        throws Exception
+    {
+        Boolean result = Boolean.FALSE;
+
+        try
+        {
+            continuumBuildAgentService.cancelBuild();
+            result = Boolean.TRUE;
+            log.info( "Cancelled build" );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to cancel build", e );
+        }
+
+        return result;
+    }
 }

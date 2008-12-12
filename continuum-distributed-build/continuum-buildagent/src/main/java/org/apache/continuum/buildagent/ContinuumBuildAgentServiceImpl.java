@@ -59,6 +59,7 @@ public class ContinuumBuildAgentServiceImpl
     }
 
     public void cancelBuild()
+        throws ContinuumBuildAgentException
     {
         
     }

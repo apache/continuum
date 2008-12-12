@@ -179,4 +179,23 @@ public class ProxySlaveAgentTransportService
         
         return result;
     }
+
+    public Boolean cancelBuild()
+        throws Exception
+    {
+        Boolean result = null;
+
+        try
+        {
+            result = slave.cancelBuild();
+            log.info( "Cancelled build" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error cancelling build" );
+            throw new Exception( "Error cancelling build", e );
+        }
+
+        return null;
+    }
 }

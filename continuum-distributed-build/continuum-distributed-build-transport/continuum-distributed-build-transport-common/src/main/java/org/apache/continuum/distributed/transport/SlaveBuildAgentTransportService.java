@@ -43,4 +43,6 @@ public interface SlaveBuildAgentTransportService
     public Boolean isBusy() throws Exception;
     
     public Boolean ping() throws Exception;
+
+    public Boolean cancelBuild() throws Exception;
 }
