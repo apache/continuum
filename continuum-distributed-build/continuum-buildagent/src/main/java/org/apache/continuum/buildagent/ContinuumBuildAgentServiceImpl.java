@@ -23,6 +23,13 @@ public class ContinuumBuildAgentServiceImpl
 
         prepareBuildProjects( buildContext );
         
+        try
+        {
+            Thread.sleep( 60000 );
+        }
+        catch ( InterruptedException e )
+        {
+        }
     }
 
     public List<Installation> getAvailableInstallations()
@@ -49,6 +56,11 @@ public class ContinuumBuildAgentServiceImpl
     {
         // TODO Auto-generated method stub
         return 0;
+    }
+
+    public void cancelBuild()
+    {
+        
     }
 
     private List<BuildContext> initializeBuildContext( List<Map> projectsBuildContext )
