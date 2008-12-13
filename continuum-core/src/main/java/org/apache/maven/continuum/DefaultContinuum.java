@@ -1877,6 +1877,8 @@ public class DefaultContinuum
 
         ProjectGroup projectGroup = (ProjectGroup) result.getProjectGroups().iterator().next();
 
+        boolean projectGroupCreation = false;
+        
         try
         {
             if ( projectGroupId == -1 )
@@ -1906,6 +1908,8 @@ public class DefaultContinuum
                     executeAction( "store-project-group", pgContext );
 
                     projectGroupId = AbstractContinuumAction.getProjectGroupId( pgContext );
+                    
+                    projectGroupCreation = true;
                 }
             }
 
@@ -1955,6 +1959,14 @@ public class DefaultContinuum
             {
                 context = new HashMap();
 
+                // CONTINUUM-1953 olamy : attached buildDefs from template here
+                // if no group creation 
+                if ( !projectGroupCreation && buildDefintionTemplateId > 0 )
+                {
+                    buildDefinitionService.addTemplateInProject( buildDefintionTemplateId, projectDao
+                        .getProject( project.getId() ) );
+                }                
+                
                 context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT, project );
                 //
                 //            executeAction( "validate-project", context );
@@ -1979,6 +1991,10 @@ public class DefaultContinuum
                 context.put( AbstractContinuumAction.KEY_PROJECT, projectDao.getProject( project.getId() ) );
                 executeAction( "add-project-to-checkout-queue", context );
             }
+        }
+        catch ( BuildDefinitionServiceException e )
+        {
+            throw new ContinuumException( "Error attaching buildDefintionTemplate to project ", e );
         }
         catch ( ContinuumStoreException e )
         {

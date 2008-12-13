@@ -89,7 +89,9 @@ public class DefaultContinuumTest
         
         //assertTrue( validator.validate( fileUrl ) );
         
-        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( fileUrl );
+        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( rootPom.toURI().toURL()
+                                                                              .toExternalForm(), -1, true,
+                                                                              false, true, -1 );
 
         assertNotNull( result );
 
@@ -470,8 +472,9 @@ public class DefaultContinuumTest
         assertEquals( 0 , continuum.getAllContinuumReleaseResults().size() );
         assertFalse( logFile.exists() );
         assertEquals( defaultProjectGroup, continuum.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID ) );
+        
     }
-
+    
     private Continuum getContinuum()
         throws Exception
     {

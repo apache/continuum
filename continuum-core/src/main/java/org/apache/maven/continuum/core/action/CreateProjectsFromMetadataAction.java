@@ -98,11 +98,18 @@ public class CreateProjectsFromMetadataAction
 
         try
         {
+            BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( context );
+            if ( buildDefinitionTemplate == null )
+            {
+                buildDefinitionTemplate = projectBuilder.getDefaultBuildDefinitionTemplate();
+            }            
             if ( !curl.startsWith( "http" ) )
             {
                 url = new URL( curl );
 
-                result = projectBuilder.buildProjectsFromMetadata( url, null, null );
+                result = projectBuilder.buildProjectsFromMetadata( url, null, null, loadRecursiveProjects,
+                                                                   buildDefinitionTemplate );
+
             }
             else
             {
@@ -138,11 +145,7 @@ public class CreateProjectsFromMetadataAction
 
                 if ( urlValidator.isValid( curl ) )
                 {
-                    BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( context );
-                    if ( buildDefinitionTemplate == null )
-                    {
-                        buildDefinitionTemplate = projectBuilder.getDefaultBuildDefinitionTemplate();
-                    }
+
                     result = projectBuilder.buildProjectsFromMetadata( url, username, password, loadRecursiveProjects,
                                                                        buildDefinitionTemplate );
 
