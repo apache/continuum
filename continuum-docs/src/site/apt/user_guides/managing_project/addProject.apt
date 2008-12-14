@@ -32,7 +32,9 @@ Add a Project
 
   By default, Continuum adds each sub-module POM as an individual Continuum Project. If you want to add only the root POM without sub-modules, check the "load only root as recursive build" field.
   
-  You can choose a Build Definition Template which will be applied to your project.
+  You can choose a Build Definition Template which will be applied to your project.  If you choose a Build Definition
+  Template, the build definitions from the template will be added in addition to any build definitions that are defined
+  at the project group level.
 
 * {Maven 1 project}
     
