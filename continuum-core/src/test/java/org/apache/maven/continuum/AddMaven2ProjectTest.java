@@ -69,7 +69,7 @@ public class AddMaven2ProjectTest
     
     
     
-    public void testAddProjectWithBuildDefTemplateToExistingGroup()
+    public void testAddProjectToExistingGroupWithBuildDefTemplate()
         throws Exception
     {
 
@@ -79,6 +79,10 @@ public class AddMaven2ProjectTest
         getContinuum().addProjectGroup( pg );
         pg = getContinuum().getAllProjectGroups().get( 1 );
         assertEquals( 2, getContinuum().getAllProjectGroups().size() );
+        pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
+        // group created with the m2 default build def 
+        assertEquals( 1, pg.getBuildDefinitions().size() );
+        
 
         File rootPom = getTestFile( "src/test/resources/projects/continuum/continuum-core/pom.xml" );
 
@@ -97,11 +101,12 @@ public class AddMaven2ProjectTest
         assertNotNull( project );
         pg = getContinuum().getProjectGroupWithBuildDetails( pg.getId() );
         log.info( "project buildDef list size : " + project.getBuildDefinitions().size() );
+        // project with the build def coming from template
         assertEquals( 1, project.getBuildDefinitions().size() );
         assertEquals( "clean deploy", ( (BuildDefinition) project.getBuildDefinitions().get( 0 ) ).getGoals() );
     }
     
-    public void testAddProjectWithBuildDefTemplateWithGroupCreation()
+    public void testAddProjectWithGroupCreationWithBuildDefTemplate()
         throws Exception
     {
 
@@ -117,10 +122,13 @@ public class AddMaven2ProjectTest
         assertNotNull( result );
 
         assertEquals( 1, result.getProjects().size() );
-
         Project project = result.getProjects().get( 0 );
         assertNotNull( project );
+        project = getContinuum().getProjectWithBuildDetails( project.getId() );
         log.info( "project buildDef list size : " + project.getBuildDefinitions().size() );
+        // build def only at the group level du to group creation 
+        assertEquals( 0, project.getBuildDefinitions().size() );
+        
         log.info( "all pg size " + getContinuum().getAllProjectGroups().size() );
         ProjectGroup pg = result.getProjectGroups().get( 0 );
 
@@ -128,7 +136,7 @@ public class AddMaven2ProjectTest
 
         log.info( " pg groupId " + pg.getGroupId() );
         //@ group level the db from template must be used
-        log.info( " mg builddefs size " + pg.getBuildDefinitions().size() );
+        log.info( " pg builddefs size " + pg.getBuildDefinitions().size() );
         log.info( "pg bd goals " + ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
         assertEquals( "clean deploy", ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
         
@@ -153,7 +161,13 @@ public class AddMaven2ProjectTest
 
         Project project = result.getProjects().get( 0 );
         assertNotNull( project );
+        
+        assertNotNull( project );
+        project = getContinuum().getProjectWithBuildDetails( project.getId() );
         log.info( "project buildDef list size : " + project.getBuildDefinitions().size() );
+        // only build def at group level
+        assertEquals( 0, project.getBuildDefinitions().size() );
+        
         log.info( "all pg size " + getContinuum().getAllProjectGroups().size() );
         ProjectGroup pg = result.getProjectGroups().get( 0 );
 
@@ -169,7 +183,6 @@ public class AddMaven2ProjectTest
         assertEquals( "clean install", ( (BuildDefinition) pg.getBuildDefinitions().get( 0 ) ).getGoals() );
 
     }       
-
 
     public void testAddProjectToExistingGroupDefaultBuildDef()
         throws Exception
