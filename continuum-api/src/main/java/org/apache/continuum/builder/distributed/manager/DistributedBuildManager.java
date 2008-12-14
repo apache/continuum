@@ -14,10 +14,13 @@ public interface DistributedBuildManager
     void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
         throws ContinuumException;
 
-    void updateProjectScmRoot( Map context )
+    void updateScmResult( Map context )
         throws ContinuumException;
 
     void updateBuildResult( Map context )
+        throws ContinuumException;
+
+    void prepareBuildFinished( Map context )
         throws ContinuumException;
 
     void reload()
