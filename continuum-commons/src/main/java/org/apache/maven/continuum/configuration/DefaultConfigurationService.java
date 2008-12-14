@@ -22,8 +22,10 @@ package org.apache.maven.continuum.configuration;
 import org.apache.continuum.configuration.ContinuumConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.configuration.GeneralConfiguration;
+import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -44,7 +46,7 @@ public class DefaultConfigurationService
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
-    // when adding requirement the template in application.xml must be updated CONTINUUM-1207
+    // when adding requirement the template in spring-context.xml must be updated CONTINUUM-1207
 
     /**
      * @plexus.configuration default-value="${plexus.home}"
@@ -60,6 +62,11 @@ public class DefaultConfigurationService
      * @plexus.requirement
      */
     private SystemConfigurationDao systemConfigurationDao;
+    
+    /**
+     * @plexus.requirement
+     */
+    private BuildQueueDao buildQueueDao;
 
     /**
      * @plexus.requirement
@@ -94,6 +101,16 @@ public class DefaultConfigurationService
     public void setScheduleDao( ScheduleDao scheduleDao )
     {
         this.scheduleDao = scheduleDao;
+    }
+    
+    public BuildQueueDao getBuildQueueDao()
+    {
+        return buildQueueDao;
+    }
+    
+    public void setBuildQueueDao( BuildQueueDao buildQueueDao )
+    {
+        this.buildQueueDao = buildQueueDao;
     }
 
     public SystemConfigurationDao getSystemConfigurationDao()
@@ -390,7 +407,7 @@ public class DefaultConfigurationService
     {
         generalConfiguration.setNumberOfBuildsInParallel( num );
     }
-
+    
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -495,13 +512,28 @@ public class DefaultConfigurationService
 
         return defaultSchedule;
     }
-
+    
+    public BuildQueue getDefaultBuildQueue()
+        throws ContinuumStoreException
+    {     
+        BuildQueue defaultBuildQueue = buildQueueDao.getBuildQueueByName( DEFAULT_BUILD_QUEUE_NAME );
+    
+        if ( defaultBuildQueue == null )
+        {
+            defaultBuildQueue = createDefaultBuildQueue();
+    
+            defaultBuildQueue = buildQueueDao.addBuildQueue( defaultBuildQueue );
+        }
+    
+        return defaultBuildQueue;
+    }
+    
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
     private Schedule createDefaultSchedule()
-        throws ConfigurationLoadingException, ContinuumConfigurationException
+        throws ConfigurationLoadingException, ContinuumConfigurationException, ContinuumStoreException
     {
 
         log.info( "create Default Schedule" );
@@ -521,8 +553,22 @@ public class DefaultConfigurationService
         schedule.setCronExpression( systemConf.getDefaultScheduleCronExpression() );
 
         schedule.setActive( true );
+        
+        BuildQueue buildQueue = getDefaultBuildQueue();
+        
+        schedule.addBuildQueue( buildQueue );
 
         return schedule;
     }
-
+    
+    private BuildQueue createDefaultBuildQueue()
+    {
+        log.info( "create Default Build Queue" );
+        
+        BuildQueue buildQueue = new BuildQueue();
+        
+        buildQueue.setName( DEFAULT_BUILD_QUEUE_NAME );        
+        
+        return buildQueue;
+    }
 }

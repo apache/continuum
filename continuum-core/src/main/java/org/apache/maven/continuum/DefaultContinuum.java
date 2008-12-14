@@ -1478,6 +1478,9 @@ public class DefaultContinuum
         context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, projectGroup );
 
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
+        
+     // used by BuildManager to determine on which build queue will the project be put
+        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, ( BuildDefinition ) project.getBuildDefinitions().get( 0 ) );
 
         executeAction( "validate-project", context );
 
@@ -1705,10 +1708,28 @@ public class DefaultContinuum
                 // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup ); 
                 // remove object data -> we don't display the project name in the build queue
                 context.put( AbstractContinuumAction.KEY_PROJECT, projectDao.getProject( project.getId() ) );
+                
+                BuildDefinition defaultBuildDefinition = null;
+                if( projectBuilderId.equals( MavenTwoContinuumProjectBuilder.ID ) )
+                {
+                    defaultBuildDefinition = ( BuildDefinition ) buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions().get( 0 );
+                }
+                else if( projectBuilderId.equals( MavenOneContinuumProjectBuilder.ID ) )
+                {
+                    defaultBuildDefinition = ( BuildDefinition ) buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate().getBuildDefinitions().get( 0 );
+                }
+                    
+                // used by BuildManager to determine on which build queue will the project be put
+                context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, defaultBuildDefinition );
+                
                 executeAction( "add-project-to-checkout-queue", context );
             }
         }
         catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error adding projects from modules", e );
+        }
+        catch ( BuildDefinitionServiceException e )
         {
             throw new ContinuumException( "Error adding projects from modules", e );
         }

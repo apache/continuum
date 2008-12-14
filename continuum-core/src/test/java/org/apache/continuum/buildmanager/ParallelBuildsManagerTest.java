@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
@@ -35,6 +36,8 @@ import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -100,7 +103,7 @@ public class ParallelBuildsManagerTest
     
     private void setupOverallBuildQueues()
     {
-        for( int i = 1; i <= 5; i++ )
+        for( int i = 2; i <= 5; i++ )
         {
             OverallBuildQueue overallBuildQueue = ( OverallBuildQueue ) lookup( OverallBuildQueue.class );            
             overallBuildQueue.setId( i );
@@ -140,7 +143,7 @@ public class ParallelBuildsManagerTest
         
         assertNotNull( whereBuildIsQueued );
         assertEquals( 1, whereBuildIsQueued.getId() );
-        assertEquals( "BUILD_QUEUE_1", whereBuildIsQueued.getName() );
+        assertEquals( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME, whereBuildIsQueued.getName() );
         
         // verify that other build queues are not used
         assertFalse( overallBuildQueues.get( 2 ).isInBuildQueue( 1 ) );
@@ -537,9 +540,23 @@ public class ParallelBuildsManagerTest
 
     }*/
     
-    public void testRemoveOverallBuildQueue()
+    public void testRemoveDefaultOverallBuildQueue()
         throws Exception
     {
+        try
+        {
+            buildsManager.removeOverallBuildQueue( 1 );
+            fail( "An exception should have been thrown." );
+        }
+        catch ( BuildManagerException e )
+        {
+            assertEquals( "Cannot remove default build queue.", e.getMessage() );
+        }
+    }
+    
+    public void testRemoveOverallBuildQueue()
+        throws Exception
+    {   
         // queued tasks (both checkout & build tasks) must be transferred to the other queues!
         setupOverallBuildQueues();
         assertEquals( 5, buildsManager.getOverallBuildQueues().size() );
@@ -596,15 +613,15 @@ public class ParallelBuildsManagerTest
         context.checking( new Expectations()
         {
             {
-                one( buildDefinitionDao ).getDefaultBuildDefinition( 6 );
+                one( buildDefinitionDao ).getDefaultBuildDefinition( 7 );
                 will( returnValue( buildDefinition ) );
                 
-                one( buildDefinitionDao ).getDefaultBuildDefinition( 9 );
+                one( buildDefinitionDao ).getDefaultBuildDefinition( 10 );
                 will( returnValue( buildDefinition ) );
             }
         } );
         
-        buildsManager.removeOverallBuildQueue( 1 );
+        buildsManager.removeOverallBuildQueue( 2 );
         
         // verify
         context.assertIsSatisfied();
@@ -613,21 +630,24 @@ public class ParallelBuildsManagerTest
         assertEquals( 4, overallBuildQueues.size() );
         
         // checkout queues
-        assertNull( overallBuildQueues.get( 1 ) );           
-        assertTrue( overallBuildQueues.get( 2 ).isInCheckoutQueue( 7 ) );
+        assertNull( overallBuildQueues.get( 2 ) );           
+        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 6 ) );   
+        assertTrue( overallBuildQueues.get( 3 ).isInCheckoutQueue( 7 ) ); 
         assertTrue( overallBuildQueues.get( 3 ).isInCheckoutQueue( 8 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInCheckoutQueue( 10 ) );
-        assertTrue( overallBuildQueues.get( 3 ).isInCheckoutQueue( 6 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInCheckoutQueue( 9 ) );
+        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 9 ) );
+        // shouldn't this be queued in build queue #1?
+        assertTrue( overallBuildQueues.get( 3 ).isInCheckoutQueue( 10 ) );
         
-        // build queues           
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 2 ) );
-        assertTrue( overallBuildQueues.get( 3 ).isInBuildQueue( 3 ) );        
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 5 ) );
-        assertTrue( overallBuildQueues.get( 3 ).isInBuildQueue( 1 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 4 ) );
+        // build queues                   
+        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 1 ) );   
+        assertTrue( overallBuildQueues.get( 3 ).isInBuildQueue( 2 ) );
+        assertTrue( overallBuildQueues.get( 3 ).isInBuildQueue( 3 ) );
+        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 4 ) );
+        // shouldn't this be queued in build queue #1?
+        assertTrue( overallBuildQueues.get( 3 ).isInBuildQueue( 5 ) );        
     }
     
+    // TODO use the default build queue instead!
     public void testNoBuildQueuesConfigured()
         throws Exception
     {    

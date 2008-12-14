@@ -29,6 +29,7 @@
     <property name="scheduleDao" ref="scheduleDao"/>
     <property name="systemConfigurationDao" ref="systemConfigurationDao"/>
     <property name="configuration" ref="continuumConfiguration"/>
+    <property name="buildQueueDao" ref="buildQueueDao"/>
   </bean>
   <bean id="workingDirectoryService" class="org.apache.maven.continuum.utils.DefaultWorkingDirectoryService">
     <property name="configurationService" ref="configurationService"/>
