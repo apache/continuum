@@ -7,9 +7,10 @@ import java.util.Map;
 import org.apache.continuum.buildagent.configuration.ConfigurationService;
 import org.apache.continuum.buildagent.model.BuildContext;
 import org.apache.continuum.buildagent.model.Installation;
+import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 
 public class ContinuumBuildAgentServiceImpl
-    extends AbstractContinuumBuildAgentService
+    implements ContinuumBuildAgentService
 {
     /**
      * @plexus.requirement
@@ -21,8 +22,6 @@ public class ContinuumBuildAgentServiceImpl
     {
         List<BuildContext> buildContext = initializeBuildContext( projectsBuildContext );
 
-        prepareBuildProjects( buildContext );
-        
         try
         {
             Thread.sleep( 60000 );
@@ -71,40 +70,23 @@ public class ContinuumBuildAgentServiceImpl
         for ( Map map : projectsBuildContext )
         {
             BuildContext context = new BuildContext();
-            context.setProjectId( getProjectId( map ) );
-            context.setBuildDefinitionId( getBuildDefinitionId( map ) );
-            context.setBuildFile( getBuildFile( map ) );
-            context.setExecutorId( getExecutorId( map ) );
-            context.setGoals( getGoals( map ) );
-            context.setArguments( getArguments( map ) );
-            context.setScmUrl( getScmUrl( map ) );
-            context.setScmUsername( getScmUsername( map ) );
-            context.setScmPassword( getScmPassword( map ) );
-            context.setBuildFresh( isBuildFresh( map ) );
-            context.setProjectGroupId( getProjectGroupId( map ) );
-            context.setScmRootAddress( getScmRootAddress( map ) );
+            context.setProjectId( ContinuumBuildAgentUtil.getProjectId( map ) );
+            context.setBuildDefinitionId( ContinuumBuildAgentUtil.getBuildDefinitionId( map ) );
+            context.setBuildFile( ContinuumBuildAgentUtil.getBuildFile( map ) );
+            context.setExecutorId( ContinuumBuildAgentUtil.getExecutorId( map ) );
+            context.setGoals( ContinuumBuildAgentUtil.getGoals( map ) );
+            context.setArguments( ContinuumBuildAgentUtil.getArguments( map ) );
+            context.setScmUrl( ContinuumBuildAgentUtil.getScmUrl( map ) );
+            context.setScmUsername( ContinuumBuildAgentUtil.getScmUsername( map ) );
+            context.setScmPassword( ContinuumBuildAgentUtil.getScmPassword( map ) );
+            context.setBuildFresh( ContinuumBuildAgentUtil.isBuildFresh( map ) );
+            context.setProjectGroupId( ContinuumBuildAgentUtil.getProjectGroupId( map ) );
+            context.setScmRootAddress( ContinuumBuildAgentUtil.getScmRootAddress( map ) );
             
             buildContext.add( context );
         }
 
         return buildContext;
-    }
-
-    private void prepareBuildProjects( List<BuildContext> context )
-    {
-        for ( BuildContext buildContext : context )
-        {
-            if ( buildContext.isBuildFresh() )
-            {
-                // clean working directory
-                cleanWorkingDirectory( buildContext );
-            }
-        }
-    }
-
-    private void cleanWorkingDirectory( BuildContext context )
-    {
-        
     }
 
     public ConfigurationService getConfigurationService()

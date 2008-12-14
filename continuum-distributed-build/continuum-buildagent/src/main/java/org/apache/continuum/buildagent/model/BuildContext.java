@@ -1,5 +1,10 @@
 package org.apache.continuum.buildagent.model;
 
+import java.util.Map;
+
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.model.scm.ScmResult;
+
 public class BuildContext
 {
     private int projectId;
@@ -27,6 +32,12 @@ public class BuildContext
     private int projectGroupId;
 
     private String scmRootAddress;
+
+    private Map<String, Object> actionContext;
+
+    private ScmResult scmResult;
+
+    private BuildResult buildResult;
 
     public int getProjectGroupId()
     {
@@ -156,5 +167,35 @@ public class BuildContext
     public void setBuildFresh( boolean buildFresh )
     {
         this.buildFresh = buildFresh;
+    }
+
+    public Map<String, Object> getActionContext()
+    {
+        return actionContext;
+    }
+
+    public void setActionContext( Map<String, Object> actionContext ) 
+    {
+        this.actionContext = actionContext;
+    }
+
+    public ScmResult getScmResult()
+    {
+        return scmResult;
+    }
+
+    public void setScmResult( ScmResult scmResult )
+    {
+        this.scmResult = scmResult;
+    }
+
+    public BuildResult getBuildResult()
+    {
+        return buildResult;
+    }
+
+    public void setBuildResult( BuildResult buildResult )
+    {
+        this.buildResult = buildResult;
     }
 }
