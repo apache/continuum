@@ -284,14 +284,12 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public void updateProjectScmRoot( Map context )
+    public void updateScmResult( Map context )
         throws ContinuumException
     {
         try
         {
             int projectId = ContinuumBuildConstant.getProjectId( context );
-            int projectGroupId = ContinuumBuildConstant.getProjectGroupId( context );
-            String scmRootAddress = ContinuumBuildConstant.getScmRootAddress( context );
 
             log.info( "update scm result of project" + projectId );
             Project project = projectDao.getProjectWithScmDetails( projectId );
@@ -301,42 +299,14 @@ public class DefaultDistributedBuildManager
             scmResult.setCommandOutput( ContinuumBuildConstant.getScmCommandOutput( context ) );
             scmResult.setException( ContinuumBuildConstant.getScmException( context ) );
             scmResult.setProviderMessage( ContinuumBuildConstant.getScmProviderMessage( context ) );
-
-            String error = convertScmResultToError( scmResult );
-
-            if ( error == null )
-            {
-                scmResult.setSuccess( true );
-            }
-            else
-            {
-                scmResult.setSuccess( false );
-            }
+            scmResult.setSuccess( ContinuumBuildConstant.isScmSuccess( context ) );
 
             project.setScmResult( scmResult );
             projectDao.updateProject( project );
-
-            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroupId, scmRootAddress );
-
-            if ( error != null )
-            {
-                log.info( "scm error, not building" );
-                scmRoot.setError( error );
-                scmRoot.setState( ContinuumProjectState.ERROR );
-                projectScmRootDao.updateProjectScmRoot( scmRoot );
-            }
-            else if ( ContinuumBuildConstant.isPrepareBuildFinished( context ) )
-            {
-                log.info( "prepare build finished" );
-                scmRoot.setState( ContinuumProjectState.UPDATED );
-                projectScmRootDao.updateProjectScmRoot( scmRoot );
-
-                //TODO: set state of project to building
-            }
         }
         catch ( ContinuumStoreException e )
         {
-            throw new ContinuumException( "Error updating project scm root", e );
+            throw new ContinuumException( "Error updating project's scm result", e );
         }
     }
 
@@ -397,6 +367,36 @@ public class DefaultDistributedBuildManager
         catch ( ContinuumStoreException e )
         {
             throw new ContinuumException( "Error while updating build result for project", e );
+        }
+    }
+
+    public void prepareBuildFinished( Map context )
+        throws ContinuumException
+    {
+        int projectGroupId = ContinuumBuildConstant.getProjectGroupId( context );
+        String scmRootAddress = ContinuumBuildConstant.getScmRootAddress( context );
+
+        try
+        {
+            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroupId, scmRootAddress );
+            
+            String error = ContinuumBuildConstant.getScmError( context );
+            
+            if ( StringUtils.isEmpty( error ) )
+            {
+                scmRoot.setState( ContinuumProjectState.UPDATED );
+            }
+            else
+            {
+                scmRoot.setState( ContinuumProjectState.ERROR );
+                scmRoot.setError( error );
+            }
+
+            projectScmRootDao.updateProjectScmRoot( scmRoot );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while updating project scm root '" + scmRootAddress + "'", e );
         }
     }
 
@@ -504,45 +504,5 @@ public class DefaultDistributedBuildManager
         return null;
     }
 
-    private String convertScmResultToError( ScmResult result )
-    {
-        String error = "";
-
-        if ( result == null )
-        {
-            error = "Scm result is null.";
-        }
-        else
-        {
-            if ( result.getCommandLine() != null )
-            {
-                error = "Command line: " + StringUtils.clean( result.getCommandLine() ) +
-                    System.getProperty( "line.separator" );
-            }
-
-            if ( result.getProviderMessage() != null )
-            {
-                error = "Provider message: " + StringUtils.clean( result.getProviderMessage() ) +
-                    System.getProperty( "line.separator" );
-            }
-
-            if ( result.getCommandOutput() != null )
-            {
-                error += "Command output: " + System.getProperty( "line.separator" );
-                error += "-------------------------------------------------------------------------------" +
-                    System.getProperty( "line.separator" );
-                error += StringUtils.clean( result.getCommandOutput() ) + System.getProperty( "line.separator" );
-                error += "-------------------------------------------------------------------------------" +
-                    System.getProperty( "line.separator" );
-            }
-
-            if ( result.getException() != null )
-            {
-                error += "Exception:" + System.getProperty( "line.separator" );
-                error += result.getException();
-            }
-        }
-
-        return error;
-    }
+    
 }

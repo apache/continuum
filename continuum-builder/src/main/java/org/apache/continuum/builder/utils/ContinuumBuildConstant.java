@@ -44,11 +44,13 @@ public class ContinuumBuildConstant
 
     public static final String KEY_SCM_EXCEPTION = "scm-exception";
 
-    public static final String KEY_PREPARE_BUILD_FINISHED = "prepare-build-finished";
+    public static final String KEY_SCM_SUCCESS = "scm-success";
 
     public static final String KEY_PROJECT_GROUP_ID = "project-group-id";
 
     public static final String KEY_SCM_ROOT_ADDRESS = "scm-root-address";
+
+    public static final String KEY_SCM_ERROR = "scm-error";
 
     public static int getProjectId( Map context )
     {
@@ -110,9 +112,9 @@ public class ContinuumBuildConstant
         return getString( context, KEY_SCM_PROVIDER_MESSAGE );
     }
 
-    public static boolean isPrepareBuildFinished( Map context )
+    public static boolean isScmSuccess( Map context )
     {
-        return getBoolean( context, KEY_PREPARE_BUILD_FINISHED );
+        return getBoolean( context, KEY_SCM_SUCCESS );
     }
 
     public static int getProjectGroupId( Map context )
@@ -123,6 +125,11 @@ public class ContinuumBuildConstant
     public static String getScmRootAddress( Map context )
     {
         return getString( context, KEY_SCM_ROOT_ADDRESS );
+    }
+
+    public static String getScmError( Map context )
+    {
+        return getString( context, KEY_SCM_ERROR );
     }
 
     // ----------------------------------------------------------------------
