@@ -75,6 +75,28 @@ under the License.
   </build>
   <dependencies>
     <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-api</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.archiva</groupId>
+          <artifactId>archiva-common</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.archiva</groupId>
+          <artifactId>archiva-repository-layer</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-commons</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-scm</artifactId>
+    </dependency>
+    <dependency>
       <groupId>net.java.dev.stax-utils</groupId>
       <artifactId>stax-utils</artifactId>
       <version>20060502</version>
@@ -89,6 +111,10 @@ under the License.
       <groupId>stax</groupId>
       <artifactId>stax-api</artifactId>
       <version>1.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>file-management</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
