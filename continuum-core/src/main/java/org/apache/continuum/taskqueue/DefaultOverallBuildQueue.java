@@ -317,7 +317,7 @@ public class DefaultOverallBuildQueue
         }
     }
 
-    public List<BuildProjectTask> getProjectsInBuildQueue()
+    public List<Task> getProjectsInBuildQueue()
         throws TaskQueueException
     {   
         return buildQueue.getQueueSnapshot();        
@@ -353,22 +353,23 @@ public class DefaultOverallBuildQueue
     public boolean isInBuildQueue( int projectId, int buildDefinitionId )
         throws TaskQueueException
     {
-        List<BuildProjectTask> queue = getProjectsInBuildQueue();
+        List<Task> queue = getProjectsInBuildQueue();
 
-        for ( BuildProjectTask task : queue )
+        for ( Task task : queue )
         {
+            BuildProjectTask buildTask = (BuildProjectTask) task;
             if ( task != null )
             {
                 if ( buildDefinitionId < 0 )
                 {
-                    if ( task.getProjectId() == projectId )
+                    if ( buildTask.getProjectId() == projectId )
                     {
                         return true;
                     }
                 }
                 else
                 {
-                    if ( task.getProjectId() == projectId && task.getBuildDefinitionId() == buildDefinitionId )
+                    if ( buildTask.getProjectId() == projectId && buildTask.getBuildDefinitionId() == buildDefinitionId )
                     {
                         return true;
                     }
@@ -510,17 +511,18 @@ public class DefaultOverallBuildQueue
         {
             return false;
         }
-        List<BuildProjectTask> queue = getProjectsInBuildQueue();
+        List<Task> queue = getProjectsInBuildQueue();
 
         List<BuildProjectTask> tasks = new ArrayList<BuildProjectTask>();
 
-        for ( BuildProjectTask task : queue )
+        for ( Task task : queue )
         {
+            BuildProjectTask buildTask = (BuildProjectTask) task;
             if ( task != null )
             {
-                if ( ArrayUtils.contains( projectIds, task.getProjectId() ) )
+                if ( ArrayUtils.contains( projectIds, buildTask.getProjectId() ) )
                 {
-                    tasks.add( task );
+                    tasks.add( buildTask );
                 }
             }
         }
@@ -540,11 +542,12 @@ public class DefaultOverallBuildQueue
     public boolean removeProjectFromBuildQueue( int projectId )
         throws TaskQueueException
     {
-        List<BuildProjectTask> queue = getProjectsInBuildQueue();
+        List<Task> queue = getProjectsInBuildQueue();
 
-        for ( BuildProjectTask task : queue )
+        for ( Task task : queue )
         {
-            if ( task != null && task.getProjectId() == projectId )
+            BuildProjectTask buildTask = (BuildProjectTask) task;
+            if ( task != null && buildTask.getProjectId() == projectId )
             {
                 return buildQueue.remove( task );
             }
@@ -556,10 +559,9 @@ public class DefaultOverallBuildQueue
     public void removeProjectsFromBuildQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueException
     {
-        List<BuildProjectTask> queue = getProjectsInBuildQueue();
-
-        for ( BuildProjectTask task : queue )
-        {
+        List<Task> queue = getProjectsInBuildQueue();
+        for ( Task task : queue )        
+        {            
             if ( ArrayUtils.contains( hashCodes, task.hashCode() ) )
             {
                 buildQueue.remove( task );

@@ -20,6 +20,7 @@ package org.apache.continuum.buildmanager;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -471,7 +471,7 @@ public class ParallelBuildsManager
     {
         try
         {
-            List<Object> objects = container.lookupList( TaskQueueExecutor.class );
+            List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
             for( Object obj : objects )
             {
                 log.info( "\n object --> " + obj );
@@ -491,23 +491,6 @@ public class ParallelBuildsManager
         }
         
         return false;
-        /*try
-        {
-            Task task = getBuildTaskQueueExecutor().getCurrentTask();
-            if ( task != null )
-            {
-                if ( task instanceof BuildProjectTask )
-                {
-                    return ( (BuildProjectTask) task ).getProjectId();
-                }
-            }
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new TaskQueueException( "Error occurred while looking up the build task queue executor. " );
-        }
-        
-        return -1;*/
     }
     
     public void prepareBuildProject( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
@@ -673,7 +656,7 @@ public class ParallelBuildsManager
     
     public void removeOverallBuildQueue( int overallBuildQueueId ) throws BuildManagerException
     {
-        List<BuildProjectTask> tasks = null;
+        List<Task> tasks = null;
         List<CheckOutTask> checkoutTasks = null;
         
         /*if( overallBuildQueueId == 1 )
@@ -716,10 +699,11 @@ public class ParallelBuildsManager
         
         try
         {
-            for( BuildProjectTask task : tasks )
+            for( Task task : tasks )
             {
-                BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( task.getBuildDefinitionId() );
-                buildProject( task.getProjectId(), buildDefinition, task.getProjectName(), task.getTrigger() );                    
+                BuildProjectTask buildTask = ( BuildProjectTask ) task;
+                BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildTask.getBuildDefinitionId() );
+                buildProject( buildTask.getProjectId(), buildDefinition, buildTask.getProjectName(), buildTask.getTrigger() );                    
             }
          
             for( CheckOutTask task : checkoutTasks )
@@ -737,8 +721,107 @@ public class ParallelBuildsManager
     }
     
     public Map<Integer, OverallBuildQueue> getOverallBuildQueues()
-    {
+    {   
         return overallBuildQueues;
+    }
+    
+    public List<Task> getCurrentBuilds() throws BuildManagerException
+    {   
+        List<Task> currentBuilds = new ArrayList<Task>();        
+        try
+        {
+            List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
+            for( Object obj : objects )
+            {
+                ThreadedTaskQueueExecutor executor = ( ThreadedTaskQueueExecutor ) obj;
+                Task task = executor.getCurrentTask();
+                if( task instanceof BuildProjectTask )
+                {
+                    currentBuilds.add( task );                    
+                }
+            }            
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new BuildManagerException( e.getMessage() );
+        }
+        
+        return currentBuilds;
+    }
+    
+    public List<Task> getCurrentCheckouts() throws BuildManagerException
+    {
+        List<Task> currentCheckouts = new ArrayList<Task>();        
+        try
+        {
+            List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
+            for( Object obj : objects )
+            {
+                ThreadedTaskQueueExecutor executor = ( ThreadedTaskQueueExecutor ) obj;
+                Task task = executor.getCurrentTask();
+                if( task instanceof CheckOutTask )
+                {
+                    currentCheckouts.add( task );                    
+                }
+            }            
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new BuildManagerException( e.getMessage() );
+        }
+        
+        return currentCheckouts;
+    }
+    
+    public Map<String, List<Task>> getProjectsInBuildQueues() throws BuildManagerException
+    {   
+        synchronized( overallBuildQueues )
+        {            
+            Map<String, List<Task>> buildsInQueue = new HashMap<String, List<Task>>();
+            Set<Integer> keySet = overallBuildQueues.keySet();
+            for( Integer key : keySet )
+            {
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                try
+                {                    
+                    buildsInQueue.put( overallBuildQueue.getName(), overallBuildQueue.getProjectsInBuildQueue() );
+                }
+                catch ( TaskQueueException e )
+                {
+                    throw new BuildManagerException( "Error occurred while getting projects in build queue '" +
+                        overallBuildQueue.getName() + "'.", e );
+                }
+            }                
+            return buildsInQueue;            
+        }
+    }
+    
+    public Map<String, List<Task>> getProjectsInCheckoutQueues() throws BuildManagerException
+    {
+        synchronized( overallBuildQueues )
+        {            
+            Map<String, List<Task>> checkoutsInQueue = new HashMap<String, List<Task>>();
+            Set<Integer> keySet = overallBuildQueues.keySet();
+            for( Integer key : keySet )
+            {
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                try
+                {                    
+                    checkoutsInQueue.put( overallBuildQueue.getName(), overallBuildQueue.getCheckOutTasksInQueue() );
+                }
+                catch ( TaskQueueException e )
+                {
+                    throw new BuildManagerException( "Error occurred while getting projects in checkout queue '" +
+                        overallBuildQueue.getName() + "'.", e );
+                }
+            }                
+            return checkoutsInQueue;            
+        }
+    }
+    
+    public boolean isBuildInProgress() throws BuildManagerException
+    {
+        return false;
     }
     
     private boolean isInQueue( int projectId, int typeOfQueue, int buildDefinitionId )

@@ -33,6 +33,7 @@ import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.codehaus.plexus.taskqueue.Task;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
@@ -81,7 +82,14 @@ public class ParallelBuildsManagerTest
         {
             BuildQueue buildQueue = new BuildQueue();
             buildQueue.setId( i );
-            buildQueue.setName( "BUILD_QUEUE_" + String.valueOf( i ) );
+            if( i == 1 )
+            {
+                buildQueue.setName( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME );                
+            }
+            else
+            {
+                buildQueue.setName( "BUILD_QUEUE_" + String.valueOf( i ) );
+            }
             buildQueues.add( buildQueue );
         }
 
@@ -713,5 +721,59 @@ public class ParallelBuildsManagerTest
         {
             assertEquals( "No build queue found.", e.getMessage() );
         }
+    }
+    
+    public void testGetProjectsInBuildQueue()
+        throws Exception
+    {
+        setupOverallBuildQueues();
+        
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
+        
+     // populate build queue
+        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );      
+        buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1 );      
+        buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1 );
+        
+        Map<String, List<Task>> buildsInQueue = buildsManager.getProjectsInBuildQueues();
+        
+        assertEquals( 5, buildsInQueue.size() );
+        assertTrue( buildsInQueue.containsKey( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) );
+        assertTrue( buildsInQueue.containsKey( "BUILD_QUEUE_2" ) );
+        
+        assertEquals( 2, buildsInQueue.get( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ).size() );
+        assertEquals( 1, buildsInQueue.get( "BUILD_QUEUE_2" ).size() );
+    }
+    
+    public void testGetProjectsInCheckoutQueue()
+        throws Exception
+    {
+        setupOverallBuildQueues();
+        
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
+        
+        buildsManager.checkoutProject( 1, "continuum-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
+                                       "dummy", "dummypass", buildDef );
+        buildsManager.checkoutProject( 2, "continuum-test-2", new File( getBasedir(), "/target/test-working-dir/1" ), 
+                                       "dummy", "dummypass", buildDef );
+        buildsManager.checkoutProject( 3, "continuum-test-3", new File( getBasedir(), "/target/test-working-dir/1" ), 
+                                       "dummy", "dummypass", buildDef );
+        buildsManager.checkoutProject( 4, "continuum-test-4", new File( getBasedir(), "/target/test-working-dir/1" ), 
+                                       "dummy", "dummypass", buildDef );
+        buildsManager.checkoutProject( 5, "continuum-test-5", new File( getBasedir(), "/target/test-working-dir/1" ), 
+                                       "dummy", "dummypass", buildDef );
+                
+        Map<String, List<Task>> checkoutsInQueue = buildsManager.getProjectsInCheckoutQueues();
+        
+        assertEquals( 5, checkoutsInQueue.size() );
+        assertTrue( checkoutsInQueue.containsKey( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) );
+        assertTrue( checkoutsInQueue.containsKey( "BUILD_QUEUE_2" ) );
+        
+        assertEquals( 3, checkoutsInQueue.get( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ).size() );
+        assertEquals( 2, checkoutsInQueue.get( "BUILD_QUEUE_2" ).size() );
     }
 }

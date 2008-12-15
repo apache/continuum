@@ -21,7 +21,6 @@ package org.apache.continuum.taskqueue;
 
 import java.util.List;
 
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.taskqueue.Task;
@@ -229,7 +228,7 @@ public interface OverallBuildQueue
      * @return
      * @throws TaskQueueException TODO
      */
-    List<BuildProjectTask> getProjectsInBuildQueue()
+    List<Task> getProjectsInBuildQueue()
         throws TaskQueueException;
 
     /**
