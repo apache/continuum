@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.configuration.model.ContinuumConfigurationModel;
 import org.apache.continuum.configuration.model.io.xpp3.ContinuumConfigurationModelXpp3Reader;
 import org.apache.continuum.configuration.model.io.xpp3.ContinuumConfigurationModelXpp3Writer;
+import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +41,14 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultContinuumConfiguration
     implements ContinuumConfiguration
-{
+{ 
     private Logger log = LoggerFactory.getLogger( getClass() );
 
     private File configurationFile;
 
     private GeneralConfiguration generalConfiguration;
+    
+    public static final String CONFIGURATION_FILE = "continuum.xml";
 
     //----------------------------------------------------
     //  Initialize method configured in the Spring xml 
@@ -117,6 +120,8 @@ public class DefaultContinuumConfiguration
                 .read( new InputStreamReader( new FileInputStream( file ) ) );
 
             this.generalConfiguration = new GeneralConfiguration();
+            
+            this.generalConfiguration.setNumberOfBuildsInParallel( configuration.getNumberOfBuildsInParallel() );
             this.generalConfiguration.setBaseUrl( configuration.getBaseUrl() );
             if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
             {
@@ -149,6 +154,9 @@ public class DefaultContinuumConfiguration
                 this.generalConfiguration.setReleaseOutputDirectory( new File( configuration
                     .getReleaseOutputDirectory() ) );
             }
+            
+            
+            
         }
         catch ( IOException e )
         {
@@ -170,11 +178,14 @@ public class DefaultContinuumConfiguration
         {
             ContinuumConfigurationModel configurationModel = new ContinuumConfigurationModel();
             configurationModel.setBaseUrl( this.generalConfiguration.getBaseUrl() );
+
+            
             // normally not null but NPE free is better !
             if ( this.generalConfiguration.getBuildOutputDirectory() != null )
             {
                 configurationModel.setBuildOutputDirectory( this.generalConfiguration.getBuildOutputDirectory()
                     .getPath() );
+                configurationModel.setNumberOfBuildsInParallel( this.generalConfiguration.getNumberOfBuildsInParallel() );
             }
             if ( this.generalConfiguration.getWorkingDirectory() != null )
             {
@@ -209,6 +220,8 @@ public class DefaultContinuumConfiguration
                     .getPath() );
             }
 
+            
+            
             ContinuumConfigurationModelXpp3Writer writer = new ContinuumConfigurationModelXpp3Writer();
             FileWriter fileWriter = new FileWriter( file );
             writer.write( fileWriter, configurationModel );
@@ -225,7 +238,7 @@ public class DefaultContinuumConfiguration
     //  Spring injection
     // ----------------------------------------
 
-
+    
     public File getConfigurationFile()
     {
         return configurationFile;

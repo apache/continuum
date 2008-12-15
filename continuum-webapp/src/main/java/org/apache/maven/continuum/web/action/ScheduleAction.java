@@ -19,12 +19,21 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.model.Build;
 
-import java.util.Collection;
+import com.opensymphony.xwork2.Preparable;
 
 /**
  * @author Nik Gonzalez
@@ -32,6 +41,7 @@ import java.util.Collection;
  */
 public class ScheduleAction
     extends ContinuumConfirmAction
+    implements Preparable
 {
     private int id;
 
@@ -64,6 +74,27 @@ public class ScheduleAction
     private String dayOfWeek = "?";
 
     private String year;
+    
+    private List<BuildQueue> schedulesBuildQueue;
+    
+    private BuildQueue buildQueue;
+   
+    private List<BuildQueue> buildQueues;
+    
+    private List<String> buildQueueIds;
+    
+    /**
+     * @plexus.requirement
+     */
+    private BuildQueueDao buildQueueDao;
+    
+    public void prepare()
+        throws Exception
+    {
+    	super.prepare();
+        buildQueues = buildQueueDao.getAllBuildQueues();
+        schedulesBuildQueue = new ArrayList<BuildQueue>();
+    }
 
     public String summary()
         throws ContinuumException
@@ -81,7 +112,9 @@ public class ScheduleAction
         {
             addActionError( e.getMessage() );
             return REQUIRES_AUTHENTICATION;
-        }
+        }        buildQueueIds = new ArrayList<String>();
+        
+        
 
         schedules = getContinuum().getSchedules();
 
@@ -127,6 +160,7 @@ public class ScheduleAction
             name = schedule.getName();
             delay = schedule.getDelay();
             maxJobExecutionTime = schedule.getMaxJobExecutionTime();
+         
         }
         else
         {
@@ -140,6 +174,7 @@ public class ScheduleAction
     public String save()
         throws ContinuumException
     {
+    	
         try
         {
             checkManageSchedulesAuthorization();
@@ -178,13 +213,14 @@ public class ScheduleAction
 
     private Schedule setFields( Schedule schedule )
     {
-        schedule.setActive( active );
+        schedule.setActive( active );	
         schedule.setCronExpression( getCronExpression() );
         schedule.setDelay( delay );
         schedule.setDescription( description );
         schedule.setName( name );
         schedule.setMaxJobExecutionTime( maxJobExecutionTime );
-
+        schedule.setBuildQueues( schedulesBuildQueue );	
+        
         return schedule;
     }
 
@@ -414,4 +450,56 @@ public class ScheduleAction
         return ( second + " " + minute + " " + hour + " " + dayOfMonth + " " + month + " " + dayOfWeek + " " +
             year ).trim();
     }
+
+	public BuildQueue getBuildQueue() 
+	{
+	    return buildQueue;
+	}
+
+	public void setBuildQueue(BuildQueue buildQueue) 
+	{
+	    this.buildQueue = buildQueue;
+	}
+
+	public List<BuildQueue> getBuildQueues() 
+	{
+	    return buildQueues;
+	}
+
+	public void setBuildQueues(List<BuildQueue> buildQueues) 
+	{
+	    this.buildQueues = buildQueues;
+	}
+
+	public List<String> getBuildQueueIds() 
+	{
+	    return buildQueueIds;
+	}
+
+	public void setBuildQueueIds(List<String> buildQueueIds) 
+	{
+	    this.buildQueueIds = buildQueueIds;
+	}
+
+	public BuildQueueDao getBuildQueueDao() 
+	{
+	    return buildQueueDao;
+	}
+
+	public void setBuildQueueDao(BuildQueueDao buildQueueDao) 
+	{
+	    this.buildQueueDao = buildQueueDao;
+	}
+
+	public List<BuildQueue> getSchedulesBuildQueue() 
+	{
+	    return schedulesBuildQueue;
+	}
+
+	public void setSchedulesBuildQueue(List<BuildQueue> schedulesBuildQueue) 
+	{
+	    this.schedulesBuildQueue = schedulesBuildQueue;
+	}
+	
+	
 }

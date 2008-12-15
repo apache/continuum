@@ -89,6 +89,14 @@
       </div>
       <div>
         <redback:ifAuthorized permission="continuum-manage-repositories">
+          <s:url id="buildQueueListUrl" action="buildQueueList" namespace="/admin" includeParams="none"/>
+          <div class="body">
+            <s:a href="%{buildQueueListUrl}">
+              <s:text name="menu.administration.build.queue"/>
+            </s:a>
+          </div>
+        </redback:ifAuthorized>
+        <redback:ifAuthorized permission="continuum-manage-repositories">
           <s:url id="repositoryListUrl" action="repositoryList" namespace="/admin" includeParams="none"/>
           <div class="body">
             <s:a href="%{repositoryListUrl}">

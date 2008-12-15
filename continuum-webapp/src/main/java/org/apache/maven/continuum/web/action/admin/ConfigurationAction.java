@@ -57,8 +57,12 @@ public class ConfigurationAction
     
     private String releaseOutputDirectory;
 
+    private int numberOfAllowedBuildsinParallel;
+    
     private boolean requireReleaseOutput;
-
+    
+    private boolean requireParallelBuilds;
+    
     public void prepare()
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
@@ -97,6 +101,11 @@ public class ConfigurationAction
             releaseOutputDirectory = releaseOutputDirectoryFile.getAbsolutePath();
         }
         
+        if ( requireParallelBuilds )
+        {
+            numberOfAllowedBuildsinParallel = configuration.getNumberOfBuildsInParallel();	
+        }
+        
         String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
         setRequireReleaseOutput( new Boolean( requireRelease ) );
     }
@@ -119,7 +128,12 @@ public class ConfigurationAction
         configuration.setWorkingDirectory( new File( workingDirectory ) );
 
         configuration.setBuildOutputDirectory( new File( buildOutputDirectory ) );
-
+        
+        if ( requireParallelBuilds )
+        {
+            configuration.setNumberOfBuildsInParallel( numberOfAllowedBuildsinParallel );	
+        }
+        
         if ( StringUtils.isNotEmpty( deploymentRepositoryDirectory ) )
         {
             configuration.setDeploymentRepositoryDirectory( new File( deploymentRepositoryDirectory ) );
@@ -128,7 +142,7 @@ public class ConfigurationAction
         {
             configuration.setDeploymentRepositoryDirectory( null );
         }
-
+        
         configuration.setUrl( baseUrl );
 
         configuration.setInitialized( true );
@@ -221,4 +235,26 @@ public class ConfigurationAction
     {
         this.requireReleaseOutput = requireReleaseOutput;
     }
+    
+	public int getNumberOfAllowedBuildsinParallel() 
+	{
+	    return numberOfAllowedBuildsinParallel;
+	}
+
+	public void setNumberOfAllowedBuildsinParallel( int numberOfAllowedBuildsinParallel ) 
+	{
+	    this.numberOfAllowedBuildsinParallel = numberOfAllowedBuildsinParallel;
+	}
+
+	public boolean isRequireParallelBuilds() 
+	{
+	    return requireParallelBuilds;
+	}
+
+	public void setRequireParallelBuilds( boolean requireParallelBuilds ) 
+	{
+	    this.requireParallelBuilds = requireParallelBuilds;
+	}
+    
+    
 }

@@ -71,15 +71,21 @@
             <s:textfield label="%{getText('schedule.quietPeriod.label')}" name="delay">
                 <s:param name="desc"><p><s:text name="schedule.quietPeriod.message"/></p></s:param>
             </s:textfield>
+            
+            <s:select label="Build Queues" id="schedulesBuildQueue" name="schedulesBuildQueue" headerKey="-1" listValue="name" multiple="true" size="4" 
+                      listKey="id" headerValue="--Build Queues--" list="buildQueues" />
+                        
             <s:checkbox label="%{getText('schedule.enabled.label')}" name="active" value="active" fieldValue="true">
                 <s:param name="desc"><p><s:text name="schedule.enabled.message"/></p></s:param>
             </s:checkbox>
+
           </table>
           <s:hidden name="id"/>
         <div class="functnbar3">
           <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
         </div>
       </s:form>
+      
     </div>
   </div>
 </div>

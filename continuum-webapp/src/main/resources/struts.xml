@@ -686,7 +686,7 @@
       <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
     </action>  
     
-    <!--
+    <!--addBuildEnv
        Build Definitions Templates actions 
     -->  
     <action name="buildDefinitionTemplates" class="buildDefinitionTemplates" method="summary">
@@ -781,6 +781,29 @@
       </result>      
     </action>    
     
+    <!--
+    * ALLOWED BUILDS IN PARALLEL
+    -->
+    
+    <action name="buildQueueList" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="list">
+      <result name="success">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
+    </action>
+    
+    <action name="addBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction">
+      <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result> 
+    </action>
+    
+    <action name="saveBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="save">
+      <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
+      <result name="success" type="redirect-action">buildQueueList</result>
+    </action> 
+    
+    <action name="deleteBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="delete">
+      <result name="input">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
+    </action>  
+        
     <!--
     * Local Repository actions
     -->
