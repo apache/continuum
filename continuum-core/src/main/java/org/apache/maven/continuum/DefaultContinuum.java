@@ -3390,7 +3390,7 @@ public class DefaultContinuum
     {
         try
         {
-            parallelBuildsManager.prepareBuildProject( projectsBuildDefinitionsMap, trigger );            
+            parallelBuildsManager.prepareBuildProjects( projectsBuildDefinitionsMap, trigger );            
         }
         catch( BuildManagerException e )
         {

@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
@@ -450,7 +449,7 @@ public class ParallelBuildsManager
         return false;
     }
 
-    public void prepareBuildProject( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
+    public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
         throws BuildManagerException
     {
         try
