@@ -19,7 +19,7 @@
 
 <component-set>
   <components>
-
+    
     <!--
      |
      | Build Project Task Queue
@@ -73,7 +73,7 @@
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>build-project</role-hint>
       <instantiation-strategy>per-lookup</instantiation-strategy>
-      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>      
+      <implementation>org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor</implementation>      
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
@@ -107,7 +107,7 @@
     <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>check-out-project</role-hint>
-      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <implementation>org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor</implementation>
       <instantiation-strategy>per-lookup</instantiation-strategy>
       <requirements>
         <requirement>

@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
@@ -34,6 +35,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -50,12 +52,12 @@ public class DefaultOverallBuildQueue
     /**
      * @plexus.requirement role-hint="build-project"
      */
-    private TaskQueue buildQueue;
+    //private TaskQueue buildQueue;
 
     /**
      * @plexus.requirement role-hint="check-out-project"
      */
-    private TaskQueue checkoutQueue;
+    //private TaskQueue checkoutQueue;
 
     /**
      * @plexus.requirement
@@ -63,6 +65,16 @@ public class DefaultOverallBuildQueue
     private BuildDefinitionDao buildDefinitionDao;
 
     private PlexusContainer container;
+    
+    /**
+     * @plexus.requirement role-hint="build-project"
+     */
+    private TaskQueueExecutor buildTaskQueueExecutor;
+    
+    /**
+     * @plexus.requirement role-hint="check-out-project"
+     */
+    private TaskQueueExecutor checkoutTaskQueueExecutor;
 
     private int id;
 
@@ -94,7 +106,7 @@ public class DefaultOverallBuildQueue
     public void addToCheckoutQueue( Task checkoutTask )
         throws TaskQueueException
     {
-        checkoutQueue.put( checkoutTask );
+        getCheckoutQueue().put( checkoutTask );
     }
 
     /**
@@ -105,7 +117,7 @@ public class DefaultOverallBuildQueue
     {
         for ( Task checkoutTask : checkoutTasks )
         {
-            checkoutQueue.put( checkoutTask );
+            getCheckoutQueue().put( checkoutTask );
         }
     }
 
@@ -115,7 +127,7 @@ public class DefaultOverallBuildQueue
     public List<CheckOutTask> getCheckOutTasksInQueue()
         throws TaskQueueException
     {
-        return checkoutQueue.getQueueSnapshot();
+        return getCheckoutQueue().getQueueSnapshot();
     }
 
     /**
@@ -149,7 +161,7 @@ public class DefaultOverallBuildQueue
         {
             if ( task != null && task.getProjectId() == projectId )
             {
-                return checkoutQueue.remove( task );
+                return getCheckoutQueue().remove( task );
             }
         }
 
@@ -186,7 +198,7 @@ public class DefaultOverallBuildQueue
         }
         if ( !tasks.isEmpty() )
         {
-            return checkoutQueue.removeAll( tasks );
+            return getCheckoutQueue().removeAll( tasks );
         }
         return false;
     }
@@ -203,7 +215,7 @@ public class DefaultOverallBuildQueue
         {
             if ( ArrayUtils.contains( hashCodes, task.hashCode() ) )
             {
-                checkoutQueue.remove( task );
+                getCheckoutQueue().remove( task );
             }
         }
     }
@@ -214,7 +226,7 @@ public class DefaultOverallBuildQueue
     public void addToBuildQueue( Task buildTask )
         throws TaskQueueException
     {
-        buildQueue.put( buildTask );
+        getBuildQueue().put( buildTask );
     }
 
     /**
@@ -225,7 +237,7 @@ public class DefaultOverallBuildQueue
     {
         for ( Task buildTask : buildTasks )
         {
-            buildQueue.put( buildTask );
+            getBuildQueue().put( buildTask );
         }
     }
 
@@ -235,7 +247,7 @@ public class DefaultOverallBuildQueue
     public List<Task> getProjectsInBuildQueue()
         throws TaskQueueException
     {
-        return buildQueue.getQueueSnapshot();
+        return getBuildQueue().getQueueSnapshot();
     }
 
     /**
@@ -253,8 +265,7 @@ public class DefaultOverallBuildQueue
     public boolean isInBuildQueue( int projectId, int buildDefinitionId )
         throws TaskQueueException
     {
-        List<Task> queue = getProjectsInBuildQueue();
-
+        List<Task> queue = getProjectsInBuildQueue();        
         for ( Task task : queue )
         {
             BuildProjectTask buildTask = (BuildProjectTask) task;
@@ -354,7 +365,7 @@ public class DefaultOverallBuildQueue
         BuildProjectTask buildProjectTask =
             new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName, buildDefinitionLabel );
 
-        return this.buildQueue.remove( buildProjectTask );
+        return getBuildQueue().remove( buildProjectTask );
     }
 
     /**
@@ -393,7 +404,7 @@ public class DefaultOverallBuildQueue
         }
         if ( !tasks.isEmpty() )
         {
-            return buildQueue.removeAll( tasks );
+            return getBuildQueue().removeAll( tasks );
         }
 
         return false;
@@ -412,7 +423,7 @@ public class DefaultOverallBuildQueue
             BuildProjectTask buildTask = (BuildProjectTask) task;
             if ( task != null && buildTask.getProjectId() == projectId )
             {
-                return buildQueue.remove( task );
+                return getBuildQueue().remove( task );
             }
         }
 
@@ -430,7 +441,7 @@ public class DefaultOverallBuildQueue
         {
             if ( ArrayUtils.contains( hashCodes, task.hashCode() ) )
             {
-                buildQueue.remove( task );
+                getBuildQueue().remove( task );
             }
         }
     }
@@ -440,7 +451,7 @@ public class DefaultOverallBuildQueue
      */
     public TaskQueue getCheckoutQueue()
     {
-        return checkoutQueue;
+        return ( ( ParallelBuildsThreadedTaskQueueExecutor ) checkoutTaskQueueExecutor ).getQueue();
     }
 
     /**
@@ -448,11 +459,21 @@ public class DefaultOverallBuildQueue
      */
     public TaskQueue getBuildQueue()
     {
-        return buildQueue;
+        return ( ( ParallelBuildsThreadedTaskQueueExecutor ) buildTaskQueueExecutor ).getQueue();
     }
 
-    public void setContainer( PlexusContainer container )
+    /*public void setContainer( PlexusContainer container )
     {
         this.container = container;
+    }*/
+
+    public TaskQueueExecutor getBuildTaskQueueExecutor()
+    {
+        return buildTaskQueueExecutor;
+    }
+
+    public TaskQueueExecutor getCheckoutTaskQueueExecutor()
+    {
+        return checkoutTaskQueueExecutor;
     }
 }

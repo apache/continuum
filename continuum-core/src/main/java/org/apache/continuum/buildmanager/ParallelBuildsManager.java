@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
+import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -44,10 +45,10 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -119,7 +120,7 @@ public class ParallelBuildsManager
             new BuildProjectTask( projectId, buildDefinition.getId(), trigger, projectName, buildDefinitionLabel );
         try
         {
-            log.info( "Queueing project '" + projectId + "' in build queue '" + overallBuildQueue.getName() );
+            log.info( "Queueing project '" + projectId + "' in build queue '" + overallBuildQueue.getName() + "'");
             overallBuildQueue.addToBuildQueue( buildTask );
         }
         catch ( TaskQueueException e )
@@ -632,7 +633,7 @@ public class ParallelBuildsManager
     {
         // set the container which is used by overall build queue for getting the task queue executor
         // trying to avoid implementing Contextualizable for the OverallBuildQueue! 
-        overallBuildQueue.setContainer( container );
+        //overallBuildQueue.setContainer( container );
 
         synchronized ( overallBuildQueues )
         {
@@ -669,6 +670,8 @@ public class ParallelBuildsManager
                 overallBuildQueue.getBuildQueue().removeAll( tasks );
                 overallBuildQueue.getCheckoutQueue().removeAll( checkoutTasks );
 
+                ( (ParallelBuildsThreadedTaskQueueExecutor) overallBuildQueue.getBuildTaskQueueExecutor() ).stop();
+                ( (ParallelBuildsThreadedTaskQueueExecutor) overallBuildQueue.getCheckoutTaskQueueExecutor() ).stop();
                 container.release( overallBuildQueue );
             }
             catch ( TaskQueueException e )
@@ -681,6 +684,12 @@ public class ParallelBuildsManager
                 throw new BuildManagerException(
                                                  "Cannot remove build queue. An error occurred while destroying the build queue: " +
                                                      e.getMessage() );
+            }
+            catch ( StoppingException e )
+            {
+                throw new BuildManagerException(
+                                                "Cannot remove build queue. An error occurred while stopping the build queue: " +
+                                                    e.getMessage() );
             }
 
             this.overallBuildQueues.remove( overallBuildQueueId );
@@ -967,18 +976,7 @@ public class ParallelBuildsManager
     public void contextualize( Context context )
         throws ContextException
     {
-        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
-        
-        // start up task executor for the default overall build queue
-        try
-        {
-            TaskQueueExecutor checkoutProject = ( TaskQueueExecutor ) container.lookup( TaskQueueExecutor.class, "check-out-project" );
-            TaskQueueExecutor buildProject = ( TaskQueueExecutor ) container.lookup( TaskQueueExecutor.class, "build-project" );
-        }
-        catch ( ComponentLookupException e )
-        {
-            log.error( e.getMessage() );
-        }
+        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );       
         
         synchronized ( overallBuildQueues )
         {
@@ -990,7 +988,7 @@ public class ParallelBuildsManager
                     (OverallBuildQueue) container.lookup( OverallBuildQueue.class );
                 defaultOverallBuildQueue.setId( defaultBuildQueue.getId() );
                 defaultOverallBuildQueue.setName( defaultBuildQueue.getName() );
-                defaultOverallBuildQueue.setContainer( container );
+                //defaultOverallBuildQueue.setContainer( container );
 
                 overallBuildQueues.put( defaultOverallBuildQueue.getId(), defaultOverallBuildQueue );
             }
