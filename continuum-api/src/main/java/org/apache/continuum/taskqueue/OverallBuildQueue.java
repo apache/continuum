@@ -26,8 +26,11 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 
+/**
+ * 
+ * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
+ */
 public interface OverallBuildQueue
 {       
     /**
@@ -121,62 +124,6 @@ public interface OverallBuildQueue
     void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueException;
 
-    /* Prepare Build Projects Queue */
-    
-    /**
-     * Returns the prepare-build-projects queue.
-     * 
-     * @return
-     */
-    //TaskQueue getPrepareBuildQueue();
-
-    /**
-     * Returns the task queue executor of the prepare-build-projects queue.
-     * 
-     * @return
-     * @throws ComponentLookupException TODO
-     */
-   // TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
-   //     throws ComponentLookupException;
-
-    /**
-     * Add prepare build task to prepare-build-project queue.
-     * 
-     * @param prepareBuildTask
-     * @throws TaskQueueException TODO
-     */
-   // void addToPrepareBuildQueue( Task prepareBuildTask )
-    //    throws TaskQueueException;
-    
-    /**
-     * Add prepare build tasks to prepare-build-project queue
-     * 
-     * @param prepareBuildTasks
-     * @throws TaskQueueException TODO
-     */
-  //  void addToPrepareBuildQueue( List<Task> prepareBuildTasks )
-  //      throws TaskQueueException;
-
-    /**
-     * Checks if the project is in the prepare-build-projects queue.
-     * 
-     * @param projectId
-     * @return
-     * @throws TaskQueueException TODO
-     */
-  //  boolean isInPrepareBuildQueue( int projectId )
-  //      throws TaskQueueException;
-
-    /**
-     * Checks if the current prepare build task being executed is the specified project.
-     * 
-     * @param projectId
-     * @return
-     * @throws TaskQueueException TODO
-     */
-  //  boolean isCurrentPrepareBuildTaskInExecution( int projectId )
-  //      throws TaskQueueException;
-    
     /* Build Queue */
 
     /**
@@ -185,15 +132,6 @@ public interface OverallBuildQueue
      * @return
      */
     TaskQueue getBuildQueue();
-
-    /**
-     * Returns the task queue executor for the build queue.
-     * 
-     * @return
-     * @throws ComponentLookupException TODO
-     */
-    //TaskQueueExecutor getBuildTaskQueueExecutor()
-    //    throws ComponentLookupException;
 
     /**
      * Add the build task to the build queue.
@@ -214,15 +152,6 @@ public interface OverallBuildQueue
         throws TaskQueueException;
 
     /**
-     * Returns the project id of the project currently being built.
-     * 
-     * @return
-     * @throws TaskQueueException TODO
-     */
-   // int getProjectIdInCurrentBuild()
-    //    throws TaskQueueException;
-
-    /**
      * Returns the build tasks in the build queue.
      * 
      * @return
@@ -230,15 +159,6 @@ public interface OverallBuildQueue
      */
     List<Task> getProjectsInBuildQueue()
         throws TaskQueueException;
-
-    /**
-     * Checks if there is a build in progress.
-     * 
-     * @return
-     * @throws TaskQueueException TODO
-     */
-    //boolean isBuildInProgress()
-    //    throws TaskQueueException;
 
     /**
      * Checks if the specified project is in the build queue.
