@@ -596,15 +596,7 @@ public class ParallelBuildsManager
                 for ( Integer key : keySet )
                 {
                     OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
-                    overallBuildQueue.removeTasksFromCheckoutQueueWithHashCodes( hashcodes );
-                    /*List<CheckOutTask> tasks = overallBuildQueue.getCheckOutTasksInQueue();
-                    for ( CheckOutTask task : tasks )
-                    {
-                        if ( ArrayUtils.contains( hashcodes, task.hashCode() ) )
-                        {
-                            overallBuildQueue.getCheckoutQueue().remove( task );
-                        }
-                    }*/
+                    overallBuildQueue.removeTasksFromCheckoutQueueWithHashCodes( hashcodes );                   
                 }
             }
         }
@@ -626,14 +618,6 @@ public class ParallelBuildsManager
                 {
                     OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
                     overallBuildQueue.removeProjectsFromBuildQueueWithHashCodes( hashcodes );
-                    /*List<Task> tasks = overallBuildQueue.getProjectsInBuildQueue();
-                    for ( Task task : tasks )
-                    {
-                        if ( ArrayUtils.contains( hashcodes, task.hashCode() ) )
-                        {
-                            overallBuildQueue.getBuildQueue().remove( task );
-                        }
-                    }*/
                 }
             }
         }
@@ -667,11 +651,6 @@ public class ParallelBuildsManager
     {
         List<Task> tasks = null;
         List<CheckOutTask> checkoutTasks = null;
-
-        /*if( overallBuildQueueId == 1 )
-        {
-            throw new BuildManagerException( "Default build queue cannot be deleted." );
-        }*/
 
         synchronized ( overallBuildQueues )
         {
