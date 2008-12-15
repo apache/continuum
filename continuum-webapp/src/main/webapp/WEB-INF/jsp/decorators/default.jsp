@@ -32,19 +32,19 @@
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/extremecomponents.css" includeParams="none"/>" media="screen"/>
   <link rel="shortcut icon" href="<s:url value="/favicon.ico" includeParams="none"/>" type="image/x-icon"/>
   <script type="text/javascript" src="<s:url value="/js/prototype.js" includeParams="none"/>"></script>
-
+  <s:head/>
   <decorator:head/>
 </head>
 
 <body onload="<decorator:getProperty property="body.onload" />" marginwidth="0" marginheight="0" class="composite">
-<%@ include file="/WEB-INF/jsp/navigations/DefaultTop.jsp" %>
+<s:include value="/WEB-INF/jsp/navigations/DefaultTop.jsp"/>
 
 <table id="main" border="0" cellpadding="4" cellspacing="0" width="100%">
   <tbody>
     <tr valign="top">
       <td id="leftcol" width="180">
         <br/> <br/>
-        <%@ include file="/WEB-INF/jsp/navigations/Menu.jsp" %>
+        <s:include value="/WEB-INF/jsp/navigations/Menu.jsp"/>
       </td>
       <td width="86%">
         <br/>

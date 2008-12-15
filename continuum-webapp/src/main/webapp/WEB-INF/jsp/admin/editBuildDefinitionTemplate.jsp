@@ -30,8 +30,7 @@
         <h3><s:text name="buildDefinition.template.section.title"/></h3>
 
         <div class="axial">
-          <s:form action="saveBuildDefinitionTemplate" method="post" validate="true" name="buildDefinitionTemplate"
-                   onsubmit="customOnsubmit_saveBuildDefinitionTemplate();">
+          <s:form action="saveBuildDefinitionTemplate" method="post" name="buildDefinitionTemplate" validate="false">
             <c:choose>
             
               <c:when test="${!empty actionErrors}">
@@ -81,4 +80,10 @@
       </div>
     </body>
   </s:i18n>
+  <script type="text/javascript">
+  customOnsubmit = function(){
+	  // no op
+  }
+  </script>
 </html>
+
