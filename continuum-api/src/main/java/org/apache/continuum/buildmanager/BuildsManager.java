@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.taskqueue.OverallBuildQueue;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.taskqueue.Task;
@@ -109,10 +108,4 @@ public interface BuildsManager
     Map<String, List<Task>> getProjectsInCheckoutQueues() throws BuildManagerException;
     
     boolean isBuildInProgress() throws BuildManagerException; 
-    // maybe these could return a new object which contains the name of the build queue (overall) and the current task?
-    // - add getCurrentBuilds(..) 
-    // - add getCurrentCheckouts(..)
-    // - add getAllQueuedBuilds(..)
-    // - add getAllQueuedCheckouts(...)
-    // - buildInProgress() <-- used in purge (see taskQueuemanager for impl)
 }

@@ -19,7 +19,11 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.buildmanager.BuildsManager;
@@ -47,11 +51,7 @@ import org.codehaus.redback.integration.interceptor.SecureActionException;
 public class QueuesAction
     extends AbstractBuildQueueAction
     implements SecureAction, LogEnabled
-{
-    
-    // TODO: deng - parallel builds
-    // see TODO comments below!!!
-    
+{    
     /**
      * @plexus.requirement role-hint='build-project'
      */
@@ -87,10 +87,18 @@ public class QueuesAction
      */
     private TaskQueueManager taskQueueManager;
     
+ // TODO: deng parallel builds
+    
     /**
      * @plexus.requirement role-hint="parallel"
      */
     private BuildsManager parallelBuildsManager;
+    
+    private List<BuildProjectTask> currentBuildProjectTasks = new ArrayList<BuildProjectTask>();
+    
+    private Map<String, List<BuildProjectTask>> buildsInQueue = new HashMap<String, List<BuildProjectTask>>();
+    
+    private Map<String, List<CheckOutTask>> checkoutsInQueue = new HashMap<String, List<CheckOutTask>>();
 
     // -----------------------------------------------------
     //  webwork
@@ -135,8 +143,9 @@ public class QueuesAction
             addActionError( e.getMessage() );
             return REQUIRES_AUTHENTICATION;
         }
-            
-        taskQueueManager.removeProjectFromCheckoutQueue( projectId );
+         
+        parallelBuildsManager.removeProjectFromCheckoutQueue( projectId );
+        //taskQueueManager.removeProjectFromCheckoutQueue( projectId );
         return SUCCESS;
     }
 
@@ -164,15 +173,56 @@ public class QueuesAction
     public String display()
         throws Exception
     {
-        // TODO: deng parallel builds
-        // - need to get all the build queues and their current tasks
-        // - need to get all the build queues and their queued tasks
-                
-        this.setCurrentBuildProjectTask( (BuildProjectTask) taskQueueExecutor.getCurrentTask() );        
+        // current builds
+        for( Task task : parallelBuildsManager.getCurrentBuilds() )
+        {
+            BuildProjectTask buildTask = (BuildProjectTask) task;
+            this.currentBuildProjectTasks.add( buildTask );
+        }
+        
+        // queued builds
+        Map<String, List<Task>> builds = parallelBuildsManager.getProjectsInBuildQueues();
+        Set<String> keySet = builds.keySet(); 
+        List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
+        for( String key : keySet )
+        {
+            for( Task task : builds.get( key ) )
+            {
+                BuildProjectTask buildTask = (BuildProjectTask) task;
+                buildTasks.add( buildTask ); 
+            }
+            buildsInQueue.put( key, buildTasks );
+        }
+        
+        // current checkouts
+        for( Task task : parallelBuildsManager.getCurrentCheckouts() )
+        {
+            CheckOutTask checkoutTask = (CheckOutTask) task;
+            this.currentCheckOutTasks.add( checkoutTask );
+        }
+        
+        // queued checkouts
+        Map<String, List<Task>> checkouts = parallelBuildsManager.getProjectsInCheckoutQueues();
+        keySet = builds.keySet(); 
+        List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
+        for( String key : keySet )
+        {
+            for( Task task : checkouts.get( key ) )
+            {
+                CheckOutTask checkoutTask = (CheckOutTask) task;
+                checkoutTasks.add( checkoutTask ); 
+            }
+            checkoutsInQueue.put( key, checkoutTasks );
+        }
+        
+        //this.setCurrentBuildProjectTask( (BuildProjectTask) taskQueueExecutor.getCurrentTask() );        
+        //this.setBuildProjectTasks( taskQueueManager.getProjectsInBuildQueue() );
+        
+        /*this.setCurrentBuildProjectTask( (BuildProjectTask) taskQueueExecutor.getCurrentTask() );        
         this.setBuildProjectTasks( taskQueueManager.getProjectsInBuildQueue() );
         
         this.setCurrentCheckOutTask( (CheckOutTask) checkoutTaskQueueExecutor.getCurrentTask() );
-        this.setCurrentCheckOutTasks( taskQueueManager.getCheckOutTasksInQueue() );
+        this.setCurrentCheckOutTasks( taskQueueManager.getCheckOutTasksInQueue() );*/
         return SUCCESS;
     }
 
@@ -193,8 +243,7 @@ public class QueuesAction
             addActionError( e.getMessage() );
             return REQUIRES_AUTHENTICATION;
         }
-        
-        //taskQueueManager.removeFromBuildingQueue( projectId, buildDefinitionId, trigger, projectName );
+                
         parallelBuildsManager.removeProjectFromBuildQueue( projectId, buildDefinitionId, trigger, projectName );
         Project project = getContinuum().getProject( projectId );
         project.setState( project.getOldState() );
@@ -435,6 +484,13 @@ public class QueuesAction
         this.selectedCheckOutTaskHashCodes = selectedCheckOutTaskHashCodes;
     }
 
+    public List<BuildProjectTask> getCurrentBuildProjectTasks()
+    {
+        return currentBuildProjectTasks;
+    }
 
-    
+    public void setCurrentBuildProjectTasks( List<BuildProjectTask> currentBuildProjectTasks )
+    {
+        this.currentBuildProjectTasks = currentBuildProjectTasks;
+    }
 }

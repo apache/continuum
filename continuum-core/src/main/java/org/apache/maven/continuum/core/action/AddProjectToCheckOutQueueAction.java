@@ -45,11 +45,6 @@ public class AddProjectToCheckOutQueueAction
      * @plexus.requirement
      */
     private ProjectDao projectDao;
-
-    /**
-     * @plexus.requirement
-     */
-    //private TaskQueueManager taskQueueManager;
     
     /**
      * @plexus.requirement role-hint="parallel"
@@ -60,10 +55,6 @@ public class AddProjectToCheckOutQueueAction
     public void execute( Map context )
         throws Exception
     {
-
-        //TODO: deng parallel builds
-        // - get the default build definition from context and pass to parallel builds manager!
-        
         Project project = (Project) getObject( context, KEY_PROJECT, null );
         if ( project == null )
         {
@@ -75,9 +66,5 @@ public class AddProjectToCheckOutQueueAction
                                                workingDirectoryService.getWorkingDirectory( project ),
                                                project.getScmUsername(), project.getScmPassword(),
                                                defaultBuildDefinition );
-        /*CheckOutTask checkOutTask = new CheckOutTask( project.getId(), workingDirectoryService
-            .getWorkingDirectory( project ), project.getName(), project.getScmUsername(), project.getScmPassword() );
-
-        taskQueueManager.getCheckoutQueue().put( checkOutTask );*/
     }
 }

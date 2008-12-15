@@ -42,22 +42,12 @@ public class CreateBuildProjectTaskAction
     /**
      * @plexus.requirement
      */
-    //private TaskQueueManager taskQueueManager;
-
-    /**
-     * @plexus.requirement
-     */
     private BuildExecutorManager executorManager;
 
     /**
      * @plexus.requirement
      */
     private ProjectDao projectDao;
-
-    /**
-     * @plexus.requirement
-     */
-    //private BuildDefinitionDao buildDefinitionDao;
     
     /**
      * @plexus.requirement role-hint="parallel"
@@ -67,11 +57,6 @@ public class CreateBuildProjectTaskAction
     public synchronized void execute( Map context )
         throws Exception
     {
-    // TODO: deng parallel builds
-    // - context now contains a "list" of projects and a "map" of projectId, build definition ket-value pair
-    // - update the list of projects
-    // - pass this updated list + map of build definitions to builds manager
-        
         List<Project> projects = AbstractContinuumAction.getListOfProjects( context );
         Map<Integer, BuildDefinition> projectsBuildDefinitionsMap =
             AbstractContinuumAction.getProjectsBuildDefinitionsMap( context );
@@ -138,85 +123,6 @@ public class CreateBuildProjectTaskAction
             }
         }
         
-        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, trigger );        
-                        
-        /*Project project = AbstractContinuumAction.getProject( context );
-        int buildDefinitionId = AbstractContinuumAction.getBuildDefinitionId( context );
-        int trigger = AbstractContinuumAction.getTrigger( context );
-        
-        if ( taskQueueManager.isInBuildingQueue( project.getId(), buildDefinitionId ) )
-        {
-            return;
-        }
-
-        if ( taskQueueManager.isInCheckoutQueue( project.getId() ) )
-        {
-            taskQueueManager.removeProjectFromCheckoutQueue( project.getId() );
-        }
-        
-        try
-        {
-            if ( project.getState() != ContinuumProjectState.NEW &&
-                project.getState() != ContinuumProjectState.CHECKEDOUT &&
-                project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
-                project.getState() != ContinuumProjectState.ERROR )
-            {
-                ContinuumBuildExecutor executor = executorManager.getBuildExecutor( project.getExecutorId() );
-
-                if ( executor.isBuilding( project ) || project.getState() == ContinuumProjectState.UPDATING )
-                {
-                    // project is building
-                    getLogger().info( "Project '" + project.getName() + "' already being built." );
-
-                    return;
-                }
-                else
-                {
-                    project.setOldState( project.getState() );
-
-                    project.setState( ContinuumProjectState.ERROR );
-
-                    projectDao.updateProject( project );
-
-                    project = projectDao.getProject( project.getId() );
-                }
-            }
-            else
-            {
-                project.setOldState( project.getState() );
-
-                projectDao.updateProject( project );
-
-                project = projectDao.getProject( project.getId() );
-            }
-
-            BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-            String buildDefinitionLabel = buildDefinition.getDescription();
-            if ( StringUtils.isEmpty( buildDefinitionLabel ) )
-            {
-                buildDefinitionLabel = buildDefinition.getGoals();
-            }
-
-            getLogger().info( "Enqueuing '" + project.getName() + "' with build definition '" + buildDefinitionLabel +
-                "' - id=" + buildDefinitionId + ")." );
-
-            BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project
-                .getName(), buildDefinitionLabel );
-
-            task.setMaxExecutionTime( buildDefinition.getSchedule()
-                .getMaxJobExecutionTime() * 1000 );
-
-            taskQueueManager.getBuildQueue().put( task );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            getLogger().error( "Error while creating build object", e );
-            throw new ContinuumException( "Error while creating build object.", e );
-        }
-        catch ( TaskQueueException e )
-        {
-            getLogger().error( "Error while enqueuing object", e );
-            throw new ContinuumException( "Error while enqueuing object.", e );
-        }*/
+        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, trigger );      
     }
 }
