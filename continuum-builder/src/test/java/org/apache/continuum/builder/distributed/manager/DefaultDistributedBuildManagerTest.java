@@ -47,15 +47,13 @@ public class DefaultDistributedBuildManagerTest
 
         Map context = new HashMap();
         context.put( "project-id", project.getId() );
-        context.put( "project-group-id", project.getProjectGroup().getId() );
-        context.put( "scm-root-address", scmRoot.getScmRootAddress() );
         context.put( "scm-command-line", null );
         context.put( "scm-command-output", null );
         context.put( "scm-exception", null );
         context.put( "scm-provider-message", null );
-        context.put( "prepare-build-finished", true );
+        context.put( "scm-success", true );
 
-        distributedBuildManager.updateProjectScmRoot( context );
+        distributedBuildManager.updateScmResult( context );
 
         project = getProjectDao().getProjectWithScmDetails( project.getId() );
 

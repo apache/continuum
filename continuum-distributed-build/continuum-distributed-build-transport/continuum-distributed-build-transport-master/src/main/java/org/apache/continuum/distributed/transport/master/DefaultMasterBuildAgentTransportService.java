@@ -21,6 +21,7 @@ package org.apache.continuum.distributed.transport.master;
 
 import java.util.Map;
 
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.distributed.transport.MasterBuildAgentTransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +34,16 @@ public class DefaultMasterBuildAgentTransportService
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
+    /**
+     * @plexus.requirement
+     */
+    private DistributedBuildManager distributedBuildManager;
+
     public Boolean returnBuildResult( Map buildResult )
         throws Exception
     {
         log.info( "Build result returned." );
-        
+        distributedBuildManager.updateBuildResult( buildResult );
         return Boolean.TRUE;
     }
 
@@ -45,7 +51,7 @@ public class DefaultMasterBuildAgentTransportService
         throws Exception
     {
         log.info( "SCM result returned." );
-        
+        distributedBuildManager.updateScmResult( scmResult );
         return Boolean.TRUE;
     }
 
@@ -56,4 +62,6 @@ public class DefaultMasterBuildAgentTransportService
         
         return Boolean.TRUE;
     }
+    
+    // TODO: add prepareBuildFinished() method
 }

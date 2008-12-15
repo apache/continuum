@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.distributed.transport.SlaveBuildAgentTransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,10 +84,10 @@ public class ProxySlaveAgentTransportService
         return result;
     }
 
-    public List<Installation> getAvailableInstallations()
+    public List<Object> getAvailableInstallations()
         throws Exception
     {
-        List<Installation> installations = null;
+        List<Object> installations = null;
         
         try
         {

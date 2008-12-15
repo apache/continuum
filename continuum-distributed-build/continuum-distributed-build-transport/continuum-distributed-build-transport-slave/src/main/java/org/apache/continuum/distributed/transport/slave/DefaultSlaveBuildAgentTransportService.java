@@ -64,9 +64,12 @@ public class DefaultSlaveBuildAgentTransportService
         return result;
     }
 
-    public List<Installation> getAvailableInstallations()
+    // TODO: fix this
+    public List<Object> getAvailableInstallations()
         throws Exception
     {
+        List<Object> installationsObj = null;
+
         List<Installation> installations = null;
         
         try
@@ -78,8 +81,8 @@ public class DefaultSlaveBuildAgentTransportService
         {
             log.error( "Failed to get available installations.", e );
         }
-        
-        return installations;
+
+        return installationsObj;
     }
 
     public Map getBuildResult( int projectId )

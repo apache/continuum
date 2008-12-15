@@ -1,9 +1,6 @@
-package org.apache.continuum.distributed.transport;
+package org.apache.continuum.buildagent.configuration;
 
-import java.util.List;
-import java.util.Map;
-
-import com.atlassian.xmlrpc.ServiceObject;
+import java.io.File;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,23 +21,25 @@ import com.atlassian.xmlrpc.ServiceObject;
  * under the License.
  */
 
-/**
- * SlaveBuildAgentTransportService
- */
-@ServiceObject( "SlaveBuildAgentTransportService" )
-public interface SlaveBuildAgentTransportService
+public interface ContinuumConfiguration
 {
-    public Boolean buildProjects( List<Map> projectsBuildContext ) throws Exception;
-    
-    public Map getBuildResult( int projectId ) throws Exception;
-    
-    public Integer getProjectCurrentlyBuilding() throws Exception;
-    
-    public List<Object> getAvailableInstallations() throws Exception;
-    
-    public Boolean isBusy() throws Exception;
-    
-    public Boolean ping() throws Exception;
+    String ROLE = ContinuumConfiguration.class.getName();
 
-    public Boolean cancelBuild() throws Exception;
+    ContinuumBuildAgentConfiguration getContinuumBuildAgentConfiguration()
+        throws ContinuumConfigurationException;
+
+    void setContinuumBuildAgentConfiguration( ContinuumBuildAgentConfiguration configuration )
+        throws ContinuumConfigurationException;
+
+    void save()
+        throws ContinuumConfigurationException;
+    
+    void save( File file )
+        throws ContinuumConfigurationException;
+    
+    void reload( )
+        throws ContinuumConfigurationException;    
+    
+    void reload( File file )
+        throws ContinuumConfigurationException;
 }
