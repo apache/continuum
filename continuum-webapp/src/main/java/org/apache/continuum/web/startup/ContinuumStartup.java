@@ -21,6 +21,7 @@ package org.apache.continuum.web.startup;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.codehaus.plexus.spring.PlexusToSpringUtils;
@@ -60,13 +61,15 @@ public class ContinuumStartup
 
         // to simulate Plexus load on start with Spring
         Continuum continuum = (Continuum) wac.getBean( PlexusToSpringUtils.buildSpringId( Continuum.class ) );
+        
+        BuildsManager buildsManager = (BuildsManager) wac.getBean( PlexusToSpringUtils.buildSpringId( BuildsManager.class, "parallel" ) );
 
-        TaskQueueExecutor buildProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
+        /*        TaskQueueExecutor buildProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "build-project" ) );
 
         TaskQueueExecutor checkOutProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "check-out-project" ) );
-
+*/
         TaskQueueExecutor prepareRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "prepare-release" ) );
 

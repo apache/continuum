@@ -47,6 +47,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -967,7 +968,18 @@ public class ParallelBuildsManager
         throws ContextException
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
-
+        
+        // start up task executor for the default overall build queue
+        try
+        {
+            TaskQueueExecutor checkoutProject = ( TaskQueueExecutor ) container.lookup( TaskQueueExecutor.class, "check-out-project" );
+            TaskQueueExecutor buildProject = ( TaskQueueExecutor ) container.lookup( TaskQueueExecutor.class, "build-project" );
+        }
+        catch ( ComponentLookupException e )
+        {
+            log.error( e.getMessage() );
+        }
+        
         synchronized ( overallBuildQueues )
         {
             try
