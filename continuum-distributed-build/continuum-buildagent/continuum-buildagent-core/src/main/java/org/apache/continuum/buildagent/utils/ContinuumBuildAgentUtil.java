@@ -77,11 +77,16 @@ public class ContinuumBuildAgentUtil
 
     public static final String KEY_BUILD_RESULT = "build-result";
 
-    public static final String KEY_CANCELLED = "cancelled";
+    public static final String KEY_PROJECT_NAME = "project-name";
 
     public static Integer getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
+    }
+
+    public static String getProjectName( Map context )
+    {
+        return getString( context, KEY_PROJECT_NAME );
     }
 
     public static Integer getBuildDefinitionId( Map context )
@@ -177,11 +182,6 @@ public class ContinuumBuildAgentUtil
     public static BuildResult getBuildResult( Map context, Object defaultValue )
     {
         return (BuildResult) getObject( context, KEY_BUILD_RESULT );
-    }
-
-    public static boolean isCancelled( Map context )
-    {
-        return (Boolean) getObject( context, KEY_CANCELLED );
     }
 
     // ----------------------------------------------------------------------

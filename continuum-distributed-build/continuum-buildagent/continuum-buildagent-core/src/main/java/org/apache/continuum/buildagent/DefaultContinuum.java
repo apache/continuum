@@ -1,4 +1,4 @@
-package org.apache.continuum.buildagent.taskqueue.execution;
+package org.apache.continuum.buildagent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,10 +7,10 @@ import java.util.Map;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.ConfigurationService;
+import org.apache.continuum.buildagent.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
-import org.apache.continuum.buildagent.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.ContinuumException;
@@ -20,20 +20,16 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
-import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
-import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Maria Catherine Tan
- * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor" role-hint="prepare-build-agent"
+ * @plexus.component role="org.apache.continuum.buildagent.Continuum" role-hint="default"
  */
-public class PrepareBuildTaskExecutor
-    implements TaskExecutor
+public class DefaultContinuum
+    implements Continuum
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
@@ -41,11 +37,6 @@ public class PrepareBuildTaskExecutor
      * @plexus.requirement
      */
     private ActionManager actionManager;
-    
-    /**
-     * @plexus.requirement
-     */
-    private BuildContextManager buildContextManager;
 
     /**
      * @plexus.requirement
@@ -57,12 +48,9 @@ public class PrepareBuildTaskExecutor
      */
     private TaskQueueManager taskQueueManager;
 
-    // do we still need a queue for this?
-    public void executeTask( Task task )
-        throws TaskExecutionException
+    public void prepareBuildProjects( List<BuildContext> buildContexts)
+        throws ContinuumException
     {
-        List<BuildContext> buildContexts = buildContextManager.getBuildContextList();
-
         Map<String, Object> context = null;
 
         try
@@ -137,13 +125,13 @@ public class PrepareBuildTaskExecutor
     }
 
     private void cleanWorkingDirectory( BuildContext buildContext )
-        throws TaskExecutionException
+        throws ContinuumException
     {
         performAction( "clean-agent-work-directory", buildContext );
     }
 
     private void updateWorkingDirectory( BuildContext buildContext )
-        throws TaskExecutionException
+        throws ContinuumException
     {
         Map<String, Object> actionContext = buildContext.getActionContext();
 
@@ -177,7 +165,7 @@ public class PrepareBuildTaskExecutor
     }
 
     private void endProjectPrepareBuild( BuildContext buildContext )
-        throws TaskExecutionException
+        throws ContinuumException
     {
         Map<String, Object> context = buildContext.getActionContext();
 
@@ -191,7 +179,7 @@ public class PrepareBuildTaskExecutor
     }
 
     private void endPrepareBuild( Map context )
-        throws TaskExecutionException
+        throws ContinuumException
     {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( ContinuumBuildAgentUtil.getProjectGroupId( context ) ) );
@@ -294,9 +282,9 @@ public class PrepareBuildTaskExecutor
     }
 
     private void performAction( String actionName, BuildContext buildContext )
-        throws TaskExecutionException
+        throws ContinuumException
     {
-        TaskExecutionException exception = null;
+        ContinuumException exception = null;
     
         try
         {
@@ -306,11 +294,11 @@ public class PrepareBuildTaskExecutor
         }
         catch ( ActionNotFoundException e )
         {
-            exception = new TaskExecutionException( "Error looking up action '" + actionName + "'", e );
+            exception = new ContinuumException( "Error looking up action '" + actionName + "'", e );
         }
         catch ( Exception e )
         {
-            exception = new TaskExecutionException( "Error executing action '" + actionName + "'", e );
+            exception = new ContinuumException( "Error executing action '" + actionName + "'", e );
         }
         
         ScmResult result = new ScmResult();
@@ -326,14 +314,15 @@ public class PrepareBuildTaskExecutor
     }
     
     private void buildProjects( List<BuildContext> buildContexts )
-        throws TaskExecutionException
+        throws ContinuumException
     {
         for ( BuildContext buildContext : buildContexts )
         {
             BuildProjectTask buildProjectTask = new BuildProjectTask( buildContext.getProjectId(),
                                                                       buildContext.getBuildDefinitionId(),
                                                                       buildContext.getTrigger(),
-                                                                      "", "" );
+                                                                      buildContext.getProjectName(),
+                                                                      "" );
             try
             {
                 taskQueueManager.getBuildQueue().put( buildProjectTask );
@@ -341,8 +330,9 @@ public class PrepareBuildTaskExecutor
             catch ( TaskQueueException e )
             {
                 log.error( "Error while enqueing build task for project " + buildContext.getProjectId(), e );
-                throw new TaskExecutionException( "Error while enqueuing build task for project " + buildContext.getProjectId(), e );
+                throw new ContinuumException( "Error while enqueuing build task for project " + buildContext.getProjectId(), e );
             }
         }
     }
+
 }

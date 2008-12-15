@@ -7,7 +7,10 @@ import java.util.Map;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.configuration.ConfigurationService;
 import org.apache.continuum.buildagent.model.Installation;
+import org.apache.continuum.buildagent.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.maven.continuum.ContinuumException;
 
 public class ContinuumBuildAgentServiceImpl
     implements ContinuumBuildAgentService
@@ -17,17 +20,28 @@ public class ContinuumBuildAgentServiceImpl
      */
     private ConfigurationService configurationService;
 
+    /**
+     * @plexus.requirement
+     */
+    private Continuum continuum;
+
+    /**
+     * @plexus.requirement
+     */
+    private TaskQueueManager taskQueueManager;
+
     public void buildProjects( List<Map> projectsBuildContext )
         throws ContinuumBuildAgentException
     {
-        List<BuildContext> buildContext = initializeBuildContext( projectsBuildContext );
+        List<BuildContext> buildContextList = initializeBuildContext( projectsBuildContext );
 
         try
         {
-            Thread.sleep( 60000 );
+            continuum.prepareBuildProjects( buildContextList );
         }
-        catch ( InterruptedException e )
+        catch ( ContinuumException e )
         {
+            throw new ContinuumBuildAgentException( e.getMessage(), e );
         }
     }
 
@@ -45,22 +59,34 @@ public class ContinuumBuildAgentServiceImpl
     }
 
     public boolean isBusy()
-        throws ContinuumBuildAgentException
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
     public int getProjectCurrentlyBuilding()
+        throws ContinuumBuildAgentException
     {
-        // TODO Auto-generated method stub
-        return 0;
+        try
+        {
+            return taskQueueManager.getCurrentProjectInBuilding();
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumBuildAgentException( e.getMessage(), e );
+        }
     }
 
     public void cancelBuild()
         throws ContinuumBuildAgentException
     {
-        
+        try
+        {
+            taskQueueManager.cancelBuild();
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumBuildAgentException( e.getMessage(), e );
+        }
     }
 
     private List<BuildContext> initializeBuildContext( List<Map> projectsBuildContext )
@@ -82,6 +108,7 @@ public class ContinuumBuildAgentServiceImpl
             context.setBuildFresh( ContinuumBuildAgentUtil.isBuildFresh( map ) );
             context.setProjectGroupId( ContinuumBuildAgentUtil.getProjectGroupId( map ) );
             context.setScmRootAddress( ContinuumBuildAgentUtil.getScmRootAddress( map ) );
+            context.setProjectName( ContinuumBuildAgentUtil.getProjectName( map ) );
             
             buildContext.add( context );
         }
@@ -97,5 +124,25 @@ public class ContinuumBuildAgentServiceImpl
     public void setConfigurationService( ConfigurationService configurationService )
     {
         this.configurationService = configurationService;
+    }
+    
+    public Continuum getContinuum()
+    {
+        return continuum;
+    }
+
+    public void setContinuum( Continuum continuum )
+    {
+        this.continuum = continuum;
+    }
+
+    public TaskQueueManager getTaskQueueManager()
+    {
+        return taskQueueManager;
+    }
+
+    public void setTaskQueueManager( TaskQueueManager taskQueueManager )
+    {
+        this.taskQueueManager = taskQueueManager;
     }
 }

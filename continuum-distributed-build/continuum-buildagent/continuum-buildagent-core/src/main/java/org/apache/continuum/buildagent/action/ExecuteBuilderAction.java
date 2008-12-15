@@ -17,6 +17,9 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.action.AbstractAction;
 
+/**
+ * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="execute-agent-builder"
+ */
 public class ExecuteBuilderAction
     extends AbstractAction
 {
@@ -76,8 +79,6 @@ public class ExecuteBuilderAction
             getLogger().info( "Cancelled build" );
             
             buildResult.setState( ContinuumProjectState.CANCELLED );
-            
-            context.put( ContinuumBuildAgentUtil.KEY_CANCELLED, new Boolean( true ) );
         }
         catch ( Throwable e )
         {
@@ -97,6 +98,8 @@ public class ExecuteBuilderAction
             {
                 buildResult.setState( ContinuumProjectState.ERROR );
             }
+
+            context.put( ContinuumBuildAgentUtil.KEY_BUILD_RESULT, buildResult );
         }
     }
 }

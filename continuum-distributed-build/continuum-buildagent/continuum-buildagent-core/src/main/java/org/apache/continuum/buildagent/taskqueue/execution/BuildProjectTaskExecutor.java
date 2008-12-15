@@ -1,13 +1,18 @@
 package org.apache.continuum.buildagent.taskqueue.execution;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
+import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
+import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.utils.ContinuumUtils;
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.ActionManager;
@@ -39,8 +44,6 @@ public class BuildProjectTaskExecutor
         BuildProjectTask buildProjectTask = (BuildProjectTask) task;
 
         int projectId = buildProjectTask.getProjectId();
-        int buildDefinitionId = buildProjectTask.getBuildDefinitionId();
-        int trigger = buildProjectTask.getTrigger();
 
         log.info( "Initializing build" );
         BuildContext context = buildContextManager.getBuildContext( projectId );
@@ -52,7 +55,7 @@ public class BuildProjectTaskExecutor
             return;
         }
         
-        log.info( "Starting build of " + context.getProjectId() );
+        log.info( "Starting build of " + context.getProjectName() );
         startBuild( context );
 
         try
@@ -61,36 +64,11 @@ public class BuildProjectTaskExecutor
 
             performAction( "execute-builder", context );
 
-            performAction( "deploy-artifact", context );
-
-            /*
-            context.setCancelled( (Boolean) actionContext.get( AbstractContinuumAction.KEY_CANCELLED ) );
-
-            String s = (String) actionContext.get( AbstractContinuumAction.KEY_BUILD_ID );
-
-            if ( s != null && !context.isCancelled() )
-            {
-                try
-                {
-                    context.setBuildResult( buildResultDao.getBuildResult( Integer.valueOf( s ) ) );
-                }
-                catch ( NumberFormatException e )
-                {
-                    throw new TaskExecutionException( "Internal error: build id not an integer", e );
-                }
-                catch ( ContinuumObjectNotFoundException e )
-                {
-                    throw new TaskExecutionException( "Internal error: Cannot find build result", e );
-                }
-                catch ( ContinuumStoreException e )
-                {
-                    throw new TaskExecutionException( "Error loading build result", e );
-                }
-            }*/
+            updateBuildResult( context, null );
         }
         finally
         {
-            //endBuild( context );
+            endBuild( context );
         }
     }
 
@@ -112,6 +90,30 @@ public class BuildProjectTaskExecutor
     private void startBuild( BuildContext buildContext )
     {
         // inform master that project is building ( to set the state )
+        
+    }
+
+    private void endBuild( BuildContext buildContext )
+    {
+        // return build result to master
+        BuildResult buildResult = buildContext.getBuildResult();
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( buildContext.getProjectId() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( buildContext.getBuildDefinitionId() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( buildContext.getTrigger() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( buildResult.getState() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, new Integer( buildResult.getExitCode() ) );
+        if ( buildResult.getError() != null )
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, buildResult.getError() );
+        }
+        else
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, "" );
+        }
     }
 
     private void performAction( String actionName, BuildContext context )
@@ -148,25 +150,37 @@ public class BuildProjectTaskExecutor
             exception = new TaskExecutionException( "Error executing action '" + actionName + "'", e );
             error = ContinuumUtils.throwableToString( exception );
         }
-    
-        // TODO: clean this up. We catch the original exception from the action, and then update the buildresult
-        // for it - we need to because of the specialized error message for SCM.
-        // If updating the buildresult fails, log the previous error and throw the new one.
-        // If updating the buildresult succeeds, throw the original exception. The build result should NOT
-        // be updated again - a TaskExecutionException is final, no further action should be taken upon it.
-    
-        /*
-        try
-        {
-            updateBuildResult( context, error );
-        }
-        catch ( TaskExecutionException e )
-        {
-            log.error( "Error updating build result after receiving the following exception: ", exception );
-            throw e;
-        }*/
-    
+
+        updateBuildResult( context, error );
+
         throw exception;
+    }
+
+    private void updateBuildResult( BuildContext context, String error )
+    {
+        context.setBuildResult( ContinuumBuildAgentUtil.getBuildResult( context.getActionContext(), null ) );
+        
+        if ( context.getBuildResult() == null )
+        {
+            BuildResult build = new BuildResult();
+
+            build.setState( ContinuumProjectState.ERROR );
+
+            build.setTrigger( context.getTrigger() );
+
+            build.setStartTime( context.getBuildStartTime() );
+
+            build.setEndTime( System.currentTimeMillis() );
+
+            build.setBuildDefinition( BuildContextToBuildDefinition.getBuildDefinition( context ) );
+
+            if ( error != null )
+            {
+                build.setError( error );
+            }
+
+            context.setBuildResult( build );
+        }
     }
 
     private String getValidationMessages( ScmRepositoryException ex )

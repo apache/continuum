@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.continuum.buildagent.configuration.ConfigurationService;
+import org.apache.continuum.buildagent.installation.InstallationService;
 import org.apache.continuum.utils.shell.ExecutionResult;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.artifact.Artifact;
@@ -44,6 +45,11 @@ public abstract class AbstractBuildExecutor
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
+
+    /**
+     * @plexus.requirement
+     */
+    private InstallationService installationService;
 
     /**
      * @plexus.configuration
@@ -92,6 +98,16 @@ public abstract class AbstractBuildExecutor
     public void setConfigurationService( ConfigurationService configurationService )
     {
         this.configurationService = configurationService;
+    }
+
+    public InstallationService getInstallationService()
+    {
+        return installationService;
+    }
+
+    public void setInstallationService( InstallationService installationService )
+    {
+        this.installationService = installationService;
     }
 
     // ----------------------------------------------------------------------
@@ -241,73 +257,6 @@ public abstract class AbstractBuildExecutor
         }
     }
 
-    private String getRelativePath( File chrootDir, File workingDirectory, String groupId )
-    {
-        String path = workingDirectory.getPath();
-        String chrootBase = new File( chrootDir, groupId ).getPath();
-        if ( path.startsWith( chrootBase ) )
-        {
-            return path.substring( chrootBase.length(), path.length() );
-        }
-        else
-        {
-            throw new IllegalArgumentException(
-                "Working directory is not inside the chroot jail " + chrootBase + " , " + path );
-        }
-    }
-
-    protected abstract Map<String, String> getEnvironments( BuildDefinition buildDefinition );
-
-    protected String getJavaHomeValue( BuildDefinition buildDefinition )
-    {
-        Profile profile = buildDefinition.getProfile();
-        if ( profile == null )
-        {
-            return null;
-        }
-        Installation jdk = profile.getJdk();
-        if ( jdk == null )
-        {
-            return null;
-        }
-        return jdk.getVarValue();
-    }
-
-    public void backupTestFiles( Project project, int buildId )
-    {
-        //Nothing to do, by default
-    }
-
-    /**
-     * By default, we return true because with a change, the project must be rebuilt.
-     */
-    public boolean shouldBuild( List<ChangeSet> changes, Project continuumProject, File workingDirectory,
-                                BuildDefinition buildDefinition )
-        throws ContinuumBuildExecutorException
-    {
-        return true;
-    }
-
-    protected Map<String, String> getEnvironmentVariables( BuildDefinition buildDefinition )
-    {
-        Profile profile = buildDefinition.getProfile();
-        Map<String, String> envVars = new HashMap<String, String>();
-        if ( profile == null )
-        {
-            return envVars;
-        }
-        List<Installation> environmentVariables = profile.getEnvironmentVariables();
-        if ( environmentVariables.isEmpty() )
-        {
-            return envVars;
-        }
-        for ( Installation installation : environmentVariables )
-        {
-            envVars.put( installation.getVarName(), installation.getVarValue() );
-        }
-        return envVars;
-    }
-
     protected Properties getContinuumSystemProperties( Project project )
     {
         Properties properties = new Properties();
@@ -324,14 +273,8 @@ public abstract class AbstractBuildExecutor
     protected String getBuildFileForProject( Project project, BuildDefinition buildDefinition )
     {
         String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
-        String relPath = StringUtils.clean( project.getRelativePath() );
-
-        if ( StringUtils.isEmpty( relPath ) )
-        {
-            return buildFile;
-        }
-
-        return relPath + File.separator + buildFile;
+        
+        return buildFile;
     }
 
     public boolean isBuilding( Project project )
@@ -356,7 +299,6 @@ public abstract class AbstractBuildExecutor
     {
         return getConfigurationService().getWorkingDirectory( projectId );
     }
-
 
     public boolean isResolveExecutable()
     {

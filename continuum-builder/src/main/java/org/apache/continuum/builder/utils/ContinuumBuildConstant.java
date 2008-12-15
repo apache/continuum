@@ -52,6 +52,8 @@ public class ContinuumBuildConstant
 
     public static final String KEY_SCM_ERROR = "scm-error";
 
+    public static final String KEY_PROJECT_NAME = "project-name";
+
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
