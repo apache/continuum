@@ -58,11 +58,6 @@ public class DefaultOverallBuildQueue
     private TaskQueue checkoutQueue;
 
     /**
-     * @plexus.requirement role-hint="prepare-build-project"
-     */
-    //private TaskQueue prepareBuildQueue;
-
-    /**
      * @plexus.requirement
      */
     private BuildDefinitionDao buildDefinitionDao;
@@ -92,21 +87,6 @@ public class DefaultOverallBuildQueue
     {
         this.name = name;
     }
-
-    /* Checkout Queue */
-
-    /*public TaskQueueExecutor getCheckoutTaskQueueExecutor()
-        throws TaskQueueManagerException
-    {
-        try
-        {
-            return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "check-out-project" );
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new TaskQueueManagerException( e.getMessage(), e );
-        }
-    }*/
 
     public void addToCheckoutQueue( Task checkoutTask )
         throws TaskQueueException
@@ -206,94 +186,7 @@ public class DefaultOverallBuildQueue
             }
         }
     }
-
-    /* Prepare-build-projects Queue */
-
-    /*public TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
-        throws ComponentLookupException
-    {        
-        return (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, "prepare-build-project" );        
-    }
-
-    public void addToPrepareBuildQueue( Task prepareBuildTask )
-        throws TaskQueueException
-    {
-        prepareBuildQueue.put( prepareBuildTask );
-    }
-
-    public void addToPrepareBuildQueue( List<Task> prepareBuildTasks )
-        throws TaskQueueException
-    {
-        for ( Task prepareBuildTask : prepareBuildTasks )
-        {
-            prepareBuildQueue.put( prepareBuildTask );
-        }
-    }
-
-    public boolean isInPrepareBuildQueue( int projectId )
-        throws TaskQueueException
-    {        
-        List<PrepareBuildProjectsTask> queue = prepareBuildQueue.getQueueSnapshot();
-
-        for ( PrepareBuildProjectsTask task : queue )
-        {
-            if ( task != null )
-            {
-                Map<Integer, Integer> map = ( (PrepareBuildProjectsTask) task ).getProjectsBuildDefinitionsMap();
-
-                if ( map.size() > 0 )
-                {
-                    Set<Integer> projectIds = map.keySet();
-
-                    if ( projectIds.contains( new Integer( projectId ) ) )
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;        
-    }
-
-    public boolean isCurrentPrepareBuildTaskInExecution( int projectId )
-        throws TaskQueueException
-    {
-        try
-        {
-            Task task = getPrepareBuildTaskQueueExecutor().getCurrentTask();
     
-            if ( task != null && task instanceof PrepareBuildProjectsTask )
-            {
-                Map<Integer, Integer> map = ( (PrepareBuildProjectsTask) task ).getProjectsBuildDefinitionsMap();
-    
-                if ( map.size() > 0 )
-                {
-                    Set<Integer> projectIds = map.keySet();
-    
-                    if ( projectIds.contains( new Integer( projectId ) ) )
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new TaskQueueException( "Error looking up prepare-build-project task queue executor." );
-        }
-        
-        return false;
-    }*/
-
-    /* Build Queue */
-
-    /*public TaskQueueExecutor getBuildTaskQueueExecutor()
-        throws ComponentLookupException
-    {   
-        return ( TaskQueueExecutor ) container.lookup( TaskQueueExecutor.class, "build-project" );        
-    }*/
-
     public void addToBuildQueue( Task buildTask )
         throws TaskQueueException
     {

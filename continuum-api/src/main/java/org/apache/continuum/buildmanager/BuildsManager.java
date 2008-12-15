@@ -37,19 +37,12 @@ import org.codehaus.plexus.taskqueue.Task;
  */
 public interface BuildsManager
 {       
-    // NOTE: deng parallel builds 
-    // I think we can move out the prepare build queue from the build manager?
-    //      only builds and checkouts should be executed in parallel? :D <-- i don't think so :)
-    
     void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap, int trigger ) throws BuildManagerException;
     
     void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger ) throws BuildManagerException;
     
-    //public void prepareBuildProjects( Collection<Map<Integer, Integer>> projectsBuildDefinitions, int trigger, int scheduleId );
-    
     void prepareBuildProject( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger ) throws BuildManagerException;
     
-    // project checkout doesn't require dependency checking
     void checkoutProject( int projectId, String projectName, File workingDirectory, String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition ) throws BuildManagerException;
         
     boolean cancelBuild( int projectId ) throws BuildManagerException;
@@ -97,8 +90,7 @@ public interface BuildsManager
     
     boolean isProjectInAnyCurrentBuild( int projectId ) throws BuildManagerException;
     
-    // TODO: deng - add the following methods (needed by QueuesAction in webapp)
-    
+    // needed in QueuesAction
     List<Task> getCurrentBuilds() throws BuildManagerException;
     
     List<Task> getCurrentCheckouts() throws BuildManagerException;
