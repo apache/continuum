@@ -1,3 +1,5 @@
+package org.apache.continuum.web.startup;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,14 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.continuum.web.startup;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.maven.continuum.Continuum;
-import org.apache.maven.continuum.ContinuumException;
 import org.codehaus.plexus.spring.PlexusToSpringUtils;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.slf4j.Logger;

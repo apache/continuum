@@ -26,6 +26,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 
 /**
  * 
@@ -241,5 +242,9 @@ public interface OverallBuildQueue
     void removeProjectsFromBuildQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueException;
     
-    void setContainer( PlexusContainer container );
+    //void setContainer( PlexusContainer container );
+    
+    TaskQueueExecutor getBuildTaskQueueExecutor();
+    
+    TaskQueueExecutor getCheckoutTaskQueueExecutor();
 }
