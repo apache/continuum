@@ -60,17 +60,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ParallelBuildsManager
     implements BuildsManager, Contextualizable
-{
-    // TODO: deng parallel builds
-    // - move prepare build queue to parallel builds manager instead of moving it back to the
-    //      task queue manager
-    // - prepare build queue must be a singleton, not per lookup, as we are maintaining only one
-    //      prepare build queue :) <-- changed my mind, prepare build queue should be here except it
-    //      should be a singleton and not added in the overallbuildqueue!
-    
-    // NOTE: maybe we could also use the default build definition template? 
-    // - take a look at AddProjectTest (add-projects-from-metadata)
-    
+{    
     private Logger log = LoggerFactory.getLogger( ParallelBuildsManager.class );
         
     // map must be synchronized!
@@ -251,12 +241,6 @@ public class ParallelBuildsManager
                     log.warn( "Project not found in any of the build queues." );
                 }
             }
-            /*catch ( TaskQueueException e )
-            {
-                log.error( "Cannot cancel build on build queue '" + overallBuildQueue.getName() + "'." );
-                throw new BuildManagerException( "Cannot cancel build on build queue '" + overallBuildQueue.getName() +
-                                 "': " + e.getMessage() );
-            }   */
             catch ( ComponentLookupException e )
             {
                 log.error( e.getMessage() );
@@ -281,13 +265,7 @@ public class ParallelBuildsManager
                     overallBuildQueue = overallBuildQueues.get( key );                
                     overallBuildQueue.cancelCurrentBuild();                
                 }
-            }
-            /*catch ( TaskQueueException e )
-            {
-                log.error( "Cannot cancel build on build queue '" + overallBuildQueue.getName() + "'." );
-                throw new BuildManagerException( "Cannot cancel build on build queue '" + overallBuildQueue.getName() +
-                                 "': " + e.getMessage() );
-            }  */         
+            }        
             catch ( ComponentLookupException e )
             {
                 log.error( e.getMessage() );

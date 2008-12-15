@@ -46,15 +46,7 @@ import org.codehaus.plexus.util.StringUtils;
 public class DefaultOverallBuildQueue
     extends AbstractLogEnabled
     implements OverallBuildQueue
-    //, Contextualizable 
-{
-    // TODO: deng parallel builds
-    // - might need to set a task queue executor for each task queue! 
-    //      change getXXXXTaskQueueExecutor() methods
-    
-    // TODO:
-    // - need to specify each task queue to be instantiated each time it is looked up!!!
-
+{   
     /**
      * @plexus.requirement role-hint="build-project"
      */
@@ -323,27 +315,6 @@ public class DefaultOverallBuildQueue
         return buildQueue.getQueueSnapshot();        
     }
 
-    /*public boolean isBuildInProgress()
-        throws TaskQueueException
-    {
-        try
-        {
-            Task task = getCurrentTask( "build-project" );
-    
-            if ( task != null && task instanceof BuildProjectTask )
-            {
-                return true;
-            }
-        }
-        catch( ComponentLookupException e )
-        {
-            // should we wrap this in a different exception instead of a TaskQueueException
-            throw new TaskQueueException( e.getMessage() );
-        }
-        
-        return false;
-    }*/
-
     public boolean isInBuildQueue( int projectId )
         throws TaskQueueException
     {
@@ -376,7 +347,6 @@ public class DefaultOverallBuildQueue
                 }
             }
         }
-
         return false;
     }
 
@@ -400,26 +370,8 @@ public class DefaultOverallBuildQueue
                     getLogger().info( "current task is a BuildProjectTask." );
                 }
             }
-        }            
+        }           
         
-        
-        /*try
-        {
-            Task currentTask = getBuildTaskQueueExecutor().getCurrentTask();
-    
-            if ( currentTask instanceof BuildProjectTask )
-            {
-                if ( ( (BuildProjectTask) currentTask ).getProjectId() == projectId )
-                {
-                    getLogger().info( "Cancelling task for project " + projectId );
-                    getBuildTaskQueueExecutor().cancelTask( currentTask );
-                }
-            }
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new TaskQueueException( e.getMessage() );
-        }*/
     }
 
     public boolean cancelCurrentBuild()
@@ -441,33 +393,6 @@ public class DefaultOverallBuildQueue
                 getLogger().info( "current task is a BuildProjectTask." );
             }
         }
-        
-        /*try
-        {
-            Task task = getBuildTaskQueueExecutor().getCurrentTask();
-    
-            if ( task != null )
-            {
-                if ( task instanceof BuildProjectTask )
-                {
-                    getLogger().info( "Cancelling current build task" );
-                    return getBuildTaskQueueExecutor().cancelTask( task );
-                }
-                else
-                {
-                    getLogger().warn( "Current task not a BuildProjectTask - not cancelling" );
-                }
-            }
-            else
-            {
-                getLogger().warn( "No task running - not cancelling" );
-            }
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new TaskQueueException( e.getMessage() );
-        }*/
-        
         return false;
     }
 
@@ -569,12 +494,6 @@ public class DefaultOverallBuildQueue
         }
     }
 
-    /*public void contextualize( Context context )
-        throws ContextException
-    {
-        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
-    }*/
-
     public TaskQueue getCheckoutQueue()
     {
         return checkoutQueue;
@@ -589,12 +508,4 @@ public class DefaultOverallBuildQueue
     {
         this.container = container;
     }
-    // TODO: change this!
-    /*private Task getCurrentTask( String task )
-        throws ComponentLookupException
-    {
-        
-        TaskQueueExecutor executor = (TaskQueueExecutor) container.lookup( TaskQueueExecutor.class, task );
-        return executor.getCurrentTask();       
-    }    */
 }
