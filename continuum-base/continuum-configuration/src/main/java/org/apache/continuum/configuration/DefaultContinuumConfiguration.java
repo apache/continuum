@@ -155,8 +155,6 @@ public class DefaultContinuumConfiguration
                     .getReleaseOutputDirectory() ) );
             }
             
-            
-            
         }
         catch ( IOException e )
         {
@@ -178,15 +176,15 @@ public class DefaultContinuumConfiguration
         {
             ContinuumConfigurationModel configurationModel = new ContinuumConfigurationModel();
             configurationModel.setBaseUrl( this.generalConfiguration.getBaseUrl() );
-
-            
+            configurationModel.setNumberOfBuildsInParallel( this.generalConfiguration.getNumberOfBuildsInParallel() );
+                        
             // normally not null but NPE free is better !
             if ( this.generalConfiguration.getBuildOutputDirectory() != null )
             {
                 configurationModel.setBuildOutputDirectory( this.generalConfiguration.getBuildOutputDirectory()
-                    .getPath() );
-                configurationModel.setNumberOfBuildsInParallel( this.generalConfiguration.getNumberOfBuildsInParallel() );
+                    .getPath() );                
             }
+                        
             if ( this.generalConfiguration.getWorkingDirectory() != null )
             {
                 configurationModel.setWorkingDirectory( this.generalConfiguration.getWorkingDirectory().getPath() );
@@ -219,8 +217,6 @@ public class DefaultContinuumConfiguration
                 configurationModel.setReleaseOutputDirectory( this.generalConfiguration.getReleaseOutputDirectory()
                     .getPath() );
             }
-
-            
             
             ContinuumConfigurationModelXpp3Writer writer = new ContinuumConfigurationModelXpp3Writer();
             FileWriter fileWriter = new FileWriter( file );

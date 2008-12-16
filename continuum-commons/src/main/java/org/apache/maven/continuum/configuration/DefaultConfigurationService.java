@@ -46,7 +46,7 @@ public class DefaultConfigurationService
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
-    // when adding requirement the template in spring-context.xml must be updated CONTINUUM-1207
+    // when adding a requirement, the template in spring-context.xml must be updated CONTINUUM-1207
 
     /**
      * @plexus.configuration default-value="${plexus.home}"

@@ -57,7 +57,7 @@ public class ConfigurationAction
     
     private String releaseOutputDirectory;
 
-    private int numberOfAllowedBuildsinParallel;
+    private int numberOfAllowedBuildsinParallel = 1;
     
     private boolean requireReleaseOutput;
     
@@ -101,11 +101,11 @@ public class ConfigurationAction
             releaseOutputDirectory = releaseOutputDirectoryFile.getAbsolutePath();
         }
         
-        if ( requireParallelBuilds )
-        {
-            numberOfAllowedBuildsinParallel = configuration.getNumberOfBuildsInParallel();	
-        }
-        
+        //if ( requireParallelBuilds )
+        //{
+        numberOfAllowedBuildsinParallel = configuration.getNumberOfBuildsInParallel();	
+        //}
+                
         String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
         setRequireReleaseOutput( new Boolean( requireRelease ) );
     }
@@ -115,6 +115,11 @@ public class ConfigurationAction
         if ( isRequireReleaseOutput() )
         {
             addActionError( "configuration.releaseOutputDirectory.required" );
+        }
+                
+        if( numberOfAllowedBuildsinParallel <= 0 )
+        {
+            addActionError( "configuration.numberOfBuildsInParallel.invalid" );
         }
         
         return INPUT;
@@ -129,10 +134,10 @@ public class ConfigurationAction
 
         configuration.setBuildOutputDirectory( new File( buildOutputDirectory ) );
         
-        if ( requireParallelBuilds )
-        {
+        //if ( requireParallelBuilds )
+        //{
             configuration.setNumberOfBuildsInParallel( numberOfAllowedBuildsinParallel );	
-        }
+        //}
         
         if ( StringUtils.isNotEmpty( deploymentRepositoryDirectory ) )
         {
@@ -255,6 +260,4 @@ public class ConfigurationAction
 	{
 	    this.requireParallelBuilds = requireParallelBuilds;
 	}
-    
-    
 }

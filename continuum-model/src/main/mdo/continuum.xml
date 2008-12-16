@@ -1273,6 +1273,12 @@
           <type>String</type>
           <defaultValue>release-output-directory</defaultValue>
         </field>
+        <field>
+          <name>numberOfBuildsInParallel</name>
+          <version>1.1.4+</version>
+          <type>int</type>
+          <defaultValue>1</defaultValue>
+        </field>
       </fields>
     </class>
 

@@ -428,27 +428,20 @@ public class ParallelBuildsManager
     public boolean isProjectInAnyCurrentBuild( int projectId )
         throws BuildManagerException
     {
-        try
+        synchronized( overallBuildQueues )
         {
-            List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
-            for ( Object obj : objects )
+            Set<Integer> keys = overallBuildQueues.keySet();
+            for( Integer key : keys )
             {
-                log.info( "Task queue executor : " + obj );
-                ThreadedTaskQueueExecutor executor = (ThreadedTaskQueueExecutor) obj;
-                Task task = executor.getCurrentTask();
-                if ( task instanceof BuildProjectTask )
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                BuildProjectTask task = (BuildProjectTask) overallBuildQueue.getBuildTaskQueueExecutor().getCurrentTask();
+                if( task != null && task.getProjectId() == projectId )
                 {
-                    log.info( "current task is a BuildProjectTask." );
                     return true;
                 }
             }
+            return false;
         }
-        catch ( ComponentLookupException e )
-        {
-            throw new BuildManagerException( e.getMessage() );
-        }
-
-        return false;
     }
 
     public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
@@ -727,8 +720,23 @@ public class ParallelBuildsManager
     public List<Task> getCurrentBuilds()
         throws BuildManagerException
     {
-        List<Task> currentBuilds = new ArrayList<Task>();
-        try
+        synchronized( overallBuildQueues )
+        {
+            List<Task> currentBuilds = new ArrayList<Task>();           
+            Set<Integer> keys = overallBuildQueues.keySet();
+            for( Integer key : keys )
+            {
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                Task task = overallBuildQueue.getBuildTaskQueueExecutor().getCurrentTask();
+                if( task != null )
+                {
+                    currentBuilds.add( task );
+                }
+            }
+            
+            return currentBuilds;
+        }
+        /*try
         {
             List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
             for ( Object obj : objects )
@@ -745,34 +753,28 @@ public class ParallelBuildsManager
         catch ( ComponentLookupException e )
         {
             throw new BuildManagerException( e.getMessage() );
-        }
-
-        return currentBuilds;
+        }*/
     }
 
     public List<Task> getCurrentCheckouts()
         throws BuildManagerException
     {
-        List<Task> currentCheckouts = new ArrayList<Task>();
-        try
+        synchronized( overallBuildQueues )
         {
-            List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
-            for ( Object obj : objects )
+            List<Task> currentCheckouts = new ArrayList<Task>();           
+            Set<Integer> keys = overallBuildQueues.keySet();
+            for( Integer key : keys )
             {
-                ThreadedTaskQueueExecutor executor = (ThreadedTaskQueueExecutor) obj;
-                Task task = executor.getCurrentTask();
-                if ( task instanceof CheckOutTask )
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                Task task = overallBuildQueue.getCheckoutTaskQueueExecutor().getCurrentTask();
+                if( task != null )
                 {
                     currentCheckouts.add( task );
                 }
             }
+            
+            return currentCheckouts;
         }
-        catch ( ComponentLookupException e )
-        {
-            throw new BuildManagerException( e.getMessage() );
-        }
-
-        return currentCheckouts;
     }
 
     public Map<String, List<Task>> getProjectsInBuildQueues()

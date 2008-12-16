@@ -31,13 +31,13 @@ import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
-import org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * "Overall" build queue which has a checkout queue and a build queue.
@@ -46,25 +46,12 @@ import org.codehaus.plexus.util.StringUtils;
  * @plexus.component role="org.apache.continuum.taskqueue.OverallBuildQueue" instantiation-strategy="per-lookup"
  */
 public class DefaultOverallBuildQueue
-    extends AbstractLogEnabled
     implements OverallBuildQueue
 {
-    /**
-     * @plexus.requirement role-hint="build-project"
-     */
-    //private TaskQueue buildQueue;
-
-    /**
-     * @plexus.requirement role-hint="check-out-project"
-     */
-    //private TaskQueue checkoutQueue;
-
     /**
      * @plexus.requirement
      */
     private BuildDefinitionDao buildDefinitionDao;
-
-    private PlexusContainer container;
     
     /**
      * @plexus.requirement role-hint="build-project"
@@ -79,6 +66,8 @@ public class DefaultOverallBuildQueue
     private int id;
 
     private String name;
+    
+    private Logger log = LoggerFactory.getLogger( DefaultOverallBuildQueue.class );
 
     public int getId()
     {
@@ -145,7 +134,6 @@ public class DefaultOverallBuildQueue
                 return true;
             }
         }
-
         return false;
     }
 
@@ -164,7 +152,6 @@ public class DefaultOverallBuildQueue
                 return getCheckoutQueue().remove( task );
             }
         }
-
         return false;
     }
 
@@ -296,23 +283,13 @@ public class DefaultOverallBuildQueue
     public void cancelBuildTask( int projectId )
         throws ComponentLookupException
     {
-        List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
-        for ( Object obj : objects )
+        BuildProjectTask task = (BuildProjectTask) buildTaskQueueExecutor.getCurrentTask();
+        if( task != null && task.getProjectId() == projectId )
         {
-            ThreadedTaskQueueExecutor executor = (ThreadedTaskQueueExecutor) obj;
-            Task task = executor.getCurrentTask();
-            if ( task != null && task instanceof BuildProjectTask )
-            {
-                if ( ( (BuildProjectTask) task ).getProjectId() == projectId )
-                {
-                    getLogger().info(
-                                      "Cancelling build task for project '" + projectId + "' in task executor '" +
-                                          executor );
-                    executor.cancelTask( task );
-                }
-            }
-        }
-
+            log.info( "Cancelling build task for project '" + projectId + "' in task executor '" +
+                                 buildTaskQueueExecutor );
+            buildTaskQueueExecutor.cancelTask( task );
+        }        
     }
 
     /**
@@ -321,20 +298,13 @@ public class DefaultOverallBuildQueue
     public boolean cancelCurrentBuild()
         throws ComponentLookupException
     {
-        List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
-        for ( Object obj : objects )
+        Task task = buildTaskQueueExecutor.getCurrentTask();
+        if( task != null )
         {
-            ThreadedTaskQueueExecutor executor = (ThreadedTaskQueueExecutor) obj;
-            Task task = executor.getCurrentTask();
-            if ( task != null && task instanceof BuildProjectTask )
-            {
-                BuildProjectTask buildTask = (BuildProjectTask) task;
-                getLogger().info(
-                                  "Cancelling task for project '" + buildTask.getProjectId() + "' in task executor '" +
-                                      executor );
-                executor.cancelTask( task );
-            }
+            return buildTaskQueueExecutor.cancelTask( task );
         }
+        
+        log.info( "No build task currently executing on build executor: " + buildTaskQueueExecutor );
         return false;
     }
 
@@ -400,7 +370,7 @@ public class DefaultOverallBuildQueue
 
         for ( BuildProjectTask buildProjectTask : tasks )
         {
-            getLogger().info( "cancel build for project " + buildProjectTask.getProjectId() );
+            log.info( "cancel build for project " + buildProjectTask.getProjectId() );
         }
         if ( !tasks.isEmpty() )
         {
@@ -426,7 +396,6 @@ public class DefaultOverallBuildQueue
                 return getBuildQueue().remove( task );
             }
         }
-
         return false;
     }
 
@@ -461,11 +430,6 @@ public class DefaultOverallBuildQueue
     {
         return ( ( ParallelBuildsThreadedTaskQueueExecutor ) buildTaskQueueExecutor ).getQueue();
     }
-
-    /*public void setContainer( PlexusContainer container )
-    {
-        this.container = container;
-    }*/
 
     public TaskQueueExecutor getBuildTaskQueueExecutor()
     {
