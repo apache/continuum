@@ -20,6 +20,9 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @plexus.component role="org.apache.continuum.buildagent.taskqueue.manager.TaskQueueManager"
+ */
 public class DefaultTaskQueueManager
     implements TaskQueueManager, Contextualizable
 {

@@ -45,7 +45,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @plexus.component role="org.apache.continuum.buildagent.build.execution.maven.m2.MavenBuilderHelper" role-hint="default"
+ * @plexus.component role="org.apache.continuum.buildagent.build.execution.maven.m2.MavenBuilderHelper" 
+ * role-hint="default"
  */
 public class DefaultMavenBuilderHelper
     implements MavenBuilderHelper, Contextualizable, Initializable

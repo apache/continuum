@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
+import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.ConfigurationService;
 import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.taskqueue.manager.TaskQueueManager;
@@ -12,6 +13,9 @@ import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
 
+/**
+ * @plexus.component role="org.apache.continuum.buildagent.ContinuumBuildAgentService"
+ */
 public class ContinuumBuildAgentServiceImpl
     implements ContinuumBuildAgentService
 {
@@ -29,6 +33,11 @@ public class ContinuumBuildAgentServiceImpl
      * @plexus.requirement
      */
     private TaskQueueManager taskQueueManager;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildContextManager buildContextManager;
 
     public void buildProjects( List<Map> projectsBuildContext )
         throws ContinuumBuildAgentException
@@ -113,9 +122,12 @@ public class ContinuumBuildAgentServiceImpl
             buildContext.add( context );
         }
 
+        buildContextManager.setBuildContextList( buildContext );
+
         return buildContext;
     }
 
+    /*
     public ConfigurationService getConfigurationService()
     {
         return configurationService;
@@ -145,4 +157,5 @@ public class ContinuumBuildAgentServiceImpl
     {
         this.taskQueueManager = taskQueueManager;
     }
+    */
 }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutor;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
 import org.apache.maven.continuum.ContinuumException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class DefaultBuildExecutorManager
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
     /**
-     * @plexus.requirement role="org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutor"
+     * @plexus.requirement role="org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor"
      */
     private Map executors;
 
@@ -53,10 +53,10 @@ public class DefaultBuildExecutorManager
     // BuildExecutorManager Implementation
     // ----------------------------------------------------------------------
 
-    public ContinuumBuildExecutor getBuildExecutor( String builderType )
+    public ContinuumAgentBuildExecutor getBuildExecutor( String builderType )
         throws ContinuumException
     {
-        ContinuumBuildExecutor executor = (ContinuumBuildExecutor) executors.get( builderType );
+        ContinuumAgentBuildExecutor executor = (ContinuumAgentBuildExecutor) executors.get( builderType );
 
         if ( executor == null )
         {

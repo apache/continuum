@@ -3,17 +3,17 @@ package org.apache.continuum.buildagent.build.execution.shell;
 import java.io.File;
 
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildCancelledException;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutionResult;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutor;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutorException;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutorException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 
 public class ShellBuildExecutor
     extends AbstractBuildExecutor
-    implements ContinuumBuildExecutor
+    implements ContinuumAgentBuildExecutor
 {
     public static final String CONFIGURATION_EXECUTABLE = "executable";
 
@@ -24,8 +24,8 @@ public class ShellBuildExecutor
         super( ID, false );
     }
 
-    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
-        throws ContinuumBuildExecutorException, ContinuumBuildCancelledException
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+        throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
         String executable = getBuildFileForProject( project, buildDefinition );
 

@@ -4,14 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildCancelledException;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutionResult;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutor;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutorException;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutorException;
 import org.apache.continuum.buildagent.installation.InstallationService;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
@@ -26,7 +25,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 public class MavenTwoBuildExecutor
     extends AbstractBuildExecutor
-    implements ContinuumBuildExecutor
+    implements ContinuumAgentBuildExecutor
 {
     public static final String CONFIGURATION_GOALS = "goals";
 
@@ -57,8 +56,18 @@ public class MavenTwoBuildExecutor
         this.projectHelper = projectHelper;
     }
 
-    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
-        throws ContinuumBuildExecutorException, ContinuumBuildCancelledException
+    public MavenBuilderHelper getBuilderHelper()
+    {
+        return builderHelper;
+    }
+
+    public void setBuilderHelper( MavenBuilderHelper builderHelper )
+    {
+        this.builderHelper = builderHelper;
+    }
+
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+        throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
         String executable = getInstallationService().getExecutorConfigurator( InstallationService.MAVEN2_TYPE )
         .getExecutable();
@@ -90,7 +99,7 @@ public class MavenTwoBuildExecutor
     @Override
     public List<Artifact> getDeployableArtifacts( Project continuumProject, File workingDirectory,
                                         BuildDefinition buildDefinition )
-        throws ContinuumBuildExecutorException
+        throws ContinuumAgentBuildExecutorException
     {
         MavenProject project = getMavenProject( continuumProject, workingDirectory, buildDefinition );
 
@@ -184,7 +193,7 @@ public class MavenTwoBuildExecutor
 
     private MavenProject getMavenProject( Project continuumProject, File workingDirectory,
                                           BuildDefinition buildDefinition )
-        throws ContinuumBuildExecutorException
+        throws ContinuumAgentBuildExecutorException
     {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
 
@@ -192,14 +201,14 @@ public class MavenTwoBuildExecutor
 
         if ( !f.exists() )
         {
-            throw new ContinuumBuildExecutorException( "Could not find Maven project descriptor '" + f + "'." );
+            throw new ContinuumAgentBuildExecutorException( "Could not find Maven project descriptor '" + f + "'." );
         }
 
         MavenProject project = builderHelper.getMavenProject( result, f );
 
         if ( result.hasErrors() )
         {
-            throw new ContinuumBuildExecutorException(
+            throw new ContinuumAgentBuildExecutorException(
                 "Unable to read the Maven project descriptor '" + f + "': " + result.getErrorsAsString() );
         }
         return project;

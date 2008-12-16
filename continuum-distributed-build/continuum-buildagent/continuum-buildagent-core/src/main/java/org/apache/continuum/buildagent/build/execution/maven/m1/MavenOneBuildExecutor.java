@@ -5,10 +5,10 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildCancelledException;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutionResult;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutor;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutorException;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutorException;
 import org.apache.continuum.buildagent.installation.InstallationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -17,7 +17,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 public class MavenOneBuildExecutor
     extends AbstractBuildExecutor
-    implements ContinuumBuildExecutor
+    implements ContinuumAgentBuildExecutor
 {
     public final static String CONFIGURATION_GOALS = "goals";
 
@@ -28,8 +28,8 @@ public class MavenOneBuildExecutor
         super( ID, true );
     }
 
-    public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
-        throws ContinuumBuildExecutorException, ContinuumBuildCancelledException
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+        throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
         String executable = getInstallationService().getExecutorConfigurator( InstallationService.MAVEN1_TYPE )
         .getExecutable();

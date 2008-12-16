@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
-import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.ConfigurationService;
 import org.apache.continuum.buildagent.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
+import org.apache.continuum.buildagent.utils.ContinuumUtils;
 import org.apache.continuum.taskqueue.BuildProjectTask;
-import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -53,50 +52,53 @@ public class DefaultContinuum
     {
         Map<String, Object> context = null;
 
-        try
+        if ( buildContexts != null && buildContexts.size() > 0 )
         {
-            for ( BuildContext buildContext : buildContexts )
+            try
             {
-                context = buildContext.getActionContext();
-
-                BuildDefinition buildDef = BuildContextToBuildDefinition.getBuildDefinition( buildContext );
+                for ( BuildContext buildContext : buildContexts )
+                {
+                    context = buildContext.getActionContext();
     
-                log.info( "Check scm root state" );
-                if ( !checkProjectScmRoot( context ) )
-                {
-                    break;
-                }
-                
-                log.info( "Initializing prepare build" );
-                initializeActionContext( buildContext );
-                
-                log.info( "Starting prepare build" );
-
-                try
-                {
-                    if ( buildDef.isBuildFresh() )
-                    {
-                        log.info( "Clean up working directory" );
-                        cleanWorkingDirectory( buildContext );
-                    }
+                    BuildDefinition buildDef = BuildContextToBuildDefinition.getBuildDefinition( buildContext );
         
-                    log.info( "Updating working directory" );
-                    updateWorkingDirectory( buildContext );
-                }
-                finally
-                {
-                    endProjectPrepareBuild( buildContext );
+                    log.info( "Check scm root state" );
+                    if ( !checkProjectScmRoot( context ) )
+                    {
+                        break;
+                    }
+                    
+                    log.info( "Initializing prepare build" );
+                    initializeActionContext( buildContext );
+                    
+                    log.info( "Starting prepare build" );
+    
+                    try
+                    {
+                        if ( buildDef.isBuildFresh() )
+                        {
+                            log.info( "Clean up working directory" );
+                            cleanWorkingDirectory( buildContext );
+                        }
+            
+                        log.info( "Updating working directory" );
+                        updateWorkingDirectory( buildContext );
+                    }
+                    finally
+                    {
+                        endProjectPrepareBuild( buildContext );
+                    }
                 }
             }
-        }
-        finally
-        {
-            endPrepareBuild( context );
-        }
+            finally
+            {
+                endPrepareBuild( context );
+            }
 
-        if ( !checkProjectScmRoot( context ) )
-        {
-            buildProjects( buildContexts );
+            if ( !checkProjectScmRoot( context ) )
+            {
+                buildProjects( buildContexts );
+            }
         }
     }
 

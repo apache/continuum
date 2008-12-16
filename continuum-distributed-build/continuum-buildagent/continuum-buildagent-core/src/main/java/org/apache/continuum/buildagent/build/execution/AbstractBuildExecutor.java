@@ -2,21 +2,17 @@ package org.apache.continuum.buildagent.build.execution;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.continuum.buildagent.configuration.ConfigurationService;
 import org.apache.continuum.buildagent.installation.InstallationService;
-import org.apache.continuum.utils.shell.ExecutionResult;
-import org.apache.continuum.utils.shell.ShellCommandHelper;
+import org.apache.continuum.buildagent.utils.shell.ExecutionResult;
+import org.apache.continuum.buildagent.utils.shell.ShellCommandHelper;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.scm.ChangeSet;
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.commandline.ExecutableResolver;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -27,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractBuildExecutor
-    implements ContinuumBuildExecutor, Initializable
+    implements ContinuumAgentBuildExecutor, Initializable
 {
     protected Logger log = LoggerFactory.getLogger( getClass() );
 
@@ -213,9 +209,9 @@ public abstract class AbstractBuildExecutor
         return actualExecutable;
     }
 
-    protected ContinuumBuildExecutionResult executeShellCommand( Project project, String executable, String arguments,
+    protected ContinuumAgentBuildExecutionResult executeShellCommand( Project project, String executable, String arguments,
                                                                  File output, Map<String, String> environments )
-        throws ContinuumBuildExecutorException, ContinuumBuildCancelledException
+        throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
 
         File workingDirectory = getWorkingDirectory( project.getId() );
@@ -235,24 +231,24 @@ public abstract class AbstractBuildExecutor
 
             log.info( "Exit code: " + result.getExitCode() );
 
-            return new ContinuumBuildExecutionResult( output, result.getExitCode() );
+            return new ContinuumAgentBuildExecutionResult( output, result.getExitCode() );
         }
         catch ( CommandLineException e )
         {
             if ( e.getCause() instanceof InterruptedException )
             {
-                throw new ContinuumBuildCancelledException( "The build was cancelled", e );
+                throw new ContinuumAgentBuildCancelledException( "The build was cancelled", e );
             }
             else
             {
-                throw new ContinuumBuildExecutorException(
+                throw new ContinuumAgentBuildExecutorException(
                     "Error while executing shell command. The most common error is that '" + executable + "' " +
                         "is not in your path.", e );
             }
         }
         catch ( Exception e )
         {
-            throw new ContinuumBuildExecutorException( "Error while executing shell command. " +
+            throw new ContinuumAgentBuildExecutorException( "Error while executing shell command. " +
                 "The most common error is that '" + executable + "' " + "is not in your path.", e );
         }
     }
@@ -289,7 +285,7 @@ public abstract class AbstractBuildExecutor
     }
 
     public List<Artifact> getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
-        throws ContinuumBuildExecutorException
+        throws ContinuumAgentBuildExecutorException
     {
         // Not supported by this builder
         return Collections.EMPTY_LIST;

@@ -110,7 +110,7 @@ public class DefaultConfigurationService
         return buildAgentConfiguration.getContinuumServerUrl();
     }
 
-    public List<Installation> getAvailableInstallations()
+    public List getAvailableInstallations()
     {
         return buildAgentConfiguration.getInstallations();
     }

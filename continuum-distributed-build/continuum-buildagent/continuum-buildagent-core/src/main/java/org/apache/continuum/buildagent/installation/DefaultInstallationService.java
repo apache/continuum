@@ -35,5 +35,4 @@ public class DefaultInstallationService
         this.typesValues
             .put( InstallationService.MAVEN2_TYPE, new ExecutorConfigurator( "mvn", "bin", "M2_HOME", "-v" ) );
     }
-
 }

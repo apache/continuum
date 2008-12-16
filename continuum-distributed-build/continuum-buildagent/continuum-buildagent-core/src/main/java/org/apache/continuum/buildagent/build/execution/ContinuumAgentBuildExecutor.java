@@ -7,12 +7,12 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 
-public interface ContinuumBuildExecutor
+public interface ContinuumAgentBuildExecutor
 {
-    String ROLE = ContinuumBuildExecutor.class.getName();
+    String ROLE = ContinuumAgentBuildExecutor.class.getName();
 
-    ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
-        throws ContinuumBuildExecutorException, ContinuumBuildCancelledException;
+    ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+        throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException;
     
     boolean isBuilding( Project project );
 
@@ -20,5 +20,5 @@ public interface ContinuumBuildExecutor
 
     // TODO: are these part of the builder interface, or a separate project/build definition interface?
     List<Artifact> getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
-        throws ContinuumBuildExecutorException;
+        throws ContinuumAgentBuildExecutorException;
 }

@@ -9,8 +9,8 @@ import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
+import org.apache.continuum.buildagent.utils.ContinuumUtils;
 import org.apache.continuum.taskqueue.BuildProjectTask;
-import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.scm.ScmException;
@@ -23,6 +23,10 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
+ * role-hint="build-agent"
+ */
 public class BuildProjectTaskExecutor
     implements TaskExecutor
 {

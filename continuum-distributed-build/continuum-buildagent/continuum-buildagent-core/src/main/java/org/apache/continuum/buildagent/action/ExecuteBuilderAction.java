@@ -4,13 +4,13 @@ import java.io.File;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildCancelledException;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutionResult;
-import org.apache.continuum.buildagent.build.execution.ContinuumBuildExecutor;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.manager.BuildExecutorManager;
 import org.apache.continuum.buildagent.configuration.ConfigurationService;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
-import org.apache.continuum.utils.ContinuumUtils;
+import org.apache.continuum.buildagent.utils.ContinuumUtils;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -46,7 +46,7 @@ public class ExecuteBuilderAction
 
         int trigger = ContinuumBuildAgentUtil.getTrigger( context );
 
-        ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
+        ContinuumAgentBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
         
         // ----------------------------------------------------------------------
         // Make the buildResult
@@ -68,13 +68,13 @@ public class ExecuteBuilderAction
         {
             File buildOutputFile = configurationService.getBuildOutputFile( project.getId() );
 
-            ContinuumBuildExecutionResult result = buildExecutor.build( project, buildDefinition, buildOutputFile );
+            ContinuumAgentBuildExecutionResult result = buildExecutor.build( project, buildDefinition, buildOutputFile );
 
             buildResult.setState( result.getExitCode() == 0 ? ContinuumProjectState.OK : ContinuumProjectState.FAILED );
 
             buildResult.setExitCode( result.getExitCode() );
         }
-        catch ( ContinuumBuildCancelledException e )
+        catch ( ContinuumAgentBuildCancelledException e )
         {
             getLogger().info( "Cancelled build" );
             
