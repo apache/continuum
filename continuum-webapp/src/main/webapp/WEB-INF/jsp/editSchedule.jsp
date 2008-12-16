@@ -20,6 +20,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
+
 <html>
   <s:i18n name="localization.Continuum">
 <head>
@@ -71,10 +72,10 @@
             <s:textfield label="%{getText('schedule.quietPeriod.label')}" name="delay">
                 <s:param name="desc"><p><s:text name="schedule.quietPeriod.message"/></p></s:param>
             </s:textfield>
-            
-            <s:select label="Build Queues" id="schedulesBuildQueue" name="schedulesBuildQueue" headerKey="-1" listValue="name" multiple="true" size="4" 
-                      listKey="id" headerValue="--Build Queues--" list="buildQueues" />
-                        
+    	
+            <s:select label="Add Build Queue" id="buildQueueIds" name="buildQueueIds" headerKey="-1" listKey="name" listValue="name" multiple="true"
+                headerValue="--Build Queues--" list="buildQueues" />
+                                       
             <s:checkbox label="%{getText('schedule.enabled.label')}" name="active" value="active" fieldValue="true">
                 <s:param name="desc"><p><s:text name="schedule.enabled.message"/></p></s:param>
             </s:checkbox>
@@ -93,3 +94,4 @@
 </body>
 </s:i18n>
 </html>
+
