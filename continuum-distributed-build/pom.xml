@@ -31,6 +31,5 @@ under the License.
   <name>Continuum :: Distributed Build</name>
   <modules>
     <module>continuum-buildagent</module>
-    <module>continuum-distributed-build-transport</module>
   </modules>
 </project>
