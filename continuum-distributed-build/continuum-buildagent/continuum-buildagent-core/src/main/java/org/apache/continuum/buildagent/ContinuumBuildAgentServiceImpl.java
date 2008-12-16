@@ -67,11 +67,6 @@ public class ContinuumBuildAgentServiceImpl
         return null;
     }
 
-    public boolean isBusy()
-    {
-        return false;
-    }
-
     public int getProjectCurrentlyBuilding()
         throws ContinuumBuildAgentException
     {
@@ -127,35 +122,4 @@ public class ContinuumBuildAgentServiceImpl
         return buildContext;
     }
 
-    /*
-    public ConfigurationService getConfigurationService()
-    {
-        return configurationService;
-    }
-
-    public void setConfigurationService( ConfigurationService configurationService )
-    {
-        this.configurationService = configurationService;
-    }
-    
-    public Continuum getContinuum()
-    {
-        return continuum;
-    }
-
-    public void setContinuum( Continuum continuum )
-    {
-        this.continuum = continuum;
-    }
-
-    public TaskQueueManager getTaskQueueManager()
-    {
-        return taskQueueManager;
-    }
-
-    public void setTaskQueueManager( TaskQueueManager taskQueueManager )
-    {
-        this.taskQueueManager = taskQueueManager;
-    }
-    */
 }

@@ -12,10 +12,7 @@ public interface ContinuumBuildAgentService
     
     List<Installation> getAvailableInstallations()
         throws ContinuumBuildAgentException;
-    
-    boolean isBusy()
-        throws ContinuumBuildAgentException;
-    
+
     Map getBuildResult( int projectId )
         throws ContinuumBuildAgentException;
     
