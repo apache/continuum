@@ -135,7 +135,7 @@ public interface BuildsManager
 
     // public boolean cancelPrepareBuild(int projectId) throws BuildManagerException;
 
-    // public boolean cancelAllPrepareBuilds() throws BuildManagerException;
+    boolean cancelAllPrepareBuilds() throws BuildManagerException;
 
     /**
      * Removes the project from the build queue.
@@ -199,11 +199,10 @@ public interface BuildsManager
      */
     void removeProjectsFromCheckoutQueueWithHashcodes( int[] hashcodes )
         throws BuildManagerException;
+    
+    /*void removeProjectFromPrepareBuildQueue( int projectId ) throws BuildManagerException;
 
-    // TODO: implement this!
-    // public void removeProjectFromPrepareBuildQueue( int projectId );
-
-    // public void removeProjectsFromPrepareBuildQueue( int[] projectIds );
+    void removeProjectsFromPrepareBuildQueue( int[] projectIds ) throws BuildManagerException;*/
 
     /**
      * Add an overall build queue.

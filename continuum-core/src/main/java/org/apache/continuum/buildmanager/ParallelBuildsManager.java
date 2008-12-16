@@ -49,6 +49,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
@@ -621,13 +622,9 @@ public class ParallelBuildsManager
             throw new BuildManagerException( "Error encountered while removing project(s) from build queue.", e );
         }
     }
-
+    
     public void addOverallBuildQueue( OverallBuildQueue overallBuildQueue )
-    {
-        // set the container which is used by overall build queue for getting the task queue executor
-        // trying to avoid implementing Contextualizable for the OverallBuildQueue! 
-        //overallBuildQueue.setContainer( container );
-
+    {   
         synchronized ( overallBuildQueues )
         {
             if ( overallBuildQueues.get( overallBuildQueue.getId() ) == null )
@@ -824,10 +821,30 @@ public class ParallelBuildsManager
             return checkoutsInQueue;
         }
     }
+    
+    public boolean cancelAllPrepareBuilds() throws BuildManagerException
+    {
+        try
+        {
+            TaskQueueExecutor executor = ( TaskQueueExecutor ) container.lookup( TaskQueueExecutor.class, "prepare-build-project" );
+            Task task = executor.getCurrentTask();            
+            if( task != null )
+            {
+                executor.cancelTask( task );
+            }
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new BuildManagerException( "Error looking up prepare-build-queue.", e );
+        }
+        
+        return false;
+    }
 
     public boolean isBuildInProgress()
         throws BuildManagerException
-    {
+    {        
+        //TODO!
         return false;
     }
 
