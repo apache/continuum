@@ -730,45 +730,43 @@ public class ParallelBuildsManager
         return overallBuildQueues;
     }
 
-    public List<Task> getCurrentBuilds()
+    public Map<String, Task> getCurrentBuilds()
         throws BuildManagerException
     {
         synchronized( overallBuildQueues )
         {
-            List<Task> currentBuilds = new ArrayList<Task>();           
+            Map<String, Task> currentBuilds = new HashMap<String, Task>();            
             Set<Integer> keys = overallBuildQueues.keySet();
             for( Integer key : keys )
             {
-                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );                
                 Task task = overallBuildQueue.getBuildTaskQueueExecutor().getCurrentTask();
                 if( task != null )
                 {
-                    currentBuilds.add( task );
-                }
-            }
-            
+                    currentBuilds.put( overallBuildQueue.getName(), task );
+                }                
+            }            
             return currentBuilds;
         }
     }
 
-    public List<Task> getCurrentCheckouts()
+    public Map<String, Task> getCurrentCheckouts()
         throws BuildManagerException
     {
         synchronized( overallBuildQueues )
         {
-            List<Task> currentCheckouts = new ArrayList<Task>();           
+            Map<String, Task> currentCheckouts = new HashMap<String, Task>();
             Set<Integer> keys = overallBuildQueues.keySet();
             for( Integer key : keys )
             {
-                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );                
                 Task task = overallBuildQueue.getCheckoutTaskQueueExecutor().getCurrentTask();
                 if( task != null )
                 {
-                    currentCheckouts.add( task );
-                }
-            }
-            
-            return currentCheckouts;
+                    currentCheckouts.put( overallBuildQueue.getName(), task );
+                }                
+            }            
+            return currentCheckouts;           
         }
     }
 
@@ -777,14 +775,14 @@ public class ParallelBuildsManager
     {
         synchronized ( overallBuildQueues )
         {
-            Map<String, List<Task>> buildsInQueue = new HashMap<String, List<Task>>();
+            Map<String, List<Task>> queuedBuilds = new HashMap<String, List<Task>>();
             Set<Integer> keySet = overallBuildQueues.keySet();
             for ( Integer key : keySet )
             {
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
                 try
                 {
-                    buildsInQueue.put( overallBuildQueue.getName(), overallBuildQueue.getProjectsInBuildQueue() );
+                    queuedBuilds.put( overallBuildQueue.getName(), overallBuildQueue.getProjectsInBuildQueue() );
                 }
                 catch ( TaskQueueException e )
                 {
@@ -792,7 +790,7 @@ public class ParallelBuildsManager
                         overallBuildQueue.getName() + "'.", e );
                 }
             }
-            return buildsInQueue;
+            return queuedBuilds;
         }
     }
 
@@ -801,22 +799,22 @@ public class ParallelBuildsManager
     {
         synchronized ( overallBuildQueues )
         {
-            Map<String, List<Task>> checkoutsInQueue = new HashMap<String, List<Task>>();
+            Map<String, List<Task>> queuedCheckouts = new HashMap<String, List<Task>>();
             Set<Integer> keySet = overallBuildQueues.keySet();
             for ( Integer key : keySet )
             {
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
                 try
                 {
-                    checkoutsInQueue.put( overallBuildQueue.getName(), overallBuildQueue.getCheckOutTasksInQueue() );
+                    queuedCheckouts.put( overallBuildQueue.getName(), overallBuildQueue.getCheckOutTasksInQueue() );
                 }
                 catch ( TaskQueueException e )
                 {
-                    throw new BuildManagerException( "Error occurred while getting projects in checkout queue '" +
+                    throw new BuildManagerException( "Error occurred while getting projects in build queue '" +
                         overallBuildQueue.getName() + "'.", e );
                 }
             }
-            return checkoutsInQueue;
+            return queuedCheckouts;
         }
     }
     

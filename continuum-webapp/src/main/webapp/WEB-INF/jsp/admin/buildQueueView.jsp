@@ -36,41 +36,51 @@
             <s:text name="buildQueue.currentTask.section.title"/>
           </h3>  
           <table width="100%">
-            <s:if test="%{currentBuildProjectTask != null}">
+            <s:if test="%{currentBuildProjectTasks != null}">
             <tbody>
               <tr>
+                <th><s:text name="buildQueue.currentTask.buildQueue"/></th>
                 <th><s:text name="buildQueue.currentTask.projectName"/></th>
                 <th><s:text name="buildQueue.currentTask.buildDefinition"/></th>
                 <th>&nbsp;</th>
               </tr>
-              <tr>
-                <td width="50%"><s:property value="currentBuildProjectTask.projectName"/></td>
-                <td width="49%"><s:property value="currentBuildProjectTask.buildDefinitionLabel"/></td>
-                <td width="1%">
-                <redback:ifAuthorized permission="continuum-manage-queues">
-                  <s:url id="cancelUrl" action="cancelCurrentBuildTask" method="cancelCurrent" namespace="/">
-                    <s:param name="projectId"><s:property value="currentBuildProjectTask.projectId"/></s:param>
-                  </s:url>
-                  <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
-                </redback:ifAuthorized>
-                <redback:elseAuthorized>
-                  <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
-                </redback:elseAuthorized>
-                </td>
-              </tr>
+              <%-- //deng - TODO: loop through each of the current tasks --%>
+              <c:forEach var="element" items="${currentBuildProjectTasks}">
+                <tr>              
+                  <td width="20%">${element.key}</td> 
+                  <td width="50%">${element.value.projectName}</td>
+                  <td width="29%">${element.value.buildDefinitionLabel}</td>
+                  <td width="1%">
+                    <redback:ifAuthorized permission="continuum-manage-queues">
+                      <s:url id="cancelUrl" action="cancelCurrentBuildTask" method="cancelCurrent" namespace="/">
+                        <s:param name="projectId">${element.value.projectId}</s:param>
+                      </s:url>
+                      <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
+                    </redback:ifAuthorized>
+                    <redback:elseAuthorized>
+                      <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
+                    </redback:elseAuthorized>
+                  </td>
+                </tr>
+              </c:forEach>
             </tbody>
             </s:if>
             <s:else>
               <s:text name="buildQueue.no.currentTaks" />
             </s:else>
           </table>
-        </div>    
+        </div>  
+        
+        <%-- deng - parallel builds
+        TODO: might need to loop through each element of map (each returns a list) 
+        
+          
         <div id="h3">
           <h3>
             <s:text name="buildQueue.section.title"/>
           </h3>  
-            <c:if test="${not empty buildProjectTasks}">
-              <ec:table items="buildProjectTasks"
+            <c:if test="${not empty buildsInQueue}">
+              <ec:table items="buildsInQueue.values"
                         var="buildProjectTask"
                         showExports="false"
                         showPagination="false"
@@ -102,11 +112,11 @@
                 </ec:row>
               </ec:table>
             </c:if>
-            <c:if test="${empty buildProjectTasks}">
+            <c:if test="${empty buildsInQueue}">
               <s:text name="buildQueue.empty"/>
             </c:if>
         </div>
-        <c:if test="${not empty buildProjectTasks}">
+        <c:if test="${not empty buildsInQueue}">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -122,32 +132,39 @@
         </c:if>
         
         
+        END OF COMMENT --%>
+        
+        
         <!-- checkout queue -->
         <div id="h3">
           <h3>
             <s:text name="checkoutQueue.currentTask.section.title"/>
           </h3>  
           <table width="100%">
-            <s:if test="%{currentCheckOutTask != null}">
+            <s:if test="%{currentCheckoutTasks != null}">
             <tbody>
               <tr>
+                <th><s:text name="checkoutQueue.currentTask.buildQueue"/></th>
                 <th><s:text name="checkoutQueue.currentTask.projectName"/></th>
                 <th>&nbsp;</th>
               </tr>
-              <tr>
-                <td width="99%"><s:property value="currentCheckOutTask.projectName"/></td>
-                <td width="1%">
-                <redback:ifAuthorized permission="continuum-manage-queues">
-                  <s:url id="cancelUrl" action="cancelCurrentQueueTask" method="cancelCurrentCheckout" namespace="/">
-                    <s:param name="projectId"><s:property value="currentCheckOutTask.projectId"/></s:param>
-                  </s:url>
-                  <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
-                </redback:ifAuthorized>
-                <redback:elseAuthorized>
-                  <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
-                </redback:elseAuthorized>              
-                </td>
-              </tr>
+              <c:forEach var="element" items="${currentCheckoutTasks}">
+                <tr>
+                  <td width="30%">${element.key}</td>
+                  <td width="69%">${element.value.projectName}</td>
+                  <td width="1%">
+                  <redback:ifAuthorized permission="continuum-manage-queues">
+                    <s:url id="cancelUrl" action="cancelCurrentQueueTask" method="cancelCurrentCheckout" namespace="/">
+                      <s:param name="projectId">${element.value.projectId}</s:param>
+                    </s:url>
+                    <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
+                  </redback:ifAuthorized>
+                  <redback:elseAuthorized>
+                    <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
+                  </redback:elseAuthorized>              
+                  </td>
+                </tr>
+              </c:forEach>
             </tbody>
             </s:if>
             <s:else>
@@ -155,12 +172,17 @@
             </s:else>
           </table>
         </div>    
+        
+        <%-- deng - parallel builds 
+        TODO: might need to loop through each element of map (each returns a list) 
+        
+        
         <div id="h3">
           <h3>
             <s:text name="checkoutQueue.section.title"/>
           </h3>  
-            <c:if test="${!empty currentCheckOutTasks}">
-              <ec:table items="currentCheckOutTasks"
+            <c:if test="${!empty checkoutsInQueue}">              
+              <ec:table items="checkoutsInQueue.values"
                         var="currentCheckOutTask"
                         showExports="false"
                         showPagination="false"
@@ -208,6 +230,9 @@
             </table>
           </div>
         </c:if>
+        
+        END OF COMMENT --%>
+        
       </s:form>
     </body>
   </s:i18n>

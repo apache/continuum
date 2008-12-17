@@ -76,7 +76,11 @@ public class QueuesAction
      */
     //private TaskQueueManager taskQueueManager;
         
-    private List<BuildProjectTask> currentBuildProjectTasks = new ArrayList<BuildProjectTask>();
+    //private List<BuildProjectTask> currentBuildProjectTasks = new ArrayList<BuildProjectTask>();
+    
+    private Map<String, BuildProjectTask> currentBuildProjectTasks = new HashMap<String, BuildProjectTask>();
+    
+    private Map<String, CheckOutTask> currentCheckoutTasks = new HashMap<String, CheckOutTask>();
     
     private Map<String, List<BuildProjectTask>> buildsInQueue = new HashMap<String, List<BuildProjectTask>>();
     
@@ -164,46 +168,82 @@ public class QueuesAction
     public String display()
         throws Exception
     {
-        // current builds
-        for( Task task : getContinuum().getBuildsManager().getCurrentBuilds() )
+        try
         {
-            BuildProjectTask buildTask = (BuildProjectTask) task;
-            this.currentBuildProjectTasks.add( buildTask );
-        }
-        
-        // queued builds
-        Map<String, List<Task>> builds = getContinuum().getBuildsManager().getProjectsInBuildQueues();
-        Set<String> keySet = builds.keySet(); 
-        List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
-        for( String key : keySet )
-        {
-            for( Task task : builds.get( key ) )
-            {
-                BuildProjectTask buildTask = (BuildProjectTask) task;
-                buildTasks.add( buildTask ); 
+            // current builds
+            Map<String, Task> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
+            Set<String> keySet = currentBuilds.keySet();
+            for( String key : keySet )
+            {   
+                BuildProjectTask buildTask = (BuildProjectTask) currentBuilds.get( key );
+                currentBuildProjectTasks.put( key, buildTask );
             }
-            buildsInQueue.put( key, buildTasks );
+        }
+        catch ( BuildManagerException e )
+        {
+            addActionError( e.getMessage() );
+            return ERROR;
         }
         
-        // current checkouts
-        for( Task task : getContinuum().getBuildsManager().getCurrentCheckouts() )
+        try
         {
-            CheckOutTask checkoutTask = (CheckOutTask) task;
-            this.currentCheckOutTasks.add( checkoutTask );
-        }
-        
-        // queued checkouts
-        Map<String, List<Task>> checkouts = getContinuum().getBuildsManager().getProjectsInCheckoutQueues();
-        keySet = builds.keySet(); 
-        List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
-        for( String key : keySet )
-        {
-            for( Task task : checkouts.get( key ) )
+            // queued builds
+            Map<String, List<Task>> builds = getContinuum().getBuildsManager().getProjectsInBuildQueues();
+            Set<String> keySet = builds.keySet(); 
+            List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
+            for( String key : keySet )
             {
-                CheckOutTask checkoutTask = (CheckOutTask) task;
-                checkoutTasks.add( checkoutTask ); 
+                for( Task task : builds.get( key ) )
+                {
+                    BuildProjectTask buildTask = (BuildProjectTask) task;
+                    buildTasks.add( buildTask ); 
+                }
+                buildsInQueue.put( key, buildTasks );
             }
-            checkoutsInQueue.put( key, checkoutTasks );
+        }
+        catch ( BuildManagerException e )
+        {
+            addActionError( e.getMessage() );
+            return ERROR;
+        }
+        
+        try
+        {
+            // current checkouts
+            Map<String, Task> currentCheckouts = getContinuum().getBuildsManager().getCurrentCheckouts();
+            Set<String> keySet = currentCheckouts.keySet();
+            for( String key : keySet )
+            {
+                CheckOutTask checkoutTask = (CheckOutTask) currentCheckouts.get( key );
+                currentCheckoutTasks.put( key, checkoutTask );
+            }
+        }
+        catch ( BuildManagerException e )
+        {
+            addActionError( e.getMessage() );
+            return ERROR;
+        }
+        
+        try
+        {
+            // queued checkouts
+            Map<String, List<Task>> checkouts = getContinuum().getBuildsManager().getProjectsInCheckoutQueues();
+            Set<String> keySet = checkouts.keySet(); 
+            List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
+            for( String key : keySet )
+            {
+                for( Task task : checkouts.get( key ) )
+                {
+                    CheckOutTask checkoutTask = (CheckOutTask) task;
+                    checkoutTasks.add( checkoutTask ); 
+                }
+                checkoutsInQueue.put( key, checkoutTasks );
+            }
+        }
+        catch ( BuildManagerException e )
+        {
+            addActionError( e.getMessage() );
+            return ERROR;
         }
         
         return SUCCESS;
@@ -316,12 +356,14 @@ public class QueuesAction
     
     private boolean cancelCheckout(int projectId)
         throws BuildManagerException
-    {
-        List<Task> tasks = getContinuum().getBuildsManager().getCurrentCheckouts();
+    {   
+        Map<String, Task> tasks = getContinuum().getBuildsManager().getCurrentCheckouts();
         if( tasks != null )
-        {        
-            for( Task task : tasks )
+        {  
+            Set<String> keySet = tasks.keySet();
+            for( String key : keySet )
             {
+                Task task = tasks.get( key );
                 if( task != null && task instanceof CheckOutTask )                    
                 {
                     if ( ( (CheckOutTask) task ).getProjectId() == projectId )
@@ -342,28 +384,6 @@ public class QueuesAction
         {
             getLogger().warn( "No task running - not cancelling checkout" );
         }
-        
-        /*if ( task != null )
-        {
-            if ( task instanceof CheckOutTask )
-            {
-                if ( ( (CheckOutTask) task ).getProjectId() == projectId )
-                {
-                    getLogger().info( "Cancelling checkout for project " + projectId );
-                    return getCheckoutTaskQueueExecutor().cancelTask( task );
-                }
-                else
-                {
-                    getLogger().warn(
-                                      "Current task is not for the given projectId (" + projectId + "): "
-                                          + ( (CheckOutTask) task ).getProjectId() + "; not cancelling checkout" );
-                }
-            }
-            else
-            {
-                getLogger().warn( "Current task not a CheckOutTask - not cancelling checkout" );
-            }
-        }*/
         
         return false;
     }
@@ -490,7 +510,48 @@ public class QueuesAction
         this.selectedCheckOutTaskHashCodes = selectedCheckOutTaskHashCodes;
     }
 
-    public List<BuildProjectTask> getCurrentBuildProjectTasks()
+    public Map<String, BuildProjectTask> getCurrentBuildProjectTasks()
+    {
+        return currentBuildProjectTasks;
+    }
+
+    public void setCurrentBuildProjectTasks( Map<String, BuildProjectTask> currentBuildProjectTasks )
+    {
+        this.currentBuildProjectTasks = currentBuildProjectTasks;
+    }
+
+    public Map<String, CheckOutTask> getCurrentCheckoutTasks()
+    {
+        return currentCheckoutTasks;
+    }
+
+    public void setCurrentCheckoutTasks( Map<String, CheckOutTask> currentCheckoutTasks )
+    {
+        this.currentCheckoutTasks = currentCheckoutTasks;
+    }
+
+    public Map<String, List<BuildProjectTask>> getBuildsInQueue()
+    {
+        return buildsInQueue;
+    }
+
+    public void setBuildsInQueue( Map<String, List<BuildProjectTask>> buildsInQueue )
+    {
+        this.buildsInQueue = buildsInQueue;
+    }
+
+    public Map<String, List<CheckOutTask>> getCheckoutsInQueue()
+    {
+        return checkoutsInQueue;
+    }
+
+    public void setCheckoutsInQueue( Map<String, List<CheckOutTask>> checkoutsInQueue )
+    {
+        this.checkoutsInQueue = checkoutsInQueue;
+    }
+
+
+    /*public List<BuildProjectTask> getCurrentBuildProjectTasks()
     {
         return currentBuildProjectTasks;
     }
@@ -498,5 +559,5 @@ public class QueuesAction
     public void setCurrentBuildProjectTasks( List<BuildProjectTask> currentBuildProjectTasks )
     {
         this.currentBuildProjectTasks = currentBuildProjectTasks;
-    }
+    }*/
 }

@@ -280,7 +280,7 @@ public interface BuildsManager
      * @return
      * @throws BuildManagerException
      */
-    List<Task> getCurrentBuilds()
+    Map<String, Task> getCurrentBuilds()
         throws BuildManagerException;
 
     /**
@@ -288,7 +288,7 @@ public interface BuildsManager
      * @return
      * @throws BuildManagerException
      */
-    List<Task> getCurrentCheckouts()
+    Map<String, Task> getCurrentCheckouts()
         throws BuildManagerException;
 
     /**
