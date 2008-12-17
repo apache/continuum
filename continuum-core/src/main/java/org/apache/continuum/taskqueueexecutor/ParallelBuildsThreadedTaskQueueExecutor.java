@@ -282,7 +282,8 @@ public class ParallelBuildsThreadedTaskQueueExecutor
     {
         log.info( "Starting task executor, thread name '" + name + "'." );
 
-        this.executorService = Executors.newSingleThreadExecutor();
+        //this.executorService = Executors.newSingleThreadExecutor();
+        this.executorService = Executors.newCachedThreadPool();
 
         executorRunnable = new ExecutorRunnable();
 

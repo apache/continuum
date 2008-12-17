@@ -63,9 +63,11 @@
         <requirement>
           <role>org.apache.maven.continuum.buildcontroller.BuildController</role>
         </requirement>
+        <!-- 
         <requirement>
           <role>org.apache.continuum.taskqueue.manager.TaskQueueManager</role>
         </requirement>
+         -->
       </requirements>
     </component>
 

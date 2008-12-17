@@ -107,6 +107,11 @@ public class ParallelBuildsManager
                 e.getMessage() );
         }
 
+        List<BuildQueue> buildQueues = buildDefinition.getSchedule().getBuildQueues();
+        for( BuildQueue buildQueue : buildQueues )
+        {
+            log.info( "[Build Project]++++++build queue : " + buildQueue.getId() + " - " + buildQueue.getName() );
+        }
         OverallBuildQueue overallBuildQueue =
             getOverallBuildQueue( projectId, BUILD_QUEUE, buildDefinition.getSchedule().getBuildQueues() );
 
@@ -120,7 +125,8 @@ public class ParallelBuildsManager
             new BuildProjectTask( projectId, buildDefinition.getId(), trigger, projectName, buildDefinitionLabel );
         try
         {
-            log.info( "Queueing project '" + projectId + "' in build queue '" + overallBuildQueue.getName() + "'");
+            log.info( "++++++[Build] Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() +
+                "'." );
             overallBuildQueue.addToBuildQueue( buildTask );
         }
         catch ( TaskQueueException e )
@@ -155,18 +161,26 @@ public class ParallelBuildsManager
         if ( firstProjectId != 0 )
         {
             BuildDefinition buildDef = projectsBuildDefinitionsMap.get( firstProjectId );
+            List<BuildQueue> buildQueues = buildDef.getSchedule().getBuildQueues();
+            for( BuildQueue buildQueue : buildQueues )
+            {
+                log.info( "[Build Projects]++++++BUILD QUEUE from projectsBuildDefinitionsMap : " + 
+                          buildQueue.getId() + " - " + buildQueue.getName() );
+            }
+            
             OverallBuildQueue overallBuildQueue =
                 getOverallBuildQueue( firstProjectId, BUILD_QUEUE, buildDef.getSchedule().getBuildQueues() );
-            ;
 
             if ( overallBuildQueue != null )
-            {
+            {                
                 for ( Project project : projects )
                 {
                     try
                     {
-                        if ( isInQueue( project.getId(), BUILD_QUEUE, -1 ) )
+                        if ( isInQueue( project.getId(), BUILD_QUEUE, projectsBuildDefinitionsMap.get( project.getId() ).getId() ) )
                         {
+                            log.warn( "Project '" + project.getId() + "' - '" + project.getName() +
+                                "' is already in build queue." );
                             continue;
                         }
                     }
@@ -190,6 +204,9 @@ public class ParallelBuildsManager
 
                     try
                     {
+                        log.info( "++++++[Build Projects] Project '" + project.getId() + "' - '" + project.getName() +
+                            "' added to overall build queue '" + overallBuildQueue.getName() + "'." );
+                        
                         overallBuildQueue.addToBuildQueue( buildTask );
                     }
                     catch ( TaskQueueException e )
@@ -320,11 +337,19 @@ public class ParallelBuildsManager
 
         OverallBuildQueue overallBuildQueue =
             getOverallBuildQueue( projectId, CHECKOUT_QUEUE, defaultBuildDefinition.getSchedule().getBuildQueues() );
-
+        
+        List<BuildQueue> buildQueues = defaultBuildDefinition.getSchedule().getBuildQueues();
+        for( BuildQueue buildQueue : buildQueues )
+        {
+            log.info( "++++++build queue : " + buildQueue.getId() + " - " + buildQueue.getName() );
+        }
+        
         CheckOutTask checkoutTask =
             new CheckOutTask( projectId, workingDirectory, projectName, scmUsername, scmPassword );
         try
         {
+            log.info( "++++++[Checkout] Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() +
+                "'." );
             overallBuildQueue.addToCheckoutQueue( checkoutTask );
         }
         catch ( TaskQueueException e )
@@ -911,8 +936,7 @@ public class ParallelBuildsManager
             try
             {   
                 for ( BuildQueue buildQueue : buildQueues )
-                {
-                    log.info( "BUILD QUEUE : " + buildQueue.getId() + " : " + buildQueue.getName() );                    
+                {                                        
                     OverallBuildQueue overallBuildQueue = overallBuildQueues.get( buildQueue.getId() );
                     if ( overallBuildQueue != null )
                     {
@@ -926,8 +950,6 @@ public class ParallelBuildsManager
                             taskQueue = overallBuildQueue.getCheckoutQueue();
                         }
                         
-                        log.info( "SIZE OF TASK QUEUE :: " + taskQueue.getQueueSnapshot().size() );
-
                         if ( idx == 0 )
                         {
                             size = taskQueue.getQueueSnapshot().size();
@@ -960,8 +982,6 @@ public class ParallelBuildsManager
             for( Integer key : keySet )
             {
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
-                log.info( "OVERALLBUILD QUEUE :: " + overallBuildQueue.getId() + " : "
-                          + overallBuildQueue.getName() );
                 if( overallBuildQueue.getName().equals( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) )
                 {
                     return overallBuildQueue;
@@ -993,7 +1013,6 @@ public class ParallelBuildsManager
                     (OverallBuildQueue) container.lookup( OverallBuildQueue.class );
                 defaultOverallBuildQueue.setId( defaultBuildQueue.getId() );
                 defaultOverallBuildQueue.setName( defaultBuildQueue.getName() );
-                //defaultOverallBuildQueue.setContainer( container );
 
                 overallBuildQueues.put( defaultOverallBuildQueue.getId(), defaultOverallBuildQueue );
             }

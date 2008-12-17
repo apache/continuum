@@ -22,19 +22,16 @@ package org.apache.maven.continuum.web.action;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.continuum.dao.BuildQueueDao;
 
 import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.apache.maven.model.Build;
 
 import com.opensymphony.xwork2.Preparable;
 
@@ -162,8 +159,7 @@ public class ScheduleAction
             description = schedule.getDescription();
             name = schedule.getName();
             delay = schedule.getDelay();
-            maxJobExecutionTime = schedule.getMaxJobExecutionTime();
-
+            maxJobExecutionTime = schedule.getMaxJobExecutionTime();            
         }
         else
         {
@@ -222,8 +218,28 @@ public class ScheduleAction
         schedule.setDescription( description );
         schedule.setName( name );
         schedule.setMaxJobExecutionTime( maxJobExecutionTime );
-
-        schedule.setBuildQueues( getBuildQueuesFromSelectedBuildQueues() );
+                
+        // remove old build queues
+        /*List<BuildQueue> existingBuildQueues = schedule.getBuildQueues();
+        for( BuildQueue buildQueue : existingBuildQueues )
+        {
+            schedule.removeBuildQueue( buildQueue );
+        }
+        */
+        for ( String buildQueueId : buildQueueIds )
+        {   
+            try
+            {
+                BuildQueue buildQueue = buildQueueDao.getBuildQueueByName( buildQueueId ) ;
+                schedule.addBuildQueue( buildQueue );
+            }
+            catch ( ContinuumStoreException e)
+            {
+                addActionError( e.getMessage() );
+            }
+        }
+        
+        //schedule.setBuildQueues( getBuildQueuesFromSelectedBuildQueues() );
 
         return schedule;
     }
@@ -295,17 +311,18 @@ public class ScheduleAction
     }
     
     private List<BuildQueue> getBuildQueuesFromSelectedBuildQueues()
-    {
+    {   
         if ( this.buildQueueIds == null )
         {
             return Collections.EMPTY_LIST;
         }
-        List<BuildQueue> selectedBuildQueue = new ArrayList<BuildQueue>();
+     
+        List<BuildQueue> selectedBuildQueue = new ArrayList<BuildQueue>();        
         for ( String buildQueueId : buildQueueIds )
-        {
+        {  
         	try
         	{
-        	    BuildQueue buildQueue = buildQueueDao.getBuildQueueByName( buildQueueId ) ;	
+        	    BuildQueue buildQueue = buildQueueDao.getBuildQueueByName( buildQueueId ) ;
         	}
         	catch ( ContinuumStoreException e)
         	{
