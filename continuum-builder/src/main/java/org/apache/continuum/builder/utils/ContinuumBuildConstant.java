@@ -2,6 +2,8 @@ package org.apache.continuum.builder.utils;
 
 import java.util.Map;
 
+import org.apache.maven.continuum.model.project.BuildResult;
+
 public class ContinuumBuildConstant
 {
     public static final String KEY_PROJECT_ID = "project-id";
@@ -53,6 +55,10 @@ public class ContinuumBuildConstant
     public static final String KEY_SCM_ERROR = "scm-error";
 
     public static final String KEY_PROJECT_NAME = "project-name";
+
+    public static final String KEY_BUILD_OUTPUT = "build-output";
+
+    public static final String KEY_BUILD_RESULT = "build-result";
 
     public static int getProjectId( Map context )
     {
@@ -132,6 +138,16 @@ public class ContinuumBuildConstant
     public static String getScmError( Map context )
     {
         return getString( context, KEY_SCM_ERROR );
+    }
+
+    public static String getBuildOutput( Map context )
+    {
+        return getString( context, KEY_BUILD_OUTPUT );
+    }
+
+    public static BuildResult getBuildResult( Map context, Object defaultValue )
+    {
+        return (BuildResult) getObject( context, KEY_BUILD_RESULT, defaultValue );
     }
 
     // ----------------------------------------------------------------------

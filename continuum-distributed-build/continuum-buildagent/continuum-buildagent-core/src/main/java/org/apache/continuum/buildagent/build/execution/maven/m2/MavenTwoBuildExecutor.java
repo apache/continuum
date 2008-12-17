@@ -11,7 +11,7 @@ import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancel
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutorException;
-import org.apache.continuum.buildagent.installation.InstallationService;
+import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -39,7 +39,7 @@ public class MavenTwoBuildExecutor
     /**
      * @plexus.requirement
      */
-    private MavenBuilderHelper builderHelper;
+    private BuildAgentMavenBuilderHelper builderHelper;
 
     public MavenTwoBuildExecutor()
     {
@@ -56,12 +56,12 @@ public class MavenTwoBuildExecutor
         this.projectHelper = projectHelper;
     }
 
-    public MavenBuilderHelper getBuilderHelper()
+    public BuildAgentMavenBuilderHelper getBuilderHelper()
     {
         return builderHelper;
     }
 
-    public void setBuilderHelper( MavenBuilderHelper builderHelper )
+    public void setBuilderHelper( BuildAgentMavenBuilderHelper builderHelper )
     {
         this.builderHelper = builderHelper;
     }
@@ -69,7 +69,7 @@ public class MavenTwoBuildExecutor
     public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
-        String executable = getInstallationService().getExecutorConfigurator( InstallationService.MAVEN2_TYPE )
+        String executable = getBuildAgentInstallationService().getExecutorConfigurator( BuildAgentInstallationService.MAVEN2_TYPE )
         .getExecutable();
 
         StringBuffer arguments = new StringBuffer();

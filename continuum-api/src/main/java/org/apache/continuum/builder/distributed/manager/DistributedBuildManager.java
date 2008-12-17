@@ -23,6 +23,9 @@ public interface DistributedBuildManager
     void prepareBuildFinished( Map context )
         throws ContinuumException;
 
+    void updateProjectCurrentlyBuilding( int projectId )
+        throws ContinuumException;
+
     void reload()
         throws ContinuumException;
     
@@ -35,4 +38,7 @@ public interface DistributedBuildManager
         throws ContinuumException;
 
     Map<String, PrepareBuildProjectsTask> getDistributedBuildProjects();
+
+    Map<String, Object> getBuildResult( int projectId )
+        throws ContinuumException;
 }

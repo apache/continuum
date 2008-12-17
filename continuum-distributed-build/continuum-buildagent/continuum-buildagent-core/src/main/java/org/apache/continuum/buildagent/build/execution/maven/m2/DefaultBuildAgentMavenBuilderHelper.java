@@ -45,11 +45,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @plexus.component role="org.apache.continuum.buildagent.build.execution.maven.m2.MavenBuilderHelper" 
+ * @plexus.component role="org.apache.continuum.buildagent.build.execution.maven.m2.BuildAgentMavenBuilderHelper" 
  * role-hint="default"
  */
-public class DefaultMavenBuilderHelper
-    implements MavenBuilderHelper, Contextualizable, Initializable
+public class DefaultBuildAgentMavenBuilderHelper
+    implements BuildAgentMavenBuilderHelper, Contextualizable, Initializable
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 

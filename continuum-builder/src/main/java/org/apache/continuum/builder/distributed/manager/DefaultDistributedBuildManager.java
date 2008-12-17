@@ -15,7 +15,7 @@ import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
-import org.apache.continuum.distributed.transport.master.ProxySlaveAgentTransportService;
+import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.ContinuumUtils;
@@ -105,7 +105,7 @@ public class DefaultDistributedBuildManager
                 {
                     try
                     {
-                        ProxySlaveAgentTransportService client = new ProxySlaveAgentTransportService( new URL( agent.getUrl() ) );
+                        SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( agent.getUrl() ) );
                         
                         if ( client.ping() )
                         {
@@ -120,7 +120,7 @@ public class DefaultDistributedBuildManager
                     catch ( MalformedURLException e )
                     {
                         // do not throw exception, just log it
-                        log.info( "Invalid URL " + agent.getUrl() + ", not creating task queue executor" );
+                        log.info( "Invalid build agent URL " + agent.getUrl() + ", not creating task queue executor" );
                     }
                     catch ( ContinuumException e )
                     {
@@ -147,7 +147,7 @@ public class DefaultDistributedBuildManager
             {
                 try
                 {
-                    ProxySlaveAgentTransportService client = new ProxySlaveAgentTransportService( new URL( agent.getUrl() ) );
+                    SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( agent.getUrl() ) );
                     
                     if ( client.ping() )
                     {
@@ -162,7 +162,7 @@ public class DefaultDistributedBuildManager
                 catch ( MalformedURLException e )
                 {
                     // do not throw exception, just log it
-                    log.info( "Invalid URL " + agent.getUrl() + ", not creating task queue executor" );
+                    log.info( "Invalid build agent URL " + agent.getUrl() + ", not creating task queue executor" );
                 }
                 catch ( Exception e )
                 {
@@ -253,7 +253,7 @@ public class DefaultDistributedBuildManager
 
                         try
                         {
-                            ProxySlaveAgentTransportService client = new ProxySlaveAgentTransportService( new URL( buildAgentUrl ) );
+                            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
                             client.cancelBuild();
                         }
                         catch ( Exception e )
@@ -341,17 +341,10 @@ public class DefaultDistributedBuildManager
             // Make the buildResult
             // ----------------------------------------------------------------------
 
-            BuildResult buildResult = new BuildResult();
-
-            buildResult.setStartTime( ContinuumBuildConstant.getBuildStart( context ) );
-            buildResult.setEndTime( ContinuumBuildConstant.getBuildEnd( context ) );
+            BuildResult buildResult = convertMapToBuildResult( context );
             buildResult.setBuildDefinition( buildDefinition );
             buildResult.setBuildNumber( buildNumber );
-            buildResult.setError( ContinuumBuildConstant.getBuildError( context ) );
-            buildResult.setExitCode( ContinuumBuildConstant.getBuildExitCode( context ) );
             buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, context ) );
-            buildResult.setState( ContinuumBuildConstant.getBuildState( context ) );
-            buildResult.setTrigger( ContinuumBuildConstant.getTrigger( context ) );
             
             buildResultDao.addBuildResult( project, buildResult );
             
@@ -424,7 +417,7 @@ public class DefaultDistributedBuildManager
     {
         try
         {
-            ProxySlaveAgentTransportService client = new ProxySlaveAgentTransportService( new URL( buildAgentUrl ) );
+            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
             
             //return client.getAvailableInstallations();
         }
@@ -504,5 +497,105 @@ public class DefaultDistributedBuildManager
         return null;
     }
 
-    
+    public void updateProjectCurrentlyBuilding( int projectId )
+        throws ContinuumException
+    {
+        try
+        {
+            Project project = projectDao.getProject( projectId );
+            project.setState( ContinuumProjectState.BUILDING );
+            projectDao.updateProject( project );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            log.error( "Error while updating project's state", e );
+            throw new ContinuumException( "Error while updating project's state", e );
+        }
+    }
+
+    public Map<String, Object> getBuildResult( int projectId )
+        throws ContinuumException
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
+        
+        String buildAgentUrl = getBuildAgent( projectId );
+        
+        if ( buildAgentUrl == null )
+        {
+            throw new ContinuumException( "Unable to find build agent for project " + projectId );
+        }
+
+        try
+        {
+            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+
+            Map result = client.getBuildResult( projectId );
+            
+            if ( result != null )
+            {
+                int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( result );
+
+                Project project = projectDao.getProjectWithAllDetails( projectId );
+                BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+
+                BuildResult oldBuildResult =
+                    buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+
+                BuildResult buildResult = convertMapToBuildResult( result );
+                buildResult.setBuildDefinition( buildDefinition );
+                buildResult.setBuildNumber( project.getBuildNumber() + 1 );
+                buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, result ) );
+
+                String buildOutput = ContinuumBuildConstant.getBuildOutput( result );
+                
+                map.put( ContinuumBuildConstant.KEY_BUILD_RESULT, buildResult );
+                map.put( ContinuumBuildConstant.KEY_BUILD_OUTPUT, buildOutput );
+            }
+        }
+        catch ( MalformedURLException e )
+        {
+            throw new ContinuumException( "Invalid build agent URL '" + buildAgentUrl + "'" );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "", e );
+        }
+
+        return map;
+    }
+
+    private String getBuildAgent( int projectId )
+        throws ContinuumException
+    {
+        Map<String, PrepareBuildProjectsTask> map = getDistributedBuildProjects();
+        
+        for ( String url : map.keySet() )
+        {
+            PrepareBuildProjectsTask task = map.get( url );
+            
+            for ( Integer id : task.getProjectsBuildDefinitionsMap().keySet() )
+            {
+                if ( projectId == id )
+                {
+                    return url;
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    private BuildResult convertMapToBuildResult( Map context )
+    {
+        BuildResult buildResult = new BuildResult();
+
+        buildResult.setStartTime( ContinuumBuildConstant.getBuildStart( context ) );
+        buildResult.setEndTime( ContinuumBuildConstant.getBuildEnd( context ) );
+        buildResult.setError( ContinuumBuildConstant.getBuildError( context ) );
+        buildResult.setExitCode( ContinuumBuildConstant.getBuildExitCode( context ) );
+        buildResult.setState( ContinuumBuildConstant.getBuildState( context ) );
+        buildResult.setTrigger( ContinuumBuildConstant.getTrigger( context ) );
+
+        return buildResult;
+    }
 }

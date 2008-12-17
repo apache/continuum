@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.apache.continuum.buildagent.model.Installation;
 
-public interface ConfigurationService
+public interface BuildAgentConfigurationService
 {
-    String ROLE = ConfigurationService.class.getName();
+    String ROLE = BuildAgentConfigurationService.class.getName();
 
     File getBuildOutputDirectory();
 
@@ -20,10 +20,10 @@ public interface ConfigurationService
     String getContinuumServerUrl();
 
     String getBuildOutput( int projectId )
-        throws ContinuumConfigurationException;
+        throws BuildAgentConfigurationException;
 
     File getBuildOutputFile( int projectId )
-        throws ContinuumConfigurationException;
+        throws BuildAgentConfigurationException;
 
     List<Installation> getAvailableInstallations();
 }

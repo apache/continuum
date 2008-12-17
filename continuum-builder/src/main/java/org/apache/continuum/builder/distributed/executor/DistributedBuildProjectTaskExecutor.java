@@ -12,7 +12,7 @@ import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
-import org.apache.continuum.distributed.transport.master.ProxySlaveAgentTransportService;
+import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.ContinuumUtils;
@@ -77,7 +77,7 @@ public class DistributedBuildProjectTaskExecutor
 
         try
         {
-            ProxySlaveAgentTransportService client = new ProxySlaveAgentTransportService( new URL( buildAgentUrl ) );
+            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
 
             ProjectScmRoot scmRoot = projectScmRootDao.
                 getProjectScmRootByProjectGroupAndScmRootAddress( prepareBuildTask.getProjectGroupId(), 

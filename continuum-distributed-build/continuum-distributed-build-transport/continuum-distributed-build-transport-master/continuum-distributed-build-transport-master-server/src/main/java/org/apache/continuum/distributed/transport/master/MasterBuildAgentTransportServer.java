@@ -62,6 +62,20 @@ public class MasterBuildAgentTransportServer
         
         return Boolean.TRUE;
     }
-    
-    // TODO: add prepareBuildFinished() method
+
+    public Boolean prepareBuildFinished( Map prepareBuildResult )
+        throws Exception
+    {
+        log.info( "Prepare build finished." );
+        distributedBuildManager.prepareBuildFinished( prepareBuildResult );
+        return Boolean.TRUE;
+    }
+
+    public Boolean returnProjectCurrentlyBuilding( Integer projectId )
+        throws Exception
+    {
+        log.info( "Project currently building returned." );
+        distributedBuildManager.updateProjectCurrentlyBuilding( projectId.intValue() );
+        return Boolean.TRUE;
+    }
 }

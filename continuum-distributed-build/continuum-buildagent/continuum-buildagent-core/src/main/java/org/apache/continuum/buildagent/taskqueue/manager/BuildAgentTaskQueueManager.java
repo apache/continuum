@@ -3,9 +3,9 @@ package org.apache.continuum.buildagent.taskqueue.manager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 
-public interface TaskQueueManager
+public interface BuildAgentTaskQueueManager
 {
-    String ROLE = TaskQueueManager.class.getName();
+    String ROLE = BuildAgentTaskQueueManager.class.getName();
 
     TaskQueue getBuildQueue();
 

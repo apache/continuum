@@ -10,11 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @plexus.component role="org.apache.continuum.buildagent.build.execution.manager.BuildExecutorManager"
+ * @plexus.component role="org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager"
  * role-hint"default"
  */
-public class DefaultBuildExecutorManager
-    implements BuildExecutorManager
+public class DefaultBuildAgentBuildExecutorManager
+    implements BuildAgentBuildExecutorManager
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 

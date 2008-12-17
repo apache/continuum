@@ -9,19 +9,7 @@
   <bean id="slaveBuildAgentTransportServer" class="org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportServer">
     <constructor-arg ref="continuumBuildAgentService"/>
   </bean>
-  
-  <bean id="continuumBuildAgentService" class="org.apache.continuum.buildagent.ContinuumBuildAgentServiceImpl">
-    <property name="configurationService" ref="buildAgentConfigurationService"/>
-  </bean>
-  
-  <bean id="buildAgentConfigurationService" class="org.apache.continuum.buildagent.configuration.DefaultConfigurationService">
-    <property name="configuration" ref="continuumConfiguration" />
-  </bean>
-  
-  <bean id="continuumConfiguration" class="org.apache.continuum.buildagent.configuration.DefaultContinuumConfiguration">
-    <property name="configurationFile" value="file:${appserver.base}/conf/continuum.xml" />
-  </bean>
-  
+
   <bean name="xmlrpcServicesList" class="java.util.ArrayList">
     <constructor-arg>
       <list>

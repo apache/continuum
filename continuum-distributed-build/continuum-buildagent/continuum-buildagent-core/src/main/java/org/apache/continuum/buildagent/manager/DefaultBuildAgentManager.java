@@ -1,16 +1,15 @@
-package org.apache.continuum.buildagent;
+package org.apache.continuum.buildagent.manager;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
-import org.apache.continuum.buildagent.configuration.ConfigurationService;
-import org.apache.continuum.buildagent.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
-import org.apache.continuum.buildagent.utils.ContinuumUtils;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -25,10 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @plexus.component role="org.apache.continuum.buildagent.Continuum" role-hint="default"
+ * @plexus.component role="org.apache.continuum.buildagent.manager.BuildAgentManager" role-hint="default"
  */
-public class DefaultContinuum
-    implements Continuum
+public class DefaultBuildAgentManager
+    implements BuildAgentManager
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
@@ -40,12 +39,12 @@ public class DefaultContinuum
     /**
      * @plexus.requirement
      */
-    private ConfigurationService configurationService;
+    private BuildAgentConfigurationService buildAgentConfigurationService;
 
     /**
      * @plexus.requirement
      */
-    private TaskQueueManager taskQueueManager;
+    private BuildAgentTaskQueueManager buildAgentTaskQueueManager;
 
     public void prepareBuildProjects( List<BuildContext> buildContexts)
         throws ContinuumException
@@ -155,7 +154,7 @@ public class DefaultContinuum
             Project project = ContinuumBuildAgentUtil.getProject( actionContext );
     
             actionContext.put( ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY,
-                               configurationService.getWorkingDirectory( project.getId() ).getAbsolutePath() );
+                               buildAgentConfigurationService.getWorkingDirectory( project.getId() ).getAbsolutePath() );
     
             performAction( "checkout-project", buildContext );
     
@@ -307,7 +306,7 @@ public class DefaultContinuum
         
         result.setSuccess( false );
         
-        result.setException( ContinuumUtils.throwableToString( exception ) );
+        result.setException( ContinuumBuildAgentUtil.throwableToString( exception ) );
 
         buildContext.setScmResult( result );
         buildContext.getActionContext().put( ContinuumBuildAgentUtil.KEY_UPDATE_SCM_RESULT, result );
@@ -327,7 +326,7 @@ public class DefaultContinuum
                                                                       "" );
             try
             {
-                taskQueueManager.getBuildQueue().put( buildProjectTask );
+                buildAgentTaskQueueManager.getBuildQueue().put( buildProjectTask );
             }
             catch ( TaskQueueException e )
             {

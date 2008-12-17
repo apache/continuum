@@ -582,17 +582,32 @@ under the License.
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-distributed-build-transport-common</artifactId>
+        <artifactId>continuum-distributed-build-transport-slave-api</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-distributed-build-transport-master</artifactId>
+        <artifactId>continuum-distributed-build-transport-slave-server</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-distributed-build-transport-slave</artifactId>
+        <artifactId>continuum-distributed-build-transport-slave-client</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-distributed-build-transport-master-api</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-distributed-build-transport-master-server</artifactId>
+        <version>${pom.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-distributed-build-transport-master-client</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>

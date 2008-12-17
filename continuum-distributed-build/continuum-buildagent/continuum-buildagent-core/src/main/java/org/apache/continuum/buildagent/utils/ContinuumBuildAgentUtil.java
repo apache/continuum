@@ -1,5 +1,7 @@
 package org.apache.continuum.buildagent.utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Map;
 
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -9,6 +11,8 @@ import org.apache.maven.continuum.model.scm.ScmResult;
 
 public class ContinuumBuildAgentUtil
 {
+    public static final String EOL = System.getProperty( "line.separator" );
+
     public static final String KEY_PROJECT_ID = "project-id";
 
     public static final String KEY_BUILD_DEFINITION_ID = "builddefinition-id";
@@ -78,6 +82,8 @@ public class ContinuumBuildAgentUtil
     public static final String KEY_BUILD_RESULT = "build-result";
 
     public static final String KEY_PROJECT_NAME = "project-name";
+
+    public static final String KEY_BUILD_OUTPUT = "build-output";
 
     public static Integer getProjectId( Map context )
     {
@@ -249,5 +255,48 @@ public class ContinuumBuildAgentUtil
         }
 
         return value;
+    }
+
+    public static String throwableToString( Throwable error )
+    {
+        if ( error == null )
+        {
+            return "";
+        }
+
+        StringWriter writer = new StringWriter();
+
+        PrintWriter printer = new PrintWriter( writer );
+
+        error.printStackTrace( printer );
+
+        printer.flush();
+
+        return writer.getBuffer().toString();
+    }
+
+    public static String throwableMessagesToString( Throwable error )
+    {
+        if ( error == null )
+        {
+            return "";
+        }
+
+        StringBuffer buffer = new StringBuffer();
+
+        buffer.append( error.getMessage() );
+
+        error = error.getCause();
+
+        while ( error != null )
+        {
+            buffer.append( EOL );
+
+            buffer.append( error.getMessage() );
+
+            error = error.getCause();
+        }
+
+        return buffer.toString();
     }
 }

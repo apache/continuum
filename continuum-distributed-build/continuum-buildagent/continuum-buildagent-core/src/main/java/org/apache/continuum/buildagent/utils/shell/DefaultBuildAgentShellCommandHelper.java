@@ -20,11 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @plexus.component role="org.apache.continuum.buildagent.utils.shell.ShellCommandHelper"
+ * @plexus.component role="org.apache.continuum.buildagent.utils.shell.BuildAgentShellCommandHelper"
  * role-hint="default"
  */
-public class DefaultShellCommandHelper
-    implements ShellCommandHelper
+public class DefaultBuildAgentShellCommandHelper
+    implements BuildAgentShellCommandHelper
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
     

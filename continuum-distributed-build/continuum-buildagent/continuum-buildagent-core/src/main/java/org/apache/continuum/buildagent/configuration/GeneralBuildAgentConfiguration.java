@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.continuum.buildagent.model.Installation;
 
-public class ContinuumBuildAgentConfiguration
+public class GeneralBuildAgentConfiguration
 {
     private File workingDirectory;
 

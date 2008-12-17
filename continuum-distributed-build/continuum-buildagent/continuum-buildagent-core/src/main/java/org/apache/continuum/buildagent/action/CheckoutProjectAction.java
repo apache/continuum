@@ -7,11 +7,10 @@ import java.util.Map;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
-import org.apache.continuum.buildagent.configuration.ConfigurationService;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
-import org.apache.continuum.buildagent.utils.ContinuumUtils;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -37,7 +36,7 @@ public class CheckoutProjectAction
     /**
      * @plexus.requirement
      */
-    private ConfigurationService configurationService;
+    private BuildAgentConfigurationService buildAgentConfigurationService;
 
     /**
      * @plexus.requirement
@@ -52,7 +51,7 @@ public class CheckoutProjectAction
         Project project = BuildContextToProject.getProject( buildContext );
         BuildDefinition buildDefinition = BuildContextToBuildDefinition.getBuildDefinition( buildContext );
 
-        File workingDirectory = configurationService.getWorkingDirectory( project.getId() );
+        File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() );
 
         // ----------------------------------------------------------------------
         // Check out the project
@@ -126,7 +125,7 @@ public class CheckoutProjectAction
 
             result.setSuccess( false );
 
-            result.setException( ContinuumUtils.throwableMessagesToString( e ) );
+            result.setException( ContinuumBuildAgentUtil.throwableMessagesToString( e ) );
 
             getLogger().error( e.getMessage(), e );
         }
@@ -138,7 +137,7 @@ public class CheckoutProjectAction
 
             result.setSuccess( false );
 
-            result.setException( ContinuumUtils.throwableMessagesToString( t ) );
+            result.setException( ContinuumBuildAgentUtil.throwableMessagesToString( t ) );
 
             getLogger().error( t.getMessage(), t );
         }

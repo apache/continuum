@@ -1,15 +1,17 @@
 package org.apache.continuum.buildagent.taskqueue.execution;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
-import org.apache.continuum.buildagent.utils.ContinuumUtils;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -20,6 +22,7 @@ import org.codehaus.plexus.action.ActionNotFoundException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
+import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +44,11 @@ public class BuildProjectTaskExecutor
      * @plexus.requirement
      */
     private ActionManager actionManager;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentConfigurationService buildAgentConfigurationService;
 
     public void executeTask( Task task )
         throws TaskExecutionException
@@ -110,6 +118,17 @@ public class BuildProjectTaskExecutor
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ) );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ) );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, new Integer( buildResult.getExitCode() ) );
+        
+        String buildOutput = getBuildOutputText( buildContext.getProjectId() );
+        if ( buildOutput == null )
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_BUILD_OUTPUT, "" );
+        }
+        else
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_BUILD_OUTPUT, buildOutput );
+        }
+
         if ( buildResult.getError() != null )
         {
             result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, buildResult.getError() );
@@ -134,25 +153,25 @@ public class BuildProjectTaskExecutor
         }
         catch ( ActionNotFoundException e )
         {
-            error = ContinuumUtils.throwableToString( e );
+            error = ContinuumBuildAgentUtil.throwableToString( e );
             exception = new TaskExecutionException( "Error looking up action '" + actionName + "'", e );
         }
         catch ( ScmRepositoryException e )
         {
-            error = getValidationMessages( e ) + "\n" + ContinuumUtils.throwableToString( e );
+            error = getValidationMessages( e ) + "\n" + ContinuumBuildAgentUtil.throwableToString( e );
     
             exception = new TaskExecutionException( "SCM error while executing '" + actionName + "'", e );
         }
         catch ( ScmException e )
         {
-            error = ContinuumUtils.throwableToString( e );
+            error = ContinuumBuildAgentUtil.throwableToString( e );
     
             exception = new TaskExecutionException( "SCM error while executing '" + actionName + "'", e );
         }
         catch ( Exception e )
         {
             exception = new TaskExecutionException( "Error executing action '" + actionName + "'", e );
-            error = ContinuumUtils.throwableToString( exception );
+            error = ContinuumBuildAgentUtil.throwableToString( exception );
         }
 
         updateBuildResult( context, error );
@@ -206,5 +225,25 @@ public class BuildProjectTaskExecutor
             }
         }
         return message.toString();
+    }
+
+    private String getBuildOutputText( int projectId )
+    {
+        try
+        {
+            File buildOutputFile = buildAgentConfigurationService.getBuildOutputFile( projectId );
+        
+            if ( buildOutputFile.exists() )
+            {
+                return StringEscapeUtils.escapeHtml( FileUtils.fileRead( buildOutputFile ) );
+            }
+        }
+        catch ( Exception e )
+        {
+            // do not throw exception, just log it
+            log.error( "Error retrieving build output file", e );
+        }
+
+        return null;
     }
 }

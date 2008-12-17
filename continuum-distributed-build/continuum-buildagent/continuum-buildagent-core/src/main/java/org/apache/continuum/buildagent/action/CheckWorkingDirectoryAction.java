@@ -3,7 +3,7 @@ package org.apache.continuum.buildagent.action;
 import java.io.File;
 import java.util.Map;
 
-import org.apache.continuum.buildagent.configuration.ConfigurationService;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.action.AbstractAction;
@@ -17,14 +17,14 @@ public class CheckWorkingDirectoryAction
     /**
      * @plexus.requirement
      */    
-    ConfigurationService configurationService;
+    BuildAgentConfigurationService buildAgentConfigurationService;
     
     public void execute( Map context )
         throws Exception
     {
         Project project = ContinuumBuildAgentUtil.getProject( context );
 
-        File workingDirectory = configurationService.getWorkingDirectory( project.getId() );
+        File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() );
 
         if ( !workingDirectory.exists() )
         {

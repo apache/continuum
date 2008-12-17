@@ -119,4 +119,42 @@ public class MasterBuildAgentTransportClient
         
         return result;
     }
+
+    public Boolean prepareBuildFinished( Map prepareBuildResult )
+        throws Exception
+    {
+        Boolean result = null;
+        
+        try
+        {
+            result = master.prepareBuildFinished( prepareBuildResult );
+            log.info(  "Prepare build finished." );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to finish prepare build" );
+            throw new Exception( "Failed to finish prepare build", e );
+        }
+        
+        return result;
+    }
+
+    public Boolean returnProjectCurrentlyBuilding( Integer projectId )
+        throws Exception
+    {
+        Boolean result = null;
+        
+        try
+        {
+            result = master.returnProjectCurrentlyBuilding( projectId );
+            log.info( "Return project currently building" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to return project currently building", e );
+            throw new Exception( "Failed to return project currently building", e );
+        }
+
+        return result;
+    }
 }

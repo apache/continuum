@@ -1,17 +1,26 @@
 package org.apache.continuum.buildagent;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
-import org.apache.continuum.buildagent.configuration.ConfigurationService;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.model.Installation;
-import org.apache.continuum.buildagent.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.codehaus.plexus.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @plexus.component role="org.apache.continuum.buildagent.ContinuumBuildAgentService"
@@ -19,20 +28,22 @@ import org.apache.maven.continuum.ContinuumException;
 public class ContinuumBuildAgentServiceImpl
     implements ContinuumBuildAgentService
 {
-    /**
-     * @plexus.requirement
-     */
-    private ConfigurationService configurationService;
+    private Logger log = LoggerFactory.getLogger( this.getClass() );
 
     /**
      * @plexus.requirement
      */
-    private Continuum continuum;
+    private BuildAgentConfigurationService buildAgentConfigurationService;
 
     /**
      * @plexus.requirement
      */
-    private TaskQueueManager taskQueueManager;
+    private BuildAgentManager buildAgentManager;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentTaskQueueManager buildAgentTaskQueueManager;
 
     /**
      * @plexus.requirement
@@ -46,7 +57,7 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
-            continuum.prepareBuildProjects( buildContextList );
+            buildAgentManager.prepareBuildProjects( buildContextList );
         }
         catch ( ContinuumException e )
         {
@@ -54,17 +65,72 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
+    //TODO: fix this
     public List<Installation> getAvailableInstallations()
         throws ContinuumBuildAgentException
     {
-        return configurationService.getAvailableInstallations();
+        return buildAgentConfigurationService.getAvailableInstallations();
     }
 
     public Map getBuildResult( int projectId )
         throws ContinuumBuildAgentException
     {
-        // TODO Auto-generated method stub
-        return null;
+        Map result = new HashMap();
+
+        if ( projectId == getProjectCurrentlyBuilding() )
+        {
+            BuildContext buildContext = buildContextManager.getBuildContext( projectId );
+            
+            result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( buildContext.getProjectId() ) );
+            result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( buildContext.getBuildDefinitionId() ) );
+            result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( buildContext.getTrigger() ) );
+            
+            BuildResult buildResult = buildContext.getBuildResult();
+
+            if ( buildResult != null )
+            {
+                if ( buildResult.getStartTime() <= 0 )
+                {
+                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildContext.getBuildStartTime() ) );
+                }
+                else
+                {
+                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ) );
+                }
+
+                if ( buildResult.getError() == null )
+                {
+                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, "" );
+                }
+                else
+                {
+                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, buildResult.getError() );
+                }
+
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( buildResult.getState() ) );
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ) );
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, buildResult.getExitCode() );
+            }
+            else
+            {
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildContext.getBuildStartTime() ) );
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( 0 ) );
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( ContinuumProjectState.BUILDING ) );
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, "" );
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, new Integer( 0 ) );
+            }
+            
+            String buildOutput = getBuildOutputText( projectId );
+            if ( buildOutput == null )
+            {
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_OUTPUT, "" );
+            }
+            else
+            {
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_OUTPUT, buildOutput );
+            }
+        }
+        return result;
     }
 
     public int getProjectCurrentlyBuilding()
@@ -72,7 +138,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            return taskQueueManager.getCurrentProjectInBuilding();
+            return buildAgentTaskQueueManager.getCurrentProjectInBuilding();
         }
         catch ( TaskQueueManagerException e )
         {
@@ -85,7 +151,7 @@ public class ContinuumBuildAgentServiceImpl
     {
         try
         {
-            taskQueueManager.cancelBuild();
+            buildAgentTaskQueueManager.cancelBuild();
         }
         catch ( TaskQueueManagerException e )
         {
@@ -122,4 +188,23 @@ public class ContinuumBuildAgentServiceImpl
         return buildContext;
     }
 
+    private String getBuildOutputText( int projectId )
+    {
+        try
+        {
+            File buildOutputFile = buildAgentConfigurationService.getBuildOutputFile( projectId );
+        
+            if ( buildOutputFile.exists() )
+            {
+                return StringEscapeUtils.escapeHtml( FileUtils.fileRead( buildOutputFile ) );
+            }
+        }
+        catch ( Exception e )
+        {
+            // do not throw exception, just log it
+            log.error( "Error retrieving build output file", e );
+        }
+
+        return null;
+    }
 }

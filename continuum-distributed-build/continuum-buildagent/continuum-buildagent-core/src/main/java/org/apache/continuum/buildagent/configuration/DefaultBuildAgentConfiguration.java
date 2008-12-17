@@ -14,14 +14,14 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DefaultContinuumConfiguration
-    implements ContinuumConfiguration
+public class DefaultBuildAgentConfiguration
+    implements BuildAgentConfiguration
 {
     private Logger log = LoggerFactory.getLogger( getClass() );
 
     private File configurationFile;
 
-    private ContinuumBuildAgentConfiguration buildAgentConfiguration;
+    private GeneralBuildAgentConfiguration buildAgentConfiguration;
 
     protected void initialize()
     {
@@ -35,7 +35,7 @@ public class DefaultContinuumConfiguration
             {
                 reload( configurationFile );
             }
-            catch ( ContinuumConfigurationException e )
+            catch ( BuildAgentConfigurationException e )
             {
                 // skip this and only log a warn
                 log.warn( " error on loading configuration from file " + configurationFile.getPath() );
@@ -44,24 +44,24 @@ public class DefaultContinuumConfiguration
         else
         {
             log.info( "build agent configuration file does not exists" );
-            this.buildAgentConfiguration = new ContinuumBuildAgentConfiguration();
+            this.buildAgentConfiguration = new GeneralBuildAgentConfiguration();
         }
     }
 
-    public ContinuumBuildAgentConfiguration getContinuumBuildAgentConfiguration()
-        throws ContinuumConfigurationException
+    public GeneralBuildAgentConfiguration getContinuumBuildAgentConfiguration()
+        throws BuildAgentConfigurationException
     {
         return buildAgentConfiguration;
     }
 
     public void reload()
-        throws ContinuumConfigurationException
+        throws BuildAgentConfigurationException
     {
         this.initialize();
     }
 
     public void reload( File file )
-        throws ContinuumConfigurationException
+        throws BuildAgentConfigurationException
     {
         try
         {
@@ -70,7 +70,7 @@ public class DefaultContinuumConfiguration
             ContinuumBuildAgentConfigurationModel configuration = configurationXpp3Reader
                 .read( new InputStreamReader( new FileInputStream( file ) ) );
 
-            this.buildAgentConfiguration = new ContinuumBuildAgentConfiguration();
+            this.buildAgentConfiguration = new GeneralBuildAgentConfiguration();
             if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
             {
                 this.buildAgentConfiguration.setBuildOutputDirectory( new File( configuration.getBuildOutputDirectory() ) );
@@ -85,17 +85,17 @@ public class DefaultContinuumConfiguration
         catch ( IOException e )
         {
             log.error( e.getMessage(), e );
-            throw new ContinuumConfigurationException( e.getMessage(), e );
+            throw new BuildAgentConfigurationException( e.getMessage(), e );
         }
         catch ( XmlPullParserException e )
         {
             log.error( e.getMessage(), e );
-            throw new ContinuumConfigurationException( e.getMessage(), e );
+            throw new BuildAgentConfigurationException( e.getMessage(), e );
         }
     }
 
     public void save()
-        throws ContinuumConfigurationException
+        throws BuildAgentConfigurationException
     {
         if ( !configurationFile.exists() )
         {
@@ -105,7 +105,7 @@ public class DefaultContinuumConfiguration
     }
 
     public void save( File file )
-        throws ContinuumConfigurationException
+        throws BuildAgentConfigurationException
     {
         try
         {
@@ -128,12 +128,12 @@ public class DefaultContinuumConfiguration
         catch ( IOException e )
         {
             log.error( e.getMessage(), e );
-            throw new ContinuumConfigurationException( e.getMessage(), e );
+            throw new BuildAgentConfigurationException( e.getMessage(), e );
         }
     }
 
-    public void setContinuumBuildAgentConfiguration( ContinuumBuildAgentConfiguration buildAgentConfiguration )
-        throws ContinuumConfigurationException
+    public void setContinuumBuildAgentConfiguration( GeneralBuildAgentConfiguration buildAgentConfiguration )
+        throws BuildAgentConfigurationException
     {
         this.buildAgentConfiguration = buildAgentConfiguration;
     }

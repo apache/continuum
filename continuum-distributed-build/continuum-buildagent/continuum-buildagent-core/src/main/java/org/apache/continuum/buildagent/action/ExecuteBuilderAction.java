@@ -7,10 +7,9 @@ import java.util.Map;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
-import org.apache.continuum.buildagent.build.execution.manager.BuildExecutorManager;
-import org.apache.continuum.buildagent.configuration.ConfigurationService;
+import org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
-import org.apache.continuum.buildagent.utils.ContinuumUtils;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -26,12 +25,12 @@ public class ExecuteBuilderAction
     /**
      * @plexus.requirement
      */
-    private BuildExecutorManager buildExecutorManager;
+    private BuildAgentBuildExecutorManager buildAgentBuildExecutorManager;
 
     /**
      * @plexus.requirement
      */
-    private ConfigurationService configurationService;
+    private BuildAgentConfigurationService buildAgentConfigurationService;
 
     public void execute( Map context )
         throws Exception
@@ -46,7 +45,7 @@ public class ExecuteBuilderAction
 
         int trigger = ContinuumBuildAgentUtil.getTrigger( context );
 
-        ContinuumAgentBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
+        ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor( project.getExecutorId() );
         
         // ----------------------------------------------------------------------
         // Make the buildResult
@@ -66,7 +65,7 @@ public class ExecuteBuilderAction
 
         try
         {
-            File buildOutputFile = configurationService.getBuildOutputFile( project.getId() );
+            File buildOutputFile = buildAgentConfigurationService.getBuildOutputFile( project.getId() );
 
             ContinuumAgentBuildExecutionResult result = buildExecutor.build( project, buildDefinition, buildOutputFile );
 
@@ -86,7 +85,7 @@ public class ExecuteBuilderAction
 
             buildResult.setState( ContinuumProjectState.ERROR );
 
-            buildResult.setError( ContinuumUtils.throwableToString( e ) );
+            buildResult.setError( ContinuumBuildAgentUtil.throwableToString( e ) );
         }
         finally
         {

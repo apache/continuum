@@ -5,9 +5,9 @@ import java.io.File;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.project.MavenProject;
 
-public interface MavenBuilderHelper
+public interface BuildAgentMavenBuilderHelper
 {
-    String ROLE = MavenBuilderHelper.class.getName();
+    String ROLE = BuildAgentMavenBuilderHelper.class.getName();
 
     MavenProject getMavenProject( ContinuumProjectBuildingResult result, File file );
 }

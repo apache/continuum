@@ -96,18 +96,6 @@ public class SlaveBuildAgentTransportServiceTest
         }
     }
 
-    public void testIsBusy()
-    {
-        try
-        {
-            slaveProxy.isBusy().booleanValue();
-        }
-        catch ( Exception e )
-        {
-            fail( e.getMessage() );
-        }
-    }
-
     public void testPing()
     {
         try

@@ -1,13 +1,13 @@
-package org.apache.continuum.buildagent;
+package org.apache.continuum.buildagent.manager;
 
 import java.util.List;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.maven.continuum.ContinuumException;
 
-public interface Continuum
+public interface BuildAgentManager
 {
-    String ROLE = Continuum.class.getName();
+    String ROLE = BuildAgentManager.class.getName();
 
     void prepareBuildProjects( List<BuildContext> buildContextList )
         throws ContinuumException;

@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.continuum.buildagent.configuration.ConfigurationService;
-import org.apache.continuum.buildagent.installation.InstallationService;
+import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.utils.shell.ExecutionResult;
-import org.apache.continuum.buildagent.utils.shell.ShellCommandHelper;
+import org.apache.continuum.buildagent.utils.shell.BuildAgentShellCommandHelper;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -30,7 +30,7 @@ public abstract class AbstractBuildExecutor
     /**
      * @plexus.requirement
      */
-    private ShellCommandHelper shellCommandHelper;
+    private BuildAgentShellCommandHelper buildAgentShellCommandHelper;
 
     /**
      * @plexus.requirement
@@ -40,12 +40,12 @@ public abstract class AbstractBuildExecutor
     /**
      * @plexus.requirement
      */
-    private ConfigurationService configurationService;
+    private BuildAgentConfigurationService buildAgentConfigurationService;
 
     /**
      * @plexus.requirement
      */
-    private InstallationService installationService;
+    private BuildAgentInstallationService buildAgentInstallationService;
 
     /**
      * @plexus.configuration
@@ -71,14 +71,14 @@ public abstract class AbstractBuildExecutor
         this.resolveExecutable = resolveExecutable;
     }
 
-    public void setShellCommandHelper( ShellCommandHelper shellCommandHelper )
+    public void setBuildAgentShellCommandHelper( BuildAgentShellCommandHelper buildAgentShellCommandHelper )
     {
-        this.shellCommandHelper = shellCommandHelper;
+        this.buildAgentShellCommandHelper = buildAgentShellCommandHelper;
     }
 
-    public ShellCommandHelper getShellCommandHelper()
+    public BuildAgentShellCommandHelper getBuildAgentShellCommandHelper()
     {
-        return shellCommandHelper;
+        return buildAgentShellCommandHelper;
     }
 
     public void setDefaultExecutable( String defaultExecutable )
@@ -86,24 +86,24 @@ public abstract class AbstractBuildExecutor
         this.defaultExecutable = defaultExecutable;
     }
 
-    public ConfigurationService getConfigurationService()
+    public BuildAgentConfigurationService getBuildAgentConfigurationService()
     {
-        return configurationService;
+        return buildAgentConfigurationService;
     }
 
-    public void setConfigurationService( ConfigurationService configurationService )
+    public void setBuildAgentConfigurationService( BuildAgentConfigurationService buildAgentConfigurationService )
     {
-        this.configurationService = configurationService;
+        this.buildAgentConfigurationService = buildAgentConfigurationService;
     }
 
-    public InstallationService getInstallationService()
+    public BuildAgentInstallationService getBuildAgentInstallationService()
     {
-        return installationService;
+        return buildAgentInstallationService;
     }
 
-    public void setInstallationService( InstallationService installationService )
+    public void setBuildAgentInstallationService( BuildAgentInstallationService buildAgentInstallationService )
     {
-        this.installationService = installationService;
+        this.buildAgentInstallationService = buildAgentInstallationService;
     }
 
     // ----------------------------------------------------------------------
@@ -225,7 +225,7 @@ public abstract class AbstractBuildExecutor
 
         try
         {
-            ExecutionResult result = getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable,
+            ExecutionResult result = getBuildAgentShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable,
                                                                                   arguments, output, project.getId(),
                                                                                   environments );
 
@@ -276,12 +276,12 @@ public abstract class AbstractBuildExecutor
     public boolean isBuilding( Project project )
     {
         return project.getState() == ContinuumProjectState.BUILDING ||
-            getShellCommandHelper().isRunning( project.getId() );
+            getBuildAgentShellCommandHelper().isRunning( project.getId() );
     }
 
     public void killProcess( Project project )
     {
-        getShellCommandHelper().killProcess( project.getId() );
+        getBuildAgentShellCommandHelper().killProcess( project.getId() );
     }
 
     public List<Artifact> getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
@@ -293,7 +293,7 @@ public abstract class AbstractBuildExecutor
 
     public File getWorkingDirectory( int projectId )
     {
-        return getConfigurationService().getWorkingDirectory( projectId );
+        return getBuildAgentConfigurationService().getWorkingDirectory( projectId );
     }
 
     public boolean isResolveExecutable()

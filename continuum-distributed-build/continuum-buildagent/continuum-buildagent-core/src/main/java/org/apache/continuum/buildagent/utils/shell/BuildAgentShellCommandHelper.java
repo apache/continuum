@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.apache.maven.shared.release.ReleaseResult;
 
-public interface ShellCommandHelper
+public interface BuildAgentShellCommandHelper
 {
-    String ROLE = ShellCommandHelper.class.getName();
+    String ROLE = BuildAgentShellCommandHelper.class.getName();
 
     ExecutionResult executeShellCommand( File workingDirectory, String executable, String arguments, File output,
                                          long idCommand, Map<String, String> environments )

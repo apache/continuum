@@ -21,10 +21,13 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.builder.utils.ContinuumBuildConstant;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.StateGenerator;
 import org.apache.struts2.ServletActionContext;
@@ -35,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -45,6 +49,11 @@ import java.util.List;
 public class BuildResultAction
     extends AbstractBuildAction
 {
+    /**
+     * @plexus.requirement
+     */
+    private DistributedBuildManager distributedBuildManager;
+
     private Project project;
 
     private BuildResult buildResult;
@@ -77,27 +86,47 @@ public class BuildResultAction
         // check if there are surefire results to display
         project = getContinuum().getProject( getProjectId() );
 
-        buildResult = getContinuum().getBuildResult( getBuildId() );
-
-        // directory contains files ?
-        File surefireReportsDirectory =
-            getContinuum().getConfiguration().getTestReportsDirectory( buildId, getProjectId() );
-        File[] files = surefireReportsDirectory.listFiles();
-        if ( files == null )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() && project.getState() == ContinuumProjectState.BUILDING )
         {
+            Map<String, Object> map = distributedBuildManager.getBuildResult( project.getId() );
+
+            if ( map.size() > 0 )
+            {
+                buildResult = ContinuumBuildConstant.getBuildResult( map, null );
+
+                buildOutput = ContinuumBuildConstant.getBuildOutput( map );
+            }
+            changeSet = null;
+
             hasSurefireResults = false;
+
+            this.setCanDelete( false );
         }
         else
         {
-            hasSurefireResults = files.length > 0;
+            buildResult = getContinuum().getBuildResult( getBuildId() );
+    
+            // directory contains files ?
+            File surefireReportsDirectory =
+                getContinuum().getConfiguration().getTestReportsDirectory( buildId, getProjectId() );
+            File[] files = surefireReportsDirectory.listFiles();
+            if ( files == null )
+            {
+                hasSurefireResults = false;
+            }
+            else
+            {
+                hasSurefireResults = files.length > 0;
+            }
+            changeSet = getContinuum().getChangesSinceLastUpdate( getProjectId() );
+    
+            buildOutput = getBuildOutputText();
+    
+            state = StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+    
+            this.setCanDelete( this.canRemoveBuildResult( buildResult ) );
         }
-        changeSet = getContinuum().getChangesSinceLastUpdate( getProjectId() );
 
-        buildOutput = getBuildOutputText();
-
-        state = StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
-
-        this.setCanDelete( this.canRemoveBuildResult( buildResult ) );
         return SUCCESS;
     }
 

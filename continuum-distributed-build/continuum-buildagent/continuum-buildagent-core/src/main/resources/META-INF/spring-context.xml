@@ -10,7 +10,7 @@
   <bean name="continuumAgentBuildExecutor#maven2"
          class="org.apache.continuum.buildagent.build.execution.maven.m2.MavenTwoBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="mvn"/>
-    <property name="builderHelper" ref="mavenBuilderHelper"/>
+    <property name="builderHelper" ref="buildAgentMavenBuilderHelper"/>
     <property name="projectHelper" ref="mavenProjectHelper"/>
   </bean>
   <bean name="continuumAgentBuildExecutor#maven-1"
@@ -25,12 +25,12 @@
          class="org.apache.continuum.buildagent.build.execution.shell.ShellBuildExecutor" autowire="byName">
   </bean>
 
-  <bean id="configurationService" class="org.apache.continuum.buildagent.configuration.DefaultConfigurationService">
-    <property name="configuration" ref="continuumConfiguration" />
+  <bean id="buildAgentConfigurationService" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfigurationService">
+    <property name="configuration" ref="buildAgentConfiguration" />
   </bean>
   
-  <bean id="continuumConfiguration" class="org.apache.continuum.buildagent.configuration.DefaultContinuumConfiguration">
-    <property name="configurationFile" value="file:${appserver.base}/conf/continuum.xml" />
+  <bean id="buildAgentConfiguration" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfiguration">
+    <property name="configurationFile" value="file:${appserver.base}/conf/continuum-buildagent.xml" />
   </bean>
 
 </beans>

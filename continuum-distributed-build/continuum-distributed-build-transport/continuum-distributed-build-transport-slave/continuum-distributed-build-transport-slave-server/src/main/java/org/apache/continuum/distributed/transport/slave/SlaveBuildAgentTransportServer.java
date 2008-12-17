@@ -92,7 +92,7 @@ public class SlaveBuildAgentTransportServer
         
         try
         {
-            continuumBuildAgentService.getBuildResult( projectId );
+            buildResult = continuumBuildAgentService.getBuildResult( projectId );
             log.info( "Build result for project " + projectId + " acquired." );
         }
         catch ( ContinuumBuildAgentException e )
@@ -111,23 +111,6 @@ public class SlaveBuildAgentTransportServer
         log.info( "Currently building project " + projectId.intValue() );
         
         return projectId;
-    }
-
-    public Boolean isBusy()
-        throws Exception
-    {
-        Boolean busy = null;
-        try
-        {
-            busy = new Boolean( continuumBuildAgentService.isBusy() );
-            log.info( "Build agent is " + ( busy ? "" : "not" ) + " busy." );
-        }
-        catch ( ContinuumBuildAgentException e )
-        {
-            log.error( "Failed to determine if master is busy.", e );
-        }
-        
-        return busy;
     }
 
     public Boolean ping()

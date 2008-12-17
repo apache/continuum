@@ -21,25 +21,25 @@ import java.io.File;
  * under the License.
  */
 
-public interface ContinuumConfiguration
+public interface BuildAgentConfiguration
 {
-    String ROLE = ContinuumConfiguration.class.getName();
+    String ROLE = BuildAgentConfiguration.class.getName();
 
-    ContinuumBuildAgentConfiguration getContinuumBuildAgentConfiguration()
-        throws ContinuumConfigurationException;
+    GeneralBuildAgentConfiguration getContinuumBuildAgentConfiguration()
+        throws BuildAgentConfigurationException;
 
-    void setContinuumBuildAgentConfiguration( ContinuumBuildAgentConfiguration configuration )
-        throws ContinuumConfigurationException;
+    void setContinuumBuildAgentConfiguration( GeneralBuildAgentConfiguration configuration )
+        throws BuildAgentConfigurationException;
 
     void save()
-        throws ContinuumConfigurationException;
+        throws BuildAgentConfigurationException;
     
     void save( File file )
-        throws ContinuumConfigurationException;
+        throws BuildAgentConfigurationException;
     
     void reload( )
-        throws ContinuumConfigurationException;    
+        throws BuildAgentConfigurationException;    
     
     void reload( File file )
-        throws ContinuumConfigurationException;
+        throws BuildAgentConfigurationException;
 }

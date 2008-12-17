@@ -9,30 +9,30 @@ import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DefaultConfigurationService
-    implements ConfigurationService
+public class DefaultBuildAgentConfigurationService
+    implements BuildAgentConfigurationService
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
     /**
      * @plexus.requirement
      */
-    private ContinuumConfiguration configuration;
+    private BuildAgentConfiguration configuration;
 
-    private ContinuumBuildAgentConfiguration buildAgentConfiguration;
+    private GeneralBuildAgentConfiguration buildAgentConfiguration;
 
     public void initialize()
-        throws ContinuumConfigurationException
+        throws BuildAgentConfigurationException
     {
         loadData();
     }
 
-    public ContinuumConfiguration getConfiguration()
+    public BuildAgentConfiguration getConfiguration()
     {
         return configuration;
     }
 
-    public void setConfiguration( ContinuumConfiguration configuration )
+    public void setConfiguration( BuildAgentConfiguration configuration )
     {
         this.configuration = configuration;
     }
@@ -68,7 +68,7 @@ public class DefaultConfigurationService
     }
 
     public String getBuildOutput( int projectId )
-        throws ContinuumConfigurationException
+        throws BuildAgentConfigurationException
     {
         File file = getBuildOutputFile( projectId );
     
@@ -92,13 +92,13 @@ public class DefaultConfigurationService
     }
 
     public File getBuildOutputFile( int projectId )
-        throws ContinuumConfigurationException
+        throws BuildAgentConfigurationException
     {
         File dir = getBuildOutputDirectory( projectId );
 
         if ( !dir.exists() && !dir.mkdirs() )
         {
-            throw new ContinuumConfigurationException( 
+            throw new BuildAgentConfigurationException( 
                       "Could not make the build output directory: " + "'" + dir.getAbsolutePath() + "'." );
         }
 
@@ -116,7 +116,7 @@ public class DefaultConfigurationService
     }
 
     private void loadData()
-        throws ContinuumConfigurationException
+        throws BuildAgentConfigurationException
     {
         buildAgentConfiguration = configuration.getContinuumBuildAgentConfiguration();
     }

@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
-import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -16,15 +14,14 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
-import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @plexus.component role="org.apache.continuum.buildagent.taskqueue.manager.TaskQueueManager"
+ * @plexus.component role="org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager"
  */
-public class DefaultTaskQueueManager
-    implements TaskQueueManager, Contextualizable
+public class DefaultBuildAgentTaskQueueManager
+    implements BuildAgentTaskQueueManager, Contextualizable
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 

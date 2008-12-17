@@ -2,9 +2,9 @@ package org.apache.continuum.buildagent.installation;
 
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 
-public interface InstallationService
+public interface BuildAgentInstallationService
 {
-    String ROLE = InstallationService.class.getName();
+    String ROLE = BuildAgentInstallationService.class.getName();
 
     String JDK_TYPE = "jdk";
 

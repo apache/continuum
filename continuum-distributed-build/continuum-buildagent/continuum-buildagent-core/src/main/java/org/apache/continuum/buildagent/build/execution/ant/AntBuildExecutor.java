@@ -9,7 +9,7 @@ import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancel
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutorException;
-import org.apache.continuum.buildagent.installation.InstallationService;
+import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -33,7 +33,7 @@ public class AntBuildExecutor
     public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
-        String executable = getInstallationService().getExecutorConfigurator( InstallationService.ANT_TYPE )
+        String executable = getBuildAgentInstallationService().getExecutorConfigurator( BuildAgentInstallationService.ANT_TYPE )
             .getExecutable();
 
         StringBuffer arguments = new StringBuffer();
