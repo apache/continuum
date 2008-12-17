@@ -50,7 +50,6 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
-import org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  * @plexus.component role="org.apache.continuum.buildmanager.BuildsManager" role-hint="parallel"
  */
-public class ParallelBuildsManager
+public class ParallelBuildsManager    
     implements BuildsManager, Contextualizable
 {
     private Logger log = LoggerFactory.getLogger( ParallelBuildsManager.class );
@@ -213,23 +212,15 @@ public class ParallelBuildsManager
     {
         synchronized ( overallBuildQueues )
         {
-            OverallBuildQueue overallBuildQueue = null;
-            try
+            OverallBuildQueue overallBuildQueue = null;            
+            overallBuildQueue = overallBuildQueues.get( buildQueueId );
+            if ( overallBuildQueue != null )
             {
-                overallBuildQueue = overallBuildQueues.get( buildQueueId );
-                if ( overallBuildQueue != null )
-                {
-                    overallBuildQueue.cancelCurrentBuild();
-                }
-                else
-                {
-                    log.warn( "Project not found in any of the build queues." );
-                }
+                overallBuildQueue.cancelCurrentBuild();
             }
-            catch ( ComponentLookupException e )
+            else
             {
-                log.error( e.getMessage() );
-                throw new BuildManagerException( e.getMessage() );
+                log.warn( "Project not found in any of the build queues." );
             }
 
             return true;
@@ -243,19 +234,10 @@ public class ParallelBuildsManager
         {
             Set<Integer> keySet = overallBuildQueues.keySet();
             OverallBuildQueue overallBuildQueue = null;
-
-            try
+            for ( Integer key : keySet )
             {
-                for ( Integer key : keySet )
-                {
-                    overallBuildQueue = overallBuildQueues.get( key );
-                    overallBuildQueue.cancelCurrentBuild();
-                }
-            }
-            catch ( ComponentLookupException e )
-            {
-                log.error( e.getMessage() );
-                throw new BuildManagerException( e.getMessage() );
+                overallBuildQueue = overallBuildQueues.get( key );
+                overallBuildQueue.cancelCurrentBuild();
             }
 
             return true;
@@ -289,11 +271,7 @@ public class ParallelBuildsManager
         {
             throw new BuildManagerException( "Error occurred while cancelling build: " + e.getMessage() );
         }
-        catch ( ComponentLookupException e )
-        {
-            throw new BuildManagerException( e.getMessage() );
-        }
-
+        
         return true;
     }
 
@@ -623,17 +601,30 @@ public class ParallelBuildsManager
         }
     }
     
-    public void addOverallBuildQueue( OverallBuildQueue overallBuildQueue )
-    {   
+    public void addOverallBuildQueue( BuildQueue buildQueue )
+        throws BuildManagerException
+    {
         synchronized ( overallBuildQueues )
         {
-            if ( overallBuildQueues.get( overallBuildQueue.getId() ) == null )
+            try
             {
-                this.overallBuildQueues.put( overallBuildQueue.getId(), overallBuildQueue );
+                OverallBuildQueue overallBuildQueue = (OverallBuildQueue) container.lookup( OverallBuildQueue.class );
+                overallBuildQueue.setId( buildQueue.getId() );
+                overallBuildQueue.setName( buildQueue.getName() );
+                
+                if ( overallBuildQueues.get( buildQueue.getId() ) == null )
+                {
+                    log.info( "Adding overall build queue to map : " + overallBuildQueue.getName() );
+                    overallBuildQueues.put( overallBuildQueue.getId(), overallBuildQueue );
+                }
+                else
+                {
+                    log.warn( "Overall build queue already in the map." );
+                }
             }
-            else
-            {
-                log.warn( "Overall build queue already in the map" );
+            catch ( ComponentLookupException e )
+            {                
+                throw new BuildManagerException( "Error creating overall build queue.", e );
             }
         }
     }
@@ -733,24 +724,6 @@ public class ParallelBuildsManager
             
             return currentBuilds;
         }
-        /*try
-        {
-            List<Object> objects = container.lookupList( ThreadedTaskQueueExecutor.class );
-            for ( Object obj : objects )
-            {
-                log.info( "Task queue executor : " + obj );
-                ThreadedTaskQueueExecutor executor = (ThreadedTaskQueueExecutor) obj;
-                Task task = executor.getCurrentTask();
-                if ( task instanceof BuildProjectTask )
-                {
-                    currentBuilds.add( task );
-                }
-            }
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new BuildManagerException( e.getMessage() );
-        }*/
     }
 
     public List<Task> getCurrentCheckouts()
@@ -936,9 +909,10 @@ public class ParallelBuildsManager
             int size = 0;
             int idx = 0;
             try
-            {
+            {   
                 for ( BuildQueue buildQueue : buildQueues )
                 {
+                    log.info( "BUILD QUEUE : " + buildQueue.getId() + " : " + buildQueue.getName() );                    
                     OverallBuildQueue overallBuildQueue = overallBuildQueues.get( buildQueue.getId() );
                     if ( overallBuildQueue != null )
                     {
@@ -951,6 +925,8 @@ public class ParallelBuildsManager
                         {
                             taskQueue = overallBuildQueue.getCheckoutQueue();
                         }
+                        
+                        log.info( "SIZE OF TASK QUEUE :: " + taskQueue.getQueueSnapshot().size() );
 
                         if ( idx == 0 )
                         {
@@ -979,9 +955,19 @@ public class ParallelBuildsManager
         }
 
         if ( whereToBeQueued == null )
-        {
-            // TODO queue in the default overall build queue
-            throw new BuildManagerException( "No build queue found." );
+        {     
+            Set<Integer> keySet = overallBuildQueues.keySet();
+            for( Integer key : keySet )
+            {
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                log.info( "OVERALLBUILD QUEUE :: " + overallBuildQueue.getId() + " : "
+                          + overallBuildQueue.getName() );
+                if( overallBuildQueue.getName().equals( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) )
+                {
+                    return overallBuildQueue;
+                }
+            }            
+            //throw new BuildManagerException( "No build queue found." );
         }
 
         return whereToBeQueued;

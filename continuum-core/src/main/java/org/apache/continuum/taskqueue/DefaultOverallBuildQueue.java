@@ -29,8 +29,6 @@ import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
@@ -45,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  * @plexus.component role="org.apache.continuum.taskqueue.OverallBuildQueue" instantiation-strategy="per-lookup"
  */
-public class DefaultOverallBuildQueue
+public class DefaultOverallBuildQueue   
     implements OverallBuildQueue
 {
     /**
@@ -68,7 +66,7 @@ public class DefaultOverallBuildQueue
     private String name;
     
     private Logger log = LoggerFactory.getLogger( DefaultOverallBuildQueue.class );
-
+    
     public int getId()
     {
         return id;
@@ -281,7 +279,6 @@ public class DefaultOverallBuildQueue
      * @see OverallBuildQueue#cancelBuildTask(int)
      */
     public void cancelBuildTask( int projectId )
-        throws ComponentLookupException
     {
         BuildProjectTask task = (BuildProjectTask) buildTaskQueueExecutor.getCurrentTask();
         if( task != null && task.getProjectId() == projectId )
@@ -296,7 +293,6 @@ public class DefaultOverallBuildQueue
      * @see OverallBuildQueue#cancelCurrentBuild()
      */
     public boolean cancelCurrentBuild()
-        throws ComponentLookupException
     {
         Task task = buildTaskQueueExecutor.getCurrentTask();
         if( task != null )

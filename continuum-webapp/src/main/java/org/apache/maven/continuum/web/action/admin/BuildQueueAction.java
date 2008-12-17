@@ -1,18 +1,5 @@
 package org.apache.maven.continuum.web.action.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.continuum.dao.BuildQueueDao;
-import org.apache.continuum.taskqueue.DefaultOverallBuildQueue;
-import org.apache.continuum.taskqueue.OverallBuildQueue;
-import org.apache.maven.continuum.model.project.BuildQueue;
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.store.ContinuumStoreException;
-
-import com.opensymphony.xwork2.Preparable;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -32,6 +19,15 @@ import com.opensymphony.xwork2.Preparable;
  * under the License.
  */
 
+import java.util.List;
+
+import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.dao.BuildQueueDao;
+import org.apache.maven.continuum.model.project.BuildQueue;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+
+import com.opensymphony.xwork2.Preparable;
+
 /**
  *
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildQueueAction"
@@ -39,7 +35,10 @@ import com.opensymphony.xwork2.Preparable;
 public class BuildQueueAction 
     extends AbstractBuildQueueAction
     implements Preparable
-{
+{    
+    //TODO:
+    // - move all access to buildQueueDao to Continuum class
+    
 	private String name;
 	
 	private int size;
@@ -55,8 +54,8 @@ public class BuildQueueAction
 
     public void prepare()
         throws ContinuumStoreException
-    {
-	    this.buildQueueList = buildQueueDao.getAllBuildQueues();
+    {   
+        this.buildQueueList = buildQueueDao.getAllBuildQueues();        
     }
     
     public String input()
@@ -67,47 +66,90 @@ public class BuildQueueAction
     public String list()
         throws Exception
     {
-        this.buildQueueList = buildQueueDao.getAllBuildQueues();
+        try
+        {
+            this.buildQueueList = buildQueueDao.getAllBuildQueues();
+        }
+        catch ( ContinuumStoreException e )
+        {
+            addActionError( "Cannot get build queues from the database : " + e.getMessage() );
+            return ERROR;
+        }
         return SUCCESS;
     }
     
     public String save()
         throws Exception
-    {
-    	
+    {    	
     	int allowedBuilds = getContinuum().getConfiguration().getNumberOfBuildsInParallel();
-    	if ( allowedBuilds <= this.buildQueueList.size() )
+    	if ( allowedBuilds < this.buildQueueList.size() )
     	{
-    		addActionError(" You are only allowed " + allowedBuilds );
+    		addActionError( "You are only allowed " + allowedBuilds + " number of builds in parallel." );
     		return ERROR;
     	}
     	else
     	{
-    		BuildQueue buildQueue = new BuildQueue();	
-        	buildQueue.setId( buildQueueList.size() + 1 );
-        	buildQueue.setName( name );
-        	buildQueueDao.addBuildQueue( buildQueue );
-        	
+    	    try
+    	    {
+        		BuildQueue buildQueue = new BuildQueue();
+            	buildQueue.setName( name );
+            	BuildQueue addedBuildQueue = buildQueueDao.addBuildQueue( buildQueue );
+            	
+            	getContinuum().getBuildsManager().addOverallBuildQueue( addedBuildQueue );            	
+    	    }
+    	    catch ( ContinuumStoreException e )
+    	    {   
+    	        addActionError( "Error adding build queue to database: " + e.getMessage() );
+    	        return ERROR;
+    	    }
+    	    catch ( BuildManagerException e )
+    	    {
+    	        addActionError( "Error creating overall build queue: " + e.getMessage() );
+                return ERROR;
+    	    }
+    	    
         	return SUCCESS;
-    	}
-    	
+    	}    	
     }
     
     public String edit()
         throws Exception
     {
-        BuildQueue buildQueueToBeEdited = buildQueueDao.getBuildQueue( this.buildQueue.getId() );
+        try
+        {
+            BuildQueue buildQueueToBeEdited = buildQueueDao.getBuildQueue( this.buildQueue.getId() );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            addActionError( "Error retrieving build queue from the database : " + e.getMessage() );
+            return ERROR;
+        }
         return SUCCESS;
     }
     
     public String delete()
         throws Exception
     {
-    	BuildQueue buildQueueToBeDeleted = buildQueueDao.getBuildQueue( this.buildQueue.getId() );
-    	buildQueueDao.removeBuildQueue( buildQueueToBeDeleted );
-
-    	this.buildQueueList = buildQueueDao.getAllBuildQueues();
-    	
+        try
+        {
+        	BuildQueue buildQueueToBeDeleted = buildQueueDao.getBuildQueue( this.buildQueue.getId() );
+        	buildQueueDao.removeBuildQueue( buildQueueToBeDeleted );
+        	
+        	getContinuum().getBuildsManager().removeOverallBuildQueue( buildQueueToBeDeleted.getId() );
+        	
+        	this.buildQueueList = buildQueueDao.getAllBuildQueues();    	
+        }
+        catch ( BuildManagerException e )
+        {
+            addActionError( "Cannot delete overall build queue: " + e.getMessage() );
+            return ERROR;
+        }
+        catch ( ContinuumStoreException e )
+        {
+            addActionError( "Cannot delete build queue from the database: " + e.getMessage() );
+            return ERROR;
+        }
+        
         return SUCCESS;
     }
 

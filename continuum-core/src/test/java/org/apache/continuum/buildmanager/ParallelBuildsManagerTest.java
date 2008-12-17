@@ -108,14 +108,15 @@ public class ParallelBuildsManagerTest
     }
 
     private void setupOverallBuildQueues()
-    {
+        throws Exception
+    {   
         for ( int i = 2; i <= 5; i++ )
         {
-            OverallBuildQueue overallBuildQueue = (OverallBuildQueue) lookup( OverallBuildQueue.class );
-            overallBuildQueue.setId( i );
-            overallBuildQueue.setName( "BUILD_QUEUE_" + String.valueOf( i ) );
-
-            buildsManager.addOverallBuildQueue( overallBuildQueue );
+            BuildQueue buildQueue = new BuildQueue();
+            buildQueue.setId( i );
+            buildQueue.setName( "BUILD_QUEUE_" + String.valueOf( i ) );
+                        
+            buildsManager.addOverallBuildQueue( buildQueue );
         }
 
         assertEquals( 5, buildsManager.getOverallBuildQueues().size() );
@@ -553,11 +554,11 @@ public class ParallelBuildsManagerTest
     public void testNoBuildQueuesConfigured()
         throws Exception
     {
-        OverallBuildQueue overallBuildQueue = (OverallBuildQueue) lookup( OverallBuildQueue.class );
-        overallBuildQueue.setId( 1 );
-        overallBuildQueue.setName( "BUILD_QUEUE_1" );
+        BuildQueue buildQueue = new BuildQueue();
+        buildQueue.setId( 1 );
+        buildQueue.setName( "BUILD_QUEUE_1" );
 
-        buildsManager.addOverallBuildQueue( overallBuildQueue );
+        buildsManager.addOverallBuildQueue( buildQueue );
 
         BuildDefinition buildDef = new BuildDefinition();
         buildDef.setId( 1 );

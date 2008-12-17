@@ -34,7 +34,13 @@
   <div id="axial" class="h3">
     <h3><s:text name="parallel.build.queue.section.title"/></h3>
 
-    <s:actionerror />
+    <c:if test="${!empty actionErrors}">
+      <div class="errormessage">
+        <s:iterator value="actionErrors">
+          <p><s:text name="<s:property/>" /></p>
+        </s:iterator>
+      </div>
+    </c:if>
     
     <div class="axial">
       <s:form action="saveBuildQueue" method="post" validate="true">

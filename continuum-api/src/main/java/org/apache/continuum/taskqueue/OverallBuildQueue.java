@@ -21,8 +21,6 @@ package org.apache.continuum.taskqueue;
 
 import java.util.List;
 
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
@@ -186,19 +184,15 @@ public interface OverallBuildQueue
      * Cancel the build task of the corresponding project.
      * 
      * @param projectId
-     * @throws ComponentLookupException TODO
      */
-    void cancelBuildTask( int projectId )
-        throws ComponentLookupException;
+    void cancelBuildTask( int projectId );
 
     /**
      * Cancel the current build.
      * 
      * @return
-     * @throws ComponentLookupException TODO
      */
-    boolean cancelCurrentBuild()
-        throws ComponentLookupException;
+    boolean cancelCurrentBuild();
 
     /**
      * Remove the project matching the specified id, name, build definition and trigger from the build queue.

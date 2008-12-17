@@ -23,8 +23,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.taskqueue.OverallBuildQueue;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.taskqueue.Task;
 
@@ -207,9 +207,10 @@ public interface BuildsManager
     /**
      * Add an overall build queue.
      * 
-     * @param overallBuildQueue
+     * @param buildQueue
+     * @throws BuildManagerException TODO
      */
-    void addOverallBuildQueue( OverallBuildQueue overallBuildQueue );
+    void addOverallBuildQueue( BuildQueue buildQueue ) throws BuildManagerException;
 
     /**
      * Remove an overall build queue.
