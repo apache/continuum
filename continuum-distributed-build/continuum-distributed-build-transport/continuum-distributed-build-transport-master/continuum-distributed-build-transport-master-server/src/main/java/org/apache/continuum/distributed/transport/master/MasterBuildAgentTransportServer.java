@@ -71,11 +71,19 @@ public class MasterBuildAgentTransportServer
         return Boolean.TRUE;
     }
 
-    public Boolean returnProjectCurrentlyBuilding( Integer projectId )
+    public Boolean startProjectBuild( Integer projectId )
         throws Exception
     {
-        log.info( "Project currently building returned." );
-        distributedBuildManager.updateProjectCurrentlyBuilding( projectId.intValue() );
+        log.info( "Start project build." );
+        distributedBuildManager.startProjectBuild( projectId.intValue() );
+        return Boolean.TRUE;
+    }
+
+    public Boolean startPrepareBuild( Map prepareBuildResult )
+        throws Exception
+    {
+        log.info( "Start prepare build." );
+        distributedBuildManager.startPrepareBuild( prepareBuildResult );
         return Boolean.TRUE;
     }
 }

@@ -14,6 +14,9 @@
   <logger name="org.apache.continuum.buildagent">
     <level value="info"/>
   </logger>
+  <logger name="org.apache.continuum.web">
+    <level value="info"/>
+  </logger>
   <logger name="org.springframework">
     <level value="error"/>
   </logger>

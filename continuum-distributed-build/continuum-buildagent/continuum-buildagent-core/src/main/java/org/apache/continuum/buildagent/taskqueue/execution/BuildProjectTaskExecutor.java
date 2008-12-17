@@ -10,9 +10,11 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.scm.ScmException;
@@ -49,6 +51,11 @@ public class BuildProjectTaskExecutor
      * @plexus.requirement
      */
     private BuildAgentConfigurationService buildAgentConfigurationService;
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentManager buildAgentManager;
 
     public void executeTask( Task task )
         throws TaskExecutionException
@@ -100,9 +107,18 @@ public class BuildProjectTaskExecutor
     }
 
     private void startBuild( BuildContext buildContext )
+        throws TaskExecutionException
     {
-        // inform master that project is building ( to set the state )
-        
+        try
+        {
+            buildAgentManager.startProjectBuild( buildContext.getProjectId() );
+        }
+        catch ( ContinuumException e )
+        {
+            // do not throw exception, just log?
+            log.error( "Failed to start project '" + buildContext.getProjectName() + "'", e );
+            throw new TaskExecutionException( "Failed to start project '" + buildContext.getProjectName() + "'", e );
+        }
     }
 
     private void endBuild( BuildContext buildContext )

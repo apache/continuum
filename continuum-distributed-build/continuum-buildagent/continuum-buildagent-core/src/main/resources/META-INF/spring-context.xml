@@ -25,11 +25,13 @@
          class="org.apache.continuum.buildagent.build.execution.shell.ShellBuildExecutor" autowire="byName">
   </bean>
 
-  <bean id="buildAgentConfigurationService" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfigurationService">
+  <bean id="buildAgentConfigurationService" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfigurationService"
+        init-method="initialize">
     <property name="configuration" ref="buildAgentConfiguration" />
   </bean>
   
-  <bean id="buildAgentConfiguration" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfiguration">
+  <bean id="buildAgentConfiguration" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfiguration"
+     init-method="initialize">
     <property name="configurationFile" value="file:${appserver.base}/conf/continuum-buildagent.xml" />
   </bean>
 

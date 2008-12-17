@@ -33,9 +33,11 @@ public interface MasterBuildAgentTransportService
     
     public Boolean returnScmResult( Map scmResult ) throws Exception;
 
-    public Boolean returnProjectCurrentlyBuilding( Integer projectId ) throws Exception;
+    public Boolean startProjectBuild( Integer projectId ) throws Exception;
 
     public Boolean prepareBuildFinished( Map prepareBuildResult ) throws Exception; 
+
+    public Boolean startPrepareBuild( Map prepareBuildResult ) throws Exception;
 
     public Boolean ping() throws Exception;
 }

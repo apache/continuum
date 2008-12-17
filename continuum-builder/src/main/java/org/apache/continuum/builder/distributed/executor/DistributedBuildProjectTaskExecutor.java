@@ -79,21 +79,12 @@ public class DistributedBuildProjectTaskExecutor
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
 
-            ProjectScmRoot scmRoot = projectScmRootDao.
-                getProjectScmRootByProjectGroupAndScmRootAddress( prepareBuildTask.getProjectGroupId(), 
-                                                                  prepareBuildTask.getScmRootAddress() );
-
             log.info( "initializing buildContext" );
             List buildContext = initializeBuildContext( prepareBuildTask.getProjectsBuildDefinitionsMap(), 
                                                         prepareBuildTask.getTrigger(), 
                                                         prepareBuildTask.getScmRootAddress() );
 
             startTime = System.currentTimeMillis();
-
-            scmRoot.setOldState( scmRoot.getState() );
-            scmRoot.setState( ContinuumProjectState.UPDATING );
-            projectScmRootDao.updateProjectScmRoot( scmRoot );
-
             client.buildProjects( buildContext );
 
             endTime = System.currentTimeMillis();

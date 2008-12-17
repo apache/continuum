@@ -497,7 +497,7 @@ public class DefaultDistributedBuildManager
         return null;
     }
 
-    public void updateProjectCurrentlyBuilding( int projectId )
+    public void startProjectBuild( int projectId )
         throws ContinuumException
     {
         try
@@ -510,6 +510,26 @@ public class DefaultDistributedBuildManager
         {
             log.error( "Error while updating project's state", e );
             throw new ContinuumException( "Error while updating project's state", e );
+        }
+    }
+
+    public void startPrepareBuild( Map context )
+        throws ContinuumException
+    {
+        try
+        {
+            int projectGroupId = ContinuumBuildConstant.getProjectGroupId( context );
+            String scmRootAddress = ContinuumBuildConstant.getScmRootAddress( context );
+            
+            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroupId, scmRootAddress );
+            scmRoot.setOldState( scmRoot.getState() );
+            scmRoot.setState( ContinuumProjectState.UPDATING );
+            projectScmRootDao.updateProjectScmRoot( scmRoot );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            log.error( "Error while updating project scm root's state", e );
+            throw new ContinuumException( "Error while updating project scm root's state", e );
         }
     }
 

@@ -1,5 +1,7 @@
 package org.apache.continuum.buildagent.manager;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueMana
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
+import org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportClient;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -67,11 +70,12 @@ public class DefaultBuildAgentManager
                         break;
                     }
                     
+                    log.info( "Starting prepare build" );
+                    startPrepareBuild( buildContext );
+                    
                     log.info( "Initializing prepare build" );
                     initializeActionContext( buildContext );
                     
-                    log.info( "Starting prepare build" );
-    
                     try
                     {
                         if ( buildDef.isBuildFresh() )
@@ -97,6 +101,78 @@ public class DefaultBuildAgentManager
             if ( !checkProjectScmRoot( context ) )
             {
                 buildProjects( buildContexts );
+            }
+        }
+    }
+
+    public void startProjectBuild( int projectId )
+        throws ContinuumException
+    {
+        try
+        {
+            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
+                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            client.startProjectBuild( projectId );
+        }
+        catch ( MalformedURLException e )
+        {
+            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error starting project build", e );
+            throw new ContinuumException( "Error starting project build", e );
+        }
+    }
+
+    public void returnBuildResult( Map buildResult )
+        throws ContinuumException
+    {
+        try
+        {
+            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
+                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            client.returnBuildResult( buildResult );
+        }
+        catch ( MalformedURLException e )
+        {
+            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error while returning build result to the continuum server", e );
+            throw new ContinuumException( e.getMessage(), e );
+        }
+    }
+
+    private void startPrepareBuild( BuildContext buildContext )
+        throws ContinuumException
+    {
+        Map<String, Object> actionContext = buildContext.getActionContext();
+        
+        if ( actionContext == null || !( ContinuumBuildAgentUtil.getScmRootState( actionContext ) == ContinuumProjectState.UPDATING ) ) 
+        {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( buildContext.getProjectGroupId() ) );
+            map.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, buildContext.getScmRootAddress() );
+            
+            try
+            {
+                MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
+                    new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+                client.startPrepareBuild( map );
+            }
+            catch ( MalformedURLException e )
+            {
+                log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+                throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'", e );
+            }
+            catch ( Exception e )
+            {
+                log.error( "Error starting prepare build", e );
+                throw new ContinuumException( "Error starting prepare build", e );
             }
         }
     }
@@ -177,23 +253,59 @@ public class DefaultBuildAgentManager
         {
             context.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE, ContinuumProjectState.ERROR );
         }
+
+        // connect to continuum server (master)
+        try
+        {
+            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
+                 new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            client.returnScmResult( createScmResult( buildContext ) );
+        }
+        catch ( MalformedURLException e )
+        {
+            throw new ContinuumException( "Invalid Continuum Server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumException( "Error while returning scm result to the continuum server", e );
+        }
     }
 
     private void endPrepareBuild( Map context )
         throws ContinuumException
     {
-        Map<String, Object> result = new HashMap<String, Object>();
-        result.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( ContinuumBuildAgentUtil.getProjectGroupId( context ) ) );
-        result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, ContinuumBuildAgentUtil.getScmRootAddress( context ) );
-        
-        String error = convertScmResultToError( ContinuumBuildAgentUtil.getScmResult( context, null ) );
-        if ( StringUtils.isEmpty( error ) )
+        if ( context != null )
         {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, "" );
-        }
-        else
-        {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, error );
+            Map<String, Object> result = new HashMap<String, Object>();
+            result.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( ContinuumBuildAgentUtil.getProjectGroupId( context ) ) );
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, ContinuumBuildAgentUtil.getScmRootAddress( context ) );
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE, new Integer( ContinuumBuildAgentUtil.getScmRootState( context ) ) );
+            
+            String error = convertScmResultToError( ContinuumBuildAgentUtil.getScmResult( context, null ) );
+            if ( StringUtils.isEmpty( error ) )
+            {
+                result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, "" );
+            }
+            else
+            {
+                result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, error );
+            }
+    
+            // connect to continuum server (master)
+            try
+            {
+                MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
+                     new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+                client.prepareBuildFinished( result );
+            }
+            catch ( MalformedURLException e )
+            {
+                throw new ContinuumException( "Invalid Continuum Server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            }
+            catch ( Exception e )
+            {
+                throw new ContinuumException( "Error while finishing prepare build", e );
+            }
         }
     }
 

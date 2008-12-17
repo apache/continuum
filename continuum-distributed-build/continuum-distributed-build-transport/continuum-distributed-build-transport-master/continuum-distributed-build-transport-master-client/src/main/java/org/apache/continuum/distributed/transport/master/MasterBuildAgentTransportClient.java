@@ -139,20 +139,39 @@ public class MasterBuildAgentTransportClient
         return result;
     }
 
-    public Boolean returnProjectCurrentlyBuilding( Integer projectId )
+    public Boolean startProjectBuild( Integer projectId )
         throws Exception
     {
         Boolean result = null;
         
         try
         {
-            result = master.returnProjectCurrentlyBuilding( projectId );
+            result = master.startProjectBuild( projectId );
             log.info( "Return project currently building" );
         }
         catch ( Exception e )
         {
             log.error( "Failed to return project currently building", e );
             throw new Exception( "Failed to return project currently building", e );
+        }
+
+        return result;
+    }
+
+    public Boolean startPrepareBuild( Map prepareBuildResult )
+        throws Exception
+    {
+        Boolean result = null;
+
+        try
+        {
+            result = master.startPrepareBuild( prepareBuildResult );
+            log.info( "Started prepare build" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to start prepare build", e );
+            throw new Exception( "Failed to start prepare build", e );
         }
 
         return result;

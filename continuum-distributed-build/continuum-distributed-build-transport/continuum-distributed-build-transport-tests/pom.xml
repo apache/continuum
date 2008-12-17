@@ -65,6 +65,12 @@
       <artifactId>slf4j-log4j12</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   
   <build>
@@ -86,6 +92,12 @@
               <maxIdleTime>60000</maxIdleTime>
             </connector>
           </connectors>
+          <systemProperties>
+            <systemProperty>
+              <name>appserver.base</name>
+              <value>${project.build.directory}/appserver-base</value>
+            </systemProperty>
+          </systemProperties>
         </configuration>
         <executions>
           <execution>
