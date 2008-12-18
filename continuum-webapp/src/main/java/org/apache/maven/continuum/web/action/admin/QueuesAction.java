@@ -49,18 +49,9 @@ import org.codehaus.redback.integration.interceptor.SecureActionException;
 public class QueuesAction
     extends AbstractBuildQueueAction
     implements SecureAction, LogEnabled
-{    
-    private BuildProjectTask currentBuildProjectTask;
-    
-    private List<BuildProjectTask> buildProjectTasks;
-    
+{            
     private List<String> selectedBuildTaskHashCodes;
         
-    private CheckOutTask currentCheckOutTask;
-    
-    // retain! can be used for parallel builds
-    private List<CheckOutTask> currentCheckOutTasks;
-    
     private List<String> selectedCheckOutTaskHashCodes;
     
     private int buildDefinitionId;
@@ -70,13 +61,6 @@ public class QueuesAction
     private int trigger;
 
     private String projectName;
-
-    /**
-     * @plexus.requirement
-     */
-    //private TaskQueueManager taskQueueManager;
-        
-    //private List<BuildProjectTask> currentBuildProjectTasks = new ArrayList<BuildProjectTask>();
     
     private Map<String, BuildProjectTask> currentBuildProjectTasks = new HashMap<String, BuildProjectTask>();
     
@@ -131,7 +115,6 @@ public class QueuesAction
         }
          
         getContinuum().getBuildsManager().removeProjectFromCheckoutQueue( projectId );
-        //taskQueueManager.removeProjectFromCheckoutQueue( projectId );
         return SUCCESS;
     }
 
@@ -294,8 +277,7 @@ public class QueuesAction
         }
         
         getContinuum().getBuildsManager().removeProjectsFromBuildQueueWithHashcodes(
-                                                                                     listToIntArray( this.getSelectedBuildTaskHashCodes() ) );
-        //taskQueueManager.removeProjectsFromBuildingQueueWithHashCodes( listToIntArray(this.getSelectedBuildTaskHashCodes()) );
+                 listToIntArray( this.getSelectedBuildTaskHashCodes() ) );
         return SUCCESS;
     }
 
@@ -317,11 +299,8 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
      
-        //taskQueueManager
-          //  .removeTasksFromCheckoutQueueWithHashCodes( listToIntArray( this.getSelectedCheckOutTaskHashCodes() ) );
-        
         getContinuum().getBuildsManager().removeProjectsFromCheckoutQueueWithHashcodes(
-                                                                                        listToIntArray( this.getSelectedCheckOutTaskHashCodes() ) );
+                    listToIntArray( this.getSelectedCheckOutTaskHashCodes() ) );
         return SUCCESS;
     }
 
@@ -386,18 +365,7 @@ public class QueuesAction
         }
         
         return false;
-    }
-    
-
-    public List<BuildProjectTask> getBuildProjectTasks()
-    {
-        return buildProjectTasks;
-    }
-
-    public void setBuildProjectTasks( List<BuildProjectTask> buildProjectTasks )
-    {
-        this.buildProjectTasks = buildProjectTasks;
-    }
+    }    
 
     public int getBuildDefinitionId()
     {
@@ -437,57 +405,6 @@ public class QueuesAction
     public void setProjectName( String projectName )
     {
         this.projectName = projectName;
-    }
-
-    public BuildProjectTask getCurrentBuildProjectTask()
-    {
-        return currentBuildProjectTask;
-    }
-
-    public void setCurrentBuildProjectTask( BuildProjectTask currentBuildProjectTask )
-    {
-        this.currentBuildProjectTask = currentBuildProjectTask;
-    }
-
-    /*public TaskQueueExecutor getTaskQueueExecutor()
-    {
-        return taskQueueExecutor;
-    }
-
-
-    public TaskQueueExecutor getCheckoutTaskQueueExecutor()
-    {
-        return checkoutTaskQueueExecutor;
-    }
-
-
-    public void setCheckoutTaskQueueExecutor( TaskQueueExecutor checkoutTaskQueueExecutor )
-    {
-        this.checkoutTaskQueueExecutor = checkoutTaskQueueExecutor;
-    }*/
-
-
-    public CheckOutTask getCurrentCheckOutTask()
-    {
-        return currentCheckOutTask;
-    }
-
-
-    public void setCurrentCheckOutTask( CheckOutTask currentCheckOutTask )
-    {
-        this.currentCheckOutTask = currentCheckOutTask;
-    }
-
-
-    public List<CheckOutTask> getCurrentCheckOutTasks()
-    {
-        return currentCheckOutTasks;
-    }
-
-
-    public void setCurrentCheckOutTasks( List<CheckOutTask> currentCheckOutTasks )
-    {
-        this.currentCheckOutTasks = currentCheckOutTasks;
     }
 
     public List<String> getSelectedBuildTaskHashCodes()
@@ -549,15 +466,4 @@ public class QueuesAction
     {
         this.checkoutsInQueue = checkoutsInQueue;
     }
-
-
-    /*public List<BuildProjectTask> getCurrentBuildProjectTasks()
-    {
-        return currentBuildProjectTasks;
-    }
-
-    public void setCurrentBuildProjectTasks( List<BuildProjectTask> currentBuildProjectTasks )
-    {
-        this.currentBuildProjectTasks = currentBuildProjectTasks;
-    }*/
 }

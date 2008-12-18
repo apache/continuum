@@ -136,10 +136,7 @@
           </div>
         </c:if> 
         
-        <%-- deng - parallel builds
-        TODO: might need to loop through each element of map (each returns a list) 
-        
-          
+        <%--           
         <div id="h3">
           <h3>
             <s:text name="buildQueue.section.title"/>
@@ -196,7 +193,7 @@
           </div>
         </c:if>        
         
-        END OF COMMENT --%>
+        --%>
         
         
         <!-- checkout queue -->
