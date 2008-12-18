@@ -44,7 +44,6 @@
                 <th><s:text name="buildQueue.currentTask.buildDefinition"/></th>
                 <th>&nbsp;</th>
               </tr>
-              <%-- //deng - TODO: loop through each of the current tasks --%>
               <c:forEach var="element" items="${currentBuildProjectTasks}">
                 <tr>              
                   <td width="20%">${element.key}</td> 
@@ -70,6 +69,72 @@
             </s:else>
           </table>
         </div>  
+        
+        <div id="h3">
+          <h3>
+            <s:text name="buildQueue.section.title"/>
+          </h3>   
+          <table width="100%">
+            <s:if test="%{buildsInQueue != null}">
+            <tbody>
+              <tr>
+                <redback:ifAuthorized permission="continuum-manage-queues">
+                  <th>&nbsp;</th>
+                </redback:ifAuthorized>
+                <th><s:text name="buildQueue.currentTask.buildQueue"/></th>
+                <th><s:text name="buildQueue.currentTask.projectName"/></th>
+                <th><s:text name="buildQueue.currentTask.buildDefinition"/></th>
+                <th>&nbsp;</th>
+              </tr>
+              <c:forEach var="element" items="${buildsInQueue}">
+                <tr>                  
+                  <c:forEach var="buildTask" items="${element.value}">
+                    <td width="1%>
+                      <redback:ifAuthorized permission="continuum-manage-queues">
+                        <input type="checkbox" name="selectedBuildTaskHashCodes" value="${buildTask.hashCode}" />                                      
+                      </redback:ifAuthorized>
+                    </td>
+                  	<td width="29%">${element.key}</td>
+                  	<td width="50%">${buildTask.projectName}</td>
+                  	<td width="19%">${buildTask.buildDefinitionLabel}</td>
+                    <td width="1%">
+                      <redback:ifAuthorized permission="continuum-manage-queues">
+                        <s:url id="cancelUrl" action="removeBuildQueueEntry" method="remove" namespace="/">
+                          <s:param name="projectId">${pageScope.buildTask.projectId}</s:param>
+                          <s:param name="buildDefinitionId">${pageScope.buildTask.buildDefinitionId}</s:param>
+                          <s:param name="trigger">${pageScope.buildTask.trigger}</s:param>
+                          <s:param name="projectName">${pageScope.buildTask.projectName}</s:param>
+                        </s:url>
+                        <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
+                      </redback:ifAuthorized>
+                      <redback:elseAuthorized>
+                        <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
+                      </redback:elseAuthorized>               
+                    </td>
+                  </c:forEach>                  
+                </tr>
+              </c:forEach>
+            </tbody>
+            </s:if>
+            <s:else>
+              <s:text name="buildQueue.empty"/>
+            </s:else>
+          </table>
+        </div>   
+        <c:if test="${not empty buildsInQueue}">
+          <div class="functnbar3">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="submit" value="<s:text name="buildQueue.removeEntries"/>"
+                           onclick="$('removeForm').action='removeBuildQueueEntries!removeBuildEntries.action';$('removeForm').submit();" /> 
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </c:if> 
         
         <%-- deng - parallel builds
         TODO: might need to loop through each element of map (each returns a list) 
@@ -129,8 +194,7 @@
               </tbody>
             </table>
           </div>
-        </c:if>
-        
+        </c:if>        
         
         END OF COMMENT --%>
         
@@ -173,16 +237,66 @@
           </table>
         </div>    
         
-        <%-- deng - parallel builds 
-        TODO: might need to loop through each element of map (each returns a list) 
+        <div id="h3">
+          <h3>
+            <s:text name="checkoutQueue.section.title"/>
+          </h3>   
+          <table width="100%">
+            <s:if test="%{checkoutsInQueue != null}">
+            <tbody>
+              <tr>
+                <redback:ifAuthorized permission="continuum-manage-queues">
+                  <th>&nbsp;</th>
+                </redback:ifAuthorized>
+                <th><s:text name="checkoutQueue.currentTask.buildQueue"/></th>
+                <th><s:text name="checkoutQueue.currentTask.projectName"/></th>
+                <th>&nbsp;</th>
+              </tr>
+              <c:forEach var="element" items="${checkoutsInQueue}">
+                <tr>                  
+                  <c:forEach var="checkoutTask" items="${element.value}">
+                    <td width="1%>
+                      <redback:ifAuthorized permission="continuum-manage-queues">
+                        <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="${checkoutTask.hashCode}" />                                      
+                      </redback:ifAuthorized>
+                    </td>
+                  	<td width="29%">${element.key}</td>
+                  	<td width="69%">${checkoutTask.projectName}</td>
+                    <td width="1%">
+                      <redback:ifAuthorized permission="continuum-manage-queues">
+                        <s:url id="cancelUrl" action="removeCheckoutQueueEntry" method="removeCheckout">
+                          <s:param name="projectId">${checkoutTask.projectId}</s:param>
+                        </s:url>
+                        <s:a href="%{cancelUrl}"><img src="<s:url value='/images/cancelbuild.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0"></s:a>
+                      </redback:ifAuthorized>
+                      <redback:elseAuthorized>
+                        <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
+                      </redback:elseAuthorized>             
+                    </td>
+                  </c:forEach>                  
+                </tr>
+              </c:forEach>
+            </tbody>
+            </s:if>
+            <s:else>
+              <s:text name="checkoutQueue.no.currentTaks" />
+            </s:else>
+          </table>
+        </div>    
         
-        
+        <%--
         <div id="h3">
           <h3>
             <s:text name="checkoutQueue.section.title"/>
           </h3>  
+          
+          
+          <c:forEach var="element" items="${checkoutsInQueue}">
+          <h4>          
+            Build Queue: ${element.key}
+          </h4>          
             <c:if test="${!empty checkoutsInQueue}">              
-              <ec:table items="checkoutsInQueue.values"
+              <ec:table items="checkoutsInQueue.values.value"
                         var="currentCheckOutTask"
                         showExports="false"
                         showPagination="false"
@@ -210,11 +324,12 @@
                 </ec:row>
               </ec:table>
             </c:if>
-            <c:if test="${empty currentCheckOutTasks}">
+            <c:if test="${empty checkoutsInQueue}">
               <s:text name="checkoutQueue.empty"/>
             </c:if>
+          </c:forEach>   
         </div>
-        <c:if test="${not empty currentCheckOutTasks}">
+        <c:if test="${not empty checkoutsInQueue}">
           <div class="functnbar3">
             <table>
               <tbody>
@@ -230,8 +345,7 @@
             </table>
           </div>
         </c:if>
-        
-        END OF COMMENT --%>
+        --%>
         
       </s:form>
     </body>

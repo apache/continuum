@@ -159,7 +159,9 @@ public class ScheduleAction
             description = schedule.getDescription();
             name = schedule.getName();
             delay = schedule.getDelay();
-            maxJobExecutionTime = schedule.getMaxJobExecutionTime();            
+            maxJobExecutionTime = schedule.getMaxJobExecutionTime();       
+            
+            getBuildQueueIdsFromSchedule();
         }
         else
         {
@@ -168,6 +170,22 @@ public class ScheduleAction
         }
 
         return SUCCESS;
+    }
+
+    private void getBuildQueueIdsFromSchedule()
+    {
+        if( schedule != null )
+        {
+            List<BuildQueue> buildQueues = schedule.getBuildQueues();
+            if( buildQueueIds == null )
+            {
+                buildQueueIds = new ArrayList<String>();
+            }
+            for( BuildQueue buildQueue :  buildQueues )
+            {
+                buildQueueIds.add( buildQueue.getName() );
+            }
+        }
     }
 
     public String save()
@@ -196,21 +214,38 @@ public class ScheduleAction
             return ERROR;
         }
         else
-        {
+        {            
             if ( id == 0 )
             {
-                getContinuum().addSchedule( setFields( new Schedule() ) );
+                try
+                {
+                    getContinuum().addSchedule( setFields( new Schedule() ) );
+                }
+                catch ( ContinuumStoreException e )
+                {
+                    addActionError( "schedule.buildqueues.add.error" );
+                    return ERROR;
+                }
                 return SUCCESS;
             }
             else
             {
-                getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
+                try
+                {
+                    getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
+                }
+                catch ( ContinuumStoreException e )
+                {   
+                    addActionError( "schedule.buildqueues.add.error" );
+                    return ERROR;
+                }
                 return SUCCESS;
             }
         }
     }
 
-    private Schedule setFields( Schedule schedule )
+    private Schedule setFields( Schedule schedule ) 
+        throws ContinuumStoreException
     {
         schedule.setActive( active );	
         schedule.setCronExpression( getCronExpression() );
@@ -218,29 +253,17 @@ public class ScheduleAction
         schedule.setDescription( description );
         schedule.setName( name );
         schedule.setMaxJobExecutionTime( maxJobExecutionTime );
-                
+       
         // remove old build queues
-        /*List<BuildQueue> existingBuildQueues = schedule.getBuildQueues();
-        for( BuildQueue buildQueue : existingBuildQueues )
-        {
-            schedule.removeBuildQueue( buildQueue );
-        }
-        */
+        schedule.setBuildQueues( null );
+                        
+        // add selected build queues
         for ( String buildQueueId : buildQueueIds )
-        {   
-            try
-            {
-                BuildQueue buildQueue = buildQueueDao.getBuildQueueByName( buildQueueId ) ;
-                schedule.addBuildQueue( buildQueue );
-            }
-            catch ( ContinuumStoreException e)
-            {
-                addActionError( e.getMessage() );
-            }
+        {               
+            BuildQueue buildQueue = buildQueueDao.getBuildQueueByName( buildQueueId ) ;
+            schedule.addBuildQueue( buildQueue );           
         }
         
-        //schedule.setBuildQueues( getBuildQueuesFromSelectedBuildQueues() );
-
         return schedule;
     }
 
@@ -294,7 +317,6 @@ public class ScheduleAction
             catch ( ContinuumException e )
             {
                 addActionError( "schedule.remove.error" );
-
                 return ERROR;
             }
         }
@@ -308,31 +330,7 @@ public class ScheduleAction
         }
 
         return SUCCESS;
-    }
-    
-    private List<BuildQueue> getBuildQueuesFromSelectedBuildQueues()
-    {   
-        if ( this.buildQueueIds == null )
-        {
-            return Collections.EMPTY_LIST;
-        }
-     
-        List<BuildQueue> selectedBuildQueue = new ArrayList<BuildQueue>();        
-        for ( String buildQueueId : buildQueueIds )
-        {  
-        	try
-        	{
-        	    BuildQueue buildQueue = buildQueueDao.getBuildQueueByName( buildQueueId ) ;
-        	}
-        	catch ( ContinuumStoreException e)
-        	{
-        	    addActionError( e.getMessage() );
-        	}
-            
-            selectedBuildQueue.add( buildQueue );
-        }
-        return selectedBuildQueue;
-    }
+    }    
 
     public Collection getSchedules()
     {
