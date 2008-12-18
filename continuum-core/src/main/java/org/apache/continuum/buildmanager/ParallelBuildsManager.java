@@ -717,6 +717,12 @@ public class ParallelBuildsManager
 
             try
             {
+                if( overallBuildQueue.getBuildTaskQueueExecutor().getCurrentTask() != null ||
+                                overallBuildQueue.getCheckoutTaskQueueExecutor().getCurrentTask() != null )
+                {
+                    throw new BuildManagerException( "Cannot remove build queue. A task is currently executing." );
+                }
+
                 tasks = overallBuildQueue.getProjectsInBuildQueue();
                 checkoutTasks = overallBuildQueue.getCheckOutTasksInQueue();
 

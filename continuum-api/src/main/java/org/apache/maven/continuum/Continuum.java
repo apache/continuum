@@ -35,6 +35,7 @@ import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -633,6 +634,28 @@ public interface Continuum
     // Builds Manager
     // ----------------------------------------------------------------------
     BuildsManager getBuildsManager();    
+    
+    // ----------------------------------------------------------------------
+    // Build Queue
+    // ----------------------------------------------------------------------
+    
+    BuildQueue addBuildQueue( BuildQueue buildQueue )
+        throws ContinuumException;
+
+    BuildQueue getBuildQueue( int buildQueueId )
+        throws ContinuumException;
+
+    BuildQueue getBuildQueueByName( String buildQueueName )
+        throws ContinuumException;
+
+    void removeBuildQueue( BuildQueue buildQueue )
+        throws ContinuumException;
+
+    BuildQueue storeBuildQueue( BuildQueue buildQueue )
+        throws ContinuumException;
+
+    List<BuildQueue> getAllBuildQueues()
+        throws ContinuumException;
     
     public void startup()
         throws ContinuumException;

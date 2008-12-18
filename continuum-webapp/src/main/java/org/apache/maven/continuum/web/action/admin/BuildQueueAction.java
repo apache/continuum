@@ -22,184 +22,163 @@ package org.apache.maven.continuum.web.action.admin;
 import java.util.List;
 
 import org.apache.continuum.buildmanager.BuildManagerException;
-import org.apache.continuum.dao.BuildQueueDao;
+import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
-import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import com.opensymphony.xwork2.Preparable;
 
 /**
- *
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildQueueAction"
  */
-public class BuildQueueAction 
+public class BuildQueueAction
     extends AbstractBuildQueueAction
     implements Preparable
-{    
-    //TODO:
-    // - move all access to buildQueueDao to Continuum class
-    
-	private String name;
-	
-	private int size;
-	
+{
+    private String name;
+
+    private int size;
+
     private List<BuildQueue> buildQueueList;
-    
-    /**
-     * @plexus.requirement
-     */
-    private BuildQueueDao buildQueueDao;
-    
+
     private BuildQueue buildQueue;
 
     public void prepare()
-        throws ContinuumStoreException
-    {   
-        this.buildQueueList = buildQueueDao.getAllBuildQueues();        
+        throws ContinuumException
+    {
+        this.buildQueueList = getContinuum().getAllBuildQueues();
     }
-    
+
     public String input()
-    {	
+    {
         return INPUT;
     }
-    
+
     public String list()
         throws Exception
     {
         try
         {
-            this.buildQueueList = buildQueueDao.getAllBuildQueues();
+            this.buildQueueList = getContinuum().getAllBuildQueues();
         }
-        catch ( ContinuumStoreException e )
+        catch ( ContinuumException e )
         {
             addActionError( "Cannot get build queues from the database : " + e.getMessage() );
             return ERROR;
         }
         return SUCCESS;
     }
-    
+
     public String save()
         throws Exception
-    {    	
-    	int allowedBuilds = getContinuum().getConfiguration().getNumberOfBuildsInParallel();
-    	if ( allowedBuilds < this.buildQueueList.size() )
-    	{
-    		addActionError( "You are only allowed " + allowedBuilds + " number of builds in parallel." );
-    		return ERROR;
-    	}
-    	else
-    	{
-    	    try
-    	    {
-        		BuildQueue buildQueue = new BuildQueue();
-            	buildQueue.setName( name );
-            	BuildQueue addedBuildQueue = buildQueueDao.addBuildQueue( buildQueue );
-            	
-            	getContinuum().getBuildsManager().addOverallBuildQueue( addedBuildQueue );            	
-    	    }
-    	    catch ( ContinuumStoreException e )
-    	    {   
-    	        addActionError( "Error adding build queue to database: " + e.getMessage() );
-    	        return ERROR;
-    	    }
-    	    catch ( BuildManagerException e )
-    	    {
-    	        addActionError( "Error creating overall build queue: " + e.getMessage() );
+    {
+        int allowedBuilds = getContinuum().getConfiguration().getNumberOfBuildsInParallel();
+        if ( allowedBuilds < this.buildQueueList.size() )
+        {
+            addActionError( "You are only allowed " + allowedBuilds + " number of builds in parallel." );
+            return ERROR;
+        }
+        else
+        {
+            try
+            {
+                BuildQueue buildQueue = new BuildQueue();
+                buildQueue.setName( name );
+                BuildQueue addedBuildQueue = getContinuum().addBuildQueue( buildQueue );
+
+                getContinuum().getBuildsManager().addOverallBuildQueue( addedBuildQueue );
+            }
+            catch ( ContinuumException e )
+            {
+                addActionError( "Error adding build queue to database: " + e.getMessage() );
                 return ERROR;
-    	    }
-    	    
-        	return SUCCESS;
-    	}    	
+            }
+            catch ( BuildManagerException e )
+            {
+                addActionError( "Error creating overall build queue: " + e.getMessage() );
+                return ERROR;
+            }
+
+            return SUCCESS;
+        }
     }
-    
+
     public String edit()
         throws Exception
     {
         try
         {
-            BuildQueue buildQueueToBeEdited = buildQueueDao.getBuildQueue( this.buildQueue.getId() );
+            BuildQueue buildQueueToBeEdited = getContinuum().getBuildQueue( this.buildQueue.getId() );
         }
-        catch ( ContinuumStoreException e )
+        catch ( ContinuumException e )
         {
             addActionError( "Error retrieving build queue from the database : " + e.getMessage() );
             return ERROR;
         }
         return SUCCESS;
     }
-    
+
     public String delete()
         throws Exception
     {
         try
         {
-        	BuildQueue buildQueueToBeDeleted = buildQueueDao.getBuildQueue( this.buildQueue.getId() );
-        	buildQueueDao.removeBuildQueue( buildQueueToBeDeleted );
-        	
-        	getContinuum().getBuildsManager().removeOverallBuildQueue( buildQueueToBeDeleted.getId() );
-        	
-        	this.buildQueueList = buildQueueDao.getAllBuildQueues();    	
+            BuildQueue buildQueueToBeDeleted = getContinuum().getBuildQueue( this.buildQueue.getId() );
+            getContinuum().getBuildsManager().removeOverallBuildQueue( buildQueueToBeDeleted.getId() );
+            getContinuum().removeBuildQueue( buildQueueToBeDeleted );
+
+            this.buildQueueList = getContinuum().getAllBuildQueues();
         }
         catch ( BuildManagerException e )
         {
             addActionError( "Cannot delete overall build queue: " + e.getMessage() );
             return ERROR;
         }
-        catch ( ContinuumStoreException e )
+        catch ( ContinuumException e )
         {
             addActionError( "Cannot delete build queue from the database: " + e.getMessage() );
             return ERROR;
         }
-        
+
         return SUCCESS;
     }
 
-	public String getName() 
-	{
-	    return name;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setName(String name) 
-	{
-	    this.name = name;
-	}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-	public List<BuildQueue> getBuildQueueList() 
-	{
-	    return buildQueueList;
-	}
+    public List<BuildQueue> getBuildQueueList()
+    {
+        return buildQueueList;
+    }
 
-	public void setBuildQueueList(List<BuildQueue> buildQueueList) 
-	{
-	    this.buildQueueList = buildQueueList;
-	}
+    public void setBuildQueueList( List<BuildQueue> buildQueueList )
+    {
+        this.buildQueueList = buildQueueList;
+    }
 
-	public BuildQueueDao getBuildQueueDao() 
-	{
-	    return buildQueueDao;
-	}
+    public int getSize()
+    {
+        return size;
+    }
 
-	public void setBuildQueueDao(BuildQueueDao buildQueueDao) 
-	{
-	    this.buildQueueDao = buildQueueDao;
-	}
+    public void setSize( int size )
+    {
+        this.size = size;
+    }
 
-	public int getSize() 
-	{
-		return size;
-	}
+    public BuildQueue getBuildQueue()
+    {
+        return buildQueue;
+    }
 
-	public void setSize(int size) 
-	{
-		this.size = size;
-	}
-
-	public BuildQueue getBuildQueue() 
-	{
-	    return buildQueue;
-	}
-
-	public void setBuildQueue(BuildQueue buildQueue) 
-	{
-	    this.buildQueue = buildQueue;
-	}
+    public void setBuildQueue( BuildQueue buildQueue )
+    {
+        this.buildQueue = buildQueue;
+    }
 }
