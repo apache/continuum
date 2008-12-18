@@ -313,8 +313,6 @@ public interface BuildsManager
      * Checks whether a build is in progress.
      * 
      * @return
-     * @throws BuildManagerException
      */
-    boolean isBuildInProgress()
-        throws BuildManagerException;
+    boolean isBuildInProgress();
 }

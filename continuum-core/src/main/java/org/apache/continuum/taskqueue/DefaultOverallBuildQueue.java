@@ -427,11 +427,17 @@ public class DefaultOverallBuildQueue
         return ( ( ParallelBuildsThreadedTaskQueueExecutor ) buildTaskQueueExecutor ).getQueue();
     }
 
+    /**
+     * @see OverallBuildQueue#getBuildTaskQueueExecutor()
+     */
     public TaskQueueExecutor getBuildTaskQueueExecutor()
     {
         return buildTaskQueueExecutor;
     }
 
+    /**
+     * @see OverallBuildQueue#getCheckoutTaskQueueExecutor()
+     */
     public TaskQueueExecutor getCheckoutTaskQueueExecutor()
     {
         return checkoutTaskQueueExecutor;

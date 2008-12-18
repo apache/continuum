@@ -64,12 +64,6 @@ public class ContinuumStartup
         
         BuildsManager buildsManager = (BuildsManager) wac.getBean( PlexusToSpringUtils.buildSpringId( BuildsManager.class, "parallel" ) );
 
-        /*        TaskQueueExecutor buildProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "build-project" ) );
-
-        TaskQueueExecutor checkOutProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "check-out-project" ) );
-*/
         TaskQueueExecutor prepareRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "prepare-release" ) );
 

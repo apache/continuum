@@ -56,11 +56,6 @@ public class SummaryAction
     private GroupSummary groupSummary = new GroupSummary();
 
     /**
-     * @plexus.requirement
-     */
-    //private TaskQueueManager taskQueueManager;
-    
-    /**
      * @plexus.requirement role-hint="parallel"
      */
     private BuildsManager parallelBuildsManager;
@@ -115,13 +110,11 @@ public class SummaryAction
             model.setProjectType( project.getExecutorId() );
 
             try
-            {
-                //if ( taskQueueManager.isInBuildingQueue( project.getId() ) )
+            {                
                 if ( parallelBuildsManager.isInAnyBuildQueue( project.getId() ) )
                 {
                     model.setInBuildingQueue( true );
-                }
-                //else if ( taskQueueManager.isInCheckoutQueue( project.getId() ) )
+                }             
                 else if ( parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) )
                 {
                     model.setInCheckoutQueue( true );
@@ -136,10 +129,6 @@ public class SummaryAction
             {
                 throw new ContinuumException( e.getMessage(), e );
             }
-            /*catch ( TaskQueueManagerException e )
-            {
-                throw new ContinuumException( e.getMessage(), e );
-            }*/
 
             model.setState( project.getState() );
 

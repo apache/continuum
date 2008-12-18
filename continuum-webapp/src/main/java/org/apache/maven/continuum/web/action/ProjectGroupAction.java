@@ -80,11 +80,6 @@ public class ProjectGroupAction
      * @plexus.requirement role-hint="default"
      */
     private RoleManager roleManager;
-
-    /**
-     * @plexus.requirement
-     */
-    //private TaskQueueManager taskQueueManager;
     
     /**
      * @plexus.requirement role-hint="parallel"
@@ -351,8 +346,7 @@ public class ProjectGroupAction
             {
                 Project p = (Project) proj.next();
                 try
-                {
-                    //if ( taskQueueManager.isInCheckoutQueue( p.getId() ) )
+                {   
                     if ( parallelBuildsManager.isInAnyCheckoutQueue( p.getId() ) )
                     {
                         projectInCOQueue = true;
@@ -362,10 +356,6 @@ public class ProjectGroupAction
                 {
                     throw new ContinuumException( e.getMessage(), e );
                 }
-                /*catch ( TaskQueueManagerException e )
-                {
-                    throw new ContinuumException( e.getMessage(), e );
-                }*/
                 projects.put( p, new Integer( p.getProjectGroup().getId() ) );
             }
         }

@@ -42,7 +42,7 @@ public class GeneralConfiguration
     
     private File releaseOutputDirectory;
     
-    private int numberOfBuildsInParallel;
+    private int numberOfBuildsInParallel = 1;
 
     public GeneralConfiguration()
     {

@@ -18,10 +18,14 @@
  */
 package org.apache.maven.continuum.web.action;
 
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+import org.codehaus.plexus.taskqueue.Task;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -30,31 +34,24 @@ import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
  */
 public abstract class AbstractBuildAction
     extends ContinuumConfirmAction
-{
-    
+{    
     private int projectId;
     
     private boolean canDelete = true;
     
-    /**
-     * @plexus.requirement role-hint='build-project'
-     */
-    private TaskQueueExecutor taskQueueExecutor; 
-    
-    
-    
-    protected TaskQueueExecutor getTaskQueueExecutor()
-    {
-        return this.taskQueueExecutor;
-    }
-    
     protected boolean canRemoveBuildResult(BuildResult buildResult)
+        throws BuildManagerException
     {
-        BuildProjectTask buildProjectTask = (BuildProjectTask) getTaskQueueExecutor().getCurrentTask();
-        if ( buildProjectTask != null && buildResult != null )
+        Map<String, Task> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
+        Set<String> keySet = currentBuilds.keySet();
+        for( String key : keySet )
         {
-            return !( buildResult.getState() == ContinuumProjectState.BUILDING && ( buildProjectTask
-                .getBuildDefinitionId() == buildResult.getBuildDefinition().getId() && buildProjectTask.getProjectId() == this.getProjectId() ) );
+            BuildProjectTask buildProjectTask = (BuildProjectTask) currentBuilds.get( key );
+            if ( buildProjectTask != null && buildResult != null )
+            {
+                return !( buildResult.getState() == ContinuumProjectState.BUILDING && ( buildProjectTask
+                    .getBuildDefinitionId() == buildResult.getBuildDefinition().getId() && buildProjectTask.getProjectId() == this.getProjectId() ) );
+            }
         }
         return true;
     }

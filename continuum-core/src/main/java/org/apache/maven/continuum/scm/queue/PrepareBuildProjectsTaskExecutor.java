@@ -483,35 +483,6 @@ public class PrepareBuildProjectsTaskExecutor
                 //shouldBuild = true;
                 projectsToBeBuilt.add( project );
             }
-
-            // TODO: deng parallel builds.. 
-            // - add those projects which should be built into a list
-            //       and also add the build definition into a map of <projectId,build definition> 
-            // - set these in the context map 
-            // 
-            /*if ( shouldBuild )
-            {
-                try
-                {
-                    Map context = new HashMap();
-                    context.put( AbstractContinuumAction.KEY_PROJECT, project );
-                    context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
-                    context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
-                    
-                    getLogger().info( "Performing action create-build-project-task" );
-                    actionManager.lookup( "create-build-project-task" ).execute( context );
-                }
-                catch ( ActionNotFoundException e )
-                {
-                   getLogger().error( "Error looking up action 'build-project'" );
-                   throw new TaskExecutionException( "Error looking up action 'build-project'", e );
-                }
-                catch ( Exception e )
-                {
-                    getLogger().error( e.getMessage(), e );
-                    throw new TaskExecutionException( "Error executing action 'build-project'", e );
-                }
-            }*/
         }
         
         try

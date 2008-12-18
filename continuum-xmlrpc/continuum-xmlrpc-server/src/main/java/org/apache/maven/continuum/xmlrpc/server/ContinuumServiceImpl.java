@@ -28,8 +28,6 @@ import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -61,6 +59,7 @@ import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
+import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -71,6 +70,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -96,11 +96,6 @@ public class ContinuumServiceImpl
      * @plexus.requirement role-hint="default"
      */
     private RoleManager roleManager;
-
-    /**
-     * @plexus.requirement
-     */
-    private TaskQueueManager taskQueueManager;
     
     /**
      * @plexus.requirement role-hint="parallel"
@@ -1054,28 +1049,35 @@ public class ContinuumServiceImpl
         try
         {
             return parallelBuildsManager.isInAnyBuildQueue( projectId );
-            //return taskQueueManager.isInBuildingQueue( projectId );
         }
         catch ( BuildManagerException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }
-        /*catch ( TaskQueueManagerException e )
-        {
-            throw new ContinuumException( e.getMessage(), e );
-        }*/
     }
 
     public List<BuildProjectTask> getProjectsInBuildQueue()
         throws ContinuumException
     {
         try
-        {
-            //TODO: deng parallel builds
-            // implement this!
-            return populateBuildProjectTaskList( taskQueueManager.getProjectsInBuildQueue() );
+        {  
+            Map<String, List<Task>> buildTasks = parallelBuildsManager.getProjectsInBuildQueues();
+            Set<String> keys = buildTasks.keySet();
+            List<org.apache.maven.continuum.buildqueue.BuildProjectTask> convertedTasks =
+                new ArrayList<org.apache.maven.continuum.buildqueue.BuildProjectTask>();
+            
+            for( String key : keys )
+            {
+                List<Task> tasks = buildTasks.get( key );
+                for( Task task : tasks )
+                {
+                    convertedTasks.add( ( org.apache.maven.continuum.buildqueue.BuildProjectTask ) task );
+                }
+            }
+            
+            return populateBuildProjectTaskList( convertedTasks );
         }
-        catch ( TaskQueueManagerException e )
+        catch ( BuildManagerException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }
@@ -1087,7 +1089,6 @@ public class ContinuumServiceImpl
         checkManageQueuesAuthorization();
         
         parallelBuildsManager.removeProjectsFromBuildQueue( projectsId );
-        //taskQueueManager.removeProjectsFromBuildingQueue( projectsId );
         
         return 0;
     }
@@ -1098,11 +1099,9 @@ public class ContinuumServiceImpl
         checkManageQueuesAuthorization();
         try
         {
-            // TODO: deng parallel builds
-            // - implement this in BuildsManager!
-            return taskQueueManager.cancelCurrentBuild();
+            return parallelBuildsManager.cancelAllBuilds();
         }
-        catch ( TaskQueueManagerException e )
+        catch ( BuildManagerException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }

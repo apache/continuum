@@ -236,9 +236,17 @@ public interface OverallBuildQueue
     void removeProjectsFromBuildQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueException;
     
-    //void setContainer( PlexusContainer container );
-    
+    /**
+     * Returns the build task queue executor used.
+     * 
+     * @return
+     */
     TaskQueueExecutor getBuildTaskQueueExecutor();
     
+    /**
+     * Returns the checkout task queue executor used.
+     * 
+     * @return
+     */
     TaskQueueExecutor getCheckoutTaskQueueExecutor();
 }

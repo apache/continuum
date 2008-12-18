@@ -89,7 +89,9 @@
               </p></s:param>
             </s:textfield>
 
+            <%--
             <s:checkbox label="%{getText('configuration.disable.parallel.builds')}" name="requireParallelBuilds" required="true"/>
+            --%>
             
             <s:hidden name="requireReleaseOutput"/>
           </tbody>

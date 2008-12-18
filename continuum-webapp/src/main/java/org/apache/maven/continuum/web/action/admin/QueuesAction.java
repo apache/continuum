@@ -172,10 +172,10 @@ public class QueuesAction
         {
             // queued builds
             Map<String, List<Task>> builds = getContinuum().getBuildsManager().getProjectsInBuildQueues();
-            Set<String> keySet = builds.keySet(); 
-            List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
+            Set<String> keySet = builds.keySet();            
             for( String key : keySet )
             {
+                List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
                 for( Task task : builds.get( key ) )
                 {
                     BuildProjectTask buildTask = (BuildProjectTask) task;
@@ -211,10 +211,10 @@ public class QueuesAction
         {
             // queued checkouts
             Map<String, List<Task>> checkouts = getContinuum().getBuildsManager().getProjectsInCheckoutQueues();
-            Set<String> keySet = checkouts.keySet(); 
-            List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
+            Set<String> keySet = checkouts.keySet();
             for( String key : keySet )
             {
+                List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
                 for( Task task : checkouts.get( key ) )
                 {
                     CheckOutTask checkoutTask = (CheckOutTask) task;

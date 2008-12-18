@@ -22,6 +22,7 @@ package org.apache.maven.continuum.web.action;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.web.action.admin.AbstractBuildQueueAction;
@@ -36,7 +37,6 @@ import org.codehaus.plexus.util.StringUtils;
 public class CancelBuildAction
     extends AbstractBuildQueueAction
 {
-
     private int projectId;
 
     private int projectGroupId;
@@ -79,11 +79,19 @@ public class CancelBuildAction
         BuildsManager parallelBuildsManager = getContinuum().getBuildsManager();
         parallelBuildsManager.removeProjectsFromBuildQueue( projectsId );           
         
-        // now we must check if the current build is one of this
-        int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
-        if ( index > 0 )
+        try
         {
-            cancelBuild( projectsId[index] );
+            // now we must check if the current build is one of this
+            int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
+            if ( index > 0 )
+            {
+                cancelBuild( projectsId[index] );
+            }
+        }
+        catch ( BuildManagerException e )
+        {
+            getLogger().error( e.getMessage() );
+            throw new ContinuumException( e.getMessage(), e );
         }
         return SUCCESS;
     }

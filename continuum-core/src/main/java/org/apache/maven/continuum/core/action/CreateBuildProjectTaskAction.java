@@ -65,19 +65,11 @@ public class CreateBuildProjectTaskAction
         List<Project> projectsToBeBuilt = new ArrayList<Project>();
         int trigger = AbstractContinuumAction.getTrigger( context );
         
-        getLogger().info( "\n--------- create build project tasks action ---------" );
-        
         // update state of each project first
         for( Project project : projects )
-        {
-            getLogger().info( "##### project : " + project.getId() + " - " + project.getName() );
+        {   
             BuildDefinition buildDefinition = projectsBuildDefinitionsMap.get( project.getId() );
-            List<BuildQueue> buildQueues = buildDefinition.getSchedule().getBuildQueues();
-            for( BuildQueue buildQueue : buildQueues )
-            {
-                getLogger().info( "##### build queue : " + buildQueue.getId() + " - " + buildQueue.getName() );
-            }
-
+            
             if ( parallelBuildsManager.isInAnyBuildQueue( project.getId(), buildDefinition.getId() ) )
             {
                 return;
