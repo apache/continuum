@@ -772,7 +772,10 @@ public class MailContinuumNotifier
 
             message.setSentDate( new Date() );
 
-            javaMailSender.send( message );
+            if ( message.getAllRecipients() != null && ( (Address[]) message.getAllRecipients() ).length > 0 )
+            {
+                javaMailSender.send( message );
+            }
         }
         catch ( AddressException ex )
         {
@@ -873,7 +876,10 @@ public class MailContinuumNotifier
 
             message.setSentDate( new Date() );
 
-            javaMailSender.send( message );
+            if ( message.getAllRecipients() != null && ( (Address[]) message.getAllRecipients() ).length > 0 )
+            {
+                javaMailSender.send( message );
+            }
         }
         catch ( AddressException ex )
         {
