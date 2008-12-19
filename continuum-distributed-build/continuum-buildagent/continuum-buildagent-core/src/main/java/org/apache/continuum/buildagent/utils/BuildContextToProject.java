@@ -18,7 +18,7 @@ public class BuildContextToProject
 
         project.setScmUrl( buildContext.getScmUrl() );
 
-        project.setScmUsername( buildContext.getScmPassword());
+        project.setScmUsername( buildContext.getScmUsername() );
 
         project.setScmPassword( buildContext.getScmPassword() );
 
