@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
@@ -86,6 +87,11 @@ public class ParallelBuildsManager
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
+    
+    /**
+     * @plexus.requirement
+     */
+    private BuildQueueDao buildQueueDao;
 
     private PlexusContainer container;
 
@@ -1086,22 +1092,26 @@ public class ParallelBuildsManager
         {
             try
             {
-                BuildQueue defaultBuildQueue = configurationService.getDefaultBuildQueue();
+                // create all the build queues configured in the database, not just the default!
+                List<BuildQueue> buildQueues = buildQueueDao.getAllBuildQueues();
+                for( BuildQueue buildQueue : buildQueues )
+                {
+                    OverallBuildQueue defaultOverallBuildQueue =
+                        (OverallBuildQueue) container.lookup( OverallBuildQueue.class );
+                    defaultOverallBuildQueue.setId( buildQueue.getId() );
+                    defaultOverallBuildQueue.setName( buildQueue.getName() );
 
-                OverallBuildQueue defaultOverallBuildQueue =
-                    (OverallBuildQueue) container.lookup( OverallBuildQueue.class );
-                defaultOverallBuildQueue.setId( defaultBuildQueue.getId() );
-                defaultOverallBuildQueue.setName( defaultBuildQueue.getName() );
-
-                overallBuildQueues.put( defaultOverallBuildQueue.getId(), defaultOverallBuildQueue );
+                    overallBuildQueues.put( defaultOverallBuildQueue.getId(), defaultOverallBuildQueue );
+                }               
+                //BuildQueue defaultBuildQueue = configurationService.getDefaultBuildQueue();
             }
             catch ( ComponentLookupException e )
             {
-                log.error( "Cannot add default build queue: " + e.getMessage() );
+                log.error( "Cannot create overall build queue: " + e.getMessage() );
             }
             catch ( ContinuumStoreException e )
             {
-                log.error( "Cannot add default build queue: " + e.getMessage() );
+                log.error( "Cannot create overall build queue: " + e.getMessage() );
             }
         }
     }

@@ -782,7 +782,7 @@
     </action>    
     
     <!--
-    * ALLOWED BUILDS IN PARALLEL
+    * Build Queue (Parallel Builds)
     -->
     
     <action name="buildQueueList" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="list">
@@ -801,7 +801,7 @@
     
     <action name="deleteBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="delete">
       <result name="input">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
-      <result name="success">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>    
     </action>  
         
     <!--

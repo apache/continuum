@@ -41,6 +41,8 @@ public class BuildQueueAction
     private List<BuildQueue> buildQueueList;
 
     private BuildQueue buildQueue;
+    
+    private String message;
 
     public void prepare()
         throws ContinuumException
@@ -119,26 +121,12 @@ public class BuildQueueAction
 
     public String delete()
         throws Exception
-    {
-        try
-        {
-            BuildQueue buildQueueToBeDeleted = getContinuum().getBuildQueue( this.buildQueue.getId() );
-            getContinuum().getBuildsManager().removeOverallBuildQueue( buildQueueToBeDeleted.getId() );
-            getContinuum().removeBuildQueue( buildQueueToBeDeleted );
+    {        
+        BuildQueue buildQueueToBeDeleted = getContinuum().getBuildQueue( this.buildQueue.getId() );
+        getContinuum().getBuildsManager().removeOverallBuildQueue( buildQueueToBeDeleted.getId() );
+        getContinuum().removeBuildQueue( buildQueueToBeDeleted );
 
-            this.buildQueueList = getContinuum().getAllBuildQueues();
-        }
-        catch ( BuildManagerException e )
-        {
-            addActionError( "Cannot delete overall build queue: " + e.getMessage() );
-            return ERROR;
-        }
-        catch ( ContinuumException e )
-        {
-            addActionError( "Cannot delete build queue from the database: " + e.getMessage() );
-            return ERROR;
-        }
-
+        this.buildQueueList = getContinuum().getAllBuildQueues();
         return SUCCESS;
     }
 
@@ -180,5 +168,15 @@ public class BuildQueueAction
     public void setBuildQueue( BuildQueue buildQueue )
     {
         this.buildQueue = buildQueue;
+    }
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public void setMessage( String message )
+    {
+        this.message = message;
     }
 }

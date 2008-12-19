@@ -3241,7 +3241,7 @@ public class DefaultContinuum
         }
         catch ( ContinuumStoreException e )
         {
-            throw new ContinuumException( "Error adding build queue.", e );
+            throw new ContinuumException( "Error adding build queue to the database.", e );
         }
     }
     
@@ -3277,7 +3277,7 @@ public class DefaultContinuum
         }
         catch ( ContinuumStoreException e )
         {
-            throw new ContinuumException( "Error deleting build queue.", e );
+            throw new ContinuumException( "Error deleting build queue from database.", e );
         }
     }
     
