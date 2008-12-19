@@ -89,12 +89,13 @@ public class DefaultDistributedBuildManagerTest
         Map context = new HashMap();
         context.put( "project-id", project.getId() );
         context.put( "builddefinition-id", buildDef.getId() );
-        context.put( "build-start", expectedBuildResult.getStartTime() );
-        context.put( "build-end", expectedBuildResult.getEndTime() );
+        context.put( "build-start", new Long( expectedBuildResult.getStartTime() ).toString() );
+        context.put( "build-end", new Long( expectedBuildResult.getEndTime() ).toString() );
         context.put( "build-error", expectedBuildResult.getError() );
         context.put( "build-exit-code", expectedBuildResult.getExitCode() );
         context.put( "build-state", expectedBuildResult.getState() );
         context.put( "trigger", expectedBuildResult.getTrigger() );
+        context.put( "build-output", null );
         
         distributedBuildManager.updateBuildResult( context );
 

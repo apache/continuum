@@ -82,12 +82,12 @@ public class ContinuumBuildConstant
 
     public static long getBuildStart( Map context )
     {
-        return getLong( context, KEY_BUILD_START );
+        return new Long( getString( context, KEY_BUILD_START ) );
     }
 
     public static long getBuildEnd( Map context )
     {
-        return getLong( context, KEY_BUILD_END );
+        return new Long( getString( context, KEY_BUILD_END ) );
     }
 
     public static int getBuildExitCode( Map context )

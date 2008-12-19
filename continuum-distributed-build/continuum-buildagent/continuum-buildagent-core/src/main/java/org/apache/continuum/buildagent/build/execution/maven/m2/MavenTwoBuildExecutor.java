@@ -83,6 +83,7 @@ public class MavenTwoBuildExecutor
     
         arguments.append( StringUtils.clean( buildDefinition.getArguments() ) ).append( " " );
     
+        /*
         Properties props = getContinuumSystemProperties( project );
         for ( Enumeration itr = props.propertyNames(); itr.hasMoreElements(); )
         {
@@ -90,7 +91,8 @@ public class MavenTwoBuildExecutor
             String value = props.getProperty( name );
             arguments.append( "\"-D" ).append( name ).append( "=" ).append( value ).append( "\" " );
         }
-    
+        */
+
         arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
 
         return executeShellCommand( project, executable, arguments.toString(), buildOutput, null );

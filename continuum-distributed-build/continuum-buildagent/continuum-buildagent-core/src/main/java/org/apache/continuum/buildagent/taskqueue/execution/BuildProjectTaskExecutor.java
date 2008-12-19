@@ -12,6 +12,7 @@ import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
+import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.ContinuumException;
@@ -93,6 +94,13 @@ public class BuildProjectTaskExecutor
 
     private void initializeBuildContext( BuildContext buildContext )
     {
+        Map<String, Object> actionContext = buildContext.getActionContext();
+
+        actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, buildContext.getProjectId() );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT, BuildContextToProject.getProject( buildContext ) );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION, BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
+
         buildContext.setBuildStartTime( System.currentTimeMillis() );
     }
     
@@ -122,6 +130,7 @@ public class BuildProjectTaskExecutor
     }
 
     private void endBuild( BuildContext buildContext )
+        throws TaskExecutionException
     {
         // return build result to master
         BuildResult buildResult = buildContext.getBuildResult();
@@ -131,8 +140,8 @@ public class BuildProjectTaskExecutor
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( buildContext.getBuildDefinitionId() ) );
         result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( buildContext.getTrigger() ) );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( buildResult.getState() ) );
-        result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ) );
-        result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ).toString() );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ).toString() );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, new Integer( buildResult.getExitCode() ) );
         
         String buildOutput = getBuildOutputText( buildContext.getProjectId() );
@@ -152,6 +161,16 @@ public class BuildProjectTaskExecutor
         else
         {
             result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, "" );
+        }
+
+        try
+        {
+            buildAgentManager.returnBuildResult( result );
+        }
+        catch ( ContinuumException e )
+        {
+            log.error( "Failed to return build result for project '" + buildContext.getProjectName() + "'", e );
+            throw new TaskExecutionException( "Failed to return build result for project '" + buildContext.getProjectName() + "'", e );
         }
     }
 

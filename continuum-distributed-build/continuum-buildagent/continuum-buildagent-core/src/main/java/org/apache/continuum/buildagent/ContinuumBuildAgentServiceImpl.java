@@ -91,11 +91,11 @@ public class ContinuumBuildAgentServiceImpl
             {
                 if ( buildResult.getStartTime() <= 0 )
                 {
-                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildContext.getBuildStartTime() ) );
+                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildContext.getBuildStartTime() ).toString() );
                 }
                 else
                 {
-                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ) );
+                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ).toString() );
                 }
 
                 if ( buildResult.getError() == null )
@@ -108,13 +108,13 @@ public class ContinuumBuildAgentServiceImpl
                 }
 
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( buildResult.getState() ) );
-                result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ) );
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ).toString() );
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, buildResult.getExitCode() );
             }
             else
             {
-                result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildContext.getBuildStartTime() ) );
-                result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( 0 ) );
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildContext.getBuildStartTime() ).toString() );
+                result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( 0 ).toString() );
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( ContinuumProjectState.BUILDING ) );
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, "" );
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, new Integer( 0 ) );

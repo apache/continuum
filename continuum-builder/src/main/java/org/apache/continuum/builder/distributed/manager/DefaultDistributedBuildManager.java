@@ -1,5 +1,9 @@
 package org.apache.continuum.builder.distributed.manager;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -355,11 +360,24 @@ public class DefaultDistributedBuildManager
 
             projectDao.updateProject( project );
 
-            //TODO: set state of next project to building
+            File buildOutputFile = configurationService.getBuildOutputFile( buildResult.getId(), project.getId() );
+            
+            FileWriter fstream = new FileWriter( buildOutputFile );
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write( ContinuumBuildConstant.getBuildOutput( context ) == null ? "" : ContinuumBuildConstant.getBuildOutput( context ) );
+            out.close();
         }
         catch ( ContinuumStoreException e )
         {
             throw new ContinuumException( "Error while updating build result for project", e );
+        }
+        catch ( ConfigurationException e )
+        {
+            throw new ContinuumException( "Error retrieving build output file", e );
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumException( "Error while writing build output to file", e );
         }
     }
 
