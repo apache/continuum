@@ -81,7 +81,7 @@ public class BuildProjectTaskExecutor
         {
             Map actionContext = context.getActionContext();
 
-            performAction( "execute-builder", context );
+            performAction( "execute-agent-builder", context );
 
             updateBuildResult( context, null );
         }

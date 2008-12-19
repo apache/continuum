@@ -12,6 +12,8 @@ public class BuildContextToBuildDefinition
     {
         BuildDefinition buildDefinition = new BuildDefinition();
 
+        buildDefinition.setId( buildContext.getBuildDefinitionId() );
+
         buildDefinition.setAlwaysBuild( true );
 
         buildDefinition.setArguments( buildContext.getArguments() );

@@ -60,8 +60,6 @@ public class DefaultBuildAgentManager
             {
                 for ( BuildContext buildContext : buildContexts )
                 {
-                    context = buildContext.getActionContext();
-    
                     BuildDefinition buildDef = BuildContextToBuildDefinition.getBuildDefinition( buildContext );
         
                     log.info( "Check scm root state" );
@@ -90,6 +88,7 @@ public class DefaultBuildAgentManager
                     finally
                     {
                         endProjectPrepareBuild( buildContext );
+                        context = buildContext.getActionContext();
                     }
                 }
             }
@@ -98,7 +97,7 @@ public class DefaultBuildAgentManager
                 endPrepareBuild( context );
             }
 
-            if ( !checkProjectScmRoot( context ) )
+            if ( checkProjectScmRoot( context ) )
             {
                 buildProjects( buildContexts );
             }
@@ -281,14 +280,22 @@ public class DefaultBuildAgentManager
             result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, ContinuumBuildAgentUtil.getScmRootAddress( context ) );
             result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE, new Integer( ContinuumBuildAgentUtil.getScmRootState( context ) ) );
             
-            String error = convertScmResultToError( ContinuumBuildAgentUtil.getScmResult( context, null ) );
-            if ( StringUtils.isEmpty( error ) )
+            if ( ContinuumBuildAgentUtil.getScmRootState( context ) == ContinuumProjectState.ERROR )
             {
-                result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, "" );
+                String error = convertScmResultToError( ContinuumBuildAgentUtil.getScmResult( context, null ) );
+                
+                if ( StringUtils.isEmpty( error ) )
+                {
+                    result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, "" );
+                }
+                else
+                {
+                    result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, error );
+                }
             }
             else
             {
-                result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, error );
+                result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, "" );
             }
     
             // connect to continuum server (master)

@@ -1,6 +1,7 @@
 package org.apache.continuum.buildagent.action;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +14,15 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.scm.ScmException;
-import org.apache.maven.scm.command.checkout.CheckOutScmResult;
+import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.AbstractAction;
 
 /**
- * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="checkout-agent-project"
+ * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="update-agent-working-directory"
  */
-public class CheckoutProjectAction
+public class UpdateWorkingDirectoryAction
     extends AbstractAction
 {
     /**
@@ -38,54 +39,40 @@ public class CheckoutProjectAction
         throws Exception
     {
         Project project = ContinuumBuildAgentUtil.getProject( context );
+
         BuildDefinition buildDefinition = ContinuumBuildAgentUtil.getBuildDefinition( context );
 
-        File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() );
-
-        // ----------------------------------------------------------------------
-        // Check out the project
-        // ----------------------------------------------------------------------
+        UpdateScmResult scmResult;
 
         ScmResult result;
-
+        
         try
         {
-            String scmUserName = ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_USERNAME, "" );
-            String scmPassword = ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_PASSWORD, "" );
-
-            ContinuumScmConfiguration config =
-                createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
-
+            // TODO: not sure why this is different to the context, but it all needs to change
+            File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() );
+            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
+            //config.setLatestUpdateDate( latestUpdateDate );
             String tag = config.getTag();
-            getLogger().info( "Checking out project: '" + project.getName() + "', id: '" + project.getId() + "' " +
-                "to '" + workingDirectory + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." ) );
+            String msg = project.getName() + "', id: '" + project.getId() + "' to '" +
+                workingDirectory.getAbsolutePath() + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." );
+            getLogger().info( "Updating project: " + msg );
+            scmResult = scm.update( config );
 
-            CheckOutScmResult checkoutResult = scm.checkout( config );
-            //if ( StringUtils.isNotEmpty( checkoutResult.getRelativePathProjectDirectory() ) )
-            //{
-            //    context.put( AbstractContinuumAction.KEY_PROJECT_RELATIVE_PATH,
-            //                 checkoutResult.getRelativePathProjectDirectory() );
-            //}
-
-            if ( !checkoutResult.isSuccess() )
+            if ( !scmResult.isSuccess() )
             {
-                // TODO: is it more appropriate to return this in the converted result so that it can be presented to
-                // the user?
-                String msg = "Error while checking out the code for project: '" + project.getName() + "', id: '" +
-                    project.getId() + "' to '" + workingDirectory.getAbsolutePath() + "'" +
-                    ( tag != null ? " with branch/tag " + tag + "." : "." );
-                getLogger().warn( msg );
+                getLogger().warn( "Error while updating the code for project: '" + msg );
 
-                getLogger().warn( "Command output: " + checkoutResult.getCommandOutput() );
+                getLogger().warn( "Command output: " + scmResult.getCommandOutput() );
 
-                getLogger().warn( "Provider message: " + checkoutResult.getProviderMessage() );
-            }
-            else
-            {
-                getLogger().info( "Checked out " + checkoutResult.getCheckedOutFiles().size() + " files." );
+                getLogger().warn( "Provider message: " + scmResult.getProviderMessage() );
             }
 
-            result = convertScmResult( checkoutResult );
+            if ( scmResult.getUpdatedFiles() != null && scmResult.getUpdatedFiles().size() > 0 )
+            {
+                getLogger().info( "Updated " + scmResult.getUpdatedFiles().size() + " files." );
+            }
+
+            result = convertScmResult( scmResult );
         }
         catch ( ScmRepositoryException e )
         {
@@ -94,8 +81,8 @@ public class CheckoutProjectAction
             result.setSuccess( false );
 
             result.setProviderMessage( e.getMessage() + ": " + getValidationMessages( e ) );
-
-            getLogger().error( e.getMessage(), e );
+            
+            getLogger().error( e.getMessage(), e);
         }
         catch ( NoSuchScmProviderException e )
         {
@@ -105,8 +92,8 @@ public class CheckoutProjectAction
             result.setSuccess( false );
 
             result.setProviderMessage( e.getMessage() );
-
-            getLogger().error( e.getMessage(), e );
+            
+            getLogger().error( e.getMessage(), e);
         }
         catch ( ScmException e )
         {
@@ -115,45 +102,32 @@ public class CheckoutProjectAction
             result.setSuccess( false );
 
             result.setException( ContinuumBuildAgentUtil.throwableMessagesToString( e ) );
-
-            getLogger().error( e.getMessage(), e );
-        }
-        catch ( Throwable t )
-        {
-            // TODO: do we want this here, or should it be to the logs?
-            // TODO: what throwables do we really get here that we can cope with?
-            result = new ScmResult();
-
-            result.setSuccess( false );
-
-            result.setException( ContinuumBuildAgentUtil.throwableMessagesToString( t ) );
-
-            getLogger().error( t.getMessage(), t );
+            
+            getLogger().error( e.getMessage(), e);
         }
 
-        context.put( ContinuumBuildAgentUtil.KEY_CHECKOUT_SCM_RESULT, result );
+        context.put( ContinuumBuildAgentUtil.KEY_UPDATE_SCM_RESULT, result );
     }
 
-    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory,
-                                                              String scmUserName, String scmPassword )
+    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
         config.setUrl( project.getScmUrl() );
-        config.setUsername( scmUserName );
-        config.setPassword( scmPassword );
+        config.setUsername( project.getScmUsername() );
+        config.setPassword( project.getScmPassword() );
         config.setUseCredentialsCache( project.isScmUseCache() );
         config.setWorkingDirectory( workingDirectory );
         config.setTag( project.getScmTag() );
         return config;
     }
 
-    private ScmResult convertScmResult( CheckOutScmResult scmResult )
+    private ScmResult convertScmResult( UpdateScmResult scmResult )
     {
         ScmResult result = new ScmResult();
 
-        result.setSuccess( scmResult.isSuccess() );
-
         result.setCommandLine( maskPassword( scmResult.getCommandLine() ) );
+
+        result.setSuccess( scmResult.isSuccess() );
 
         result.setCommandOutput( scmResult.getCommandOutput() );
 
@@ -161,8 +135,8 @@ public class CheckoutProjectAction
 
         return result;
     }
-
-    // TODO: migrate to the SvnCommandLineUtils version (preferably properly encapsulated in the provider)
+    
+ // TODO: migrate to the SvnCommandLineUtils version (preferably properly encapsulated in the provider)
     private String maskPassword( String commandLine )
     {
         String cmd = commandLine;
@@ -183,7 +157,7 @@ public class CheckoutProjectAction
 
         return cmd;
     }
-
+    
     private String getValidationMessages( ScmRepositoryException ex )
     {
         List<String> messages = ex.getValidationMessages();
@@ -194,7 +168,7 @@ public class CheckoutProjectAction
         {
             for ( Iterator<String> i = messages.iterator(); i.hasNext(); )
             {
-                message.append( (String) i.next() );
+                message.append( i.next() );
 
                 if ( i.hasNext() )
                 {
