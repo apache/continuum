@@ -34,10 +34,12 @@ public class MasterBuildAgentTransportServer
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
-    /**
-     * @plexus.requirement
-     */
     private DistributedBuildManager distributedBuildManager;
+
+    public MasterBuildAgentTransportServer( DistributedBuildManager distributedBuildManager )
+    {
+        this.distributedBuildManager = distributedBuildManager;
+    }
 
     public Boolean returnBuildResult( Map buildResult )
         throws Exception

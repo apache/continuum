@@ -153,7 +153,7 @@ public class DistributedBuildProjectTaskExecutor
 
                 if ( project.getScmPassword() == null )
                 {
-                    context.put( ContinuumBuildConstant.KEY_SCM_PASSWORD, project.getScmPassword() );
+                    context.put( ContinuumBuildConstant.KEY_SCM_PASSWORD, "" );
                 }
                 else
                 {

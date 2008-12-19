@@ -232,7 +232,7 @@ public class DefaultBuildAgentManager
             actionContext.put( ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY,
                                buildAgentConfigurationService.getWorkingDirectory( project.getId() ).getAbsolutePath() );
     
-            performAction( "checkout-project", buildContext );
+            performAction( "checkout-agent-project", buildContext );
     
             scmResult = ContinuumBuildAgentUtil.getCheckoutScmResult( actionContext, null );
         }
