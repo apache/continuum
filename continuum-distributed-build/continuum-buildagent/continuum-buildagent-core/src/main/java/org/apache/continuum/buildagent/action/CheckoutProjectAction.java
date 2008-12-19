@@ -23,7 +23,7 @@ import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.AbstractAction;
 
 /**
- * @plexus.requirement role="org.codehaus.plexus.action.Action" role-hint="checkout-agent-project"
+ * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="checkout-agent-project"
  */
 public class CheckoutProjectAction
     extends AbstractAction
