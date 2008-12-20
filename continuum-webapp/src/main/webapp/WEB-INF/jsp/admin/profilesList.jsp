@@ -50,8 +50,8 @@
               sortable="false"
               filterable="false">
       <ec:row highlightRow="true">
-        <ec:column property="name" title="Name" style="white-space: nowrap" />
-        <ec:column property="Installations" title="Installations" style="white-space: nowrap">
+        <ec:column property="name" title="profile.name.label" style="white-space: nowrap" />
+        <ec:column property="Installations" title="profilesList.installations.label" style="white-space: nowrap">
           <ul>
             <c:if test='${profile.jdk != null}'>
               <li><c:out value="${profile.jdk.name}"/> (<c:out value="${profile.jdk.type}"/>)</li>
@@ -64,7 +64,7 @@
                 <li><c:out value="${envVar.name}" /></li>
               </c:forEach>
             </c:if>
-          <ul>
+          </ul>
         </ec:column>
         <ec:column property="id" title="&nbsp;" width="1%">
           <a href="editBuildEnv!edit.action?profile.id=<c:out value="${pageScope.profile.id}"/>">

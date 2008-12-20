@@ -19,27 +19,27 @@
 
 <%@ taglib prefix="ww" uri="/webwork" %>
 <html>
+<ww:i18n name="localization.Continuum">
 <head>
-  <title>Configure Appearance</title>
+  <title><ww:text name="appearance.page.title"/></title>
   <ww:head/>
 </head>
 
 <body>
-  <h1>Appearance</h1>
+  <h1><ww:text name="appearance.section.title"/></h1>
 
-  <h2>Company Details</h2>
+  <h2><ww:text name="appearance.companyDetails"/></h2>
 
   <p>
-    Enter the details of the company super POM below. If it exists, the organization name, URL and logo will be read
-    from it.
+    <ww:text name="appearance.enterCompanyPom"/>
   </p>
 
   <ww:actionmessage/>
   <ww:form method="post" action="saveAppearance" namespace="/admin" validate="true" theme="xhtml">
-    <ww:textfield name="companyPom.groupId" label="Group ID"/>
-    <ww:textfield name="companyPom.artifactId" label="Artifact ID"/>
-    <ww:submit value="Save"/>
+    <ww:textfield name="companyPom.groupId" label="%{getText('appearance.companyPom.groupId')}"/>
+    <ww:textfield name="companyPom.artifactId" label="%{getText('appearance.companyPom.artifactId')}"/>
+    <ww:submit value="%{getText('save')}"/>
   </ww:form>
 </body>
-
+</ww:i18n>
 </html>

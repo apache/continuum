@@ -42,10 +42,10 @@
               sortable="false"
               filterable="false">
       <ec:row highlightRow="true">
-        <ec:column property="name" title="Name" style="white-space: nowrap" />
-        <ec:column property="type" title="Type" style="white-space: nowrap" />
-        <ec:column property="varName" title="Env Var Name" style="white-space: nowrap" />
-        <ec:column property="varValue" title="Value/Path" style="white-space: nowrap" />
+        <ec:column property="name" title="installation.name.label" style="white-space: nowrap" />
+        <ec:column property="type" title="installation.type.label" style="white-space: nowrap" />
+        <ec:column property="varName" title="installation.varName.label" style="white-space: nowrap" />
+        <ec:column property="varValue" title="installation.value.label" style="white-space: nowrap" />
         
         <ec:column property="id" title="&nbsp;" width="1%">
           <a href="editInstallation!edit.action?installation.installationId=<c:out value="${installation.installationId}"/>">

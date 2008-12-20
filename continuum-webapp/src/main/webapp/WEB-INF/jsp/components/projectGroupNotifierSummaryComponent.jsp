@@ -24,7 +24,7 @@
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 <ww:i18n name="localization.Continuum">
 
-  <h3>Project Group Notifiers of ${projectGroup.name} group</h3>
+  <h3><ww:text name="projectGroupNotifierSummaryComponent.groupNotifiers"><ww:param>${projectGroup.name}</ww:param></ww:text></h3>
   <ww:if test="${not empty projectGroupNotifierSummaries}">
   <ec:table items="projectGroupNotifierSummaries"
             var="projectGroupNotifierSummary"
@@ -84,7 +84,7 @@
   </redback:ifAuthorized>
 
   <ww:if test="${not empty projectNotifierSummaries}">
-    <h3>Project Notifiers</h3>
+    <h3><ww:text name="projectGroupNotifierSummaryComponent.projectNotifiers"/></h3>
     <ec:table items="projectNotifierSummaries"
               var="projectNotifierSummary"
               showExports="false"
@@ -93,7 +93,7 @@
               filterable="false"
               sortable="false">
       <ec:row>
-        <ec:column property="projectName" title="PROJECT NAME">
+        <ec:column property="projectName" title="projectView.project.name">
           <ww:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
             <ww:param name="projectId" value="${pageScope.projectNotifierSummary.projectId}"/>
           </ww:url>

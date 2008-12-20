@@ -37,11 +37,11 @@
 
       <div class="axial">
         <ww:if test="hasActionErrors()">
-          <h3>Action Error</h3>
-        </ww:if>
-        <p>
-          <ww:actionerror/>
-        </p>      
+          <h3><s:text name="profile.actionError"/></h3>
+         <p>
+           <ww:actionerror/>
+         </p>
+       </ww:if>
       </div>
       <table>
         <tr>
@@ -83,13 +83,13 @@
                                   width="100%"
                                   autoIncludeParameters="false">
                           <ec:row highlightRow="true">
-                            <ec:column property="nameEdit" title="Installation Name" style="white-space: nowrap" width="50%">
+                            <ec:column property="nameEdit" title="profile.installation.name.label" style="white-space: nowrap" width="50%">
                               <a href="editInstallation!edit.action?installation.installationId=<c:out value="${profileInstallation.installationId}"/>">
                                 <c:out value="${profileInstallation.name}"/>
                               </a>
                                (<c:out value="${profileInstallation.varValue}"/>)
                             </ec:column>
-                            <ec:column property="type" title="Type" style="white-space: nowrap" width="49%"/>
+                            <ec:column property="type" title="installation.type.label" style="white-space: nowrap" width="49%"/>
                             <ec:column property="id" title="&nbsp;" width="1%">
                               <a href="removeBuildEnvInstallation!removeInstallation.action?profile.id=<c:out value="${profile.id}"/>&installationId=<c:out value="${profileInstallation.installationId}"/>">
                                 <img src="<ww:url value='/images/delete.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0" />

@@ -19,36 +19,37 @@
 
 <%@ taglib prefix="ww" uri="/webwork" %>
 <html>
+<ww:i18n name="localization.Continuum">
 <head>
-  <title>Edit Company POM</title>
+  <title><ww:text name="companyPom.page.title"/></title>
   <ww:head/>
 </head>
 
 <body>
-<h1>Company POM</h1>
+<h1><ww:text name="companyPom.section.title"/></h1>
 
 <ww:actionmessage/>
 <ww:form method="post" action="saveCompanyPom" namespace="/admin" validate="true" theme="xhtml">
-  <ww:label name="companyModel.groupId" label="Group ID"/>
-  <ww:label name="companyModel.artifactId" label="Artifact ID"/>
+  <ww:label name="companyModel.groupId" label="%{getText('appearance.companyPom.groupId')}"/>
+  <ww:label name="companyModel.artifactId" label="%{getText('appearance.companyPom.artifactId')}"/>
   <tr>
-    <td>Version</td>
+    <td><ww:text name="appearance.companyPom.version"/></td>
     <td>
       <ww:property value="companyModel.version"/>
-      <i>(The version will automatically be incremented when you save this form)</i>
+      <i>(<ww:text name="companyPom.autoIncrementVersion"/>)</i>
     </td>
   </tr>
   <tr>
     <td></td>
-    <td><h2>Organization</h2></td>
+    <td><h2><ww:text name="companyPom.organization"/></h2></td>
   </tr>
-  <ww:textfield name="companyModel.organization.name" size="40" label="Name"/>
-  <ww:textfield name="companyModel.organization.url" size="70" label="URL"/>
+  <ww:textfield name="companyModel.organization.name" size="40" label="%{getText('appearance.companyPom.organizationName.label')}"/>
+  <ww:textfield name="companyModel.organization.url" size="70" label="%{getText('appearance.companyPom.organizationUrl.label')}"/>
   <%-- TODO: how to get it to be a string, not a String[]? --%>
-  <ww:textfield name="companyModel.properties['organization.logo']" size="70" label="Logo URL"/>
-  <ww:submit value="Save"/>
+  <ww:textfield name="companyModel.properties['organization.logo']" size="70" label="%{getText('appearance.companyPom.organizationLogoUrl.label')}"/>
+  <ww:submit value="%{getText('save')}"/>
 </ww:form>
 
 </body>
-
+</ww:i18n>
 </html>
