@@ -14,6 +14,7 @@ import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportClient;
 import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -452,6 +453,23 @@ public class DefaultBuildAgentManager
                 log.error( "Error while enqueing build task for project " + buildContext.getProjectId(), e );
                 throw new ContinuumException( "Error while enqueuing build task for project " + buildContext.getProjectId(), e );
             }
+        }
+
+        try
+        {
+            boolean stop = false;
+            while ( !stop )
+            {
+                if ( buildAgentTaskQueueManager.getCurrentProjectInBuilding() <= 0 && 
+                                !buildAgentTaskQueueManager.hasBuildTaskInQueue()  )
+                {
+                    stop = true;
+                }
+            }   
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( e.getMessage(), e );
         }
     }
 

@@ -120,7 +120,24 @@ public class DefaultBuildAgentTaskQueueManager
             throw new TaskQueueManagerException( e.getMessage(), e );
         }
     }
-    
+
+    public boolean hasBuildTaskInQueue()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            if ( getBuildQueue().getQueueSnapshot() != null && getBuildQueue().getQueueSnapshot().size() > 0 )
+            {
+                return true;
+            }
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
+        return false;
+    }
+
     public void contextualize( Context context )
         throws ContextException
     {
