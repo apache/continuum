@@ -152,24 +152,24 @@ public class LocalRepositoryAction
             {
                 if ( repository.getName().equals( repo.getName() ) )
                 {
-                    addActionError( "repository.error.name.unique" );
+                    addActionError( getText( "repository.error.name.unique" ) );
                 }
                 
                 if ( repository.getLocation().equals( repo.getLocation() ) )
                 {
-                    addActionError( "repository.error.location.unique" );
+                    addActionError( getText( "repository.error.location.unique" ) );
                 }
             }
         }
         
         if ( repository.getName().trim().equals( "" ) )
         {
-            addActionError( "repository.error.name.cannot.be.spaces" );
+            addActionError( getText( "repository.error.name.cannot.be.spaces" ) );
         }
         
         if ( repository.getLocation().trim().equals( "" ) )
         {
-            addActionError( "repository.error.location.cannot.be.spaces" );
+            addActionError( getText( "repository.error.location.cannot.be.spaces" ) );
         }
         
         if ( hasActionErrors() )
@@ -189,7 +189,7 @@ public class LocalRepositoryAction
             TaskQueueManager taskQueueManager = getContinuum().getTaskQueueManager();
             if ( taskQueueManager.isRepositoryInUse( repository.getId() ) )
             {
-                addActionError( "repository.error.save.in.use" );
+                addActionError( getText( "repository.error.save.in.use" ) );
                 return ERROR;
             }
             

@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.validator;
  * under the License.
  */
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 import com.opensymphony.xwork2.validator.validators.ValidatorSupport;
@@ -51,6 +52,7 @@ public class CronExpressionValidator
 
         if ( !validator.validate( cronExpression ) )
         {
+            // FIXME i18n
             ctxt.addActionError( "Invalid cron expression value(s)" );
             return;
         }

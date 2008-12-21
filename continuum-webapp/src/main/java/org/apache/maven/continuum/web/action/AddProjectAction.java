@@ -108,7 +108,7 @@ public class AddProjectAction
             }
             if ( projectNameAlreadyExist )
             {
-                addActionError( "projectName.already.exist.error" );
+                addActionError( getText( "projectName.already.exist.error" ) );
                 this.input();
             }
             }
