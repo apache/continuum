@@ -108,7 +108,7 @@ public class ReleaseResultAction
                     catch ( ContinuumException e )
                     {
                         getLogger().error( "Error removing ContinuumReleaseResult with id=" + resultId );
-                        addActionError( "Unable to remove ContinuumReleaseResult with id=" + resultId );
+                        addActionError( getText( "Unable to remove ContinuumReleaseResult with id=" + resultId ) );
                     }
                 }
             }
