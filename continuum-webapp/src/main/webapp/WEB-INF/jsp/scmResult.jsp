@@ -21,17 +21,14 @@
 <html>
   <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="scmResult.page.title"/></title>
+      <title><s:text name="scmResult.page.title"/></title>
     </head>
     <body>
       <div id="h3">
-
         <s:action name="projectGroupTab" executeResult="true"/>
-
         <h3>
-            <ww:text name="scmResult.section.title"/>
+          <s:text name="scmResult.section.title"/>
         </h3>
-        
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <c1:data label="%{getText('scmResult.projectGroupName')}" name="projectGroupName"/>

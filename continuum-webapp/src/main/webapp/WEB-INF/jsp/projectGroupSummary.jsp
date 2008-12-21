@@ -96,7 +96,7 @@
       </table>
     </div>
 
-    <h3><ww:text name="projectGroup.scmRoot.title"/></h3>
+    <h3><s:text name="projectGroup.scmRoot.title"/></h3>
     <ec:table items="projectScmRoots"
               var="projectScmRoot"
               showExports="false"
