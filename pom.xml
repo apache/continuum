@@ -952,6 +952,11 @@ under the License.
         <version>${spring.version}</version>
       </dependency>
       <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>jsr250-api</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.continuum</groupId>
         <artifactId>continuum-purge</artifactId>
         <version>${pom.version}</version>
