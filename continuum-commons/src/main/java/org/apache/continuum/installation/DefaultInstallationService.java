@@ -19,6 +19,18 @@ package org.apache.continuum.installation;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
 import org.apache.continuum.dao.InstallationDao;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
@@ -38,36 +50,25 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import org.springframework.stereotype.Service;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.installation.InstallationService"
  * TODO use some cache mechanism to prevent always reading from store ?
  * @since 13 juin 07
+ * 
  */
+@Service("installationService")
 public class DefaultInstallationService
     extends AbstractLogEnabled
     implements InstallationService, Initializable
 {
-    /**
-     * @plexus.requirement
-     */
+
+    @Resource
     private InstallationDao installationDao;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Resource
     private ProfileService profileService;
 
     private Map<String, ExecutorConfigurator> typesValues;

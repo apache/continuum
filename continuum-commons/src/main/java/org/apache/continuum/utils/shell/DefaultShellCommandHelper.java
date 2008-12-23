@@ -19,6 +19,13 @@ package org.apache.continuum.utils.shell;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.exec.MavenExecutorException;
 import org.apache.maven.shared.release.exec.TeeConsumer;
@@ -29,20 +36,13 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 import org.codehaus.plexus.util.cli.WriterStreamConsumer;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.Writer;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
+import org.springframework.stereotype.Service;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
- * @plexus.component role="org.apache.continuum.utils.shell.ShellCommandHelper"
- * role-hint="default"
  */
+@Service("shellCommandHelper")
 public class DefaultShellCommandHelper
     extends AbstractLogEnabled
     implements ShellCommandHelper

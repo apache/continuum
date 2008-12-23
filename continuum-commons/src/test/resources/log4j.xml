@@ -16,7 +16,7 @@
 
   <!-- quiet spring loading :-) -->
   <category name="org.springframework">
-    <priority value="ERROR"/>
+    <priority value="INFO"/>
   </category>
   <category name="org.codehaus.plexus">
     <priority value="ERROR"/>
