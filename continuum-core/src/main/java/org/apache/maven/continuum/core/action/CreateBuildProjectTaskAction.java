@@ -37,6 +37,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
+ * @version $Id$
  * @plexus.component role="org.codehaus.plexus.action.Action" role-hint="create-build-project-task"
  */
 public class CreateBuildProjectTaskAction
