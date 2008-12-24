@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Configurable;
+import org.springframework.stereotype.Service;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -37,6 +38,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Configurable;
  * @plexus.component role="org.apache.maven.continuum.utils.ContinuumUrlValidator"
  *   role-hint="continuumUrl"
  */
+@Service("continuumUrlValidator#continuumUrl")
 public class ContinuumUrlValidator
     implements Configurable
 {
