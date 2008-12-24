@@ -52,14 +52,6 @@
   <bean id="workingDirectoryService" class="org.apache.maven.continuum.utils.ChrootJailWorkingDirectoryService" autowire="byName"/>
   -->
 
-  <bean id="scmManager"
-    class="org.apache.continuum.scm.manager.ScmManager">
-    <property name="scmLogger" ref="scmLogger" />
-    <property name="scmProviders">
-      <bean class="org.apache.continuum.scm.manager.spring.ScmProviderFactoryBean"/>
-    </property>
-  </bean>
-  
   <bean id="mailSession" class="org.springframework.jndi.JndiObjectFactoryBean">
     <property name="jndiName" value="java:comp/env/mail/Session">
     </property>
