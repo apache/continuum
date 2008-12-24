@@ -23,6 +23,7 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  */
 public interface ReleaseTaskExecutor
     extends TaskExecutor
