@@ -85,5 +85,11 @@
         </properties>
       </configuration>
     </component>
+
+    <component>
+      <role>org.apache.maven.continuum.utils.ContinuumUrlValidator</role>
+      <role-hint>continuumUrl</role-hint>
+      <implementation>org.apache.maven.continuum.utils.ContinuumUrlValidator</implementation>
+    </component>
   </components>
 </plexus>
