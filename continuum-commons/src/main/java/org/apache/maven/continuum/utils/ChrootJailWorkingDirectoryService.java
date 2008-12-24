@@ -25,12 +25,13 @@ import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.springframework.stereotype.Service;
 
 /**
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.utils.WorkingDirectoryService" role-hint="chrootJail"
  */
+@Service("workingDirectoryService#chrootJail")
 public class ChrootJailWorkingDirectoryService
     extends AbstractLogEnabled
     implements WorkingDirectoryService
