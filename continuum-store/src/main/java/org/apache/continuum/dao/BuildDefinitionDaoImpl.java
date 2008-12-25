@@ -48,7 +48,7 @@ public class BuildDefinitionDaoImpl
     extends AbstractDao
     implements BuildDefinitionDao
 {
-    private static Logger log = LoggerFactory.getLogger( BuildDefinitionDaoImpl.class );
+    private Logger log = LoggerFactory.getLogger( BuildDefinitionDaoImpl.class );
 
     /**
      * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
