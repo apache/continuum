@@ -28,6 +28,7 @@ import java.util.Collection;
 
 /**
  * @author Nik Gonzalez
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="schedule"
  */
 public class ScheduleAction

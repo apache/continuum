@@ -53,7 +53,7 @@ import com.opensymphony.xwork2.ModelDriven;
 
 /**
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id: ConfigurationAction.java 480950 2006-11-30 14:58:35Z evenisse $
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="configureAppearance"
  */
 public class ConfigureAppearanceAction

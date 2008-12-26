@@ -27,7 +27,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id: AbstractNotifierEditAction.java 467122 2006-10-23 20:50:19Z jmcconnell $
+ * @version $Id$
  */
 public abstract class AbstractProjectNotifierEditAction
     extends AbstractNotifierEditActionSupport

@@ -30,6 +30,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseRollback"
  */
 public class ReleaseRollbackAction

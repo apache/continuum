@@ -31,7 +31,7 @@ import org.codehaus.plexus.util.StringUtils;
  * Action to add a {@link ProjectNotifier} for a specified {@link Project}.
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id: AddNotifierAction.java 466640 2006-10-22 13:11:30Z jmcconnell $
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addProjectNotifier"
  * @since 1.1
  */

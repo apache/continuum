@@ -34,7 +34,7 @@ import java.util.List;
  * RoleProfileEnvironmentCheck:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $ID:$
+ * @version: $Id$
  * @plexus.component role="org.codehaus.plexus.redback.system.check.EnvironmentCheck"
  * role-hint="continuum-role-profile-check"
  */
