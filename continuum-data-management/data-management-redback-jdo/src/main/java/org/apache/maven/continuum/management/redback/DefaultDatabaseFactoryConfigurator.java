@@ -27,6 +27,7 @@ import java.util.Properties;
  */
 
 /**
+ * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.management.DatabaseFactoryConfigurator" role-hint="redback"
  */
 public class DefaultDatabaseFactoryConfigurator

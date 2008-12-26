@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 /**
+ * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.management.DatabaseFactoryConfigurator" role-hint="continuum"
  */
 public class DefaultDatabaseFactoryConfigurator
