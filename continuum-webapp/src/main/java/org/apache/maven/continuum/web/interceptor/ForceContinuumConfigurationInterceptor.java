@@ -29,7 +29,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  * ForceContinuumConfigurationInterceptor:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $ID:$
+ * @version: $Id$
  * @plexus.component role="com.opensymphony.xwork2.interceptor.Interceptor"
  * role-hint="forceContinuumConfigurationInterceptor"
  */
