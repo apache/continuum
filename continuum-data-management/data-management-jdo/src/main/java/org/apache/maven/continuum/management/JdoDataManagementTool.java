@@ -46,7 +46,7 @@ import java.util.Properties;
 
 /**
  * JDO implementation the database management tool API.
- *
+ * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="continuum-jdo"
  */
 public class JdoDataManagementTool
