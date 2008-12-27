@@ -40,6 +40,7 @@ import org.schwering.irc.lib.ssl.SSLDefaultTrustManager;
 import org.schwering.irc.lib.ssl.SSLIRCConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,13 +48,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 /**
  * <b>This implementation assumes there aren't concurrent acces to the IRCConnection</b>
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.notification.Notifier" role-hint="irc"
+ * 
  */
+@Service("notifier#irc")
 public class IrcContinuumNotifier
     extends AbstractContinuumNotifier
     implements Disposable
@@ -64,15 +68,10 @@ public class IrcContinuumNotifier
     // Requirements
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.configuration default-value="6667"
-     */
-    private int defaultPort;
+    private int defaultPort = 6667;
 
     /**
      * key is upper(hostname) + port + upper(nick) + upper(alternateNick)

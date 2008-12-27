@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 public abstract class AbstractContinuumNotifier
     implements Notifier
 {
@@ -49,29 +51,18 @@ public abstract class AbstractContinuumNotifier
 
     private Logger log = LoggerFactory.getLogger( getClass() );
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private BuildResultDao buildResultDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ProjectScmRootDao projectScmRootDao;
 
-    /**
-     * @plexus.configuration
-     */
     private boolean alwaysSend = false;
 
     protected String getBuildOutput( Project project, BuildResult buildResult )
