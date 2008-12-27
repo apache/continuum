@@ -719,12 +719,12 @@ under the License.
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.5.0</version>
+        <version>${slf4jVersion}</version>
       </dependency>      
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.5.0</version>
+        <version>${slf4jVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
@@ -1049,5 +1049,6 @@ under the License.
     <maven-scm.version>1.1</maven-scm.version>
     <redback.version>1.2-beta-1</redback.version>
     <archiva.version>1.1</archiva.version>
+    <slf4jVersion>1.5.0</slf4jVersion>
   </properties>
 </project>
