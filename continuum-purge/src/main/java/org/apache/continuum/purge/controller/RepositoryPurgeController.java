@@ -31,7 +31,8 @@ import org.apache.continuum.purge.executor.DaysOldRepositoryPurgeExecutor;
 import org.apache.continuum.purge.executor.ReleasedSnapshotsRepositoryPurgeExecutor;
 import org.apache.continuum.purge.executor.RetentionCountRepositoryPurgeExecutor;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DefaultPurgeController
@@ -40,9 +41,10 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  * @plexus.component role="org.apache.continuum.purge.controller.PurgeController" role-hint="purge-repository"
  */
 public class RepositoryPurgeController
-    extends AbstractLogEnabled
     implements PurgeController
 {
+    private Logger log = LoggerFactory.getLogger( RepositoryPurgeController.class );
+
     private ContinuumPurgeExecutor purgeExecutor;
 
     private ContinuumPurgeExecutor purgeReleasedSnapshotsExecutor;
@@ -106,7 +108,7 @@ public class RepositoryPurgeController
         }
         catch ( ContinuumPurgeExecutorException e )
         {
-            getLogger().error( e.getMessage(), e );
+            log.error( e.getMessage(), e );
         }
     }
 }

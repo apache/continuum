@@ -19,7 +19,6 @@ package org.apache.maven.continuum.web.util;
  * under the License.
  */
 
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
@@ -34,7 +33,6 @@ import java.util.List;
  * @version $Id$
  */
 public class WorkingCopyContentGenerator
-    extends AbstractLogEnabled
 {
     private File basedir;
 
