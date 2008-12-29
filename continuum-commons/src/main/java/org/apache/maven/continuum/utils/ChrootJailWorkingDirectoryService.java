@@ -20,11 +20,11 @@ package org.apache.maven.continuum.utils;
  */
 
 import java.io.File;
+import javax.annotation.Resource;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,12 +33,9 @@ import org.springframework.stereotype.Service;
  */
 @Service("workingDirectoryService#chrootJail")
 public class ChrootJailWorkingDirectoryService
-    extends AbstractLogEnabled
     implements WorkingDirectoryService
 {
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ConfigurationService configurationService;
 
     /**

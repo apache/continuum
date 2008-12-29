@@ -42,7 +42,6 @@ import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
@@ -50,6 +49,8 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -61,9 +62,9 @@ import org.springframework.stereotype.Service;
  */
 @Service("installationService")
 public class DefaultInstallationService
-    extends AbstractLogEnabled
     implements InstallationService, Initializable
 {
+    private Logger log = LoggerFactory.getLogger( DefaultInstallationService.class );
 
     @Resource
     private InstallationDao installationDao;
@@ -440,7 +441,7 @@ public class DefaultInstallationService
         }
         catch ( CommandLineException e )
         {
-            getLogger().error(
+            log.error(
                 "fail to execute " + executable + " with arg " + executorConfigurator.getVersionArgument() );
             throw new InstallationException( e.getMessage(), e );
         }

@@ -21,7 +21,6 @@ package org.apache.maven.continuum.utils;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -34,7 +33,6 @@ import javax.annotation.Resource;
  */
 @Service("workingDirectoryService")
 public class DefaultWorkingDirectoryService
-    extends AbstractLogEnabled
     implements WorkingDirectoryService
 {
     @Resource
