@@ -28,7 +28,9 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -42,22 +44,18 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.BuildDefinitionDao"
  */
+@Repository("buildDefinitionDao")
 public class BuildDefinitionDaoImpl
     extends AbstractDao
     implements BuildDefinitionDao
 {
     private Logger log = LoggerFactory.getLogger( BuildDefinitionDaoImpl.class );
 
-    /**
-     * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
-     */
+    @Resource
     private ProjectDao projectDao;
 
-    /**
-     * @plexus.requirement role="org.apache.continuum.dao.ProjectGroupDao"
-     */
+    @Resource
     private ProjectGroupDao projectGroupDao;
 
     public BuildDefinition getBuildDefinition( int buildDefinitionId )

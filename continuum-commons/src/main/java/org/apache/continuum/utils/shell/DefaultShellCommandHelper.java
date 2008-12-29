@@ -29,13 +29,14 @@ import java.util.Map;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.exec.MavenExecutorException;
 import org.apache.maven.shared.release.exec.TeeConsumer;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 import org.codehaus.plexus.util.cli.WriterStreamConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,9 +45,10 @@ import org.springframework.stereotype.Service;
  */
 @Service("shellCommandHelper")
 public class DefaultShellCommandHelper
-    extends AbstractLogEnabled
     implements ShellCommandHelper
 {
+    private Logger log = LoggerFactory.getLogger( DefaultShellCommandHelper.class );
+
     // ----------------------------------------------------------------------
     // ShellCommandHelper Implementation
     // ----------------------------------------------------------------------
@@ -122,9 +124,9 @@ public class DefaultShellCommandHelper
 
         Commandline cl = createCommandline( workingDirectory, executable, arguments, idCommand, environments );
 
-        getLogger().info( "Executing: " + cl );
-        getLogger().info( "Working directory: " + cl.getWorkingDirectory().getAbsolutePath() );
-        getLogger().debug( "EnvironmentVariables " + Arrays.asList( cl.getEnvironmentVariables() ) );
+        log.info( "Executing: " + cl );
+        log.info( "Working directory: " + cl.getWorkingDirectory().getAbsolutePath() );
+        log.debug( "EnvironmentVariables " + Arrays.asList( cl.getEnvironmentVariables() ) );
 
         // ----------------------------------------------------------------------
         //
@@ -203,7 +205,7 @@ public class DefaultShellCommandHelper
         try
         {
     		relResult.appendInfo( "Executing: " + cl.toString() );
-    		getLogger().info( "Executing: " + cl.toString() );
+    		log.info( "Executing: " + cl.toString() );
 
     		int result = CommandLineUtils.executeCommandLine( cl, stdOut, stdErr );
 

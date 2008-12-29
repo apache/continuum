@@ -23,6 +23,7 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.util.StringUtils;
+import org.springframework.stereotype.Repository;
 
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
@@ -36,8 +37,8 @@ import java.util.List;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.InstallationDao"
  */
+@Repository("installationDao")
 public class InstallationDaoImpl
     extends AbstractDao
     implements InstallationDao
