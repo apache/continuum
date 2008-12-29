@@ -20,19 +20,22 @@ package org.apache.continuum.dao;
  */
 
 import org.codehaus.plexus.jdo.JdoFactory;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.jdo.PersistenceManagerFactory;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.StoreUtilities"
  */
+@Service("storeUtilities")
 public class StoreUtilities
 {
     /**
      * @plexus.requirement role-hint="continuum"
      */
+    @Resource(name="jdoFactory#continuum")
     private JdoFactory continuumJdoFactory;
 
     private PersistenceManagerFactory continuumPersistenceManagerFactory;

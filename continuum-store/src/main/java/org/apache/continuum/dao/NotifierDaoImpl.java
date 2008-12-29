@@ -21,12 +21,13 @@ package org.apache.continuum.dao;
 
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.NotifierDao"
  */
+@Repository("notifierDao")
 public class NotifierDaoImpl
     extends AbstractDao
     implements NotifierDao

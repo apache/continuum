@@ -30,11 +30,12 @@ import javax.jdo.Transaction;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
- * @plexus.component role="org.apache.continuum.dao.ContinuumReleaseResultDao"
  */
+@Repository("continuumReleaseResultDao")
 public class ContinuumReleaseResultDaoImpl
     extends AbstractDao
     implements ContinuumReleaseResultDao
