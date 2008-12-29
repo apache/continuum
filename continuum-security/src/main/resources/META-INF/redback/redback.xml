@@ -30,11 +30,11 @@
           <name>continuum-manage-queues</name>
           <description>Manage Continuum Queues</description>
         </operation>    
-      <operation>
-        <id>continuum-view-queues</id>
-        <name>continuum-view-queues</name>
-        <description>Continuum View Queues</description>
-      </operation>
+        <operation>
+          <id>continuum-view-queues</id>
+          <name>continuum-view-queues</name>
+          <description>Continuum View Queues</description>
+        </operation>
         <operation>
           <id>continuum-manage-build-templates</id>
           <name>continuum-manage-build-templates</name>
