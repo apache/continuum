@@ -19,6 +19,10 @@ package org.apache.continuum.web.action;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.maven.continuum.ContinuumException;
@@ -28,12 +32,6 @@ import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.util.FileUtils;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
