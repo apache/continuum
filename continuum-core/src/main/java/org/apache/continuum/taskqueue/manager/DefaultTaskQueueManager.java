@@ -1,5 +1,24 @@
 package org.apache.continuum.taskqueue.manager;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,22 +43,24 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
  * @plexus.component role="org.apache.continuum.taskqueue.manager.TaskQueueManager" role-hint="default"
  */
 public class DefaultTaskQueueManager
-    extends AbstractLogEnabled
     implements TaskQueueManager, Contextualizable
 {
+    private Logger log = LoggerFactory.getLogger( DefaultTaskQueueManager.class );
+
     /**
      * @plexus.requirement role-hint="build-project"
      */
@@ -101,23 +122,23 @@ public class DefaultTaskQueueManager
             {
                 if ( ( (BuildProjectTask) currentTask ).getProjectId() == projectId )
                 {
-                    getLogger().info( "Cancelling task for project " + projectId );
+                    log.info( "Cancelling task for project " + projectId );
                     getBuildTaskQueueExecutor().cancelTask( currentTask );
                 }
                 else
                 {
-                    getLogger().warn( "Current task is not for the given projectId (" + projectId + "): "
+                    log.warn( "Current task is not for the given projectId (" + projectId + "): "
                                           + ( (BuildProjectTask) currentTask ).getProjectId() + "; not cancelling" );
                 }
             }
             else
             {
-                getLogger().warn( "Current task not a BuildProjectTask - not cancelling" );
+                log.warn( "Current task not a BuildProjectTask - not cancelling" );
             }
         }
         else
         {
-            getLogger().warn( "No task running - not cancelling" );
+            log.warn( "No task running - not cancelling" );
         }
     }
 
@@ -132,23 +153,23 @@ public class DefaultTaskQueueManager
             {
                 if ( ( (CheckOutTask) task ).getProjectId() == projectId )
                 {
-                    getLogger().info( "Cancelling checkout for project " + projectId );
+                    log.info( "Cancelling checkout for project " + projectId );
                     return getCheckoutTaskQueueExecutor().cancelTask( task );
                 }
                 else
                 {
-                    getLogger().warn( "Current task is not for the given projectId (" + projectId + "): "
+                    log.warn( "Current task is not for the given projectId (" + projectId + "): "
                                           + ( (CheckOutTask) task ).getProjectId() + "; not cancelling checkout" );
                 }
             }
             else
             {
-                getLogger().warn( "Current task not a CheckOutTask - not cancelling checkout" );
+                log.warn( "Current task not a CheckOutTask - not cancelling checkout" );
             }
         }
         else
         {
-            getLogger().warn( "No task running - not cancelling checkout" );
+            log.warn( "No task running - not cancelling checkout" );
         }
         return false;
     }
@@ -162,17 +183,17 @@ public class DefaultTaskQueueManager
         {
             if ( task instanceof BuildProjectTask )
             {
-                getLogger().info( "Cancelling current build task" );
+                log.info( "Cancelling current build task" );
                 return getBuildTaskQueueExecutor().cancelTask( task );
             }
             else
             {
-                getLogger().warn( "Current task not a BuildProjectTask - not cancelling" );
+                log.warn( "Current task not a BuildProjectTask - not cancelling" );
             }
         }
         else
         {
-            getLogger().warn( "No task running - not cancelling" );
+            log.warn( "No task running - not cancelling" );
         }
         return false;
     }
@@ -558,7 +579,7 @@ public class DefaultTaskQueueManager
 
         for ( BuildProjectTask buildProjectTask : tasks )
         {
-            getLogger().info( "cancel build for project " + buildProjectTask.getProjectId() );
+            log.info( "cancel build for project " + buildProjectTask.getProjectId() );
         }
         if ( !tasks.isEmpty() )
         {

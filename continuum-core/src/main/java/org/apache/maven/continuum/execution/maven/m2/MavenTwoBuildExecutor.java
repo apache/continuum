@@ -53,8 +53,6 @@ import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -64,7 +62,6 @@ public class MavenTwoBuildExecutor
     extends AbstractBuildExecutor
     implements ContinuumBuildExecutor
 {
-    
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -351,7 +348,7 @@ public class MavenTwoBuildExecutor
         }
         catch ( ConfigurationException e )
         {
-            getLogger().info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
+            log.info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
         }
         backupTestFiles( getWorkingDirectory( project ), backupDirectory );
     }
@@ -367,7 +364,7 @@ public class MavenTwoBuildExecutor
         String[] testResultFiles = scanner.getIncludedFiles();
         if ( testResultFiles.length > 0 )
         {
-            getLogger().info( "Backup surefire files." );
+            log.info( "Backup surefire files." );
         }
         for ( String testResultFile : testResultFiles )
         {
@@ -381,7 +378,7 @@ public class MavenTwoBuildExecutor
             }
             catch ( IOException e )
             {
-                getLogger().info( "failed to backup unit report file " + xmlFile.getPath() );
+                log.info( "failed to backup unit report file " + xmlFile.getPath() );
             }
         }
     }
@@ -404,9 +401,9 @@ public class MavenTwoBuildExecutor
             }
         if ( isRecursive && changes != null && !changes.isEmpty() )
         {
-            if ( logger.isInfoEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                logger.info( "recursive build and changes found --> building" );
+                log.info( "recursive build and changes found --> building" );
             }
             return true;
         }
@@ -416,15 +413,15 @@ public class MavenTwoBuildExecutor
         //CONTINUUM-1815: additional check for projects recently released
         if ( !continuumProject.getVersion().equals( project.getVersion() ) )
         {
-            logger.info( "Found changes in project's version ( maybe project was recently released ), building" );
+            log.info( "Found changes in project's version ( maybe project was recently released ), building" );
             return true;
         }
         
         if ( changes.isEmpty() )
         {
-            if ( logger.isInfoEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                logger.info( "Found no changes, not building" );
+                log.info( "Found no changes, not building" );
             }
             return false;
         }
@@ -442,27 +439,27 @@ public class MavenTwoBuildExecutor
         while ( i <= files.size() - 1 )
         {
             ChangeFile file = files.get( i );
-            if ( logger.isDebugEnabled() )
+            if ( log.isDebugEnabled() )
             {
-                logger.debug( "changeFile.name " + file.getName() );
-                logger.debug( "check in modules " + modules );
+                log.debug( "changeFile.name " + file.getName() );
+                log.debug( "check in modules " + modules );
             }
             boolean found = false;
             for ( String module : modules )
             {
                 if ( file.getName().indexOf( module ) >= 0 )
                 {
-                    if ( logger.isDebugEnabled() )
+                    if ( log.isDebugEnabled() )
                     {
-                        logger.debug( "changeFile.name " + file.getName() + " removed because in a module" );
+                        log.debug( "changeFile.name " + file.getName() + " removed because in a module" );
                     }                    
                     files.remove( file );
                     found = true;
                     break;
                 }
-                if (logger.isDebugEnabled())
+                if (log.isDebugEnabled())
                 {
-                    logger.debug( "no remving file " + file.getName() + " not in module " + module );
+                    log.debug( "no remving file " + file.getName() + " not in module " + module );
                 }
             }
             if ( !found )
@@ -475,12 +472,12 @@ public class MavenTwoBuildExecutor
 
         if ( !shouldBuild )
         {
-            logger.info( "Changes are only in sub-modules." );
+            log.info( "Changes are only in sub-modules." );
         }
 
-        if ( logger.isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
-            logger.debug( "shoulbuild = " + shouldBuild );
+            log.debug( "shoulbuild = " + shouldBuild );
         }
         return shouldBuild;
     }

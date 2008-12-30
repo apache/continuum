@@ -59,13 +59,14 @@ import org.codehaus.plexus.component.repository.exception.ComponentLifecycleExce
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,9 +82,10 @@ import java.util.List;
  * @plexus.component role="org.apache.maven.continuum.execution.maven.m2.MavenBuilderHelper" role-hint="default"
  */
 public class DefaultMavenBuilderHelper
-    extends AbstractLogEnabled
     implements MavenBuilderHelper, Contextualizable, Initializable
 {
+    private Logger log = LoggerFactory.getLogger( DefaultMavenBuilderHelper.class );
+
     /**
      * @plexus.requirement
      */
@@ -373,7 +375,7 @@ public class DefaultMavenBuilderHelper
 
             Settings settings = getSettings();
 
-            if ( getLogger().isDebugEnabled() )
+            if ( log.isDebugEnabled() )
             {
                 writeSettings( settings );
             }
@@ -382,7 +384,7 @@ public class DefaultMavenBuilderHelper
 
             project = projectBuilder.build( file, getLocalRepository(), profileManager, false );
 
-            if ( getLogger().isDebugEnabled() )
+            if ( log.isDebugEnabled() )
             {
                 writePom( project );
                 writeActiveProfileStatement( project );
@@ -434,7 +436,7 @@ public class DefaultMavenBuilderHelper
 
             file.delete();
 
-            getLogger().error( msg );
+            log.error( msg );
 
             return null;
         }
@@ -447,7 +449,7 @@ public class DefaultMavenBuilderHelper
 
             file.delete();
 
-            getLogger().error( msg );
+            log.error( msg );
 
             return null;
         }
@@ -463,7 +465,7 @@ public class DefaultMavenBuilderHelper
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM, getProjectName( project ) );
 
-            getLogger().error( "Missing 'scm' element in the " + getProjectName( project ) + " POM." );
+            log.error( "Missing 'scm' element in the " + getProjectName( project ) + " POM." );
 
             return null;
         }
@@ -474,7 +476,7 @@ public class DefaultMavenBuilderHelper
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_SCM_CONNECTION, getProjectName( project ) );
 
-            getLogger().error(
+            log.error(
                 "Missing 'connection' element in the 'scm' element in the " + getProjectName( project ) + " POM." );
 
             return null;
@@ -629,11 +631,11 @@ public class DefaultMavenBuilderHelper
             message.append( "\n************************************************************************************" );
             message.append( "\n\n" );
 
-            getLogger().debug( message.toString() );
+            log.debug( message.toString() );
         }
         catch ( IOException e )
         {
-            getLogger().warn( "Cannot serialize Settings to XML.", e );
+            log.warn( "Cannot serialize Settings to XML.", e );
         }
     }
 
@@ -659,11 +661,11 @@ public class DefaultMavenBuilderHelper
             message.append( "\n************************************************************************************" );
             message.append( "\n\n" );
 
-            getLogger().debug( message.toString() );
+            log.debug( message.toString() );
         }
         catch ( IOException e )
         {
-            getLogger().warn( "Cannot serialize POM to XML.", e );
+            log.warn( "Cannot serialize POM to XML.", e );
         }
     }
 
@@ -699,7 +701,7 @@ public class DefaultMavenBuilderHelper
         message.append( "\n************************************************************************************" );
         message.append( "\n\n" );
 
-        getLogger().debug( message.toString() );
+        log.debug( message.toString() );
     }
 
     /**
