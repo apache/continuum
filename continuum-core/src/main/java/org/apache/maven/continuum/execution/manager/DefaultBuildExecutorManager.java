@@ -21,8 +21,9 @@ package org.apache.maven.continuum.execution.manager;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,9 +36,10 @@ import java.util.Map;
  * role-hint"default"
  */
 public class DefaultBuildExecutorManager
-    extends AbstractLogEnabled
     implements BuildExecutorManager, Initializable
 {
+    private Logger log = LoggerFactory.getLogger( DefaultBuildExecutorManager.class );
+
     /**
      * @plexus.requirement role="org.apache.maven.continuum.execution.ContinuumBuildExecutor"
      */
@@ -56,15 +58,15 @@ public class DefaultBuildExecutorManager
 
         if ( executors.size() == 0 )
         {
-            getLogger().warn( "No build executors defined." );
+            log.warn( "No build executors defined." );
         }
         else
         {
-            getLogger().info( "Build executors:" );
+            log.info( "Build executors:" );
 
             for ( Iterator it = executors.keySet().iterator(); it.hasNext(); )
             {
-                getLogger().info( "  " + it.next().toString() );
+                log.info( "  " + it.next().toString() );
             }
         }
     }

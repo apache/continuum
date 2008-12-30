@@ -29,7 +29,8 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -42,9 +43,10 @@ import java.util.List;
  * @since 25 jul 07
  */
 public class DefaultRepositoryService
-    extends AbstractLogEnabled
     implements RepositoryService
 {
+    private Logger log = LoggerFactory.getLogger( DefaultRepositoryService.class );
+
     /**
      * @plexus.requirement
      */
@@ -91,7 +93,7 @@ public class DefaultRepositoryService
 
             repository = localRepositoryDao.addLocalRepository( localRepository );
 
-            getLogger().info( "Added new local repository: " + repository.getName() );
+            log.info( "Added new local repository: " + repository.getName() );
         }
         catch ( ContinuumStoreException e )
         {
@@ -118,7 +120,7 @@ public class DefaultRepositoryService
                 taskQueueManager.removeRepositoryFromPurgeQueue( repositoryId );
             }
 
-            getLogger().info( "Remove purge configurations of " + repository.getName() );
+            log.info( "Remove purge configurations of " + repository.getName() );
             removePurgeConfigurationsOfRepository( repositoryId );
 
             List<ProjectGroup> groups = projectGroupDao.getProjectGroupByRepository( repositoryId );
@@ -131,7 +133,7 @@ public class DefaultRepositoryService
 
             localRepositoryDao.removeLocalRepository( repository );
 
-            getLogger().info( "Removed local repository: " + repository.getName() );
+            log.info( "Removed local repository: " + repository.getName() );
         }
         catch ( TaskQueueManagerException e )
         {
@@ -158,7 +160,7 @@ public class DefaultRepositoryService
 
             localRepositoryDao.updateLocalRepository( localRepository );
 
-            getLogger().info( "Updated local repository: " + localRepository.getName() );
+            log.info( "Updated local repository: " + localRepository.getName() );
         }
         catch ( TaskQueueManagerException e )
         {

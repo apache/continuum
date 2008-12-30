@@ -45,8 +45,9 @@ import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -59,9 +60,10 @@ import java.util.Map;
  * @plexus.component role="org.apache.maven.continuum.buildcontroller.BuildController" role-hint="default"
  */
 public class DefaultBuildController
-    extends AbstractLogEnabled
     implements BuildController
 {
+    private Logger log = LoggerFactory.getLogger( DefaultBuildController.class );
+
     /**
      * @plexus.requirement
      */
@@ -120,17 +122,17 @@ public class DefaultBuildController
     public void build( int projectId, int buildDefinitionId, int trigger )
         throws TaskExecutionException
     {
-        getLogger().info( "Initializing build" );
+        log.info( "Initializing build" );
         BuildContext context = initializeBuildContext( projectId, buildDefinitionId, trigger );
 
         // ignore this if AlwaysBuild ?
         if ( !checkScmResult( context ) )
         {
-            getLogger().info( "Error updating from SCM, not building" );
+            log.info( "Error updating from SCM, not building" );
             return;
         }
         
-        getLogger().info( "Starting build of " + context.getProject().getName() );
+        log.info( "Starting build of " + context.getProject().getName() );
         startBuild( context );
 
         try
@@ -153,7 +155,7 @@ public class DefaultBuildController
                 updateBuildResult( context, ContinuumUtils.throwableToString( e ) );
 
                 //just log the error but don't stop the build from progressing in order not to suppress any build result messages there
-                getLogger().error( "Error executing action update-project-from-working-directory '", e );
+                log.error( "Error executing action update-project-from-working-directory '", e );
             }
 
             performAction( "execute-builder", context );
@@ -390,7 +392,7 @@ public class DefaultBuildController
 
         try
         {
-            getLogger().info( "Performing action " + actionName );
+            log.info( "Performing action " + actionName );
             actionManager.lookup( actionName ).execute( context.getActionContext() );
             return;
         }
@@ -429,7 +431,7 @@ public class DefaultBuildController
         }
         catch ( TaskExecutionException e )
         {
-            getLogger().error( "Error updating build result after receiving the following exception: ", exception );
+            log.error( "Error updating build result after receiving the following exception: ", exception );
             throw e;
         }
 
@@ -442,17 +444,17 @@ public class DefaultBuildController
         BuildDefinition buildDefinition = context.getBuildDefinition();
         if ( buildDefinition.isBuildFresh() )
         {
-            getLogger().info( "FreshBuild configured, building" );
+            log.info( "FreshBuild configured, building" );
             return true;
         }
         if ( buildDefinition.isAlwaysBuild() )
         {
-            getLogger().info( "AlwaysBuild configured, building" );
+            log.info( "AlwaysBuild configured, building" );
             return true;
         }
         if ( context.getOldBuildResult() == null )
         {
-            getLogger().info( "The project was never be built with the current build definition, building" );
+            log.info( "The project was never be built with the current build definition, building" );
             return true;
         }
 
@@ -462,13 +464,13 @@ public class DefaultBuildController
         if ( project.getOldState() == ContinuumProjectState.ERROR ||
             context.getOldBuildResult().getState() == ContinuumProjectState.ERROR )
         {
-            getLogger().info( "Latest state was 'ERROR', building" );
+            log.info( "Latest state was 'ERROR', building" );
             return true;
         }
 
         if ( context.getTrigger() == ContinuumProjectState.TRIGGER_FORCED )
         {
-            getLogger().info( "The project build is forced, building" );
+            log.info( "The project build is forced, building" );
             return true;
         }
 
@@ -488,12 +490,12 @@ public class DefaultBuildController
             {
                 if ( !context.getScmResult().getChanges().isEmpty() )
                 {
-                    getLogger().info(
+                    log.info(
                         "The project was not built because all changes are unknown (maybe local modifications or ignored files not defined in your SCM tool." );
                 }
                 else
                 {
-                    getLogger().info(
+                    log.info(
                         "The project was not built because no changes were detected in sources since the last build." );
                 }
             }
@@ -501,7 +503,7 @@ public class DefaultBuildController
             // Check dependencies changes
             if ( context.getModifiedDependencies() != null && !context.getModifiedDependencies().isEmpty() )
             {
-                getLogger().info( "Found dependencies changes, building" );
+                log.info( "Found dependencies changes, building" );
                 shouldBuild = true;
             }
         }
@@ -526,7 +528,7 @@ public class DefaultBuildController
 
         if ( shouldBuild )
         {
-            getLogger().info( "Changes found in the current project, building" );
+            log.info( "Changes found in the current project, building" );
         }
         else
         {
@@ -542,7 +544,7 @@ public class DefaultBuildController
             {
                 throw new TaskExecutionException( "Error storing project", e );
             }
-            getLogger().info( "No changes in the current project, not building" );
+            log.info( "No changes in the current project, not building" );
 
         }
 
@@ -628,19 +630,19 @@ public class DefaultBuildController
                                                                                            context.getOldBuildResult().getEndTime() );
                     if ( buildResults != null && !buildResults.isEmpty() )
                     {
-                        getLogger().debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
+                        log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
                             dep.getVersion() );
                         modifiedDependencies.add( dep );
                     }
                     else
                     {
-                        getLogger().debug( "Dependency not changed: " + dep.getGroupId() + ":" + dep.getArtifactId() +
+                        log.debug( "Dependency not changed: " + dep.getGroupId() + ":" + dep.getArtifactId() +
                             ":" + dep.getVersion() );
                     }
                 }
                 else
                 {
-                    getLogger().debug( "Skip non Continuum project: " + dep.getGroupId() + ":" + dep.getArtifactId() +
+                    log.debug( "Skip non Continuum project: " + dep.getGroupId() + ":" + dep.getArtifactId() +
                         ":" + dep.getVersion() );
                 }
             }
@@ -650,7 +652,7 @@ public class DefaultBuildController
         }
         catch ( ContinuumStoreException e )
         {
-            getLogger().warn( "Can't get the project dependencies", e );
+            log.warn( "Can't get the project dependencies", e );
         }
     }
 

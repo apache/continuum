@@ -41,12 +41,13 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,14 +68,13 @@ import java.net.UnknownHostException;
  * @version $Id$
  */
 public abstract class AbstractContinuumProjectBuilder
-    extends AbstractLogEnabled
     implements ContinuumProjectBuilder, Initializable
 {
-
     private static final String TMP_DIR = System.getProperty( "java.io.tmpdir" );
 
-    private DefaultHttpClient httpClient;
+    protected Logger log = LoggerFactory.getLogger( AbstractContinuumProjectBuilder.class );
 
+    private DefaultHttpClient httpClient;
 
     public void initialize()
         throws InitializationException
@@ -94,8 +94,6 @@ public abstract class AbstractContinuumProjectBuilder
         ClientConnectionManager cm = new ThreadSafeClientConnManager( params, schemeRegistry );
 
         httpClient = new DefaultHttpClient( cm, params );
-
-
     }
 
     protected File createMetadataFile( URL metadata, String username, String password,
@@ -107,7 +105,7 @@ public abstract class AbstractContinuumProjectBuilder
         {
             url = hidePasswordInUrl( url );
         }
-        getLogger().info( "Downloading " + url );
+        log.info( "Downloading " + url );
 
         InputStream is = null;
 
@@ -134,11 +132,11 @@ public abstract class AbstractContinuumProjectBuilder
                 case 200:
                     break;
                 case 401:
-                    getLogger().error( "Error adding project: Unauthorized " + metadata, null );
+                    log.error( "Error adding project: Unauthorized " + metadata );
                     result.addError( ContinuumProjectBuildingResult.ERROR_UNAUTHORIZED );
                     return null;
                 default:
-                    getLogger().warn( "skip non handled http return code " + res );
+                    log.warn( "skip non handled http return code " + res );
             }
             is = IOUtils.toInputStream( EntityUtils.toString( httpResponse.getEntity(), EntityUtils
                 .getContentCharSet( httpResponse.getEntity() ) ) );
@@ -243,32 +241,32 @@ public abstract class AbstractContinuumProjectBuilder
         }
         catch ( FileNotFoundException e )
         {
-            getLogger().info( "URL not found: " + metadata, e );
+            log.info( "URL not found: " + metadata, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
         }
         catch ( MalformedURLException e )
         {
-            getLogger().info( "Malformed URL: " + metadata, e );
+            log.info( "Malformed URL: " + metadata, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
         }
         catch ( URISyntaxException e )
         {
-            getLogger().info( "Malformed URL: " + metadata, e );
+            log.info( "Malformed URL: " + metadata, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
         }
         catch ( UnknownHostException e )
         {
-            getLogger().info( "Unknown host: " + metadata, e );
+            log.info( "Unknown host: " + metadata, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN_HOST );
         }
         catch ( IOException e )
         {
-            getLogger().warn( "Could not download the URL: " + metadata, e );
+            log.warn( "Could not download the URL: " + metadata, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
         catch ( HttpException e )
         {
-            getLogger().warn( "Could not download the URL: " + metadata, e );
+            log.warn( "Could not download the URL: " + metadata, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }
         return null;

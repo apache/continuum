@@ -121,7 +121,7 @@ public class MavenOneContinuumProjectBuilder
         }
         catch ( MavenOneMetadataHelperException e )
         {
-            getLogger().error( "Unknown error while processing metadata", e );
+            log.error( "Unknown error while processing metadata", e );
 
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
         }

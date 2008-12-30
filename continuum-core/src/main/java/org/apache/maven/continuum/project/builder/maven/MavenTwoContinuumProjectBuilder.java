@@ -168,37 +168,37 @@ public class MavenTwoContinuumProjectBuilder
         }
         catch ( MalformedURLException e )
         {
-            getLogger().debug( "Error adding project: Malformed URL " + url, e );
+            log.debug( "Error adding project: Malformed URL " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
             return;
         }
         catch ( URISyntaxException e )
         {
-            getLogger().debug( "Error adding project: Malformed URL " + url, e );
+            log.debug( "Error adding project: Malformed URL " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
             return;
         }        
         catch ( FileNotFoundException e )
         {
-            getLogger().debug( "Error adding project: File not found " + url, e );
+            log.debug( "Error adding project: File not found " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
             return;
         }
         catch ( ConnectException e )
         {
-            getLogger().debug( "Error adding project: Unable to connect " + url, e );
+            log.debug( "Error adding project: Unable to connect " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_CONNECT );
             return;
         }
         catch ( IOException e )
         {
-            getLogger().info( "Error adding project: Unknown error downloading from " + url, e );
+            log.info( "Error adding project: Unknown error downloading from " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
             return;
         }
         catch ( HttpException e )
         {
-            getLogger().info( "Error adding project: Unknown error downloading from " + url, e );
+            log.info( "Error adding project: Unknown error downloading from " + url, e );
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
             return;
         }        
@@ -209,14 +209,14 @@ public class MavenTwoContinuumProjectBuilder
                 pomFile.delete();
             }
         }
-        getLogger().debug( "groupPom " + groupPom );
+        log.debug( "groupPom " + groupPom );
         if ( groupPom )
         {
             ProjectGroup projectGroup = buildProjectGroup( mavenProject, result );
 
             // project groups have the top lvl build definition which is the default build defintion for the sub
             // projects
-            getLogger().debug( "projectGroup != null" + ( projectGroup != null ) );
+            log.debug( "projectGroup != null" + ( projectGroup != null ) );
             if ( projectGroup != null )
             {
                 List<BuildDefinition> buildDefinitions =
@@ -248,7 +248,7 @@ public class MavenTwoContinuumProjectBuilder
                         }
                         catch ( ContinuumStoreException e )
                         {
-                            getLogger().warn( "Can't get default schedule.", e );
+                            log.warn( "Can't get default schedule.", e );
                         }
                     }
                     // jdo complains that Collections.singletonList(bd) is a second class object and fails.
@@ -285,7 +285,7 @@ public class MavenTwoContinuumProjectBuilder
 
             if ( result.hasErrors() )
             {
-                getLogger().info(
+                log.info(
                     "Error adding project: Unknown error mapping project " + url + ": " + result.getErrorsAsString() );
                 return;
             }
@@ -346,7 +346,7 @@ public class MavenTwoContinuumProjectBuilder
                     }
                     catch ( MalformedURLException e )
                     {
-                        getLogger().debug( "Error adding project module: Malformed URL " + urlString, e );
+                        log.debug( "Error adding project module: Malformed URL " + urlString, e );
                         result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL, urlString );
                         continue;
                     }
@@ -381,7 +381,7 @@ public class MavenTwoContinuumProjectBuilder
                 if ( StringUtils.isEmpty( buildDefinition.getArguments() ) )
                 {
                     // strange for a mvn build 
-                    getLogger().info( "build definition has empty args" );
+                    log.info( "build definition has empty args" );
                 }
                 else
                 {
@@ -445,7 +445,7 @@ public class MavenTwoContinuumProjectBuilder
         }
         catch ( ContinuumStoreException e )
         {
-            getLogger().warn( "Can't get default repository.", e );
+            log.warn( "Can't get default repository.", e );
         }
 
         return projectGroup;

@@ -21,7 +21,6 @@ package org.apache.maven.continuum.buildqueue.evaluator;
 
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.TaskViabilityEvaluator;
 
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ import java.util.Map;
  * @version $Id$
  */
 public class BuildProjectTaskViabilityEvaluator
-    extends AbstractLogEnabled
     implements TaskViabilityEvaluator
 {
     /**

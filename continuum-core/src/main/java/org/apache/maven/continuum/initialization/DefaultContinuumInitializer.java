@@ -34,9 +34,10 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Settings;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jpox.SchemaTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -48,9 +49,10 @@ import java.io.IOException;
  * role-hint="default"
  */
 public class DefaultContinuumInitializer
-    extends AbstractLogEnabled
     implements ContinuumInitializer
 {
+    private Logger log = LoggerFactory.getLogger( DefaultContinuumInitializer.class );
+
     // ----------------------------------------------------------------------
     //  Requirements
     // ----------------------------------------------------------------------
@@ -92,11 +94,11 @@ public class DefaultContinuumInitializer
     public void initialize()
         throws ContinuumInitializationException
     {
-        getLogger().info( "Continuum initializer running ..." );
+        log.info( "Continuum initializer running ..." );
 
-        if ( getLogger().isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
-            getLogger().debug( "Dumping JPOX/JDO Schema Details ..." );
+            log.debug( "Dumping JPOX/JDO Schema Details ..." );
             try
             {
                 SchemaTool.outputDBInfo( null, true );
@@ -104,7 +106,7 @@ public class DefaultContinuumInitializer
             }
             catch ( Exception e )
             {
-                getLogger().debug( "Error while dumping the database schema", e );
+                log.debug( "Error while dumping the database schema", e );
             }
         }
 
@@ -132,7 +134,7 @@ public class DefaultContinuumInitializer
         {
             throw new ContinuumInitializationException( "Can't get default build definition", e );
         }
-        getLogger().info( "Continuum initializer end running ..." );
+        log.info( "Continuum initializer end running ..." );
     }
 
 
@@ -143,12 +145,12 @@ public class DefaultContinuumInitializer
         try
         {
             group = projectGroupDao.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
-            getLogger().info( "Default Project Group exists" );
+            log.info( "Default Project Group exists" );
         }
         catch ( ContinuumObjectNotFoundException e )
         {
 
-            getLogger().info( "create Default Project Group" );
+            log.info( "create Default Project Group" );
 
             group = new ProjectGroup();
 
@@ -180,7 +182,7 @@ public class DefaultContinuumInitializer
 
         if ( repository == null )
         {
-            getLogger().info( "create Default Local Repository" );
+            log.info( "create Default Local Repository" );
 
             repository = new LocalRepository();
 
@@ -194,7 +196,7 @@ public class DefaultContinuumInitializer
         }
         else if ( !repository.getLocation().equals( settings.getLocalRepository() ) )
         {
-            getLogger().info( "updating location of Default Local Repository" );
+            log.info( "updating location of Default Local Repository" );
 
             repository.setLocation( settings.getLocalRepository() );
 

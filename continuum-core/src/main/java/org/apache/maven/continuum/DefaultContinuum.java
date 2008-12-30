@@ -92,7 +92,6 @@ import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -103,6 +102,8 @@ import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -111,9 +112,10 @@ import org.codehaus.plexus.util.dag.CycleDetectedException;
  * @plexus.component role="org.apache.maven.continuum.Continuum" role-hint="default"
  */
 public class DefaultContinuum
-    extends AbstractLogEnabled
     implements Continuum, Contextualizable, Initializable, Startable
 {
+    private Logger log = LoggerFactory.getLogger( DefaultContinuum.class );
+
     /**
      * @plexus.requirement
      */
@@ -374,7 +376,7 @@ public class DefaultContinuum
             }
         }
 
-        getLogger().info( "Remove project group " + projectGroup.getName() + "(" + projectGroup.getId() + ")" );
+        log.info( "Remove project group " + projectGroup.getName() + "(" + projectGroup.getId() + ")" );
 
         Map context = new HashMap();
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
@@ -417,7 +419,7 @@ public class DefaultContinuum
                 context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( new_pg.getId() ) );
                 executeAction( "add-assignable-roles", context );
 
-                getLogger().info( "Added new project group: " + new_pg.getName() );
+                log.info( "Added new project group: " + new_pg.getName() );
             }
             catch ( BuildDefinitionServiceException e )
             {
@@ -600,7 +602,7 @@ public class DefaultContinuum
                 throw logAndCreateException( "Error while deleting project group release output directory.", e );
             }
 
-            getLogger().info( "Remove project " + project.getName() + "(" + projectId + ")" );
+            log.info( "Remove project " + project.getName() + "(" + projectId + ")" );
 
             try
             {
@@ -744,7 +746,7 @@ public class DefaultContinuum
         }
         catch ( CycleDetectedException e )
         {
-            getLogger().warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
+            log.warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
 
             projectsList = getProjects();
         }
@@ -770,7 +772,7 @@ public class DefaultContinuum
         }
         catch ( CycleDetectedException e )
         {
-            getLogger().warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
+            log.warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
 
             projectsList = getProjects();
         }
@@ -831,7 +833,7 @@ public class DefaultContinuum
         }
         catch ( CycleDetectedException e )
         {
-            getLogger().warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
+            log.warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
 
             projectsList = getProjects();
         }
@@ -860,7 +862,7 @@ public class DefaultContinuum
 
             if ( projectsMap == null || projectsMap.size() == 0 )
             {
-                getLogger().debug( "no builds attached to schedule" );
+                log.debug( "no builds attached to schedule" );
                 // We don't have projects attached to this schedule
                 return;
             }
@@ -873,7 +875,7 @@ public class DefaultContinuum
         }
         catch ( CycleDetectedException e )
         {
-            getLogger().warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
+            log.warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
 
             projectsList = getProjects();
         }
@@ -1030,11 +1032,11 @@ public class DefaultContinuum
         }
         catch ( ConfigurationException e )
         {
-            getLogger().info( "skip error during cleanup build files " + e.getMessage(), e );
+            log.info( "skip error during cleanup build files " + e.getMessage(), e );
         }
         catch ( IOException e )
         {
-            getLogger().info( "skip IOException during cleanup build files " + e.getMessage(), e );
+            log.info( "skip IOException during cleanup build files " + e.getMessage(), e );
         }
 
     }
@@ -1171,7 +1173,7 @@ public class DefaultContinuum
             return new ArrayList<Project>();
         }
 
-        return ProjectSorter.getSortedProjects( projects, getLogger() );
+        return ProjectSorter.getSortedProjects( projects, log );
     }
 
     // ----------------------------------------------------------------------
@@ -1499,17 +1501,17 @@ public class DefaultContinuum
         ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context
             .get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
 
-        if ( getLogger().isInfoEnabled() )
+        if ( log.isInfoEnabled() )
         {
             if ( result.getProjects() != null )
             {
-                getLogger().info( "Created " + result.getProjects().size() + " projects." );
+                log.info( "Created " + result.getProjects().size() + " projects." );
             }
             if ( result.getProjectGroups() != null )
             {
-                getLogger().info( "Created " + result.getProjectGroups().size() + " project groups." );
+                log.info( "Created " + result.getProjectGroups().size() + " project groups." );
             }
-            getLogger().info( result.getErrors().size() + " errors." );
+            log.info( result.getErrors().size() + " errors." );
 
             // ----------------------------------------------------------------------
             // Look for any errors.
@@ -1517,8 +1519,8 @@ public class DefaultContinuum
 
             if ( result.hasErrors() )
             {
-                getLogger().info( result.getErrors().size() + " errors during project add: " );
-                getLogger().info( result.getErrorsAsString() );
+                log.info( result.getErrors().size() + " errors during project add: " );
+                log.info( result.getErrorsAsString() );
                 return result;
             }
         }
@@ -1552,12 +1554,12 @@ public class DefaultContinuum
 
                     projectGroupId = projectGroup.getId();
 
-                    getLogger().info(
+                    log.info(
                         "Using existing project group with the group id: '" + projectGroup.getGroupId() + "'." );
                 }
                 catch ( ContinuumObjectNotFoundException e )
                 {
-                    getLogger().info(
+                    log.info(
                         "Creating project group with the group id: '" + projectGroup.getGroupId() + "'." );
 
                     Map pgContext = new HashMap();
@@ -2280,7 +2282,7 @@ public class DefaultContinuum
             }
             catch ( SchedulesActivationException e )
             {
-                getLogger().error( "Can't unactivate schedule. You need to restart Continuum.", e );
+                log.error( "Can't unactivate schedule. You need to restart Continuum.", e );
             }
         }
     }
@@ -2314,7 +2316,7 @@ public class DefaultContinuum
         }
         catch ( SchedulesActivationException e )
         {
-            getLogger().error( "Can't unactivate the schedule. You need to restart Continuum.", e );
+            log.error( "Can't unactivate the schedule. You need to restart Continuum.", e );
         }
 
         try
@@ -2323,7 +2325,7 @@ public class DefaultContinuum
         }
         catch ( Exception e )
         {
-            getLogger().error( "Can't remove the schedule.", e );
+            log.error( "Can't remove the schedule.", e );
 
             try
             {
@@ -2331,7 +2333,7 @@ public class DefaultContinuum
             }
             catch ( SchedulesActivationException sae )
             {
-                getLogger().error( "Can't reactivate the schedule. You need to restart Continuum.", e );
+                log.error( "Can't reactivate the schedule. You need to restart Continuum.", e );
             }
             throw new ContinuumException( "Can't remove the schedule", e );
         }
@@ -2481,7 +2483,7 @@ public class DefaultContinuum
     public void initialize()
         throws InitializationException
     {
-        getLogger().info( "Initializing Continuum." );
+        log.info( "Initializing Continuum." );
 
         File wdFile = new File( workingDirectory );
 
@@ -2502,7 +2504,7 @@ public class DefaultContinuum
             }
         }
 
-        getLogger().info( "Showing all groups:" );
+        log.info( "Showing all groups:" );
         try
         {
             for ( ProjectGroup group : projectGroupDao.getAllProjectGroups() )
@@ -2515,7 +2517,7 @@ public class DefaultContinuum
             throw new InitializationException( "Error while creating project scm root for the project group", e );
         }
 
-        getLogger().info( "Showing all projects: " );
+        log.info( "Showing all projects: " );
 
         for ( Project project : projectDao.getAllProjectsByNameWithBuildDetails() )
         {
@@ -2547,7 +2549,7 @@ public class DefaultContinuum
 
                 try
                 {
-                    getLogger().info( "Fix project state for project " + project.getId() + ":" + project.getName() +
+                    log.info( "Fix project state for project " + project.getId() + ":" + project.getName() +
                         ":" + project.getVersion() );
 
                     projectDao.updateProject( project );
@@ -2556,7 +2558,7 @@ public class DefaultContinuum
 
                     if ( state == p.getState() )
                     {
-                        getLogger().info( "Can't fix the project state." );
+                        log.info( "Can't fix the project state." );
                     }
                 }
                 catch ( ContinuumStoreException e )
@@ -2565,7 +2567,7 @@ public class DefaultContinuum
                 }
             }
 
-            getLogger().info( " " + project.getId() + ":" + project.getName() + ":" + project.getVersion() + ":" +
+            log.info( " " + project.getId() + ":" + project.getName() + ":" + project.getVersion() + ":" +
                 project.getExecutorId() );
         }
 
@@ -2579,7 +2581,7 @@ public class DefaultContinuum
 
                 try
                 {
-                    getLogger().info( "Fix state for projectScmRoot " + projectScmRoot.getScmRootAddress() );
+                    log.info( "Fix state for projectScmRoot " + projectScmRoot.getScmRootAddress() );
                     
                     projectScmRootDao.updateProjectScmRoot( projectScmRoot );
                 }
@@ -2634,7 +2636,7 @@ public class DefaultContinuum
         catch ( SchedulesActivationException e )
         {
             // We don't throw an exception here, so users will can modify schedules in interface instead of database
-            getLogger().error( "Error activating schedules.", e );
+            log.error( "Error activating schedules.", e );
         }
     }
 
@@ -2683,7 +2685,7 @@ public class DefaultContinuum
         }
         catch ( Exception e )
         {
-            getLogger().info( "Error storing the Continuum configuration.", e );
+            log.info( "Error storing the Continuum configuration.", e );
         }
 
         closeStore();
@@ -2728,7 +2730,7 @@ public class DefaultContinuum
         }
         catch ( Exception e )
         {
-            getLogger().info( "exception", e );
+            log.info( "exception", e );
             throw new ContinuumException( "Error while executing the action '" + actionName + "'.", e );
         }
     }
@@ -2744,7 +2746,7 @@ public class DefaultContinuum
             return new ContinuumException( "No such object.", cause );
         }
 
-        getLogger().error( message, cause );
+        log.error( message, cause );
 
         return new ContinuumException( message, cause );
     }
@@ -2976,7 +2978,7 @@ public class DefaultContinuum
 
     private void startMessage()
     {
-        getLogger().info( "Starting Continuum." );
+        log.info( "Starting Continuum." );
 
         // ----------------------------------------------------------------------
         //
@@ -2984,27 +2986,27 @@ public class DefaultContinuum
 
         String banner = StringUtils.repeat( "-", getVersion().length() );
 
-        getLogger().info( "" );
-        getLogger().info( "" );
-        getLogger().info( "< Continuum " + getVersion() + " started! >" );
-        getLogger().info( "-----------------------" + banner );
-        getLogger().info( "       \\   ^__^" );
-        getLogger().info( "        \\  (oo)\\_______" );
-        getLogger().info( "           (__)\\       )\\/\\" );
-        getLogger().info( "               ||----w |" );
-        getLogger().info( "               ||     ||" );
-        getLogger().info( "" );
-        getLogger().info( "" );
+        log.info( "" );
+        log.info( "" );
+        log.info( "< Continuum " + getVersion() + " started! >" );
+        log.info( "-----------------------" + banner );
+        log.info( "       \\   ^__^" );
+        log.info( "        \\  (oo)\\_______" );
+        log.info( "           (__)\\       )\\/\\" );
+        log.info( "               ||----w |" );
+        log.info( "               ||     ||" );
+        log.info( "" );
+        log.info( "" );
     }
 
     private void stopMessage()
     {
         // Yes dorothy, this can happen!
-        if ( getLogger() != null )
+        if ( log != null )
         {
-            getLogger().info( "Stopping Continuum." );
+            log.info( "Stopping Continuum." );
 
-            getLogger().info( "Continuum stopped." );
+            log.info( "Continuum stopped." );
         }
     }
 
@@ -3108,7 +3110,7 @@ public class DefaultContinuum
         }
         catch ( ConfigurationException e )
         {
-            getLogger().info( "skip error during cleanup release files " + e.getMessage(), e );
+            log.info( "skip error during cleanup release files " + e.getMessage(), e );
         }
     }
 
@@ -3261,24 +3263,24 @@ public class DefaultContinuum
                 }
                 catch ( ContinuumObjectNotFoundException e )
                 {
-                    getLogger().debug( e.getMessage() );
+                    log.debug( e.getMessage() );
                 }
                 catch ( ContinuumStoreException e )
                 {
-                    getLogger().debug( e.getMessage() );
+                    log.debug( e.getMessage() );
                 }
 
                 if ( projectDefaultBD != null )
                 {
                     buildDefId = projectDefaultBD.getId();
-                    getLogger().debug( "Project " + project.getId() +
+                    log.debug( "Project " + project.getId() +
                         " has own default build definition, will use it instead of group's." );
                 }
             }
 
             if ( buildDefId == -1 )
             {
-                getLogger().info( "Project " + projectId +
+                log.info( "Project " + projectId +
                     " don't have a default build definition defined in the project or project group, will not be included in group prepare." );
                 continue;
             }
