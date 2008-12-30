@@ -19,27 +19,27 @@
 
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
+<s:i18n name="localization.Continuum">
 <head>
-  <title>Configure Appearance</title>
+  <title><s:text name="appearance.page.title"/></title>
   <s:head/>
 </head>
 
 <body>
-  <h1>Appearance</h1>
+  <h1><s:text name="appearance.section.title"/></h1>
 
-  <h2>Company Details</h2>
+  <h2><s:text name="appearance.companyDetails"/></h2>
 
   <p>
-    Enter the details of the company super POM below. If it exists, the organization name, URL and logo will be read
-    from it.
+    <s:text name="appearance.enterCompanyPom"/>
   </p>
 
   <s:actionmessage/>
   <s:form method="post" action="saveAppearance" namespace="/admin" validate="true" theme="xhtml">
-    <s:textfield name="companyPom.groupId" label="Group ID"/>
-    <s:textfield name="companyPom.artifactId" label="Artifact ID"/>
-    <s:submit value="Save"/>
+    <s:textfield name="companyPom.groupId" label="%{getText('appearance.companyPom.groupId')}"/>
+    <s:textfield name="companyPom.artifactId" label="%{getText('appearance.companyPom.artifactId')}"/>
+    <s:submit value="%{getText('save')}"/>
   </s:form>
 </body>
-
+</s:i18n>
 </html>

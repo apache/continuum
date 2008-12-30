@@ -19,36 +19,37 @@
 
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
+<s:i18n name="localization.Continuum">
 <head>
-  <title>Edit Company POM</title>
+  <title><s:text name="companyPom.page.title"/></title>
   <s:head/>
 </head>
 
 <body>
-<h1>Company POM</h1>
+<h1><s:text name="companyPom.section.title"/></h1>
 
 <s:actionmessage/>
 <s:form method="post" action="saveCompanyPom" namespace="/admin" validate="true" theme="xhtml">
-  <s:label name="companyModel.groupId" label="Group ID"/>
-  <s:label name="companyModel.artifactId" label="Artifact ID"/>
+  <s:label name="companyModel.groupId" label="%{getText('appearance.companyPom.groupId')}"/>
+  <s:label name="companyModel.artifactId" label="%{getText('appearance.companyPom.artifactId')}"/>
   <tr>
-    <td>Version</td>
+    <td><s:text name="appearance.companyPom.version"/></td>
     <td>
       <s:property value="companyModel.version"/>
-      <i>(The version will automatically be incremented when you save this form)</i>
+      <i>(<s:text name="companyPom.autoIncrementVersion"/>)</i>
     </td>
   </tr>
   <tr>
     <td></td>
-    <td><h2>Organization</h2></td>
+    <td><h2><s:text name="companyPom.organization"/></h2></td>
   </tr>
-  <s:textfield name="companyModel.organization.name" size="40" label="Name"/>
-  <s:textfield name="companyModel.organization.url" size="70" label="URL"/>
+  <s:textfield name="companyModel.organization.name" size="40" label="%{getText('appearance.companyPom.organizationName.label')}"/>
+  <s:textfield name="companyModel.organization.url" size="70" label="%{getText('appearance.companyPom.organizationUrl.label')}"/>
   <%-- TODO: how to get it to be a string, not a String[]? --%>
-  <s:textfield name="companyModel.properties['organization.logo']" size="70" label="Logo URL"/>
-  <s:submit value="Save"/>
+  <s:textfield name="companyModel.properties['organization.logo']" size="70" label="%{getText('appearance.companyPom.organizationLogoUrl.label')}"/>
+  <s:submit value="%{getText('save')}"/>
 </s:form>
 
 </body>
-
+</s:i18n>
 </html>
