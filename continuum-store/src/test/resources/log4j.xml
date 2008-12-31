@@ -33,10 +33,10 @@
   </appender>
 
   <!-- quiet spring loading :-) -->
-  <category name="org.springframework.beans.factory.xml.XmlBeanDefinitionReader">
+  <category name="org.springframework">
     <priority value="ERROR"/>
   </category>
-  <category name="org.springframework.beans.factory.support.DefaultListableBeanFactory">
+  <category name="org.codehaus.plexus">
     <priority value="ERROR"/>
   </category>
 
