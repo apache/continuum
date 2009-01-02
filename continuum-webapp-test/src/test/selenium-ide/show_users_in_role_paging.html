@@ -1,0 +1,825 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>show_users_in_role_paging</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">show_users_in_role_paging</td></tr>
+</thead><tbody>
+<!--Assumptions:  Fresh install with only admin and guest users present.  User is already logged in as admin before beginning test.-->
+<tr>
+	<td>open</td>
+	<td>/continuum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Users</td>
+	<td></td>
+</tr>
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user3</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user4</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user5</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user6</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user7</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user8</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user9</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user10</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user11</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user12</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user13</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user14</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user15</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@name='addDSelectedRoles' and @value='Project Developer - Default Project Group']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Begin Add User-->
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>user16</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>user@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<!-- Do not add a role to User 16 -->
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<!--End Add User-->
+<!--Show users with the Developer role in the Default project group-->
+<tr>
+	<td>select</td>
+	<td>userlist_roleName</td>
+	<td>label=Project Developer - Default Project Group</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userlist_0</td>
+	<td></td>
+</tr>
+<!--Page 1 should show admin and user1 through user14-->
+<tr>
+	<td>assertTextPresent</td>
+	<td>List of Users in Role: Project Developer - Default Project Group</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>user14</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//img[@alt='Next']</td>
+	<td></td>
+</tr>
+<!--Page 2 should only have user15 on it-->
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>user14</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>user15</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>user16</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>List of Users in Role: Project Developer - Default Project Group</td>
+	<td></td>
+</tr>
+<!--Instead, Page 2 reverts to 'Any' role and shows user14, 15, 16-->
+
+</tbody></table>
+</body>
+</html>
