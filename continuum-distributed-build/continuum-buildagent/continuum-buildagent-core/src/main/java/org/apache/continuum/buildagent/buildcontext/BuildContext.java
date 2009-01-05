@@ -11,6 +11,8 @@ public class BuildContext
 
     private String projectName;
 
+    private int projectState;
+
     private int buildDefinitionId;
 
     private String buildFile;
@@ -81,6 +83,16 @@ public class BuildContext
     public void setProjectName( String projectName )
     {
         this.projectName = projectName;
+    }
+
+    public int getProjectState()
+    {
+        return projectState;
+    }
+
+    public void setProjectState( int projectState )
+    {
+        this.projectState = projectState;
     }
 
     public int getBuildDefinitionId()

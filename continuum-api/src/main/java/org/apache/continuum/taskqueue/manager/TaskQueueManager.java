@@ -101,6 +101,9 @@ public interface TaskQueueManager
     boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
         throws TaskQueueManagerException;
 
+    boolean removeFromDistributedBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueManagerException;
+
     boolean removeFromPrepareBuildQueue( int projectGroupId, String scmRootAddress )
         throws TaskQueueManagerException;
 
@@ -157,5 +160,8 @@ public interface TaskQueueManager
      * @throws TaskQueueManagerException
      */
     void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
+        throws TaskQueueManagerException;
+
+    void removeTasksFromDistributedBuildQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueManagerException;
 }

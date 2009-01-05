@@ -17,14 +17,18 @@ public class PrepareBuildProjectsTask
 
     private String scmRootAddress;
 
+    private int projectScmRootId;
+
     public PrepareBuildProjectsTask( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger,
-                                     int projectGroupId, String projectGroupName, String scmRootAddress )
+                                     int projectGroupId, String projectGroupName, String scmRootAddress,
+                                     int projectScmRootId )
     {
         this.projectsBuildDefinitionsMap = projectsBuildDefinitionsMap;
         this.trigger = trigger;
         this.projectGroupId = projectGroupId;
         this.projectGroupName = projectGroupName;
         this.scmRootAddress = scmRootAddress;
+        this.projectScmRootId = projectScmRootId;
     }
     
     public long getMaxExecutionTime()
@@ -86,5 +90,10 @@ public class PrepareBuildProjectsTask
     public void setScmRootAddress( String scmRootAddress )
     {
         this.scmRootAddress = scmRootAddress;
+    }
+
+    public int hashCode()
+    {
+        return this.projectGroupId + this.projectScmRootId + this.trigger;
     }
 }

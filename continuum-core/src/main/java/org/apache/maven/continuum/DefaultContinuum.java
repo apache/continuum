@@ -963,7 +963,8 @@ public class DefaultContinuum
         projectsBuildDefinitionsMap.put( projectId, buildDef.getId() );
         
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
-        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), scmRoot.getProjectGroup().getId() );
+        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), 
+                              scmRoot.getProjectGroup().getId(), scmRoot.getId() );
     }
 
     public void buildProject( int projectId, int buildDefinitionId, int trigger )
@@ -987,7 +988,8 @@ public class DefaultContinuum
         projectsBuildDefinitionsMap.put( projectId, buildDefinitionId );
 
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
-        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), scmRoot.getProjectGroup().getId() );
+        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), 
+                              scmRoot.getProjectGroup().getId(), scmRoot.getId() );
     }
 
     public BuildResult getBuildResult( int buildId )
@@ -1578,7 +1580,7 @@ public class DefaultContinuum
 
             String url = (String) context.get( CreateProjectsFromMetadataAction.KEY_URL );
             
-            projectScmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
+            projectScmRoot = getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
             
             if ( projectScmRoot == null )
             {
@@ -3195,6 +3197,19 @@ public class DefaultContinuum
         return null;
     }
 
+    public ProjectScmRoot getProjectScmRootByProjectGroupAndScmRootAddress( int projectGroupId, String scmRootAddress )
+        throws ContinuumException
+    {
+        try
+        {
+            return projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroupId, scmRootAddress );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while retrieving project scm root for " + projectGroupId, e );
+        }
+    }
+
     private void prepareBuildProjects( Collection<Project> projects, List<BuildDefinition> bds,
                                       boolean checkDefaultBuildDefinitionForProject, int trigger )
         throws ContinuumException
@@ -3335,17 +3350,19 @@ public class DefaultContinuum
     {
         for ( ProjectScmRoot scmRoot : map.keySet() )
         {
-            prepareBuildProjects( map.get( scmRoot ), trigger, scmRoot.getScmRootAddress(), scmRoot.getProjectGroup().getId() );
+            prepareBuildProjects( map.get( scmRoot ), trigger, scmRoot.getScmRootAddress(), 
+                                  scmRoot.getProjectGroup().getId(), scmRoot.getId() );
         }
     }
 
     private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, 
-                                       String scmRootAddress, int projectGroupId )
+                                       String scmRootAddress, int projectGroupId, int scmRootId )
         throws ContinuumException
     {
         ProjectGroup group = getProjectGroup( projectGroupId );
         PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger,
-                                                                      projectGroupId, group.getName(), scmRootAddress );
+                                                                      projectGroupId, group.getName(), 
+                                                                      scmRootAddress, scmRootId );
 
         try
         {
@@ -3404,7 +3421,7 @@ public class DefaultContinuum
     {
         try
         {
-            ProjectScmRoot scmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
+            ProjectScmRoot scmRoot = getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
 
             if ( scmRoot != null )
             {

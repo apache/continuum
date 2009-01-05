@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
@@ -32,6 +33,7 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
@@ -105,6 +107,8 @@ public class QueuesAction
     private int projectGroupId;
 
     private String scmRootAddress;
+
+    private List<String> selectedDistributedBuildTaskHashCodes;
 
     // -----------------------------------------------------
     //  webwork
@@ -219,6 +223,17 @@ public class QueuesAction
                summary.setProjectGroupId( task.getProjectGroupId() );
                summary.setProjectGroupName( projectGroup.getName() );
                summary.setScmRootAddress( task.getScmRootAddress() );
+               
+               ProjectScmRoot scmRoot = continuum.getProjectScmRootByProjectGroupAndScmRootAddress( task.getProjectGroupId(), 
+                                                                                                    task.getScmRootAddress() );
+               if ( scmRoot.getState() == ContinuumProjectState.UPDATING )
+               {
+                   summary.setCancelEnabled( false );
+               }
+               else
+               {
+                   summary.setCancelEnabled( true );
+               }
 
                distributedBuildSummary.add( summary );
             }
@@ -327,6 +342,53 @@ public class QueuesAction
         }
 
         distributedBuildManager.cancelDistributedBuild( buildAgentUrl, projectGroupId, scmRootAddress );
+
+        return SUCCESS;
+    }
+
+    public String removeDistributedBuildEntry()
+        throws Exception
+    {
+        try 
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        taskQueueManager.removeFromDistributedBuildQueue( projectGroupId, scmRootAddress );
+
+        return SUCCESS;
+    }
+
+    public String removeDistributedBuildEntries()
+        throws Exception
+    {
+        try 
+        {
+            checkManageQueuesAuthorization();
+        }
+        catch( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+        catch ( AuthenticationRequiredException e )
+        {
+            addActionError( e.getMessage() );
+            return REQUIRES_AUTHENTICATION;
+        }
+
+        taskQueueManager
+            .removeTasksFromDistributedBuildQueueWithHashCodes( listToIntArray( this.getSelectedDistributedBuildTaskHashCodes() ) );
 
         return SUCCESS;
     }
@@ -509,5 +571,15 @@ public class QueuesAction
     public void setDistributedBuildQueues( List<PrepareBuildProjectsTask> distributedBuildQueues )
     {
         this.distributedBuildQueues = distributedBuildQueues;
+    }
+
+    public List<String> getSelectedDistributedBuildTaskHashCodes()
+    {
+        return selectedDistributedBuildTaskHashCodes;
+    }
+
+    public void setSelectedDistributedBuildTaskHashCodes( List<String> selectedDistributedBuildTaskHashCodes )
+    {
+        this.selectedDistributedBuildTaskHashCodes = selectedDistributedBuildTaskHashCodes;
     }
 }

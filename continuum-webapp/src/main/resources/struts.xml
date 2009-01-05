@@ -798,6 +798,18 @@
         <param name="actionName">displayQueues</param>
       </result>
     </action>
+
+    <action name="removeDistributedBuildEntries" class="queues" method="removeDistributedBuildEntries">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
+    
+    <action name="removeDistributedBuildEntry" class="queues" method="removeDistributedBuildEntry">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
     
     <!--
     * Local Repository actions

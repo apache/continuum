@@ -439,19 +439,24 @@ public class DefaultBuildAgentManager
     {
         for ( BuildContext buildContext : buildContexts )
         {
-            BuildProjectTask buildProjectTask = new BuildProjectTask( buildContext.getProjectId(),
-                                                                      buildContext.getBuildDefinitionId(),
-                                                                      buildContext.getTrigger(),
-                                                                      buildContext.getProjectName(),
-                                                                      "" );
-            try
+            // only build if it's forced build or project state is not OK
+            if ( buildContext.getTrigger() == ContinuumProjectState.TRIGGER_FORCED || 
+                 buildContext.getProjectState() != ContinuumProjectState.OK )
             {
-                buildAgentTaskQueueManager.getBuildQueue().put( buildProjectTask );
-            }
-            catch ( TaskQueueException e )
-            {
-                log.error( "Error while enqueing build task for project " + buildContext.getProjectId(), e );
-                throw new ContinuumException( "Error while enqueuing build task for project " + buildContext.getProjectId(), e );
+                BuildProjectTask buildProjectTask = new BuildProjectTask( buildContext.getProjectId(),
+                                                                          buildContext.getBuildDefinitionId(),
+                                                                          buildContext.getTrigger(),
+                                                                          buildContext.getProjectName(),
+                                                                          "" );
+                try
+                {
+                    buildAgentTaskQueueManager.getBuildQueue().put( buildProjectTask );
+                }
+                catch ( TaskQueueException e )
+                {
+                    log.error( "Error while enqueing build task for project " + buildContext.getProjectId(), e );
+                    throw new ContinuumException( "Error while enqueuing build task for project " + buildContext.getProjectId(), e );
+                }
             }
         }
 

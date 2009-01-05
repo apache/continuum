@@ -23,9 +23,8 @@ public class BuildContextToProject
         project.setScmPassword( buildContext.getScmPassword() );
 
         project.setExecutorId( buildContext.getExecutorId() );
-        
-        //rename ?
-        project.setName( "distributed-build-[projectId="+buildContext.getProjectId()+"]" );
+
+        project.setState( buildContext.getProjectState() );
         
         return project;
     }

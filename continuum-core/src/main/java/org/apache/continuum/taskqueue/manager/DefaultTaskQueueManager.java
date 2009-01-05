@@ -527,6 +527,21 @@ public class DefaultTaskQueueManager
         return this.buildQueue.remove( buildProjectTask );
     }
 
+    public boolean removeFromDistributedBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueManagerException
+    {
+        List<PrepareBuildProjectsTask> queue = getDistributedBuildProjectsInQueue();
+
+        for ( PrepareBuildProjectsTask task : queue )
+        {
+            if ( task != null && task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+            {
+                return distributedBuildQueue.remove( task );
+            }
+        }
+        return false;
+    }
+
     public boolean removeFromPurgeQueue( int purgeConfigId )
         throws TaskQueueManagerException
     {
@@ -773,6 +788,20 @@ public class DefaultTaskQueueManager
         catch ( ComponentLookupException e )
         {
             throw new TaskQueueManagerException( "Unable to lookup current task", e );
+        }
+    }
+
+    public void removeTasksFromDistributedBuildQueueWithHashCodes( int[] hashCodes )
+        throws TaskQueueManagerException
+    {
+        List<PrepareBuildProjectsTask> queue = getDistributedBuildProjectsInQueue();
+        
+        for ( PrepareBuildProjectsTask task : queue )
+        {
+            if ( ArrayUtils.contains( hashCodes, task.hashCode() ) )
+            {
+                distributedBuildQueue.remove( task );
+            }
         }
     }
 }

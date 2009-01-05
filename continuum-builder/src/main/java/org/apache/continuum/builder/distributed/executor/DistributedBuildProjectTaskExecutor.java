@@ -141,6 +141,7 @@ public class DistributedBuildProjectTaskExecutor
                 context.put( ContinuumBuildConstant.KEY_PROJECT_NAME, project.getName() );
                 context.put( ContinuumBuildConstant.KEY_EXECUTOR_ID, project.getExecutorId() );
                 context.put( ContinuumBuildConstant.KEY_SCM_URL, project.getScmUrl() );
+                context.put( ContinuumBuildConstant.KEY_PROJECT_STATE, new Integer( project.getState() ) );
 
                 if ( project.getScmUsername() == null )
                 {

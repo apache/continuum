@@ -507,6 +507,13 @@
           <description>Scm root address of projects</description>
           <type>String</type>
         </field>
+        <field>
+          <name>cancelEnabled</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>Determines if the cancel button is enabled</description>
+          <type>boolean</type>
+        </field>
       </fields>
     </class>
   </classes>

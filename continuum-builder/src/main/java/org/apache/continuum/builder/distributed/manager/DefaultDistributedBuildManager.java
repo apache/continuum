@@ -347,16 +347,25 @@ public class DefaultDistributedBuildManager
             // ----------------------------------------------------------------------
 
             BuildResult buildResult = convertMapToBuildResult( context );
-            buildResult.setBuildDefinition( buildDefinition );
-            buildResult.setBuildNumber( buildNumber );
-            buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, context ) );
             
-            buildResultDao.addBuildResult( project, buildResult );
+            if ( buildResult.getState() != ContinuumProjectState.CANCELLED )
+            {
+                buildResult.setBuildDefinition( buildDefinition );
+                buildResult.setBuildNumber( buildNumber );
+                buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, context ) );
+                
+                buildResultDao.addBuildResult( project, buildResult );
             
-            project.setBuildNumber( buildNumber );
-            project.setLatestBuildId( buildResult.getId() );
-            project.setOldState( project.getState() );
-            project.setState( ContinuumBuildConstant.getBuildState( context ) );
+                project.setOldState( project.getState() );
+                project.setState( ContinuumBuildConstant.getBuildState( context ) );
+                project.setBuildNumber( buildNumber );
+                project.setLatestBuildId( buildResult.getId() );
+            }
+            else
+            {
+                project.setState( project.getOldState() );
+                project.setOldState( 0 );
+            }
 
             projectDao.updateProject( project );
 

@@ -85,6 +85,8 @@ public class ContinuumBuildAgentUtil
 
     public static final String KEY_BUILD_OUTPUT = "build-output";
 
+    public static final String KEY_PROJECT_STATE = "project-state";
+
     public static Integer getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -93,6 +95,11 @@ public class ContinuumBuildAgentUtil
     public static String getProjectName( Map context )
     {
         return getString( context, KEY_PROJECT_NAME );
+    }
+
+    public static Integer getProjectState( Map context )
+    {
+        return getInteger( context, KEY_PROJECT_STATE );
     }
 
     public static Integer getBuildDefinitionId( Map context )

@@ -179,7 +179,9 @@ public class ContinuumBuildAgentServiceImpl
             context.setProjectGroupId( ContinuumBuildAgentUtil.getProjectGroupId( map ) );
             context.setScmRootAddress( ContinuumBuildAgentUtil.getScmRootAddress( map ) );
             context.setProjectName( ContinuumBuildAgentUtil.getProjectName( map ) );
-            
+            context.setProjectState( ContinuumBuildAgentUtil.getProjectState( map ) );
+            context.setTrigger( ContinuumBuildAgentUtil.getTrigger( map ) );
+
             buildContext.add( context );
         }
 

@@ -60,6 +60,8 @@ public class ContinuumBuildConstant
 
     public static final String KEY_BUILD_RESULT = "build-result";
 
+    public static final String KEY_PROJECT_STATE = "project-state";
+
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
