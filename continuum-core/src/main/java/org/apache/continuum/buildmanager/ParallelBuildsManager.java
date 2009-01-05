@@ -94,7 +94,7 @@ public class ParallelBuildsManager
     private BuildQueueDao buildQueueDao;
 
     private PlexusContainer container;
-
+    
     /**
      * @see BuildsManager#buildProject(int, BuildDefinition, String, int)
      */
@@ -1023,47 +1023,53 @@ public class ParallelBuildsManager
             }
 
             int size = 0;
-            int idx = 0;
-            
-            // TODO: 
-            // - the number of build queues to be used should respect the number of allowed builds in parallel!
-            // - what to do when the number of allowed builds in parallel is reduced and there are queued tasks?
+            int idx = 0;            
+            int allowedBuilds = configurationService.getNumberOfBuildsInParallel();
             
             try
-            {   
+            {
+                int count = 1;             
                 for ( BuildQueue buildQueue : buildQueues )
-                {                                        
-                    OverallBuildQueue overallBuildQueue = overallBuildQueues.get( buildQueue.getId() );
-                    if ( overallBuildQueue != null )
-                    {
-                        TaskQueue taskQueue = null;
-                        if ( typeOfQueue == BUILD_QUEUE )
+                {            
+                    if( count <= allowedBuilds )
+                    {   
+                        OverallBuildQueue overallBuildQueue = overallBuildQueues.get( buildQueue.getId() );
+                        if ( overallBuildQueue != null )
                         {
-                            taskQueue = overallBuildQueue.getBuildQueue();
+                            TaskQueue taskQueue = null;
+                            if ( typeOfQueue == BUILD_QUEUE )
+                            {
+                                taskQueue = overallBuildQueue.getBuildQueue();
+                            }
+                            else if ( typeOfQueue == CHECKOUT_QUEUE )
+                            {
+                                taskQueue = overallBuildQueue.getCheckoutQueue();
+                            }
+                            
+                            if ( idx == 0 )
+                            {
+                                size = taskQueue.getQueueSnapshot().size();
+                                whereToBeQueued = overallBuildQueue;
+                            }
+    
+                            if ( taskQueue.getQueueSnapshot().size() < size )
+                            {
+                                whereToBeQueued = overallBuildQueue;
+                                size = taskQueue.getQueueSnapshot().size();
+                            }
+    
+                            idx++;
                         }
-                        else if ( typeOfQueue == CHECKOUT_QUEUE )
+                        else
                         {
-                            taskQueue = overallBuildQueue.getCheckoutQueue();
+                            log.error( "Build queue not found." );                            
                         }
-                        
-                        if ( idx == 0 )
-                        {
-                            size = taskQueue.getQueueSnapshot().size();
-                            whereToBeQueued = overallBuildQueue;
-                        }
-
-                        if ( taskQueue.getQueueSnapshot().size() < size )
-                        {
-                            whereToBeQueued = overallBuildQueue;
-                            size = taskQueue.getQueueSnapshot().size();
-                        }
-
-                        idx++;
+                        count++;
                     }
                     else
                     {
-                        log.error( "Build queue not found." );
-                    }
+                        break;
+                    }   
                 }
             }
             catch ( TaskQueueException e )
@@ -1084,32 +1090,6 @@ public class ParallelBuildsManager
                 {
                     found = true;
                     return overallBuildQueue;
-                }
-            }            
-            
-            // no default "overall" build queue configured
-            if( !found )
-            {
-                try
-                {
-                    // add the default build queue to the map                    
-                    BuildQueue defaultBuildQueue = buildQueueDao.getBuildQueueByName( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME );
-                    if( defaultBuildQueue != null )
-                    {
-                        return createOverallBuildQueue( defaultBuildQueue );                        
-                    }
-                    else
-                    {
-                        throw new BuildManagerException( "No default build queue configured." );
-                    }
-                }
-                catch ( ContinuumStoreException e )
-                {
-                    throw new BuildManagerException( "Error encountered while retrieving default build queue from the database." );
-                }
-                catch ( ComponentLookupException e )
-                {
-                    throw new BuildManagerException( "Error occurred while creating default build queue." );
                 }
             }
         }
@@ -1137,7 +1117,13 @@ public class ParallelBuildsManager
                 {   
                     createOverallBuildQueue( buildQueue );
                 }               
-                //BuildQueue defaultBuildQueue = configurationService.getDefaultBuildQueue();
+
+                // add default overall build queue if not yet added to the map
+                BuildQueue defaultBuildQueue = configurationService.getDefaultBuildQueue();
+                if( overallBuildQueues.get( defaultBuildQueue.getId() ) == null )
+                {
+                    createOverallBuildQueue( defaultBuildQueue );
+                }
             }
             catch ( ComponentLookupException e )
             {
