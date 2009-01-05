@@ -351,13 +351,19 @@ public class ParallelBuildsManager
 
         OverallBuildQueue overallBuildQueue =
             getOverallBuildQueue( projectId, CHECKOUT_QUEUE, defaultBuildDefinition.getSchedule().getBuildQueues() );
-        
         CheckOutTask checkoutTask =
             new CheckOutTask( projectId, workingDirectory, projectName, scmUsername, scmPassword );
         try
         {
-            log.info( "Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() + "'." );
-            overallBuildQueue.addToCheckoutQueue( checkoutTask );
+            if( overallBuildQueue != null )
+            {
+                log.info( "Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() + "'." );
+                overallBuildQueue.addToCheckoutQueue( checkoutTask );
+            }
+            else
+            {
+                throw new BuildManagerException( "Unable to add project to checkout queue. No overall build queue configured." );
+            }
         }
         catch ( TaskQueueException e )
         {
@@ -1018,6 +1024,11 @@ public class ParallelBuildsManager
 
             int size = 0;
             int idx = 0;
+            
+            // TODO: 
+            // - the number of build queues to be used should respect the number of allowed builds in parallel!
+            // - what to do when the number of allowed builds in parallel is reduced and there are queued tasks?
+            
             try
             {   
                 for ( BuildQueue buildQueue : buildQueues )
@@ -1061,23 +1072,51 @@ public class ParallelBuildsManager
             }
         }
 
+        // use default overall build queue if none is configured
         if ( whereToBeQueued == null )
         {     
+            boolean found = false;            
             Set<Integer> keySet = overallBuildQueues.keySet();
             for( Integer key : keySet )
             {
-                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
+                OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );                
                 if( overallBuildQueue.getName().equals( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) )
                 {
+                    found = true;
                     return overallBuildQueue;
                 }
             }            
-            //throw new BuildManagerException( "No build queue found." );
+            
+            // no default "overall" build queue configured
+            if( !found )
+            {
+                try
+                {
+                    // add the default build queue to the map                    
+                    BuildQueue defaultBuildQueue = buildQueueDao.getBuildQueueByName( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME );
+                    if( defaultBuildQueue != null )
+                    {
+                        return createOverallBuildQueue( defaultBuildQueue );                        
+                    }
+                    else
+                    {
+                        throw new BuildManagerException( "No default build queue configured." );
+                    }
+                }
+                catch ( ContinuumStoreException e )
+                {
+                    throw new BuildManagerException( "Error encountered while retrieving default build queue from the database." );
+                }
+                catch ( ComponentLookupException e )
+                {
+                    throw new BuildManagerException( "Error occurred while creating default build queue." );
+                }
+            }
         }
 
         return whereToBeQueued;
     }
-
+    
     public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
     {
         this.buildDefinitionDao = buildDefinitionDao;
@@ -1086,22 +1125,17 @@ public class ParallelBuildsManager
     public void contextualize( Context context )
         throws ContextException
     {
-        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );       
+        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY ); 
         
         synchronized ( overallBuildQueues )
         {
             try
             {
                 // create all the build queues configured in the database, not just the default!
-                List<BuildQueue> buildQueues = buildQueueDao.getAllBuildQueues();
+                List<BuildQueue> buildQueues = buildQueueDao.getAllBuildQueues();                
                 for( BuildQueue buildQueue : buildQueues )
-                {
-                    OverallBuildQueue defaultOverallBuildQueue =
-                        (OverallBuildQueue) container.lookup( OverallBuildQueue.class );
-                    defaultOverallBuildQueue.setId( buildQueue.getId() );
-                    defaultOverallBuildQueue.setName( buildQueue.getName() );
-
-                    overallBuildQueues.put( defaultOverallBuildQueue.getId(), defaultOverallBuildQueue );
+                {   
+                    createOverallBuildQueue( buildQueue );
                 }               
                 //BuildQueue defaultBuildQueue = configurationService.getDefaultBuildQueue();
             }
@@ -1119,5 +1153,18 @@ public class ParallelBuildsManager
     public void setContainer( PlexusContainer container )
     {
         this.container = container;
+    }
+    
+    private OverallBuildQueue createOverallBuildQueue( BuildQueue defaultBuildQueue )
+        throws ComponentLookupException
+    {
+        OverallBuildQueue overallBuildQueue =
+            (OverallBuildQueue) container.lookup( OverallBuildQueue.class );
+        overallBuildQueue.setId( defaultBuildQueue.getId() );
+        overallBuildQueue.setName( defaultBuildQueue.getName() );
+    
+        overallBuildQueues.put( overallBuildQueue.getId(), overallBuildQueue );
+        
+        return overallBuildQueue;
     }
 }
