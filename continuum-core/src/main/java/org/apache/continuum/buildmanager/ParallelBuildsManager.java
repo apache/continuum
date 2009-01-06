@@ -26,8 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.continuum.buildqueue.BuildQueueService;
+import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.dao.BuildDefinitionDao;
-import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
@@ -87,11 +88,11 @@ public class ParallelBuildsManager
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
-    
+        
     /**
      * @plexus.requirement
      */
-    private BuildQueueDao buildQueueDao;
+    private BuildQueueService buildQueueService;
 
     private PlexusContainer container;
     
@@ -720,7 +721,7 @@ public class ParallelBuildsManager
         List<CheckOutTask> checkoutTasks = null;
 
         synchronized ( overallBuildQueues )
-        {
+        {                        
             OverallBuildQueue overallBuildQueue = overallBuildQueues.get( overallBuildQueueId );
             if ( overallBuildQueue.getName().equals( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) )
             {
@@ -764,30 +765,42 @@ public class ParallelBuildsManager
             }
 
             this.overallBuildQueues.remove( overallBuildQueueId );
+            log.info( "Removed overall build queue '" + overallBuildQueueId + "' from build queues map." );
         }
 
-        try
-        {
-            for ( Task task : tasks )
+        
+        for ( Task task : tasks )
+        {            
+            BuildProjectTask buildTask = (BuildProjectTask) task;
+            try
             {
-                BuildProjectTask buildTask = (BuildProjectTask) task;
                 BuildDefinition buildDefinition =
                     buildDefinitionDao.getBuildDefinition( buildTask.getBuildDefinitionId() );
+            
                 buildProject( buildTask.getProjectId(), buildDefinition, buildTask.getProjectName(),
                               buildTask.getTrigger() );
             }
+            catch ( ContinuumStoreException e )
+            {
+                log.error( "Unable to queue build task for project '" + buildTask.getProjectName() + "'" );
+                continue;
+            }
+        }
 
-            for ( CheckOutTask task : checkoutTasks )
+        for ( CheckOutTask task : checkoutTasks )
+        {
+            try
             {
                 BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( task.getProjectId() );
                 checkoutProject( task.getProjectId(), task.getProjectName(), task.getWorkingDirectory(),
-                                 task.getScmUserName(), task.getScmPassword(), buildDefinition );
+                                 task.getScmUserName(), task.getScmPassword(), buildDefinition );            
             }
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new BuildManagerException( "Cannot remove build queue: " + e.getMessage() );
-        }
+            catch ( ContinuumStoreException e )
+            {
+                log.error( "Unable to queue checkout task for project '" + task.getProjectName() + "'" );
+                continue;
+            }
+        }        
     }
 
     public Map<Integer, OverallBuildQueue> getOverallBuildQueues()
@@ -1111,8 +1124,8 @@ public class ParallelBuildsManager
         {
             try
             {
-                // create all the build queues configured in the database, not just the default!
-                List<BuildQueue> buildQueues = buildQueueDao.getAllBuildQueues();                
+                // create all the build queues configured in the database, not just the default!               
+                List<BuildQueue> buildQueues = buildQueueService.getAllBuildQueues();
                 for( BuildQueue buildQueue : buildQueues )
                 {   
                     createOverallBuildQueue( buildQueue );
@@ -1129,7 +1142,7 @@ public class ParallelBuildsManager
             {
                 log.error( "Cannot create overall build queue: " + e.getMessage() );
             }
-            catch ( ContinuumStoreException e )
+            catch ( BuildQueueServiceException e )
             {
                 log.error( "Cannot create overall build queue: " + e.getMessage() );
             }

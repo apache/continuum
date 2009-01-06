@@ -35,9 +35,10 @@ import java.util.regex.Pattern;
 
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.buildqueue.BuildQueueService;
+import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
-import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ContinuumReleaseResultDao;
 import org.apache.continuum.dao.DaoUtils;
@@ -252,11 +253,11 @@ public class DefaultContinuum
      * @plexus.requirement role-hint="parallel"
      */
     private BuildsManager parallelBuildsManager;
-    
+        
     /**
      * @plexus.requirement
      */
-    private BuildQueueDao buildQueueDao;
+    private BuildQueueService buildQueueService;
 
     public DefaultContinuum()
     {
@@ -3236,10 +3237,10 @@ public class DefaultContinuum
     public BuildQueue addBuildQueue( BuildQueue buildQueue ) throws ContinuumException
     {
         try
-        {
-            return buildQueueDao.addBuildQueue( buildQueue );
+        {            
+            return buildQueueService.addBuildQueue( buildQueue );
         }
-        catch ( ContinuumStoreException e )
+        catch ( BuildQueueServiceException e )
         {
             throw new ContinuumException( "Error adding build queue to the database.", e );
         }
@@ -3249,9 +3250,9 @@ public class DefaultContinuum
     {
         try
         {
-            return buildQueueDao.getBuildQueue( buildQueueId );
+            return buildQueueService.getBuildQueue( buildQueueId );
         }
-        catch ( ContinuumStoreException e )
+        catch ( BuildQueueServiceException e )
         {
             throw new ContinuumException( "Error retrieving build queue.", e );
         }
@@ -3260,10 +3261,10 @@ public class DefaultContinuum
     public BuildQueue getBuildQueueByName( String buildQueueName ) throws ContinuumException
     {
         try
-        {
-            return buildQueueDao.getBuildQueueByName( buildQueueName );
+        {            
+            return buildQueueService.getBuildQueueByName( buildQueueName );
         }
-        catch ( ContinuumStoreException e )
+        catch ( BuildQueueServiceException e )
         {
             throw new ContinuumException( "Error retrieving build queue.", e );
         }
@@ -3272,10 +3273,10 @@ public class DefaultContinuum
     public void removeBuildQueue( BuildQueue buildQueue ) throws ContinuumException
     {
         try
-        {
-            buildQueueDao.removeBuildQueue( buildQueue );
+        {            
+            buildQueueService.removeBuildQueue( buildQueue );
         }
-        catch ( ContinuumStoreException e )
+        catch ( BuildQueueServiceException e )
         {
             throw new ContinuumException( "Error deleting build queue from database.", e );
         }
@@ -3284,10 +3285,10 @@ public class DefaultContinuum
     public BuildQueue storeBuildQueue( BuildQueue buildQueue ) throws ContinuumException
     {
         try
-        {
-            return buildQueueDao.storeBuildQueue( buildQueue );
+        {            
+            return buildQueueService.updateBuildQueue( buildQueue );
         }
-        catch ( ContinuumStoreException e )
+        catch ( BuildQueueServiceException e )
         {
             throw new ContinuumException( "Error updating build queue.", e );
         }
@@ -3296,10 +3297,10 @@ public class DefaultContinuum
     public List<BuildQueue> getAllBuildQueues() throws ContinuumException
     {
         try
-        {
-            return buildQueueDao.getAllBuildQueues();
+        {            
+            return buildQueueService.getAllBuildQueues();
         }
-        catch ( ContinuumStoreException e )
+        catch ( BuildQueueServiceException e )
         {
             throw new ContinuumException( "Error adding build queue.", e );
         }

@@ -19,10 +19,11 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.continuum.buildqueue.BuildQueueService;
+import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.ContinuumConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.configuration.GeneralConfiguration;
-import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.maven.continuum.model.project.BuildQueue;
@@ -62,11 +63,11 @@ public class DefaultConfigurationService
      * @plexus.requirement
      */
     private SystemConfigurationDao systemConfigurationDao;
-    
+        
     /**
      * @plexus.requirement
      */
-    private BuildQueueDao buildQueueDao;
+    private BuildQueueService buildQueueService;
 
     /**
      * @plexus.requirement
@@ -103,16 +104,16 @@ public class DefaultConfigurationService
         this.scheduleDao = scheduleDao;
     }
     
-    public BuildQueueDao getBuildQueueDao()
+    public BuildQueueService getBuildQueueService()
     {
-        return buildQueueDao;
-    }
-    
-    public void setBuildQueueDao( BuildQueueDao buildQueueDao )
-    {
-        this.buildQueueDao = buildQueueDao;
+        return buildQueueService;
     }
 
+    public void setBuildQueueService( BuildQueueService buildQueueService )
+    {
+        this.buildQueueService = buildQueueService;
+    }
+    
     public SystemConfigurationDao getSystemConfigurationDao()
     {
         return systemConfigurationDao;
@@ -498,7 +499,7 @@ public class DefaultConfigurationService
     }
 
     public Schedule getDefaultSchedule()
-        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException
+        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException, BuildQueueServiceException
     {
         // Schedule
         Schedule defaultSchedule = scheduleDao.getScheduleByName( DEFAULT_SCHEDULE_NAME );
@@ -514,15 +515,15 @@ public class DefaultConfigurationService
     }
     
     public BuildQueue getDefaultBuildQueue()
-        throws ContinuumStoreException
+        throws BuildQueueServiceException
     {     
-        BuildQueue defaultBuildQueue = buildQueueDao.getBuildQueueByName( DEFAULT_BUILD_QUEUE_NAME );
+        BuildQueue defaultBuildQueue = buildQueueService.getBuildQueueByName( DEFAULT_BUILD_QUEUE_NAME );
     
         if ( defaultBuildQueue == null )
         {
             defaultBuildQueue = createDefaultBuildQueue();
-    
-            defaultBuildQueue = buildQueueDao.addBuildQueue( defaultBuildQueue );
+            
+            defaultBuildQueue = buildQueueService.addBuildQueue( defaultBuildQueue );
         }
     
         return defaultBuildQueue;
@@ -533,7 +534,7 @@ public class DefaultConfigurationService
     // ----------------------------------------------------------------------
 
     private Schedule createDefaultSchedule()
-        throws ConfigurationLoadingException, ContinuumConfigurationException, ContinuumStoreException
+        throws ConfigurationLoadingException, ContinuumConfigurationException, ContinuumStoreException, BuildQueueServiceException
     {
 
         log.info( "create Default Schedule" );

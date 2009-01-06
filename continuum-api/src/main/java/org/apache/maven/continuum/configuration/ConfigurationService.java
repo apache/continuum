@@ -19,6 +19,7 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
@@ -92,7 +93,7 @@ public interface ConfigurationService
     void setNumberOfBuildsInParallel( int num );
     
     BuildQueue getDefaultBuildQueue()
-        throws ContinuumStoreException;
+        throws BuildQueueServiceException;
 
     // ----------------------------------------------------------------------
     //
@@ -113,5 +114,5 @@ public interface ConfigurationService
         throws ConfigurationStoringException, ContinuumConfigurationException;
 
     Schedule getDefaultSchedule()
-        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException;
+        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException, BuildQueueServiceException;
 }
