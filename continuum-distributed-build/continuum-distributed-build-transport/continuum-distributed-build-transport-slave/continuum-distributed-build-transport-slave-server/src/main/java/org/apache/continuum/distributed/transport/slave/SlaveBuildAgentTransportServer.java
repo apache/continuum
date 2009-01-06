@@ -64,14 +64,11 @@ public class SlaveBuildAgentTransportServer
         return result;
     }
 
-    // TODO: fix this
-    public List<Object> getAvailableInstallations()
+    public List<Map> getAvailableInstallations()
         throws Exception
     {
-        List<Object> installationsObj = null;
+        List<Map> installations = null;
 
-        List<Installation> installations = null;
-        
         try
         {
             installations = continuumBuildAgentService.getAvailableInstallations();
@@ -82,7 +79,7 @@ public class SlaveBuildAgentTransportServer
             log.error( "Failed to get available installations.", e );
         }
 
-        return installationsObj;
+        return installations;
     }
 
     public Map getBuildResult( int projectId )

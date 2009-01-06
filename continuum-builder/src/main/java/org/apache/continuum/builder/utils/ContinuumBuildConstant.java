@@ -62,6 +62,14 @@ public class ContinuumBuildConstant
 
     public static final String KEY_PROJECT_STATE = "project-state";
 
+    public static final String KEY_INSTALLATION_NAME = "installation-name";
+
+    public static final String KEY_INSTALLATION_TYPE = "installation-type";
+
+    public static final String KEY_INSTALLATION_VAR_NAME = "installation-var-name";
+
+    public static final String KEY_INSTALLATION_VAR_VALUE = "installation-var-value";
+
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -150,6 +158,26 @@ public class ContinuumBuildConstant
     public static BuildResult getBuildResult( Map context, Object defaultValue )
     {
         return (BuildResult) getObject( context, KEY_BUILD_RESULT, defaultValue );
+    }
+
+    public static String getInstallationName( Map context )
+    {
+        return getString( context, KEY_INSTALLATION_NAME );
+    }
+
+    public static String getInstallationType( Map context )
+    {
+        return getString( context, KEY_INSTALLATION_TYPE );
+    }
+
+    public static String getInstallationVarValue( Map context )
+    {
+        return getString( context, KEY_INSTALLATION_VAR_VALUE );
+    }
+
+    public static String getInstallationVarName( Map context )
+    {
+        return getString( context, KEY_INSTALLATION_VAR_NAME );
     }
 
     // ----------------------------------------------------------------------

@@ -3,14 +3,12 @@ package org.apache.continuum.buildagent;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.buildagent.model.Installation;
-
 public interface ContinuumBuildAgentService
 {
     void buildProjects( List<Map> projectsBuildContext )
         throws ContinuumBuildAgentException;
     
-    List<Installation> getAvailableInstallations()
+    List<Map> getAvailableInstallations()
         throws ContinuumBuildAgentException;
 
     Map getBuildResult( int projectId )

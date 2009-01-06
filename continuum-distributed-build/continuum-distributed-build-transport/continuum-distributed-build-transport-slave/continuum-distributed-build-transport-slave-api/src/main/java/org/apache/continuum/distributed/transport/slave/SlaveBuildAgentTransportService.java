@@ -36,7 +36,7 @@ public interface SlaveBuildAgentTransportService
     
     public Integer getProjectCurrentlyBuilding() throws Exception;
     
-    public List<Object> getAvailableInstallations() throws Exception;
+    public List<Map> getAvailableInstallations() throws Exception;
     
     public Boolean ping() throws Exception;
 

@@ -87,6 +87,14 @@ public class ContinuumBuildAgentUtil
 
     public static final String KEY_PROJECT_STATE = "project-state";
 
+    public static final String KEY_INSTALLATION_NAME = "installation-name";
+
+    public static final String KEY_INSTALLATION_TYPE = "installation-type";
+
+    public static final String KEY_INSTALLATION_VAR_NAME = "installation-var-name";
+
+    public static final String KEY_INSTALLATION_VAR_VALUE = "installation-var-value";
+
     public static Integer getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );

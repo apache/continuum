@@ -380,6 +380,11 @@ public class DefaultDistributedBuildManager
             BufferedWriter out = new BufferedWriter(fstream);
             out.write( ContinuumBuildConstant.getBuildOutput( context ) == null ? "" : ContinuumBuildConstant.getBuildOutput( context ) );
             out.close();
+
+            //if ( buildResult.getState() != ContinuumProjectState.CANCELLED )
+            //{
+            //    notifierDispatcher.buildComplete( project, buildDefinition, buildResult );
+            //}
         }
         catch ( ContinuumStoreException e )
         {
@@ -418,6 +423,8 @@ public class DefaultDistributedBuildManager
             }
 
             projectScmRootDao.updateProjectScmRoot( scmRoot );
+
+            //notifierDispatcher.prepareBuildComplete( scmRoot );
         }
         catch ( ContinuumStoreException e )
         {
@@ -447,18 +454,30 @@ public class DefaultDistributedBuildManager
     public List<Installation> getAvailableInstallations( String buildAgentUrl )
         throws ContinuumException
     {
+        List<Installation> installations = new ArrayList<Installation>();
+
         try
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
             
-            //return client.getAvailableInstallations();
+            List<Map> installationsList = client.getAvailableInstallations();
+
+            for ( Map context : installationsList )
+            {
+                Installation installation = new Installation();
+                installation.setName( ContinuumBuildConstant.getInstallationName( context ) );
+                installation.setType( ContinuumBuildConstant.getInstallationType( context ) );
+                installation.setVarName( ContinuumBuildConstant.getInstallationVarName( context ) );
+                installation.setVarValue( ContinuumBuildConstant.getInstallationVarValue( context ) );
+                installations.add( installation );
+            }
+            
+            return installations;
         }
         catch ( Exception e )
         {
             throw new ContinuumException( "Unable to get available installations of build agent", e );
         }
-
-        return null;
     }
 
     private List<ProjectDependency> getModifiedDependencies( BuildResult oldBuildResult, Map context )
@@ -574,7 +593,7 @@ public class DefaultDistributedBuildManager
         
         if ( buildAgentUrl == null )
         {
-            throw new ContinuumException( "Unable to find build agent for project " + projectId );
+            return null;
         }
 
         try
@@ -610,7 +629,7 @@ public class DefaultDistributedBuildManager
         }
         catch ( Exception e )
         {
-            throw new ContinuumException( "", e );
+            throw new ContinuumException( "Error while retrieving build result for project" + projectId, e );
         }
 
         return map;

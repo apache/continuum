@@ -70,6 +70,8 @@ public class BuildResultAction
 
     private String projectGroupName = "";
 
+    private int projectGroupId;
+
     public String execute()
         throws ContinuumException, ConfigurationException, IOException
     {
@@ -89,6 +91,13 @@ public class BuildResultAction
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() && project.getState() == ContinuumProjectState.BUILDING )
         {
             Map<String, Object> map = distributedBuildManager.getBuildResult( project.getId() );
+
+            if ( map == null )
+            {
+                projectGroupId = project.getProjectGroup().getId();
+
+                return ERROR;
+            }
 
             if ( map.size() > 0 )
             {
@@ -234,4 +243,8 @@ public class BuildResultAction
         return projectGroupName;
     }
 
+    public int getProjectGroupId()
+    {
+        return projectGroupId;
+    }
 }

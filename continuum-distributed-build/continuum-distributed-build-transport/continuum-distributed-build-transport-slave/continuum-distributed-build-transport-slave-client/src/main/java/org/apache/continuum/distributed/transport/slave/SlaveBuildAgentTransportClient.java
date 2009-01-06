@@ -83,10 +83,10 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    public List<Object> getAvailableInstallations()
+    public List<Map> getAvailableInstallations()
         throws Exception
     {
-        List<Object> installations = null;
+        List<Map> installations = null;
         
         try
         {

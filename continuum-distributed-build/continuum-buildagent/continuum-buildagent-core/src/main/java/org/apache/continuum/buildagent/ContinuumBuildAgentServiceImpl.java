@@ -19,6 +19,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,11 +66,57 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
-    //TODO: fix this
-    public List<Installation> getAvailableInstallations()
+    public List<Map> getAvailableInstallations()
         throws ContinuumBuildAgentException
     {
-        return buildAgentConfigurationService.getAvailableInstallations();
+        List<Map> installationsList = new ArrayList<Map>();
+        
+        List<Installation> installations = buildAgentConfigurationService.getAvailableInstallations();
+
+        for ( Installation installation : installations )
+        {
+            Map map = new HashMap();
+            
+            if ( StringUtils.isBlank( installation.getName() ) )
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_INSTALLATION_NAME, "" );
+            }
+            else
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_INSTALLATION_NAME, installation.getName() );
+            }
+
+            if ( StringUtils.isBlank( installation.getType() ) )
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_INSTALLATION_TYPE, "" );
+            }
+            else
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_INSTALLATION_TYPE, installation.getType() );
+            }
+
+            if ( StringUtils.isBlank( installation.getVarName() ) )
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_INSTALLATION_VAR_NAME, "" );
+            }
+            else
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_INSTALLATION_VAR_VALUE, installation.getVarValue() );
+            }
+
+            if ( StringUtils.isBlank( installation.getVarValue() ) )
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_INSTALLATION_VAR_VALUE, "" );
+            }
+            else
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_INSTALLATION_VAR_VALUE, installation.getVarValue() );
+            }
+
+            installationsList.add( map );
+        }
+
+        return installationsList;
     }
 
     public Map getBuildResult( int projectId )
