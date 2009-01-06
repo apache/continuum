@@ -32,7 +32,7 @@
   
   <bean id="buildAgentConfiguration" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfiguration"
      init-method="initialize">
-    <property name="configurationFile" value="file:${appserver.base}/conf/continuum-buildagent.xml" />
+    <property name="configurationFile" value="file:${SLAVE_HOME}/conf/continuum-buildagent.xml" />
   </bean>
 
 </beans>

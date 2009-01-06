@@ -89,7 +89,7 @@
           </connectors>
           <systemProperties>
             <systemProperty>
-              <name>appserver.base</name>
+              <name>SLAVE_HOME</name>
               <value>${project.build.directory}/appserver-base</value>
             </systemProperty>
           </systemProperties>
