@@ -675,8 +675,6 @@ public class DefaultContinuum
             BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( projectId );
             context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
             
-            // TODO: deng parallel builds 
-            // - add default build definition of project (schedule is attached to the build def) to context!
             executeAction( "add-project-to-checkout-queue", context );
         }
         catch ( ContinuumStoreException e )
