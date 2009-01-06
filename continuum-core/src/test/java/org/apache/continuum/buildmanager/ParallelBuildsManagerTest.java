@@ -21,19 +21,23 @@ package org.apache.continuum.buildmanager;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
+import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
-import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
+import org.codehaus.plexus.taskqueue.TaskQueue;
+import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
@@ -50,6 +54,18 @@ public class ParallelBuildsManagerTest
     Mockery context;
 
     private BuildDefinitionDao buildDefinitionDao;
+    
+    private TaskQueue prepareBuildQueue;
+    
+    private ConfigurationService configurationService;
+    
+    private BuildQueueService buildQueueService;
+    
+    private OverallBuildQueue overallBuildQueue;
+    
+    private TaskQueue buildQueue;
+    
+    private TaskQueue checkoutQueue;
 
     public void setUp()
         throws Exception
@@ -63,6 +79,22 @@ public class ParallelBuildsManagerTest
         buildDefinitionDao = context.mock( BuildDefinitionDao.class );
 
         buildsManager.setBuildDefinitionDao( buildDefinitionDao );
+        
+        prepareBuildQueue = context.mock( TaskQueue.class, "prepare-build-queue" );
+        
+        buildsManager.setPrepareBuildQueue( prepareBuildQueue );
+        
+        configurationService = context.mock( ConfigurationService.class );
+        
+        buildsManager.setConfigurationService( configurationService );
+        
+        buildQueueService = context.mock( BuildQueueService.class );
+        
+        buildsManager.setBuildQueueService( buildQueueService );        
+
+        buildQueue = context.mock( TaskQueue.class, "build-queue" );
+        
+        checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
     }
 
     public void tearDown()
@@ -107,7 +139,7 @@ public class ParallelBuildsManagerTest
         return schedule;
     }
 
-    private void setupOverallBuildQueues()
+    /*private void setupOverallBuildQueues()
         throws Exception
     {   
         for ( int i = 2; i <= 5; i++ )
@@ -120,568 +152,305 @@ public class ParallelBuildsManagerTest
         }
 
         assertEquals( 5, buildsManager.getOverallBuildQueues().size() );
+    }*/
+    
+    public void setupMockOverallBuildQueues()
+        throws Exception
+    {   
+        Map<Integer, OverallBuildQueue> overallBuildQueues =
+            Collections.synchronizedMap( new HashMap<Integer, OverallBuildQueue>() );
+        overallBuildQueue = context.mock( OverallBuildQueue.class );        
+        for ( int i = 1; i <=5; i++ )
+        {   
+            overallBuildQueues.put( new Integer( i ), overallBuildQueue );
+        }
+        
+        buildsManager.setOverallBuildQueues( overallBuildQueues );
+    }
+    
+    private void recordStartOfProcess( )
+        throws TaskQueueException
+    {
+        context.checking( new Expectations()
+        {
+            {
+                exactly(5).of( overallBuildQueue ).isInBuildQueue( with( any(int.class) ) );
+                will( returnValue( false ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( configurationService ).getNumberOfBuildsInParallel();
+                will( returnValue( 2 ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(2).of( overallBuildQueue ).getBuildQueue();
+                will( returnValue( buildQueue ) );
+            }
+        } );
+    }
+    
+    private void recordBuildProjectBuildQueuesAreEmpty()
+        throws TaskQueueException
+    {
+        // shouldn't only the build queues attached to the schedule be checked?
+        recordStartOfProcess();
+        
+        final List<Task> tasks = new ArrayList<Task>();        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(3).of( buildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue).getName();
+                will( returnValue( "BUILD_QUEUE_2" ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue).addToBuildQueue( with( any( Task.class ) ) );
+            }
+        } );
     }
 
+    // start of tests...
+    
     public void testContainer()
         throws Exception
     {
         buildsManager.setContainer( getContainer() );
-
+    
         buildsManager.isProjectInAnyCurrentBuild( 1 );
-
+    
         assertTrue( true );
     }
-
-    // start of tests...
-
+    
     public void testBuildProjectNoProjectQueuedInAnyOverallBuildQueues()
         throws Exception
     {
-        setupOverallBuildQueues();
+        setupMockOverallBuildQueues();
 
         BuildDefinition buildDef = new BuildDefinition();
         buildDef.setId( 1 );
         buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
 
+        recordBuildProjectBuildQueuesAreEmpty();
+        
         buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-        OverallBuildQueue whereBuildIsQueued = overallBuildQueues.get( 1 );
-
-        assertNotNull( whereBuildIsQueued );
-        assertEquals( 1, whereBuildIsQueued.getId() );
-        assertEquals( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME, whereBuildIsQueued.getName() );
-
-        // verify that other build queues are not used
-        assertFalse( overallBuildQueues.get( 2 ).isInBuildQueue( 1 ) );
-        assertFalse( overallBuildQueues.get( 3 ).isInBuildQueue( 1 ) );
-        assertFalse( overallBuildQueues.get( 4 ).isInBuildQueue( 1 ) );
-        assertFalse( overallBuildQueues.get( 5 ).isInBuildQueue( 1 ) );
+        
+        context.assertIsSatisfied();
     }
-
+    
     public void testBuildProjectProjectsAreAlreadyQueuedInOverallBuildQueues()
         throws Exception
     {
-        setupOverallBuildQueues();
+        setupMockOverallBuildQueues();
 
         BuildDefinition buildDef = new BuildDefinition();
         buildDef.setId( 1 );
         buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
 
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
-        buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1 );
-        buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1 );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-
-        assertNotNull( overallBuildQueues.get( 1 ) );
-        assertNotNull( overallBuildQueues.get( 2 ) );
+        recordBuildProjectBuildQueuesAreEmpty();
         
-        /*assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 1, buildDef.getId() ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 3, buildDef.getId() ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 2, buildDef.getId() ) );*/
-    }
-
-    public void testBuildProjects()
-        throws Exception
-    {
-        setupOverallBuildQueues();
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
-
-        List<Project> projects = new ArrayList<Project>();
-        Project project = new Project();
-        project.setId( 4 );
-        project.setGroupId( "org.apache.continuum" );
-        project.setArtifactId( "continuum-test-1" );
-        project.addBuildDefinition( buildDef );
-        projects.add( project );
-
-        project = new Project();
-        project.setId( 5 );
-        project.setGroupId( "org.apache.continuum" );
-        project.setArtifactId( "continuum-test-2" );
-        project.addBuildDefinition( buildDef );
-        projects.add( project );
-
-        project = new Project();
-        project.setId( 6 );
-        project.setGroupId( "org.apache.continuum" );
-        project.setArtifactId( "continuum-test-3" );
-        project.addBuildDefinition( buildDef );
-        projects.add( project );
-
-        Map<Integer, BuildDefinition> projectsBuildDefinitionsMap = new HashMap<Integer, BuildDefinition>();
-        projectsBuildDefinitionsMap.put( 4, buildDef );
-        projectsBuildDefinitionsMap.put( 5, buildDef );
-        projectsBuildDefinitionsMap.put( 6, buildDef );
-
-        // populate build queue
         buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
+        context.assertIsSatisfied();
+        
+        //queue second project - 1st queue is not empty, 2nd queue is empty 
+        recordStartOfProcess();
+        
+        // the first build queue already has a task queued
+        final List<Task> tasksOfFirstBuildQueue = new ArrayList<Task>();
+        tasksOfFirstBuildQueue.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", buildDef.getDescription() ) );        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(2).of( buildQueue ).getQueueSnapshot();
+                will( returnValue( tasksOfFirstBuildQueue ) );
+            }
+        } );
+        
+        final List<Task> tasks = new ArrayList<Task>();
+        
+        // the second build queue has no tasks queued, so it should return 0
+        context.checking( new Expectations()
+        {
+            {
+                exactly(2).of(buildQueue).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue).getName();
+                will( returnValue( "BUILD_QUEUE_3" ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue).addToBuildQueue( with( any( Task.class ) ) );
+            }
+        } );
+        
         buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1 );
+        context.assertIsSatisfied();
+        
+        // queue third project - both queues have 1 task queued each
+        recordStartOfProcess();
+        
+        // both queues have 1 task each        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(3).of( buildQueue ).getQueueSnapshot();
+                will( returnValue( tasksOfFirstBuildQueue ) );
+            }
+        } );
+                
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue).getName();
+                will( returnValue( "BUILD_QUEUE_2" ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue).addToBuildQueue( with( any( Task.class ) ) );
+            }
+        } );
+        
         buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1 );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-
-        /*assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 1, buildDef.getId() ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 3, buildDef.getId() ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 2, buildDef.getId() ) );*/
-
-        // build a set of projects
-        buildsManager.buildProjects( projects, projectsBuildDefinitionsMap, 1 );
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-
-        assertFalse( overallBuildQueues.get( 1 ).isInBuildQueue( 4 ) );
-        assertFalse( overallBuildQueues.get( 1 ).isInBuildQueue( 5 ) );
-        assertFalse( overallBuildQueues.get( 1 ).isInBuildQueue( 6 ) );
-
-        /*assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 4 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 5 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 6 ) );*/
+        context.assertIsSatisfied();
     }
-
+    
     public void testRemoveProjectFromBuildQueue()
         throws Exception
     {
-        // - if project is built from a group, should the whole group be cancelled?
-        setupOverallBuildQueues();
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
-
-        // populate build queue
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
-        buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1 );
-        buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1 );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-
-        /*assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 1, buildDef.getId() ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 3, buildDef.getId() ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 2, buildDef.getId() ) );*/
-
-        // remove project 1
+        setupMockOverallBuildQueues();
+        
+        context.checking( new Expectations()
+        {
+            {
+                one(overallBuildQueue).isInBuildQueue( 1 );
+                will( returnValue( true ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one(overallBuildQueue).removeProjectFromBuildQueue( 1 );
+            }
+        } );
+        
         buildsManager.removeProjectFromBuildQueue( 1 );
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertFalse( overallBuildQueues.get( 1 ).isInBuildQueue( 1, buildDef.getId() ) );
-
-        // remove project 2
-        buildsManager.removeProjectFromBuildQueue( 2 );
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertFalse( overallBuildQueues.get( 2 ).isInBuildQueue( 2, buildDef.getId() ) );
-
-        // remove project 3
-        buildsManager.removeProjectFromBuildQueue( 3 );
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertFalse( overallBuildQueues.get( 1 ).isInBuildQueue( 3, buildDef.getId() ) );
+        context.assertIsSatisfied();
     }
-
+    
     public void testRemoveProjectsFromBuildQueue()
         throws Exception
     {
-        setupOverallBuildQueues();
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
-
+        setupMockOverallBuildQueues();
         int[] projectIds = new int[] { 1, 2, 3 };
-
-        // populate build queue
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
-        buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1 );
-        buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1 );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-
-       /* assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 1, buildDef.getId() ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 3, buildDef.getId() ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 2, buildDef.getId() ) );*/
-
-        // remove all projects
+    
+        context.checking( new Expectations()
+        {
+            {
+                exactly(3).of(overallBuildQueue).isInBuildQueue( with( any( int.class ) ) );
+                will( returnValue( true ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(3).of(overallBuildQueue).removeProjectFromBuildQueue( with( any( int.class ) ) );
+            }
+        } );
+        
         buildsManager.removeProjectsFromBuildQueue( projectIds );
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertFalse( overallBuildQueues.get( 1 ).isInBuildQueue( 1, buildDef.getId() ) );
-        assertFalse( overallBuildQueues.get( 2 ).isInBuildQueue( 2, buildDef.getId() ) );
-        assertFalse( overallBuildQueues.get( 1 ).isInBuildQueue( 3, buildDef.getId() ) );
+        context.assertIsSatisfied();
     }
-
+    
     public void testCheckoutProjectSingle()
         throws Exception
     {
-        setupOverallBuildQueues();
-
+        setupMockOverallBuildQueues();
+    
         BuildDefinition buildDef = new BuildDefinition();
         buildDef.setId( 1 );
         buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
-
-        buildsManager.checkoutProject( 1, "continuum-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-        //assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 1 ) );
-
-        // verify that other build queues are not used
-        assertFalse( overallBuildQueues.get( 2 ).isInCheckoutQueue( 1 ) );
-        assertFalse( overallBuildQueues.get( 3 ).isInCheckoutQueue( 1 ) );
-        assertFalse( overallBuildQueues.get( 4 ).isInCheckoutQueue( 1 ) );
-        assertFalse( overallBuildQueues.get( 5 ).isInCheckoutQueue( 1 ) );
-    }
-
-    public void testCheckoutProjectMultiple()
-        throws Exception
-    {
-        setupOverallBuildQueues();
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
-
-        buildsManager.checkoutProject( 1, "continuum-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 2, "continuum-test-2", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 3, "continuum-test-3", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 4, "continuum-test-4", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 5, "continuum-test-5", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-
-        /*assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 1 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInCheckoutQueue( 2 ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 3 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInCheckoutQueue( 4 ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 5 ) );*/
-    }
-
-    public void testRemoveProjectFromCheckoutQueue()
-        throws Exception
-    {
-        setupOverallBuildQueues();
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
-
-        buildsManager.checkoutProject( 1, "continuum-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 2, "continuum-test-2", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 3, "continuum-test-3", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-        /*assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 1 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInCheckoutQueue( 2 ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 3 ) );*/
-
-        buildsManager.removeProjectFromCheckoutQueue( 1 );
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertFalse( overallBuildQueues.get( 1 ).isInCheckoutQueue( 1 ) );
-
-        buildsManager.removeProjectFromCheckoutQueue( 2 );
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertFalse( overallBuildQueues.get( 2 ).isInCheckoutQueue( 2 ) );
-
-        buildsManager.removeProjectFromCheckoutQueue( 3 );
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertFalse( overallBuildQueues.get( 1 ).isInCheckoutQueue( 3 ) );
-    }
-
-    public void testRemoveProjectsFromCheckoutQueue()
-        throws Exception
-    {
-        setupOverallBuildQueues();
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
-
-        buildsManager.checkoutProject( 1, "continuum-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 2, "continuum-test-2", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 3, "continuum-test-3", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-        /*assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 1 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInCheckoutQueue( 2 ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 3 ) );*/
-
-        int[] projectIds = new int[] { 1, 2, 3 };
-        buildsManager.removeProjectsFromCheckoutQueue( projectIds );
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertFalse( overallBuildQueues.get( 1 ).isInCheckoutQueue( 1 ) );
-        assertFalse( overallBuildQueues.get( 2 ).isInCheckoutQueue( 2 ) );
-        assertFalse( overallBuildQueues.get( 1 ).isInCheckoutQueue( 3 ) );
-    }
-
-    /*public void testRemoveProjectFromPrepareBuildQueue()
-        throws Exception
-    {
-
-    }*/
-
-    public void testRemoveDefaultOverallBuildQueue()
-        throws Exception
-    {
-        try
-        {
-            buildsManager.removeOverallBuildQueue( 1 );
-            fail( "An exception should have been thrown." );
-        }
-        catch ( BuildManagerException e )
-        {
-            assertEquals( "Cannot remove default build queue.", e.getMessage() );
-        }
-    }
-
-    /*public void testRemoveOverallBuildQueue()
-        throws Exception
-    {
-        // queued tasks (both checkout & build tasks) must be transferred to the other queues!
-        setupOverallBuildQueues();
-        assertEquals( 5, buildsManager.getOverallBuildQueues().size() );
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 1, 3 ) );
-
-        // populate build queue
-        buildsManager.buildProject( 1, buildDef, "continuum-build-test-1", 1 );
-        buildsManager.buildProject( 2, buildDef, "continuum-build-test-2", 1 );
-        buildsManager.buildProject( 3, buildDef, "continuum-build-test-3", 1 );
-        buildsManager.buildProject( 4, buildDef, "continuum-build-test-4", 1 );
-        buildsManager.buildProject( 5, buildDef, "continuum-build-test-5", 1 );
-
-        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 1 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 2 ) );
-        assertTrue( overallBuildQueues.get( 3 ).isInBuildQueue( 3 ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 4 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInBuildQueue( 5 ) );
-
-        // populate checkout queue
-        buildsManager.checkoutProject( 6, "continuum-checkout-test-6", new File( getBasedir(),
-                                                                                 "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 7, "continuum-checkout-test-7", new File( getBasedir(),
-                                                                                 "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 8, "continuum-checkout-test-8", new File( getBasedir(),
-                                                                                 "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 9, "continuum-checkout-test-9", new File( getBasedir(),
-                                                                                 "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 10, "continuum-checkout-test-10", new File( getBasedir(),
-                                                                                   "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-
-        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 6 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInCheckoutQueue( 7 ) );
-        assertTrue( overallBuildQueues.get( 3 ).isInCheckoutQueue( 8 ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 9 ) );
-        assertTrue( overallBuildQueues.get( 2 ).isInCheckoutQueue( 10 ) );
-
-        final BuildDefinition buildDefinition = new BuildDefinition();
-        buildDefinition.setId( 1 );
-        buildDefinition.setSchedule( getSchedule( 1, 2, 3 ) );
-
-        // set expectations
+    
         context.checking( new Expectations()
         {
             {
-                exactly( 2 ).of( buildDefinitionDao ).getBuildDefinition( 1 );
-                will( returnValue( buildDefinition ) );
+                exactly(5).of(overallBuildQueue).isInCheckoutQueue( 1 );
+                will( returnValue( false ) );
             }
         } );
-
+        
         context.checking( new Expectations()
         {
             {
-                one( buildDefinitionDao ).getDefaultBuildDefinition( 7 );
-                will( returnValue( buildDefinition ) );
-
-                one( buildDefinitionDao ).getDefaultBuildDefinition( 10 );
-                will( returnValue( buildDefinition ) );
+                one( configurationService ).getNumberOfBuildsInParallel();
+                will( returnValue( 2 ) );
             }
         } );
-
-        buildsManager.removeOverallBuildQueue( 2 );
-
-        // verify
+        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(2).of( overallBuildQueue ).getCheckoutQueue();
+                will( returnValue( checkoutQueue ) );
+            }
+        } );
+        
+        final List<Task> tasks = new ArrayList<Task>();        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(3).of( checkoutQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue).getName();
+                will( returnValue( "BUILD_QUEUE_2" ) );
+            }
+        } );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue).addToCheckoutQueue( with( any( Task.class ) ) );
+            }
+        } );
+        
+        buildsManager.checkoutProject( 1, "continuum-project-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
+                                       "dummy", "dummypass", buildDef );
         context.assertIsSatisfied();
-
-        overallBuildQueues = buildsManager.getOverallBuildQueues();
-        assertEquals( 4, overallBuildQueues.size() );
-
-        // checkout queues
-        assertNull( overallBuildQueues.get( 2 ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 6 ) );
-        assertTrue( overallBuildQueues.get( 3 ).isInCheckoutQueue( 7 ) );
-        assertTrue( overallBuildQueues.get( 3 ).isInCheckoutQueue( 8 ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInCheckoutQueue( 9 ) );
-        // shouldn't this be queued in build queue #1?
-        assertTrue( overallBuildQueues.get( 3 ).isInCheckoutQueue( 10 ) );
-
-        // build queues                   
-        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 1 ) );
-        assertTrue( overallBuildQueues.get( 3 ).isInBuildQueue( 2 ) );
-        assertTrue( overallBuildQueues.get( 3 ).isInBuildQueue( 3 ) );
-        assertTrue( overallBuildQueues.get( 1 ).isInBuildQueue( 4 ) );
-        // shouldn't this be queued in build queue #1?
-        assertTrue( overallBuildQueues.get( 3 ).isInBuildQueue( 5 ) );
-    }*/
-
-    // TODO use the default build queue instead!
-    public void testNoBuildQueuesConfigured()
-        throws Exception
-    {
-        BuildQueue buildQueue = new BuildQueue();
-        buildQueue.setId( 1 );
-        buildQueue.setName( "BUILD_QUEUE_1" );
-
-        buildsManager.addOverallBuildQueue( buildQueue );
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 2, 3 ) );
-
-        // test if buildProject(...) is invoked
-        try
-        {
-            buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
-            fail( "An exception should have been thrown." );
-        }
-        catch ( BuildManagerException e )
-        {
-            assertEquals( "No build queue found.", e.getMessage() );
-        }
-
-        // test if buildProjects(...) is invoked
-        List<Project> projects = new ArrayList<Project>();
-        Project project = new Project();
-        project.setId( 4 );
-        project.setGroupId( "org.apache.continuum" );
-        project.setArtifactId( "continuum-test-4" );
-        project.addBuildDefinition( buildDef );
-        projects.add( project );
-
-        project = new Project();
-        project.setId( 5 );
-        project.setGroupId( "org.apache.continuum" );
-        project.setArtifactId( "continuum-test-5" );
-        project.addBuildDefinition( buildDef );
-        projects.add( project );
-
-        Map<Integer, BuildDefinition> projectsBuildDefinitionsMap = new HashMap<Integer, BuildDefinition>();
-        projectsBuildDefinitionsMap.put( 4, buildDef );
-        projectsBuildDefinitionsMap.put( 5, buildDef );
-
-        try
-        {
-            buildsManager.buildProjects( projects, projectsBuildDefinitionsMap, 1 );
-            fail( "An exception should have been thrown." );
-        }
-        catch ( BuildManagerException e )
-        {
-            assertEquals( "No build queue found.", e.getMessage() );
-        }
-
-        // test if checkoutProject(..) is invoked        
-        try
-        {
-            buildsManager.checkoutProject( 6, "continuum-checkout-test-1", new File( getBasedir(),
-                                                                                     "/target/test-working-dir/1" ),
-                                           "dummy", "dummypass", buildDef );
-            fail( "An exception should have been thrown." );
-        }
-        catch ( BuildManagerException e )
-        {
-            assertEquals( "No build queue found.", e.getMessage() );
-        }
     }
-
-    public void testGetProjectsInBuildQueue()
-        throws Exception
-    {
-        setupOverallBuildQueues();
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
-
-        // populate build queue
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
-        buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1 );
-        buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1 );
-
-        Map<String, List<Task>> buildsInQueue = buildsManager.getProjectsInBuildQueues();
-
-        assertEquals( 5, buildsInQueue.size() );
-        assertTrue( buildsInQueue.containsKey( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) );
-        assertTrue( buildsInQueue.containsKey( "BUILD_QUEUE_2" ) );
-
-        /*assertEquals( 2, buildsInQueue.get( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ).size() );
-        assertEquals( 1, buildsInQueue.get( "BUILD_QUEUE_2" ).size() );*/
-    }
-
-    public void testGetProjectsInCheckoutQueue()
-        throws Exception
-    {
-        setupOverallBuildQueues();
-
-        BuildDefinition buildDef = new BuildDefinition();
-        buildDef.setId( 1 );
-        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
-
-        buildsManager.checkoutProject( 1, "continuum-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 2, "continuum-test-2", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 3, "continuum-test-3", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 4, "continuum-test-4", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-        buildsManager.checkoutProject( 5, "continuum-test-5", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
-
-        Map<String, List<Task>> checkoutsInQueue = buildsManager.getProjectsInCheckoutQueues();
-
-        assertEquals( 5, checkoutsInQueue.size() );
-        assertTrue( checkoutsInQueue.containsKey( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) );
-        assertTrue( checkoutsInQueue.containsKey( "BUILD_QUEUE_2" ) );
-
-        /*assertEquals( 3, checkoutsInQueue.get( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ).size() );
-        assertEquals( 2, checkoutsInQueue.get( "BUILD_QUEUE_2" ).size() );*/
-    }
-
-    /*public void testRemoveProjectsFromCheckoutQueueWithHashcodes() 
-        throws Exception
-    {
-    
-    }
-    
-    public void testRemoveProjectsFromBuildQueueWithHashcodes() 
-        throws Exception
-    {
-    
-    }*/
 }

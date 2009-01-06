@@ -1166,4 +1166,26 @@ public class ParallelBuildsManager
         
         return overallBuildQueue;
     }
+    
+    // for unit tests..
+    
+    public void setOverallBuildQueues( Map<Integer, OverallBuildQueue> overallBuildQueues )
+    {
+        this.overallBuildQueues = overallBuildQueues;
+    }
+
+    public void setPrepareBuildQueue( TaskQueue prepareBuildQueue )
+    {
+        this.prepareBuildQueue = prepareBuildQueue;
+    }
+
+    public void setConfigurationService( ConfigurationService configurationService )
+    {
+        this.configurationService = configurationService;
+    }
+
+    public void setBuildQueueService( BuildQueueService buildQueueService )
+    {
+        this.buildQueueService = buildQueueService;
+    }
 }
