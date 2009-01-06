@@ -189,6 +189,11 @@ public class DefaultDistributedBuildManager
         log.info( "remove TaskQueueExecutor for build agent '" + buildAgentUrl + "'" );
         ThreadedDistributedBuildTaskQueueExecutor executor = taskQueueExecutors.get( buildAgentUrl );
 
+        if ( executor == null )
+        {
+            return;
+        }
+
         try
         {
             executor.stop();

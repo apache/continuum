@@ -41,7 +41,14 @@
             </c:if>
             
             <table>
-              <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" required="true"/>
+              <c:choose>
+                <c:when test="${empty buildAgent.url}">
+                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" required="true"/>
+                </c:when>
+                <c:otherwise>
+                  <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" required="true" disabled="true"/>
+                </c:otherwise>
+              </c:choose>
               <s:textfield label="%{getText('buildAgent.description.label')}" name="buildAgent.description"/>
               <s:checkbox label="%{getText('buildAgent.enabled.label')}" name="buildAgent.enabled" value="buildAgent.enabled" fieldValue="true"/>
             </table>
