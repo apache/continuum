@@ -109,9 +109,9 @@ public class DefaultOverallBuildQueue
     }
 
     /**
-     * @see OverallBuildQueue#getCheckOutTasksInQueue()
+     * @see OverallBuildQueue#getProjectsInCheckoutQueue()
      */
-    public List<CheckOutTask> getCheckOutTasksInQueue()
+    public List<CheckOutTask> getProjectsInCheckoutQueue()
         throws TaskQueueException
     {
         return getCheckoutQueue().getQueueSnapshot();
@@ -123,7 +123,7 @@ public class DefaultOverallBuildQueue
     public boolean isInCheckoutQueue( int projectId )
         throws TaskQueueException
     {
-        List<CheckOutTask> queue = getCheckOutTasksInQueue();
+        List<CheckOutTask> queue = getProjectsInCheckoutQueue();
 
         for ( CheckOutTask task : queue )
         {
@@ -141,7 +141,7 @@ public class DefaultOverallBuildQueue
     public boolean removeProjectFromCheckoutQueue( int projectId )
         throws TaskQueueException
     {
-        List<CheckOutTask> queue = getCheckOutTasksInQueue();
+        List<CheckOutTask> queue = getProjectsInCheckoutQueue();
 
         for ( CheckOutTask task : queue )
         {
@@ -167,7 +167,7 @@ public class DefaultOverallBuildQueue
         {
             return false;
         }
-        List<CheckOutTask> queue = getCheckOutTasksInQueue();
+        List<CheckOutTask> queue = getProjectsInCheckoutQueue();
 
         List<CheckOutTask> tasks = new ArrayList<CheckOutTask>();
 
@@ -194,7 +194,7 @@ public class DefaultOverallBuildQueue
     public void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueException
     {
-        List<CheckOutTask> queue = getCheckOutTasksInQueue();
+        List<CheckOutTask> queue = getProjectsInCheckoutQueue();
 
         for ( CheckOutTask task : queue )
         {
@@ -441,5 +441,20 @@ public class DefaultOverallBuildQueue
     public TaskQueueExecutor getCheckoutTaskQueueExecutor()
     {
         return checkoutTaskQueueExecutor;
+    }
+
+    public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
+    {
+        this.buildDefinitionDao = buildDefinitionDao;
+    }
+
+    public void setBuildTaskQueueExecutor( TaskQueueExecutor buildTaskQueueExecutor )
+    {
+        this.buildTaskQueueExecutor = buildTaskQueueExecutor;
+    }
+
+    public void setCheckoutTaskQueueExecutor( TaskQueueExecutor checkoutTaskQueueExecutor )
+    {
+        this.checkoutTaskQueueExecutor = checkoutTaskQueueExecutor;
     }
 }

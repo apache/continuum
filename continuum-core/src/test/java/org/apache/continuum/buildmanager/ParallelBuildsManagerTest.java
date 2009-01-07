@@ -56,7 +56,7 @@ public class ParallelBuildsManagerTest
 {
     private ParallelBuildsManager buildsManager;
 
-    Mockery context;
+    private Mockery context;
 
     private BuildDefinitionDao buildDefinitionDao;
     
@@ -609,7 +609,7 @@ public class ParallelBuildsManagerTest
                 one(buildQueue).removeAll( buildTasks );
                 
              // get all queued checkout tasks & remove them
-                one(overallBuildQueue).getCheckOutTasksInQueue();
+                one(overallBuildQueue).getProjectsInCheckoutQueue();
                 will( returnValue( checkoutTasks ) );                
                 one(overallBuildQueue).getCheckoutQueue();
                 will( returnValue( checkoutQueue ) );
@@ -805,7 +805,7 @@ public class ParallelBuildsManagerTest
                 exactly(5).of( overallBuildQueue ).getName();
                 will( returnValue( "BUILD_QUEUE" ) );
                 
-                exactly(5).of( overallBuildQueue).getCheckOutTasksInQueue();
+                exactly(5).of( overallBuildQueue).getProjectsInCheckoutQueue();
                 will( returnValue( tasks ) );
             }
         });

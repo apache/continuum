@@ -82,7 +82,7 @@ public interface OverallBuildQueue
      * @return
      * @throws TaskQueueException TODO
      */
-    List /* CheckOutTask */getCheckOutTasksInQueue()
+    List /* CheckOutTask */getProjectsInCheckoutQueue()
         throws TaskQueueException;
 
     /**

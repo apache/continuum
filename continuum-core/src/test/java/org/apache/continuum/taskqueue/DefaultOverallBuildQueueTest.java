@@ -20,65 +20,328 @@ package org.apache.continuum.taskqueue;
  */
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
-import org.apache.maven.continuum.scm.queue.PrepareBuildProjectsTask;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
+import org.codehaus.plexus.taskqueue.Task;
+import org.codehaus.plexus.taskqueue.TaskQueue;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit3.JUnit3Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
 
+/**
+ * DefaultOverallBuildQueueTest
+ * 
+ * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
+ *
+ */
 public class DefaultOverallBuildQueueTest
-    extends AbstractContinuumTest
-{    
-    private OverallBuildQueue overallQueue;
-    
+    extends PlexusInSpringTestCase
+{
+    private DefaultOverallBuildQueue overallQueue;
+
+    private Mockery context;
+
+    private BuildDefinitionDao buildDefinitionDao;
+
+    private ParallelBuildsThreadedTaskQueueExecutor buildTaskQueueExecutor;
+
+    private ParallelBuildsThreadedTaskQueueExecutor checkoutTaskQueueExecutor;
+
     @Override
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        
-        overallQueue = ( OverallBuildQueue ) lookup( OverallBuildQueue.class );
+
+        overallQueue = new DefaultOverallBuildQueue();
+
+        context = new JUnit3Mockery();
+
+        buildDefinitionDao = context.mock( BuildDefinitionDao.class );
+        context.setImposteriser( ClassImposteriser.INSTANCE );
+
+        buildTaskQueueExecutor = context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "build-queue-executor" );
+
+        checkoutTaskQueueExecutor =
+            context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "checkout-queue-executor" );
+
+        overallQueue.setBuildDefinitionDao( buildDefinitionDao );
+
+        overallQueue.setBuildTaskQueueExecutor( buildTaskQueueExecutor );
+
+        overallQueue.setCheckoutTaskQueueExecutor( checkoutTaskQueueExecutor );
     }
-    
+
+    // checkout queue
+
     public void testAddToCheckoutQueue()
         throws Exception
     {
-        File workingDir = new File( getBasedir(), "target/working-dir" );
-        
-        CheckOutTask task = new CheckOutTask( 1, workingDir, "continuum-test-project", "username", "password" );
-        overallQueue.addToCheckoutQueue( task );
-        
-        CheckOutTask queuedTask = ( CheckOutTask ) overallQueue.getCheckoutQueue().take();
-        assertNotNull( queuedTask );
-        assertEquals( 1, queuedTask.getProjectId() );
-        assertEquals( "continuum-test-project", queuedTask.getProjectName() );
+        final Task checkoutTask =
+            new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
+                              "dummy", "dummypass" );
+        final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( checkoutTaskQueueExecutor ).getQueue();
+                will( returnValue( checkoutQueue ) );
+
+                one( checkoutQueue ).put( checkoutTask );
+            }
+        } );
+
+        overallQueue.addToCheckoutQueue( checkoutTask );
+        context.assertIsSatisfied();
     }
-    
-    public void testAddToBuildQueue()
-        throws Exception
-    {   
-        BuildProjectTask buildTask = new BuildProjectTask( 1, 1, 1, "continuum-test-project", "build-def-label" );
-        overallQueue.addToBuildQueue( buildTask );
-        
-        BuildProjectTask queuedTask = ( BuildProjectTask ) overallQueue.getBuildQueue().take();
-        assertNotNull( queuedTask );
-        assertEquals( 1, queuedTask.getProjectId() );
-        assertEquals( "continuum-test-project", queuedTask.getProjectName() );
-    }
-    
-    /*public void testAddToPrepareBuildQueue()
+
+    public void testGetProjectsInCheckoutQueue()
         throws Exception
     {
-        Map<Integer, Integer> projectsBuildDefMap = new HashMap<Integer, Integer>();
-        projectsBuildDefMap.put( new Integer( 1 ), new Integer( 1 ) ); 
-        
-        PrepareBuildProjectsTask prepareBuildTask = new PrepareBuildProjectsTask( projectsBuildDefMap, 1 );
-        overallQueue.addToPrepareBuildQueue( prepareBuildTask );
-        
-        PrepareBuildProjectsTask queuedTask = ( PrepareBuildProjectsTask ) overallQueue.getPrepareBuildQueue().take();
-        assertNotNull( queuedTask );
-        assertEquals( 1, ( ( Integer )queuedTask.getProjectsBuildDefinitionsMap().get( new Integer( 1 ) ) ).intValue() );        
-    }*/
+        final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ),
+                                     "continuum-project-test-1", "dummy", "dummypass" ) );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( checkoutTaskQueueExecutor ).getQueue();
+                will( returnValue( checkoutQueue ) );
+
+                one( checkoutQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }
+        } );
+
+        List<CheckOutTask> returnedTasks = overallQueue.getProjectsInCheckoutQueue();
+        context.assertIsSatisfied();
+
+        assertNotNull( returnedTasks );
+        assertEquals( 1, returnedTasks.size() );
+    }
+
+    public void testIsInCheckoutQueue()
+        throws Exception
+    {
+        final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ),
+                                     "continuum-project-test-1", "dummy", "dummypass" ) );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( checkoutTaskQueueExecutor ).getQueue();
+                will( returnValue( checkoutQueue ) );
+
+                one( checkoutQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }
+        } );
+
+        assertTrue( overallQueue.isInCheckoutQueue( 1 ) );
+        context.assertIsSatisfied();
+    }
+
+    public void testRemoveProjectFromCheckoutQueue()
+        throws Exception
+    {
+        final Task checkoutTask =
+            new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
+                              "dummy", "dummypass" );
+        final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( checkoutTask );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( checkoutTaskQueueExecutor ).getQueue();
+                will( returnValue( checkoutQueue ) );
+
+                one( checkoutQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+
+                one( checkoutTaskQueueExecutor ).getQueue();
+                will( returnValue( checkoutQueue ) );
+
+                one( checkoutQueue ).remove( checkoutTask );
+            }
+        } );
+
+        overallQueue.removeProjectFromCheckoutQueue( 1 );
+        context.assertIsSatisfied();
+    }
+
+    // build queue
+
+    public void testAddToBuildQueue()
+        throws Exception
+    {
+        final Task buildTask = new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF" );
+        final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( buildTaskQueueExecutor ).getQueue();
+                will( returnValue( buildQueue ) );
+
+                one( buildQueue ).put( buildTask );
+            }
+        } );
+
+        overallQueue.addToBuildQueue( buildTask );
+        context.assertIsSatisfied();
+    }
+
+    public void testGetProjectsFromBuildQueue()
+        throws Exception
+    {
+        final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF" ) );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( buildTaskQueueExecutor ).getQueue();
+                will( returnValue( buildQueue ) );
+
+                one( buildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }
+        } );
+
+        List<Task> returnedTasks = overallQueue.getProjectsInBuildQueue();
+        context.assertIsSatisfied();
+
+        assertNotNull( returnedTasks );
+        assertEquals( 1, returnedTasks.size() );
+    }
+
+    public void testIsInBuildQueue()
+        throws Exception
+    {
+        final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF" ) );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( buildTaskQueueExecutor ).getQueue();
+                will( returnValue( buildQueue ) );
+
+                one( buildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+            }
+        } );
+
+        assertTrue( overallQueue.isInBuildQueue( 2 ) );
+        context.assertIsSatisfied();
+    }
+
+    public void testCancelBuildTask()
+        throws Exception
+    {
+        final Task buildTask = new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF" );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( buildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( buildTask ) );
+
+                one( buildTaskQueueExecutor ).cancelTask( buildTask );
+            }
+        } );
+
+        overallQueue.cancelBuildTask( 2 );
+        context.assertIsSatisfied();
+    }
+
+    public void testCancelCurrentBuild()
+        throws Exception
+    {
+        final Task buildTask = new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF" );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( buildTaskQueueExecutor ).getCurrentTask();
+                will( returnValue( buildTask ) );
+
+                one( buildTaskQueueExecutor ).cancelTask( buildTask );
+            }
+        } );
+
+        overallQueue.cancelCurrentBuild();
+        context.assertIsSatisfied();
+    }
+
+    public void testRemoveProjectFromBuildQueueWithGivenBuildDefinition()
+        throws Exception
+    {
+        final BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setDescription( "Test build definition" );
+
+        final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( buildDefinitionDao ).getBuildDefinition( 1 );
+                will( returnValue( buildDef ) );
+
+                one( buildTaskQueueExecutor ).getQueue();
+                will( returnValue( buildQueue ) );
+
+                one( buildQueue ).remove( with( any( Task.class ) ) );
+            }
+        } );
+
+        overallQueue.removeProjectFromBuildQueue( 1, 1, 1, "continuum-project-test-1" );
+        context.assertIsSatisfied();
+    }
+
+    public void testRemoveProjectFromBuildQueue()
+        throws Exception
+    {
+        final Task buildTask = new BuildProjectTask( 1, 1, 1, "continuum-project-test-2", "BUILD_DEF" );
+
+        final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( buildTask );
+
+        context.checking( new Expectations()
+        {
+            {
+                one( buildTaskQueueExecutor ).getQueue();
+                will( returnValue( buildQueue ) );
+
+                one( buildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+
+                one( buildTaskQueueExecutor ).getQueue();
+                will( returnValue( buildQueue ) );
+
+                one( buildQueue ).remove( buildTask );
+            }
+        } );
+
+        overallQueue.removeProjectFromBuildQueue( 1 );
+        context.assertIsSatisfied();
+    }
 }

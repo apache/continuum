@@ -737,7 +737,7 @@ public class ParallelBuildsManager
                 }
 
                 tasks = overallBuildQueue.getProjectsInBuildQueue();
-                checkoutTasks = overallBuildQueue.getCheckOutTasksInQueue();
+                checkoutTasks = overallBuildQueue.getProjectsInCheckoutQueue();
 
                 overallBuildQueue.getBuildQueue().removeAll( tasks );
                 overallBuildQueue.getCheckoutQueue().removeAll( checkoutTasks );
@@ -896,7 +896,7 @@ public class ParallelBuildsManager
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
                 try
                 {
-                    queuedCheckouts.put( overallBuildQueue.getName(), overallBuildQueue.getCheckOutTasksInQueue() );
+                    queuedCheckouts.put( overallBuildQueue.getName(), overallBuildQueue.getProjectsInCheckoutQueue() );
                 }
                 catch ( TaskQueueException e )
                 {
