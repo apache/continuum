@@ -1093,15 +1093,13 @@ public class ParallelBuildsManager
 
         // use default overall build queue if none is configured
         if ( whereToBeQueued == null )
-        {     
-            boolean found = false;            
+        {                
             Set<Integer> keySet = overallBuildQueues.keySet();
             for( Integer key : keySet )
             {
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );                
                 if( overallBuildQueue.getName().equals( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) )
                 {
-                    found = true;
                     return overallBuildQueue;
                 }
             }

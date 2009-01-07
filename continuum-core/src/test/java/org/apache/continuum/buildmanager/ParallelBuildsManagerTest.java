@@ -725,11 +725,112 @@ public class ParallelBuildsManagerTest
         }
     }
     
+    public void testNoBuildQueuesConfigured()
+        throws Exception
+    {
+        overallBuildQueue = context.mock( OverallBuildQueue.class ); 
+        
+        Map<Integer, OverallBuildQueue> overallBuildQueues =
+            Collections.synchronizedMap( new HashMap<Integer, OverallBuildQueue>() );
+        overallBuildQueues.put( 1, overallBuildQueue );
+        
+        buildsManager.setOverallBuildQueues( overallBuildQueues );
+        
+        Schedule schedule = new Schedule();
+        schedule.setId( 1 );
+        schedule.setName( "DEFAULT_SCHEDULE" );
+        schedule.setCronExpression( "0 0 * * * ?" );
+        schedule.setDelay( 100 );
+        schedule.setMaxJobExecutionTime( 10000 );
+        
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( schedule );
+        
+        context.checking( new Expectations() 
+        {
+            {
+                one( overallBuildQueue ).isInBuildQueue( with( any(int.class) ) );
+                will( returnValue( false ) );
+                
+                one( configurationService ).getNumberOfBuildsInParallel();
+                will( returnValue( 2 ) );                
+                
+                exactly(2).of( overallBuildQueue ).getName();
+                will( returnValue( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) );
+                
+                one(overallBuildQueue).addToBuildQueue( with( any( Task.class) ) );
+            }            
+        });
+        
+        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
+        context.assertIsSatisfied();
+    }
+    
+    public void testGetProjectsInBuildQueue()
+        throws Exception
+    {
+        setupMockOverallBuildQueues();
+    
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new BuildProjectTask(  2, 1, 1, "continuum-project-test-2", "BUILD_DEF" ) );
+        
+        context.checking( new Expectations()  
+        {
+            {
+                exactly(5).of( overallBuildQueue ).getName();
+                will( returnValue( "BUILD_QUEUE" ) );
+                
+                exactly(5).of( overallBuildQueue).getProjectsInBuildQueue();
+                will( returnValue( tasks ) );
+            }
+        });
+        
+        buildsManager.getProjectsInBuildQueues();
+        context.assertIsSatisfied();
+    }
+
+    public void testGetProjectsInCheckoutQueue()
+        throws Exception
+    {
+        setupMockOverallBuildQueues();
+        
+        final List<Task> tasks = new ArrayList<Task>();
+        tasks.add( new CheckOutTask( 2, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-2",
+                                     "dummy", "dummypass" ) );
+        
+        context.checking( new Expectations()  
+        {
+            {
+                exactly(5).of( overallBuildQueue ).getName();
+                will( returnValue( "BUILD_QUEUE" ) );
+                
+                exactly(5).of( overallBuildQueue).getCheckOutTasksInQueue();
+                will( returnValue( tasks ) );
+            }
+        });
+        
+        buildsManager.getProjectsInCheckoutQueues();
+        context.assertIsSatisfied();
+    }
+    
     /*
     public void testNumOfAllowedParallelBuildsIsLessThanConfiguredBuildQueues()
         throws Exception
     {
     
+    }
+    
+    public void testPrepareBuildProjects()
+        throws Exception
+    {
+    
+    }
+    
+    public void testRemoveProjectFromPrepareBuildQueue()
+        throws Exception
+    {
+
     }
     */
 }
