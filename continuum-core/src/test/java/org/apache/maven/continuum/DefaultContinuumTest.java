@@ -40,8 +40,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.utils.ContinuumUrlValidator;
-import org.codehaus.plexus.taskqueue.TaskQueue;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,19 +57,7 @@ public class DefaultContinuumTest
     {
         lookup( Continuum.ROLE );
     }
-
-    public void testLookups()
-        throws Exception
-    {
-        lookup( TaskQueue.ROLE, "build-project" );
-
-        lookup( TaskQueue.ROLE, "check-out-project" );
-
-        lookup( TaskQueueExecutor.ROLE, "build-project" );
-
-        lookup( TaskQueueExecutor.ROLE, "check-out-project" );
-    }
-
+    
     public void testAddMavenTwoProjectSet()
         throws Exception
     {
@@ -352,10 +338,8 @@ public class DefaultContinuumTest
         throws Exception
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
-
-        TaskQueueManager taskQueueManager = (TaskQueueManager) lookup( TaskQueueManager.ROLE );
         
-        BuildsManager parallelBuildsManager = (BuildsManager) lookup( BuildsManager.class, "parallel" );
+        BuildsManager parallelBuildsManager = continuum.getBuildsManager();
         
         String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
 
@@ -370,14 +354,11 @@ public class DefaultContinuumTest
         assertEquals( Project.class, projects.get( 0 ).getClass() );
 
         Project project = (Project) projects.get( 0 );
-
-        /*assertTrue( "project missing from the checkout queue",
-                    parallelBuildsManager.removeProjectFromCheckoutQueue( project.getId() ) );*/
-        /*assertTrue( "project missing from the checkout queue",
-                    taskQueueManager.removeProjectFromCheckoutQueue( project.getId() ) );
-
+        
+        parallelBuildsManager.removeProjectFromCheckoutQueue( project.getId() );
+        
         assertFalse( "project still exist on the checkout queue",
-                     taskQueueManager.removeProjectFromCheckoutQueue( project.getId() ) );*/
+                     parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) );
     }
 
     public void testAddAntProjectWithdefaultBuildDef()
