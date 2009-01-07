@@ -8,14 +8,6 @@
 
 <p>The Apache Continuum team is pleased to announce Apache Continuum 1.2.3</p>
 
-<p>As the first public release since Continuum 1.2, version 1.2.2 resolves a security issue in which scm passwords were
-  exposed in plain text in the log files.
-	Users who have password protected scm repositories are encouraged to upgrade and take precautions to secure any
-	log files written by Continuum 1.2.</p>
-
-<p>In addition, this release contains many fixes and improvements, including new configuration options and XML-RPC
-	methods.</p>
-
 <h3>Changes in Continuum 1.2.3</h3>
 <h2>        Bug
 </h2>
