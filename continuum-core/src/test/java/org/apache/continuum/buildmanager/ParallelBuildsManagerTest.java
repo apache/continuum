@@ -29,20 +29,25 @@ import java.util.Map;
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
+import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
+import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
+import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
+import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
+ * ParallelBuildsManagerTest
  * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  */
@@ -75,6 +80,7 @@ public class ParallelBuildsManagerTest
         buildsManager = (ParallelBuildsManager) lookup( BuildsManager.class, "parallel" );
 
         context = new JUnit3Mockery();
+        context.setImposteriser( ClassImposteriser.INSTANCE );
 
         buildDefinitionDao = context.mock( BuildDefinitionDao.class );
 
@@ -138,21 +144,6 @@ public class ParallelBuildsManagerTest
 
         return schedule;
     }
-
-    /*private void setupOverallBuildQueues()
-        throws Exception
-    {   
-        for ( int i = 2; i <= 5; i++ )
-        {
-            BuildQueue buildQueue = new BuildQueue();
-            buildQueue.setId( i );
-            buildQueue.setName( "BUILD_QUEUE_" + String.valueOf( i ) );
-                        
-            buildsManager.addOverallBuildQueue( buildQueue );
-        }
-
-        assertEquals( 5, buildsManager.getOverallBuildQueues().size() );
-    }*/
     
     public void setupMockOverallBuildQueues()
         throws Exception
@@ -167,8 +158,9 @@ public class ParallelBuildsManagerTest
         
         buildsManager.setOverallBuildQueues( overallBuildQueues );
     }
-    
-    private void recordStartOfProcess( )
+   
+    // build project recordings
+    private void recordStartOfBuildProjectSequence()
         throws TaskQueueException
     {
         context.checking( new Expectations()
@@ -176,31 +168,21 @@ public class ParallelBuildsManagerTest
             {
                 exactly(5).of( overallBuildQueue ).isInBuildQueue( with( any(int.class) ) );
                 will( returnValue( false ) );
-            }
-        } );
-        
-        context.checking( new Expectations()
-        {
-            {
+                
                 one( configurationService ).getNumberOfBuildsInParallel();
                 will( returnValue( 2 ) );
-            }
-        } );
-        
-        context.checking( new Expectations()
-        {
-            {
+                
                 exactly(2).of( overallBuildQueue ).getBuildQueue();
                 will( returnValue( buildQueue ) );
             }
-        } );
+        } );        
     }
     
     private void recordBuildProjectBuildQueuesAreEmpty()
         throws TaskQueueException
     {
         // shouldn't only the build queues attached to the schedule be checked?
-        recordStartOfProcess();
+        recordStartOfBuildProjectSequence();
         
         final List<Task> tasks = new ArrayList<Task>();        
         context.checking( new Expectations()
@@ -208,17 +190,18 @@ public class ParallelBuildsManagerTest
             {
                 exactly(3).of( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }
-        } );
-        
-        context.checking( new Expectations()
-        {
-            {
+                
                 one( overallBuildQueue).getName();
                 will( returnValue( "BUILD_QUEUE_2" ) );
             }
         } );
-        
+                
+        recordAddToBuildQueue();
+    }
+    
+    private void recordAddToBuildQueue()
+        throws TaskQueueException
+    {
         context.checking( new Expectations()
         {
             {
@@ -226,8 +209,59 @@ public class ParallelBuildsManagerTest
             }
         } );
     }
+    
+    // checkout project recordings
+    private void recordStartOfCheckoutProjectSequence()
+        throws TaskQueueException
+    {
+        context.checking( new Expectations()
+        {
+            {
+                exactly(5).of(overallBuildQueue).isInCheckoutQueue( with( any( int.class ) ) );
+                will( returnValue( false ) ); 
+                
+                one( configurationService ).getNumberOfBuildsInParallel();
+                will( returnValue( 2 ) );
+                
+                exactly(2).of( overallBuildQueue ).getCheckoutQueue();
+                will( returnValue( checkoutQueue ) );
+            }
+        } );
+        
+    }
+    
+    private void recordCheckoutProjectBuildQueuesAreEmpty()
+        throws TaskQueueException
+    {
+        recordStartOfCheckoutProjectSequence();
+        
+        final List<Task> tasks = new ArrayList<Task>();        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(3).of( checkoutQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+                
+                one( overallBuildQueue).getName();
+                will( returnValue( "BUILD_QUEUE_2" ) );
+            }
+        } );
+                
+        recordAddToCheckoutQueue();
+    }
+    
+    private void recordAddToCheckoutQueue()
+        throws TaskQueueException
+    {
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue ).addToCheckoutQueue( with( any( Task.class ) ) );
+            }
+        } );
+    }
 
-    // start of tests...
+    // start of test cases..
     
     public void testContainer()
         throws Exception
@@ -270,9 +304,10 @@ public class ParallelBuildsManagerTest
         context.assertIsSatisfied();
         
         //queue second project - 1st queue is not empty, 2nd queue is empty 
-        recordStartOfProcess();
+        recordStartOfBuildProjectSequence();
         
         // the first build queue already has a task queued
+        final List<Task> tasks = new ArrayList<Task>();
         final List<Task> tasksOfFirstBuildQueue = new ArrayList<Task>();
         tasksOfFirstBuildQueue.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", buildDef.getDescription() ) );        
         context.checking( new Expectations()
@@ -280,40 +315,23 @@ public class ParallelBuildsManagerTest
             {
                 exactly(2).of( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasksOfFirstBuildQueue ) );
-            }
-        } );
-        
-        final List<Task> tasks = new ArrayList<Task>();
-        
-        // the second build queue has no tasks queued, so it should return 0
-        context.checking( new Expectations()
-        {
-            {
+                
+                // the second build queue has no tasks queued, so it should return 0
                 exactly(2).of(buildQueue).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }
-        } );
-        
-        context.checking( new Expectations()
-        {
-            {
+                
                 one( overallBuildQueue).getName();
                 will( returnValue( "BUILD_QUEUE_3" ) );
             }
         } );
         
-        context.checking( new Expectations()
-        {
-            {
-                one( overallBuildQueue).addToBuildQueue( with( any( Task.class ) ) );
-            }
-        } );
+        recordAddToBuildQueue();
         
         buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1 );
         context.assertIsSatisfied();
         
         // queue third project - both queues have 1 task queued each
-        recordStartOfProcess();
+        recordStartOfBuildProjectSequence();
         
         // both queues have 1 task each        
         context.checking( new Expectations()
@@ -321,23 +339,13 @@ public class ParallelBuildsManagerTest
             {
                 exactly(3).of( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasksOfFirstBuildQueue ) );
-            }
-        } );
                 
-        context.checking( new Expectations()
-        {
-            {
                 one( overallBuildQueue).getName();
                 will( returnValue( "BUILD_QUEUE_2" ) );
             }
         } );
-        
-        context.checking( new Expectations()
-        {
-            {
-                one( overallBuildQueue).addToBuildQueue( with( any( Task.class ) ) );
-            }
-        } );
+                        
+        recordAddToBuildQueue();
         
         buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1 );
         context.assertIsSatisfied();
@@ -353,12 +361,7 @@ public class ParallelBuildsManagerTest
             {
                 one(overallBuildQueue).isInBuildQueue( 1 );
                 will( returnValue( true ) );
-            }
-        } );
-        
-        context.checking( new Expectations()
-        {
-            {
+                
                 one(overallBuildQueue).removeProjectFromBuildQueue( 1 );
             }
         } );
@@ -372,22 +375,17 @@ public class ParallelBuildsManagerTest
     {
         setupMockOverallBuildQueues();
         int[] projectIds = new int[] { 1, 2, 3 };
-    
+            
         context.checking( new Expectations()
         {
             {
                 exactly(3).of(overallBuildQueue).isInBuildQueue( with( any( int.class ) ) );
-                will( returnValue( true ) );
-            }
-        } );
-        
-        context.checking( new Expectations()
-        {
-            {
+                will( returnValue( true ) );                
+                
                 exactly(3).of(overallBuildQueue).removeProjectFromBuildQueue( with( any( int.class ) ) );
             }
         } );
-        
+                
         buildsManager.removeProjectsFromBuildQueue( projectIds );
         context.assertIsSatisfied();
     }
@@ -401,6 +399,125 @@ public class ParallelBuildsManagerTest
         buildDef.setId( 1 );
         buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
     
+        recordCheckoutProjectBuildQueuesAreEmpty();
+        
+        buildsManager.checkoutProject( 1, "continuum-project-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
+                                       "dummy", "dummypass", buildDef );
+        context.assertIsSatisfied();
+    }
+
+    public void testCheckoutProjectMultiple()
+        throws Exception
+    {
+        setupMockOverallBuildQueues();
+    
+        BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
+    
+        recordCheckoutProjectBuildQueuesAreEmpty();
+        
+        buildsManager.checkoutProject( 1, "continuum-project-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
+                                       "dummy", "dummypass", buildDef );
+        context.assertIsSatisfied();
+        
+        // queue second project - 1st queue has 1 task while 2nd queue is empty; project should be queued in
+        //      2nd queue
+        recordStartOfCheckoutProjectSequence();
+                
+        final List<Task> tasks = new ArrayList<Task>();
+        
+        final List<Task> tasksInFirstCheckoutQueue = new ArrayList<Task>();
+        tasksInFirstCheckoutQueue.add( new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ),
+                                                 "continuum-project-test-1", "dummy", "dummypass" ) );
+        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(2).of( checkoutQueue ).getQueueSnapshot();
+                will( returnValue( tasksInFirstCheckoutQueue ) );
+                
+                exactly(2).of( checkoutQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+                
+                one( overallBuildQueue).getName();
+                will( returnValue( "BUILD_QUEUE_3" ) );
+            }
+        } );
+        
+        recordAddToCheckoutQueue();
+        
+        buildsManager.checkoutProject( 2, "continuum-project-test-2", new File( getBasedir(), "/target/test-working-dir/1" ),
+                                       "dummy", "dummypass", buildDef );
+        context.assertIsSatisfied();                
+        
+        // queue third project - both queues have 1 task queued each; third project should be queued in 1st queue
+        recordStartOfCheckoutProjectSequence();
+        
+        context.checking( new Expectations()
+        {
+            {
+                exactly(3).of( checkoutQueue ).getQueueSnapshot();
+                will( returnValue( tasksInFirstCheckoutQueue ) );
+                
+                one( overallBuildQueue).getName();
+                will( returnValue( "BUILD_QUEUE_2" ) );
+            }
+        } );
+                     
+        recordAddToCheckoutQueue();
+        
+        buildsManager.checkoutProject( 3, "continuum-project-test-3", new File( getBasedir(), "/target/test-working-dir/1" ),
+                                       "dummy", "dummypass", buildDef );
+        context.assertIsSatisfied();
+    }
+
+    public void testRemoveProjectFromCheckoutQueue()
+        throws Exception
+    {
+        setupMockOverallBuildQueues();
+    
+        context.checking( new Expectations()
+        {
+            {
+                one(overallBuildQueue).isInCheckoutQueue( 1 );
+                will( returnValue( true ) );
+                
+                one(overallBuildQueue).removeProjectFromCheckoutQueue( 1 );
+            }
+        } );
+                
+        buildsManager.removeProjectFromCheckoutQueue( 1 );
+        context.assertIsSatisfied();
+    }
+    
+    public void testRemoveProjectsFromCheckoutQueue()
+        throws Exception
+    {
+        setupMockOverallBuildQueues();    
+    
+        context.checking( new Expectations()
+        {
+            {
+                exactly(3).of(overallBuildQueue).isInCheckoutQueue( with( any( int.class ) ) );
+                will( returnValue( true ) );
+                
+                exactly(3).of(overallBuildQueue).removeProjectFromCheckoutQueue( with( any( int.class ) ) );
+            }
+        } );
+                
+        int[] projectIds = new int[] { 1, 2, 3 };
+        
+        buildsManager.removeProjectsFromCheckoutQueue( projectIds );
+        context.assertIsSatisfied();
+    }
+    
+    public void testRemoveProjectFromCheckoutQueueProjectNotFound()
+        throws Exception
+    {
+        setupMockOverallBuildQueues();
+        
+        // shouldn't only the project's build queues be checked instead of all the overall build queues?
         context.checking( new Expectations()
         {
             {
@@ -409,48 +526,210 @@ public class ParallelBuildsManagerTest
             }
         } );
         
-        context.checking( new Expectations()
-        {
-            {
-                one( configurationService ).getNumberOfBuildsInParallel();
-                will( returnValue( 2 ) );
-            }
-        } );
-        
-        context.checking( new Expectations()
-        {
-            {
-                exactly(2).of( overallBuildQueue ).getCheckoutQueue();
-                will( returnValue( checkoutQueue ) );
-            }
-        } );
-        
-        final List<Task> tasks = new ArrayList<Task>();        
-        context.checking( new Expectations()
-        {
-            {
-                exactly(3).of( checkoutQueue ).getQueueSnapshot();
-                will( returnValue( tasks ) );
-            }
-        } );
-        
-        context.checking( new Expectations()
-        {
-            {
-                one( overallBuildQueue).getName();
-                will( returnValue( "BUILD_QUEUE_2" ) );
-            }
-        } );
-        
-        context.checking( new Expectations()
-        {
-            {
-                one( overallBuildQueue).addToCheckoutQueue( with( any( Task.class ) ) );
-            }
-        } );
-        
-        buildsManager.checkoutProject( 1, "continuum-project-test-1", new File( getBasedir(), "/target/test-working-dir/1" ),
-                                       "dummy", "dummypass", buildDef );
+        buildsManager.removeProjectFromCheckoutQueue( 1 );
         context.assertIsSatisfied();
     }
+    
+    public void testRemoveDefaultOverallBuildQueue()
+        throws Exception
+    {
+        setupMockOverallBuildQueues();
+        
+        try
+        {
+            context.checking( new Expectations()
+            {
+                {
+                    one(overallBuildQueue).getName();
+                    will( returnValue( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) );
+                }
+            } );
+            
+            buildsManager.removeOverallBuildQueue( 1 );
+            context.assertIsSatisfied();
+            fail( "An exception should have been thrown." );
+        }
+        catch ( BuildManagerException e )
+        {
+            assertEquals( "Cannot remove default build queue.", e.getMessage() );
+        }
+    }
+    
+    public void testRemoveOverallBuildQueueNoTasksCurrentlyExecuting()
+        throws Exception
+    {
+        // queued tasks (both checkout & build tasks) must be transferred to the other queues!
+        setupMockOverallBuildQueues();
+        
+        final BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
+        
+        final TaskQueueExecutor buildQueueExecutor = context.mock( TaskQueueExecutor.class, "build-queue-executor" );
+        final TaskQueueExecutor checkoutQueueExecutor =
+            context.mock( TaskQueueExecutor.class, "checkout-queue-executor" );
+        
+        final List<Task> buildTasks = new ArrayList<Task>();
+        buildTasks.add( new BuildProjectTask(  2, 1, 1, "continuum-project-test-2", "BUILD_DEF" ) );
+        
+        final List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
+        checkoutTasks.add( new CheckOutTask( 2, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-2",
+                                          "dummy", "dummypass" ) );
+        
+        final ParallelBuildsThreadedTaskQueueExecutor buildTaskQueueExecutor = context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "parallel-build-task-executor" );
+        final ParallelBuildsThreadedTaskQueueExecutor checkoutTaskQueueExecutor = context.mock( ParallelBuildsThreadedTaskQueueExecutor.class, "parallel-checkout-task-executor" );
+        
+        final List<Task> tasks = new ArrayList<Task>();     
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( overallBuildQueue ).getName();
+                will( returnValue( "BUILD_QUEUE_5" ) );
+                
+             // check if there is any build task currently being executed
+                one( overallBuildQueue ).getBuildTaskQueueExecutor();
+                will( returnValue( buildQueueExecutor ) );                
+                one( buildQueueExecutor ).getCurrentTask();
+                will ( returnValue( null ) );
+                //will( returnValue( buildTask ) );
+                
+             // check if there is any checkout task currently being executed
+                one( overallBuildQueue ).getCheckoutTaskQueueExecutor();
+                will( returnValue( checkoutQueueExecutor ) );                
+                one( checkoutQueueExecutor ).getCurrentTask();
+                will ( returnValue( null ) );
+                //will( returnValue( checkoutTask ) );
+                
+             // get all queued build tasks & remove them
+                one(overallBuildQueue).getProjectsInBuildQueue();
+                will( returnValue( buildTasks ) );
+                one(overallBuildQueue).getBuildQueue();
+                will( returnValue( buildQueue ) );
+                one(buildQueue).removeAll( buildTasks );
+                
+             // get all queued checkout tasks & remove them
+                one(overallBuildQueue).getCheckOutTasksInQueue();
+                will( returnValue( checkoutTasks ) );                
+                one(overallBuildQueue).getCheckoutQueue();
+                will( returnValue( checkoutQueue ) );
+                one(checkoutQueue).removeAll( checkoutTasks );
+                
+             // stop the build & checkout task queue executors
+                one(overallBuildQueue).getBuildTaskQueueExecutor();
+                will( returnValue( buildTaskQueueExecutor ) );
+                one(overallBuildQueue).getCheckoutTaskQueueExecutor();
+                will( returnValue( checkoutTaskQueueExecutor ) );
+                
+                one( buildTaskQueueExecutor ).stop();
+                one( checkoutTaskQueueExecutor ).stop();
+             
+                // TODO: test scenario when there are no longer build queues configured aside from the one removed?
+                //      - the behaviour should be that the default build queue will be used!
+                
+             // re-queue projects in the build queue of the deleted overall build queue
+                one( buildDefinitionDao ).getBuildDefinition( 1 );
+                will( returnValue( buildDef ) );
+                
+                // queue to other build queue
+                exactly(4).of( overallBuildQueue ).isInBuildQueue( with( any(int.class) ) );
+                will( returnValue( false ) );
+                
+                one( configurationService ).getNumberOfBuildsInParallel();
+                will( returnValue( 2 ) );                
+                
+                exactly(2).of( overallBuildQueue ).getBuildQueue();
+                will( returnValue( buildQueue ) );
+                
+                exactly(3).of( buildQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+                
+                one( overallBuildQueue).getName();
+                will( returnValue( "BUILD_QUEUE_2" ) );
+                
+                recordAddToBuildQueue();
+                
+             // re-queue projects in the checkout queue of the deleted overall build queue
+                one( buildDefinitionDao ).getDefaultBuildDefinition( 2 );
+                will( returnValue( buildDef ) );
+                
+                // queue to other checkout queues
+                exactly(4).of(overallBuildQueue).isInCheckoutQueue( with( any( int.class ) ) );
+                will( returnValue( false ) ); 
+                
+                one( configurationService ).getNumberOfBuildsInParallel();
+                will( returnValue( 2 ) );
+                
+                exactly(2).of( overallBuildQueue ).getCheckoutQueue();
+                will( returnValue( checkoutQueue ) );
+                
+                exactly(3).of( checkoutQueue ).getQueueSnapshot();
+                will( returnValue( tasks ) );
+                
+                one( overallBuildQueue).getName();
+                will( returnValue( "BUILD_QUEUE_2" ) );
+                
+                recordAddToCheckoutQueue();
+            }
+        } );
+                   
+        buildsManager.removeOverallBuildQueue( 5 );
+        context.assertIsSatisfied();
+
+        Map<Integer, OverallBuildQueue> overallBuildQueues = buildsManager.getOverallBuildQueues();
+        assertNull( overallBuildQueues.get( 5 ) );
+    }
+    
+    public void testRemoveOverallBuildQueueTasksCurrentlyExecuting()
+        throws Exception
+    {
+        setupMockOverallBuildQueues();
+        
+        final BuildDefinition buildDef = new BuildDefinition();
+        buildDef.setId( 1 );
+        buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
+        
+        final TaskQueueExecutor buildQueueExecutor = context.mock( TaskQueueExecutor.class, "build-queue-executor" );
+        final Task buildTask = new BuildProjectTask( 1, 1, 1, "continuum-project-test-1", "BUILD_DEF" );
+
+        final List<Task> buildTasks = new ArrayList<Task>();
+        buildTasks.add( new BuildProjectTask(  2, 1, 1, "continuum-project-test-2", "BUILD_DEF" ) );
+        
+        final List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
+        checkoutTasks.add( new CheckOutTask( 2, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-2",
+                                          "dummy", "dummypass" ) );
+        
+        try
+        {
+            context.checking( new Expectations()
+            {
+                {
+                    one( overallBuildQueue ).getName();
+                    will( returnValue( "BUILD_QUEUE_5" ) );
+                    
+                 // check if there is any build task currently being executed
+                    one( overallBuildQueue ).getBuildTaskQueueExecutor();
+                    will( returnValue( buildQueueExecutor ) );                
+                    one( buildQueueExecutor ).getCurrentTask();                
+                    will( returnValue( buildTask ) );                        
+                }
+            } );
+                       
+            buildsManager.removeOverallBuildQueue( 5 );
+            context.assertIsSatisfied();
+            fail( "An exception should have been thrown." );
+        }
+        catch ( BuildManagerException e )
+        {
+            assertEquals( "Cannot remove build queue. A task is currently executing.", e.getMessage() );
+        }
+    }
+    
+    /*
+    public void testNumOfAllowedParallelBuildsIsLessThanConfiguredBuildQueues()
+        throws Exception
+    {
+    
+    }
+    */
 }
