@@ -74,7 +74,7 @@ public class BuildQueueAction
         throws Exception
     {
         int allowedBuilds = getContinuum().getConfiguration().getNumberOfBuildsInParallel();
-        if ( allowedBuilds < this.buildQueueList.size() )
+        if ( allowedBuilds < ( this.buildQueueList.size() + 1 ) )
         {
             addActionError( "You are only allowed " + allowedBuilds + " number of builds in parallel." );
             return ERROR;
@@ -83,11 +83,19 @@ public class BuildQueueAction
         {
             try
             {
-                BuildQueue buildQueue = new BuildQueue();
-                buildQueue.setName( name );
-                BuildQueue addedBuildQueue = getContinuum().addBuildQueue( buildQueue );
-
-                getContinuum().getBuildsManager().addOverallBuildQueue( addedBuildQueue );
+                if ( !isDuplicate( name ) )
+                {
+                    BuildQueue buildQueue = new BuildQueue();
+                    buildQueue.setName( name );
+                    BuildQueue addedBuildQueue = getContinuum().addBuildQueue( buildQueue );
+    
+                    getContinuum().getBuildsManager().addOverallBuildQueue( addedBuildQueue );
+                }
+                else
+                {
+                    addActionError( "Build queue name already exists." );
+                    return ERROR;
+                }
             }
             catch ( ContinuumException e )
             {
@@ -178,5 +186,24 @@ public class BuildQueueAction
     public void setMessage( String message )
     {
         this.message = message;
+    }
+    
+    private boolean isDuplicate( String queueName )
+        throws ContinuumException
+    {
+        boolean isExisting = false;
+        
+        List<BuildQueue> buildQueues = getContinuum().getAllBuildQueues();
+        
+        for ( BuildQueue bq : buildQueues )
+        {
+            if ( queueName.equals( bq.getName() ) )
+            {
+                isExisting = true;
+                break;
+            }
+        }
+        
+        return isExisting;
     }
 }

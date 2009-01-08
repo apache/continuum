@@ -89,7 +89,7 @@
               <c:forEach var="element" items="${buildsInQueue}">
                 <c:forEach var="buildTask" items="${element.value}">
                   <tr>                                    
-                    <td width="1%>
+                    <td width="1%">
                       <redback:ifAuthorized permission="continuum-manage-queues">
                         <input type="checkbox" name="selectedBuildTaskHashCodes" value="${buildTask.hashCode}" />                                      
                       </redback:ifAuthorized>
@@ -252,7 +252,7 @@
               <c:forEach var="element" items="${checkoutsInQueue}">
                 <c:forEach var="checkoutTask" items="${element.value}">
                   <tr>
-                    <td width="1%>
+                    <td width="1%">
                       <redback:ifAuthorized permission="continuum-manage-queues">
                         <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="${checkoutTask.hashCode}" />                                      
                       </redback:ifAuthorized>

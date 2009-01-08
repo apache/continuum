@@ -33,6 +33,7 @@
       <h3>
         <s:text name="parallel.build.queues.section.title"/>
       </h3>
+      
       <c:if test="${not empty buildQueueList}">
       <ec:table items="buildQueueList"
               var="buildQueue"
