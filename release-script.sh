@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/usr/local/bin/bash
 ## $Id$ ##
 #$1 version
 #$2 staging repo path on p.a.o
