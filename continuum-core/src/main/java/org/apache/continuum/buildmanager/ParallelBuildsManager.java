@@ -272,8 +272,18 @@ public class ParallelBuildsManager
     public boolean cancelAllCheckouts()
         throws BuildManagerException
     {
-        // TODO Auto-generated method stub
-        return false;
+        synchronized ( overallBuildQueues )
+        {
+            Set<Integer> keySet = overallBuildQueues.keySet();
+            OverallBuildQueue overallBuildQueue = null;
+            for ( Integer key : keySet )
+            {
+                overallBuildQueue = overallBuildQueues.get( key );
+                overallBuildQueue.cancelCurrentCheckout();
+            }
+
+            return true;
+        }
     }
 
     /**
@@ -291,8 +301,22 @@ public class ParallelBuildsManager
             }
             else
             {
-                log.info( "Project '" + projectId + "' not found in any of the builds queues." );
-                //throw new BuildManagerException( "Project not found in any of the build queues." );
+                synchronized( overallBuildQueues )
+                {
+                    Set<Integer> keySet = overallBuildQueues.keySet();
+                    for( Integer key : keySet )
+                    {
+                        overallBuildQueue = overallBuildQueues.get( key );
+                        BuildProjectTask buildTask = (BuildProjectTask) overallBuildQueue.getBuildTaskQueueExecutor().getCurrentTask();
+                        if( buildTask != null && buildTask.getProjectId() == projectId )
+                        {
+                            overallBuildQueue.cancelBuildTask( projectId );
+                            return true;
+                        }
+                    }
+                    log.error( "Project '" + projectId + "' not found in any of the builds queues." );
+                    //throw new BuildManagerException( "Project not found in any of the build queues." );
+                }
             }
         }
         catch ( TaskQueueException e )
@@ -314,11 +338,26 @@ public class ParallelBuildsManager
             OverallBuildQueue overallBuildQueue = getOverallBuildQueueWhereProjectIsQueued( projectId, CHECKOUT_QUEUE );
             if ( overallBuildQueue != null )
             {
-                overallBuildQueue.getCheckoutTaskQueueExecutor().getCurrentTask();
+                overallBuildQueue.cancelCheckoutTask( projectId );
             }
             else
             {
-                throw new BuildManagerException( "Project not found in any of the checkout queues." );
+                synchronized( overallBuildQueues )
+                {
+                    Set<Integer> keySet = overallBuildQueues.keySet();
+                    for( Integer key : keySet )
+                    {
+                        overallBuildQueue = overallBuildQueues.get( key );
+                        CheckOutTask checkoutTask = (CheckOutTask) overallBuildQueue.getCheckoutTaskQueueExecutor().getCurrentTask();                        
+                        if( checkoutTask != null && checkoutTask.getProjectId() == projectId )
+                        {
+                            overallBuildQueue.cancelCheckoutTask( projectId );
+                            return true;
+                        }
+                    }
+                    log.info( "Project '" + projectId + "' not found in any of the checkout queues." );
+                    //throw new BuildManagerException( "Project not found in any of the checkout queues." );
+                }
             }
         }
         catch ( TaskQueueException e )

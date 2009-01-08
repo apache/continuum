@@ -288,6 +288,21 @@ public class DefaultOverallBuildQueue
             buildTaskQueueExecutor.cancelTask( task );
         }        
     }
+    
+    /**
+     * @see OverallBuildQueue#cancelCheckoutTask(int)
+     */
+    public void cancelCheckoutTask( int projectId )
+        throws TaskQueueException
+    {
+        CheckOutTask task = (CheckOutTask) checkoutTaskQueueExecutor.getCurrentTask();
+        if( task != null && task.getProjectId() == projectId )
+        {
+            log.info( "Cancelling checkout task for project '" + projectId + "' in task executor '" +
+                                 checkoutTaskQueueExecutor );
+            checkoutTaskQueueExecutor.cancelTask( task );
+        }    
+    }
 
     /**
      * @see OverallBuildQueue#cancelCurrentBuild()
@@ -301,6 +316,21 @@ public class DefaultOverallBuildQueue
         }
         
         log.info( "No build task currently executing on build executor: " + buildTaskQueueExecutor );
+        return false;
+    }
+    
+    /**
+     * @see OverallBuildQueue#cancelCurrentCheckout()
+     */
+    public boolean cancelCurrentCheckout()
+    {
+        Task task = checkoutTaskQueueExecutor.getCurrentTask();
+        if( task != null )
+        {
+            return checkoutTaskQueueExecutor.cancelTask( task );
+        }
+        
+        log.info( "No checkout task currently executing on checkout task executor: " + checkoutTaskQueueExecutor );
         return false;
     }
 

@@ -624,6 +624,8 @@ public class DefaultContinuum
                 
                 parallelBuildsManager.removeProjectFromBuildQueue( projectId );                
                 
+                parallelBuildsManager.cancelCheckout( projectId );
+                
                 parallelBuildsManager.cancelBuild( projectId );                
             }
             catch ( BuildManagerException e )

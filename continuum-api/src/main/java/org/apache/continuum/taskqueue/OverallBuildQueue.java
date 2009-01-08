@@ -71,7 +71,7 @@ public interface OverallBuildQueue
     * Add checkout tasks to checkout queue.
     * 
     * @param checkoutTasks
- * @throws TaskQueueException TODO
+    * @throws TaskQueueException TODO
     */
     void addToCheckoutQueue( List<Task> checkoutTasks )
         throws TaskQueueException;
@@ -94,6 +94,21 @@ public interface OverallBuildQueue
      */
     boolean isInCheckoutQueue( int projectId )
         throws TaskQueueException;
+    
+    /**
+     * Cancel checkout of project.
+     * 
+     * @param projectId
+     * @throws TaskQueueException
+     */
+    void cancelCheckoutTask( int projectId )
+        throws TaskQueueException;
+    
+    /**
+     * Cancel current checkout.
+     * @return TODO
+     */
+    boolean cancelCurrentCheckout();
 
     /**
      * Remove project from checkout queue.
