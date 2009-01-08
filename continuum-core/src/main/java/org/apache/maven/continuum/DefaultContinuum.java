@@ -369,10 +369,35 @@ public class DefaultContinuum
         ProjectGroup projectGroup = getProjectGroupWithProjects( projectGroupId );
 
         if ( projectGroup != null )
-        {
-            for ( Object o : projectGroup.getProjects() )
+        {   
+            List<Project> projects = projectGroup.getProjects();
+            int[] projectIds = new int[projects.size()];
+            
+            int idx = 0;
+            for( Project project : projects )
             {
-                removeProject( ( (Project) o ).getId() );
+                projectIds[idx] = project.getId();
+                idx++;
+            }
+            
+            // check if any project is still being checked out
+            // canceling the checkout and proceeding with the delete results to a cannot delete directory error!
+            try
+            {            
+                if( parallelBuildsManager.isAnyProjectCurrentlyBeingCheckedOut( projectIds ) )
+                {
+                    throw new ContinuumException(
+                                                  "Unable to delete group. At least one project in group is still being checked out." );
+                }
+            }
+            catch ( BuildManagerException e )
+            {
+                throw new ContinuumException( "Unable to delete group.", e );
+            }
+        
+            for ( int i = 0; i < projectIds.length; i++ )
+            {
+                removeProject( projectIds[i] );
             }
 
             List<ProjectScmRoot> projectScmRoots = getProjectScmRootByProjectGroup( projectGroupId );
@@ -624,7 +649,7 @@ public class DefaultContinuum
                 
                 parallelBuildsManager.removeProjectFromBuildQueue( projectId );                
                 
-                parallelBuildsManager.cancelCheckout( projectId );
+                //parallelBuildsManager.cancelCheckout( projectId );
                 
                 parallelBuildsManager.cancelBuild( projectId );                
             }

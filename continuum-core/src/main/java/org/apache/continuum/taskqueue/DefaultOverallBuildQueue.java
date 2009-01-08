@@ -300,7 +300,7 @@ public class DefaultOverallBuildQueue
         {
             log.info( "Cancelling checkout task for project '" + projectId + "' in task executor '" +
                                  checkoutTaskQueueExecutor );
-            checkoutTaskQueueExecutor.cancelTask( task );
+            checkoutTaskQueueExecutor.cancelTask( task );            
         }    
     }
 

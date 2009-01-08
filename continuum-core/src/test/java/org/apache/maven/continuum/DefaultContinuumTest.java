@@ -30,7 +30,6 @@ import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryService;
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -260,7 +259,24 @@ public class DefaultContinuumTest
         projectGroup = (ProjectGroup) projectGroupList.iterator().next();
 
         assertNotNull( projectGroup );
-
+        
+        BuildsManager buildsManager = continuum.getBuildsManager();
+        
+        List<Project> projects = projectGroup.getProjects();
+        int[] projectIds = new int[ projects.size() ];
+        
+        int idx = 0;
+        for( Project project : projects )
+        {
+            projectIds[ idx ] = project.getId();
+            idx++;
+        }
+        
+        while( buildsManager.isAnyProjectCurrentlyBeingCheckedOut( projectIds ) )
+        {
+            continue;
+        }
+        
         continuum.removeProjectGroup( projectGroup.getId() );
 
         projectGroupList = continuum.getAllProjectGroupsWithProjects();

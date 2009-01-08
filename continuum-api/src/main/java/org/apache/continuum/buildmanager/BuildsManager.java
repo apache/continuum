@@ -251,6 +251,16 @@ public interface BuildsManager
      */
     boolean isInAnyCheckoutQueue( int projectId )
         throws BuildManagerException;
+    
+    /**
+     * Checks if at least one of the projects is currently being checked out.
+     * 
+     * @param projectIds
+     * @return
+     * @throws BuildManagerException
+     */
+    boolean isAnyProjectCurrentlyBeingCheckedOut( int[] projectIds )
+        throws BuildManagerException;
 
     /**
      * Checks whether the project is already in the prepare-build queue.

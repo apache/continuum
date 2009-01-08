@@ -460,6 +460,27 @@ public class ParallelBuildsManager
     }
 
     /**
+     * @see BuildsManager#isAnyProjectCurrentlyBeingCheckedOut(int[])
+     */
+    public boolean isAnyProjectCurrentlyBeingCheckedOut( int[] projectIds )
+        throws BuildManagerException
+    {        
+        for( int i = 0; i < projectIds.length; i++ )
+        {
+            Map<String, Task> checkouts = getCurrentCheckouts();
+            Set<String> keySet = checkouts.keySet();
+            for( String key : keySet )
+            {
+                CheckOutTask task = (CheckOutTask) checkouts.get( key );
+                if( task.getProjectId() == projectIds[i] )
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    /**
      * @see BuildsManager#isInPrepareBuildQueue(int)
      */
     public boolean isInPrepareBuildQueue( int projectId )

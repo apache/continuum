@@ -43,7 +43,6 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
 
 /**
  * 
- * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  */
 public class ParallelBuildsThreadedTaskQueueExecutor
     implements TaskQueueExecutor, Initializable, Startable
