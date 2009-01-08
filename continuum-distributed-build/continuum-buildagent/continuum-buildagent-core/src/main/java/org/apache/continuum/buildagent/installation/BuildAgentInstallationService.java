@@ -21,4 +21,6 @@ public interface BuildAgentInstallationService
      * @return ExecutorConfigurator or null if unknown type
      */
     public ExecutorConfigurator getExecutorConfigurator( String type );
+
+    public String getEnvVar( String type );
 }

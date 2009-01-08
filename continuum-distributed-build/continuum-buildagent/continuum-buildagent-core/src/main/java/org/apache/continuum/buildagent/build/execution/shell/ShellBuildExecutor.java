@@ -1,6 +1,7 @@
 package org.apache.continuum.buildagent.build.execution.shell;
 
 import java.io.File;
+import java.util.Map;
 
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
@@ -24,11 +25,13 @@ public class ShellBuildExecutor
         super( ID, false );
     }
 
-    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, 
+                                                     File buildOutput, Map<String, String> environments,
+                                                     String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
         String executable = getBuildFileForProject( project, buildDefinition );
 
-        return executeShellCommand( project, executable, buildDefinition.getArguments(), buildOutput, null );
+        return executeShellCommand( project, executable, buildDefinition.getArguments(), buildOutput, environments );
     }
 }

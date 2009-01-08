@@ -147,6 +147,27 @@ public class DefaultBuildAgentManager
         }
     }
 
+    public Map<String, String> getEnvironments( int buildDefinitionId, String installationType )
+        throws ContinuumException
+    {
+        try
+        {
+            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
+                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            return client.getEnvironments( buildDefinitionId, installationType );
+        }
+        catch ( MalformedURLException e )
+        {
+            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error while retrieving environments for build definition " + buildDefinitionId, e );
+            throw new ContinuumException( e.getMessage(), e );
+        }
+    }
+
     private void startPrepareBuild( BuildContext buildContext )
         throws ContinuumException
     {

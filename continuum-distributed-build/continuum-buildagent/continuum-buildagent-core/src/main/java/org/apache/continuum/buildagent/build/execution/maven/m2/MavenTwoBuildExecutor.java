@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
@@ -66,7 +67,9 @@ public class MavenTwoBuildExecutor
         this.builderHelper = builderHelper;
     }
 
-    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, 
+                                                     File buildOutput, Map<String, String> environments,
+                                                     String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
         String executable = getBuildAgentInstallationService().getExecutorConfigurator( BuildAgentInstallationService.MAVEN2_TYPE )
@@ -93,9 +96,27 @@ public class MavenTwoBuildExecutor
         }
         */
 
+        if ( StringUtils.isNotEmpty( localRepository ) )
+        {
+            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean( localRepository ) ).append( "\" " );
+        }
+
         arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
 
-        return executeShellCommand( project, executable, arguments.toString(), buildOutput, null );
+        String m2Home = null;
+
+        if ( environments != null )
+        {
+            m2Home = environments.get( getBuildAgentInstallationService().getEnvVar( BuildAgentInstallationService.MAVEN2_TYPE ) );
+        }
+
+        if ( StringUtils.isNotEmpty( m2Home ) )
+        {
+            executable = m2Home + File.separator + "bin" + File.separator + executable;
+            setResolveExecutable( false );
+        }
+
+        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
     }
 
     @Override

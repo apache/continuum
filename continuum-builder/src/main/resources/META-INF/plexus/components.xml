@@ -19,29 +19,6 @@
 
 <component-set>
   <components>
-    
-    <component>
-      <role>org.apache.continuum.builder.distributed.manager.DistributedBuildManager</role>
-      <role-hint>default</role-hint>
-      <implementation>org.apache.continuum.builder.distributed.manager.DefaultDistributedBuildManager</implementation>
-      <requirements>
-        <requirement>
-          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.continuum.dao.ProjectDao</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.continuum.dao.ProjectScmRootDao</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.continuum.dao.BuildResultDao</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.continuum.dao.BuildDefinitionDao</role>
-        </requirement>
-      </requirements>
-    </component>
   
     <!--
      |

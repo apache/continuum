@@ -10,12 +10,15 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
+import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.utils.BuildContextToBuildDefinition;
 import org.apache.continuum.buildagent.utils.BuildContextToProject;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.scm.ScmException;
@@ -93,6 +96,7 @@ public class BuildProjectTaskExecutor
     }
 
     private void initializeBuildContext( BuildContext buildContext )
+        throws TaskExecutionException
     {
         Map<String, Object> actionContext = buildContext.getActionContext();
 
@@ -100,6 +104,9 @@ public class BuildProjectTaskExecutor
         actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT, BuildContextToProject.getProject( buildContext ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION, BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS, getEnvironments( buildContext.getBuildDefinitionId(), 
+                                                                                      getInstallationType( buildContext ) ) );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, buildContext.getLocalRepository() );
 
         buildContext.setBuildStartTime( System.currentTimeMillis() );
     }
@@ -277,6 +284,40 @@ public class BuildProjectTaskExecutor
         {
             // do not throw exception, just log it
             log.error( "Error retrieving build output file", e );
+        }
+
+        return null;
+    }
+
+    private Map<String, String> getEnvironments( int buildDefinitionId, String installationType )
+        throws TaskExecutionException
+    {
+        try
+        {
+            return buildAgentManager.getEnvironments( buildDefinitionId, installationType );
+        }
+        catch ( ContinuumException e )
+        {
+            log.error( "Error while retrieving environments of build definition: " + buildDefinitionId, e );
+            throw new TaskExecutionException( "Error while retrieving environments of build definition: " + buildDefinitionId, e );
+        }
+    }
+
+    private String getInstallationType( BuildContext buildContext )
+    {
+        String executorId = buildContext.getExecutorId();
+        
+        if ( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( executorId ) )
+        {
+            return BuildAgentInstallationService.MAVEN2_TYPE;
+        }
+        else if ( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR.equals( executorId ) )
+        {
+            return BuildAgentInstallationService.MAVEN1_TYPE;
+        }
+        else if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( executorId ) )
+        {
+            return BuildAgentInstallationService.ANT_TYPE;
         }
 
         return null;

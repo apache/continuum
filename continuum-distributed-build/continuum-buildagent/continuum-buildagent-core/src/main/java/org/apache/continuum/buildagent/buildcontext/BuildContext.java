@@ -45,6 +45,8 @@ public class BuildContext
 
     private long buildStartTime;
 
+    private String localRepository;
+
     public int getProjectGroupId()
     {
         return projectGroupId;
@@ -233,5 +235,15 @@ public class BuildContext
     public void setBuildStartTime( long buildStartTime )
     {
         this.buildStartTime = buildStartTime;
+    }
+
+    public String getLocalRepository()
+    {
+        return localRepository;
+    }
+
+    public void setLocalRepository( String localRepository )
+    {
+        this.localRepository = localRepository;
     }
 }

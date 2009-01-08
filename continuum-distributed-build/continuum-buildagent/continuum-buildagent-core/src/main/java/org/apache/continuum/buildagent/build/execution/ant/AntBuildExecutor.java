@@ -2,6 +2,7 @@ package org.apache.continuum.buildagent.build.execution.ant;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
@@ -30,7 +31,9 @@ public class AntBuildExecutor
         super( ID, true );
     }
 
-    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, 
+                                                     File buildOutput, Map<String, String> environments,
+                                                     String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
         String executable = getBuildAgentInstallationService().getExecutorConfigurator( BuildAgentInstallationService.ANT_TYPE )
@@ -54,9 +57,22 @@ public class AntBuildExecutor
             String value = props.getProperty( name );
             arguments.append( "\"-D" ).append( name ).append( "=" ).append( value ).append( "\" " );
         }
-    
+
         arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
 
-        return executeShellCommand( project, executable, arguments.toString(), buildOutput, null );
+        String antHome = null;
+
+        if ( environments != null )
+        {
+            antHome = environments.get( getBuildAgentInstallationService().getEnvVar( BuildAgentInstallationService.ANT_TYPE ) );
+        }
+
+        if ( StringUtils.isNotEmpty( antHome ) )
+        {
+            executable = antHome + File.separator + "bin" + File.separator + executable;
+            setResolveExecutable( false );
+        }
+
+        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
     }
 }

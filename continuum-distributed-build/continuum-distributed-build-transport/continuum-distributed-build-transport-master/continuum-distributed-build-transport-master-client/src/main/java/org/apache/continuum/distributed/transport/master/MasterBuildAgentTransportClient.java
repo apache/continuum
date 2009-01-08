@@ -176,4 +176,22 @@ public class MasterBuildAgentTransportClient
 
         return result;
     }
+
+    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
+        throws Exception
+    {
+        Map<String, String> result = null;
+        try
+        {
+            result = master.getEnvironments( buildDefinitionId, installationType );
+            log.info( "Retrieved environments" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to retrieve environments", e );
+            throw new Exception( "Failed to retrieve environments", e );
+        }
+
+        return result;
+    }
 }

@@ -70,6 +70,8 @@ public class ContinuumBuildConstant
 
     public static final String KEY_INSTALLATION_VAR_VALUE = "installation-var-value";
 
+    public static final String KEY_LOCAL_REPOSITORY = "local-repository";
+
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );

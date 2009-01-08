@@ -95,6 +95,10 @@ public class ContinuumBuildAgentUtil
 
     public static final String KEY_INSTALLATION_VAR_VALUE = "installation-var-value";
 
+    public static final String KEY_ENVIRONMENTS = "environments";
+
+    public static final String KEY_LOCAL_REPOSITORY = "local-repository";
+
     public static Integer getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -203,6 +207,16 @@ public class ContinuumBuildAgentUtil
     public static BuildResult getBuildResult( Map context, Object defaultValue )
     {
         return (BuildResult) getObject( context, KEY_BUILD_RESULT );
+    }
+
+    public static Map<String, String> getEnvironments( Map context )
+    {
+        return (Map<String, String>) getObject( context, KEY_ENVIRONMENTS );
+    }
+
+    public static String getLocalRepository( Map context )
+    {
+        return (String) getObject( context, KEY_LOCAL_REPOSITORY );
     }
 
     // ----------------------------------------------------------------------

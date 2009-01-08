@@ -88,4 +88,11 @@ public class MasterBuildAgentTransportServer
         distributedBuildManager.startPrepareBuild( prepareBuildResult );
         return Boolean.TRUE;
     }
+
+    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
+        throws Exception
+    {
+        log.info( "Retrieving environments" );
+        return distributedBuildManager.getEnvironments( buildDefinitionId, installationType );
+    }
 }

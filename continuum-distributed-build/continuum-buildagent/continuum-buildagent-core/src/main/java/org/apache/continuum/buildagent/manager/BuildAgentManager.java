@@ -18,4 +18,7 @@ public interface BuildAgentManager
     
     void startProjectBuild( int projectId )
         throws ContinuumException;
+
+    Map<String, String> getEnvironments( int buildDefinitionId, String installationType )
+        throws ContinuumException;
 }

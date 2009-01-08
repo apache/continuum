@@ -35,4 +35,10 @@ public class DefaultBuildAgentInstallationService
         this.typesValues
             .put( BuildAgentInstallationService.MAVEN2_TYPE, new ExecutorConfigurator( "mvn", "bin", "M2_HOME", "-v" ) );
     }
+
+    public String getEnvVar( String type )
+    {
+        ExecutorConfigurator executorConfigurator = this.typesValues.get( type );
+        return executorConfigurator == null ? null : executorConfigurator.getEnvVar();
+    }
 }

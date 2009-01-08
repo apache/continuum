@@ -2,6 +2,7 @@ package org.apache.continuum.buildagent.build.execution.maven.m1;
 
 import java.io.File;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
@@ -28,7 +29,9 @@ public class MavenOneBuildExecutor
         super( ID, true );
     }
 
-    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+    public ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, 
+                                                     File buildOutput, Map<String, String> environments,
+                                                     String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
         String executable = getBuildAgentInstallationService().getExecutorConfigurator( BuildAgentInstallationService.MAVEN1_TYPE )
@@ -52,10 +55,28 @@ public class MavenOneBuildExecutor
             String value = props.getProperty( name );
             arguments.append( "\"-D" ).append( name ).append( "=" ).append( value ).append( "\" " );
         }
-        
+
+        if ( StringUtils.isNotEmpty( localRepository ) )
+        {
+            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean( localRepository ) ).append( "\" " );
+        }
+
         arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
-    
-        return executeShellCommand( project, executable, arguments.toString(), buildOutput, null );
+
+        String m1Home = null;
+
+        if ( environments != null )
+        {
+            m1Home = environments.get( getBuildAgentInstallationService().getEnvVar( BuildAgentInstallationService.MAVEN1_TYPE ) );
+        }
+
+        if ( StringUtils.isNotEmpty( m1Home ) )
+        {
+            executable = m1Home + File.separator + "bin" + File.separator + executable;
+                setResolveExecutable( false );
+        }
+
+        return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
     }
 
 }

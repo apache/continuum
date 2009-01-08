@@ -14,6 +14,7 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
 import org.apache.continuum.model.project.ProjectScmRoot;
+import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.continuum.utils.ProjectSorter;
@@ -142,6 +143,17 @@ public class DistributedBuildProjectTaskExecutor
                 context.put( ContinuumBuildConstant.KEY_EXECUTOR_ID, project.getExecutorId() );
                 context.put( ContinuumBuildConstant.KEY_SCM_URL, project.getScmUrl() );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_STATE, new Integer( project.getState() ) );
+
+                LocalRepository localRepo = project.getProjectGroup().getLocalRepository();
+
+                if ( localRepo != null )
+                {
+                    context.put( ContinuumBuildConstant.KEY_LOCAL_REPOSITORY, localRepo.getLocation() );
+                }
+                else
+                {
+                    context.put( ContinuumBuildConstant.KEY_LOCAL_REPOSITORY, "" );
+                }
 
                 if ( project.getScmUsername() == null )
                 {

@@ -2,6 +2,7 @@ package org.apache.continuum.buildagent.build.execution;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -11,7 +12,8 @@ public interface ContinuumAgentBuildExecutor
 {
     String ROLE = ContinuumAgentBuildExecutor.class.getName();
 
-    ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
+    ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
+                                              Map<String, String> environments, String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException;
     
     boolean isBuilding( Project project );

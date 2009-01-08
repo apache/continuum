@@ -228,6 +228,7 @@ public class ContinuumBuildAgentServiceImpl
             context.setProjectName( ContinuumBuildAgentUtil.getProjectName( map ) );
             context.setProjectState( ContinuumBuildAgentUtil.getProjectState( map ) );
             context.setTrigger( ContinuumBuildAgentUtil.getTrigger( map ) );
+            context.setLocalRepository( ContinuumBuildAgentUtil.getLocalRepository( map ) );
 
             buildContext.add( context );
         }

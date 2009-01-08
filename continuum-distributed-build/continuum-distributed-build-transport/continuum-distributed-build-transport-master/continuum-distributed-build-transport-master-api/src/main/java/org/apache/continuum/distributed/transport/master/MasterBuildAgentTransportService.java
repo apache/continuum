@@ -39,5 +39,7 @@ public interface MasterBuildAgentTransportService
 
     public Boolean startPrepareBuild( Map prepareBuildResult ) throws Exception;
 
+    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType ) throws Exception;
+
     public Boolean ping() throws Exception;
 }

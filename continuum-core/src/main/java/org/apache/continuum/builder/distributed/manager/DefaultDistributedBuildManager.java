@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +27,15 @@ import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
@@ -51,6 +55,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Maria Catherine Tan
+ * @plexus.component role="org.apache.continuum.builder.distributed.manager.DistributedBuildManager"
  */
 public class DefaultDistributedBuildManager
     implements DistributedBuildManager, Contextualizable, Initializable
@@ -61,6 +66,11 @@ public class DefaultDistributedBuildManager
      * @plexus.requirement
      */
     private ConfigurationService configurationService;
+
+    /**
+     * @plexus.requirement
+     */
+    private InstallationService installationService;
 
     /**
      * @plexus.requirement
@@ -81,6 +91,11 @@ public class DefaultDistributedBuildManager
      * @plexus.requirement
      */
     private BuildResultDao buildResultDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumNotificationDispatcher notifierDispatcher;
 
     private PlexusContainer container;
 
@@ -381,10 +396,10 @@ public class DefaultDistributedBuildManager
             out.write( ContinuumBuildConstant.getBuildOutput( context ) == null ? "" : ContinuumBuildConstant.getBuildOutput( context ) );
             out.close();
 
-            //if ( buildResult.getState() != ContinuumProjectState.CANCELLED )
-            //{
-            //    notifierDispatcher.buildComplete( project, buildDefinition, buildResult );
-            //}
+            if ( buildResult.getState() != ContinuumProjectState.CANCELLED )
+            {
+                notifierDispatcher.buildComplete( project, buildDefinition, buildResult );
+            }
         }
         catch ( ContinuumStoreException e )
         {
@@ -424,7 +439,7 @@ public class DefaultDistributedBuildManager
 
             projectScmRootDao.updateProjectScmRoot( scmRoot );
 
-            //notifierDispatcher.prepareBuildComplete( scmRoot );
+            notifierDispatcher.prepareBuildComplete( scmRoot );
         }
         catch ( ContinuumStoreException e )
         {
@@ -635,6 +650,40 @@ public class DefaultDistributedBuildManager
         return map;
     }
 
+    public Map<String, String> getEnvironments( int buildDefinitionId, String installationType )
+        throws ContinuumException
+    {
+        BuildDefinition buildDefinition;
+
+        try
+        {
+            buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Failed to retrieve build definition: " + buildDefinitionId, e );
+        }
+
+        Profile profile = buildDefinition.getProfile();
+        if ( profile == null )
+        {
+            return Collections.EMPTY_MAP;
+        }
+        Map<String, String> envVars = new HashMap<String, String>();
+        String javaHome = getJavaHomeValue( buildDefinition );
+        if ( !StringUtils.isEmpty( javaHome ) )
+        {
+            envVars.put( installationService.getEnvVar( InstallationService.JDK_TYPE ), javaHome );
+        }
+        Installation builder = profile.getBuilder();
+        if ( builder != null )
+        {
+            envVars.put( installationService.getEnvVar( installationType ), builder.getVarValue() );
+        }
+        envVars.putAll( getEnvironmentVariables( buildDefinition ) );
+        return envVars;
+    }
+
     private String getBuildAgent( int projectId )
         throws ContinuumException
     {
@@ -669,4 +718,40 @@ public class DefaultDistributedBuildManager
 
         return buildResult;
     }
+
+    private String getJavaHomeValue( BuildDefinition buildDefinition )
+    {
+        Profile profile = buildDefinition.getProfile();
+        if ( profile == null )
+        {
+            return null;
+        }
+        Installation jdk = profile.getJdk();
+        if ( jdk == null )
+        {
+            return null;
+        }
+        return jdk.getVarValue();
+    }
+
+    private Map<String, String> getEnvironmentVariables( BuildDefinition buildDefinition )
+    {
+        Profile profile = buildDefinition.getProfile();
+        Map<String, String> envVars = new HashMap<String, String>();
+        if ( profile == null )
+        {
+            return envVars;
+        }
+        List<Installation> environmentVariables = profile.getEnvironmentVariables();
+        if ( environmentVariables.isEmpty() )
+        {
+            return envVars;
+        }
+        for ( Installation installation : environmentVariables )
+        {
+            envVars.put( installation.getVarName(), installation.getVarValue() );
+        }
+        return envVars;
+    }
+
 }

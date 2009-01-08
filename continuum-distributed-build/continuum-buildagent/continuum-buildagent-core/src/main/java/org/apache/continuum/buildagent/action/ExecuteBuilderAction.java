@@ -43,6 +43,10 @@ public class ExecuteBuilderAction
 
         BuildDefinition buildDefinition = ContinuumBuildAgentUtil.getBuildDefinition( context );
 
+        Map<String, String> environments = ContinuumBuildAgentUtil.getEnvironments( context );
+
+        String localRepository = ContinuumBuildAgentUtil.getLocalRepository( context );
+
         int trigger = ContinuumBuildAgentUtil.getTrigger( context );
 
         ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor( project.getExecutorId() );
@@ -67,7 +71,8 @@ public class ExecuteBuilderAction
         {
             File buildOutputFile = buildAgentConfigurationService.getBuildOutputFile( project.getId() );
 
-            ContinuumAgentBuildExecutionResult result = buildExecutor.build( project, buildDefinition, buildOutputFile );
+            ContinuumAgentBuildExecutionResult result = buildExecutor.build( project, buildDefinition, buildOutputFile,
+                                                                             environments, localRepository );
 
             buildResult.setState( result.getExitCode() == 0 ? ContinuumProjectState.OK : ContinuumProjectState.FAILED );
 
