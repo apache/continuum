@@ -57,6 +57,8 @@ public class BuildAgentAction
 
     private String message;
 
+    private String type;
+
     public String input()
         throws Exception
     {
@@ -69,8 +71,13 @@ public class BuildAgentAction
                 if ( agent.getUrl().equals( buildAgent.getUrl() ) )
                 {
                     buildAgent = agent;
+                    type = "edit";
                 }
             }
+        }
+        else
+        {
+            type = "new";
         }
 
         return INPUT;
@@ -134,6 +141,14 @@ public class BuildAgentAction
         if ( !found )
         {
             configuration.addBuildAgent( buildAgent );
+        }
+        else
+        {
+            if ( type.equals( "new" ) )
+            {
+                addActionError( getResourceBundle().getString( "buildAgent.error.duplicate" ) );
+                return INPUT;
+            }
         }
 
         distributedBuildManager.reload();
@@ -232,5 +247,15 @@ public class BuildAgentAction
     public void setMessage( String message )
     {
         this.message = message;
+    }
+
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType( String type )
+    {
+        this.type = type;
     }
 }

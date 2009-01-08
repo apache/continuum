@@ -41,8 +41,9 @@
             </c:if>
             
             <table>
+              <s:hidden name="type"/>
               <c:choose>
-                <c:when test="${empty buildAgent.url}">
+                <c:when test="${type=='new'}">
                   <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" required="true"/>
                 </c:when>
                 <c:otherwise>
