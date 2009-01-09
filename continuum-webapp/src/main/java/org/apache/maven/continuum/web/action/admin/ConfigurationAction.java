@@ -61,8 +61,6 @@ public class ConfigurationAction
     
     private boolean requireReleaseOutput;
     
-    private boolean requireParallelBuilds;
-    
     public void prepare()
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
@@ -101,7 +99,12 @@ public class ConfigurationAction
             releaseOutputDirectory = releaseOutputDirectoryFile.getAbsolutePath();
         }
         
-        numberOfAllowedBuildsinParallel = configuration.getNumberOfBuildsInParallel();	
+        numberOfAllowedBuildsinParallel = configuration.getNumberOfBuildsInParallel();
+        
+        if( numberOfAllowedBuildsinParallel == 0 )
+        {
+            numberOfAllowedBuildsinParallel = 1;
+        }
                
         String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
         setRequireReleaseOutput( new Boolean( requireRelease ) );
@@ -125,6 +128,12 @@ public class ConfigurationAction
     public String save()
         throws ConfigurationStoringException, ContinuumStoreException, ContinuumConfigurationException
     {
+        if( numberOfAllowedBuildsinParallel <= 0 )
+        {
+            addActionError( "Number of Allowed Builds in Parallel must be greater than zero." );
+            return ERROR;
+        }
+        
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         configuration.setWorkingDirectory( new File( workingDirectory ) );
@@ -243,15 +252,5 @@ public class ConfigurationAction
 	public void setNumberOfAllowedBuildsinParallel( int numberOfAllowedBuildsinParallel ) 
 	{
 	    this.numberOfAllowedBuildsinParallel = numberOfAllowedBuildsinParallel;
-	}
-
-	public boolean isRequireParallelBuilds() 
-	{
-	    return requireParallelBuilds;
-	}
-
-	public void setRequireParallelBuilds( boolean requireParallelBuilds ) 
-	{
-	    this.requireParallelBuilds = requireParallelBuilds;
 	}
 }
