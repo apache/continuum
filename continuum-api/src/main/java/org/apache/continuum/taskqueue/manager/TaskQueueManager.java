@@ -53,6 +53,16 @@ public interface TaskQueueManager
     boolean isRepositoryInUse( int repositoryId )
         throws TaskQueueManagerException;
 
+    /**
+     * Check whether a project is in the release stage based on the given releaseId.
+     * 
+     * @param releaseId
+     * @return
+     * @throws TaskQueueManagerException
+     */
+    boolean isProjectInReleaseStage( String releaseId )
+        throws TaskQueueManagerException;        
+    
     boolean releaseInProgress()
         throws TaskQueueManagerException;
 

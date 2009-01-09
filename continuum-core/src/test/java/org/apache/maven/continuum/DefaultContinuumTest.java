@@ -20,6 +20,7 @@ package org.apache.maven.continuum;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,9 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryService;
+import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -39,6 +42,9 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.utils.ContinuumUrlValidator;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit3.JUnit3Mockery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +56,25 @@ public class DefaultContinuumTest
     extends AbstractContinuumTest
 {
     protected Logger log = LoggerFactory.getLogger( getClass() );
+    
+    private Mockery context;
+    
+    private TaskQueueManager taskQueueManager;
+    
+    private ProjectDao projectDao;
+    
+    @Override
+    protected void setUp()
+        throws Exception
+    {
+        super.setUp();
+        
+        context = new JUnit3Mockery();
+        
+        taskQueueManager = context.mock( TaskQueueManager.class );
+        
+        projectDao = context.mock( ProjectDao.class );
+    }
     
     public void testContinuumConfiguration()
         throws Exception
@@ -476,7 +501,92 @@ public class DefaultContinuumTest
         assertFalse( logFile.exists() );
         assertEquals( defaultProjectGroup, continuum.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID ) );
     }
-
+    
+    public void testBuildProjectWhileProjectIsInReleaseStage()
+        throws Exception
+    {
+        DefaultContinuum continuum = ( DefaultContinuum ) getContinuum();
+        
+        continuum.setTaskQueueManager( taskQueueManager );
+        
+        continuum.setProjectDao( projectDao );
+        
+        final Project project = new Project();
+        project.setId( 1 );
+        project.setName( "Continuum Core" );
+        project.setGroupId( "org.apache.continuum" );
+        project.setArtifactId( "continuum-core" );
+        
+        context.checking( new Expectations()
+        {
+            {                
+                one( projectDao ).getProject( 1 );
+                will( returnValue( project ) );
+                
+                one( taskQueueManager ).isProjectInReleaseStage( "org.apache.continuum:continuum-core" );
+                will( returnValue( true ) );
+            }
+        });
+        
+        try
+        {
+            continuum.buildProject( 1 );
+            fail( "An exception should have been thrown." );
+        }
+        catch ( ContinuumException e )
+        {
+            assertEquals( "Project (id=1) is currently in release stage.", e.getMessage() );
+        }
+    }
+        
+    public void testBuildProjectGroupWhileAtLeastOneProjectIsInReleaseStage()
+        throws Exception
+    {
+        DefaultContinuum continuum = ( DefaultContinuum ) getContinuum();
+        
+        continuum.setTaskQueueManager( taskQueueManager );
+        
+        continuum.setProjectDao( projectDao );
+        
+        final List<Project> projects = new ArrayList<Project>();
+        
+        Project project = new Project();
+        project.setId( 1 );
+        project.setName( "Continuum Core" );
+        project.setGroupId( "org.apache.continuum" );
+        project.setArtifactId( "continuum-core" );
+        projects.add( project );
+        
+        project = new Project();
+        project.setId( 2 );
+        project.setName( "Continuum API" );
+        project.setGroupId( "org.apache.continuum" );
+        project.setArtifactId( "continuum-api" );
+        projects.add( project );
+        
+        context.checking( new Expectations()  
+        {
+            {
+                one( projectDao ).getProjectsInGroup( 1 );
+                will( returnValue( projects ) );
+                
+                one( taskQueueManager ).isProjectInReleaseStage( "org.apache.continuum:continuum-core" );
+                will( returnValue( true ) );
+            }
+        });
+        
+        try
+        {
+            continuum.buildProjectGroup( 1 );
+            fail( "An exception should have been thrown." );
+        }
+        catch ( ContinuumException e )
+        {
+            assertEquals( "Cannot build project group. Project (id=1) in group is currently in release stage.",
+                          e.getMessage() );
+        }
+    }
+    
     private Continuum getContinuum()
         throws Exception
     {

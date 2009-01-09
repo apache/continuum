@@ -31,6 +31,7 @@ import org.apache.continuum.purge.task.PurgeTask;
 import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
+import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -56,6 +57,16 @@ public class DefaultTaskQueueManager
      * @plexus.requirement role-hint="purge"
      */
     private TaskQueue purgeQueue;
+    
+    /**
+     * @plexus.requirement role-hint="prepare-release"
+     */
+    private TaskQueue prepareReleaseQueue;
+    
+    /**
+     * @plexus.requirement role-hint="perform-release"
+     */
+    private TaskQueue performReleaseQueue;
     
     /**
      * @plexus.requirement
@@ -130,6 +141,68 @@ public class DefaultTaskQueueManager
         {
             throw new TaskQueueManagerException( e.getMessage(), e );
         }
+    }
+    
+    public boolean isProjectInReleaseStage( String releaseId )
+        throws TaskQueueManagerException
+    {
+        Task prepareTask = getCurrentTask( "prepare-release" );        
+        if( prepareTask != null && prepareTask instanceof PrepareReleaseProjectTask )
+        {
+            if( ( ( PrepareReleaseProjectTask ) prepareTask ).getReleaseId().equals( releaseId ) )
+            {
+                return true;
+            }
+            else
+            {
+                try
+                {
+                    // check if in queue
+                    List<Task> tasks = prepareReleaseQueue.getQueueSnapshot();
+                    for( Task prepareReleaseTask : tasks )
+                    {
+                        if( ( ( PrepareReleaseProjectTask) prepareReleaseTask ).getReleaseId().equals( releaseId ) ) 
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch ( TaskQueueException e )
+                {
+                    throw new TaskQueueManagerException( e );
+                }
+            }
+        }
+        
+        Task performTask = getCurrentTask( "perform-release" );        
+        if( performTask != null && performTask instanceof PerformReleaseProjectTask )
+        {
+            if( ( ( PerformReleaseProjectTask ) performTask ).getReleaseId().equals( releaseId ) )
+            {
+                return true;
+            }
+            else
+            {
+                try
+                {
+                    // check if in queue
+                    List<Task> tasks = performReleaseQueue.getQueueSnapshot();
+                    for( Task performReleaseTask : tasks )
+                    {
+                        if( ( ( PerformReleaseProjectTask) performReleaseTask ).getReleaseId().equals( releaseId ) ) 
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch ( TaskQueueException e )
+                {
+                    throw new TaskQueueManagerException( e );
+                }
+            }
+        }
+                
+        return false;
     }
 
     public boolean releaseInProgress()
@@ -239,5 +312,5 @@ public class DefaultTaskQueueManager
         {
             throw new TaskQueueManagerException( "Unable to lookup current task", e );
         }
-    }
+    }    
 }

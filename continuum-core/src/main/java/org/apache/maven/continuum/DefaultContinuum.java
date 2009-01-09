@@ -53,6 +53,7 @@ import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -761,13 +762,17 @@ public class DefaultContinuum
     public void buildProjectsWithBuildDefinition( List<Project> projects, List<BuildDefinition> bds )
         throws ContinuumException
     {
-        prepareBuildProjects( projects, bds, true, ContinuumProjectState.TRIGGER_FORCED );
+        Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projects );
+        
+        prepareBuildProjects( filteredProjectsList, bds, true, ContinuumProjectState.TRIGGER_FORCED );
     }
 
     public void buildProjectsWithBuildDefinition( List<Project> projects, int buildDefinitionId )
         throws ContinuumException
     {
-        prepareBuildProjects( projects, buildDefinitionId, ContinuumProjectState.TRIGGER_FORCED );
+        Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projects );
+        
+        prepareBuildProjects( filteredProjectsList, buildDefinitionId, ContinuumProjectState.TRIGGER_FORCED );
     }
 
     /**
@@ -791,8 +796,10 @@ public class DefaultContinuum
 
             projectsList = getProjects();
         }
-
-        prepareBuildProjects( projectsList, null, true, trigger );
+        
+        Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projectsList );    
+        
+        prepareBuildProjects( filteredProjectsList, null, true, trigger );
     }
 
     /**
@@ -818,7 +825,9 @@ public class DefaultContinuum
             projectsList = getProjects();
         }
 
-        prepareBuildProjects( projectsList, buildDefinitionId, trigger );
+        Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projectsList );
+        
+        prepareBuildProjects( filteredProjectsList, buildDefinitionId, trigger );
     }
 
     /**
@@ -831,10 +840,13 @@ public class DefaultContinuum
         throws ContinuumException
     {
         List<BuildDefinition> groupDefaultBDs = null;
+        
+        if( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
+        {
+            groupDefaultBDs = getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
 
-        groupDefaultBDs = getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
-
-        buildProjectGroupWithBuildDefinition( projectGroupId, groupDefaultBDs, true );
+            buildProjectGroupWithBuildDefinition( projectGroupId, groupDefaultBDs, true );
+        }
     }
 
     /**
@@ -847,13 +859,16 @@ public class DefaultContinuum
     public void buildProjectGroupWithBuildDefinition( int projectGroupId, int buildDefinitionId )
         throws ContinuumException
     {
-        List<BuildDefinition> bds = new ArrayList<BuildDefinition>();
-        BuildDefinition bd = getBuildDefinition( buildDefinitionId );
-        if ( bd != null )
+        if( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
         {
-            bds.add( bd );
+            List<BuildDefinition> bds = new ArrayList<BuildDefinition>();
+            BuildDefinition bd = getBuildDefinition( buildDefinitionId );
+            if ( bd != null )
+            {
+                bds.add( bd );
+            }
+            buildProjectGroupWithBuildDefinition( projectGroupId, bds, false );
         }
-        buildProjectGroupWithBuildDefinition( projectGroupId, bds, false );
     }
 
     /**
@@ -866,20 +881,23 @@ public class DefaultContinuum
                                                        boolean checkDefaultBuildDefinitionForProject )
         throws ContinuumException
     {
-        Collection<Project> projectsList;
-
-        try
+        if( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
         {
-            projectsList = getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
+            Collection<Project> projectsList;
+    
+            try
+            {
+                projectsList = getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
+            }
+            catch ( CycleDetectedException e )
+            {
+                getLogger().warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
+    
+                projectsList = getProjects();
+            }
+            
+            prepareBuildProjects( projectsList, bds, checkDefaultBuildDefinitionForProject, ContinuumProjectState.TRIGGER_FORCED );
         }
-        catch ( CycleDetectedException e )
-        {
-            getLogger().warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
-
-            projectsList = getProjects();
-        }
-
-        prepareBuildProjects( projectsList, bds, checkDefaultBuildDefinitionForProject, ContinuumProjectState.TRIGGER_FORCED );
     }
 
     /**
@@ -896,7 +914,7 @@ public class DefaultContinuum
         Collection<Project> projectsList;
 
         Map projectsMap = null;
-
+        
         try
         {
             projectsMap = daoUtils.getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( schedule.getId() );
@@ -983,6 +1001,12 @@ public class DefaultContinuum
     public void buildProject( int projectId, int trigger )
         throws ContinuumException
     {
+        Project project = getProject( projectId );        
+        if( isProjectInReleaseStage( project ) )
+        {
+            throw new ContinuumException( "Project (id=" + projectId + ") is currently in release stage." );
+        }
+            
         BuildDefinition buildDef = getDefaultBuildDefinition( projectId );
 
         if ( buildDef == null )
@@ -1008,11 +1032,17 @@ public class DefaultContinuum
         projectsBuildDefinitionsMap.put( projectId, buildDef.getId() );
         
         prepareBuildProjects( projectsBuildDefinitionsMap, trigger );
-    }
+    }   
 
     public void buildProject( int projectId, int buildDefinitionId, int trigger )
         throws ContinuumException
     {
+        Project project = getProject( projectId );
+        if( isProjectInReleaseStage( project ) )
+        {
+            throw new ContinuumException( "Project (id=" + projectId + ") is currently in release stage." );
+        }
+        
         try
         {
             if ( parallelBuildsManager.isInAnyBuildQueue( projectId, buildDefinitionId ) || 
@@ -3551,5 +3581,69 @@ public class DefaultContinuum
         {
             throw new ContinuumException( "Error while creating project scm root with scm root address:" + url );
         }
+    }
+    
+    private boolean isProjectInReleaseStage( Project project ) throws ContinuumException
+    {           
+        String releaseId = project.getGroupId() + ":" + project.getArtifactId();        
+        try
+        {
+            if( taskQueueManager.isProjectInReleaseStage( releaseId ) )
+            {
+                return true;
+            }
+            return false;
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw new ContinuumException( "Error occurred while checking if project is currently being released.",  e );
+        }
+    }
+    
+    private boolean isAnyProjectInGroupInReleaseStage( int projectGroupId )
+        throws ContinuumException
+    {
+        Collection<Project> projects = getProjectsInGroup( projectGroupId );
+        for( Project project : projects )
+        {
+            if( isProjectInReleaseStage( project ) )
+            {
+                throw new ContinuumException( "Cannot build project group. Project (id=" + project.getId() +
+                    ") in group is currently in release stage." );
+            }
+        }        
+        return false;
+    }
+    
+    private Collection<Project> getProjectsNotInReleaseStage( Collection<Project> projectsList )
+        throws ContinuumException
+    {
+        // filter the projects to be built
+        // projects that are in the release stage will not be built
+        Collection<Project> filteredProjectsList = new ArrayList<Project>();
+        for( Project project : projectsList )
+        {
+            if( !isProjectInReleaseStage( project ) )
+            {
+                filteredProjectsList.add( project );
+            }
+            else
+            {
+                getLogger().warn(
+                                  "Project (id=" + project.getId() +
+                                      ") will not be built. It is currently in the release stage." );
+            }
+        }
+        return filteredProjectsList;
+    }
+    
+    void setTaskQueueManager( TaskQueueManager taskQueueManager )
+    {
+        this.taskQueueManager = taskQueueManager;
+    }
+    
+    void setProjectDao( ProjectDao  projectDao )
+    {
+        this.projectDao = projectDao;
     }
 }
