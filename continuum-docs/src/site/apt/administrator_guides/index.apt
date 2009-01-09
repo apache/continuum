@@ -18,6 +18,8 @@ Administrator's Guides
 
  * {{{profiles.html}Managing Build Environments}}
 
+ * {{{build-agents.html}Managing Build Agents}}
+
  * {{{schedules.html}Managing Schedules}}
 
  * {{{configuration.html}Managing General Configuration}}
@@ -35,3 +37,5 @@ Administrator's Guides
  * {{{builddefTemplate.html}Build Definition Templates}}
 
  * {{{shutdown.html}Shutting Down Continuum}}
+
+ * {{{distributed-builds.html}Distributed Builds}}

@@ -1,0 +1,25 @@
+ ------------------
+ Distributed Builds
+ ------------------
+
+
+Understanding Distributed Builds
+
+  When the 'Distributed Builds' option in General Configuration is enabled, the Continuum instance will become the
+  Master and will delegate all builds to configured Build Agents.
+
+  There is a one to many relationship between the master and the agents.  A master may have many agents, but each
+  agent only has one master.
+
+  Communication happens over XML-RPC, first with the Master contacting an agent to supply the necessary info and invoke
+  a build, and then with the agent later contacting the master to return the build results.
+
+  An agent may be installed on the same server as the master, or on a separate server.
+
+  More than one agent may be installed on a server.
+
+  TODO:  When a build is enqueued, the choice of which agent to use is defined by ____.
+
+  TODO:  How are multi-module projects handled?
+
+  TODO:  How are releases handled?
