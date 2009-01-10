@@ -40,7 +40,18 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/tags/continuum-1.2.3</developerConnection>
     <url>http://svn.apache.org/viewvc/continuum/tags/continuum-1.2.3</url>
   </scm>
-  <build>
+    <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>2.0-beta-7</version>
+        <configuration>
+          <templateDirectory>${basedir}/src/site</templateDirectory>
+          <template>continuum-site.vm</template>
+        </configuration>
+      </plugin>
+    </plugins>
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
