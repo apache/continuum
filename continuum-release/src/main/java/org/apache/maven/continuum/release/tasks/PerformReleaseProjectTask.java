@@ -28,6 +28,7 @@ import java.io.File;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  */
 public class PerformReleaseProjectTask
     extends AbstractReleaseProjectTask

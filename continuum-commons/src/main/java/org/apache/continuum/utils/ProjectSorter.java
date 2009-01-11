@@ -21,10 +21,10 @@ package org.apache.continuum.utils;
 
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.dag.DAG;
 import org.codehaus.plexus.util.dag.TopologicalSorter;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;

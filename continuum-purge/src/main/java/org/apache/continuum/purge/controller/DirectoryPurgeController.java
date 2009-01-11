@@ -26,7 +26,8 @@ import org.apache.continuum.purge.executor.ContinuumPurgeExecutor;
 import org.apache.continuum.purge.executor.ContinuumPurgeExecutorException;
 import org.apache.continuum.purge.executor.DaysOldDirectoryPurgeExecutor;
 import org.apache.continuum.purge.executor.RetentionCountDirectoryPurgeExecutor;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DirectoryPurgeController
@@ -35,9 +36,10 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  * @plexus.component role="org.apache.continuum.purge.controller.PurgeController" role-hint="purge-directory"
  */
 public class DirectoryPurgeController
-    extends AbstractLogEnabled
     implements PurgeController
 {
+    private Logger log = LoggerFactory.getLogger( DirectoryPurgeController.class );
+
     private ContinuumPurgeExecutor purgeExecutor;
 
     public void doPurge( String path )
@@ -48,7 +50,7 @@ public class DirectoryPurgeController
         }
         catch ( ContinuumPurgeExecutorException e )
         {
-            getLogger().error( e.getMessage(), e );
+            log.error( e.getMessage(), e );
         }
     }
 

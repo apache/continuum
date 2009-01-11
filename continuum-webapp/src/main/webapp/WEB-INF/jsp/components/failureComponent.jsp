@@ -26,7 +26,7 @@
   <div class="axial">
     <table>
       <tr>
-        <td><center>This Component Failed to Render</center></td>
+        <td><center><s:text name="failureComponent.section.title"/></center></td>
       </tr>
     </table>
   </div>

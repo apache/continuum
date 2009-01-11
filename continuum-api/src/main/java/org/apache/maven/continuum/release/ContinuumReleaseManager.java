@@ -32,6 +32,7 @@ import java.util.Properties;
  * that has been received by the Maven Release Plugin.
  *
  * @author Jason van Zyl
+ * @version $Id$
  */
 public interface ContinuumReleaseManager
 {

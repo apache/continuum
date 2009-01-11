@@ -36,6 +36,7 @@ import org.apache.maven.shared.release.ReleaseResult;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseInProgress"
  */
 public class ReleaseInProgressAction

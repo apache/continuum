@@ -96,7 +96,7 @@
       </table>
     </div>
 
-    <h3><ww:text name="projectGroup.scmRoot.title"/></h3>
+    <h3><s:text name="projectGroup.scmRoot.title"/></h3>
     <ec:table items="projectScmRoots"
               var="projectScmRoot"
               showExports="false"
@@ -116,7 +116,7 @@
       <c:if test="${!empty actionErrors}">
         <div class="errormessage">
           <s:iterator value="actionErrors">
-            <p><s:text name="<s:property/>" /></p>
+            <p><s:property/></p>
           </s:iterator>
         </div>
       </c:if>

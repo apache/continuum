@@ -24,6 +24,7 @@ import org.apache.maven.shared.release.config.ReleaseDescriptor;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  */
 public interface ReleaseProjectTask
 {

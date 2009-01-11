@@ -97,7 +97,7 @@ public class BuildResultsListAction
                     catch ( ContinuumException e )
                     {
                         getLogger().error( "Error removing BuildResult with id=" + buildId );
-                        addActionError( "Unable to remove BuildResult with id=" + buildId );
+                        addActionError( getText( "Unable to remove BuildResult with id=" + buildId ) );
                     }
                 }
             }

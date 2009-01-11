@@ -1,5 +1,24 @@
 package org.apache.maven.continuum.scm.queue;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,22 +42,25 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
+ * @version $Id$
  * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
  * role-hint="prepare-build-project"
  */
 public class PrepareBuildProjectsTaskExecutor
-    extends AbstractLogEnabled
     implements TaskExecutor
 {
+    private Logger log = LoggerFactory.getLogger( PrepareBuildProjectsTaskExecutor.class );
+
     /**
      * @plexus.requirement
      */
@@ -85,22 +107,22 @@ public class PrepareBuildProjectsTaskExecutor
             {
                 int buildDefinitionId = projectsBuildDefinitionsMap.get( projectId );
                 
-                getLogger().info( "Initializing prepare build" );
+                log.info( "Initializing prepare build" );
                 context = initializeContext( projectId, buildDefinitionId );
-
-                getLogger().info( "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
-                startPrepareBuild( context );
 
                 if ( !checkProjectScmRoot( context ) )
                 {
                     break;
                 }
-                
+
+                log.info( "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
+                startPrepareBuild( context );
+
                 try
                 {
                     if ( AbstractContinuumAction.getBuildDefinition( context ).isBuildFresh() )
                     {
-                        getLogger().info( "Purging existing working copy" );
+                        log.info( "Purging existing working copy" );
                         cleanWorkingDirectory( context );
                     }
 
@@ -109,10 +131,10 @@ public class PrepareBuildProjectsTaskExecutor
                     // ContinuumScmResult should return a ContinuumScmResult from all
                     // methods, even in a case of failure.
                     // ----------------------------------------------------------------------
-                    getLogger().info( "Updating working dir" );
+                    log.info( "Updating working dir" );
                     updateWorkingDirectory( context );
 
-                    getLogger().info( "Merging SCM results" );
+                    log.info( "Merging SCM results" );
                     //CONTINUUM-1393
                     if ( !AbstractContinuumAction.getBuildDefinition( context ).isBuildFresh() )
                     {
@@ -121,14 +143,14 @@ public class PrepareBuildProjectsTaskExecutor
                 }
                 finally
                 {
-                    getLogger().info( "Ending prepare build of project: " + AbstractContinuumAction.getProject( context).getName() );
+                    log.info( "Ending prepare build of project: " + AbstractContinuumAction.getProject( context).getName() );
                     endProjectPrepareBuild( context );
                 }
             }
         }
         finally
         {
-            getLogger().info( "Ending prepare build" );
+            log.info( "Ending prepare build" );
             endPrepareBuild( context );
         }
 
@@ -342,7 +364,7 @@ public class PrepareBuildProjectsTaskExecutor
 
         try
         {
-            getLogger().info( "Performing action " + actionName );
+            log.info( "Performing action " + actionName );
             actionManager.lookup( actionName ).execute( context );
             return;
         }
@@ -436,7 +458,7 @@ public class PrepareBuildProjectsTaskExecutor
         
         try
         {
-            projectList = ProjectSorter.getSortedProjects( projects, getLogger() );
+            projectList = ProjectSorter.getSortedProjects( projects, log );
         }
         catch ( CycleDetectedException e )
         {
@@ -462,7 +484,7 @@ public class PrepareBuildProjectsTaskExecutor
                 }
                 catch ( ContinuumStoreException e )
                 {
-                    getLogger().error( "Error while creating build object", e );
+                    log.error( "Error while creating build object", e );
                     throw new TaskExecutionException( "Error while creating build object", e );
                 }
                 shouldBuild = true;
@@ -477,17 +499,17 @@ public class PrepareBuildProjectsTaskExecutor
                     context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
                     context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
                     
-                    getLogger().info( "Performing action create-build-project-task" );
+                    log.info( "Performing action create-build-project-task" );
                     actionManager.lookup( "create-build-project-task" ).execute( context );
                 }
                 catch ( ActionNotFoundException e )
                 {
-                   getLogger().error( "Error looking up action 'build-project'" );
+                   log.error( "Error looking up action 'build-project'" );
                    throw new TaskExecutionException( "Error looking up action 'build-project'", e );
                 }
                 catch ( Exception e )
                 {
-                    getLogger().error( e.getMessage(), e );
+                    log.error( e.getMessage(), e );
                     throw new TaskExecutionException( "Error executing action 'build-project'", e );
                 }
             }

@@ -25,11 +25,12 @@ import org.apache.maven.continuum.model.project.ProjectDeveloper;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,9 +47,10 @@ import java.util.Properties;
  * role-hint="default"
  */
 public class DefaultMavenOneMetadataHelper
-    extends AbstractLogEnabled
     implements MavenOneMetadataHelper
 {
+    private Logger log = LoggerFactory.getLogger( DefaultMavenOneMetadataHelper.class );
+
     // ----------------------------------------------------------------------
     // MavenOneMetadataHelper Implementation
     // ----------------------------------------------------------------------
@@ -75,7 +77,7 @@ public class DefaultMavenOneMetadataHelper
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_XML_PARSE );
 
-            getLogger().info( "Error while reading maven POM (" + e.getMessage() + ").", e );
+            log.info( "Error while reading maven POM (" + e.getMessage() + ").", e );
 
             return;
         }
@@ -83,7 +85,7 @@ public class DefaultMavenOneMetadataHelper
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
 
-            getLogger().info( "Error while reading maven POM (" + e.getMessage() + ").", e );
+            log.info( "Error while reading maven POM (" + e.getMessage() + ").", e );
 
             return;
         }
@@ -91,7 +93,7 @@ public class DefaultMavenOneMetadataHelper
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
 
-            getLogger().info( "Error while reading maven POM (" + e.getMessage() + ").", e );
+            log.info( "Error while reading maven POM (" + e.getMessage() + ").", e );
 
             return;
         }
@@ -108,7 +110,7 @@ public class DefaultMavenOneMetadataHelper
         {
             result.addError( ContinuumProjectBuildingResult.ERROR_EXTEND );
 
-            getLogger().info( "Cannot use a POM with an 'extend' element." );
+            log.info( "Cannot use a POM with an 'extend' element." );
 
             return;
         }
@@ -137,7 +139,7 @@ public class DefaultMavenOneMetadataHelper
             {
                 result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_GROUPID );
 
-                getLogger().info( "Missing 'groupId' element in the POM." );
+                log.info( "Missing 'groupId' element in the POM." );
 
                 // Do not throw an exception or return here, gather up as many results as possible first.
             }
@@ -148,7 +150,7 @@ public class DefaultMavenOneMetadataHelper
             {
                 result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_ARTIFACTID );
 
-                getLogger().info( "Missing 'artifactId' element in the POM." );
+                log.info( "Missing 'artifactId' element in the POM." );
 
                 // Do not throw an exception or return here, gather up as many results as possible first.
             }

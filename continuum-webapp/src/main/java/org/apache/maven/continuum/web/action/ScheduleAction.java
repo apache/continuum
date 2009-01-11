@@ -28,6 +28,7 @@ import java.util.Collection;
 
 /**
  * @author Nik Gonzalez
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="schedule"
  */
 public class ScheduleAction
@@ -158,7 +159,7 @@ public class ScheduleAction
         if ( ( "".equals( name ) ) || ( name == null ) )
         {
             getLogger().error( "Can't create schedule. No schedule name was supplied." );
-            addActionError( "buildDefinition.noname.save.error.message" );
+            addActionError( getText( "buildDefinition.noname.save.error.message" ) );
             return ERROR;
         }
         else
@@ -237,7 +238,7 @@ public class ScheduleAction
             }
             catch ( ContinuumException e )
             {
-                addActionError( "schedule.remove.error" );
+                addActionError( getText( "schedule.remove.error" ) );
 
                 return ERROR;
             }

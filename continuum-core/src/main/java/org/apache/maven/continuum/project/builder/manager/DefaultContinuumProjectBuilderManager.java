@@ -20,7 +20,6 @@ package org.apache.maven.continuum.project.builder.manager;
  */
 
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.util.Map;
 
@@ -31,7 +30,6 @@ import java.util.Map;
  * role-hint="default"
  */
 public class DefaultContinuumProjectBuilderManager
-    extends AbstractLogEnabled
     implements ContinuumProjectBuilderManager
 {
     /**

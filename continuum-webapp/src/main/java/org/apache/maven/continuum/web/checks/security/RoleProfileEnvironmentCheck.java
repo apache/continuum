@@ -21,10 +21,11 @@ package org.apache.maven.continuum.web.checks.security;
 
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.system.check.EnvironmentCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,14 +35,15 @@ import java.util.List;
  * RoleProfileEnvironmentCheck:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $ID:$
+ * @version: $Id$
  * @plexus.component role="org.codehaus.plexus.redback.system.check.EnvironmentCheck"
  * role-hint="continuum-role-profile-check"
  */
 public class RoleProfileEnvironmentCheck
-    extends AbstractLogEnabled
     implements EnvironmentCheck
 {
+    private Logger log = LoggerFactory.getLogger( RoleProfileEnvironmentCheck.class );
+
     /**
      * @plexus.requirement role-hint="default"
      */
@@ -56,7 +58,7 @@ public class RoleProfileEnvironmentCheck
     {
         try
         {
-            getLogger().info( "Checking roles list." );
+            log.info( "Checking roles list." );
 
             Collection projectGroups = continuum.getAllProjectGroups();
 

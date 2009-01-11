@@ -20,7 +20,6 @@ package org.apache.maven.continuum.buildcontroller;
  */
 
 import org.apache.continuum.taskqueue.BuildProjectTask;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
@@ -30,7 +29,6 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
  * @version $Id$
  */
 public class BuildProjectTaskExecutor
-    extends AbstractLogEnabled
     implements TaskExecutor
 {
     /**

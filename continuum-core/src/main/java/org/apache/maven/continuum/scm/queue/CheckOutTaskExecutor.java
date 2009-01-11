@@ -25,10 +25,11 @@ import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.action.ActionManager;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,9 +41,10 @@ import java.util.Map;
  * role-hint="check-out-project"
  */
 public class CheckOutTaskExecutor
-    extends AbstractLogEnabled
     implements TaskExecutor
 {
+    private Logger log = LoggerFactory.getLogger( CheckOutTaskExecutor.class );
+
     /**
      * @plexus.requirement
      */
@@ -72,7 +74,7 @@ public class CheckOutTaskExecutor
         }
         catch ( ContinuumStoreException ex )
         {
-            getLogger().error( "Internal error while getting the project.", ex );
+            log.error( "Internal error while getting the project.", ex );
 
             return;
         }

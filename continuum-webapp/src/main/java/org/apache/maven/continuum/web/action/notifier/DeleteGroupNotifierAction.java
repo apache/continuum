@@ -34,7 +34,7 @@ import java.util.Map;
  * specified {@link ProjectGroup}.
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id: DeleteNotifierAction.java 467122 2006-10-23 20:50:19Z jmcconnell $
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="deleteGroupNotifier"
  * @since 1.1
  */

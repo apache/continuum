@@ -115,7 +115,7 @@ public interface BuildDefinitionService
 
     public List<BuildDefinitionTemplate> getBuildDefinitionTemplatesWithType( String type )
         throws BuildDefinitionServiceException;
-
+    
     public ProjectGroup addBuildDefinitionTemplateToProjectGroup( int projectGroupId,
                                                                   BuildDefinitionTemplate buildDefinitionTemplate )
         throws BuildDefinitionServiceException, ContinuumObjectNotFoundException;

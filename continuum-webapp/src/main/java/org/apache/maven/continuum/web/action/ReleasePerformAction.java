@@ -36,6 +36,7 @@ import java.util.List;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releasePerform"
  */
 public class ReleasePerformAction

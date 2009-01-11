@@ -27,7 +27,7 @@ import org.apache.maven.shared.release.ReleaseResult;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @version $Id: ShellCommandHelper.java 548732 2007-06-19 14:04:13Z evenisse $
+ * @version $Id$
  */
 public interface ShellCommandHelper
 {

@@ -28,6 +28,8 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -42,15 +44,12 @@ public class PropertiesHandlerMapping
     extends PropertyHandlerMapping
     implements Contextualizable
 {
+    private Logger log = LoggerFactory.getLogger( PropertiesHandlerMapping.class );
+
     /**
      * @plexus.requirement role="org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent"
      */
     private Map xmlrpcComponents;
-
-    /**
-     * @plexus.requirement
-     */
-    private Listener listener;
 
     private PlexusContainer container;
 
@@ -61,17 +60,20 @@ public class PropertiesHandlerMapping
         {
             String key = (String) i.next();
             Class cl = xmlrpcComponents.get( key ).getClass();
-            listener.getLogger().debug( key + " => " + cl.getName() );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( key + " => " + cl.getName() );
+            }
 
             registerPublicMethods( key, cl );
         }
 
-        if ( listener.getLogger().isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
             String[] methods = getListMethods();
             for ( int i = 0; i < methods.length; i++ )
             {
-                listener.getLogger().debug( methods[i] );
+                log.debug( methods[i] );
             }
         }
     }

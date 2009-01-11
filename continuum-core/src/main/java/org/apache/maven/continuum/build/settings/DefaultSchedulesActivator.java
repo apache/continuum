@@ -32,7 +32,6 @@ import org.apache.maven.continuum.scheduler.ContinuumBuildJob;
 import org.apache.maven.continuum.scheduler.ContinuumPurgeJob;
 import org.apache.maven.continuum.scheduler.ContinuumSchedulerConstants;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.scheduler.AbstractJob;
 import org.codehaus.plexus.scheduler.Scheduler;
 import org.codehaus.plexus.util.StringUtils;
@@ -40,6 +39,8 @@ import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Collection;
@@ -52,9 +53,10 @@ import java.util.List;
  * @plexus.component role="org.apache.maven.continuum.build.settings.SchedulesActivator"
  */
 public class DefaultSchedulesActivator
-    extends AbstractLogEnabled
     implements SchedulesActivator
 {
+    private Logger log = LoggerFactory.getLogger( DefaultSchedulesActivator.class );
+
     /**
      * @plexus.requirement
      */
@@ -86,7 +88,7 @@ public class DefaultSchedulesActivator
     public void activateSchedules( Continuum continuum )
         throws SchedulesActivationException
     {
-        getLogger().info( "Activating schedules ..." );
+        log.info( "Activating schedules ..." );
 
         Collection<Schedule> schedules = scheduleDao.getAllSchedulesByName();
 
@@ -96,7 +98,7 @@ public class DefaultSchedulesActivator
             {
                 // TODO: this can possibly be removed but it's here now to
                 // weed out any bugs
-                getLogger().info( "Not scheduling " + schedule.getName() );
+                log.info( "Not scheduling " + schedule.getName() );
 
                 continue;
             }
@@ -116,7 +118,7 @@ public class DefaultSchedulesActivator
             }
             catch ( SchedulesActivationException e )
             {
-                getLogger().error( "Can't activate schedule '" + schedule.getName() + "'", e );
+                log.error( "Can't activate schedule '" + schedule.getName() + "'", e );
 
                 schedule.setActive( false );
 
@@ -136,7 +138,7 @@ public class DefaultSchedulesActivator
     public void activateSchedule( Schedule schedule, Continuum continuum )
         throws SchedulesActivationException
     {
-        getLogger().info( "Activating schedule " + schedule.getName() );
+        log.info( "Activating schedule " + schedule.getName() );
 
         if ( isScheduleFromBuildJob( schedule ) )
         {
@@ -152,7 +154,7 @@ public class DefaultSchedulesActivator
     public void unactivateSchedule( Schedule schedule, Continuum continuum )
         throws SchedulesActivationException
     {
-        getLogger().info( "Deactivating schedule " + schedule.getName() );
+        log.info( "Deactivating schedule " + schedule.getName() );
 
         unschedule( schedule, continuum );
     }
@@ -162,7 +164,7 @@ public class DefaultSchedulesActivator
     {
         if ( !schedule.isActive() )
         {
-            getLogger().info( "Schedule \"" + schedule.getName() + "\" is disabled." );
+            log.info( "Schedule \"" + schedule.getName() + "\" is disabled." );
 
             return;
         }
@@ -171,7 +173,7 @@ public class DefaultSchedulesActivator
 
         dataMap.put( "continuum", continuum );
 
-        dataMap.put( AbstractJob.LOGGER, getLogger() );
+        dataMap.put( AbstractJob.LOGGER, log );
 
         dataMap.put( ContinuumSchedulerConstants.SCHEDULE, schedule );
 
@@ -208,7 +210,7 @@ public class DefaultSchedulesActivator
         {
             scheduler.scheduleJob( jobDetail, trigger );
 
-            getLogger().info( trigger.getName() + ": next fire time ->" + trigger.getNextFireTime() );
+            log.info( trigger.getName() + ": next fire time ->" + trigger.getNextFireTime() );
         }
         catch ( SchedulerException e )
         {
@@ -223,7 +225,7 @@ public class DefaultSchedulesActivator
         {
             if ( schedule.isActive() )
             {
-                getLogger().info( "Stopping active schedule \"" + schedule.getName() + "\"." );
+                log.info( "Stopping active schedule \"" + schedule.getName() + "\"." );
 
                 scheduler.interruptSchedule( schedule.getName(), org.quartz.Scheduler.DEFAULT_GROUP );
             }

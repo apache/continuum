@@ -101,7 +101,7 @@ public class ProjectsListAction
                 catch ( ContinuumException e )
                 {
                     getLogger().error( "Error removing Project with id=" + projectId );
-                    addActionError( "Unable to remove Project with id=" + projectId );
+                    addActionError( getText( "Unable to remove Project with id=" + projectId ) );
                 }
             }
         }

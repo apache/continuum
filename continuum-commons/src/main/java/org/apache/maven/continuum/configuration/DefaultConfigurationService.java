@@ -38,6 +38,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @version $Id$
@@ -54,19 +56,13 @@ public class DefaultConfigurationService
      */
     private File applicationHome;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ScheduleDao scheduleDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private SystemConfigurationDao systemConfigurationDao;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ContinuumConfiguration configuration;
 
     private GeneralConfiguration generalConfiguration;

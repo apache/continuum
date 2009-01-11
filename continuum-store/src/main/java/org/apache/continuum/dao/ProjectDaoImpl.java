@@ -23,6 +23,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.springframework.stereotype.Repository;
 
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
@@ -35,8 +36,8 @@ import java.util.List;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.ProjectDao"
  */
+@Repository("projectDao")
 public class ProjectDaoImpl
     extends AbstractDao
     implements ProjectDao

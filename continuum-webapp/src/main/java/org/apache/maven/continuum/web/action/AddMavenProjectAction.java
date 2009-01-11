@@ -145,12 +145,12 @@ public abstract class AddMavenProjectAction
             }
             catch ( MalformedURLException e )
             {
-                addActionError( "add.project.unknown.error" );
+                addActionError( getText( "add.project.unknown.error" ) );
                 return doDefault();
             }
             catch ( UnsupportedEncodingException e )
             {
-                addActionError( "add.project.unknown.error" );
+                addActionError( getText( "add.project.unknown.error" ) );
                 return doDefault();
             }
             
@@ -182,7 +182,7 @@ public abstract class AddMavenProjectAction
             else
             {
                 // no url or file was filled
-                addActionError( "add.project.field.required.error" );
+                addActionError( getText( "add.project.field.required.error" ) );
                 return doDefault();
             }
         }
