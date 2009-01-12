@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +15,10 @@ public class DefaultBuildAgentConfigurationService
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
-    /**
-     * @plexus.requirement
-     */
-    private BuildAgentConfiguration configuration;
+    @Resource
+    private BuildAgentConfiguration buildAgentConfiguration;
 
-    private GeneralBuildAgentConfiguration buildAgentConfiguration;
+    private GeneralBuildAgentConfiguration generalBuildAgentConfiguration;
 
     public void initialize()
         throws BuildAgentConfigurationException
@@ -26,19 +26,19 @@ public class DefaultBuildAgentConfigurationService
         loadData();
     }
 
-    public BuildAgentConfiguration getConfiguration()
+    public BuildAgentConfiguration getBuildAgentConfiguration()
     {
-        return configuration;
+        return buildAgentConfiguration;
     }
 
-    public void setConfiguration( BuildAgentConfiguration configuration )
+    public void setBuildAgentConfiguration( BuildAgentConfiguration buildAgentConfiguration )
     {
-        this.configuration = configuration;
+        this.buildAgentConfiguration = buildAgentConfiguration;
     }
 
     public File getBuildOutputDirectory()
     {
-        return buildAgentConfiguration.getBuildOutputDirectory();
+        return generalBuildAgentConfiguration.getBuildOutputDirectory();
     }
 
     public File getBuildOutputDirectory( int projectId )
@@ -58,12 +58,12 @@ public class DefaultBuildAgentConfigurationService
 
     public File getWorkingDirectory()
     {
-        return buildAgentConfiguration.getWorkingDirectory();
+        return generalBuildAgentConfiguration.getWorkingDirectory();
     }
 
     public File getWorkingDirectory( int projectId )
     {
-        return new File( buildAgentConfiguration.getWorkingDirectory(), Integer.toString( projectId ) );
+        return new File( generalBuildAgentConfiguration.getWorkingDirectory(), Integer.toString( projectId ) );
     }
 
     public String getBuildOutput( int projectId )
@@ -106,17 +106,17 @@ public class DefaultBuildAgentConfigurationService
 
     public String getContinuumServerUrl()
     {
-        return buildAgentConfiguration.getContinuumServerUrl();
+        return generalBuildAgentConfiguration.getContinuumServerUrl();
     }
 
     public List getAvailableInstallations()
     {
-        return buildAgentConfiguration.getInstallations();
+        return generalBuildAgentConfiguration.getInstallations();
     }
 
     private void loadData()
         throws BuildAgentConfigurationException
     {
-        buildAgentConfiguration = configuration.getContinuumBuildAgentConfiguration();
+        generalBuildAgentConfiguration = buildAgentConfiguration.getContinuumBuildAgentConfiguration();
     }
 }

@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.continuum.buildagent.ContinuumBuildAgentException;
 import org.apache.continuum.buildagent.ContinuumBuildAgentService;
-import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ public class SlaveBuildAgentTransportServer
     implements SlaveBuildAgentTransportService
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
-    
+
     private ContinuumBuildAgentService continuumBuildAgentService;
     
     public SlaveBuildAgentTransportServer( ContinuumBuildAgentService continuumBuildAgentService )

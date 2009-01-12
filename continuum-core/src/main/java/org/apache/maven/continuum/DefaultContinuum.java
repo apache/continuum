@@ -1433,7 +1433,10 @@ public class DefaultContinuum
 
         executeAction( "store-project", context );
 
-        executeAction( "add-project-to-checkout-queue", context );
+        if ( !configurationService.isDistributedBuildEnabled() )
+        {
+            executeAction( "add-project-to-checkout-queue", context );
+        }
 
         executeAction( "add-assignable-roles", context );
 
@@ -1619,7 +1622,7 @@ public class DefaultContinuum
         {
             project.setScmUseCache( useCredentialsCache );
 
-            // values backup for first checkout
+            // values backup for first 
             scmUserName = project.getScmUsername();
             scmPassword = project.getScmPassword();
             // CONTINUUM-1792 : we don't store it
@@ -1670,7 +1673,10 @@ public class DefaultContinuum
                 // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup ); 
                 // remove object data -> we don't display the project name in the build queue
                 context.put( AbstractContinuumAction.KEY_PROJECT, projectDao.getProject( project.getId() ) );
-                executeAction( "add-project-to-checkout-queue", context );
+                if ( !configurationService.isDistributedBuildEnabled() )
+                {
+                    executeAction( "add-project-to-checkout-queue", context );
+                }
             }
         }
         catch ( BuildDefinitionServiceException e )
