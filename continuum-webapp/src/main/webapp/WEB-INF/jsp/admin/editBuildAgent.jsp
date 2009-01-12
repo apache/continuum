@@ -47,6 +47,7 @@
                   <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" required="true"/>
                 </c:when>
                 <c:otherwise>
+                  <s:hidden name="buildAgent.url"/>
                   <s:textfield label="%{getText('buildAgent.url.label')}" name="buildAgent.url" required="true" disabled="true"/>
                 </c:otherwise>
               </c:choose>
