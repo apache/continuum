@@ -73,8 +73,8 @@
                 <s:param name="desc"><p><s:text name="schedule.quietPeriod.message"/></p></s:param>
             </s:textfield>
     	
-            <s:select label="Add Build Queue" id="buildQueueIds" name="buildQueueIds" headerKey="-1" listKey="name" listValue="name" multiple="true"
-                headerValue="--Build Queues--" list="buildQueues" />
+            <s:select label="Add Build Queue" id="buildQueueIds" name="buildQueueIds" listKey="name" listValue="name" multiple="true"
+                list="buildQueues" />
                                        
             <s:checkbox label="%{getText('schedule.enabled.label')}" name="active" value="active" fieldValue="true">
                 <s:param name="desc"><p><s:text name="schedule.enabled.message"/></p></s:param>
