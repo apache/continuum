@@ -21,7 +21,6 @@ package org.apache.maven.continuum.web.action;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.continuum.ContinuumException;
@@ -72,20 +71,49 @@ public class ScheduleAction
     private String dayOfWeek = "?";
 
     private String year;
-
-    private List<BuildQueue> schedulesBuildQueue;
-
-    private BuildQueue buildQueue;
-
-    private List<BuildQueue> buildQueues;
-
-    private List<String> buildQueueIds;
+    
+    private List<String> availableBuildQueues;
+    
+    private List<String> selectedBuildQueues = new ArrayList<String>();
 
     public void prepare()
         throws Exception
     {
         super.prepare();
+        
+        populateBuildQueues();
+    }
+
+    private void populateBuildQueues()
+        throws ContinuumException
+    {
+        List<BuildQueue> buildQueues = null;
+        if( schedule != null )
+        {
+            buildQueues = schedule.getBuildQueues();
+            for( BuildQueue buildQueue : buildQueues )
+            {
+                selectedBuildQueues.add( buildQueue.getName() );
+            }
+
+        }
+            
+        availableBuildQueues = new ArrayList<String>();
+        
         buildQueues = getContinuum().getAllBuildQueues();
+        for( BuildQueue buildQueue : buildQueues )
+        {
+            availableBuildQueues.add( buildQueue.getName() );
+        }
+        
+        // remove selected build queues from available build queues
+        for( String buildQueue : selectedBuildQueues )
+        {
+            if( availableBuildQueues.contains( buildQueue ) )
+            {
+                availableBuildQueues.remove( buildQueue );
+            }
+        }
     }
 
     public String summary()
@@ -106,8 +134,7 @@ public class ScheduleAction
             return REQUIRES_AUTHENTICATION;
 
         }
-        buildQueueIds = new ArrayList<String>();
-
+        
         schedules = getContinuum().getSchedules();
 
         return SUCCESS;
@@ -154,7 +181,7 @@ public class ScheduleAction
             delay = schedule.getDelay();
             maxJobExecutionTime = schedule.getMaxJobExecutionTime();
 
-            getBuildQueueIdsFromSchedule();
+            populateBuildQueues();
         }
         else
         {
@@ -163,22 +190,6 @@ public class ScheduleAction
         }
 
         return SUCCESS;
-    }
-
-    private void getBuildQueueIdsFromSchedule()
-    {
-        if ( schedule != null )
-        {
-            List<BuildQueue> buildQueues = schedule.getBuildQueues();
-            if ( buildQueueIds == null )
-            {
-                buildQueueIds = new ArrayList<String>();
-            }
-            for ( BuildQueue buildQueue : buildQueues )
-            {
-                buildQueueIds.add( buildQueue.getName() );
-            }
-        }
     }
 
     public String save()
@@ -247,16 +258,15 @@ public class ScheduleAction
         schedule.setName( name );
         schedule.setMaxJobExecutionTime( maxJobExecutionTime );
 
-        // remove old build queues
+     // remove old build queues
         schedule.setBuildQueues( null );
 
-        // add selected build queues
-        for ( String buildQueueId : buildQueueIds )
+        for( String name : selectedBuildQueues )
         {
-            BuildQueue buildQueue = getContinuum().getBuildQueueByName( buildQueueId );
+            BuildQueue buildQueue = getContinuum().getBuildQueueByName( name );
             schedule.addBuildQueue( buildQueue );
         }
-
+        
         return schedule;
     }
 
@@ -485,43 +495,23 @@ public class ScheduleAction
         return ( second + " " + minute + " " + hour + " " + dayOfMonth + " " + month + " " + dayOfWeek + " " + year ).trim();
     }
 
-    public BuildQueue getBuildQueue()
+    public List<String> getAvailableBuildQueues()
     {
-        return buildQueue;
+        return availableBuildQueues;
     }
 
-    public void setBuildQueue( BuildQueue buildQueue )
+    public void setAvailableBuildQueues( List<String> availableBuildQueues )
     {
-        this.buildQueue = buildQueue;
+        this.availableBuildQueues = availableBuildQueues;
     }
 
-    public List<BuildQueue> getBuildQueues()
+    public List<String> getSelectedBuildQueues()
     {
-        return buildQueues;
+        return selectedBuildQueues;
     }
 
-    public void setBuildQueues( List<BuildQueue> buildQueues )
+    public void setSelectedBuildQueues( List<String> selectedBuildQueues )
     {
-        this.buildQueues = buildQueues;
-    }
-
-    public List<String> getBuildQueueIds()
-    {
-        return buildQueueIds == null ? Collections.EMPTY_LIST : buildQueueIds;
-    }
-
-    public void setBuildQueueIds( List<String> buildQueueIds )
-    {
-        this.buildQueueIds = buildQueueIds;
-    }
-
-    public List<BuildQueue> getSchedulesBuildQueue()
-    {
-        return schedulesBuildQueue;
-    }
-
-    public void setSchedulesBuildQueue( List<BuildQueue> schedulesBuildQueue )
-    {
-        this.schedulesBuildQueue = schedulesBuildQueue;
+        this.selectedBuildQueues = selectedBuildQueues;
     }
 }
