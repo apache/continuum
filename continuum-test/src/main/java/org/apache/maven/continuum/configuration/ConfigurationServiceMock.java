@@ -19,6 +19,8 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.continuum.buildqueue.BuildQueueServiceException;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
@@ -188,6 +190,12 @@ public class ConfigurationServiceMock
     {
     }
 
+    public BuildQueue getDefaultBuildQueue()
+        throws BuildQueueServiceException
+    {
+        return null;
+    }
+    
     public Schedule getDefaultSchedule()
         throws ContinuumStoreException
     {
@@ -240,4 +248,13 @@ public class ConfigurationServiceMock
         return null;
     }
 
+    public int getNumberOfBuildsInParallel()
+    {
+        return 1;
+    }
+    
+    public void setNumberOfBuildsInParallel( int num )
+    {
+        
+    }
 }

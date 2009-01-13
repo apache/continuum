@@ -130,6 +130,10 @@ under the License.
       <artifactId>jpox</artifactId>
     </dependency>
     <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>jsr250-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-store</artifactId>
     </dependency>
@@ -253,6 +257,21 @@ under the License.
     <dependency>
       <groupId>org.jmock</groupId>
       <artifactId>jmock-junit3</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jmock</groupId>
+      <artifactId>jmock-legacy</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.objenesis</groupId>
+      <artifactId>objenesis</artifactId>    
       <scope>test</scope>
     </dependency>
   </dependencies>

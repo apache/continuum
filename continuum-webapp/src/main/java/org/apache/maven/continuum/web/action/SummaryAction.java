@@ -19,8 +19,8 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -56,10 +56,10 @@ public class SummaryAction
     private GroupSummary groupSummary = new GroupSummary();
 
     /**
-     * @plexus.requirement
+     * @plexus.requirement role-hint="parallel"
      */
-    private TaskQueueManager taskQueueManager;
-
+    private BuildsManager parallelBuildsManager;
+    
     public String execute()
         throws ContinuumException
     {
@@ -110,12 +110,12 @@ public class SummaryAction
             model.setProjectType( project.getExecutorId() );
 
             try
-            {
-                if ( taskQueueManager.isInBuildingQueue( project.getId() ) )
+            {                
+                if ( parallelBuildsManager.isInAnyBuildQueue( project.getId() ) )
                 {
                     model.setInBuildingQueue( true );
-                }
-                else if ( taskQueueManager.isInCheckoutQueue( project.getId() ) )
+                }             
+                else if ( parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) )
                 {
                     model.setInCheckoutQueue( true );
                 }
@@ -125,7 +125,7 @@ public class SummaryAction
                     model.setInCheckoutQueue( false );
                 }
             }
-            catch ( TaskQueueManagerException e )
+            catch ( BuildManagerException e )
             {
                 throw new ContinuumException( e.getMessage(), e );
             }

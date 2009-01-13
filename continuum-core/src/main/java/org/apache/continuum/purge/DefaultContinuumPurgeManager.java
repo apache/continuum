@@ -19,6 +19,7 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -27,11 +28,6 @@ import org.apache.continuum.purge.task.PurgeTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.Schedule;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 
 import java.util.List;
@@ -61,6 +57,11 @@ public class DefaultContinuumPurgeManager
      * @plexus.requirement
      */
     private TaskQueueManager taskQueueManager;
+    
+    /**
+     * @plexus.requirement role-hint="parallel"
+     */
+    private BuildsManager parallelBuildsManager;
     
     public void purge( Schedule schedule )
         throws ContinuumPurgeManagerException
@@ -129,7 +130,7 @@ public class DefaultContinuumPurgeManager
             else if ( "buildOutput".equals( dirPurge.getDirectoryType() ) )
             {
                 // do not purge if build in progress
-                if ( !taskQueueManager.buildInProgress() && 
+                if ( !parallelBuildsManager.isBuildInProgress() && 
                      !taskQueueManager.isInPurgeQueue( dirPurge.getId() ) )
                 {
                     taskQueueManager.getPurgeQueue().put( new PurgeTask( dirPurge.getId() ) );

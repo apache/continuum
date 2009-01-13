@@ -31,31 +31,31 @@
   <classes>
     <class rootElement="true" xml.tagName="continuum-configuration">
       <name>ContinuumConfigurationModel</name>
-      <version>1.0.0+</version>
+      <version>1.1.0+</version>
       <fields>
         <field>
           <name>baseUrl</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>
         <field>
           <name>buildOutputDirectory</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>
         <field>
           <name>deploymentRepositoryDirectory</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>   
         <field>
           <name>workingDirectory</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>
         <field>
           <name>proxyConfiguration</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <association>
             <type>ProxyConfiguration</type>
             <multiplicity>1</multiplicity>
@@ -63,33 +63,38 @@
         </field>     
         <field>
           <name>releaseOutputDirectory</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <type>String</type>
-        </field>                
+        </field>    
+        <field>
+          <name>numberOfBuildsInParallel</name>
+          <version>1.1.0+</version>
+          <type>int</type>
+        </field>            
       </fields>
     </class>
     <class xml.tagName="proxy-configuration">
       <name>ProxyConfiguration</name>
-      <version>1.0.0+</version>
+      <version>1.1.0+</version>
       <fields>
         <field>
           <name>proxyHost</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>
         <field>
           <name>proxyPort</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <type>int</type>
         </field>
         <field>
           <name>proxyUser</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>   
         <field>
           <name>proxyPassword</name>
-          <version>1.0.0+</version>
+          <version>1.1.0+</version>
           <type>String</type>
         </field>                     
       </fields>

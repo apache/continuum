@@ -46,6 +46,10 @@ public abstract class AbstractContinuumAction
     public static final String KEY_PROJECT_ID = "project-id";
 
     public static final String KEY_PROJECT = "project";
+    
+    public static final String KEY_PROJECTS = "projects";
+    
+    public static final String KEY_PROJECTS_BUILD_DEFINITIONS_MAP = "projects-build-definitions";
 
     public static final String KEY_BUILD_DEFINITION_TEMPLATE = "build-definition-template";
 
@@ -219,6 +223,16 @@ public abstract class AbstractContinuumAction
     public static int getOldBuildId( Map context )
     {
         return getInteger( context, KEY_OLD_BUILD_ID ); 
+    }
+    
+    public static List<Project> getListOfProjects( Map context )
+    {
+        return (List<Project>) getObject( context, KEY_PROJECTS );
+    }
+    
+    public static Map<Integer, BuildDefinition> getProjectsBuildDefinitionsMap( Map context )
+    {
+        return (Map<Integer, BuildDefinition>) getObject( context, KEY_PROJECTS_BUILD_DEFINITIONS_MAP );
     }
 
     // ----------------------------------------------------------------------

@@ -37,7 +37,7 @@ import java.util.Map;
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  * @plexus.component role="org.codehaus.plexus.taskqueue.execution.TaskExecutor"
- * role-hint="check-out-project"
+ * role-hint="check-out-project" instantiation-strategy="per-lookup"
  */
 public class CheckOutTaskExecutor
     implements TaskExecutor
@@ -61,6 +61,8 @@ public class CheckOutTaskExecutor
     public void executeTask( Task t )
         throws TaskExecutionException
     {
+        log.info( "Checkout task executor.." );
+        
         CheckOutTask task = (CheckOutTask) t;
 
         int projectId = task.getProjectId();

@@ -21,6 +21,7 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -62,7 +63,7 @@ public class BuildResultAction
     private String projectGroupName = "";
 
     public String execute()
-        throws ContinuumException, ConfigurationException, IOException
+        throws ContinuumException, ConfigurationException, IOException, BuildManagerException
     {
         try
         {

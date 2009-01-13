@@ -21,12 +21,13 @@ package org.apache.maven.continuum.xmlrpc.server;
 
 import net.sf.dozer.util.mapping.DozerBeanMapperSingletonWrapper;
 import net.sf.dozer.util.mapping.MapperIF;
+
+import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.continuum.purge.PurgeConfigurationServiceException;
 import org.apache.continuum.repository.RepositoryServiceException;
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -58,6 +59,7 @@ import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
+import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -68,6 +70,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -93,11 +96,11 @@ public class ContinuumServiceImpl
      * @plexus.requirement role-hint="default"
      */
     private RoleManager roleManager;
-
+    
     /**
-     * @plexus.requirement
+     * @plexus.requirement role-hint="parallel"
      */
-    private TaskQueueManager taskQueueManager;
+    private BuildsManager parallelBuildsManager;
 
     public boolean ping()
         throws ContinuumException
@@ -1045,9 +1048,9 @@ public class ContinuumServiceImpl
     {
         try
         {
-            return taskQueueManager.isInBuildingQueue( projectId );
+            return parallelBuildsManager.isInAnyBuildQueue( projectId );
         }
-        catch ( TaskQueueManagerException e )
+        catch ( BuildManagerException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }
@@ -1057,10 +1060,24 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         try
-        {
-            return populateBuildProjectTaskList( taskQueueManager.getProjectsInBuildQueue() );
+        {  
+            Map<String, List<Task>> buildTasks = parallelBuildsManager.getProjectsInBuildQueues();
+            Set<String> keys = buildTasks.keySet();
+            List<org.apache.maven.continuum.buildqueue.BuildProjectTask> convertedTasks =
+                new ArrayList<org.apache.maven.continuum.buildqueue.BuildProjectTask>();
+            
+            for( String key : keys )
+            {
+                List<Task> tasks = buildTasks.get( key );
+                for( Task task : tasks )
+                {
+                    convertedTasks.add( ( org.apache.maven.continuum.buildqueue.BuildProjectTask ) task );
+                }
+            }
+            
+            return populateBuildProjectTaskList( convertedTasks );
         }
-        catch ( TaskQueueManagerException e )
+        catch ( BuildManagerException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }
@@ -1070,14 +1087,9 @@ public class ContinuumServiceImpl
         throws ContinuumException
     {
         checkManageQueuesAuthorization();
-        try
-        {
-            taskQueueManager.removeProjectsFromBuildingQueue( projectsId );
-        }
-        catch ( TaskQueueManagerException e )
-        {
-            throw new ContinuumException( e.getMessage(), e );
-        }
+        
+        parallelBuildsManager.removeProjectsFromBuildQueue( projectsId );
+        
         return 0;
     }
 
@@ -1087,9 +1099,9 @@ public class ContinuumServiceImpl
         checkManageQueuesAuthorization();
         try
         {
-            return taskQueueManager.cancelCurrentBuild();
+            return parallelBuildsManager.cancelAllBuilds();
         }
-        catch ( TaskQueueManagerException e )
+        catch ( BuildManagerException e )
         {
             throw new ContinuumException( e.getMessage(), e );
         }

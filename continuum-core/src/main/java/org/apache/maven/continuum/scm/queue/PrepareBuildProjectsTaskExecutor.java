@@ -19,6 +19,7 @@ package org.apache.maven.continuum.scm.queue;
  * under the License.
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.scm.ChangeSet;
@@ -464,54 +466,74 @@ public class PrepareBuildProjectsTaskExecutor
             projectList = projectDao.getAllProjectsByName();
         }
 
+        List<Project> projectsToBeBuilt = new ArrayList<Project>();
+        Map<Integer, BuildDefinition> projectsBuildDefinitionsMap = new HashMap<Integer, BuildDefinition>();
+        
         for ( Project project : projectList )
         {
-            boolean shouldBuild = false;
+            //boolean shouldBuild = false;
             int buildDefinitionId = 0;
             
             if ( projectsAndBuildDefinitionsMap.get( project.getId() ) != null )
             {
-                buildDefinitionId = projectsAndBuildDefinitionsMap.get( project.getId() );
-                shouldBuild = true;
+                buildDefinitionId = projectsAndBuildDefinitionsMap.get( project.getId() );                
+                //shouldBuild = true;         
+                try
+                {
+                    BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+                    projectsBuildDefinitionsMap.put( project.getId(), buildDefinition );
+                    projectsToBeBuilt.add( project );
+                }
+                catch( ContinuumStoreException e )
+                {
+                    log.error( "Error while creating build object", e );
+                    throw new TaskExecutionException( "Error while creating build object", e );
+                }
             }
             else if ( project.getState() == ContinuumProjectState.CHECKEDOUT || project.getState() == ContinuumProjectState.NEW ) //check if no build result yet for project
             {
                 try
                 {
                     //get default build definition for project
-                    buildDefinitionId = buildDefinitionDao.getDefaultBuildDefinition( project.getId() ).getId();
+                    //buildDefinitionId = buildDefinitionDao.getDefaultBuildDefinition( project.getId() ).getId();
+                    BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( project.getId() );
+                    projectsBuildDefinitionsMap.put( project.getId(), buildDefinition );
+                    projectsToBeBuilt.add( project );
                 }
                 catch ( ContinuumStoreException e )
                 {
                     log.error( "Error while creating build object", e );
                     throw new TaskExecutionException( "Error while creating build object", e );
                 }
-                shouldBuild = true;
-            }
-
-            if ( shouldBuild )
-            {
-                try
-                {
-                    Map context = new HashMap();
-                    context.put( AbstractContinuumAction.KEY_PROJECT, project );
-                    context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
-                    context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
-                    
-                    log.info( "Performing action create-build-project-task" );
-                    actionManager.lookup( "create-build-project-task" ).execute( context );
-                }
-                catch ( ActionNotFoundException e )
-                {
-                   log.error( "Error looking up action 'build-project'" );
-                   throw new TaskExecutionException( "Error looking up action 'build-project'", e );
-                }
                 catch ( Exception e )
                 {
                     log.error( e.getMessage(), e );
                     throw new TaskExecutionException( "Error executing action 'build-project'", e );
                 }
+                //shouldBuild = true;
+                projectsToBeBuilt.add( project );
             }
+        }
+        
+        try
+        {
+            Map context = new HashMap();
+            context.put( AbstractContinuumAction.KEY_PROJECTS, projectsToBeBuilt );
+            context.put( AbstractContinuumAction.KEY_PROJECTS_BUILD_DEFINITIONS_MAP, projectsBuildDefinitionsMap );
+            context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
+            
+            log.info( "Performing action create-build-project-task" );
+            actionManager.lookup( "create-build-project-task" ).execute( context );
+        }
+        catch ( ActionNotFoundException e )
+        {
+           log.error( "Error looking up action 'build-project'" );
+           throw new TaskExecutionException( "Error looking up action 'build-project'", e );
+        }
+        catch ( Exception e )
+        {
+            log.error( e.getMessage(), e );
+            throw new TaskExecutionException( "Error executing action 'build-project'", e );
         }
     }
 }
