@@ -34,5 +34,6 @@ under the License.
     <module>continuum-buildagent-api</module>
     <module>continuum-buildagent-core</module>
     <module>continuum-buildagent-webapp</module>
+    <module>continuum-buildagent-jetty</module>
   </modules>
 </project>

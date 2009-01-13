@@ -68,6 +68,6 @@
   
   <servlet-mapping>
     <servlet-name>SlaveXmlRpcServlet</servlet-name>
-    <url-pattern>/slave-xmlrpc</url-pattern>
+    <url-pattern>/buildagent-xmlrpc</url-pattern>
   </servlet-mapping>
 </web-app>

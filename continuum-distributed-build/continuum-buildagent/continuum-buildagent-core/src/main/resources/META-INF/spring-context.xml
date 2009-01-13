@@ -36,7 +36,7 @@
   
   <bean id="buildAgentConfiguration" class="org.apache.continuum.buildagent.configuration.DefaultBuildAgentConfiguration"
      init-method="initialize">
-    <property name="configurationFile" value="file:${SLAVE_HOME}/conf/continuum-buildagent.xml" />
+    <property name="configurationFile" value="file:${CONTINUUM_BUILDAGENT_HOME}/conf/continuum-buildagent.xml" />
   </bean>
 
   <bean id="projectHelper" class="org.apache.maven.project.DefaultMavenProjectHelper"/>
