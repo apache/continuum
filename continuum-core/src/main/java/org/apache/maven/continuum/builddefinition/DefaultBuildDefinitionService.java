@@ -18,6 +18,7 @@
  */
 package org.apache.maven.continuum.builddefinition;
 
+import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildDefinitionTemplateDao;
@@ -427,6 +428,10 @@ public class DefaultBuildDefinitionService
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }
         catch ( ContinuumConfigurationException e )
+        {
+            throw new BuildDefinitionServiceException( e.getMessage(), e );
+        }
+        catch ( BuildQueueServiceException e )
         {
             throw new BuildDefinitionServiceException( e.getMessage(), e );
         }

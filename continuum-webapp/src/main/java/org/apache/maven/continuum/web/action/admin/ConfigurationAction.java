@@ -57,8 +57,10 @@ public class ConfigurationAction
     
     private String releaseOutputDirectory;
 
+    private int numberOfAllowedBuildsinParallel = 1;
+    
     private boolean requireReleaseOutput;
-
+    
     public void prepare()
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
@@ -97,6 +99,13 @@ public class ConfigurationAction
             releaseOutputDirectory = releaseOutputDirectoryFile.getAbsolutePath();
         }
         
+        numberOfAllowedBuildsinParallel = configuration.getNumberOfBuildsInParallel();
+        
+        if( numberOfAllowedBuildsinParallel == 0 )
+        {
+            numberOfAllowedBuildsinParallel = 1;
+        }
+               
         String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
         setRequireReleaseOutput( new Boolean( requireRelease ) );
     }
@@ -107,6 +116,11 @@ public class ConfigurationAction
         {
             addActionError( getText( "configuration.releaseOutputDirectory.required" ) );
         }
+                
+        if( numberOfAllowedBuildsinParallel <= 0 )
+        {
+            addActionError( "configuration.numberOfBuildsInParallel.invalid" );
+        }
         
         return INPUT;
     }
@@ -114,12 +128,20 @@ public class ConfigurationAction
     public String save()
         throws ConfigurationStoringException, ContinuumStoreException, ContinuumConfigurationException
     {
+        if( numberOfAllowedBuildsinParallel <= 0 )
+        {
+            addActionError( "Number of Allowed Builds in Parallel must be greater than zero." );
+            return ERROR;
+        }
+        
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         configuration.setWorkingDirectory( new File( workingDirectory ) );
 
         configuration.setBuildOutputDirectory( new File( buildOutputDirectory ) );
-
+        
+        configuration.setNumberOfBuildsInParallel( numberOfAllowedBuildsinParallel );	
+        
         if ( StringUtils.isNotEmpty( deploymentRepositoryDirectory ) )
         {
             configuration.setDeploymentRepositoryDirectory( new File( deploymentRepositoryDirectory ) );
@@ -128,7 +150,7 @@ public class ConfigurationAction
         {
             configuration.setDeploymentRepositoryDirectory( null );
         }
-
+        
         configuration.setUrl( baseUrl );
 
         configuration.setInitialized( true );
@@ -221,4 +243,14 @@ public class ConfigurationAction
     {
         this.requireReleaseOutput = requireReleaseOutput;
     }
+    
+	public int getNumberOfAllowedBuildsinParallel() 
+	{
+	    return numberOfAllowedBuildsinParallel;
+	}
+
+	public void setNumberOfAllowedBuildsinParallel( int numberOfAllowedBuildsinParallel ) 
+	{
+	    this.numberOfAllowedBuildsinParallel = numberOfAllowedBuildsinParallel;
+	}
 }

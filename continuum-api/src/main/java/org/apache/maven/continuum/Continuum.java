@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.purge.ContinuumPurgeManager;
@@ -31,10 +32,10 @@ import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -44,7 +45,6 @@ import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 /**
@@ -630,6 +630,33 @@ public interface Continuum
     // ----------------------------------------------------------------------
     TaskQueueManager getTaskQueueManager();
 
+    // ----------------------------------------------------------------------
+    // Builds Manager
+    // ----------------------------------------------------------------------
+    BuildsManager getBuildsManager();    
+    
+    // ----------------------------------------------------------------------
+    // Build Queue
+    // ----------------------------------------------------------------------
+    
+    BuildQueue addBuildQueue( BuildQueue buildQueue )
+        throws ContinuumException;
+
+    BuildQueue getBuildQueue( int buildQueueId )
+        throws ContinuumException;
+
+    BuildQueue getBuildQueueByName( String buildQueueName )
+        throws ContinuumException;
+
+    void removeBuildQueue( BuildQueue buildQueue )
+        throws ContinuumException;
+
+    BuildQueue storeBuildQueue( BuildQueue buildQueue )
+        throws ContinuumException;
+
+    List<BuildQueue> getAllBuildQueues()
+        throws ContinuumException;
+    
     public void startup()
         throws ContinuumException;
     

@@ -19,7 +19,9 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
@@ -34,6 +36,8 @@ public interface ConfigurationService
     String ROLE = ConfigurationService.class.getName();
 
     public static final String DEFAULT_SCHEDULE_NAME = "DEFAULT_SCHEDULE";
+    
+    public static final String DEFAULT_BUILD_QUEUE_NAME = "DEFAULT_BUILD_QUEUE";
 
     // ----------------------------------------------------------------------
     //
@@ -83,6 +87,13 @@ public interface ConfigurationService
 
     String getReleaseOutput( int projectGroupId, String releaseName )
         throws ConfigurationException;
+    
+    int getNumberOfBuildsInParallel();
+    
+    void setNumberOfBuildsInParallel( int num );
+    
+    BuildQueue getDefaultBuildQueue()
+        throws BuildQueueServiceException;
 
     // ----------------------------------------------------------------------
     //
@@ -103,5 +114,5 @@ public interface ConfigurationService
         throws ConfigurationStoringException, ContinuumConfigurationException;
 
     Schedule getDefaultSchedule()
-        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException;
+        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException, BuildQueueServiceException;
 }

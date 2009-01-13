@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -112,13 +113,21 @@ public class BuildResultsListAction
                 {
                     int buildId = Integer.parseInt( id );
 
-                    if ( canRemoveBuildResult( getContinuum().getBuildResult( buildId ) ) )
+                    try
                     {
-                        buildResultsRemovable.add( Integer.toString( buildId ) );
+                        if ( canRemoveBuildResult( getContinuum().getBuildResult( buildId ) ) )
+                        {
+                            buildResultsRemovable.add( Integer.toString( buildId ) );
+                        }
+                        else
+                        {
+                            this.addActionMessage( getResourceBundle().getString( "buildResult.cannot.delete" ) );
+                        }
                     }
-                    else
+                    catch ( BuildManagerException e )
                     {
-                        this.addActionMessage( getResourceBundle().getString( "buildResult.cannot.delete" ) );
+                        getLogger().error( e.getMessage() );
+                        throw new ContinuumException( e.getMessage(), e ); 
                     }
                 }
             }
@@ -186,7 +195,5 @@ public class BuildResultsListAction
     public void setProjectGroupId( int projectGroupId )
     {
         this.projectGroupId = projectGroupId;
-    }
-
-    
+    }    
 }

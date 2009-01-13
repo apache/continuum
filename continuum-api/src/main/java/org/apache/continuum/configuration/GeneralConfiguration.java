@@ -41,6 +41,8 @@ public class GeneralConfiguration
     private ProxyConfiguration proxyConfiguration;
     
     private File releaseOutputDirectory;
+    
+    private int numberOfBuildsInParallel = 1;
 
     public GeneralConfiguration()
     {
@@ -113,4 +115,13 @@ public class GeneralConfiguration
         this.releaseOutputDirectory = releaseOutputDirectory;
     }
 
+    public int getNumberOfBuildsInParallel()
+    {
+        return numberOfBuildsInParallel;
+    }
+
+    public void setNumberOfBuildsInParallel( int numberOfBuildsInParallel )
+    {
+        this.numberOfBuildsInParallel = numberOfBuildsInParallel;
+    }
 }

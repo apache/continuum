@@ -20,6 +20,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri="continuum" prefix="c1" %>
+
 <html>
   <s:i18n name="localization.Continuum">
 <head>
@@ -71,15 +72,28 @@
             <s:textfield label="%{getText('schedule.quietPeriod.label')}" name="delay">
                 <s:param name="desc"><p><s:text name="schedule.quietPeriod.message"/></p></s:param>
             </s:textfield>
+    	                
+            <s:optiontransferselect label="%{getText('schedule.buildqueues.label')}" name="availableBuildQueues"
+                list="availableBuildQueues" size="8" multiple="true" emptyOption="false"
+                doubleName="selectedBuildQueues" doubleList="selectedBuildQueues" doubleSize="8" 
+                doubleMultiple="true" doubleEmptyOption="false"
+                addAllToRightOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
+				addToRightOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
+				addAllToLeftOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
+				addToLeftOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
+                />
+                                       
             <s:checkbox label="%{getText('schedule.enabled.label')}" name="active" value="active" fieldValue="true">
                 <s:param name="desc"><p><s:text name="schedule.enabled.message"/></p></s:param>
             </s:checkbox>
+
           </table>
           <s:hidden name="id"/>
         <div class="functnbar3">
           <c1:submitcancel value="%{getText('save')}" cancel="%{getText('cancel')}"/>
         </div>
       </s:form>
+      
     </div>
   </div>
 </div>
@@ -87,3 +101,4 @@
 </body>
 </s:i18n>
 </html>
+

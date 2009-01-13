@@ -1,0 +1,26 @@
+ ------
+ Parallel Build Queue
+ ------
+ 
+Parallel Build Queue
+
+    Click the <<Build Queue>> link under the <<Administration>> section.
+
+[../images/buildQueue.png] Build Queue
+
+    You will see all the Parallel build queue configurations.
+
+[../images/listBuildQueue.png] Parallel Build Queue list
+
+    Here you can add/delete the build queue.
+    
+* Adding Parallel Build Queue
+
+	Input the name for the build queue and save.
+	
+[../images/addBuildQueue.png] Add Parallel Build Queue
+
+    The number of allowed build queues to be created is set in the Configuration page.
+    The value should be greater than one (1) to be able to create a build queue aside from the default.
+
+[../images/allowedBuildQueue.png] Configuration page

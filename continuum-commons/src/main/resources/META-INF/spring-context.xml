@@ -36,5 +36,6 @@
         init-method="initialize">
     <property name="applicationHome" value="data"/>
   </bean> 
-  <bean id="shellCommandHelper" class="org.apache.continuum.utils.shell.DefaultShellCommandHelper"/>  
+  <bean id="shellCommandHelper" class="org.apache.continuum.utils.shell.DefaultShellCommandHelper"/>
+  <bean id="buildQueueService" class="org.apache.continuum.buildqueue.DefaultBuildQueueService"/>
 </beans>

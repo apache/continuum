@@ -1,67 +1,34 @@
 package org.apache.continuum.taskqueue.manager;
 
-import java.util.List;
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
-import org.codehaus.plexus.taskqueue.TaskQueue;
-import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+import org.codehaus.plexus.taskqueue.TaskQueue;;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
  */
 public interface TaskQueueManager
-{
+{            
     String ROLE = TaskQueueManager.class.getName();
-
-    boolean buildInProgress()
-        throws TaskQueueManagerException;
-
-    void cancelBuildTask( int projectId )
-        throws TaskQueueManagerException;
-
-    boolean cancelCheckout( int projectId )
-        throws TaskQueueManagerException;
-
-    boolean cancelCurrentBuild()
-        throws TaskQueueManagerException;
-
-    TaskQueue getBuildQueue();
-
-    TaskQueueExecutor getBuildTaskQueueExecutor()
-        throws TaskQueueManagerException;
-
-    TaskQueue getCheckoutQueue();
-
-    List /* CheckOutTask */getCheckOutTasksInQueue()
-        throws TaskQueueManagerException;
-
-    int getCurrentProjectIdBuilding()
-        throws TaskQueueManagerException;
-
-    TaskQueue getPrepareBuildQueue();
-
-    TaskQueueExecutor getPrepareBuildTaskQueueExecutor()
-        throws TaskQueueManagerException;
-
-    public List<BuildProjectTask> getProjectsInBuildQueue()
-        throws TaskQueueManagerException;
-
+    
     TaskQueue getPurgeQueue();
-
-    boolean isInBuildingQueue( int projectId )
-        throws TaskQueueManagerException;
-
-    boolean isInBuildingQueue( int projectId, int buildDefinitionId )
-        throws TaskQueueManagerException;
-
-    boolean isInCheckoutQueue( int projectId )
-        throws TaskQueueManagerException;
-
-    boolean isInCurrentPrepareBuildTask( int projectId )
-        throws TaskQueueManagerException;
-
-    boolean isInPrepareBuildQueue( int projectId )
-        throws TaskQueueManagerException;
 
     boolean isInPurgeQueue( int purgeConfigurationId )
         throws TaskQueueManagerException;
@@ -86,15 +53,19 @@ public interface TaskQueueManager
     boolean isRepositoryInUse( int repositoryId )
         throws TaskQueueManagerException;
 
+    /**
+     * Check whether a project is in the release stage based on the given releaseId.
+     * 
+     * @param releaseId
+     * @return
+     * @throws TaskQueueManagerException
+     */
+    boolean isProjectInReleaseStage( String releaseId )
+        throws TaskQueueManagerException;        
+    
     boolean releaseInProgress()
         throws TaskQueueManagerException;
-
-    boolean removeFromBuildingQueue( int projectId, int buildDefinitionId, int trigger, String projectName )
-        throws TaskQueueManagerException;
-
-    boolean removeFromPrepareBuildQueue( int projectGroupId, String scmRootAddress )
-        throws TaskQueueManagerException;
-
+    
     /**
      * Remove local repository from the purge queue
      * 
@@ -115,25 +86,6 @@ public interface TaskQueueManager
     boolean removeFromPurgeQueue( int[] purgeConfigIds )
         throws TaskQueueManagerException;
 
-    boolean removeProjectFromBuildingQueue( int projectId )
-        throws TaskQueueManagerException;
-
-    boolean removeProjectsFromBuildingQueue( int[] projectsId )
-        throws TaskQueueManagerException;
-
-    /**
-     * @param hashCodes BuildProjectTask hashCodes
-     * @throws TaskQueueManagerException
-     */
-    void removeProjectsFromBuildingQueueWithHashCodes( int[] hashCodes )
-        throws TaskQueueManagerException;
-
-    boolean removeProjectFromCheckoutQueue( int projectId )
-        throws TaskQueueManagerException;
-
-    boolean removeProjectsFromCheckoutQueue( int[] projectId )
-        throws TaskQueueManagerException;
-
     /**
      * Remove local repository from the purge queue
      * 
@@ -141,12 +93,5 @@ public interface TaskQueueManager
      * @throws TaskQueueManagerException
      */
     void removeRepositoryFromPurgeQueue( int repositoryId )
-        throws TaskQueueManagerException;
-
-    /**
-     * @param hashCodes CheckOutTask hashCodes
-     * @throws TaskQueueManagerException
-     */
-    void removeTasksFromCheckoutQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueManagerException;
 }

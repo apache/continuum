@@ -31,7 +31,7 @@
     <h3>
       <s:text name="configuration.section.title"/>
     </h3>
-
+     
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
         <c1:data label="%{getText('configuration.workingDirectory.label')}" name="workingDirectory"/>
@@ -40,6 +40,7 @@
         <c1:data label="%{getText('configuration.deploymentRepositoryDirectory.label')}"
                  name="deploymentRepositoryDirectory"/>
         <c1:data label="%{getText('configuration.baseUrl.label')}" name="baseUrl"/>
+        <c1:data label="%{getText('configuration.allowed.build.parallel')}" name="numberOfAllowedBuildsinParallel"/>
       </table>
       <div class="functnbar3">
         <s:form action="configuration!input.action" method="post">
