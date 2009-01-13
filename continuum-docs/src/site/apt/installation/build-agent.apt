@@ -10,25 +10,25 @@ Installing a Build Agent
 
   Next, configure the environment.
 
-  The build agent needs two things in order to function properly:  A SLAVE_HOME environment variable, and a
-  continuum-buildagent.xml configuration file in a conf/ directory under $SLAVE_HOME.
+  The build agent needs two things in order to function properly:  A CONTINUUM_BUILDAGENT_HOME environment variable, and a
+  continuum-buildagent.xml configuration file in a conf/ directory under $CONTINUUM_BUILDAGENT_HOME.
 
   Set the environment variable:
 
-  export SLAVE_HOME=/path/to/slave/home
+  export CONTINUUM_BUILDAGENT_HOME=/path/to/build/agent/home
 
   or
 
-  set SLAVE_HOME=c:\path\to\slave\home
+  set CONTINUUM_BUILDAGENT_HOME=c:\path\to\build\agent\home
 
-  Create a directory called 'conf' under [SLAVE_HOME].
+  Create a directory called 'conf' under [CONTINUUM_BUILDAGENT_HOME].
 
   In the 'conf' directory, save the continuum-buildagent.xml file:
 
 +--------------+
 <continuum-buildagent-configuration>
-<buildOutputDirectory>/path/to/slave/data/build-output-directory</buildOutputDirectory>
- <workingDirectory>/path/to/slave/data/working-directory</workingDirectory>
+<buildOutputDirectory>/path/to/build/agent/data/build-output-directory</buildOutputDirectory>
+ <workingDirectory>/path/to/build/agent/data/working-directory</workingDirectory>
  <continuumServerUrl>http://builds.example.com:8080/continuum/master-xmlrpc</continuumServerUrl>
  <installations>
   <installation>
@@ -40,7 +40,7 @@ Installing a Build Agent
 </continuum-buildagent-configuration>
 +----------------+
 
-  List all of the installations available on the slave, including Maven, Ant, JDK, etc.
+  List all of the installations available on the build agent, including Maven, Ant, JDK, etc.
 
   Note that all of your agents need to be identical, as there is no way to control which agent Continuum chooses.
 
