@@ -96,7 +96,7 @@
       </table>
     </div>
 
-    <h3><ww:text name="projectGroup.scmRoot.title"/></h3>
+    <h3><s:text name="projectGroup.scmRoot.title"/></h3>
     <ec:table items="projectScmRoots"
               var="projectScmRoot"
               showExports="false"
@@ -116,7 +116,7 @@
       <c:if test="${!empty actionErrors}">
         <div class="errormessage">
           <s:iterator value="actionErrors">
-            <p><s:text name="<s:property/>" /></p>
+            <p><s:property/></p>
           </s:iterator>
         </div>
       </c:if>
@@ -172,6 +172,14 @@
                 <form action="removeProjectGroup.action" method="post">
                   <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
                   <input type="submit" name="remove" value="<s:text name="projectGroup.deleteGroup"/>"/>
+                </form>
+              </redback:ifAuthorized>
+            </td>
+            <td>
+              <redback:ifAuthorized permission="continuum-build-project-in-group" resource="${projectGroup.name}">
+                <form action="cancelGroupBuild.action" method="post">
+                  <input type="hidden" name="projectGroupId" value="<s:property value="projectGroupId"/>"/>
+                  <input type="submit" name="cancel" value="<s:text name="projectGroup.cancelGroupBuild"/>"/>
                 </form>
               </redback:ifAuthorized>
             </td>

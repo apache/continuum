@@ -24,6 +24,7 @@ package org.apache.maven.continuum.web.exception;
  * checks within action classes
  *
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
+ * @version $Id$
  */
 public class AuthenticationRequiredException
     extends Exception

@@ -428,7 +428,7 @@ public class BuildDefinitionAction
         }
         catch ( ContinuumException e )
         {
-            addActionError( "unable to get schedule" );
+            addActionError( getText( "unable to get schedule" ) );
             throw new ContinuumActionException( "unable to get schedule" );
         }
 

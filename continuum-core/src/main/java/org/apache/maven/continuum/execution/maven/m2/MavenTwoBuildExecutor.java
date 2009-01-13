@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -349,7 +348,7 @@ public class MavenTwoBuildExecutor
         }
         catch ( ConfigurationException e )
         {
-            getLogger().info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
+            log.info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
         }
         backupTestFiles( getWorkingDirectory( project ), backupDirectory );
     }
@@ -365,7 +364,7 @@ public class MavenTwoBuildExecutor
         String[] testResultFiles = scanner.getIncludedFiles();
         if ( testResultFiles.length > 0 )
         {
-            getLogger().info( "Backup surefire files." );
+            log.info( "Backup surefire files." );
         }
         for ( String testResultFile : testResultFiles )
         {
@@ -379,7 +378,7 @@ public class MavenTwoBuildExecutor
             }
             catch ( IOException e )
             {
-                getLogger().info( "failed to backup unit report file " + xmlFile.getPath() );
+                log.info( "failed to backup unit report file " + xmlFile.getPath() );
             }
         }
     }
@@ -394,15 +393,17 @@ public class MavenTwoBuildExecutor
         throws ContinuumBuildExecutorException
     {
         //Check if it's a recursive build
-        boolean isRecursive = StringUtils.isNotEmpty( buildDefinition.getArguments() ) && !(
-            buildDefinition.getArguments().indexOf( "-N" ) < 0 ||
-                buildDefinition.getArguments().indexOf( "--non-recursive" ) < 0 );
-
-        if ( isRecursive )
-        {
-            if ( getLogger().isDebugEnabled() )
+        boolean isRecursive = false;
+        if (StringUtils.isNotEmpty( buildDefinition.getArguments() ) )
             {
-                getLogger().debug( "isRecursive --> shouldBuild = true" );
+            isRecursive =  buildDefinition.getArguments().indexOf( "-N" ) < 0 &&
+                buildDefinition.getArguments().indexOf( "--non-recursive" ) < 0 ;
+            }
+        if ( isRecursive && changes != null && !changes.isEmpty() )
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "recursive build and changes found --> building" );
             }
             return true;
         }
@@ -412,15 +413,15 @@ public class MavenTwoBuildExecutor
         //CONTINUUM-1815: additional check for projects recently released
         if ( !continuumProject.getVersion().equals( project.getVersion() ) )
         {
-            getLogger().info( "Found changes in project's version ( maybe project was recently released ), building" );
+            log.info( "Found changes in project's version ( maybe project was recently released ), building" );
             return true;
         }
         
         if ( changes.isEmpty() )
         {
-            if ( getLogger().isDebugEnabled() )
+            if ( log.isInfoEnabled() )
             {
-                getLogger().info( "Found no changes, not building" );
+                log.info( "Found no changes, not building" );
             }
             return false;
         }
@@ -438,14 +439,27 @@ public class MavenTwoBuildExecutor
         while ( i <= files.size() - 1 )
         {
             ChangeFile file = files.get( i );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "changeFile.name " + file.getName() );
+                log.debug( "check in modules " + modules );
+            }
             boolean found = false;
             for ( String module : modules )
             {
-                if ( file.getName().indexOf( module ) > 0 )
+                if ( file.getName().indexOf( module ) >= 0 )
                 {
+                    if ( log.isDebugEnabled() )
+                    {
+                        log.debug( "changeFile.name " + file.getName() + " removed because in a module" );
+                    }                    
                     files.remove( file );
                     found = true;
                     break;
+                }
+                if (log.isDebugEnabled())
+                {
+                    log.debug( "no remving file " + file.getName() + " not in module " + module );
                 }
             }
             if ( !found )
@@ -458,12 +472,12 @@ public class MavenTwoBuildExecutor
 
         if ( !shouldBuild )
         {
-            getLogger().info( "Changes are only in sub-modules." );
+            log.info( "Changes are only in sub-modules." );
         }
 
-        if ( getLogger().isDebugEnabled() )
+        if ( log.isDebugEnabled() )
         {
-            getLogger().debug( "shoulbuild = " + shouldBuild );
+            log.debug( "shoulbuild = " + shouldBuild );
         }
         return shouldBuild;
     }

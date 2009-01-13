@@ -34,9 +34,10 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,9 +51,10 @@ import java.util.List;
  * @since 15 sept. 07
  */
 public class DefaultBuildDefinitionService
-    extends AbstractLogEnabled
     implements BuildDefinitionService, Initializable
 {
+    private Logger log = LoggerFactory.getLogger( DefaultBuildDefinitionService.class );
+
     /**
      * @plexus.configuration default-value=""
      */
@@ -273,7 +275,7 @@ public class DefaultBuildDefinitionService
         {
             return template;
         }
-        getLogger().info( "create default AntBuildDefinitionTemplate" );
+        log.info( "create default AntBuildDefinitionTemplate" );
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
         template.setName( "Default Ant Template" );
@@ -308,10 +310,10 @@ public class DefaultBuildDefinitionService
             getContinuumDefaultWithType( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR );
         if ( template != null )
         {
-            getLogger().debug( "found default maven template " + template.getType() );
+            log.debug( "found default maven template " + template.getType() );
             return template;
         }
-        getLogger().info( "create default MavenOneBuildDefinitionTemplate" );
+        log.info( "create default MavenOneBuildDefinitionTemplate" );
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
         template.setName( "Default Maven 1 Template" );
@@ -349,7 +351,7 @@ public class DefaultBuildDefinitionService
         {
             return template;
         }
-        getLogger().info( "create default MavenTwoBuildDefinitionTemplate" );
+        log.info( "create default MavenTwoBuildDefinitionTemplate" );
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
         template.setName( "Default Maven 2 Template" );
@@ -387,7 +389,7 @@ public class DefaultBuildDefinitionService
         {
             return template;
         }
-        getLogger().info( "create default ShellBuildDefinitionTemplate" );
+        log.info( "create default ShellBuildDefinitionTemplate" );
         template = new BuildDefinitionTemplate();
         template.setContinuumDefault( true );
         template.setName( "Default Shell Template" );

@@ -36,7 +36,7 @@
         <c:if test="${!empty actionErrors}">
           <div class="errormessage">
             <s:iterator value="actionErrors">
-              <p><s:text name="<s:property/>" /></p>
+              <p><s:property/></p>
             </s:iterator>
           </div>
         </c:if>

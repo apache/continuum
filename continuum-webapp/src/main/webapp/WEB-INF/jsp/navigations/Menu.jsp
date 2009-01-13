@@ -185,7 +185,7 @@
   </redback:ifAnyAuthorized>
 
   <div id="projectmenu" class="toolgroup">
-    <div class="label">Legend</div>
+    <div class="label"><s:text name="legend.title"/></div>
     <div id="legend">
       <div id="litem1" class="body"><s:text name="legend.buildNow"/></div>
       <div id="litem2" class="body"><s:text name="legend.buildHistory"/></div>

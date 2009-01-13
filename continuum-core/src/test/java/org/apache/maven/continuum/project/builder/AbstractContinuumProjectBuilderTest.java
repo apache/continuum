@@ -44,7 +44,7 @@ public abstract class AbstractContinuumProjectBuilderTest
     {
         super.setUp();
         builder = new ContinuumProjectBuilder();
-        builder.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
+        //builder.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
     }
 
     /**

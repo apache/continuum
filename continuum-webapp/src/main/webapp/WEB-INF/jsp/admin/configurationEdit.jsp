@@ -36,11 +36,13 @@
 
     <s:form action="configuration!save" method="post">
 
-    <c:if test="${!empty actionErrors}">
-      <div class="errormessage">
-        <p><s:actionerror/></p>
-      </div>
-    </c:if>
+      <c:if test="${!empty actionErrors}">
+        <div class="errormessage">
+          <s:iterator value="actionErrors">
+            <p><s:property/></p>
+          </s:iterator>
+        </div>
+      </c:if>
 
       <div class="axial">
 

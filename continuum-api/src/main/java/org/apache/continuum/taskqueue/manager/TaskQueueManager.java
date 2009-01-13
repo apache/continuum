@@ -27,7 +27,7 @@ import org.codehaus.plexus.taskqueue.TaskQueue;;
 public interface TaskQueueManager
 {            
     String ROLE = TaskQueueManager.class.getName();
-
+    
     TaskQueue getPurgeQueue();
 
     boolean isInPurgeQueue( int purgeConfigurationId )

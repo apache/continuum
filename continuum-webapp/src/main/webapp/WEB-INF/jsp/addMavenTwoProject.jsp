@@ -43,26 +43,26 @@
                         </c:if>
                         <table>
                           <tbody>
-                            <s:textfield label="%{getText('add.m2.project.m2PomUrl.label')}" name="m2PomUrl">
-                                <s:param name="desc">
-                                <table cellspacing="0" cellpadding="0">
-                                  <tbody>
-                                    <tr>
-                                      <td><s:text name="add.m2.project.m2PomUrl.username.label"/>: </td>
-                                      <td><input type="text" name="scmUsername" size="20" id="addMavenTwoProject_scmUsername"/><td>
-                                    </tr>  
-                                    <tr>
-                                      <td><s:text name="add.m2.project.m2PomUrl.password.label"/>: </td>
-                                      <td><input type="password" name="scmPassword" size="20" id="addMavenTwoProject_scmPassword"/><td>
-                                    </tr>  
-                                  </tbody>
-                                    <tr>
-                                      <td></td>
-                                      <td><s:checkbox label="%{getText('projectEdit.project.scmUseCache.label')}" name="scmUseCache"/><td>
-                                    </tr>
-                                </table>  
-                                  <p><s:text name="add.m2.project.m2PomUrl.message"/></p>
-                                </s:param>
+                            <s:textfield label="%{getText('add.m2.project.m2PomUrl.label')}" required="true" name="m2PomUrl">
+	                            <s:param name="desc">
+		                            <table cellspacing="0" cellpadding="0">
+		                              <tbody>
+		                                <tr>
+		                                  <td><s:text name="add.m2.project.m2PomUrl.username.label"/>: </td>
+		                                  <td><input type="text" name="scmUsername" size="20" id="addMavenTwoProject_scmUsername"/></td>
+		                                </tr>  
+		                                <tr>
+		                                  <td><s:text name="add.m2.project.m2PomUrl.password.label"/>: </td>
+		                                  <td><input type="password" name="scmPassword" size="20" id="addMavenTwoProject_scmPassword"/></td>
+		                                </tr>  
+		                              </tbody>
+		                                <tr>
+		                                  <td></td>
+		                                  <td><s:checkbox label="%{getText('projectEdit.project.scmUseCache.label')}" name="scmUseCache"/></td>
+		                                </tr>
+		                            </table>  
+	                            <p><s:text name="add.m2.project.m2PomUrl.message"/></p>
+	                            </s:param>
                             </s:textfield>
                             <s:label>
                               <s:param name="after"><strong><s:text name="or"/></strong></s:param>

@@ -32,6 +32,14 @@
     </layout>
   </appender>
 
+  <!-- quiet spring loading :-) -->
+  <category name="org.springframework">
+    <priority value="ERROR"/>
+  </category>
+  <category name="org.codehaus.plexus">
+    <priority value="ERROR"/>
+  </category>
+
   <category name="JPOX">
     <priority value="ERROR"/>
     <appender-ref ref="default"/>

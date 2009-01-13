@@ -21,6 +21,7 @@ package org.apache.continuum.dao;
 
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.springframework.stereotype.Repository;
 
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
@@ -33,8 +34,8 @@ import java.util.List;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.LocalRepositoryDao"
  */
+@Repository("localRepositoryDao")
 public class LocalRepositoryDaoImpl
     extends AbstractDao
     implements LocalRepositoryDao

@@ -38,21 +38,23 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
  * @plexus.component role="org.apache.continuum.taskqueue.manager.TaskQueueManager" role-hint="default"
  */
 public class DefaultTaskQueueManager
-    extends AbstractLogEnabled
     implements TaskQueueManager, Contextualizable
 {
+    private Logger log = LoggerFactory.getLogger( DefaultTaskQueueManager.class );
+
     /**
      * @plexus.requirement role-hint="purge"
      */
@@ -280,7 +282,7 @@ public class DefaultTaskQueueManager
             removeFromPurgeQueue( repoPurge.getId() );
         }
     }
-
+    
     public void contextualize( Context context )
         throws ContextException
     {

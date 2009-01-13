@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
@@ -66,9 +67,11 @@ public interface BuildsManager
      * 
      * @param projectsBuildDefinitionsMap
      * @param trigger
+     * @param projectGroupId TODO
+     * @param scmRootAddress TODO
      * @throws BuildManagerException
      */
-    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
+    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, String scmRootAddress )
         throws BuildManagerException;
 
     /**
@@ -198,6 +201,9 @@ public interface BuildsManager
      * @throws BuildManagerException
      */
     void removeProjectsFromCheckoutQueueWithHashcodes( int[] hashcodes )
+        throws BuildManagerException;
+    
+    boolean removeProjectGroupFromPrepareBuildQueue( int projectGroupId, String scmRootAddress )
         throws BuildManagerException;
     
     /*void removeProjectFromPrepareBuildQueue( int projectId ) throws BuildManagerException;

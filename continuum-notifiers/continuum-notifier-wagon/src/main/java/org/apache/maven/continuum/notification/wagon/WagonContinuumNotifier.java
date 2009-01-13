@@ -67,17 +67,20 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 /**
  * @author <a href="mailto:hisidro@exist.com">Henry Isidro</a>
  * @author <a href="mailto:nramirez@exist.com">Napoleon Esmundo C. Ramirez</a>
- * @plexus.component role="org.apache.maven.continuum.notification.Notifier" role-hint="wagon"
  */
+@Service("notifier#wagon")
 public class WagonContinuumNotifier
     extends AbstractContinuumNotifier
     implements Contextualizable
@@ -88,24 +91,16 @@ public class WagonContinuumNotifier
 
     private Logger log = LoggerFactory.getLogger( getClass() );
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ConfigurationService configurationService;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private WagonManager wagonManager;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private MavenProjectBuilder projectBuilder;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private MavenSettingsBuilder settingsBuilder;
 
     /**

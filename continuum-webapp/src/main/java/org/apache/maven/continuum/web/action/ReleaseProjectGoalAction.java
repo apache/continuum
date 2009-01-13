@@ -31,6 +31,7 @@ import java.util.Map;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releaseProjectGoal"
  */
 public class ReleaseProjectGoalAction

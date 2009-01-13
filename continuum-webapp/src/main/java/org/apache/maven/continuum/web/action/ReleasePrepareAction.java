@@ -47,6 +47,7 @@ import java.util.Properties;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releasePrepare"
  */
 public class ReleasePrepareAction
@@ -70,6 +71,8 @@ public class ReleasePrepareAction
 
     private String scmTagBase;
 
+    private boolean scmUseEditMode = false;
+    
     private List projects = new ArrayList();
 
     private List projectKeys;
@@ -382,6 +385,7 @@ public class ReleasePrepareAction
 
         p.setProperty( "tag", scmTag );
         p.setProperty( "prepareGoals", prepareGoals );
+        p.setProperty( "useEditMode", Boolean.toString( scmUseEditMode ) );
 
         return p;
     }
@@ -560,4 +564,16 @@ public class ReleasePrepareAction
     {
         this.profileId = profileId;
     }
+
+	public boolean isScmUseEditMode() 
+	{
+		return scmUseEditMode;
+	}
+
+	public void setScmUseEditMode(boolean scmUseEditMode) 
+	{
+		this.scmUseEditMode = scmUseEditMode;
+	}
+    
+    
 }

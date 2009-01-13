@@ -21,34 +21,25 @@
 <html>
   <s:i18n name="localization.Continuum">
     <head>
-        <title><ww:text name="scmResult.page.title"/></title>
+      <title><s:text name="scmResult.page.title"/></title>
     </head>
     <body>
       <div id="h3">
-
         <s:action name="projectGroupTab" executeResult="true"/>
-
         <h3>
-            <ww:text name="scmResult.section.title"/>
+          <s:text name="scmResult.section.title"/>
         </h3>
-        
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
-            <c1:data label="%{getText('scmResult.projectGroupName')}">
-                <ww:param name="after" value="projectGroupName"/>
-            </c1:data>
-            <c1:data label="%{getText('scmResult.scmRootAddress')}">
-                <ww:param name="after" value="projectScmRoot.scmRootAddress"/>
-            </c1:data>
-            <c1:data label="%{getText('scmResult.state')}">
-                <ww:param name="after" value="state"/>
-            </c1:data>
+            <c1:data label="%{getText('scmResult.projectGroupName')}" name="projectGroupName"/>
+            <c1:data label="%{getText('scmResult.scmRootAddress')}" name="projectScmRoot.scmRootAddress"/>
+            <c1:data label="%{getText('scmResult.state')}" name="state"/>
           </table>
         </div>
         
-        <h4><ww:text name="scmResult.scmError"/></h4>
+        <h4><s:text name="scmResult.scmError"/></h4>
         <div style="width:100%; height:500px; overflow:auto; border-style: solid; border-width: 1px">
-          <pre><ww:property value="projectScmRoot.error"/></pre>
+          <pre><s:property value="projectScmRoot.error"/></pre>
         </div>
       </div>
     </body>

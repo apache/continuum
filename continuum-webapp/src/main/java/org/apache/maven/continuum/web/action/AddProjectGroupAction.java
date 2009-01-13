@@ -61,11 +61,11 @@ public class AddProjectGroupAction
         clearErrorsAndMessages();
         if ( name != null && name.equals( "" ) )
         {
-            addActionError( "projectGroup.error.name.required" );
+            addActionError( getText( "projectGroup.error.name.required" ) );
         }
         else if ( name != null && name.trim().equals( "" ) )
         {
-            addActionError( "projectGroup.error.name.cannot.be.spaces" );
+            addActionError( getText( "projectGroup.error.name.cannot.be.spaces" ) );
         }
         else if ( name != null && !name.equals( "" ) )
         {
@@ -75,18 +75,18 @@ public class AddProjectGroupAction
                 ProjectGroup projectGroup = (ProjectGroup) iterator.next();
                 if ( name.equals( projectGroup.getName() ) )
                 {
-                    addActionError( "projectGroup.error.name.already.exists" );
+                    addActionError( getText( "projectGroup.error.name.already.exists" ) );
                     break;
                 }
             }
         }
         if ( groupId != null && groupId.equals( "" ) )
         {
-            addActionError( "projectGroup.error.groupId.required" );
+            addActionError( getText( "projectGroup.error.groupId.required" ) );
         }
         else if ( groupId != null && groupId.trim().equals( "" ) )
         {
-            addActionError( "projectGroup.error.groupId.cannot.be.spaces" );
+            addActionError( getText( "projectGroup.error.groupId.cannot.be.spaces" ) );
         }
         else
         {
@@ -94,7 +94,7 @@ public class AddProjectGroupAction
             {
                 if ( getContinuum().getProjectGroupByGroupId( groupId ) != null )
                 {
-                    addActionError( "projectGroup.error.groupId.already.exists" );
+                    addActionError( getText( "projectGroup.error.groupId.already.exists" ) );
                 }
             }
             catch ( ContinuumException e )

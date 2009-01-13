@@ -23,6 +23,7 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.springframework.stereotype.Repository;
 
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
@@ -37,8 +38,8 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.BuildResultDao"
  */
+@Repository("buildResultDao")
 public class BuildResultDaoImpl
     extends AbstractDao
     implements BuildResultDao

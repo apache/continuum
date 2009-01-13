@@ -19,6 +19,18 @@ package org.apache.continuum.installation;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
 import org.apache.continuum.dao.InstallationDao;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
@@ -30,7 +42,6 @@ import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
@@ -38,36 +49,27 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
- * @plexus.component role="org.apache.maven.continuum.installation.InstallationService"
  * TODO use some cache mechanism to prevent always reading from store ?
  * @since 13 juin 07
+ * 
  */
+@Service("installationService")
 public class DefaultInstallationService
-    extends AbstractLogEnabled
     implements InstallationService, Initializable
 {
-    /**
-     * @plexus.requirement
-     */
+    private Logger log = LoggerFactory.getLogger( DefaultInstallationService.class );
+
+    @Resource
     private InstallationDao installationDao;
 
-    /**
-     * @plexus.requirement role-hint="default"
-     */
+    @Resource
     private ProfileService profileService;
 
     private Map<String, ExecutorConfigurator> typesValues;
@@ -439,7 +441,7 @@ public class DefaultInstallationService
         }
         catch ( CommandLineException e )
         {
-            getLogger().error(
+            log.error(
                 "fail to execute " + executable + " with arg " + executorConfigurator.getVersionArgument() );
             throw new InstallationException( e.getMessage(), e );
         }

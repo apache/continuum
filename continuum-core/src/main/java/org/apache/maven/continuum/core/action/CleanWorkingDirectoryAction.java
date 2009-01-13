@@ -30,7 +30,7 @@ import java.util.Map;
 
 /**
  * @author Jesse McConnell <jmcconnell@apache.org>
- * @version $Id:$
+ * @version $Id$
  * @plexus.component role="org.codehaus.plexus.action.Action"
  * role-hint="clean-working-directory"
  */

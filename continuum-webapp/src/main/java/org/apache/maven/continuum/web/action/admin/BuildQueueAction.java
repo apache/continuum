@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
+import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 
 import com.opensymphony.xwork2.Preparable;
 
@@ -31,7 +32,8 @@ import com.opensymphony.xwork2.Preparable;
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildQueueAction"
  */
 public class BuildQueueAction
-    extends AbstractBuildQueueAction
+    //extends AbstractBuildQueueAction
+    extends ContinuumActionSupport
     implements Preparable
 {
     private String name;

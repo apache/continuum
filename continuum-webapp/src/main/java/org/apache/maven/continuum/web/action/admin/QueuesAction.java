@@ -31,6 +31,7 @@ import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
+import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.logging.LogEnabled;
@@ -47,7 +48,7 @@ import org.codehaus.redback.integration.interceptor.SecureActionException;
  * @since 24 sept. 07
  */
 public class QueuesAction
-    extends AbstractBuildQueueAction
+    extends ContinuumActionSupport
     implements SecureAction, LogEnabled
 {            
     private List<String> selectedBuildTaskHashCodes;
@@ -91,8 +92,17 @@ public class QueuesAction
             addActionError( e.getMessage() );
             return REQUIRES_AUTHENTICATION;
         }
-        
-        cancelBuild( projectId );
+
+        try
+        {
+            getContinuum().getBuildsManager().cancelBuild( projectId );
+        }
+        catch ( BuildManagerException e )
+        {
+            addActionError( e.getMessage() );
+            return ERROR;
+        }
+
         return SUCCESS;
     }
     
@@ -114,11 +124,21 @@ public class QueuesAction
             return REQUIRES_AUTHENTICATION;
         }
          
-        getContinuum().getBuildsManager().removeProjectFromCheckoutQueue( projectId );
+        try
+        {
+            getContinuum().getBuildsManager().removeProjectFromCheckoutQueue( projectId );
+        }
+        catch ( BuildManagerException e )
+        {
+            addActionError( e.getMessage() );
+            return ERROR;
+        }
+        
         return SUCCESS;
     }
 
     public String cancelCurrentCheckout()
+        throws Exception
     {
         try 
         {
@@ -134,7 +154,6 @@ public class QueuesAction
             addActionError( e.getMessage() );
             return REQUIRES_AUTHENTICATION;
         }
-        
         try
         {
             cancelCheckout( projectId );
@@ -365,8 +384,8 @@ public class QueuesAction
         }
         
         return false;
-    }    
-
+    }  
+    
     public int getBuildDefinitionId()
     {
         return buildDefinitionId;

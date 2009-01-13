@@ -22,6 +22,7 @@ package org.apache.continuum.scm.manager;
 import org.apache.maven.scm.log.ScmLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 /**
  * SLF4J logger for Maven SCM.
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @version $Id$
  */
+@Service("scmLogger")
 public class Slf4jScmLogger
     implements ScmLogger
 {

@@ -79,7 +79,7 @@ public class ContinuumBuildExecutorTest
         executor.setChrootJailDirectory( chrootJailFile );
         executor.setShellCommandHelper( helper );
         executor.setWorkingDirectoryService( directoryService );
-        executor.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
+        //executor.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
 
         final Project project = new Project();
         project.setId( 7 );

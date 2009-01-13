@@ -108,68 +108,9 @@
       </configuration>
     </component>
 
-    <!--
-    | The jabber notifier
-    |-->
-    <component>
-      <role>org.apache.maven.continuum.notification.Notifier</role>
-      <role-hint>jabber</role-hint>
-      <implementation>org.apache.maven.continuum.notification.jabber.JabberContinuumNotifier</implementation>
-      <requirements>
-        <requirement>
-          <role>org.codehaus.plexus.jabber.JabberClient</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.continuum.dao.ProjectDao</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.continuum.dao.BuildResultDao</role>
-        </requirement>
-      </requirements>
-      <configuration>
-        <alwaysSend>false</alwaysSend>
-        <!-- from-address/>
-        <from-password/>
-        <host/>
-        <port/>
-        <sslConnection>true</sslConnection -->
-      </configuration>
-    </component>
-
     <component>
       <role>org.codehaus.plexus.jabber.JabberClient</role>
       <implementation>org.codehaus.plexus.jabber.DefaultJabberClient</implementation>
-    </component>
-
-    <!--
-    | The MSN notifier
-    |-->
-    <component>
-      <role>org.apache.maven.continuum.notification.Notifier</role>
-      <role-hint>msn</role-hint>
-      <implementation>org.apache.maven.continuum.notification.msn.MsnContinuumNotifier</implementation>
-      <requirements>
-        <requirement>
-          <role>org.codehaus.plexus.msn.MsnClient</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.continuum.dao.ProjectDao</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.continuum.dao.BuildResultDao</role>
-        </requirement>
-      </requirements>
-      <configuration>
-        <alwaysSend>false</alwaysSend>
-        <!-- from-address/>
-        <from-password/ -->
-      </configuration>
     </component>
 
     <component>
@@ -486,7 +427,7 @@
           <field-name>userImpl</field-name>
         </requirement>
         <requirement>
-          <role>org.codehaus.plexus.ehcache.EhcacheComponent</role>
+          <role>org.codehaus.plexus.cache.Cache</role>
           <role-hint>users</role-hint>
           <field-name>usersCache</field-name>
         </requirement>

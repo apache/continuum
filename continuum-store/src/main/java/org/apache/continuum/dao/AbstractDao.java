@@ -25,6 +25,7 @@ import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;
 
+import javax.annotation.Resource;
 import javax.jdo.FetchPlan;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -59,9 +60,7 @@ public class AbstractDao
 
     protected static final String PROJECT_WITH_SCM_DETAILS_FETCH_GROUP = "project-with-scm-details";
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private StoreUtilities storeUtilities;
 
     protected Object addObject( Object object )

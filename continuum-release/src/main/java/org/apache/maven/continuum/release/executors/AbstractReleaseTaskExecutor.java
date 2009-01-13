@@ -34,6 +34,7 @@ import java.io.IOException;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  */
 public abstract class AbstractReleaseTaskExecutor
     implements ReleaseTaskExecutor

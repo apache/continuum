@@ -21,21 +21,25 @@ package org.apache.maven.continuum.web.action;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.struts2.interceptor.ServletRequestAware;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -46,6 +50,7 @@ import org.codehaus.plexus.util.StringUtils;
  */
 public abstract class AddMavenProjectAction
     extends ContinuumActionSupport
+    implements ServletRequestAware
 {
     private static final long serialVersionUID = -3965565189557706469L;
 
@@ -79,6 +84,8 @@ public abstract class AddMavenProjectAction
     
     private List<String> errorMessages = new ArrayList<String>();
 
+    private HttpServletRequest httpServletRequest;
+    
     public String execute()
         throws ContinuumException, BuildDefinitionServiceException
     {
@@ -110,10 +117,19 @@ public abstract class AddMavenProjectAction
                 URL url = new URL( pomUrl );
                 if ( pomUrl.startsWith( "http" ) && !StringUtils.isEmpty( scmUsername ) )
                 {
+                    String encoding = this.httpServletRequest.getCharacterEncoding();
+                    if ( StringUtils.isEmpty( encoding ) )
+                    {
+                         encoding = System.getProperty( "file.encoding" );
+                    }
+
+                    String encodedUsername = URLEncoder.encode( scmUsername, encoding );
+                    String encodedPassword = URLEncoder.encode( scmPassword, encoding );
+
                     StringBuffer urlBuffer = new StringBuffer();
                     urlBuffer.append( url.getProtocol() ).append( "://" );
-                    urlBuffer.append( scmUsername ).append( ':' ).append( scmPassword ).append( '@' ).append(
-                        url.getHost() );
+                    urlBuffer.append( encodedUsername ).append( ':' ).append( encodedPassword ).append( '@' )
+                        .append( url.getHost() );
                     if ( url.getPort() != -1 )
                     {
                         urlBuffer.append( ":" ).append( url.getPort() );
@@ -129,9 +145,15 @@ public abstract class AddMavenProjectAction
             }
             catch ( MalformedURLException e )
             {
-                addActionError( "add.project.unknown.error" );
+                addActionError( getText( "add.project.unknown.error" ) );
                 return doDefault();
             }
+            catch ( UnsupportedEncodingException e )
+            {
+                addActionError( getText( "add.project.unknown.error" ) );
+                return doDefault();
+            }
+            
         }
         else
         {
@@ -160,7 +182,7 @@ public abstract class AddMavenProjectAction
             else
             {
                 // no url or file was filled
-                addActionError( "add.project.field.required.error" );
+                addActionError( getText( "add.project.field.required.error" ) );
                 return doDefault();
             }
         }
@@ -427,5 +449,10 @@ public abstract class AddMavenProjectAction
     public void setErrorMessages( List<String> errorMessages )
     {
         this.errorMessages = errorMessages;
+    }
+
+    public void setServletRequest( HttpServletRequest httpServletRequest )
+    {
+        this.httpServletRequest = httpServletRequest;
     }
 }

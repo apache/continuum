@@ -23,18 +23,16 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.configuration.ConfigurationService;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
  * ForceContinuumConfigurationInterceptor:
  *
  * @author: Jesse McConnell <jmcconnell@apache.org>
- * @version: $ID:$
+ * @version: $Id$
  * @plexus.component role="com.opensymphony.xwork2.interceptor.Interceptor"
  * role-hint="forceContinuumConfigurationInterceptor"
  */
 public class ForceContinuumConfigurationInterceptor
-    extends AbstractLogEnabled
     implements Interceptor
 {
     private static boolean checked = false;

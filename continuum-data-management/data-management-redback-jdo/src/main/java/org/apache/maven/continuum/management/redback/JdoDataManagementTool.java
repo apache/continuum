@@ -32,7 +32,7 @@ import java.io.IOException;
 
 /**
  * JDO implementation the database management tool API.
- *
+ * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="redback-jdo"
  */
 public class JdoDataManagementTool

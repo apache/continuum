@@ -21,66 +21,67 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="continuum" prefix="c1" %>
 <html>
+<s:i18n name="localization.Continuum">
 <head>
-  <title>Configure Appearance</title>
+  <title><s:text name="appearance.page.title"/></title>
   <s:head/>
 </head>
 
 <body>
-<h1>Appearance</h1>
+<h1><s:text name="appearance.section.title"/></h1>
 
 <div style="float: right">
-  <a href="<s:url action='editAppearance' />">Edit</a>
+  <a href="<s:url action='editAppearance' />"><s:text name="edit"/></a>
 </div>
-<h2>Company Details</h2>
+<h2><s:text name="appearance.companyDetails"/></h2>
 
 <p>
-  The logo in the top right of the screen is controlled by your selected 'company POM'.
+  <s:text name="appearance.description"/>
 </p>
 
 <s:set name="companyPom" value="companyPom"/>
 
 <c:if test="${empty (companyPom.groupId) || empty (companyPom.artifactId)}">
   <p>
-    You have not yet specified a company POM. <a href="<s:url action='editAppearance' />">Select a Company POM</a>
+    <s:text name="appearance.noCompanyPom"/> <a href="<s:url action='editAppearance' />"><s:text name="appearance.selectCompanyPom"/></a>
   </p>
 </c:if>
 
 <c:if test="${!empty (companyPom.groupId) && !empty (companyPom.artifactId)}">
   <p>
-    Your selected company POM is below. If you would like to change the organization name, url or logo, you can
-    <a href="<s:url action='editCompanyPom'/>">edit the POM</a>.
+    <s:text name="appearance.detailsIntroduction"/> <s:text name="appearance.maybeChange"/>
+    <a href="<s:url action='editCompanyPom'/>"><s:text name="appearance.editThePomLink"/></a>.
   </p>
 
   <s:set name="companyModel" value="companyModel"/>
   <table>
-    <s:label name="companyPom.groupId" label="Group ID"/>
-    <s:label name="companyPom.artifactId" label="Artifact ID"/>
+    <s:label name="companyPom.groupId" label="%{getText('appearance.companyPom.groupId')}"/>
+    <s:label name="companyPom.artifactId" label="%{getText('appearance.companyPom.artifactId')}"/>
     <c:if test="${companyModel != null}">
-      <s:label name="companyModel.version" label="Version"/>
+      <s:label name="companyModel.version" label="%{getText('appearance.companyPom.version')}"/>
     </c:if>
   </table>
 
   <div style="float: right">
-    <a href="<s:url action='editCompanyPom' />">Edit Company POM</a>
+    <a href="<s:url action='editCompanyPom' />"><s:text name="appearance.editCompanyPom"/></a>
   </div>
-  <h3>POM Information</h3>
+  <h3><s:text name="appearance.companyPom.section.title"/></h3>
 
   <c:choose>
     <c:when test="${companyModel != null}">
       <table>
         <tr>
-          <th>Name</th>
+          <th><s:text name="appearance.companyPom.organizationName.label"/></th>
           <td>${companyModel.organization.name}</td>
         </tr>
         <tr>
-          <th>URL</th>
+          <th><s:text name="appearance.companyPom.organizationUrl.label"/></th>
           <td><a href="${companyModel.organization.url}" target="_blank">
             <code>${companyModel.organization.url}</code>
           </a></td>
         </tr>
         <tr>
-          <th>Logo URL</th>
+          <th><s:text name="appearance.companyPom.organizationLogoUrl.label"/></th>
           <td>
             <code>${companyModel.properties['organization.logo']}</code>
           </td>
@@ -88,18 +89,18 @@
       </table>
     </c:when>
     <c:otherwise>
-      Company POM '${companyPom.groupId}:${companyPom.artifactId}' doesn't exist.
-      <a href="<s:url action='editCompanyPom' />">Create company POM</a>
+      <s:text name="appearance.companyPomDoesNotExist"><s:param>${companyPom.groupId}:${companyPom.artifactId}</s:param></s:text>
+      <a href="<s:url action='editCompanyPom' />"><s:text name="appearance.createCompanyPom"/></a>
     </c:otherwise>
   </c:choose>
 </c:if>
 <s:form action="saveFooter!saveFooter.action" method="get" namespace="/admin">
   <div id="axial" class="h3">
-    <h3>footer content</h3>
+    <h3><s:text name="appearance.footerContent"/></h3>
     <div class="axial">
       <table>
         <tbody>  
-          <s:textarea cols="120" rows="3" label="HTML Content" name="footer" />
+          <s:textarea cols="120" rows="3" label="%{getText('appearance.htmlContent.label')}" name="footer" />
         </tbody>
       </table>
       <div class="functnbar3">
@@ -109,5 +110,5 @@
   </div>
 </s:form>
 </body>
-
+</s:i18n>
 </html>

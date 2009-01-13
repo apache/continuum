@@ -30,13 +30,13 @@
         <h3><s:text name="buildDefinition.section.title"/></h3>
 
         <div class="axial">
-          <s:form action="saveBuildDefinition" method="get" validate="true">
+          <s:form action="saveBuildDefinition" method="get">
             <c:choose>
             
               <c:when test="${!empty actionErrors}">
                 <div class="errormessage">
                   <s:iterator value="actionErrors">
-                    <p><s:text name="<s:property/>" /></p>
+                    <p><s:property/></p>
                   </s:iterator>
                 </div>
                 <input type="button" value="Back" onClick="history.go(-1)">

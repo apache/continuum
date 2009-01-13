@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  */
 public class RollbackReleaseTaskExecutor
     extends AbstractReleaseTaskExecutor

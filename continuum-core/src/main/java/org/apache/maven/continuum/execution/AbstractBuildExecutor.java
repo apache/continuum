@@ -31,11 +31,12 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.commandline.ExecutableResolver;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collections;
@@ -49,9 +50,10 @@ import java.util.Properties;
  * @version $Id$
  */
 public abstract class AbstractBuildExecutor
-    extends AbstractLogEnabled
     implements ContinuumBuildExecutor, Initializable
 {
+    protected Logger log = LoggerFactory.getLogger( getClass() );
+    
     private static final String SUDO_EXECUTABLE = "sudo";
 
     private static final String CHROOT_EXECUTABLE = "chroot";
@@ -152,7 +154,7 @@ public abstract class AbstractBuildExecutor
         {
             if ( StringUtils.isEmpty( defaultExecutable ) )
             {
-                getLogger().warn( "The default executable for build executor '" + id + "' is not set. " +
+                log.warn( "The default executable for build executor '" + id + "' is not set. " +
                     "This will cause a problem unless the project has a executable configured." );
             }
             else
@@ -161,12 +163,12 @@ public abstract class AbstractBuildExecutor
 
                 if ( resolvedExecutable == null )
                 {
-                    getLogger().warn(
+                    log.warn(
                         "Could not find the executable '" + defaultExecutable + "' in the " + "path '" + path + "'." );
                 }
                 else
                 {
-                    getLogger().info( "Resolved the executable '" + defaultExecutable + "' to " + "'" +
+                    log.info( "Resolved the executable '" + defaultExecutable + "' to " + "'" +
                         resolvedExecutable.getAbsolutePath() + "'." );
                 }
             }
@@ -211,11 +213,11 @@ public abstract class AbstractBuildExecutor
 
             if ( e == null )
             {
-                getLogger().warn( "Could not find the executable '" + executable + "' in this path: " );
+                log.warn( "Could not find the executable '" + executable + "' in this path: " );
 
                 for ( String element : path )
                 {
-                    getLogger().warn( element );
+                    log.warn( element );
                 }
 
                 actualExecutable = defaultExecutable;
@@ -278,7 +280,7 @@ public abstract class AbstractBuildExecutor
                                                                                   arguments, output, project.getId(),
                                                                                   environments );
 
-            getLogger().info( "Exit code: " + result.getExitCode() );
+            log.info( "Exit code: " + result.getExitCode() );
 
             return new ContinuumBuildExecutionResult( output, result.getExitCode() );
         }

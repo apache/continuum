@@ -25,6 +25,7 @@ import org.apache.maven.shared.release.config.ReleaseDescriptor;
 
 /**
  * @author Edwin Punzalan
+ * @version $Id$
  */
 public class RollbackReleaseProjectTask
     extends AbstractReleaseProjectTask

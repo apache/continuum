@@ -538,14 +538,18 @@ public class ParallelBuildsManager
     }
 
     /**
-     * @see BuildsManager#prepareBuildProjects(Map, int)
+     * @see BuildsManager#prepareBuildProjects(Map, int, int, String)
      */
-    public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger )
+    public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, String scmRootAddress )
         throws BuildManagerException
     {
         try
-        {
-            PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger );
+        {            
+            //PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger );
+            
+            PrepareBuildProjectsTask task =
+                new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger, projectGroupId, scmRootAddress );
+            
             log.info( "Queueing prepare-build-project task '" + task + "' to prepare-build queue." );
             prepareBuildQueue.put( task );
         }
@@ -737,6 +741,29 @@ public class ParallelBuildsManager
         catch ( TaskQueueException e )
         {
             throw new BuildManagerException( "Error encountered while removing project(s) from build queue.", e );
+        }
+    }
+    
+    public boolean removeProjectGroupFromPrepareBuildQueue( int projectGroupId, String scmRootAddress )
+        throws BuildManagerException
+    {
+        try
+        {
+            List<PrepareBuildProjectsTask> queue = prepareBuildQueue.getQueueSnapshot();
+
+            for ( PrepareBuildProjectsTask task : queue )
+            {
+                if ( task != null && task.getProjectGroupId() == projectGroupId &&
+                    task.getScmRootAddress().equals( scmRootAddress ) )
+                {
+                    return prepareBuildQueue.remove( task );
+                }
+            }
+            return false;
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( "Error while getting the prepare build projects task in queue", e );
         }
     }
     

@@ -114,7 +114,7 @@ public class ConfigurationAction
     {
         if ( isRequireReleaseOutput() )
         {
-            addActionError( "configuration.releaseOutputDirectory.required" );
+            addActionError( getText( "configuration.releaseOutputDirectory.required" ) );
         }
                 
         if( numberOfAllowedBuildsinParallel <= 0 )
@@ -161,7 +161,7 @@ public class ConfigurationAction
         }
         else if ( isRequireReleaseOutput() )
         {
-            addActionError( "configuration.releaseOutputDirectory.required" );
+            addActionError( getText( "configuration.releaseOutputDirectory.required" ) );
             return ERROR;
         }
         else

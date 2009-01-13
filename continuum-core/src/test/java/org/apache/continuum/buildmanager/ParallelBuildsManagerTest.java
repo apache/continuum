@@ -72,6 +72,7 @@ public class ParallelBuildsManagerTest
     
     private TaskQueue checkoutQueue;
 
+    @Override
     public void setUp()
         throws Exception
     {
@@ -103,6 +104,7 @@ public class ParallelBuildsManagerTest
         checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
     }
 
+    @Override
     public void tearDown()
         throws Exception
     {

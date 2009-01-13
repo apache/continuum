@@ -32,12 +32,13 @@ import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @plexus.component role="org.apache.continuum.dao.BuildQueueDao"
  */
+@Repository("buildQueueDao")
 public class BuildQueueDaoImpl
     extends AbstractDao
     implements BuildQueueDao

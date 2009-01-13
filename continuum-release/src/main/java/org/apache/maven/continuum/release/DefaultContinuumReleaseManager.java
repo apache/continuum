@@ -19,6 +19,7 @@ package org.apache.maven.continuum.release;
  * under the License.
  */
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -49,6 +50,7 @@ import java.util.Properties;
 /**
  * @author Jason van Zyl
  * @author Edwin Punzalan
+ * @version $Id$
  */
 public class DefaultContinuumReleaseManager
     implements ContinuumReleaseManager
@@ -268,6 +270,12 @@ public class DefaultContinuumReleaseManager
         descriptor.setReleaseVersions( relVersions );
         descriptor.setDevelopmentVersions( devVersions );
         descriptor.setPreparationGoals( releaseProperties.getProperty( "prepareGoals" ) );
+        
+        String useEditMode = releaseProperties.getProperty( "useEditMode" );
+        if ( BooleanUtils.toBoolean( useEditMode ) )
+        {
+            descriptor.setScmUseEditMode( Boolean.valueOf( useEditMode ) );
+        } 
         
         LocalRepository repository = project.getProjectGroup().getLocalRepository();
         

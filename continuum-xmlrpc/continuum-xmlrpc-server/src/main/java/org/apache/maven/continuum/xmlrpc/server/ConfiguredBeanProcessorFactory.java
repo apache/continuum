@@ -30,6 +30,8 @@ import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,15 +45,12 @@ import java.util.Map;
 public class ConfiguredBeanProcessorFactory
     implements RequestProcessorFactoryFactory, Initializable, Contextualizable
 {
+    private Logger log = LoggerFactory.getLogger( ConfiguredBeanProcessorFactory.class );
+
     /**
      * @plexus.requirement role="org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent"
      */
     private Map xmlrpcComponents;
-
-    /**
-     * @plexus.requirement
-     */
-    private Listener listener;
 
     private Map componentsMapping = new HashMap();
 
@@ -91,7 +90,7 @@ public class ConfiguredBeanProcessorFactory
     protected Object getRequestProcessor( Class cls )
         throws XmlRpcException
     {
-        listener.getLogger().debug( "Load '" + cls.getName() + "' handler." );
+        log.debug( "Load '" + cls.getName() + "' handler." );
 
         Object obj = null;
         try
@@ -100,7 +99,7 @@ public class ConfiguredBeanProcessorFactory
         }
         catch ( ComponentLookupException e )
         {
-            listener.getLogger().error( "Can't load component.", e );
+            log.error( "Can't load component.", e );
         }
 
         if ( obj == null )
@@ -120,7 +119,7 @@ public class ConfiguredBeanProcessorFactory
         throws ComponentLookupException
     {
         String key = getComponentKey( cls );
-        listener.getLogger().debug( "load component:" );
+        log.debug( "load component:" + key );
         return container.lookup( ContinuumXmlRpcComponent.class.getName(), key );
     }
 

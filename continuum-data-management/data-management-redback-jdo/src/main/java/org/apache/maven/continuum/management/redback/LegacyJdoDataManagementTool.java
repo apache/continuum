@@ -65,7 +65,7 @@ import java.util.Map;
 
 /**
  * JDO implementation the database management tool API.
- *
+ * @version $Id$
  * @plexus.component role="org.apache.maven.continuum.management.DataManagementTool" role-hint="legacy-redback-jdo"
  */
 public class LegacyJdoDataManagementTool

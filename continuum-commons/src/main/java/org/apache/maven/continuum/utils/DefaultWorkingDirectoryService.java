@@ -21,21 +21,21 @@ package org.apache.maven.continuum.utils;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
+
+import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
+@Service("workingDirectoryService")
 public class DefaultWorkingDirectoryService
-    extends AbstractLogEnabled
     implements WorkingDirectoryService
 {
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ConfigurationService configurationService;
 
     public void setConfigurationService( ConfigurationService configurationService )

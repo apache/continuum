@@ -411,24 +411,22 @@ public class ProjectGroupAction
         {
             if ( name.equals( "" ) )
             {
-                addActionError( "projectGroup.error.name.required" );
+                addActionError( getText( "projectGroup.error.name.required" ) );
                 return INPUT;
             }
             else if ( name.trim().equals( "" ) )
             {
-                addActionError( "projectGroup.error.name.cannot.be.spaces" );
+                addActionError( getText( "projectGroup.error.name.cannot.be.spaces" ) );
                 return INPUT;
             }
             else
             {
                 name = name.trim();
-                Iterator iterator = getContinuum().getAllProjectGroups().iterator();
-                while ( iterator.hasNext() )
+                for ( ProjectGroup projectGroup : getContinuum().getAllProjectGroups() )
                 {
-                    ProjectGroup projectGroup = (ProjectGroup) iterator.next();
                     if ( name.equals( projectGroup.getName() ) && projectGroup.getId() != projectGroupId )
                     {
-                        addActionError( "projectGroup.error.name.already.exists" );
+                        addActionError( getText( "projectGroup.error.name.already.exists" ) );
                         return INPUT;
                     }
                 }
@@ -604,7 +602,7 @@ public class ProjectGroupAction
                     {
                         //currently, we have no provisions for releasing 2 or more parents
                         //at the same time, this will be implemented in the future
-                        addActionError( "projectGroup.release.error.severalParentProjects" );
+                        addActionError( getText( "projectGroup.release.error.severalParentProjects" ) );
                         return INPUT;
                     }
                 }
@@ -618,7 +616,7 @@ public class ProjectGroupAction
 
         if ( parent == null )
         {
-            addActionError( "projectGroup.release.error.emptyGroup" );
+            addActionError( getText( "projectGroup.release.error.emptyGroup" ) );
             return INPUT;
         }
 
@@ -630,7 +628,7 @@ public class ProjectGroupAction
         }
         else
         {
-            addActionError( "projectGroup.release.error.projectNotInSuccess" );
+            addActionError( getText( "projectGroup.release.error.projectNotInSuccess" ) );
             return INPUT;
         }
     }

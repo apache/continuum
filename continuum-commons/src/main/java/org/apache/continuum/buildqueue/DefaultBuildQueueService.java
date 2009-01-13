@@ -27,23 +27,20 @@ import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
+import javax.annotation.Resource;
+
 /**
  * DefaultBuildQueueService
  * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @plexus.component role="org.apache.continuum.buildqueue.BuildQueueService"
  */
 public class DefaultBuildQueueService
     implements BuildQueueService
 {
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private BuildQueueDao buildQueueDao;
     
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ScheduleDao scheduleDao;
 
     public BuildQueue addBuildQueue( BuildQueue buildQueue )
@@ -136,6 +133,26 @@ public class DefaultBuildQueueService
         {
             throw new BuildQueueServiceException( e );
         }
+    }
+
+    public BuildQueueDao getBuildQueueDao()
+    {
+        return buildQueueDao;
+    }
+
+    public void setBuildQueueDao( BuildQueueDao buildQueueDao )
+    {
+        this.buildQueueDao = buildQueueDao;
+    }
+
+    public ScheduleDao getScheduleDao()
+    {
+        return scheduleDao;
+    }
+
+    public void setScheduleDao( ScheduleDao scheduleDao )
+    {
+        this.scheduleDao = scheduleDao;
     }
 
 }

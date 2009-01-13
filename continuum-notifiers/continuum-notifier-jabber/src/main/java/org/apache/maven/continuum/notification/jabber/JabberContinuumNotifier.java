@@ -34,15 +34,19 @@ import org.codehaus.plexus.jabber.JabberClientException;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  */
+@Service("notifier#jabber")
 public class JabberContinuumNotifier
     extends AbstractContinuumNotifier
 {
@@ -52,14 +56,10 @@ public class JabberContinuumNotifier
     // Requirements
     // ----------------------------------------------------------------------
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private JabberClient jabberClient;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ConfigurationService configurationService;
 
     // ----------------------------------------------------------------------

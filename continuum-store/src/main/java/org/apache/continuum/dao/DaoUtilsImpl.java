@@ -41,7 +41,9 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import javax.jdo.Extent;
 import javax.jdo.JDOUserException;
 import javax.jdo.PersistenceManager;
@@ -57,15 +59,13 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
- * @plexus.component role="org.apache.continuum.dao.DaoUtils"
  */
+@Repository("daoUtils")
 public class DaoUtilsImpl
     extends AbstractDao
     implements DaoUtils
 {
-    /**
-     * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
-     */
+    @Resource
     private ProjectDao projectDao;
 
     public void closeStore()
