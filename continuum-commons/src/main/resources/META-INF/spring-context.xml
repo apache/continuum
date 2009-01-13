@@ -35,15 +35,12 @@
   <bean id="configurationService" class="org.apache.maven.continuum.configuration.DefaultConfigurationService"
         init-method="initialize">
     <property name="applicationHome" value="data"/>
-    <!-- 
-    <property name="scheduleDao" ref="scheduleDao"/>
-    <property name="systemConfigurationDao" ref="systemConfigurationDao"/>
-    <property name="configuration" ref="continuumConfiguration"/>
-    <property name="buildQueueService" ref="buildQueueService"/>   -->
   </bean>
+  
   <bean id="buildQueueService" class="org.apache.continuum.buildqueue.DefaultBuildQueueService">
     <property name="buildQueueDao" ref="buildQueueDao"/>
     <property name="scheduleDao" ref="scheduleDao"/>
   </bean> 
+  
   <bean id="shellCommandHelper" class="org.apache.continuum.utils.shell.DefaultShellCommandHelper"/>  
 </beans>

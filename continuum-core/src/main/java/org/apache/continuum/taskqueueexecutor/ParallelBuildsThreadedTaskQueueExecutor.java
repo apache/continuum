@@ -42,7 +42,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
 
 /**
- * 
+ * Modified plexus ThreadedTaskQueueExecutor
  */
 public class ParallelBuildsThreadedTaskQueueExecutor
     implements TaskQueueExecutor, Initializable, Startable
@@ -50,16 +50,22 @@ public class ParallelBuildsThreadedTaskQueueExecutor
     private static final int SHUTDOWN = 1;
 
     private static final int CANCEL_TASK = 2;
-    
+
     private Logger log = LoggerFactory.getLogger( getClass() );
 
-    /** @requirement */
+    /**
+     * @requirement 
+     */
     private TaskQueue queue;
 
-    /** @requirement */
+    /**
+     * @requirement 
+     */
     private TaskExecutor executor;
 
-    /** @configuration */
+    /**
+     * @configuration 
+     */
     private String name;
 
     // ----------------------------------------------------------------------
@@ -93,8 +99,8 @@ public class ParallelBuildsThreadedTaskQueueExecutor
                 }
                 catch ( InterruptedException e )
                 {
-                    log.info( "Executor thread interrupted, command: "
-                        + ( command == SHUTDOWN ? "Shutdown" : command == CANCEL_TASK ? "Cancel task" : "Unknown" ) );
+                    log.info( "Executor thread interrupted, command: " +
+                        ( command == SHUTDOWN ? "Shutdown" : command == CANCEL_TASK ? "Cancel task" : "Unknown" ) );
                     continue;
                 }
 
@@ -214,8 +220,8 @@ public class ParallelBuildsThreadedTaskQueueExecutor
                 }
                 else
                 {
-                    log.warn( "Task not cancelled (Flags: done: " + future.isDone() + " cancelled: "
-                        + future.isCancelled() + ")" );
+                    log.warn( "Task not cancelled (Flags: done: " + future.isDone() + " cancelled: " +
+                        future.isCancelled() + ")" );
                 }
             }
             else
@@ -281,7 +287,6 @@ public class ParallelBuildsThreadedTaskQueueExecutor
     {
         log.info( "Starting task executor, thread name '" + name + "'." );
 
-        //this.executorService = Executors.newSingleThreadExecutor();
         this.executorService = Executors.newCachedThreadPool();
 
         executorRunnable = new ExecutorRunnable();

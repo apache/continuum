@@ -130,6 +130,10 @@ under the License.
       <artifactId>jpox</artifactId>
     </dependency>
     <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>jsr250-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-store</artifactId>
     </dependency>

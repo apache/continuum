@@ -32,7 +32,6 @@ import com.opensymphony.xwork2.Preparable;
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildQueueAction"
  */
 public class BuildQueueAction
-    //extends AbstractBuildQueueAction
     extends ContinuumActionSupport
     implements Preparable
 {

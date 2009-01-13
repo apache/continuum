@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -59,7 +61,7 @@ import org.slf4j.LoggerFactory;
  * Parallel builds manager. 
  * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @plexus.component role="org.apache.continuum.buildmanager.BuildsManager" role-hint="parallel"
+ * @version $Id$
  */
 public class ParallelBuildsManager    
     implements BuildsManager, Contextualizable
@@ -74,24 +76,15 @@ public class ParallelBuildsManager
 
     private static final int CHECKOUT_QUEUE = 2;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private BuildDefinitionDao buildDefinitionDao;
 
-    /**
-     * @plexus.requirement role-hint="prepare-build-project"
-     */
     private TaskQueue prepareBuildQueue;
 
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private ConfigurationService configurationService;
         
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private BuildQueueService buildQueueService;
 
     private PlexusContainer container;
@@ -315,7 +308,6 @@ public class ParallelBuildsManager
                         }
                     }
                     log.error( "Project '" + projectId + "' not found in any of the builds queues." );
-                    //throw new BuildManagerException( "Project not found in any of the build queues." );
                 }
             }
         }
@@ -356,7 +348,6 @@ public class ParallelBuildsManager
                         }
                     }
                     log.info( "Project '" + projectId + "' not found in any of the checkout queues." );
-                    //throw new BuildManagerException( "Project not found in any of the checkout queues." );
                 }
             }
         }
@@ -545,8 +536,6 @@ public class ParallelBuildsManager
     {
         try
         {            
-            //PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger );
-            
             PrepareBuildProjectsTask task =
                 new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger, projectGroupId, scmRootAddress );
             
@@ -576,7 +565,6 @@ public class ParallelBuildsManager
             else
             {
                 log.info( "Project '" + projectId + "' not found in any of the build queues." );
-                //throw new BuildManagerException( "Project not found in any of the build queues." );
             }
         }
         catch ( TaskQueueException e )
@@ -602,7 +590,6 @@ public class ParallelBuildsManager
             else
             {
                 log.info( "Project '" + projectId + "' not found in any of the build queues." );
-                //throw new BuildManagerException( "Project not found in any of the build queues." );
             }
         }
         catch ( TaskQueueException e )
@@ -628,7 +615,6 @@ public class ParallelBuildsManager
             else
             {
                 log.info( "Project '" + projectId + "' not found in any of the checkout queues." );
-                //throw new BuildManagerException( "Project not found in any of the checkout queues." );
             }
         }
         catch ( TaskQueueException e )
@@ -1195,11 +1181,6 @@ public class ParallelBuildsManager
         return whereToBeQueued;
     }
     
-    public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
-    {
-        this.buildDefinitionDao = buildDefinitionDao;
-    }
-
     public void contextualize( Context context )
         throws ContextException
     {
@@ -1252,16 +1233,21 @@ public class ParallelBuildsManager
         return overallBuildQueue;
     }
     
-    // for unit tests..
+    public TaskQueue getPrepareBuildQueue()
+    {
+        return prepareBuildQueue;
+    }
+    
+    public void setPrepareBuildQueue( TaskQueue prepareBuildQueue )
+    {
+        this.prepareBuildQueue = prepareBuildQueue;
+    }
+    
+    // for unit tests.. 
     
     public void setOverallBuildQueues( Map<Integer, OverallBuildQueue> overallBuildQueues )
     {
         this.overallBuildQueues = overallBuildQueues;
-    }
-
-    public void setPrepareBuildQueue( TaskQueue prepareBuildQueue )
-    {
-        this.prepareBuildQueue = prepareBuildQueue;
     }
 
     public void setConfigurationService( ConfigurationService configurationService )
@@ -1272,5 +1258,10 @@ public class ParallelBuildsManager
     public void setBuildQueueService( BuildQueueService buildQueueService )
     {
         this.buildQueueService = buildQueueService;
+    }
+    
+    public void setBuildDefinitionDao( BuildDefinitionDao buildDefinitionDao )
+    {
+        this.buildDefinitionDao = buildDefinitionDao;
     }
 }

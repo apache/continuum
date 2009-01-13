@@ -22,6 +22,8 @@ package org.apache.continuum.taskqueue;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
@@ -41,24 +43,16 @@ import org.slf4j.LoggerFactory;
  * "Overall" build queue which has a checkout queue and a build queue.
  * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
- * @plexus.component role="org.apache.continuum.taskqueue.OverallBuildQueue" instantiation-strategy="per-lookup"
+ * @version $Id$
  */
 public class DefaultOverallBuildQueue   
     implements OverallBuildQueue
 {
-    /**
-     * @plexus.requirement
-     */
+    @Resource
     private BuildDefinitionDao buildDefinitionDao;
     
-    /**
-     * @plexus.requirement role-hint="build-project"
-     */
     private TaskQueueExecutor buildTaskQueueExecutor;
     
-    /**
-     * @plexus.requirement role-hint="check-out-project"
-     */
     private TaskQueueExecutor checkoutTaskQueueExecutor;
 
     private int id;
