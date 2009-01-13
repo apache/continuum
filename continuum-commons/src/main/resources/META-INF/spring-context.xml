@@ -37,10 +37,7 @@
     <property name="applicationHome" value="data"/>
   </bean>
   
-  <bean id="buildQueueService" class="org.apache.continuum.buildqueue.DefaultBuildQueueService">
-    <property name="buildQueueDao" ref="buildQueueDao"/>
-    <property name="scheduleDao" ref="scheduleDao"/>
-  </bean> 
+  <bean id="buildQueueService" class="org.apache.continuum.buildqueue.DefaultBuildQueueService"/>
   
   <bean id="shellCommandHelper" class="org.apache.continuum.utils.shell.DefaultShellCommandHelper"/>  
 </beans>
