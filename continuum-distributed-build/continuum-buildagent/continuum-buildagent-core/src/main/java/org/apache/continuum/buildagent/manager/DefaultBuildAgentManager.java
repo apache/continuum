@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
@@ -47,21 +45,28 @@ import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-@Service("buildAgentManager")
+/**
+ * @plexus.component role="org.apache.continuum.buildagent.manager.BuildAgentManager" role-hint="default"
+ */
 public class DefaultBuildAgentManager
     implements BuildAgentManager
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
-    @Resource
+    /**
+     * @plexus.requirement
+     */
     private ActionManager actionManager;
 
-    @Resource
+    /**
+     * @plexus.requirement
+     */
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
-    @Resource
+    /**
+     * @plexus.requirement
+     */
     private BuildAgentTaskQueueManager buildAgentTaskQueueManager;
 
     public void prepareBuildProjects( List<BuildContext> buildContexts)
