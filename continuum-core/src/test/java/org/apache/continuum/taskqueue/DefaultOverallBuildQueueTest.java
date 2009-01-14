@@ -25,9 +25,9 @@ import java.util.List;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.scm.queue.CheckOutTask;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;

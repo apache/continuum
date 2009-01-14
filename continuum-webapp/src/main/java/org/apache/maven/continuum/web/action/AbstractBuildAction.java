@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.continuum.buildmanager.BuildManagerException;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.taskqueue.Task;

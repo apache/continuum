@@ -176,6 +176,10 @@ under the License.
       <artifactId>mail</artifactId>
       <version>1.4</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-builder</artifactId>
     </dependency>    
     <!-- === Testing Dependencies === -->
     <dependency>

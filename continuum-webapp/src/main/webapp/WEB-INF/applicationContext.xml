@@ -65,4 +65,16 @@
     <property name="session" ref="mailSession"/>
   </bean>	
   
+  <bean id="masterBuildAgentTransportServer" class="org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportServer">
+    <constructor-arg ref="distributedBuildManager"/>
+  </bean>
+  
+  <bean name="xmlrpcServicesList" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <ref bean="masterBuildAgentTransportServer"/>
+      </list>
+    </constructor-arg>
+  </bean>
+    
 </beans>

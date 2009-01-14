@@ -25,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -67,6 +69,11 @@ public class TestDefaultContinuumConfiguration
         assertNotNull( generalConfiguration.getBaseUrl() );
         assertEquals( "http://test", generalConfiguration.getBaseUrl() );
         assertEquals( new File( "myBuildOutputDir" ), generalConfiguration.getBuildOutputDirectory() );
+        assertNotNull( generalConfiguration.getBuildAgents() );
+        org.apache.continuum.configuration.BuildAgentConfiguration buildAgentConfig = generalConfiguration.getBuildAgents().get( 0 );
+        assertEquals( "http://buildagent/xmlrpc", buildAgentConfig.getUrl() );
+        assertEquals( "linux", buildAgentConfig.getDescription() );
+        assertTrue( buildAgentConfig.isEnabled() );
     }
 
     public void testDefaultConfiguration()
@@ -87,6 +94,13 @@ public class TestDefaultContinuumConfiguration
         generalConfiguration.getProxyConfiguration().setProxyPort( 8080 );
         File targetDir = new File(getBasedir(), "target");
         generalConfiguration.setBuildOutputDirectory( targetDir );
+        BuildAgentConfiguration buildAgentConfiguration = new BuildAgentConfiguration();
+        buildAgentConfiguration.setUrl( "http://buildagent/test" );
+        buildAgentConfiguration.setDescription( "windows xp" );
+        buildAgentConfiguration.setEnabled( false );
+        List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
+        buildAgents.add( buildAgentConfiguration );
+        generalConfiguration.setBuildAgents( buildAgents );
         configuration.setGeneralConfiguration( generalConfiguration );
         configuration.save();
 
@@ -94,12 +108,16 @@ public class TestDefaultContinuumConfiguration
         assertTrue( contents.indexOf( "http://test/zloug" ) > 0 );
         assertTrue( contents.indexOf( "localhost" ) > 0 );
         assertTrue( contents.indexOf( "8080" ) > 0 );
-
+        assertTrue( contents.indexOf( "http://buildagent/test" ) > 0 );
+        assertTrue( contents.indexOf( "windows xp" ) > 0 );
+        
         configuration.reload();
         assertEquals( "http://test/zloug", configuration.getGeneralConfiguration().getBaseUrl() );
         assertEquals( "localhost", configuration.getGeneralConfiguration().getProxyConfiguration().getProxyHost() );
         assertEquals( 8080, configuration.getGeneralConfiguration().getProxyConfiguration().getProxyPort() );
         assertEquals(targetDir.getPath(), configuration.getGeneralConfiguration().getBuildOutputDirectory().getPath());
+        assertEquals( "http://buildagent/test", configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).getUrl() );
+        assertFalse( configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).isEnabled() );
         log.info( "generalConfiguration " + configuration.getGeneralConfiguration().toString() );
     }
 }

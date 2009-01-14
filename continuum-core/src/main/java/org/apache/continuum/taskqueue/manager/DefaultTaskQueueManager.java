@@ -32,7 +32,8 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.purge.task.PurgeTask;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
@@ -60,10 +61,15 @@ public class DefaultTaskQueueManager
 	private Logger log = LoggerFactory.getLogger( DefaultTaskQueueManager.class );
 
     /**
+     * @plexus.requirement role-hint="distributed-build-project"
+     */
+     private TaskQueue distributedBuildQueue;
+
+    /**
      * @plexus.requirement role-hint="purge"
      */
     private TaskQueue purgeQueue;
-    
+
     /**
      * @plexus.requirement role-hint="prepare-release"
      */
@@ -91,10 +97,54 @@ public class DefaultTaskQueueManager
     
     private PlexusContainer container;
 
+    public TaskQueue getDistributedBuildQueue()
+    {
+        return distributedBuildQueue;
+    }
+
+    public List<PrepareBuildProjectsTask> getDistributedBuildProjectsInQueue()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            return distributedBuildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( "Error while getting the distributed building queue", e );
+        }
+    }
+
     public TaskQueue getPurgeQueue()
     {
         return purgeQueue;
-    }    
+    }
+
+    public boolean isInDistributedBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            List<PrepareBuildProjectsTask> queue = distributedBuildQueue.getQueueSnapshot();
+
+            for ( PrepareBuildProjectsTask task : queue )
+            {
+                if ( task != null )
+                {
+                    if ( task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( "Error while getting the tasks in distributed build queue", e );
+        }
+    }
     
     public boolean isInPurgeQueue( int purgeConfigId )
         throws TaskQueueManagerException
@@ -241,6 +291,21 @@ public class DefaultTaskQueueManager
         return false;
     }
 
+    public boolean removeFromDistributedBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueManagerException
+    {
+        List<PrepareBuildProjectsTask> queue = getDistributedBuildProjectsInQueue();
+
+        for ( PrepareBuildProjectsTask task : queue )
+        {
+            if ( task != null && task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+            {
+                return distributedBuildQueue.remove( task );
+            }
+        }
+        return false;
+    }
+
     public boolean removeFromPurgeQueue( int purgeConfigId )
         throws TaskQueueManagerException
     {
@@ -301,6 +366,20 @@ public class DefaultTaskQueueManager
         for ( RepositoryPurgeConfiguration repoPurge : repoPurgeConfigs )
         {
             removeFromPurgeQueue( repoPurge.getId() );
+        }
+    }
+
+    public void removeTasksFromDistributedBuildQueueWithHashCodes( int[] hashCodes )
+        throws TaskQueueManagerException
+    {
+        List<PrepareBuildProjectsTask> queue = getDistributedBuildProjectsInQueue();
+        
+        for ( PrepareBuildProjectsTask task : queue )
+        {
+            if ( ArrayUtils.contains( hashCodes, task.hashCode() ) )
+            {
+                distributedBuildQueue.remove( task );
+            }
         }
     }
     

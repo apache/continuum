@@ -298,4 +298,10 @@ public class ProjectDaoImpl
 
         }
     }
+
+    public Project getProjectWithDependencies( int projectId )
+        throws ContinuumStoreException
+    {
+        return (Project) getObjectById( Project.class, projectId, PROJECT_DEPENDENCIES_FETCH_GROUP );
+    }
 }

@@ -52,8 +52,10 @@ import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.repository.RepositoryService;
+import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
+import org.apache.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.build.settings.SchedulesActivationException;
 import org.apache.maven.continuum.build.settings.SchedulesActivator;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -87,7 +89,6 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUrlValidator;
-import org.apache.maven.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -102,6 +103,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StartingException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
+import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
@@ -916,7 +918,7 @@ public class DefaultContinuum
         Collection<Project> projectsList;
 
         Map projectsMap = null;
-        
+
         try
         {
             projectsMap = daoUtils.getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( schedule.getId() );
@@ -957,7 +959,7 @@ public class DefaultContinuum
                                 !parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) && !parallelBuildsManager.isInPrepareBuildQueue( project.getId() ) )
                         {
                             ProjectScmRoot scmRoot = getProjectScmRootByProject( project.getId() );
-                            
+
                             Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
                             
                             if ( projectsAndBuildDefinitionsMap == null )
@@ -1001,7 +1003,7 @@ public class DefaultContinuum
         {
             throw new ContinuumException( "Project (id=" + projectId + ") is currently in release stage." );
         }
-            
+
         BuildDefinition buildDef = getDefaultBuildDefinition( projectId );
 
         if ( buildDef == null )
@@ -1027,7 +1029,8 @@ public class DefaultContinuum
         projectsBuildDefinitionsMap.put( projectId, buildDef.getId() );
         
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
-        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), scmRoot.getProjectGroup().getId() );
+        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), 
+                              scmRoot.getProjectGroup().getId(), scmRoot.getId() );
     }
 
     public void buildProject( int projectId, int buildDefinitionId, int trigger )
@@ -1057,7 +1060,8 @@ public class DefaultContinuum
         projectsBuildDefinitionsMap.put( projectId, buildDefinitionId );
 
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
-        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), scmRoot.getProjectGroup().getId() );
+        prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(), 
+                              scmRoot.getProjectGroup().getId(), scmRoot.getId() );
     }
 
     public BuildResult getBuildResult( int buildId )
@@ -1502,7 +1506,10 @@ public class DefaultContinuum
 
         executeAction( "store-project", context );
 
-        executeAction( "add-project-to-checkout-queue", context );
+        if ( !configurationService.isDistributedBuildEnabled() )
+        {
+            executeAction( "add-project-to-checkout-queue", context );
+        }
 
         executeAction( "add-assignable-roles", context );
 
@@ -1658,7 +1665,7 @@ public class DefaultContinuum
 
             String url = (String) context.get( CreateProjectsFromMetadataAction.KEY_URL );
             
-            projectScmRoot = projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
+            projectScmRoot = getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
             
             if ( projectScmRoot == null )
             {
@@ -1752,8 +1759,11 @@ public class DefaultContinuum
                     
                 // used by BuildManager to determine on which build queue will the project be put
                 context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, defaultBuildDefinition );
-                
-                executeAction( "add-project-to-checkout-queue", context );
+
+                if ( !configurationService.isDistributedBuildEnabled() )
+                {
+                    executeAction( "add-project-to-checkout-queue", context );
+                }
             }
         }
         catch ( BuildDefinitionServiceException e )
@@ -3300,7 +3310,20 @@ public class DefaultContinuum
         }
         return null;
     }
-    
+
+    public ProjectScmRoot getProjectScmRootByProjectGroupAndScmRootAddress( int projectGroupId, String scmRootAddress )
+        throws ContinuumException
+    {
+        try
+        {
+            return projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( projectGroupId, scmRootAddress );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Error while retrieving project scm root for " + projectGroupId, e );
+        }
+    }
+
     public BuildQueue addBuildQueue( BuildQueue buildQueue ) throws ContinuumException
     {
         try
@@ -3487,7 +3510,7 @@ public class DefaultContinuum
                 }
                 
                 ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
-                
+
                 Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
                 
                 if ( projectsAndBuildDefinitionsMap == null )
@@ -3513,19 +3536,44 @@ public class DefaultContinuum
     {
         for ( ProjectScmRoot scmRoot : map.keySet() )
         {
-            prepareBuildProjects( map.get( scmRoot ), trigger, scmRoot.getScmRootAddress(), scmRoot.getProjectGroup().getId() );
+            prepareBuildProjects( map.get( scmRoot ), trigger, scmRoot.getScmRootAddress(),
+                                  scmRoot.getProjectGroup().getId(), scmRoot.getId() );
         }
     }
 
     private void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, 
-                                       String scmRootAddress, int projectGroupId )
+                                       String scmRootAddress, int projectGroupId, int scmRootId )
         throws ContinuumException
     {
+        ProjectGroup group = getProjectGroup( projectGroupId );
+        
         try
-        {     
-        	parallelBuildsManager.prepareBuildProjects(
+        {
+            if ( configurationService.isDistributedBuildEnabled() )
+            {
+                if ( !taskQueueManager.isInDistributedBuildQueue( projectGroupId, scmRootAddress ) )
+                {
+                    PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger,
+                                                                      projectGroupId, group.getName(), 
+                                                                      scmRootAddress, scmRootId );
+                    
+                    taskQueueManager.getDistributedBuildQueue().put( task );
+                }
+            }
+            else
+            {
+        	    parallelBuildsManager.prepareBuildProjects(
 					projectsBuildDefinitionsMap, trigger, projectGroupId,
-					scmRootAddress);
+					group.getName(), scmRootAddress, scmRootId );
+		    }
+        }
+        catch ( TaskQueueManagerException e )
+        {
+            throw logAndCreateException( e.getMessage(), e );
+        }
+        catch ( TaskQueueException e )
+        {
+            throw logAndCreateException( "Error while creating enqueuing object.", e );
         }
         catch( BuildManagerException e )
         {

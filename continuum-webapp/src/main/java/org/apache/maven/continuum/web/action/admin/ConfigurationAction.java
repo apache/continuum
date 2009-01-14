@@ -60,7 +60,9 @@ public class ConfigurationAction
     private int numberOfAllowedBuildsinParallel = 1;
     
     private boolean requireReleaseOutput;
-    
+
+    private boolean distributedBuildEnabled;
+
     public void prepare()
     {
         ConfigurationService configuration = getContinuum().getConfiguration();
@@ -108,6 +110,8 @@ public class ConfigurationAction
                
         String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
         setRequireReleaseOutput( new Boolean( requireRelease ) );
+
+        distributedBuildEnabled = configuration.isDistributedBuildEnabled();
     }
 
     public String input()
@@ -150,7 +154,7 @@ public class ConfigurationAction
         {
             configuration.setDeploymentRepositoryDirectory( null );
         }
-        
+
         configuration.setUrl( baseUrl );
 
         configuration.setInitialized( true );
@@ -168,6 +172,8 @@ public class ConfigurationAction
         {
             configuration.setReleaseOutputDirectory( null );
         }
+
+        configuration.setDistributedBuildEnabled( distributedBuildEnabled );
 
         configuration.store();
 
@@ -253,4 +259,14 @@ public class ConfigurationAction
 	{
 	    this.numberOfAllowedBuildsinParallel = numberOfAllowedBuildsinParallel;
 	}
+
+    public boolean isDistributedBuildEnabled()
+    {
+        return distributedBuildEnabled;
+    }
+
+    public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
+    {
+        this.distributedBuildEnabled = distributedBuildEnabled;
+    }
 }

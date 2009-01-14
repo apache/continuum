@@ -22,6 +22,7 @@ package org.apache.continuum.configuration;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -43,6 +44,8 @@ public class GeneralConfiguration
     private File releaseOutputDirectory;
     
     private int numberOfBuildsInParallel = 1;
+
+    private List<BuildAgentConfiguration> buildAgents;
 
     public GeneralConfiguration()
     {
@@ -123,5 +126,15 @@ public class GeneralConfiguration
     public void setNumberOfBuildsInParallel( int numberOfBuildsInParallel )
     {
         this.numberOfBuildsInParallel = numberOfBuildsInParallel;
+    }
+
+    public List<BuildAgentConfiguration> getBuildAgents()
+    {
+        return buildAgents;
+    }
+
+    public void setBuildAgents( List<BuildAgentConfiguration> buildAgents )
+    {
+        this.buildAgents = buildAgents;
     }
 }
