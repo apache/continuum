@@ -23,10 +23,17 @@ Managing General Configuration
 *---------------------------------+------------------------------------------------------+
 | Number of Allowed Builds in Parallel | The number of build queues that will be utilized to build projects. This allows concurrent checkouts and builds of multiple projects. Available since version 1.3.1. |
 *---------------------------------+------------------------------------------------------+
+| Enable Distributed Builds       | When checked, this Continuum instance will delegate all builds to configured agents. |
+*---------------------------------+------------------------------------------------------+
 
     You can modify values or keep defaults then save. 
 
-    You'll can modify values at a later time with the following steps:
+    Although Continuum defaults to storing its data within the installation, it is a best practice to separate the
+    installation and data directories.
+
+    These values can be pre-configured in continuum.xml.  Make sure that Continuum is not running when editing this file.
+
+    You can modify values at a later time with the following steps:
 
     [[1]] Login to Continuum with an Administrator account
 

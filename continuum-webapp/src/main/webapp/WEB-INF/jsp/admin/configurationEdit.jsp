@@ -82,7 +82,7 @@
                 <s:text name="configuration.baseUrl.message"/>
               </p></s:param>
             </s:textfield>
-            
+
             <s:textfield label="%{getText('configuration.allowed.build.parallel')}" name="numberOfAllowedBuildsinParallel" size="10">
               <s:param name="desc"><p>
                 <s:text name="configuration.allowed.build.paralle.message"/>
@@ -92,7 +92,9 @@
             <%--
             <s:checkbox label="%{getText('configuration.disable.parallel.builds')}" name="requireParallelBuilds" required="true"/>
             --%>
-            
+
+            <s:checkbox label="%{getText('configuration.distributedBuildEnabled.label')}" name="distributedBuildEnabled"/>
+
             <s:hidden name="requireReleaseOutput"/>
           </tbody>
         </table>

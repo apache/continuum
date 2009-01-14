@@ -20,12 +20,14 @@ package org.apache.maven.continuum.configuration;
  */
 
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
+import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -36,7 +38,7 @@ public interface ConfigurationService
     String ROLE = ConfigurationService.class.getName();
 
     public static final String DEFAULT_SCHEDULE_NAME = "DEFAULT_SCHEDULE";
-    
+
     public static final String DEFAULT_BUILD_QUEUE_NAME = "DEFAULT_BUILD_QUEUE";
 
     // ----------------------------------------------------------------------
@@ -94,6 +96,19 @@ public interface ConfigurationService
     
     BuildQueue getDefaultBuildQueue()
         throws BuildQueueServiceException;
+
+    List<BuildAgentConfiguration> getBuildAgents();
+
+    void addBuildAgent( BuildAgentConfiguration buildAgent )
+        throws ConfigurationException;
+
+    void removeBuildAgent( BuildAgentConfiguration buildAgent );
+
+    void updateBuildAgent( BuildAgentConfiguration buildAgent );
+
+    boolean isDistributedBuildEnabled();
+
+    void setDistributedBuildEnabled( boolean distributedBuildEnabled );
 
     // ----------------------------------------------------------------------
     //

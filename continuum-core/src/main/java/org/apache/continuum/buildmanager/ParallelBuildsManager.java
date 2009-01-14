@@ -31,15 +31,15 @@ import javax.annotation.Resource;
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.taskqueue.CheckOutTask;
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
+import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
-import org.apache.maven.continuum.buildqueue.BuildProjectTask;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.scm.queue.CheckOutTask;
-import org.apache.maven.continuum.scm.queue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -531,13 +531,13 @@ public class ParallelBuildsManager
     /**
      * @see BuildsManager#prepareBuildProjects(Map, int, int, String)
      */
-    public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, String scmRootAddress )
+    public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, String projectGroupName, String scmRootAddress, int scmRootId )
         throws BuildManagerException
     {
         try
         {            
             PrepareBuildProjectsTask task =
-                new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger, projectGroupId, scmRootAddress );
+                new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger, projectGroupId, projectGroupName, scmRootAddress, scmRootId );
             
             log.info( "Queueing prepare-build-project task '" + task + "' to prepare-build queue." );
             prepareBuildQueue.put( task );

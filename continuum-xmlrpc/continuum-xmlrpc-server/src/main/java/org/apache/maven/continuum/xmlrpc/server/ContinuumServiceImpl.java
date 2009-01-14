@@ -1063,15 +1063,15 @@ public class ContinuumServiceImpl
         {  
             Map<String, List<Task>> buildTasks = parallelBuildsManager.getProjectsInBuildQueues();
             Set<String> keys = buildTasks.keySet();
-            List<org.apache.maven.continuum.buildqueue.BuildProjectTask> convertedTasks =
-                new ArrayList<org.apache.maven.continuum.buildqueue.BuildProjectTask>();
+            List<org.apache.continuum.taskqueue.BuildProjectTask> convertedTasks =
+                new ArrayList<org.apache.continuum.taskqueue.BuildProjectTask>();
             
             for( String key : keys )
             {
                 List<Task> tasks = buildTasks.get( key );
                 for( Task task : tasks )
                 {
-                    convertedTasks.add( ( org.apache.maven.continuum.buildqueue.BuildProjectTask ) task );
+                    convertedTasks.add( ( org.apache.continuum.taskqueue.BuildProjectTask ) task );
                 }
             }
             
@@ -1469,10 +1469,10 @@ public class ContinuumServiceImpl
     // ----------------------------------------------------------------------
 
     private List<BuildProjectTask> populateBuildProjectTaskList(
-        List<org.apache.maven.continuum.buildqueue.BuildProjectTask> buildProjectTasks )
+        List<org.apache.continuum.taskqueue.BuildProjectTask> buildProjectTasks )
     {
         List<BuildProjectTask> responses = new ArrayList<BuildProjectTask>();
-        for ( org.apache.maven.continuum.buildqueue.BuildProjectTask buildProjectTask : buildProjectTasks )
+        for ( org.apache.continuum.taskqueue.BuildProjectTask buildProjectTask : buildProjectTasks )
         {
 
             responses.add( (BuildProjectTask) mapper.map( buildProjectTask, BuildProjectTask.class ) );

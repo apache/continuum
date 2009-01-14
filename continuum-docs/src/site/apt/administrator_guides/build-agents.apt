@@ -1,0 +1,29 @@
+ ------
+ Managing Build Agents
+ ------
+
+Managing Build Agents
+
+  Before this, you may want to enable the Distributed Builds option in the {{{configuration.html}General Configuration}}
+  and {{{../installation/build-agent.html}install a Build Agent}}.
+
+  From the menu, choose the 'Build Agents' item
+
+[../images/build-agents-menu.png] Build Agents Menu
+
+  You will see a list of the existing Build Agents, if any.
+
+[../images/build-agents.png] Build Agents List
+
+  To add a new Build Agent, click the 'Add' button
+
+  To edit an existing Build Agent, click the 'edit' link to the right of the entry.
+
+  You will be prompted to enter or edit the Build Agent URL and Description:
+
+[../images/build-agent-edit.png] Add/Edit Build Agent
+
+  Be sure to enable the agent by checking the 'Enabled' checkbox.
+
+  After you save your changes, verify that 'Enabled' is true.  If it is false, most likely Continuum was unable to ping
+  the agent.  Consult the log file for additional information.

@@ -19,6 +19,7 @@ package org.apache.maven.continuum.buildqueue;
  * under the License.
  */
 
+import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.project.ContinuumProjectState;

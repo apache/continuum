@@ -71,7 +71,8 @@ public interface BuildsManager
      * @param scmRootAddress TODO
      * @throws BuildManagerException
      */
-    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, String scmRootAddress )
+    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, 
+                               String projectGroupName, String scmRootAddress, int scmRootId )
         throws BuildManagerException;
 
     /**

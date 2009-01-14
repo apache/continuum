@@ -369,6 +369,10 @@
 
     <action name="buildResult" class="buildResult">
       <result name="success">/WEB-INF/jsp/buildResult.jsp</result>
+      <result name="error" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
     </action>
     
     <action name="buildOutputText" class="buildResult">
@@ -754,6 +758,7 @@
     
     <action name="displayQueues" class="queues" method="display">
       <result name="success">/WEB-INF/jsp/admin/buildQueueView.jsp</result>
+      <result name="distributed-build-success">/WEB-INF/jsp/admin/viewDistributedBuilds.jsp</result>
     </action>
     
     <action name="removeBuildQueueEntry" class="queues" method="remove">
@@ -791,6 +796,24 @@
         <param name="actionName">displayQueues</param>
       </result>      
     </action>    
+    
+    <action name="cancelDistributedBuild" class="queues" method="cancelDistributedBuild">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
+
+    <action name="removeDistributedBuildEntries" class="queues" method="removeDistributedBuildEntries">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
+    
+    <action name="removeDistributedBuildEntry" class="queues" method="removeDistributedBuildEntry">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
     
     <!--
     * Build Queue (Parallel Builds)
@@ -893,6 +916,38 @@
       </result>
     </action>
     
+    <action name="buildAgentList" class="buildAgent" method="list">
+      <result name="success">/WEB-INF/jsp/admin/buildAgentsList.jsp</result>
+    </action>
+    
+    <action name="editBuildAgent" class="buildAgent" method="input">
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+    </action>
+    
+    <action name="saveBuildAgent" class="buildAgent" method="save">
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+      </result>
+    </action>
+    
+    <action name="deleteBuildAgent" class="buildAgent" method="delete">
+      <result name="error" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildAgent.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+      </result>
+    </action>
+    
+    <action name="viewBuildAgent" class="buildAgent" method="view">
+      <result name="success">/WEB-INF/jsp/admin/viewBuildAgent.jsp</result>
+    </action>
+
   </package>
 
   <package name="component" extends="default">

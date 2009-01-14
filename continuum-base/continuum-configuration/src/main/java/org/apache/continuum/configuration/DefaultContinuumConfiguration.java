@@ -24,6 +24,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.configuration.model.ContinuumConfigurationModel;
@@ -41,13 +43,13 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultContinuumConfiguration
     implements ContinuumConfiguration
-{ 
+{
     private Logger log = LoggerFactory.getLogger( getClass() );
 
     private File configurationFile;
 
     private GeneralConfiguration generalConfiguration;
-    
+
     public static final String CONFIGURATION_FILE = "continuum.xml";
 
     //----------------------------------------------------
@@ -120,7 +122,7 @@ public class DefaultContinuumConfiguration
                 .read( new InputStreamReader( new FileInputStream( file ) ) );
 
             this.generalConfiguration = new GeneralConfiguration();
-            
+
             this.generalConfiguration.setNumberOfBuildsInParallel( configuration.getNumberOfBuildsInParallel() );
             this.generalConfiguration.setBaseUrl( configuration.getBaseUrl() );
             if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
@@ -154,7 +156,21 @@ public class DefaultContinuumConfiguration
                 this.generalConfiguration.setReleaseOutputDirectory( new File( configuration
                     .getReleaseOutputDirectory() ) );
             }
-            
+            if ( configuration.getBuildAgents() != null )
+            {
+                List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
+
+                List<org.apache.continuum.configuration.model.BuildAgentConfiguration> agents = configuration.getBuildAgents();
+                for ( org.apache.continuum.configuration.model.BuildAgentConfiguration agent : agents )
+                {
+                    BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( agent.getUrl(),
+                                                                                      agent.getDescription(),
+                                                                                      agent.isEnabled() );
+                    buildAgents.add( buildAgent );
+                }
+                
+                this.generalConfiguration.setBuildAgents( buildAgents );
+            }
         }
         catch ( IOException e )
         {
@@ -177,14 +193,13 @@ public class DefaultContinuumConfiguration
             ContinuumConfigurationModel configurationModel = new ContinuumConfigurationModel();
             configurationModel.setBaseUrl( this.generalConfiguration.getBaseUrl() );
             configurationModel.setNumberOfBuildsInParallel( this.generalConfiguration.getNumberOfBuildsInParallel() );
-                        
+
             // normally not null but NPE free is better !
             if ( this.generalConfiguration.getBuildOutputDirectory() != null )
             {
                 configurationModel.setBuildOutputDirectory( this.generalConfiguration.getBuildOutputDirectory()
-                    .getPath() );                
+                    .getPath() );
             }
-                        
             if ( this.generalConfiguration.getWorkingDirectory() != null )
             {
                 configurationModel.setWorkingDirectory( this.generalConfiguration.getWorkingDirectory().getPath() );
@@ -217,7 +232,23 @@ public class DefaultContinuumConfiguration
                 configurationModel.setReleaseOutputDirectory( this.generalConfiguration.getReleaseOutputDirectory()
                     .getPath() );
             }
-            
+            if ( this.generalConfiguration.getBuildAgents() != null )
+            {
+                List buildAgents = new ArrayList();
+
+                for ( BuildAgentConfiguration agent : this.generalConfiguration.getBuildAgents() )
+                {
+                    org.apache.continuum.configuration.model.BuildAgentConfiguration buildAgent = 
+                        new org.apache.continuum.configuration.model.BuildAgentConfiguration();
+                    buildAgent.setUrl( agent.getUrl() );
+                    buildAgent.setDescription( agent.getDescription() );
+                    buildAgent.setEnabled( agent.isEnabled() );
+                    
+                    buildAgents.add( buildAgent );
+                }
+                configurationModel.setBuildAgents( buildAgents );
+            }
+
             ContinuumConfigurationModelXpp3Writer writer = new ContinuumConfigurationModelXpp3Writer();
             FileWriter fileWriter = new FileWriter( file );
             writer.write( fileWriter, configurationModel );
@@ -234,7 +265,7 @@ public class DefaultContinuumConfiguration
     //  Spring injection
     // ----------------------------------------
 
-    
+
     public File getConfigurationFile()
     {
         return configurationFile;

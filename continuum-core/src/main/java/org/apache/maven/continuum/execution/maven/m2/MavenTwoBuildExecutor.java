@@ -161,7 +161,7 @@ public class MavenTwoBuildExecutor
         LocalRepository repository = project.getProjectGroup().getLocalRepository();
         if ( repository != null )
         {
-            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean(repository.getLocation() ) ).append( "\" " );
+            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean( repository.getLocation() ) ).append( "\" " );
         }
         
         arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );

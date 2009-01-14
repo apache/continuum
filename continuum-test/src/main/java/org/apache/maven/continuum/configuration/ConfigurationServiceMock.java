@@ -20,11 +20,13 @@ package org.apache.maven.continuum.configuration;
  */
 
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
+import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -195,7 +197,7 @@ public class ConfigurationServiceMock
     {
         return null;
     }
-    
+
     public Schedule getDefaultSchedule()
         throws ContinuumStoreException
     {
@@ -256,5 +258,32 @@ public class ConfigurationServiceMock
     public void setNumberOfBuildsInParallel( int num )
     {
         
+    }
+
+    public void addBuildAgent( BuildAgentConfiguration buildAgent )
+        throws ConfigurationException
+    {    
+    }
+
+    public List<BuildAgentConfiguration> getBuildAgents()
+    {
+        return null;
+    }
+
+    public boolean isDistributedBuildEnabled()
+    {
+        return false;
+    }
+
+    public void removeBuildAgent( BuildAgentConfiguration buildAgent )
+    {   
+    }
+
+    public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
+    {
+    }
+
+    public void updateBuildAgent( BuildAgentConfiguration buildAgent )
+    {
     }
 }

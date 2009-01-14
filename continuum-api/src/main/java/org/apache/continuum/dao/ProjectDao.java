@@ -79,4 +79,7 @@ public interface ProjectDao
 
     ProjectGroup getProjectGroupByProjectId( int projectId )
         throws ContinuumObjectNotFoundException;
+
+    Project getProjectWithDependencies( int projectId )
+        throws ContinuumStoreException;
 }

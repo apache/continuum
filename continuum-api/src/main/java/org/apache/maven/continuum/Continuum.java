@@ -625,6 +625,9 @@ public interface Continuum
     ProjectScmRoot getProjectScmRootByProject( int projectId )
         throws ContinuumException;
 
+    ProjectScmRoot getProjectScmRootByProjectGroupAndScmRootAddress( int projectGroupId, String scmRootAddress )
+        throws ContinuumException;
+
     // ----------------------------------------------------------------------
     // Task Queue Manager
     // ----------------------------------------------------------------------

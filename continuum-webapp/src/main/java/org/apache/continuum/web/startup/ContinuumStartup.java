@@ -23,6 +23,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.continuum.buildmanager.BuildsManager;
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.Continuum;
 import org.codehaus.plexus.spring.PlexusToSpringUtils;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
@@ -61,7 +62,7 @@ public class ContinuumStartup
 
         // to simulate Plexus load on start with Spring
         Continuum continuum = (Continuum) wac.getBean( PlexusToSpringUtils.buildSpringId( Continuum.class ) );
-        
+
         BuildsManager buildsManager = (BuildsManager) wac.getBean( PlexusToSpringUtils.buildSpringId( BuildsManager.class, "parallel" ) );
 
         TaskQueueExecutor prepareRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
@@ -78,6 +79,9 @@ public class ContinuumStartup
 
         TaskQueueExecutor prepareBuildProject = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "prepare-build-project" ) );
+
+        DistributedBuildManager distributedBuildManager = (DistributedBuildManager) wac.getBean( PlexusToSpringUtils
+            .buildSpringId( DistributedBuildManager.class ) );
     }
 
 }

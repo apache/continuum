@@ -65,12 +65,20 @@
           <name>releaseOutputDirectory</name>
           <version>1.1.0+</version>
           <type>String</type>
-        </field>    
+        </field>
         <field>
           <name>numberOfBuildsInParallel</name>
           <version>1.1.0+</version>
           <type>int</type>
-        </field>            
+        </field>
+        <field>
+          <name>buildAgents</name>
+          <version>1.1.0+</version>
+          <association>
+            <type>BuildAgentConfiguration</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
       </fields>
     </class>
     <class xml.tagName="proxy-configuration">
@@ -97,6 +105,27 @@
           <version>1.1.0+</version>
           <type>String</type>
         </field>                     
+      </fields>
+    </class>
+    <class xml.tagName="buildagent-configuration">
+      <name>BuildAgentConfiguration</name>
+      <version>1.1.0+</version>
+      <fields>
+        <field>
+          <name>url</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>description</name>
+          <version>1.1.0+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>enabled</name>
+          <version>1.1.0+</version>
+          <type>boolean</type>
+        </field>
       </fields>
     </class>    
   </classes>
