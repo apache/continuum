@@ -21,8 +21,10 @@ Managing General Configuration
 *---------------------------------+------------------------------------------------------+
 | Base URL                        | The base Continuum URL. This URL is used in notifications |
 *---------------------------------+------------------------------------------------------+
+| Number of Allowed Builds in Parallel | The number of build queues that will be utilized to build projects. This allows concurrent checkouts and builds of multiple projects. Available since version 1.3.1. |
+*---------------------------------+------------------------------------------------------+
 
-    You can modify values or keep defaults then save.
+    You can modify values or keep defaults then save. 
 
     You'll can modify values at a later time with the following steps:
 
