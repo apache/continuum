@@ -23,8 +23,8 @@ import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.ContinuumPurgeManagerException;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.model.project.Schedule;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.scheduler.AbstractJob;
+import org.slf4j.Logger;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 
