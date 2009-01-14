@@ -21,8 +21,12 @@ package org.apache.continuum.taskqueue.manager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
@@ -80,6 +84,11 @@ public class DefaultTaskQueueManager
      */
     private PurgeConfigurationService purgeConfigurationService;
     
+    /**
+     * @plexus.requirement role-hint="parallel" 
+     */
+    private BuildsManager buildsManager;
+    
     private PlexusContainer container;
 
     public TaskQueue getPurgeQueue()
@@ -121,28 +130,40 @@ public class DefaultTaskQueueManager
     public boolean isRepositoryInUse( int repositoryId )
         throws TaskQueueManagerException
     {
-        try
-        {
-            Task task = getCurrentTask( "build-project" );
-    
-            if ( task != null && task instanceof BuildProjectTask )
-            {
-                int projectId = ( (BuildProjectTask) task ).getProjectId();
-    
-                Project project = projectDao.getProject( projectId );
-                LocalRepository repository = project.getProjectGroup().getLocalRepository();
-    
-                if ( repository != null && repository.getId() == repositoryId )
+    	try
+    	{
+    		Map<String, Task> currentBuilds = buildsManager.getCurrentBuilds();
+    		Set<String> keys = currentBuilds.keySet();
+    		
+    		for( String key : keys )
+    		{
+    			Task task = currentBuilds.get( key );
+    			if ( task != null && task instanceof BuildProjectTask )
                 {
-                    return true;
+                    int projectId = ( (BuildProjectTask) task ).getProjectId();
+        
+                    Project project = projectDao.getProject( projectId );
+                    LocalRepository repository = project.getProjectGroup().getLocalRepository();
+        
+                    if ( repository != null && repository.getId() == repositoryId )
+                    {
+                        return true;
+                    }
                 }
-            }
+    		}
+
             return false;
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new TaskQueueManagerException( e.getMessage(), e );
-        }
+    	}
+    	catch ( BuildManagerException e )
+    	{
+    		log.error( "Error occured while getting current builds: " + e.getMessage() );
+    		throw new TaskQueueManagerException( e.getMessage(), e );
+    	}
+    	catch ( ContinuumStoreException e )
+    	{
+    		log.error( "Error occured while getting project details: " + e.getMessage() );
+    		throw new TaskQueueManagerException( e.getMessage(), e );
+    	}
     }
     
     public boolean isProjectInReleaseStage( String releaseId )
