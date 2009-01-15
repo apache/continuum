@@ -1017,6 +1017,7 @@ public class DefaultContinuum
                             parallelBuildsManager.isInAnyCheckoutQueue( projectId ) ||
                             parallelBuildsManager.isInPrepareBuildQueue( projectId ) )           
             {
+                log.info( "Not queueing project. Project is already in prepare-build-project, check-out-project or build-project queue." );
                 return;
             }
         }
@@ -1048,6 +1049,7 @@ public class DefaultContinuum
                             parallelBuildsManager.isInAnyCheckoutQueue( projectId ) ||
                             parallelBuildsManager.isInPrepareBuildQueue( projectId ))
             {
+                log.info( "Not queueing project. Project is already in prepare-build-project, check-out-project or build-project queue." );
                 return;
             }
         }
@@ -1758,7 +1760,6 @@ public class DefaultContinuum
                 context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, defaultBuildDefinition );
 
                 executeAction( "add-project-to-checkout-queue", context );
-
             }
         }
         catch ( BuildDefinitionServiceException e )
@@ -3544,33 +3545,23 @@ public class DefaultContinuum
         
         try
         {
-            if ( configurationService.isDistributedBuildEnabled() )
+            if( !taskQueueManager.isInInitPrepareBuildQueue( projectGroupId, scmRootAddress ) )
             {
-                if ( !taskQueueManager.isInDistributedBuildQueue( projectGroupId, scmRootAddress ) )
-                {
-                    PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger,
-                                                                      projectGroupId, group.getName(), 
-                                                                      scmRootAddress, scmRootId );
-                    
-                    taskQueueManager.getDistributedBuildQueue().put( task );
-                }
+                PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( projectsBuildDefinitionsMap, trigger,
+                                                                          projectGroupId, group.getName(), 
+                                                                          scmRootAddress, scmRootId );            
+                taskQueueManager.getInitPrepareBuildQueue().put( task );
             }
             else
             {
-        	    parallelBuildsManager.prepareBuildProjects(
-					projectsBuildDefinitionsMap, trigger, projectGroupId,
-					group.getName(), scmRootAddress, scmRootId );
-		    }
-        }
-        catch ( TaskQueueManagerException e )
-        {
-            throw logAndCreateException( e.getMessage(), e );
+                log.info( "Project is already queued!" );
+            }
         }
         catch ( TaskQueueException e )
         {
             throw logAndCreateException( "Error while creating enqueuing object.", e );
         }
-        catch( BuildManagerException e )
+        catch ( TaskQueueManagerException e )
         {
             throw logAndCreateException( "Error while creating enqueuing object.", e );
         }

@@ -71,8 +71,17 @@ public interface BuildsManager
      * @param scmRootAddress TODO
      * @throws BuildManagerException
      */
-    void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, 
+    /*void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, 
                                String projectGroupName, String scmRootAddress, int scmRootId )
+        throws BuildManagerException;*/
+    
+    /**
+     * Adds the task in the prepare-build-queue
+     * 
+     * @param prepareBuildTask
+     * @throws BuildManagerException
+     */
+    void prepareBuildProjects( Task prepareBuildTask )
         throws BuildManagerException;
 
     /**
@@ -326,6 +335,15 @@ public interface BuildsManager
     Map<String, List<Task>> getProjectsInCheckoutQueues()
         throws BuildManagerException;
 
+    /**
+     * Returns all the tasks in prepare-build-queue
+     * 
+     * @return
+     * @throws BuildManagerException
+     */
+    List<Task> getTasksInPrepareBuildQueue()
+        throws BuildManagerException;
+    
     /**
      * Checks whether a build is in progress.
      * 

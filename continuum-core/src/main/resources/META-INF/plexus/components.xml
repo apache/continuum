@@ -161,6 +161,42 @@
       </configuration>
     </component>
     
+    <!--
+     |
+     | Init Prepare Build Project Task Queue
+     | This queue holds all the projects to be built. The "init-prepare-build-project"
+     |     	task executor determines whether to put the PrepareBuildProjectsTask in
+     |		the distributed build queue (remote build) or in the parallel build queue (local to server build) 
+     |
+     |-->
+     
+    <component>
+      <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+      <role-hint>init-prepare-build-project</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
+      <lifecycle-handler>plexus-configurable</lifecycle-handler>
+      <instantiation-strategy>singleton</instantiation-strategy>
+    </component>
+    
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
+      <role-hint>init-prepare-build-project</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <instantiation-strategy>singleton</instantiation-strategy>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+          <role-hint>init-prepare-build-project</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>init-prepare-build-project</role-hint>
+        </requirement>
+      </requirements>
+      <configuration>
+        <name>init-prepare-build-project</name>
+      </configuration>
+    </component>
     
   </components>
 </component-set>
