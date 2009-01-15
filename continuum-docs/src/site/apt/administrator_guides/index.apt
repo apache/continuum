@@ -28,7 +28,7 @@ Administrator's Guides
 
  * {{{purgeConfiguration.html}Managing Purge Configuration}}
 
- * {{{parallelBuilds.html}Managing Parallel Build Queue}}
+ * {{{parallelBuilds.html}Managing Parallel Builds}}
 
  * {{{external-db.html}External Databases}}
 

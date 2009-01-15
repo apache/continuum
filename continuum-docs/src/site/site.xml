@@ -79,7 +79,7 @@
         <item name="Managing General Configuration" href="administrator_guides/configuration.html"/> <!-- (configuration and appearance) -->
         <item name="Managing Local Repositories" href="administrator_guides/localRepository.html"/>
         <item name="Managing Purge Configuration" href="administrator_guides/purgeConfiguration.html"/>
-        <item name="Managing Parallel Build Queue" href="administrator_guides/parallelBuilds.html"/>
+        <item name="Managing Parallel Builds" href="administrator_guides/parallelBuilds.html"/>
         <item name="External databases" href="administrator_guides/external-db.html"/>
         <item name="Monitoring Continuum" href="administrator_guides/monitoring.html"/>
         <item name="Appearance Configuration" href="administrator_guides/appearance.html"/>
