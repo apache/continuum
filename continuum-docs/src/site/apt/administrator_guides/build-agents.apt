@@ -5,7 +5,8 @@
 Managing Build Agents
 
   Before this, you may want to enable the Distributed Builds option in the {{{configuration.html}General Configuration}}
-  and {{{../installation/build-agent.html}install a Build Agent}}.
+  and {{{../installation/build-agent.html}install a Build Agent}}, or read about the {{{distributed-builds.html}Distributed
+  Builds}} feature.
 
   From the menu, choose the 'Build Agents' item
 
