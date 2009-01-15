@@ -1499,17 +1499,14 @@ public class DefaultContinuum
 
         context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( projectGroup.getId() ) );
         
-     // used by BuildManager to determine on which build queue will the project be put
+        // used by BuildManager to determine on which build queue will the project be put
         context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, ( BuildDefinition ) project.getBuildDefinitions().get( 0 ) );
 
         executeAction( "validate-project", context );
 
         executeAction( "store-project", context );
 
-        if ( !configurationService.isDistributedBuildEnabled() )
-        {
-            executeAction( "add-project-to-checkout-queue", context );
-        }
+        executeAction( "add-project-to-checkout-queue", context );
 
         executeAction( "add-assignable-roles", context );
 
@@ -1760,10 +1757,8 @@ public class DefaultContinuum
                 // used by BuildManager to determine on which build queue will the project be put
                 context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, defaultBuildDefinition );
 
-                if ( !configurationService.isDistributedBuildEnabled() )
-                {
-                    executeAction( "add-project-to-checkout-queue", context );
-                }
+                executeAction( "add-project-to-checkout-queue", context );
+
             }
         }
         catch ( BuildDefinitionServiceException e )
