@@ -197,7 +197,7 @@ public class QueuesAction
 	public String display()
 	    throws Exception
 	{
-	    if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
+	    /*if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )	    
         {
             distributedBuildSummary = new ArrayList<DistributedBuildSummary>();
 
@@ -234,7 +234,7 @@ public class QueuesAction
             return DISTRIBUTED_BUILD_SUCCESS;
         }
         else
-        {
+        {*/
 	        try
 	        {
 	            // current builds
@@ -312,7 +312,7 @@ public class QueuesAction
 	            addActionError( e.getMessage() );
 	            return ERROR;
 	        }
-	    }
+	   // }
 
 	    return SUCCESS;
 	}

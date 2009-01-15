@@ -95,6 +95,11 @@ public class DefaultTaskQueueManager
      */
     private BuildsManager buildsManager;
     
+    /**
+     * @plexus.requirement role-hint="init-prepare-build-project"
+     */
+    private TaskQueue initPrepareBuildQueue;
+    
     private PlexusContainer container;
 
     public TaskQueue getDistributedBuildQueue()
@@ -107,11 +112,64 @@ public class DefaultTaskQueueManager
     {
         try
         {
-            return distributedBuildQueue.getQueueSnapshot();
+            return distributedBuildQueue.getQueueSnapshot();   
         }
         catch ( TaskQueueException e )
         {
             throw new TaskQueueManagerException( "Error while getting the distributed building queue", e );
+        }
+    }
+    
+    /**
+     * @see TaskQueueManager#getInitPrepareBuildQueue()
+     */
+    public TaskQueue getInitPrepareBuildQueue()
+    {
+        return initPrepareBuildQueue;
+    }
+    
+    /**
+     * @see TaskQueueManager#getTasksInInitPrepareBuildQueue()
+     */
+    public List<PrepareBuildProjectsTask> getTasksInInitPrepareBuildQueue()
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            return initPrepareBuildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( "Error while getting tasks in init-prepare-build-queue", e );
+        }
+    }
+    
+    /**
+     * @see TaskQueueManager#isInInitPrepareBuildQueue(int, String)
+     */
+    public boolean isInInitPrepareBuildQueue( int projectGroupId, String scmRootAddress )
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            List<PrepareBuildProjectsTask> queue = initPrepareBuildQueue.getQueueSnapshot();
+
+            for ( PrepareBuildProjectsTask task : queue )
+            {
+                if ( task != null )
+                {
+                    if ( task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( "Error while getting the tasks in distributed build queue", e );
         }
     }
 

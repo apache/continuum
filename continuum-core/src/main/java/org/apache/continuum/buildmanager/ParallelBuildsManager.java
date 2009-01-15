@@ -531,7 +531,7 @@ public class ParallelBuildsManager
     /**
      * @see BuildsManager#prepareBuildProjects(Map, int, int, String)
      */
-    public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, String projectGroupName, String scmRootAddress, int scmRootId )
+    /*public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, String projectGroupName, String scmRootAddress, int scmRootId )
         throws BuildManagerException
     {
         try
@@ -541,6 +541,23 @@ public class ParallelBuildsManager
             
             log.info( "Queueing prepare-build-project task '" + task + "' to prepare-build queue." );
             prepareBuildQueue.put( task );
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( "Error occurred while creating prepare-build-project task: " +
+                e.getMessage() );
+        }
+    }*/
+
+    /**
+     * @see BuildsManager#prepareBuildProjects(Task)
+     */
+    public void prepareBuildProjects( Task prepareBuildTask )
+        throws BuildManagerException
+    {
+        try
+        {
+            prepareBuildQueue.put( prepareBuildTask );
         }
         catch ( TaskQueueException e )
         {
@@ -942,7 +959,11 @@ public class ParallelBuildsManager
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
                 try
                 {
-                    queuedBuilds.put( overallBuildQueue.getName(), overallBuildQueue.getProjectsInBuildQueue() );
+                	List<Task> queuedProjects = overallBuildQueue.getProjectsInBuildQueue();
+                	if( queuedProjects != null && !queuedProjects.isEmpty() )
+                	{
+                		queuedBuilds.put( overallBuildQueue.getName(), queuedProjects );
+                	}
                 }
                 catch ( TaskQueueException e )
                 {
@@ -969,7 +990,11 @@ public class ParallelBuildsManager
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
                 try
                 {
-                    queuedCheckouts.put( overallBuildQueue.getName(), overallBuildQueue.getProjectsInCheckoutQueue() );
+                	List<Task> queuedProjects = overallBuildQueue.getProjectsInCheckoutQueue();
+                	if( queuedProjects != null && !queuedProjects.isEmpty() )
+                	{
+                		queuedCheckouts.put( overallBuildQueue.getName(), queuedProjects );
+                	}
                 }
                 catch ( TaskQueueException e )
                 {
@@ -978,6 +1003,22 @@ public class ParallelBuildsManager
                 }
             }
             return queuedCheckouts;
+        }
+    }
+    
+    /**
+     * @see BuildsManager#getTasksInPrepareBuildQueue()
+     */
+    public List<Task> getTasksInPrepareBuildQueue()
+        throws BuildManagerException
+    {
+        try
+        {
+            return prepareBuildQueue.getQueueSnapshot();
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( "Error retrieving tasks in prepare-build-queue.", e );
         }
     }
     
