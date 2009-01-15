@@ -45,11 +45,11 @@ public interface ShellCommandHelper
 
     void killProcess( long idCommand );
 
-    void executeGoals( File workingDirectory, String goals, boolean interactive, String arguments,
+    void executeGoals( File workingDirectory, String executable, String goals, boolean interactive, String arguments,
                        ReleaseResult relResult, Map<String, String> environments )
         throws Exception;
 
-    void executeGoals( File workingDirectory, String goals, boolean interactive, String[] arguments,
+    void executeGoals( File workingDirectory, String executable, String goals, boolean interactive, String[] arguments,
                        ReleaseResult relResult, Map<String, String> environments )
         throws Exception;
 }
