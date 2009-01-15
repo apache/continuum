@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.exec.MavenExecutorException;
 import org.apache.maven.shared.release.exec.TeeConsumer;
@@ -161,7 +162,7 @@ public class DefaultShellCommandHelper
         CommandLineUtils.killProcess( idCommand );
     }
 
-    public void executeGoals( File workingDirectory, String goals, boolean interactive, String arguments,
+    public void executeGoals( File workingDirectory, String executable, String goals, boolean interactive, String arguments,
                               ReleaseResult relResult, Map<String, String> environments )
         throws Exception
     {
@@ -171,14 +172,19 @@ public class DefaultShellCommandHelper
 
         argument.setLine( arguments );
 
-        executeGoals( workingDirectory, goals, interactive, argument.getParts(), relResult, environments );
+        executeGoals( workingDirectory, executable, goals, interactive, argument.getParts(), relResult, environments );
     }
 
-    public void executeGoals( File workingDirectory, String goals, boolean interactive, String[] arguments,
+    public void executeGoals( File workingDirectory, String executable, String goals, boolean interactive, String[] arguments,
                               ReleaseResult relResult, Map<String, String> environments )
         throws Exception
     {
-        Commandline cl = createCommandline( workingDirectory, "mvn", arguments, -1, environments );
+        if ( executable == null )
+        {
+            executable = "mvn";
+        }
+
+        Commandline cl = createCommandline( workingDirectory, executable, arguments, -1, environments );
 
         if ( goals != null )
         {

@@ -315,6 +315,9 @@
         <requirement>
           <role>org.apache.continuum.utils.shell.ShellCommandHelper</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.installation.InstallationService</role>
+        </requirement>
       </requirements>
     </component>
     <component>
@@ -324,6 +327,9 @@
       <requirements>
         <requirement>
           <role>org.apache.continuum.utils.shell.ShellCommandHelper</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.continuum.installation.InstallationService</role>
         </requirement>
       </requirements>
     </component>

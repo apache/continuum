@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.shared.release.ReleaseExecutionException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
@@ -40,6 +41,11 @@ public abstract class AbstractContinuumRunGoalsPhase
      * @plexus.requirement
      */
     private ShellCommandHelper shellCommandHelper;
+
+    /**
+     * @plexus.requirement
+     */
+    private InstallationService installationService;
 
     public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, File workingDirectory,
                                   String additionalArguments )
@@ -58,10 +64,21 @@ public abstract class AbstractContinuumRunGoalsPhase
                 {
                     environments = ( (ContinuumReleaseDescriptor) releaseDescriptor ).getEnvironments();
                 }
-                
+
+                String executable = installationService.getExecutorConfigurator( InstallationService.MAVEN2_TYPE ).getExecutable();
+
+                if ( environments != null )
+                {
+                    String m2Home = environments.get( installationService.getEnvVar( InstallationService.MAVEN2_TYPE ) );
+                    if ( StringUtils.isNotEmpty( m2Home ) )
+                    {
+                        executable = m2Home + File.separator + "bin" + File.separator + executable;
+                    }
+                }
+
                 shellCommandHelper.executeGoals( determineWorkingDirectory( workingDirectory,
                                                                             releaseDescriptor.getScmRelativePathProjectDirectory() ),
-                                                 goals, releaseDescriptor.isInteractive(), additionalArguments, result, 
+                                                 executable, goals, releaseDescriptor.isInteractive(), additionalArguments, result, 
                                                  environments );
             }
         }
