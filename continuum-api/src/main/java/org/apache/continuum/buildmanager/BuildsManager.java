@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
