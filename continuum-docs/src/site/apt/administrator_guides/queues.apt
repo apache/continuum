@@ -18,8 +18,9 @@ Managing Queues
 	
 	You must have a <<"Manage Continuum Queues">> role for you to:
 
-    [[1]] Cancel the current checkout, the current build, one of the checkout queue or build queue by clicking the  
+    [[1]] Cancel current checkouts, current builds, queued checkouts and queued builds by clicking the  
 
 [../images/cancelbuild.gif] cancel build icon.
   
-    [[2]] Cancel multiple queues by selecting the corresponding checkboxes of the queues you want to cancel and then click the <<Cancel Entries>> button.
+    [[2]] Cancel multiple queued tasks by selecting the corresponding checkboxes of the checkouts or builds you want to cancel and
+    then click the <<Cancel Entries>> button.

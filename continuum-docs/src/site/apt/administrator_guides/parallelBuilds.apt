@@ -2,7 +2,7 @@
  Parallel Build Queue
  ------
  
-Parallel Builds
+Managing Parallel Builds
 
     Since 1.3.1, Continuum can be configured to checkout and build projects in parallel or concurrently.
 
