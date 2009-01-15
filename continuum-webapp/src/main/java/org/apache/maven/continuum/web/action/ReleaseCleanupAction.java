@@ -101,4 +101,10 @@ public class ReleaseCleanupAction
 
         return projectGroupName;
     }
+
+    public int getProjectGroupId()
+        throws ContinuumException
+    {
+        return getContinuum().getProjectGroupByProjectId( projectId ).getId();
+    }
 }

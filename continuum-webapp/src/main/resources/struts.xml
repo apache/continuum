@@ -546,7 +546,10 @@
 
     <action name="releaseCleanup" class="releaseCleanup">
       <result name="prepareFinished" type="chain">releasePromptGoal</result>
-      <result name="performFinished" type="redirect-action">groupSummary</result>
+      <result name="performFinished" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
     </action>
 
     <action name="releaseViewResult" class="releaseInProgress" method="viewResult">
