@@ -1,29 +1,26 @@
 
 
 
-Installing a Build Agent
+Installing and Configuring a Build Agent
 
+    First, {{{http://continuum.apache.org/download.html}download}} the Continuum Build Agent standalone
+    distribution or webapp.
 
-  The build agent is available as a web application which you will need to install into a container.
+* Standalone
 
-  First, {{{../../download.html}download}} the webapp.
+    The Build Agent is available as a separate standalone Jetty-bundled
+    webapp.  Installing it is as simple as extracting it to a preferred
+    directory.  
 
-  Next, configure the environment.
+    The Build Agent runs on a specific port (defaulting to 8181), so it is possible
+    to install multiple Build Agents in one machine.  It is also possible to
+    install Slaves in the same machine as the Master.  To configure the Build Agent
+    to run using a different port, edit the 
+    <<<$CONTINUUM_BUILDAGENT_HOME/conf/jetty.xml>>> file.
 
-  The build agent needs two things in order to function properly:  A CONTINUUM_BUILDAGENT_HOME environment variable, and a
-  continuum-buildagent.xml configuration file in a conf/ directory under $CONTINUUM_BUILDAGENT_HOME.
-
-  Set the environment variable:
-
-  export CONTINUUM_BUILDAGENT_HOME=/path/to/build/agent/home
-
-  or
-
-  set CONTINUUM_BUILDAGENT_HOME=c:\path\to\build\agent\home
-
-  Create a directory called 'conf' under [CONTINUUM_BUILDAGENT_HOME].
-
-  In the 'conf' directory, save the continuum-buildagent.xml file:
+    Another configuration file to look at is the
+    <<<$CONTINUUM_BUILDAGENT_HOME/conf/continuum-buildagent.xml>>>.  This file must
+    be manually edited, as there is no web interface for configuration.
 
 +--------------+
 <continuum-buildagent-configuration>
@@ -39,14 +36,45 @@ Installing a Build Agent
  </installations>
 </continuum-buildagent-configuration>
 +----------------+
+	
+    A minimal configuration will have the following fields:
 
-  List all of the installations available on the build agent, including Maven, Ant, JDK, etc.
+    * <<<buildOutputDirectory>>> - similar to the build output directory of Continuum
 
+    * <<<workingDirectory>>> - similar to the working directory of Continuum
+
+    * <<<continuumServerUrl>>> - the url pointing to the XML-RPC context of the Master Build Agent
+
+    * <<<installations>>> - a list of the installations available on the build agent, including Maven, Ant, JDK, etc.
+	
   Note that all of your agents need to be identical, as there is no way to control which agent Continuum chooses.
 
-  Finally, drop the webapp into your container, and start it.
+  Now start the Build Agent by executing the startup script available in
+  <<<$CONTINUUM_BUILDAGENT_HOME/bin/>>>.  For example:
+
+  <<<continuum-buildagent start>>> (or <<<continuum-buildagent console>>> on Windows).
 
   Next, enable the Distributed Builds option in the {{{../administrator_guides/configuration.html}General Configuration}},
   and {{{../administrator_guides/build-agents.html}add the agent}} to the Continuum master server.
 
-  TODO:  Provide a Jetty bundle for the agent webapp.
+  TODO:  Does the Jetty bundle still want CONTINUUM_BUILDAGENT_HOME set?
+
+* Webapp
+
+  The build agent is also available as a web application which you can install into your own container.
+
+  The build agent needs two things in order to function properly:  A CONTINUUM_BUILDAGENT_HOME environment variable, 
+  and a continuum-buildagent.xml configuration file in $CONTINUUM_BUILDAGENT_HOME/conf.
+
+  First, set the environment variable:
+
+  export CONTINUUM_BUILDAGENT_HOME=/path/to/build/agent/home
+
+  or
+
+  set CONTINUUM_BUILDAGENT_HOME=c:\path\to\build\agent\home
+
+  Next, create the continuum-buildagent.xml file as shown above, and save it in $CONTINUUM_BUILDAGENT_HOME/conf.
+  You will need to create these directories.
+
+  Finally, drop the webapp into your container, and start it.
