@@ -28,8 +28,8 @@ under the License.
   <name>Continuum :: Distributed Build :: Transport :: Master</name>
   <packaging>pom</packaging>
   <modules>
-    <module>continuum-distributed-build-transport-master-api</module>
-    <module>continuum-distributed-build-transport-master-server</module>
-    <module>continuum-distributed-build-transport-master-client</module>
+    <module>continuum-distributed-master-api</module>
+    <module>continuum-distributed-master-server</module>
+    <module>continuum-distributed-master-client</module>
   </modules>
 </project>
