@@ -12,6 +12,9 @@ Managing Parallel Builds
     the Number of Allowed Builds in Parallel field (see {{{configuration.html} Managing General Configuration}}).
     The value should be greater than one (1) to be able to create a build queue aside from the default.
 
+    Another thing to note is that if Distributed Builds is enabled, Parallel Builds is automatically disabled. To make it
+    short, you're only allowed to use one of these functionalities at a time in the current implementation.
+
 * Adding a Build Queue
 
     By default, there is already a DEFAULT_BUILD_QUEUE that cannot be deleted configured in Continuum. To add more build queues..
@@ -45,6 +48,14 @@ Managing Parallel Builds
     buttons in between the two list boxes. All build queues on the right hand list box will be attached to the schedule when you click Save.
 
 [../images/editSchedule.png] Edit Schedule
+
+* Viewing Checkouts and Builds in Queues
+
+    Current checkouts and builds, and all other projects queued in the checkout and build queues can be viewed in the <<Queues>> page.
+    These executing and queued tasks can also be cancelled by clicking the corresponding Cancel icons for each task. Multiple-cancel is
+    also supported.
+
+[../images/parallelBuildsQueues.png] Queues
 
 * Limitations
 
