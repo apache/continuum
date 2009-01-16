@@ -35,6 +35,7 @@ import org.springframework.stereotype.Repository;
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
  * @version $Id: $
+ *  @plexus.component role="org.apache.continuum.dao.ProjectScmRootDao"
  */
 @Repository("projectScmRootDao")
 public class ProjectScmRootDaoImpl

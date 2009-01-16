@@ -51,10 +51,16 @@ public class BuildDefinitionDaoImpl
     implements BuildDefinitionDao
 {
     private Logger log = LoggerFactory.getLogger( BuildDefinitionDaoImpl.class );
-
+    
+    /**
+    * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
+    */
     @Resource
     private ProjectDao projectDao;
 
+    /**
+    * @plexus.requirement role="org.apache.continuum.dao.ProjectGroupDao"
+    */    
     @Resource
     private ProjectGroupDao projectGroupDao;
 

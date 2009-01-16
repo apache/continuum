@@ -28,6 +28,7 @@ import javax.jdo.PersistenceManagerFactory;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ * @plexus.component role="org.apache.continuum.dao.StoreUtilities"
  */
 @Service("storeUtilities")
 public class StoreUtilities

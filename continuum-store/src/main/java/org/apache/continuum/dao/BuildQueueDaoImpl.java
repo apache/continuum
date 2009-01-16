@@ -37,6 +37,7 @@ import org.springframework.stereotype.Repository;
 /**
  * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
+ * @plexus.component role="org.apache.continuum.dao.BuildQueueDao"
  */
 @Repository("buildQueueDao")
 public class BuildQueueDaoImpl

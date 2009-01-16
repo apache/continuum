@@ -39,12 +39,16 @@ import java.util.List;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ * @plexus.component role="org.apache.continuum.dao.ProjectGroupDao"
  */
 @Repository("projectGroupDao")
 public class ProjectGroupDaoImpl
     extends AbstractDao
     implements ProjectGroupDao
 {
+    /**
+     * @plexus.requirement role=org.apache.continuum.dao.ProjectDao"
+     */  
     @Resource
     private ProjectDao projectDao;
 

@@ -59,12 +59,16 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ * @plexus.component role="org.apache.continuum.dao.DaoUtils"
  */
 @Repository("daoUtils")
 public class DaoUtilsImpl
     extends AbstractDao
     implements DaoUtils
 {
+    /**
+     * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
+     */
     @Resource
     private ProjectDao projectDao;
 

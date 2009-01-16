@@ -33,6 +33,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ * @plexus.component role="org.apache.continuum.dao.BuildDefinitionTemplateDao"
  */
 @Repository("buildDefinitionTemplateDao")
 public class BuildDefinitionTemplateDaoImpl
