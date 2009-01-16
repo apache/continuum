@@ -27,8 +27,8 @@ under the License.
   <name>Continuum :: Distributed Build :: Transport :: Slave</name>
   <packaging>pom</packaging>
   <modules>
-    <module>continuum-distributed-build-transport-slave-api</module>
-    <module>continuum-distributed-build-transport-slave-server</module>
-    <module>continuum-distributed-build-transport-slave-client</module>
+    <module>continuum-distributed-slave-api</module>
+    <module>continuum-distributed-slave-server</module>
+    <module>continuum-distributed-slave-client</module>
   </modules>
 </project>
