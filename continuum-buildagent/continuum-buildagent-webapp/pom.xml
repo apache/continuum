@@ -32,11 +32,11 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-distributed-build-transport-slave-server</artifactId>
+      <artifactId>continuum-distributed-slave-server</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-distributed-build-transport-master-client</artifactId>
+      <artifactId>continuum-distributed-master-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
