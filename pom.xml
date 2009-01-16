@@ -219,7 +219,8 @@ under the License.
     <module>continuum-docs</module>
     <module>continuum-jetty</module>
     <module>continuum-purge</module>
-    <module>continuum-distributed-build</module>
+    <module>continuum-buildagent</module>
+    <module>continuum-distributed-build-transport</module>
     <module>continuum-builder</module>
   </modules>
   <!-- TODO: confirm whether these are needed -->
