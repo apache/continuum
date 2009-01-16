@@ -28,9 +28,9 @@ under the License.
   <name>Continuum :: Distributed Build :: Transport</name>
   <packaging>pom</packaging>
   <modules>
-    <module>continuum-distributed-build-transport-master</module>
-    <module>continuum-distributed-build-transport-slave</module>
-    <!-- <module>continuum-distributed-build-transport-tests</module> -->
+    <module>continuum-distributed-master</module>
+    <module>continuum-distributed-slave</module>
+    <!-- <module>continuum-distributed-tests</module> -->
   </modules>
   <dependencies>
     <dependency>
