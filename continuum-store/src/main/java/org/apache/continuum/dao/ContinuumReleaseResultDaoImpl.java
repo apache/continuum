@@ -34,6 +34,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
+ * @plexus.component role="org.apache.continuum.dao.ContinuumReleaseResultDao"
  */
 @Repository("continuumReleaseResultDao")
 public class ContinuumReleaseResultDaoImpl
