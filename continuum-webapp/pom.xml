@@ -464,7 +464,7 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-distributed-build-transport-master-server</artifactId>
+      <artifactId>continuum-distributed-master-server</artifactId>
     </dependency>    
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>

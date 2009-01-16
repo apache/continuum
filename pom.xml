@@ -608,32 +608,32 @@ under the License.
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-distributed-build-transport-slave-api</artifactId>
+        <artifactId>continuum-distributed-slave-api</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-distributed-build-transport-slave-server</artifactId>
+        <artifactId>continuum-distributed-slave-server</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-distributed-build-transport-slave-client</artifactId>
+        <artifactId>continuum-distributed-slave-client</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-distributed-build-transport-master-api</artifactId>
+        <artifactId>continuum-distributed-master-api</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-distributed-build-transport-master-server</artifactId>
+        <artifactId>continuum-distributed-master-server</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.continuum</groupId>
-        <artifactId>continuum-distributed-build-transport-master-client</artifactId>
+        <artifactId>continuum-distributed-master-client</artifactId>
         <version>${pom.version}</version>
       </dependency>
       <dependency>
