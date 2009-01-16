@@ -27,8 +27,14 @@
 <head>
   <title>
     <c:choose>
-      <c:when test="${param.errorCode == 403 || param.errorCode == 404 || param.errorCode == 500}">
-        <s:text name="error.%{param.errorCode}.title"/>
+      <c:when test="${param.errorCode == 403}">
+        <s:text name="error.403.title"/>
+      </c:when>
+      <c:when test="${param.errorCode == 404}">
+        <s:text name="error.404.title"/>
+      </c:when>
+      <c:when test="${param.errorCode == 405}">
+        <s:text name="error.405.title"/>
       </c:when>
       <c:otherwise>
         <s:text name="error.page.title"/>
@@ -61,8 +67,14 @@
             <div id="axial" class="h3">
               <h3>
                 <c:choose>
-                  <c:when test="${param.errorCode == 403 || param.errorCode == 404 || param.errorCode == 500}">
-                    <s:text name="error.%{param.errorCode}.section.title"/>
+                  <c:when test="${param.errorCode == 403}">
+                    <s:text name="error.403.section.title"/>
+                  </c:when>
+                  <c:when test="${param.errorCode == 404}">
+                    <s:text name="error.404.section.title"/>
+                  </c:when>
+                  <c:when test="${param.errorCode == 405}">
+                    <s:text name="error.405.section.title"/>
                   </c:when>
                   <c:otherwise>
                     The URL requested results to an unknown error.
@@ -72,8 +84,14 @@
 
               <div class="errormessage">
                 <c:choose>
-                  <c:when test="${param.errorCode == 403 || param.errorCode == 404 || param.errorCode == 500}">
-                    <s:text name="error.%{param.errorCode}.message"/>
+                  <c:when test="${param.errorCode == 403}">
+                    <s:text name="error.403.message"/>
+                  </c:when>
+                  <c:when test="${param.errorCode == 404}">
+                    <s:text name="error.404.message"/>
+                  </c:when>
+                  <c:when test="${param.errorCode == 405}">
+                    <s:text name="error.405.message"/>
                   </c:when>
                   <c:otherwise>
                     The URL requested results to an unknown error.
