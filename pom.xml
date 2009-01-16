@@ -220,7 +220,7 @@ under the License.
     <module>continuum-jetty</module>
     <module>continuum-purge</module>
     <module>continuum-buildagent</module>
-    <module>continuum-distributed-build-transport</module>
+    <module>continuum-distributed</module>
     <module>continuum-builder</module>
   </modules>
   <!-- TODO: confirm whether these are needed -->
