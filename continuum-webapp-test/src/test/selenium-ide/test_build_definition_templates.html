@@ -3,12 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>test_build_definition_templates</title>
+<link rel="selenium.base" href="" />
+<title>test_build_definition_templates.html</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">test_build_definition_templates</td></tr>
+<tr><td rowspan="1" colspan="3">test_build_definition_templates.html</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -44,7 +45,7 @@
 <!--Add another build definition-->
 <tr>
 	<td>clickAndWait</td>
-	<td>saveBuildDefinitionAsTemplate_0</td>
+	<td>saveBuildDefinitionAsTemplate_</td>
 	<td></td>
 </tr>
 <tr>
@@ -69,7 +70,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>saveBuildDefinitionAsTemplate_0</td>
+	<td>saveBuildDefinitionAsTemplate_</td>
 	<td></td>
 </tr>
 <!--Add a new template and associate the two build definitions-->
@@ -105,7 +106,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>saveBuildDefinitionTemplate_0</td>
+	<td>saveBuildDefinitionTemplate_</td>
 	<td></td>
 </tr>
 <!--Add a new project group-->
@@ -136,7 +137,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>addProjectGroup_0</td>
+	<td>addProjectGroup_</td>
 	<td></td>
 </tr>
 <!--Open the new project group and add a project using the template-->
@@ -162,7 +163,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>addMavenTwoProject_0</td>
+	<td>//input[@id='addMavenTwoProject_']</td>
 	<td></td>
 </tr>
 <!--Verify that both build definitions from the template were used-->
@@ -189,6 +190,42 @@
 <tr>
 	<td>assertTextPresent</td>
 	<td>Maven 2 site only</td>
+	<td></td>
+</tr>
+<!--Remove the project group, template, and build defs-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Project Group Summary</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>removeProjectGroup_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Build Definitions Templates</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//img[@alt='Delete']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//img[@alt='Delete']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//img[@alt='Delete']</td>
 	<td></td>
 </tr>
 
