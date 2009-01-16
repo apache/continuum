@@ -36,35 +36,6 @@ public interface TaskQueueManager
     List<PrepareBuildProjectsTask> getDistributedBuildProjectsInQueue()
         throws TaskQueueManagerException;
 
-    /**
-     * Returns the init-prepare-build-queue where projects are initially queued
-     * when triggered to be built.
-     * 
-     * @return
-     */
-    TaskQueue getInitPrepareBuildQueue();
-    
-    /**
-     * Returns the list of tasks in init-prepare-build-project queue.
-     * 
-     * @return
-     * @throws TaskQueueManagerException
-     */
-    List<PrepareBuildProjectsTask> getTasksInInitPrepareBuildQueue()
-        throws TaskQueueManagerException;
-    
-    /**
-     * Check whether the specified project group with the given scm root address is in
-     * init-prepare-build-project queue.
-     * 
-     * @param projectGroupId
-     * @param scmRootAddress
-     * @return
-     * @throws TaskQueueManagerException
-     */
-    boolean isInInitPrepareBuildQueue( int projectGroupId, String scmRootAddress )
-        throws TaskQueueManagerException;
-    
     TaskQueue getPurgeQueue();
 
     boolean isInDistributedBuildQueue( int projectGroupId, String scmRootAddress )

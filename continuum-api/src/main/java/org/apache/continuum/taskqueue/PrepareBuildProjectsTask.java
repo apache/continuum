@@ -96,14 +96,4 @@ public class PrepareBuildProjectsTask
     {
         return this.projectGroupId + this.projectScmRootId + this.trigger;
     }
-
-    public int getProjectScmRootId()
-    {
-        return projectScmRootId;
-    }
-
-    public void setProjectScmRootId( int projectScmRootId )
-    {
-        this.projectScmRootId = projectScmRootId;
-    }
 }

@@ -82,10 +82,6 @@ public class ContinuumStartup
 
         DistributedBuildManager distributedBuildManager = (DistributedBuildManager) wac.getBean( PlexusToSpringUtils
             .buildSpringId( DistributedBuildManager.class ) );
-        
-        TaskQueueExecutor initPrepareBuildProject =
-            (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils.buildSpringId( TaskQueueExecutor.class,
-                                                                                "init-prepare-build-project" ) );
     }
 
 }
