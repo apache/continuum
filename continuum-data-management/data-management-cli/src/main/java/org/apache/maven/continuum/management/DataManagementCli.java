@@ -198,7 +198,7 @@ public class DataManagementCli
         artifacts.addAll(
             downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion() ) );
         artifacts.addAll(
-            downloadArtifact( container, "org.apache.maven.continuum", managementArtifactId, applicationVersion ) );
+            downloadArtifact( container, "org.apache.continuum", managementArtifactId, applicationVersion ) );
         artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion() ) );
 
         List<File> jars = new ArrayList<File>();
@@ -218,7 +218,7 @@ public class DataManagementCli
                     !"continuum-legacy".equals( id ) && !"continuum-model".equals( id ) &&
                     !"redback-legacy".equals( id ) )
                 {
-                    exclusions.add( "org.apache.maven.continuum:" + id );
+                    exclusions.add( "org.apache.continuum:" + id );
                     jars.add( new File( url.getPath() ) );
                 }
             }
@@ -388,7 +388,7 @@ public class DataManagementCli
         ArtifactResolver resolver = (ArtifactResolver) container.lookup( ArtifactResolver.ROLE );
 
         List<String> exclusions = new ArrayList<String>();
-        exclusions.add( "org.apache.maven.continuum:data-management-api" );
+        exclusions.add( "org.apache.continuum:data-management-api" );
         exclusions.add( "org.codehaus.plexus:plexus-component-api" );
         exclusions.add( "org.codehaus.plexus:plexus-container-default" );
         exclusions.add( "stax:stax-api" );
@@ -441,7 +441,7 @@ public class DataManagementCli
     {
         Properties properties = new Properties();
         properties.load( DataManagementCli.class.getResourceAsStream(
-            "/META-INF/maven/org.apache.maven.continuum/data-management-api/pom.properties" ) );
+            "/META-INF/maven/org.apache.continuum/data-management-api/pom.properties" ) );
         return properties.getProperty( "version" );
     }
 
