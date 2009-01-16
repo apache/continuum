@@ -119,7 +119,7 @@
           <descriptor>src/assembly/app.xml</descriptor>
           <archive>
             <manifest>
-              <mainClass>org.apache.continuum.management.DataManagementCli</mainClass>
+              <mainClass>org.apache.maven.continuum.management.DataManagementCli</mainClass>
             </manifest>
           </archive>
         </configuration>
