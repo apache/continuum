@@ -17,3 +17,5 @@ Installation/Upgrade Guides
     * {{{../release-notes.html}Release Notes}}
 
     * {{{upgrade.html}How to upgrade from a previous version?}}
+
+    * {{{build-agent.html}Installation of Build Agent for Distributed Builds}}
