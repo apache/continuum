@@ -80,7 +80,7 @@ Understanding Distributed Builds
 
     * {{{build-agents.html}Add}} your Build Agents to the Continuum Master.
 
-    <<Note>> Artifacts in the build agent should be deployed to the master. See {{{../user_guides/managing_builddef/builddefDistributed.html}Add and Configure}} Build Definition for your projects. 
+    <<WARNING>> Need to have a central remote repository to store the artifacts created from the build agent so that other agents will be able to use the new artifacts.
 
 * Limitations
 
