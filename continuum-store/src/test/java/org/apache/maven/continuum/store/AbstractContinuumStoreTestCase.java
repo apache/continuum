@@ -176,13 +176,13 @@ public abstract class AbstractContinuumStoreTestCase
         releaseResultDao = (ContinuumReleaseResultDao) lookup( ContinuumReleaseResultDao.class.getName() );
     }
 
-    protected void createBuildDatabase()
+    protected void createBuildDatabase( boolean isTestFromDataManagementTool )
         throws Exception
     {
-        createBuildDatabase( true );
+        createBuildDatabase( true, isTestFromDataManagementTool );
     }
 
-    protected void createBuildDatabase( boolean addToStore )
+    protected void createBuildDatabase( boolean addToStore, boolean isTestFromDataManagementTool )
         throws Exception
     {
         // Setting up test data
@@ -595,9 +595,40 @@ public abstract class AbstractContinuumStoreTestCase
         systemConfiguration.setInitialized( true );
         systemConfiguration.setWorkingDirectory( "workingDirectory" );
 
-        if ( addToStore )
-        {
+        if ( addToStore && !isTestFromDataManagementTool )
+        {   
             systemConfiguration = systemConfigurationDao.addSystemConfiguration( systemConfiguration );
+        }
+        else
+        {
+            // hack for DataManagementTool test
+            // data-management-jdo has a dependency to continuum-commons where DefaultConfigurationService
+            //      is located. DefaultConfiguration loads the data and already adds a system configuration, causing
+            //      this to throw an exception
+            boolean isExisting = false;
+            try
+            {
+                systemConfigurationDao.getSystemConfiguration();
+            }
+            catch ( ContinuumStoreException e )
+            {
+                isExisting = true;
+            }
+            
+            if( !isExisting )
+            {
+                systemConfiguration = systemConfigurationDao.getSystemConfiguration();
+                systemConfiguration.setBaseUrl( "baseUrl" );
+                systemConfiguration.setBuildOutputDirectory( "buildOutputDirectory" );
+                systemConfiguration.setDefaultScheduleCronExpression( "* * * * *" );
+                systemConfiguration.setDefaultScheduleDescription( "Description" );
+                systemConfiguration.setDeploymentRepositoryDirectory( "deployment" );
+                systemConfiguration.setGuestAccountEnabled( false );
+                systemConfiguration.setInitialized( true );
+                systemConfiguration.setWorkingDirectory( "workingDirectory" );
+                
+                systemConfigurationDao.updateSystemConfiguration( systemConfiguration );
+            }
         }
         
         testProjectScmRoot = createTestProjectScmRoot( "scmRootAddress1", 1, 0, "error1", group );
@@ -788,8 +819,7 @@ public abstract class AbstractContinuumStoreTestCase
         store.addProjectGroup( group );
         testProjectGroup2.setId( group.getId() );
 */
-
-        assertSystemConfiguration( systemConfiguration, systemConfigurationDao.getSystemConfiguration() );
+        assertSystemConfiguration( systemConfiguration, systemConfigurationDao.getSystemConfiguration() );        
     }
 
     private void assertSystemConfiguration( SystemConfiguration expected, SystemConfiguration actual )
@@ -805,14 +835,17 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( expected.getWorkingDirectory(), actual.getWorkingDirectory() );
     }
 
-    protected void assertEmpty()
+    protected void assertEmpty( boolean isTestFromDataManagementTool )
         throws ContinuumStoreException
     {
         assertEquals( 0, installationDao.getAllInstallations().size() );
         assertEquals( 0, profileDao.getAllProfilesByName().size() );
         assertEquals( 0, projectGroupDao.getAllProjectGroups().size() );
         assertEquals( 0, projectDao.getAllProjectsByName().size() );
-        assertNull( systemConfigurationDao.getSystemConfiguration() );
+        if( !isTestFromDataManagementTool )
+        {
+            assertNull( systemConfigurationDao.getSystemConfiguration() );
+        }
     }
 
     protected static BuildDefinition createTestBuildDefinition( BuildDefinition buildDefinition )

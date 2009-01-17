@@ -50,6 +50,10 @@
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-commons</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-store</artifactId>
       <scope>runtime</scope>
     </dependency>
