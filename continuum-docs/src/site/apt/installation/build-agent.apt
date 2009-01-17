@@ -48,6 +48,8 @@ Installing and Configuring a Build Agent
     * <<<installations>>> - a list of the installations available on the build agent, including Maven, Ant, JDK, etc.
 	
   Note that all of your agents need to be identical, as there is no way to control which agent Continuum chooses.
+  In addition, if you are using the Continuum Release functionality, the master needs to match the agents, as releases
+  will be executed on the master.
 
   Now start the Build Agent by executing the startup script available in
   <<<$CONTINUUM_BUILDAGENT_HOME/bin/>>>.  For example:
