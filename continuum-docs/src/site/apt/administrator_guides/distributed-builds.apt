@@ -70,8 +70,6 @@ Understanding Distributed Builds
     Master by invoking the callback method <<<returnBuildResult()>>>, which the
     Master aggregates to provide a unified view of projects
 
-    []
-
     TODO: insert sequence diagram here
 
 * Setup
@@ -81,6 +79,8 @@ Understanding Distributed Builds
     * {{{configuration.html}Enable}} the Distributed Builds option in the General Configuration, and 
 
     * {{{build-agents.html}Add}} your Build Agents to the Continuum Master.
+
+    <<Note>> Artifacts in the build agent should be deployed to the master. See {{{../user_guides/managing_builddef/builddefDistributed.html}Add and Configure}} Build Definition for your projects. 
 
 * Limitations
 
