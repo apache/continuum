@@ -21,7 +21,7 @@
 <project name="Apache Continuum">
   <body>
     <breadcrumbs>
-      <item name="1.3.0" href="/" />
+      <item name="1.3.1" href="/" />
     </breadcrumbs>
     <menu name="Documentation">
       <item name="Index (category)" href="index.html"/>
