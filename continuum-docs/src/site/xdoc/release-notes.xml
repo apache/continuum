@@ -15,12 +15,50 @@
   <p><b>Migration to Struts 2</b> -- The web framework underlying Continuum has been changed from WebWork to Struts 2.0.12.
     For more information on the S2 framework, visit <a href="http://struts.apache.org">http://struts.apache.org</a>.</p>
 
+  <p><b>Distributed Builds</b> -- Project builds can now be distributed among different build agents.</p>
+
+  <p><b>Parallel or Concurrent Builds</b> -- Multiple build queues can be configured and used for locally building projects simultaneously.</p>
+
   <p>To learn more about how the Continuum dev team versions releases, see our
       <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.</p>  
 
-  <h2>Release Notes - Continuum - Version 1.3.1</h2>    
+  <h2>Release Notes - Continuum - Version 1.3.1</h2>
 
-  <h2>Release Notes - Continuum - Version 1.3.0 (test build)</h2>
+  <h2>        Sub-task
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2023'>CONTINUUM-2023</a>] -         Document usage of parallel builds
+  </li>
+  </ul>
+
+  <h2>        Bug
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1513'>CONTINUUM-1513</a>] -         Release does not work when maven 2 executable is not on PATH
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1978'>CONTINUUM-1978</a>] -         regression from 1.1 to 1.2.2: Add Maven 2.0+ Project using https POM Url where the source server has self signed certificate
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1981'>CONTINUUM-1981</a>] -         Error while using Windows domain in username when adding a M2 project
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1984'>CONTINUUM-1984</a>] -         Dead link to data-management-cli-1.2-app.jar in upgrade documentation
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1988'>CONTINUUM-1988</a>] -         Cannot build project if triggered from Project Information page
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1998'>CONTINUUM-1998</a>] -         Unable to delete a user
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1999'>CONTINUUM-1999</a>] -         Missing validation error message for duplicate project group
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2008'>CONTINUUM-2008</a>] -         Creating or Editing  &quot;build definition&quot; and &quot;build definition template&quot; generates javascript error
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2017'>CONTINUUM-2017</a>] -         Unable to add build definitions to a template
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2021'>CONTINUUM-2021</a>] -         NullPointerException when sending mail notification
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2030'>CONTINUUM-2030</a>] -         Show Users in Role paging not working
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2040'>CONTINUUM-2040</a>] -         NPE encountered when building a project migrated from an old database
+  </li>
+  </ul>
 
   <h2>        Improvement
   </h2>
@@ -29,7 +67,40 @@
   </li>
   <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1864'>CONTINUUM-1864</a>] -         Transient State
   </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1884'>CONTINUUM-1884</a>] -         Clicking 'Done' after a successful release perform sends you all the way out to the list of groups
+  </li>
   <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1962'>CONTINUUM-1962</a>] -         Migrate to Struts 2
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1969'>CONTINUUM-1969</a>] -         Externalize all strings and make continuum fully localizable.
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2010'>CONTINUUM-2010</a>] -         Add group cancel build
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2013'>CONTINUUM-2013</a>] -         Database migration tool for migration from 1.2.x to 1.3.x
+  </li>
+  </ul>
+
+  <h2>        New Feature
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-265'>CONTINUUM-265</a>] -         Concurrent builds
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1666'>CONTINUUM-1666</a>] -         Distributed Builds
+  </li>
+  </ul>
+
+  <h2>        Task
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1990'>CONTINUUM-1990</a>] -         Unable to publish website from 1.3.0 tag
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2024'>CONTINUUM-2024</a>] -         Upgrade httpclient to 4.0beta2
+  </li>
+  </ul>
+
+  <h2>        Wish
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1635'>CONTINUUM-1635</a>] -         Manage configurable number of parallel build queues
   </li>
   </ul>
 
