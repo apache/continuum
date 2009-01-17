@@ -1381,7 +1381,7 @@ public class ContinuumStoreTest
 
         buildResultDao = (BuildResultDao) lookup( BuildResultDao.class.getName() );
 
-        createBuildDatabase();
+        createBuildDatabase(false);
     }
 
     private static void checkProjectFetchGroup( Project project, boolean checkoutFetchGroup,

@@ -1,5 +1,24 @@
 package org.apache.maven.continuum.management;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.InstallationDao;
@@ -10,7 +29,9 @@ import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.dao.SystemConfigurationDao;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ContinuumDatabase;
 import org.apache.maven.continuum.model.project.Project;
@@ -24,6 +45,9 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.ConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.dag.CycleDetectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
@@ -43,6 +67,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * JDO implementation the database management tool API.
@@ -52,6 +77,8 @@ import java.util.Properties;
 public class JdoDataManagementTool
     implements DataManagementTool
 {
+    private Logger log = LoggerFactory.getLogger( JdoDataManagementTool.class );
+    
     /**
      * @plexus.requirement
      */
@@ -266,12 +293,70 @@ public class JdoDataManagementTool
                 projectGroup.setLocalRepository( localRepositories.get( 
                                                  Integer.valueOf( projectGroup.getLocalRepository().getId() ) ) );
             }
-
+            
             projectGroup = (ProjectGroup) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectGroup );
             projectGroups.put( Integer.valueOf( projectGroup.getId() ), projectGroup );
         }
+        
+        // create project scm root data (CONTINUUM-2040)
+        Map<Integer, ProjectScmRoot> projectScmRoots = new HashMap<Integer, ProjectScmRoot>();
+        Set<Integer> keys = projectGroups.keySet();
+        int id = 1;
+        for( Integer key : keys )
+        {
+            ProjectGroup projectGroup = projectGroups.get( key );            
+            String url = " ";
+            try
+            {                   
+                List<Project> projects =
+                    ProjectSorter.getSortedProjects( getProjectsByGroupIdWithDependencies( pmf, projectGroup.getId() ),
+                                                     log );
+                for ( Iterator j = projects.iterator(); j.hasNext(); )
+                {
+                    Project project = (Project) j.next();
+                    if ( !project.getScmUrl().trim().startsWith( url ) )
+                    {
+                        url = project.getScmUrl();
+                        ProjectScmRoot projectScmRoot = new ProjectScmRoot();
+                        projectScmRoot.setId( id );                        
+                        projectScmRoot.setProjectGroup( projectGroup );
+                        projectScmRoot.setScmRootAddress( url );
+                        projectScmRoot.setState( project.getState() );
+                        
+                        projectScmRoot = (ProjectScmRoot) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectScmRoot );                        
+                        projectScmRoots.put( Integer.valueOf( projectScmRoot.getId() ), projectScmRoot );
+                        id++;                                                
+                    }
+                }
+            }
+            catch ( CycleDetectedException e )
+            {
+                //skip
+                log.info( "Skipping group '" + projectGroup.getGroupId() +
+                    "' when creating ProjectScmRoot data. Cycle detected: " + e.getMessage() );
+                continue;
+            }
+        }
     }
+    
+    private List<Project> getProjectsByGroupIdWithDependencies( PersistenceManagerFactory pmf, int projectGroupId )
+    {
+        List<Project> allProjects =
+            PlexusJdoUtils.getAllObjectsDetached( pmf.getPersistenceManager(), Project.class, "name ascending",
+                                                  "project-dependencies" );
+        List<Project> groupProjects = new ArrayList<Project>();
 
+        for ( Project project : allProjects )
+        {
+            if ( project.getProjectGroup().getId() == projectGroupId )
+            {
+                groupProjects.add( project );
+            }
+        }
+        
+        return groupProjects;
+    }
+    
     private static void processBuildDefinitions( List buildDefinitions, Map<Integer, Schedule> schedules,
                                                  Map<Integer, Profile> profiles,
                                                  Map<Integer, LocalRepository> localRepositories )

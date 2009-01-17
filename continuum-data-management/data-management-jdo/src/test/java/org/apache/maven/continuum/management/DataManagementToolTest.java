@@ -57,7 +57,7 @@ public class DataManagementToolTest
 
         targetDirectory = createBackupDirectory();
     }
-
+    
 /*
     protected ContinuumStore createStore()
         throws Exception
@@ -76,8 +76,8 @@ public class DataManagementToolTest
 
     public void testBackupBuilds()
         throws IOException, ContinuumStoreException, XMLStreamException, Exception
-    {
-        createBuildDatabase();
+    {           
+        createBuildDatabase( true );
 
         // test sanity check
         assertBuildDatabase();
@@ -100,19 +100,19 @@ public class DataManagementToolTest
     public void testEraseBuilds()
         throws Exception
     {
-        createBuildDatabase();
+        createBuildDatabase( false );
 
         dataManagementTool.eraseDatabase();
 
-        assertEmpty();
+        assertEmpty( false );
     }
 
     public void testRestoreBuilds()
         throws Exception
     {
-        createBuildDatabase( false );
+        createBuildDatabase( false, true );
 
-        assertEmpty();
+        assertEmpty( true );
 
         File backupFile = new File( targetDirectory, BUILDS_XML );
 
