@@ -53,10 +53,10 @@
               sortable="false"
               filterable="false">
       <ec:row highlightRow="true">
-        <ec:column property="name" title="groups.table.name" width="20%" style="white-space: nowrap">
+        <ec:column property="name" title="groups.table.name" width="40%" style="white-space: nowrap">
           <a href="<s:url  action="projectGroupSummary" namespace="/"><s:param name="projectGroupId">${group.id}</s:param></s:url>">${group.name}</a>
         </ec:column>
-        <ec:column property="groupId" title="groups.table.groupId" width="20%"/>
+        <ec:column property="groupId" title="groups.table.groupId" width="40%"/>
         <ec:column property="buildGroupNowAction" title="&nbsp;" width="1%">
           <redback:ifAuthorized permission="continuum-build-group" resource="${group.name}">
             <s:url id="buildProjectGroupUrl" action="buildProjectGroup" namespace="/" includeParams="none">
