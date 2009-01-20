@@ -84,7 +84,7 @@ public abstract class AbstractContinuumRunGoalsPhase
         }
         catch ( Exception e )
         {
-            throw new ReleaseExecutionException( e.getMessage(), e );
+            throw new ReleaseExecutionException( result.getOutput(), e );
         }
 
         result.setResultCode( ReleaseResult.SUCCESS );
