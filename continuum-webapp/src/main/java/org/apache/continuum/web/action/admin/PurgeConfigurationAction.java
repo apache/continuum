@@ -265,7 +265,14 @@ public class PurgeConfigurationAction
     public String remove()
         throws Exception
     {
-        purgeConfigService.removePurgeConfiguration( purgeConfigId );
+        if ( confirmed )
+        {
+        	purgeConfigService.removePurgeConfiguration( purgeConfigId );
+        }
+        else
+        {
+            return CONFIRM;
+        }
         
         return SUCCESS;
     }

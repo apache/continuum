@@ -904,6 +904,11 @@
     </action>
     
     <action name="removePurgeConfig" class="purgeConfiguration" method="remove">
+      <result name="error" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeletePurgeConfiguration.jsp</result>
       <result name="success" type="redirect-action">
         <param name="actionName">purgeConfigList</param>
       </result>
