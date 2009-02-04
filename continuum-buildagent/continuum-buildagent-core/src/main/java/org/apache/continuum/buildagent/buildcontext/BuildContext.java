@@ -30,7 +30,11 @@ public class BuildContext
 
     private String projectName;
 
+    private String projectVersion;
+
     private int projectState;
+
+    private int buildNumber;
 
     private int buildDefinitionId;
 
@@ -54,6 +58,8 @@ public class BuildContext
 
     private int projectGroupId;
 
+    private String projectGroupName;
+
     private String scmRootAddress;
 
     private Map<String, Object> actionContext;
@@ -65,6 +71,8 @@ public class BuildContext
     private long buildStartTime;
 
     private String localRepository;
+
+    private ScmResult oldScmResult;
 
     public int getProjectGroupId()
     {
@@ -264,5 +272,45 @@ public class BuildContext
     public void setLocalRepository( String localRepository )
     {
         this.localRepository = localRepository;
+    }
+
+    public void setProjectGroupName( String projectGroupName )
+    {
+        this.projectGroupName = projectGroupName;
+    }
+
+    public String getProjectGroupName()
+    {
+        return projectGroupName;
+    }
+
+    public void setProjectVersion( String projectVersion )
+    {
+        this.projectVersion = projectVersion;
+    }
+
+    public String getProjectVersion()
+    {
+        return projectVersion;
+    }
+
+    public void setBuildNumber( int buildNumber )
+    {
+        this.buildNumber = buildNumber;
+    }
+
+    public int getBuildNumber()
+    {
+        return buildNumber;
+    }
+
+    public void setOldScmResult( ScmResult oldScmResult )
+    {
+        this.oldScmResult = oldScmResult;
+    }
+
+    public ScmResult getOldScmResult()
+    {
+        return oldScmResult;
     }
 }

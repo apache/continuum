@@ -20,18 +20,25 @@ package org.apache.continuum.buildagent.build.execution;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
+import org.apache.continuum.buildagent.manager.BuildAgentManager;
+import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.buildagent.utils.shell.ExecutionResult;
 import org.apache.continuum.buildagent.utils.shell.BuildAgentShellCommandHelper;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectDependency;
+import org.apache.maven.continuum.model.project.ProjectDeveloper;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.codehaus.plexus.commandline.ExecutableResolver;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -71,6 +78,11 @@ public abstract class AbstractBuildExecutor
      */
     private String defaultExecutable;
 
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentManager buildAgentManager;
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -79,7 +91,7 @@ public abstract class AbstractBuildExecutor
 
     private boolean resolveExecutable;
 
- // ----------------------------------------------------------------------
+    // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
@@ -123,6 +135,16 @@ public abstract class AbstractBuildExecutor
     public void setBuildAgentInstallationService( BuildAgentInstallationService buildAgentInstallationService )
     {
         this.buildAgentInstallationService = buildAgentInstallationService;
+    }
+
+    public BuildAgentManager getBuildAgentManager()
+    {
+        return buildAgentManager;
+    }
+
+    public void setBuildAgentManager( BuildAgentManager buildAgentManager )
+    {
+        this.buildAgentManager = buildAgentManager;
     }
 
     // ----------------------------------------------------------------------
@@ -290,6 +312,160 @@ public abstract class AbstractBuildExecutor
         String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
         
         return buildFile;
+    }
+
+    protected void updateProject( Project project )
+        throws ContinuumAgentBuildExecutorException
+    {
+        Map projectMap = new HashMap();
+
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( project.getId() ) );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, project.getVersion() );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, project.getArtifactId() );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, project.getGroupId() );
+        if ( StringUtils.isNotEmpty( project.getName() ) )
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_NAME, project.getName() );
+        }
+        else
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_NAME, "" );
+        }
+        if ( StringUtils.isNotEmpty( project.getDescription() ) )
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DESCRIPTION, project.getDescription() );
+        }
+        else
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DESCRIPTION, "" );
+        }
+        if ( StringUtils.isNotEmpty( project.getScmUrl() ) )
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_SCM_URL, project.getScmUrl() );
+        }
+        else
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_SCM_URL, "" );
+        }
+        if ( StringUtils.isNotEmpty( project.getScmTag() ) )
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, project.getScmTag() );
+        }
+        else
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, "" );
+        }
+        if ( StringUtils.isNotEmpty( project.getUrl() ) )
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_URL, project.getUrl() );
+        }
+        else
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_URL, "" );
+        }
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_PARENT, getProjectParent( project.getParent() ) );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPERS, getProjectDevelopers( project.getDevelopers() ) );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEPENDENCIES, getProjectDependencies( project.getDependencies() ) );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_NOTIFIERS, getProjectNotifiers( project.getNotifiers() ) );
+
+        try
+        {
+            buildAgentManager.updateProject( projectMap );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumAgentBuildExecutorException( "Failed to update project", e );
+        }
+    }
+
+    protected List<Map> getProjectDevelopers( List<ProjectDeveloper> developers )
+    {
+        List<Map> pDevelopers = new ArrayList<Map>();
+
+        if ( developers != null )
+        {
+            for ( ProjectDeveloper developer : developers )
+            {
+                Map map = new HashMap();
+                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_NAME, developer.getName() );
+                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, developer.getEmail() );
+                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_SCMID, developer.getScmId() );
+
+                pDevelopers.add( map );
+            }
+        }
+        return pDevelopers;
+    }
+
+    protected Map getProjectParent( ProjectDependency parent )
+    {
+        Map map = new HashMap();
+
+        if ( parent != null )
+        {
+            map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, parent.getGroupId() );
+            map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, parent.getArtifactId() );
+            map.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, parent.getVersion() );
+        }
+        return map;
+    }
+
+    protected List<Map> getProjectDependencies( List<ProjectDependency> dependencies )
+    {
+        List<Map> pDependencies = new ArrayList<Map>();
+
+        if ( dependencies != null )
+        {
+            for ( ProjectDependency dependency : dependencies )
+            {
+                Map map = new HashMap();
+                map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, dependency.getGroupId() );
+                map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, dependency.getArtifactId() );
+                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, dependency.getVersion() );
+
+                pDependencies.add( map );
+            }
+        }
+        return pDependencies;
+    }
+
+    protected List<Map> getProjectNotifiers( List<ProjectNotifier> notifiers )
+    {
+        List<Map> pNotifiers = new ArrayList<Map>();
+
+        if ( notifiers != null )
+        {
+            for ( ProjectNotifier notifier : notifiers )
+            {
+                Map map = new HashMap();
+
+                if ( notifier.getConfiguration() != null )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_CONFIGURATION, notifier.getConfiguration() );
+                }
+                else
+                {
+
+                }
+                if ( StringUtils.isNotBlank( notifier.getType() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_TYPE, notifier.getType() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_TYPE, "" );
+                }
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_FROM, new Integer( notifier.getFrom() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_RECIPIENT_TYPE, new Integer( notifier.getRecipientType() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_ENABLED, new Boolean( notifier.isEnabled() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_ERROR, new Boolean( notifier.isSendOnError() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_SUCCESS, new Boolean( notifier.isSendOnSuccess() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_FAILURE, new Boolean( notifier.isSendOnFailure() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_SCMFAILURE, new Boolean( notifier.isSendOnScmFailure() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_WARNING, new Boolean( notifier.isSendOnWarning() ) );
+            }
+        }
+        return pNotifiers;
     }
 
     public boolean isBuilding( Project project )

@@ -128,7 +128,7 @@ public class BuildResultAction
             {
                 hasSurefireResults = files.length > 0;
             }
-            changeSet = getContinuum().getChangesSinceLastUpdate( getProjectId() );
+            changeSet = getContinuum().getChangesSinceLastSuccess( getProjectId(), getBuildId() );
 
             buildOutput = getBuildOutputText();
 

@@ -66,4 +66,7 @@ public interface DistributedBuildManager
 
     Map<String, String> getEnvironments( int buildDefinitionId, String installationType )
         throws ContinuumException;
+
+    void updateProject( Map context )
+        throws ContinuumException;
 }

@@ -32,6 +32,9 @@ public interface BuildAgentManager
     void prepareBuildProjects( List<BuildContext> buildContextList )
         throws ContinuumException;
 
+    void buildProjects( List<BuildContext> buildContextList )
+        throws ContinuumException;
+
     void returnBuildResult( Map result )
         throws ContinuumException;
     
@@ -39,5 +42,8 @@ public interface BuildAgentManager
         throws ContinuumException;
 
     Map<String, String> getEnvironments( int buildDefinitionId, String installationType )
+        throws ContinuumException;
+
+    void updateProject( Map project )
         throws ContinuumException;
 }

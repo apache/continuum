@@ -51,6 +51,10 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
+import org.apache.maven.continuum.model.project.ProjectDeveloper;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.model.scm.ChangeFile;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
@@ -344,6 +348,7 @@ public class DefaultDistributedBuildManager
             scmResult.setException( ContinuumBuildConstant.getScmException( context ) );
             scmResult.setProviderMessage( ContinuumBuildConstant.getScmProviderMessage( context ) );
             scmResult.setSuccess( ContinuumBuildConstant.isScmSuccess( context ) );
+            scmResult.setChanges( getScmChanges( context ) );
 
             project.setScmResult( scmResult );
             projectDao.updateProject( project );
@@ -392,6 +397,7 @@ public class DefaultDistributedBuildManager
                 buildResult.setBuildDefinition( buildDefinition );
                 buildResult.setBuildNumber( buildNumber );
                 buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, context ) );
+                buildResult.setScmResult( project.getScmResult() );
                 
                 buildResultDao.addBuildResult( project, buildResult );
             
@@ -650,6 +656,7 @@ public class DefaultDistributedBuildManager
                 buildResult.setBuildDefinition( buildDefinition );
                 buildResult.setBuildNumber( project.getBuildNumber() + 1 );
                 buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, result ) );
+                buildResult.setScmResult( project.getScmResult() );
 
                 String buildOutput = ContinuumBuildConstant.getBuildOutput( result );
                 
@@ -701,6 +708,58 @@ public class DefaultDistributedBuildManager
         }
         envVars.putAll( getEnvironmentVariables( buildDefinition ) );
         return envVars;
+    }
+
+    public void updateProject( Map context )
+        throws ContinuumException
+    {
+        try
+        {
+            Project project = projectDao.getProject( ContinuumBuildConstant.getProjectId( context ) );
+
+            if ( StringUtils.isNotBlank( ContinuumBuildConstant.getGroupId( context ) ) )
+            {
+                project.setGroupId( ContinuumBuildConstant.getGroupId( context ) );
+            }
+            if ( StringUtils.isNotBlank( ContinuumBuildConstant.getArtifactId( context ) ) )
+            {
+                project.setArtifactId( ContinuumBuildConstant.getArtifactId( context ) );
+            }
+            if ( StringUtils.isNotBlank( ContinuumBuildConstant.getVersion( context ) ) )
+            {
+                project.setVersion( ContinuumBuildConstant.getVersion( context ) );
+            }
+            if ( StringUtils.isNotBlank( ContinuumBuildConstant.getProjectName( context ) ) )
+            {
+                project.setName( ContinuumBuildConstant.getProjectName( context ) );
+            }
+            if ( StringUtils.isNotBlank( ContinuumBuildConstant.getProjectDescription( context ) ) )
+            {
+                project.setDescription( ContinuumBuildConstant.getProjectDescription( context ) );
+            }
+            if ( StringUtils.isNotBlank( ContinuumBuildConstant.getProjectUrl( context ) ) )
+            {
+                project.setUrl( ContinuumBuildConstant.getProjectUrl( context ) );
+            }
+            if ( StringUtils.isNotBlank( ContinuumBuildConstant.getScmUrl( context ) ) )
+            {
+                project.setScmUrl( ContinuumBuildConstant.getScmUrl( context ) );
+            }
+            if ( StringUtils.isNotBlank( ContinuumBuildConstant.getScmTag( context ) ) )
+            {
+                project.setScmTag( ContinuumBuildConstant.getScmTag( context ) );
+            }
+            project.setParent( getProjectParent( context ) );
+            project.setDependencies( getProjectDependencies( context ) );
+            project.setDevelopers( getProjectDevelopers( context ) );
+            project.setNotifiers( getProjectNotifiers( context ) );
+
+            projectDao.updateProject( project );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            throw new ContinuumException( "Unable to update project from working copy", e );
+        }
     }
 
     private String getBuildAgent( int projectId )
@@ -773,4 +832,129 @@ public class DefaultDistributedBuildManager
         return envVars;
     }
 
+    private List getScmChanges( Map context )
+    {
+        List changes = new ArrayList();
+        List<Map> scmChanges = ContinuumBuildConstant.getScmChanges( context );
+
+        if ( scmChanges != null )
+        {
+            for ( Map map : scmChanges )
+            {
+                ChangeSet changeSet = new ChangeSet();
+                changeSet.setAuthor( ContinuumBuildConstant.getChangeSetAuthor( map ) );
+                changeSet.setComment( ContinuumBuildConstant.getChangeSetComment( map ) );
+                changeSet.setDate( ContinuumBuildConstant.getChangeSetDate( map ) );
+                setChangeFiles( changeSet, map );
+                changes.add( changeSet );
+            }
+        }
+
+        return changes;
+    }
+
+    private void setChangeFiles( ChangeSet changeSet, Map context )
+    {
+        List<Map> changeFiles = ContinuumBuildConstant.getChangeSetFiles( context );
+
+        if ( changeFiles != null )
+        {
+            for ( Map map : changeFiles )
+            {
+                ChangeFile changeFile = new ChangeFile();
+                changeFile.setName( ContinuumBuildConstant.getChangeFileName( map ) );
+                changeFile.setRevision( ContinuumBuildConstant.getChangeFileRevision( map ) );
+                changeFile.setStatus( ContinuumBuildConstant.getChangeFileStatus( map ) );
+
+                changeSet.addFile( changeFile );
+            }
+        }
+    }
+
+    private ProjectDependency getProjectParent( Map context )
+    {
+        Map map = ContinuumBuildConstant.getProjectParent( context );
+        
+        if ( map != null && map.size() > 0 )
+        {
+            ProjectDependency parent = new ProjectDependency();
+            parent.setGroupId( ContinuumBuildConstant.getGroupId( map ) );
+            parent.setArtifactId( ContinuumBuildConstant.getArtifactId( map ) );
+            parent.setVersion( ContinuumBuildConstant.getVersion( map ) );
+
+            return parent;
+        }
+
+        return null;
+    }
+
+    private List<ProjectDependency> getProjectDependencies( Map context )
+    {
+        List<ProjectDependency> projectDependencies = new ArrayList<ProjectDependency>();
+
+        List<Map> dependencies = ContinuumBuildConstant.getProjectDependencies( context );
+        
+        if ( dependencies != null )
+        {
+            for ( Map map : dependencies )
+            {
+                ProjectDependency dependency = new ProjectDependency();
+                dependency.setGroupId( ContinuumBuildConstant.getGroupId( map ) );
+                dependency.setArtifactId( ContinuumBuildConstant.getArtifactId( map ) );
+                dependency.setVersion( ContinuumBuildConstant.getVersion( map ) );
+
+                projectDependencies.add( dependency );
+            }
+        }
+        return projectDependencies;
+    }
+
+    private List<ProjectDeveloper> getProjectDevelopers( Map context )
+    {
+        List<ProjectDeveloper> projectDevelopers = new ArrayList<ProjectDeveloper>();
+
+        List<Map> developers = ContinuumBuildConstant.getProjectDevelopers( context );
+
+        if ( developers != null )
+        {
+            for ( Map map : developers )
+            {
+                ProjectDeveloper developer = new ProjectDeveloper();
+                developer.setName( ContinuumBuildConstant.getDeveloperName( map ) );
+                developer.setEmail( ContinuumBuildConstant.getDeveloperEmail( map ) );
+                developer.setScmId( ContinuumBuildConstant.getDeveloperScmId( map ) );
+
+                projectDevelopers.add( developer );
+            }
+        }
+        return projectDevelopers;
+    }
+
+    private List<ProjectNotifier> getProjectNotifiers( Map context )
+    {
+        List<ProjectNotifier> projectNotifiers = new ArrayList<ProjectNotifier>();
+
+        List<Map> notifiers = ContinuumBuildConstant.getProjectNotifiers( context );
+
+        if ( notifiers != null )
+        {
+            for ( Map map : notifiers )
+            {
+                ProjectNotifier notifier = new ProjectNotifier();
+                notifier.setConfiguration( ContinuumBuildConstant.getNotifierConfiguration( map ) );
+                notifier.setEnabled( ContinuumBuildConstant.isNotifierEnabled( map ) );
+                notifier.setFrom( ContinuumBuildConstant.getNotifierFrom( map ) );
+                notifier.setRecipientType( ContinuumBuildConstant.getNotifierRecipientType( map ) );
+                notifier.setSendOnError( ContinuumBuildConstant.isNotifierSendOnError( map ) );
+                notifier.setSendOnFailure( ContinuumBuildConstant.isNotifierSendOnFailure( map ) );
+                notifier.setSendOnScmFailure( ContinuumBuildConstant.isNotifierSendOnScmFailure( map ) );
+                notifier.setSendOnSuccess( ContinuumBuildConstant.isNotifierSendOnSuccess( map ) );
+                notifier.setSendOnWarning( ContinuumBuildConstant.isNotifierSendOnWarning( map ) );
+                notifier.setType( ContinuumBuildConstant.getNotifierType( map ) );
+
+                projectNotifiers.add( notifier );
+            }
+        }
+        return projectNotifiers;
+    }
 }

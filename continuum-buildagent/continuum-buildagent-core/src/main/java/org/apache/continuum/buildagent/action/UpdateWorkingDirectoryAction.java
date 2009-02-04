@@ -30,8 +30,11 @@ import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ChangeFile;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.scm.ScmException;
+import org.apache.maven.scm.ScmFile;
 import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
@@ -151,10 +154,78 @@ public class UpdateWorkingDirectoryAction
 
         result.setProviderMessage( scmResult.getProviderMessage() );
 
+        if ( scmResult.getChanges() != null && !scmResult.getChanges().isEmpty() )
+        {
+            for ( org.apache.maven.scm.ChangeSet scmChangeSet : (List<org.apache.maven.scm.ChangeSet>) scmResult.getChanges() )
+            {
+                ChangeSet change = new ChangeSet();
+
+                change.setAuthor( scmChangeSet.getAuthor() );
+
+                change.setComment( scmChangeSet.getComment() );
+
+                if ( scmChangeSet.getDate() != null )
+                {
+                    change.setDate( scmChangeSet.getDate().getTime() );
+                }
+
+                if ( scmChangeSet.getFiles() != null )
+                {
+                    for ( org.apache.maven.scm.ChangeFile f : (List<org.apache.maven.scm.ChangeFile>) scmChangeSet.getFiles() )
+                    {
+                        ChangeFile file = new ChangeFile();
+
+                        file.setName( f.getName() );
+
+                        file.setRevision( f.getRevision() );
+
+                        change.addFile( file );
+                    }
+                }
+
+                result.addChange( change );
+            }
+        }
+        else
+        {
+            // We don't have a changes information probably because provider doesn't have a changelog command
+            // so we use the updated list that contains only the updated files list
+            ChangeSet changeSet = convertScmFileSetToChangeSet( scmResult.getUpdatedFiles() );
+
+            if ( changeSet != null )
+            {
+                result.addChange( changeSet );
+            }
+        }
         return result;
     }
-    
- // TODO: migrate to the SvnCommandLineUtils version (preferably properly encapsulated in the provider)
+
+    private static ChangeSet convertScmFileSetToChangeSet( List<ScmFile> files )
+    {
+        ChangeSet changeSet = null;
+
+        if ( files != null && !files.isEmpty() )
+        {
+            changeSet = new ChangeSet();
+
+            // TODO: author, etc.
+            for ( ScmFile scmFile : files )
+            {
+                ChangeFile file = new ChangeFile();
+
+                file.setName( scmFile.getPath() );
+
+                // TODO: revision?
+
+                file.setStatus( scmFile.getStatus().toString() );
+
+                changeSet.addFile( file );
+            }
+        }
+        return changeSet;
+    }
+
+    // TODO: migrate to the SvnCommandLineUtils version (preferably properly encapsulated in the provider)
     private String maskPassword( String commandLine )
     {
         String cmd = commandLine;

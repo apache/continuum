@@ -177,4 +177,23 @@ public class SlaveBuildAgentTransportClient
 
         return null;
     }
+
+    public Boolean updateProjects( List<Map> projectsBuildContext )
+        throws Exception
+    {
+        Boolean result = null;
+
+        try
+        {
+            result = slave.updateProjects( projectsBuildContext );
+            log.info( "Updating projects" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error updating projects" );
+            throw new Exception( "Error updating projects", e );
+        }
+
+        return result;
+    }
 }

@@ -135,4 +135,23 @@ public class SlaveBuildAgentTransportServer
 
         return result;
     }
+
+    public Boolean updateProjects( List<Map> projectsBuildContext )
+        throws Exception
+    {
+        Boolean result = Boolean.FALSE;
+
+        try
+        {
+            continuumBuildAgentService.updateProjects( projectsBuildContext );
+            result = Boolean.TRUE;
+            log.info( "Updating projects" );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to update projects", e );
+        }
+
+        return result;
+    }
 }

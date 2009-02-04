@@ -16,7 +16,7 @@
   <bean name="continuumAgentBuildExecutor#maven2"
          class="org.apache.continuum.buildagent.build.execution.maven.m2.MavenTwoBuildExecutor" autowire="byName">
     <property name="defaultExecutable" value="mvn"/>
-    <property name="builderHelper" ref="buildAgentMavenBuilderHelper"/>
+    <property name="buildAgentMavenBuilderHelper" ref="buildAgentMavenBuilderHelper"/>
     <property name="projectHelper" ref="mavenProjectHelper"/>
   </bean>
   <bean name="continuumAgentBuildExecutor#maven-1"
@@ -38,16 +38,6 @@
      init-method="initialize">
     <property name="configurationFile" value="file:${CONTINUUM_BUILDAGENT_HOME}/conf/continuum-buildagent.xml" />
   </bean>
-
-  <bean id="projectHelper" class="org.apache.maven.project.DefaultMavenProjectHelper"/>
-
-  <bean id="projectBuilder" class="org.apache.maven.project.DefaultMavenProjectBuilder"/>
-
-  <bean id="mavenSettingsBuilder" class="org.apache.maven.settings.DefaultMavenSettingsBuilder"/>
-
-  <bean id="artifactRepositoryFactory" class="org.apache.maven.artifact.repository.DefaultArtifactRepositoryFactory"/>
-
-  <bean id="defaultRepositoryLayout" class="org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout"/>
 
   <bean id="actionManager" class="org.codehaus.plexus.action.DefaultActionManager"/>
 </beans>

@@ -95,4 +95,12 @@ public class MasterBuildAgentTransportServer
         log.info( "Retrieving environments" );
         return distributedBuildManager.getEnvironments( buildDefinitionId, installationType );
     }
+
+    public Boolean updateProject( Map project )
+        throws Exception
+    {
+        log.info( "Start updating project" );
+        distributedBuildManager.updateProject( project );
+        return Boolean.TRUE;
+    }
 }

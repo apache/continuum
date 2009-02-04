@@ -94,4 +94,11 @@ public class AntBuildExecutor
 
         return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
     }
+
+    public void updateProjectFromWorkingDirectory( File workingDirectory, Project project,
+                                                   BuildDefinition buildDefinition )
+        throws ContinuumAgentBuildExecutorException
+    {
+        // nothing to do here
+    }
 }

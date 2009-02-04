@@ -19,6 +19,9 @@ package org.apache.continuum.builder.utils;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -26,6 +29,10 @@ import org.apache.maven.continuum.model.project.BuildResult;
 public class ContinuumBuildConstant
 {
     public static final String KEY_PROJECT_ID = "project-id";
+
+    public static final String KEY_PROJECT_VERSION = "project-version";
+
+    public static final String KEY_PROJECT_BUILD_NUMBER = "build-number";
 
     public static final String KEY_BUILD_DEFINITION_ID = "builddefinition-id";
 
@@ -46,6 +53,8 @@ public class ContinuumBuildConstant
     public static final String KEY_ARGUMENTS = "arguments";
 
     public static final String KEY_BUILD_FRESH = "build-fresh";
+
+    public static final String KEY_ALWAYS_BUILD = "always-build";
 
     public static final String KEY_BUILD_START = "build-start";
 
@@ -69,6 +78,8 @@ public class ContinuumBuildConstant
 
     public static final String KEY_PROJECT_GROUP_ID = "project-group-id";
 
+    public static final String KEY_PROJECT_GROUP_NAME = "project-group-name";
+    
     public static final String KEY_SCM_ROOT_ADDRESS = "scm-root-address";
 
     public static final String KEY_SCM_ERROR = "scm-error";
@@ -90,6 +101,70 @@ public class ContinuumBuildConstant
     public static final String KEY_INSTALLATION_VAR_VALUE = "installation-var-value";
 
     public static final String KEY_LOCAL_REPOSITORY = "local-repository";
+
+    public static final String KEY_SCM_CHANGES = "scm-changes";
+
+    public static final String KEY_CHANGESET_ID = "changeset-id";
+
+    public static final String KEY_CHANGESET_AUTHOR = "changeset-author";
+
+    public static final String KEY_CHANGESET_COMMENT = "changeset-comment";
+
+    public static final String KEY_CHANGESET_DATE = "changeset-date";
+
+    public static final String KEY_CHANGESET_FILES = "changeset-files";
+
+    public static final String KEY_CHANGEFILE_NAME = "changefile-name";
+
+    public static final String KEY_CHANGEFILE_REVISION = "changefile-revision";
+
+    public static final String KEY_CHANGEFILE_STATUS = "changefile-status";
+
+    public static final String KEY_OLD_SCM_CHANGES = "old-scm-changes";
+
+    public static final String KEY_PROJECT_DESCRIPTION = "project-description";
+
+    public static final String KEY_GROUP_ID = "group-id";
+
+    public static final String KEY_ARTIFACT_ID = "artifact-id";
+
+    public static final String KEY_PROJECT_DEVELOPERS = "project-developers";
+
+    public static final String KEY_PROJECT_DEPENDENCIES = "project-dependencies";
+
+    public static final String KEY_PROJECT_NOTIFIERS = "project-notifiers";
+
+    public static final String KEY_PROJECT_URL = "project-url";
+
+    public static final String KEY_SCM_TAG = "scm-tag";
+
+    public static final String KEY_PROJECT_PARENT = "project-parent";
+
+    public static final String KEY_NOTIFIER_TYPE = "notifier-type";
+
+    public static final String KEY_NOTIFIER_CONFIGURATION = "notifier-configuration";
+
+    public static final String KEY_NOTIFIER_FROM = "notifier-from";
+
+    public static final String KEY_NOTIFIER_RECIPIENT_TYPE = "notifier-recipient-type";
+
+    public static final String KEY_NOTIFIER_ENABLED = "notifier-enabled";
+
+    public static final String KEY_NOTIFIER_SEND_ON_SUCCESS = "notifier-send-on-success";
+
+    public static final String KEY_NOTIFIER_SEND_ON_FAILURE = "notifier-send-on-failure";
+
+    public static final String KEY_NOTIFIER_SEND_ON_ERROR = "notifier-send-on-error";
+
+    public static final String KEY_NOTIFIER_SEND_ON_SCMFAILURE = "notifier-send-on-scmfailure";
+
+    public static final String KEY_NOTIFIER_SEND_ON_WARNING = "notifier-send-on-warning";
+
+    public static final String KEY_PROJECT_DEVELOPER_NAME = "developer-name";
+
+    public static final String KEY_PROJECT_DEVELOPER_EMAIL = "developer-email";
+
+    public static final String KEY_PROJECT_DEVELOPER_SCMID = "developer-scmid";
 
     public static int getProjectId( Map context )
     {
@@ -201,6 +276,181 @@ public class ContinuumBuildConstant
         return getString( context, KEY_INSTALLATION_VAR_NAME );
     }
 
+    public static List getScmChanges( Map context )
+    {
+        return getList( context, KEY_SCM_CHANGES );
+    }
+
+    public static String getChangeSetAuthor( Map context )
+    {
+        return getString( context, KEY_CHANGESET_AUTHOR );
+    }
+
+    public static String getChangeSetComment( Map context )
+    {
+        return getString( context, KEY_CHANGESET_COMMENT );
+    }
+
+    public static long getChangeSetDate( Map context )
+    {
+        Date date = getDate( context, KEY_CHANGESET_DATE );
+
+        if ( date == null )
+        {
+            return 0;
+        }
+        else
+        {
+            return date.getTime();
+        }
+    }
+
+    public static List getChangeSetFiles( Map context )
+    {
+        return getList( context, KEY_CHANGESET_FILES );
+    }
+
+    public static String getChangeFileName( Map context )
+    {
+        return getString( context, KEY_CHANGEFILE_NAME );
+    }
+
+    public static String getChangeFileRevision( Map context )
+    {
+        return getString( context, KEY_CHANGEFILE_REVISION );
+    }
+
+    public static String getChangeFileStatus( Map context )
+    {
+        return getString( context, KEY_CHANGEFILE_STATUS );
+    }
+
+    public static String getGroupId( Map context )
+    {
+        return getString( context, KEY_GROUP_ID);
+    }
+
+    public static String getArtifactId( Map context )
+    {
+        return getString( context, KEY_ARTIFACT_ID );
+    }
+
+    public static String getVersion( Map context )
+    {
+        return getString( context, KEY_PROJECT_VERSION );
+        
+    }
+
+    public static String getProjectName( Map context )
+    {
+        return getString( context, KEY_PROJECT_NAME );
+    }
+
+    public static String getProjectDescription( Map context )
+    {
+        return getString( context, KEY_PROJECT_DESCRIPTION );
+    }
+
+    public static String getProjectUrl( Map context )
+    {
+        return getString( context, KEY_PROJECT_URL );
+    }
+
+    public static String getScmUrl( Map context )
+    {
+        return getString( context, KEY_SCM_URL );
+    }
+
+    public static String getScmTag( Map context )
+    {
+        return getString( context, KEY_SCM_TAG );
+    }
+
+    public static Map getProjectParent( Map context )
+    {
+        return getMap( context, KEY_PROJECT_PARENT );
+    }
+
+    public static List getProjectDevelopers( Map context )
+    {
+        return getList( context, KEY_PROJECT_DEVELOPERS );
+    }
+
+    public static String getDeveloperName( Map context )
+    {
+        return getString( context, KEY_PROJECT_DEVELOPER_NAME );
+    }
+
+    public static String getDeveloperEmail( Map context )
+    {
+        return getString( context, KEY_PROJECT_DEVELOPER_EMAIL );
+    }
+
+    public static String getDeveloperScmId( Map context )
+    {
+        return getString( context, KEY_PROJECT_DEVELOPER_SCMID );
+    }
+
+    public static List getProjectDependencies( Map context )
+    {
+        return getList( context, KEY_PROJECT_DEPENDENCIES );
+    }
+
+    public static List getProjectNotifiers( Map context )
+    {
+        return getList( context, KEY_PROJECT_NOTIFIERS );
+    }
+
+    public static Map getNotifierConfiguration( Map context )
+    {
+        return getMap( context, KEY_NOTIFIER_CONFIGURATION );
+    }
+
+    public static int getNotifierFrom( Map context )
+    {
+        return getInteger( context, KEY_NOTIFIER_FROM );
+    }
+
+    public static int getNotifierRecipientType( Map context )
+    {
+        return getInteger( context, KEY_NOTIFIER_RECIPIENT_TYPE );
+    }
+
+    public static String getNotifierType( Map context )
+    {
+        return getString( context, KEY_NOTIFIER_TYPE );
+    }
+
+    public static boolean isNotifierEnabled( Map context )
+    {
+        return getBoolean( context, KEY_NOTIFIER_ENABLED );
+    }
+
+    public static boolean isNotifierSendOnError( Map context )
+    {
+        return getBoolean( context, KEY_NOTIFIER_SEND_ON_ERROR );
+    }
+
+    public static boolean isNotifierSendOnFailure( Map context )
+    {
+        return getBoolean( context, KEY_NOTIFIER_SEND_ON_FAILURE );
+    }
+
+    public static boolean isNotifierSendOnScmFailure( Map context )
+    {
+        return getBoolean( context, KEY_NOTIFIER_SEND_ON_SCMFAILURE );
+    }
+
+    public static boolean isNotifierSendOnSuccess( Map context )
+    {
+        return getBoolean( context, KEY_NOTIFIER_SEND_ON_SUCCESS );
+    }
+
+    public static boolean isNotifierSendOnWarning( Map context )
+    {
+        return getBoolean( context, KEY_NOTIFIER_SEND_ON_WARNING );
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -257,17 +507,60 @@ public class ContinuumBuildConstant
         }
     }
 
-    protected static long getLong( Map context, String key )
+    protected static Date getDate( Map context, String key )
     {
         Object obj = getObject( context, key, null );
-        
+
         if ( obj == null )
         {
-            return 0;
+            return null;
         }
         else
         {
-            return ( (Long) obj ).longValue();
+            return (Date)obj;
+        }
+    }
+
+    protected static List getList( Map context, String key )
+    {
+        Object obj = getObject( context, key, null );
+
+        if ( obj == null )
+        {
+            return null;
+        }
+        else
+        {
+            List list = new ArrayList();
+            Object[] objA = (Object[]) obj;
+
+            for ( Object o : objA )
+            {
+                if ( o instanceof Map )
+                {
+                    list.add( (Map) o );
+                }
+                else
+                {
+                    list.add( o );
+                }
+            }
+
+            return list;
+        }
+    }
+
+    protected static Map getMap( Map context, String key )
+    {
+        Object obj = getObject( context, key, null );
+
+        if ( obj == null )
+        {
+            return null;
+        }
+        else
+        {
+            return (Map) obj;
         }
     }
 

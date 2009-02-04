@@ -25,8 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
@@ -40,6 +38,8 @@ import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildResult;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
@@ -92,11 +92,12 @@ public class BuildProjectTaskExecutor
         BuildContext context = buildContextManager.getBuildContext( projectId );
         initializeBuildContext( context );
 
+        /*
         if ( !checkScmResult( context ) )
         {
             log.info( "Error updating from SCM, not building" );
             return;
-        }
+        }*/
         
         log.info( "Starting build of " + context.getProjectName() );
         startBuild( context );
@@ -104,6 +105,18 @@ public class BuildProjectTaskExecutor
         try
         {
             Map actionContext = context.getActionContext();
+
+            try
+            {
+                performAction( "update-project-from-agent-working-directory", context );
+            }
+            catch ( TaskExecutionException e )
+            {
+                updateBuildResult( context, ContinuumBuildAgentUtil.throwableToString( e ) );
+
+                //just log the error but don't stop the build from progressing in order not to suppress any build result messages there
+                log.error( "Error executing action update-project-from-agent-working-directory '", e );
+            }
 
             performAction( "execute-agent-builder", context );
 
@@ -118,15 +131,23 @@ public class BuildProjectTaskExecutor
     private void initializeBuildContext( BuildContext buildContext )
         throws TaskExecutionException
     {
-        Map<String, Object> actionContext = buildContext.getActionContext();
+        Map<String, Object> actionContext = new HashMap<String, Object>();
 
         actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, buildContext.getProjectId() );
-        actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT, BuildContextToProject.getProject( buildContext ) );
+
+        Project project = BuildContextToProject.getProject( buildContext );
+        ProjectGroup projectGroup = new ProjectGroup();
+        projectGroup.setId( buildContext.getProjectGroupId() );
+        projectGroup.setName( buildContext.getProjectGroupName() );
+        project.setProjectGroup( projectGroup );
+        
+        actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT, project );
         actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION, BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS, getEnvironments( buildContext.getBuildDefinitionId(), 
                                                                                       getInstallationType( buildContext ) ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, buildContext.getLocalRepository() );
+        buildContext.setActionContext( actionContext );
 
         buildContext.setBuildStartTime( System.currentTimeMillis() );
     }
