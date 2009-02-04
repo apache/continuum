@@ -284,6 +284,11 @@ public class DefaultBuildController
 
     private void updateBuildResult( BuildResult build, BuildContext context )
     {
+        if ( build.getScmResult() == null && context.getScmResult() != null )
+        {
+            build.setScmResult( context.getScmResult() );
+        }
+
         if ( build.getModifiedDependencies() == null && context.getModifiedDependencies() != null )
         {
             build.setModifiedDependencies( context.getModifiedDependencies() );
@@ -347,7 +352,7 @@ public class DefaultBuildController
             context.setOldBuildResult( oldBuildResult );
 
 		    context.setScmResult( project.getScmResult() );
-		    
+
             // CONTINUUM-1871 olamy if continuum is killed during building oldBuildResult will have a endTime 0
             // this means all changes since the project has been loaded in continuum will be in memory
             // now we will load all BuildResult with an Id bigger or equals than the oldBuildResult one
@@ -375,6 +380,8 @@ public class DefaultBuildController
         actionContext.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
 
         actionContext.put( AbstractContinuumAction.KEY_FIRST_RUN, context.getOldBuildResult() == null );
+
+        actionContext.put( AbstractContinuumAction.KEY_SCM_RESULT, context.getScmResult() );
 
         if ( context.getOldBuildResult() != null )
         {
@@ -677,6 +684,8 @@ public class DefaultBuildController
         build.setEndTime( System.currentTimeMillis() );
 
         updateBuildResult( build, context );
+
+        build.setScmResult( context.getScmResult() );
 
         build.setBuildDefinition( context.getBuildDefinition() );
 

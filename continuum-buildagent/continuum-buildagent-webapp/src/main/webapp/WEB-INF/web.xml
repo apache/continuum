@@ -30,22 +30,6 @@
   </context-param>
   
   <servlet>
-    <servlet-name>MasterXmlRpcServlet</servlet-name>
-    <servlet-class>
-      com.atlassian.xmlrpc.spring.BinderSpringXmlRpcServlet
-    </servlet-class>
-    <init-param>
-      <param-name>serviceListBeanName</param-name>
-      <param-value>xmlrpcServicesList</param-value>
-    </init-param>
-    <init-param>
-      <param-name>enabledForExtensions</param-name>
-      <param-value>true</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  
-  <servlet>
     <servlet-name>SlaveXmlRpcServlet</servlet-name>
     <servlet-class>
       com.atlassian.xmlrpc.spring.BinderSpringXmlRpcServlet
@@ -60,11 +44,6 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>MasterXmlRpcServlet</servlet-name>
-    <url-pattern>/master-xmlrpc</url-pattern>
-  </servlet-mapping>
   
   <servlet-mapping>
     <servlet-name>SlaveXmlRpcServlet</servlet-name>

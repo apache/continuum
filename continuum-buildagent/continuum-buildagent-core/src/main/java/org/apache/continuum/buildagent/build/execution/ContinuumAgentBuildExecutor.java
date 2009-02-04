@@ -34,12 +34,15 @@ public interface ContinuumAgentBuildExecutor
     ContinuumAgentBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput,
                                               Map<String, String> environments, String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException;
-    
+
     boolean isBuilding( Project project );
 
     void killProcess( Project project );
 
     // TODO: are these part of the builder interface, or a separate project/build definition interface?
     List<Artifact> getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
+        throws ContinuumAgentBuildExecutorException;
+
+    void updateProjectFromWorkingDirectory( File workingDirectory, Project project, BuildDefinition buildDefinition )
         throws ContinuumAgentBuildExecutorException;
 }

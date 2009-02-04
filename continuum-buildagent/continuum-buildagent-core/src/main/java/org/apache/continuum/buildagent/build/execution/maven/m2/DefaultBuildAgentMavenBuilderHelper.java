@@ -22,19 +22,28 @@ package org.apache.continuum.buildagent.build.execution.maven.m2;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.annotation.Resource;
 
 import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectDependency;
+import org.apache.maven.continuum.model.project.ProjectDeveloper;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Developer;
+import org.apache.maven.model.Extension;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Notifier;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Profile;
+import org.apache.maven.model.ReportPlugin;
 import org.apache.maven.model.Scm;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.profiles.DefaultProfileManager;
@@ -64,27 +73,34 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 /**
- * @author marica
+ * @plexus.component role="org.apache.continuum.buildagent.build.execution.maven.m2.BuildAgentMavenBuilderHelper" 
+ * role-hint="default" 
  */
-@Service("buildAgentMavenBuilderHelper")
 public class DefaultBuildAgentMavenBuilderHelper
     implements BuildAgentMavenBuilderHelper, Contextualizable, Initializable
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
-    @Resource
+    /**
+     * @plexus.requirement
+     */
     private MavenProjectBuilder projectBuilder;
 
-    @Resource
+    /**
+     * @plexus.requirement
+     */
     private MavenSettingsBuilder mavenSettingsBuilder;
 
-    @Resource
+    /**
+     * @plexus.requirement
+     */
     private ArtifactRepositoryFactory artifactRepositoryFactory;
 
-    @Resource
+    /**
+     * @plexus.requirement
+     */
     private ArtifactRepositoryLayout defaultRepositoryLayout;
 
     private PlexusContainer container;
@@ -208,6 +224,307 @@ public class DefaultBuildAgentMavenBuilderHelper
         }
 
         return project;
+    }
+
+    public void mapMetadataToProject( ContinuumProjectBuildingResult result, File metadata, Project continuumProject )
+    {
+        MavenProject mavenProject = getMavenProject( result, metadata );
+
+        if ( mavenProject == null )
+        {
+            result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN,
+                             "Can't load the maven project. Verify that your scm url is correct and remove/readd the project." );
+            return;
+        }
+
+        mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, false );
+    }
+
+    public void mapMavenProjectToContinuumProject( ContinuumProjectBuildingResult result, MavenProject mavenProject,
+                                                   Project continuumProject, boolean groupPom )
+    {
+        if ( mavenProject == null )
+        {
+            result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN, "The maven project is null." );
+            return;
+        }
+
+        // ----------------------------------------------------------------------
+        // Name
+        // ----------------------------------------------------------------------
+
+        continuumProject.setName( getProjectName( mavenProject ) );
+
+        // ----------------------------------------------------------------------
+        // SCM Url
+        // ----------------------------------------------------------------------
+
+        // TODO: Remove this: scm url shouldn't be null there
+        if ( StringUtils.isEmpty( continuumProject.getScmUrl() ) )
+        {
+            String scmUrl = getScmUrl( mavenProject );
+
+            continuumProject.setScmUrl( scmUrl );
+
+            if ( !"HEAD".equals( mavenProject.getScm().getTag() ) )
+            {
+                continuumProject.setScmTag( mavenProject.getScm().getTag() );
+            }
+        }
+
+        // ----------------------------------------------------------------------
+        // Version
+        // ----------------------------------------------------------------------
+
+        continuumProject.setVersion( getVersion( mavenProject ) );
+
+        // ----------------------------------------------------------------------
+        // GroupId
+        // ----------------------------------------------------------------------
+
+        if ( !StringUtils.isEmpty( mavenProject.getGroupId() ) )
+        {
+            continuumProject.setGroupId( mavenProject.getGroupId() );
+        }
+        else
+        {
+            result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_GROUPID );
+            return;
+        }
+
+        // ----------------------------------------------------------------------
+        // artifactId
+        // ----------------------------------------------------------------------
+
+        if ( !StringUtils.isEmpty( mavenProject.getArtifactId() ) )
+        {
+            continuumProject.setArtifactId( mavenProject.getArtifactId() );
+        }
+        else
+        {
+            result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_ARTIFACTID );
+            return;
+        }
+
+        // ----------------------------------------------------------------------
+        // Project Url
+        // ----------------------------------------------------------------------
+
+        if ( !StringUtils.isEmpty( mavenProject.getUrl() ) )
+        {
+            continuumProject.setUrl( mavenProject.getUrl() );
+        }
+
+        // ----------------------------------------------------------------------
+        // Developers
+        // ----------------------------------------------------------------------
+
+        if ( mavenProject.getDevelopers() != null )
+        {
+            List<ProjectDeveloper> developers = new ArrayList<ProjectDeveloper>();
+
+            for ( Developer d : (List<Developer>)mavenProject.getDevelopers() )
+            {
+                ProjectDeveloper cd = new ProjectDeveloper();
+
+                cd.setScmId( d.getId() );
+
+                cd.setName( d.getName() );
+
+                cd.setEmail( d.getEmail() );
+
+                developers.add( cd );
+            }
+
+            continuumProject.setDevelopers( developers );
+        }
+
+        // ----------------------------------------------------------------------
+        // Parent
+        // ----------------------------------------------------------------------
+
+        if ( mavenProject.getParent() != null )
+        {
+            MavenProject parentProject = mavenProject.getParent();
+
+            ProjectDependency parent = new ProjectDependency();
+
+            parent.setGroupId( parentProject.getGroupId() );
+
+            parent.setArtifactId( parentProject.getArtifactId() );
+
+            parent.setVersion( parentProject.getVersion() );
+
+            continuumProject.setParent( parent );
+        }
+
+        // ----------------------------------------------------------------------
+        // Dependencies
+        // ----------------------------------------------------------------------
+
+        List<ProjectDependency> dependencies = new ArrayList<ProjectDependency>();
+
+        for ( Dependency dependency : (List<Dependency>)mavenProject.getDependencies() )
+        {
+            ProjectDependency cd = new ProjectDependency();
+
+            cd.setGroupId( dependency.getGroupId() );
+
+            cd.setArtifactId( dependency.getArtifactId() );
+
+            cd.setVersion( dependency.getVersion() );
+
+            dependencies.add( cd );
+        }
+
+        for ( Plugin dependency : (List<Plugin>)mavenProject.getBuildPlugins() )
+        {
+            ProjectDependency cd = new ProjectDependency();
+
+            cd.setGroupId( dependency.getGroupId() );
+
+            cd.setArtifactId( dependency.getArtifactId() );
+
+            cd.setVersion( dependency.getVersion() );
+
+            dependencies.add( cd );
+        }
+
+        for ( ReportPlugin dependency : (List<ReportPlugin>)mavenProject.getReportPlugins() )
+        {
+            ProjectDependency cd = new ProjectDependency();
+
+            cd.setGroupId( dependency.getGroupId() );
+
+            cd.setArtifactId( dependency.getArtifactId() );
+
+            cd.setVersion( dependency.getVersion() );
+
+            dependencies.add( cd );
+        }
+
+        for ( Extension dependency : (List<Extension>)mavenProject.getBuildExtensions() )
+        {
+            ProjectDependency cd = new ProjectDependency();
+
+            cd.setGroupId( dependency.getGroupId() );
+
+            cd.setArtifactId( dependency.getArtifactId() );
+
+            cd.setVersion( dependency.getVersion() );
+
+            dependencies.add( cd );
+        }
+
+        continuumProject.setDependencies( dependencies );
+
+        // ----------------------------------------------------------------------
+        // Notifiers
+        // ----------------------------------------------------------------------
+
+        List<ProjectNotifier> userNotifiers = new ArrayList<ProjectNotifier>();
+
+        if ( continuumProject.getNotifiers() != null )
+        {
+            for ( int i = 0; i < continuumProject.getNotifiers().size(); i++ )
+            {
+                ProjectNotifier notifier = (ProjectNotifier) continuumProject.getNotifiers().get( i );
+
+                if ( notifier.isFromUser() )
+                {
+                    ProjectNotifier userNotifier = new ProjectNotifier();
+
+                    userNotifier.setType( notifier.getType() );
+
+                    userNotifier.setEnabled( notifier.isEnabled() );
+
+                    userNotifier.setConfiguration( notifier.getConfiguration() );
+
+                    userNotifier.setFrom( notifier.getFrom() );
+
+                    userNotifier.setRecipientType( notifier.getRecipientType() );
+
+                    userNotifier.setSendOnError( notifier.isSendOnError() );
+
+                    userNotifier.setSendOnFailure( notifier.isSendOnFailure() );
+
+                    userNotifier.setSendOnSuccess( notifier.isSendOnSuccess() );
+
+                    userNotifier.setSendOnWarning( notifier.isSendOnWarning() );
+
+                    userNotifier.setSendOnScmFailure( notifier.isSendOnScmFailure() );
+
+                    userNotifiers.add( userNotifier );
+                }
+            }
+        }
+
+        List<ProjectNotifier> notifiers = getNotifiers( result, mavenProject, continuumProject );
+        if ( notifiers != null )
+        {
+            continuumProject.setNotifiers( notifiers );
+        }
+
+        for ( ProjectNotifier notifier : userNotifiers )
+        {
+            continuumProject.addNotifier( notifier );
+        }
+    }
+
+    private String getScmUrl( MavenProject project )
+    {
+        return project.getScm().getConnection();
+    }
+
+    private List<ProjectNotifier> getNotifiers( ContinuumProjectBuildingResult result, MavenProject mavenProject,
+                               Project continuumProject )
+    {
+        List<ProjectNotifier> notifiers = new ArrayList<ProjectNotifier>();
+
+        if ( mavenProject.getCiManagement() != null && mavenProject.getCiManagement().getNotifiers() != null )
+        {
+            for ( Notifier projectNotifier : (List<Notifier>)mavenProject.getCiManagement().getNotifiers() )
+            {
+                ProjectNotifier notifier = new ProjectNotifier();
+
+                if ( StringUtils.isEmpty( projectNotifier.getType() ) )
+                {
+                    result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_NOTIFIER_TYPE );
+                    return null;
+                }
+
+                notifier.setType( projectNotifier.getType() );
+
+                if ( projectNotifier.getConfiguration() == null )
+                {
+                    result.addError( ContinuumProjectBuildingResult.ERROR_MISSING_NOTIFIER_CONFIGURATION );
+                    return null;
+                }
+
+                notifier.setConfiguration( projectNotifier.getConfiguration() );
+
+                notifier.setFrom( ProjectNotifier.FROM_PROJECT );
+
+                notifier.setSendOnSuccess( projectNotifier.isSendOnSuccess() );
+
+                notifier.setSendOnFailure( projectNotifier.isSendOnFailure() );
+
+                notifier.setSendOnError( projectNotifier.isSendOnError() );
+
+                notifier.setSendOnWarning( projectNotifier.isSendOnWarning() );
+
+                notifier.setSendOnScmFailure( false );
+
+                notifiers.add( notifier );
+            }
+        }
+
+        return notifiers;
+    }
+
+    private String getVersion( MavenProject project )
+    {
+        return project.getVersion();
     }
 
     private Settings getSettings()

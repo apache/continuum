@@ -41,10 +41,15 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ChangeFile;
+import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.apache.maven.continuum.model.scm.ScmResult;
+import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,6 +110,8 @@ public class DistributedBuildProjectTaskExecutor
                                                         prepareBuildTask.getScmRootAddress() );
 
             startTime = System.currentTimeMillis();
+            client.updateProjects( buildContext );
+            updateBuildContext( buildContext);
             client.buildProjects( buildContext );
 
             endTime = System.currentTimeMillis();
@@ -150,16 +157,17 @@ public class DistributedBuildProjectTaskExecutor
             {                
                 int buildDefinitionId = projectsAndBuildDefinitions.get( project.getId() );
                 BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
-                BuildResult oldBuildResult =
-                    buildResultDao.getLatestBuildResultForBuildDefinition( project.getId(), buildDefinitionId );
 
                 Map context = new HashMap();
                 
                 context.put( ContinuumBuildConstant.KEY_PROJECT_GROUP_ID, new Integer( project.getProjectGroup().getId() ) );
+                context.put( ContinuumBuildConstant.KEY_PROJECT_GROUP_NAME, project.getProjectGroup().getName() );
                 context.put( ContinuumBuildConstant.KEY_SCM_ROOT_ADDRESS, scmRootAddress );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_ID, new Integer( project.getId() ) );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_NAME, project.getName() );
+                context.put( ContinuumBuildConstant.KEY_PROJECT_VERSION, project.getVersion() );
                 context.put( ContinuumBuildConstant.KEY_EXECUTOR_ID, project.getExecutorId() );
+                context.put( ContinuumBuildConstant.KEY_PROJECT_BUILD_NUMBER, new Integer( project.getBuildNumber() ) );
                 context.put( ContinuumBuildConstant.KEY_SCM_URL, project.getScmUrl() );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_STATE, new Integer( project.getState() ) );
 
@@ -206,6 +214,8 @@ public class DistributedBuildProjectTaskExecutor
                 }
                 context.put( ContinuumBuildConstant.KEY_TRIGGER, new Integer( trigger ) );
                 context.put( ContinuumBuildConstant.KEY_BUILD_FRESH, new Boolean( buildDef.isBuildFresh() ) );
+                context.put( ContinuumBuildConstant.KEY_ALWAYS_BUILD, new Boolean( buildDef.isAlwaysBuild() ) );
+                context.put( ContinuumBuildConstant.KEY_OLD_SCM_CHANGES, getOldScmChanges( project.getId(), buildDefinitionId ) );
 
                 buildContext.add( context );
             }
@@ -262,5 +272,147 @@ public class DistributedBuildProjectTaskExecutor
         {
             throw new TaskExecutionException( "Error while creating result", e );
         }
+    }
+
+    private List getOldScmChanges( int projectId, int buildDefinitionId )
+        throws ContinuumStoreException
+    {
+        List scmChanges = new ArrayList();
+
+        BuildResult oldBuildResult =
+            buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+
+        if ( oldBuildResult != null )
+        {
+            ScmResult scmResult = getOldScmResults( projectId, oldBuildResult.getBuildNumber(), oldBuildResult.getEndTime() );
+        
+            if ( scmResult != null && scmResult.getChanges() != null )
+            {
+                for ( Object obj : scmResult.getChanges() )
+                {
+                    ChangeSet changeSet = (ChangeSet) obj; 
+
+                    Map map = new HashMap();
+                    if ( StringUtils.isNotEmpty( changeSet.getAuthor() ) )
+                    {
+                        map.put( ContinuumBuildConstant.KEY_CHANGESET_AUTHOR, changeSet.getAuthor() );
+                    }
+                    else
+                    {
+                        map.put( ContinuumBuildConstant.KEY_CHANGESET_AUTHOR, "" );
+                    }
+                    if ( StringUtils.isNotEmpty( changeSet.getComment() ) )
+                    {
+                        map.put( ContinuumBuildConstant.KEY_CHANGESET_COMMENT, changeSet.getComment() );
+                    }
+                    else
+                    {
+                        map.put( ContinuumBuildConstant.KEY_CHANGESET_COMMENT, "" );
+                    }
+                    map.put( ContinuumBuildConstant.KEY_CHANGESET_DATE, changeSet.getDateAsDate() );
+                    map.put( ContinuumBuildConstant.KEY_CHANGESET_FILES, getOldScmChangeFiles( changeSet.getFiles() ) );
+                    scmChanges.add( map );
+                }
+            }
+        }
+
+        return scmChanges;
+    }
+
+    private List<Map> getOldScmChangeFiles( List<ChangeFile> files )
+    {
+        List<Map> scmChangeFiles = new ArrayList<Map>();
+
+        if ( files != null )
+        {
+            for ( ChangeFile changeFile : files )
+            {
+                Map map = new HashMap();
+
+                if ( StringUtils.isNotEmpty( changeFile.getName() ) )
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGEFILE_NAME, changeFile.getName() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGEFILE_NAME, "" );
+                }
+                if ( StringUtils.isNotEmpty( changeFile.getRevision() ) )
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGEFILE_REVISION, changeFile.getRevision() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGEFILE_REVISION, "" );
+                }
+                if ( StringUtils.isNotEmpty( changeFile.getStatus() ) )
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGEFILE_STATUS, changeFile.getStatus() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGEFILE_STATUS, "" );   
+                }
+                scmChangeFiles.add( map );
+            }
+        }
+        return scmChangeFiles;
+    }
+
+    private ScmResult getOldScmResults( int projectId, long startId, long fromDate )
+        throws ContinuumStoreException
+    {
+        List<BuildResult> results = buildResultDao.getBuildResultsForProjectFromId( projectId, startId );
+    
+        ScmResult res = new ScmResult();
+    
+        if ( results != null && results.size() > 0 )
+        {
+            for ( BuildResult result : results )
+            {
+                ScmResult scmResult = result.getScmResult();
+    
+                if ( scmResult != null )
+                {
+                    List<ChangeSet> changes = scmResult.getChanges();
+    
+                    if ( changes != null )
+                    {
+                        for ( ChangeSet changeSet : changes )
+                        {
+                            if ( changeSet.getDate() < fromDate )
+                            {
+                                continue;
+                            }
+                            if ( !res.getChanges().contains( changeSet ) )
+                            {
+                                res.addChange( changeSet );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+        return res;
+    }
+
+    private void updateBuildContext( List<Map> buildContext )
+    {
+        for ( Map context : buildContext )
+        {
+            int projectId = ContinuumBuildConstant.getProjectId( context );
+            
+            if ( !shouldBuild() )
+            {
+                buildContext.remove( context );
+            }
+        }
+    }
+
+    //TODO: Fix this
+    private boolean shouldBuild()
+    {
+        return true;
     }
 }

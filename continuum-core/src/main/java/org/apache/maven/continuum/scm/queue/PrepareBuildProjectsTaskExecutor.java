@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
@@ -34,6 +35,7 @@ import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.scm.ChangeSet;
@@ -82,7 +84,12 @@ public class PrepareBuildProjectsTaskExecutor
      * @plexus.requirement
      */
     private ProjectScmRootDao projectScmRootDao;
-    
+
+    /**
+     * @plexus.requirement
+     */
+    private BuildResultDao buildResultDao;
+
     /**
      * @plexus.requirement
      */
@@ -191,8 +198,19 @@ public class PrepareBuildProjectsTaskExecutor
     
             context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
             context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinitionDao.getBuildDefinition( buildDefinitionId ) );
-            
-            context.put( AbstractContinuumAction.KEY_OLD_SCM_RESULT, project.getScmResult() );
+
+            BuildResult oldBuildResult =
+                buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+
+            if ( oldBuildResult != null )
+            {
+                context.put( AbstractContinuumAction.KEY_OLD_SCM_RESULT, 
+                             getOldScmResults( projectId, oldBuildResult.getBuildNumber(), oldBuildResult.getEndTime() ) );
+            }
+            else
+            {
+                context.put( AbstractContinuumAction.KEY_OLD_SCM_RESULT, null );
+            }
         }
         catch ( ContinuumStoreException e )
         {
@@ -323,7 +341,45 @@ public class PrepareBuildProjectsTaskExecutor
             throw new TaskExecutionException( "Error storing the project", e );
         }
     }
+
+    private ScmResult getOldScmResults( int projectId, long startId, long fromDate )
+        throws ContinuumStoreException
+    {
+        List<BuildResult> results = buildResultDao.getBuildResultsForProjectFromId( projectId, startId );
     
+        ScmResult res = new ScmResult();
+
+        if ( results != null && results.size() > 0 )
+        {
+            for ( BuildResult result : results )
+            {
+                ScmResult scmResult = result.getScmResult();
+    
+                if ( scmResult != null )
+                {
+                    List<ChangeSet> changes = scmResult.getChanges();
+    
+                    if ( changes != null )
+                    {
+                        for ( ChangeSet changeSet : changes )
+                        {
+                            if ( changeSet.getDate() < fromDate )
+                            {
+                                continue;
+                            }
+                            if ( !res.getChanges().contains( changeSet ) )
+                            {
+                                res.addChange( changeSet );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    
+        return res;
+    }
+
     /**
      * Merges scm results so we'll have all changes since last execution of current build definition
      *
@@ -522,7 +578,7 @@ public class PrepareBuildProjectsTaskExecutor
             context.put( AbstractContinuumAction.KEY_PROJECTS, projectsToBeBuilt );
             context.put( AbstractContinuumAction.KEY_PROJECTS_BUILD_DEFINITIONS_MAP, projectsBuildDefinitionsMap );
             context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
-            
+
             log.info( "Performing action create-build-project-task" );
             actionManager.lookup( "create-build-project-task" ).execute( context );
         }

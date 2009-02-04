@@ -41,5 +41,7 @@ public interface MasterBuildAgentTransportService
 
     public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType ) throws Exception;
 
+    public Boolean updateProject( Map project ) throws Exception;
+
     public Boolean ping() throws Exception;
 }

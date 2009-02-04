@@ -53,4 +53,11 @@ public class ShellBuildExecutor
 
         return executeShellCommand( project, executable, buildDefinition.getArguments(), buildOutput, environments );
     }
+
+    public void updateProjectFromWorkingDirectory( File workingDirectory, Project project,
+                                                   BuildDefinition buildDefinition )
+        throws ContinuumAgentBuildExecutorException
+    {
+        // nothing to do here   
+    }
 }

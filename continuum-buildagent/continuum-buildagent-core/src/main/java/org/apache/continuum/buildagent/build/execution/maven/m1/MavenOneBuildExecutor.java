@@ -24,6 +24,8 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.Resource;
+
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
@@ -33,6 +35,7 @@ import org.apache.continuum.buildagent.installation.BuildAgentInstallationServic
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
 
 public class MavenOneBuildExecutor
@@ -42,6 +45,9 @@ public class MavenOneBuildExecutor
     public final static String CONFIGURATION_GOALS = "goals";
 
     public final static String ID = ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR;
+
+    @Resource
+    private BuildAgentMavenOneMetadataHelper buildAgentMavenOneMetadataHelper;
 
     public MavenOneBuildExecutor()
     {
@@ -98,4 +104,48 @@ public class MavenOneBuildExecutor
         return executeShellCommand( project, executable, arguments.toString(), buildOutput, environments );
     }
 
+    public void updateProjectFromWorkingDirectory( File workingDirectory, Project project,
+                                                   BuildDefinition buildDefinition )
+        throws ContinuumAgentBuildExecutorException
+    {
+        File projectXmlFile = null;
+
+        if ( buildDefinition != null )
+        {
+            String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
+
+            if ( !StringUtils.isEmpty( buildFile ) )
+            {
+                projectXmlFile = new File( workingDirectory, buildFile );
+            }
+        }
+
+        if ( projectXmlFile == null )
+        {
+            projectXmlFile = new File( workingDirectory, "project.xml" );
+        }
+
+        if ( !projectXmlFile.exists() )
+        {
+            throw new ContinuumAgentBuildExecutorException( "Could not find Maven project descriptor." );
+        }
+
+        try
+        {
+            ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
+            
+            buildAgentMavenOneMetadataHelper.mapMetadata( result, projectXmlFile, project );
+
+            if ( result.hasErrors() )
+            {
+                throw new ContinuumAgentBuildExecutorException( "Error while mapping metadata:" + result.getErrorsAsString() );
+            }
+
+            updateProject( project );
+        }
+        catch ( BuildAgentMavenOneMetadataHelperException e )
+        {
+            throw new ContinuumAgentBuildExecutorException( "Error while mapping metadata.", e );
+        }
+    }
 }

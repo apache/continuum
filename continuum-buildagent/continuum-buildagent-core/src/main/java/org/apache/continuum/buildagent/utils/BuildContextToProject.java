@@ -35,6 +35,8 @@ public class BuildContextToProject
 
         project.setName( buildContext.getProjectName() );
 
+        project.setVersion( buildContext.getProjectVersion() );
+
         project.setScmUrl( buildContext.getScmUrl() );
 
         project.setScmUsername( buildContext.getScmUsername() );
@@ -44,7 +46,13 @@ public class BuildContextToProject
         project.setExecutorId( buildContext.getExecutorId() );
 
         project.setState( buildContext.getProjectState() );
-        
+
+        project.setOldState( buildContext.getProjectState() );
+
+        project.setBuildNumber( buildContext.getBuildNumber() );
+
+        project.setScmResult( buildContext.getOldScmResult() );
+
         return project;
     }
 }

@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.annotation.Resource;
-
 import org.apache.continuum.buildagent.build.execution.AbstractBuildExecutor;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildCancelledException;
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutionResult;
@@ -53,10 +51,14 @@ public class MavenTwoBuildExecutor
 
     public static final String ID = ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR;
 
-    @Resource
+    /**
+     * @plexus.requirement
+     */
     private MavenProjectHelper projectHelper;
 
-    @Resource
+    /**
+     * @plexus.requirement
+     */
     private BuildAgentMavenBuilderHelper buildAgentMavenBuilderHelper;
 
     public MavenTwoBuildExecutor()
@@ -74,12 +76,12 @@ public class MavenTwoBuildExecutor
         this.projectHelper = projectHelper;
     }
 
-    public BuildAgentMavenBuilderHelper getBuilderHelper()
+    public BuildAgentMavenBuilderHelper getBuildAgentMavenBuilderHelper()
     {
         return buildAgentMavenBuilderHelper;
     }
 
-    public void setBuilderHelper( BuildAgentMavenBuilderHelper builderHelper )
+    public void setBuildAgentMavenBuilderHelper( BuildAgentMavenBuilderHelper builderHelper )
     {
         this.buildAgentMavenBuilderHelper = builderHelper;
     }
@@ -103,7 +105,6 @@ public class MavenTwoBuildExecutor
     
         arguments.append( StringUtils.clean( buildDefinition.getArguments() ) ).append( " " );
     
-        /*
         Properties props = getContinuumSystemProperties( project );
         for ( Enumeration itr = props.propertyNames(); itr.hasMoreElements(); )
         {
@@ -111,7 +112,6 @@ public class MavenTwoBuildExecutor
             String value = props.getProperty( name );
             arguments.append( "\"-D" ).append( name ).append( "=" ).append( value ).append( "\" " );
         }
-        */
 
         if ( StringUtils.isNotEmpty( localRepository ) )
         {
@@ -229,6 +229,30 @@ public class MavenTwoBuildExecutor
         }
 
         return artifacts;
+    }
+
+    public void updateProjectFromWorkingDirectory( File workingDirectory, Project project, BuildDefinition buildDefinition )
+        throws ContinuumAgentBuildExecutorException
+    {
+        File f = getPomFile( getBuildFileForProject( project, buildDefinition ), workingDirectory );
+    
+        if ( !f.exists() )
+        {
+            throw new ContinuumAgentBuildExecutorException( "Could not find Maven project descriptor." );
+        }
+    
+        ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
+    
+        buildAgentMavenBuilderHelper.mapMetadataToProject( result, f, project );
+    
+        if ( result.hasErrors() )
+        {
+            throw new ContinuumAgentBuildExecutorException( "Error while mapping metadata:" + result.getErrorsAsString() );
+        }
+        else
+        {
+            updateProject( project );
+        }
     }
 
     private MavenProject getMavenProject( Project continuumProject, File workingDirectory,

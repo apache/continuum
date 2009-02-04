@@ -194,4 +194,23 @@ public class MasterBuildAgentTransportClient
 
         return result;
     }
+
+    public Boolean updateProject( Map project )
+        throws Exception
+    {
+        Boolean result = null;
+
+        try
+        {
+            result = master.updateProject( project );
+            log.info( "Updating project" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to update project", e );
+            throw new Exception( "Failed to update project", e );
+        }
+
+        return result;
+    }
 }

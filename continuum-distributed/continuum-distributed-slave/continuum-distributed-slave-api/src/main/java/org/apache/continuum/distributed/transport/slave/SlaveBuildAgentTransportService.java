@@ -41,4 +41,6 @@ public interface SlaveBuildAgentTransportService
     public Boolean ping() throws Exception;
 
     public Boolean cancelBuild() throws Exception;
+
+    public Boolean updateProjects( List<Map> projectsBuildContext ) throws Exception;
 }
