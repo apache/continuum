@@ -529,7 +529,7 @@ public class ParallelBuildsManager
     }
 
     /**
-     * @see BuildsManager#prepareBuildProjects(Map, int, int, String)
+     * @see BuildsManager#prepareBuildProjects(Map, int, int, String, String, int)
      */
     public void prepareBuildProjects( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId, String projectGroupName, String scmRootAddress, int scmRootId )
         throws BuildManagerException
@@ -1114,7 +1114,7 @@ public class ParallelBuildsManager
             
             try
             {
-                int count = 1;             
+                int count = 1;
                 for ( BuildQueue buildQueue : buildQueues )
                 {            
                     if( count <= allowedBuilds )

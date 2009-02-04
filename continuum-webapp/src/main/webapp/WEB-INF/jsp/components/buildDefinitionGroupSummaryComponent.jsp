@@ -96,7 +96,7 @@
           <c:when test="${pageScope.buildDefinitionSummary.isDefault == true}">
             <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0">
           </c:when>
-          <c:otherwise>${pageScope.buildDefinitionSummary.isDefault}
+          <c:otherwise>
             <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
               <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
               <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
@@ -187,6 +187,7 @@
           <s:url id="editUrl" action="buildDefinition" method="input" namespace="/">
             <s:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</s:param>
             <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+            <s:param name="groupBuildView" value="true"/>
           </s:url>
           <s:a href="%{editUrl}">
               <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0">
