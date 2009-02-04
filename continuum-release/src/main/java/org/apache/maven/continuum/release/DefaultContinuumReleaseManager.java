@@ -84,7 +84,7 @@ public class DefaultContinuumReleaseManager
      * @plexus.requirement
      */
     private InstallationService installationService;
-    
+
     private Map listeners;
 
     /**
@@ -114,7 +114,8 @@ public class DefaultContinuumReleaseManager
     {
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
 
-        ReleaseDescriptor descriptor = getReleaseDescriptor( project, releaseProperties, relVersions, devVersions, profile );
+        ReleaseDescriptor descriptor =
+            getReleaseDescriptor( project, releaseProperties, relVersions, devVersions, profile );
 
         getListeners().put( releaseId, listener );
 
@@ -138,7 +139,7 @@ public class DefaultContinuumReleaseManager
     {
         perform( releaseId, buildDirectory, goals, useReleaseProfile, listener, null );
     }
-    
+
     public void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
                          ContinuumReleaseManagerListener listener, LocalRepository repository )
         throws ContinuumReleaseException
@@ -160,7 +161,8 @@ public class DefaultContinuumReleaseManager
     }
 
     private void perform( String releaseId, ReleaseDescriptor descriptor, File buildDirectory, String goals,
-                          boolean useReleaseProfile, ContinuumReleaseManagerListener listener, LocalRepository repository )
+                          boolean useReleaseProfile, ContinuumReleaseManagerListener listener,
+                          LocalRepository repository )
         throws ContinuumReleaseException
     {
         try
@@ -169,8 +171,7 @@ public class DefaultContinuumReleaseManager
 
             performReleaseQueue.put( new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory, goals,
                                                                     useReleaseProfile,
-                                                                    (ReleaseManagerListener) listener,
-                                                                    repository ) );
+                                                                    (ReleaseManagerListener) listener, repository ) );
         }
         catch ( TaskQueueException e )
         {
@@ -258,7 +259,7 @@ public class DefaultContinuumReleaseManager
                                                     Map devVersions, Profile profile )
     {
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
-        String workingDirectory = workingDirectoryService.getWorkingDirectory( project ).getPath(); 
+        String workingDirectory = workingDirectoryService.getWorkingDirectory( project ).getPath();
 
         //release properties from the project
         descriptor.setWorkingDirectory( workingDirectory );
@@ -270,20 +271,20 @@ public class DefaultContinuumReleaseManager
         descriptor.setReleaseVersions( relVersions );
         descriptor.setDevelopmentVersions( devVersions );
         descriptor.setPreparationGoals( releaseProperties.getProperty( "prepareGoals" ) );
-        
+
         String useEditMode = releaseProperties.getProperty( "useEditMode" );
         if ( BooleanUtils.toBoolean( useEditMode ) )
         {
             descriptor.setScmUseEditMode( Boolean.valueOf( useEditMode ) );
-        } 
-        
+        }
+
         LocalRepository repository = project.getProjectGroup().getLocalRepository();
-        
+
         if ( repository != null )
         {
             descriptor.setAdditionalArguments( "\"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
         }
-        
+
         //other properties
         if ( releaseProperties.containsKey( "username" ) )
         {
@@ -300,10 +301,10 @@ public class DefaultContinuumReleaseManager
 
         //forced properties
         descriptor.setInteractive( false );
-        
+
         //set environments
         descriptor.setEnvironments( getEnvironments( profile ) );
-        
+
         return descriptor;
     }
 
