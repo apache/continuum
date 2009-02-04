@@ -71,6 +71,8 @@ public class ReleasePrepareAction
 
     private String scmTagBase;
 
+    private String scmCommentPrefix;
+
     private boolean scmUseEditMode = false;
     
     private List projects = new ArrayList();
@@ -383,6 +385,11 @@ public class ReleasePrepareAction
             p.setProperty( "tagBase", scmTagBase );
         }
 
+        if ( StringUtils.isNotEmpty( scmCommentPrefix ))
+        {
+            p.setProperty( "commentPrefix", scmCommentPrefix );
+        }
+
         p.setProperty( "tag", scmTag );
         p.setProperty( "prepareGoals", prepareGoals );
         p.setProperty( "useEditMode", Boolean.toString( scmUseEditMode ) );
@@ -574,6 +581,11 @@ public class ReleasePrepareAction
 	{
 		this.scmUseEditMode = scmUseEditMode;
 	}
+
+    public void setScmCommentPrefix( String scmCommentPrefix )
+    {
+        this.scmCommentPrefix = scmCommentPrefix;
+    }
     
     
 }

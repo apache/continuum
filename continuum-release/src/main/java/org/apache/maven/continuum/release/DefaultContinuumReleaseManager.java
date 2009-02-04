@@ -293,6 +293,10 @@ public class DefaultContinuumReleaseManager
         {
             descriptor.setScmPassword( releaseProperties.getProperty( "password" ) );
         }
+        if ( releaseProperties.containsKey( "commentPrefix" ) )
+        {
+            descriptor.setScmCommentPrefix( releaseProperties.getProperty( "commentPrefix" ) );
+        }
 
         //forced properties
         descriptor.setInteractive( false );

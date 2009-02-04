@@ -38,6 +38,7 @@
             <c:if test="${!empty (scmTagBase)}">
               <s:textfield label="%{getText('releasePrepare.scmTagBase.label')}" name="scmTagBase"/>
             </c:if>
+            <s:textfield label="%{getText('releasePrepare.scmCommentPrefix.label')}" name="scmCommentPrefix"/>
             <s:textfield label="%{getText('releasePrepare.prepareGoals.label')}" name="prepareGoals" required="true"/>
             <s:select label="%{getText('releasePrepare.buildEnvironment.label')}" name="profileId" list="profiles" listValue="name"
                        listKey="id" headerKey="-1" headerValue=""/>
