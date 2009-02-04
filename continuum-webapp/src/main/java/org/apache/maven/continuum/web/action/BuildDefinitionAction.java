@@ -19,13 +19,6 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -39,6 +32,13 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * BuildDefinitionAction:
@@ -78,6 +78,8 @@ public class BuildDefinitionAction
 
     private boolean groupBuildDefinition = false;
 
+    private boolean groupBuildView = false;
+
     private String projectGroupName = "";
 
     private int profileId;
@@ -89,12 +91,13 @@ public class BuildDefinitionAction
     private String buildDefinitionType;
 
     private boolean alwaysBuild;
-    
+
     /**
      * @plexus.requirement
-     */    
-    private BuildDefinitionService buildDefinitionService;    
-    
+     */
+    private BuildDefinitionService buildDefinitionService;
+
+    @Override
     public void prepare()
         throws Exception
     {
@@ -132,6 +135,7 @@ public class BuildDefinitionAction
      *
      * @return action result
      */
+    @Override
     public String input()
         throws ContinuumException, ContinuumStoreException, BuildDefinitionServiceException
     {
@@ -311,6 +315,11 @@ public class BuildDefinitionAction
             return REQUIRES_AUTHORIZATION;
         }
 
+        if ( groupBuildView )
+        {
+            return "success_group";
+        }
+
         return SUCCESS;
     }
 
@@ -463,7 +472,7 @@ public class BuildDefinitionAction
         return buildDefinitionId;
     }
 
-    public void setBuildDefinitionId( int buildDefinitionId )
+    public void setBuildDefinitionId( final int buildDefinitionId )
     {
         this.buildDefinitionId = buildDefinitionId;
     }
@@ -473,7 +482,7 @@ public class BuildDefinitionAction
         return projectId;
     }
 
-    public void setProjectId( int projectId )
+    public void setProjectId( final int projectId )
     {
         this.projectId = projectId;
     }
@@ -483,7 +492,7 @@ public class BuildDefinitionAction
         return projectGroupId;
     }
 
-    public void setProjectGroupId( int projectGroupId )
+    public void setProjectGroupId( final int projectGroupId )
     {
         this.projectGroupId = projectGroupId;
     }
@@ -493,7 +502,7 @@ public class BuildDefinitionAction
         return scheduleId;
     }
 
-    public void setScheduleId( int scheduleId )
+    public void setScheduleId( final int scheduleId )
     {
         this.scheduleId = scheduleId;
     }
@@ -503,17 +512,19 @@ public class BuildDefinitionAction
         return defaultBuildDefinition;
     }
 
-    public void setDefaultBuildDefinition( boolean defaultBuildDefinition )
+    public void setDefaultBuildDefinition( final boolean defaultBuildDefinition )
     {
         this.defaultBuildDefinition = defaultBuildDefinition;
     }
 
+    @Override
     public boolean isConfirmed()
     {
         return confirmed;
     }
 
-    public void setConfirmed( boolean confirmed )
+    @Override
+    public void setConfirmed( final boolean confirmed )
     {
         this.confirmed = confirmed;
     }
@@ -523,7 +534,7 @@ public class BuildDefinitionAction
         return executor;
     }
 
-    public void setExecutor( String executor )
+    public void setExecutor( final String executor )
     {
         this.executor = executor;
     }
@@ -533,7 +544,7 @@ public class BuildDefinitionAction
         return goals;
     }
 
-    public void setGoals( String goals )
+    public void setGoals( final String goals )
     {
         this.goals = goals;
     }
@@ -543,7 +554,7 @@ public class BuildDefinitionAction
         return arguments;
     }
 
-    public void setArguments( String arguments )
+    public void setArguments( final String arguments )
     {
         this.arguments = arguments;
     }
@@ -553,7 +564,7 @@ public class BuildDefinitionAction
         return buildFile;
     }
 
-    public void setBuildFile( String buildFile )
+    public void setBuildFile( final String buildFile )
     {
         this.buildFile = buildFile;
     }
@@ -563,7 +574,7 @@ public class BuildDefinitionAction
         return buildFresh;
     }
 
-    public void setBuildFresh( boolean buildFresh )
+    public void setBuildFresh( final boolean buildFresh )
     {
         this.buildFresh = buildFresh;
     }
@@ -573,7 +584,7 @@ public class BuildDefinitionAction
         return schedules;
     }
 
-    public void setSchedules( Map schedules )
+    public void setSchedules( final Map schedules )
     {
         this.schedules = schedules;
     }
@@ -583,7 +594,7 @@ public class BuildDefinitionAction
         return profiles;
     }
 
-    public void setProfiles( List profiles )
+    public void setProfiles( final List profiles )
     {
         this.profiles = profiles;
     }
@@ -593,7 +604,7 @@ public class BuildDefinitionAction
         return groupBuildDefinition;
     }
 
-    public void setGroupBuildDefinition( boolean groupBuildDefinition )
+    public void setGroupBuildDefinition( final boolean groupBuildDefinition )
     {
         this.groupBuildDefinition = groupBuildDefinition;
     }
@@ -621,7 +632,7 @@ public class BuildDefinitionAction
         return profileId;
     }
 
-    public void setProfileId( int profileId )
+    public void setProfileId( final int profileId )
     {
         this.profileId = profileId;
     }
@@ -631,7 +642,7 @@ public class BuildDefinitionAction
         return description;
     }
 
-    public void setDescription( String description )
+    public void setDescription( final String description )
     {
         this.description = description;
     }
@@ -641,7 +652,7 @@ public class BuildDefinitionAction
         return buildDefinitionType;
     }
 
-    public void setBuildDefinitionType( String buildDefinitionType )
+    public void setBuildDefinitionType( final String buildDefinitionType )
     {
         this.buildDefinitionType = buildDefinitionType;
     }
@@ -656,9 +667,19 @@ public class BuildDefinitionAction
         return alwaysBuild;
     }
 
-    public void setAlwaysBuild( boolean alwaysBuild )
+    public void setAlwaysBuild( final boolean alwaysBuild )
     {
         this.alwaysBuild = alwaysBuild;
     }
-    
+
+    public boolean isGroupBuildView()
+    {
+        return groupBuildView;
+    }
+
+    public void setGroupBuildView( final boolean groupBuildView )
+    {
+        this.groupBuildView = groupBuildView;
+    }
+
 }

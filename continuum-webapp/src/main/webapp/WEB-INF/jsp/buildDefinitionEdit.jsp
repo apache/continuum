@@ -90,6 +90,9 @@
                 <s:hidden name="projectId"/>
                 <s:hidden name="projectGroupId"/>
                 <s:hidden name="groupBuildDefinition"/>
+                <c:if test="${groupBuildView == true}">
+                  <s:hidden name="groupBuildView" value="true"/>
+                </c:if>
                 <c:choose>
                 <c:when test="${defaultBuildDefinition == true}">
                   <s:hidden name="defaultBuildDefinition" value="true"/>
