@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:9090/" />
+<title>test_release_plugin_configuration</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">test_release_plugin_configuration</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/continuum/groupSummary.action</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Maven 2.0.x Project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addMavenTwoProject_m2PomUrl</td>
+	<td>http://svn.apache.org/repos/asf/continuum/sandbox/examples/mm-example/pom.xml</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='addMavenTwoProject_']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>in progress</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Project Group Information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>build</td>
+	<td></td>
+</tr>
+<!--Wait for build success-->
+<tr>
+	<td>assertTextPresent</td>
+	<td>Success : 2</td>
+	<td></td>
+</tr>
+<!--Begin the release process-->
+<tr>
+	<td>clickAndWait</td>
+	<td>release</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>goal</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>releaseProject_0</td>
+	<td></td>
+</tr>
+<!--Verify that the SCM Comment Prefix was pre-populated with the value from the pom-->
+<tr>
+	<td>assertTextPresent</td>
+	<td>MME-455</td>
+	<td></td>
+</tr>
+<!--Verify that it does not prompt for a version for the sub-module, since autoVersionSubmodules is true-->
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>Multi Module Example :: Core</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
