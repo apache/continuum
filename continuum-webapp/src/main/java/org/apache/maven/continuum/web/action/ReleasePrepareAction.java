@@ -605,6 +605,11 @@ public class ReleasePrepareAction
         this.scmUseEditMode = scmUseEditMode;
     }
 
+    public String getScmCommentPrefix()
+    {
+        return scmCommentPrefix;
+    }
+
     public void setScmCommentPrefix( String scmCommentPrefix )
     {
         this.scmCommentPrefix = scmCommentPrefix;
