@@ -101,15 +101,15 @@ public class DefaultContinuumReleaseManager
      */
     private static Map releaseResults;
 
-    public String prepare( Project project, Properties releaseProperties, Map relVersions, Map devVersions,
-                           ContinuumReleaseManagerListener listener )
+    public String prepare( Project project, Properties releaseProperties, Map<String, String> relVersions,
+                           Map<String, String> devVersions, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
         return prepare( project, releaseProperties, relVersions, devVersions, listener, null );
     }
 
-    public String prepare( Project project, Properties releaseProperties, Map relVersions, Map devVersions,
-                           ContinuumReleaseManagerListener listener, Profile profile )
+    public String prepare( Project project, Properties releaseProperties, Map<String, String> relVersions,
+                           Map<String, String> devVersions, ContinuumReleaseManagerListener listener, Profile profile )
         throws ContinuumReleaseException
     {
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
@@ -255,8 +255,9 @@ public class DefaultContinuumReleaseManager
         return envVars;
     }
 
-    private ReleaseDescriptor getReleaseDescriptor( Project project, Properties releaseProperties, Map relVersions,
-                                                    Map devVersions, Profile profile )
+    private ReleaseDescriptor getReleaseDescriptor( Project project, Properties releaseProperties,
+                                                    Map<String, String> relVersions, Map<String, String> devVersions,
+                                                    Profile profile )
     {
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
         String workingDirectory = workingDirectoryService.getWorkingDirectory( project ).getPath();

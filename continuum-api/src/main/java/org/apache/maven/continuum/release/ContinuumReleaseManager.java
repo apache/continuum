@@ -49,10 +49,10 @@ public interface ContinuumReleaseManager
      * @return
      * @throws ContinuumReleaseException
      */
-    String prepare( Project project, Properties releaseProperties, Map releaseVersions, Map developmentVersions,
-                    ContinuumReleaseManagerListener listener )
+    String prepare( Project project, Properties releaseProperties, Map<String, String> releaseVersions,
+                    Map<String, String> developmentVersions, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
-    
+
     /**
      * Prepare a project for release
      *
@@ -65,8 +65,8 @@ public interface ContinuumReleaseManager
      * @return
      * @throws ContinuumReleaseException
      */
-    String prepare( Project project, Properties releaseProperties, Map releaseVersions, Map developmentVersions,
-                    ContinuumReleaseManagerListener listener, Profile profile )
+    String prepare( Project project, Properties releaseProperties, Map<String, String> releaseVersions,
+                    Map<String, String> developmentVersions, ContinuumReleaseManagerListener listener, Profile profile )
         throws ContinuumReleaseException;
 
     /**
@@ -113,7 +113,7 @@ public interface ContinuumReleaseManager
     Map getReleaseResults();
 
     Map getListeners();
-    
+
     void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
                   ContinuumReleaseManagerListener listener, LocalRepository repository )
         throws ContinuumReleaseException;
