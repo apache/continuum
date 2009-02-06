@@ -75,13 +75,13 @@ public class ReleasePrepareAction
 
     private boolean scmUseEditMode = false;
 
-    private List projects = new ArrayList();
+    private List<Map<String, String>> projects = new ArrayList<Map<String, String>>();
 
-    private List projectKeys;
+    private List<String> projectKeys;
 
-    private List devVersions;
+    private List<String> devVersions;
 
-    private List relVersions;
+    private List<String> relVersions;
 
     private String prepareGoals;
 
@@ -94,6 +94,8 @@ public class ReleasePrepareAction
     private List<Profile> profiles;
 
     private int profileId;
+
+    private boolean autoVersionSubmodules = false;
 
     public String input()
         throws Exception
@@ -161,10 +163,8 @@ public class ReleasePrepareAction
 
         if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
         {
-            for ( Iterator plugins = model.getBuild().getPlugins().iterator(); plugins.hasNext(); )
+            for ( Plugin plugin : (List<Plugin>) model.getBuild().getPlugins() )
             {
-                Plugin plugin = (Plugin) plugins.next();
-
                 if ( plugin.getGroupId() != null && plugin.getGroupId().equals( "org.apache.maven.plugins" ) &&
                     plugin.getArtifactId() != null && plugin.getArtifactId().equals( "maven-release-plugin" ) )
                 {
@@ -200,6 +200,12 @@ public class ReleasePrepareAction
                         if ( configuration != null )
                         {
                             scmCommentPrefix = configuration.getValue();
+                        }
+
+                        configuration = dom.getChild( "autoVersionSubmodules" );
+                        if ( configuration != null )
+                        {
+                            autoVersionSubmodules = Boolean.valueOf( configuration.getValue() );
                         }
                     }
                 }
@@ -320,16 +326,19 @@ public class ReleasePrepareAction
 
         setProperties( model );
 
-        for ( Iterator modules = model.getModules().iterator(); modules.hasNext(); )
+        if ( !autoVersionSubmodules )
         {
-            processProject( workingDirectory + "/" + modules.next().toString(), "pom.xml" );
+            for ( Iterator modules = model.getModules().iterator(); modules.hasNext(); )
+            {
+                processProject( workingDirectory + "/" + modules.next().toString(), "pom.xml" );
+            }
         }
     }
 
     private void setProperties( Model model )
         throws Exception
     {
-        Map params = new HashMap();
+        Map<String, String> params = new HashMap<String, String>();
 
         params.put( "key", model.getGroupId() + ":" + model.getArtifactId() );
 
@@ -347,24 +356,32 @@ public class ReleasePrepareAction
         projects.add( params );
     }
 
-    private Map getDevVersionMap()
+    private Map<String, String> getDevVersionMap()
     {
         return getVersionMap( projectKeys, devVersions );
     }
 
-    private Map getRelVersionMap()
+    private Map<String, String> getRelVersionMap()
     {
         return getVersionMap( projectKeys, relVersions );
     }
 
-    private Map getVersionMap( List keys, List versions )
+    private Map<String, String> getVersionMap( List<String> keys, List<String> versions )
     {
-        Map versionMap = new HashMap();
+        Map<String, String> versionMap = new HashMap<String, String>();
 
         for ( int idx = 0; idx < keys.size(); idx++ )
         {
-            String key = keys.get( idx ).toString();
-            String version = versions.get( idx ).toString();
+            String key = keys.get( idx );
+            String version;
+            if ( !autoVersionSubmodules )
+            {
+                version = versions.get( idx );
+            }
+            else
+            {
+                version = versions.get( 0 );
+            }
 
             versionMap.put( key, version );
         }
@@ -403,32 +420,32 @@ public class ReleasePrepareAction
         return p;
     }
 
-    public List getProjectKeys()
+    public List<String> getProjectKeys()
     {
         return projectKeys;
     }
 
-    public void setProjectKeys( List projectKeys )
+    public void setProjectKeys( List<String> projectKeys )
     {
         this.projectKeys = projectKeys;
     }
 
-    public List getDevVersions()
+    public List<String> getDevVersions()
     {
         return devVersions;
     }
 
-    public void setDevVersions( List devVersions )
+    public void setDevVersions( List<String> devVersions )
     {
         this.devVersions = devVersions;
     }
 
-    public List getRelVersions()
+    public List<String> getRelVersions()
     {
         return relVersions;
     }
 
-    public void setRelVersions( List relVersions )
+    public void setRelVersions( List<String> relVersions )
     {
         this.relVersions = relVersions;
     }
@@ -483,12 +500,12 @@ public class ReleasePrepareAction
         this.scmTagBase = scmTagBase;
     }
 
-    public List getProjects()
+    public List<Map<String, String>> getProjects()
     {
         return projects;
     }
 
-    public void setProjects( List projects )
+    public void setProjects( List<Map<String, String>> projects )
     {
         this.projects = projects;
     }
@@ -593,5 +610,13 @@ public class ReleasePrepareAction
         this.scmCommentPrefix = scmCommentPrefix;
     }
 
+    public boolean isAutoVersionSubmodules()
+    {
+        return autoVersionSubmodules;
+    }
 
+    public void setAutoVersionSubmodules( boolean autoVersionSubmodules )
+    {
+        this.autoVersionSubmodules = autoVersionSubmodules;
+    }
 }

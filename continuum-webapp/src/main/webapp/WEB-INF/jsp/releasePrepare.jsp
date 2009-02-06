@@ -30,6 +30,7 @@
       <s:form action="releasePrepare" method="post">
         <h3><s:text name="releasePrepare.parameters"/></h3>
         <input type="hidden" name="projectId" value="<s:property value="projectId"/>"/>
+        <input type="hidden" name="autoVersionSubmodules" value="<s:property value="autoVersionSubmodules"/>"/>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <s:textfield label="%{getText('releasePrepare.scmUsername.label')}" name="scmUsername" required="true"/>
@@ -43,6 +44,9 @@
             <s:select label="%{getText('releasePrepare.buildEnvironment.label')}" name="profileId" list="profiles" listValue="name"
                        listKey="id" headerKey="-1" headerValue=""/>
 			      <s:checkbox label="%{getText('releasePrepare.useEditMode.label')}" name="scmUseEditMode" fieldValue="false"/>
+            <c:if test="${autoVersionSubmodules}">
+              <s:checkbox label="%{getText('releasePrepare.autoVersionSubmodules')}" name="autoVersionSubmodules" disabled="true" fieldValue="false"/>
+            </c:if>
           </table>
         </div>
 
