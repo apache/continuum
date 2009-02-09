@@ -36,6 +36,7 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
@@ -119,11 +120,11 @@ public class DefaultBuildController
      * @param trigger
      * @throws TaskExecutionException
      */
-    public void build( int projectId, int buildDefinitionId, int trigger )
+    public void build( int projectId, int buildDefinitionId, int trigger, ScmResult scmResult )
         throws TaskExecutionException
     {
         log.info( "Initializing build" );
-        BuildContext context = initializeBuildContext( projectId, buildDefinitionId, trigger );
+        BuildContext context = initializeBuildContext( projectId, buildDefinitionId, trigger, scmResult );
 
         // ignore this if AlwaysBuild ?
         if ( !checkScmResult( context ) )
@@ -327,7 +328,7 @@ public class DefaultBuildController
      * @return
      * @throws TaskExecutionException
      */
-    protected BuildContext initializeBuildContext( int projectId, int buildDefinitionId, int trigger )
+    protected BuildContext initializeBuildContext( int projectId, int buildDefinitionId, int trigger, ScmResult scmResult )
         throws TaskExecutionException
     {
         BuildContext context = new BuildContext();
@@ -338,7 +339,7 @@ public class DefaultBuildController
 
         try
         {
-            Project project = projectDao.getProjectWithScmDetails( projectId );
+            Project project = projectDao.getProject( projectId );
 
             context.setProject( project );
 
@@ -351,7 +352,7 @@ public class DefaultBuildController
 
             context.setOldBuildResult( oldBuildResult );
 
-		    context.setScmResult( project.getScmResult() );
+		    context.setScmResult( scmResult );
 
             // CONTINUUM-1871 olamy if continuum is killed during building oldBuildResult will have a endTime 0
             // this means all changes since the project has been loaded in continuum will be in memory

@@ -40,6 +40,7 @@ import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -90,9 +91,9 @@ public class ParallelBuildsManager
     private PlexusContainer container;
     
     /**
-     * @see BuildsManager#buildProject(int, BuildDefinition, String, int)
+     * @see BuildsManager#buildProject(int, BuildDefinition, String, int, ScmResult)
      */
-    public void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger )
+    public void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger, ScmResult scmResult )
         throws BuildManagerException
     {
         try
@@ -119,7 +120,7 @@ public class ParallelBuildsManager
         }
 
         Task buildTask =
-            new BuildProjectTask( projectId, buildDefinition.getId(), trigger, projectName, buildDefinitionLabel );
+            new BuildProjectTask( projectId, buildDefinition.getId(), trigger, projectName, buildDefinitionLabel, scmResult );
         try
         {
             log.info( "Project '" + projectName + "' added to overall build queue '" + overallBuildQueue.getName() + "'." );
@@ -132,10 +133,10 @@ public class ParallelBuildsManager
     }
 
     /**
-     * @see BuildsManager#buildProjects(List, Map, int)
+     * @see BuildsManager#buildProjects(List, Map, int, Map)
      */
     public void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap,
-                               int trigger )
+                               int trigger, Map<Integer, ScmResult> scmResultMap )
         throws BuildManagerException
     {
         int firstProjectId = 0;
@@ -189,9 +190,10 @@ public class ParallelBuildsManager
                         buildDefinitionLabel = buildDefinition.getGoals();
                     }
 
+                    ScmResult scmResult = scmResultMap.get( project.getId() );
                     BuildProjectTask buildTask =
                         new BuildProjectTask( project.getId(), buildDefinition.getId(), trigger, project.getName(),
-                                              buildDefinitionLabel );
+                                              buildDefinitionLabel, scmResult );
                     buildTask.setMaxExecutionTime( buildDefinition.getSchedule().getMaxJobExecutionTime() * 1000 );
 
                     try
@@ -851,7 +853,7 @@ public class ParallelBuildsManager
                     buildDefinitionDao.getBuildDefinition( buildTask.getBuildDefinitionId() );
             
                 buildProject( buildTask.getProjectId(), buildDefinition, buildTask.getProjectName(),
-                              buildTask.getTrigger() );
+                              buildTask.getTrigger(), buildTask.getScmResult() );
             }
             catch ( ContinuumStoreException e )
             {

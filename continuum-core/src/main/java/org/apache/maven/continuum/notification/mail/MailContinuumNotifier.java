@@ -344,7 +344,8 @@ public class MailContinuumNotifier
 
                 context.put( "project", project );
 
-                context.put( "changesSinceLastUpdate", continuum.getChangesSinceLastUpdate( project.getId() ) );
+                context.put( "changesSinceLastSuccess", continuum.getChangesSinceLastSuccess( project.getId(), build
+                    .getId() ) );
 
                 context.put( "previousBuild", previousBuild );
 
@@ -716,7 +717,7 @@ public class MailContinuumNotifier
                         {
                             if ( Boolean.parseBoolean( committerField ) )
                             {
-                                ScmResult scmResult = context.getProject().getScmResult();
+                                ScmResult scmResult = context.getBuildResult().getScmResult();
                                 if ( scmResult != null && scmResult.getChanges() != null &&
                                     !scmResult.getChanges().isEmpty() )
                                 {

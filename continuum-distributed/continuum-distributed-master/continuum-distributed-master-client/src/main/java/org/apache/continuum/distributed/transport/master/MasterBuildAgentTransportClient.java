@@ -82,25 +82,6 @@ public class MasterBuildAgentTransportClient
         return result;
     }
 
-    public Boolean returnScmResult( Map scmResult )
-        throws Exception
-    {
-        Boolean result = null;
-        
-        try
-        {
-            result = master.returnScmResult( scmResult );
-            log.info( "Returning the scm result." );
-        }
-        catch ( Exception e )
-        {
-            log.error( "Failed to return the SCM result.", e );
-            throw new Exception( "Failed to return the SCM result", e);
-        }
-        
-        return result;
-    }
-    
     public Boolean ping()
         throws Exception
     {

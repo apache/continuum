@@ -1199,32 +1199,6 @@ public class DefaultContinuum
         return changes;
     }
 
-    public List<ChangeSet> getChangesSinceLastUpdate( int projectId )
-        throws ContinuumException
-    {
-        List<ChangeSet> changes = new ArrayList<ChangeSet>();
-        
-        Project project;
-        
-        try
-        {
-            project = projectDao.getProjectWithScmDetails( projectId );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new ContinuumException( "", e );
-        }
-        
-        ScmResult scmResult = project.getScmResult();
-        
-        if ( scmResult != null )
-        {
-            changes.addAll( scmResult.getChanges() );
-        }
-        
-        return changes;
-    }
-
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------

@@ -27,6 +27,7 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.codehaus.plexus.taskqueue.Task;
 
 /**
@@ -43,9 +44,10 @@ public interface BuildsManager
      * @param projects
      * @param projectsBuildDefinitionsMap
      * @param trigger
+     * @param scmResultMap TODO
      * @throws BuildManagerException
      */
-    void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap, int trigger )
+    void buildProjects( List<Project> projects, Map<Integer, BuildDefinition> projectsBuildDefinitionsMap, int trigger, Map<Integer, ScmResult> scmResultMap )
         throws BuildManagerException;
 
     /**
@@ -57,9 +59,10 @@ public interface BuildsManager
      * @param buildDefinition 
      * @param projectName
      * @param trigger
+     * @param scmResult TODO
      * @throws BuildManagerException
      */
-    void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger )
+    void buildProject( int projectId, BuildDefinition buildDefinition, String projectName, int trigger, ScmResult scmResult )
         throws BuildManagerException;
 
     /**

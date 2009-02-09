@@ -21,6 +21,7 @@ package org.apache.continuum.taskqueue;
 
 import java.io.Serializable;
 
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.codehaus.plexus.taskqueue.Task;
 
 /**
@@ -46,8 +47,10 @@ public class BuildProjectTask
     
     private String buildDefinitionLabel;
 
+    private ScmResult scmResult;
+
     public BuildProjectTask( int projectId, int buildDefinitionId, int trigger, String projectName,
-                             String buildDefinitionLabel )
+                             String buildDefinitionLabel, ScmResult scmResult )
     {
         this.projectId = projectId;
 
@@ -60,6 +63,8 @@ public class BuildProjectTask
         this.projectName = projectName;
         
         this.buildDefinitionLabel = buildDefinitionLabel;
+
+        this.scmResult = scmResult;
     }
 
     public int getProjectId()
@@ -101,7 +106,12 @@ public class BuildProjectTask
     {
         return buildDefinitionLabel;
     }    
-    
+
+    public ScmResult getScmResult()
+    {
+        return scmResult;
+    }
+
     public boolean equals( Object obj )
     {
         if ( obj == null )

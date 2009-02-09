@@ -228,9 +228,6 @@ public interface Continuum
     void removeBuildResult( int buildId )
         throws ContinuumException;
 
-    List<ChangeSet> getChangesSinceLastUpdate( int projectId )
-        throws ContinuumException;
-    
     // ----------------------------------------------------------------------
     // Projects
     // ----------------------------------------------------------------------

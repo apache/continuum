@@ -73,21 +73,6 @@ public class ContinuumBuildAgentServiceImpl
      */
     private BuildContextManager buildContextManager;
 
-    public void updateProjects( List<Map> projectsBuildContext )
-        throws ContinuumBuildAgentException
-    {
-        List<BuildContext> buildContextList = initializeBuildContext( projectsBuildContext );
-
-        try
-        {
-            buildAgentManager.prepareBuildProjects( buildContextList );
-        }
-        catch ( ContinuumException e )
-        {
-            throw new ContinuumBuildAgentException( e.getMessage(), e );
-        }
-    }
-
     public void buildProjects( List<Map> projectsBuildContext )
         throws ContinuumBuildAgentException
     {
@@ -95,7 +80,7 @@ public class ContinuumBuildAgentServiceImpl
 
         try
         {
-            buildAgentManager.buildProjects( buildContextList );
+            buildAgentManager.prepareBuildProjects( buildContextList );
         }
         catch ( ContinuumException e )
         {
@@ -213,6 +198,8 @@ public class ContinuumBuildAgentServiceImpl
             {
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_OUTPUT, buildOutput );
             }
+
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, ContinuumBuildAgentUtil.createScmResult( buildContext ) );
         }
         return result;
     }
@@ -270,7 +257,6 @@ public class ContinuumBuildAgentServiceImpl
             context.setLocalRepository( ContinuumBuildAgentUtil.getLocalRepository( map ) );
             context.setBuildNumber( ContinuumBuildAgentUtil.getBuildNumber( map ) );
             context.setOldScmResult( getOldScmResult( map ) );
-            //context.setScmResult( context.getOldScmResult() );
 
             buildContext.add( context );
         }

@@ -21,7 +21,6 @@ package org.apache.continuum.buildagent.manager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,6 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -125,6 +123,11 @@ public class DefaultBuildAgentManager
             finally
             {
                 endPrepareBuild( context );
+            }
+
+            if ( checkProjectScmRoot( context ) )
+            {
+                buildProjects( buildContexts );
             }
         }
         else
@@ -318,7 +321,6 @@ public class DefaultBuildAgentManager
         Map<String, Object> context = buildContext.getActionContext();
 
         ScmResult scmResult = ContinuumBuildAgentUtil.getScmResult( context, null );
-        Project project = ContinuumBuildAgentUtil.getProject( context );
 
         if ( scmResult == null || !scmResult.isSuccess() )
         {
@@ -327,22 +329,6 @@ public class DefaultBuildAgentManager
         else
         {
             buildContext.setScmResult( scmResult );
-        }
-
-        // connect to continuum server (master)
-        try
-        {
-            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
-                 new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
-            client.returnScmResult( createScmResult( buildContext ) );
-        }
-        catch ( MalformedURLException e )
-        {
-            throw new ContinuumException( "Invalid Continuum Server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
-        }
-        catch ( Exception e )
-        {
-            throw new ContinuumException( "Error while returning scm result to the continuum server", e );
         }
     }
 
@@ -394,50 +380,6 @@ public class DefaultBuildAgentManager
         {
             throw new ContinuumException( "No project build context" );
         }
-    }
-
-    private Map<String, Object> createScmResult( BuildContext buildContext )
-    {
-        Map<String, Object> result = new HashMap<String, Object>();
-        ScmResult scmResult = buildContext.getScmResult();
-
-        result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( buildContext.getProjectId() ) );
-        if ( StringUtils.isEmpty( scmResult.getCommandLine() ) )
-        {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_COMMAND_LINE, "" );
-        }
-        else
-        {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_COMMAND_LINE, scmResult.getCommandLine() );
-        }
-        if ( StringUtils.isEmpty( scmResult.getCommandOutput() ) )
-        {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_COMMAND_OUTPUT, "" );
-        }
-        else
-        {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_COMMAND_OUTPUT, scmResult.getCommandOutput() );
-        }
-        if ( StringUtils.isEmpty( scmResult.getProviderMessage() ) )
-        {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_PROVIDER_MESSAGE, "" );
-        }
-        else
-        {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_PROVIDER_MESSAGE, scmResult.getProviderMessage() );
-        }
-        if ( StringUtils.isEmpty( scmResult.getException() ) )
-        {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_EXCEPTION, "" );
-        }
-        else
-        {
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_EXCEPTION, scmResult.getException() );
-        }
-        result.put( ContinuumBuildAgentUtil.KEY_SCM_SUCCESS, new Boolean( scmResult.isSuccess() ) );
-        result.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( scmResult ) );
-
-        return result;
     }
 
     private String convertScmResultToError( ScmResult result )
@@ -514,7 +456,7 @@ public class DefaultBuildAgentManager
         throw exception;
     }
     
-    public void buildProjects( List<BuildContext> buildContexts )
+    private void buildProjects( List<BuildContext> buildContexts )
         throws ContinuumException
     {
         for ( BuildContext buildContext : buildContexts )
@@ -527,7 +469,8 @@ public class DefaultBuildAgentManager
                                                                           buildContext.getBuildDefinitionId(),
                                                                           buildContext.getTrigger(),
                                                                           buildContext.getProjectName(),
-                                                                          "" );
+                                                                          "", 
+                                                                          buildContext.getScmResult() );
                 try
                 {
                     buildAgentTaskQueueManager.getBuildQueue().put( buildProjectTask );
@@ -556,85 +499,6 @@ public class DefaultBuildAgentManager
         {
             throw new ContinuumException( e.getMessage(), e );
         }
-    }
-
-    private List<Map> getScmChanges( ScmResult scmResult )
-    {
-        List<Map> scmChanges = new ArrayList<Map>();
-
-        List<ChangeSet> changes = scmResult.getChanges();
-
-        if ( changes != null )
-        {
-            for ( ChangeSet cs : changes )
-            {
-                Map changeSet = new HashMap();
-
-                if ( StringUtils.isNotEmpty( cs.getAuthor() ) )
-                {
-                    changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_AUTHOR, cs.getAuthor() );
-                }
-                else
-                {
-                    changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_AUTHOR, "" );
-                }
-                if ( StringUtils.isNotEmpty( cs.getComment() ) ) 
-                {
-                    changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_COMMENT, cs.getComment() );
-                }
-                else
-                {
-                    changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_COMMENT, "" );
-                }
-                changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_DATE, cs.getDateAsDate() );
-                changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_FILES, getChangeFiles( cs.getFiles() ) );
-
-                scmChanges.add( changeSet );
-            }
-        }
-
-        return scmChanges;
-    }
-
-    private List getChangeFiles( List<ChangeFile> changeFiles )
-    {
-        List<Map> files = new ArrayList<Map>();
-
-        if ( changeFiles != null )
-        {
-            for ( ChangeFile file : changeFiles )
-            {
-                Map changeFile = new HashMap();
-                if ( StringUtils.isNotEmpty( file.getName() ) )
-                {
-                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_NAME, file.getName() );
-                }
-                else
-                {
-                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_NAME, "" );
-                }
-                if ( StringUtils.isNotEmpty( file.getRevision() ) )
-                {
-                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_REVISION, file.getRevision() );
-                }
-                else
-                {
-                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_REVISION, "" );
-                }
-                if ( StringUtils.isNotEmpty( file.getStatus() ) )
-                {
-                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_STATUS, file.getStatus() );
-                }
-                else
-                {
-                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_STATUS, "" );
-                }
-
-                files.add( changeFile );
-            }
-        }
-
-        return files;
     }
 
     private void mergeScmResults( BuildContext buildContext )

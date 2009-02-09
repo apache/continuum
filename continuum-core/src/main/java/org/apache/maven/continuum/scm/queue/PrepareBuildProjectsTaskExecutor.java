@@ -109,6 +109,7 @@ public class PrepareBuildProjectsTaskExecutor
         int trigger = prepareTask.getTrigger();
         Set<Integer> projectsId = projectsBuildDefinitionsMap.keySet();
         Map context = new HashMap();
+        Map<Integer, ScmResult> scmResultMap = new HashMap<Integer, ScmResult>();
 
         try
         {
@@ -153,6 +154,8 @@ public class PrepareBuildProjectsTaskExecutor
                 finally
                 {
                     log.info( "Ending prepare build of project: " + AbstractContinuumAction.getProject( context).getName() );
+                    scmResultMap.put( AbstractContinuumAction.getProjectId( context ), 
+                                      AbstractContinuumAction.getScmResult( context, null ) );
                     endProjectPrepareBuild( context );
                 }
             }
@@ -166,7 +169,7 @@ public class PrepareBuildProjectsTaskExecutor
         if ( checkProjectScmRoot( context ) )
         {
             int projectGroupId = AbstractContinuumAction.getProjectGroupId( context );
-            buildProjects( projectGroupId, projectsBuildDefinitionsMap, trigger );
+            buildProjects( projectGroupId, projectsBuildDefinitionsMap, trigger, scmResultMap );
         }
     }
 
@@ -177,7 +180,7 @@ public class PrepareBuildProjectsTaskExecutor
 
         try
         {
-            Project project = projectDao.getProjectWithScmDetails( projectId );
+            Project project = projectDao.getProject( projectId );
             ProjectGroup projectGroup = project.getProjectGroup();
             
             List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( projectGroup.getId() );
@@ -328,17 +331,6 @@ public class PrepareBuildProjectsTaskExecutor
             String error = convertScmResultToError( scmResult );
             
             updateProjectScmRoot( context, error );
-        }
-        
-        try
-        {
-            project.setScmResult( scmResult );
-
-            projectDao.updateProject( project );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new TaskExecutionException( "Error storing the project", e );
         }
     }
 
@@ -508,7 +500,8 @@ public class PrepareBuildProjectsTaskExecutor
         }
     }
 
-    private void buildProjects( int projectGroupId, Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger )
+    private void buildProjects( int projectGroupId, Map<Integer, Integer> projectsAndBuildDefinitionsMap, 
+                                int trigger, Map<Integer, ScmResult> scmResultMap )
         throws TaskExecutionException
     {
         List<Project> projects = projectDao.getProjectsWithDependenciesByGroupId( projectGroupId );
@@ -578,6 +571,7 @@ public class PrepareBuildProjectsTaskExecutor
             context.put( AbstractContinuumAction.KEY_PROJECTS, projectsToBeBuilt );
             context.put( AbstractContinuumAction.KEY_PROJECTS_BUILD_DEFINITIONS_MAP, projectsBuildDefinitionsMap );
             context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
+            context.put( AbstractContinuumAction.KEY_SCM_RESULT_MAP, scmResultMap );
 
             log.info( "Performing action create-build-project-task" );
             actionManager.lookup( "create-build-project-task" ).execute( context );

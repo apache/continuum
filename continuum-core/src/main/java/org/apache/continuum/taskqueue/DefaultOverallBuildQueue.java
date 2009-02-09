@@ -353,7 +353,7 @@ public class DefaultOverallBuildQueue
         }
 
         BuildProjectTask buildProjectTask =
-            new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName, buildDefinitionLabel );
+            new BuildProjectTask( projectId, buildDefinitionId, trigger, projectName, buildDefinitionLabel, null );
 
         return getBuildQueue().remove( buildProjectTask );
     }

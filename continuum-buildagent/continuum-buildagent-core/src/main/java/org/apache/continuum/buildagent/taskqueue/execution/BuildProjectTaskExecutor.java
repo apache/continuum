@@ -20,6 +20,7 @@ package org.apache.continuum.buildagent.taskqueue.execution;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +41,9 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.model.scm.ChangeFile;
+import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
@@ -49,6 +53,7 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,12 +97,11 @@ public class BuildProjectTaskExecutor
         BuildContext context = buildContextManager.getBuildContext( projectId );
         initializeBuildContext( context );
 
-        /*
         if ( !checkScmResult( context ) )
         {
             log.info( "Error updating from SCM, not building" );
             return;
-        }*/
+        }
         
         log.info( "Starting build of " + context.getProjectName() );
         startBuild( context );
@@ -147,6 +151,7 @@ public class BuildProjectTaskExecutor
         actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS, getEnvironments( buildContext.getBuildDefinitionId(), 
                                                                                       getInstallationType( buildContext ) ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, buildContext.getLocalRepository() );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, buildContext.getScmResult() );
         buildContext.setActionContext( actionContext );
 
         buildContext.setBuildStartTime( System.currentTimeMillis() );
@@ -210,6 +215,8 @@ public class BuildProjectTaskExecutor
         {
             result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, "" );
         }
+
+        result.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, ContinuumBuildAgentUtil.createScmResult( buildContext ) );
 
         try
         {
@@ -279,6 +286,8 @@ public class BuildProjectTaskExecutor
             build.setEndTime( System.currentTimeMillis() );
 
             build.setBuildDefinition( BuildContextToBuildDefinition.getBuildDefinition( context ) );
+
+            build.setScmResult( context.getScmResult() );
 
             if ( error != null )
             {

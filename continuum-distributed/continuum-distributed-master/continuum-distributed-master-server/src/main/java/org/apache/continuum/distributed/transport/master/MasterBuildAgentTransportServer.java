@@ -49,14 +49,6 @@ public class MasterBuildAgentTransportServer
         return Boolean.TRUE;
     }
 
-    public Boolean returnScmResult( Map scmResult )
-        throws Exception
-    {
-        log.info( "SCM result returned." );
-        distributedBuildManager.updateScmResult( scmResult );
-        return Boolean.TRUE;
-    }
-
     public Boolean ping()
         throws Exception
     {

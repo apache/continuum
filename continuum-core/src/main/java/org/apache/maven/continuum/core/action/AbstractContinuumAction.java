@@ -97,6 +97,8 @@ public abstract class AbstractContinuumAction
 
     public static final String KEY_CANCELLED = "cancelled";
 
+    public static final String KEY_SCM_RESULT_MAP = "scm-result-map";
+
     // ----------------------------------------------------------------------
     // Utils
     // ----------------------------------------------------------------------
@@ -233,6 +235,11 @@ public abstract class AbstractContinuumAction
     public static Map<Integer, BuildDefinition> getProjectsBuildDefinitionsMap( Map context )
     {
         return (Map<Integer, BuildDefinition>) getObject( context, KEY_PROJECTS_BUILD_DEFINITIONS_MAP );
+    }
+
+    public static Map<Integer, ScmResult> getScmResultMap( Map context )
+    {
+        return (Map<Integer, ScmResult>) getObject( context, KEY_SCM_RESULT_MAP );
     }
 
     // ----------------------------------------------------------------------

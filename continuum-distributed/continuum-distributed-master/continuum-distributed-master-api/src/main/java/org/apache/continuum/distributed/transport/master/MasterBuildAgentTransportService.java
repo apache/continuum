@@ -30,8 +30,6 @@ import com.atlassian.xmlrpc.ServiceObject;
 public interface MasterBuildAgentTransportService
 {
     public Boolean returnBuildResult( Map buildResult ) throws Exception;
-    
-    public Boolean returnScmResult( Map scmResult ) throws Exception;
 
     public Boolean startProjectBuild( Integer projectId ) throws Exception;
 
