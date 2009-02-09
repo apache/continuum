@@ -32,9 +32,6 @@ public interface BuildAgentManager
     void prepareBuildProjects( List<BuildContext> buildContextList )
         throws ContinuumException;
 
-    void buildProjects( List<BuildContext> buildContextList )
-        throws ContinuumException;
-
     void returnBuildResult( Map result )
         throws ContinuumException;
     

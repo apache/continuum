@@ -23,13 +23,18 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ChangeFile;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
+import org.codehaus.plexus.util.StringUtils;
 
 public class ContinuumBuildAgentUtil
 {
@@ -531,5 +536,131 @@ public class ContinuumBuildAgentUtil
         }
 
         return buffer.toString();
+    }
+
+    public static Map<String, Object> createScmResult( BuildContext buildContext )
+    {
+        Map<String, Object> result = new HashMap<String, Object>();
+        ScmResult scmResult = buildContext.getScmResult();
+
+        result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( buildContext.getProjectId() ) );
+        if ( StringUtils.isEmpty( scmResult.getCommandLine() ) )
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_COMMAND_LINE, "" );
+        }
+        else
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_COMMAND_LINE, scmResult.getCommandLine() );
+        }
+        if ( StringUtils.isEmpty( scmResult.getCommandOutput() ) )
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_COMMAND_OUTPUT, "" );
+        }
+        else
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_COMMAND_OUTPUT, scmResult.getCommandOutput() );
+        }
+        if ( StringUtils.isEmpty( scmResult.getProviderMessage() ) )
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_PROVIDER_MESSAGE, "" );
+        }
+        else
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_PROVIDER_MESSAGE, scmResult.getProviderMessage() );
+        }
+        if ( StringUtils.isEmpty( scmResult.getException() ) )
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_EXCEPTION, "" );
+        }
+        else
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_EXCEPTION, scmResult.getException() );
+        }
+        result.put( ContinuumBuildAgentUtil.KEY_SCM_SUCCESS, new Boolean( scmResult.isSuccess() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( scmResult ) );
+
+        return result;
+    }
+
+    private static List<Map> getScmChanges( ScmResult scmResult )
+    {
+        List<Map> scmChanges = new ArrayList<Map>();
+
+        List<ChangeSet> changes = scmResult.getChanges();
+
+        if ( changes != null )
+        {
+            for ( ChangeSet cs : changes )
+            {
+                Map changeSet = new HashMap();
+
+                if ( StringUtils.isNotEmpty( cs.getAuthor() ) )
+                {
+                    changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_AUTHOR, cs.getAuthor() );
+                }
+                else
+                {
+                    changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_AUTHOR, "" );
+                }
+                if ( StringUtils.isNotEmpty( cs.getComment() ) ) 
+                {
+                    changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_COMMENT, cs.getComment() );
+                }
+                else
+                {
+                    changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_COMMENT, "" );
+                }
+                if ( cs.getDateAsDate() != null )
+                {
+                    changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_DATE, cs.getDateAsDate() );
+                }
+                changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_FILES, getChangeFiles( cs.getFiles() ) );
+
+                scmChanges.add( changeSet );
+            }
+        }
+
+        return scmChanges;
+    }
+
+    private static List getChangeFiles( List<ChangeFile> changeFiles )
+    {
+        List<Map> files = new ArrayList<Map>();
+
+        if ( changeFiles != null )
+        {
+            for ( ChangeFile file : changeFiles )
+            {
+                Map changeFile = new HashMap();
+                if ( StringUtils.isNotEmpty( file.getName() ) )
+                {
+                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_NAME, file.getName() );
+                }
+                else
+                {
+                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_NAME, "" );
+                }
+                if ( StringUtils.isNotEmpty( file.getRevision() ) )
+                {
+                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_REVISION, file.getRevision() );
+                }
+                else
+                {
+                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_REVISION, "" );
+                }
+                if ( StringUtils.isNotEmpty( file.getStatus() ) )
+                {
+                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_STATUS, file.getStatus() );
+                }
+                else
+                {
+                    changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_STATUS, "" );
+                }
+
+                files.add( changeFile );
+            }
+        }
+
+        return files;
     }
 }

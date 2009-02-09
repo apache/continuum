@@ -51,8 +51,6 @@ public class BuildContextToProject
 
         project.setBuildNumber( buildContext.getBuildNumber() );
 
-        project.setScmResult( buildContext.getOldScmResult() );
-
         return project;
     }
 }

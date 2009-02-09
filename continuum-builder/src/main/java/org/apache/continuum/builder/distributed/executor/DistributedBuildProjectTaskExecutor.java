@@ -110,10 +110,7 @@ public class DistributedBuildProjectTaskExecutor
                                                         prepareBuildTask.getScmRootAddress() );
 
             startTime = System.currentTimeMillis();
-            client.updateProjects( buildContext );
-            updateBuildContext( buildContext);
             client.buildProjects( buildContext );
-
             endTime = System.currentTimeMillis();
         }
         catch ( MalformedURLException e )
@@ -395,24 +392,5 @@ public class DistributedBuildProjectTaskExecutor
         }
     
         return res;
-    }
-
-    private void updateBuildContext( List<Map> buildContext )
-    {
-        for ( Map context : buildContext )
-        {
-            int projectId = ContinuumBuildConstant.getProjectId( context );
-            
-            if ( !shouldBuild() )
-            {
-                buildContext.remove( context );
-            }
-        }
-    }
-
-    //TODO: Fix this
-    private boolean shouldBuild()
-    {
-        return true;
     }
 }

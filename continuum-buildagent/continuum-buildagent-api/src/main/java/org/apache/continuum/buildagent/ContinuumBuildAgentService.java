@@ -24,9 +24,6 @@ import java.util.Map;
 
 public interface ContinuumBuildAgentService
 {
-    void updateProjects( List<Map> projectsBuildContext )
-        throws ContinuumBuildAgentException;
-
     void buildProjects( List<Map> projectsBuildContext )
         throws ContinuumBuildAgentException;
     

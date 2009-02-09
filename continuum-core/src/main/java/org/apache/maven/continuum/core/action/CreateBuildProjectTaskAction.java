@@ -28,8 +28,8 @@ import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.BuildDefinition;
-import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
@@ -62,7 +62,8 @@ public class CreateBuildProjectTaskAction
         List<Project> projects = AbstractContinuumAction.getListOfProjects( context );
         Map<Integer, BuildDefinition> projectsBuildDefinitionsMap =
             AbstractContinuumAction.getProjectsBuildDefinitionsMap( context );
-        
+        Map<Integer, ScmResult> scmResultMap = 
+            AbstractContinuumAction.getScmResultMap( context );
         List<Project> projectsToBeBuilt = new ArrayList<Project>();
         int trigger = AbstractContinuumAction.getTrigger( context );
         
@@ -126,6 +127,6 @@ public class CreateBuildProjectTaskAction
             }
         }
         
-        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, trigger );      
+        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, trigger, scmResultMap );      
     }
 }

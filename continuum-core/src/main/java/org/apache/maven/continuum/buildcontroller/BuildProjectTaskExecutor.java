@@ -46,6 +46,6 @@ public class BuildProjectTaskExecutor
         BuildProjectTask buildProjectTask = (BuildProjectTask) task;
 
         controller.build( buildProjectTask.getProjectId(), buildProjectTask.getBuildDefinitionId(), buildProjectTask
-            .getTrigger() );
+            .getTrigger(), buildProjectTask.getScmResult() );
     }
 }

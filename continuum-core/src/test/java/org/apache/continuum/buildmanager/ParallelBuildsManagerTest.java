@@ -286,7 +286,7 @@ public class ParallelBuildsManagerTest
 
         recordBuildProjectBuildQueuesAreEmpty();
         
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
+        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null );
         
         context.assertIsSatisfied();
     }
@@ -302,7 +302,7 @@ public class ParallelBuildsManagerTest
 
         recordBuildProjectBuildQueuesAreEmpty();
         
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
+        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null );
         context.assertIsSatisfied();
         
         //queue second project - 1st queue is not empty, 2nd queue is empty 
@@ -311,7 +311,7 @@ public class ParallelBuildsManagerTest
         // the first build queue already has a task queued
         final List<Task> tasks = new ArrayList<Task>();
         final List<Task> tasksOfFirstBuildQueue = new ArrayList<Task>();
-        tasksOfFirstBuildQueue.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", buildDef.getDescription() ) );        
+        tasksOfFirstBuildQueue.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", buildDef.getDescription(), null ) );        
         context.checking( new Expectations()
         {
             {
@@ -329,7 +329,7 @@ public class ParallelBuildsManagerTest
         
         recordAddToBuildQueue();
         
-        buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1 );
+        buildsManager.buildProject( 2, buildDef, "continuum-project-test-2", 1, null );
         context.assertIsSatisfied();
         
         // queue third project - both queues have 1 task queued each
@@ -349,7 +349,7 @@ public class ParallelBuildsManagerTest
                         
         recordAddToBuildQueue();
         
-        buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1 );
+        buildsManager.buildProject( 3, buildDef, "continuum-project-test-3", 1, null );
         context.assertIsSatisfied();
     }
     
@@ -572,7 +572,7 @@ public class ParallelBuildsManagerTest
             context.mock( TaskQueueExecutor.class, "checkout-queue-executor" );
         
         final List<Task> buildTasks = new ArrayList<Task>();
-        buildTasks.add( new BuildProjectTask(  2, 1, 1, "continuum-project-test-2", "BUILD_DEF" ) );
+        buildTasks.add( new BuildProjectTask(  2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null ) );
         
         final List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
         checkoutTasks.add( new CheckOutTask( 2, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-2",
@@ -692,10 +692,10 @@ public class ParallelBuildsManagerTest
         buildDef.setSchedule( getSchedule( 1, 1, 2 ) );
         
         final TaskQueueExecutor buildQueueExecutor = context.mock( TaskQueueExecutor.class, "build-queue-executor" );
-        final Task buildTask = new BuildProjectTask( 1, 1, 1, "continuum-project-test-1", "BUILD_DEF" );
+        final Task buildTask = new BuildProjectTask( 1, 1, 1, "continuum-project-test-1", "BUILD_DEF", null );
 
         final List<Task> buildTasks = new ArrayList<Task>();
-        buildTasks.add( new BuildProjectTask(  2, 1, 1, "continuum-project-test-2", "BUILD_DEF" ) );
+        buildTasks.add( new BuildProjectTask(  2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null ) );
         
         final List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
         checkoutTasks.add( new CheckOutTask( 2, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-2",
@@ -765,7 +765,7 @@ public class ParallelBuildsManagerTest
             }            
         });
         
-        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1 );
+        buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null );
         context.assertIsSatisfied();
     }
     
@@ -775,7 +775,7 @@ public class ParallelBuildsManagerTest
         setupMockOverallBuildQueues();
     
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new BuildProjectTask(  2, 1, 1, "continuum-project-test-2", "BUILD_DEF" ) );
+        tasks.add( new BuildProjectTask(  2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null ) );
         
         context.checking( new Expectations()  
         {

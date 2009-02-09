@@ -33,9 +33,6 @@ public interface DistributedBuildManager
     void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
         throws ContinuumException;
 
-    void updateScmResult( Map context )
-        throws ContinuumException;
-
     void updateBuildResult( Map context )
         throws ContinuumException;
 

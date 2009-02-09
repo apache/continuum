@@ -332,33 +332,6 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public void updateScmResult( Map context )
-        throws ContinuumException
-    {
-        try
-        {
-            int projectId = ContinuumBuildConstant.getProjectId( context );
-
-            log.info( "update scm result of project" + projectId );
-            Project project = projectDao.getProjectWithScmDetails( projectId );
-            
-            ScmResult scmResult = new ScmResult();
-            scmResult.setCommandLine( ContinuumBuildConstant.getScmCommandLine( context ) );
-            scmResult.setCommandOutput( ContinuumBuildConstant.getScmCommandOutput( context ) );
-            scmResult.setException( ContinuumBuildConstant.getScmException( context ) );
-            scmResult.setProviderMessage( ContinuumBuildConstant.getScmProviderMessage( context ) );
-            scmResult.setSuccess( ContinuumBuildConstant.isScmSuccess( context ) );
-            scmResult.setChanges( getScmChanges( context ) );
-
-            project.setScmResult( scmResult );
-            projectDao.updateProject( project );
-        }
-        catch ( ContinuumStoreException e )
-        {
-            throw new ContinuumException( "Error updating project's scm result", e );
-        }
-    }
-
     public void updateBuildResult( Map context )
         throws ContinuumException
     {
@@ -397,7 +370,7 @@ public class DefaultDistributedBuildManager
                 buildResult.setBuildDefinition( buildDefinition );
                 buildResult.setBuildNumber( buildNumber );
                 buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, context ) );
-                buildResult.setScmResult( project.getScmResult() );
+                buildResult.setScmResult( getScmResult( context ) );
                 
                 buildResultDao.addBuildResult( project, buildResult );
             
@@ -656,7 +629,7 @@ public class DefaultDistributedBuildManager
                 buildResult.setBuildDefinition( buildDefinition );
                 buildResult.setBuildNumber( project.getBuildNumber() + 1 );
                 buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, result ) );
-                buildResult.setScmResult( project.getScmResult() );
+                buildResult.setScmResult( getScmResult( result ) );
 
                 String buildOutput = ContinuumBuildConstant.getBuildOutput( result );
                 
@@ -956,5 +929,25 @@ public class DefaultDistributedBuildManager
             }
         }
         return projectNotifiers;
+    }
+
+    private ScmResult getScmResult( Map context )
+    {
+        Map map = ContinuumBuildConstant.getScmResult( context );
+
+        if ( !map.isEmpty() )
+        {
+            ScmResult scmResult = new ScmResult();
+            scmResult.setCommandLine( ContinuumBuildConstant.getScmCommandLine( map ) );
+            scmResult.setCommandOutput( ContinuumBuildConstant.getScmCommandOutput( map ) );
+            scmResult.setException( ContinuumBuildConstant.getScmException( map ) );
+            scmResult.setProviderMessage( ContinuumBuildConstant.getScmProviderMessage( map ) );
+            scmResult.setSuccess( ContinuumBuildConstant.isScmSuccess( map ) );
+            scmResult.setChanges( getScmChanges( map ) );
+
+            return scmResult;
+        }
+
+        return null;
     }
 }

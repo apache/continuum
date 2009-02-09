@@ -138,6 +138,8 @@ public class ContinuumBuildConstant
 
     public static final String KEY_SCM_TAG = "scm-tag";
 
+    public static final String KEY_SCM_RESULT = "scm-result";
+
     public static final String KEY_PROJECT_PARENT = "project-parent";
 
     public static final String KEY_NOTIFIER_TYPE = "notifier-type";
@@ -449,6 +451,11 @@ public class ContinuumBuildConstant
     public static boolean isNotifierSendOnWarning( Map context )
     {
         return getBoolean( context, KEY_NOTIFIER_SEND_ON_WARNING );
+    }
+
+    public static Map getScmResult( Map context )
+    {
+        return getMap( context, KEY_SCM_RESULT );
     }
 
     // ----------------------------------------------------------------------

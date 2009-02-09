@@ -127,7 +127,7 @@ public class DefaultBuildControllerTest
         throws Exception
     {
         return controller.initializeBuildContext( projectId2, buildDefinitionId2,
-                                                  ContinuumProjectState.TRIGGER_SCHEDULED );
+                                                  ContinuumProjectState.TRIGGER_SCHEDULED, new ScmResult() );
     }
 
     private BuildContext getContext( int hourOfLastExecution )

@@ -84,6 +84,8 @@ public class ExecuteBuilderAction
 
         buildResult.setBuildDefinition( buildDefinition );
 
+        buildResult.setScmResult( ContinuumBuildAgentUtil.getScmResult( context, null ) );
+
         context.put( ContinuumBuildAgentUtil.KEY_BUILD_RESULT, buildResult );
 
         try
