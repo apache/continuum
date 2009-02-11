@@ -48,6 +48,8 @@ public class AddProjectAction
 {
     private String projectName;
 
+    private String projectDescription;
+
     private String projectVersion;
 
     private String projectScmUrl;
@@ -164,6 +166,9 @@ public class AddProjectAction
         Project project = new Project();
 
         project.setName( projectName.trim() );
+
+        if ( projectDescription != null )
+            project.setDescription( projectDescription.trim() );
 
         project.setVersion( projectVersion.trim() );
 
@@ -420,5 +425,13 @@ public class AddProjectAction
         {
             return false;
         }
+    }
+
+    public String getProjectDescription() {
+        return projectDescription;
+    }
+
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription = projectDescription;
     }
 }

@@ -49,6 +49,7 @@ public class TestMavenBuilderHelper
 
         assertEquals( "plexus", project.getGroupId() );
         assertEquals( "continuum-project2", project.getArtifactId() );
+        assertEquals( "This is a sample pom for test purposes", project.getDescription() );
         assertNotNull( project.getScm() );
         assertTrue( project.getDependencies().isEmpty() );
         assertTrue( result.getErrors().isEmpty() );
