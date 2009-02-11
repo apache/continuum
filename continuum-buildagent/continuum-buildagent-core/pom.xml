@@ -27,7 +27,7 @@ under the License.
   <groupId>org.apache.continuum</groupId>
   <artifactId>continuum-buildagent-core</artifactId>
   <packaging>jar</packaging>
-  <name>Continuum :: Distributed Build :: Build Agent Core</name>
+  <name>Continuum :: Distributed Build :: Build Agent :: Core</name>
 
   <dependencies>
     <dependency>
