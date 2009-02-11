@@ -85,7 +85,7 @@ public class DefaultContinuumReleaseManager
      */
     private InstallationService installationService;
 
-    private Map listeners;
+    private Map<String, ContinuumReleaseManagerListener> listeners;
 
     /**
      * contains previous release:prepare descriptors; one per project
@@ -133,38 +133,44 @@ public class DefaultContinuumReleaseManager
         return releaseId;
     }
 
-    public void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
-                         ContinuumReleaseManagerListener listener )
+    public void perform( String releaseId, File buildDirectory, String goals, String arguments,
+                         boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
-        perform( releaseId, buildDirectory, goals, useReleaseProfile, listener, null );
+        perform( releaseId, buildDirectory, goals, arguments, useReleaseProfile, listener, null );
     }
 
-    public void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
-                         ContinuumReleaseManagerListener listener, LocalRepository repository )
+    public void perform( String releaseId, File buildDirectory, String goals, String arguments,
+                         boolean useReleaseProfile, ContinuumReleaseManagerListener listener,
+                         LocalRepository repository )
         throws ContinuumReleaseException
     {
         ReleaseDescriptor descriptor = (ReleaseDescriptor) getPreparedReleases().get( releaseId );
         if ( descriptor != null )
         {
-            perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener, repository );
+            perform( releaseId, descriptor, buildDirectory, goals, arguments, useReleaseProfile, listener, repository );
         }
     }
 
-    public void perform( String releaseId, String workingDirectory, File buildDirectory, String goals,
+    public void perform( String releaseId, String workingDirectory, File buildDirectory, String goals, String arguments,
                          boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException
     {
         ReleaseDescriptor descriptor = readReleaseDescriptor( workingDirectory );
 
-        perform( releaseId, descriptor, buildDirectory, goals, useReleaseProfile, listener, null );
+        perform( releaseId, descriptor, buildDirectory, goals, arguments, useReleaseProfile, listener, null );
     }
 
     private void perform( String releaseId, ReleaseDescriptor descriptor, File buildDirectory, String goals,
-                          boolean useReleaseProfile, ContinuumReleaseManagerListener listener,
+                          String arguments, boolean useReleaseProfile, ContinuumReleaseManagerListener listener,
                           LocalRepository repository )
         throws ContinuumReleaseException
     {
+        if ( descriptor != null )
+        {
+            descriptor.setAdditionalArguments( arguments );
+        }
+
         try
         {
             getListeners().put( releaseId, listener );
@@ -230,10 +236,6 @@ public class DefaultContinuumReleaseManager
         }
 
         Map<String, String> envVars = new HashMap<String, String>();
-        if ( profile == null )
-        {
-            return envVars;
-        }
 
         String javaHome = getJavaHomeValue( profile );
         if ( !StringUtils.isEmpty( javaHome ) )
@@ -272,6 +274,8 @@ public class DefaultContinuumReleaseManager
         descriptor.setReleaseVersions( relVersions );
         descriptor.setDevelopmentVersions( devVersions );
         descriptor.setPreparationGoals( releaseProperties.getProperty( "prepareGoals" ) );
+        descriptor.setAdditionalArguments( releaseProperties.getProperty( "arguments" ) );
+        descriptor.setAddSchema( Boolean.valueOf( releaseProperties.getProperty( "addSchema" ) ) );
 
         String useEditMode = releaseProperties.getProperty( "useEditMode" );
         if ( BooleanUtils.toBoolean( useEditMode ) )
@@ -298,6 +302,10 @@ public class DefaultContinuumReleaseManager
         if ( releaseProperties.containsKey( "commentPrefix" ) )
         {
             descriptor.setScmCommentPrefix( releaseProperties.getProperty( "commentPrefix" ) );
+        }
+        if ( releaseProperties.containsKey( "useReleaseProfile" ) )
+        {
+            descriptor.setUseReleaseProfile( Boolean.valueOf( releaseProperties.getProperty( "useReleaseProfile" ) ) );
         }
 
         //forced properties
@@ -327,11 +335,11 @@ public class DefaultContinuumReleaseManager
         return descriptor;
     }
 
-    public Map getListeners()
+    public Map<String, ContinuumReleaseManagerListener> getListeners()
     {
         if ( listeners == null )
         {
-            listeners = new Hashtable();
+            listeners = new Hashtable<String, ContinuumReleaseManagerListener>();
         }
 
         return listeners;

@@ -19,8 +19,6 @@ package org.apache.maven.continuum.release.executors;
  * under the License.
  */
 
-import java.io.File;
-
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
@@ -39,6 +37,8 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.FileUtils;
+
+import java.io.File;
 
 /**
  * @author Edwin Punzalan
@@ -236,16 +236,12 @@ public class ReleaseTaskExecutorTest
 
     private Task getPrepareTask( String releaseId, ReleaseDescriptor descriptor )
     {
-        Task task = new PrepareReleaseProjectTask( releaseId, descriptor, null );
-
-        return task;
+        return new PrepareReleaseProjectTask( releaseId, descriptor, null );
     }
 
     private Task getPerformTask( String releaseId, ReleaseDescriptor descriptor, File buildDir )
     {
-        Task task = new PerformReleaseProjectTask( releaseId, descriptor, buildDir, "package", true, null );
-
-        return task;
+        return new PerformReleaseProjectTask( releaseId, descriptor, buildDir, "package", true, null );
     }
 
     private ScmRepository getScmRepositorty( String scmUrl )

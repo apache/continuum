@@ -78,7 +78,7 @@ public interface ContinuumReleaseManager
      * @param useReleaseProfile
      * @throws ContinuumReleaseException
      */
-    void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
+    void perform( String releaseId, File buildDirectory, String goals, String arguments, boolean useReleaseProfile,
                   ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
@@ -93,7 +93,7 @@ public interface ContinuumReleaseManager
      * @param listener
      * @throws ContinuumReleaseException
      */
-    void perform( String releaseId, String workingDirectory, File buildDirectory, String goals,
+    void perform( String releaseId, String workingDirectory, File buildDirectory, String goals, String arguments,
                   boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
@@ -114,7 +114,7 @@ public interface ContinuumReleaseManager
 
     Map getListeners();
 
-    void perform( String releaseId, File buildDirectory, String goals, boolean useReleaseProfile,
+    void perform( String releaseId, File buildDirectory, String goals, String arguments, boolean useReleaseProfile,
                   ContinuumReleaseManagerListener listener, LocalRepository repository )
         throws ContinuumReleaseException;
 
