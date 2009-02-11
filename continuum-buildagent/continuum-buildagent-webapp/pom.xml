@@ -27,7 +27,7 @@
   <groupId>org.apache.continuum</groupId>
   <artifactId>continuum-buildagent-webapp</artifactId>
   <packaging>war</packaging>
-  <name>Continuum :: Distributed Build :: Build Agent: Webapp</name>
+  <name>Continuum :: Distributed Build :: Build Agent :: Webapp</name>
   <url>http://continuum.apache.org</url>
   <dependencies>
     <dependency>
