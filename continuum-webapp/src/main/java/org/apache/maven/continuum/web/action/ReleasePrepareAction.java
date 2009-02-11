@@ -85,6 +85,8 @@ public class ReleasePrepareAction
 
     private String prepareGoals;
 
+    private String arguments;
+
     private ReleaseResult result;
 
     private ContinuumReleaseManagerListener listener;
@@ -96,6 +98,8 @@ public class ReleasePrepareAction
     private int profileId;
 
     private boolean autoVersionSubmodules = false;
+
+    private boolean addSchema = true;
 
     public String input()
         throws Exception
@@ -158,6 +162,7 @@ public class ReleasePrepareAction
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {
+        //TODO: Use the model reader so we'll can get the plugin configuration from parent too
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
         Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
 
@@ -196,6 +201,12 @@ public class ReleasePrepareAction
                             prepareGoals = configuration.getValue();
                         }
 
+                        configuration = dom.getChild( "arguments" );
+                        if ( configuration != null )
+                        {
+                            arguments = configuration.getValue();
+                        }
+
                         configuration = dom.getChild( "scmCommentPrefix" );
                         if ( configuration != null )
                         {
@@ -206,6 +217,12 @@ public class ReleasePrepareAction
                         if ( configuration != null )
                         {
                             autoVersionSubmodules = Boolean.valueOf( configuration.getValue() );
+                        }
+
+                        configuration = dom.getChild( "addSchema" );
+                        if ( configuration != null )
+                        {
+                            addSchema = Boolean.valueOf( configuration.getValue() );
                         }
                     }
                 }
@@ -415,7 +432,9 @@ public class ReleasePrepareAction
 
         p.setProperty( "tag", scmTag );
         p.setProperty( "prepareGoals", prepareGoals );
+        p.setProperty( "arguments", arguments );
         p.setProperty( "useEditMode", Boolean.toString( scmUseEditMode ) );
+        p.setProperty( "addSchema", Boolean.toString( addSchema ) );
 
         return p;
     }
@@ -560,6 +579,16 @@ public class ReleasePrepareAction
         this.prepareGoals = prepareGoals;
     }
 
+    public String getArguments()
+    {
+        return arguments;
+    }
+
+    public void setArguments( String arguments )
+    {
+        this.arguments = arguments;
+    }
+
     public void validate()
     {
     }
@@ -623,5 +652,15 @@ public class ReleasePrepareAction
     public void setAutoVersionSubmodules( boolean autoVersionSubmodules )
     {
         this.autoVersionSubmodules = autoVersionSubmodules;
+    }
+
+    public boolean isAddSchema()
+    {
+        return addSchema;
+    }
+
+    public void setAddSchema( boolean addSchema )
+    {
+        this.addSchema = addSchema;
     }
 }

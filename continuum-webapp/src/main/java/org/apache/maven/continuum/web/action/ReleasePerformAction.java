@@ -28,10 +28,15 @@ import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.scm.provider.svn.repository.SvnScmProviderRepository;
 import org.apache.maven.shared.release.ReleaseResult;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
+import java.io.FileReader;
 import java.util.List;
 
 /**
@@ -56,9 +61,11 @@ public class ReleasePerformAction
 
     private String scmTagBase;
 
-    private String goals;
+    private String goals = "clean deploy";
 
-    private boolean useReleaseProfile;
+    private String arguments;
+
+    private boolean useReleaseProfile = true;
 
     private ContinuumReleaseManagerListener listener;
 
@@ -69,6 +76,16 @@ public class ReleasePerformAction
     private List<Profile> profiles;
 
     private int profileId;
+
+    private void init()
+        throws Exception
+    {
+        Project project = getContinuum().getProject( projectId );
+
+        String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
+
+        getReleasePluginParameters( workingDirectory, "pom.xml" );
+    }
 
     public String inputFromScm()
         throws Exception
@@ -81,6 +98,8 @@ public class ReleasePerformAction
         {
             return REQUIRES_AUTHORIZATION;
         }
+
+        init();
 
         populateFromProject();
 
@@ -103,7 +122,56 @@ public class ReleasePerformAction
             return REQUIRES_AUTHORIZATION;
         }
 
+        init();
+
         return SUCCESS;
+    }
+
+    private void getReleasePluginParameters( String workingDirectory, String pomFilename )
+        throws Exception
+    {
+        //TODO: Use the model reader so we'll can get the plugin configuration from parent too
+        MavenXpp3Reader pomReader = new MavenXpp3Reader();
+        Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
+
+        if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
+        {
+            for ( Plugin plugin : (List<Plugin>) model.getBuild().getPlugins() )
+            {
+                if ( plugin.getGroupId() != null && plugin.getGroupId().equals( "org.apache.maven.plugins" ) &&
+                    plugin.getArtifactId() != null && plugin.getArtifactId().equals( "maven-release-plugin" ) )
+                {
+                    Xpp3Dom dom = (Xpp3Dom) plugin.getConfiguration();
+
+                    if ( dom != null )
+                    {
+                        Xpp3Dom configuration = dom.getChild( "useReleaseProfile" );
+                        if ( configuration != null )
+                        {
+                            useReleaseProfile = Boolean.valueOf( configuration.getValue() );
+                        }
+
+                        configuration = dom.getChild( "goals" );
+                        if ( configuration != null )
+                        {
+                            goals = configuration.getValue();
+                            if ( model.getDistributionManagement() != null &&
+                                model.getDistributionManagement().getSite() != null )
+                            {
+                                goals += " site-deploy";
+                            }
+                        }
+
+                        configuration = dom.getChild( "arguments" );
+                        if ( configuration != null )
+                        {
+                            arguments = configuration.getValue();
+                        }
+
+                    }
+                }
+            }
+        }
     }
 
     public String execute()
@@ -128,10 +196,11 @@ public class ReleasePerformAction
         File performDirectory = new File( getContinuum().getConfiguration().getWorkingDirectory(),
                                           "releases-" + System.currentTimeMillis() );
         performDirectory.mkdirs();
-        
+
         LocalRepository repository = project.getProjectGroup().getLocalRepository();
-        
-        releaseManager.perform( releaseId, performDirectory, goals, useReleaseProfile, listener, repository );
+
+        releaseManager.perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, listener,
+                                repository );
 
         return SUCCESS;
     }
@@ -147,12 +216,10 @@ public class ReleasePerformAction
         descriptor.setScmPassword( scmPassword );
         descriptor.setScmReleaseLabel( scmTag );
         descriptor.setScmTagBase( scmTagBase );
-        
-        Profile profile = null;
-        
+
         if ( profileId != -1 )
         {
-            profile = getContinuum().getProfileService().getProfile( profileId );
+            Profile profile = getContinuum().getProfileService().getProfile( profileId );
             descriptor.setEnvironments( releaseManager.getEnvironments( profile ) );
         }
 
@@ -328,5 +395,14 @@ public class ReleasePerformAction
     {
         this.profileId = profileId;
     }
-    
+
+    public String getArguments()
+    {
+        return arguments;
+    }
+
+    public void setArguments( String arguments )
+    {
+        this.arguments = arguments;
+    }
 }

@@ -34,7 +34,7 @@ public class DefaultReleaseManagerListener
 {
     private String goalName;
 
-    private List completedPhases;
+    private List<String> completedPhases;
 
     private String inProgress;
 
@@ -49,7 +49,7 @@ public class DefaultReleaseManagerListener
         state = LISTENING;
         goalName = name;
         this.phases = phases;
-        completedPhases = Collections.synchronizedList( new ArrayList() );
+        completedPhases = Collections.synchronizedList( new ArrayList<String>() );
         inProgress = null;
     }
 
