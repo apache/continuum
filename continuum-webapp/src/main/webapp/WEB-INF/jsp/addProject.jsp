@@ -57,6 +57,9 @@
                             <s:textfield label="%{getText('projectName.label')}" name="projectName" required="true">
                                 <s:param name="desc"><p><s:text name="projectName.message"/></p></s:param>
                             </s:textfield>
+                            <s:textfield label="%{getText('projectDescription.label')}" name="projectDescription">
+                                <s:param name="desc"><p><s:text name="projectDescription.message"/></p></s:param>
+                            </s:textfield>
                             <s:textfield label="%{getText('projectVersion.label')}" name="projectVersion" required="true">
                                 <s:param name="desc"><p><s:text name="projectVersion.message"/></p></s:param>
                             </s:textfield>

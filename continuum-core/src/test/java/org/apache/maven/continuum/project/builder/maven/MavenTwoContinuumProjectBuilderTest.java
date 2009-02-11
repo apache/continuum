@@ -233,6 +233,8 @@ public class MavenTwoContinuumProjectBuilderTest
 
             assertNotNull( project.getName() );
 
+            assertNotNull( project.getDescription() );
+
             projects.put( project.getName(), project );
         }
 

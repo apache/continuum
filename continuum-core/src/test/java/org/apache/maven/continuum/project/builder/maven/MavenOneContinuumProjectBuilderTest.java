@@ -107,11 +107,13 @@ public class MavenOneContinuumProjectBuilderTest
 
         assertEquals( "result.projects.length", 1, result.getProjects().size() );
 
-        Project project = (Project) result.getProjects().get( 0 );
+        Project project = result.getProjects().get( 0 );
 
         assertNotNull( project );
 
         assertEquals( "Maven", project.getName() );
+
+        assertEquals( "Java Project Management Tools", project.getDescription() );
 
         assertEquals( "scm:svn:http://svn.apache.org/repos/asf:maven/maven-1/core/trunk/", project.getScmUrl() );
 

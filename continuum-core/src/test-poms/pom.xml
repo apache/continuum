@@ -23,6 +23,7 @@
   <artifactId>continuum-project2</artifactId>
   <packaging>jar</packaging>
   <name>Continuum Test Project 2</name>
+  <description>This is a sample pom for test purposes</description>
   <version>1.0</version>
   
   <scm>

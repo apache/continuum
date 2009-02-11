@@ -40,6 +40,7 @@
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <c1:data label="%{getText('projectView.project.name')}" name="project.name"/>
+            <c1:data label="%{getText('projectView.project.description')}" name="project.description"/>
             <c1:data label="%{getText('projectView.project.version')}" name="project.version"/>
             <c1:data label="%{getText('projectView.project.scmUrl')}" name="project.scmUrl"/>
             <c1:data label="%{getText('projectView.project.scmTag')}" name="project.scmTag"/>

@@ -149,6 +149,12 @@ public class DefaultMavenBuilderHelper
         continuumProject.setName( getProjectName( mavenProject ) );
 
         // ----------------------------------------------------------------------
+        // Description
+        // ----------------------------------------------------------------------
+
+        continuumProject.setDescription( mavenProject.getDescription() );
+
+        // ----------------------------------------------------------------------
         // SCM Url
         // ----------------------------------------------------------------------
 
