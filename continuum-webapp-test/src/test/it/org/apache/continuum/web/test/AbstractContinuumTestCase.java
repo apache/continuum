@@ -24,7 +24,6 @@ package org.apache.continuum.web.test;
 public abstract class AbstractContinuumTestCase
     extends AbstractSeleniumTestCase
 {
-    private String baseUrl = "http://localhost:9595/continuum";
 
     public final static String DEFAULT_PROJ_GRP_NAME = "Default Project Group";
 

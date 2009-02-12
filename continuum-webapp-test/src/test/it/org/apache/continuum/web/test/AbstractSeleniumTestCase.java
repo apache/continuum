@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -43,25 +44,41 @@ public abstract class AbstractSeleniumTestCase
 
     private Selenium sel;
 
-    protected String adminUsername = "admin";
+    protected String adminUsername;
 
-    protected String adminPassword = "admin1";
+    protected String adminPassword;
 
     protected String adminFullName = getApplicationName() + " Admin";
 
     protected String adminEmail = "admin@localhost.localdomain";
 
+    protected String maxWaitTimeInMs;
+
+    protected String baseUrl;
+
     public void setUp()
         throws Exception
     {
         super.setUp();
+
+        Properties p = new Properties();
+        p.load ( this.getClass().getClassLoader().getResourceAsStream( "it.properties" ) );
+
+        baseUrl = p.getProperty( "BASE_URL" );
+        maxWaitTimeInMs = p.getProperty( "MAX_WAIT_TIME_IN_MS" );
+        adminUsername = p.getProperty( "ADMIN_USERNAME" );
+        adminPassword = p.getProperty( "ADMIN_PASSWORD" );
+        
+        String seleniumHost = p.getProperty( "SELENIUM_HOST" );
+        int seleniumPort = Integer.parseInt( (p.getProperty( "SELENIUM_PORT" ) ) );
+
         String browser = System.getProperty( "browser" );
         if ( StringUtils.isEmpty( browser ) )
         {
-            browser = "*firefox";
+            browser = p.getProperty( "SELENIUM_BROWSER" );
         }
 
-        sel = new DefaultSelenium( "localhost", SeleniumServer.DEFAULT_PORT, browser, getBaseUrl() );
+        sel = new DefaultSelenium( seleniumHost, seleniumPort, browser, baseUrl );
         sel.start();
         initialize();
     }
