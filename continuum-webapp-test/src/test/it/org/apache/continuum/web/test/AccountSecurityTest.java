@@ -16,7 +16,6 @@ package org.apache.continuum.web.test;
  * limitations under the License.
  */
 
-import org.apache.maven.shared.web.test.XPathExpressionUtil;
 
 public class AccountSecurityTest
     extends AbstractAuthenticatedAccessTestCase

@@ -17,7 +17,6 @@ package org.apache.continuum.web.test;
  */
 
 
-import org.apache.maven.shared.web.test.XPathExpressionUtil;
 
 import java.util.HashMap;
 
