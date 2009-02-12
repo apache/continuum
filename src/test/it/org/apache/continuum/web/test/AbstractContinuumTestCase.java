@@ -16,7 +16,6 @@ package org.apache.continuum.web.test;
  * limitations under the License.
  */
 
-import org.apache.maven.shared.web.test.AbstractSeleniumTestCase;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
