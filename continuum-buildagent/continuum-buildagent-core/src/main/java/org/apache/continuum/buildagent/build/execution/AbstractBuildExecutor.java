@@ -40,6 +40,7 @@ import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectDeveloper;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.commandline.ExecutableResolver;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -307,7 +308,7 @@ public abstract class AbstractBuildExecutor
         return properties;
     }
 
-    protected String getBuildFileForProject( Project project, BuildDefinition buildDefinition )
+    protected String getBuildFileForProject( BuildDefinition buildDefinition )
     {
         String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
         
@@ -484,6 +485,12 @@ public abstract class AbstractBuildExecutor
     {
         // Not supported by this builder
         return Collections.EMPTY_LIST;
+    }
+
+    public MavenProject getMavenProject( File workingDirectory, BuildDefinition buildDefinition )
+        throws ContinuumAgentBuildExecutorException
+    {
+        return null;
     }
 
     public File getWorkingDirectory( int projectId )

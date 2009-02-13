@@ -43,4 +43,7 @@ public interface BuildAgentManager
 
     void updateProject( Map project )
         throws ContinuumException;
+
+    boolean shouldBuild( Map context )
+        throws ContinuumException;
 }

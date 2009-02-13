@@ -156,6 +156,37 @@ public class DefaultBuildAgentTaskQueueManager
         return false;
     }
 
+    public boolean isProjectInBuildQueue( int projectId )
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            List<BuildProjectTask> queues = buildAgentBuildQueue.getQueueSnapshot();
+        
+            if ( queues != null )
+            {
+                for ( BuildProjectTask task : queues )
+                {
+                    if ( task.getProjectId() == projectId )
+                    {
+                        log.info( "project already in build queue" );
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                log.info( "no build task in queue" );
+            }
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
+
+        return false;
+    }
+
     public void contextualize( Context context )
         throws ContextException
     {

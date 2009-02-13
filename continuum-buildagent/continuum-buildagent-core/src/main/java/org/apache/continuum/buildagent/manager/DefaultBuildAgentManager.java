@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
@@ -70,6 +71,11 @@ public class DefaultBuildAgentManager
      */
     private BuildAgentTaskQueueManager buildAgentTaskQueueManager;
 
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentBuildExecutorManager executorManager;
+
     public void prepareBuildProjects( List<BuildContext> buildContexts)
         throws ContinuumException
     {
@@ -111,7 +117,7 @@ public class DefaultBuildAgentManager
                         if ( !buildDef.isBuildFresh() )
                         {
                             mergeScmResults( buildContext );
-                        }    
+                        }
                     }
                     finally
                     {
@@ -217,6 +223,27 @@ public class DefaultBuildAgentManager
         {
             log.error( "Error while updating project", e );
             throw new ContinuumException( e.getMessage(), e );
+        }
+    }
+
+    public boolean shouldBuild( Map context )
+        throws ContinuumException
+    {
+        try
+        {
+            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
+                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            return client.shouldBuild( context );
+        }
+        catch ( MalformedURLException e )
+        {
+            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to determine if project should build", e );
+            throw new ContinuumException( "Failed to determine if project should build", e );
         }
     }
 
@@ -461,25 +488,29 @@ public class DefaultBuildAgentManager
     {
         for ( BuildContext buildContext : buildContexts )
         {
-            // only build if it's forced build or project state is not OK
-            if ( buildContext.getTrigger() == ContinuumProjectState.TRIGGER_FORCED || 
-                 buildContext.getProjectState() != ContinuumProjectState.OK )
+            BuildProjectTask buildProjectTask = new BuildProjectTask( buildContext.getProjectId(),
+                                                                      buildContext.getBuildDefinitionId(),
+                                                                      buildContext.getTrigger(),
+                                                                      buildContext.getProjectName(),
+                                                                      "", 
+                                                                      buildContext.getScmResult() );
+
+            try
             {
-                BuildProjectTask buildProjectTask = new BuildProjectTask( buildContext.getProjectId(),
-                                                                          buildContext.getBuildDefinitionId(),
-                                                                          buildContext.getTrigger(),
-                                                                          buildContext.getProjectName(),
-                                                                          "", 
-                                                                          buildContext.getScmResult() );
-                try
+                if ( !buildAgentTaskQueueManager.isProjectInBuildQueue( buildProjectTask.getProjectId() ) )
                 {
                     buildAgentTaskQueueManager.getBuildQueue().put( buildProjectTask );
                 }
-                catch ( TaskQueueException e )
-                {
-                    log.error( "Error while enqueing build task for project " + buildContext.getProjectId(), e );
-                    throw new ContinuumException( "Error while enqueuing build task for project " + buildContext.getProjectId(), e );
-                }
+            }
+            catch ( TaskQueueException e )
+            {
+                log.error( "Error while enqueing build task for project " + buildContext.getProjectId(), e );
+                throw new ContinuumException( "Error while enqueuing build task for project " + buildContext.getProjectId(), e );
+            }
+            catch ( TaskQueueManagerException e )
+            {
+                log.error( "Error while checking if project " + buildContext.getProjectId() + " is in build queue", e );
+                throw new ContinuumException( "Error while checking if project " + buildContext.getProjectId() + " is in build queue", e );
             }
         }
 

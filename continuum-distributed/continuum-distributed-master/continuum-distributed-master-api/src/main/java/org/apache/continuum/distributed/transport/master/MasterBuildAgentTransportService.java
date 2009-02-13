@@ -42,4 +42,6 @@ public interface MasterBuildAgentTransportService
     public Boolean updateProject( Map project ) throws Exception;
 
     public Boolean ping() throws Exception;
+
+    public Boolean shouldBuild( Map context ) throws Exception;
 }

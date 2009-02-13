@@ -44,7 +44,6 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
-import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.taskqueue.Task;
@@ -282,41 +281,53 @@ public class DistributedBuildProjectTaskExecutor
         if ( oldBuildResult != null )
         {
             ScmResult scmResult = getOldScmResults( projectId, oldBuildResult.getBuildNumber(), oldBuildResult.getEndTime() );
-        
-            if ( scmResult != null && scmResult.getChanges() != null )
-            {
-                for ( Object obj : scmResult.getChanges() )
-                {
-                    ChangeSet changeSet = (ChangeSet) obj; 
 
-                    Map map = new HashMap();
-                    if ( StringUtils.isNotEmpty( changeSet.getAuthor() ) )
-                    {
-                        map.put( ContinuumBuildConstant.KEY_CHANGESET_AUTHOR, changeSet.getAuthor() );
-                    }
-                    else
-                    {
-                        map.put( ContinuumBuildConstant.KEY_CHANGESET_AUTHOR, "" );
-                    }
-                    if ( StringUtils.isNotEmpty( changeSet.getComment() ) )
-                    {
-                        map.put( ContinuumBuildConstant.KEY_CHANGESET_COMMENT, changeSet.getComment() );
-                    }
-                    else
-                    {
-                        map.put( ContinuumBuildConstant.KEY_CHANGESET_COMMENT, "" );
-                    }
-                    map.put( ContinuumBuildConstant.KEY_CHANGESET_DATE, changeSet.getDateAsDate() );
-                    map.put( ContinuumBuildConstant.KEY_CHANGESET_FILES, getOldScmChangeFiles( changeSet.getFiles() ) );
-                    scmChanges.add( map );
+            scmChanges = getScmChanges( scmResult );
+        }
+
+        return scmChanges;
+    }
+
+    private List getScmChanges( ScmResult scmResult )
+    {
+        List scmChanges = new ArrayList();
+
+        if ( scmResult != null && scmResult.getChanges() != null )
+        {
+            for ( Object obj : scmResult.getChanges() )
+            {
+                ChangeSet changeSet = (ChangeSet) obj; 
+
+                Map map = new HashMap();
+                if ( StringUtils.isNotEmpty( changeSet.getAuthor() ) )
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGESET_AUTHOR, changeSet.getAuthor() );
                 }
+                else
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGESET_AUTHOR, "" );
+                }
+                if ( StringUtils.isNotEmpty( changeSet.getComment() ) )
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGESET_COMMENT, changeSet.getComment() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGESET_COMMENT, "" );
+                }
+                if ( changeSet.getDateAsDate() != null )
+                {
+                    map.put( ContinuumBuildConstant.KEY_CHANGESET_DATE, changeSet.getDateAsDate() );
+                }
+                map.put( ContinuumBuildConstant.KEY_CHANGESET_FILES, getScmChangeFiles( changeSet.getFiles() ) );
+                scmChanges.add( map );
             }
         }
 
         return scmChanges;
     }
 
-    private List<Map> getOldScmChangeFiles( List<ChangeFile> files )
+    private List<Map> getScmChangeFiles( List<ChangeFile> files )
     {
         List<Map> scmChangeFiles = new ArrayList<Map>();
 

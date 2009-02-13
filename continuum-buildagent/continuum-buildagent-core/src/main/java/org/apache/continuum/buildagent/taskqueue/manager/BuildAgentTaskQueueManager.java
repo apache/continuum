@@ -36,4 +36,7 @@ public interface BuildAgentTaskQueueManager
 
     boolean hasBuildTaskInQueue()
         throws TaskQueueManagerException;
+
+    boolean isProjectInBuildQueue( int projectId )
+        throws TaskQueueManagerException;
 }

@@ -95,4 +95,11 @@ public class MasterBuildAgentTransportServer
         distributedBuildManager.updateProject( project );
         return Boolean.TRUE;
     }
+
+    public Boolean shouldBuild( Map context )
+        throws Exception
+    {
+        log.info( "Checking if project should build" );
+        return distributedBuildManager.shouldBuild( context );
+    }
 }

@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
+import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutorException;
+import org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
@@ -38,6 +41,7 @@ import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -45,6 +49,7 @@ import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.action.ActionManager;
@@ -86,6 +91,11 @@ public class BuildProjectTaskExecutor
      */
     private BuildAgentManager buildAgentManager;
 
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentBuildExecutorManager buildAgentBuildExecutorManager;
+
     public void executeTask( Task task )
         throws TaskExecutionException
     {
@@ -102,7 +112,13 @@ public class BuildProjectTaskExecutor
             log.info( "Error updating from SCM, not building" );
             return;
         }
-        
+
+        log.info( "Checking if project '" + context.getProjectName() + "' should build" );
+        if ( !shouldBuild( context ) )
+        {
+            return;
+        }
+
         log.info( "Starting build of " + context.getProjectName() );
         startBuild( context );
 
@@ -147,6 +163,7 @@ public class BuildProjectTaskExecutor
         
         actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT, project );
         actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION, BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, buildContext.getBuildDefinitionId() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS, getEnvironments( buildContext.getBuildDefinitionId(), 
                                                                                       getInstallationType( buildContext ) ) );
@@ -371,5 +388,139 @@ public class BuildProjectTaskExecutor
         }
 
         return null;
+    }
+
+    private boolean shouldBuild( BuildContext context )
+        throws TaskExecutionException
+    {
+        Map map = new HashMap();
+        map.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( context.getProjectId() ) );
+        map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( context.getBuildDefinitionId() ) );
+        map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( context.getTrigger() ) );
+        map.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( context.getScmResult() ) );
+        map.put( ContinuumBuildAgentUtil.KEY_MAVEN_PROJECT, getMavenProject( context ) );
+
+        try
+        {
+            return buildAgentManager.shouldBuild( map );
+        }
+        catch ( ContinuumException e )
+        {
+            log.error( "Failed to determine if project should build", e );
+            throw new TaskExecutionException( "Failed to determine if project should build", e );
+        }
+    }
+
+    private List getScmChanges( ScmResult scmResult )
+    {
+        List scmChanges = new ArrayList();
+
+        if ( scmResult != null && scmResult.getChanges() != null )
+        {
+            for ( Object obj : scmResult.getChanges() )
+            {
+                ChangeSet changeSet = (ChangeSet) obj; 
+
+                Map map = new HashMap();
+                if ( StringUtils.isNotEmpty( changeSet.getAuthor() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGESET_AUTHOR, changeSet.getAuthor() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGESET_AUTHOR, "" );
+                }
+                if ( StringUtils.isNotEmpty( changeSet.getComment() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGESET_COMMENT, changeSet.getComment() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGESET_COMMENT, "" );
+                }
+                if ( changeSet.getDateAsDate() != null )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGESET_DATE, changeSet.getDateAsDate() );
+                }
+                map.put( ContinuumBuildAgentUtil.KEY_CHANGESET_FILES, getScmChangeFiles( changeSet.getFiles() ) );
+                scmChanges.add( map );
+            }
+        }
+
+        return scmChanges;
+    }
+
+    private List<Map> getScmChangeFiles( List<ChangeFile> files )
+    {
+        List<Map> scmChangeFiles = new ArrayList<Map>();
+
+        if ( files != null )
+        {
+            for ( ChangeFile changeFile : files )
+            {
+                Map map = new HashMap();
+
+                if ( StringUtils.isNotEmpty( changeFile.getName() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_NAME, changeFile.getName() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_NAME, "" );
+                }
+                if ( StringUtils.isNotEmpty( changeFile.getRevision() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_REVISION, changeFile.getRevision() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_REVISION, "" );
+                }
+                if ( StringUtils.isNotEmpty( changeFile.getStatus() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_STATUS, changeFile.getStatus() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_STATUS, "" );   
+                }
+                scmChangeFiles.add( map );
+            }
+        }
+        return scmChangeFiles;
+    }
+
+    private Map getMavenProject( BuildContext context )
+        throws TaskExecutionException
+    {
+        Map mavenProject = new HashMap();
+
+        try
+        {
+            ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor( context.getExecutorId() );
+
+            BuildDefinition buildDefinition = BuildContextToBuildDefinition.getBuildDefinition( context );
+
+            File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( context.getProjectId() );
+
+            MavenProject project = buildExecutor.getMavenProject( workingDirectory, buildDefinition );
+
+            mavenProject.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, project.getVersion() );
+
+            if ( project.getModules() != null )
+            {
+                mavenProject.put( ContinuumBuildAgentUtil.KEY_PROJECT_MODULES, project.getModules() );
+            }
+        }
+        catch ( ContinuumAgentBuildExecutorException e )
+        {
+            log.error( "Error getting maven project", e );
+        }
+        catch ( ContinuumException e )
+        {
+            log.error( "Error getting build executor", e );   
+        }
+
+        return mavenProject;
     }
 }
