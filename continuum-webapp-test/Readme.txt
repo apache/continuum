@@ -11,6 +11,15 @@ Run Selenium tests in src/test/java with Maven
  * modify src/test/resources/it.properties as needed
  * mvn clean install
 
+Run Selenium tests in src/test/it with Maven
+ * modify src/test/resources/it.properties as needed
+ * mvn clean install -f pom-it.xml
+
+Run Selenium teests in src/test/pom2 with Maven
+ * set TOMCAT_HOME environment variable to location of Tomcat 5.5.x installation
+ * modify src/test/resources/it.properties as needed
+ * mvn clean install -f pom2.xml
+
 ======= OLD INSTRUCTIONS FOR src/test/it BELOW =======
 
 Test Continuum with Tomcat 5.x and firefox
