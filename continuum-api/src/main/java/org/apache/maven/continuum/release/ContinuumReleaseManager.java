@@ -105,7 +105,7 @@ public interface ContinuumReleaseManager
      * @param listener
      * @throws ContinuumReleaseException
      */
-    public void rollback( String releaseId, String workingDirectory, ContinuumReleaseManagerListener listener )
+    void rollback( String releaseId, String workingDirectory, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
     Map getPreparedReleases();
@@ -119,4 +119,14 @@ public interface ContinuumReleaseManager
         throws ContinuumReleaseException;
 
     Map<String, String> getEnvironments( Profile profile );
+
+    /**
+     * Clean up the tagname to respect the scm provider policy.
+     *
+     * @param scmUrl  The scm url
+     * @param tagName The tag name
+     * @return The cleaned tag name
+     */
+    String sanitizeTagName( String scmUrl, String tagName )
+        throws Exception;
 }

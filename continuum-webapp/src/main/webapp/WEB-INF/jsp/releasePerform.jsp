@@ -32,7 +32,7 @@
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
             <s:textfield label="%{getText('releasePerformFromScm.goals.label')}" name="goals"/>
-            <s:textfield label="%{getText('releasePrepare.arguments.label')}" name="arguments" required="true"/>
+            <s:textfield label="%{getText('releasePrepare.arguments.label')}" name="arguments"/>
             <s:checkbox label="%{getText('releasePerformFromScm.useReleaseProfile.label')}" name="useReleaseProfile" fieldValue="false"/>
           </table>
         </div>

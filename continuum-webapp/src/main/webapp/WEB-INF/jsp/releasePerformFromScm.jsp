@@ -39,7 +39,7 @@
               <s:textfield label="%{getText('releasePerformFromScm.scmTagBase.label')}" name="scmTagBase"/>
             </c:if>
             <s:textfield label="%{getText('releasePerformFromScm.goals.label')}" name="goals"/>
-            <s:textfield label="%{getText('releasePrepare.arguments.label')}" name="arguments" required="true"/>
+            <s:textfield label="%{getText('releasePrepare.arguments.label')}" name="arguments"/>
             <s:checkbox label="%{getText('releasePerformFromScm.useReleaseProfile.label')}" name="useReleaseProfile"/>
             <s:select label="%{getText('releasePerformFromScm.buildEnvironment.label')}" name="profileId" list="profiles" listValue="name"
                        listKey="id" headerKey="-1" headerValue=""/>

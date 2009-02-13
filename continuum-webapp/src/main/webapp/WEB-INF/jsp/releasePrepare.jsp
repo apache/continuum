@@ -41,7 +41,7 @@
             </c:if>
             <s:textfield label="%{getText('releasePrepare.scmCommentPrefix.label')}" name="scmCommentPrefix"/>
             <s:textfield label="%{getText('releasePrepare.prepareGoals.label')}" name="prepareGoals" required="true"/>
-            <s:textfield label="%{getText('releasePrepare.arguments.label')}" name="arguments" required="true"/>
+            <s:textfield label="%{getText('releasePrepare.arguments.label')}" name="arguments"/>
             <s:select label="%{getText('releasePrepare.buildEnvironment.label')}" name="profileId" list="profiles" listValue="name"
                        listKey="id" headerKey="-1" headerValue=""/>
 			      <s:checkbox label="%{getText('releasePrepare.useEditMode.label')}" name="scmUseEditMode" fieldValue="false"/>
