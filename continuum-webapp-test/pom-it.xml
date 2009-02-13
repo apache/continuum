@@ -144,7 +144,7 @@ under the License.
                 <name>jdbc/users</name>
                 <type>javax.sql.DataSource</type>
                 <parameters>
-                  <driverClassName>org.apache.derby.jdbc.EmbeddedDataSource</driverClassName>
+                  <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
                   <url>jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true</url>
                   <username>sa</username>
                   <password></password>
@@ -154,7 +154,7 @@ under the License.
                 <name>jdbc/continuum</name>
                 <type>javax.sql.DataSource</type>
                 <parameters>
-                  <driverClassName>org.apache.derby.jdbc.EmbeddedDataSource</driverClassName>
+                  <driverClassName>org.apache.derby.jdbc.EmbeddedDriver</driverClassName>
                   <url>jdbc:derby:${project.build.directory}/databases/${container.name}/data/builds;create=true</url>
                   <username>sa</username>
                   <password></password>
