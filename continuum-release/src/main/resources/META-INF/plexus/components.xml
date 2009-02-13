@@ -49,6 +49,9 @@
         <requirement>
           <role>org.apache.maven.continuum.installation.InstallationService</role>
         </requirement>
+        <requirement>
+          <role>org.apache.maven.scm.manager.ScmManager</role>
+        </requirement>
       </requirements>
     </component>
 

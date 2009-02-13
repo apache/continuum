@@ -152,6 +152,11 @@ public class ReleasePrepareAction
 
         getReleasePluginParameters( workingDirectory, "pom.xml" );
 
+        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+
+        //CONTINUUM-1503
+        releaseManager.sanitizeTagName( scmUrl, scmTag );
+
         processProject( workingDirectory, "pom.xml" );
 
         profiles = this.getContinuum().getProfileService().getAllProfiles();
@@ -261,8 +266,9 @@ public class ReleasePrepareAction
 
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
-        releaseId = releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(),
-                                            listener, profile );
+        releaseId =
+            releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), listener,
+                                    profile );
 
         return SUCCESS;
     }
@@ -435,6 +441,7 @@ public class ReleasePrepareAction
         p.setProperty( "arguments", arguments );
         p.setProperty( "useEditMode", Boolean.toString( scmUseEditMode ) );
         p.setProperty( "addSchema", Boolean.toString( addSchema ) );
+        p.setProperty( "autoVersionSubmodules", Boolean.toString( autoVersionSubmodules ) );
 
         return p;
     }

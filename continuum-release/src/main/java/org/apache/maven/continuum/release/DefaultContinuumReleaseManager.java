@@ -30,6 +30,9 @@ import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.RollbackReleaseProjectTask;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
+import org.apache.maven.scm.manager.ScmManager;
+import org.apache.maven.scm.provider.ScmProvider;
+import org.apache.maven.scm.repository.ScmRepository;
 import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.apache.maven.shared.release.config.ReleaseDescriptorStore;
@@ -84,6 +87,11 @@ public class DefaultContinuumReleaseManager
      * @plexus.requirement
      */
     private InstallationService installationService;
+
+    /**
+     * @plexus.requirement
+     */
+    private ScmManager scmManager;
 
     private Map<String, ContinuumReleaseManagerListener> listeners;
 
@@ -175,9 +183,9 @@ public class DefaultContinuumReleaseManager
         {
             getListeners().put( releaseId, listener );
 
-            performReleaseQueue.put( new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory, goals,
-                                                                    useReleaseProfile,
-                                                                    (ReleaseManagerListener) listener, repository ) );
+            performReleaseQueue.put(
+                new PerformReleaseProjectTask( releaseId, descriptor, buildDirectory, goals, useReleaseProfile,
+                                               (ReleaseManagerListener) listener, repository ) );
         }
         catch ( TaskQueueException e )
         {
@@ -276,6 +284,8 @@ public class DefaultContinuumReleaseManager
         descriptor.setPreparationGoals( releaseProperties.getProperty( "prepareGoals" ) );
         descriptor.setAdditionalArguments( releaseProperties.getProperty( "arguments" ) );
         descriptor.setAddSchema( Boolean.valueOf( releaseProperties.getProperty( "addSchema" ) ) );
+        descriptor.setAutoVersionSubmodules(
+            Boolean.valueOf( releaseProperties.getProperty( "autoVersionSubmodules" ) ) );
 
         String useEditMode = releaseProperties.getProperty( "useEditMode" );
         if ( BooleanUtils.toBoolean( useEditMode ) )
@@ -353,5 +363,13 @@ public class DefaultContinuumReleaseManager
             return null;
         }
         return jdk.getVarValue();
+    }
+
+    public String sanitizeTagName( String scmUrl, String tagName )
+        throws Exception
+    {
+        ScmRepository scmRepo = scmManager.makeScmRepository( scmUrl );
+        ScmProvider scmProvider = scmManager.getProviderByRepository( scmRepo );
+        return scmProvider.sanitizeTagName( tagName );
     }
 }
