@@ -49,7 +49,7 @@ public class ShellBuildExecutor
                                                      String localRepository )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
-        String executable = getBuildFileForProject( project, buildDefinition );
+        String executable = getBuildFileForProject( buildDefinition );
 
         return executeShellCommand( project, executable, buildDefinition.getArguments(), buildOutput, environments );
     }

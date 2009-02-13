@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.project.MavenProject;
 
 public interface ContinuumAgentBuildExecutor
 {
@@ -44,5 +45,8 @@ public interface ContinuumAgentBuildExecutor
         throws ContinuumAgentBuildExecutorException;
 
     void updateProjectFromWorkingDirectory( File workingDirectory, Project project, BuildDefinition buildDefinition )
+        throws ContinuumAgentBuildExecutorException;
+
+    MavenProject getMavenProject( File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumAgentBuildExecutorException;
 }

@@ -46,6 +46,7 @@ import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
+import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -492,75 +493,7 @@ public class DefaultDistributedBuildManager
             throw new ContinuumException( "Unable to get available installations of build agent", e );
         }
     }
-
-    private List<ProjectDependency> getModifiedDependencies( BuildResult oldBuildResult, Map context )
-        throws ContinuumException
-    {
-        if ( oldBuildResult == null )
-        {
-            return null;
-        }
-
-        try
-        {
-            Project project = projectDao.getProjectWithAllDetails( ContinuumBuildConstant.getProjectId( context ) );
-            List<ProjectDependency> dependencies = project.getDependencies();
-
-            if ( dependencies == null )
-            {
-                dependencies = new ArrayList<ProjectDependency>();
-            }
-
-            if ( project.getParent() != null )
-            {
-                dependencies.add( project.getParent() );
-            }
-
-            if ( dependencies.isEmpty() )
-            {
-                return null;
-            }
-
-            List<ProjectDependency> modifiedDependencies = new ArrayList<ProjectDependency>();
-
-            for ( ProjectDependency dep : dependencies )
-            {
-                Project dependencyProject =
-                    projectDao.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
-
-                if ( dependencyProject != null )
-                {
-                    List buildResults = buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
-                                                                                           oldBuildResult.getEndTime() );
-                    if ( buildResults != null && !buildResults.isEmpty() )
-                    {
-                        log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
-                            dep.getVersion() );
-                        modifiedDependencies.add( dep );
-                    }
-                    else
-                    {
-                        log.debug( "Dependency not changed: " + dep.getGroupId() + ":" + dep.getArtifactId() +
-                            ":" + dep.getVersion() );
-                    }
-                }
-                else
-                {
-                    log.debug( "Skip non Continuum project: " + dep.getGroupId() + ":" + dep.getArtifactId() +
-                        ":" + dep.getVersion() );
-                }
-            }
-
-            return modifiedDependencies;
-        }
-        catch ( ContinuumStoreException e )
-        {
-            log.warn( "Can't get the project dependencies", e );
-        }
-
-        return null;
-    }
-
+    
     public void startProjectBuild( int projectId )
         throws ContinuumException
     {
@@ -733,6 +666,299 @@ public class DefaultDistributedBuildManager
         {
             throw new ContinuumException( "Unable to update project from working copy", e );
         }
+    }
+
+    public boolean shouldBuild( Map context )
+    {
+        try
+        {
+            int projectId = ContinuumBuildConstant.getProjectId( context );
+
+            int buildDefinitionId = ContinuumBuildConstant.getBuildDefinitionId( context );
+
+            int trigger = ContinuumBuildConstant.getTrigger( context );
+
+            Project project = projectDao.getProjectWithAllDetails( projectId );
+
+            BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+
+            BuildResult oldBuildResult = buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
+
+            List<ProjectDependency> modifiedDependencies = getModifiedDependencies( oldBuildResult, context );
+
+            List<ChangeSet> changes = getScmChanges( context );
+
+            if ( buildDefinition.isBuildFresh() )
+            {
+                log.info( "FreshBuild configured, building" );
+                return true;
+            }
+            if ( buildDefinition.isAlwaysBuild() )
+            {
+                log.info( "AlwaysBuild configured, building" );
+                return true;
+            }
+            if ( oldBuildResult == null )
+            {
+                log.info( "The project was never be built with the current build definition, building" );
+                return true;
+            }
+
+            //CONTINUUM-1428
+            if ( project.getOldState() == ContinuumProjectState.ERROR ||
+                oldBuildResult.getState() == ContinuumProjectState.ERROR )
+            {
+                log.info( "Latest state was 'ERROR', building" );
+                return true;
+            }
+
+            if ( trigger == ContinuumProjectState.TRIGGER_FORCED )
+            {
+                log.info( "The project build is forced, building" );
+                return true;
+            }
+
+            boolean shouldBuild = false;
+
+            boolean allChangesUnknown = true;
+
+            if ( project.getOldState() != ContinuumProjectState.NEW &&
+                project.getOldState() != ContinuumProjectState.CHECKEDOUT &&
+                trigger != ContinuumProjectState.TRIGGER_FORCED &&
+                project.getState() != ContinuumProjectState.NEW && project.getState() != ContinuumProjectState.CHECKEDOUT )
+            {
+                // Check SCM changes
+                allChangesUnknown = checkAllChangesUnknown( changes );
+
+                if ( allChangesUnknown )
+                {
+                    if ( !changes.isEmpty() )
+                    {
+                        log.info(
+                            "The project was not built because all changes are unknown (maybe local modifications or ignored files not defined in your SCM tool." );
+                    }
+                    else
+                    {
+                        log.info(
+                            "The project was not built because no changes were detected in sources since the last build." );
+                    }
+                }
+
+                // Check dependencies changes
+                if ( modifiedDependencies != null && !modifiedDependencies.isEmpty() )
+                {
+                    log.info( "Found dependencies changes, building" );
+                    shouldBuild = true;
+                }
+            }
+
+            // Check changes
+            if ( !shouldBuild && ( ( !allChangesUnknown && !changes.isEmpty() ) ||
+                project.getExecutorId().equals( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR ) ) )
+            {
+                shouldBuild = shouldBuild( changes, buildDefinition, project, getMavenProjectVersion( context ), getMavenProjectModules( context ) );
+            }
+
+            if ( shouldBuild )
+            {
+                log.info( "Changes found in the current project, building" );
+            }
+            else
+            {
+                log.info( "No changes in the current project, not building" );
+            }
+
+            return shouldBuild;
+        }
+        catch ( ContinuumStoreException e )
+        {
+            log.error( "Failed to determine if project should build", e );
+        }
+        catch ( ContinuumException e )
+        {
+            log.error( "Failed to determine if project should build", e );
+        }
+
+        return false;
+    }
+
+    private boolean shouldBuild( List<ChangeSet> changes, BuildDefinition buildDefinition, Project project, 
+                                 String mavenProjectVersion, List<String> mavenProjectModules )
+    {
+        //Check if it's a recursive build
+        boolean isRecursive = false;
+        if (StringUtils.isNotEmpty( buildDefinition.getArguments() ) )
+        {
+            isRecursive = buildDefinition.getArguments().indexOf( "-N" ) < 0 &&
+                buildDefinition.getArguments().indexOf( "--non-recursive" ) < 0 ;
+        }
+
+        if ( isRecursive && changes != null && !changes.isEmpty() )
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "recursive build and changes found --> building" );
+            }
+            return true;
+        }
+
+        if ( !project.getVersion().equals( mavenProjectVersion ) )
+        {
+            log.info( "Found changes in project's version ( maybe project was recently released ), building" );
+            return true;
+        }
+
+        if ( changes.isEmpty() )
+        {
+            if ( log.isInfoEnabled() )
+            {
+                log.info( "Found no changes, not building" );
+            }
+            return false;
+        }
+
+        //check if changes are only in sub-modules or not
+        List<ChangeFile> files = new ArrayList<ChangeFile>();
+        for ( ChangeSet changeSet : changes )
+        {
+            files.addAll( changeSet.getFiles() );
+        }
+
+        int i = 0;
+        while ( i <= files.size() - 1 )
+        {
+            ChangeFile file = files.get( i );
+            if ( log.isDebugEnabled() )
+            {
+                log.debug( "changeFile.name " + file.getName() );
+                log.debug( "check in modules " + mavenProjectModules );
+            }
+            boolean found = false;
+            if ( mavenProjectModules != null )
+            {
+                for ( String module : mavenProjectModules )
+                {
+                    if ( file.getName().indexOf( module ) >= 0 )
+                    {
+                        if ( log.isDebugEnabled() )
+                        {
+                            log.debug( "changeFile.name " + file.getName() + " removed because in a module" );
+                        }                    
+                        files.remove( file );
+                        found = true;
+                        break;
+                    }
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug( "not removing file " + file.getName() + " not in module " + module );
+                    }
+                }
+            }
+            if ( !found )
+            {
+                i++;
+            }
+        }
+
+        boolean shouldBuild = !files.isEmpty();
+
+        if ( !shouldBuild )
+        {
+            log.info( "Changes are only in sub-modules." );
+        }
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "shoulbuild = " + shouldBuild );
+        }
+
+        return shouldBuild;
+    }
+
+    private boolean checkAllChangesUnknown( List<ChangeSet> changes )
+    {
+        for ( ChangeSet changeSet : changes )
+        {
+            List<ChangeFile> changeFiles = changeSet.getFiles();
+
+            for ( ChangeFile changeFile : changeFiles )
+            {
+                if ( !"unknown".equalsIgnoreCase( changeFile.getStatus() ) )
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private List<ProjectDependency> getModifiedDependencies( BuildResult oldBuildResult, Map context )
+        throws ContinuumException
+    {
+        if ( oldBuildResult == null )
+        {
+            return null;
+        }
+    
+        try
+        {
+            Project project = projectDao.getProjectWithAllDetails( ContinuumBuildConstant.getProjectId( context ) );
+            List<ProjectDependency> dependencies = project.getDependencies();
+    
+            if ( dependencies == null )
+            {
+                dependencies = new ArrayList<ProjectDependency>();
+            }
+    
+            if ( project.getParent() != null )
+            {
+                dependencies.add( project.getParent() );
+            }
+    
+            if ( dependencies.isEmpty() )
+            {
+                return null;
+            }
+    
+            List<ProjectDependency> modifiedDependencies = new ArrayList<ProjectDependency>();
+    
+            for ( ProjectDependency dep : dependencies )
+            {
+                Project dependencyProject =
+                    projectDao.getProject( dep.getGroupId(), dep.getArtifactId(), dep.getVersion() );
+    
+                if ( dependencyProject != null )
+                {
+                    List buildResults = buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
+                                                                                           oldBuildResult.getEndTime() );
+                    if ( buildResults != null && !buildResults.isEmpty() )
+                    {
+                        log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
+                            dep.getVersion() );
+                        modifiedDependencies.add( dep );
+                    }
+                    else
+                    {
+                        log.debug( "Dependency not changed: " + dep.getGroupId() + ":" + dep.getArtifactId() +
+                            ":" + dep.getVersion() );
+                    }
+                }
+                else
+                {
+                    log.debug( "Skip non Continuum project: " + dep.getGroupId() + ":" + dep.getArtifactId() +
+                        ":" + dep.getVersion() );
+                }
+            }
+    
+            return modifiedDependencies;
+        }
+        catch ( ContinuumStoreException e )
+        {
+            log.warn( "Can't get the project dependencies", e );
+        }
+    
+        return null;
     }
 
     private String getBuildAgent( int projectId )
@@ -946,6 +1172,30 @@ public class DefaultDistributedBuildManager
             scmResult.setChanges( getScmChanges( map ) );
 
             return scmResult;
+        }
+
+        return null;
+    }
+
+    private String getMavenProjectVersion( Map context )
+    {
+        Map map = ContinuumBuildConstant.getMavenProject( context );
+
+        if ( !map.isEmpty() )
+        {
+            return ContinuumBuildConstant.getVersion( map );
+        }
+
+        return null;
+    }
+
+    private List<String> getMavenProjectModules( Map context )
+    {
+        Map map = ContinuumBuildConstant.getMavenProject( context );
+
+        if ( !map.isEmpty() )
+        {
+            return ContinuumBuildConstant.getProjectModules( map );
         }
 
         return null;

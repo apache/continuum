@@ -66,4 +66,6 @@ public interface DistributedBuildManager
 
     void updateProject( Map context )
         throws ContinuumException;
+
+    boolean shouldBuild( Map context );
 }

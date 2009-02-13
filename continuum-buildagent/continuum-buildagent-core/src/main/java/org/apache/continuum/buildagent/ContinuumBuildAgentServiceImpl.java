@@ -256,7 +256,7 @@ public class ContinuumBuildAgentServiceImpl
             context.setTrigger( ContinuumBuildAgentUtil.getTrigger( map ) );
             context.setLocalRepository( ContinuumBuildAgentUtil.getLocalRepository( map ) );
             context.setBuildNumber( ContinuumBuildAgentUtil.getBuildNumber( map ) );
-            context.setOldScmResult( getOldScmResult( map ) );
+            context.setOldScmResult( getScmResult( ContinuumBuildAgentUtil.getOldScmChanges( map ) ) );
 
             buildContext.add( context );
         }
@@ -286,15 +286,13 @@ public class ContinuumBuildAgentServiceImpl
         return null;
     }
 
-    private ScmResult getOldScmResult( Map context )
+    private ScmResult getScmResult( List<Map> scmChanges )
     {
-        ScmResult oldScmResult = null;
-
-        List<Map> scmChanges = ContinuumBuildAgentUtil.getOldScmChanges( context );
+        ScmResult scmResult = null;
 
         if ( scmChanges != null && scmChanges.size() > 0 )
         {
-            oldScmResult = new ScmResult();
+            scmResult = new ScmResult();
             
             for ( Map map : scmChanges )
             {
@@ -303,11 +301,11 @@ public class ContinuumBuildAgentServiceImpl
                 changeSet.setComment( ContinuumBuildAgentUtil.getChangeSetComment( map ) );
                 changeSet.setDate( ContinuumBuildAgentUtil.getChangeSetDate( map ) );
                 setChangeFiles( changeSet, map );
-                oldScmResult.addChange( changeSet );
+                scmResult.addChange( changeSet );
             }
         }
 
-        return oldScmResult;
+        return scmResult;
     }
 
     private void setChangeFiles( ChangeSet changeSet, Map context )

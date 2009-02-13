@@ -168,6 +168,10 @@ public class ContinuumBuildConstant
 
     public static final String KEY_PROJECT_DEVELOPER_SCMID = "developer-scmid";
 
+    public static final String KEY_MAVEN_PROJECT = "maven-project";
+
+    public static final String KEY_PROJECT_MODULES = "project-modules";
+
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -456,6 +460,16 @@ public class ContinuumBuildConstant
     public static Map getScmResult( Map context )
     {
         return getMap( context, KEY_SCM_RESULT );
+    }
+
+    public static Map getMavenProject( Map context )
+    {
+        return getMap( context, KEY_MAVEN_PROJECT );
+    }
+
+    public static List getProjectModules( Map context )
+    {
+        return getList( context, KEY_PROJECT_MODULES );
     }
 
     // ----------------------------------------------------------------------

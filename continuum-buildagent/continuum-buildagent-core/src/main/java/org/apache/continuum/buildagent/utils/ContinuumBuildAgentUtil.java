@@ -196,6 +196,10 @@ public class ContinuumBuildAgentUtil
 
     public static final String KEY_PROJECT_DEVELOPER_SCMID = "developer-scmid";
 
+    public static final String KEY_PROJECT_MODULES = "project-modules";
+
+    public static final String KEY_MAVEN_PROJECT = "maven-project";
+
     public static Integer getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -383,6 +387,11 @@ public class ContinuumBuildAgentUtil
     public static ScmResult getOldScmResult( Map context, ScmResult defaultValue )
     {
         return (ScmResult) getObject( context, KEY_OLD_SCM_RESULT, defaultValue );
+    }
+
+    public static List getScmChanges( Map context )
+    {
+        return getList( context, KEY_SCM_CHANGES );
     }
 
     // ----------------------------------------------------------------------

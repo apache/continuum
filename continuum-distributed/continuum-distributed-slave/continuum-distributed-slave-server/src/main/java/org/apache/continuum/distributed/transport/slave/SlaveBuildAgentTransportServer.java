@@ -58,6 +58,7 @@ public class SlaveBuildAgentTransportServer
         catch ( ContinuumBuildAgentException e )
         {
             log.error( "Failed to build projects.", e );
+            throw e;
         }
         
         return result;
@@ -76,6 +77,7 @@ public class SlaveBuildAgentTransportServer
         catch ( ContinuumBuildAgentException e )
         {
             log.error( "Failed to get available installations.", e );
+            throw e;
         }
 
         return installations;
@@ -94,6 +96,7 @@ public class SlaveBuildAgentTransportServer
         catch ( ContinuumBuildAgentException e )
         {
             log.error( "Failed to get build result for project " + projectId, e );
+            throw e;
         }
         
         return buildResult;

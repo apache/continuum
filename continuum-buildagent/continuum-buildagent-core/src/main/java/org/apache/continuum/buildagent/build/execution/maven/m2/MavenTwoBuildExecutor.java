@@ -96,7 +96,7 @@ public class MavenTwoBuildExecutor
 
         StringBuffer arguments = new StringBuffer();
     
-        String buildFile = getBuildFileForProject( project, buildDefinition );
+        String buildFile = getBuildFileForProject( buildDefinition );
     
         if ( !StringUtils.isEmpty( buildFile ) && !"pom.xml".equals( buildFile ) )
         {
@@ -141,7 +141,7 @@ public class MavenTwoBuildExecutor
                                         BuildDefinition buildDefinition )
         throws ContinuumAgentBuildExecutorException
     {
-        MavenProject project = getMavenProject( continuumProject, workingDirectory, buildDefinition );
+        MavenProject project = getMavenProject( workingDirectory, buildDefinition );
 
         // Maven could help us out a lot more here by knowing how to get the deployment artifacts from a project.
         // TODO: this is currently quite lame
@@ -234,7 +234,7 @@ public class MavenTwoBuildExecutor
     public void updateProjectFromWorkingDirectory( File workingDirectory, Project project, BuildDefinition buildDefinition )
         throws ContinuumAgentBuildExecutorException
     {
-        File f = getPomFile( getBuildFileForProject( project, buildDefinition ), workingDirectory );
+        File f = getPomFile( getBuildFileForProject( buildDefinition ), workingDirectory );
     
         if ( !f.exists() )
         {
@@ -255,13 +255,13 @@ public class MavenTwoBuildExecutor
         }
     }
 
-    private MavenProject getMavenProject( Project continuumProject, File workingDirectory,
-                                          BuildDefinition buildDefinition )
+    @Override
+    public MavenProject getMavenProject( File workingDirectory, BuildDefinition buildDefinition )
         throws ContinuumAgentBuildExecutorException
     {
         ContinuumProjectBuildingResult result = new ContinuumProjectBuildingResult();
 
-        File f = getPomFile( getBuildFileForProject( continuumProject, buildDefinition ), workingDirectory );
+        File f = getPomFile( getBuildFileForProject( buildDefinition ), workingDirectory );
 
         if ( !f.exists() )
         {

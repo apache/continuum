@@ -194,4 +194,23 @@ public class MasterBuildAgentTransportClient
 
         return result;
     }
+
+    public Boolean shouldBuild( Map context )
+        throws Exception
+    {
+        Boolean result = null;
+
+        try
+        {
+            result = master.shouldBuild( context );
+            log.info( "Checking if project should build" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to determine if project should build", e );
+            throw new Exception( "Failed to determine if project should build", e );
+        }
+
+        return result;
+    }
 }
