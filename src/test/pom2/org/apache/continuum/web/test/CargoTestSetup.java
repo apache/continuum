@@ -104,6 +104,7 @@ public class CargoTestSetup extends TestSetup {
         LocalConfiguration configuration =
                 (LocalConfiguration) configurationFactory.createConfiguration(
                         containerId,
+                        ContainerType.INSTALLED,
                         ConfigurationType.STANDALONE);
 
         // Find and (if provided) set the port to use for the container.
@@ -127,7 +128,7 @@ public class CargoTestSetup extends TestSetup {
             containerHome = System.getenv("TOMCAT_HOME");
         }
         System.out.println("[INFO] container home: " + containerHome);
-        container.setHome(new File(containerHome));
+        container.setHome(containerHome);
 
         // Find and (if provided) set the path to a log file
         String containerLog = System.getProperty("cargo.container.log");
@@ -140,7 +141,7 @@ public class CargoTestSetup extends TestSetup {
         String containerOutput = System.getProperty("cargo.container.output");
         if (containerOutput != null) {
             System.out.println("[INFO] container output: " + containerOutput);
-            container.setOutput(new File(containerOutput));
+            container.setOutput(containerOutput);
         }
 
         container.start();
