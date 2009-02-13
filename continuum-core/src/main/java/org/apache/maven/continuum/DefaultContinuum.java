@@ -404,20 +404,6 @@ public class DefaultContinuum
             {
                 removeProject( projectIds[i] );
             }
-
-            List<ProjectScmRoot> projectScmRoots = getProjectScmRootByProjectGroup( projectGroupId );
-
-            for ( ProjectScmRoot projectScmRoot : projectScmRoots )
-            {
-                try
-                {
-                    projectScmRootDao.removeProjectScmRoot( projectScmRoot );
-                }
-                catch ( ContinuumStoreException e )
-                {
-                    throw new ContinuumException( "unable to delete project scm root: " + projectScmRoot.getScmRootAddress() );
-                }
-            }
         }
 
         log.info( "Remove project group " + projectGroup.getName() + "(" + projectGroup.getId() + ")" );
@@ -623,6 +609,8 @@ public class DefaultContinuum
 
             List<ContinuumReleaseResult> releaseResults = releaseResultDao.getContinuumReleaseResultsByProject( projectId );
 
+            ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
+
             try
             {
                 for ( ContinuumReleaseResult releaseResult : releaseResults )
@@ -681,6 +669,8 @@ public class DefaultContinuum
             FileUtils.deleteDirectory( buildOutputDirectory );
 
             projectDao.removeProject( projectDao.getProject( projectId ) );
+
+            removeProjectScmRoot( scmRoot );
         }
         catch ( ContinuumStoreException ex )
         {
@@ -3290,6 +3280,43 @@ public class DefaultContinuum
         catch ( ContinuumStoreException e )
         {
             throw new ContinuumException( "Error while retrieving project scm root for " + projectGroupId, e );
+        }
+    }
+
+    private void removeProjectScmRoot( ProjectScmRoot projectScmRoot )
+        throws ContinuumException
+    {
+        //get all projects in the group
+        ProjectGroup group = getProjectGroupWithProjects( projectScmRoot.getProjectGroup().getId() );
+
+        List<Project> projects = group.getProjects();
+
+        boolean found = false;
+        for ( Project project : projects )
+        {
+            if ( project.getScmUrl() != null && project.getScmUrl().startsWith( projectScmRoot.getScmRootAddress() ) )
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if ( !found )
+        {
+            log.info( "Removing project scm root '" + projectScmRoot.getScmRootAddress() + "'" );
+            try
+            {
+                projectScmRootDao.removeProjectScmRoot( projectScmRoot );
+            }
+    		catch ( ContinuumStoreException e )
+    		{
+    		    log.error( "Failed to remove project scm root '" + projectScmRoot.getScmRootAddress() + "'", e );
+    		    throw new ContinuumException( "Error while removing project scm root '" + projectScmRoot.getScmRootAddress() + "'", e );
+    		}
+        }
+        else
+        {
+            log.info( "Project scm root '" + projectScmRoot.getScmRootAddress() + "' still has projects, not removing" );
         }
     }
 
