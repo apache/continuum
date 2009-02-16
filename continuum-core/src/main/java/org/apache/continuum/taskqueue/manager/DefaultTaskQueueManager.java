@@ -291,19 +291,18 @@ public class DefaultTaskQueueManager
         return false;
     }
 
-    public boolean removeFromDistributedBuildQueue( int projectGroupId, String scmRootAddress )
+    public void removeFromDistributedBuildQueue( int projectGroupId, String scmRootAddress )
         throws TaskQueueManagerException
     {
         List<PrepareBuildProjectsTask> queue = getDistributedBuildProjectsInQueue();
 
         for ( PrepareBuildProjectsTask task : queue )
         {
-            if ( task != null && task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+            if ( task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
             {
-                return distributedBuildQueue.remove( task );
+                distributedBuildQueue.remove( task );
             }
         }
-        return false;
     }
 
     public boolean removeFromPurgeQueue( int purgeConfigId )
