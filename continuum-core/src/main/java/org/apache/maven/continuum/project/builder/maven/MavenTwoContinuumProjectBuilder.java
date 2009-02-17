@@ -152,7 +152,7 @@ public class MavenTwoContinuumProjectBuilder
 
         try
         {
-            pomFile = createMetadataFile( url, username, password, result );
+            pomFile = createMetadataFile( result, url, username, password );
             
             if ( result.hasErrors() )
             {
@@ -166,42 +166,6 @@ public class MavenTwoContinuumProjectBuilder
                 return;
             }
         }
-        catch ( MalformedURLException e )
-        {
-            log.debug( "Error adding project: Malformed URL " + url, e );
-            result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
-            return;
-        }
-        catch ( URISyntaxException e )
-        {
-            log.debug( "Error adding project: Malformed URL " + url, e );
-            result.addError( ContinuumProjectBuildingResult.ERROR_MALFORMED_URL );
-            return;
-        }        
-        catch ( FileNotFoundException e )
-        {
-            log.debug( "Error adding project: File not found " + url, e );
-            result.addError( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND );
-            return;
-        }
-        catch ( ConnectException e )
-        {
-            log.debug( "Error adding project: Unable to connect " + url, e );
-            result.addError( ContinuumProjectBuildingResult.ERROR_CONNECT );
-            return;
-        }
-        catch ( IOException e )
-        {
-            log.info( "Error adding project: Unknown error downloading from " + url, e );
-            result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
-            return;
-        }
-        catch ( HttpException e )
-        {
-            log.info( "Error adding project: Unknown error downloading from " + url, e );
-            result.addError( ContinuumProjectBuildingResult.ERROR_UNKNOWN );
-            return;
-        }        
         finally
         {
             if ( pomFile != null && pomFile.exists() )
