@@ -77,7 +77,7 @@ public interface TaskQueueManager
     boolean releaseInProgress()
         throws TaskQueueManagerException;
 
-    boolean removeFromDistributedBuildQueue( int projectGroupId, String scmRootAddress )
+    void removeFromDistributedBuildQueue( int projectGroupId, String scmRootAddress )
         throws TaskQueueManagerException;
   
     /**
