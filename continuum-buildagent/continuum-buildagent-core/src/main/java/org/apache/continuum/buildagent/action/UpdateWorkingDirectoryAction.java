@@ -20,6 +20,7 @@ package org.apache.continuum.buildagent.action;
  */
 
 import java.io.File;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -61,18 +62,15 @@ public class UpdateWorkingDirectoryAction
     {
         Project project = ContinuumBuildAgentUtil.getProject( context );
 
-        BuildDefinition buildDefinition = ContinuumBuildAgentUtil.getBuildDefinition( context );
-
         UpdateScmResult scmResult;
 
         ScmResult result;
         
         try
         {
-            // TODO: not sure why this is different to the context, but it all needs to change
             File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() );
             ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
-            //config.setLatestUpdateDate( latestUpdateDate );
+            config.setLatestUpdateDate( ContinuumBuildAgentUtil.getLatestUpdateDate( context ) );
             String tag = config.getTag();
             String msg = project.getName() + "', id: '" + project.getId() + "' to '" +
                 workingDirectory.getAbsolutePath() + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." );
@@ -128,6 +126,7 @@ public class UpdateWorkingDirectoryAction
         }
 
         context.put( ContinuumBuildAgentUtil.KEY_UPDATE_SCM_RESULT, result );
+        context.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, getLatestUpdateDate( result ) );
     }
 
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )
@@ -266,5 +265,30 @@ public class UpdateWorkingDirectoryAction
             }
         }
         return message.toString();
+    }
+
+    private Date getLatestUpdateDate( ScmResult result )
+    {
+        List<ChangeSet> changes = result.getChanges();
+
+        if ( changes != null && !changes.isEmpty() )
+        {
+            long date = 0;
+
+            for ( ChangeSet change : changes )
+            {
+                if ( date < change.getDate() )
+                {
+                    date = change.getDate();
+                }
+            }
+
+            if ( date != 0 )
+            {
+                return new Date( date );
+            }
+        }
+
+        return null;
     }
 }

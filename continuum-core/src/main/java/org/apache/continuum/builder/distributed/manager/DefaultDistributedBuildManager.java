@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -222,7 +223,7 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public void removeAgentFromTaskQueueExecutor( String buildAgentUrl)
+    public void removeAgentFromTaskQueueExecutor( String buildAgentUrl )
         throws ContinuumException
     {
         log.info( "remove TaskQueueExecutor for build agent '" + buildAgentUrl + "'" );
@@ -372,7 +373,17 @@ public class DefaultDistributedBuildManager
                 buildResult.setBuildNumber( buildNumber );
                 buildResult.setModifiedDependencies( getModifiedDependencies( oldBuildResult, context ) );
                 buildResult.setScmResult( getScmResult( context ) );
-                
+
+                Date date = ContinuumBuildConstant.getLatestUpdateDate( context );
+                if ( date != null )
+                {
+                    buildResult.setLastChangedDate( date.getTime() );
+                }
+                else if ( oldBuildResult != null )
+                {
+                    buildResult.setLastChangedDate( oldBuildResult.getLastChangedDate() );
+                }
+
                 buildResultDao.addBuildResult( project, buildResult );
             
                 project.setOldState( project.getState() );
@@ -715,6 +726,19 @@ public class DefaultDistributedBuildManager
             if ( trigger == ContinuumProjectState.TRIGGER_FORCED )
             {
                 log.info( "The project build is forced, building" );
+                return true;
+            }
+
+            Date date = ContinuumBuildConstant.getLatestUpdateDate( context );
+            if ( date != null && oldBuildResult.getLastChangedDate() >= date.getTime() )
+            {
+                log.info( "No changes found,not building" );
+                return false;
+            }
+            else if ( date != null && changes.isEmpty() )
+            {
+                // fresh checkout from build agent that's why changes is empty
+                log.info( "Changes found in the current project, building" );
                 return true;
             }
 

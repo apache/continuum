@@ -21,11 +21,11 @@ package org.apache.continuum.buildagent.manager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.buildagent.build.execution.manager.BuildAgentBuildExecutorManager;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
 import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
@@ -70,11 +70,6 @@ public class DefaultBuildAgentManager
      * @plexus.requirement
      */
     private BuildAgentTaskQueueManager buildAgentTaskQueueManager;
-
-    /**
-     * @plexus.requirement
-     */
-    private BuildAgentBuildExecutorManager executorManager;
 
     public void prepareBuildProjects( List<BuildContext> buildContexts)
         throws ContinuumException
@@ -288,6 +283,7 @@ public class DefaultBuildAgentManager
         actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, buildContext.getProjectGroupId() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, buildContext.getScmRootAddress() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_OLD_SCM_RESULT, buildContext.getOldScmResult() );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, buildContext.getLatestUpdateDate() );
 
         buildContext.setActionContext( actionContext );
     }
@@ -305,7 +301,7 @@ public class DefaultBuildAgentManager
     private void cleanWorkingDirectory( BuildContext buildContext )
         throws ContinuumException
     {
-        performAction( "clean-agent-work-directory", buildContext );
+        performAction( "clean-agent-working-directory", buildContext );
     }
 
     private void updateWorkingDirectory( BuildContext buildContext )
@@ -319,12 +315,24 @@ public class DefaultBuildAgentManager
             ContinuumBuildAgentUtil.getBoolean( actionContext, ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY_EXISTS );
     
         ScmResult scmResult;
-    
+
+        Date date = null;
+
         if ( workingDirectoryExists )
         {
             performAction( "update-agent-working-directory", buildContext );
     
             scmResult = ContinuumBuildAgentUtil.getUpdateScmResult( actionContext, null );
+
+            date = ContinuumBuildAgentUtil.getLatestUpdateDate( actionContext );
+
+            if ( date == null )
+            {
+                // try to get latest update date from change log because sometimes date in the changefile is 0
+                performAction( "changelog-agent-project", buildContext );
+
+                date = ContinuumBuildAgentUtil.getLatestUpdateDate( actionContext );
+            }
         }
         else
         {
@@ -332,13 +340,18 @@ public class DefaultBuildAgentManager
     
             actionContext.put( ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY,
                                buildAgentConfigurationService.getWorkingDirectory( project.getId() ).getAbsolutePath() );
-    
+
             performAction( "checkout-agent-project", buildContext );
-    
+
             scmResult = ContinuumBuildAgentUtil.getCheckoutScmResult( actionContext, null );
+
+            performAction( "changelog-agent-project", buildContext );
+
+            date = ContinuumBuildAgentUtil.getLatestUpdateDate( actionContext );
         }
-    
+
         buildContext.setScmResult( scmResult );
+        buildContext.setLatestUpdateDate( date );
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, scmResult );
     }
 

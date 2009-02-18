@@ -30,6 +30,7 @@ import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.ScmFileSet;
 import org.apache.maven.scm.ScmTag;
 import org.apache.maven.scm.ScmVersion;
+import org.apache.maven.scm.command.changelog.ChangeLogScmResult;
 import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
@@ -133,6 +134,25 @@ public class DefaultContinuumScm
         {
             result = scmManager.update( repository, fileSet, scmVersion, configuration.getLatestUpdateDate() );
         }
+
+        return result;
+    }
+
+    public ChangeLogScmResult changeLog( ContinuumScmConfiguration configuration )
+        throws ScmException
+    {
+        ScmVersion scmVersion = getScmVersion( configuration );
+
+        // TODO: probably need to base this from a working directory in the main configuration
+        File workingDirectory = configuration.getWorkingDirectory();
+
+        ScmRepository repository = getScmRepository( configuration );
+
+        ChangeLogScmResult result;
+
+        ScmFileSet fileSet = new ScmFileSet( workingDirectory );
+
+        result = scmManager.changeLog( repository, fileSet, scmVersion, scmVersion );
 
         return result;
     }

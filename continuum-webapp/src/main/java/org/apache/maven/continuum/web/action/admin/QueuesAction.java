@@ -661,4 +661,14 @@ public class QueuesAction
     {
         this.selectedDistributedBuildTaskHashCodes = selectedDistributedBuildTaskHashCodes;
     }
+
+    public String getScmRootAddress()
+    {
+        return scmRootAddress;
+    }
+
+    public void setScmRootAddress( String scmRootAddress )
+    {
+        this.scmRootAddress = scmRootAddress;
+    }
 }

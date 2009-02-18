@@ -22,6 +22,7 @@ package org.apache.continuum.scm;
 import java.io.IOException;
 
 import org.apache.maven.scm.ScmException;
+import org.apache.maven.scm.command.changelog.ChangeLogScmResult;
 import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
@@ -57,5 +58,16 @@ public interface ContinuumScm
      * @throws ScmException if there is a problem updating
      */
     UpdateScmResult update( ContinuumScmConfiguration config )
+        throws ScmRepositoryException, NoSuchScmProviderException, ScmException;
+
+    /**
+     * Get change log for a project
+     * @param config
+     * @return the result of the change log
+     * @throws ScmRepositoryException if there is a problem with the configuration
+     * @throws NoSuchScmProviderException if there is a problem with the configuration
+     * @throws ScmException if there is a problem getting the change log
+     */
+    ChangeLogScmResult changeLog( ContinuumScmConfiguration config )
         throws ScmRepositoryException, NoSuchScmProviderException, ScmException;
 }

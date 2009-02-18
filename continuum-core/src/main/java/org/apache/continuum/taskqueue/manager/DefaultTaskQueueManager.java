@@ -295,7 +295,7 @@ public class DefaultTaskQueueManager
         throws TaskQueueManagerException
     {
         List<PrepareBuildProjectsTask> queue = getDistributedBuildProjectsInQueue();
-
+        
         for ( PrepareBuildProjectsTask task : queue )
         {
             if ( task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )

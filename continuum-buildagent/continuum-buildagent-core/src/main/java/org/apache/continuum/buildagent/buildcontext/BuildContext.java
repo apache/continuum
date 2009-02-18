@@ -19,6 +19,7 @@ package org.apache.continuum.buildagent.buildcontext;
  * under the License.
  */
 
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -73,6 +74,8 @@ public class BuildContext
     private String localRepository;
 
     private ScmResult oldScmResult;
+
+    private Date latestUpdateDate;
 
     public int getProjectGroupId()
     {
@@ -312,5 +315,15 @@ public class BuildContext
     public ScmResult getOldScmResult()
     {
         return oldScmResult;
+    }
+
+    public void setLatestUpdateDate( Date latestUpdateDate )
+    {
+        this.latestUpdateDate = latestUpdateDate;
+    }
+
+    public Date getLatestUpdateDate()
+    {
+        return latestUpdateDate;
     }
 }

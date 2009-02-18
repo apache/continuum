@@ -87,14 +87,6 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
 
         BuildDefinition buildDefinition = getBuildDefinition( context );
 
-        // do not set state of project to updating
-
-        //int state = project.getState();
-
-        //project.setState( ContinuumProjectState.UPDATING );
-
-        //projectDao.updateProject( project );
-
         UpdateScmResult scmResult;
 
         ScmResult result;

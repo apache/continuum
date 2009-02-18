@@ -602,6 +602,11 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
+        <field>
+          <name>lastChangedDate</name>
+          <version>1.1.4+</version>
+          <type>long</type>
+        </field>
       </fields>
       <codeSegments>
         <codeSegment>
