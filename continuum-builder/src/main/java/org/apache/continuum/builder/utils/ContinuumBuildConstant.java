@@ -172,6 +172,8 @@ public class ContinuumBuildConstant
 
     public static final String KEY_PROJECT_MODULES = "project-modules";
 
+    public static final String KEY_LATEST_UPDATE_DATE = "latest-update-date";
+
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -472,6 +474,10 @@ public class ContinuumBuildConstant
         return getList( context, KEY_PROJECT_MODULES );
     }
 
+    public static Date getLatestUpdateDate( Map context )
+    {
+        return getDate( context, KEY_LATEST_UPDATE_DATE );
+    }
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------

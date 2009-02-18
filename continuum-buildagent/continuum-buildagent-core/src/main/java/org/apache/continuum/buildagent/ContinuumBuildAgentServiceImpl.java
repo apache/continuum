@@ -153,7 +153,7 @@ public class ContinuumBuildAgentServiceImpl
             result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( buildContext.getProjectId() ) );
             result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( buildContext.getBuildDefinitionId() ) );
             result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( buildContext.getTrigger() ) );
-            
+
             BuildResult buildResult = buildContext.getBuildResult();
 
             if ( buildResult != null )
@@ -257,6 +257,7 @@ public class ContinuumBuildAgentServiceImpl
             context.setLocalRepository( ContinuumBuildAgentUtil.getLocalRepository( map ) );
             context.setBuildNumber( ContinuumBuildAgentUtil.getBuildNumber( map ) );
             context.setOldScmResult( getScmResult( ContinuumBuildAgentUtil.getOldScmChanges( map ) ) );
+            context.setLatestUpdateDate( ContinuumBuildAgentUtil.getLatestUpdateDate( map ) );
 
             buildContext.add( context );
         }

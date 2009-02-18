@@ -22,6 +22,7 @@ package org.apache.continuum.builder.distributed.executor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,6 +154,7 @@ public class DistributedBuildProjectTaskExecutor
             {                
                 int buildDefinitionId = projectsAndBuildDefinitions.get( project.getId() );
                 BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
+                BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( project.getId() );
 
                 Map context = new HashMap();
                 
@@ -166,6 +168,10 @@ public class DistributedBuildProjectTaskExecutor
                 context.put( ContinuumBuildConstant.KEY_PROJECT_BUILD_NUMBER, new Integer( project.getBuildNumber() ) );
                 context.put( ContinuumBuildConstant.KEY_SCM_URL, project.getScmUrl() );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_STATE, new Integer( project.getState() ) );
+                if ( buildResult != null )
+                {
+                    context.put( ContinuumBuildConstant.KEY_LATEST_UPDATE_DATE, new Date( buildResult.getStartTime() ) );
+                }
 
                 LocalRepository localRepo = project.getProjectGroup().getLocalRepository();
 

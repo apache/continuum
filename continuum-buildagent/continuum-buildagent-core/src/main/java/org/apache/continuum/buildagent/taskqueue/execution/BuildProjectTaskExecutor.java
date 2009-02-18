@@ -213,7 +213,11 @@ public class BuildProjectTaskExecutor
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ).toString() );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ).toString() );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, new Integer( buildResult.getExitCode() ) );
-        
+        if ( buildContext.getLatestUpdateDate() != null )
+        {
+            result.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, buildContext.getLatestUpdateDate() );
+        }
+
         String buildOutput = getBuildOutputText( buildContext.getProjectId() );
         if ( buildOutput == null )
         {
@@ -399,6 +403,10 @@ public class BuildProjectTaskExecutor
         map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( context.getTrigger() ) );
         map.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( context.getScmResult() ) );
         map.put( ContinuumBuildAgentUtil.KEY_MAVEN_PROJECT, getMavenProject( context ) );
+        if ( context.getLatestUpdateDate() != null )
+        {
+            map.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, context.getLatestUpdateDate() );
+        }
 
         try
         {
