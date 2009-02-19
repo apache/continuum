@@ -13,7 +13,13 @@ Run Selenium tests in src/test/java with Maven
 
 Run Selenium tests in src/test/it with Maven
  * modify src/test/resources/it.properties as needed
- * mvn clean install -f pom-it.xml
+ * mvn clean install -f it-pom.xml
+
+ Note that this does not install anything, it simply runs through the lifecycle including the integration test phases.
+ More properly it would be 'mvn clean post-integration-test', but install is much shorter to type. :)
+
+ After you have run through the lifecycle once to set up the container and webapps, you can re-start it using:
+ mvn cargo:start
 
 Run Selenium teests in src/test/pom2 with Maven
  * set TOMCAT_HOME environment variable to location of Tomcat 5.5.x installation
