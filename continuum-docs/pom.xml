@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.continuum</groupId>
     <artifactId>continuum</artifactId>
-    <version>1.2.4-SNAPSHOT</version>
+    <version>1.2.3</version>
   </parent>
   <artifactId>continuum-docs</artifactId>
   <groupId>org.apache.continuum</groupId>
