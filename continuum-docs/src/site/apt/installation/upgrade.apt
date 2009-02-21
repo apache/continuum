@@ -40,7 +40,7 @@ alter table CHANGESET alter column CHANGECOMMENT SET DATA TYPE varchar(8192)
 
         * {{http://repo1.maven.org/maven2/org/apache/maven/continuum/data-management-cli/1.1/data-management-cli-1.1-app.jar}}
         
-        * {{http://repo1.maven.org/maven2/org/apache/continuum/data-management-cli/1.2/data-management-cli-1.2-app.jar}}
+        * {{http://repo1.maven.org/maven2/org/apache/continuum/data-management-cli/1.2.3.1/data-management-cli-1.2.3.1-app.jar}}
 
     The first version of this tool is 1.1-beta-2
 
@@ -53,8 +53,8 @@ alter table CHANGESET alter column CHANGECOMMENT SET DATA TYPE varchar(8192)
         * Export the build and user data from the old version using the jar for the old version:
 
 +------------------------------------------+
-java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -buildsJdbcUrl jdbc:derby:${old.continuum.home}/data/continuum/database -mode EXPORT -directory backups
-java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -usersJdbcUrl jdbc:derby:${old.continuum.home}/data/users/database -mode EXPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.1-app.jar -buildsJdbcUrl jdbc:derby:${old.continuum.home}/data/continuum/database -mode EXPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.1-app.jar -usersJdbcUrl jdbc:derby:${old.continuum.home}/data/users/database -mode EXPORT -directory userbackups
 +------------------------------------------+
 
 * Importing Data to the new version
@@ -70,8 +70,8 @@ java -Xmx512m -jar data-management-cli-1.1-beta-4-app.jar -usersJdbcUrl jdbc:der
         * Import the build and user data into the new version using the jar for the new version:
 
 +------------------------------------------+
-java -Xmx512m -jar data-management-cli-1.1-app.jar -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/continuum/database -mode IMPORT -directory backups
-java -Xmx512m -jar data-management-cli-1.2-app.jar -usersJdbcUrl jdbc:derby:${new.continuum.home}/data/users/database -mode IMPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.2.3.1-app.jar -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/databases/users -mode IMPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.2.3.1-app.jar -usersJdbcUrl jdbc:derby:${new.continuum.home}/data/databases/continuum -mode IMPORT -directory userbackups
 +------------------------------------------+
 
         * <<NEXT_VAL values in SEQUENCE_TABLE must be checked before restarting continuum>>
@@ -111,7 +111,7 @@ java -Xmx512m -jar data-management-cli-1.2-app.jar -usersJdbcUrl jdbc:derby:${ne
 xsltproc copy.xsl builds.xml > fixed-builds.xml
 +------------------------------------------+
 
-~~* Upgrade Notes
-~~ TODO:  link to static export, not diectly to Confluence
-~~  Additional notes on upgrading are maintained in the {{{http://cwiki.apache.org/confluence/display/CONTINUUM/Continuum+Upgrade}wiki}}.
+* Upgrade Notes
+
+  Additional notes on upgrading are maintained in the {{{http://cwiki.apache.org/confluence/display/CONTINUUM/Continuum+Upgrade}wiki}}.
   

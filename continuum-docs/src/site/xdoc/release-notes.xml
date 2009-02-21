@@ -3,7 +3,7 @@
     <title>Release Notes</title>
   </properties>  
 <body>
-	
+
 <h2>Release Notes - Continuum - Version 1.2.3</h2>
 
 <p>The Apache Continuum team is pleased to announce Apache Continuum 1.2.3</p>
@@ -46,7 +46,15 @@
 </li>
 </ul>
 
-  
+<h3>Changes in Continuum Data Management 1.2.3.1</h3>
+
+<h2>        Bug
+</h2>
+<ul>
+<li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2081'>CONTINUUM-2081</a>] -         Database migration tool does not work
+</li>
+</ul>
+    
 Have Fun !
 <br/><br/>
 --<br/>
