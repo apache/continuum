@@ -26,6 +26,7 @@
   </parent>
   <artifactId>continuum-docs</artifactId>
   <groupId>org.apache.continuum</groupId>
+  <version>1.2.3.1-SNAPSHOT</version>
   <name>Continuum :: docs</name>
   <packaging>pom</packaging>
   <url>http://continuum.apache.org/docs/${project.version}</url>
