@@ -25,10 +25,11 @@ under the License.
   <parent>
     <artifactId>continuum</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.2.4-SNAPSHOT</version>
+    <version>1.2.3</version>
   </parent>
   <packaging>pom</packaging>
   <artifactId>continuum-data-management</artifactId>
+  <version>1.2.3.1-SNAPSHOT</version>
   <name>Continuum :: Data Management :: Parent</name>
   <modules>
     <module>data-management-cli</module>
@@ -55,4 +56,46 @@ under the License.
       </plugin>
     </plugins>
   </build>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>data-management-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-legacy</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-model</artifactId>
+        <version>1.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-api</artifactId>
+        <version>1.2.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-store</artifactId>
+        <version>1.2.3</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>continuum-store</artifactId>
+        <classifier>tests</classifier>
+        <version>1.2.3</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.continuum</groupId>
+        <artifactId>data-management-jdo</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
