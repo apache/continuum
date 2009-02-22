@@ -422,7 +422,14 @@ public abstract class AbstractBuildExecutor
                 Map map = new HashMap();
                 map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, dependency.getGroupId() );
                 map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, dependency.getArtifactId() );
-                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, dependency.getVersion() );
+                if ( StringUtils.isNotBlank( dependency.getVersion() ) )
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, dependency.getVersion() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, "" );
+                }
 
                 pDependencies.add( map );
             }
