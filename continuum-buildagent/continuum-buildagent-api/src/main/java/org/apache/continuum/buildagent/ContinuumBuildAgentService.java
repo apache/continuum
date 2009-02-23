@@ -38,4 +38,10 @@ public interface ContinuumBuildAgentService
     
     void cancelBuild()
         throws ContinuumBuildAgentException;
+
+    String generateWorkingCopyContent( int projectId, String userDirectory, String baseUrl, String imagesBaseUrl )
+        throws ContinuumBuildAgentException;
+
+    String getProjectFileContent( int projectId, String directory, String filename )
+        throws ContinuumBuildAgentException;
 }

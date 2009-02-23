@@ -679,6 +679,72 @@ public class DefaultDistributedBuildManager
         }
     }
 
+    public String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imageBaseUrl )
+        throws ContinuumException
+    {
+        BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
+
+        if ( buildResult != null )
+        {
+            String buildAgentUrl = buildResult.getBuildUrl();
+
+            if ( buildAgentUrl == null )
+            {
+                return "";
+            }
+
+            try
+            {
+                if ( directory == null )
+                {
+                    directory = "";
+                }
+
+                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                return client.generateWorkingCopyContent( projectId, directory, baseUrl, imageBaseUrl );
+            }
+            catch ( MalformedURLException e )
+            {
+                log.error( "Invalid build agent url " + buildAgentUrl );
+            }
+            catch ( Exception e )
+            {
+                log.error( "Error while generating working copy content from build agent " + buildAgentUrl, e );
+            }
+        }
+        return "";
+    }
+
+    public String getFileContent( int projectId, String directory, String filename )
+        throws ContinuumException
+    {
+        BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
+
+        if ( buildResult != null )
+        {
+            String buildAgentUrl = buildResult.getBuildUrl();
+
+            if ( buildAgentUrl == null )
+            {
+                return "";
+            }
+
+            try
+            {
+                SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                return client.getProjectFileContent( projectId, directory, filename );
+            }
+            catch ( MalformedURLException e )
+            {
+                log.error( "Invalid build agent url " + buildAgentUrl );
+            }
+            catch ( Exception e )
+            {
+                log.error( "Error while retrieving content of " + filename, e );
+            }
+        }
+        return "";
+    }
     public boolean shouldBuild( Map context )
     {
         try
@@ -1016,6 +1082,7 @@ public class DefaultDistributedBuildManager
         buildResult.setExitCode( ContinuumBuildConstant.getBuildExitCode( context ) );
         buildResult.setState( ContinuumBuildConstant.getBuildState( context ) );
         buildResult.setTrigger( ContinuumBuildConstant.getTrigger( context ) );
+        buildResult.setBuildUrl( ContinuumBuildConstant.getBuildAgentUrl( context ) );
 
         return buildResult;
     }

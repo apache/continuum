@@ -134,8 +134,37 @@ public class SlaveBuildAgentTransportServer
         catch ( ContinuumBuildAgentException e )
         {
             log.error( "Failed to cancel build", e );
+            throw e;
         }
 
         return result;
+    }
+
+    public String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.generateWorkingCopyContent( projectId, directory, baseUrl, imagesBaseUrl );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+           log.error( "Failed to generate working copy content", e );
+           throw e;
+        }
+    }
+
+    public String getProjectFileContent( int projectId, String directory, String filename )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getProjectFileContent( projectId, directory, filename );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve project file content", e );
+            throw e;
+        }
     }
 }

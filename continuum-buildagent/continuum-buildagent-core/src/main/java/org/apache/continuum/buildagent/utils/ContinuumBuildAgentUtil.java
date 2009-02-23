@@ -19,6 +19,7 @@ package org.apache.continuum.buildagent.utils;
  * under the License.
  */
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
+import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -201,6 +203,8 @@ public class ContinuumBuildAgentUtil
     public static final String KEY_MAVEN_PROJECT = "maven-project";
 
     public static final String KEY_LATEST_UPDATE_DATE = "latest-update-date";
+
+    public static final String KEY_BUILD_AGENT_URL = "build-agent-url";
 
     public static Integer getProjectId( Map context )
     {
@@ -399,6 +403,11 @@ public class ContinuumBuildAgentUtil
     public static Date getLatestUpdateDate( Map context )
     {
         return getDate( context, KEY_LATEST_UPDATE_DATE );
+    }
+
+    public static String getBuildAgentUrl( Map context )
+    {
+        return getString( context, KEY_BUILD_AGENT_URL );
     }
 
     // ----------------------------------------------------------------------
@@ -678,5 +687,61 @@ public class ContinuumBuildAgentUtil
         }
 
         return files;
+    }
+
+    public static List<File> getFiles( String userDirectory, File workingDirectory )
+        throws ContinuumException
+    {
+        return getFiles( workingDirectory, null, userDirectory );
+    }
+
+    private static List<File> getFiles( File baseDirectory, String currentSubDirectory, String userDirectory )
+    {
+        List<File> dirs = new ArrayList<File>();
+
+        File workingDirectory;
+
+        if ( currentSubDirectory != null )
+        {
+            workingDirectory = new File( baseDirectory, currentSubDirectory );
+        }
+        else
+        {
+            workingDirectory = baseDirectory;
+        }
+
+        String[] files = workingDirectory.list();
+
+        if ( files != null )
+        {
+            for ( String file : files )
+            {
+                File current = new File( workingDirectory, file );
+
+                String currentFile;
+
+                if ( currentSubDirectory == null )
+                {
+                    currentFile = file;
+                }
+                else
+                {
+                    currentFile = currentSubDirectory + "/" + file;
+                }
+
+                if ( userDirectory != null && current.isDirectory() && userDirectory.startsWith( currentFile ) )
+                {
+                    dirs.add( current );
+
+                    dirs.addAll( getFiles( baseDirectory, currentFile, userDirectory ) );
+                }
+                else
+                {
+                    dirs.add( current );
+                }
+            }
+        }
+
+        return dirs;
     }
 }

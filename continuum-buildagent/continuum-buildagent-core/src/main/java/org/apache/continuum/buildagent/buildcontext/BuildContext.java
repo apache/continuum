@@ -77,6 +77,8 @@ public class BuildContext
 
     private Date latestUpdateDate;
 
+    private String buildAgentUrl;
+
     public int getProjectGroupId()
     {
         return projectGroupId;
@@ -325,5 +327,15 @@ public class BuildContext
     public Date getLatestUpdateDate()
     {
         return latestUpdateDate;
+    }
+
+    public void setBuildAgentUrl( String buildAgentUrl )
+    {
+        this.buildAgentUrl = buildAgentUrl;
+    }
+
+    public String getBuildAgentUrl()
+    {
+        return buildAgentUrl;
     }
 }

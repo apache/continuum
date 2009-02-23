@@ -218,6 +218,7 @@ public class DistributedBuildProjectTaskExecutor
                 context.put( ContinuumBuildConstant.KEY_BUILD_FRESH, new Boolean( buildDef.isBuildFresh() ) );
                 context.put( ContinuumBuildConstant.KEY_ALWAYS_BUILD, new Boolean( buildDef.isAlwaysBuild() ) );
                 context.put( ContinuumBuildConstant.KEY_OLD_SCM_CHANGES, getOldScmChanges( project.getId(), buildDefinitionId ) );
+                context.put( ContinuumBuildConstant.KEY_BUILD_AGENT_URL, buildAgentUrl );
 
                 buildContext.add( context );
             }
