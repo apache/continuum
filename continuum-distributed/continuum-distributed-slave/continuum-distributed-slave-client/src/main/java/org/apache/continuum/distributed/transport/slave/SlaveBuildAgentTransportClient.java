@@ -175,6 +175,44 @@ public class SlaveBuildAgentTransportClient
             throw new Exception( "Error cancelling build", e );
         }
 
-        return null;
+        return result;
+    }
+
+    public String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
+        throws Exception
+    {
+        String result = null;
+
+        try
+        {
+            result = slave.generateWorkingCopyContent( projectId, directory, baseUrl, imagesBaseUrl );
+            log.info( "Generated working copy content" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error generating working copy content", e );
+            throw new Exception( "Error generating working copy content", e );
+        }
+
+        return result;
+    }
+
+    public String getProjectFileContent( int projectId, String directory, String filename )
+        throws Exception
+    {
+        String result = null;
+
+        try
+        {
+            result = slave.getProjectFileContent( projectId, directory, filename );
+            log.info( "Retrived project file content" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error retrieving project file content", e );
+            throw new Exception( "Error retrieving project file content", e );
+        }
+
+        return result;
     }
 }

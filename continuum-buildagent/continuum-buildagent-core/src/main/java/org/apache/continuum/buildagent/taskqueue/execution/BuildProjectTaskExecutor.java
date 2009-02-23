@@ -238,6 +238,7 @@ public class BuildProjectTaskExecutor
         }
 
         result.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, ContinuumBuildAgentUtil.createScmResult( buildContext ) );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_AGENT_URL, buildContext.getBuildAgentUrl() );
 
         try
         {

@@ -20,10 +20,13 @@ package org.apache.continuum.buildagent;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
@@ -33,6 +36,7 @@ import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.model.Installation;
 import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
+import org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -72,6 +76,11 @@ public class ContinuumBuildAgentServiceImpl
      * @plexus.requirement
      */
     private BuildContextManager buildContextManager;
+
+    /**
+     * @plexus.requirement
+     */
+    private WorkingCopyContentGenerator generator;
 
     public void buildProjects( List<Map> projectsBuildContext )
         throws ContinuumBuildAgentException
@@ -230,6 +239,51 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
+    public String generateWorkingCopyContent( int projectId, String userDirectory, String baseUrl, String imagesBaseUrl )
+        throws ContinuumBuildAgentException
+    {
+        File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( projectId );
+
+        try
+        {
+            List<File> files = ContinuumBuildAgentUtil.getFiles( userDirectory, workingDirectory );
+            return generator.generate( files, baseUrl, imagesBaseUrl, workingDirectory );
+        }
+        catch ( ContinuumException e )
+        {
+            log.error( "Failed to generate working copy content", e );
+        }
+            
+        return "";
+    }
+
+    public String getProjectFileContent( int projectId, String directory, String filename )
+        throws ContinuumBuildAgentException
+    {
+        String relativePath = "\\.\\./"; // prevent users from using relative paths.
+        Pattern pattern = Pattern.compile( relativePath );
+        Matcher matcher = pattern.matcher( directory );
+        String filteredDirectory = matcher.replaceAll( "" );
+
+        matcher = pattern.matcher( filename );
+        String filteredFilename = matcher.replaceAll( "" );
+
+        File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( projectId );
+
+        File fileDirectory = new File( workingDirectory, filteredDirectory );
+
+        File userFile = new File( fileDirectory, filteredFilename );
+
+        try
+        {
+            return FileUtils.fileRead( userFile );
+        }
+        catch ( IOException e )
+        {
+            throw new ContinuumBuildAgentException( "Can't read file " + filename, e );
+        }
+    }
+
     private List<BuildContext> initializeBuildContext( List<Map> projectsBuildContext )
     {
         List<BuildContext> buildContext = new ArrayList<BuildContext>();
@@ -258,6 +312,7 @@ public class ContinuumBuildAgentServiceImpl
             context.setBuildNumber( ContinuumBuildAgentUtil.getBuildNumber( map ) );
             context.setOldScmResult( getScmResult( ContinuumBuildAgentUtil.getOldScmChanges( map ) ) );
             context.setLatestUpdateDate( ContinuumBuildAgentUtil.getLatestUpdateDate( map ) );
+            context.setBuildAgentUrl( ContinuumBuildAgentUtil.getBuildAgentUrl( map ) );
 
             buildContext.add( context );
         }

@@ -68,4 +68,10 @@ public interface DistributedBuildManager
         throws ContinuumException;
 
     boolean shouldBuild( Map context );
+
+    String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
+        throws ContinuumException;
+
+    String getFileContent( int projectId, String directory, String filename )
+        throws ContinuumException;
 }

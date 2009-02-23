@@ -41,4 +41,10 @@ public interface SlaveBuildAgentTransportService
     public Boolean ping() throws Exception;
 
     public Boolean cancelBuild() throws Exception;
+
+    public String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
+        throws Exception;
+
+    public String getProjectFileContent( int projectId, String directory, String filename )
+        throws Exception;
 }

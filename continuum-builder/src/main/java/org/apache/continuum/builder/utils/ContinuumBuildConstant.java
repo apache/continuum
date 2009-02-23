@@ -174,6 +174,8 @@ public class ContinuumBuildConstant
 
     public static final String KEY_LATEST_UPDATE_DATE = "latest-update-date";
 
+    public static final String KEY_BUILD_AGENT_URL = "build-agent-url";
+
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -478,6 +480,12 @@ public class ContinuumBuildConstant
     {
         return getDate( context, KEY_LATEST_UPDATE_DATE );
     }
+
+    public static String getBuildAgentUrl( Map context )
+    {
+        return getString( context, KEY_BUILD_AGENT_URL );
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
