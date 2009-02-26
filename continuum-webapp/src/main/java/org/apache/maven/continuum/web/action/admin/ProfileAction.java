@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
@@ -71,7 +73,22 @@ public class ProfileAction
 
     private List<Installation> profileInstallations;
 
+    private List<BuildAgentGroupConfiguration> buildAgentGroups;
+
     private String message;
+
+    public void prepare()
+        throws Exception
+    {
+        super.prepare();
+
+        List<BuildAgentGroupConfiguration> agentGroups = getContinuum().getConfiguration().getBuildAgentGroups();
+        if ( agentGroups == null )
+        {
+            agentGroups = Collections.EMPTY_LIST;
+        }
+        this.setBuildAgentGroups( agentGroups );
+    }
 
     // -------------------------------------------------------
     //  Webwork Methods
@@ -139,11 +156,15 @@ public class ProfileAction
                 // but in the UI maybe some installations has been we retrieve it
                 // and only set the name related to CONTINUUM-1361
                 String name = profile.getName();
+                String buildAgentGroup = profile.getBuildAgentGroup();
+
                 profile = profileService.getProfile( profile.getId() );
                 // CONTINUUM-1746 we update the profile only if the name has changed 
-                if ( !StringUtils.equals( name, profile.getName() ) )
+                // jancajas: added build agent group. updated profile if agent group is changed also.
+                if ( !StringUtils.equals( name, profile.getName() ) || !StringUtils.equals( buildAgentGroup, profile.getBuildAgentGroup() ))
                 {
                     profile.setName( name );
+                    profile.setBuildAgentGroup( buildAgentGroup );
                     profileService.updateProfile( profile );
                 }
             }
@@ -310,5 +331,15 @@ public class ProfileAction
     public void setMessage( String message )
     {
         this.message = message;
+    }
+
+    public List<BuildAgentGroupConfiguration> getBuildAgentGroups()
+    {
+        return buildAgentGroups;
+    }
+
+    public void setBuildAgentGroups( List<BuildAgentGroupConfiguration> buildAgentGroups )
+    {
+        this.buildAgentGroups = buildAgentGroups;
     }
 }

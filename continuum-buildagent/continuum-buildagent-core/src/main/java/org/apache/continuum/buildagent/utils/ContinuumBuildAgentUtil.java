@@ -303,7 +303,7 @@ public class ContinuumBuildAgentUtil
 
     public static ScmResult getScmResult( Map context, Object defaultValue )
     {
-        return (ScmResult) getObject( context, KEY_SCM_RESULT );
+        return (ScmResult) getObject( context, KEY_SCM_RESULT, defaultValue );
     }
 
     public static int getTrigger( Map context )

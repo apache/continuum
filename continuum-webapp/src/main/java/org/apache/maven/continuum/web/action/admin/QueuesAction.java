@@ -27,13 +27,13 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.buildmanager.BuildManagerException;
+import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
-import org.apache.continuum.taskqueue.manager.TaskQueueManager;
-import org.apache.maven.continuum.Continuum;
+import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -45,6 +45,7 @@ import org.apache.maven.continuum.web.model.DistributedBuildSummary;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.taskqueue.Task;
+import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
@@ -229,7 +230,7 @@ public class QueuesAction
                distributedBuildSummary.add( summary );
             }
 
-            distributedBuildQueues = getContinuum().getTaskQueueManager().getDistributedBuildProjectsInQueue();
+            distributedBuildQueues = aggregateQueues();
 
             return DISTRIBUTED_BUILD_SUCCESS;
         }
@@ -670,5 +671,33 @@ public class QueuesAction
     public void setScmRootAddress( String scmRootAddress )
     {
         this.scmRootAddress = scmRootAddress;
+    }
+
+    private List<PrepareBuildProjectsTask> aggregateQueues() throws TaskQueueManagerException
+    {
+        List<PrepareBuildProjectsTask> aggregatedQueues = new ArrayList<PrepareBuildProjectsTask>();
+
+        List<PrepareBuildProjectsTask> overallQueues = getContinuum().getTaskQueueManager().getDistributedBuildProjectsInQueue();
+
+        Map <String, DistributedBuildTaskQueueExecutor> agentTaskQueueExecutors = distributedBuildManager.getTaskQueueExecutors();
+
+        for ( String url : agentTaskQueueExecutors.keySet() )
+        {
+            try
+            {
+                getLogger().debug("size of each queue snapshot " + url + " : " + agentTaskQueueExecutors.get( url ).getQueue().getQueueSnapshot().size()); 
+                aggregatedQueues.addAll( agentTaskQueueExecutors.get( url ).getQueue().getQueueSnapshot() ) ;
+            }
+            catch ( TaskQueueException e )
+            {
+                //silently ignore error
+                getLogger().error( "Error encountered retrieving queue snapshot from queue :" + url, e );
+            }
+        }
+
+        getLogger().debug("size of agg. queue " + aggregatedQueues.size() );
+        aggregatedQueues.addAll( overallQueues );
+
+        return aggregatedQueues;
     }
 }

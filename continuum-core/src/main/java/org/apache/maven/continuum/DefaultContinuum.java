@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.buildqueue.BuildQueueService;
@@ -263,6 +264,11 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private BuildQueueService buildQueueService;
+
+    /**
+     * @plexus.requirement
+     */
+    private DistributedBuildManager distributedBuildManager;
 
     public DefaultContinuum()
     {
@@ -3692,5 +3698,10 @@ public class DefaultContinuum
     void setProjectDao( ProjectDao  projectDao )
     {
         this.projectDao = projectDao;
+    }
+
+    public DistributedBuildManager getDistributedBuildManager()
+    {
+        return distributedBuildManager;
     }
 }

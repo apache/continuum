@@ -79,6 +79,14 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
+        <field>
+          <name>buildAgentGroups</name>
+          <version>1.1.1+</version>
+          <association>
+            <type>BuildAgentGroupConfiguration</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
       </fields>
     </class>
     <class xml.tagName="proxy-configuration">
@@ -125,6 +133,25 @@
           <name>enabled</name>
           <version>1.1.0+</version>
           <type>boolean</type>
+        </field>
+      </fields>
+    </class>
+    <class xml.tagName="buildagentgroup-configuration">
+      <name>BuildAgentGroupConfiguration</name>
+      <version>1.1.1+</version>
+      <fields>
+        <field>
+          <name>name</name>
+          <version>1.1.1+</version>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildAgents</name>
+          <version>1.1.1+</version>
+          <association>
+            <type>BuildAgentConfiguration</type>
+            <multiplicity>*</multiplicity>
+          </association>
         </field>
       </fields>
     </class>    

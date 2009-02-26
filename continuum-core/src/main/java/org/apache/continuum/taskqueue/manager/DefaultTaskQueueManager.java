@@ -63,7 +63,7 @@ public class DefaultTaskQueueManager
     /**
      * @plexus.requirement role-hint="distributed-build-project"
      */
-     private TaskQueue distributedBuildQueue;
+    private TaskQueue distributedBuildQueue;
 
     /**
      * @plexus.requirement role-hint="purge"
@@ -413,5 +413,5 @@ public class DefaultTaskQueueManager
         {
             throw new TaskQueueManagerException( "Unable to lookup current task", e );
         }
-    }    
+    }
 }

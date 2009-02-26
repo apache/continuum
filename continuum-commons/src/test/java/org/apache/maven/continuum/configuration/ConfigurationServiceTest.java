@@ -20,6 +20,7 @@ package org.apache.maven.continuum.configuration;
  */
 
 import org.apache.continuum.configuration.BuildAgentConfiguration;
+import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
@@ -119,5 +120,42 @@ public class ConfigurationServiceTest
         assertEquals( "http://buildagent/xmlrpc", service.getBuildAgents().get( 0 ).getUrl() );
         assertEquals( "linux", service.getBuildAgents().get( 0 ).getDescription() );
         assertTrue( service.getBuildAgents().get( 0 ).isEnabled() );
+
+        BuildAgentGroupConfiguration buildAgentGroup = new BuildAgentGroupConfiguration();
+        buildAgentGroup.setName( "group-1" );
+        buildAgentGroup.addBuildAgent( buildAgent );
+        service.addBuildAgentGroup( buildAgentGroup );
+
+        service.store();
+        service.reload();
+        assertEquals( "check # build agent groups", 1, service.getBuildAgentGroups().size() );
+        assertEquals( "group-1", service.getBuildAgentGroups().get( 0 ).getName() );
+        assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription());
+
+        BuildAgentConfiguration buildAgent2 = new BuildAgentConfiguration( "http://machine-1/xmlrpc", "node-1", true);
+        //buildAgentGroup.addBuildAgent( buildAgent2 );
+        service.addBuildAgent( buildAgentGroup, buildAgent2 );
+
+        service.store();
+        service.reload();
+
+        assertEquals( "check # build agent groups", 1, service.getBuildAgentGroups().size() );
+        assertEquals( "check # build agent groups", 2, service.getBuildAgentGroups().get( 0 ).getBuildAgents().size() );
+        assertEquals( "group-1", service.getBuildAgentGroups().get( 0 ).getName() );
+        assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription());     
+        assertEquals( "http://machine-1/xmlrpc",
+                      service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).getUrl() );
+        assertEquals( "node-1",
+                      service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).getDescription() );
+        assertEquals( true,
+                      service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).isEnabled() );
+
+        service.removeBuildAgent( buildAgentGroup, buildAgent2 );
+        service.store();
+        service.reload();
+
+        assertEquals( "check # build agent groups", 1, service.getBuildAgentGroups().size() );
+        assertEquals( "group-1", service.getBuildAgentGroups().get( 0 ).getName() );
+        assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription());
     }
 }

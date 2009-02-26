@@ -345,4 +345,9 @@ public class ThreadedDistributedBuildTaskQueueExecutor
     {
         return executor.getBuildAgentUrl();
     }
+
+    public TaskQueue getQueue()
+    {
+        return queue;
+    }
 }

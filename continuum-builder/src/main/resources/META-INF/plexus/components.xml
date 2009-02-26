@@ -19,7 +19,7 @@
 
 <component-set>
   <components>
-  
+
     <!--
      |
      | Distributed Build Task Queue
@@ -32,6 +32,99 @@
       <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
       <lifecycle-handler>plexus-configurable</lifecycle-handler>
     </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+      <role-hint>distributed-build-project-deferred</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
+      <lifecycle-handler>plexus-configurable</lifecycle-handler>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+      <role-hint>distributed-build-project-per-agent</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
+      <lifecycle-handler>plexus-configurable</lifecycle-handler>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+      <role-hint>distributed-build-project-overall</role-hint>
+      <implementation>org.apache.continuum.builder.distributed.executor.overall.DistributedBuildProjectTaskExecutorOverall</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.configuration.ConfigurationService</role>
+          <role-hint>default</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.dao.ProjectDao</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.dao.BuildDefinitionDao</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.continuum.builder.distributed.manager.DistributedBuildManager</role>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>distributed-build-project-deferred</role-hint>
+          <field-name>deferredTaskQueue</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
+      <role-hint>distributed-build-project-overall</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <instantiation-strategy>singleton</instantiation-strategy>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+          <role-hint>distributed-build-project-overall</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>distributed-build-project</role-hint>
+        </requirement>
+      </requirements>
+      <configuration>
+        <name>distributed-build-project-overall</name>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+      <role-hint>distributed-build-project-deferred</role-hint>
+      <implementation>org.apache.continuum.builder.distributed.executor.deferred.DistributedBuildProjectTaskExecutorDeferred</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>distributed-build-project</role-hint>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
+      <role-hint>distributed-build-project-deferred</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <instantiation-strategy>singleton</instantiation-strategy>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+          <role-hint>distributed-build-project-deferred</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>distributed-build-project-deferred</role-hint>
+        </requirement>
+      </requirements>
+      <configuration>
+        <name>distributed-build-project-deferred</name>
+      </configuration>
+    </component>    
 
     <component>
       <role>org.apache.continuum.builder.distributed.executor.DistributedBuildTaskExecutor</role>
@@ -62,7 +155,7 @@
 	  <requirements>
         <requirement>
           <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
-          <role-hint>distributed-build-project</role-hint>
+          <role-hint>distributed-build-project-per-agent</role-hint>
         </requirement>
         <requirement>
           <role>org.apache.continuum.builder.distributed.executor.DistributedBuildTaskExecutor</role>
