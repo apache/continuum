@@ -171,6 +171,29 @@ public class DefaultContinuumConfiguration
                 
                 this.generalConfiguration.setBuildAgents( buildAgents );
             }
+            if ( configuration.getBuildAgentGroups() != null )
+            {
+                List<BuildAgentGroupConfiguration> buildAgentGroups = new ArrayList<BuildAgentGroupConfiguration>();
+                List<org.apache.continuum.configuration.model.BuildAgentGroupConfiguration> groups = configuration.getBuildAgentGroups();
+                
+                for ( org.apache.continuum.configuration.model.BuildAgentGroupConfiguration group : groups )
+                {
+                    List <BuildAgentConfiguration> agents = new ArrayList<BuildAgentConfiguration>();
+                    List<org.apache.continuum.configuration.model.BuildAgentConfiguration> modelAgents =  group.getBuildAgents();                   
+                    for ( org.apache.continuum.configuration.model.BuildAgentConfiguration modelAgent : modelAgents )
+                    {
+                        BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( modelAgent.getUrl(),
+                                                                                          modelAgent.getDescription(),
+                                                                                          modelAgent.isEnabled() ) ;
+                        agents.add( buildAgent );
+                    }
+
+                    BuildAgentGroupConfiguration groupAgent = new BuildAgentGroupConfiguration( group.getName(),agents );
+                    buildAgentGroups.add( groupAgent );
+                }
+
+                this.generalConfiguration.setBuildAgentGroups( buildAgentGroups );
+            }
         }
         catch ( IOException e )
         {
@@ -248,6 +271,38 @@ public class DefaultContinuumConfiguration
                 }
                 configurationModel.setBuildAgents( buildAgents );
             }
+            if ( this.generalConfiguration.getBuildAgentGroups() != null )
+            {
+                List buildAgentGroups = new ArrayList();
+
+                for ( BuildAgentGroupConfiguration group : this.generalConfiguration.getBuildAgentGroups() )
+                {
+                    org.apache.continuum.configuration.model.BuildAgentGroupConfiguration buildAgentGroup =
+                        new org.apache.continuum.configuration.model.BuildAgentGroupConfiguration();
+                    buildAgentGroup.setName( group.getName() );
+
+                    List buildAgents = new ArrayList();
+
+                    if ( group.getBuildAgents() != null )
+                    {
+                        for ( BuildAgentConfiguration agent : group.getBuildAgents() )
+                        {
+                            org.apache.continuum.configuration.model.BuildAgentConfiguration buildAgent =
+                                new org.apache.continuum.configuration.model.BuildAgentConfiguration();
+                            buildAgent.setUrl( agent.getUrl() );
+                            buildAgent.setDescription( agent.getDescription() );
+                            buildAgent.setEnabled( agent.isEnabled() );
+
+                            buildAgents.add( buildAgent );
+                        }
+
+                        buildAgentGroup.setBuildAgents( buildAgents );
+                    }
+
+                    buildAgentGroups.add( buildAgentGroup );
+                }
+                configurationModel.setBuildAgentGroups( buildAgentGroups );
+            }
 
             ContinuumConfigurationModelXpp3Writer writer = new ContinuumConfigurationModelXpp3Writer();
             FileWriter fileWriter = new FileWriter( file );
@@ -259,7 +314,7 @@ public class DefaultContinuumConfiguration
         }
         
     }
-    
+
     
     // ----------------------------------------
     //  Spring injection

@@ -46,6 +46,8 @@ public class GeneralConfiguration
     private int numberOfBuildsInParallel = 1;
 
     private List<BuildAgentConfiguration> buildAgents;
+    
+    private List<BuildAgentGroupConfiguration> buildAgentGroups;
 
     public GeneralConfiguration()
     {
@@ -136,5 +138,15 @@ public class GeneralConfiguration
     public void setBuildAgents( List<BuildAgentConfiguration> buildAgents )
     {
         this.buildAgents = buildAgents;
+    }
+
+    public List<BuildAgentGroupConfiguration> getBuildAgentGroups()
+    {
+        return buildAgentGroups;
+    }
+
+    public void setBuildAgentGroups( List<BuildAgentGroupConfiguration> buildAgentGroups )
+    {
+        this.buildAgentGroups = buildAgentGroups;
     }
 }

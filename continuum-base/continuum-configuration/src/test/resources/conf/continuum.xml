@@ -9,4 +9,16 @@
       <enabled>true</enabled>
     </buildAgent>
   </buildAgents>
+  <buildAgentGroups>
+    <buildAgentGroup>
+      <name>group-agent-1</name>
+      <buildAgents>
+        <buildAgent>
+          <url>http://buildagent/xmlrpc</url>
+          <description>linux</description>
+          <enabled>true</enabled>
+        </buildAgent>
+      </buildAgents>
+    </buildAgentGroup>
+  </buildAgentGroups>
 </continuum-configuration>

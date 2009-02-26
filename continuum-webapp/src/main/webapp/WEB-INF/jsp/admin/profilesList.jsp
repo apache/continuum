@@ -66,6 +66,7 @@
             </s:if>
           </ul>
         </ec:column>
+        <ec:column property="buildAgentGroup" title="profilesList.buildAgentGroup.label" style="white-space: nowrap" />                
         <ec:column property="id" title="&nbsp;" width="1%">
           <a href="editBuildEnv!edit.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
             <img src="<s:url value='/images/edit.gif' includeParams="none"/>" alt="<s:text name='edit'/>" title="<s:text name='edit'/>" border="0" />
@@ -75,7 +76,7 @@
           <a href="confirmDeleteBuildEnv!confirmDelete.action?profile.id=<c:out value="${pageScope.profile.id}"/>">
             <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
           </a>                    
-        </ec:column>        
+        </ec:column>
       </ec:row>
     </ec:table>
     </c:if>

@@ -962,6 +962,30 @@
       <result name="success">/WEB-INF/jsp/admin/viewBuildAgent.jsp</result>
     </action>
 
+    <action name="deleteBuildAgentGroup" class="buildAgent" method="deleteGroup">
+      <result name="error" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildAgentGroup.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+      </result>
+    </action>
+
+    <action name="editBuildAgentGroup" class="buildAgent" method="inputGroup">
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
+    </action>
+
+    <action name="saveBuildAgentGroup" class="buildAgent" method="saveGroup">
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+      </result>
+    </action>
+
   </package>
 
   <package name="component" extends="default">

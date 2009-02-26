@@ -20,6 +20,7 @@ package org.apache.continuum.builder.distributed.executor;
  */
 
 import org.codehaus.plexus.taskqueue.Task;
+import org.codehaus.plexus.taskqueue.TaskQueue;
 
 public interface DistributedBuildTaskQueueExecutor
 {
@@ -54,4 +55,13 @@ public interface DistributedBuildTaskQueueExecutor
      * @return true if the task was cancelled, false if the task was not executing.
      */
     boolean cancelTask( Task task );
+
+    /**
+     * Returns the task queue
+     * 
+     *
+     * 
+     * @return the TaskQueue of the task queue executor
+     */
+    public TaskQueue getQueue();
 }

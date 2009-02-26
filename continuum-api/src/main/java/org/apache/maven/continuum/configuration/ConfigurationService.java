@@ -21,6 +21,7 @@ package org.apache.maven.continuum.configuration;
 
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
+import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
@@ -77,23 +78,23 @@ public interface ConfigurationService
 
     File getTestReportsDirectory( int buildId, int projectId )
         throws ConfigurationException;
-    
+
     File getReleaseOutputDirectory();
-    
+
     void setReleaseOutputDirectory( File releaseOutputDirectory );
-    
+
     File getReleaseOutputDirectory( int projectGroupId );
-    
+
     File getReleaseOutputFile( int projectGroupId, String releaseName )
         throws ConfigurationException;
 
     String getReleaseOutput( int projectGroupId, String releaseName )
         throws ConfigurationException;
-    
+
     int getNumberOfBuildsInParallel();
-    
+
     void setNumberOfBuildsInParallel( int num );
-    
+
     BuildQueue getDefaultBuildQueue()
         throws BuildQueueServiceException;
 
@@ -109,6 +110,29 @@ public interface ConfigurationService
     boolean isDistributedBuildEnabled();
 
     void setDistributedBuildEnabled( boolean distributedBuildEnabled );
+
+    void addBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException;
+
+    void removeBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException;
+
+    void updateBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException;
+
+    void addBuildAgent( BuildAgentGroupConfiguration buildAgentGroup, BuildAgentConfiguration buildAgent )
+        throws ConfigurationException;
+
+    void removeBuildAgent( BuildAgentGroupConfiguration buildAgentGroup, BuildAgentConfiguration buildAgent )
+        throws ConfigurationException;
+
+    BuildAgentGroupConfiguration getBuildAgentGroup(String name);
+
+    BuildAgentConfiguration getBuildAgent(String url);
+
+    List<BuildAgentGroupConfiguration> getBuildAgentGroups();
+
+    boolean containsBuildAgentUrl(String buildAgentUrl,  BuildAgentGroupConfiguration buildAgentGroup );
 
     // ----------------------------------------------------------------------
     //

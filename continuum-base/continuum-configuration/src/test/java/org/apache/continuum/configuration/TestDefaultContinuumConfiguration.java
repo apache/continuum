@@ -74,6 +74,15 @@ public class TestDefaultContinuumConfiguration
         assertEquals( "http://buildagent/xmlrpc", buildAgentConfig.getUrl() );
         assertEquals( "linux", buildAgentConfig.getDescription() );
         assertTrue( buildAgentConfig.isEnabled() );
+
+        // agent group tests        
+        assertNotNull( "agent group", generalConfiguration.getBuildAgentGroups() );
+        BuildAgentGroupConfiguration buildAgentGroupConfig =
+            generalConfiguration.getBuildAgentGroups().get( 0 );
+        assertEquals("group-agent-1", buildAgentGroupConfig.getName() );        
+        BuildAgentConfiguration agentConfig = (BuildAgentConfiguration) buildAgentGroupConfig.getBuildAgents().get( 0 );
+        assertEquals( "http://buildagent/xmlrpc", agentConfig.getUrl() );
+        assertEquals( "linux", agentConfig.getDescription() );
     }
 
     public void testDefaultConfiguration()
@@ -98,9 +107,24 @@ public class TestDefaultContinuumConfiguration
         buildAgentConfiguration.setUrl( "http://buildagent/test" );
         buildAgentConfiguration.setDescription( "windows xp" );
         buildAgentConfiguration.setEnabled( false );
+
+        BuildAgentConfiguration buildAgentConfiguration2 = new BuildAgentConfiguration();
+        buildAgentConfiguration2.setUrl( "http://buildagent-node-2/test" );
+        buildAgentConfiguration2.setDescription( "linux" );
+        buildAgentConfiguration2.setEnabled( true );
+
         List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
         buildAgents.add( buildAgentConfiguration );
+        buildAgents.add( buildAgentConfiguration2 );
+        BuildAgentGroupConfiguration buildAgentGroupConfiguration = new BuildAgentGroupConfiguration();
+        buildAgentGroupConfiguration.setName( "secret-agent" );        
+        buildAgentGroupConfiguration.setBuildAgents( buildAgents );
+
+        List<BuildAgentGroupConfiguration> buildAgentGroups = new ArrayList<BuildAgentGroupConfiguration>();
+        buildAgentGroups.add( buildAgentGroupConfiguration );
+
         generalConfiguration.setBuildAgents( buildAgents );
+        generalConfiguration.setBuildAgentGroups( buildAgentGroups );
         configuration.setGeneralConfiguration( generalConfiguration );
         configuration.save();
 
@@ -110,14 +134,23 @@ public class TestDefaultContinuumConfiguration
         assertTrue( contents.indexOf( "8080" ) > 0 );
         assertTrue( contents.indexOf( "http://buildagent/test" ) > 0 );
         assertTrue( contents.indexOf( "windows xp" ) > 0 );
-        
+        assertTrue( contents.indexOf( "http://buildagent-node-2/test" )> 0);
+        assertTrue( contents.indexOf( "linux" )> 0);
+        assertTrue( contents.indexOf( "secret-agent" )> 0);       
+
         configuration.reload();
         assertEquals( "http://test/zloug", configuration.getGeneralConfiguration().getBaseUrl() );
         assertEquals( "localhost", configuration.getGeneralConfiguration().getProxyConfiguration().getProxyHost() );
         assertEquals( 8080, configuration.getGeneralConfiguration().getProxyConfiguration().getProxyPort() );
         assertEquals(targetDir.getPath(), configuration.getGeneralConfiguration().getBuildOutputDirectory().getPath());
-        assertEquals( "http://buildagent/test", configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).getUrl() );
+        assertEquals( "http://buildagent/test", configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).getUrl() );        
         assertFalse( configuration.getGeneralConfiguration().getBuildAgents().get( 0 ).isEnabled() );
+        assertEquals( "http://buildagent-node-2/test", configuration.getGeneralConfiguration().getBuildAgents().get( 1 ).getUrl() );
+        assertTrue(configuration.getGeneralConfiguration().getBuildAgents().get( 1 ).isEnabled());
+
+        assertEquals("secret-agent", configuration.getGeneralConfiguration().getBuildAgentGroups().get( 0 ).getName());
+        assertEquals("http://buildagent/test",configuration.getGeneralConfiguration().getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getUrl() );
+        assertEquals("http://buildagent-node-2/test",configuration.getGeneralConfiguration().getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).getUrl() );
         log.info( "generalConfiguration " + configuration.getGeneralConfiguration().toString() );
     }
 }

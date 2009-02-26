@@ -20,10 +20,12 @@ package org.apache.continuum.web.action.admin;
  */
 
 import org.apache.continuum.configuration.BuildAgentConfiguration;
+import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.apache.struts2.ServletActionContext;
@@ -33,6 +35,9 @@ import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -52,6 +57,14 @@ public class BuildAgentAction
 
     private BuildAgentConfiguration buildAgent;
 
+    private BuildAgentGroupConfiguration buildAgentGroup;
+
+    private List<BuildAgentGroupConfiguration> buildAgentGroups;
+
+    private List<BuildAgentConfiguration> selectedbuildAgents;
+
+    private List<String> selectedBuildAgentIds;
+
     private List<Installation> installations;
 
     private boolean confirmed;
@@ -59,6 +72,15 @@ public class BuildAgentAction
     private String message;
 
     private String type;
+
+    private String typeGroup;
+
+    public void prepare()
+        throws Exception
+    {
+        super.prepare();
+        this.setBuildAgents( getContinuum().getConfiguration().getBuildAgents() );
+    }
 
     public String input()
         throws Exception
@@ -95,6 +117,7 @@ public class BuildAgentAction
         }
 
         this.buildAgents = getContinuum().getConfiguration().getBuildAgents();
+        this.buildAgentGroups = getContinuum().getConfiguration().getBuildAgentGroups();
 
         return SUCCESS;
     }
@@ -186,6 +209,15 @@ public class BuildAgentAction
 
         ConfigurationService configuration = getContinuum().getConfiguration();
 
+        for ( BuildAgentGroupConfiguration buildAgentGroup : configuration.getBuildAgentGroups() )
+        {
+            if ( configuration.containsBuildAgentUrl( buildAgent.getUrl(), buildAgentGroup ) )
+            {
+                message = getText( "buildAgent.error.remove.in.use" );
+                return ERROR;
+            }
+        }
+
         for ( BuildAgentConfiguration agent : configuration.getBuildAgents() )
         {
             if ( buildAgent.getUrl().equals( agent.getUrl() ) )
@@ -199,6 +231,151 @@ public class BuildAgentAction
         return ERROR;
     }
 
+    public String deleteGroup()
+        throws Exception
+    {
+        if ( !confirmed )
+        {
+            return CONFIRM;
+        }
+
+        List<Profile> profiles = getContinuum().getProfileService().getAllProfiles();
+        for ( Profile profile : profiles )
+        {
+            if (buildAgentGroup.getName().equals( profile.getBuildAgentGroup() ) )
+            {                
+                message = getText( "buildAgentGroup.error.remove.in.use" );
+                return ERROR;
+            }                
+        }
+
+        ConfigurationService configuration = getContinuum().getConfiguration();
+
+        for ( BuildAgentGroupConfiguration group : configuration.getBuildAgentGroups() )
+        {
+            if ( buildAgentGroup.getName().equals( group.getName() ) )
+            {
+                configuration.removeBuildAgentGroup( group );
+                return SUCCESS;
+            }
+        }
+
+        message = getText( "buildAgentGroup.error.doesnotexist" );
+        return ERROR;
+    }
+
+    public String saveGroup()
+        throws Exception
+    {
+        boolean found = false;
+
+        ConfigurationService configuration = getContinuum().getConfiguration();
+        selectedbuildAgents = getBuildAgentsFromSelectedBuildAgents();
+
+        if ( buildAgentGroup.getName() != null )
+        {
+            if ( buildAgentGroup.getName().equals( "" ) )
+            {
+                addActionError( getResourceBundle().getString( "buildAgentGroup.error.name.required" ) );
+                return INPUT;
+            }
+            else if ( buildAgentGroup.getName().trim().equals( "" ) )
+            {
+                addActionError( getText( "buildAgentGroup.error.name.cannot.be.spaces" ) );
+                return INPUT;
+            }
+        }
+
+        if ( configuration.getBuildAgentGroups() != null )
+        {
+            for ( BuildAgentGroupConfiguration group : configuration.getBuildAgentGroups() )
+            {
+                if ( buildAgentGroup.getName().equals( group.getName() ) )
+                {
+                    group.setName( buildAgentGroup.getName() );
+                    configuration.updateBuildAgentGroup( group );
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if ( !found )
+        {            
+            buildAgentGroup.setBuildAgents( selectedbuildAgents );
+            configuration.addBuildAgentGroup( buildAgentGroup );
+        }
+        else
+        // found
+        {
+            if ( typeGroup.equals( "new" ) )
+            {
+                addActionError( getResourceBundle().getString( "buildAgentGroup.error.duplicate" ) );
+                return INPUT;
+            }
+            else if ( typeGroup.equals( "edit" ) )
+            {
+                buildAgentGroup.setBuildAgents( selectedbuildAgents );
+                configuration.updateBuildAgentGroup( buildAgentGroup );
+            }
+        }
+
+        distributedBuildManager.reload();
+
+        return SUCCESS;
+    }
+
+    public String inputGroup()
+        throws Exception
+    {
+        ConfigurationService configuration = getContinuum().getConfiguration();
+
+        if ( buildAgentGroup != null && !StringUtils.isBlank( buildAgentGroup.getName() ) )
+        {
+            List<BuildAgentGroupConfiguration> agentGroups = configuration.getBuildAgentGroups();
+
+            for ( BuildAgentGroupConfiguration group : agentGroups )
+            {
+                if ( buildAgentGroup.getName().equals( group.getName() ) )
+                {
+                    buildAgentGroup = group;
+                    typeGroup = "edit";
+
+                    this.buildAgentGroup = configuration.getBuildAgentGroup( buildAgentGroup.getName() );
+                    this.buildAgents = configuration.getBuildAgents();
+
+                    this.selectedBuildAgentIds = new ArrayList<String>();
+                    if ( this.buildAgentGroup.getBuildAgents() != null )
+                    {
+                        for ( Iterator<BuildAgentConfiguration> iterator = buildAgentGroup.getBuildAgents().iterator(); iterator.hasNext(); )
+                        {
+                            this.selectedBuildAgentIds.add( iterator.next().getUrl() );
+                        }
+
+                    }
+
+                    List<BuildAgentConfiguration> unusedBuildAgents = new ArrayList<BuildAgentConfiguration>();
+
+                    for ( BuildAgentConfiguration agent : getBuildAgents() )
+                    {
+                        if ( !this.selectedBuildAgentIds.contains( agent.getUrl() ) )
+                        {
+                            unusedBuildAgents.add( agent );
+                        }
+                    }
+                    this.setBuildAgents( unusedBuildAgents );
+
+                    break;
+                }
+            }
+        }
+        else
+        {
+            typeGroup = "new";
+        }
+        return INPUT;
+    }
+
     public SecureActionBundle getSecureActionBundle()
         throws SecureActionException
     {
@@ -207,6 +384,25 @@ public class BuildAgentAction
         bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_DISTRIBUTED_BUILDS, Resource.GLOBAL );
 
         return bundle;
+    }
+
+    private List<BuildAgentConfiguration>getBuildAgentsFromSelectedBuildAgents()
+    {
+        if ( this.selectedBuildAgentIds == null )
+        {
+            return Collections.EMPTY_LIST;
+        }
+
+        List<BuildAgentConfiguration> selectedbuildAgents = new ArrayList<BuildAgentConfiguration>();
+        for ( String ids: selectedBuildAgentIds )
+        {
+            BuildAgentConfiguration buildAgent = getContinuum().getConfiguration().getBuildAgent( ids );
+            if (buildAgent!=null)
+            {
+                selectedbuildAgents.add( buildAgent );
+            }
+        }
+        return selectedbuildAgents;
     }
 
     public List<BuildAgentConfiguration> getBuildAgents()
@@ -267,5 +463,55 @@ public class BuildAgentAction
     public void setType( String type )
     {
         this.type = type;
+    }
+
+    public List<BuildAgentGroupConfiguration> getBuildAgentGroups()
+    {
+        return buildAgentGroups;
+    }
+
+    public void setBuildAgentGroups( List<BuildAgentGroupConfiguration> buildAgentGroups )
+    {
+        this.buildAgentGroups = buildAgentGroups;
+    }
+
+    public BuildAgentGroupConfiguration getBuildAgentGroup()
+    {
+        return buildAgentGroup;
+    }
+
+    public void setBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+    {
+        this.buildAgentGroup = buildAgentGroup;
+    }
+
+    public String getTypeGroup()
+    {
+        return typeGroup;
+    }
+
+    public void setTypeGroup( String typeGroup )
+    {
+        this.typeGroup = typeGroup;
+    }
+
+    public List<BuildAgentConfiguration> getSelectedbuildAgents()
+    {
+        return selectedbuildAgents;
+    }
+
+    public void setSelectedbuildAgents( List<BuildAgentConfiguration> selectedbuildAgents )
+    {
+        this.selectedbuildAgents = selectedbuildAgents;
+    }
+
+    public List<String> getSelectedBuildAgentIds()
+    {
+        return selectedBuildAgentIds == null ? Collections.EMPTY_LIST : selectedBuildAgentIds;
+    }
+
+    public void setSelectedBuildAgentIds( List<String> selectedBuildAgentIds )
+    {
+        this.selectedBuildAgentIds = selectedBuildAgentIds;
     }
 }

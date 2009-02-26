@@ -124,7 +124,7 @@ public class DefaultDistributedBuildManager
 
     private PlexusContainer container;
 
-    private Map<String, ThreadedDistributedBuildTaskQueueExecutor> taskQueueExecutors;
+    private Map<String, DistributedBuildTaskQueueExecutor> taskQueueExecutors;
 
     // --------------------------------
     //  Plexus Lifecycle
@@ -138,7 +138,7 @@ public class DefaultDistributedBuildManager
     public void initialize()
         throws InitializationException
     {
-        taskQueueExecutors = new HashMap<String, ThreadedDistributedBuildTaskQueueExecutor>();
+        taskQueueExecutors = new HashMap<String, DistributedBuildTaskQueueExecutor>();
 
         List<BuildAgentConfiguration> agents = configurationService.getBuildAgents();
 
@@ -227,7 +227,7 @@ public class DefaultDistributedBuildManager
         throws ContinuumException
     {
         log.info( "remove TaskQueueExecutor for build agent '" + buildAgentUrl + "'" );
-        ThreadedDistributedBuildTaskQueueExecutor executor = taskQueueExecutors.get( buildAgentUrl );
+        ThreadedDistributedBuildTaskQueueExecutor executor = (ThreadedDistributedBuildTaskQueueExecutor) taskQueueExecutors.get( buildAgentUrl );
 
         if ( executor == null )
         {
@@ -253,7 +253,7 @@ public class DefaultDistributedBuildManager
 
     public boolean isBuildAgentBusy( String buildAgentUrl )
     {
-        ThreadedDistributedBuildTaskQueueExecutor executor = taskQueueExecutors.get( buildAgentUrl );
+        DistributedBuildTaskQueueExecutor executor = taskQueueExecutors.get( buildAgentUrl );
         
         if ( executor != null && executor.getCurrentTask() != null )
         {
@@ -270,7 +270,7 @@ public class DefaultDistributedBuildManager
     {
         try
         {            
-            ThreadedDistributedBuildTaskQueueExecutor taskQueueExecutor = (ThreadedDistributedBuildTaskQueueExecutor) container.
+            DistributedBuildTaskQueueExecutor taskQueueExecutor = (DistributedBuildTaskQueueExecutor) container.
                                                                           lookup( DistributedBuildTaskQueueExecutor.class, "distributed-build-project" );
             taskQueueExecutor.setBuildAgentUrl( url );
             taskQueueExecutors.put( url, taskQueueExecutor );
@@ -284,7 +284,7 @@ public class DefaultDistributedBuildManager
     public void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
         throws ContinuumException
     {
-        ThreadedDistributedBuildTaskQueueExecutor taskQueueExecutor = taskQueueExecutors.get( buildAgentUrl );
+        DistributedBuildTaskQueueExecutor taskQueueExecutor = (DistributedBuildTaskQueueExecutor) taskQueueExecutors.get( buildAgentUrl );
 
         if ( taskQueueExecutor != null )
         {
@@ -463,7 +463,7 @@ public class DefaultDistributedBuildManager
 
         for ( String url : taskQueueExecutors.keySet() )
         {
-            ThreadedDistributedBuildTaskQueueExecutor taskQueueExecutor = taskQueueExecutors.get( url );
+            DistributedBuildTaskQueueExecutor taskQueueExecutor = (DistributedBuildTaskQueueExecutor) taskQueueExecutors.get( url );
 
             if ( taskQueueExecutor.getCurrentTask() != null )
             {
@@ -1290,5 +1290,10 @@ public class DefaultDistributedBuildManager
         }
 
         return null;
+    }
+
+    public Map<String, DistributedBuildTaskQueueExecutor> getTaskQueueExecutors()
+    {
+        return taskQueueExecutors;
     }
 }

@@ -21,6 +21,7 @@ package org.apache.maven.continuum.configuration;
 
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
+import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
@@ -285,5 +286,50 @@ public class ConfigurationServiceMock
 
     public void updateBuildAgent( BuildAgentConfiguration buildAgent )
     {
+    }
+
+    public void addBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException
+    {
+    }
+
+    public void removeBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException
+    {
+    }
+
+    public void updateBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException
+    {
+    }
+
+    public List<BuildAgentGroupConfiguration> getBuildAgentGroups()
+    {
+        return null;
+    }
+
+    public void addBuildAgent( BuildAgentGroupConfiguration buildAgentGroup, BuildAgentConfiguration buildAgent )
+        throws ConfigurationException
+    {
+    }
+
+    public void removeBuildAgent( BuildAgentGroupConfiguration buildAgentGroup, BuildAgentConfiguration buildAgent )
+        throws ConfigurationException
+    {
+    }
+
+    public BuildAgentGroupConfiguration getBuildAgentGroup( String name )
+    {
+        return null;
+    }
+
+    public BuildAgentConfiguration getBuildAgent(String url)
+    {
+        return null;
+    }
+
+    public boolean containsBuildAgentUrl( String buildAgentUrl, BuildAgentGroupConfiguration buildAgentGroup )
+    {
+        return false;
     }
 }

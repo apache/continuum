@@ -58,10 +58,11 @@ public class DefaultProfileService
 
         // already exists check should be done in the same transaction
         // but we assume we don't have a huge load and a lot of concurrent access ;-)
-        if ( alreadyExistsProfileName( profile ) )
+        /*if ( alreadyExistsProfileName( profile ) )
         {
             throw new AlreadyExistsProfileException( "profile with name " + profile.getName() + " already exists" );
         }
+        */
 
         try
         {
@@ -73,6 +74,7 @@ public class DefaultProfileService
             stored.setJdk( profile.getJdk() );
             stored.setName( profile.getName() );
             stored.setEnvironmentVariables( profile.getEnvironmentVariables() );
+            stored.setBuildAgentGroup( profile.getBuildAgentGroup() );
             profileDao.updateProfile( stored );
         }
         catch ( ContinuumStoreException e )
@@ -103,6 +105,7 @@ public class DefaultProfileService
             stored.setJdk( profile.getJdk() );
             stored.setName( profile.getName() );
             stored.setEnvironmentVariables( profile.getEnvironmentVariables() );
+            stored.setBuildAgentGroup( profile.getBuildAgentGroup() );
             profileDao.updateProfile( stored );
         }
         catch ( ContinuumStoreException e )

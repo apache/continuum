@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.project.ProjectScmRoot;
@@ -515,7 +516,6 @@ public interface Continuum
     BuildDefinition addBuildDefinitionToProject( int projectId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
-
     BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
         throws ContinuumException;
 
@@ -605,7 +605,7 @@ public interface Continuum
     ContinuumPurgeManager getPurgeManager();
 
     PurgeConfigurationService getPurgeConfigurationService();
-    
+
     // ----------------------------------------------------------------------
     // Repository Service
     // ----------------------------------------------------------------------
@@ -634,11 +634,11 @@ public interface Continuum
     // Builds Manager
     // ----------------------------------------------------------------------
     BuildsManager getBuildsManager();    
-    
+
     // ----------------------------------------------------------------------
     // Build Queue
     // ----------------------------------------------------------------------
-    
+
     BuildQueue addBuildQueue( BuildQueue buildQueue )
         throws ContinuumException;
 
@@ -656,10 +656,10 @@ public interface Continuum
 
     List<BuildQueue> getAllBuildQueues()
         throws ContinuumException;
-    
+
     public void startup()
         throws ContinuumException;
-    
+
     ContinuumReleaseResult addContinuumReleaseResult( ContinuumReleaseResult releaseResult )
         throws ContinuumException;
 
@@ -675,7 +675,9 @@ public interface Continuum
 
     ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
         throws ContinuumException;
-    
+
     String getReleaseOutput( int releaseResultId )
         throws ContinuumException;
+
+    DistributedBuildManager getDistributedBuildManager();
 }

@@ -22,6 +22,7 @@ package org.apache.maven.continuum.configuration;
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
+import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.continuum.configuration.ContinuumConfiguration;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.configuration.GeneralConfiguration;
@@ -359,6 +360,178 @@ public class DefaultConfigurationService
     public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
     {
         systemConf.setDistributedBuildEnabled( distributedBuildEnabled );
+    }
+
+    public void addBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException
+    {
+        List<BuildAgentGroupConfiguration> buildAgentGroups = generalConfiguration.getBuildAgentGroups();
+
+        if ( buildAgentGroups == null )
+        {
+            buildAgentGroups = new ArrayList<BuildAgentGroupConfiguration>();
+        }
+
+        for ( BuildAgentGroupConfiguration groups : buildAgentGroups )
+        {
+            if ( groups.getName().equals( buildAgentGroup.getName() ) )
+            {
+                throw new ConfigurationException( "Unable to add build agent group: build agent group already exist" );
+            }
+        }
+
+        buildAgentGroups.add( buildAgentGroup );
+        generalConfiguration.setBuildAgentGroups( buildAgentGroups );
+    }
+
+    public void removeBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException
+    {
+        List<BuildAgentGroupConfiguration> buildAgentGroups = generalConfiguration.getBuildAgentGroups();
+        if ( buildAgentGroups != null )
+        {
+            for ( BuildAgentGroupConfiguration groups : buildAgentGroups )
+            {
+                if ( groups.getName().equals( buildAgentGroup.getName() ) )
+                {
+                    buildAgentGroups.remove( groups );
+                    break;
+                }
+            }
+            generalConfiguration.setBuildAgentGroups( buildAgentGroups );
+        }
+    }
+
+    public void updateBuildAgentGroup( BuildAgentGroupConfiguration buildAgentGroup )
+        throws ConfigurationException
+    {
+        List<BuildAgentGroupConfiguration> buildAgentGroups = generalConfiguration.getBuildAgentGroups();
+        if ( buildAgentGroups != null )
+        {
+            for ( BuildAgentGroupConfiguration groups : buildAgentGroups )
+            {
+                if ( groups.getName().equals( buildAgentGroup.getName() ) )
+                {
+                    groups.setName( buildAgentGroup.getName() );
+                    groups.setBuildAgents( buildAgentGroup.getBuildAgents()  );
+
+                    return;
+                }
+            }
+        }
+
+    }
+
+    public void addBuildAgent( BuildAgentGroupConfiguration buildAgentGroup, BuildAgentConfiguration buildAgent )
+        throws ConfigurationException
+    {
+        List<BuildAgentGroupConfiguration> buildAgentGroupConfiguration = generalConfiguration.getBuildAgentGroups();
+        if ( buildAgentGroupConfiguration != null )
+        {
+            for ( BuildAgentGroupConfiguration group : buildAgentGroupConfiguration )
+            {
+                if ( group.getName().equals( buildAgentGroup.getName() ) )
+                {
+                    List<BuildAgentConfiguration> agents = group.getBuildAgents();
+
+                    for ( BuildAgentConfiguration agent : agents )
+                    {
+                        if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+                        {
+                            throw new ConfigurationException( "Unable to add build agent : build agent already exist" );
+                        }
+                    }
+                    group.addBuildAgent( buildAgent );
+                    break;
+                }
+            }
+            generalConfiguration.setBuildAgentGroups( buildAgentGroupConfiguration );
+        }        
+    }
+
+    public void removeBuildAgent( BuildAgentGroupConfiguration buildAgentGroup, BuildAgentConfiguration buildAgent )
+        throws ConfigurationException
+    {
+        List<BuildAgentGroupConfiguration> buildAgentGroupConfiguration = generalConfiguration.getBuildAgentGroups();
+        if ( buildAgentGroupConfiguration != null )
+        {
+            for ( BuildAgentGroupConfiguration group : buildAgentGroupConfiguration )
+            {
+                if ( group.getName().equals( buildAgentGroup.getName() ) )
+                {
+                    List<BuildAgentConfiguration> agents = group.getBuildAgents();
+
+                    for ( BuildAgentConfiguration agent : agents )
+                    {
+                        if ( agent.getUrl().equals( buildAgent.getUrl() ) )
+                        {
+                            group.removeBuildAgent( agent );
+                            break;
+                        }
+                    }
+                }
+            }
+            generalConfiguration.setBuildAgentGroups( buildAgentGroupConfiguration );
+        }
+    }
+
+    public BuildAgentGroupConfiguration getBuildAgentGroup( String name )
+    {
+        List<BuildAgentGroupConfiguration> buildAgentGroupConfiguration = generalConfiguration.getBuildAgentGroups();
+        if ( buildAgentGroupConfiguration != null )
+        {
+            for ( BuildAgentGroupConfiguration buildAgentGroup : buildAgentGroupConfiguration )
+            {
+                if ( buildAgentGroup.getName().equals( name ) )
+                {
+                    return buildAgentGroup;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public BuildAgentConfiguration getBuildAgent(String url)
+    {
+        List<BuildAgentConfiguration> buildAgents = generalConfiguration.getBuildAgents();
+        if ( buildAgents == null )
+        {
+            buildAgents = new ArrayList<BuildAgentConfiguration>();
+        }
+
+        for ( BuildAgentConfiguration agent : buildAgents )
+        {
+            if ( agent.getUrl().equals(url ) )
+            {
+                return agent;
+            }
+        }
+        return null;
+    }
+
+    public List<BuildAgentGroupConfiguration> getBuildAgentGroups()
+    {
+        return generalConfiguration.getBuildAgentGroups();
+    }
+
+    public boolean containsBuildAgentUrl( String buildAgentUrl, BuildAgentGroupConfiguration buildAgentGroup )
+    {
+        BuildAgentGroupConfiguration group = this.getBuildAgentGroup( buildAgentGroup.getName() );
+        List<BuildAgentConfiguration> buildAgents = group.getBuildAgents();
+        if ( buildAgents == null )
+        {
+            buildAgents = new ArrayList<BuildAgentConfiguration>();
+        }
+
+        for ( BuildAgentConfiguration agent : buildAgents )
+        {
+            if ( agent.getUrl().equals( buildAgentUrl ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     // ----------------------------------------------------------------------

@@ -22,6 +22,7 @@ package org.apache.continuum.builder.distributed.manager;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.system.Installation;
@@ -68,6 +69,8 @@ public interface DistributedBuildManager
         throws ContinuumException;
 
     boolean shouldBuild( Map context );
+
+    Map<String, DistributedBuildTaskQueueExecutor> getTaskQueueExecutors();
 
     String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
         throws ContinuumException;

@@ -52,9 +52,27 @@
               <!--  if other fields are added ProfileAction#save must be changed  -->
               <table>
                 <tbody>
-                  <s:hidden name="profile.id" />
-                  <s:textfield label="%{getText('profile.name.label')}" name="profile.name"
-                                required="true" />
+                  <tr>
+                    <td>
+                      <s:hidden name="profile.id" />
+                      <s:textfield label="%{getText('profile.name.label')}" name="profile.name"
+                                   required="true" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <s:if test ="profile != null">
+                        <s:if test="profile.buildAgentGroup == null">
+                          <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
+                                   value="-1" listKey="name" headerKey="" headerValue=""/>
+                        </s:if>
+                        <s:else>
+                          <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
+                                   listKey="name" headerKey="" headerValue=""/>
+                        </s:else>
+                      </s:if>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
               <div class="functnbar3">
