@@ -18,14 +18,14 @@ Guide to building Continuum
     * to fix a problem you are having and submit a patch to the development team.
 
   Note that you don't need to build Continuum for day to day use. While we encourage getting
-  involved and fixing bugs that you find, for day to day use we recommend using the latest release.
+  involved and fixing bugs that you find, for day to day use we recommend using the latest GA release.
 
 * Checking out the sources
 
   All of the source code for Continuum and its related libraries is in a {{{http://subversion.tigris.org/} Subversion}} repository.
   You can also {{{http://svn.apache.org/viewvc/continuum/} browse the repository}}, or checkout specific modules directly.
 
-  All SVN instructions are available on the {{{../../../source-repository.html}Source Repository page}}.
+  All SVN instructions are available on the {{{http://continuum.apache.org/source-repository.html}Source Repository page}}.
 
 * Building the sources
 
