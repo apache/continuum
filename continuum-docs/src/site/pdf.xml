@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Licensed to the Apache Software Foundation (ASF) under one
+ ~ or more contributor license agreements.  See the NOTICE file
+ ~ distributed with this work for additional information
+ ~ regarding copyright ownership.  The ASF licenses this file
+ ~ to you under the Apache License, Version 2.0 (the
+ ~ "License"); you may not use this file except in compliance
+ ~ with the License.  You may obtain a copy of the License at
+ ~
+ ~   http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+
+<document outputName="ApacheContinuum">
+
+ <meta>
+   <title>Apache Continuum</title>
+   <author>The Apache Continuum Project</author>
+ </meta>
+
+   <toc name="Documentation">
+     <item name="Index (category)" ref="index.html"/>
+     <item name="Getting Started" ref="getting-started.html"/>
+
+     <item name="Installation/Upgrade Guides" ref="installation/index.html"/>
+       <item name="System Requirements" ref="installation/requirements.html"/>
+       <item name="Installation" ref="installation/installation.html"/>
+         <item name="Standalone" ref="installation/standalone.html"/>
+         <item name="Tomcat" ref="installation/tomcat.html"/>
+         <item name="JBoss" ref="installation/jboss.html"/>
+         <item name="Jetty" ref="installation/jetty.html"/>
+         <item name="Geronimo" ref="installation/geronimo.html"/>
+         <item name="Glassfish" ref="installation/glassfish.html"/>
+       <item name="Release Notes" ref="installation/release-notes.html"/>
+       <item name="Upgrade" ref="installation/upgrade.html"/>
+
+     <item name="User's Guides" collapse="true" ref="user_guides/index.html"/>
+       <item name="Managing Projects" ref="user_guides/managing_project/index.html"/>
+         <item name="Add a Project" ref="user_guides/managing_project/addProject.html"/>
+         <item name="Edit a Project" ref="user_guides/managing_project/editProject.html"/>
+         <item name="Remove a Project" ref="user_guides/managing_project/removeProject.html"/>
+       <item name="Managing Build Definitions" ref="user_guides/managing_builddef/index.html"/>
+         <item name="Project Build Definition" ref="user_guides/managing_builddef/builddefProject.html"/>
+         <item name="Project Group Build Definition" ref="user_guides/managing_builddef/builddefGroup.html"/>
+       <item name="Managing Notification" ref="user_guides/notification/index.html"/>
+         <item name="Mail Notification" ref="user_guides/notification/mail.html"/>
+         <item name="IRC Notification" ref="user_guides/notification/irc.html"/>
+         <item name="Jabber Notification" ref="user_guides/notification/jabber.html"/>
+         <item name="MSN Notification" ref="user_guides/notification/msn.html"/>
+         <item name="Wagon Notification" ref="user_guides/notification/wagon.html"/>
+       <item name="Building a project" ref="user_guides/building_project/index.html"/>
+       <item name="Release Management" ref="user_guides/release/index.html"/>
+
+     <item name="Administrator's Guides" ref="administrator_guides/index.html"/>
+       <item name="Managing Users and Security" ref="administrator_guides/security/index.html"/>
+         <item name="Security Configuration" ref="administrator_guides/security/customising-security.html"/>
+         <item name="LDAP Configuration" ref="administrator_guides/security/ldap.html"/>
+       <item name="Adding Project Group" ref="administrator_guides/projectgroup.html"/>
+       <item name="Managing Builders" ref="administrator_guides/builder.html"/>
+       <item name="Managing JDKs" ref="administrator_guides/jdk.html"/>
+       <item name="Managing Build Environments" ref="administrator_guides/profiles.html"/>
+       <item name="Managing Schedules" ref="administrator_guides/schedules.html"/>
+       <item name="Managing General Configuration" ref="administrator_guides/configuration.html"/>
+       <item name="Managing Local Repositories" ref="administrator_guides/localRepository.html"/>
+       <item name="Managing Purge Configuration" ref="administrator_guides/purgeConfiguration.html"/>
+       <item name="Managing Parallel Builds" ref="administrator_guides/parallelBuilds.html"/>
+       <item name="External databases" ref="administrator_guides/external-db.html"/>
+       <item name="Monitoring Continuum" ref="administrator_guides/monitoring.html"/>
+       <item name="Appearance Configuration" ref="administrator_guides/appearance.html"/>
+       <item name="Build Definition Template" ref="administrator_guides/builddefTemplate.html"/>
+       <item name="Shutdown Continuum" ref="administrator_guides/shutdown.html"/>
+
+     <item name="Developer's Guides" ref="developer_guides/index.html"/>
+       <item name="Building Continuum" ref="developer_guides/building.html"/>
+       <item name="XML-RPC" ref="developer_guides/xmlrpc.html"/>
+
+   </toc>
+
+</document>
