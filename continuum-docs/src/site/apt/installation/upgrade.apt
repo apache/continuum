@@ -53,8 +53,7 @@ alter table CHANGESET alter column CHANGECOMMENT SET DATA TYPE varchar(8192)
         * Export the build and user data from the old version using the jar for the old version:
 
 +------------------------------------------+
-java -Xmx512m -jar data-management-cli-1.1-app.jar -buildsJdbcUrl jdbc:derby:${old.continuum.home}/data/continuum/database -mode EXPORT -directory backups
-java -Xmx512m -jar data-management-cli-1.1-app.jar -usersJdbcUrl jdbc:derby:${old.continuum.home}/data/users/database -mode EXPORT -directory userbackups
+java -Xmx512m -jar data-management-cli-1.1-app.jar -buildsJdbcUrl jdbc:derby:${old.continuum.home}/data/continuum/database -usersJdbcUrl jdbc:derby:${old.continuum.home}/data/users/database  -mode EXPORT -directory backups
 +------------------------------------------+
 
 * Importing Data to the new version
@@ -70,8 +69,8 @@ java -Xmx512m -jar data-management-cli-1.1-app.jar -usersJdbcUrl jdbc:derby:${ol
         * Import the build and user data into the new version using the jar for the new version:
 
 +------------------------------------------+
-java -Xmx512m -jar data-management-cli-1.2.3.1-app.jar -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/databases/users -mode IMPORT -directory backups
-java -Xmx512m -jar data-management-cli-1.2.3.1-app.jar -usersJdbcUrl jdbc:derby:${new.continuum.home}/data/databases/continuum -mode IMPORT -directory userbackups
+java -Xmx512m -jar data-management-cli-1.2.3.1-app.jar -buildsJdbcUrl jdbc:derby:${new.continuum.home}/data/databases/continuum -mode IMPORT -directory backups
+java -Xmx512m -jar data-management-cli-1.2.3.1-app.jar -usersJdbcUrl jdbc:derby:${new.continuum.home}/data/databases/users -mode IMPORT -directory backups
 +------------------------------------------+
 
         * <<NEXT_VAL values in SEQUENCE_TABLE must be checked before restarting continuum>>
