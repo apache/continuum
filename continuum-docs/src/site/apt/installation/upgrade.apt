@@ -71,6 +71,21 @@ java -Xmx512m -jar data-management-cli-1.3.2-app.jar -buildsJdbcUrl jdbc:derby:$
 
             * For example, the next value of "org.apache.maven.continuum.model.Project" must be greater than the greatest id in Project table.
 
+            * Here are some example SQL statements.  You may need to add or remove lines depending on the contents of your database.
+
++-----------------------------------------+
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(systemconfiguration_id)+1 from SYSTEMCONFIGURATION) WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.system.SystemConfiguration';
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from BUILDQUEUE) WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.BuildQueue';
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from SCHEDULE) WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.Schedule';
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from BUILDDEFINITION) WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.BuildDefinition';
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from LOCALREPOSITORY) WHERE SEQUENCE_NAME='org.apache.continuum.model.repository.LocalRepository';
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from PROJECTGROUP) WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.ProjectGroup';
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(scmresult_id)+1 from SCMRESULT) WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.scm.ScmResult';
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(projectdependency_id)+1 from PROJECTDEPENDENCY) WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.ProjectDependency';
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from BUILDDEFINITIONTEMPLATE) WHERE SEQUENCE_NAME='org.apache.maven.continuum.model.project.BuildDefinitionTemplate';
+UPDATE SEQUENCE_TABLE set NEXT_VAL = (select max(id)+1 from ABSTRACTPURGECONFIGURATION) WHERE SEQUENCE_NAME='org.apache.continuum.model.repository.AbstractPurgeConfiguration';
++-----------------------------------------+
+
         []
 
         Now you can start your new version of Continuum.
