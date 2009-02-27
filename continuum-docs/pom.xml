@@ -87,4 +87,28 @@
       </plugin>
     </plugins>
   </reporting>
+  <profiles>
+    <profile>
+      <id>pdf</id>
+      <build>
+          <plugins>
+            <plugin>
+              <artifactId>maven-pdf-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>site-pdf</id>
+                  <phase>site</phase>
+                  <goals>
+                    <goal>pdf</goal>
+                  </goals>
+                  <configuration>
+                    <outputDirectory>${project.reporting.outputDirectory}</outputDirectory>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+    </profile>
+  </profiles>
 </project>
