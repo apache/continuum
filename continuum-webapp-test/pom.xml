@@ -29,7 +29,6 @@ under the License.
   <packaging>pom</packaging>
 
   <build>
-    <!--testSourceDirectory>src/test/it</testSourceDirectory-->
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -73,6 +72,95 @@ under the License.
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <id>start-container</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <wait>false</wait>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stop-container</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <container>
+            <containerId>${container.name}</containerId>
+            <zipUrlInstaller>
+              <url>${container.url}</url>
+              <installDir>${project.build.directory}/installs/${container.name}</installDir>
+            </zipUrlInstaller>
+            <log>${project.build.directory}/logs/${container.name}.log</log>
+            <output>${project.build.directory}/logs/${container.name}.out</output>
+            <timeout>600000</timeout>
+            <systemProperties>
+              <appserver.base>${project.build.directory}</appserver.base>
+              <derby.system.home>${project.build.directory}</derby.system.home>
+            </systemProperties>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derby</artifactId>
+              </dependency>
+              <dependency>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+              </dependency>
+              <dependency>
+                <groupId>javax.activation</groupId>
+                <artifactId>activation</artifactId>
+              </dependency>
+            </dependencies>
+          </container>
+          <configuration>
+            <home>${project.build.directory}/${container.name}</home>
+            <type>standalone</type>
+            <properties>
+              <cargo.servlet.port>9595</cargo.servlet.port>
+              <cargo.datasource.datasource.users>
+                cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
+                cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true|
+                cargo.datasource.jndi=jdbc/users|
+                cargo.datasource.username=sa
+              </cargo.datasource.datasource.users>
+              <cargo.datasource.datasource.builds>
+                cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
+                cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/builds;create=true|
+                cargo.datasource.jndi=jdbc/continuum|
+                cargo.datasource.username=sa
+              </cargo.datasource.datasource.builds>
+              <cargo.resource.resource.mail>
+                cargo.resource.name=mail/Session|
+                cargo.resource.type=javax.mail.Session|
+                cargo.resource.factory=org.apache.naming.factory.MailSessionFactory|
+                cargo.resource.parameters=mail.smtp.host=localhost
+              </cargo.resource.resource.mail>
+            </properties>
+            <deployables>
+              <deployable>
+                <groupId>${project.goupId}</groupId>
+                <artifactId>continuum-webapp</artifactId>
+                <type>war</type>
+                <properties>
+                  <context>continuum</context>
+                </properties>
+              </deployable>
+            </deployables>
+          </configuration>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <executions>
@@ -106,17 +194,66 @@ under the License.
       <scope>test</scope>
     </dependency>
     
-    <!-- dependencies below are for code in src/test/it -->
+    <!-- deployables -->
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-utils</artifactId>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+
+    <!-- container dependencies -->
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>10.1.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
       <version>1.4</version>
     </dependency>
     <dependency>
-      <groupId>org.openqa.selenium.server</groupId>
-      <artifactId>selenium-server</artifactId>
-      <version>0.8.1</version>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>1.1</version>
     </dependency>
-
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>tomcat5x</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <container.name>tomcat5x</container.name>
+        <container.url>http://apache.mirrors.redwire.net/tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip
+        </container.url>
+      </properties>
+    </profile>
+    <profile>
+      <id>firefox</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <browser>*firefox</browser>
+      </properties>
+    </profile>
+    <profile>
+      <id>iexplore</id>
+      <properties>
+        <browser>*iexplore</browser>
+      </properties>
+    </profile>
+    <profile>
+      <id>otherbrowser</id>
+      <properties>
+        <browser>*custom ${browserPath}</browser>
+      </properties>
+    </profile>
+
+  </profiles>
+
 </project>

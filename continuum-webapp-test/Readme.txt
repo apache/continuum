@@ -6,12 +6,11 @@ Test with Firefox and Selenium IDE
  * in Selenium IDE, modify the Base URL if necessary (for example, http://localhost:8080/continuum)
  * in Selenium IDE, click the 'Play entire test suite' icon
 
-Run Selenium tests in src/test/java with Maven
- * Start Continuum, create admin user, and save General Configuration
+Run Selenium tests in src/test/java with Maven and Cargo using support for multiple data sources
  * modify src/test/resources/it.properties as needed
  * mvn clean install
 
-Run Selenium tests in src/test/it with Maven
+Run Selenium tests in src/test/it with Maven and Cargo with alternate configuration
  * modify src/test/resources/it.properties as needed
  * mvn clean install -f it-pom.xml
 
