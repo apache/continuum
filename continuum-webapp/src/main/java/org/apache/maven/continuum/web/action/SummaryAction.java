@@ -28,6 +28,8 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.GroupSummary;
 import org.apache.maven.continuum.web.model.ProjectSummary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,6 +49,8 @@ import java.util.Map;
 public class SummaryAction
     extends ContinuumActionSupport
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private int projectGroupId;
 
     private String projectGroupName;
@@ -59,7 +63,7 @@ public class SummaryAction
      * @plexus.requirement role-hint="parallel"
      */
     private BuildsManager parallelBuildsManager;
-    
+
     public String execute()
         throws ContinuumException
     {
@@ -110,11 +114,11 @@ public class SummaryAction
             model.setProjectType( project.getExecutorId() );
 
             try
-            {                
+            {
                 if ( parallelBuildsManager.isInAnyBuildQueue( project.getId() ) )
                 {
                     model.setInBuildingQueue( true );
-                }             
+                }
                 else if ( parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) )
                 {
                     model.setInCheckoutQueue( true );
@@ -189,7 +193,7 @@ public class SummaryAction
             default:
                 if ( latestBuild.getState() == 5 || latestBuild.getState() > 10 )
                 {
-                    getLogger().warn(
+                    logger.warn(
                         "unknown buildState value " + latestBuild.getState() + " with build " + latestBuild.getId() );
                 }
         }

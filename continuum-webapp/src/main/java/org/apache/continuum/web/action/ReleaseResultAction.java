@@ -32,6 +32,8 @@ import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.codehaus.plexus.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:ctan@apache.org">Maria Catherine Tan</a>
@@ -40,18 +42,20 @@ import org.codehaus.plexus.util.FileUtils;
 public class ReleaseResultAction
     extends ContinuumConfirmAction
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private int projectGroupId;
-    
+
     private int releaseResultId;
-    
+
     private List<ContinuumReleaseResult> releaseResults;
-    
+
     private List<String> selectedReleaseResults;
-    
+
     private ProjectGroup projectGroup;
-    
+
     private ReleaseResult result;
-    
+
     private boolean confirmed;
 
     private String projectName;
@@ -70,13 +74,13 @@ public class ReleaseResultAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-        
+
         releaseResults = getContinuum().getContinuumReleaseResultsByProjectGroup( projectGroupId );
-        
+
         return SUCCESS;
 
     }
-    
+
     public String remove()
         throws ContinuumException
     {
@@ -88,7 +92,7 @@ public class ReleaseResultAction
         {
             return REQUIRES_AUTHORIZATION;
         }
-     
+
         if ( confirmed )
         {
             if ( selectedReleaseResults != null && !selectedReleaseResults.isEmpty() )
@@ -99,23 +103,23 @@ public class ReleaseResultAction
 
                     try
                     {
-                        getLogger().info( "Removing ContinuumReleaseResult with id=" + resultId );
+                        logger.info( "Removing ContinuumReleaseResult with id=" + resultId );
 
                         getContinuum().removeContinuumReleaseResult( resultId );
                     }
                     catch ( ContinuumException e )
                     {
-                        getLogger().error( "Error removing ContinuumReleaseResult with id=" + resultId );
+                        logger.error( "Error removing ContinuumReleaseResult with id=" + resultId );
                         addActionError( getText( "Unable to remove ContinuumReleaseResult with id=" + resultId ) );
                     }
                 }
             }
             return SUCCESS;
         }
-        
+
         return CONFIRM;
     }
-    
+
     public String viewResult()
         throws ContinuumException
     {
@@ -128,9 +132,9 @@ public class ReleaseResultAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-        
+
         ContinuumReleaseResult releaseResult = getContinuum().getContinuumReleaseResult( releaseResultId );
-        
+
         result = new ReleaseResult();
         result.setStartTime( releaseResult.getStartTime() );
         result.setEndTime( releaseResult.getEndTime() );
@@ -141,7 +145,10 @@ public class ReleaseResultAction
 
         try
         {
-            File releaseOutputFile = getContinuum().getConfiguration().getReleaseOutputFile( projectGroupId, "releases-" + releaseResult.getStartTime() );
+            File releaseOutputFile = getContinuum().getConfiguration().getReleaseOutputFile( projectGroupId,
+                                                                                             "releases-" +
+                                                                                                 releaseResult.getStartTime() )
+                ;
 
             if ( releaseOutputFile.exists() )
             {
@@ -157,17 +164,17 @@ public class ReleaseResultAction
         {
             //getLogger().error( "" );
         }
-        
+
         return SUCCESS;
     }
-    
+
     public String getProjectGroupName()
         throws ContinuumException
     {
-    
+
         return getProjectGroup( projectGroupId ).getName();
     }
-    
+
     public ProjectGroup getProjectGroup( int projectGroupId )
         throws ContinuumException
     {
@@ -182,45 +189,45 @@ public class ReleaseResultAction
                 projectGroup = getContinuum().getProjectGroup( projectGroupId );
             }
         }
-    
+
         return projectGroup;
     }
-    
+
     public ProjectGroup getProjectGroup()
     {
         return projectGroup;
     }
-    
+
     public void setProjectGroup( ProjectGroup projectGroup )
     {
         this.projectGroup = projectGroup;
     }
-    
+
     public int getProjectGroupId()
     {
         return projectGroupId;
     }
-    
+
     public void setProjectGroupId( int projectGroupId )
     {
         this.projectGroupId = projectGroupId;
     }
-    
+
     public int getReleaseResultId()
     {
         return releaseResultId;
     }
-    
+
     public void setReleaseResultId( int releaseResultId )
     {
         this.releaseResultId = releaseResultId;
     }
-    
+
     public List<ContinuumReleaseResult> getReleaseResults()
     {
         return releaseResults;
     }
-    
+
     public void setReleaseResults( List<ContinuumReleaseResult> releaseResults )
     {
         this.releaseResults = releaseResults;
@@ -230,27 +237,27 @@ public class ReleaseResultAction
     {
         return selectedReleaseResults;
     }
-    
+
     public void setSelectedReleaseResults( List<String> selectedReleaseResults )
     {
         this.selectedReleaseResults = selectedReleaseResults;
     }
-    
+
     public ReleaseResult getResult()
     {
         return result;
     }
-    
+
     public void setResult( ReleaseResult result )
     {
         this.result = result;
     }
-    
+
     public boolean isConfirmed()
     {
         return confirmed;
     }
-    
+
     public void setConfirmed( boolean confirmed )
     {
         this.confirmed = confirmed;

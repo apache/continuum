@@ -30,6 +30,8 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.action.AbstractBuildDefinitionAction;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.BuildDefinitionSummary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * BuildDefinitionSummaryAction:
@@ -41,6 +43,8 @@ import org.apache.maven.continuum.web.model.BuildDefinitionSummary;
 public class BuildDefinitionSummaryAction
     extends AbstractBuildDefinitionAction
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private int projectGroupId;
 
     private String projectGroupName;
@@ -77,7 +81,7 @@ public class BuildDefinitionSummaryAction
         }
         catch ( ContinuumException e )
         {
-            getLogger().info( "unable to build summary" );
+            logger.info( "unable to build summary" );
             return ERROR;
         }
         catch ( AuthorizationRequiredException authzE )
@@ -111,7 +115,7 @@ public class BuildDefinitionSummaryAction
         }
         catch ( ContinuumException e )
         {
-            getLogger().info( "unable to build summary" );
+            logger.info( "unable to build summary" );
             return ERROR;
         }
         catch ( AuthorizationRequiredException authzE )
@@ -182,7 +186,6 @@ public class BuildDefinitionSummaryAction
         return summaryList;
     }
 
-    
 
     public int getProjectId()
     {

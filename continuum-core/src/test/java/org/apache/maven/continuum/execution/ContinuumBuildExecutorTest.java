@@ -33,8 +33,6 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.utils.ChrootJailWorkingDirectoryService;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 
@@ -88,8 +86,9 @@ public class ContinuumBuildExecutorTest
         projectGroup.setGroupId( project.getGroupId() );
         project.setProjectGroup( projectGroup );
 
-        assertEquals( toSystemPath( chrootJailFile.getPath() + "/" + project.getGroupId() + workingDirectory.getPath() +
-            "/" + project.getId() ), directoryService.getWorkingDirectory( project ).getPath() );
+        assertEquals( toSystemPath(
+            chrootJailFile.getPath() + "/" + project.getGroupId() + workingDirectory.getPath() + "/" +
+                project.getId() ), directoryService.getWorkingDirectory( project ).getPath() );
 
         String executable = "mvn";
         final String arguments = "-o clean install";
@@ -105,11 +104,10 @@ public class ContinuumBuildExecutorTest
         context.checking( new Expectations()
         {
             {
-                one( helper ).executeShellCommand( chrootJailFile, "sudo", toSystemPath( cmd ), output,
-                                                   project.getId(), environments );
+                one( helper ).executeShellCommand( chrootJailFile, "sudo", toSystemPath( cmd ), output, project.getId(),
+                                                   environments );
                 will( returnValue( result ) );
-            }
-        } );
+            }} );
 
         executor.executeShellCommand( project, executable, arguments, output, environments );
 

@@ -35,6 +35,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -44,6 +46,8 @@ import org.codehaus.plexus.util.StringUtils;
 public class CancelBuildAction
 	extends ContinuumActionSupport
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
 	private int projectId;
 	
 	private int projectGroupId;
@@ -104,7 +108,7 @@ public class CancelBuildAction
 	    }
 	    catch ( BuildManagerException e )
 	    {
-	        getLogger().error( e.getMessage() );
+	        logger.error( e.getMessage() );
 	        throw new ContinuumException( e.getMessage(), e );
 	    }
 	

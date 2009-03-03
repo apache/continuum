@@ -31,6 +31,8 @@ import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.NotifierSummary;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +50,8 @@ import java.util.Map;
 public class NotifierSummaryAction
     extends ContinuumActionSupport
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     /**
      * Identifier for the {@link ProjectGroup} for which the Notifier summary
      * needs to be prepared for.
@@ -78,7 +82,7 @@ public class NotifierSummaryAction
      */
     public String summarizeForProject()
     {
-        getLogger().debug( "Obtaining summary for Project Id: " + projectId );
+        logger.debug( "Obtaining summary for Project Id: " + projectId );
 
         try
         {
@@ -88,7 +92,7 @@ public class NotifierSummaryAction
         }
         catch ( ContinuumException e )
         {
-            getLogger().error( "Unable to prepare Notifier summaries for Project Id: " + projectId, e );
+            logger.error( "Unable to prepare Notifier summaries for Project Id: " + projectId, e );
             return ERROR;
         }
         catch ( AuthorizationRequiredException authzE )
@@ -119,7 +123,7 @@ public class NotifierSummaryAction
      */
     public String summarizeForProjectGroup()
     {
-        getLogger().debug( "Obtaining summary for ProjectGroup Id:" + projectGroupId );
+        logger.debug( "Obtaining summary for ProjectGroup Id:" + projectGroupId );
 
         try
         {
@@ -138,7 +142,7 @@ public class NotifierSummaryAction
         }
         catch ( ContinuumException e )
         {
-            getLogger().error( "Unable to prepare Notifier summaries for ProjectGroup Id: " + projectGroupId, e );
+            logger.error( "Unable to prepare Notifier summaries for ProjectGroup Id: " + projectGroupId, e );
             return ERROR;
         }
         catch ( AuthorizationRequiredException authzE )

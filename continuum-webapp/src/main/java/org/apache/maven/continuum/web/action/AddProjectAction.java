@@ -31,6 +31,8 @@ import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +48,8 @@ public class AddProjectAction
     extends ContinuumActionSupport
     implements Validateable
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private String projectName;
 
     private String projectDescription;
@@ -90,29 +94,30 @@ public class AddProjectAction
         boolean projectNameAlreadyExist = false;
 
         clearErrorsAndMessages();
-        
+
         try
         {
-            if ( ( projectName.trim().length() > 0 ) && ( projectVersion.trim().length() > 0 ) && ( projectScmUrl.trim().length() > 0 ) )
+            if ( ( projectName.trim().length() > 0 ) && ( projectVersion.trim().length() > 0 ) &&
+                ( projectScmUrl.trim().length() > 0 ) )
             {
-            Iterator<Project> projects = getContinuum().getProjects().iterator();
-            while ( projects.hasNext() )
-            {
-                Project project = projects.next();
-                // CONTINUUM-1445
-                if ( StringUtils.equalsIgnoreCase( project.getName(), projectName.trim() ) &&
-                    StringUtils.equalsIgnoreCase( project.getVersion(), projectVersion.trim() ) &&
-                    StringUtils.equalsIgnoreCase( project.getScmUrl(), projectScmUrl.trim() ) )
+                Iterator<Project> projects = getContinuum().getProjects().iterator();
+                while ( projects.hasNext() )
                 {
-                    projectNameAlreadyExist = true;
-                    break;
+                    Project project = projects.next();
+                    // CONTINUUM-1445
+                    if ( StringUtils.equalsIgnoreCase( project.getName(), projectName.trim() ) &&
+                        StringUtils.equalsIgnoreCase( project.getVersion(), projectVersion.trim() ) &&
+                        StringUtils.equalsIgnoreCase( project.getScmUrl(), projectScmUrl.trim() ) )
+                    {
+                        projectNameAlreadyExist = true;
+                        break;
+                    }
                 }
-            }
-            if ( projectNameAlreadyExist )
-            {
-                addActionError( getText( "projectName.already.exist.error" ) );
-                this.input();
-            }
+                if ( projectNameAlreadyExist )
+                {
+                    addActionError( getText( "projectName.already.exist.error" ) );
+                    this.input();
+                }
             }
             else
             {
@@ -133,11 +138,11 @@ public class AddProjectAction
         }
         catch ( ContinuumException e )
         {
-            getLogger().error( e.getMessage(), e );
+            logger.error( e.getMessage(), e );
         }
         catch ( BuildDefinitionServiceException e )
         {
-            getLogger().error( e.getMessage(), e );
+            logger.error( e.getMessage(), e );
         }
     }
 
@@ -168,7 +173,9 @@ public class AddProjectAction
         project.setName( projectName.trim() );
 
         if ( projectDescription != null )
+        {
             project.setDescription( projectDescription.trim() );
+        }
 
         project.setVersion( projectVersion.trim() );
 
@@ -231,8 +238,8 @@ public class AddProjectAction
 
         if ( !disableGroupSelection )
         {
-            selectedProjectGroup = getContinuum().getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID )
-                .getId();
+            selectedProjectGroup =
+                getContinuum().getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID ).getId();
         }
         this.profiles = profileService.getAllProfiles();
         buildDefinitionTemplates = getContinuum().getBuildDefinitionService().getAllBuildDefinitionTemplate();
@@ -427,11 +434,13 @@ public class AddProjectAction
         }
     }
 
-    public String getProjectDescription() {
+    public String getProjectDescription()
+    {
         return projectDescription;
     }
 
-    public void setProjectDescription(String projectDescription) {
+    public void setProjectDescription( String projectDescription )
+    {
         this.projectDescription = projectDescription;
     }
 }

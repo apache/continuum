@@ -29,6 +29,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -38,8 +40,10 @@ import org.codehaus.plexus.util.dag.CycleDetectedException;
 public class ProjectsListAction
     extends ContinuumActionSupport
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private List<String> selectedProjects;
-    
+
     private List<String> selectedProjectsNames;
 
     private String projectGroupName = "";
@@ -66,14 +70,14 @@ public class ProjectsListAction
         {
             return remove();
         }
-        else if ("confirmRemove".equals( methodToCall ))
+        else if ( "confirmRemove".equals( methodToCall ) )
         {
             return confirmRemove();
         }
 
         return SUCCESS;
     }
-   
+
     private String remove()
         throws ContinuumException
     {
@@ -94,13 +98,13 @@ public class ProjectsListAction
 
                 try
                 {
-                    getLogger().info( "Removing Project with id=" + projectId );
+                    logger.info( "Removing Project with id=" + projectId );
 
                     getContinuum().removeProject( projectId );
                 }
                 catch ( ContinuumException e )
                 {
-                    getLogger().error( "Error removing Project with id=" + projectId );
+                    logger.error( "Error removing Project with id=" + projectId );
                     addActionError( getText( "Unable to remove Project with id=" + projectId ) );
                 }
             }
@@ -123,7 +127,7 @@ public class ProjectsListAction
         }
         return "confirmRemove";
     }
-    
+
     private String build()
         throws ContinuumException
     {
@@ -158,7 +162,8 @@ public class ProjectsListAction
 
             if ( this.getBuildDefinitionId() <= 0 )
             {
-                List<BuildDefinition> groupDefaultBDs = getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
+                List<BuildDefinition> groupDefaultBDs =
+                    getContinuum().getDefaultBuildDefinitionsForProjectGroup( projectGroupId );
                 getContinuum().buildProjectsWithBuildDefinition( sortedProjects, groupDefaultBDs );
             }
             else

@@ -28,6 +28,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.GroupSummary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -37,6 +39,8 @@ import org.apache.maven.continuum.web.model.GroupSummary;
 public class GroupSummaryAction
     extends ContinuumActionSupport
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private String infoMessage;
 
     private List<GroupSummary> groups;
@@ -53,7 +57,7 @@ public class GroupSummaryAction
 
             if ( isAuthorized( projectGroup.getName() ) )
             {
-                getLogger().debug( "GroupSummaryAction: building group " + projectGroup.getName() );
+                logger.debug( "GroupSummaryAction: building group " + projectGroup.getName() );
 
                 GroupSummary groupModel = new GroupSummary();
                 groupModel.setId( projectGroup.getId() );
@@ -72,7 +76,7 @@ public class GroupSummaryAction
 
                 for ( Project project : projects )
                 {
-                    
+
                     if ( project.getState() == 2 )
                     {
                         numSuccesses++;
@@ -94,7 +98,7 @@ public class GroupSummaryAction
                 groupModel.setNumSuccesses( numSuccesses );
                 groupModel.setNumFailures( numFailures );
                 groupModel.setNumErrors( numErrors );
-                getLogger().debug( "GroupSummaryAction: adding group to groups list " + groupModel.getName() );
+                logger.debug( "GroupSummaryAction: adding group to groups list " + groupModel.getName() );
                 groups.add( groupModel );
             }
         }

@@ -24,9 +24,9 @@ import com.opensymphony.xwork2.validator.validators.ValidatorSupport;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -39,11 +39,10 @@ import java.util.List;
  */
 public class InstallationValidator
     extends ValidatorSupport
-    implements LogEnabled
 {
     private String fieldName;
 
-    private Logger logger;
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     /**
      * @plexus.requirement role-hint="default"
@@ -79,8 +78,8 @@ public class InstallationValidator
                 if ( executorConfigurator.getVersionArgument() != null )
                 {
                     // just try to get version infos to validate path is valid
-                    List<String> versionInfos = installationService
-                        .getExecutorConfiguratorVersion( varValue, executorConfigurator, null );
+                    List<String> versionInfos =
+                        installationService.getExecutorConfiguratorVersion( varValue, executorConfigurator, null );
                 }
             }
         }
@@ -101,13 +100,5 @@ public class InstallationValidator
     public void setFieldName( String fieldName )
     {
         this.fieldName = fieldName;
-    }
-
-    /**
-     * @see org.codehaus.plexus.logging.LogEnabled#enableLogging(org.codehaus.plexus.logging.Logger)
-     */
-    public void enableLogging( Logger logger )
-    {
-        this.logger = logger;
     }
 }

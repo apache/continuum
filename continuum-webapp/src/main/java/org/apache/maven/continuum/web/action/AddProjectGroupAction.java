@@ -27,6 +27,8 @@ import org.apache.continuum.repository.RepositoryServiceException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.opensymphony.xwork2.Validateable;
 
@@ -38,24 +40,26 @@ public class AddProjectGroupAction
     extends ContinuumActionSupport
     implements Validateable
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private String name;
 
     private String groupId;
 
     private String description;
-    
+
     private int repositoryId;
-    
+
     private List<LocalRepository> repositories;
 
     public void prepare()
         throws Exception
     {
         super.prepare();
-        
+
         repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
     }
-    
+
     public void validate()
     {
         clearErrorsAndMessages();
@@ -124,7 +128,7 @@ public class AddProjectGroupAction
         projectGroup.setGroupId( groupId );
 
         projectGroup.setDescription( description );
-        
+
         try
         {
             if ( repositoryId > 0 )
@@ -135,8 +139,8 @@ public class AddProjectGroupAction
         }
         catch ( RepositoryServiceException e )
         {
-            getLogger().error( "Error adding project group" + e.getLocalizedMessage() );
-            
+            logger.error( "Error adding project group" + e.getLocalizedMessage() );
+
             return ERROR;
         }
 
@@ -146,7 +150,7 @@ public class AddProjectGroupAction
         }
         catch ( ContinuumException e )
         {
-            getLogger().error( "Error adding project group: " + e.getLocalizedMessage() );
+            logger.error( "Error adding project group: " + e.getLocalizedMessage() );
 
             return ERROR;
         }
@@ -198,22 +202,22 @@ public class AddProjectGroupAction
     {
         this.name = name;
     }
-    
+
     public int getRepositoryId()
     {
         return repositoryId;
     }
-    
+
     public void setRepositoryId( int repositoryId )
     {
         this.repositoryId = repositoryId;
     }
-    
+
     public List<LocalRepository> getRepositories()
     {
         return repositories;
     }
-    
+
     public void setRepositories( List<LocalRepository> repositories )
     {
         this.repositories = repositories;

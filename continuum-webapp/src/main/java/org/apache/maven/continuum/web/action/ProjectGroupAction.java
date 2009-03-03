@@ -42,6 +42,8 @@ import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.users.User;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,6 +64,8 @@ import java.util.Map;
 public class ProjectGroupAction
     extends ContinuumConfirmAction
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private final static Map FILTER_CRITERIA = new HashMap();
 
     static
@@ -80,7 +84,7 @@ public class ProjectGroupAction
      * @plexus.requirement role-hint="default"
      */
     private RoleManager roleManager;
-    
+
     /**
      * @plexus.requirement role-hint="parallel"
      */
@@ -161,8 +165,7 @@ public class ProjectGroupAction
                 if ( !buildDefinition.isDefaultForProject() )
                 {
                     String key = StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals()
-                        : buildDefinition
-                            .getDescription();
+                        : buildDefinition.getDescription();
                     buildDefinitions.put( key, Integer.valueOf( buildDefinition.getId() ) );
                 }
             }
@@ -346,7 +349,7 @@ public class ProjectGroupAction
             {
                 Project p = (Project) proj.next();
                 try
-                {   
+                {
                     if ( parallelBuildsManager.isInAnyCheckoutQueue( p.getId() ) )
                     {
                         projectInCOQueue = true;
@@ -386,7 +389,7 @@ public class ProjectGroupAction
         {
             Project rootProject = ( getContinuum().getProjectsInBuildOrder( projList ) ).get( 0 );
 
-            if (rootProject != null)
+            if ( rootProject != null )
             {
                 setUrl( rootProject.getUrl() );
             }
@@ -500,13 +503,12 @@ public class ProjectGroupAction
                 }
             }
 
-            ProjectGroup newProjectGroup =
-                getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() );
+            ProjectGroup newProjectGroup = getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() )
+                ;
 
             if ( newProjectGroup.getId() != projectGroup.getId() && isAuthorized( newProjectGroup.getName() ) )
             {
-                getLogger().info(
-                    "Moving project " + project.getName() + " to project group " + newProjectGroup.getName() );
+                logger.info( "Moving project " + project.getName() + " to project group " + newProjectGroup.getName() );
                 project.setProjectGroup( newProjectGroup );
 
                 //CONTINUUM-1512
@@ -685,7 +687,7 @@ public class ProjectGroupAction
         }
         catch ( Exception e )
         {
-            getLogger().error( "Can't get the users list", e );
+            logger.error( "Can't get the users list", e );
         }
 
         if ( !StringUtils.isEmpty( filterKey ) )
