@@ -34,25 +34,13 @@ import java.util.Map;
  */
 public abstract class PlexusActionSupport
     extends ActionSupport
-    implements LogEnabled, SessionAware
+    implements SessionAware
 {
     protected Map session;
-
-    private Logger logger;
 
     public void setSession( Map map )
     {
         //noinspection AssignmentToCollectionOrArrayFieldFromParameter
         this.session = map;
-    }
-
-    public void enableLogging( Logger logger )
-    {
-        this.logger = logger;
-    }
-
-    protected Logger getLogger()
-    {
-        return logger;
     }
 }

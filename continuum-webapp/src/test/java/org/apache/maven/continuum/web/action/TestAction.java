@@ -1,5 +1,8 @@
 package org.apache.maven.continuum.web.action;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,12 +31,14 @@ package org.apache.maven.continuum.web.action;
 public class TestAction
     extends PlexusActionSupport
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private String testString;
 
     public String execute()
         throws Exception
     {
-        getLogger().info( testString );
+        logger.info( testString );
 
         return INPUT;
     }

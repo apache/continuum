@@ -28,6 +28,8 @@ import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.opensymphony.xwork2.Preparable;
 
@@ -40,6 +42,8 @@ public class ScheduleAction
     extends ContinuumConfirmAction
     implements Preparable
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private int id;
 
     private boolean active = false;
@@ -71,16 +75,16 @@ public class ScheduleAction
     private String dayOfWeek = "?";
 
     private String year;
-    
+
     private List<String> availableBuildQueues;
-    
+
     private List<String> selectedBuildQueues = new ArrayList<String>();
 
     public void prepare()
         throws Exception
     {
         super.prepare();
-        
+
         populateBuildQueues();
     }
 
@@ -88,28 +92,28 @@ public class ScheduleAction
         throws ContinuumException
     {
         List<BuildQueue> buildQueues = null;
-        if( schedule != null )
+        if ( schedule != null )
         {
             buildQueues = schedule.getBuildQueues();
-            for( BuildQueue buildQueue : buildQueues )
+            for ( BuildQueue buildQueue : buildQueues )
             {
                 selectedBuildQueues.add( buildQueue.getName() );
             }
 
         }
-            
+
         availableBuildQueues = new ArrayList<String>();
-        
+
         buildQueues = getContinuum().getAllBuildQueues();
-        for( BuildQueue buildQueue : buildQueues )
+        for ( BuildQueue buildQueue : buildQueues )
         {
             availableBuildQueues.add( buildQueue.getName() );
         }
-        
+
         // remove selected build queues from available build queues
-        for( String buildQueue : selectedBuildQueues )
+        for ( String buildQueue : selectedBuildQueues )
         {
-            if( availableBuildQueues.contains( buildQueue ) )
+            if ( availableBuildQueues.contains( buildQueue ) )
             {
                 availableBuildQueues.remove( buildQueue );
             }
@@ -134,7 +138,7 @@ public class ScheduleAction
             return REQUIRES_AUTHENTICATION;
 
         }
-        
+
         schedules = getContinuum().getSchedules();
 
         return SUCCESS;
@@ -213,7 +217,7 @@ public class ScheduleAction
 
         if ( ( "".equals( name ) ) || ( name == null ) )
         {
-            getLogger().error( "Can't create schedule. No schedule name was supplied." );
+            logger.error( "Can't create schedule. No schedule name was supplied." );
             addActionError( getText( "buildDefinition.noname.save.error.message" ) );
             return ERROR;
         }
@@ -258,15 +262,15 @@ public class ScheduleAction
         schedule.setName( name );
         schedule.setMaxJobExecutionTime( maxJobExecutionTime );
 
-     // remove old build queues
+        // remove old build queues
         schedule.setBuildQueues( null );
 
-        for( String name : selectedBuildQueues )
+        for ( String name : selectedBuildQueues )
         {
             BuildQueue buildQueue = getContinuum().getBuildQueueByName( name );
             schedule.addBuildQueue( buildQueue );
         }
-        
+
         return schedule;
     }
 
@@ -492,7 +496,8 @@ public class ScheduleAction
 
     private String getCronExpression()
     {
-        return ( second + " " + minute + " " + hour + " " + dayOfMonth + " " + month + " " + dayOfWeek + " " + year ).trim();
+        return ( second + " " + minute + " " + hour + " " + dayOfMonth + " " + month + " " + dayOfWeek + " " +
+            year ).trim();
     }
 
     public List<String> getAvailableBuildQueues()

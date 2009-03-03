@@ -24,8 +24,6 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 
 /**
  * Test for {@link AbstractContinuumProjectBuilder}
@@ -44,7 +42,6 @@ public abstract class AbstractContinuumProjectBuilderTest
     {
         super.setUp();
         builder = new ContinuumProjectBuilder();
-        //builder.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
     }
 
     /**
@@ -86,7 +83,7 @@ public abstract class AbstractContinuumProjectBuilderTest
             return null;
         }
 
-        public BuildDefinitionTemplate  getDefaultBuildDefinitionTemplate()
+        public BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
             throws ContinuumProjectBuilderException
         {
             return null;

@@ -35,6 +35,8 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.opensymphony.xwork2.Preparable;
 
@@ -47,6 +49,8 @@ public class ConfigurationAction
     extends ContinuumActionSupport
     implements Preparable, SecureAction
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private String workingDirectory;
 
     private String buildOutputDirectory;
@@ -54,11 +58,11 @@ public class ConfigurationAction
     private String deploymentRepositoryDirectory;
 
     private String baseUrl;
-    
+
     private String releaseOutputDirectory;
 
     private int numberOfAllowedBuildsinParallel = 1;
-    
+
     private boolean requireReleaseOutput;
 
     private boolean distributedBuildEnabled;
@@ -92,7 +96,7 @@ public class ConfigurationAction
             HttpServletRequest request = ServletActionContext.getRequest();
             baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
                 request.getContextPath();
-            getLogger().info( "baseUrl='" + baseUrl + "'" );
+            logger.info( "baseUrl='" + baseUrl + "'" );
         }
 
         File releaseOutputDirectoryFile = configuration.getReleaseOutputDirectory();
@@ -100,14 +104,14 @@ public class ConfigurationAction
         {
             releaseOutputDirectory = releaseOutputDirectoryFile.getAbsolutePath();
         }
-        
+
         numberOfAllowedBuildsinParallel = configuration.getNumberOfBuildsInParallel();
-        
-        if( numberOfAllowedBuildsinParallel == 0 )
+
+        if ( numberOfAllowedBuildsinParallel == 0 )
         {
             numberOfAllowedBuildsinParallel = 1;
         }
-               
+
         String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
         setRequireReleaseOutput( new Boolean( requireRelease ) );
 
@@ -120,32 +124,32 @@ public class ConfigurationAction
         {
             addActionError( getText( "configuration.releaseOutputDirectory.required" ) );
         }
-                
-        if( numberOfAllowedBuildsinParallel <= 0 )
+
+        if ( numberOfAllowedBuildsinParallel <= 0 )
         {
             addActionError( "configuration.numberOfBuildsInParallel.invalid" );
         }
-        
+
         return INPUT;
     }
 
     public String save()
         throws ConfigurationStoringException, ContinuumStoreException, ContinuumConfigurationException
     {
-        if( numberOfAllowedBuildsinParallel <= 0 )
+        if ( numberOfAllowedBuildsinParallel <= 0 )
         {
             addActionError( "Number of Allowed Builds in Parallel must be greater than zero." );
             return ERROR;
         }
-        
+
         ConfigurationService configuration = getContinuum().getConfiguration();
 
         configuration.setWorkingDirectory( new File( workingDirectory ) );
 
         configuration.setBuildOutputDirectory( new File( buildOutputDirectory ) );
-        
-        configuration.setNumberOfBuildsInParallel( numberOfAllowedBuildsinParallel );	
-        
+
+        configuration.setNumberOfBuildsInParallel( numberOfAllowedBuildsinParallel );
+
         if ( StringUtils.isNotEmpty( deploymentRepositoryDirectory ) )
         {
             configuration.setDeploymentRepositoryDirectory( new File( deploymentRepositoryDirectory ) );
@@ -244,21 +248,21 @@ public class ConfigurationAction
     {
         return requireReleaseOutput;
     }
-    
+
     public void setRequireReleaseOutput( boolean requireReleaseOutput )
     {
         this.requireReleaseOutput = requireReleaseOutput;
     }
-    
-	public int getNumberOfAllowedBuildsinParallel() 
-	{
-	    return numberOfAllowedBuildsinParallel;
-	}
 
-	public void setNumberOfAllowedBuildsinParallel( int numberOfAllowedBuildsinParallel ) 
-	{
-	    this.numberOfAllowedBuildsinParallel = numberOfAllowedBuildsinParallel;
-	}
+    public int getNumberOfAllowedBuildsinParallel()
+    {
+        return numberOfAllowedBuildsinParallel;
+    }
+
+    public void setNumberOfAllowedBuildsinParallel( int numberOfAllowedBuildsinParallel )
+    {
+        this.numberOfAllowedBuildsinParallel = numberOfAllowedBuildsinParallel;
+    }
 
     public boolean isDistributedBuildEnabled()
     {

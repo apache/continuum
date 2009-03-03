@@ -28,6 +28,8 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -37,20 +39,22 @@ import org.codehaus.plexus.util.StringUtils;
 public class BuildResultsListAction
     extends AbstractBuildAction
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     private Project project;
 
     private Collection buildResults;
-    
+
     private Collection<String> selectedBuildResults;
 
     private int projectId;
-    
+
     private int projectGroupId;
 
     private String projectName;
 
     private String projectGroupName = "";
-    
+
     public String execute()
         throws ContinuumException
     {
@@ -69,7 +73,7 @@ public class BuildResultsListAction
 
         return SUCCESS;
     }
-    
+
     public String remove()
         throws ContinuumException
     {
@@ -91,13 +95,13 @@ public class BuildResultsListAction
 
                     try
                     {
-                        getLogger().info( "Removing BuildResult with id=" + buildId );
+                        logger.info( "Removing BuildResult with id=" + buildId );
 
                         getContinuum().removeBuildResult( buildId );
                     }
                     catch ( ContinuumException e )
                     {
-                        getLogger().error( "Error removing BuildResult with id=" + buildId );
+                        logger.error( "Error removing BuildResult with id=" + buildId );
                         addActionError( getText( "Unable to remove BuildResult with id=" + buildId ) );
                     }
                 }
@@ -126,8 +130,8 @@ public class BuildResultsListAction
                     }
                     catch ( BuildManagerException e )
                     {
-                        getLogger().error( e.getMessage() );
-                        throw new ContinuumException( e.getMessage(), e ); 
+                        logger.error( e.getMessage() );
+                        throw new ContinuumException( e.getMessage(), e );
                     }
                 }
             }
@@ -195,5 +199,5 @@ public class BuildResultsListAction
     public void setProjectGroupId( int projectGroupId )
     {
         this.projectGroupId = projectGroupId;
-    }    
+    }
 }

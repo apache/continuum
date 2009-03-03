@@ -34,6 +34,8 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,11 +50,13 @@ public class BuildAgentAction
     extends ContinuumConfirmAction
     implements SecureAction
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     /**
      * @plexus.requirement
      */
     private DistributedBuildManager distributedBuildManager;
-    
+
     private List<BuildAgentConfiguration> buildAgents;
 
     private BuildAgentConfiguration buildAgent;
@@ -88,7 +92,7 @@ public class BuildAgentAction
         if ( buildAgent != null && !StringUtils.isBlank( buildAgent.getUrl() ) )
         {
             List<BuildAgentConfiguration> agents = getContinuum().getConfiguration().getBuildAgents();
-            
+
             for ( BuildAgentConfiguration agent : agents )
             {
                 if ( agent.getUrl().equals( buildAgent.getUrl() ) )
@@ -139,7 +143,7 @@ public class BuildAgentAction
                 }
                 catch ( ContinuumException e )
                 {
-                    getLogger().error( "Unable to retrieve installations of build agent '" + agent.getUrl() + "'", e );
+                    logger.error( "Unable to retrieve installations of build agent '" + agent.getUrl() + "'", e );
                 }
 
                 break;
@@ -242,11 +246,11 @@ public class BuildAgentAction
         List<Profile> profiles = getContinuum().getProfileService().getAllProfiles();
         for ( Profile profile : profiles )
         {
-            if (buildAgentGroup.getName().equals( profile.getBuildAgentGroup() ) )
-            {                
+            if ( buildAgentGroup.getName().equals( profile.getBuildAgentGroup() ) )
+            {
                 message = getText( "buildAgentGroup.error.remove.in.use" );
                 return ERROR;
-            }                
+            }
         }
 
         ConfigurationService configuration = getContinuum().getConfiguration();
@@ -301,7 +305,7 @@ public class BuildAgentAction
         }
 
         if ( !found )
-        {            
+        {
             buildAgentGroup.setBuildAgents( selectedbuildAgents );
             configuration.addBuildAgentGroup( buildAgentGroup );
         }
@@ -347,7 +351,8 @@ public class BuildAgentAction
                     this.selectedBuildAgentIds = new ArrayList<String>();
                     if ( this.buildAgentGroup.getBuildAgents() != null )
                     {
-                        for ( Iterator<BuildAgentConfiguration> iterator = buildAgentGroup.getBuildAgents().iterator(); iterator.hasNext(); )
+                        for ( Iterator<BuildAgentConfiguration> iterator = buildAgentGroup.getBuildAgents().iterator();
+                              iterator.hasNext(); )
                         {
                             this.selectedBuildAgentIds.add( iterator.next().getUrl() );
                         }
@@ -386,7 +391,7 @@ public class BuildAgentAction
         return bundle;
     }
 
-    private List<BuildAgentConfiguration>getBuildAgentsFromSelectedBuildAgents()
+    private List<BuildAgentConfiguration> getBuildAgentsFromSelectedBuildAgents()
     {
         if ( this.selectedBuildAgentIds == null )
         {
@@ -394,10 +399,10 @@ public class BuildAgentAction
         }
 
         List<BuildAgentConfiguration> selectedbuildAgents = new ArrayList<BuildAgentConfiguration>();
-        for ( String ids: selectedBuildAgentIds )
+        for ( String ids : selectedBuildAgentIds )
         {
             BuildAgentConfiguration buildAgent = getContinuum().getConfiguration().getBuildAgent( ids );
-            if (buildAgent!=null)
+            if ( buildAgent != null )
             {
                 selectedbuildAgents.add( buildAgent );
             }
@@ -449,7 +454,7 @@ public class BuildAgentAction
     {
         return this.message;
     }
-    
+
     public void setMessage( String message )
     {
         this.message = message;

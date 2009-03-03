@@ -26,6 +26,8 @@ import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -35,11 +37,12 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 public class ProjectViewAction
     extends ContinuumActionSupport
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
 
     private Project project;
 
     private int projectId;
-    
+
     private String lastBuildDateTime;
 
     /**
@@ -66,20 +69,21 @@ public class ProjectViewAction
         {
             try
             {
-            BuildResult lastBuildResult = getContinuum().getBuildResult( project.getLatestBuildId() );
-            if ( lastBuildResult != null )
-            {
-                this.setLastBuildDateTime( dateFormatter.format( new Date( lastBuildResult.getEndTime() ) ) );
+                BuildResult lastBuildResult = getContinuum().getBuildResult( project.getLatestBuildId() );
+                if ( lastBuildResult != null )
+                {
+                    this.setLastBuildDateTime( dateFormatter.format( new Date( lastBuildResult.getEndTime() ) ) );
+                }
             }
-            } catch (ContinuumException e)
+            catch ( ContinuumException e )
             {
-                getLogger().info( "buildResult with id " + project.getLatestBuildId() + " has been deleted" );
+                logger.info( "buildResult with id " + project.getLatestBuildId() + " has been deleted" );
             }
         }
 
         return SUCCESS;
     }
-    
+
     public void setProjectId( int projectId )
     {
         this.projectId = projectId;

@@ -39,6 +39,8 @@ import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.opensymphony.xwork2.Preparable;
 
@@ -51,8 +53,9 @@ import com.opensymphony.xwork2.Preparable;
 public class ProfileAction
     extends ContinuumActionSupport
     implements Preparable, SecureAction
-
 {
+    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+
     /**
      * @plexus.requirement role-hint="default"
      */
@@ -110,7 +113,7 @@ public class ProfileAction
         {
             addActionError( errorMessage );
         }
-        
+
         this.profiles = profileService.getAllProfiles();
         return SUCCESS;
     }
@@ -118,9 +121,9 @@ public class ProfileAction
     public String edit()
         throws Exception
     {
-        if ( getLogger().isDebugEnabled() )
+        if ( logger.isDebugEnabled() )
         {
-            getLogger().debug( "edit profile with id " + profile.getId() );
+            logger.debug( "edit profile with id " + profile.getId() );
         }
         this.profile = profileService.getProfile( profile.getId() );
         return SUCCESS;
@@ -161,7 +164,8 @@ public class ProfileAction
                 profile = profileService.getProfile( profile.getId() );
                 // CONTINUUM-1746 we update the profile only if the name has changed 
                 // jancajas: added build agent group. updated profile if agent group is changed also.
-                if ( !StringUtils.equals( name, profile.getName() ) || !StringUtils.equals( buildAgentGroup, profile.getBuildAgentGroup() ))
+                if ( !StringUtils.equals( name, profile.getName() ) ||
+                    !StringUtils.equals( buildAgentGroup, profile.getBuildAgentGroup() ) )
                 {
                     profile.setName( name );
                     profile.setBuildAgentGroup( buildAgentGroup );
@@ -180,7 +184,7 @@ public class ProfileAction
 
     public String delete()
         throws Exception
-    {   
+    {
         try
         {
             profileService.deleteProfile( profile.getId() );
@@ -200,7 +204,7 @@ public class ProfileAction
         this.profile = getContinuum().getProfileService().getProfile( profile.getId() );
         return SUCCESS;
     }
-    
+
     public String addInstallation()
         throws Exception
     {
@@ -227,7 +231,7 @@ public class ProfileAction
     // -----------------------------------------------------
     // security
     // -----------------------------------------------------    
-    
+
     public SecureActionBundle getSecureActionBundle()
         throws SecureActionException
     {
@@ -236,8 +240,8 @@ public class ProfileAction
         bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_PROFILES, Resource.GLOBAL );
 
         return bundle;
-    }    
-    
+    }
+
     // -------------------------------------------------------
     // Webwork setter/getter
     // -------------------------------------------------------
@@ -270,7 +274,7 @@ public class ProfileAction
             this.allInstallations = installationService.getAllInstallations();
         }
         // CONTINUUM-1742 (olamy) don't display already attached en var
-        if (this.profile != null)
+        if ( this.profile != null )
         {
             this.allInstallations.removeAll( this.profile.getEnvironmentVariables() );
         }
