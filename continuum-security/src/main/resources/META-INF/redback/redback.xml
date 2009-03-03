@@ -387,7 +387,7 @@
         </role>   
         <role>
           <id>continuum-manage-repositories</id>
-          <name>continuum-manage-repositories</name>
+          <name>Continuum Manage Local Repositories</name>
           <assignable>true</assignable>
           <permanent>true</permanent>
           <permissions>
@@ -402,7 +402,7 @@
         </role>
         <role>
           <id>continuum-manage-purging</id>
-          <name>continuum-manage-purging</name>
+          <name>Continuum Manage Purging</name>
           <assignable>true</assignable>
           <permanent>true</permanent>
           <permissions>
