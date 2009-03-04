@@ -6,6 +6,34 @@
  Nov 19 2007
  ------
 
-Notification
+Jabber Notification
 
-    To Write
+  [[1]] Under Notifiers from the Project Information page, click Add.
+  
+  [[2]] Select Jabber from the pull-down menu and click Submit.
+  
+  [[3]] On the Add/Edit Jabber Notifier page, fill out the form with the following:
+  
+    * Jabber Host
+    
+    * Jabber Port is typically 5222
+    
+    * Jabber Login
+    
+    * Jabber Password
+    
+    * Jabber Domain Name is the fully qualified domain name of your Jabber login
+    
+    * Jabber Recipient Address
+    
+    []
+    
+[../../images/notifier-jabber-add.png] Add Jabber Notifier
+    
+  The Jabber login and Jabber recipient address must be different. The Jabber
+  recipient must also be added in the contact list of the sender (at least for Google talk).
+  
+  [[4]] Select the “Send on ...” options you want.
+  
+  [[5]] Click Save. The Jabber notifier you just added will be listed under Notifiers on the Project
+  Information page along with the other notifiers you may have set up prior to this.

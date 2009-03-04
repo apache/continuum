@@ -1,0 +1,39 @@
+ ------
+ Force Project Build
+ ------
+ ------
+ Feb 23 2009
+ ------
+
+Force Project Build
+
+    Occasionally you may want to force a build outside of the regular schedule.
+    The following procedure explains how to do this.
+    
+    To manually build a project perform the following steps:
+    
+    [[1]] Click <<Show Project Groups>>.
+    
+    [[2]] Click the project group link of the project you want to build.
+    This will put you on the <<Summary>> page of the project group.
+    
+    [[3]] You can click <<Build all projects>> button under <<Group Actions>> to build all
+    the projects in the project group.
+    
+[../../images/force_build.png] Project Group Actions
+
+    [[4]] To build an individual project, you can click on the build icon that is found
+    along the row of the project you want to build. It is the first icon on the right of
+    the project name. This will execute the default build goal you have defined for that project.
+    
+    To build selected projects, check the box beside the name of the project,
+    then click the <<Build Project(s)>> button.
+    
+    If you want to build the project according to a specific build goal other than the
+    default build goal, click on the project name to go to the <<Project's Information>> page.
+    All build goal definitions for the project are listed under the <<Build Definitions>> section.
+    Click on the build icon to the right of the specific build goal you want to execute.
+    
+    []
+    
+    To view the results of the build, refer to {{{build_results.html}Build Results Management}}.

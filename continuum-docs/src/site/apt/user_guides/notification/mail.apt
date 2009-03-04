@@ -25,6 +25,12 @@ Mail Notification
   
 +-------------------------------+     
 
-  Or can you can add manually mail notifier to you project group and/or project
+  Or can you can add manually mail notifier to you project group and/or project.
+  
+  On the <<Add Notifier>> form select <<Mail>> from the pull-down menu and click Submit.
   
 [../../images/notifier-mail-add.png] Add Email Notifier 
+
+  Fill in the recipient's fully qualified email address and select the send on options you want.
+  
+  Then, click <<Save>>.

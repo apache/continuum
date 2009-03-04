@@ -22,5 +22,12 @@ Building Projects
     
     * continuum.project.name
     
-    * continuum.project.version 
+    * continuum.project.version
     
+    [] 
+    
+    Projects can be built in two ways:
+    
+    [[1]] {{{schedule_build.html} Scheduled Builds}}
+    
+    [[2]] {{{forced_build.html} Forced Builds}}
