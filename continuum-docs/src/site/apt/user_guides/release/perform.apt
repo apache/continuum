@@ -15,3 +15,5 @@ Perform Release
  Wait for the process to complete, then click Done.
 
 [../../images/release-perform-executing.png]
+
+ To view the release perform results, refer to {{{release_results.html}Release Results Management}}.

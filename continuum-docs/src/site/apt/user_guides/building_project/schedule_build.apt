@@ -1,0 +1,24 @@
+ ------
+ Scheduling Project Build
+ ------
+ ------
+ Feb 23 2009
+ ------
+
+Scheduling Project Build
+
+    Schedules determine the project's time interval to build. In this section,
+    how to configure a project to build on a schedule is discussed.
+    
+    To configure a scheduled build:
+
+    [[1]] Create a schedule. You can refer to {{{../../administrator_guides/schedules.html} Managing Schedules}} section.
+
+    [[2]] Add a build definition to a project using the schedule created in step 1 for the <<Schedule>> field.
+       You can refer to the section {{{../managing_builddef/index.html} Managing Build Definitions}}.
+
+[../../images/schedule_build.png] Scheduling build
+
+    []
+    
+    To view the results of the build, refer to {{{build_results.html}Build Results Management}}.
