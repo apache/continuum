@@ -163,7 +163,13 @@ public class MailContinuumNotifier
      *
      * @plexus.configuration
      */
-    private String subjectFormat = "[continuum] BUILD ${state}: ${project.groupId} ${project.name}";
+    private String buildSubjectFormat = "[continuum] BUILD ${state}: ${project.groupId} ${project.name}";
+
+    /**
+     * Customizable mail subject
+     * @plexus.configuration
+     */
+    private String prepareBuildSubjectFormat = "[continuum] PREPARE BUILD ${state]";
 
     // ----------------------------------------------------------------------
     //
@@ -569,7 +575,7 @@ public class MailContinuumNotifier
 
         StringWriter writer = new StringWriter();
 
-        boolean velocityResults = velocity.getEngine().evaluate( context, writer, "subjectPattern", subjectFormat );
+        boolean velocityResults = velocity.getEngine().evaluate( context, writer, "subjectPattern", buildSubjectFormat );
 
         return writer.toString();
     }
@@ -578,7 +584,6 @@ public class MailContinuumNotifier
         throws Exception
     {
         String state = getState( projectScmRoot );
-        subjectFormat = "[continuum] PREPARE BUILD ${state}: ${projectScmRoot.scmRootAddress}";
         
         VelocityContext context = new VelocityContext();
         context.put( "projectScmRoot", projectScmRoot );
@@ -586,7 +591,7 @@ public class MailContinuumNotifier
     
         StringWriter writer = new StringWriter();
     
-        boolean velocityResults = velocity.getEngine().evaluate( context, writer, "subjectPattern", subjectFormat );
+        boolean velocityResults = velocity.getEngine().evaluate( context, writer, "subjectPattern", prepareBuildSubjectFormat );
     
         return writer.toString();
     }
