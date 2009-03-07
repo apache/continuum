@@ -55,7 +55,7 @@
             <c:when test="${template.continuumDefault == true}">
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='disabled'/>" title="<s:text name='disabled'/>" border="0" />
             </c:when>
-            <c:otherwise>${template.continuumDefault}
+            <c:otherwise>
               <s:url id="deleteUrl" action="deleteDefinitionTemplate" method="delete" namespace="/">
                 <s:param name="buildDefinitionTemplate.id">${pageScope.template.id}</s:param>
               </s:url>
