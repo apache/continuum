@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
-import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 
 import com.opensymphony.xwork2.Preparable;
 
@@ -32,7 +32,7 @@ import com.opensymphony.xwork2.Preparable;
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildQueueAction"
  */
 public class BuildQueueAction
-    extends ContinuumActionSupport
+    extends ContinuumConfirmAction
     implements Preparable
 {
     private String name;
@@ -44,6 +44,8 @@ public class BuildQueueAction
     private BuildQueue buildQueue;
     
     private String message;
+    
+    private boolean confirmed;
 
     public void prepare()
         throws ContinuumException
@@ -131,11 +133,19 @@ public class BuildQueueAction
     public String delete()
         throws Exception
     {        
-        BuildQueue buildQueueToBeDeleted = getContinuum().getBuildQueue( this.buildQueue.getId() );
-        getContinuum().getBuildsManager().removeOverallBuildQueue( buildQueueToBeDeleted.getId() );
-        getContinuum().removeBuildQueue( buildQueueToBeDeleted );
+        if ( confirmed )
+        {
+            BuildQueue buildQueueToBeDeleted = getContinuum().getBuildQueue( this.buildQueue.getId() );
+            getContinuum().getBuildsManager().removeOverallBuildQueue( buildQueueToBeDeleted.getId() );
+            getContinuum().removeBuildQueue( buildQueueToBeDeleted );
 
-        this.buildQueueList = getContinuum().getAllBuildQueues();
+            this.buildQueueList = getContinuum().getAllBuildQueues();
+        }
+        else
+        {
+            return CONFIRM;
+        }
+        
         return SUCCESS;
     }
 
@@ -206,5 +216,15 @@ public class BuildQueueAction
         }
         
         return isExisting;
+    }
+
+    public boolean isConfirmed()
+    {
+        return confirmed;
+    }
+
+    public void setConfirmed( boolean confirmed )
+    {
+        this.confirmed = confirmed;
     }
 }
