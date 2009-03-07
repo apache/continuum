@@ -47,9 +47,13 @@
            
         <ec:column property="id" title="&nbsp;" width="1%">
           <c:if test="${buildQueue.id != 1}"> 
-            <a href="deleteBuildQueue!delete.action?buildQueue.id=<c:out value="${buildQueue.id}"/>">
+            <s:url id="deleteBuildQueueUrl" action="deleteBuildQueue">
+              <s:param name="buildQueue.id">${pageScope.buildQueue.id}</s:param>
+              <s:param name="buildQueue.name">${pageScope.buildQueue.name}</s:param>
+            </s:url>          
+            <s:a href="%{deleteBuildQueueUrl}">
               <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
-            </a>
+            </s:a>
           </c:if>
           <c:if test="${buildQueue.id == 1}">
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />

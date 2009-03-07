@@ -843,10 +843,12 @@
     </action> 
     
     <action name="deleteBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="delete">
-      <result name="input">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
-      <result name="success">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>    
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildQueue.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildQueueList</param>
+      </result>    
     </action>  
-        
+            
     <!--
     * Local Repository actions
     -->
