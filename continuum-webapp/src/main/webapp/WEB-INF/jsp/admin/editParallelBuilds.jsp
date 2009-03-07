@@ -26,7 +26,7 @@
 <html>
   <s:i18n name="localization.Continuum">
 <head>
-<title><s:text name="repository.page.title"/></title>
+<title><s:text name="parallel.build.queue.page.title"/></title>
 </head>
 <body>
 
