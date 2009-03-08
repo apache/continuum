@@ -46,8 +46,13 @@
               </tr>
               <c:forEach var="element" items="${currentBuildProjectTasks}">
                 <tr>              
-                  <td width="20%">${element.key}</td> 
-                  <td width="50%">${element.value.projectName}</td>
+                  <td width="20%">${element.key}</td>
+                  <td width="20%">
+                    <s:url id="viewUrl" action="buildResults">
+                      <s:param name="projectId">${element.value.projectId}</s:param>
+                    </s:url>
+                    <s:a href="%{viewUrl}">${element.value.projectName}</s:a>
+                  </td>
                   <td width="29%">${element.value.buildDefinitionLabel}</td>
                   <td width="1%">
                     <redback:ifAuthorized permission="continuum-manage-queues">
@@ -95,7 +100,12 @@
                       </redback:ifAuthorized>
                     </td>
                   	<td width="29%">${element.key}</td>
-                  	<td width="50%">${buildTask.projectName}</td>
+                    <td width="50%">
+                      <s:url id="viewUrl" action="buildResults">
+                        <s:param name="projectId">${buildTask.projectId}</s:param>
+                      </s:url>
+                      <s:a href="%{viewUrl}">${buildTask.projectName}</s:a>
+                    </td>
                   	<td width="19%">${buildTask.buildDefinitionLabel}</td>
                     <td width="1%">
                       <redback:ifAuthorized permission="continuum-manage-queues">
@@ -152,7 +162,12 @@
               <c:forEach var="element" items="${currentCheckoutTasks}">
                 <tr>
                   <td width="30%">${element.key}</td>
-                  <td width="69%">${element.value.projectName}</td>
+                  <td width="69%">
+                    <s:url id="viewUrl" action="projectView">
+                      <s:param name="projectId">${element.value.projectId}</s:param>
+                    </s:url>
+                    <s:a href="%{viewUrl}">${element.value.projectName}</s:a>
+                  </td>
                   <td width="1%">
                   <redback:ifAuthorized permission="continuum-manage-queues">
                     <s:url id="cancelUrl" action="cancelCurrentQueueTask" method="cancelCurrentCheckout" namespace="/">
@@ -198,7 +213,12 @@
                       </redback:ifAuthorized>
                     </td>
                   	<td width="29%">${element.key}</td>
-                  	<td width="69%">${checkoutTask.projectName}</td>
+                    <td width="69%">
+                      <s:url id="viewUrl" action="projectView">
+                        <s:param name="projectId">${checkoutTask.projectId}</s:param>
+                      </s:url>
+                      <s:a href="%{viewUrl}">${checkoutTask.projectName}</s:a>
+                    </td>
                     <td width="1%">
                       <redback:ifAuthorized permission="continuum-manage-queues">
                         <s:url id="cancelUrl" action="removeCheckoutQueueEntry" method="removeCheckout">
