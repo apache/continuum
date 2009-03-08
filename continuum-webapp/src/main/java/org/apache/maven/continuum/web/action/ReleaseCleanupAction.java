@@ -19,10 +19,12 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author Edwin Punzalan
@@ -51,24 +53,41 @@ public class ReleaseCleanupAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-
-        releaseManager.getReleaseResults().remove( releaseId );
-
-        ContinuumReleaseManagerListener listener =
-            (ContinuumReleaseManagerListener) releaseManager.getListeners().remove( releaseId );
-
-        if ( listener != null )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            String goal = listener.getGoalName();
+            DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-            return goal + "Finished";
+            String goal = releaseManager.releaseCleanup( releaseId );
+
+            if ( StringUtils.isNotBlank( goal ) )
+            {
+                return goal;
+            }
+            else
+            {
+                throw new Exception( "No listener to cleanup for id " + releaseId );
+            }
         }
         else
         {
-            throw new Exception( "No listener to cleanup for id " + releaseId );
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+    
+            releaseManager.getReleaseResults().remove( releaseId );
+    
+            ContinuumReleaseManagerListener listener =
+                (ContinuumReleaseManagerListener) releaseManager.getListeners().remove( releaseId );
+    
+            if ( listener != null )
+            {
+                String goal = listener.getGoalName();
+    
+                return goal + "Finished";
+            }
+            else
+            {
+                throw new Exception( "No listener to cleanup for id " + releaseId );
+            }
         }
-
     }
 
     public String getReleaseId()

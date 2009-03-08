@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
@@ -80,16 +81,34 @@ public class ReleaseProjectAction
 
         String releaseId = ArtifactUtils.versionlessKey( project.getGroupId(), project.getArtifactId() );
 
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-
-        Map preparedReleases = releaseManager.getPreparedReleases();
-        if ( preparedReleases.containsKey( releaseId ) )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
+            DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-            preparedReleaseName = descriptor.getReleaseVersions().get( releaseId ).toString();
+            preparedReleaseName = releaseManager.getPreparedReleaseName( releaseId );
 
-            preparedReleaseId = releaseId;
+            if ( StringUtils.isNotBlank( preparedReleaseName ) )
+            {
+                preparedReleaseId = releaseId;
+            }
+            else
+            {
+                preparedReleaseName = null;
+            }
+        }
+        else
+        {
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+    
+            Map preparedReleases = releaseManager.getPreparedReleases();
+            if ( preparedReleases.containsKey( releaseId ) )
+            {
+                ReleaseDescriptor descriptor = (ReleaseDescriptor) preparedReleases.get( releaseId );
+    
+                preparedReleaseName = descriptor.getReleaseVersions().get( releaseId ).toString();
+    
+                preparedReleaseId = releaseId;
+            }
         }
 
         projectName = project.getName();

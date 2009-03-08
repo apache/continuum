@@ -21,8 +21,7 @@ package org.apache.continuum.buildagent.taskqueue.manager;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-
+import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManagerException;
 import org.codehaus.plexus.PlexusConstants;
@@ -37,16 +36,24 @@ import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-@Service("buildAgentTaskQueueManager")
+/**
+ * @plexus.component role="org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager" role-hint="default"
+ */
 public class DefaultBuildAgentTaskQueueManager
     implements BuildAgentTaskQueueManager, Contextualizable
 {
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
-    @Resource
+    /**
+     * @plexus.requirement role-hint="build-agent"
+     */
     private TaskQueue buildAgentBuildQueue;
+
+    /**
+     * @plexus.requirement role-hint="prepare-build-agent"
+     */
+    private TaskQueue buildAgentPrepareBuildQueue;
 
     private PlexusContainer container;
 
@@ -74,6 +81,11 @@ public class DefaultBuildAgentTaskQueueManager
             }
         }
         return -1;
+    }
+
+    public TaskQueue getPrepareBuildQueue()
+    {
+        return buildAgentPrepareBuildQueue;
     }
     
     private void removeProjectsFromBuildQueue()
@@ -177,6 +189,37 @@ public class DefaultBuildAgentTaskQueueManager
             else
             {
                 log.info( "no build task in queue" );
+            }
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
+
+        return false;
+    }
+
+    public boolean isInPrepareBuildQueue( int projectGroupId, int trigger, String scmRootAddress )
+        throws TaskQueueManagerException
+    {
+        try
+        {
+            List<PrepareBuildProjectsTask> queues = buildAgentPrepareBuildQueue.getQueueSnapshot();
+        
+            if ( queues != null )
+            {
+                for ( PrepareBuildProjectsTask task : queues )
+                {
+                    if ( task.getProjectGroupId() == projectGroupId && task.getTrigger() == trigger && task.getScmRootAddress().equals( scmRootAddress ) )
+                    {
+                        log.info( "projects already in build queue" );
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                log.info( "no prepare build task in queue" );
             }
         }
         catch ( TaskQueueException e )

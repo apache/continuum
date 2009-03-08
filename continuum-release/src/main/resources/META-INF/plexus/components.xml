@@ -44,12 +44,6 @@
           <field-name>rollbackReleaseQueue</field-name>
         </requirement>
         <requirement>
-          <role>org.apache.maven.continuum.utils.WorkingDirectoryService</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.maven.continuum.installation.InstallationService</role>
-        </requirement>
-        <requirement>
           <role>org.apache.maven.scm.manager.ScmManager</role>
         </requirement>
       </requirements>
@@ -318,9 +312,6 @@
         <requirement>
           <role>org.apache.continuum.utils.shell.ShellCommandHelper</role>
         </requirement>
-        <requirement>
-          <role>org.apache.maven.continuum.installation.InstallationService</role>
-        </requirement>
       </requirements>
     </component>
     <component>
@@ -330,9 +321,6 @@
       <requirements>
         <requirement>
           <role>org.apache.continuum.utils.shell.ShellCommandHelper</role>
-        </requirement>
-        <requirement>
-          <role>org.apache.maven.continuum.installation.InstallationService</role>
         </requirement>
       </requirements>
     </component>

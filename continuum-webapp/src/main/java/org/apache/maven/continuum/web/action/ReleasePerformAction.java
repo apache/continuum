@@ -21,6 +21,9 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
+import org.apache.continuum.release.distributed.DistributedReleaseUtil;
+import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
+import org.apache.continuum.web.action.AbstractReleaseAction;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.system.Profile;
@@ -37,7 +40,9 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Edwin Punzalan
@@ -45,7 +50,7 @@ import java.util.List;
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releasePerform"
  */
 public class ReleasePerformAction
-    extends ContinuumActionSupport
+    extends AbstractReleaseAction
 {
     private int projectId;
 
@@ -80,11 +85,20 @@ public class ReleasePerformAction
     private void init()
         throws Exception
     {
-        Project project = getContinuum().getProject( projectId );
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
+        {
+            DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
 
-        String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
-
-        getReleasePluginParameters( workingDirectory, "pom.xml" );
+            getReleasePluginParameters( distributedReleaseManager.getReleasePluginParameters( projectId, "pom.xml" ) );
+        }
+        else
+        {
+            Project project = getContinuum().getProject( projectId );
+    
+            String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
+    
+            getReleasePluginParameters( workingDirectory, "pom.xml" );
+        }
     }
 
     public String inputFromScm()
@@ -186,21 +200,30 @@ public class ReleasePerformAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        listener = new DefaultReleaseManagerListener();
-
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-
         Project project = getContinuum().getProject( projectId );
-
-        //todo should be configurable
-        File performDirectory = new File( getContinuum().getConfiguration().getWorkingDirectory(),
-                                          "releases-" + System.currentTimeMillis() );
-        performDirectory.mkdirs();
 
         LocalRepository repository = project.getProjectGroup().getLocalRepository();
 
-        releaseManager.perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, listener,
-                                repository );
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
+        {
+            DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
+
+            releaseManager.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+        }
+        else
+        {
+            listener = new DefaultReleaseManagerListener();
+    
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+
+            //todo should be configurable
+            File performDirectory = new File( getContinuum().getConfiguration().getWorkingDirectory(),
+                                              "releases-" + System.currentTimeMillis() );
+            performDirectory.mkdirs();
+
+            releaseManager.perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, listener,
+                                    repository );
+        }
 
         return SUCCESS;
     }
@@ -208,30 +231,53 @@ public class ReleasePerformAction
     public String executeFromScm()
         throws Exception
     {
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-
-        ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
-        descriptor.setScmSourceUrl( scmUrl );
-        descriptor.setScmUsername( scmUsername );
-        descriptor.setScmPassword( scmPassword );
-        descriptor.setScmReleaseLabel( scmTag );
-        descriptor.setScmTagBase( scmTagBase );
-
-        if ( profileId != -1 )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            Profile profile = getContinuum().getProfileService().getProfile( profileId );
-            descriptor.setEnvironments( releaseManager.getEnvironments( profile ) );
-        }
+            Project project = getContinuum().getProject( projectId );
 
-        do
+            LocalRepository repository = project.getProjectGroup().getLocalRepository();
+
+            DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
+            Map<String, String> environments = new HashMap<String, String>();
+            
+            if ( profileId != -1 )
+            {
+                Profile profile = getContinuum().getProfileService().getProfile( profileId );
+                environments = getEnvironments( profile );
+            }
+
+            releaseManager.releasePerformFromScm( projectId, goals, arguments, useReleaseProfile, repository, scmUrl, 
+                                                  scmUsername, scmPassword, scmTag, scmTagBase, environments );
+
+            return SUCCESS;
+        }
+        else
         {
-            releaseId = String.valueOf( System.currentTimeMillis() );
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+    
+            ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
+            descriptor.setScmSourceUrl( scmUrl );
+            descriptor.setScmUsername( scmUsername );
+            descriptor.setScmPassword( scmPassword );
+            descriptor.setScmReleaseLabel( scmTag );
+            descriptor.setScmTagBase( scmTagBase );
+    
+            if ( profileId != -1 )
+            {
+                Profile profile = getContinuum().getProfileService().getProfile( profileId );
+                descriptor.setEnvironments( getEnvironments( profile ) );
+            }
+    
+            do
+            {
+                releaseId = String.valueOf( System.currentTimeMillis() );
+            }
+            while ( releaseManager.getPreparedReleases().containsKey( releaseId ) );
+    
+            releaseManager.getPreparedReleases().put( releaseId, descriptor );
+    
+            return execute();
         }
-        while ( releaseManager.getPreparedReleases().containsKey( releaseId ) );
-
-        releaseManager.getPreparedReleases().put( releaseId, descriptor );
-
-        return execute();
     }
 
     private void populateFromProject()
@@ -253,6 +299,15 @@ public class ReleasePerformAction
         }
 
         releaseId = "";
+    }
+
+    private void getReleasePluginParameters( Map context )
+    {
+        useReleaseProfile = DistributedReleaseUtil.getUseReleaseProfile( context, useReleaseProfile );
+
+        goals = DistributedReleaseUtil.getGoals( context, goals );
+
+        arguments = DistributedReleaseUtil.getArguments( context, "" );
     }
 
     public String getReleaseId()

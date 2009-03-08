@@ -19,7 +19,6 @@ package org.apache.maven.continuum.release.tasks;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 
@@ -32,11 +31,6 @@ public class PrepareReleaseProjectTask
 {
     public PrepareReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener )
     {
-        this( releaseId, descriptor, listener, null );
-    }
-    
-    public PrepareReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener, Profile profile )
-    {
-        super( releaseId, descriptor, listener, profile );
+        super( releaseId, descriptor, listener );
     }
 }

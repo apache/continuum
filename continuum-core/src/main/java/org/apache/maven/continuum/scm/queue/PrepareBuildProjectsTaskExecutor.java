@@ -120,13 +120,13 @@ public class PrepareBuildProjectsTaskExecutor
                 log.info( "Initializing prepare build" );
                 context = initializeContext( projectId, buildDefinitionId );
 
+                log.info( "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
+                startPrepareBuild( context );
+
                 if ( !checkProjectScmRoot( context ) )
                 {
                     break;
                 }
-
-                log.info( "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
-                startPrepareBuild( context );
 
                 try
                 {

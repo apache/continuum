@@ -47,4 +47,35 @@ public interface SlaveBuildAgentTransportService
 
     public String getProjectFileContent( int projectId, String directory, String filename )
         throws Exception;
+
+    public Map getReleasePluginParameters( int projectId, String pomFilename )
+        throws Exception;
+
+    public List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
+        throws Exception;
+
+    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map environments )
+        throws Exception;
+
+    public Map getReleaseResult( String releaseId )
+        throws Exception;
+
+    public Map getListener( String releaseId )
+        throws Exception;
+
+    public Boolean removeListener( String releaseId )
+        throws Exception;
+
+    public String getPreparedReleaseName( String releaseId )
+        throws Exception;
+
+    public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+        throws Exception;
+
+    public Boolean releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, 
+                                          String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+        throws Exception;
+
+    public String releaseCleanup( String releaseId )
+        throws Exception;
 }

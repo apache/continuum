@@ -20,9 +20,11 @@ package org.apache.continuum.buildagent;
  */
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -32,8 +34,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager;
 import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationService;
-import org.apache.continuum.buildagent.manager.BuildAgentManager;
+import org.apache.continuum.buildagent.manager.BuildAgentReleaseManager;
 import org.apache.continuum.buildagent.model.Installation;
+import org.apache.continuum.buildagent.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.buildagent.taskqueue.manager.BuildAgentTaskQueueManager;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.buildagent.utils.WorkingCopyContentGenerator;
@@ -44,8 +47,17 @@ import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
+import org.apache.maven.continuum.release.ContinuumReleaseException;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.shared.release.ReleaseResult;
+import org.apache.maven.shared.release.versions.DefaultVersionInfo;
+import org.apache.maven.shared.release.versions.VersionInfo;
+import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,11 +77,6 @@ public class ContinuumBuildAgentServiceImpl
     /**
      * @plexus.requirement
      */
-    private BuildAgentManager buildAgentManager;
-
-    /**
-     * @plexus.requirement
-     */
     private BuildAgentTaskQueueManager buildAgentTaskQueueManager;
 
     /**
@@ -82,19 +89,32 @@ public class ContinuumBuildAgentServiceImpl
      */
     private WorkingCopyContentGenerator generator;
 
+    /**
+     * @plexus.requirement
+     */
+    private BuildAgentReleaseManager buildAgentReleaseManager;
+
     public void buildProjects( List<Map> projectsBuildContext )
         throws ContinuumBuildAgentException
     {
         List<BuildContext> buildContextList = initializeBuildContext( projectsBuildContext );
 
+        PrepareBuildProjectsTask task = createPrepareBuildProjectsTask( buildContextList );
+
+        if ( task == null )
+        {
+            return;
+        }
+
         try
         {
-            buildAgentManager.prepareBuildProjects( buildContextList );
+            buildAgentTaskQueueManager.getPrepareBuildQueue().put( task );
         }
-        catch ( ContinuumException e )
+        catch ( TaskQueueException e )
         {
-            throw new ContinuumBuildAgentException( e.getMessage(), e );
+            throw new ContinuumBuildAgentException( "Error while enqueuing projects", e );
         }
+
     }
 
     public List<Map> getAvailableInstallations()
@@ -169,11 +189,11 @@ public class ContinuumBuildAgentServiceImpl
             {
                 if ( buildResult.getStartTime() <= 0 )
                 {
-                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildContext.getBuildStartTime() ).toString() );
+                    result.put( ContinuumBuildAgentUtil.KEY_START_TIME, new Long( buildContext.getBuildStartTime() ).toString() );
                 }
                 else
                 {
-                    result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ).toString() );
+                    result.put( ContinuumBuildAgentUtil.KEY_START_TIME, new Long( buildResult.getStartTime() ).toString() );
                 }
 
                 if ( buildResult.getError() == null )
@@ -186,13 +206,13 @@ public class ContinuumBuildAgentServiceImpl
                 }
 
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( buildResult.getState() ) );
-                result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ).toString() );
+                result.put( ContinuumBuildAgentUtil.KEY_END_TIME, new Long( buildResult.getEndTime() ).toString() );
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, buildResult.getExitCode() );
             }
             else
             {
-                result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildContext.getBuildStartTime() ).toString() );
-                result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( 0 ).toString() );
+                result.put( ContinuumBuildAgentUtil.KEY_START_TIME, new Long( buildContext.getBuildStartTime() ).toString() );
+                result.put( ContinuumBuildAgentUtil.KEY_END_TIME, new Long( 0 ).toString() );
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( ContinuumProjectState.BUILDING ) );
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_ERROR, "" );
                 result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, new Integer( 0 ) );
@@ -284,6 +304,294 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
+    public Map getReleasePluginParameters( int projectId, String pomFilename )
+        throws ContinuumBuildAgentException
+    {
+        Map releaseParameters = new HashMap();
+
+        String workingDirectory = buildAgentConfigurationService.getWorkingDirectory( projectId ).getPath();
+
+        MavenXpp3Reader pomReader = new MavenXpp3Reader();
+        try
+        {
+            Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
+    
+            if ( model.getBuild() != null && model.getBuild().getPlugins() != null )
+            {
+                for ( Plugin plugin : (List<Plugin>) model.getBuild().getPlugins() )
+                {
+                    if ( plugin.getGroupId() != null && plugin.getGroupId().equals( "org.apache.maven.plugins" ) &&
+                        plugin.getArtifactId() != null && plugin.getArtifactId().equals( "maven-release-plugin" ) )
+                    {
+                        Xpp3Dom dom = (Xpp3Dom) plugin.getConfiguration();
+    
+                        if ( dom != null )
+                        {
+                            Xpp3Dom configuration = dom.getChild( "releaseLabel" );
+                            if ( configuration != null )
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, configuration.getValue() );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, "" );
+                            }
+    
+                            configuration = dom.getChild( "tag" );
+                            if ( configuration != null )
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, configuration.getValue() );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAG, "" );
+                            }
+                                
+    
+                            configuration = dom.getChild( "tagBase" );
+                            if ( configuration != null )
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAGBASE, configuration.getValue() );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_TAGBASE, "" );
+                            }
+    
+                            configuration = dom.getChild( "preparationGoals" );
+                            if ( configuration != null )
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_PREPARE_GOALS, configuration.getValue() );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_PREPARE_GOALS, "" );
+                            }
+    
+                            configuration = dom.getChild( "arguments" );
+                            if ( configuration != null )
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_ARGUMENTS, configuration.getValue() );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_ARGUMENTS, "" );
+                            }
+    
+                            configuration = dom.getChild( "scmCommentPrefix" );
+                            if ( configuration != null )
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_COMMENT_PREFIX, configuration.getValue() );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_SCM_COMMENT_PREFIX, "" );
+                            }
+    
+                            configuration = dom.getChild( "autoVersionSubmodules" );
+                            if ( configuration != null )
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_AUTO_VERSION_SUBMODULES, Boolean.valueOf( configuration.getValue() ) );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_AUTO_VERSION_SUBMODULES, new Boolean( false ) );
+                            }
+    
+                            configuration = dom.getChild( "addSchema" );
+                            if ( configuration != null )
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_ADD_SCHEMA, Boolean.valueOf( configuration.getValue() ) );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_ADD_SCHEMA, new Boolean( false ) );
+                            }
+
+                            configuration = dom.getChild( "useReleaseProfile" );
+                            if ( configuration != null )
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_USE_RELEASE_PROFILE, Boolean.valueOf( configuration.getValue() ) );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_USE_RELEASE_PROFILE, new Boolean( false ) );
+                            }
+
+                            configuration = dom.getChild( "goals" );
+                            if ( configuration != null )
+                            {
+                                String goals = configuration.getValue();
+                                if ( model.getDistributionManagement() != null &&
+                                     model.getDistributionManagement().getSite() != null )
+                                {
+                                    goals += "site-deploy";
+                                }
+
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_GOALS, goals );
+                            }
+                            else
+                            {
+                                releaseParameters.put( ContinuumBuildAgentUtil.KEY_GOALS, "" );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumBuildAgentException( "Error getting release plugin parameters from pom file", e );
+        }
+
+        return releaseParameters;
+    }
+
+    public List<Map<String, String>>processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
+        throws ContinuumBuildAgentException
+    {
+        List<Map<String, String>> projects = new ArrayList<Map<String, String>>();
+
+        String workingDirectory = buildAgentConfigurationService.getWorkingDirectory( projectId ).getPath();
+
+        try
+        {
+            processProject( workingDirectory, pomFilename, autoVersionSubmodules, projects );
+        }
+        catch ( Exception e )
+        {
+            throw new ContinuumBuildAgentException( "Unable to process project " + projectId, e );
+        }
+
+        return projects;
+    }
+
+    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map<String, String> environments )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            return buildAgentReleaseManager.releasePrepare( project, properties, releaseVersion, developmentVersion, environments );
+        }
+        catch ( ContinuumReleaseException e )
+        {
+            throw new ContinuumBuildAgentException( "Unable to prepare release", e );
+        }
+    }
+
+    public Map getReleaseResult( String releaseId )
+        throws ContinuumBuildAgentException
+    {
+        ReleaseResult result = buildAgentReleaseManager.getReleaseResult( releaseId );
+
+        Map map = new HashMap();
+        map.put( ContinuumBuildAgentUtil.KEY_START_TIME, new Long( result.getStartTime() ).toString() );
+        map.put( ContinuumBuildAgentUtil.KEY_END_TIME, new Long( result.getEndTime() ).toString() );
+        map.put( ContinuumBuildAgentUtil.KEY_RELEASE_RESULT_CODE, new Integer( result.getResultCode() ) );
+        map.put( ContinuumBuildAgentUtil.KEY_RELEASE_OUTPUT, result.getOutput() );
+
+        return map;
+    }
+
+    public Map getListener( String releaseId )
+        throws ContinuumBuildAgentException
+    {
+        return buildAgentReleaseManager.getListener( releaseId );
+    }
+
+    public void removeListener( String releaseId )
+    {
+        buildAgentReleaseManager.removeListener( releaseId );
+    }
+
+    public String getPreparedReleaseName( String releaseId )
+    {
+        return buildAgentReleaseManager.getPreparedReleaseName( releaseId );
+    }
+
+    public void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            buildAgentReleaseManager.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+        }
+        catch ( ContinuumReleaseException e )
+        {
+            throw new ContinuumBuildAgentException( "Unable to perform release " + releaseId, e );
+        }
+    }
+
+    public void releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, 
+                                       String scmUsername, String scmPassword, String scmTag, String scmTagBase, 
+                                       Map<String, String> environments )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            buildAgentReleaseManager.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername, 
+                                                            scmPassword, scmTag, scmTagBase, environments );
+        }
+        catch ( ContinuumReleaseException e )
+        {
+            throw new ContinuumBuildAgentException( "Unable to perform release from scm", e );
+        }
+    }
+
+    public String releaseCleanup( String releaseId )
+        throws ContinuumBuildAgentException
+    {
+        return buildAgentReleaseManager.releaseCleanup( releaseId );
+    }
+
+    private void processProject( String workingDirectory, String pomFilename, boolean autoVersionSubmodules, List<Map<String, String>> projects )
+        throws Exception
+    {
+        MavenXpp3Reader pomReader = new MavenXpp3Reader();
+        Model model = pomReader.read( new FileReader( new File( workingDirectory, pomFilename ) ) );
+
+        if ( model.getGroupId() == null )
+        {
+            model.setGroupId( model.getParent().getGroupId() );
+        }
+
+        if ( model.getVersion() == null )
+        {
+            model.setVersion( model.getParent().getVersion() );
+        }
+
+        setProperties( model, projects );
+
+        if ( !autoVersionSubmodules )
+        {
+            for ( Iterator modules = model.getModules().iterator(); modules.hasNext(); )
+            {
+                processProject( workingDirectory + "/" + modules.next().toString(), "pom.xml", autoVersionSubmodules, projects );
+            }
+        }
+    }
+
+    private void setProperties( Model model, List<Map<String, String>> projects )
+        throws Exception
+    {
+        Map<String, String> params = new HashMap<String, String>();
+
+        params.put( "key", model.getGroupId() + ":" + model.getArtifactId() );
+
+        if ( model.getName() == null )
+        {
+            model.setName( model.getArtifactId() );
+        }
+        params.put( "name", model.getName() );
+
+        VersionInfo version = new DefaultVersionInfo( model.getVersion() );
+
+        params.put( "release", version.getReleaseVersionString() );
+        params.put( "dev", version.getNextVersion().getSnapshotVersionString() );
+
+        projects.add( params );
+    }
+
     private List<BuildContext> initializeBuildContext( List<Map> projectsBuildContext )
     {
         List<BuildContext> buildContext = new ArrayList<BuildContext>();
@@ -313,6 +621,7 @@ public class ContinuumBuildAgentServiceImpl
             context.setOldScmResult( getScmResult( ContinuumBuildAgentUtil.getOldScmChanges( map ) ) );
             context.setLatestUpdateDate( ContinuumBuildAgentUtil.getLatestUpdateDate( map ) );
             context.setBuildAgentUrl( ContinuumBuildAgentUtil.getBuildAgentUrl( map ) );
+            context.setMaxExecutionTime( ContinuumBuildAgentUtil.getMaxExecutionTime( map ) );
 
             buildContext.add( context );
         }
@@ -379,6 +688,25 @@ public class ContinuumBuildAgentServiceImpl
 
                 changeSet.addFile( changeFile );
             }
+        }
+    }
+
+    private PrepareBuildProjectsTask createPrepareBuildProjectsTask( List<BuildContext> buildContexts )
+        throws ContinuumBuildAgentException
+    {
+        if ( buildContexts != null && buildContexts.size() > 0 ) 
+        {
+            BuildContext context = (BuildContext) buildContexts.get( 0 );
+            PrepareBuildProjectsTask task = new PrepareBuildProjectsTask( buildContexts, 
+                                                                          context.getTrigger(), 
+                                                                          context.getProjectGroupId(), 
+                                                                          context.getScmRootAddress() );
+            return task;
+        }
+        else
+        {
+            log.info( "Nothing to build" );
+            return null;
         }
     }
 }

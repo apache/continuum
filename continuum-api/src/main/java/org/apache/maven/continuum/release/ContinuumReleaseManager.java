@@ -46,11 +46,13 @@ public interface ContinuumReleaseManager
      * @param releaseVersions
      * @param developmentVersions
      * @param listener
+     * @param workingDirectory
      * @return
      * @throws ContinuumReleaseException
      */
     String prepare( Project project, Properties releaseProperties, Map<String, String> releaseVersions,
-                    Map<String, String> developmentVersions, ContinuumReleaseManagerListener listener )
+                    Map<String, String> developmentVersions, ContinuumReleaseManagerListener listener,
+                    String workingDirectory )
         throws ContinuumReleaseException;
 
     /**
@@ -61,12 +63,15 @@ public interface ContinuumReleaseManager
      * @param releaseVersions
      * @param developmentVersions
      * @param listener
-     * @param profile
+     * @param workingDirectory
+     * @param environments
+     * @param executable
      * @return
      * @throws ContinuumReleaseException
      */
     String prepare( Project project, Properties releaseProperties, Map<String, String> releaseVersions,
-                    Map<String, String> developmentVersions, ContinuumReleaseManagerListener listener, Profile profile )
+                    Map<String, String> developmentVersions, ContinuumReleaseManagerListener listener,
+                    String workingDirectory, Map<String, String> environments, String executable )
         throws ContinuumReleaseException;
 
     /**
@@ -117,8 +122,6 @@ public interface ContinuumReleaseManager
     void perform( String releaseId, File buildDirectory, String goals, String arguments, boolean useReleaseProfile,
                   ContinuumReleaseManagerListener listener, LocalRepository repository )
         throws ContinuumReleaseException;
-
-    Map<String, String> getEnvironments( Profile profile );
 
     /**
      * Clean up the tagname to respect the scm provider policy.

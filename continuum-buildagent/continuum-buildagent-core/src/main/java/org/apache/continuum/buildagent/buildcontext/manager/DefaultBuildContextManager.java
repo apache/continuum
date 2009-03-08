@@ -22,12 +22,11 @@ package org.apache.continuum.buildagent.buildcontext.manager;
 import java.util.List;
 
 import org.apache.continuum.buildagent.buildcontext.BuildContext;
-import org.springframework.stereotype.Service;
 
 /**
  * @author Jan Steven Ancajas
+ * @plexus.component role="org.apache.continuum.buildagent.buildcontext.manager.BuildContextManager" role-hint="default"
  */
-@Service("buildContextManager")
 public class DefaultBuildContextManager
     implements BuildContextManager
 {
@@ -37,7 +36,7 @@ public class DefaultBuildContextManager
     {
         BuildContext context = null;
 
-        if (buildContexts!= null)
+        if ( buildContexts != null )
         {
             for ( BuildContext item : buildContexts )
             {

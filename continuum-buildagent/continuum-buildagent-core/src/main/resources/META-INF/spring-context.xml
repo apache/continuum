@@ -38,7 +38,5 @@
      init-method="initialize">
     <property name="configurationFile" value="file:${CONTINUUM_BUILDAGENT_HOME}/conf/continuum-buildagent.xml" />
   </bean>
-
-  <bean id="actionManager" class="org.codehaus.plexus.action.DefaultActionManager"/>
 </beans>
 	

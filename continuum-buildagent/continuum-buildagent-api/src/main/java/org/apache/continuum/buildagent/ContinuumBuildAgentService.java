@@ -44,4 +44,35 @@ public interface ContinuumBuildAgentService
 
     String getProjectFileContent( int projectId, String directory, String filename )
         throws ContinuumBuildAgentException;
+
+    Map getReleasePluginParameters( int projectId, String pomFilename )
+        throws ContinuumBuildAgentException;
+
+    List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
+        throws ContinuumBuildAgentException;
+
+    String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map<String, String> environments )
+        throws ContinuumBuildAgentException;
+
+    Map getReleaseResult( String releaseId )
+        throws ContinuumBuildAgentException;
+
+    Map getListener( String releaseId )
+        throws ContinuumBuildAgentException;
+
+    void removeListener( String releaseId )
+        throws ContinuumBuildAgentException;
+
+    String getPreparedReleaseName( String releaseId )
+        throws ContinuumBuildAgentException;
+
+    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+        throws ContinuumBuildAgentException;
+
+    void releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, String scmUsername, 
+                                String scmPassword, String scmTag, String scmTagBase, Map<String, String> environments )
+        throws ContinuumBuildAgentException;
+
+    String releaseCleanup( String releaseId )
+        throws ContinuumBuildAgentException;
 }

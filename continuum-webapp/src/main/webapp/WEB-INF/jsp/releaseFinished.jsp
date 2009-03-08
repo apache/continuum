@@ -32,15 +32,15 @@
             <th><s:text name="releaseInProgress.status"/></th>
             <th width="100%"><s:text name="releaseInProgress.phase"/></th>
           </tr>
-          <s:iterator value="listener.phases">
+          <s:iterator value="listenerSummary.phases">
             <tr>
               <td>
-              <s:if test="listener.completedPhases.contains( top )">
+              <s:if test="listenerSummary.completedPhases.contains( top )">
                 <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>"
                      alt="Done" title="Done" border="0">
               </s:if>
-              <s:elseif test="listener.inProgress.equals( top )">
-                <s:if test="listener.error == null">
+              <s:elseif test="listenerSummary.inProgress.equals( top )">
+                <s:if test="listenerSummary.error == null">
                   <img src="<s:url value='/images/building.gif' includeParams="none"/>"
                        alt="In Progress" title="In Progress" border="0">
                 </s:if>

@@ -79,6 +79,8 @@ public class BuildContext
 
     private String buildAgentUrl;
 
+    private int maxExecutionTime;
+
     public int getProjectGroupId()
     {
         return projectGroupId;
@@ -337,5 +339,15 @@ public class BuildContext
     public String getBuildAgentUrl()
     {
         return buildAgentUrl;
+    }
+
+    public void setMaxExecutionTime( int maxExecutionTime )
+    {
+        this.maxExecutionTime = maxExecutionTime;
+    }
+
+    public int getMaxExecutionTime()
+    {
+        return maxExecutionTime;
     }
 }

@@ -219,6 +219,7 @@ public class DistributedBuildProjectTaskExecutor
                 context.put( ContinuumBuildConstant.KEY_ALWAYS_BUILD, new Boolean( buildDef.isAlwaysBuild() ) );
                 context.put( ContinuumBuildConstant.KEY_OLD_SCM_CHANGES, getOldScmChanges( project.getId(), buildDefinitionId ) );
                 context.put( ContinuumBuildConstant.KEY_BUILD_AGENT_URL, buildAgentUrl );
+                context.put( ContinuumBuildConstant.KEY_MAX_JOB_EXEC_TIME, new Integer( buildDef.getSchedule().getMaxJobExecutionTime() ) );
 
                 buildContext.add( context );
             }

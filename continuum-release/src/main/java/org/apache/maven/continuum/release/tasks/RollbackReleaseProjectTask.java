@@ -32,11 +32,6 @@ public class RollbackReleaseProjectTask
 {
     public RollbackReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener )
     {
-        this( releaseId, descriptor, listener, null );
-    }
-    
-    public RollbackReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener, Profile profile )
-    {
-        super( releaseId, descriptor, listener, profile );
+        super( releaseId, descriptor, listener );
     }
 }

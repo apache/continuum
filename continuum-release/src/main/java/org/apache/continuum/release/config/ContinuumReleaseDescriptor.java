@@ -32,6 +32,8 @@ public class ContinuumReleaseDescriptor
 {
     private Map<String, String> environments;
 
+    private String executable;
+
     public void addEnvironment( String name, String value )
     {
         getEnvironments().put( name, value );
@@ -64,5 +66,15 @@ public class ContinuumReleaseDescriptor
     public void setEnvironments( Map<String, String> environments )
     {
         this.environments = environments;
+    }
+
+    public String getExecutable()
+    {
+        return executable;
+    }
+
+    public void setExecutable( String executable )
+    {
+        this.executable = executable;
     }
 }

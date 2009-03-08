@@ -68,9 +68,9 @@ public class ContinuumBuildAgentUtil
 
     public static final String KEY_BUILD_FRESH = "build-fresh";
 
-    public static final String KEY_BUILD_START = "build-start";
+    public static final String KEY_START_TIME = "start-time";
 
-    public static final String KEY_BUILD_END = "build-end";
+    public static final String KEY_END_TIME = "end-time";
 
     public static final String KEY_BUILD_ERROR = "build-error";
 
@@ -206,6 +206,46 @@ public class ContinuumBuildAgentUtil
 
     public static final String KEY_BUILD_AGENT_URL = "build-agent-url";
 
+    public static final String KEY_SCM_TAGBASE = "scm-tagbase";
+
+    public static final String KEY_PREPARE_GOALS = "preparation-goals";
+
+    public static final String KEY_SCM_COMMENT_PREFIX = "scm-comment-prefix";
+
+    public static final String KEY_AUTO_VERSION_SUBMODULES = "auto-version-submodules";
+
+    public static final String KEY_ADD_SCHEMA = "add-schema";
+
+    public static final String KEY_USE_RELEASE_PROFILE = "use-release-profile";
+
+    public static final String KEY_RELEASE_VERSION = "release-version";
+
+    public static final String KEY_DEVELOPMENT_VERSION = "development-version";
+
+    public static final String KEY_USE_EDIT_MODE = "use-edit-mode";
+
+    public static final String KEY_RELEASE_RESULT_CODE = "release-result-code";
+
+    public static final String KEY_RELEASE_OUTPUT = "release-output";
+
+    public static final String KEY_BUILD_CONTEXTS = "build-contexts";
+
+    public static final String KEY_MAX_JOB_EXEC_TIME = "max-job-exec-time";
+
+    public static final String KEY_RELEASE_STATE = "state";
+
+    public static final String KEY_RELEASE_PHASES = "release-phases";
+
+    public static final String KEY_RELEASE_IN_PROGRESS = "release-in-progress";
+
+    public static final String KEY_COMPLETED_RELEASE_PHASES = "completed-release-phases";
+
+    public static final String KEY_RELEASE_ERROR = "release-error";
+
+    public static final String KEY_LOCAL_REPOSITORY_NAME = "repo-name";
+
+    public static final String KEY_LOCAL_REPOSITORY_LAYOUT = "repo-layout";
+
     public static Integer getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -253,12 +293,12 @@ public class ContinuumBuildAgentUtil
 
     public static String getScmUsername( Map context )
     {
-        return getString( context, KEY_SCM_USERNAME );
+        return getString( context, KEY_SCM_USERNAME, "" );
     }
 
     public static String getScmPassword( Map context )
     {
-        return getString( context, KEY_SCM_PASSWORD );
+        return getString( context, KEY_SCM_PASSWORD, "" );
     }
 
     public static boolean isBuildFresh( Map context )
@@ -323,7 +363,7 @@ public class ContinuumBuildAgentUtil
 
     public static String getLocalRepository( Map context )
     {
-        return getString( context, KEY_LOCAL_REPOSITORY );
+        return getString( context, KEY_LOCAL_REPOSITORY, "" );
     }
 
     public static String getProjectVersion( Map context )
@@ -410,6 +450,81 @@ public class ContinuumBuildAgentUtil
         return getString( context, KEY_BUILD_AGENT_URL );
     }
 
+    public static String getGroupId( Map context )
+    {
+        return getString( context, KEY_GROUP_ID );
+    }
+
+    public static String getArtifactId( Map context )
+    {
+        return getString( context, KEY_ARTIFACT_ID );
+    }
+
+    public static Map getReleaseVersion( Map context )
+    {
+        return getMap( context, KEY_RELEASE_VERSION );
+    }
+
+    public static Map getDevelopmentVersion( Map context )
+    {
+        return getMap( context, KEY_DEVELOPMENT_VERSION );
+    }
+
+    public static String getScmTagBase( Map context )
+    {
+        return getString( context, KEY_SCM_TAGBASE, "" );
+    }
+
+    public static String getScmCommentPrefix( Map context )
+    {
+        return getString( context, KEY_SCM_COMMENT_PREFIX, "" );
+    }
+
+    public static String getScmTag( Map context )
+    {
+        return getString( context, KEY_SCM_TAG, "" );
+    }
+
+    public static String getPrepareGoals( Map context )
+    {
+        return getString( context, KEY_PREPARE_GOALS, "" );
+    }
+
+    public static String getUseEditMode( Map context )
+    {
+        return getString( context, KEY_USE_EDIT_MODE, "" );
+    }
+
+    public static String getAddSchema( Map context )
+    {
+        return getString( context, KEY_ADD_SCHEMA, "" );
+    }
+
+    public static String getAutoVersionSubmodules( Map context )
+    {
+        return getString( context, KEY_AUTO_VERSION_SUBMODULES, "" );
+    }
+
+    public static List getBuildContexts( Map context )
+    {
+        return getList( context, KEY_BUILD_CONTEXTS );
+    }
+
+    public static int getMaxExecutionTime( Map context )
+    {
+        return getInteger( context, KEY_MAX_JOB_EXEC_TIME );
+    }
+
+    public static String getLocalRepositoryName( Map context )
+    {
+        return getString( context, KEY_LOCAL_REPOSITORY_NAME, "" );
+    }
+
+    public static String getLocalRepositoryLayout( Map context )
+    {
+        return getString( context, KEY_LOCAL_REPOSITORY_LAYOUT, "" );
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -459,18 +574,26 @@ public class ContinuumBuildAgentUtil
         else
         {
             List list = new ArrayList();
-            Object[] objA = (Object[]) obj;
 
-            for ( Object o : objA )
+            if ( obj instanceof Object[] )
             {
-                if ( o instanceof Map )
+                Object[] objA = (Object[]) obj;
+    
+                for ( Object o : objA )
                 {
-                    list.add( (Map) o );
+                    if ( o instanceof Map )
+                    {
+                        list.add( (Map) o );
+                    }
+                    else
+                    {
+                        list.add( o );
+                    }
                 }
-                else
-                {
-                    list.add( o );
-                }
+            }
+            else
+            {
+                list = (List) obj;
             }
 
             return list;
@@ -488,6 +611,20 @@ public class ContinuumBuildAgentUtil
         else
         {
             return (Date) obj;
+        }
+    }
+
+    protected static Map getMap( Map context, String key )
+    {
+        Object obj = getObject( context, key, null );
+
+        if ( obj == null )
+        {
+            return null;
+        }
+        else
+        {
+            return (Map) obj;
         }
     }
 

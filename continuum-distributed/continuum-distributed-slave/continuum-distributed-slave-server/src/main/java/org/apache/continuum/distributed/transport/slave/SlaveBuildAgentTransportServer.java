@@ -167,4 +167,161 @@ public class SlaveBuildAgentTransportServer
             throw e;
         }
     }
+
+    public Map getReleasePluginParameters( int projectId, String pomFilename )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getReleasePluginParameters( projectId, pomFilename );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve release plugin parameters", e );
+            throw e;
+        }
+    }
+
+    public List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.processProject( projectId, pomFilename, autoVersionSubmodules );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to process project", e );
+            throw e;
+        }
+    }
+
+    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map environments )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.releasePrepare( project, properties, releaseVersion, developmentVersion, environments );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to prepare release", e );
+            throw e;
+        }
+    }
+
+    public Map getListener( String releaseId )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getListener( releaseId );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve listener state of " + releaseId, e );
+            throw e;
+        }
+    }
+
+    public Map getReleaseResult( String releaseId )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getReleaseResult( releaseId );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve release result of " + releaseId, e );
+            throw e;
+        }
+    }
+
+    public Boolean removeListener( String releaseId )
+        throws Exception
+    {
+        Boolean result = Boolean.FALSE;
+
+        try
+        {
+            continuumBuildAgentService.removeListener( releaseId );
+            result = Boolean.TRUE;
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to remove listener of " + releaseId, e );
+            throw e;
+        }
+
+        return result;
+    }
+
+    public String getPreparedReleaseName( String releaseId )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.getPreparedReleaseName( releaseId );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to retrieve prepared release name of " + releaseId );
+            throw e;
+        }
+    }
+
+    public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+        throws Exception
+    {
+        Boolean result = Boolean.FALSE;
+
+        try
+        {
+            continuumBuildAgentService.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+            result = Boolean.TRUE;
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Unable to perform release", e );
+            throw e;
+        }
+
+        return result;
+    }
+
+    public Boolean releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl,
+                                          String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+        throws Exception
+    {
+        Boolean result = Boolean.FALSE;
+    
+        try
+        {
+            continuumBuildAgentService.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername,
+                                                              scmPassword, scmTag, scmTagBase, environments );
+            result = Boolean.TRUE;
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Unable to perform release", e );
+            throw e;
+        }
+    
+        return result;
+    }
+
+    public String releaseCleanup( String releaseId )
+        throws Exception
+    {
+        try
+        {
+            return continuumBuildAgentService.releaseCleanup( releaseId );
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Unable to cleanup release of " + releaseId, e );
+            throw e;
+        }
+    }
 }

@@ -36,5 +36,17 @@ public class BuildAgentStartup
         
         TaskQueueExecutor buildAgent = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
             .buildSpringId( TaskQueueExecutor.class, "build-agent" ) );
+
+        TaskQueueExecutor prepareBuildAgent = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
+            .buildSpringId( TaskQueueExecutor.class, "prepare-build-agent" ) );
+
+        TaskQueueExecutor prepareRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
+            .buildSpringId( TaskQueueExecutor.class, "prepare-release" ) );
+
+        TaskQueueExecutor performRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
+            .buildSpringId( TaskQueueExecutor.class, "perform-release" ) );
+
+        TaskQueueExecutor rollbackRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
+            .buildSpringId( TaskQueueExecutor.class, "rollback-release" ) ); 
     }
 }
