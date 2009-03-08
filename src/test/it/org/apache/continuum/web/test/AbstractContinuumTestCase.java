@@ -48,12 +48,7 @@ public abstract class AbstractContinuumTestCase
 
     public static final String TEST_PROJECT_NAME = "Apache Maven";
 
-    protected void postAdminUserCreation()
-    {
-        assertEditConfigurationPage();
-        submitConfigurationPage( baseUrl, null, null, null );
-    }
-
+    
     //////////////////////////////////////
     // Overriden AbstractSeleniumTestCase methods
     //////////////////////////////////////
@@ -69,7 +64,10 @@ public abstract class AbstractContinuumTestCase
 
     public void assertHeader()
     {
-        //TODO
+        assertElementPresent( "xpath=//img[@alt='Continuum']" );
+        assertLinkPresent( "Continuum" );
+        assertLinkPresent( "Maven" );
+        assertLinkPresent( "Apache" );
     }
 
     public String getBaseUrl()
@@ -92,65 +90,61 @@ public abstract class AbstractContinuumTestCase
         assertPage( "Continuum - About" );
         assertTextPresent( "About Continuum" );
         assertTextPresent( "Version:" );
-        assertTextPresent( "1.1-SNAPSHOT" );
+        assertTextPresent( "1.3.2-SNAPSHOT" );
+        assertTextPresent( "Build Number:" );
     }
 
     //////////////////////////////////////
     // Configuration
     //////////////////////////////////////
+    public void goToConfigurationPage() 
+    {
+    	clickLinkWithText( "Configuration" );
+    	
+    	assertEditConfigurationPage();
+    }
+    
     public void assertEditConfigurationPage()
     {
-        assertPage( "Continuum - Configuration" );
-        assertTextPresent( "Working Directory" );
-        assertElementPresent( "workingDirectory" );
-        assertTextPresent( "Build Output Directory" );
-        assertElementPresent( "buildOutputDirectory" );
-        assertTextPresent( "Deployment Repository Directory" );
-        assertElementPresent( "deploymentRepositoryDirectory" );
-        assertTextPresent( "Base URL" );
-        assertElementPresent( "baseUrl" );
+    	assertPage( "Continuum - Configuration" );
+    	String configText = "General Configuration,Working Directory*:,Build Output Directory*:,Release Output Directory:,Deployment Repository Directory:,Base URL*:,Number of Allowed Builds in Parallel:";
+    	String[] arrayConfigText = configText.split(",");
+    	for( String configtext : arrayConfigText )
+    		assertTextPresent( configtext );
+    	String configElements = "configuration_workingDirectory,configuration_buildOutputDirectory,configuration_releaseOutputDirectory,configuration_deploymentRepositoryDirectory,configuration_baseUrl,configuration_numberOfAllowedBuildsinParallel,configuration_distributedBuildEnabled";
+    	String[] arrayConfigElements = configElements.split( "," );
+    	for ( String configelements : arrayConfigElements )
+    		assertElementPresent( configelements );
     }
 
-    public void submitConfigurationPage( String baseUrl, String companyName, String companyLogo, String companyUrl )
-    {
-        setFieldValue( "baseUrl", baseUrl );
-        if ( companyName != null )
-        {
-            setFieldValue( "companyName", companyName );
-        }
-        if ( companyLogo != null )
-        {
-            setFieldValue( "companyLogo", companyLogo );
-        }
-        if ( companyUrl != null )
-        {
-            setFieldValue( "companyUrl", companyUrl );
-        }
-        submit();
-        waitPage();
-    }
-
+    
     //////////////////////////////////////
     // ANT/SHELL Projects
     //////////////////////////////////////
     public void assertAddProjectPage( String type )
     {
         String title = type.substring( 0, 1 ).toUpperCase() + type.substring( 1 ).toLowerCase();
-        assertPage( "Continuum - Add " + title + " Project" );
+        assertPage( "Continuum - Add" + title + " Project" );
         assertTextPresent( "Add " + title + " Project" );
-        assertTextPresent( "Project Name" );
+        assertTextPresent( "Project Name*:" );
         assertElementPresent( "projectName" );
-        assertTextPresent( "Version" );
+        assertTextPresent( "Description:" );
+        assertElementPresent( "projectDescription" );
+        assertTextPresent( "Version*:" );
         assertElementPresent( "projectVersion" );
-        assertTextPresent( "Scm Url" );
+        assertTextPresent( "Scm Url*:" );
         assertElementPresent( "projectScmUrl" );
-        assertTextPresent( "Scm Username" );
+        assertTextPresent( "Scm Username:" );
         assertElementPresent( "projectScmUsername" );
-        assertTextPresent( "Scm Password" );
+        assertTextPresent( "Scm Password:" );
         assertElementPresent( "projectScmPassword" );
-        assertTextPresent( "Scm Branch/Tag" );
+        assertTextPresent( "Scm Branch/Tag:" );
         assertElementPresent( "projectScmTag" );
-        assertLinkPresent( "Maven SCM URL" );
+        assertElementPresent( "projectScmUseCache" );
+        assertTextPresent( "Project Group Name:" );
+        assertElementPresent( "selectedProjectGroup" );
+        assertTextPresent( "Build Definition Template:" );
+        assertElementPresent( "buildDefinitionTemplateId" );
     }
 
     public void assertAddAntProjectPage()
@@ -162,7 +156,475 @@ public abstract class AbstractContinuumTestCase
     {
         assertAddProjectPage( "shell" );
     }
+    
+    //////////////////////////////////////
+    // Parallel Build Queue
+    //////////////////////////////////////
+    public void goToParallelBuildQueuePage()
+    {
+    	clickLinkWithText( "Build Queue" );
+    	assertParallelBuildQueuePage();
+    }
+    
+    public void assertParallelBuildQueuePage() 
+    {
+    	assertPage( "Continuum - Parallel Build Queue" );
+    	assertTextPresent( "Continuum - Parallel Build Queue" );
+    	assertTextPresent( "Name" );
+    	assertTextPresent( "DEFAULT_BUILD_QUEUE" );
+    }
+    
+    public void assertAddParallelBuildQueuePage() 
+    {
+    	assertPage( "Continuum - Add/Edit Parallel Build Queue" );
+    	assertTextPresent( "Continuum - Add/Edit Parallel Build Queue" );
+    	assertTextPresent( "Name*:" );
+    	assertElementPresent( "name" );
+    }
+    
+    public void addParallelBuildQueue(String name) 
+    {
+    	goToParallelBuildQueuePage();
+    	
+    	clickButtonWithValue( "Add" );
+    	assertAddParallelBuildQueuePage();
+    	
+    	setFieldValue( "name", name );
+    	clickButtonWithValue( "Save" );
+    	
+    	if ( isTextPresent( "You are only allowed 1 number of builds in parallel." ))
+    	{
+    		goToConfigurationPage();
+    		setFieldValue( "numberOfAllowedBuildsinParallel", "3" );
+    	}
+    	else
+    	{
+    		assertPage( "Continuum - Parallel Build Queue" );
+    	}
+    }
+    
+    public void removeParallelBuildQueue()
+    {
+    	clickLinkWithLocator( "//table[@id='ec_table']/tbody/tr[2]/td[2]/a/img" );
+    }
+    
+    
+    //////////////////////////////////////
+    // Local Repositories
+    //////////////////////////////////////
+    public void goToLocalRepositoriesPage()
+    {
+    	clickLinkWithText( "Local Repositories" );
+    	assertLocalRepositoryPage();
+    }
 
+    public void assertLocalRepositoryPage() 
+    {
+    	assertPage( "Continuum - Local Repositories" );
+    	
+    	assertTextPresent( "Local Repositories" );
+    	String tableElement = "ec_table";
+    	assertCellValueFromTable("Name", tableElement, 0, 0);
+    	assertCellValueFromTable("Location", tableElement, 0, 1);
+    	assertCellValueFromTable("Layout", tableElement, 0, 2);
+    	assertCellValueFromTable("", tableElement, 0, 3);
+    	assertCellValueFromTable("", tableElement, 0, 4);
+    	assertCellValueFromTable("", tableElement, 0, 5);
+    	assertCellValueFromTable("DEFAULT", tableElement, 1, 0);
+    	assertCellValueFromTable("default", tableElement, 1, 2);
+    	assertImgWithAlt( "Edit" );
+    	assertImgWithAlt( "Purge" );
+    	assertImgWithAlt( "Delete" );
+    }
+    
+    public void assertAddEditLocalRepositoryPage() 
+    {
+    	assertPage( "Continuum - Add/Edit Local Repository" );
+    	assertTextPresent( "Continuum - Add/Edit Local Repository" );
+    	assertTextPresent( "Name*:" );
+    	assertElementPresent( "repository.name" );
+    	assertTextPresent( "Location*:" );
+    	assertElementPresent( "repository.location" );
+    	assertTextPresent( "Layout:" );
+    	assertElementPresent( "repository.layout" );
+    }
+    
+    public void addLocalRepository( String name, String location, String layout ) 
+    {
+    	goToLocalRepositoriesPage();
+    	
+    	clickLinkWithText( "Add" );
+    	assertAddEditLocalRepositoryPage();
+    	
+    	setFieldValue( "repository.name" , name );
+    	setFieldValue( "repository.location" , location );
+    	setFieldValue( "repository.layout", layout );
+    	clickButtonWithValue( "Save" );
+    	assertPage( "Continuum - Local Repositories" )	;
+    }
+
+    //////////////////////////////////////
+    // Purge Configuration
+    //////////////////////////////////////
+    public void goToPurgeConfigPage()
+    {
+    	clickLinkWithText( "Purge Configurations" );
+    	assertPurgeConfigurationPage();
+    }
+    
+    public void assertPurgeConfigurationPage() 
+    {
+    	assertPage( "Continuum - Purge Configurations" );
+    	
+    	assertTextPresent( "Repository Purge Configurations" );
+    	String tableElement = "ec_table";
+    	assertCellValueFromTable( "Repository", tableElement, 0, 0 );
+    	assertCellValueFromTable( "Days Older", tableElement, 0, 1 );
+    	assertCellValueFromTable( "Retention Count", tableElement, 0, 2 );
+    	assertCellValueFromTable( "Delete All", tableElement, 0, 3 );
+    	assertCellValueFromTable( "Delete Released Snapshots", tableElement, 0, 4 );
+    	assertCellValueFromTable( "Schedule", tableElement, 0, 5 );
+    	assertCellValueFromTable( "Default", tableElement, 0, 6 );
+    	assertCellValueFromTable( "Enabled", tableElement, 0, 7 );
+    	assertCellValueFromTable( "Description", tableElement, 0, 8 );
+    	assertCellValueFromTable( "", tableElement, 0, 9 );
+    	assertCellValueFromTable( "", tableElement, 0, 10 );
+    	assertCellValueFromTable( "", tableElement, 0, 11 );
+    	assertCellValueFromTable( "DEFAULT", tableElement, 1, 0 );
+    	assertCellValueFromTable( "100", tableElement, 1, 1 );
+    	assertCellValueFromTable( "2", tableElement, 1, 2 );
+    	assertCellValueFromTable( "false", tableElement, 1, 3 );
+    	assertCellValueFromTable( "false", tableElement, 1, 4 );
+    	assertCellValueFromTable( "", tableElement, 1, 5 );
+    	assertCellValueFromTable( "true", tableElement, 1, 6 );
+    	assertCellValueFromTable( "true", tableElement, 1, 7 );
+    	assertCellValueFromTable( "", tableElement, 1, 8 );
+    	assertImgWithAlt("Edit");
+    	assertImgWithAlt("Purge");
+    	assertImgWithAlt("Deletes");
+    	
+    	assertTextPresent( "Directory Purge Configurations" );
+    	assertTextPresent( "Directory Type" );
+    	assertTextPresent( "Days Older" );
+    	assertTextPresent( "Retention Count" );
+    	assertTextPresent( "Delete All" );
+    	assertTextPresent( "Schedule" );
+    	assertTextPresent( "Default" );
+    	assertTextPresent( "Enabled" );
+    	assertTextPresent( "Description" );
+    }
+    
+    public void addRepositoryPurgeConfig(String repository, String daysOlder, 
+    		String retentionCount, String schedule, String description) 
+    {
+    	goToPurgeConfigPage();
+    	
+    	clickButtonWithValue( "Add" );
+    	assertAddEditRepositoryPurgeConfigPage();
+    	selectValue( "savePurgeConfig_repositoryId", repository );
+    	setFieldValue( "daysOlder", daysOlder );
+    	setFieldValue( "retentionCount", retentionCount );
+    	selectValue( "savePurgeConfig_scheduleId", schedule );
+    	setFieldValue( "description", description );
+    	
+    	clickButtonWithValue( "Save" );
+    	assertPage( "Continuum - Purge Configurations" );
+    }
+    
+    public void removeRepositoryPurgeConfig()
+    {
+    	goToPurgeConfigPage();
+    	clickLinkWithLocator( "//table[@id='ec_table']/tbody/tr[2]/td[12]/a/img" );
+    	assertPage( "Delete Purge Configuration" );
+    	clickButtonWithValue( "Delete" );
+    }
+    
+    public void editRepositoryPurgeConfig(String repository, String daysOlder, 
+    		String retentionCount, String schedule, String description)
+    {
+    	//TODO
+    }
+    
+    public void assertAddEditRepositoryPurgeConfigPage() 
+    {
+    	assertPage( "Continuum - Add/Edit Repository Purge Configuration" );
+    	assertTextPresent( "Add/Edit Repository Purge Configuration" );
+    	assertTextPresent( "Repository*:" );
+    	assertElementPresent( "repositoryId" );
+    	assertTextPresent( "Days Older:" );
+    	assertElementPresent( "daysOlder" );
+    	assertTextPresent( "Retention Count:" );
+    	assertElementPresent( "retentionCount" );
+    	assertElementPresent( "deleteAll" );
+    	assertElementPresent( "deleteReleasedSnapshots" );
+    	assertElementPresent( "defaultPurgeConfiguration" );
+    	assertTextPresent( "Schedule:" );
+    	assertElementPresent( "scheduleId" );
+    	assertTextPresent( "Description:" );
+    	assertElementPresent( "description" );
+    }
+    
+    public void addDirectoryPurgeConfig(String repository, String daysOlder, 
+    		String retentionCount, String schedule, String description)
+    {
+    	//TODO
+    }
+    
+    public void editDirectoryPurgeConfig(String repository, String daysOlder, 
+    		String retentionCount, String schedule, String description)
+    {
+    	//TODO
+    }
+    
+    public void removeDirectoryPurgeConfig()
+    {
+    	//TODO
+    }
+    
+    public void assertAddEditDirectoryPurgeConfigurationPage()
+    {
+    	assertPage( "Continuum - Add/Edit Directory Purge Configuration" );
+    	assertTextPresent( "Add/Edit Directory Purge Configuration" );
+    	assertTextPresent( "Directory Type:" );
+    	assertElementPresent( "directoryType" );
+    	assertTextPresent( "Days Older:" );
+    	assertElementPresent( "daysOlder" );
+    	assertTextPresent( "Retention Count:" );
+    	assertElementPresent( "retentionCount" );
+    	assertElementPresent( "deleteAll" );
+    	assertElementPresent( "defaultPurgeConfiguration" );
+    	assertTextPresent( "Schedule:" );
+    	assertElementPresent( "scheduleId" );
+    	assertTextPresent( "Description:" );
+    	assertElementPresent( "description" );
+    }
+    
+    //////////////////////////////////////
+    // Schedules
+    //////////////////////////////////////
+    public void goToSchedulesPage()
+    {
+    	clickLinkWithText( "Schedules" );
+    	assertSchedulesPage();
+    }
+    
+    public void assertSchedulesPage() 
+    {
+    	assertPage( "Continuum - Schedules" );
+    	
+    	assertTextPresent( "Schedules" );
+    	String tableElement = "ec_table";
+    	assertCellValueFromTable("Name", tableElement, 0, 0);
+    	assertCellValueFromTable("Description", tableElement, 0, 1);
+    	assertCellValueFromTable("Quiet Period", tableElement, 0, 2);
+    	assertCellValueFromTable("Cron Expression", tableElement, 0, 3);
+    	assertCellValueFromTable("Max Job Time", tableElement, 0, 4);
+    	assertCellValueFromTable("Active", tableElement, 0, 5);
+    	assertCellValueFromTable("", tableElement, 1, 6);
+    	assertCellValueFromTable("", tableElement, 1, 7);
+    	
+    	assertCellValueFromTable("DEFAULT_SCHEDULE", tableElement, 1, 0);
+    	assertCellValueFromTable("Run hourly", tableElement, 1, 1);
+    	assertCellValueFromTable("0", tableElement, 1, 2);
+    	assertCellValueFromTable("exact:0 0 * * * ?", tableElement, 1, 3);
+    	assertCellValueFromTable("3600", tableElement, 1, 4);
+    	assertCellValueFromTable("true", tableElement, 1, 5);
+    	assertImgWithAlt( "Edit" );
+    	assertImgWithAlt( "Delete" );
+    }
+    
+    //////////////////////////////////////
+    // Installations
+    //////////////////////////////////////
+    public void assertInstallationTypeChoicePage() 
+    {
+    	assertPage( "Continuum - Installation Type Choice" );
+    	assertTextPresent( "Installation Type Choice" );
+    	assertTextPresent( "Installation Type:" );
+    	assertElementPresent( "installationType" );
+    }
+    
+    public void assertAddEditInstallationToolPage() 
+    {
+    	assertPage( "Continuum - Installation" );
+    	assertTextPresent( "Continuum - Installation" );
+    	assertTextPresent( "Name*:" );
+    	assertElementPresent( "installation.name" );
+    	assertTextPresent( "Type:" );
+    	assertElementPresent( "installation.type" );
+    	assertTextPresent( "Value/Path*:" );
+    	assertElementPresent( "installation.varValue" );
+    	assertElementPresent( "automaticProfile" );
+    	assertTextPresent( "Create a Build Environment with the Installation name" );
+    }
+    
+    public void assertAddEditInstallationEnvironmentVariablePage()
+    {
+    	assertPage( "Continuum - Installation" );
+    	assertTextPresent( "Continuum - Installation" );
+    	assertTextPresent( "Name*:" );
+    	assertElementPresent( "installation.name" );
+    	assertTextPresent( "Environment Variable Name*:" );
+    	assertElementPresent( "installation.varName" );
+    	assertTextPresent( "Value/Path*:" );
+    	assertElementPresent( "installation.varValue" );
+    	assertElementPresent( "automaticProfile" );
+    }
+    
+    public void assertInstallationPage() 
+    {
+    	assertPage( "Continuum - Installations" );
+    	assertTextPresent( "Installations" );
+    	assertTextPresent( "Name" );
+    	assertTextPresent( "Type" );
+    	assertTextPresent( "Environment Variable Name" );
+    	assertTextPresent( "Value/Path" );
+    }
+    
+    //////////////////////////////////////
+    // Build Environments
+    //////////////////////////////////////
+    public void assertBuildEnvironmentPage() 
+    {
+    	assertPage( "Continuum - Build Environments" );
+    	assertTextPresent( "Build Environments" );
+    }
+    
+    public void assertBuildEnvironmentNamePage() 
+    {
+    	assertPage( "Continuum - Build Environment" );
+    	assertTextPresent( "Build Environment" );
+    	assertTextPresent( "Build Environment Name*:" );
+    	assertElementPresent( "profile.name" );
+    }
+    
+    public void assertBuildEnvironmentBuildAgentInstallationPage()
+    {
+    	assertPage( "Continuum - Build Environment" );
+    	assertTextPresent( "Build Environment" );
+    	assertTextPresent( "Build Environment Name*:" );
+    	assertElementPresent( "profile.name" );
+    	assertTextPresent( "Build Agent Group:" );
+    	assertElementPresent( "profile.buildAgentGroup" );
+    	assertTextPresent( "Installation Name" );
+    	assertTextPresent( "Type" );
+    	assertElementPresent( "installationId" );
+    }
+    
+    //////////////////////////////////////
+    // Queues
+    //////////////////////////////////////
+    public void assertQueuePage() 
+    {
+    	assertPage( "Continuum - Queues" );
+    	assertTextPresent( "Current Build" );
+    	assertTextPresent( "Build Queue" );
+    	assertTextPresent( "Project Name" );
+    	assertTextPresent( "Build Definition" );
+    	assertTextPresent( "Continuum - Build Queue" );
+    	assertTextPresent( "Current Checkout" );
+    	assertTextPresent( "Checkout Queue" );
+    }
+    
+    //////////////////////////////////////
+    // Build Definition Templates
+    //////////////////////////////////////
+    public void assertBuildDefTemplatesPage() 
+    {
+    	//Available Templates Table Assertion
+    	assertPage( "Continuum - Build Definition Templates" );
+    	assertTextPresent( "Available Templates" );
+    	assertTextPresent( "Name" );
+    	assertTextPresent( "Default Ant Template" );
+    	assertImgWithAlt( "Edit" );
+    	assertImgWithAlt( "Disabled" );
+    	assertTextPresent( "Default Maven 1 Template" );
+    	
+    	assertTextPresent( "Default Maven 2 Template" );
+    	assertTextPresent( "Default Shell Template" );
+    	
+    	//Available Build Definitions Table Assertion
+    	assertTextPresent( "Goals" );
+    	assertTextPresent( "Arguments" );
+    	assertTextPresent( "Build File" );
+    	assertTextPresent( "Schedule" );
+    	assertTextPresent( "Build Environment" );
+    	assertTextPresent( "Is Build Fresh?" );
+    	assertTextPresent( "Default" );
+    	assertTextPresent( "Description" );
+    	assertTextPresent( "Type" );
+    	
+    }
+    
+    public void assertAddEditAvailableTemplatesPage()
+    {
+    	assertPage( "Continuum - Build Definition Template" );
+    	assertTextPresent( "Build Definition Template" );
+    	assertTextPresent( "Name*:" );
+    	assertElementPresent( "buildDefinitionTemplate.name" );
+    	assertTextPresent( "Configure the used Build Definitions:" );
+    	assertElementPresent( "buildDefinitionIds" );
+    	assertElementPresent( "selectedBuildDefinitionIds" );
+    }
+    
+    public void assertAddEditAvailableBuildDefPage()
+    {
+    	assertPage( "Continuum - Add/Edit Build Definition" );
+    	assertTextPresent( "Add/Edit Build Definition" );
+    	assertTextPresent( "POM filename*:" );
+    	assertElementPresent( "buildFile" );
+    	assertTextPresent( "Goals:" );
+    	assertElementPresent( "goals" );
+    	assertTextPresent( "Arguments:" );
+    	assertElementPresent( "arguments" );
+    	assertElementPresent( "buildFresh" );
+    	assertElementPresent( "alwaysBuild" );
+    	assertElementPresent( "defaultBuildDefinition" );
+    	assertTextPresent( "Schedule:" );
+    	assertElementPresent( "scheduleId" );
+    	assertTextPresent( "Build Environment:" );
+    	assertElementPresent( "profileId" );
+    	assertTextPresent( "Type:" );
+    	assertElementPresent( "buildDefinitionType" );
+    	assertTextPresent( "Description*:" );
+    	assertElementPresent( "description" );
+    }
+    
+    //TODO assertion for Appearance Page
+    
+    //////////////////////////////////////
+    // Build Agents
+    //////////////////////////////////////
+    public void assertBuildAgentPage()
+    {
+    	assertPage( "Continuum - Build Agents" );
+    	assertTextPresent( "Build Agent URL" );
+    	assertTextPresent( "Enabled" );
+    	assertTextPresent( "Description" );
+    	assertTextPresent( "Build Agent Groups" );
+    	assertTextPresent( "Name" );
+    	assertTextPresent( "Build Agents" );
+    }
+    
+    public void assertAddEditBuildAgentPage() 
+    {
+    	assertPage( "Continuum - Add/Edit Build Agent" );
+    	assertTextPresent( "Continuum - Add/Edit Build Agent" );
+    	assertTextPresent( "Build Agent URL*:" );
+    	assertElementPresent( "buildAgent.url" );
+    	assertTextPresent( "Description:" );
+    	assertElementPresent( "buildAgent.description" );
+    	assertElementPresent( "buildAgent.enabled" );
+    }
+    
+    public void assertAddEditBuildAgentGroupPage() 
+    {
+    	assertPage( "Continuum - Add/Edit Build Agent Group" );
+    	assertTextPresent( "Add/Edit Build Agent Group" );
+    	assertTextPresent( "Name*:" );
+    	assertElementPresent( "buildAgentGroup.name" );
+    }
+    
     //////////////////////////////////////
     // Project Groups
     //////////////////////////////////////
@@ -170,28 +632,43 @@ public abstract class AbstractContinuumTestCase
         throws Exception
     {
         clickLinkWithText( "Show Project Groups" );
-
-        assertProjectGroupsSummaryPage();
     }
 
     public void assertProjectGroupsSummaryPage()
+    	throws Exception
     {
+    	goToProjectGroupsSummaryPage();
         assertPage( "Continuum - Group Summary" );
-        assertTextPresent( "Project Groups" );
 
         if ( isTextPresent( "Project Groups list is empty." ) )
         {
             assertTextNotPresent( "Name" );
             assertTextNotPresent( "Group Id" );
-            assertTextNotPresent( "Projects" );
-            assertTextNotPresent( "Build Status" );
+            assertTextNotPresent( "Total" );
+            assertTextNotPresent( "Summary" );
         }
         else
         {
-            assertTextPresent( "Name" );
-            assertTextPresent( "Group Id" );
-            assertTextPresent( "Projects" );
-            assertTextPresent( "Build Status" );
+        	String tableElement = "ec_table";
+        	assertCellValueFromTable( "Name", tableElement, 0, 0 );
+        	assertCellValueFromTable( "Group Id", tableElement, 0, 1 );
+        	assertCellValueFromTable( "", tableElement, 0, 2 );
+        	assertCellValueFromTable( "", tableElement, 0, 3 );
+        	assertCellValueFromTable( "", tableElement, 0, 4 );
+        	assertCellValueFromTable( "", tableElement, 0, 5 );
+        	assertCellValueFromTable( "", tableElement, 0, 6 );
+        	assertCellValueFromTable( "", tableElement, 0, 7 );
+        	assertCellValueFromTable( "Total", tableElement, 0, 8 );
+        	assertCellValueFromTable( "Default Project Group", tableElement, 1, 0 );
+        	assertCellValueFromTable( "default", tableElement, 1, 1 );
+        	assertImgWithAlt( "Build all projects" );
+        	assertImgWithAlt( "Release Group" );
+        	assertImgWithAlt( "Delete Group" );
+        	assertCellValueFromTable( "0", tableElement, 1, 5 );
+        	assertCellValueFromTable( "0", tableElement, 1, 6 );
+        	assertCellValueFromTable( "0", tableElement, 1, 7 );
+        	assertCellValueFromTable( "0", tableElement, 1, 8 );
+            
         }
     }
 
@@ -212,24 +689,40 @@ public abstract class AbstractContinuumTestCase
 
     public void assertProjectGroupSummaryPage( String name, String groupId, String description )
     {
-        assertTextPresent( "Project Group Name" );
+        assertTextPresent( "Project Group Name:" );
         assertTextPresent( name );
-        assertTextPresent( "Group Id" );
+        assertTextPresent( "Group Id:" );
         assertTextPresent( groupId );
-        assertTextPresent( "Description" );
+        assertTextPresent( "Description:" );
         assertTextPresent( description );
+        assertTextPresent( "Local Repository" );
+        assertTextPresent( "DEFAULT" );
 
+        //Assert Project Group SCM Root
+        assertTextPresent( "Project Group Scm Root" );
+        assertTextPresent( "Scm Root URL" );
+        
         // Assert the available Project Group Actions
-        assertTextPresent( "Project Group Actions" );
+        assertTextPresent( "Group Actions" );
+        assertElementPresent( "buildDefinitionId" );
         assertElementPresent( "build" );
         assertElementPresent( "edit" );
+        assertElementPresent( "release" );
+        assertElementPresent( "preferredExecutor" );
+        assertButtonWithValuePresent("Add");
         assertElementPresent( "remove" );
+        assertElementPresent( "cancel" );
 
-        if ( isTextPresent( "Projects" ) )
+        if ( isTextPresent( "Member Projects" ) )
         {
-            assertTextPresent( "Project Name" );
+        	assertTextPresent( "Project Name" );
             assertTextPresent( "Version" );
             assertTextPresent( "Build" );
+            assertTextPresent( "Last Build Date" );
+            assertElementPresent( "buildDef" );
+            assertElementPresent( "build-projects" );
+            assertElementPresent( "cancel-builds" );
+            assertElementPresent( "delete-projects" );
         }
         else
         {
@@ -237,6 +730,41 @@ public abstract class AbstractContinuumTestCase
         }
     }
 
+    public void assertDefaultProjectGroupBuildDefinitionPage() 
+    {
+        String tableElement = "ec_table";
+        assertCellValueFromTable( "Goals", tableElement, 0, 0 );
+        assertCellValueFromTable( "Arguments", tableElement, 0, 1 );
+        assertCellValueFromTable( "Build File", tableElement, 0, 2 );
+        assertCellValueFromTable( "Schedule", tableElement, 0, 3 );
+        assertCellValueFromTable( "Build Environment", tableElement, 0, 4 );
+        assertCellValueFromTable( "From", tableElement, 0, 5 );
+        assertCellValueFromTable( "Build Fresh", tableElement, 0, 6 );
+        assertCellValueFromTable( "Default", tableElement, 0, 7 );
+        assertCellValueFromTable( "Description", tableElement, 0, 8 );
+        assertCellValueFromTable( "Type", tableElement, 0, 9 );
+        assertCellValueFromTable( "Always Build", tableElement, 0, 10);
+        assertCellValueFromTable( "", tableElement, 0, 11 );
+        assertCellValueFromTable( "", tableElement, 0, 12 );
+        assertCellValueFromTable( "", tableElement, 0, 13 );
+
+        assertCellValueFromTable( "clean install", tableElement, 1, 0 );
+        assertCellValueFromTable( "--batch-mode --non-recursive", tableElement, 1, 1 );
+        assertCellValueFromTable( "pom.xml", tableElement, 1, 2 );
+        assertCellValueFromTable( "DEFAULT_SCHEDULE", tableElement, 1, 3 );
+        assertCellValueFromTable( "", tableElement, 1, 4 );
+        assertCellValueFromTable( "GROUP", tableElement, 1, 5 );
+        assertCellValueFromTable( "false", tableElement, 1, 6 );
+        assertCellValueFromTable( "true", tableElement, 1, 7 );
+        assertCellValueFromTable( "Default Maven 2 Build Definition", tableElement, 1, 8 );
+        assertCellValueFromTable( "maven2", tableElement, 1, 9 );
+        assertCellValueFromTable( "false", tableElement, 1, 10 );
+        assertImgWithAlt( "Build" );
+        assertImgWithAlt( "Edit" );
+        assertImgWithAlt( "Delete" );
+    }
+    
+    
     public void addProjectGroup( String name, String groupId, String description )
         throws Exception
     {
@@ -262,28 +790,31 @@ public abstract class AbstractContinuumTestCase
         assertPage( "Continuum - Add Project Group" );
 
         assertTextPresent( "Add Project Group" );
-        assertTextPresent( "Project Group Name" );
+        assertTextPresent( "Project Group Name*:" );
         assertElementPresent( "name" );
-        assertTextPresent( "Project Group Id" );
+        assertTextPresent( "Project Group Id*:" );
         assertElementPresent( "groupId" );
-        assertTextPresent( "Description" );
+        assertTextPresent( "Description:" );
         assertElementPresent( "description" );
+        assertTextPresent( "Local Repository:" );
+        assertElementPresent( "repositoryId" );
     }
 
     public void removeProjectGroup( String name, String groupId, String description )
         throws Exception
     {
-        showProjectGroup( name, groupId, description );
+    	showProjectGroup( name, groupId, description );
 
         // Remove
         clickSubmitWithLocator( "remove" );
-
+    	//clickButtonWithValue("Delete Group");
+    	
         // Assert Confirmation
-        assertElementPresent( "removeProjectGroup_0" );
+        assertElementPresent( "removeProjectGroup_" );
         assertElementPresent( "Cancel" );
 
         // Confirm Project Group deletion
-        clickSubmitWithLocator( "removeProjectGroup_0" );
+        clickSubmitWithLocator( "removeProjectGroup_" );
     }
 
     public void editProjectGroup( String name, String groupId, String description, String newName, String newDescription )
@@ -301,19 +832,18 @@ public abstract class AbstractContinuumTestCase
     {
         assertPage( "Continuum - Update Project Group" );
         assertTextPresent( "Update Project Group" );
-        assertTextPresent( "Project Group Name" );
+        assertTextPresent( "Project Group Name*:" );
         assertElementPresent( "saveProjectGroup_name" );
-        assertTextPresent( "Project Group Id" );
+        assertTextPresent( "Project Group Id:" );
         assertTextPresent( groupId );
-        assertTextPresent( "Description" );
+        assertTextPresent( "Description:" );
         assertElementPresent( "saveProjectGroup_description" );
+        assertTextPresent( "Local Repository:" );
+        assertElementPresent( "saveProjectGroup_repositoryId" );
+        assertTextPresent( "Homepage Url:" );
+        assertElementPresent( "saveProjectGroup_url" );
 
-        // Assert Projects actions
-        assertTextPresent( "Projects" );
-        assertTextPresent( "Project Name" );
-        assertTextPresent( "Move to Group" );
-
-        assertElementPresent( "saveProjectGroup_0" );
+        assertElementPresent( "saveProjectGroup_" );
         assertElementPresent( "Cancel" );
     }
 
@@ -348,16 +878,16 @@ public abstract class AbstractContinuumTestCase
         assertTextPresent( "Choose Release Goal for Apache Maven" );
     }
 
-    public void assertReleaseEmpty()
+    /*public void assertReleaseEmpty()
     {
         assertTextPresent( "Cannot release an empty group" );
-    }
+    }*/
 
     public void addValidM2ProjectFromProjectGroup( String projectGroupName, String groupId, String description,
                                                    String m2PomUrl ) throws Exception
     {
         showProjectGroup( projectGroupName, groupId, description );
-        selectValue( "projectTypes", "Add M2 Project" );
+        selectValue( "preferredExecutor", "Add M2 Project" );
         clickButtonWithValue( "Add" );
         assertAddMavenTwoProjectPage();
 
@@ -387,7 +917,7 @@ public abstract class AbstractContinuumTestCase
 
     public void assertNotifierPage( String projectGroupName )
     {
-        assertTextPresent( "Project Group Notifiers of " + projectGroupName + " group" );
+        assertTextPresent( "Project Group Notifiers of group " + projectGroupName );
     }
 
     public void assertAddNotifierPage()
@@ -403,12 +933,14 @@ public abstract class AbstractContinuumTestCase
     {
         assertPage( "Continuum - Add/Edit Mail Notifier" );
         assertTextPresent( "Add/Edit Mail Notifier" );
-        assertTextPresent( "Mail Recipient Address" );
+        assertTextPresent( "Mail Recipient Address:" );
+        assertElementPresent( "address" );
+        assertTextPresent( "Send a mail to latest committers" );
         assertTextPresent( "Send on Success" );
         assertTextPresent( "Send on Failure" );
         assertTextPresent( "Send on Error" );
         assertTextPresent( "Send on Warning" );
-        assertElementPresent( "address" );
+        assertTextPresent( "Send On SCM Failure" ); 
         assertElementPresent( "Cancel" );
     }
 
@@ -416,45 +948,53 @@ public abstract class AbstractContinuumTestCase
     {
         assertPage( "Continuum - Add/Edit IRC Notifier" );
 
-        assertTextPresent( "IRC Host" );
+        assertTextPresent( "IRC Host*:" );
         assertElementPresent( "host" );
 
-        assertTextPresent( "IRC port" );
+        assertTextPresent( "IRC port:" );
         assertElementPresent( "port" );
 
-        assertTextPresent( "IRC channel" );
+        assertTextPresent( "IRC channel*:" );
         assertElementPresent( "channel" );
 
-        assertTextPresent( "Nick Name" );
+        assertTextPresent( "Nick Name (default value is continuum):" );
         assertElementPresent( "nick" );
+        
+        assertTextPresent( "Alternate Nick Name (default value is continuum_):" );
+        assertElementPresent( "alternateNick" );
+        
+        assertTextPresent( "User Name (default value is the nick name):" );
+        assertElementPresent( "username" );
 
-        assertTextPresent( "Full Name" );
+        assertTextPresent( "Full Name (default value is the nick name):" );
         assertElementPresent( "fullName" );
 
         assertTextPresent( "Password" );
         assertElementPresent( "password" );
 
+        assertTextPresent( "SSL" );
         assertTextPresent( "Send on Success" );
         assertTextPresent( "Send on Failure" );
         assertTextPresent( "Send on Error" );
         assertTextPresent( "Send on Warning" );
+        assertTextPresent( "Send on SCM Failure") ;
     }
 
     public void assertAddEditJabberPage()
     {
         assertPage( "Continuum - Add/Edit Jabber Notifier" );
 
-        assertTextPresent( "Jabber Host" );
+        assertTextPresent( "Jabber Host*:" );
         assertElementPresent( "host" );
-        assertTextPresent( "Jabber port" );
+        assertTextPresent( "Jabber port:" );
         assertElementPresent( "port" );
-        assertTextPresent( "Jabber login" );
+        assertTextPresent( "Jabber login*:" );
         assertElementPresent( "login" );
-        assertTextPresent( "Jabber Password" );
+        assertTextPresent( "Jabber Password*:" );
         assertElementPresent( "password" );
-        assertTextPresent( "Jabber Domain Name" );
+        assertTextPresent( "Jabber Domain Name:" );
         assertElementPresent( "domainName" );
-        assertTextPresent( "Jabber Recipient Address" );
+        assertTextPresent( "Jabber Recipient Address*:" );
         assertElementPresent( "address" );
 
         assertTextPresent( "Is it a SSL connection?" );
@@ -463,31 +1003,35 @@ public abstract class AbstractContinuumTestCase
         assertTextPresent( "Send on Failure" );
         assertTextPresent( "Send on Error" );
         assertTextPresent( "Send on Warning" );
+        assertTextPresent( "Send on SCM Failure" );
     }
 
     public void assertAddEditMsnPage()
     {
         assertPage( "Continuum - Add/Edit MSN Notifier" );
 
-        assertTextPresent( "MSN login" );
+        assertTextPresent( "MSN login*:" );
         assertElementPresent( "login" );
-        assertTextPresent( "MSN Password" );
+        assertTextPresent( "MSN Password*:" );
         assertElementPresent( "password" );
-        assertTextPresent( "MSN Recipient Address" );
+        assertTextPresent( "MSN Recipient Address*:" );
         assertElementPresent( "address" );
 
         assertTextPresent( "Send on Success" );
         assertTextPresent( "Send on Failure" );
         assertTextPresent( "Send on Error" );
         assertTextPresent( "Send on Warning" );
+        assertTextPresent( "Send on SCM Failure" );
     }
 
     public void assertAddEditWagonPage()
     {
         assertPage( "Continuum - Add/Edit Wagon Notifier" );
 
-        assertTextPresent( "Project Site URL" );
+        assertTextPresent( "Project Site URL*:" );
         assertElementPresent( "url" );
+        assertTextPresent( "Server Id (defined in your settings.xml for authentication)*:" );
+        assertElementPresent( "id" );
 
         assertTextPresent( "Send on Success" );
         assertTextPresent( "Send on Failure" );
@@ -804,19 +1348,23 @@ public abstract class AbstractContinuumTestCase
 
     public void assertAddMavenTwoProjectPage()
     {
-        assertTextPresent( "POM Url" );
+        assertTextPresent( "POM Url*:" );
         assertElementPresent( "m2PomUrl" );
-        assertTextPresent( "Username" );
+        assertTextPresent( "Username:" );
         assertElementPresent( "scmUsername" );
-        assertTextPresent( "Password" );
+        assertTextPresent( "Password:" );
         assertElementPresent( "scmPassword" );
-        assertTextPresent( "Upload POM" );
+        assertElementPresent( "scmUseCache" );
+        assertTextPresent( "Upload POM:" );
         assertElementPresent( "m2PomFile" );
-        assertTextPresent( "Project Group" );
+        assertTextPresent( "Project Group:" );
         assertElementPresent( "selectedProjectGroup" );
+        assertTextPresent( "Build Definition Template:" );
+        assertElementPresent( "buildDefinitionTemplateId" );
     }
 
     public void addMavenTwoProject( String pomUrl, String username, String password, String projectGroup, boolean validProject )
+    	throws Exception
     {
         goToAddMavenTwoProjectPage();
 
@@ -883,19 +1431,23 @@ public abstract class AbstractContinuumTestCase
 
     public void assertAddMavenOneProjectPage()
     {
-        assertTextPresent( "POM Url" );
+        assertTextPresent( "M1 POM Url:" );
         assertElementPresent( "m1PomUrl" );
-        assertTextPresent( "Username" );
+        assertTextPresent( "Username:" );
         assertElementPresent( "scmUsername" );
-        assertTextPresent( "Password" );
+        assertTextPresent( "Password:" );
         assertElementPresent( "scmPassword" );
-        assertTextPresent( "Upload POM" );
+        assertElementPresent( "scmUseCache" );
+        assertTextPresent( "Upload POM:" );
         assertElementPresent( "m1PomFile" );
-        assertTextPresent( "Project Group" );
+        assertTextPresent( "Project Group:" );
         assertElementPresent( "selectedProjectGroup" );
+        assertTextPresent( "Build Definition Template:" );
+        assertElementPresent( "buildDefinitionTemplateId" );
     }
 
     public void addMavenOneProject( String pomUrl, String username, String password, String projectGroup, boolean validProject )
+    	throws Exception
     {
         goToAddMavenOneProjectPage();
 
@@ -909,7 +1461,8 @@ public abstract class AbstractContinuumTestCase
             selectValue( "addMavenOneProject_selectedProjectGroup", projectGroup );
         }
 
-        submit();
+        //submit();
+        clickButtonWithValue( "Add" );
 
         if ( validProject )
         {
@@ -961,14 +1514,16 @@ public abstract class AbstractContinuumTestCase
         assertTextPresent( "Move to Group" );
         selectValue( "//select", newProjectGroup );
 
-        assertElementPresent( "saveProjectGroup_0" );
+        assertElementPresent( "saveProjectGroup_" );
         clickButtonWithValue( "Save" );
     }
 
     public void tearDown()
         throws Exception
     {
-        login( adminUsername, adminPassword );
+        /* TODO: This causes the browser not closing after each tests. Will repair this one too.
+         * 
+         * login( adminUsername, adminPassword );
 
         goToProjectGroupsSummaryPage();
 
@@ -990,7 +1545,7 @@ public abstract class AbstractContinuumTestCase
         {
             removeProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
             addProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
-        }
+        }*/
 
         super.tearDown();
     }
