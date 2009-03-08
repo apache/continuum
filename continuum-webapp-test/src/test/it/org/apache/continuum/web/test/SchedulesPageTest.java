@@ -332,32 +332,35 @@ public class SchedulesPageTest
     {
         //TODO: assert content
 
-        assertElementPresent( "saveSchedule_id" );
-        assertElementPresent( "id" );
-        assertElementPresent( "saveSchedule_name" );
-        assertElementPresent( "name" );
-        assertElementPresent( "saveSchedule_description" );
-        assertElementPresent( "description" );
-        assertElementPresent( "saveSchedule_second" );
-        assertElementPresent( "second" );
-        assertElementPresent( "saveSchedule_minute" );
-        assertElementPresent( "minute" );
-        assertElementPresent( "saveSchedule_hour" );
-        assertElementPresent( "hour" );
-        assertElementPresent( "saveSchedule_dayOfMonth" );
-        assertElementPresent( "dayOfMonth" );
-        assertElementPresent( "saveSchedule_month" );
-        assertElementPresent( "month" );
-        assertElementPresent( "saveSchedule_dayOfWeek" );
-        assertElementPresent( "dayOfWeek" );
-        assertElementPresent( "saveSchedule_year" );
-        assertElementPresent( "year" );
-        assertElementPresent( "saveSchedule_maxJobExecutionTime" );
-        assertElementPresent( "maxJobExecutionTime" );
-        assertElementPresent( "saveSchedule_delay" );
-        assertElementPresent( "delay" );
-        assertElementPresent( "saveSchedule_active" );
-        assertElementPresent( "active" );
+    	assertPage( "Continuum - Edit Schedule" );
+    	assertTextPresent( "Edit Schedule" );
+    	assertTextPresent( "Name*:" );
+    	assertElementPresent( "name" );
+    	assertTextPresent( "Description*:" );
+    	assertElementPresent( "description" );
+    	assertTextPresent( "Cron Expression:" );
+    	assertTextPresent( "Second:" );
+    	assertElementPresent( "second" );
+    	assertTextPresent( "Minute:" );
+    	assertElementPresent( "minute" );
+    	assertTextPresent( "Hour:" );
+    	assertElementPresent( "hour" );
+    	assertTextPresent( "Day of Month:" );
+    	assertElementPresent( "dayOfMonth" );
+    	assertTextPresent( "Month:" );
+    	assertElementPresent( "month" );
+    	assertTextPresent( "Day of Week:" );
+    	assertElementPresent( "dayOfWeek" );
+    	assertTextPresent( "Year [optional]:" );
+    	assertElementPresent( "year" );
+    	assertTextPresent( "Maximum job execution time (seconds)*:" );
+    	assertElementPresent( "maxJobExecutionTime" );
+    	assertTextPresent( "Quiet Period (seconds):" );
+    	assertElementPresent( "delay" );
+    	assertTextPresent( "Add Build Queue:" );
+    	assertElementPresent( "availableBuildQueues" );
+    	assertElementPresent( "selectedBuildQueues" );
+    	assertElementPresent( "active" );
     }
 
     public void deleteSchedule( String scheduleName )

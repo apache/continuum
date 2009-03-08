@@ -47,6 +47,7 @@ public class AddMavenOneProjectTestCase
      * @param validPom
      */
     public void submitAddMavenOneProjectPage( String m1PomUrl, boolean validPom )
+    	throws Exception
     {
         addMavenOneProject( m1PomUrl, "", "", null, validPom );
 
@@ -75,6 +76,7 @@ public class AddMavenOneProjectTestCase
      * test with no pom file or pom url specified
      */
     public void testNoPomSpecified()
+    	throws Exception
     {
         submitAddMavenOneProjectPage( "", false );
         assertTextPresent( "Either POM URL or Upload POM is required." );
@@ -84,6 +86,7 @@ public class AddMavenOneProjectTestCase
      * test with missing <repository> element in the pom file
      */
     public void testMissingElementInPom()
+    	throws Exception
     {
         String pomUrl = "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-one-projects/missing-repository-element-project.xml";
         submitAddMavenOneProjectPage( pomUrl, false );
@@ -95,6 +98,7 @@ public class AddMavenOneProjectTestCase
      * test with <extend> element present in pom file
      */
     public void testWithExtendElementPom()
+    	throws Exception
     {
         String pomUrl = "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-one-projects/extend-element-project.xml";
         submitAddMavenOneProjectPage( pomUrl, false );
@@ -105,6 +109,7 @@ public class AddMavenOneProjectTestCase
      * test with unparseable xml content for pom file
      */
     public void testUnparseableXmlContent()
+    	throws Exception
     {
         String pomUrl = "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-one-projects/unparseable-content-project.xml";
         submitAddMavenOneProjectPage( pomUrl, false );
@@ -115,6 +120,7 @@ public class AddMavenOneProjectTestCase
      * test with a malformed pom url
      */
     public void testMalformedPomUrl()
+    	throws Exception
     {
         String pomUrl = "aaa";
         submitAddMavenOneProjectPage( pomUrl, false );
@@ -126,6 +132,7 @@ public class AddMavenOneProjectTestCase
      * test with an inaccessible pom url
      */
     public void testInaccessiblePomUrl()
+    	throws Exception
     {
         String pomUrl = "http://www.google.com";
         submitAddMavenOneProjectPage( pomUrl, false );
@@ -136,6 +143,7 @@ public class AddMavenOneProjectTestCase
      * test unallowed file protocol
      */
     public void testNotAllowedProtocol()
+    	throws Exception
     {
         String pomUrl = "file:///project.xml";
         submitAddMavenOneProjectPage( pomUrl, false );

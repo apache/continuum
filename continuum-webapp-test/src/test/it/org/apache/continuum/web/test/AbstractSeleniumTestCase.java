@@ -23,7 +23,6 @@ import com.thoughtworks.selenium.DefaultSelenium;
 import com.thoughtworks.selenium.Selenium;
 import junit.framework.TestCase;
 import org.codehaus.plexus.util.StringUtils;
-import org.openqa.selenium.server.SeleniumServer;
 
 import java.io.File;
 import java.util.Calendar;
@@ -68,7 +67,6 @@ public abstract class AbstractSeleniumTestCase
         maxWaitTimeInMs = p.getProperty( "MAX_WAIT_TIME_IN_MS" );
         adminUsername = p.getProperty( "ADMIN_USERNAME" );
         adminPassword = p.getProperty( "ADMIN_PASSWORD" );
-        
         String seleniumHost = p.getProperty( "SELENIUM_HOST" );
         int seleniumPort = Integer.parseInt( (p.getProperty( "SELENIUM_PORT" ) ) );
 
@@ -119,6 +117,11 @@ public abstract class AbstractSeleniumTestCase
      */
     protected void postAdminUserCreation()
     {
+    	if ( getTitle().endsWith( "Continuum - Configuration" ) )
+    	{
+    		setFieldValue("baseUrl", baseUrl);
+    		clickButtonWithValue( "Save" );
+    	}
     }
 
     protected abstract String getApplicationName();
@@ -238,11 +241,12 @@ public abstract class AbstractSeleniumTestCase
 
     public abstract void assertHeader();
 
+    
     public void assertFooter()
     {
         int currentYear = Calendar.getInstance().get( Calendar.YEAR );
-        assertTrue( getSelenium().getText( "xpath=//div[@id='footer']/div" ).endsWith(
-            " " + getInceptionYear() + "-" + currentYear + " Apache Software Foundation" ) );
+        assertTrue( getSelenium().getText( "xpath=//div[@id='footer']/div[1]" ).endsWith(
+            "Copyright © " + getInceptionYear() + "-" + currentYear + " The Apache Software Foundation" ) );
     }
 
     public String getFieldValue( String fieldName )
@@ -440,7 +444,7 @@ public abstract class AbstractSeleniumTestCase
 
         if ( validUsernamePassword )
         {
-            assertTextPresent( "Current User:" );
+            //assertTextPresent( "Current User:" );
             assertTextPresent( username );
             assertLinkPresent( "Edit Details" );
             assertLinkPresent( "Logout" );
@@ -486,23 +490,26 @@ public abstract class AbstractSeleniumTestCase
     {
         assertPage( "Account Details" );
 
-        isTextPresent( "Username" );
-        assertTextPresent( "Username" );
+        //isTextPresent( "Username" );
+        assertTextPresent( "Username:" );
         assertElementPresent( "registerForm_user_username" );
         assertCellValueFromTable( username, "//form/table", 0, 1 );
 
-        assertTextPresent( "Full Name" );
+        assertTextPresent( "Full Name*:" );
         assertElementPresent( "user.fullName" );
         assertEquals( newFullName, getFieldValue( "user.fullName" ) );
 
-        assertTextPresent( "Email Address" );
+        assertTextPresent( "Email Address*:" );
         assertElementPresent( "user.email" );
         assertEquals( newEmailAddress, getFieldValue( "user.email" ) );
+        
+        assertTextPresent("Current Password*:");
+        assertElementPresent("oldPassword");
 
-        assertTextPresent( "Password" );
+        assertTextPresent( "New Password*:" );
         assertElementPresent( "user.password" );
 
-        assertTextPresent( "Confirm Password" );
+        assertTextPresent( "Confirm Password*:" );
         assertElementPresent( "user.confirmPassword" );
 
         assertTextPresent( "Last Password Change" );
@@ -510,15 +517,17 @@ public abstract class AbstractSeleniumTestCase
 
     }
 
-    public void editMyUserInfo( String newFullName, String newEmailAddress, String newPassword,
+    public void editMyUserInfo( String newFullName, String newEmailAddress, String oldPassword, String newPassword,
                                 String confirmNewPassword )
     {
         goToMyAccount();
 
         setFieldValue( "user.fullName", newFullName );
         setFieldValue( "user.email", newEmailAddress );
+        setFieldValue( "oldPassword", oldPassword );
         setFieldValue( "user.password", newPassword );
         setFieldValue( "user.confirmPassword", confirmNewPassword );
+        clickButtonWithValue( "Submit" );
     }
 
     //////////////////////////////////////
@@ -594,5 +603,6 @@ public abstract class AbstractSeleniumTestCase
         }
 
         return basedir;
-    }
+    }    
+    
 }

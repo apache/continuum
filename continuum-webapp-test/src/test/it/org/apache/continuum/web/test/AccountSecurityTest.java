@@ -64,7 +64,9 @@ public class AccountSecurityTest
         return super.adminPassword;
     }
 
-    public void tearDown()
+   /* TODO needs to be updated
+    * 
+    * public void tearDown()
         throws Exception
     {
         login( adminUsername, adminPassword );
@@ -94,7 +96,7 @@ public class AccountSecurityTest
         logout();
 
         super.tearDown();
-    }
+    }*/
 
     public void testBasicUserAddDelete()
     {
