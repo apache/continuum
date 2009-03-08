@@ -59,21 +59,14 @@ public abstract class AbstractContinuumRunGoalsPhase
             if ( !StringUtils.isEmpty( goals ) )
             {
                 Map<String, String> environments = null;
-                
+
+                String executable = null;
+
                 if ( releaseDescriptor instanceof ContinuumReleaseDescriptor )
                 {
                     environments = ( (ContinuumReleaseDescriptor) releaseDescriptor ).getEnvironments();
-                }
 
-                String executable = installationService.getExecutorConfigurator( InstallationService.MAVEN2_TYPE ).getExecutable();
-
-                if ( environments != null )
-                {
-                    String m2Home = environments.get( installationService.getEnvVar( InstallationService.MAVEN2_TYPE ) );
-                    if ( StringUtils.isNotEmpty( m2Home ) )
-                    {
-                        executable = m2Home + File.separator + "bin" + File.separator + executable;
-                    }
+                    executable = ( (ContinuumReleaseDescriptor) releaseDescriptor).getExecutable();
                 }
 
                 shellCommandHelper.executeGoals( determineWorkingDirectory( workingDirectory,

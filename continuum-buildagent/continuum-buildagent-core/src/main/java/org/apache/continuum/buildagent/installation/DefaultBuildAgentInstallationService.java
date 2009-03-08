@@ -25,9 +25,10 @@ import java.util.Map;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.springframework.stereotype.Service;
 
-@Service("buildAgentInstallationService")
+/**
+ * @plexus.component role="org.apache.continuum.buildagent.installation.BuildAgentInstallationService" role-hint="default"
+ */
 public class DefaultBuildAgentInstallationService
     implements BuildAgentInstallationService, Initializable
 {

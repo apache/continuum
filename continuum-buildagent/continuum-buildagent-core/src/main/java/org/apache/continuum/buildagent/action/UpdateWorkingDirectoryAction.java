@@ -29,7 +29,6 @@ import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationServ
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
-import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;

@@ -23,8 +23,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import org.apache.continuum.model.release.ContinuumReleaseResult;
+import org.apache.continuum.release.distributed.DistributedReleaseUtil;
+import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.Project;
@@ -32,6 +35,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.continuum.web.model.ReleaseListenerSummary;
 import org.apache.maven.shared.release.ReleaseResult;
 
 /**
@@ -54,6 +58,8 @@ public class ReleaseInProgressAction
 
     private String projectGroupName = "";
 
+    private ReleaseListenerSummary listenerSummary;
+
     public String execute()
         throws Exception
     {
@@ -68,38 +74,92 @@ public class ReleaseInProgressAction
 
         String status = "";
 
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+        listenerSummary = new ReleaseListenerSummary();
 
-        listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
-
-        if ( listener != null )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            if ( listener.getState() == ContinuumReleaseManagerListener.LISTENING )
+            DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
+
+            Map map = releaseManager.getListener( releaseId );
+
+            if ( map != null && !map.isEmpty() )
             {
-                status = "inProgress";
-            }
-            else if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
-            {
-                status = SUCCESS;
+                int state = DistributedReleaseUtil.getReleaseState( map );
+
+                if ( state == ContinuumReleaseManagerListener.LISTENING )
+                {
+                    status = "inProgress";
+                }
+                else if ( state == ContinuumReleaseManagerListener.FINISHED )
+                {
+                    status = SUCCESS;
+                }
+                else
+                {
+                    status = "initialized";
+                }
+    
+                if ( status.equals( SUCCESS ) )
+                {
+                    ReleaseResult result = releaseManager.getReleaseResult( releaseId );
+    
+                    if ( result != null && getContinuum().getContinuumReleaseResult( projectId, releaseGoal, result.getStartTime(), result.getEndTime() ) == null )
+                    {
+                        ContinuumReleaseResult releaseResult = createContinuumReleaseResult( result );
+                        getContinuum().addContinuumReleaseResult( releaseResult );
+                    }
+                }
+
+                listenerSummary.setPhases( DistributedReleaseUtil.getReleasePhases( map ) );
+                listenerSummary.setCompletedPhases( DistributedReleaseUtil.getCompletedReleasePhases( map ) );
+                listenerSummary.setInProgress( DistributedReleaseUtil.getReleaseInProgress( map ) );
+                listenerSummary.setError( DistributedReleaseUtil.getReleaseError( map ) );
             }
             else
             {
-                status = "initialized";
+                throw new Exception( "There is no on-going or finished release operation with id " + releaseId );
             }
         }
         else
         {
-            throw new Exception( "There is no on-going or finished release operation with id " + releaseId );
-        }
-
-        if ( status.equals( SUCCESS ) )
-        {
-            ReleaseResult result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
-
-            if ( result != null && getContinuum().getContinuumReleaseResult( projectId, releaseGoal, result.getStartTime(), result.getEndTime() ) == null )
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+    
+            listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
+    
+            if ( listener != null )
             {
-                ContinuumReleaseResult releaseResult = createContinuumReleaseResult( result );
-                getContinuum().addContinuumReleaseResult( releaseResult );
+                if ( listener.getState() == ContinuumReleaseManagerListener.LISTENING )
+                {
+                    status = "inProgress";
+                }
+                else if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
+                {
+                    status = SUCCESS;
+                }
+                else
+                {
+                    status = "initialized";
+                }
+
+                listenerSummary.setPhases( listener.getPhases() );
+                listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
+                listenerSummary.setInProgress( listener.getInProgress() );
+                listenerSummary.setError( listener.getError() );
+            }
+            else
+            {
+                throw new Exception( "There is no on-going or finished release operation with id " + releaseId );
+            }
+
+            if ( status.equals( SUCCESS ) )
+            {
+                ReleaseResult result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
+
+                if ( result != null && getContinuum().getContinuumReleaseResult( projectId, releaseGoal, result.getStartTime(), result.getEndTime() ) == null )
+                {
+                    ContinuumReleaseResult releaseResult = createContinuumReleaseResult( result );
+                    getContinuum().addContinuumReleaseResult( releaseResult );
+                }
             }
         }
 
@@ -118,26 +178,67 @@ public class ReleaseInProgressAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+        listenerSummary = new ReleaseListenerSummary();
 
-        listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
-
-        if ( listener != null )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
-            {
-                result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
+            DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-                return SUCCESS;
+            Map map = releaseManager.getListener( releaseId );
+
+            if ( map != null && !map.isEmpty() )
+            {
+                int state = DistributedReleaseUtil.getReleaseState( map );
+
+                listenerSummary.setPhases( DistributedReleaseUtil.getReleasePhases( map ) );
+                listenerSummary.setCompletedPhases( DistributedReleaseUtil.getCompletedReleasePhases( map ) );
+                listenerSummary.setInProgress( DistributedReleaseUtil.getReleaseInProgress( map ) );
+                listenerSummary.setError( DistributedReleaseUtil.getReleaseError( map ) );
+
+                if ( state == ContinuumReleaseManagerListener.FINISHED )
+                {
+                    result = releaseManager.getReleaseResult( releaseId );
+    
+                    return SUCCESS;
+                }
+                else
+                {
+                    throw new Exception( "The release operation with id " + releaseId + "has not finished yet." );
+                }
             }
             else
             {
-                throw new Exception( "The release operation with id " + releaseId + "has not finished yet." );
+                throw new Exception( "There is no finished release operation with id " + releaseId );
             }
         }
         else
         {
-            throw new Exception( "There is no finished release operation with id " + releaseId );
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+    
+            listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
+    
+            if ( listener != null )
+            {
+                listenerSummary.setPhases( listener.getPhases() );
+                listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
+                listenerSummary.setInProgress( listener.getInProgress() );
+                listenerSummary.setError( listener.getError() );
+
+                if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
+                {
+                    result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
+    
+                    return SUCCESS;
+                }
+                else
+                {
+                    throw new Exception( "The release operation with id " + releaseId + "has not finished yet." );
+                }
+            }
+            else
+            {
+                throw new Exception( "There is no finished release operation with id " + releaseId );
+            }
         }
     }
 
@@ -200,6 +301,16 @@ public class ReleaseInProgressAction
         }
 
         return projectGroupName;
+    }
+
+    public ReleaseListenerSummary getListenerSummary()
+    {
+        return listenerSummary;
+    }
+
+    public void setListenerSummary( ReleaseListenerSummary listenerSummary )
+    {
+        this.listenerSummary = listenerSummary;
     }
 
     private ContinuumReleaseResult createContinuumReleaseResult( ReleaseResult result )

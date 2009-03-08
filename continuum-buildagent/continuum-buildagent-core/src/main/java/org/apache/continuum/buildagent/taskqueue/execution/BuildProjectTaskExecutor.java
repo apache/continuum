@@ -210,8 +210,8 @@ public class BuildProjectTaskExecutor
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( buildContext.getBuildDefinitionId() ) );
         result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( buildContext.getTrigger() ) );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( buildResult.getState() ) );
-        result.put( ContinuumBuildAgentUtil.KEY_BUILD_START, new Long( buildResult.getStartTime() ).toString() );
-        result.put( ContinuumBuildAgentUtil.KEY_BUILD_END, new Long( buildResult.getEndTime() ).toString() );
+        result.put( ContinuumBuildAgentUtil.KEY_START_TIME, new Long( buildResult.getStartTime() ).toString() );
+        result.put( ContinuumBuildAgentUtil.KEY_END_TIME, new Long( buildResult.getEndTime() ).toString() );
         result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, new Integer( buildResult.getExitCode() ) );
         if ( buildContext.getLatestUpdateDate() != null )
         {

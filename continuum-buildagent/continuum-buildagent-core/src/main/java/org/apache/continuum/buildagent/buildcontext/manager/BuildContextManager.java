@@ -29,10 +29,10 @@ import org.apache.continuum.buildagent.buildcontext.BuildContext;
 public interface BuildContextManager
 {
     String ROLE = BuildContextManager.class.getName();
-    
-    public void setBuildContextList(List<BuildContext> buildContext);
-    
+
+    public void setBuildContextList( List<BuildContext> buildContext );
+
     public List<BuildContext> getBuildContextList();
-    
-    public BuildContext getBuildContext(int projectId);
+
+    public BuildContext getBuildContext( int projectId );
 }

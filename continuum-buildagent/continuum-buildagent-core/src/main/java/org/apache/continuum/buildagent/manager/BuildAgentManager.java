@@ -19,18 +19,13 @@ package org.apache.continuum.buildagent.manager;
  * under the License.
  */
 
-import java.util.List;
 import java.util.Map;
 
-import org.apache.continuum.buildagent.buildcontext.BuildContext;
 import org.apache.maven.continuum.ContinuumException;
 
 public interface BuildAgentManager
 {
     String ROLE = BuildAgentManager.class.getName();
-
-    void prepareBuildProjects( List<BuildContext> buildContextList )
-        throws ContinuumException;
 
     void returnBuildResult( Map result )
         throws ContinuumException;
@@ -45,5 +40,11 @@ public interface BuildAgentManager
         throws ContinuumException;
 
     boolean shouldBuild( Map context )
+        throws ContinuumException;
+
+    void startPrepareBuild( Map context )
+        throws ContinuumException;
+
+    void endPrepareBuild( Map context )
         throws ContinuumException;
 }

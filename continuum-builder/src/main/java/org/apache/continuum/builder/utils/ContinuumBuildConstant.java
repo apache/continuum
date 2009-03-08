@@ -56,9 +56,9 @@ public class ContinuumBuildConstant
 
     public static final String KEY_ALWAYS_BUILD = "always-build";
 
-    public static final String KEY_BUILD_START = "build-start";
+    public static final String KEY_START_TIME = "start-time";
 
-    public static final String KEY_BUILD_END = "build-end";
+    public static final String KEY_END_TIME = "end-time";
 
     public static final String KEY_BUILD_ERROR = "build-error";
 
@@ -176,6 +176,8 @@ public class ContinuumBuildConstant
 
     public static final String KEY_BUILD_AGENT_URL = "build-agent-url";
 
+    public static final String KEY_MAX_JOB_EXEC_TIME = "max-job-exec-time";
+
     public static int getProjectId( Map context )
     {
         return getInteger( context, KEY_PROJECT_ID );
@@ -196,14 +198,14 @@ public class ContinuumBuildConstant
         return getInteger( context, KEY_TRIGGER );
     }
 
-    public static long getBuildStart( Map context )
+    public static long getStartTime( Map context )
     {
-        return new Long( getString( context, KEY_BUILD_START ) );
+        return new Long( getString( context, KEY_START_TIME ) );
     }
 
-    public static long getBuildEnd( Map context )
+    public static long getEndTime( Map context )
     {
-        return new Long( getString( context, KEY_BUILD_END ) );
+        return new Long( getString( context, KEY_END_TIME ) );
     }
 
     public static int getBuildExitCode( Map context )

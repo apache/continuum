@@ -19,9 +19,10 @@ import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-@Service("buildAgentMavenOneMetadataHelper")
+/**
+ * @plexus.component role="org.apache.continuum.buildagent.build.execution.maven.m1.BuildAgentMavenOneMetadataHelper" role-hint="default"
+ */
 public class DefaultBuildAgentMavenOneMetadataHelper
     implements BuildAgentMavenOneMetadataHelper
 {

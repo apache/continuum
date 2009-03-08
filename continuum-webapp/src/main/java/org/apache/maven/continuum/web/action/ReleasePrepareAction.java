@@ -19,13 +19,18 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.release.distributed.DistributedReleaseUtil;
+import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
+import org.apache.continuum.web.action.AbstractReleaseAction;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
 import org.apache.maven.continuum.release.ContinuumReleaseManagerListener;
 import org.apache.maven.continuum.release.DefaultReleaseManagerListener;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.maven.continuum.web.model.ReleaseListenerSummary;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -51,7 +56,7 @@ import java.util.Properties;
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="releasePrepare"
  */
 public class ReleasePrepareAction
-    extends ContinuumActionSupport
+    extends AbstractReleaseAction
 {
     private static final String SCM_SVN_PROTOCOL_PREFIX = "scm:svn";
 
@@ -101,6 +106,8 @@ public class ReleasePrepareAction
 
     private boolean addSchema = true;
 
+    private ReleaseListenerSummary listenerSummary;
+
     public String input()
         throws Exception
     {
@@ -134,8 +141,6 @@ public class ReleasePrepareAction
             }
         }
 
-        String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
-
         String scmUrl = project.getScmUrl();
         if ( scmUrl.startsWith( SCM_SVN_PROTOCOL_PREFIX ) )
         {
@@ -148,16 +153,29 @@ public class ReleasePrepareAction
             scmTagBase = "";
         }
 
-        prepareGoals = "clean integration-test";
-
-        getReleasePluginParameters( workingDirectory, "pom.xml" );
-
         ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
 
         //CONTINUUM-1503
         releaseManager.sanitizeTagName( scmUrl, scmTag );
 
-        processProject( workingDirectory, "pom.xml" );
+        prepareGoals = "clean integration-test";
+
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
+        {
+            DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
+
+            getReleasePluginParameters( distributedReleaseManager.getReleasePluginParameters( projectId, "pom.xml" ) );
+
+            projects = distributedReleaseManager.processProject( projectId, "pom.xml", autoVersionSubmodules );
+        }
+        else
+        {
+            String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
+    
+            getReleasePluginParameters( workingDirectory, "pom.xml" );
+    
+            processProject( workingDirectory, "pom.xml" );
+        }
 
         profiles = this.getContinuum().getProfileService().getAllProfiles();
 
@@ -247,10 +265,8 @@ public class ReleasePrepareAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        listener = new DefaultReleaseManagerListener();
-
         Project project = getContinuum().getProject( projectId );
-
+        
         name = project.getName();
         if ( name == null )
         {
@@ -264,11 +280,39 @@ public class ReleasePrepareAction
             profile = getContinuum().getProfileService().getProfile( profileId );
         }
 
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+        Map<String, String> environments = getEnvironments( profile );
 
-        releaseId =
-            releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), listener,
-                                    profile );
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
+        {
+            DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
+
+            releaseId = distributedReleaseManager.releasePrepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), 
+                                                                  environments );
+        }
+        else
+        {
+            listener = new DefaultReleaseManagerListener();
+
+            String workingDirectory = getContinuum().getWorkingDirectory( projectId ).getPath();
+
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+
+            String executable = getContinuum().getInstallationService()
+                                .getExecutorConfigurator( InstallationService.MAVEN2_TYPE ).getExecutable();
+
+            if ( environments != null )
+            {
+                String m2Home = environments.get( getContinuum().getInstallationService().getEnvVar( InstallationService.MAVEN2_TYPE ) );
+                if ( StringUtils.isNotEmpty( m2Home ) )
+                {
+                    executable = m2Home + File.separator + "bin" + File.separator + executable;
+                }
+            }
+
+            releaseId =
+                releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), listener,
+                                        workingDirectory, environments, executable );
+        }
 
         return SUCCESS;
     }
@@ -285,7 +329,15 @@ public class ReleasePrepareAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        result = (ReleaseResult) getContinuum().getReleaseManager().getReleaseResults().get( releaseId );
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
+        {
+            DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
+            result = distributedReleaseManager.getReleaseResult( releaseId );
+        }
+        else
+        {
+            result = (ReleaseResult) getContinuum().getReleaseManager().getReleaseResults().get( releaseId );
+        }
 
         return "viewResult";
     }
@@ -304,28 +356,70 @@ public class ReleasePrepareAction
 
         String status;
 
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+        listenerSummary = new ReleaseListenerSummary();
 
-        listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
-
-        if ( listener != null )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
+            DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
+            Map listenerMap  = distributedReleaseManager.getListener( releaseId );
+
+            if ( listenerMap != null && !listenerMap.isEmpty() )
             {
-                releaseManager.getListeners().remove( releaseId );
+                int state = DistributedReleaseUtil.getReleaseState( listenerMap );
 
-                result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
+                if ( state == ContinuumReleaseManagerListener.FINISHED )
+                {
+                    distributedReleaseManager.removeListener( releaseId );
+    
+                    result = distributedReleaseManager.getReleaseResult( releaseId );
+    
+                    status = "finished";
+                }
+                else
+                {
+                    status = "inProgress";
+                }
 
-                status = "finished";
+                listenerSummary.setPhases( DistributedReleaseUtil.getReleasePhases( listenerMap ) );
+                listenerSummary.setCompletedPhases( DistributedReleaseUtil.getCompletedReleasePhases( listenerMap ) );
+                listenerSummary.setInProgress( DistributedReleaseUtil.getReleaseInProgress( listenerMap ) );
+                listenerSummary.setError( DistributedReleaseUtil.getReleaseError( listenerMap ) );
             }
             else
             {
-                status = "inProgress";
+                throw new Exception( "There is no release on-going or finished with id: " + releaseId );
             }
         }
         else
         {
-            throw new Exception( "There is no release on-going or finished with id: " + releaseId );
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+    
+            listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
+    
+            if ( listener != null )
+            {
+                if ( listener.getState() == ContinuumReleaseManagerListener.FINISHED )
+                {
+                    releaseManager.getListeners().remove( releaseId );
+    
+                    result = (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
+    
+                    status = "finished";
+                }
+                else
+                {
+                    status = "inProgress";
+                }
+
+                listenerSummary.setPhases( listener.getPhases() );
+                listenerSummary.setCompletedPhases( listener.getCompletedPhases() );
+                listenerSummary.setInProgress( listener.getInProgress() );
+                listenerSummary.setError( listener.getError() );
+            }
+            else
+            {
+                throw new Exception( "There is no release on-going or finished with id: " + releaseId );
+            }
         }
 
         return status;
@@ -444,6 +538,23 @@ public class ReleasePrepareAction
         p.setProperty( "autoVersionSubmodules", Boolean.toString( autoVersionSubmodules ) );
 
         return p;
+    }
+
+    private void getReleasePluginParameters( Map context )
+    {
+        scmTag = DistributedReleaseUtil.getScmTag( context, scmTag );
+
+        scmTagBase = DistributedReleaseUtil.getScmTagBase( context, scmTagBase );
+
+        prepareGoals = DistributedReleaseUtil.getPrepareGoals( context, prepareGoals );
+
+        arguments = DistributedReleaseUtil.getArguments( context, "" );
+
+        scmCommentPrefix = DistributedReleaseUtil.getScmCommentPrefix( context, "" );
+
+        autoVersionSubmodules = DistributedReleaseUtil.getAutoVersionSubmodules( context, false );
+
+        addSchema = DistributedReleaseUtil.getAddSchema( context, true );
     }
 
     public List<String> getProjectKeys()
@@ -669,5 +780,15 @@ public class ReleasePrepareAction
     public void setAddSchema( boolean addSchema )
     {
         this.addSchema = addSchema;
+    }
+
+    public ReleaseListenerSummary getListenerSummary()
+    {
+        return listenerSummary;
+    }
+
+    public void setListenerSummary( ReleaseListenerSummary listenerSummary )
+    {
+        this.listenerSummary = listenerSummary;
     }
 }

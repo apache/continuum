@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.exec.MavenExecutorException;
 import org.apache.maven.shared.release.exec.TeeConsumer;

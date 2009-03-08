@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.continuum.model.project.Project;
@@ -61,28 +62,37 @@ public class ReleaseRollbackAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
-
-        ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
-
-        Project project = getContinuum().getProject( projectId );
-
-        releaseManager.rollback( releaseId, workingDirectoryService.getWorkingDirectory( project ).getPath(), listener );
-
-        //recurse until rollback is finished
-        while ( listener.getState() != ContinuumReleaseManagerListener.FINISHED )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
-            try
-            {
-                Thread.sleep( 1000 );
-            }
-            catch ( InterruptedException e )
-            {
-                //do nothing
-            }
-        }
+            DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-        releaseManager.getPreparedReleases().remove( releaseId );
+            releaseManager.releaseRollback( releaseId, projectId );
+        }
+        else
+        {
+            ContinuumReleaseManager releaseManager = getContinuum().getReleaseManager();
+    
+            ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
+    
+            Project project = getContinuum().getProject( projectId );
+    
+            releaseManager.rollback( releaseId, workingDirectoryService.getWorkingDirectory( project ).getPath(), listener );
+    
+            //recurse until rollback is finished
+            while ( listener.getState() != ContinuumReleaseManagerListener.FINISHED )
+            {
+                try
+                {
+                    Thread.sleep( 1000 );
+                }
+                catch ( InterruptedException e )
+                {
+                    //do nothing
+                }
+            }
+    
+            releaseManager.getPreparedReleases().remove( releaseId );
+        }
 
         return SUCCESS;
     }

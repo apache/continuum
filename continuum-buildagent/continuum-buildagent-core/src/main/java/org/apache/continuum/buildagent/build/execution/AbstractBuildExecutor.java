@@ -31,8 +31,8 @@ import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationServ
 import org.apache.continuum.buildagent.installation.BuildAgentInstallationService;
 import org.apache.continuum.buildagent.manager.BuildAgentManager;
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
-import org.apache.continuum.buildagent.utils.shell.ExecutionResult;
-import org.apache.continuum.buildagent.utils.shell.BuildAgentShellCommandHelper;
+import org.apache.continuum.utils.shell.ExecutionResult;
+import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -57,7 +57,7 @@ public abstract class AbstractBuildExecutor
     /**
      * @plexus.requirement
      */
-    private BuildAgentShellCommandHelper buildAgentShellCommandHelper;
+    private ShellCommandHelper shellCommandHelper;
 
     /**
      * @plexus.requirement
@@ -103,14 +103,14 @@ public abstract class AbstractBuildExecutor
         this.resolveExecutable = resolveExecutable;
     }
 
-    public void setBuildAgentShellCommandHelper( BuildAgentShellCommandHelper buildAgentShellCommandHelper )
+    public void setShellCommandHelper( ShellCommandHelper shellCommandHelper )
     {
-        this.buildAgentShellCommandHelper = buildAgentShellCommandHelper;
+        this.shellCommandHelper = shellCommandHelper;
     }
 
-    public BuildAgentShellCommandHelper getBuildAgentShellCommandHelper()
+    public ShellCommandHelper getShellCommandHelper()
     {
-        return buildAgentShellCommandHelper;
+        return shellCommandHelper;
     }
 
     public void setDefaultExecutable( String defaultExecutable )
@@ -267,7 +267,7 @@ public abstract class AbstractBuildExecutor
 
         try
         {
-            ExecutionResult result = getBuildAgentShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable,
+            ExecutionResult result = getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable,
                                                                                   arguments, output, project.getId(),
                                                                                   environments );
 
@@ -479,12 +479,12 @@ public abstract class AbstractBuildExecutor
     public boolean isBuilding( Project project )
     {
         return project.getState() == ContinuumProjectState.BUILDING ||
-            getBuildAgentShellCommandHelper().isRunning( project.getId() );
+               getShellCommandHelper().isRunning( project.getId() );
     }
 
     public void killProcess( Project project )
     {
-        getBuildAgentShellCommandHelper().killProcess( project.getId() );
+        getShellCommandHelper().killProcess( project.getId() );
     }
 
     public List<Artifact> getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )

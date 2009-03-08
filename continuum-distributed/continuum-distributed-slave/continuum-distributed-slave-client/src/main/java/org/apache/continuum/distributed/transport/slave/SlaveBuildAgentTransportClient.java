@@ -215,4 +215,199 @@ public class SlaveBuildAgentTransportClient
 
         return result;
     }
+
+    public Map getReleasePluginParameters( int projectId, String pomFilename )
+        throws Exception
+    {
+        Map result = null;
+
+        try
+        {
+            result = slave.getReleasePluginParameters( projectId, pomFilename );
+            log.info(  "Retrieving release plugin parameters" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error retrieving release plugin parameters", e );
+            throw new Exception( "Error retrieving release plugin parameters", e );
+        }
+
+        return result;
+    }
+
+    public List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
+        throws Exception
+    {
+        List<Map<String, String>> result = null;
+
+        try
+        {
+            result = slave.processProject( projectId, pomFilename, autoVersionSubmodules );
+            log.info( "Processing project" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error processing project", e );
+            throw new Exception( "Error processing project", e );
+        }
+
+        return result;
+    }
+
+    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map environments )
+        throws Exception
+    {
+        String releaseId = null;
+
+        try
+        {
+            releaseId = slave.releasePrepare( project, properties, releaseVersion, developmentVersion, environments );
+            log.info( "Preparing release" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error while preparing release", e );
+            throw new Exception( "Error while preparing release", e );
+        }
+
+        return releaseId;
+    }
+
+    public Map getReleaseResult( String releaseId )
+        throws Exception
+    {
+        Map result = null;
+
+        try
+        {
+            result = slave.getReleaseResult( releaseId );
+            log.info( "Retrieving release result for " + releaseId );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error retrieving release result for " + releaseId, e );
+            throw new Exception( "Error retrieving release result for " + releaseId, e );
+        }
+
+        return result;
+    }
+
+    public Map getListener( String releaseId )
+        throws Exception
+    {
+        Map result = null;
+
+        try
+        {
+            result = slave.getListener( releaseId );
+            log.info( "Retrieving listener for " + releaseId );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error retrieving listener for " + releaseId, e );
+            throw new Exception( "Error retrieving listener for " + releaseId, e );
+        }
+
+        return result;
+    }
+
+    public Boolean removeListener( String releaseId )
+        throws Exception
+    {
+        Boolean result = null;
+
+        try
+        {
+            slave.removeListener( releaseId );
+            result = Boolean.FALSE;
+            log.info( "Removing listener for " + releaseId );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error removing listener for " + releaseId, e );
+            throw new Exception( "Error removing listener for " + releaseId, e );
+        }
+
+        return result;
+    }
+
+    public String getPreparedReleaseName( String releaseId )
+        throws Exception
+    {
+        String result = null;
+
+        try
+        {
+            result = slave.getPreparedReleaseName( releaseId );
+            log.info( "Retrieving prepared release name for " + releaseId );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error while retrieving prepared release name for " + releaseId );
+            throw new Exception( "Error while retrieving prepared release name for " + releaseId );
+        }
+
+        return result;
+    }
+
+    public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+        throws Exception
+    {
+        Boolean result = null;
+
+        try
+        {
+            slave.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+            result = Boolean.FALSE;
+            log.info( "Performing release" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error performing release", e );
+            throw new Exception( "Error performing release", e );
+        }
+
+        return result;
+    }
+
+    public Boolean releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl,
+                                          String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+        throws Exception
+    {
+        Boolean result = null;
+
+        try
+        {
+            slave.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername, scmPassword, scmTag,
+                                         scmTagBase, environments);
+            result = Boolean.FALSE;
+            log.info( "Performing release" );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error performing release from scm", e );
+            throw new Exception( "Error performing release from scm", e );
+        }
+
+        return result;
+    }
+
+    public String releaseCleanup( String releaseId )
+        throws Exception
+    {
+        String result = null;
+
+        try
+        {
+            result = slave.releaseCleanup( releaseId );
+            log.info( "Cleanup release of " + releaseId );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Error cleaning up release of " + releaseId, e );
+            throw new Exception( "Error cleaning up release of " + releaseId, e );
+        }
+
+        return result;
+    }
 }

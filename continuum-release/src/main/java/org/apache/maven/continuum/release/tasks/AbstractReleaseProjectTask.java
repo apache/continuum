@@ -39,15 +39,11 @@ public abstract class AbstractReleaseProjectTask
 
     private long maxExecutionTime;
 
-    private Profile profile;
-
-    public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener,
-                                       Profile profile )
+    public AbstractReleaseProjectTask( String releaseId, ReleaseDescriptor descriptor, ReleaseManagerListener listener )
     {
         this.releaseId = releaseId;
         this.descriptor = descriptor;
         this.listener = listener;
-        this.profile = profile;
     }
 
     public ReleaseDescriptor getDescriptor()
@@ -88,15 +84,5 @@ public abstract class AbstractReleaseProjectTask
     public void setMaxExecutionTime( long maxTime )
     {
         this.maxExecutionTime = maxTime;
-    }
-
-    public Profile getProfile()
-    {
-        return profile;
-    }
-
-    public void setProfile( Profile profile )
-    {
-        this.profile = profile;
     }
 }

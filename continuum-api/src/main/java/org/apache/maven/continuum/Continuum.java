@@ -30,6 +30,7 @@ import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
+import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -680,4 +681,6 @@ public interface Continuum
         throws ContinuumException;
 
     DistributedBuildManager getDistributedBuildManager();
+
+    DistributedReleaseManager getDistributedReleaseManager();
 }

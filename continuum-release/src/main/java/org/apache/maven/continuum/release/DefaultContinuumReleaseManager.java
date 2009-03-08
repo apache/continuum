@@ -22,14 +22,10 @@ package org.apache.maven.continuum.release;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
-import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.system.Installation;
-import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.release.tasks.PerformReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.RollbackReleaseProjectTask;
-import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.scm.manager.ScmManager;
 import org.apache.maven.scm.provider.ScmProvider;
 import org.apache.maven.scm.repository.ScmRepository;
@@ -40,13 +36,9 @@ import org.apache.maven.shared.release.config.ReleaseDescriptorStoreException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -81,16 +73,6 @@ public class DefaultContinuumReleaseManager
     /**
      * @plexus.requirement
      */
-    private WorkingDirectoryService workingDirectoryService;
-
-    /**
-     * @plexus.requirement
-     */
-    private InstallationService installationService;
-
-    /**
-     * @plexus.requirement
-     */
     private ScmManager scmManager;
 
     private Map<String, ContinuumReleaseManagerListener> listeners;
@@ -110,28 +92,29 @@ public class DefaultContinuumReleaseManager
     private static Map releaseResults;
 
     public String prepare( Project project, Properties releaseProperties, Map<String, String> relVersions,
-                           Map<String, String> devVersions, ContinuumReleaseManagerListener listener )
+                           Map<String, String> devVersions, ContinuumReleaseManagerListener listener,
+                           String workingDirectory )
         throws ContinuumReleaseException
     {
-        return prepare( project, releaseProperties, relVersions, devVersions, listener, null );
+        return prepare( project, releaseProperties, relVersions, devVersions, listener, workingDirectory, null, null );
     }
 
     public String prepare( Project project, Properties releaseProperties, Map<String, String> relVersions,
-                           Map<String, String> devVersions, ContinuumReleaseManagerListener listener, Profile profile )
+                           Map<String, String> devVersions, ContinuumReleaseManagerListener listener,
+                           String workingDirectory, Map<String, String> environments, String executable )
         throws ContinuumReleaseException
     {
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
 
         ReleaseDescriptor descriptor =
-            getReleaseDescriptor( project, releaseProperties, relVersions, devVersions, profile );
+            getReleaseDescriptor( project, releaseProperties, relVersions, devVersions, environments, workingDirectory, executable );
 
         getListeners().put( releaseId, listener );
 
         try
         {
             prepareReleaseQueue.put(
-                new PrepareReleaseProjectTask( releaseId, descriptor, (ReleaseManagerListener) listener, profile ) );
-
+                new PrepareReleaseProjectTask( releaseId, descriptor, (ReleaseManagerListener) listener ) );
         }
         catch ( TaskQueueException e )
         {
@@ -236,42 +219,13 @@ public class DefaultContinuumReleaseManager
         return releaseResults;
     }
 
-    public Map<String, String> getEnvironments( Profile profile )
-    {
-        if ( profile == null )
-        {
-            return Collections.EMPTY_MAP;
-        }
-
-        Map<String, String> envVars = new HashMap<String, String>();
-
-        String javaHome = getJavaHomeValue( profile );
-        if ( !StringUtils.isEmpty( javaHome ) )
-        {
-            envVars.put( installationService.getEnvVar( InstallationService.JDK_TYPE ), javaHome );
-        }
-
-        Installation builder = profile.getBuilder();
-        if ( builder != null )
-        {
-            envVars.put( installationService.getEnvVar( InstallationService.MAVEN2_TYPE ), builder.getVarValue() );
-        }
-
-        List<Installation> installations = profile.getEnvironmentVariables();
-        for ( Installation installation : installations )
-        {
-            envVars.put( installation.getVarName(), installation.getVarValue() );
-        }
-        return envVars;
-    }
-
     private ReleaseDescriptor getReleaseDescriptor( Project project, Properties releaseProperties,
                                                     Map<String, String> relVersions, Map<String, String> devVersions,
-                                                    Profile profile )
+                                                    Map<String, String> environments, String workingDirectory,
+                                                    String executable )
     {
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
-        String workingDirectory = workingDirectoryService.getWorkingDirectory( project ).getPath();
-
+        
         //release properties from the project
         descriptor.setWorkingDirectory( workingDirectory );
         descriptor.setScmSourceUrl( project.getScmUrl() );
@@ -322,7 +276,8 @@ public class DefaultContinuumReleaseManager
         descriptor.setInteractive( false );
 
         //set environments
-        descriptor.setEnvironments( getEnvironments( profile ) );
+        descriptor.setEnvironments( environments );
+        descriptor.setExecutable( executable );
 
         return descriptor;
     }
@@ -353,16 +308,6 @@ public class DefaultContinuumReleaseManager
         }
 
         return listeners;
-    }
-
-    private String getJavaHomeValue( Profile profile )
-    {
-        Installation jdk = profile.getJdk();
-        if ( jdk == null )
-        {
-            return null;
-        }
-        return jdk.getVarValue();
     }
 
     public String sanitizeTagName( String scmUrl, String tagName )

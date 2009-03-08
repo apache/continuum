@@ -27,6 +27,13 @@
     </component>
 
     <component>
+      <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+      <role-hint>prepare-build-agent</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
+      <lifecycle-handler>plexus-configurable</lifecycle-handler>
+    </component>
+
+    <component>
       <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
       <role-hint>build-agent</role-hint>
       <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
@@ -43,6 +50,26 @@
       </requirements>
       <configuration>
         <name>build-agent</name>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
+      <role-hint>prepare-build-agent</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <instantiation-strategy>singleton</instantiation-strategy>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+          <role-hint>prepare-build-agent</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>prepare-build-agent</role-hint>
+        </requirement>
+      </requirements>
+      <configuration>
+        <name>prepare-build-agent</name>
       </configuration>
     </component>
   </components>

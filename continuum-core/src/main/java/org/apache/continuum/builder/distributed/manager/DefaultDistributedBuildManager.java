@@ -1076,8 +1076,8 @@ public class DefaultDistributedBuildManager
     {
         BuildResult buildResult = new BuildResult();
 
-        buildResult.setStartTime( ContinuumBuildConstant.getBuildStart( context ) );
-        buildResult.setEndTime( ContinuumBuildConstant.getBuildEnd( context ) );
+        buildResult.setStartTime( ContinuumBuildConstant.getStartTime( context ) );
+        buildResult.setEndTime( ContinuumBuildConstant.getEndTime( context ) );
         buildResult.setError( ContinuumBuildConstant.getBuildError( context ) );
         buildResult.setExitCode( ContinuumBuildConstant.getBuildExitCode( context ) );
         buildResult.setState( ContinuumBuildConstant.getBuildState( context ) );

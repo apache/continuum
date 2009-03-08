@@ -64,6 +64,17 @@ under the License.
       <groupId>org.apache.archiva</groupId>
       <artifactId>archiva-repository-layer</artifactId>
       <version>${archiva.version}</version>
+    </dependency> 
+    <dependency>
+      <groupId>org.apache.maven.release</groupId>
+      <artifactId>maven-release-manager</artifactId>
+      <version>1.0-alpha-3</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-container-default</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>

@@ -28,6 +28,8 @@ public interface BuildAgentTaskQueueManager
 
     TaskQueue getBuildQueue();
 
+    TaskQueue getPrepareBuildQueue();
+
     void cancelBuild()
         throws TaskQueueManagerException;
 
@@ -38,5 +40,8 @@ public interface BuildAgentTaskQueueManager
         throws TaskQueueManagerException;
 
     boolean isProjectInBuildQueue( int projectId )
+        throws TaskQueueManagerException;
+
+    boolean isInPrepareBuildQueue( int projectGroupId, int trigger, String scmRootAddress )
         throws TaskQueueManagerException;
 }

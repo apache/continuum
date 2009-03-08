@@ -52,6 +52,7 @@ import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
+import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.repository.RepositoryService;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.taskqueue.manager.TaskQueueManager;
@@ -270,6 +271,11 @@ public class DefaultContinuum
      */
     private DistributedBuildManager distributedBuildManager;
 
+    /**
+     * @plexus.requirement
+     */
+    private DistributedReleaseManager distributedReleaseManager;
+
     public DefaultContinuum()
     {
         Runtime.getRuntime().addShutdownHook( new Thread()
@@ -326,6 +332,11 @@ public class DefaultContinuum
     public BuildsManager getBuildsManager()
     {
         return parallelBuildsManager;
+    }
+
+    public DistributedReleaseManager getDistributedReleaseManager()
+    {
+        return distributedReleaseManager;
     }
 
     // ----------------------------------------------------------------------
@@ -1476,7 +1487,10 @@ public class DefaultContinuum
 
         executeAction( "store-project", context );
 
-        executeAction( "add-project-to-checkout-queue", context );
+        if ( !configurationService.isDistributedBuildEnabled() )
+        {
+            executeAction( "add-project-to-checkout-queue", context );
+        }
 
         executeAction( "add-assignable-roles", context );
 
@@ -1727,7 +1741,10 @@ public class DefaultContinuum
                 // used by BuildManager to determine on which build queue will the project be put
                 context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, defaultBuildDefinition );
 
-                executeAction( "add-project-to-checkout-queue", context );
+                if ( !configurationService.isDistributedBuildEnabled() )
+                {
+                    executeAction( "add-project-to-checkout-queue", context );
+                }
 
             }
         }
