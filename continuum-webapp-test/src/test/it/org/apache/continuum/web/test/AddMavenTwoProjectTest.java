@@ -51,6 +51,7 @@ public class AddMavenTwoProjectTest
      * @param validPom
      */
     public void submitAddMavenTwoProjectPage( String m2PomUrl, boolean validPom )
+    	throws Exception
     {
         addMavenTwoProject( m2PomUrl, "", "", null, validPom );
 
@@ -65,6 +66,7 @@ public class AddMavenTwoProjectTest
      * Test invalid pom url
      */
     public void testNoPomSpecified()
+    	throws Exception
     {
         submitAddMavenTwoProjectPage( "", false );
         assertTextPresent( "Either POM URL or Upload POM is required." );
@@ -74,6 +76,7 @@ public class AddMavenTwoProjectTest
      * Test when scm element is missing from pom
      */
     public void testMissingScmElementPom()
+    	throws Exception
     {
         String pomUrl = "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-two-projects/missing-scm-element-pom.xml";
         submitAddMavenTwoProjectPage( pomUrl, false );
@@ -84,6 +87,7 @@ public class AddMavenTwoProjectTest
      * Test when the specified pom url is invalid
      */
     public void testCannotAccessResource()
+    	throws Exception
     {
         String pomUrl = "http://svn.apache.org/asf/maven/continuum/trunk/bad_url/pom.xml";
         submitAddMavenTwoProjectPage( pomUrl, false );
@@ -95,6 +99,7 @@ public class AddMavenTwoProjectTest
      * test with a malformed pom url
      */
     public void testMalformedPomUrl()
+    	throws Exception
     {
         String pomUrl = "aaa";
         submitAddMavenTwoProjectPage( pomUrl, false );
@@ -106,6 +111,7 @@ public class AddMavenTwoProjectTest
      * Test when the connection element is missing from the scm tag
      */
     public void testMissingConnectionElement()
+    	throws Exception
     {
         String pomUrl = "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-two-projects/missing-connection-element-pom.xml";
         submitAddMavenTwoProjectPage( pomUrl, false );
@@ -116,6 +122,7 @@ public class AddMavenTwoProjectTest
      * Test when the parent pom is missing or not yet added in continuum
      */
     public void testMissingParentPom()
+    	throws Exception
     {
         String pomUrl = "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-two-projects/missing-parent-pom.xml";
         submitAddMavenTwoProjectPage( pomUrl, false );
@@ -127,6 +134,7 @@ public class AddMavenTwoProjectTest
      * Test when the modules/subprojects specified in the pom are not found
      */
     public void testMissingModules()
+    	throws Exception
     {
         String pomUrl= "http://svn.apache.org/repos/asf/maven/continuum/trunk/continuum-webapp-test/src/test/resources/unit/maven-two-projects/missing-modules-pom.xml";
         submitAddMavenTwoProjectPage( pomUrl, false );
@@ -137,6 +145,7 @@ public class AddMavenTwoProjectTest
      * test with an inaccessible pom url
      */
     public void testInaccessiblePomUrl()
+    	throws Exception
     {
         String pomUrl = "http://www.google.com";
         submitAddMavenTwoProjectPage( pomUrl, false );
@@ -147,6 +156,7 @@ public class AddMavenTwoProjectTest
      * test unallowed file protocol
      */
     public void testNotAllowedProtocol()
+    	throws Exception
     {
         String pomUrl = "file:///pom.xml";
         submitAddMavenTwoProjectPage( pomUrl, false );

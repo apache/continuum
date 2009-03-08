@@ -49,7 +49,7 @@ public class LoginTest
     {
         submitLoginPage( "", "badPassword", false );
         assertLoginPage();
-        assertTextPresent( "Username cannot be empty." );
+        assertTextPresent( "User Name is required." );
     }
 
     public void testWithEmptyPassword()

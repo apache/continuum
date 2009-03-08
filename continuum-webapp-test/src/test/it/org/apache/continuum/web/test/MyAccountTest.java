@@ -31,23 +31,20 @@ public class MyAccountTest
     public void testMyAccountEdit()
         throws Exception
     {
-        String newFullName = "Continuum Admin _ new";
-        String newEmail = "admin_new@localhost.localdomain.com";
-        String newPassword = "admin1_new";
-        String newConfirmationPassword = newPassword;
-
         goToMyAccount();
-
         // check current account details
         assertMyAccountDetails( adminUsername, adminFullName, adminEmail );
-
-        // change account details
-        editMyUserInfo( newFullName, newEmail, newPassword, newConfirmationPassword );
-        assertMyAccountDetails( adminUsername, newFullName, newEmail );
-
-        // revert to original account details
-        editMyUserInfo( adminFullName, adminEmail, adminPassword, adminPassword );
-        assertMyAccountDetails( adminUsername, adminFullName, adminEmail );
+    }
+    
+    public void testEditAccountDuplicatePassword() 
+    	throws Exception
+    {
+    	goToMyAccount();
+    	assertMyAccountDetails( adminUsername, adminFullName, adminEmail );
+    	editMyUserInfo( adminFullName, adminEmail, adminPassword ,adminPassword, adminPassword );
+    	assertTextPresent( "Your password cannot match any of your previous 6 password(s)." );
+    	clickButtonWithValue( "Cancel" );
+    	assertPage( "Continuum - Group Summary" );
     }
 
 }
