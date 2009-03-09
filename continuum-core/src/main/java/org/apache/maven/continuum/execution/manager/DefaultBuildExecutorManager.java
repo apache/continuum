@@ -43,7 +43,7 @@ public class DefaultBuildExecutorManager
     /**
      * @plexus.requirement role="org.apache.maven.continuum.execution.ContinuumBuildExecutor"
      */
-    private Map executors;
+    private Map<String, ContinuumBuildExecutor> executors;
 
     // ----------------------------------------------------------------------
     // Component Lifecycle
@@ -53,7 +53,7 @@ public class DefaultBuildExecutorManager
     {
         if ( executors == null )
         {
-            executors = new HashMap();
+            executors = new HashMap<String, ContinuumBuildExecutor>();
         }
 
         if ( executors.size() == 0 )
@@ -78,7 +78,7 @@ public class DefaultBuildExecutorManager
     public ContinuumBuildExecutor getBuildExecutor( String builderType )
         throws ContinuumException
     {
-        ContinuumBuildExecutor executor = (ContinuumBuildExecutor) executors.get( builderType );
+        ContinuumBuildExecutor executor = executors.get( builderType );
 
         if ( executor == null )
         {

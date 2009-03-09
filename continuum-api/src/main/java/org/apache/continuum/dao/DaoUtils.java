@@ -34,12 +34,12 @@ public interface DaoUtils
 
     void eraseDatabase();
 
-    Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    Map<Integer, Integer> getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException;
 
-    Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    Map<Integer, Integer> getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException;
 
-    Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+    Map<Integer, Integer> getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
         throws ContinuumStoreException;
 }
