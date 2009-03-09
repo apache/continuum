@@ -173,8 +173,8 @@ public class DefaultBuildAgentReleaseManager
         releaseManager.perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, listener, repo );
     }
 
-    public void releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, String scmUsername, 
-                                String scmPassword, String scmTag, String scmTagBase, Map<String, String> environments )
+    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, 
+                                         String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map<String, String> environments )
         throws ContinuumReleaseException
     {
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
@@ -196,6 +196,8 @@ public class DefaultBuildAgentReleaseManager
         releaseManager.getPreparedReleases().put( releaseId, descriptor );
 
         releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+
+        return releaseId;
     }
 
     public String releaseCleanup( String releaseId )
@@ -213,6 +215,29 @@ public class DefaultBuildAgentReleaseManager
         {
             return "";
         }
+    }
+
+    public void releaseRollback( String releaseId, int projectId )
+        throws ContinuumReleaseException
+    {
+        ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
+
+        releaseManager.rollback( releaseId, buildAgentConfigurationService.getWorkingDirectory( projectId ).getPath(), listener );
+
+        //recurse until rollback is finished
+        while ( listener.getState() != ContinuumReleaseManagerListener.FINISHED )
+        {
+            try
+            {
+                Thread.sleep( 1000 );
+            }
+            catch ( InterruptedException e )
+            {
+                //do nothing
+            }
+        }
+
+        releaseManager.getPreparedReleases().remove( releaseId );
     }
 
     private Project getProject( Map context )

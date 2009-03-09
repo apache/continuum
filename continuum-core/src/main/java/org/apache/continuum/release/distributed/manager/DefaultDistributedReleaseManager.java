@@ -69,7 +69,9 @@ public class DefaultDistributedReleaseManager
      * @plexus.requirement
      */
     InstallationService installationService;
-    
+
+    private Map<String, Map> releasesInProgress;
+
     public Map getReleasePluginParameters( int projectId, String pomFilename )
         throws ContinuumReleaseException
     {
@@ -137,7 +139,9 @@ public class DefaultDistributedReleaseManager
             String releaseId = client.releasePrepare( createProjectMap( project ), createPropertiesMap( releaseProperties ),
                                                       releaseVersion, developmentVersion, environments );
 
-            addReleasePrepare( releaseId, buildAgentUrl );
+            addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ) );
+
+            addReleaseInProgress( releaseId, "prepare", project.getId() );
 
             return releaseId;
         }
@@ -270,7 +274,8 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    public void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository )
+    public void releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile, 
+                                LocalRepository repository )
         throws ContinuumReleaseException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );
@@ -304,6 +309,8 @@ public class DefaultDistributedReleaseManager
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
             client.releasePerform( releaseId, goals, arguments, useReleaseProfile, map );
+
+            addReleaseInProgress( releaseId, "perform", projectId );
         }
         catch ( MalformedURLException e )
         {
@@ -353,8 +360,10 @@ public class DefaultDistributedReleaseManager
         try
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-            client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl, scmUsername, scmPassword,
-                                          scmTag, scmTagBase, environments );
+            String releaseId = client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl, scmUsername, scmPassword,
+                                                             scmTag, scmTagBase, environments );
+
+            addReleaseInProgress( releaseId, "perform", projectId );
         }
         catch ( MalformedURLException e )
         {
@@ -371,7 +380,29 @@ public class DefaultDistributedReleaseManager
     public void releaseRollback( String releaseId, int projectId )
         throws ContinuumReleaseException
     {
-        //TODO
+        String buildAgentUrl = getBuildAgentUrl( releaseId );
+
+        if ( StringUtils.isBlank( buildAgentUrl ) )
+        {
+            log.info( "Unable to rollback release " + releaseId + " because no build agent found" );
+            return;
+        }
+
+        try
+        {
+            SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+            client.releaseRollback( releaseId, projectId );
+        }
+        catch ( MalformedURLException e )
+        {
+            log.error( "Invalid build agent url " + buildAgentUrl );
+            throw new ContinuumReleaseException( "Invalid build agent url " + buildAgentUrl );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Unable to rollback release " + releaseId, e );
+            throw new ContinuumReleaseException( "Unable to rollback release " + releaseId, e );
+        }
     }
 
     public String releaseCleanup( String releaseId )
@@ -388,7 +419,10 @@ public class DefaultDistributedReleaseManager
         try
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-            return client.releaseCleanup( releaseId );
+            String result = client.releaseCleanup( releaseId );
+
+            removeFromReleaseInProgress( releaseId );
+            return result;
         }
         catch ( MalformedURLException e )
         {
@@ -400,6 +434,55 @@ public class DefaultDistributedReleaseManager
             log.error( "Failed to get prepared release name of " + releaseId, e );
             throw new ContinuumReleaseException( "Failed to get prepared release name of " + releaseId, e );
         }
+    }
+
+    public List<Map> getAllReleasesInProgress()
+        throws ContinuumReleaseException
+    {
+        List<Map> releases = new ArrayList<Map>();
+        Map<String, Map> releasesMap = new HashMap<String, Map>();
+        
+        if ( releasesInProgress != null && !releasesInProgress.isEmpty() )
+        {
+            for ( String releaseId : releasesInProgress.keySet() )
+            {
+                String buildAgentUrl = getBuildAgentUrl( releaseId );
+
+                if ( StringUtils.isNotBlank( buildAgentUrl ) )
+                {
+                    try
+                    {
+                        SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                        Map map = client.getListener( releaseId );
+
+                        if ( map != null && !map.isEmpty() )
+                        {
+                            Map release = releasesInProgress.get( releaseId );
+                            release.put( DistributedReleaseUtil.KEY_RELEASE_ID, releaseId );
+                            release.put( DistributedReleaseUtil.KEY_BUILD_AGENT_URL, buildAgentUrl );
+
+                            releases.add( release );
+
+                            releasesMap.put( releaseId, releasesInProgress.get( releaseId ) );
+                        }
+                    }
+                    catch ( MalformedURLException e )
+                    {
+                        log.error( "Invalid build agent url " + buildAgentUrl );
+                        throw new ContinuumReleaseException( "Invalid build agent url " + buildAgentUrl );
+                    }
+                    catch ( Exception e )
+                    {
+                        log.error( "Failed to get all releases in progress ", e );
+                        throw new ContinuumReleaseException( "Failed to get all releases in progress ", e );
+                    }
+                }
+            }
+
+            releasesInProgress = releasesMap;
+        }
+
+        return releases;
     }
 
     private Map createProjectMap( Project project )
@@ -514,7 +597,7 @@ public class DefaultDistributedReleaseManager
         return null;
     }
 
-    private void addReleasePrepare( String releaseId, String buildAgentUrl )
+    private void addReleasePrepare( String releaseId, String buildAgentUrl, String releaseName )
         throws ContinuumReleaseException
     {
         File file = getPreparedReleasesFile();
@@ -527,6 +610,7 @@ public class DefaultDistributedReleaseManager
         PreparedRelease release = new PreparedRelease();
         release.setReleaseId( releaseId );
         release.setBuildAgentUrl( buildAgentUrl );
+        release.setReleaseName( releaseName );
 
         List<PreparedRelease> preparedReleases = getPreparedReleases();
 
@@ -540,7 +624,8 @@ public class DefaultDistributedReleaseManager
 
             for ( PreparedRelease preparedRelease : preparedReleases )
             {
-                if ( preparedRelease.getReleaseId().equals( release.getReleaseId() ) )
+                if ( preparedRelease.getReleaseId().equals( release.getReleaseId() ) && 
+                     preparedRelease.getReleaseName().equals( release.getReleaseName() ) )
                 {
                     preparedRelease.setBuildAgentUrl( release.getBuildAgentUrl() );
                     found = true;
@@ -568,22 +653,41 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    private void removePrepareRelease( String releaseId )
-        throws ContinuumReleaseException
+    private void addReleaseInProgress( String releaseId, String releaseType, int projectId )
     {
-        List<PreparedRelease> preparedReleases = getPreparedReleases();
+        if ( releasesInProgress == null )
+        {
+            releasesInProgress = new HashMap<String, Map>();
+        }
+
+        Map map = new HashMap();
+        map.put( DistributedReleaseUtil.KEY_RELEASE_GOAL, releaseType );
+        map.put( DistributedReleaseUtil.KEY_PROJECT_ID, projectId );
+
+        releasesInProgress.put( releaseId, map );
+    }
+
+    private void removeFromReleaseInProgress( String releaseId )
+    {
+        if ( releasesInProgress != null && releasesInProgress.containsKey( releaseId ) )
+        {
+            releasesInProgress.remove( releaseId );
+        }
     }
 
     private String getBuildAgentUrl( String releaseId )
         throws ContinuumReleaseException
     {
         List<PreparedRelease> preparedReleases = getPreparedReleases();
-        
-        for ( PreparedRelease preparedRelease : preparedReleases )
+
+        if ( preparedReleases != null )
         {
-            if ( preparedRelease.getReleaseId().equals( releaseId ) )
+            for ( PreparedRelease preparedRelease : preparedReleases )
             {
-                return preparedRelease.getBuildAgentUrl();
+                if ( preparedRelease.getReleaseId().equals( releaseId ) )
+                {
+                    return preparedRelease.getBuildAgentUrl();
+                }
             }
         }
 

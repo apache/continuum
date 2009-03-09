@@ -69,10 +69,13 @@ public interface ContinuumBuildAgentService
     void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
         throws ContinuumBuildAgentException;
 
-    void releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, String scmUsername, 
-                                String scmPassword, String scmTag, String scmTagBase, Map<String, String> environments )
+    String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, String scmUsername, 
+                                  String scmPassword, String scmTag, String scmTagBase, Map<String, String> environments )
         throws ContinuumBuildAgentException;
 
     String releaseCleanup( String releaseId )
+        throws ContinuumBuildAgentException;
+
+    void releaseRollback( String releaseId, int projectId )
         throws ContinuumBuildAgentException;
 }

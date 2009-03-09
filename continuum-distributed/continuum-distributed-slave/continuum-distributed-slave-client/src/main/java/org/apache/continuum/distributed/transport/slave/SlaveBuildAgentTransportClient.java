@@ -370,17 +370,16 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    public Boolean releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl,
+    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl,
                                           String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
         throws Exception
     {
-        Boolean result = null;
+        String result = null;
 
         try
         {
-            slave.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername, scmPassword, scmTag,
+            result = slave.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername, scmPassword, scmTag,
                                          scmTagBase, environments);
-            result = Boolean.FALSE;
             log.info( "Performing release" );
         }
         catch ( Exception e )
@@ -406,6 +405,26 @@ public class SlaveBuildAgentTransportClient
         {
             log.error( "Error cleaning up release of " + releaseId, e );
             throw new Exception( "Error cleaning up release of " + releaseId, e );
+        }
+
+        return result;
+    }
+
+    public Boolean releaseRollback( String releaseId, int projectId )
+        throws Exception
+    {
+        Boolean result = Boolean.FALSE;
+
+        try
+        {
+            slave.releaseRollback( releaseId, projectId );
+            result = Boolean.TRUE;
+            log.info( "Rollback release " + releaseId );
+        }
+        catch ( Exception e )
+        {
+            log.error( "Failed to rollback release " + releaseId );
+            throw new Exception( "Failed to rollback release " + releaseId );
         }
 
         return result;

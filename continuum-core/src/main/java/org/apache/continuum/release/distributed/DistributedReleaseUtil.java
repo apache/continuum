@@ -95,6 +95,10 @@ public class DistributedReleaseUtil
 
     public static final String KEY_LOCAL_REPOSITORY_LAYOUT = "repo-layout";
 
+    public static final String KEY_RELEASE_GOAL = "release-goal";
+
+    public static final String KEY_BUILD_AGENT_URL = "build-agent-url";
+
     public static String getScmTag( Map context, String defaultValue )
     {
         return getString( context, KEY_SCM_TAG, defaultValue );
@@ -183,6 +187,26 @@ public class DistributedReleaseUtil
     public static String getGoals( Map context, String defaultValue )
     {
         return getString( context, KEY_GOALS, defaultValue );
+    }
+
+    public static String getReleaseId( Map context )
+    {
+        return getString( context, KEY_RELEASE_ID );
+    }
+
+    public static String getReleaseGoal( Map context )
+    {
+        return getString( context, KEY_RELEASE_GOAL );
+    }
+
+    public static String getBuildAgentUrl( Map context )
+    {
+        return getString( context, KEY_BUILD_AGENT_URL );
+    }
+
+    public static int getProjectId( Map context )
+    {
+        return getInteger( context, KEY_PROJECT_ID );
     }
 
     // ----------------------------------------------------------------------

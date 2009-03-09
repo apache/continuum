@@ -577,6 +577,10 @@
         <param name="projectGroupId">${projectGroupId}</param>
       </result>
     </action>
+
+    <action name="viewReleases" class="distributedRelease" method="list">
+      <result name="success">/WEB-INF/jsp/releases.jsp</result>
+    </action>
   </package>
 
   <!--
