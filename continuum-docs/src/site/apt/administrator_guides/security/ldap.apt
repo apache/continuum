@@ -26,7 +26,6 @@ LDAP Configuration
 user.manager.impl=ldap
 ldap.bind.authenticator.enabled=true
 redback.default.admin=adminuser
-redback.default.guest=guestuser
 security.policy.password.expiration.enabled=false
 user.manager.impl=cached
 ldap.bind.authenticator.enabled=true
