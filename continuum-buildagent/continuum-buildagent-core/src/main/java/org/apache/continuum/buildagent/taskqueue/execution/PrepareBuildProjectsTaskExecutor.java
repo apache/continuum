@@ -93,10 +93,10 @@ public class PrepareBuildProjectsTaskExecutor
 
                     log.info( "Starting prepare build" );
                     startPrepareBuild( buildContext );
-                    
+
                     log.info( "Initializing prepare build" );
                     initializeActionContext( buildContext );
-                    
+
                     try
                     {
                         if ( buildDef.isBuildFresh() )
@@ -104,7 +104,7 @@ public class PrepareBuildProjectsTaskExecutor
                             log.info( "Clean up working directory" );
                             cleanWorkingDirectory( buildContext );
                         }
-            
+
                         log.info( "Updating working directory" );
                         updateWorkingDirectory( buildContext );
 
@@ -142,11 +142,12 @@ public class PrepareBuildProjectsTaskExecutor
         throws TaskExecutionException
     {
         Map<String, Object> actionContext = buildContext.getActionContext();
-        
-        if ( actionContext == null || !( ContinuumBuildAgentUtil.getScmRootState( actionContext ) == ContinuumProjectState.UPDATING ) ) 
+
+        if ( actionContext == null ||
+            !( ContinuumBuildAgentUtil.getScmRootState( actionContext ) == ContinuumProjectState.UPDATING ) )
         {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( buildContext.getProjectGroupId() ) );
+            map.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, buildContext.getProjectGroupId() );
             map.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, buildContext.getScmRootAddress() );
 
             try
@@ -159,97 +160,96 @@ public class PrepareBuildProjectsTaskExecutor
             }
         }
     }
-    
+
     private void initializeActionContext( BuildContext buildContext )
     {
         Map<String, Object> actionContext = new HashMap<String, Object>();
-    
+
         actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, buildContext.getProjectId() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT, BuildContextToProject.getProject( buildContext ) );
-        actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION, BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION,
+                           BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE, ContinuumProjectState.UPDATING );
         actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, buildContext.getProjectGroupId() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, buildContext.getScmRootAddress() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_OLD_SCM_RESULT, buildContext.getOldScmResult() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, buildContext.getLatestUpdateDate() );
-    
+
         buildContext.setActionContext( actionContext );
     }
-    
+
     private boolean checkProjectScmRoot( Map context )
     {
-        if ( context != null && ContinuumBuildAgentUtil.getScmRootState( context ) == ContinuumProjectState.ERROR )
-        {
-            return false;
-        }
-    
-        return true;
+        return !( context != null &&
+            ContinuumBuildAgentUtil.getScmRootState( context ) == ContinuumProjectState.ERROR );
+
     }
-    
+
     private void cleanWorkingDirectory( BuildContext buildContext )
         throws TaskExecutionException
     {
         performAction( "clean-agent-working-directory", buildContext );
     }
-    
+
     private void updateWorkingDirectory( BuildContext buildContext )
         throws TaskExecutionException
     {
         Map<String, Object> actionContext = buildContext.getActionContext();
-    
+
         performAction( "check-agent-working-directory", buildContext );
-        
+
         boolean workingDirectoryExists =
             ContinuumBuildAgentUtil.getBoolean( actionContext, ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY_EXISTS );
-    
+
         ScmResult scmResult;
-    
-        Date date = null;
-    
+
+        Date date;
+
         if ( workingDirectoryExists )
         {
             performAction( "update-agent-working-directory", buildContext );
-    
+
             scmResult = ContinuumBuildAgentUtil.getUpdateScmResult( actionContext, null );
-    
+
             date = ContinuumBuildAgentUtil.getLatestUpdateDate( actionContext );
-    
+
             if ( date == null )
             {
                 // try to get latest update date from change log because sometimes date in the changefile is 0
                 performAction( "changelog-agent-project", buildContext );
-    
+
                 date = ContinuumBuildAgentUtil.getLatestUpdateDate( actionContext );
             }
         }
         else
         {
             Project project = ContinuumBuildAgentUtil.getProject( actionContext );
-    
+
             actionContext.put( ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY,
-                               buildAgentConfigurationService.getWorkingDirectory( project.getId() ).getAbsolutePath() );
-    
+                               buildAgentConfigurationService.getWorkingDirectory(
+                                   project.getId() ).getAbsolutePath() );
+
             performAction( "checkout-agent-project", buildContext );
-    
+
             scmResult = ContinuumBuildAgentUtil.getCheckoutScmResult( actionContext, null );
-    
+
             performAction( "changelog-agent-project", buildContext );
-    
+
             date = ContinuumBuildAgentUtil.getLatestUpdateDate( actionContext );
         }
-    
+
         buildContext.setScmResult( scmResult );
         buildContext.setLatestUpdateDate( date );
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, scmResult );
     }
-    
+
     private void endProjectPrepareBuild( BuildContext buildContext )
         throws TaskExecutionException
     {
         Map<String, Object> context = buildContext.getActionContext();
-    
+
         ScmResult scmResult = ContinuumBuildAgentUtil.getScmResult( context, null );
-    
+
         if ( scmResult == null || !scmResult.isSuccess() )
         {
             context.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE, ContinuumProjectState.ERROR );
@@ -259,21 +259,24 @@ public class PrepareBuildProjectsTaskExecutor
             buildContext.setScmResult( scmResult );
         }
     }
-    
+
     private void endPrepareBuild( Map context )
         throws TaskExecutionException
     {
         if ( context != null )
         {
             Map<String, Object> result = new HashMap<String, Object>();
-            result.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID, new Integer( ContinuumBuildAgentUtil.getProjectGroupId( context ) ) );
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS, ContinuumBuildAgentUtil.getScmRootAddress( context ) );
-            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE, new Integer( ContinuumBuildAgentUtil.getScmRootState( context ) ) );
-            
+            result.put( ContinuumBuildAgentUtil.KEY_PROJECT_GROUP_ID,
+                        ContinuumBuildAgentUtil.getProjectGroupId( context ) );
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_ADDRESS,
+                        ContinuumBuildAgentUtil.getScmRootAddress( context ) );
+            result.put( ContinuumBuildAgentUtil.KEY_SCM_ROOT_STATE,
+                        ContinuumBuildAgentUtil.getScmRootState( context ) );
+
             if ( ContinuumBuildAgentUtil.getScmRootState( context ) == ContinuumProjectState.ERROR )
             {
                 String error = convertScmResultToError( ContinuumBuildAgentUtil.getScmResult( context, null ) );
-                
+
                 if ( StringUtils.isEmpty( error ) )
                 {
                     result.put( ContinuumBuildAgentUtil.KEY_SCM_ERROR, "" );
@@ -349,7 +352,7 @@ public class PrepareBuildProjectsTaskExecutor
         throws TaskExecutionException
     {
         TaskExecutionException exception = null;
-    
+
         try
         {
             log.info( "Performing action " + actionName );
@@ -364,16 +367,16 @@ public class PrepareBuildProjectsTaskExecutor
         {
             exception = new TaskExecutionException( "Error executing action '" + actionName + "'", e );
         }
-        
+
         ScmResult result = new ScmResult();
-        
+
         result.setSuccess( false );
-        
+
         result.setException( ContinuumBuildAgentUtil.throwableToString( exception ) );
 
         buildContext.setScmResult( result );
         buildContext.getActionContext().put( ContinuumBuildAgentUtil.KEY_UPDATE_SCM_RESULT, result );
-        
+
         throw exception;
     }
 
@@ -413,7 +416,7 @@ public class PrepareBuildProjectsTaskExecutor
     {
         Map map = new HashMap();
         map.put( ContinuumBuildAgentUtil.KEY_BUILD_CONTEXTS, buildContexts );
-        
+
         BuildContext context = new BuildContext();
         context.setActionContext( map );
 

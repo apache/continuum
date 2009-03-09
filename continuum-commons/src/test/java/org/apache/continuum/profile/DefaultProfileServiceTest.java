@@ -168,7 +168,7 @@ public class DefaultProfileServiceTest
         defaultProfile.setName( name );
         try
         {
-            getted = getProfileService().addProfile( defaultProfile );
+            getProfileService().addProfile( defaultProfile );
             fail( "no AlreadyExistsProfileException with an already exist name " );
         }
         catch ( AlreadyExistsProfileException e )
@@ -274,7 +274,7 @@ public class DefaultProfileServiceTest
         Profile profile = getProfileService().getProfile( jdk1mvn205.getId() );
         getProfileService().setJdkInProfile( profile, jdk2 );
 
-        profile = getProfileService().getProfile( jdk1mvn205.getId() );
+        getProfileService().getProfile( jdk1mvn205.getId() );
         InstallationService installationService = (InstallationService) lookup( InstallationService.ROLE, "default" );
         installationService.delete( jdk2 );
     }

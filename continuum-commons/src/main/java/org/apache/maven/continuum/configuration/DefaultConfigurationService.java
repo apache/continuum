@@ -65,7 +65,7 @@ public class DefaultConfigurationService
 
     @Resource
     private SystemConfigurationDao systemConfigurationDao;
-        
+
     @Resource
     private BuildQueueService buildQueueService;
 
@@ -101,7 +101,7 @@ public class DefaultConfigurationService
     {
         this.scheduleDao = scheduleDao;
     }
-    
+
     public BuildQueueService getBuildQueueService()
     {
         return buildQueueService;
@@ -111,7 +111,7 @@ public class DefaultConfigurationService
     {
         this.buildQueueService = buildQueueService;
     }
-    
+
     public SystemConfigurationDao getSystemConfigurationDao()
     {
         return systemConfigurationDao;
@@ -168,7 +168,7 @@ public class DefaultConfigurationService
         generalConfiguration.setBaseUrl( url );
     }
 
-    /** 
+    /**
      * @see org.apache.maven.continuum.configuration.ConfigurationService#getBuildOutputDirectory()
      */
     public File getBuildOutputDirectory()
@@ -345,7 +345,7 @@ public class DefaultConfigurationService
                 {
                     agent.setDescription( buildAgent.getDescription() );
                     agent.setEnabled( buildAgent.isEnabled() );
-                    
+
                     return;
                 }
             }
@@ -413,7 +413,7 @@ public class DefaultConfigurationService
                 if ( groups.getName().equals( buildAgentGroup.getName() ) )
                 {
                     groups.setName( buildAgentGroup.getName() );
-                    groups.setBuildAgents( buildAgentGroup.getBuildAgents()  );
+                    groups.setBuildAgents( buildAgentGroup.getBuildAgents() );
 
                     return;
                 }
@@ -446,7 +446,7 @@ public class DefaultConfigurationService
                 }
             }
             generalConfiguration.setBuildAgentGroups( buildAgentGroupConfiguration );
-        }        
+        }
     }
 
     public void removeBuildAgent( BuildAgentGroupConfiguration buildAgentGroup, BuildAgentConfiguration buildAgent )
@@ -492,7 +492,7 @@ public class DefaultConfigurationService
         return null;
     }
 
-    public BuildAgentConfiguration getBuildAgent(String url)
+    public BuildAgentConfiguration getBuildAgent( String url )
     {
         List<BuildAgentConfiguration> buildAgents = generalConfiguration.getBuildAgents();
         if ( buildAgents == null )
@@ -502,7 +502,7 @@ public class DefaultConfigurationService
 
         for ( BuildAgentConfiguration agent : buildAgents )
         {
-            if ( agent.getUrl().equals(url ) )
+            if ( agent.getUrl().equals( url ) )
             {
                 return agent;
             }
@@ -584,9 +584,9 @@ public class DefaultConfigurationService
         {
             return null;
         }
-        
+
         File dir = new File( getReleaseOutputDirectory(), Integer.toString( projectGroupId ) );
-        
+
         try
         {
             dir = dir.getCanonicalFile();
@@ -594,7 +594,7 @@ public class DefaultConfigurationService
         catch ( IOException e )
         {
         }
-        
+
         return dir;
     }
 
@@ -607,7 +607,7 @@ public class DefaultConfigurationService
         {
             return null;
         }
-        
+
         if ( !dir.exists() && !dir.mkdirs() )
         {
             throw new ConfigurationException(
@@ -639,17 +639,17 @@ public class DefaultConfigurationService
             return null;
         }
     }
-    
+
     public int getNumberOfBuildsInParallel()
     {
         return generalConfiguration.getNumberOfBuildsInParallel();
     }
-    
+
     public void setNumberOfBuildsInParallel( int num )
     {
         generalConfiguration.setNumberOfBuildsInParallel( num );
     }
-    
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
@@ -663,7 +663,7 @@ public class DefaultConfigurationService
 
         File f = null;
 
-        if ( filename != null && filename.length() != 0 )
+        if ( filename.length() != 0 )
         {
             f = new File( filename );
 
@@ -675,7 +675,11 @@ public class DefaultConfigurationService
 
         try
         {
-            return f.getCanonicalFile();
+            if ( f != null )
+            {
+                return f.getCanonicalFile();
+            }
+            return null;
         }
         catch ( IOException e )
         {
@@ -740,7 +744,8 @@ public class DefaultConfigurationService
     }
 
     public Schedule getDefaultSchedule()
-        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException, BuildQueueServiceException
+        throws ContinuumStoreException, ConfigurationLoadingException, ContinuumConfigurationException,
+        BuildQueueServiceException
     {
         // Schedule
         Schedule defaultSchedule = scheduleDao.getScheduleByName( DEFAULT_SCHEDULE_NAME );
@@ -754,28 +759,29 @@ public class DefaultConfigurationService
 
         return defaultSchedule;
     }
-    
+
     public BuildQueue getDefaultBuildQueue()
         throws BuildQueueServiceException
-    {     
+    {
         BuildQueue defaultBuildQueue = buildQueueService.getBuildQueueByName( DEFAULT_BUILD_QUEUE_NAME );
-    
+
         if ( defaultBuildQueue == null )
         {
             defaultBuildQueue = createDefaultBuildQueue();
-            
+
             defaultBuildQueue = buildQueueService.addBuildQueue( defaultBuildQueue );
         }
-    
+
         return defaultBuildQueue;
     }
-    
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
     private Schedule createDefaultSchedule()
-        throws ConfigurationLoadingException, ContinuumConfigurationException, ContinuumStoreException, BuildQueueServiceException
+        throws ConfigurationLoadingException, ContinuumConfigurationException, ContinuumStoreException,
+        BuildQueueServiceException
     {
 
         log.info( "create Default Schedule" );
@@ -795,22 +801,22 @@ public class DefaultConfigurationService
         schedule.setCronExpression( systemConf.getDefaultScheduleCronExpression() );
 
         schedule.setActive( true );
-        
+
         BuildQueue buildQueue = getDefaultBuildQueue();
-        
+
         schedule.addBuildQueue( buildQueue );
 
         return schedule;
     }
-    
+
     private BuildQueue createDefaultBuildQueue()
     {
         log.info( "create Default Build Queue" );
-        
+
         BuildQueue buildQueue = new BuildQueue();
-        
-        buildQueue.setName( DEFAULT_BUILD_QUEUE_NAME );        
-        
+
+        buildQueue.setName( DEFAULT_BUILD_QUEUE_NAME );
+
         return buildQueue;
     }
 }

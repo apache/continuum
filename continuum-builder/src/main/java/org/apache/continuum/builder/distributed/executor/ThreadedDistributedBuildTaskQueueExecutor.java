@@ -51,13 +51,19 @@ public class ThreadedDistributedBuildTaskQueueExecutor
 
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
-    /** @requirement */
+    /**
+     * @requirement
+     */
     private TaskQueue queue;
 
-    /** @requirement */
+    /**
+     * @requirement
+     */
     private DistributedBuildTaskExecutor executor;
 
-    /** @configuration */
+    /**
+     * @configuration
+     */
     private String name;
 
     // ----------------------------------------------------------------------
@@ -91,8 +97,8 @@ public class ThreadedDistributedBuildTaskQueueExecutor
                 }
                 catch ( InterruptedException e )
                 {
-                    log.info( "Executor thread interrupted, command: "
-                        + ( command == SHUTDOWN ? "Shutdown" : command == CANCEL_TASK ? "Cancel task" : "Unknown" ) );
+                    log.info( "Executor thread interrupted, command: " +
+                        ( command == SHUTDOWN ? "Shutdown" : command == CANCEL_TASK ? "Cancel task" : "Unknown" ) );
                     continue;
                 }
 
@@ -212,8 +218,9 @@ public class ThreadedDistributedBuildTaskQueueExecutor
                 }
                 else
                 {
-                    log.warn( "Task not cancelled (Flags: done: " + future.isDone() + " cancelled: "
-                        + future.isCancelled() + ")" );
+                    log.warn(
+                        "Task not cancelled (Flags: done: " + future.isDone() + " cancelled: " + future.isCancelled() +
+                            ")" );
                 }
             }
             else

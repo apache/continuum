@@ -37,7 +37,7 @@ public class CheckWorkingDirectoryAction
      * @plexus.requirement
      */
     BuildAgentConfigurationService buildAgentConfigurationService;
-    
+
     public void execute( Map context )
         throws Exception
     {
@@ -54,7 +54,7 @@ public class CheckWorkingDirectoryAction
 
         File[] files = workingDirectory.listFiles();
 
-        context.put( ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY_EXISTS, Boolean.valueOf( files.length > 0 ) );
+        context.put( ContinuumBuildAgentUtil.KEY_WORKING_DIRECTORY_EXISTS, files.length > 0 );
     }
 
 }

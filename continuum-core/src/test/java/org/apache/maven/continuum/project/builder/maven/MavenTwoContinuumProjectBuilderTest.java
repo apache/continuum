@@ -36,8 +36,8 @@ import org.codehaus.plexus.util.StringUtils;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -277,7 +277,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, result.getErrors().size() );
 
-        assertEquals( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND, result.getErrors().get( 0 ).toString() );
+        assertEquals( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND, result.getErrors().get( 0 ) );
 
         // ----------------------------------------------------------------------
         // Assert the project group built
@@ -287,7 +287,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, result.getProjectGroups().size() );
 
-        ProjectGroup projectGroup = (ProjectGroup) result.getProjectGroups().iterator().next();
+        ProjectGroup projectGroup = result.getProjectGroups().iterator().next();
 
         assertEquals( "projectGroup.groupId", "org.apache.maven.continuum", projectGroup.getGroupId() );
 
@@ -305,12 +305,10 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 9, result.getProjects().size() );
 
-        Map projects = new HashMap();
+        Map<String, Project> projects = new HashMap<String, Project>();
 
-        for ( Iterator it = result.getProjects().iterator(); it.hasNext(); )
+        for ( Project project : result.getProjects() )
         {
-            Project project = (Project) it.next();
-
             assertNotNull( project.getName() );
 
             projects.put( project.getName(), project );
@@ -329,10 +327,10 @@ public class MavenTwoContinuumProjectBuilderTest
         assertMavenTwoProject( "Continuum Jabber Notifier", projects );
 
         assertEquals( "continuum-parent-notifiers",
-                      ( (Project) projects.get( "Continuum IRC Notifier" ) ).getParent().getArtifactId() );
+                      ( projects.get( "Continuum IRC Notifier" ) ).getParent().getArtifactId() );
 
         assertEquals( "continuum-parent-notifiers",
-                      ( (Project) projects.get( "Continuum Jabber Notifier" ) ).getParent().getArtifactId() );
+                      ( projects.get( "Continuum Jabber Notifier" ) ).getParent().getArtifactId() );
 
         assertDependency( "Continuum Model", "Continuum Web", projects );
     }
@@ -390,7 +388,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, result.getProjectGroups().size() );
 
-        ProjectGroup projectGroup = (ProjectGroup) result.getProjectGroups().get( 0 );
+        ProjectGroup projectGroup = result.getProjectGroups().get( 0 );
 
         assertEquals( "projectGroup.groupId", "org.apache.maven.continuum", projectGroup.getGroupId() );
 
@@ -417,10 +415,8 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertNotNull( p.getDependencies() );
 
-        for ( Iterator i = p.getDependencies().iterator(); i.hasNext(); )
+        for ( ProjectDependency pd : (List<ProjectDependency>) p.getDependencies() )
         {
-            ProjectDependency pd = (ProjectDependency) i.next();
-
             if ( pd.getArtifactId().equals( dependency.getArtifactId() ) &&
                 pd.getGroupId().equals( dependency.getGroupId() ) && pd.getVersion().equals( dependency.getVersion() ) )
             {

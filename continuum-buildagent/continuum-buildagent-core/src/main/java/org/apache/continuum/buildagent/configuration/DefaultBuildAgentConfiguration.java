@@ -84,19 +84,21 @@ public class DefaultBuildAgentConfiguration
     {
         try
         {
-            ContinuumBuildAgentConfigurationModelXpp3Reader configurationXpp3Reader = 
+            ContinuumBuildAgentConfigurationModelXpp3Reader configurationXpp3Reader =
                 new ContinuumBuildAgentConfigurationModelXpp3Reader();
-            ContinuumBuildAgentConfigurationModel configuration = configurationXpp3Reader
-                .read( new InputStreamReader( new FileInputStream( file ) ) );
+            ContinuumBuildAgentConfigurationModel configuration =
+                configurationXpp3Reader.read( new InputStreamReader( new FileInputStream( file ) ) );
 
             this.generalBuildAgentConfiguration = new GeneralBuildAgentConfiguration();
             if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
             {
-                this.generalBuildAgentConfiguration.setBuildOutputDirectory( new File( configuration.getBuildOutputDirectory() ) );
+                this.generalBuildAgentConfiguration.setBuildOutputDirectory(
+                    new File( configuration.getBuildOutputDirectory() ) );
             }
             if ( StringUtils.isNotEmpty( configuration.getWorkingDirectory() ) )
             {
-                this.generalBuildAgentConfiguration.setWorkingDirectory( new File( configuration.getWorkingDirectory() ) );
+                this.generalBuildAgentConfiguration.setWorkingDirectory(
+                    new File( configuration.getWorkingDirectory() ) );
             }
             this.generalBuildAgentConfiguration.setContinuumServerUrl( configuration.getContinuumServerUrl() );
             this.generalBuildAgentConfiguration.setInstallations( configuration.getInstallations() );
@@ -118,7 +120,7 @@ public class DefaultBuildAgentConfiguration
     {
         if ( !configurationFile.exists() )
         {
-            configurationFile.getParentFile().mkdir();
+            configurationFile.getParentFile().mkdirs();
         }
         save( configurationFile );
     }
@@ -131,16 +133,19 @@ public class DefaultBuildAgentConfiguration
             ContinuumBuildAgentConfigurationModel configurationModel = new ContinuumBuildAgentConfigurationModel();
             if ( this.generalBuildAgentConfiguration.getBuildOutputDirectory() != null )
             {
-                configurationModel.setBuildOutputDirectory( this.generalBuildAgentConfiguration.getBuildOutputDirectory().getPath() );
+                configurationModel.setBuildOutputDirectory(
+                    this.generalBuildAgentConfiguration.getBuildOutputDirectory().getPath() );
             }
             if ( this.generalBuildAgentConfiguration.getWorkingDirectory() != null )
             {
-                configurationModel.setWorkingDirectory( this.generalBuildAgentConfiguration.getWorkingDirectory().getPath() );
+                configurationModel.setWorkingDirectory(
+                    this.generalBuildAgentConfiguration.getWorkingDirectory().getPath() );
             }
             configurationModel.setContinuumServerUrl( this.generalBuildAgentConfiguration.getContinuumServerUrl() );
             configurationModel.setInstallations( this.generalBuildAgentConfiguration.getInstallations() );
 
-            ContinuumBuildAgentConfigurationModelXpp3Writer writer = new ContinuumBuildAgentConfigurationModelXpp3Writer();
+            ContinuumBuildAgentConfigurationModelXpp3Writer writer =
+                new ContinuumBuildAgentConfigurationModelXpp3Writer();
             FileWriter fileWriter = new FileWriter( file );
             writer.write( fileWriter, configurationModel );
         }

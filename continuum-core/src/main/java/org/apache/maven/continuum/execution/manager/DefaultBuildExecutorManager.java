@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -64,9 +63,9 @@ public class DefaultBuildExecutorManager
         {
             log.info( "Build executors:" );
 
-            for ( Iterator it = executors.keySet().iterator(); it.hasNext(); )
+            for ( String key : executors.keySet() )
             {
-                log.info( "  " + it.next().toString() );
+                log.info( "  " + key );
             }
         }
     }

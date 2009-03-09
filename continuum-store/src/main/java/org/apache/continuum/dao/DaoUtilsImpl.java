@@ -160,7 +160,7 @@ public class DaoUtilsImpl
         Map<Integer, Integer> projectSource = getProjectIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
         Map<Integer, Integer> projectGroupSource = getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
 
-        Map aggregate = new HashMap();
+        Map<Integer, Integer> aggregate = new HashMap<Integer, Integer>();
 
         // start out by checking if we have projects with this scheduleId
         if ( projectSource != null )
@@ -176,11 +176,11 @@ public class DaoUtilsImpl
             for ( Iterator i = projectGroupSource.keySet().iterator(); i.hasNext(); )
             {
                 Integer projectGroupId = (Integer) i.next();
-                List projectsInGroup = projectDao.getProjectsInGroup( projectGroupId.intValue() );
+                List projectsInGroup = projectDao.getProjectsInGroup( projectGroupId );
 
                 for ( Iterator j = projectsInGroup.iterator(); j.hasNext(); )
                 {
-                    Integer projectId = new Integer( ( (Project) j.next() ).getId() );
+                    Integer projectId = ( (Project) j.next() ).getId();
                     if ( !aggregate.keySet().contains( projectId ) )
                     {
                         aggregate.put( projectId, projectGroupSource.get( projectGroupId ) );
@@ -222,7 +222,7 @@ public class DaoUtilsImpl
 
             query.setResult( "this.id, buildDef.id" );
 
-            List result = (List) query.execute( new Integer( scheduleId ) );
+            List result = (List) query.execute( scheduleId );
 
             Map projects = new HashMap();
 
@@ -333,5 +333,4 @@ public class DaoUtilsImpl
         }
         return null;
     }
-
 }

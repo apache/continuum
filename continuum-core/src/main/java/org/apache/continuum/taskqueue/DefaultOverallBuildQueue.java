@@ -41,26 +41,26 @@ import org.slf4j.LoggerFactory;
 
 /**
  * "Overall" build queue which has a checkout queue and a build queue.
- * 
+ *
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  * @version $Id$
  */
-public class DefaultOverallBuildQueue   
+public class DefaultOverallBuildQueue
     implements OverallBuildQueue
 {
     @Resource
     private BuildDefinitionDao buildDefinitionDao;
-    
+
     private TaskQueueExecutor buildTaskQueueExecutor;
-    
+
     private TaskQueueExecutor checkoutTaskQueueExecutor;
 
     private int id;
 
     private String name;
-    
+
     private Logger log = LoggerFactory.getLogger( DefaultOverallBuildQueue.class );
-    
+
     public int getId()
     {
         return id;
@@ -175,11 +175,7 @@ public class DefaultOverallBuildQueue
                 }
             }
         }
-        if ( !tasks.isEmpty() )
-        {
-            return getCheckoutQueue().removeAll( tasks );
-        }
-        return false;
+        return !tasks.isEmpty() && getCheckoutQueue().removeAll( tasks );
     }
 
     /**
@@ -244,7 +240,7 @@ public class DefaultOverallBuildQueue
     public boolean isInBuildQueue( int projectId, int buildDefinitionId )
         throws TaskQueueException
     {
-        List<Task> queue = getProjectsInBuildQueue();        
+        List<Task> queue = getProjectsInBuildQueue();
         for ( Task task : queue )
         {
             BuildProjectTask buildTask = (BuildProjectTask) task;
@@ -259,7 +255,8 @@ public class DefaultOverallBuildQueue
                 }
                 else
                 {
-                    if ( buildTask.getProjectId() == projectId && buildTask.getBuildDefinitionId() == buildDefinitionId )
+                    if ( buildTask.getProjectId() == projectId &&
+                        buildTask.getBuildDefinitionId() == buildDefinitionId )
                     {
                         return true;
                     }
@@ -275,14 +272,14 @@ public class DefaultOverallBuildQueue
     public void cancelBuildTask( int projectId )
     {
         BuildProjectTask task = (BuildProjectTask) buildTaskQueueExecutor.getCurrentTask();
-        if( task != null && task.getProjectId() == projectId )
+        if ( task != null && task.getProjectId() == projectId )
         {
-            log.info( "Cancelling build task for project '" + projectId + "' in task executor '" +
-                                 buildTaskQueueExecutor );
+            log.info(
+                "Cancelling build task for project '" + projectId + "' in task executor '" + buildTaskQueueExecutor );
             buildTaskQueueExecutor.cancelTask( task );
-        }        
+        }
     }
-    
+
     /**
      * @see OverallBuildQueue#cancelCheckoutTask(int)
      */
@@ -290,12 +287,12 @@ public class DefaultOverallBuildQueue
         throws TaskQueueException
     {
         CheckOutTask task = (CheckOutTask) checkoutTaskQueueExecutor.getCurrentTask();
-        if( task != null && task.getProjectId() == projectId )
+        if ( task != null && task.getProjectId() == projectId )
         {
             log.info( "Cancelling checkout task for project '" + projectId + "' in task executor '" +
-                                 checkoutTaskQueueExecutor );
-            checkoutTaskQueueExecutor.cancelTask( task );            
-        }    
+                checkoutTaskQueueExecutor );
+            checkoutTaskQueueExecutor.cancelTask( task );
+        }
     }
 
     /**
@@ -304,26 +301,26 @@ public class DefaultOverallBuildQueue
     public boolean cancelCurrentBuild()
     {
         Task task = buildTaskQueueExecutor.getCurrentTask();
-        if( task != null )
+        if ( task != null )
         {
             return buildTaskQueueExecutor.cancelTask( task );
         }
-        
+
         log.info( "No build task currently executing on build executor: " + buildTaskQueueExecutor );
         return false;
     }
-    
+
     /**
      * @see OverallBuildQueue#cancelCurrentCheckout()
      */
     public boolean cancelCurrentCheckout()
     {
         Task task = checkoutTaskQueueExecutor.getCurrentTask();
-        if( task != null )
+        if ( task != null )
         {
             return checkoutTaskQueueExecutor.cancelTask( task );
         }
-        
+
         log.info( "No checkout task currently executing on checkout task executor: " + checkoutTaskQueueExecutor );
         return false;
     }
@@ -392,12 +389,8 @@ public class DefaultOverallBuildQueue
         {
             log.info( "cancel build for project " + buildProjectTask.getProjectId() );
         }
-        if ( !tasks.isEmpty() )
-        {
-            return getBuildQueue().removeAll( tasks );
-        }
 
-        return false;
+        return !tasks.isEmpty() && getBuildQueue().removeAll( tasks );
     }
 
     /**
@@ -435,12 +428,12 @@ public class DefaultOverallBuildQueue
         }
     }
 
-    /** 
+    /**
      * @see OverallBuildQueue#getCheckoutQueue()
      */
     public TaskQueue getCheckoutQueue()
     {
-        return ( ( ParallelBuildsThreadedTaskQueueExecutor ) checkoutTaskQueueExecutor ).getQueue();
+        return ( (ParallelBuildsThreadedTaskQueueExecutor) checkoutTaskQueueExecutor ).getQueue();
     }
 
     /**
@@ -448,7 +441,7 @@ public class DefaultOverallBuildQueue
      */
     public TaskQueue getBuildQueue()
     {
-        return ( ( ParallelBuildsThreadedTaskQueueExecutor ) buildTaskQueueExecutor ).getQueue();
+        return ( (ParallelBuildsThreadedTaskQueueExecutor) buildTaskQueueExecutor ).getQueue();
     }
 
     /**

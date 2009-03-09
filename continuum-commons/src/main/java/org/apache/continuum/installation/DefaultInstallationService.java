@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -56,9 +55,8 @@ import org.springframework.stereotype.Service;
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
  * @version $Id$
- * TODO use some cache mechanism to prevent always reading from store ?
+ *          TODO use some cache mechanism to prevent always reading from store ?
  * @since 13 juin 07
- * 
  */
 @Service("installationService")
 public class DefaultInstallationService
@@ -90,8 +88,8 @@ public class DefaultInstallationService
                               new ExecutorConfigurator( "java", "bin", "JAVA_HOME", "-version" ) );
         this.typesValues.put( InstallationService.MAVEN1_TYPE,
                               new ExecutorConfigurator( "maven", "bin", "MAVEN_HOME", "-v" ) );
-        this.typesValues
-            .put( InstallationService.MAVEN2_TYPE, new ExecutorConfigurator( "mvn", "bin", "M2_HOME", "-v" ) );
+        this.typesValues.put( InstallationService.MAVEN2_TYPE,
+                              new ExecutorConfigurator( "mvn", "bin", "M2_HOME", "-v" ) );
     }
 
     /**
@@ -120,7 +118,7 @@ public class DefaultInstallationService
                 "Installation with name " + installation.getName() + " already exists" );
         }
         // TODO must be done in the same transaction
-        Installation storedOne = null;
+        Installation storedOne;
         try
         {
             String envVarName = this.getEnvVar( installation.getType() );
@@ -402,15 +400,14 @@ public class DefaultInstallationService
             if ( StringUtils.isNotEmpty( path ) )
             {
                 executable.append( path ).append( File.separator );
-                executable.append( executorConfigurator.getRelativePath() + File.separator );
+                executable.append( executorConfigurator.getRelativePath() ).append( File.separator );
                 commandline.addEnvironment( executorConfigurator.getEnvVar(), path );
             }
             //Installations are env var they must be add if exists
             Map<String, String> environments = getEnvVars( profile );
             // no null check we use a private method just here
-            for ( Iterator<String> iterator = environments.keySet().iterator(); iterator.hasNext(); )
+            for ( String key : environments.keySet() )
             {
-                String key = iterator.next();
                 String value = environments.get( key );
                 commandline.addEnvironment( key, value );
             }
@@ -441,8 +438,7 @@ public class DefaultInstallationService
         }
         catch ( CommandLineException e )
         {
-            log.error(
-                "fail to execute " + executable + " with arg " + executorConfigurator.getVersionArgument() );
+            log.error( "fail to execute " + executable + " with arg " + executorConfigurator.getVersionArgument() );
             throw new InstallationException( e.getMessage(), e );
         }
     }

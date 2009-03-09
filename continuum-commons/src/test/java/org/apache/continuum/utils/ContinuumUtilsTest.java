@@ -19,8 +19,6 @@ package org.apache.continuum.utils;
  * under the License.
  */
 
-import org.apache.continuum.utils.ContinuumUtils;
-
 import junit.framework.TestCase;
 
 /**
