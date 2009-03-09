@@ -290,25 +290,20 @@ public class SlaveBuildAgentTransportServer
         return result;
     }
 
-    public Boolean releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl,
-                                          String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl,
+                                         String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
         throws Exception
     {
-        Boolean result = Boolean.FALSE;
-    
         try
         {
-            continuumBuildAgentService.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername,
-                                                              scmPassword, scmTag, scmTagBase, environments );
-            result = Boolean.TRUE;
+            return continuumBuildAgentService.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername,
+                                                                     scmPassword, scmTag, scmTagBase, environments );
         }
         catch ( ContinuumBuildAgentException e )
         {
             log.error( "Unable to perform release", e );
             throw e;
         }
-    
-        return result;
     }
 
     public String releaseCleanup( String releaseId )
@@ -323,5 +318,24 @@ public class SlaveBuildAgentTransportServer
             log.error( "Unable to cleanup release of " + releaseId, e );
             throw e;
         }
+    }
+
+    public Boolean releaseRollback( String releaseId, int projectId )
+        throws Exception
+    {
+        Boolean result = Boolean.FALSE;
+
+        try
+        {
+            continuumBuildAgentService.releaseRollback( releaseId, projectId );
+            result = Boolean.TRUE;
+        }
+        catch ( ContinuumBuildAgentException e )
+        {
+            log.error( "Failed to rollback release " + releaseId, e );
+            throw e;
+        }
+
+        return result;
     }
 }

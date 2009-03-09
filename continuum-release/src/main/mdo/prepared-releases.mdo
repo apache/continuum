@@ -51,7 +51,14 @@
           <name>releaseId</name>
           <version>1.0.0</version>
           <required>true</required>
-          <description>release</description>
+          <description>release id</description>
+          <type>String</type>
+        </field>
+        <field>
+          <name>releaseName</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <description>prepared release name</description>
           <type>String</type>
         </field>
         <field>

@@ -208,7 +208,7 @@ public class ReleasePerformAction
         {
             DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-            releaseManager.releasePerform( releaseId, goals, arguments, useReleaseProfile, repository );
+            releaseManager.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repository );
         }
         else
         {

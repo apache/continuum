@@ -522,15 +522,15 @@ public class ContinuumBuildAgentServiceImpl
         }
     }
 
-    public void releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, 
-                                       String scmUsername, String scmPassword, String scmTag, String scmTagBase, 
-                                       Map<String, String> environments )
+    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, 
+                                         String scmUsername, String scmPassword, String scmTag, String scmTagBase, 
+                                         Map<String, String> environments )
         throws ContinuumBuildAgentException
     {
         try
         {
-            buildAgentReleaseManager.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername, 
-                                                            scmPassword, scmTag, scmTagBase, environments );
+            return buildAgentReleaseManager.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, 
+                                                                   scmUsername, scmPassword, scmTag, scmTagBase, environments );
         }
         catch ( ContinuumReleaseException e )
         {
@@ -542,6 +542,19 @@ public class ContinuumBuildAgentServiceImpl
         throws ContinuumBuildAgentException
     {
         return buildAgentReleaseManager.releaseCleanup( releaseId );
+    }
+
+    public void releaseRollback( String releaseId, int projectId )
+        throws ContinuumBuildAgentException
+    {
+        try
+        {
+            buildAgentReleaseManager.releaseRollback( releaseId, projectId );
+        }
+        catch ( ContinuumReleaseException e )
+        {
+            throw new ContinuumBuildAgentException( "Unable to rollback release " + releaseId, e );
+        }
     }
 
     private void processProject( String workingDirectory, String pomFilename, boolean autoVersionSubmodules, List<Map<String, String>> projects )

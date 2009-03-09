@@ -42,9 +42,12 @@ public interface BuildAgentReleaseManager
     void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
         throws ContinuumReleaseException;
 
-    void releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, String scmUsername, 
+    String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, String scmUsername, 
                                 String scmPassword, String scmTag, String scmTagBase, Map<String, String> environments )
         throws ContinuumReleaseException;
 
     String releaseCleanup( String releaseId );
+
+    void releaseRollback( String releaseId, int projectId )
+        throws ContinuumReleaseException;
 }

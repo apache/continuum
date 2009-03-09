@@ -52,7 +52,7 @@ public interface DistributedReleaseManager
     String getPreparedReleaseName( String releaseId )
         throws ContinuumReleaseException;
 
-    void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository )
+    void releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository )
         throws ContinuumReleaseException;
 
     void releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, 
@@ -63,5 +63,8 @@ public interface DistributedReleaseManager
         throws ContinuumReleaseException;
 
     String releaseCleanup( String releaseId )
+        throws ContinuumReleaseException;
+
+    List<Map> getAllReleasesInProgress()
         throws ContinuumReleaseException;
 }

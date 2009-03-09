@@ -571,5 +571,35 @@
         </field>
       </fields>
     </class>
+    <class>
+      <name>DistributedReleaseSummary</name>
+      <version>1.0.0+</version>
+      <fields>
+        <field>
+          <name>releaseId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>releaseGoal</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>buildAgentUrl</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>String</type>
+        </field>
+        <field>
+          <name>projectId</name>
+          <version>1.0.0</version>
+          <required>true</required>
+          <type>int</type>
+        </field>
+      </fields>
+    </class>
   </classes>
 </model>

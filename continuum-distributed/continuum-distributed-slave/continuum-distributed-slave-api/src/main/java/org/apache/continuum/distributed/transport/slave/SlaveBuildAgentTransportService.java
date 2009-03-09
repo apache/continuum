@@ -72,10 +72,13 @@ public interface SlaveBuildAgentTransportService
     public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
         throws Exception;
 
-    public Boolean releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, 
-                                          String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, 
+                                         String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
         throws Exception;
 
     public String releaseCleanup( String releaseId )
+        throws Exception;
+
+    public Boolean releaseRollback( String releaseId, int projectId )
         throws Exception;
 }
