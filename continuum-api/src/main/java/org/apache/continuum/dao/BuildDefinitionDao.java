@@ -48,7 +48,13 @@ public interface BuildDefinitionDao
     List<BuildDefinition> getAllBuildDefinitions()
         throws ContinuumStoreException;
 
-    Map getDefaultBuildDefinitions();
+    /**
+     * Returns the default build definition of all projects. The key is the project id and the value is the build
+     * definition id.
+     *
+     * @return a map of all default build definitions
+     */
+    Map<Integer, Integer> getDefaultBuildDefinitions();
 
     /**
      * returns the default build definitions for the project group and there

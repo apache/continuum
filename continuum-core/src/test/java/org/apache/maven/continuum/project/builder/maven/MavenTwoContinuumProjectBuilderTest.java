@@ -80,7 +80,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, result.getProjects().size() );
 
-        Project project = (Project) result.getProjects().get( 0 );
+        Project project = result.getProjects().get( 0 );
 
         assertNotNull( project );
 
@@ -94,7 +94,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( "foo@bar", notifier.getConfiguration().get( "address" ) );
 
-        ProjectGroup pg = (ProjectGroup) result.getProjectGroups().get( 0 );
+        ProjectGroup pg = result.getProjectGroups().get( 0 );
 
         assertNotNull( pg );
 
@@ -121,7 +121,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, result.getProjects().size() );
 
-        Project project = (Project) result.getProjects().get( 0 );
+        Project project = result.getProjects().get( 0 );
 
         assertNotNull( project );
 
@@ -135,7 +135,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( "foo@bar", notifier.getConfiguration().get( "address" ) );
 
-        ProjectGroup pg = (ProjectGroup) result.getProjectGroups().get( 0 );
+        ProjectGroup pg = result.getProjectGroups().get( 0 );
 
         assertNotNull( pg );
 
@@ -162,7 +162,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, result.getProjects().size() );
 
-        ProjectGroup pg = (ProjectGroup) result.getProjectGroups().get( 0 );
+        ProjectGroup pg = result.getProjectGroups().get( 0 );
 
         assertNotNull( pg );
 
@@ -170,7 +170,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         String scmUrl = "scm:cvs:ext:${user.name}@company.org:/home/company/cvs:project/foo";
 
-        Project project = (Project) result.getProjects().get( 0 );
+        Project project = result.getProjects().get( 0 );
 
         scmUrl = StringUtils.replace( scmUrl, "${user.name}", username );
 
@@ -197,7 +197,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, result.getErrors().size() );
 
-        assertEquals( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND, result.getErrors().get( 0 ).toString() );
+        assertEquals( ContinuumProjectBuildingResult.ERROR_POM_NOT_FOUND, result.getErrors().get( 0 ) );
 
         // ----------------------------------------------------------------------
         // Assert the project group built
@@ -207,7 +207,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 1, result.getProjectGroups().size() );
 
-        ProjectGroup projectGroup = (ProjectGroup) result.getProjectGroups().iterator().next();
+        ProjectGroup projectGroup = result.getProjectGroups().iterator().next();
 
         assertEquals( "projectGroup.groupId", "org.apache.maven.continuum", projectGroup.getGroupId() );
 
@@ -225,12 +225,10 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 9, result.getProjects().size() );
 
-        Map projects = new HashMap();
+        Map<String, Project> projects = new HashMap<String, Project>();
 
-        for ( Iterator it = result.getProjects().iterator(); it.hasNext(); )
+        for ( Project project : result.getProjects() )
         {
-            Project project = (Project) it.next();
-
             assertNotNull( project.getName() );
 
             assertNotNull( project.getDescription() );
@@ -251,10 +249,10 @@ public class MavenTwoContinuumProjectBuilderTest
         assertMavenTwoProject( "Continuum Jabber Notifier", projects );
 
         assertEquals( "continuum-parent-notifiers",
-                      ( (Project) projects.get( "Continuum IRC Notifier" ) ).getParent().getArtifactId() );
+                      ( projects.get( "Continuum IRC Notifier" ) ).getParent().getArtifactId() );
 
         assertEquals( "continuum-parent-notifiers",
-                      ( (Project) projects.get( "Continuum Jabber Notifier" ) ).getParent().getArtifactId() );
+                      ( projects.get( "Continuum Jabber Notifier" ) ).getParent().getArtifactId() );
 
         assertDependency( "Continuum Model", "Continuum Web", projects );
     }

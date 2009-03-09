@@ -154,11 +154,11 @@ public class DaoUtilsImpl
      *
      * @todo Move to a better place
      */
-    public Map getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+    public Map<Integer, Integer> getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
         throws ContinuumStoreException
     {
-        Map projectSource = getProjectIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
-        Map projectGroupSource = getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
+        Map<Integer, Integer> projectSource = getProjectIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
+        Map<Integer, Integer> projectGroupSource = getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
 
         Map aggregate = new HashMap();
 
@@ -197,7 +197,7 @@ public class DaoUtilsImpl
      * @throws ContinuumStoreException
      * @todo Move to a better place
      */
-    public Map getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    public Map<Integer, Integer> getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -271,7 +271,7 @@ public class DaoUtilsImpl
      * @throws ContinuumStoreException
      * @todo Move to a better place
      */
-    public Map getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    public Map<Integer, Integer> getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();

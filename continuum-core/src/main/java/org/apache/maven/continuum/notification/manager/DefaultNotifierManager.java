@@ -18,12 +18,12 @@ public class DefaultNotifierManager
         return notifiers.get( notifierId );
     }
 
-    public Map getNotifiers()
+    public Map<String, Notifier> getNotifiers()
     {
         return notifiers;
     }
 
-    public void setNotifiers( Map notifiers )
+    public void setNotifiers( Map<String, Notifier> notifiers )
     {
         this.notifiers = notifiers;
     }
