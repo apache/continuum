@@ -21,7 +21,6 @@ package org.apache.continuum.dao;
 
 import org.apache.maven.continuum.store.ContinuumStoreException;
 
-import javax.jdo.PersistenceManagerFactory;
 import java.util.Map;
 
 /**

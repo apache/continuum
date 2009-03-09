@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultTaskQueueManager
     implements TaskQueueManager, Contextualizable
 {
-	private Logger log = LoggerFactory.getLogger( DefaultTaskQueueManager.class );
+    private Logger log = LoggerFactory.getLogger( DefaultTaskQueueManager.class );
 
     /**
      * @plexus.requirement role-hint="distributed-build-project"
@@ -74,12 +74,12 @@ public class DefaultTaskQueueManager
      * @plexus.requirement role-hint="prepare-release"
      */
     private TaskQueue prepareReleaseQueue;
-    
+
     /**
      * @plexus.requirement role-hint="perform-release"
      */
     private TaskQueue performReleaseQueue;
-    
+
     /**
      * @plexus.requirement
      */
@@ -89,12 +89,12 @@ public class DefaultTaskQueueManager
      * @plexus.requirement
      */
     private PurgeConfigurationService purgeConfigurationService;
-    
+
     /**
-     * @plexus.requirement role-hint="parallel" 
+     * @plexus.requirement role-hint="parallel"
      */
     private BuildsManager buildsManager;
-    
+
     private PlexusContainer container;
 
     public TaskQueue getDistributedBuildQueue()
@@ -131,7 +131,8 @@ public class DefaultTaskQueueManager
             {
                 if ( task != null )
                 {
-                    if ( task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
+                    if ( task.getProjectGroupId() == projectGroupId &&
+                        task.getScmRootAddress().equals( scmRootAddress ) )
                     {
                         return true;
                     }
@@ -145,12 +146,12 @@ public class DefaultTaskQueueManager
             throw new TaskQueueManagerException( "Error while getting the tasks in distributed build queue", e );
         }
     }
-    
+
     public boolean isInPurgeQueue( int purgeConfigId )
         throws TaskQueueManagerException
     {
         List<PurgeTask> queue = getAllPurgeConfigurationsInPurgeQueue();
-    
+
         for ( PurgeTask task : queue )
         {
             if ( task != null && task.getPurgeConfigurationId() == purgeConfigId )
@@ -160,13 +161,13 @@ public class DefaultTaskQueueManager
         }
         return false;
     }
-    
+
     public boolean isRepositoryInPurgeQueue( int repositoryId )
         throws TaskQueueManagerException
     {
         List<RepositoryPurgeConfiguration> repoPurgeConfigs =
             purgeConfigurationService.getRepositoryPurgeConfigurationsByRepository( repositoryId );
-    
+
         for ( RepositoryPurgeConfiguration repoPurge : repoPurgeConfigs )
         {
             if ( isInPurgeQueue( repoPurge.getId() ) )
@@ -176,53 +177,53 @@ public class DefaultTaskQueueManager
         }
         return false;
     }
-    
+
     public boolean isRepositoryInUse( int repositoryId )
         throws TaskQueueManagerException
     {
-    	try
-    	{
-    		Map<String, Task> currentBuilds = buildsManager.getCurrentBuilds();
-    		Set<String> keys = currentBuilds.keySet();
-    		
-    		for( String key : keys )
-    		{
-    			Task task = currentBuilds.get( key );
-    			if ( task != null && task instanceof BuildProjectTask )
+        try
+        {
+            Map<String, Task> currentBuilds = buildsManager.getCurrentBuilds();
+            Set<String> keys = currentBuilds.keySet();
+
+            for ( String key : keys )
+            {
+                Task task = currentBuilds.get( key );
+                if ( task != null && task instanceof BuildProjectTask )
                 {
                     int projectId = ( (BuildProjectTask) task ).getProjectId();
-        
+
                     Project project = projectDao.getProject( projectId );
                     LocalRepository repository = project.getProjectGroup().getLocalRepository();
-        
+
                     if ( repository != null && repository.getId() == repositoryId )
                     {
                         return true;
                     }
                 }
-    		}
+            }
 
             return false;
-    	}
-    	catch ( BuildManagerException e )
-    	{
-    		log.error( "Error occured while getting current builds: " + e.getMessage() );
-    		throw new TaskQueueManagerException( e.getMessage(), e );
-    	}
-    	catch ( ContinuumStoreException e )
-    	{
-    		log.error( "Error occured while getting project details: " + e.getMessage() );
-    		throw new TaskQueueManagerException( e.getMessage(), e );
-    	}
+        }
+        catch ( BuildManagerException e )
+        {
+            log.error( "Error occured while getting current builds: " + e.getMessage() );
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
+        catch ( ContinuumStoreException e )
+        {
+            log.error( "Error occured while getting project details: " + e.getMessage() );
+            throw new TaskQueueManagerException( e.getMessage(), e );
+        }
     }
-    
+
     public boolean isProjectInReleaseStage( String releaseId )
         throws TaskQueueManagerException
     {
-        Task prepareTask = getCurrentTask( "prepare-release" );        
-        if( prepareTask != null && prepareTask instanceof PrepareReleaseProjectTask )
+        Task prepareTask = getCurrentTask( "prepare-release" );
+        if ( prepareTask != null && prepareTask instanceof PrepareReleaseProjectTask )
         {
-            if( ( ( PrepareReleaseProjectTask ) prepareTask ).getReleaseId().equals( releaseId ) )
+            if ( ( (PrepareReleaseProjectTask) prepareTask ).getReleaseId().equals( releaseId ) )
             {
                 return true;
             }
@@ -232,9 +233,9 @@ public class DefaultTaskQueueManager
                 {
                     // check if in queue
                     List<Task> tasks = prepareReleaseQueue.getQueueSnapshot();
-                    for( Task prepareReleaseTask : tasks )
+                    for ( Task prepareReleaseTask : tasks )
                     {
-                        if( ( ( PrepareReleaseProjectTask) prepareReleaseTask ).getReleaseId().equals( releaseId ) ) 
+                        if ( ( (PrepareReleaseProjectTask) prepareReleaseTask ).getReleaseId().equals( releaseId ) )
                         {
                             return true;
                         }
@@ -246,11 +247,11 @@ public class DefaultTaskQueueManager
                 }
             }
         }
-        
-        Task performTask = getCurrentTask( "perform-release" );        
-        if( performTask != null && performTask instanceof PerformReleaseProjectTask )
+
+        Task performTask = getCurrentTask( "perform-release" );
+        if ( performTask != null && performTask instanceof PerformReleaseProjectTask )
         {
-            if( ( ( PerformReleaseProjectTask ) performTask ).getReleaseId().equals( releaseId ) )
+            if ( ( (PerformReleaseProjectTask) performTask ).getReleaseId().equals( releaseId ) )
             {
                 return true;
             }
@@ -260,9 +261,9 @@ public class DefaultTaskQueueManager
                 {
                     // check if in queue
                     List<Task> tasks = performReleaseQueue.getQueueSnapshot();
-                    for( Task performReleaseTask : tasks )
+                    for ( Task performReleaseTask : tasks )
                     {
-                        if( ( ( PerformReleaseProjectTask) performReleaseTask ).getReleaseId().equals( releaseId ) ) 
+                        if ( ( (PerformReleaseProjectTask) performReleaseTask ).getReleaseId().equals( releaseId ) )
                         {
                             return true;
                         }
@@ -274,7 +275,7 @@ public class DefaultTaskQueueManager
                 }
             }
         }
-                
+
         return false;
     }
 
@@ -282,20 +283,15 @@ public class DefaultTaskQueueManager
         throws TaskQueueManagerException
     {
         Task task = getCurrentTask( "perform-release" );
-    
-        if ( task != null && task instanceof PerformReleaseProjectTask )
-        {
-            return true;
-        }
-    
-        return false;
+
+        return task != null && task instanceof PerformReleaseProjectTask;
     }
 
     public void removeFromDistributedBuildQueue( int projectGroupId, String scmRootAddress )
         throws TaskQueueManagerException
     {
         List<PrepareBuildProjectsTask> queue = getDistributedBuildProjectsInQueue();
-        
+
         for ( PrepareBuildProjectsTask task : queue )
         {
             if ( task.getProjectGroupId() == projectGroupId && task.getScmRootAddress().equals( scmRootAddress ) )
@@ -309,7 +305,7 @@ public class DefaultTaskQueueManager
         throws TaskQueueManagerException
     {
         List<PurgeTask> queue = getAllPurgeConfigurationsInPurgeQueue();
-    
+
         for ( PurgeTask task : queue )
         {
             if ( task != null && task.getPurgeConfigurationId() == purgeConfigId )
@@ -327,16 +323,16 @@ public class DefaultTaskQueueManager
         {
             return false;
         }
-    
+
         if ( purgeConfigIds.length < 1 )
         {
             return false;
         }
-    
+
         List<PurgeTask> queue = getAllPurgeConfigurationsInPurgeQueue();
-    
+
         List<PurgeTask> tasks = new ArrayList<PurgeTask>();
-    
+
         for ( PurgeTask task : queue )
         {
             if ( task != null )
@@ -347,21 +343,16 @@ public class DefaultTaskQueueManager
                 }
             }
         }
-    
-        if ( !tasks.isEmpty() )
-        {
-            return purgeQueue.removeAll( tasks );
-        }
-    
-        return false;
+
+        return !tasks.isEmpty() && purgeQueue.removeAll( tasks );
     }
-    
+
     public void removeRepositoryFromPurgeQueue( int repositoryId )
         throws TaskQueueManagerException
     {
         List<RepositoryPurgeConfiguration> repoPurgeConfigs =
             purgeConfigurationService.getRepositoryPurgeConfigurationsByRepository( repositoryId );
-    
+
         for ( RepositoryPurgeConfiguration repoPurge : repoPurgeConfigs )
         {
             removeFromPurgeQueue( repoPurge.getId() );
@@ -372,7 +363,7 @@ public class DefaultTaskQueueManager
         throws TaskQueueManagerException
     {
         List<PrepareBuildProjectsTask> queue = getDistributedBuildProjectsInQueue();
-        
+
         for ( PrepareBuildProjectsTask task : queue )
         {
             if ( ArrayUtils.contains( hashCodes, task.hashCode() ) )
@@ -381,13 +372,13 @@ public class DefaultTaskQueueManager
             }
         }
     }
-    
+
     public void contextualize( Context context )
         throws ContextException
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
-    
+
     private List<PurgeTask> getAllPurgeConfigurationsInPurgeQueue()
         throws TaskQueueManagerException
     {
@@ -400,7 +391,7 @@ public class DefaultTaskQueueManager
             throw new TaskQueueManagerException( "Error while getting the purge configs in purge queue", e );
         }
     }
-    
+
     private Task getCurrentTask( String task )
         throws TaskQueueManagerException
     {

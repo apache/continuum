@@ -20,7 +20,6 @@ package org.apache.continuum.buildagent.build.execution.manager;
  */
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor;
@@ -40,7 +39,7 @@ public class DefaultBuildAgentBuildExecutorManager
     /**
      * @plexus.requirement role="org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor"
      */
-    private Map executors;
+    private Map<String, ContinuumAgentBuildExecutor> executors;
 
     // ----------------------------------------------------------------------
     // Component Lifecycle
@@ -50,7 +49,7 @@ public class DefaultBuildAgentBuildExecutorManager
     {
         if ( executors == null )
         {
-            executors = new HashMap();
+            executors = new HashMap<String, ContinuumAgentBuildExecutor>();
         }
 
         if ( executors.size() == 0 )
@@ -61,9 +60,9 @@ public class DefaultBuildAgentBuildExecutorManager
         {
             log.info( "Build executors:" );
 
-            for ( Iterator it = executors.keySet().iterator(); it.hasNext(); )
+            for ( String key : executors.keySet() )
             {
-                log.info( "  " + it.next().toString() );
+                log.info( "  " + key );
             }
         }
     }
@@ -75,7 +74,7 @@ public class DefaultBuildAgentBuildExecutorManager
     public ContinuumAgentBuildExecutor getBuildExecutor( String builderType )
         throws ContinuumException
     {
-        ContinuumAgentBuildExecutor executor = (ContinuumAgentBuildExecutor) executors.get( builderType );
+        ContinuumAgentBuildExecutor executor = executors.get( builderType );
 
         if ( executor == null )
         {

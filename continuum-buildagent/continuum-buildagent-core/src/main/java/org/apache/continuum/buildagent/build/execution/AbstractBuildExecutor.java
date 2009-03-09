@@ -197,8 +197,8 @@ public abstract class AbstractBuildExecutor
      * @param defaultExecutable
      * @return The executable path
      */
-    protected String findExecutable( Project project, String executable, String defaultExecutable,
-                                     boolean resolveExecutable, File workingDirectory )
+    protected String findExecutable( String executable, String defaultExecutable, boolean resolveExecutable,
+                                     File workingDirectory )
     {
         // ----------------------------------------------------------------------
         // If we're not searching the path for the executable, prefix the
@@ -225,11 +225,11 @@ public abstract class AbstractBuildExecutor
 
             if ( e == null )
             {
-                log.warn( "Could not find the executable '" + executable + "' in this path: " );
+                log.debug( "Could not find the executable '" + executable + "' in this path: " );
 
                 for ( String element : path )
                 {
-                    log.warn( element );
+                    log.debug( element );
                 }
 
                 actualExecutable = defaultExecutable;
@@ -251,15 +251,15 @@ public abstract class AbstractBuildExecutor
         return actualExecutable;
     }
 
-    protected ContinuumAgentBuildExecutionResult executeShellCommand( Project project, String executable, String arguments,
-                                                                 File output, Map<String, String> environments )
+    protected ContinuumAgentBuildExecutionResult executeShellCommand( Project project, String executable,
+                                                                      String arguments, File output,
+                                                                      Map<String, String> environments )
         throws ContinuumAgentBuildExecutorException, ContinuumAgentBuildCancelledException
     {
 
         File workingDirectory = getWorkingDirectory( project.getId() );
 
-        String actualExecutable =
-            findExecutable( project, executable, defaultExecutable, resolveExecutable, workingDirectory );
+        String actualExecutable = findExecutable( executable, defaultExecutable, resolveExecutable, workingDirectory );
 
         // ----------------------------------------------------------------------
         // Execute the build
@@ -267,9 +267,9 @@ public abstract class AbstractBuildExecutor
 
         try
         {
-            ExecutionResult result = getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable,
-                                                                                  arguments, output, project.getId(),
-                                                                                  environments );
+            ExecutionResult result =
+                getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable, arguments, output,
+                                                             project.getId(), environments );
 
             log.info( "Exit code: " + result.getExitCode() );
 
@@ -290,8 +290,9 @@ public abstract class AbstractBuildExecutor
         }
         catch ( Exception e )
         {
-            throw new ContinuumAgentBuildExecutorException( "Error while executing shell command. " +
-                "The most common error is that '" + executable + "' " + "is not in your path.", e );
+            throw new ContinuumAgentBuildExecutorException(
+                "Error while executing shell command. " + "The most common error is that '" + executable + "' " +
+                    "is not in your path.", e );
         }
     }
 
@@ -310,9 +311,7 @@ public abstract class AbstractBuildExecutor
 
     protected String getBuildFileForProject( BuildDefinition buildDefinition )
     {
-        String buildFile = StringUtils.clean( buildDefinition.getBuildFile() );
-        
-        return buildFile;
+        return StringUtils.clean( buildDefinition.getBuildFile() );
     }
 
     protected void updateProject( Project project )
@@ -320,7 +319,7 @@ public abstract class AbstractBuildExecutor
     {
         Map projectMap = new HashMap();
 
-        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( project.getId() ) );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, project.getId() );
         projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, project.getVersion() );
         projectMap.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, project.getArtifactId() );
         projectMap.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, project.getGroupId() );
@@ -365,8 +364,10 @@ public abstract class AbstractBuildExecutor
             projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_URL, "" );
         }
         projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_PARENT, getProjectParent( project.getParent() ) );
-        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPERS, getProjectDevelopers( project.getDevelopers() ) );
-        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEPENDENCIES, getProjectDependencies( project.getDependencies() ) );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPERS,
+                        getProjectDevelopers( project.getDevelopers() ) );
+        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEPENDENCIES,
+                        getProjectDependencies( project.getDependencies() ) );
         projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_NOTIFIERS, getProjectNotifiers( project.getNotifiers() ) );
 
         try
@@ -463,14 +464,14 @@ public abstract class AbstractBuildExecutor
                 {
                     map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_TYPE, "" );
                 }
-                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_FROM, new Integer( notifier.getFrom() ) );
-                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_RECIPIENT_TYPE, new Integer( notifier.getRecipientType() ) );
-                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_ENABLED, new Boolean( notifier.isEnabled() ) );
-                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_ERROR, new Boolean( notifier.isSendOnError() ) );
-                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_SUCCESS, new Boolean( notifier.isSendOnSuccess() ) );
-                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_FAILURE, new Boolean( notifier.isSendOnFailure() ) );
-                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_SCMFAILURE, new Boolean( notifier.isSendOnScmFailure() ) );
-                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_WARNING, new Boolean( notifier.isSendOnWarning() ) );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_FROM, notifier.getFrom() );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_RECIPIENT_TYPE, notifier.getRecipientType() );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_ENABLED, notifier.isEnabled() );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_ERROR, notifier.isSendOnError() );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_SUCCESS, notifier.isSendOnSuccess() );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_FAILURE, notifier.isSendOnFailure() );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_SCMFAILURE, notifier.isSendOnScmFailure() );
+                map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_SEND_ON_WARNING, notifier.isSendOnWarning() );
             }
         }
         return pNotifiers;
@@ -479,7 +480,7 @@ public abstract class AbstractBuildExecutor
     public boolean isBuilding( Project project )
     {
         return project.getState() == ContinuumProjectState.BUILDING ||
-               getShellCommandHelper().isRunning( project.getId() );
+            getShellCommandHelper().isRunning( project.getId() );
     }
 
     public void killProcess( Project project )
@@ -487,7 +488,8 @@ public abstract class AbstractBuildExecutor
         getShellCommandHelper().killProcess( project.getId() );
     }
 
-    public List<Artifact> getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
+    public List<Artifact> getDeployableArtifacts( Project project, File workingDirectory,
+                                                  BuildDefinition buildDefinition )
         throws ContinuumAgentBuildExecutorException
     {
         // Not supported by this builder

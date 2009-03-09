@@ -69,15 +69,18 @@ public class CheckoutProjectAction
 
         try
         {
-            String scmUserName = ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_USERNAME, "" );
-            String scmPassword = ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_PASSWORD, "" );
+            String scmUserName =
+                ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_USERNAME, "" );
+            String scmPassword =
+                ContinuumBuildAgentUtil.getString( context, ContinuumBuildAgentUtil.KEY_SCM_PASSWORD, "" );
 
             ContinuumScmConfiguration config =
                 createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
 
             String tag = config.getTag();
-            getLogger().info( "Checking out project: '" + project.getName() + "', id: '" + project.getId() + "' " +
-                "to '" + workingDirectory + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." ) );
+            getLogger().info(
+                "Checking out project: '" + project.getName() + "', id: '" + project.getId() + "' " + "to '" +
+                    workingDirectory + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." ) );
 
             CheckOutScmResult checkoutResult = scm.checkout( config );
             //if ( StringUtils.isNotEmpty( checkoutResult.getRelativePathProjectDirectory() ) )
@@ -213,7 +216,7 @@ public class CheckoutProjectAction
         {
             for ( Iterator<String> i = messages.iterator(); i.hasNext(); )
             {
-                message.append( (String) i.next() );
+                message.append( i.next() );
 
                 if ( i.hasNext() )
                 {

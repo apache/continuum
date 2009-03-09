@@ -51,16 +51,16 @@ public class BuildDefinitionDaoImpl
     implements BuildDefinitionDao
 {
     private Logger log = LoggerFactory.getLogger( BuildDefinitionDaoImpl.class );
-    
+
     /**
-    * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
-    */
+     * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"
+     */
     @Resource
     private ProjectDao projectDao;
 
     /**
-    * @plexus.requirement role="org.apache.continuum.dao.ProjectGroupDao"
-    */    
+     * @plexus.requirement role="org.apache.continuum.dao.ProjectGroupDao"
+     */
     @Resource
     private ProjectGroupDao projectGroupDao;
 
@@ -352,7 +352,7 @@ public class BuildDefinitionDaoImpl
 
             query.setFilter( "this.schedule.id == scheduleId" );
 
-            List result = (List) query.execute( new Integer( scheduleId ) );
+            List result = (List) query.execute( scheduleId );
 
             return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
         }

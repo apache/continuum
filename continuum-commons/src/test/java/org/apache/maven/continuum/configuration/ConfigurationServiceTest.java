@@ -65,8 +65,8 @@ public class ConfigurationServiceTest
         log.info( "myBuildOutputDir " + new File( getBasedir(), "target/myBuildOutputDir" ).getAbsolutePath() );
 
         log.info( "getBuildOutputDirectory " + service.getBuildOutputDirectory().getAbsolutePath() );
-        assertEquals( new File( getBasedir(), "target/myBuildOutputDir" ).getAbsolutePath(), service
-            .getBuildOutputDirectory().getAbsolutePath() );
+        assertEquals( new File( getBasedir(), "target/myBuildOutputDir" ).getAbsolutePath(),
+                      service.getBuildOutputDirectory().getAbsolutePath() );
     }
 
     public void testConfigurationService()
@@ -91,7 +91,7 @@ public class ConfigurationServiceTest
 //        assertEquals( "working-directory", service.getWorkingDirectory().getName() );
 
         assertEquals( "check # build agents", 1, service.getBuildAgents().size() );
-        
+
         service.setUrl( "http://test/zloug" );
         service.setBuildOutputDirectory( new File( "testBuildOutputDir" ) );
 
@@ -106,7 +106,7 @@ public class ConfigurationServiceTest
         service.reload();
 
         assertEquals( "http://test/zloug", service.getUrl() );
-        assertEquals( "check # build agents", 2, service.getBuildAgents().size() );        
+        assertEquals( "check # build agents", 2, service.getBuildAgents().size() );
         assertEquals( "http://test/xmlrpc", service.getBuildAgents().get( 1 ).getUrl() );
         assertEquals( "windows", service.getBuildAgents().get( 1 ).getDescription() );
         assertFalse( service.getBuildAgents().get( 1 ).isEnabled() );
@@ -130,9 +130,9 @@ public class ConfigurationServiceTest
         service.reload();
         assertEquals( "check # build agent groups", 1, service.getBuildAgentGroups().size() );
         assertEquals( "group-1", service.getBuildAgentGroups().get( 0 ).getName() );
-        assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription());
+        assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription() );
 
-        BuildAgentConfiguration buildAgent2 = new BuildAgentConfiguration( "http://machine-1/xmlrpc", "node-1", true);
+        BuildAgentConfiguration buildAgent2 = new BuildAgentConfiguration( "http://machine-1/xmlrpc", "node-1", true );
         //buildAgentGroup.addBuildAgent( buildAgent2 );
         service.addBuildAgent( buildAgentGroup, buildAgent2 );
 
@@ -142,13 +142,11 @@ public class ConfigurationServiceTest
         assertEquals( "check # build agent groups", 1, service.getBuildAgentGroups().size() );
         assertEquals( "check # build agent groups", 2, service.getBuildAgentGroups().get( 0 ).getBuildAgents().size() );
         assertEquals( "group-1", service.getBuildAgentGroups().get( 0 ).getName() );
-        assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription());     
+        assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription() );
         assertEquals( "http://machine-1/xmlrpc",
                       service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).getUrl() );
-        assertEquals( "node-1",
-                      service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).getDescription() );
-        assertEquals( true,
-                      service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).isEnabled() );
+        assertEquals( "node-1", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).getDescription() );
+        assertEquals( true, service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 1 ).isEnabled() );
 
         service.removeBuildAgent( buildAgentGroup, buildAgent2 );
         service.store();
@@ -156,6 +154,6 @@ public class ConfigurationServiceTest
 
         assertEquals( "check # build agent groups", 1, service.getBuildAgentGroups().size() );
         assertEquals( "group-1", service.getBuildAgentGroups().get( 0 ).getName() );
-        assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription());
+        assertEquals( "windows", service.getBuildAgentGroups().get( 0 ).getBuildAgents().get( 0 ).getDescription() );
     }
 }

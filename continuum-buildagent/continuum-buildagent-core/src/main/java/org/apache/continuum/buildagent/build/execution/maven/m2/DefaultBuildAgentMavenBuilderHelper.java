@@ -75,8 +75,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @plexus.component role="org.apache.continuum.buildagent.build.execution.maven.m2.BuildAgentMavenBuilderHelper" 
- * role-hint="default" 
+ * @plexus.component role="org.apache.continuum.buildagent.build.execution.maven.m2.BuildAgentMavenBuilderHelper"
+ * role-hint="default"
  */
 public class DefaultBuildAgentMavenBuilderHelper
     implements BuildAgentMavenBuilderHelper, Contextualizable, Initializable
@@ -104,7 +104,7 @@ public class DefaultBuildAgentMavenBuilderHelper
     private ArtifactRepositoryLayout defaultRepositoryLayout;
 
     private PlexusContainer container;
-    
+
     public MavenProject getMavenProject( ContinuumProjectBuildingResult result, File file )
     {
         MavenProject project;
@@ -166,8 +166,7 @@ public class DefaultBuildAgentMavenBuilderHelper
 
             if ( cause instanceof ArtifactNotFoundException )
             {
-                result.addError( ContinuumProjectBuildingResult.ERROR_ARTIFACT_NOT_FOUND,
-                                 ( (ArtifactNotFoundException) cause ).toString() );
+                result.addError( ContinuumProjectBuildingResult.ERROR_ARTIFACT_NOT_FOUND, ( cause ).toString() );
                 return null;
             }
 
@@ -323,7 +322,7 @@ public class DefaultBuildAgentMavenBuilderHelper
         {
             List<ProjectDeveloper> developers = new ArrayList<ProjectDeveloper>();
 
-            for ( Developer d : (List<Developer>)mavenProject.getDevelopers() )
+            for ( Developer d : (List<Developer>) mavenProject.getDevelopers() )
             {
                 ProjectDeveloper cd = new ProjectDeveloper();
 
@@ -364,7 +363,7 @@ public class DefaultBuildAgentMavenBuilderHelper
 
         List<ProjectDependency> dependencies = new ArrayList<ProjectDependency>();
 
-        for ( Dependency dependency : (List<Dependency>)mavenProject.getDependencies() )
+        for ( Dependency dependency : (List<Dependency>) mavenProject.getDependencies() )
         {
             ProjectDependency cd = new ProjectDependency();
 
@@ -377,7 +376,7 @@ public class DefaultBuildAgentMavenBuilderHelper
             dependencies.add( cd );
         }
 
-        for ( Plugin dependency : (List<Plugin>)mavenProject.getBuildPlugins() )
+        for ( Plugin dependency : (List<Plugin>) mavenProject.getBuildPlugins() )
         {
             ProjectDependency cd = new ProjectDependency();
 
@@ -390,7 +389,7 @@ public class DefaultBuildAgentMavenBuilderHelper
             dependencies.add( cd );
         }
 
-        for ( ReportPlugin dependency : (List<ReportPlugin>)mavenProject.getReportPlugins() )
+        for ( ReportPlugin dependency : (List<ReportPlugin>) mavenProject.getReportPlugins() )
         {
             ProjectDependency cd = new ProjectDependency();
 
@@ -403,7 +402,7 @@ public class DefaultBuildAgentMavenBuilderHelper
             dependencies.add( cd );
         }
 
-        for ( Extension dependency : (List<Extension>)mavenProject.getBuildExtensions() )
+        for ( Extension dependency : (List<Extension>) mavenProject.getBuildExtensions() )
         {
             ProjectDependency cd = new ProjectDependency();
 
@@ -477,13 +476,13 @@ public class DefaultBuildAgentMavenBuilderHelper
     }
 
     private List<ProjectNotifier> getNotifiers( ContinuumProjectBuildingResult result, MavenProject mavenProject,
-                               Project continuumProject )
+                                                Project continuumProject )
     {
         List<ProjectNotifier> notifiers = new ArrayList<ProjectNotifier>();
 
         if ( mavenProject.getCiManagement() != null && mavenProject.getCiManagement().getNotifiers() != null )
         {
-            for ( Notifier projectNotifier : (List<Notifier>)mavenProject.getCiManagement().getNotifiers() )
+            for ( Notifier projectNotifier : (List<Notifier>) mavenProject.getCiManagement().getNotifiers() )
             {
                 ProjectNotifier notifier = new ProjectNotifier();
 
@@ -547,10 +546,10 @@ public class DefaultBuildAgentMavenBuilderHelper
 
     private ArtifactRepository getRepository( Settings settings )
     {
-        return artifactRepositoryFactory.createArtifactRepository( "local", "file://" + settings.getLocalRepository(), 
+        return artifactRepositoryFactory.createArtifactRepository( "local", "file://" + settings.getLocalRepository(),
                                                                    defaultRepositoryLayout, null, null );
     }
-    
+
     public String getProjectName( MavenProject project )
     {
         String name = project.getName();
@@ -562,7 +561,7 @@ public class DefaultBuildAgentMavenBuilderHelper
 
         return name;
     }
-    
+
     private void writeSettings( Settings settings )
     {
         StringWriter sWriter = new StringWriter();
@@ -620,7 +619,7 @@ public class DefaultBuildAgentMavenBuilderHelper
             log.warn( "Cannot serialize POM to XML.", e );
         }
     }
-    
+
     private void writeActiveProfileStatement( MavenProject project )
     {
         List<Profile> profiles = project.getActiveProfiles();
@@ -644,8 +643,8 @@ public class DefaultBuildAgentMavenBuilderHelper
 
             for ( Profile profile : profiles )
             {
-                message.append( "\n - " ).append( profile.getId() ).append( " (source: " )
-                    .append( profile.getSource() ).append( ")" );
+                message.append( "\n - " ).append( profile.getId() ).append( " (source: " ).append(
+                    profile.getSource() ).append( ")" );
             }
 
         }
@@ -676,7 +675,7 @@ public class DefaultBuildAgentMavenBuilderHelper
             throw new InitializationException( "Can't initialize '" + getClass().getName() + "'", e );
         }
     }
-    
+
     /**
      * @todo [BP] this might not be required if there is a better way to pass
      * them in. It doesn't feel quite right.

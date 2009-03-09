@@ -160,28 +160,26 @@ public class BuildProjectTaskExecutor
         projectGroup.setId( buildContext.getProjectGroupId() );
         projectGroup.setName( buildContext.getProjectGroupName() );
         project.setProjectGroup( projectGroup );
-        
+
         actionContext.put( ContinuumBuildAgentUtil.KEY_PROJECT, project );
-        actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION, BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION,
+                           BuildContextToBuildDefinition.getBuildDefinition( buildContext ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, buildContext.getBuildDefinitionId() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
-        actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS, getEnvironments( buildContext.getBuildDefinitionId(), 
-                                                                                      getInstallationType( buildContext ) ) );
+        actionContext.put( ContinuumBuildAgentUtil.KEY_ENVIRONMENTS,
+                           getEnvironments( buildContext.getBuildDefinitionId(),
+                                            getInstallationType( buildContext ) ) );
         actionContext.put( ContinuumBuildAgentUtil.KEY_LOCAL_REPOSITORY, buildContext.getLocalRepository() );
         actionContext.put( ContinuumBuildAgentUtil.KEY_SCM_RESULT, buildContext.getScmResult() );
         buildContext.setActionContext( actionContext );
 
         buildContext.setBuildStartTime( System.currentTimeMillis() );
     }
-    
+
     private boolean checkScmResult( BuildContext buildContext )
     {
-        if ( buildContext.getScmResult() == null || !buildContext.getScmResult().isSuccess() )
-        {
-            return false;
-        }
+        return !( buildContext.getScmResult() == null || !buildContext.getScmResult().isSuccess() );
 
-        return true;
     }
 
     private void startBuild( BuildContext buildContext )
@@ -206,13 +204,13 @@ public class BuildProjectTaskExecutor
         BuildResult buildResult = buildContext.getBuildResult();
 
         Map<String, Object> result = new HashMap<String, Object>();
-        result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( buildContext.getProjectId() ) );
-        result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( buildContext.getBuildDefinitionId() ) );
-        result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( buildContext.getTrigger() ) );
-        result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, new Integer( buildResult.getState() ) );
-        result.put( ContinuumBuildAgentUtil.KEY_START_TIME, new Long( buildResult.getStartTime() ).toString() );
-        result.put( ContinuumBuildAgentUtil.KEY_END_TIME, new Long( buildResult.getEndTime() ).toString() );
-        result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, new Integer( buildResult.getExitCode() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, buildContext.getProjectId() );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, buildContext.getBuildDefinitionId() );
+        result.put( ContinuumBuildAgentUtil.KEY_TRIGGER, buildContext.getTrigger() );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_STATE, buildResult.getState() );
+        result.put( ContinuumBuildAgentUtil.KEY_START_TIME, Long.toString( buildResult.getStartTime() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_END_TIME, Long.toString( buildResult.getEndTime() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_BUILD_EXIT_CODE, buildResult.getExitCode() );
         if ( buildContext.getLatestUpdateDate() != null )
         {
             result.put( ContinuumBuildAgentUtil.KEY_LATEST_UPDATE_DATE, buildContext.getLatestUpdateDate() );
@@ -247,16 +245,17 @@ public class BuildProjectTaskExecutor
         catch ( ContinuumException e )
         {
             log.error( "Failed to return build result for project '" + buildContext.getProjectName() + "'", e );
-            throw new TaskExecutionException( "Failed to return build result for project '" + buildContext.getProjectName() + "'", e );
+            throw new TaskExecutionException(
+                "Failed to return build result for project '" + buildContext.getProjectName() + "'", e );
         }
     }
 
     private void performAction( String actionName, BuildContext context )
         throws TaskExecutionException
     {
-        String error = null;
-        TaskExecutionException exception = null;
-    
+        String error;
+        TaskExecutionException exception;
+
         try
         {
             log.info( "Performing action " + actionName );
@@ -271,13 +270,13 @@ public class BuildProjectTaskExecutor
         catch ( ScmRepositoryException e )
         {
             error = getValidationMessages( e ) + "\n" + ContinuumBuildAgentUtil.throwableToString( e );
-    
+
             exception = new TaskExecutionException( "SCM error while executing '" + actionName + "'", e );
         }
         catch ( ScmException e )
         {
             error = ContinuumBuildAgentUtil.throwableToString( e );
-    
+
             exception = new TaskExecutionException( "SCM error while executing '" + actionName + "'", e );
         }
         catch ( Exception e )
@@ -294,7 +293,7 @@ public class BuildProjectTaskExecutor
     private void updateBuildResult( BuildContext context, String error )
     {
         context.setBuildResult( ContinuumBuildAgentUtil.getBuildResult( context.getActionContext(), null ) );
-        
+
         if ( context.getBuildResult() == null )
         {
             BuildResult build = new BuildResult();
@@ -346,7 +345,7 @@ public class BuildProjectTaskExecutor
         try
         {
             File buildOutputFile = buildAgentConfigurationService.getBuildOutputFile( projectId );
-        
+
             if ( buildOutputFile.exists() )
             {
                 return StringEscapeUtils.escapeHtml( FileUtils.fileRead( buildOutputFile ) );
@@ -371,14 +370,15 @@ public class BuildProjectTaskExecutor
         catch ( ContinuumException e )
         {
             log.error( "Error while retrieving environments of build definition: " + buildDefinitionId, e );
-            throw new TaskExecutionException( "Error while retrieving environments of build definition: " + buildDefinitionId, e );
+            throw new TaskExecutionException(
+                "Error while retrieving environments of build definition: " + buildDefinitionId, e );
         }
     }
 
     private String getInstallationType( BuildContext buildContext )
     {
         String executorId = buildContext.getExecutorId();
-        
+
         if ( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( executorId ) )
         {
             return BuildAgentInstallationService.MAVEN2_TYPE;
@@ -399,9 +399,9 @@ public class BuildProjectTaskExecutor
         throws TaskExecutionException
     {
         Map map = new HashMap();
-        map.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( context.getProjectId() ) );
-        map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, new Integer( context.getBuildDefinitionId() ) );
-        map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, new Integer( context.getTrigger() ) );
+        map.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, context.getProjectId() );
+        map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, context.getBuildDefinitionId() );
+        map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, context.getTrigger() );
         map.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( context.getScmResult() ) );
         map.put( ContinuumBuildAgentUtil.KEY_MAVEN_PROJECT, getMavenProject( context ) );
         if ( context.getLatestUpdateDate() != null )
@@ -428,7 +428,7 @@ public class BuildProjectTaskExecutor
         {
             for ( Object obj : scmResult.getChanges() )
             {
-                ChangeSet changeSet = (ChangeSet) obj; 
+                ChangeSet changeSet = (ChangeSet) obj;
 
                 Map map = new HashMap();
                 if ( StringUtils.isNotEmpty( changeSet.getAuthor() ) )
@@ -491,7 +491,7 @@ public class BuildProjectTaskExecutor
                 }
                 else
                 {
-                    map.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_STATUS, "" );   
+                    map.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_STATUS, "" );
                 }
                 scmChangeFiles.add( map );
             }
@@ -506,7 +506,8 @@ public class BuildProjectTaskExecutor
 
         try
         {
-            ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor( context.getExecutorId() );
+            ContinuumAgentBuildExecutor buildExecutor =
+                buildAgentBuildExecutorManager.getBuildExecutor( context.getExecutorId() );
 
             BuildDefinition buildDefinition = BuildContextToBuildDefinition.getBuildDefinition( context );
 
@@ -527,7 +528,7 @@ public class BuildProjectTaskExecutor
         }
         catch ( ContinuumException e )
         {
-            log.error( "Error getting build executor", e );   
+            log.error( "Error getting build executor", e );
         }
 
         return mavenProject;

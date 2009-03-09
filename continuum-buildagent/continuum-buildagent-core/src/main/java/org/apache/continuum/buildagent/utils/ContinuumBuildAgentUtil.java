@@ -541,25 +541,25 @@ public class ContinuumBuildAgentUtil
 
     public static boolean getBoolean( Map context, String key )
     {
-        return ( (Boolean) getObject( context, key ) ).booleanValue();
+        return (Boolean) getObject( context, key );
     }
-    
+
     public static boolean getBoolean( Map context, String key, boolean defaultValue )
     {
-        return ( (Boolean) getObject( context, key, Boolean.valueOf( defaultValue ) ) ).booleanValue();
-    }    
+        return (Boolean) getObject( context, key, defaultValue );
+    }
 
     public static int getInteger( Map context, String key )
     {
         Object obj = getObject( context, key, null );
-        
+
         if ( obj == null )
         {
             return 0;
         }
         else
         {
-            return ( (Integer) obj ).intValue();
+            return (Integer) obj;
         }
     }
 
@@ -578,7 +578,7 @@ public class ContinuumBuildAgentUtil
             if ( obj instanceof Object[] )
             {
                 Object[] objA = (Object[]) obj;
-    
+
                 for ( Object o : objA )
                 {
                     if ( o instanceof Map )
@@ -705,7 +705,7 @@ public class ContinuumBuildAgentUtil
         Map<String, Object> result = new HashMap<String, Object>();
         ScmResult scmResult = buildContext.getScmResult();
 
-        result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, new Integer( buildContext.getProjectId() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, buildContext.getProjectId() );
         if ( StringUtils.isEmpty( scmResult.getCommandLine() ) )
         {
             result.put( ContinuumBuildAgentUtil.KEY_SCM_COMMAND_LINE, "" );
@@ -738,7 +738,7 @@ public class ContinuumBuildAgentUtil
         {
             result.put( ContinuumBuildAgentUtil.KEY_SCM_EXCEPTION, scmResult.getException() );
         }
-        result.put( ContinuumBuildAgentUtil.KEY_SCM_SUCCESS, new Boolean( scmResult.isSuccess() ) );
+        result.put( ContinuumBuildAgentUtil.KEY_SCM_SUCCESS, scmResult.isSuccess() );
         result.put( ContinuumBuildAgentUtil.KEY_SCM_CHANGES, getScmChanges( scmResult ) );
 
         return result;
@@ -764,7 +764,7 @@ public class ContinuumBuildAgentUtil
                 {
                     changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_AUTHOR, "" );
                 }
-                if ( StringUtils.isNotEmpty( cs.getComment() ) ) 
+                if ( StringUtils.isNotEmpty( cs.getComment() ) )
                 {
                     changeSet.put( ContinuumBuildAgentUtil.KEY_CHANGESET_COMMENT, cs.getComment() );
                 }

@@ -39,11 +39,7 @@ import java.util.List;
 public class DefaultInstallationServiceTest
     extends AbstractContinuumTest
 {
-    private static final String DEFAULT_INSTALLATION_NAME = "defaultInstallation";
-
     private static final String NEW_INSTALLATION_NAME = "newInstallation";
-
-    //public Installation defaultInstallation;
 
     protected void setUp()
         throws Exception
@@ -51,22 +47,6 @@ public class DefaultInstallationServiceTest
         super.setUp();
         DaoUtils daoUtils = (DaoUtils) lookup( DaoUtils.class.getName() );
         daoUtils.eraseDatabase();
-        /*if ( getInstallationService().getAllInstallations().isEmpty() )
-        {
-            defaultInstallation = createDefault();
-            ContinuumStore store = getStore();
-            defaultInstallation = store.addInstallation( defaultInstallation );
-        }*/
-    }
-
-    private Installation createDefaultInstallation()
-    {
-        Installation installation = new Installation();
-        installation.setType( "description" );
-        installation.setName( DEFAULT_INSTALLATION_NAME );
-        installation.setVarName( "varName" );
-        installation.setVarValue( "varValue" );
-        return installation;
     }
 
     private InstallationService getInstallationService()
@@ -82,7 +62,7 @@ public class DefaultInstallationServiceTest
     {
 
         Installation installation = new Installation();
-        installation.setType( InstallationService.JDK_TYPE );
+        installation.setType( type );
         installation.setName( name );
         installation.setVarName( varName );
         installation.setVarValue( varValue );
@@ -110,7 +90,7 @@ public class DefaultInstallationServiceTest
         assertEquals( "bar", getted.getVarValue() );
         try
         {
-            added = this.addInstallation( NEW_INSTALLATION_NAME, null, "bar", InstallationService.JDK_TYPE );
+            this.addInstallation( NEW_INSTALLATION_NAME, null, "bar", InstallationService.JDK_TYPE );
             fail( "not in AlreadyExistsInstallationException" );
         }
         catch ( AlreadyExistsInstallationException e )
@@ -210,11 +190,11 @@ public class DefaultInstallationServiceTest
         installation.setName( "automaticJdk" );
         installation.setVarName( "automaticvarName" );
         installation.setVarValue( "automaticvarValue" );
-        installation = getInstallationService().add( installation, true );
+        getInstallationService().add( installation, true );
         ProfileService profileService = (ProfileService) lookup( ProfileService.ROLE, "default" );
         List<Profile> profiles = profileService.getAllProfiles();
         assertEquals( 1, profiles.size() );
-        Profile profile = (Profile) profiles.get( 0 );
+        Profile profile = profiles.get( 0 );
         assertEquals( "automaticJdk", profile.getName() );
         Installation jdk = profile.getJdk();
         assertNotNull( jdk );

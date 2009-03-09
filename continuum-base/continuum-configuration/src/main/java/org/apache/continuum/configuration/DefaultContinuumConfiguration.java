@@ -31,7 +31,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.configuration.model.ContinuumConfigurationModel;
 import org.apache.continuum.configuration.model.io.xpp3.ContinuumConfigurationModelXpp3Reader;
 import org.apache.continuum.configuration.model.io.xpp3.ContinuumConfigurationModelXpp3Writer;
-import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +91,7 @@ public class DefaultContinuumConfiguration
     {
         if ( !configurationFile.exists() )
         {
-            configurationFile.getParentFile().mkdir();
+            configurationFile.getParentFile().mkdirs();
         }
         save( configurationFile );
     }
@@ -111,15 +110,15 @@ public class DefaultContinuumConfiguration
     {
         this.generalConfiguration = generalConfiguration;
     }
-    
+
     public void reload( File file )
         throws ContinuumConfigurationException
     {
         try
         {
             ContinuumConfigurationModelXpp3Reader configurationXpp3Reader = new ContinuumConfigurationModelXpp3Reader();
-            ContinuumConfigurationModel configuration = configurationXpp3Reader
-                .read( new InputStreamReader( new FileInputStream( file ) ) );
+            ContinuumConfigurationModel configuration =
+                configurationXpp3Reader.read( new InputStreamReader( new FileInputStream( file ) ) );
 
             this.generalConfiguration = new GeneralConfiguration();
 
@@ -128,14 +127,14 @@ public class DefaultContinuumConfiguration
             if ( StringUtils.isNotEmpty( configuration.getBuildOutputDirectory() ) )
             {
                 // TODO take care if file exists ?
-                this.generalConfiguration.setBuildOutputDirectory( new File( configuration
-                    .getBuildOutputDirectory() ) );
+                this.generalConfiguration.setBuildOutputDirectory(
+                    new File( configuration.getBuildOutputDirectory() ) );
             }
             if ( StringUtils.isNotEmpty( configuration.getDeploymentRepositoryDirectory() ) )
             {
                 // TODO take care if file exists ?
-                this.generalConfiguration.setDeploymentRepositoryDirectory( new File( configuration
-                    .getDeploymentRepositoryDirectory() ) );
+                this.generalConfiguration.setDeploymentRepositoryDirectory(
+                    new File( configuration.getDeploymentRepositoryDirectory() ) );
             }
             if ( StringUtils.isNotEmpty( configuration.getWorkingDirectory() ) )
             {
@@ -144,51 +143,55 @@ public class DefaultContinuumConfiguration
             }
             if ( configuration.getProxyConfiguration() != null )
             {
-                ProxyConfiguration proxyConfiguration = new ProxyConfiguration( configuration
-                    .getProxyConfiguration().getProxyHost(), configuration.getProxyConfiguration()
-                    .getProxyPassword(), configuration.getProxyConfiguration().getProxyPort(), configuration
-                    .getProxyConfiguration().getProxyUser() );
+                ProxyConfiguration proxyConfiguration =
+                    new ProxyConfiguration( configuration.getProxyConfiguration().getProxyHost(),
+                                            configuration.getProxyConfiguration().getProxyPassword(),
+                                            configuration.getProxyConfiguration().getProxyPort(),
+                                            configuration.getProxyConfiguration().getProxyUser() );
                 this.generalConfiguration.setProxyConfiguration( proxyConfiguration );
             }
             if ( StringUtils.isNotEmpty( configuration.getReleaseOutputDirectory() ) )
             {
                 // TODO take care if file exists?
-                this.generalConfiguration.setReleaseOutputDirectory( new File( configuration
-                    .getReleaseOutputDirectory() ) );
+                this.generalConfiguration.setReleaseOutputDirectory(
+                    new File( configuration.getReleaseOutputDirectory() ) );
             }
             if ( configuration.getBuildAgents() != null )
             {
                 List<BuildAgentConfiguration> buildAgents = new ArrayList<BuildAgentConfiguration>();
 
-                List<org.apache.continuum.configuration.model.BuildAgentConfiguration> agents = configuration.getBuildAgents();
+                List<org.apache.continuum.configuration.model.BuildAgentConfiguration> agents =
+                    configuration.getBuildAgents();
                 for ( org.apache.continuum.configuration.model.BuildAgentConfiguration agent : agents )
                 {
-                    BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( agent.getUrl(),
-                                                                                      agent.getDescription(),
-                                                                                      agent.isEnabled() );
+                    BuildAgentConfiguration buildAgent =
+                        new BuildAgentConfiguration( agent.getUrl(), agent.getDescription(), agent.isEnabled() );
                     buildAgents.add( buildAgent );
                 }
-                
+
                 this.generalConfiguration.setBuildAgents( buildAgents );
             }
             if ( configuration.getBuildAgentGroups() != null )
             {
                 List<BuildAgentGroupConfiguration> buildAgentGroups = new ArrayList<BuildAgentGroupConfiguration>();
-                List<org.apache.continuum.configuration.model.BuildAgentGroupConfiguration> groups = configuration.getBuildAgentGroups();
-                
+                List<org.apache.continuum.configuration.model.BuildAgentGroupConfiguration> groups =
+                    configuration.getBuildAgentGroups();
+
                 for ( org.apache.continuum.configuration.model.BuildAgentGroupConfiguration group : groups )
                 {
-                    List <BuildAgentConfiguration> agents = new ArrayList<BuildAgentConfiguration>();
-                    List<org.apache.continuum.configuration.model.BuildAgentConfiguration> modelAgents =  group.getBuildAgents();                   
+                    List<BuildAgentConfiguration> agents = new ArrayList<BuildAgentConfiguration>();
+                    List<org.apache.continuum.configuration.model.BuildAgentConfiguration> modelAgents =
+                        group.getBuildAgents();
                     for ( org.apache.continuum.configuration.model.BuildAgentConfiguration modelAgent : modelAgents )
                     {
-                        BuildAgentConfiguration buildAgent = new BuildAgentConfiguration( modelAgent.getUrl(),
-                                                                                          modelAgent.getDescription(),
-                                                                                          modelAgent.isEnabled() ) ;
+                        BuildAgentConfiguration buildAgent =
+                            new BuildAgentConfiguration( modelAgent.getUrl(), modelAgent.getDescription(),
+                                                         modelAgent.isEnabled() );
                         agents.add( buildAgent );
                     }
 
-                    BuildAgentGroupConfiguration groupAgent = new BuildAgentGroupConfiguration( group.getName(),agents );
+                    BuildAgentGroupConfiguration groupAgent =
+                        new BuildAgentGroupConfiguration( group.getName(), agents );
                     buildAgentGroups.add( groupAgent );
                 }
 
@@ -205,7 +208,7 @@ public class DefaultContinuumConfiguration
             log.error( e.getMessage(), e );
             throw new RuntimeException( e.getMessage(), e );
         }
-        
+
     }
 
     public void save( File file )
@@ -220,8 +223,8 @@ public class DefaultContinuumConfiguration
             // normally not null but NPE free is better !
             if ( this.generalConfiguration.getBuildOutputDirectory() != null )
             {
-                configurationModel.setBuildOutputDirectory( this.generalConfiguration.getBuildOutputDirectory()
-                    .getPath() );
+                configurationModel.setBuildOutputDirectory(
+                    this.generalConfiguration.getBuildOutputDirectory().getPath() );
             }
             if ( this.generalConfiguration.getWorkingDirectory() != null )
             {
@@ -229,51 +232,48 @@ public class DefaultContinuumConfiguration
             }
             if ( this.generalConfiguration.getDeploymentRepositoryDirectory() != null )
             {
-                configurationModel.setDeploymentRepositoryDirectory( this.generalConfiguration
-                    .getDeploymentRepositoryDirectory().getPath() );
+                configurationModel.setDeploymentRepositoryDirectory(
+                    this.generalConfiguration.getDeploymentRepositoryDirectory().getPath() );
             }
             if ( this.generalConfiguration.getProxyConfiguration() != null )
             {
-                configurationModel
-                    .setProxyConfiguration( new org.apache.continuum.configuration.model.ProxyConfiguration() );
+                configurationModel.setProxyConfiguration(
+                    new org.apache.continuum.configuration.model.ProxyConfiguration() );
                 configurationModel.getProxyConfiguration().setProxyHost(
-                                                                         this.generalConfiguration
-                                                                             .getProxyConfiguration().getProxyHost() );
+                    this.generalConfiguration.getProxyConfiguration().getProxyHost() );
                 configurationModel.getProxyConfiguration().setProxyPassword(
-                                                                             this.generalConfiguration
-                                                                                 .getProxyConfiguration()
-                                                                                 .getProxyPassword() );
+                    this.generalConfiguration.getProxyConfiguration().getProxyPassword() );
                 configurationModel.getProxyConfiguration().setProxyPort(
-                                                                         this.generalConfiguration
-                                                                             .getProxyConfiguration().getProxyPort() );
+                    this.generalConfiguration.getProxyConfiguration().getProxyPort() );
                 configurationModel.getProxyConfiguration().setProxyHost(
-                                                                         this.generalConfiguration
-                                                                             .getProxyConfiguration().getProxyHost() );
+                    this.generalConfiguration.getProxyConfiguration().getProxyHost() );
             }
             if ( this.generalConfiguration.getReleaseOutputDirectory() != null )
             {
-                configurationModel.setReleaseOutputDirectory( this.generalConfiguration.getReleaseOutputDirectory()
-                    .getPath() );
+                configurationModel.setReleaseOutputDirectory(
+                    this.generalConfiguration.getReleaseOutputDirectory().getPath() );
             }
             if ( this.generalConfiguration.getBuildAgents() != null )
             {
-                List buildAgents = new ArrayList();
+                List<org.apache.continuum.configuration.model.BuildAgentConfiguration> buildAgents =
+                    new ArrayList<org.apache.continuum.configuration.model.BuildAgentConfiguration>();
 
                 for ( BuildAgentConfiguration agent : this.generalConfiguration.getBuildAgents() )
                 {
-                    org.apache.continuum.configuration.model.BuildAgentConfiguration buildAgent = 
+                    org.apache.continuum.configuration.model.BuildAgentConfiguration buildAgent =
                         new org.apache.continuum.configuration.model.BuildAgentConfiguration();
                     buildAgent.setUrl( agent.getUrl() );
                     buildAgent.setDescription( agent.getDescription() );
                     buildAgent.setEnabled( agent.isEnabled() );
-                    
+
                     buildAgents.add( buildAgent );
                 }
                 configurationModel.setBuildAgents( buildAgents );
             }
             if ( this.generalConfiguration.getBuildAgentGroups() != null )
             {
-                List buildAgentGroups = new ArrayList();
+                List<org.apache.continuum.configuration.model.BuildAgentGroupConfiguration> buildAgentGroups =
+                    new ArrayList<org.apache.continuum.configuration.model.BuildAgentGroupConfiguration>();
 
                 for ( BuildAgentGroupConfiguration group : this.generalConfiguration.getBuildAgentGroups() )
                 {
@@ -281,7 +281,8 @@ public class DefaultContinuumConfiguration
                         new org.apache.continuum.configuration.model.BuildAgentGroupConfiguration();
                     buildAgentGroup.setName( group.getName() );
 
-                    List buildAgents = new ArrayList();
+                    List<org.apache.continuum.configuration.model.BuildAgentConfiguration> buildAgents =
+                        new ArrayList<org.apache.continuum.configuration.model.BuildAgentConfiguration>();
 
                     if ( group.getBuildAgents() != null )
                     {
@@ -312,10 +313,9 @@ public class DefaultContinuumConfiguration
         {
             throw new ContinuumConfigurationException( e.getMessage(), e );
         }
-        
+
     }
 
-    
     // ----------------------------------------
     //  Spring injection
     // ----------------------------------------
@@ -330,5 +330,5 @@ public class DefaultContinuumConfiguration
     {
         this.configurationFile = configurationFile;
     }
-    
+
 }

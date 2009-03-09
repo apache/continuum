@@ -69,7 +69,7 @@ public class DefaultShellCommandHelper
 
     /**
      * Make the command line
-     * 
+     *
      * @param workingDirectory
      * @param executable
      * @param arguments
@@ -90,9 +90,8 @@ public class DefaultShellCommandHelper
 
         if ( environments != null && !environments.isEmpty() )
         {
-            for ( Iterator<String> iterator = environments.keySet().iterator(); iterator.hasNext(); )
+            for ( String key : environments.keySet() )
             {
-                String key = iterator.next();
                 String value = environments.get( key );
                 cl.addEnvironment( key, value );
             }
@@ -106,10 +105,8 @@ public class DefaultShellCommandHelper
 
         if ( arguments != null )
         {
-            for ( int i = 0; i < arguments.length; i++ )
+            for ( String argument : arguments )
             {
-                String argument = arguments[i];
-
                 cl.createArgument().setValue( argument );
             }
         }
@@ -161,8 +158,8 @@ public class DefaultShellCommandHelper
         CommandLineUtils.killProcess( idCommand );
     }
 
-    public void executeGoals( File workingDirectory, String executable, String goals, boolean interactive, String arguments,
-                              ReleaseResult relResult, Map<String, String> environments )
+    public void executeGoals( File workingDirectory, String executable, String goals, boolean interactive,
+                              String arguments, ReleaseResult relResult, Map<String, String> environments )
         throws Exception
     {
         Commandline cl = new Commandline();
@@ -174,8 +171,8 @@ public class DefaultShellCommandHelper
         executeGoals( workingDirectory, executable, goals, interactive, argument.getParts(), relResult, environments );
     }
 
-    public void executeGoals( File workingDirectory, String executable, String goals, boolean interactive, String[] arguments,
-                              ReleaseResult relResult, Map<String, String> environments )
+    public void executeGoals( File workingDirectory, String executable, String goals, boolean interactive,
+                              String[] arguments, ReleaseResult relResult, Map<String, String> environments )
         throws Exception
     {
         if ( executable == null )
@@ -190,10 +187,10 @@ public class DefaultShellCommandHelper
             // accept both space and comma, so the old way still work
             String[] tokens = StringUtils.split( goals, ", " );
 
-            for ( int i = 0; i < tokens.length; ++i )
-    		{
-                cl.createArgument().setValue( tokens[i] );
-    		}
+            for ( String token : tokens )
+            {
+                cl.createArgument().setValue( token );
+            }
         }
 
         cl.createArgument().setValue( "--no-plugin-updates" );
@@ -209,16 +206,16 @@ public class DefaultShellCommandHelper
 
         try
         {
-    		relResult.appendInfo( "Executing: " + cl.toString() );
-    		log.info( "Executing: " + cl.toString() );
+            relResult.appendInfo( "Executing: " + cl.toString() );
+            log.info( "Executing: " + cl.toString() );
 
-    		int result = CommandLineUtils.executeCommandLine( cl, stdOut, stdErr );
+            int result = CommandLineUtils.executeCommandLine( cl, stdOut, stdErr );
 
-    		if ( result != 0 )
-    		{
-    		    throw new MavenExecutorException( "Maven execution failed, exit code: \'" + result + "\'", result,
-    		                                      stdOut.toString(), stdErr.toString() );
-    		}
+            if ( result != 0 )
+            {
+                throw new MavenExecutorException( "Maven execution failed, exit code: \'" + result + "\'", result,
+                                                  stdOut.toString(), stdErr.toString() );
+            }
         }
         catch ( CommandLineException e )
         {
