@@ -708,6 +708,7 @@
     <action name="deleteInstallation" class="installation" method="delete">
       <result name="input">/WEB-INF/jsp/admin/installationsList.jsp</result>
       <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteInstallation.jsp</result>
     </action>  
     
     <!--addBuildEnv
@@ -729,8 +730,9 @@
 
     <action name="deleteDefinitionTemplate" class="buildDefinitionTemplates" method="delete">
       <result name="success" type="redirect-action">
-        <param name="actionName">buildDefinitionTemplates.action</param>
+        <param name="actionName">buildDefinitionTemplates.action</param>        
       </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionTemplate.jsp</result>
     </action>
     
     <action name="saveBuildDefinitionTemplate" class="buildDefinitionTemplates" method="save">
@@ -763,6 +765,7 @@
       <result name="success" type="redirect-action">
         <param name="actionName">buildDefinitionTemplates.action</param>
       </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionAsTemplate.jsp</result>
     </action>
     
     <action name="displayQueues" class="queues" method="display">
