@@ -48,6 +48,9 @@
           <tbody>
             <ww:hidden name="installation.installationId" />
             <ww:hidden name="installationType" />
+            <ww:hidden name="displayTypes" />
+            <ww:hidden name="varNameUpdatable" />
+            <ww:hidden name="varNameDisplayable" />
             <ww:textfield label="%{getText('installation.name.label')}" name="installation.name"
                             required="true"/>
             <ww:if test="displayTypes">
@@ -55,7 +58,7 @@
             </ww:if>
             <ww:if test="varNameUpdatable">
               <ww:if test="varNameDisplayable">
-                <ww:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="${varNameUpdatable}" />
+                <ww:textfield label="%{getText('installation.varName.label')}" name="installation.varName" required="true"/>
               </ww:if>
             </ww:if>
             <ww:else>

@@ -19,6 +19,9 @@ package org.apache.continuum.profile;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.dao.ProfileDao;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -29,9 +32,6 @@ import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -307,7 +307,7 @@ public class DefaultProfileService
      * @return true if profile with same name (<b>case sensitive</b>) exists
      * @throws ProfileException
      */
-    private boolean alreadyExistsProfileName( Profile profile )
+    public boolean alreadyExistsProfileName( Profile profile )
         throws ProfileException
     {
         return getProfileWithName( profile.getName() ) != null;

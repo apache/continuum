@@ -1,9 +1,9 @@
 package org.apache.maven.continuum.profile;
 
+import java.util.List;
+
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
-
-import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -69,10 +69,10 @@ public interface ProfileService
 
     public void addEnvVarInProfile( Profile profile, Installation envVar )
         throws ProfileException;
-    
+
     public void addInstallationInProfile( Profile profile, Installation installation )
         throws ProfileException;
-    
+
     /**
      * @param profile
      * @param installation
@@ -81,7 +81,10 @@ public interface ProfileService
      */
     public void removeInstallationFromProfile( Profile profile, Installation installation )
         throws ProfileException;
-    
+
     public Profile getProfileWithName( String profileName )
+        throws ProfileException;
+
+    public boolean alreadyExistsProfileName( Profile profile )
         throws ProfileException;
 }

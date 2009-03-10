@@ -19,6 +19,16 @@ package org.apache.continuum.installation;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.continuum.dao.InstallationDao;
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
@@ -38,16 +48,6 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author <a href="mailto:olamy@codehaus.org">olamy</a>
@@ -116,6 +116,23 @@ public class DefaultInstallationService
         {
             throw new AlreadyExistsInstallationException(
                 "Installation with name " + installation.getName() + " already exists" );
+        }
+        else if ( automaticProfile )
+        {
+            Profile profile = new Profile();
+            profile.setName( installation.getName() );
+            try
+            {
+                if ( profileService.alreadyExistsProfileName( profile ) )
+                {
+                    throw new AlreadyExistsProfileException( "Profile with name " + installation.getName()
+                        + " already exists" );
+                }
+            }
+            catch ( ProfileException e )
+            {
+                throw new InstallationException( "failed to search Profile " + e.getMessage(), e );
+            }
         }
         // TODO must be done in the same transaction
         Installation storedOne = null;
@@ -205,7 +222,7 @@ public class DefaultInstallationService
      * @see org.apache.maven.continuum.installation.InstallationService#update(org.apache.maven.continuum.model.system.Installation)
      */
     public void update( Installation installation )
-        throws InstallationException
+        throws InstallationException, AlreadyExistsInstallationException
     {
         try
         {
@@ -216,6 +233,11 @@ public class DefaultInstallationService
             }
 
             stored.setName( installation.getName() );
+            if ( alreadyExistInstallationName( installation ) )
+            {
+                throw new AlreadyExistsInstallationException(
+                    "Installation with name " + installation.getName() + " already exists" );
+            }
             stored.setType( installation.getType() );
             String envVarName = this.getEnvVar( installation.getType() );
             // override with the defined var name for defined types
@@ -451,7 +473,8 @@ public class DefaultInstallationService
         List<Installation> all = getAllInstallations();
         for ( Installation install : all )
         {
-            if ( org.apache.commons.lang.StringUtils.equals( installation.getName(), install.getName() ) )
+            if ( org.apache.commons.lang.StringUtils.equals( installation.getName(), install.getName() )
+                && ( installation.getInstallationId() == 0 || installation.getInstallationId() != install.getInstallationId() ) )
             {
                 return true;
             }

@@ -9,12 +9,14 @@ import java.util.ResourceBundle;
 import org.apache.maven.continuum.installation.AlreadyExistsInstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
+import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureAction;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionBundle;
 import org.codehaus.plexus.redback.xwork.interceptor.SecureActionException;
+import org.codehaus.plexus.util.StringUtils;
 
 import com.opensymphony.xwork.Preparable;
 
@@ -61,21 +63,21 @@ public class InstallationAction
     private List<String> types;
 
     private boolean varNameUpdatable = false;
-   
+
     private boolean automaticProfile;
-   
+
     private boolean varNameDisplayable = false;
-    
+
     private boolean displayTypes = true;
-    
+
     private String installationType;
-    
+
     private Map<String, String> installationTypes;
-    
+
     private static final String TOOL_TYPE_KEY = "tool";
-    
+
     private boolean automaticProfileDisplayable = true;
-   
+
     // -----------------------------------------------------
     // Webwork methods
     // -----------------------------------------------------
@@ -125,6 +127,12 @@ public class InstallationAction
         if ( InstallationService.ENVVAR_TYPE.equalsIgnoreCase( this.getInstallationType() ) )
         {
             this.installation.setType( InstallationService.ENVVAR_TYPE );
+            if ( StringUtils.isEmpty( installation.getVarName() ) )
+            {
+                addFieldError( "installation.varName", getResourceBundle().getString( "installation.varName.required" ) );
+                return INPUT;
+            }
+
         }
         if ( installation.getInstallationId() == 0 )
         {
@@ -137,14 +145,24 @@ public class InstallationAction
                 this.addActionError( getResourceBundle().getString( "installation.name.duplicate" ) );
                 return INPUT;
             }
+            catch ( AlreadyExistsProfileException e )
+            {
+                this.addActionError( getResourceBundle().getString( "profile.name.already.exists" ) );
+                return INPUT;
+            }
         }
         else
         {
             this.configureUiFlags();
-            installationService.update( installation );
-            return "edit";
+            try{
+                installationService.update( installation );
+            }
+            catch ( AlreadyExistsInstallationException e )
+            {
+                this.addActionError( getResourceBundle().getString( "installation.name.duplicate" ) );
+                return INPUT;
+            }
         }
-        this.configureUiFlags();
         return SUCCESS;
     }
 
@@ -166,11 +184,11 @@ public class InstallationAction
 
         return SUCCESS;
     }
-    
+
     // -----------------------------------------------------
     // security
-    // -----------------------------------------------------    
-    
+    // -----------------------------------------------------
+
     public SecureActionBundle getSecureActionBundle()
         throws SecureActionException
     {
@@ -183,7 +201,7 @@ public class InstallationAction
 
     // -----------------------------------------------------
     // utils
-    // -----------------------------------------------------    
+    // -----------------------------------------------------
     private void configureUiFlags()
     {
         // we can update env var name only with env var type
@@ -200,8 +218,8 @@ public class InstallationAction
         }
         this.setInstallationType( this.getInstallation().getType() );
     }
-    
-    
+
+
     // -----------------------------------------------------
     // getter/setters
     // -----------------------------------------------------
@@ -341,6 +359,6 @@ public class InstallationAction
     public void setAutomaticProfileDisplayable( boolean automaticProfileDisplayable )
     {
         this.automaticProfileDisplayable = automaticProfileDisplayable;
-    }    
-    
+    }
+
 }
