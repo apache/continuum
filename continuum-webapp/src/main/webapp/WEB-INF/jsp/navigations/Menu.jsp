@@ -38,6 +38,12 @@
           <s:text name="menu.continuum.showProjectGroups"/>
         </s:a>
       </div>
+      <div class="body">
+        <s:url id="releasesUrl" action="viewReleases" namespace="/" includeParams="none"/>
+        <s:a href="%{releasesUrl}">
+          <s:text name="menu.administration.releases"/>
+        </s:a>
+      </div> 
     </div>
   </div>
 
@@ -144,12 +150,6 @@
             </s:a>
           </div> 
         </redback:ifAuthorized>
-        <div class="body">
-          <s:url id="releasesUrl" action="viewReleases" namespace="/" includeParams="none"/>
-          <s:a href="%{releasesUrl}">
-            <s:text name="menu.administration.releases"/>
-          </s:a>
-        </div> 
         <redback:ifAuthorized permission="continuum-manage-build-templates">
           <s:url id="buildDefinitionTemplatesUrl" action="buildDefinitionTemplates" namespace="/admin" includeParams="none"/>
           <div class="body">
