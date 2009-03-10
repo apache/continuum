@@ -48,6 +48,9 @@
           <tbody>
             <s:hidden name="installation.installationId" />
             <s:hidden name="installationType" />
+            <s:hidden name="displayTypes" />
+            <s:hidden name="varNameUpdatable" />
+            <s:hidden name="varNameDisplayable" />
             <s:textfield label="%{getText('installation.name.label')}" name="installation.name"
                             required="true"/>
             <s:if test="displayTypes">
