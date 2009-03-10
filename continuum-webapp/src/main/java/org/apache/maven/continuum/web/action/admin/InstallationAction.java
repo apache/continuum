@@ -12,7 +12,7 @@ import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
-import org.apache.maven.continuum.web.action.ContinuumActionSupport;
+import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -45,7 +45,7 @@ import com.opensymphony.xwork2.Preparable;
  * @since 14 juin 07
  */
 public class InstallationAction
-    extends ContinuumActionSupport
+    extends ContinuumConfirmAction
     implements Preparable, SecureAction
 {
 
@@ -77,6 +77,8 @@ public class InstallationAction
     private static final String TOOL_TYPE_KEY = "tool";
 
     private boolean automaticProfileDisplayable = true;
+
+    private boolean confirmed;
 
     // -----------------------------------------------------
     // Webwork methods
@@ -169,9 +171,16 @@ public class InstallationAction
     public String delete()
         throws Exception
     {
-        Installation installationToDelete = installationService.getInstallation( installation.getInstallationId() );
-        installationService.delete( installationToDelete );
-        this.installations = installationService.getAllInstallations();
+        if ( confirmed )
+        {
+            Installation installationToDelete = installationService.getInstallation( installation.getInstallationId() );
+            installationService.delete( installationToDelete );
+            this.installations = installationService.getAllInstallations();
+        }
+        else
+        {
+            return CONFIRM;
+        }
         return SUCCESS;
     }
 
@@ -361,4 +370,13 @@ public class InstallationAction
         this.automaticProfileDisplayable = automaticProfileDisplayable;
     }
 
+    public boolean isConfirmed()
+    {
+        return confirmed;
+    }
+
+    public void setConfirmed( boolean confirmed )
+    {
+        this.confirmed = confirmed;
+    }
 }

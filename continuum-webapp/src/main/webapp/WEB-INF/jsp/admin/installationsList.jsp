@@ -53,7 +53,7 @@
           </a>  
         </ec:column>   
         <ec:column property="id" title="&nbsp;" width="1%">
-          <a href="deleteInstallation!delete.action?installation.installationId=<c:out value="${installation.installationId}"/>">
+          <a href="deleteInstallation!delete.action?installation.installationId=<c:out value="${installation.installationId}"/>&installation.name=<c:out value="${installation.name}"/>">
             <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
           </a>  
         </ec:column>             

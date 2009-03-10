@@ -153,9 +153,17 @@ public class BuildDefinitionTemplateAction
     public String delete()
         throws BuildDefinitionServiceException
     {
-        buildDefinitionTemplate = getContinuum().getBuildDefinitionService()
-            .getBuildDefinitionTemplate( this.buildDefinitionTemplate.getId() );
-        this.getContinuum().getBuildDefinitionService().removeBuildDefinitionTemplate( buildDefinitionTemplate );
+        if ( confirmed )
+        {
+            buildDefinitionTemplate =
+                getContinuum().getBuildDefinitionService().getBuildDefinitionTemplate(
+                                                                                       this.buildDefinitionTemplate.getId() );
+            this.getContinuum().getBuildDefinitionService().removeBuildDefinitionTemplate( buildDefinitionTemplate );
+        }
+        else
+        {
+            return CONFIRM;
+        }
         return SUCCESS;
     }
     
@@ -233,8 +241,16 @@ public class BuildDefinitionTemplateAction
     public String deleteBuildDefinition()
         throws BuildDefinitionServiceException
     {
-        buildDefinition = getContinuum().getBuildDefinitionService().getBuildDefinition( this.buildDefinition.getId() );
-        this.getContinuum().getBuildDefinitionService().removeBuildDefinition( buildDefinition );
+        if ( confirmed )
+        {
+            buildDefinition = getContinuum().getBuildDefinitionService().getBuildDefinition( this.buildDefinition.getId() );
+            this.getContinuum().getBuildDefinitionService().removeBuildDefinition( buildDefinition );
+        }
+        else
+        {
+            return CONFIRM;
+        }
+        
         return SUCCESS;
     }
 

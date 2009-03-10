@@ -31,7 +31,7 @@ import java.util.List;
  * @since 16 sept. 07
  */
 public abstract class AbstractBuildDefinitionAction
-    extends ContinuumActionSupport
+    extends ContinuumConfirmAction
 {
 
     protected BuildDefinitionSummary generateBuildDefinitionSummary( BuildDefinition buildDefinition )

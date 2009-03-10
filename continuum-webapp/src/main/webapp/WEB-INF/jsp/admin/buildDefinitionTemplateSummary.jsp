@@ -58,6 +58,7 @@
             <c:otherwise>
               <s:url id="deleteUrl" action="deleteDefinitionTemplate" method="delete" namespace="/">
                 <s:param name="buildDefinitionTemplate.id">${pageScope.template.id}</s:param>
+                <s:param name="buildDefinitionTemplate.name">${pageScope.template.name}</s:param>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </c:otherwise>
@@ -105,6 +106,7 @@
             <c:otherwise>
               <s:url id="deleteUrl" action="deleteBuildDefinitionAsTemplate" method="deleteBuildDefinition" namespace="/">
                 <s:param name="buildDefinition.id">${pageScope.buildDefinitionSummary.id}</s:param>
+                <s:param name="buildDefinition.description">${pageScope.buildDefinitionSummary.description}</s:param>
               </s:url>
               <s:a href="%{deleteUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
             </c:otherwise>
