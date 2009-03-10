@@ -205,7 +205,7 @@ public class DefaultInstallationService
      * @see org.apache.maven.continuum.installation.InstallationService#update(org.apache.maven.continuum.model.system.Installation)
      */
     public void update( Installation installation )
-        throws InstallationException
+        throws InstallationException, AlreadyExistsInstallationException
     {
         try
         {
@@ -216,6 +216,11 @@ public class DefaultInstallationService
             }
 
             stored.setName( installation.getName() );
+            if ( alreadyExistInstallationName( installation ) )
+            {
+                throw new AlreadyExistsInstallationException(
+                    "Installation with name " + installation.getName() + " already exists" );
+            }
             stored.setType( installation.getType() );
             String envVarName = this.getEnvVar( installation.getType() );
             // override with the defined var name for defined types
@@ -449,7 +454,8 @@ public class DefaultInstallationService
         List<Installation> all = getAllInstallations();
         for ( Installation install : all )
         {
-            if ( org.apache.commons.lang.StringUtils.equals( installation.getName(), install.getName() ) )
+            if ( org.apache.commons.lang.StringUtils.equals( installation.getName(), install.getName() )
+                && ( installation.getInstallationId() == 0 || installation.getInstallationId() != install.getInstallationId() ) )
             {
                 return true;
             }

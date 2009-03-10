@@ -311,7 +311,7 @@ public class DefaultProfileService
      * @return true if profile with same name (<b>case sensitive</b>) exists
      * @throws ProfileException
      */
-    private boolean alreadyExistsProfileName( Profile profile )
+    public boolean alreadyExistsProfileName( Profile profile )
         throws ProfileException
     {
         return getProfileWithName( profile.getName() ) != null;
