@@ -23,7 +23,6 @@
   <s:i18n name="localization.Continuum">
     <head>
       <title><s:text name="releaseProject.page.title"/></title>
-      <s:head />
     </head>
     <body>
       <h2><s:text name="releasePrepare.section.title"/></h2>
