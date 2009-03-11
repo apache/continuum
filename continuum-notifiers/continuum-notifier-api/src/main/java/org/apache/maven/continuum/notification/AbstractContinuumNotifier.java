@@ -285,7 +285,8 @@ public abstract class AbstractContinuumNotifier
             return true;
         }
 
-        if ( projectScmRoot.getState() == ContinuumProjectState.ERROR && projectNotifier.isSendOnScmFailure() )
+        if ( projectScmRoot.getState() == ContinuumProjectState.ERROR && projectNotifier.isSendOnScmFailure()
+             && projectScmRoot.getOldState() != projectScmRoot.getState() )
         {
             return true;
         }
