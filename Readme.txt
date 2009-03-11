@@ -13,6 +13,12 @@ Run Selenium tests in src/test/java with Maven and Cargo using support for multi
 Run Selenium tests in src/test/it with Maven and Cargo with alternate configuration
  * modify src/test/resources/it.properties as needed
  * mvn clean install -f it-pom.xml
+ 
+Run Selenium tests in src/test/testNG with Maven and testNG
+ * Start Continuum
+ * Config admin user for continuum application
+ * modify src/test/resources/testng.properties as needed
+ * mvn clean install -f testng-pom.xml
 
  Note that this does not install anything, it simply runs through the lifecycle including the integration test phases.
  More properly it would be 'mvn clean post-integration-test', but install is much shorter to type. :)
