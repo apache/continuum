@@ -351,10 +351,9 @@ public class BuildAgentAction
                     this.selectedBuildAgentIds = new ArrayList<String>();
                     if ( this.buildAgentGroup.getBuildAgents() != null )
                     {
-                        for ( Iterator<BuildAgentConfiguration> iterator = buildAgentGroup.getBuildAgents().iterator();
-                              iterator.hasNext(); )
+                        for ( BuildAgentConfiguration buildAgentConfiguration : buildAgentGroup.getBuildAgents() )
                         {
-                            this.selectedBuildAgentIds.add( iterator.next().getUrl() );
+                            this.selectedBuildAgentIds.add( buildAgentConfiguration.getUrl() );
                         }
 
                     }
