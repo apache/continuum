@@ -25,7 +25,7 @@
         baseRelativePath: "<@s.url includeParams='none' value='/struts/dojo' includeParams="none" encode='false'/>",
         isDebug: ${parameters.debug?default(false)},
         bindEncoding: "${parameters.encoding}",
-        debugAtAllCosts: true // not needed, but allows the Venkman debugger to work with the includes
+        debugAtAllCosts: false // not needed, but allows the Venkman debugger to work with the includes
     };
 </script>
 <script type="text/javascript"
