@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>test_shell_project</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">test_shell_project</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/continuum/groupSummary.action</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Show Project Groups</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addProjectGroup</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addProjectGroup_name</td>
+	<td>Shell Test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addProjectGroup_groupId</td>
+	<td>shell-test</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addProjectGroup_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Shell Test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>preferredExecutor</td>
+	<td>label=Add Shell Project</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addProject_projectName</td>
+	<td>Good Shell Project</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addProject_projectVersion</td>
+	<td>1.0</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addProject_projectScmUrl</td>
+	<td>https://svn.apache.org/repos/asf/continuum/sandbox/examples/shell</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addProject_</td>
+	<td></td>
+</tr>
+<!--Either the project was not added, OR you get-->
+<!--Error - "Project name already exist" (however, project is added)-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Show Project Groups</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Shell Test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//img[@alt='Build Now']</td>
+	<td></td>
+</tr>
+<!--Error - java.lang.NullPointerException-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Show Project Groups</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Shell Test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>removeProjectGroup_</td>
+	<td></td>
+</tr>
+<!--Error - java.lang.NullPointerException on first delete attempt (second seems to work) -->
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>Shell Test</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
