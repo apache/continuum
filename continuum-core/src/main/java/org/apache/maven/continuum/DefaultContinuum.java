@@ -417,9 +417,9 @@ public class DefaultContinuum
                 throw new ContinuumException( "Unable to delete group.", e );
             }
 
-            for ( int i = 0; i < projectIds.length; i++ )
+            for ( int projectId : projectIds )
             {
-                removeProject( projectIds[i] );
+                removeProject( projectId );
             }
 
             log.info( "Remove project group " + projectGroup.getName() + "(" + projectGroup.getId() + ")" );
@@ -603,14 +603,7 @@ public class DefaultContinuum
     {
         List<BuildResult> builds = buildResultDao.getBuildResultByBuildNumber( projectId, buildNumber );
 
-        if ( builds.isEmpty() )
-        {
-            return null;
-        }
-        else
-        {
-            return builds.get( 0 );
-        }
+        return ( builds.isEmpty() ? null : builds.get( 0 ) );
     }
 
     // ----------------------------------------------------------------------
