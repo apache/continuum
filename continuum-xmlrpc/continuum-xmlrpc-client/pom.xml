@@ -53,6 +53,9 @@ under the License.
                  also adding the project build directory -->
             <classpath />
             <argument>org.apache.maven.continuum.xmlrpc.client.SampleClient</argument>
+            <argument>http://localhost:8080/continuum/xmlrpc</argument>
+            <argument>admin</argument>
+            <argument>admin123</argument>
           </arguments>
         </configuration>
       </plugin>
