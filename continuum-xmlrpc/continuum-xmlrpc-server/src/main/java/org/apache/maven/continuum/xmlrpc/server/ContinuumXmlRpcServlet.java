@@ -34,8 +34,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLifecycleExce
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.redback.authentication.AuthenticationException;
 import org.codehaus.plexus.redback.authentication.PasswordBasedAuthenticationDataSource;
-import org.codehaus.plexus.redback.policy.AccountLockedException;
-import org.codehaus.plexus.redback.policy.MustChangePasswordException;
+import org.codehaus.plexus.redback.policy.PolicyViolationException;
 import org.codehaus.plexus.redback.system.DefaultSecuritySession;
 import org.codehaus.plexus.redback.system.SecuritySystem;
 import org.codehaus.plexus.redback.users.UserNotFoundException;
@@ -165,17 +164,12 @@ public class ContinuumXmlRpcServlet
                         e.printStackTrace();
                         return false;
                     }
-                    catch ( AccountLockedException e )
+                    catch ( PolicyViolationException e )
                     {
                         e.printStackTrace();
                         return false;
                     }
                     catch ( UserNotFoundException e )
-                    {
-                        e.printStackTrace();
-                        return false;
-                    }
-                    catch ( MustChangePasswordException e )
                     {
                         e.printStackTrace();
                         return false;
