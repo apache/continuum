@@ -102,10 +102,11 @@
         <field>
           <name>projectScmRoots</name>
           <version>1.1.3+</version>
-          <association>
+          <association java.init="field">
             <type>ProjectScmRoot</type>
             <multiplicity>*</multiplicity>
           </association>
+          <defaultValue>new java.util.ArrayList()</defaultValue>
         </field>
       </fields>
     </class>
@@ -426,7 +427,7 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
-        <field>
+        <field jpox.null-value="default">
           <name>sendOnScmFailure</name>
           <version>1.1.3+</version>
           <type>boolean</type>
@@ -602,15 +603,17 @@
             <multiplicity>*</multiplicity>
           </association>
         </field>
-        <field>
+        <field jpox.null-value="default">
           <name>lastChangedDate</name>
-          <version>1.1.4+</version>
+          <version>1.3.2+</version>
           <type>long</type>
+          <defaultValue>0</defaultValue>
         </field>
-        <field>
+        <field jpox.null-value="default">
           <name>buildUrl</name>
-          <version>1.1.4+</version>
+          <version>1.3.2+</version>
           <type>String</type>
+          <defaultValue></defaultValue>
         </field>
       </fields>
       <codeSegments>
@@ -1112,13 +1115,14 @@
           <version>1.0.9+</version>
           <type>String</type>
         </field>
-        <field jpox.fetch-groups="schedule-build-queues">
+        <field jpox.fetch-groups="schedule-build-queues" java.init="field">
           <name>buildQueues</name>
           <version>1.1.4+</version>
           <association xml.reference="true" stash.part="true" jpox.dependent="false">
             <type>BuildQueue</type>
             <multiplicity>*</multiplicity>
           </association>
+          <defaultValue>new java.util.ArrayList()</defaultValue>
         </field>
       </fields>
     </class>
@@ -1159,11 +1163,12 @@
           <version>1.1.0+</version>
           <type>boolean</type>
         </field>
-        <field>
+        <field jpox.null-value="default">
           <name>buildAgentGroup</name>
-          <version>1.1.4+</version>
+          <version>1.3.2+</version>
           <type>String</type>
           <required>false</required>
+          <defaultValue></defaultValue>
         </field>        
         <field>
           <name>jdk</name>
@@ -1282,16 +1287,17 @@
           <type>String</type>
           <defaultValue>release-output-directory</defaultValue>
         </field>
-        <field>
+        <field jpox.null-value="default">
           <name>numberOfBuildsInParallel</name>
           <version>1.1.4+</version>
           <type>int</type>
           <defaultValue>1</defaultValue>
         </field>
-        <field>
+        <field jpox.null-value="default">
           <name>distributedBuildEnabled</name>
           <version>1.1.4+</version>
           <type>boolean</type>
+          <defaultValue>false</defaultValue>
         </field>
       </fields>
     </class>
