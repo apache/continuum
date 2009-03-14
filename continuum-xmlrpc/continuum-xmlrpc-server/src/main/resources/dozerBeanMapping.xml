@@ -203,7 +203,7 @@
   </mapping>
   
   <mapping>
-    <class-a>org.apache.maven.continuum.buildqueue.BuildProjectTask</class-a>
+    <class-a>org.apache.continuum.taskqueue.BuildProjectTask</class-a>
     <class-b>org.apache.maven.continuum.xmlrpc.project.BuildProjectTask</class-b>
   </mapping>
 
