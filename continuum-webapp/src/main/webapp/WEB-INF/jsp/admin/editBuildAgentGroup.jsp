@@ -54,7 +54,7 @@
             </table>
             
             <c:choose>
-              <c:when test="${not empty buildAgents}">
+              <c:when test="${not empty buildAgents || not empty selectedBuildAgentIds}">
                 <table>
                   <s:optiontransferselect
                         label="%{getText('buildAgentGroup.buildAgents.define')}"    
