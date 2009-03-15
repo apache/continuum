@@ -560,8 +560,6 @@ public class PrepareBuildProjectsTaskExecutor
                     log.error( e.getMessage(), e );
                     throw new TaskExecutionException( "Error executing action 'build-project'", e );
                 }
-                //shouldBuild = true;
-                projectsToBeBuilt.add( project );
             }
         }
         
