@@ -63,7 +63,17 @@ public class DefaultBuildAgentConfigurationService
 
     public File getWorkingDirectory( int projectId )
     {
-        return new File( generalBuildAgentConfiguration.getWorkingDirectory(), Integer.toString( projectId ) );
+        File dir = new File( generalBuildAgentConfiguration.getWorkingDirectory(), Integer.toString( projectId ) );
+
+        try
+        {
+            dir = dir.getCanonicalFile();
+        }
+        catch ( IOException e )
+        {
+        }
+
+        return dir;
     }
 
     public String getBuildOutput( int projectId )
