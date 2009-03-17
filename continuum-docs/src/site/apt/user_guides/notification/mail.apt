@@ -8,7 +8,8 @@
 
 Mail Notification
 
-  Email notification will be add automatically from reading pom (you can add as many notifier as you need) :
+  If you are using Maven 2, email notifiers configured in pom.xml will be automatically added, and you may
+  have as many as you need.
     
 +-------------------------------+
   
@@ -25,12 +26,18 @@ Mail Notification
   
 +-------------------------------+     
 
-  Or can you can add manually mail notifier to you project group and/or project.
+  Or can you can manually add mail notifiers at the project group or individual project level.
   
   On the <<Add Notifier>> form select <<Mail>> from the pull-down menu and click Submit.
   
 [../../images/notifier-mail-add.png] Add Email Notifier 
 
-  Fill in the recipient's fully qualified email address and select the send on options you want.
+  You must either provide a single email address, or select to notify the latest committers.
+
+~~ TODO:  Does notifying an email address in addition to the latest committers also work?
+
+  In addition you may select one or more "Send on..." options.
+
+~~ TODO:  What is "Send on Warning"?  We only have three build states:  error, failure, success
   
   Then, click <<Save>>.
