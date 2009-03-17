@@ -22,6 +22,7 @@ package org.apache.maven.continuum.release.executors;
 import org.apache.maven.continuum.release.tasks.ReleaseProjectTask;
 import org.apache.maven.shared.release.ReleaseExecutionException;
 import org.apache.maven.shared.release.ReleaseFailureException;
+import org.apache.maven.shared.release.ReleaseManagerListener;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 public class RollbackReleaseTaskExecutor
     extends AbstractReleaseTaskExecutor
 {
+    private static final int ERROR = 99;
+
     protected void execute( ReleaseProjectTask releaseTask )
         throws TaskExecutionException
     {
@@ -43,11 +46,18 @@ public class RollbackReleaseTaskExecutor
         }
         catch ( ReleaseExecutionException e )
         {
+            updateListener( releaseTask.getListener(), e.getMessage(), ERROR );
             throw new TaskExecutionException( "Failed to rollback release", e );
         }
         catch ( ReleaseFailureException e )
         {
+            updateListener( releaseTask.getListener(), e.getMessage(), ERROR );
             throw new TaskExecutionException( "Failed to rollback release", e );
         }
+    }
+
+    private void updateListener( ReleaseManagerListener listener, String name, int state )
+    {
+        listener.error( name );
     }
 }
