@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.release.ContinuumReleaseException;
@@ -31,40 +32,40 @@ import org.apache.maven.shared.release.ReleaseResult;
 public interface DistributedReleaseManager
 {
     Map getReleasePluginParameters( int projectId, String pomFilename )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     String releasePrepare( Project project, Properties releaseProperties, Map<String, String> releaseVersion, 
                            Map<String, String> developmentVersion, Map<String, String> environments )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     ReleaseResult getReleaseResult( String releaseId )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     Map getListener( String releaseId )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     void removeListener( String releaseId )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     String getPreparedReleaseName( String releaseId )
         throws ContinuumReleaseException;
 
     void releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     void releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, 
                                 String scmUrl, String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     void releaseRollback( String releaseId, int projectId )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     String releaseCleanup( String releaseId )
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 
     List<Map> getAllReleasesInProgress()
-        throws ContinuumReleaseException;
+        throws ContinuumReleaseException, BuildAgentConfigurationException;
 }
