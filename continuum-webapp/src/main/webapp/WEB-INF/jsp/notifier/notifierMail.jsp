@@ -43,6 +43,9 @@
             </s:text>
         </h3>
 
+        <s:actionerror/>
+        <s:actionmessage/>
+
         <div class="axial">
           <s:form action="%{actionUrl}" method="post" validate="true">
             <s:hidden name="notifierId"/>
