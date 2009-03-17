@@ -70,6 +70,9 @@ under the License.
         <configuration>
           <filesets>
             <fileset>
+              <directory>${basedir}/data</directory>
+            </fileset>
+            <fileset>
               <directory>${basedir}/src/main/webapp</directory>
               <includes>
                 <!-- TODO: META-INF shouldn't be required, seems to be an issue with the current war plugin -->
