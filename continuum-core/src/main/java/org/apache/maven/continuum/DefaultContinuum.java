@@ -666,6 +666,7 @@ public class DefaultContinuum
             for ( Object o : project.getBuildResults() )
             {
                 BuildResult br = (BuildResult) o;
+                br.setBuildDefinition( null );
                 //Remove all modified dependencies to prevent SQL errors
                 br.setModifiedDependencies( null );
                 buildResultDao.updateBuildResult( br );
