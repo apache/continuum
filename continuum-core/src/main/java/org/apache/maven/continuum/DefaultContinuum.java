@@ -394,8 +394,8 @@ public class DefaultContinuum
             {
                 ProjectGroup new_pg = projectGroupDao.addProjectGroup( projectGroup );
 
-                buildDefinitionService.addBuildDefinitionTemplateToProjectGroup( new_pg.getId(), buildDefinitionService
-                    .getDefaultMavenTwoBuildDefinitionTemplate() );
+                buildDefinitionService.addBuildDefinitionTemplateToProjectGroup( new_pg.getId(),
+                                                                                 buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate() );
 
                 Map context = new HashMap();
                 context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new Integer( new_pg.getId() ) );
@@ -804,7 +804,7 @@ public class DefaultContinuum
         throws ContinuumException
     {
         Task task = getBuildTaskQueueExecutor().getCurrentTask();
-        
+
         if ( task != null )
         {
             if ( task instanceof BuildProjectTask )
@@ -836,7 +836,8 @@ public class DefaultContinuum
         {
             Project project = getProjectWithBuilds( projectId );
 
-            List<ContinuumReleaseResult> releaseResults = releaseResultDao.getContinuumReleaseResultsByProject( projectId );
+            List<ContinuumReleaseResult> releaseResults =
+                releaseResultDao.getContinuumReleaseResultsByProject( projectId );
 
             try
             {
@@ -845,7 +846,8 @@ public class DefaultContinuum
                     releaseResultDao.removeContinuumReleaseResult( releaseResult );
                 }
 
-                File releaseOutputDirectory = configurationService.getReleaseOutputDirectory( project.getProjectGroup().getId() );
+                File releaseOutputDirectory =
+                    configurationService.getReleaseOutputDirectory( project.getProjectGroup().getId() );
 
                 if ( releaseOutputDirectory != null )
                 {
@@ -893,6 +895,7 @@ public class DefaultContinuum
             for ( Object o : project.getBuildResults() )
             {
                 BuildResult br = (BuildResult) o;
+                br.setBuildDefinition( null );
                 //Remove all modified dependencies to prevent SQL errors
                 br.setModifiedDependencies( null );
                 buildResultDao.updateBuildResult( br );
@@ -1332,14 +1335,17 @@ public class DefaultContinuum
                 buildDefinitionLabel = buildDefinition.getGoals();
             }
 
-            getLogger().info( "Enqueuing '" + project.getName() + "' with build definition '" + buildDefinitionLabel +
-                "' - id=" + buildDefinitionId + ")." );
+            getLogger().info(
+                "Enqueuing '" + project.getName() + "' with build definition '" + buildDefinitionLabel + "' - id=" +
+                    buildDefinitionId + ")." );
 
-            BuildProjectTask task = new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project
-                .getName(), buildDefinitionLabel );
+            BuildProjectTask task =
+                new BuildProjectTask( project.getId(), buildDefinitionId, trigger, project.getName(),
+                                      buildDefinitionLabel );
 
-            task.setMaxExecutionTime( buildDefinitionDao.getBuildDefinition( buildDefinitionId ).getSchedule()
-                .getMaxJobExecutionTime() * 1000 );
+            task.setMaxExecutionTime(
+                buildDefinitionDao.getBuildDefinition( buildDefinitionId ).getSchedule().getMaxJobExecutionTime() *
+                    1000 );
 
             buildQueue.put( task );
         }
@@ -1533,8 +1539,7 @@ public class DefaultContinuum
         {
             return executeAddProjectsFromMetadataActivity( metadataUrl, MavenOneContinuumProjectBuilder.ID,
                                                            getDefaultProjectGroup().getId(), checkProtocol,
-                                                           buildDefinitionService
-                                                               .getDefaultMavenOneBuildDefinitionTemplate().getId() );
+                                                           buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate().getId() );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -1596,8 +1601,8 @@ public class DefaultContinuum
         try
         {
             return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, -1,
-                                                           checkProtocol, buildDefinitionService
-                .getDefaultMavenTwoBuildDefinitionTemplate().getId() );
+                                                           checkProtocol,
+                                                           buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getId() );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -1626,8 +1631,7 @@ public class DefaultContinuum
         {
             return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
                                                            projectGroupId, checkProtocol, useCredentialsCache, true,
-                                                           buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate()
-                                                               .getId() );
+                                                           buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getId() );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -1644,8 +1648,8 @@ public class DefaultContinuum
         {
             return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
                                                            projectGroupId, checkProtocol, useCredentialsCache,
-                                                           recursiveProjects, buildDefinitionService
-                .getDefaultMavenTwoBuildDefinitionTemplate().getId() );
+                                                           recursiveProjects,
+                                                           buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getId() );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -1811,11 +1815,11 @@ public class DefaultContinuum
 
         context.put( CreateProjectsFromMetadataAction.KEY_URL, metadataUrl );
 
-        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, Boolean
-            .valueOf( loadRecursiveProjects ) );
+        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS,
+                     Boolean.valueOf( loadRecursiveProjects ) );
 
-        context.put( CreateProjectsFromMetadataAction.KEY_SCM_USE_CREDENTIALS_CACHE, Boolean
-            .valueOf( useCredentialsCache ) );
+        context.put( CreateProjectsFromMetadataAction.KEY_SCM_USE_CREDENTIALS_CACHE,
+                     Boolean.valueOf( useCredentialsCache ) );
 
         context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
 
@@ -1824,8 +1828,8 @@ public class DefaultContinuum
         {
             try
             {
-                context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_TEMPLATE, buildDefinitionService
-                    .getBuildDefinitionTemplate( buildDefintionTemplateId ) );
+                context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_TEMPLATE,
+                             buildDefinitionService.getBuildDefinitionTemplate( buildDefintionTemplateId ) );
             }
             catch ( BuildDefinitionServiceException e )
             {
@@ -1838,8 +1842,9 @@ public class DefaultContinuum
 
         executeAction( "create-projects-from-metadata", context );
 
-        ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context
-            .get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
+        ContinuumProjectBuildingResult result =
+            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT )
+            ;
 
         if ( getLogger().isInfoEnabled() )
         {
@@ -1878,7 +1883,7 @@ public class DefaultContinuum
         ProjectGroup projectGroup = (ProjectGroup) result.getProjectGroups().iterator().next();
 
         boolean projectGroupCreation = false;
-        
+
         try
         {
             if ( projectGroupId == -1 )
@@ -1908,7 +1913,7 @@ public class DefaultContinuum
                     executeAction( "store-project-group", pgContext );
 
                     projectGroupId = AbstractContinuumAction.getProjectGroupId( pgContext );
-                    
+
                     projectGroupCreation = true;
                 }
             }
@@ -1963,10 +1968,10 @@ public class DefaultContinuum
                 // if no group creation 
                 if ( !projectGroupCreation && buildDefintionTemplateId > 0 )
                 {
-                    buildDefinitionService.addTemplateInProject( buildDefintionTemplateId, projectDao
-                        .getProject( project.getId() ) );
-                }                
-                
+                    buildDefinitionService.addTemplateInProject( buildDefintionTemplateId,
+                                                                 projectDao.getProject( project.getId() ) );
+                }
+
                 context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT, project );
                 //
                 //            executeAction( "validate-project", context );
@@ -2858,8 +2863,9 @@ public class DefaultContinuum
 
                 try
                 {
-                    getLogger().info( "Fix project state for project " + project.getId() + ":" + project.getName() +
-                        ":" + project.getVersion() );
+                    getLogger().info(
+                        "Fix project state for project " + project.getId() + ":" + project.getName() + ":" +
+                            project.getVersion() );
 
                     projectDao.updateProject( project );
 
@@ -3429,7 +3435,8 @@ public class DefaultContinuum
         return releaseResultDao.getContinuumReleaseResultsByProjectGroup( projectGroupId );
     }
 
-    public ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime, long endTime )
+    public ContinuumReleaseResult getContinuumReleaseResult( int projectId, String releaseGoal, long startTime,
+                                                             long endTime )
         throws ContinuumException
     {
         try
@@ -3438,7 +3445,9 @@ public class DefaultContinuum
         }
         catch ( ContinuumStoreException e )
         {
-            throw new ContinuumException( "Error while retrieving continuumReleaseResult of projectId " + projectId + " with releaseGoal: " + releaseGoal, e);
+            throw new ContinuumException(
+                "Error while retrieving continuumReleaseResult of projectId " + projectId + " with releaseGoal: " +
+                    releaseGoal, e );
         }
     }
 
@@ -3451,7 +3460,8 @@ public class DefaultContinuum
 
         try
         {
-            return configurationService.getReleaseOutput( projectGroup.getId(), "releases-" + releaseResult.getStartTime() );
+            return configurationService.getReleaseOutput( projectGroup.getId(),
+                                                          "releases-" + releaseResult.getStartTime() );
         }
         catch ( ConfigurationException e )
         {
