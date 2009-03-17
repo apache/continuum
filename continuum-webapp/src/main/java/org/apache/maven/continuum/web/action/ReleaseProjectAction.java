@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.continuum.ContinuumException;
@@ -28,6 +29,7 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

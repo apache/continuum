@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.web.action.AbstractReleaseAction;
@@ -164,9 +165,20 @@ public class ReleasePrepareAction
         {
             DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
 
-            getReleasePluginParameters( distributedReleaseManager.getReleasePluginParameters( projectId, "pom.xml" ) );
+            try
+            {
+                getReleasePluginParameters( distributedReleaseManager.getReleasePluginParameters( projectId, "pom.xml" ) );
 
-            projects = distributedReleaseManager.processProject( projectId, "pom.xml", autoVersionSubmodules );
+                projects = distributedReleaseManager.processProject( projectId, "pom.xml", autoVersionSubmodules );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                List<String> args = new ArrayList<String>();
+                args.add( e.getMessage() );
+
+                addActionError( getText( "releasePrepare.input.error", args ) );
+                return ERROR;
+            }
         }
         else
         {
@@ -286,8 +298,25 @@ public class ReleasePrepareAction
         {
             DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
 
-            releaseId = distributedReleaseManager.releasePrepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), 
-                                                                  environments );
+            try
+            {
+                releaseId = distributedReleaseManager.releasePrepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), 
+                                                                      environments );
+
+                if ( releaseId == null )
+                {
+                    addActionError( "" );
+                    return ERROR;
+                }
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                List<String> args = new ArrayList<String>();
+                args.add( e.getMessage() );
+
+                addActionError( getText( "releasePrepare.release.error", args ) );
+                return ERROR;
+            }
         }
         else
         {
@@ -332,7 +361,16 @@ public class ReleasePrepareAction
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
             DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
-            result = distributedReleaseManager.getReleaseResult( releaseId );
+
+            try
+            {
+                result = distributedReleaseManager.getReleaseResult( releaseId );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                addActionError( "release" );
+                return "viewResultError";
+            }
         }
         else
         {
@@ -361,8 +399,17 @@ public class ReleasePrepareAction
         if ( getContinuum().getConfiguration().isDistributedBuildEnabled() )
         {
             DistributedReleaseManager distributedReleaseManager = getContinuum().getDistributedReleaseManager();
-            Map listenerMap  = distributedReleaseManager.getListener( releaseId );
-
+            Map listenerMap;
+            try
+            {
+                listenerMap  = distributedReleaseManager.getListener( releaseId );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                addActionError( "" );
+                return "";
+            }
+                
             if ( listenerMap != null && !listenerMap.isEmpty() )
             {
                 int state = DistributedReleaseUtil.getReleaseState( listenerMap );

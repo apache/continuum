@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
@@ -40,6 +41,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +115,18 @@ public class ReleasePerformAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        init();
+        try
+        {
+            init();
+        }
+        catch ( BuildAgentConfigurationException e )
+        {
+            List<String> args = new ArrayList<String>();
+            args.add( e.getMessage() );
+
+            addActionError( getText( "releasePerform.input.error", args ) ) ;
+            return ERROR;
+        }
 
         populateFromProject();
 
@@ -136,7 +149,19 @@ public class ReleasePerformAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        init();
+        try
+        {
+            init();
+        }
+        catch ( BuildAgentConfigurationException e )
+        {
+            List<String> args = new ArrayList<String>();
+            args.add( e.getMessage() );
+
+            addActionError( getText( "releasePerform.input.error", args ) ) ;
+            return ERROR;
+        }
+
 
         return SUCCESS;
     }
@@ -208,7 +233,18 @@ public class ReleasePerformAction
         {
             DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-            releaseManager.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repository );
+            try
+            {
+                releaseManager.releasePerform( projectId, releaseId, goals, arguments, useReleaseProfile, repository );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                List<String> args = new ArrayList<String>();
+                args.add( e.getMessage() );
+
+                addActionError( getText( "releasePerform.release.error", args ) );
+                return ERROR;
+            }
         }
         else
         {
@@ -246,8 +282,19 @@ public class ReleasePerformAction
                 environments = getEnvironments( profile );
             }
 
-            releaseManager.releasePerformFromScm( projectId, goals, arguments, useReleaseProfile, repository, scmUrl, 
-                                                  scmUsername, scmPassword, scmTag, scmTagBase, environments );
+            try
+            {
+                releaseManager.releasePerformFromScm( projectId, goals, arguments, useReleaseProfile, repository, scmUrl, 
+                                                      scmUsername, scmPassword, scmTag, scmTagBase, environments );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                List<String> args = new ArrayList<String>();
+                args.add( e.getMessage() );
+
+                addActionError( getText( "releasePerform.release.error", args ) );
+                return ERROR;
+            }
 
             return SUCCESS;
         }

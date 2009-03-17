@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.continuum.configuration.BuildAgentConfiguration;
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportClient;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -40,6 +42,7 @@ import org.apache.continuum.release.model.PreparedRelease;
 import org.apache.continuum.release.model.PreparedReleaseModel;
 import org.apache.continuum.release.model.io.xpp3.ContinuumPrepareReleasesModelXpp3Reader;
 import org.apache.continuum.release.model.io.xpp3.ContinuumPrepareReleasesModelXpp3Writer;
+import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -70,14 +73,24 @@ public class DefaultDistributedReleaseManager
      */
     InstallationService installationService;
 
+    /**
+     * @plexus.requirement
+     */
+    ConfigurationService configurationService;
+
     private Map<String, Map> releasesInProgress;
 
     public Map getReleasePluginParameters( int projectId, String pomFilename )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
 
         String buildAgentUrl = buildResult.getBuildUrl();
+
+        if ( !checkBuildAgent( buildAgentUrl ) )
+        {
+            throw new BuildAgentConfigurationException( buildAgentUrl );
+        }
 
         try
         {
@@ -97,11 +110,16 @@ public class DefaultDistributedReleaseManager
     }
 
     public List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
 
         String buildAgentUrl = buildResult.getBuildUrl();
+
+        if ( !checkBuildAgent( buildAgentUrl ) )
+        {
+            throw new BuildAgentConfigurationException( buildAgentUrl );
+        }
 
         try
         {
@@ -122,15 +140,15 @@ public class DefaultDistributedReleaseManager
 
     public String releasePrepare( Project project, Properties releaseProperties, Map<String, String> releaseVersion, 
                                   Map<String, String> developmentVersion, Map<String, String> environments )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( project.getId() );
 
         String buildAgentUrl = buildResult.getBuildUrl();
 
-        if ( StringUtils.isBlank( buildAgentUrl ) )
+        if ( !checkBuildAgent( buildAgentUrl ) )
         {
-            return null;
+            throw new BuildAgentConfigurationException( buildAgentUrl );
         }
 
         try
@@ -158,13 +176,13 @@ public class DefaultDistributedReleaseManager
     }
 
     public ReleaseResult getReleaseResult( String releaseId )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );
 
-        if ( StringUtils.isBlank( buildAgentUrl ) )
+        if ( !checkBuildAgent( buildAgentUrl ) )
         {
-            return null;
+            throw new BuildAgentConfigurationException( buildAgentUrl );
         }
 
         try
@@ -193,13 +211,13 @@ public class DefaultDistributedReleaseManager
     }
 
     public Map getListener( String releaseId )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );
 
-        if ( StringUtils.isBlank( buildAgentUrl ) )
+        if ( !checkBuildAgent( buildAgentUrl ) )
         {
-            return null;
+            throw new BuildAgentConfigurationException( buildAgentUrl );
         }
 
         try
@@ -220,13 +238,13 @@ public class DefaultDistributedReleaseManager
     }
 
     public void removeListener( String releaseId )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );
 
-        if ( StringUtils.isBlank( buildAgentUrl ) )
+        if ( !checkBuildAgent( buildAgentUrl ) )
         {
-            return;
+            throw new BuildAgentConfigurationException( buildAgentUrl );
         }
 
         try
@@ -276,14 +294,13 @@ public class DefaultDistributedReleaseManager
 
     public void releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile, 
                                 LocalRepository repository )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );
 
-        if ( StringUtils.isBlank( buildAgentUrl ) )
+        if ( !checkBuildAgent( buildAgentUrl ) )
         {
-            log.error( "Unable to perform release because no build agent found for " + releaseId );
-            return;
+            throw new BuildAgentConfigurationException( buildAgentUrl );
         }
 
         if ( goals == null )
@@ -326,18 +343,17 @@ public class DefaultDistributedReleaseManager
 
     public void releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, 
                                        String scmUrl, String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
 
         String buildAgentUrl = buildResult.getBuildUrl();
 
-        if ( StringUtils.isBlank( buildAgentUrl ) )
+        if ( !checkBuildAgent( buildAgentUrl ) )
         {
-            log.error( "Unable to perform release because no build agent found" );
-            return;
+            throw new BuildAgentConfigurationException( buildAgentUrl );
         }
-        
+
         if ( goals == null )
         {
             goals = "";
@@ -378,14 +394,13 @@ public class DefaultDistributedReleaseManager
     }
 
     public void releaseRollback( String releaseId, int projectId )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );
 
-        if ( StringUtils.isBlank( buildAgentUrl ) )
+        if ( !checkBuildAgent( buildAgentUrl ) )
         {
-            log.info( "Unable to rollback release " + releaseId + " because no build agent found" );
-            return;
+            throw new BuildAgentConfigurationException( buildAgentUrl );
         }
 
         try
@@ -406,14 +421,13 @@ public class DefaultDistributedReleaseManager
     }
 
     public String releaseCleanup( String releaseId )
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );
 
-        if ( StringUtils.isBlank( buildAgentUrl ) )
+        if ( !checkBuildAgent( buildAgentUrl ) )
         {
-            log.info( "Unable to cleanup release for " + releaseId );
-            return null;
+            throw new BuildAgentConfigurationException( buildAgentUrl );
         }
 
         try
@@ -437,7 +451,7 @@ public class DefaultDistributedReleaseManager
     }
 
     public List<Map> getAllReleasesInProgress()
-        throws ContinuumReleaseException
+        throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         List<Map> releases = new ArrayList<Map>();
         Map<String, Map> releasesMap = new HashMap<String, Map>();
@@ -450,6 +464,11 @@ public class DefaultDistributedReleaseManager
 
                 if ( StringUtils.isNotBlank( buildAgentUrl ) )
                 {
+                    if ( !checkBuildAgent( buildAgentUrl ) )
+                    {
+                        throw new BuildAgentConfigurationException( buildAgentUrl );
+                    }
+
                     try
                     {
                         SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
@@ -698,5 +717,18 @@ public class DefaultDistributedReleaseManager
     {
         return new File( System.getProperty( "appserver.base" ) + File.separator + "conf" + File.separator
                          + PREPARED_RELEASES_FILENAME );
+    }
+
+    private boolean checkBuildAgent( String buildAgentUrl )
+    {
+        BuildAgentConfiguration buildAgent = configurationService.getBuildAgent( buildAgentUrl );
+
+        if ( buildAgent != null && buildAgent.isEnabled() )
+        {
+            return true;
+        }
+
+        log.info( "Build agent: " + buildAgentUrl + "is either disabled or removed" );
+        return false;
     }
 }

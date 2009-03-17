@@ -19,6 +19,10 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
@@ -66,7 +70,18 @@ public class ReleaseRollbackAction
         {
             DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-            releaseManager.releaseRollback( releaseId, projectId );
+            try
+            {
+                releaseManager.releaseRollback( releaseId, projectId );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                List<String> args = new ArrayList<String>();
+                args.add( e.getMessage() );
+
+                addActionError( getText( "releaseRollback.error", args ) );
+                return ERROR;
+            }
         }
         else
         {

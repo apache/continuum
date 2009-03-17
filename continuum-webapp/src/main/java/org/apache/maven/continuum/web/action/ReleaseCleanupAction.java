@@ -19,6 +19,10 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
@@ -57,15 +61,26 @@ public class ReleaseCleanupAction
         {
             DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-            String goal = releaseManager.releaseCleanup( releaseId );
-
-            if ( StringUtils.isNotBlank( goal ) )
+            try
             {
-                return goal;
+                String goal = releaseManager.releaseCleanup( releaseId );
+    
+                if ( StringUtils.isNotBlank( goal ) )
+                {
+                    return goal;
+                }
+                else
+                {
+                    throw new Exception( "No listener to cleanup for id " + releaseId );
+                }
             }
-            else
+            catch ( BuildAgentConfigurationException e )
             {
-                throw new Exception( "No listener to cleanup for id " + releaseId );
+                List<String> args = new ArrayList<String>();
+                args.add( e.getMessage() );
+
+                addActionError( getText( "releaseCleanup.error", args ) );
+                return ERROR;
             }
         }
         else

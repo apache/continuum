@@ -23,8 +23,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
@@ -80,7 +83,20 @@ public class ReleaseInProgressAction
         {
             DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-            Map map = releaseManager.getListener( releaseId );
+            Map map; 
+
+            try
+            {
+                map = releaseManager.getListener( releaseId );
+            }
+            catch ( BuildAgentConfigurationException e )
+            {
+                List<String> args = new ArrayList<String>();
+                args.add( e.getMessage() );
+
+                addActionError( getText( "releaseInProgress.error", args ) );
+                return ERROR;
+            }
 
             if ( map != null && !map.isEmpty() )
             {
@@ -184,31 +200,42 @@ public class ReleaseInProgressAction
         {
             DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-            Map map = releaseManager.getListener( releaseId );
-
-            if ( map != null && !map.isEmpty() )
+            try
             {
-                int state = DistributedReleaseUtil.getReleaseState( map );
-
-                listenerSummary.setPhases( DistributedReleaseUtil.getReleasePhases( map ) );
-                listenerSummary.setCompletedPhases( DistributedReleaseUtil.getCompletedReleasePhases( map ) );
-                listenerSummary.setInProgress( DistributedReleaseUtil.getReleaseInProgress( map ) );
-                listenerSummary.setError( DistributedReleaseUtil.getReleaseError( map ) );
-
-                if ( state == ContinuumReleaseManagerListener.FINISHED )
-                {
-                    result = releaseManager.getReleaseResult( releaseId );
+                Map map = releaseManager.getListener( releaseId );
     
-                    return SUCCESS;
+                if ( map != null && !map.isEmpty() )
+                {
+                    int state = DistributedReleaseUtil.getReleaseState( map );
+    
+                    listenerSummary.setPhases( DistributedReleaseUtil.getReleasePhases( map ) );
+                    listenerSummary.setCompletedPhases( DistributedReleaseUtil.getCompletedReleasePhases( map ) );
+                    listenerSummary.setInProgress( DistributedReleaseUtil.getReleaseInProgress( map ) );
+                    listenerSummary.setError( DistributedReleaseUtil.getReleaseError( map ) );
+    
+                    if ( state == ContinuumReleaseManagerListener.FINISHED )
+                    {
+                        result = releaseManager.getReleaseResult( releaseId );
+        
+                        return SUCCESS;
+                    }
+                    else
+                    {
+                        throw new Exception( "The release operation with id " + releaseId + "has not finished yet." );
+                    }
                 }
                 else
                 {
-                    throw new Exception( "The release operation with id " + releaseId + "has not finished yet." );
+                    throw new Exception( "There is no finished release operation with id " + releaseId );
                 }
             }
-            else
+            catch ( BuildAgentConfigurationException e )
             {
-                throw new Exception( "There is no finished release operation with id " + releaseId );
+                List<String> args = new ArrayList<String>();
+                args.add( e.getMessage() );
+                
+                addActionError( getText( "releaseViewResult.error", args ) );
+                return ERROR;
             }
         }
         else
