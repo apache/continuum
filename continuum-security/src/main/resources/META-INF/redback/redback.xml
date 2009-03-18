@@ -190,6 +190,16 @@
           <name>continuum-manage-distributed-builds</name>
           <description>Continuum Manage Distributed Builds</description>
         </operation>
+        <operation>
+          <id>continuum-view-release</id>
+          <name>continuum-view-release</name>
+          <description>Continuum View Release</description>
+        </operation>
+        <operation>
+          <id>continuum-manage-parallel-builds</id>
+          <name>continuum-manage-parallel-builds</name>
+          <description>Continuum Manage Parallel Builds</description>
+        </operation>
       </operations>
       <roles>
         <role>
@@ -210,6 +220,20 @@
               <name>Manage Continuum Distributed Builds</name>
               <permanent>true</permanent>
               <operation>continuum-manage-distributed-builds</operation>
+              <resource>global</resource>
+            </permission>
+            <permission>
+              <id>continuum-view-release</id>
+              <name>Continuum View Release</name>
+              <permanent>true</permanent>
+              <operation>continuum-view-release</operation>
+              <resource>global</resource>
+            </permission>
+            <permission>
+              <id>continuum-manage-parallel-builds</id>
+              <name>Manage Continuum Parallel Builds</name>
+              <permanent>true</permanent>
+              <operation>continuum-manage-parallel-builds</operation>
               <resource>global</resource>
             </permission>
           </permissions>

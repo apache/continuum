@@ -24,7 +24,12 @@ import java.util.List;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
+import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.action.ContinuumConfirmAction;
+import org.codehaus.plexus.redback.rbac.Resource;
+import org.codehaus.redback.integration.interceptor.SecureAction;
+import org.codehaus.redback.integration.interceptor.SecureActionBundle;
+import org.codehaus.redback.integration.interceptor.SecureActionException;
 
 import com.opensymphony.xwork2.Preparable;
 
@@ -33,7 +38,7 @@ import com.opensymphony.xwork2.Preparable;
  */
 public class BuildQueueAction
     extends ContinuumConfirmAction
-    implements Preparable
+    implements Preparable, SecureAction
 {
     private String name;
 
@@ -147,6 +152,16 @@ public class BuildQueueAction
         }
         
         return SUCCESS;
+    }
+
+    public SecureActionBundle getSecureActionBundle()
+        throws SecureActionException
+    {
+        SecureActionBundle bundle = new SecureActionBundle();
+        bundle.setRequiresAuthentication( true );
+        bundle.addRequiredAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_PARALLEL_BUILDS, Resource.GLOBAL );
+    
+        return bundle;
     }
 
     public String getName()

@@ -59,20 +59,24 @@
                                    required="true" />
                     </td>
                   </tr>
-                  <tr>
-                    <td>
-                      <s:if test ="profile != null">
-                        <s:if test="profile.buildAgentGroup == null">
-                          <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
-                                   value="-1" listKey="name" headerKey="" headerValue=""/>
+                  
+                  <c1:ifBuildTypeEnabled buildType="distributed">
+                    <tr>
+                      <td>
+                        <s:if test ="profile != null">
+                          <s:if test="profile.buildAgentGroup == null">
+                            <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
+                                     value="-1" listKey="name" headerKey="" headerValue=""/>
+                          </s:if>
+                          <s:else>
+                            <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
+                                     listKey="name" headerKey="" headerValue=""/>
+                          </s:else>
                         </s:if>
-                        <s:else>
-                          <s:select label="%{getText('profile.build.agent.group')}" name="profile.buildAgentGroup" list="buildAgentGroups" listValue="name"
-                                   listKey="name" headerKey="" headerValue=""/>
-                        </s:else>
-                      </s:if>
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                  </c1:ifBuildTypeEnabled>
+                  
                 </tbody>
               </table>
               <div class="functnbar3">

@@ -72,16 +72,18 @@
             <s:textfield label="%{getText('schedule.quietPeriod.label')}" name="delay">
                 <s:param name="desc"><p><s:text name="schedule.quietPeriod.message"/></p></s:param>
             </s:textfield>
-    	                
-            <s:optiontransferselect label="%{getText('schedule.buildqueues.label')}" name="availableBuildQueues"
-                list="availableBuildQueues" size="8" multiple="true" emptyOption="false"
-                doubleName="selectedBuildQueues" doubleList="selectedBuildQueues" doubleSize="8" 
-                doubleMultiple="true" doubleEmptyOption="false"
-                addAllToRightOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
-				addToRightOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
-				addAllToLeftOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
-				addToLeftOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
-                />
+    	      
+            <c1:ifBuildTypeEnabled buildType="parallel">          
+              <s:optiontransferselect label="%{getText('schedule.buildqueues.label')}" name="availableBuildQueues"
+                  list="availableBuildQueues" size="8" multiple="true" emptyOption="false"
+                  doubleName="selectedBuildQueues" doubleList="selectedBuildQueues" doubleSize="8" 
+                  doubleMultiple="true" doubleEmptyOption="false"
+                  addAllToRightOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
+  				addToRightOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
+  				addAllToLeftOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
+  				addToLeftOnclick="selectAllOptions(document.getElementById('saveSchedule_availableBuildQueues'));selectAllOptions(document.getElementById('saveSchedule_selectedBuildQueues'));"
+                  />
+             </c1:ifBuildTypeEnabled>   
                                        
             <s:checkbox label="%{getText('schedule.enabled.label')}" name="active" value="active" fieldValue="true">
                 <s:param name="desc"><p><s:text name="schedule.enabled.message"/></p></s:param>
