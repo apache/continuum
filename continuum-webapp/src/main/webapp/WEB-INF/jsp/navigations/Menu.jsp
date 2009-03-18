@@ -19,6 +19,7 @@
 
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
+<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://plexus.codehaus.org/redback/taglib-1.0" prefix="redback" %>
 
 <s:i18n name="localization.Continuum">
@@ -38,12 +39,7 @@
           <s:text name="menu.continuum.showProjectGroups"/>
         </s:a>
       </div>
-      <div class="body">
-        <s:url id="releasesUrl" action="viewReleases" namespace="/" includeParams="none"/>
-        <s:a href="%{releasesUrl}">
-          <s:text name="menu.administration.releases"/>
-        </s:a>
-      </div> 
+ 
     </div>
   </div>
 
@@ -94,14 +90,6 @@
         <s:text name="menu.administration"/>
       </div>
       <div>
-        <redback:ifAuthorized permission="continuum-manage-repositories">
-          <s:url id="buildQueueListUrl" action="buildQueueList" namespace="/admin" includeParams="none"/>
-          <div class="body">
-            <s:a href="%{buildQueueListUrl}">
-              <s:text name="menu.administration.build.queue"/>
-            </s:a>
-          </div>
-        </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-repositories">
           <s:url id="repositoryListUrl" action="repositoryList" namespace="/admin" includeParams="none"/>
           <div class="body">
@@ -172,16 +160,6 @@
             </s:a>
           </div>
         </redback:ifAuthorized>
-        <redback:ifAuthorized permission="continuum-manage-distributed-builds">
-          <s:url id="buildAgentList" action="buildAgentList" namespace="/security" includeParams="none"/>
-          <div class="body">
-            <s:a href="%{buildAgentList}">
-              <s:text name="menu.administration.buildAgents"/>
-            </s:a>
-          </div>
-        </redback:ifAuthorized>
-        <redback:ifAuthorized permission="continuum-manage-distributed-builds">
-        </redback:ifAuthorized>
         <redback:ifAuthorized permission="continuum-manage-users">
           <s:url id="userListUrl" action="userlist" namespace="/security" includeParams="none"/>
           <div class="body">
@@ -200,6 +178,52 @@
     </div>
   </redback:ifAnyAuthorized>
 
+  <c1:ifBuildTypeEnabled buildType="distributed">
+    <redback:ifAnyAuthorized permissions="continuum-manage-distributed-builds,continuum-view-release">
+      <div id="projectmenu" class="toolgroup">
+        <div class="label">
+          <s:text name="menu.distributedBuilds"/>
+        </div>    
+        <div>
+          <redback:ifAuthorized permission="continuum-manage-distributed-builds">    
+            <s:url id="buildAgentList" action="buildAgentList" namespace="/security" includeParams="none" />
+            <div class="body">
+              <s:a href="%{buildAgentList}">
+                <s:text name="menu.distributedBuilds.buildAgents"/>
+              </s:a>
+            </div>
+          </redback:ifAuthorized>
+          <redback:ifAuthorized permission="continuum-view-release">
+            <s:url id="releasesUrl" action="viewReleases" namespace="/" includeParams="none"/>
+            <div class="body">
+              <s:a href="%{releasesUrl}">
+                <s:text name="menu.distributedBuilds.releases"/>
+              </s:a>
+            </div>
+          </redback:ifAuthorized>            
+        </div>
+      </div>
+    </redback:ifAnyAuthorized>
+  </c1:ifBuildTypeEnabled>
+  
+  <c1:ifBuildTypeEnabled buildType="parallel">
+    <redback:ifAuthorized permission="continuum-manage-parallel-builds">
+      <div id="projectmenu" class="toolgroup">
+        <div class="label">
+          <s:text name="menu.parallelBuilds"/>
+        </div>    
+        <div>
+          <s:url id="buildQueueListUrl" action="buildQueueList" namespace="/admin" includeParams="none"/>
+          <div class="body">
+            <s:a href="%{buildQueueListUrl}">
+              <s:text name="menu.parallelBuilds.build.queue"/>
+            </s:a>
+          </div>          
+        </div>
+      </div>
+    </redback:ifAuthorized>
+  </c1:ifBuildTypeEnabled>
+  
   <div id="projectmenu" class="toolgroup">
     <div class="label"><s:text name="legend.title"/></div>
     <div id="legend">

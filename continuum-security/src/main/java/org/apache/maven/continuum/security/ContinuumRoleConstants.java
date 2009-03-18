@@ -123,4 +123,8 @@ public class ContinuumRoleConstants
     public static final String CONTINUUM_MANAGE_PURGING = "continuum-manage-purging";
 
     public static final String CONTINUUM_MANAGE_DISTRIBUTED_BUILDS = "continuum-manage-distributed-builds";
+    
+    public static final String CONTINUUM_VIEW_RELEASE = "continuum-view-release";
+
+    public static final String CONTINUUM_MANAGE_PARALLEL_BUILDS = "continuum-manage-parallel-builds";
 }
