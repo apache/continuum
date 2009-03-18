@@ -14,6 +14,10 @@ Prepare for Release
 
  Complete the form, providing the scm tag name, etc.
 
+ Check the 'Use edit mode' checkbox if you are using a SCM system that requires you to obtain a lock before editing.
+
+ Click Submit.
+
 [../../images/release-prepare-parameters.png] Release Prepare parameters
 
  Wait for the process to complete, then click Done.
