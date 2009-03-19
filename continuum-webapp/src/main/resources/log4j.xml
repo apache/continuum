@@ -50,12 +50,7 @@
     <appender-ref ref="rolling" />
   </logger>
 
-  <logger name="org.apache.maven.continuum">
-    <level value="info" />
-    <appender-ref ref="rolling" />
-  </logger>
-
-  <logger name="org.apache.maven.scm">
+  <logger name="org.apache.continuum">
     <level value="info" />
     <appender-ref ref="rolling" />
   </logger>
