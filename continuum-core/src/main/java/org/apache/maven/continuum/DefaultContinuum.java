@@ -111,6 +111,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -2764,10 +2765,17 @@ public class DefaultContinuum
             boolean removeWorkingDirectory = false;
 
             Project p = projectDao.getProject( project.getId() );
+            ProjectScmRoot projectScmRoot = null;
 
             if ( !p.getScmUrl().equals( project.getScmUrl() ) )
             {
                 removeWorkingDirectory = true;
+                projectScmRoot = getProjectScmRootByProject( project.getId() );
+            }
+
+            if ( !p.getProjectGroup().equals( project.getProjectGroup() ) )
+            {
+                projectScmRoot = getProjectScmRootByProject( project.getId() );
             }
 
             if ( StringUtils.isEmpty( p.getScmTag() ) && !StringUtils.isEmpty( project.getScmTag() ) )
@@ -2796,6 +2804,11 @@ public class DefaultContinuum
             }
 
             projectDao.updateProject( project );
+
+            if ( projectScmRoot != null )
+            {
+                updateProjectScmRoot( projectScmRoot, project );
+            }
         }
         catch ( ContinuumStoreException ex )
         {
@@ -3582,6 +3595,36 @@ public class DefaultContinuum
         catch ( ContinuumStoreException e )
         {
             throw new ContinuumException( "Error while creating project scm root with scm root address:" + url );
+        }
+    }
+
+    private void updateProjectScmRoot( ProjectScmRoot oldScmRoot, Project project )
+        throws ContinuumException
+    {
+        try
+        {
+            removeProjectScmRoot( oldScmRoot );
+            ProjectScmRoot scmRoot =
+                projectScmRootDao.getProjectScmRootByProjectGroupAndScmRootAddress( project.getProjectGroup().getId(),
+                                                                                    project.getScmUrl() );
+            if ( scmRoot == null )
+            {
+                ProjectScmRoot newScmRoot = new ProjectScmRoot();
+                if ( project.getScmUrl().equals( oldScmRoot.getScmRootAddress() ) )
+                {
+                    BeanUtils.copyProperties( oldScmRoot, newScmRoot, new String[] { "id", "projectGroup" } );
+                }
+                else
+                {
+                    newScmRoot.setScmRootAddress( project.getScmUrl() );
+                }
+                newScmRoot.setProjectGroup( project.getProjectGroup() );
+                projectScmRootDao.addProjectScmRoot( newScmRoot );
+            }
+        }
+        catch ( ContinuumStoreException ex )
+        {
+            throw logAndCreateException( "Error while updating project.", ex );
         }
     }
 
