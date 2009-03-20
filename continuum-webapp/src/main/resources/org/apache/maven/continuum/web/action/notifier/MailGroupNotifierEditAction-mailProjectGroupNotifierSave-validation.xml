@@ -26,7 +26,7 @@
     <field-validator type="expression">
       <param name="expression">
         ! (
-          ( address eq "" )
+          ( address.trim() eq "")
           and
           ( committers eq "" )
           )
