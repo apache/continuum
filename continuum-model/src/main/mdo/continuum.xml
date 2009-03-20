@@ -108,6 +108,24 @@
           </association>
           <defaultValue>new java.util.ArrayList()</defaultValue>
         </field>
+        <field>
+          <name>continuumReleaseResults</name>
+          <version>1.1.3+</version>
+          <association java.init="field">
+            <type>ContinuumReleaseResult</type>
+            <multiplicity>*</multiplicity>
+          </association>
+          <defaultValue>new java.util.ArrayList()</defaultValue>
+        </field>
+        <field>
+          <name>buildDefinitionTemplates</name>
+          <version>1.1.3+</version>
+          <association java.init="field">
+            <type>BuildDefinitionTemplate</type>
+            <multiplicity>*</multiplicity>
+          </association>
+          <defaultValue>new java.util.ArrayList()</defaultValue>
+        </field>
       </fields>
     </class>
 
