@@ -19,7 +19,11 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import com.opensymphony.xwork2.Validateable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -34,11 +38,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * @author Nick Gonzalez
  * @version $Id$
@@ -46,7 +45,6 @@ import java.util.List;
  */
 public class AddProjectAction
     extends ContinuumActionSupport
-    implements Validateable
 {
     private Logger logger = LoggerFactory.getLogger( this.getClass() );
 
@@ -91,49 +89,24 @@ public class AddProjectAction
 
     public void validate()
     {
-        boolean projectNameAlreadyExist = false;
-
         clearErrorsAndMessages();
-
         try
         {
-            if ( ( projectName.trim().length() > 0 ) && ( projectVersion.trim().length() > 0 ) &&
-                ( projectScmUrl.trim().length() > 0 ) )
+            if ( !( projectName.trim().length() > 0 ) )
             {
-                Iterator<Project> projects = getContinuum().getProjects().iterator();
-                while ( projects.hasNext() )
-                {
-                    Project project = projects.next();
-                    // CONTINUUM-1445
-                    if ( StringUtils.equalsIgnoreCase( project.getName(), projectName.trim() ) &&
-                        StringUtils.equalsIgnoreCase( project.getVersion(), projectVersion.trim() ) &&
-                        StringUtils.equalsIgnoreCase( project.getScmUrl(), projectScmUrl.trim() ) )
-                    {
-                        projectNameAlreadyExist = true;
-                        break;
-                    }
-                }
-                if ( projectNameAlreadyExist )
-                {
-                    addActionError( getText( "projectName.already.exist.error" ) );
-                    this.input();
-                }
+                addActionError( getText( "addProject.name.required" ) );
             }
-            else
+            if ( !( projectVersion.trim().length() > 0 ) )
             {
-                if ( !( projectName.trim().length() > 0 ) )
-                {
-                    addActionError( getText( "addProject.name.required" ) );
-                }
-                if ( !( projectVersion.trim().length() > 0 ) )
-                {
-                    addActionError( getText( "addProject.version.required" ) );
-                }
-                if ( !( projectScmUrl.trim().length() > 0 ) )
-                {
-                    addActionError( getText( "addProject.scmUrl.required" ) );
-                }
-                this.input();
+                addActionError( getText( "addProject.version.required" ) );
+            }
+            if ( !( projectScmUrl.trim().length() > 0 ) )
+            {
+                addActionError( getText( "addProject.scmUrl.required" ) );
+            }
+            if ( hasActionErrors() )
+            {
+                input();
             }
         }
         catch ( ContinuumException e )
@@ -168,18 +141,33 @@ public class AddProjectAction
             return REQUIRES_AUTHORIZATION;
         }
 
+        String projectNameTrim = projectName.trim();
+        String versionTrim = projectVersion.trim();
+        String scmTrim = projectScmUrl.trim();
+        for ( Project project : getContinuum().getProjects() )
+        {
+            // CONTINUUM-1445
+            if ( StringUtils.equalsIgnoreCase( project.getName(), projectNameTrim )
+                && StringUtils.equalsIgnoreCase( project.getVersion(), versionTrim )
+                && StringUtils.equalsIgnoreCase( project.getScmUrl(), scmTrim ) )
+            {
+                addActionError( getText( "projectName.already.exist.error" ) );
+                return INPUT;
+            }
+        }
+
         Project project = new Project();
 
-        project.setName( projectName.trim() );
+        project.setName( projectNameTrim );
 
         if ( projectDescription != null )
         {
             project.setDescription( projectDescription.trim() );
         }
 
-        project.setVersion( projectVersion.trim() );
+        project.setVersion( versionTrim );
 
-        project.setScmUrl( projectScmUrl.trim() );
+        project.setScmUrl( scmTrim );
 
         project.setScmUsername( projectScmUsername );
 
@@ -243,7 +231,7 @@ public class AddProjectAction
         }
         this.profiles = profileService.getAllProfiles();
         buildDefinitionTemplates = getContinuum().getBuildDefinitionService().getAllBuildDefinitionTemplate();
-        return SUCCESS;
+        return INPUT;
     }
 
     private void initializeProjectGroupName()
