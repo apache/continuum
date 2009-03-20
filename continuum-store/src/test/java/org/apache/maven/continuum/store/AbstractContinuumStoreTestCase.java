@@ -141,6 +141,8 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected ProjectScmRoot testProjectScmRoot;
 
+    protected ContinuumReleaseResult testContinuumReleaseResult;
+
     private SystemConfiguration systemConfiguration;
 
     @Override
@@ -541,7 +543,7 @@ public abstract class AbstractContinuumStoreTestCase
 
         if ( addToStore )
         {
-            projectGroupDao.addProjectGroup( group );
+            group = projectGroupDao.addProjectGroup( group );
             defaultProjectGroup.setId( group.getId() );
             testProject1.setId( project1.getId() );
             testProject2.setId( project2.getId() );
@@ -582,6 +584,7 @@ public abstract class AbstractContinuumStoreTestCase
         }
         else
         {
+            group.setId( 2 );
             testProjectGroup2.setId( 2 ); // from expected.xml, continuum-data-management
         }
 
@@ -632,10 +635,29 @@ public abstract class AbstractContinuumStoreTestCase
         }
         
         testProjectScmRoot = createTestProjectScmRoot( "scmRootAddress1", 1, 0, "error1", group );
-        
+        ProjectScmRoot scmRoot = createTestProjectScmRoot( testProjectScmRoot );
+
         if ( addToStore )
         {
-            projectScmRootDao.addProjectScmRoot( testProjectScmRoot );
+            scmRoot = projectScmRootDao.addProjectScmRoot( scmRoot );
+            testProjectScmRoot.setId( scmRoot.getId() );
+        }
+        else
+        {
+            testProjectScmRoot.setId( 1 );
+        }
+
+        testContinuumReleaseResult = createTestContinuumReleaseResult( group, null, "releaseGoal", 0, 0, 0 );
+        ContinuumReleaseResult releaseResult = createTestContinuumReleaseResult( testContinuumReleaseResult );
+
+        if ( addToStore )
+        {
+            releaseResult = releaseResultDao.addContinuumReleaseResult( releaseResult );
+            testContinuumReleaseResult.setId( releaseResult.getId() );
+        }
+        else
+        {
+            testContinuumReleaseResult.setId( 1 );
         }
     }
 
@@ -819,7 +841,26 @@ public abstract class AbstractContinuumStoreTestCase
         store.addProjectGroup( group );
         testProjectGroup2.setId( group.getId() );
 */
-        assertSystemConfiguration( systemConfiguration, systemConfigurationDao.getSystemConfiguration() );        
+        assertSystemConfiguration( systemConfiguration, systemConfigurationDao.getSystemConfiguration() );
+
+        assertLocalRepositoryEquals( testLocalRepository1, localRepositoryDao.getLocalRepository( testLocalRepository1.getId() ) );
+        assertLocalRepositoryEquals( testLocalRepository2, localRepositoryDao.getLocalRepository( testLocalRepository2.getId() ) );
+        assertLocalRepositoryEquals( testLocalRepository3, localRepositoryDao.getLocalRepository( testLocalRepository3.getId() ) );
+
+/*
+        assertRepositoryPurgeConfigurationEquals( testRepoPurgeConfiguration1,
+                                                  repositoryPurgeConfigurationDao.getRepositoryPurgeConfiguration( testRepoPurgeConfiguration1.getId() ) );
+        assertRepositoryPurgeConfigurationEquals( testRepoPurgeConfiguration2,
+                                                  repositoryPurgeConfigurationDao.getRepositoryPurgeConfiguration( testRepoPurgeConfiguration2.getId() ) );
+        assertRepositoryPurgeConfigurationEquals( testRepoPurgeConfiguration3,
+                                                  repositoryPurgeConfigurationDao.getRepositoryPurgeConfiguration( testRepoPurgeConfiguration3.getId() ) );
+
+        assertDirectoryPurgeConfigurationEquals( testDirectoryPurgeConfig, 
+                                                 directoryPurgeConfigurationDao.getDirectoryPurgeConfiguration( testDirectoryPurgeConfig.getId() ) );
+*/
+        assertProjectScmRootEquals( testProjectScmRoot, projectScmRootDao.getProjectScmRoot( testProjectScmRoot.getId() ) );
+
+        assertReleaseResultEquals( testContinuumReleaseResult, releaseResultDao.getContinuumReleaseResult( testContinuumReleaseResult.getId() ) );
     }
 
     private void assertSystemConfiguration( SystemConfiguration expected, SystemConfiguration actual )
@@ -1430,6 +1471,12 @@ public abstract class AbstractContinuumStoreTestCase
         return projectScmRoot;
     }
 
+    protected static ProjectScmRoot createTestProjectScmRoot( ProjectScmRoot scmRoot )
+    {
+        return createTestProjectScmRoot( scmRoot.getScmRootAddress(), scmRoot.getState(), scmRoot.getOldState(), 
+                                         scmRoot.getError(), scmRoot.getProjectGroup() );
+    }
+
     protected static void assertProjectScmRootEquals( ProjectScmRoot expectedConfig, ProjectScmRoot actualConfig )
     {
         assertEquals( "compare project scm root - id", expectedConfig.getId(), actualConfig.getId() );
@@ -1454,7 +1501,14 @@ public abstract class AbstractContinuumStoreTestCase
         
         return releaseResult;
     }
-    
+
+    protected static ContinuumReleaseResult createTestContinuumReleaseResult( ContinuumReleaseResult releaseResult )
+    {
+        return createTestContinuumReleaseResult( releaseResult.getProjectGroup(), releaseResult.getProject(), 
+                                                 releaseResult.getReleaseGoal(), releaseResult.getResultCode(),
+                                                 releaseResult.getStartTime(), releaseResult.getEndTime() );
+    }
+
     protected static void assertReleaseResultEquals( ContinuumReleaseResult expectedConfig, 
                                                      ContinuumReleaseResult actualConfig )
     {
@@ -1468,7 +1522,7 @@ public abstract class AbstractContinuumStoreTestCase
         assertEquals( "compare continuum release result - endTime", expectedConfig.getEndTime(),
                       actualConfig.getEndTime() );
     }
-    
+
     /**
      * Setup JDO Factory
      *

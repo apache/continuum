@@ -549,4 +549,11 @@
       <projectGroup id="2"></projectGroup>
     </projectScmRoot>
   </projectScmRoots>
+  <continuumReleaseResults>
+    <continuumReleaseResult>
+      <id>1</id>
+      <projectGroup id="2"></projectGroup>
+      <releaseGoal>releaseGoal</releaseGoal>
+    </continuumReleaseResult>
+  </continuumReleaseResults>
 </continuumDatabase>

@@ -19,6 +19,8 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildDefinitionTemplateDao;
+import org.apache.continuum.dao.ContinuumReleaseResultDao;
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.InstallationDao;
@@ -30,9 +32,13 @@ import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.dao.SystemConfigurationDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
+import org.apache.continuum.model.release.ContinuumReleaseResult;
+import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.ContinuumDatabase;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -129,6 +135,16 @@ public class JdoDataManagementTool
      */
     private ProjectScmRootDao projectScmRootDao;
 
+    /**
+     * @plexus.requirement
+     */
+    private BuildDefinitionTemplateDao buildDefinitionTemplateDao;
+
+    /**
+     * @plexus.requirement
+     */
+    private ContinuumReleaseResultDao releaseResultDao;
+
     protected static final String BUILDS_XML = "builds.xml";
 
     /**
@@ -169,6 +185,15 @@ public class JdoDataManagementTool
         database.setDirectoryPurgeConfigurations( directoryPurgeConfigurationDao.getAllDirectoryPurgeConfigurations() );
 
         database.setProjectScmRoots( projectScmRootDao.getAllProjectScmRoots() );
+        try
+        {
+            database.setBuildDefinitionTemplates( buildDefinitionTemplateDao.getAllBuildDefinitionTemplate() );
+        }
+        catch ( ContinuumStoreException e )
+        {
+        }
+
+        database.setContinuumReleaseResults( releaseResultDao.getAllContinuumReleaseResults() );
 
         ContinuumStaxWriter writer = new ContinuumStaxWriter();
 
@@ -336,6 +361,47 @@ public class JdoDataManagementTool
                     "' when creating ProjectScmRoot data. Cycle detected: " + e.getMessage() );
                 continue;
             }
+        }
+
+        /*
+        for ( RepositoryPurgeConfiguration repoPurge : (List<RepositoryPurgeConfiguration>) database.getRepositoryPurgeConfigurations() )
+        {
+            repoPurge.setRepository( localRepositories.get( 
+                                     Integer.valueOf( repoPurge.getRepository().getId() ) ) );
+
+            if ( repoPurge.getSchedule() != null )
+            {
+                repoPurge.setSchedule( schedules.get( 
+                                       Integer.valueOf( repoPurge.getSchedule().getId() ) ) );
+            }
+
+            repoPurge = (RepositoryPurgeConfiguration) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), repoPurge );
+        }*/
+
+        for ( DirectoryPurgeConfiguration dirPurge : (List<DirectoryPurgeConfiguration>) database.getDirectoryPurgeConfigurations() )
+        {
+            if ( dirPurge.getSchedule() != null )
+            {
+                dirPurge.setSchedule( schedules.get(
+                                      Integer.valueOf( dirPurge.getSchedule().getId() ) ) );
+            }
+
+            dirPurge = (DirectoryPurgeConfiguration) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), dirPurge );
+        }
+
+        for ( ContinuumReleaseResult releaseResult : (List<ContinuumReleaseResult>) database.getContinuumReleaseResults() )
+        {
+            releaseResult.setProjectGroup( projectGroups.get( 
+                                           Integer.valueOf( releaseResult.getProjectGroup().getId() ) ) );
+
+            releaseResult =
+                (ContinuumReleaseResult) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), releaseResult );
+        }
+
+        for ( BuildDefinitionTemplate template : (List<BuildDefinitionTemplate>) database.getBuildDefinitionTemplates() )
+        {
+            template = 
+                (BuildDefinitionTemplate) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), template );
         }
     }
     

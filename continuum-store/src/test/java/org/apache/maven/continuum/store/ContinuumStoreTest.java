@@ -1300,9 +1300,9 @@ public class ContinuumStoreTest
         releaseResult = releaseResultDao.addContinuumReleaseResult( releaseResult );
         
         List<ContinuumReleaseResult> releaseResults = releaseResultDao.getAllContinuumReleaseResults();
-        assertEquals( "check size of continuum release results", 1, releaseResults.size() );
+        assertEquals( "check size of continuum release results", 2, releaseResults.size() );
         
-        ContinuumReleaseResult retrievedResult = releaseResults.get( 0 );
+        ContinuumReleaseResult retrievedResult = releaseResults.get( 1 );
         assertReleaseResultEquals( releaseResult, retrievedResult );
         assertProjectGroupEquals( group, retrievedResult.getProjectGroup() );
         assertProjectEquals( project, retrievedResult.getProject() );
@@ -1312,7 +1312,7 @@ public class ContinuumStoreTest
         assertFalse( projectDao.getProjectsInGroup( group.getId() ).contains( project ) );
         
         releaseResults = releaseResultDao.getAllContinuumReleaseResults();
-        assertEquals( "check size of continuum release results", 0, releaseResults.size() );
+        assertEquals( "check size of continuum release results", 1, releaseResults.size() );
     }
     // ----------------------------------------------------------------------
     //  HELPER METHODS
