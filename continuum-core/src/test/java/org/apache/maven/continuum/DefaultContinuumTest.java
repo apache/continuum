@@ -410,6 +410,7 @@ public class DefaultContinuumTest
         Continuum continuum = getContinuum();
 
         Project project = new Project();
+        project.setScmUrl( "scmUrl" );
         int projectId = continuum.addProject( project, ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
         ProjectGroup defaultProjectGroup = continuum
             .getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
