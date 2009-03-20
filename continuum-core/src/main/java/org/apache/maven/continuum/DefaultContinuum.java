@@ -1466,6 +1466,9 @@ public class DefaultContinuum
 
         Map context = new HashMap();
 
+        String scmUrl = project.getScmUrl();
+        createProjectScmRoot( projectGroup, scmUrl );
+
         // ----------------------------------------------------------------------
         //
         // ----------------------------------------------------------------------
@@ -1690,7 +1693,7 @@ public class DefaultContinuum
                 context = new HashMap();
 
                 // CONTINUUM-1953 olamy : attached buildDefs from template here
-                // if no group creation 
+                // if no group creation
                 if ( !projectGroupCreation && buildDefintionTemplateId > 0 )
                 {
                     buildDefinitionService.addTemplateInProject( buildDefintionTemplateId,
@@ -1716,7 +1719,7 @@ public class DefaultContinuum
                     context.put( AbstractContinuumAction.KEY_SCM_PASSWORD, scmPassword );
                 }
                 // FIXME
-                // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup ); 
+                // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup );
                 // remove object data -> we don't display the project name in the build queue
                 context.put( AbstractContinuumAction.KEY_PROJECT, projectDao.getProject( project.getId() ) );
 
