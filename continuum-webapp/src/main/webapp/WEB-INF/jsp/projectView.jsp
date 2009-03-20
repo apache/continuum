@@ -135,7 +135,7 @@
                 <redback:ifAuthorized permission="continuum-modify-group" resource="${project.projectGroup.name}">
                   <c:choose>
                     <c:when test="${!pageScope.notifier.fromProject}">
-                      <s:url id="removeUrl" action="deleteProjectNotifier" namespace="/">
+                      <s:url id="removeUrl" action="deleteProjectNotifier!default.action" namespace="/">
                         <s:param name="projectId" value="project.id"/>
                         <s:param name="projectGroupId">${project.projectGroup.id}</s:param>
                         <s:param name="notifierType">${notifier.type}</s:param>
