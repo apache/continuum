@@ -1071,6 +1071,7 @@
           <version>1.1.4+</version>
           <type>String</type>
           <required>true</required>
+          <defaultValue></defaultValue>
         </field>        
       </fields>
     </class>    
@@ -1311,7 +1312,7 @@
           <type>int</type>
           <defaultValue>1</defaultValue>
         </field>
-        <field jpox.null-value="default">
+        <field>
           <name>distributedBuildEnabled</name>
           <version>1.1.4+</version>
           <type>boolean</type>
