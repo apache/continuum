@@ -27,6 +27,12 @@ Build Environment
 
 [../images/buildenv-add.png] Add Build Environment
 
+** {Attach Build Agent Group to a Build Environment}
+
+  The list box contains all available Build Agent Groups. The list box will only be visible if Distributed Builds is enabled in the {{{configuration.html}General Configuration}} Page
+
+[../images/profile-build-agent-group.png] Add Build Agent Group to Build Environment
+
 ** {Attach JDK to a Build Environment}
 
   The list box contains all available installations (jdk, mvn etc..). The installation's type is automatically recognized.

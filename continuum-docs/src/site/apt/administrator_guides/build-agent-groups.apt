@@ -1,0 +1,25 @@
+ ------
+ Managing Build Agent Groups
+ ------
+
+Managing Build Agent Groups
+
+  A Build Agent Group provides a logical association of Build Agents so that it can be attached to a Build Environment providing the user control on which agents it wants the project to be built.
+  
+  From the menu, choose the 'Build Agents' item
+
+[../images/build-agents-menu.png] Build Agents Menu
+
+  You will see a list of the existing Build Agent Groups in the Build Agent Groups Section, if any.
+
+[../images/build-agent-groups.png] Build Agent Groups List
+
+  To add a new Build Agent Group, click the 'Add' button.
+
+  To edit an existing Build Agent Group, click the 'edit' link to the right of the entry.
+
+  You will be prompted to enter or edit the Build Agent Group Name and its associated Build Agent(s):
+
+[../images/build-agent-groups-edit.png] Add/Edit Build Agent Group
+
+  Build Agent can be associated to one or more Build Agent Group

@@ -79,12 +79,14 @@ Understanding Distributed Builds
     * {{{configuration.html}Enable}} the Distributed Builds option in the General Configuration, and 
 
     * {{{build-agents.html}Add}} your Build Agents to the Continuum Master.
+  
+    * {{{build-agent-groups.html}Add}} your Build Agents to a Build Agent Group.
+
+    * {{{profiles.html} Add}} your Build Agent Group to Build Environment.
 
     <<WARNING>> Need to have a central remote repository to store the artifacts created from the build agent so that other agents will be able to use the new artifacts.
 
 * Limitations
-
-    * the Build Agent selection policy is currently following a fixed informal next-available policy; a Build Agent cannot be assigned to a specific project build
 
     * only system administrator can enable/disable distributed builds
 

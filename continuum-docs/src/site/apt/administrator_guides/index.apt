@@ -20,6 +20,8 @@ Administrator's Guides
 
  * {{{build-agents.html}Managing Build Agents}}
 
+ * {{{build-agent-groups.html}Managing Build Agent Groups}}
+
  * {{{schedules.html}Managing Schedules}}
 
  * {{{configuration.html}Managing General Configuration}}
