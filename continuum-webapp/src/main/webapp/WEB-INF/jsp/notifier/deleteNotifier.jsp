@@ -51,6 +51,7 @@
               <s:hidden name="notifierId"/>
               <s:hidden name="projectId"/>
               <s:hidden name="projectGroupId" />
+              <s:hidden name="fromGroupPage" />
               <c1:submitcancel value="%{getText('delete')}" cancel="%{getText('cancel')}"/>
             </s:form>
           </s:else>

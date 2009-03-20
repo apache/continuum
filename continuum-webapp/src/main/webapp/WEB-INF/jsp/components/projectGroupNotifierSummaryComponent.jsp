@@ -59,7 +59,6 @@
             <s:param name="projectGroupId">${pageScope.projectGroupNotifierSummary.projectGroupId}</s:param>
             <s:param name="notifierId">${pageScope.projectGroupNotifierSummary.id}</s:param>
             <s:param name="notifierType">${pageScope.projectGroupNotifierSummary.type}</s:param>
-            <s:param name="confirmed" value="false"/>
           </s:url>
         <s:a href="%{removeUrl}">
           <img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name="delete"/>" title="<s:text name="delete"/>" border="0">
@@ -131,11 +130,10 @@
           <redback:ifAuthorized permission="continuum-modify-group" resource="${projectGroup.name}">
             <c:choose>
               <c:when test="${!pageScope.projectNotifierSummary.fromProject}">
-                <s:url id="removeUrl" action="deleteProjectNotifier" namespace="/">
+                <s:url id="removeUrl" action="deleteProjectNotifier!default.action" namespace="/">
                   <s:param name="projectGroupId">${pageScope.projectNotifierSummary.projectGroupId}</s:param>
                   <s:param name="projectId">${pageScope.projectNotifierSummary.projectId}</s:param>
                   <s:param name="notifierId">${pageScope.projectNotifierSummary.id}</s:param>
-                  <s:param name="confirmed" value="false"/>
                   <s:param name="fromGroupPage" value="true"/>
                 </s:url>
                 <s:a href="%{removeUrl}">
