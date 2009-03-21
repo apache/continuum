@@ -39,4 +39,18 @@ mv continuum-webapp-$VER.war.asc apache-continuum-$VER.war.asc
 mv continuum-webapp-$VER.war.md5 apache-continuum-$VER.war.md5
 mv continuum-webapp-$VER.war.sha1 apache-continuum-$VER.war.sha1
 
+mv continuum-buildagent-jetty-$VER-bin.tar.gz apache-continuum-buildagent-$VER-bin.tar.gz
+mv continuum-buildagent-jetty-$VER-bin.tar.gz.md5 apache-continuum-buildagent-$VER-bin.tar.gz.md5
+mv continuum-buildagent-jetty-$VER-bin.tar.gz.sha1 apache-continuum-buildagent-$VER-bin.tar.gz.sha1
+mv continuum-buildagent-jetty-$VER-bin.tar.gz.asc apache-continuum-buildagent-$VER-bin.tar.gz.asc
+
+mv continuum-buildagent-jetty-$VER-bin.zip apache-continuum-buildagent-$VER-bin.zip
+mv continuum-buildagent-jetty-$VER-bin.zip.md5 apache-continuum-buildagent-$VER-bin.zip.md5
+mv continuum-buildagent-jetty-$VER-bin.zip.sha1 apache-continuum-buildagent-$VER-bin.zip.sha1
+mv continuum-buildagent-jetty-$VER-bin.zip.asc apache-continuum-buildagent-$VER-bin.zip.asc
+
+mv continuum-buildagent-webapp-$VER.war apache-continuum-buildagent-$VER.war
+mv continuum-buildagent-webapp-$VER.war.asc apache-continuum-buildagent-$VER.war.asc
+mv continuum-buildagent-webapp-$VER.war.md5 apache-continuum-buildagent-$VER.war.md5
+mv continuum-buildagent-webapp-$VER.war.sha1 apache-continuum-buildagent-$VER.war.sha1
 echo 'GREAT :-) '
