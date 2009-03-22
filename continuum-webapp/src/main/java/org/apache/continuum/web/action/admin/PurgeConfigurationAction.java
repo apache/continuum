@@ -219,7 +219,7 @@ public class PurgeConfigurationAction
         
         if ( errorMessage != null )
         {
-            addActionError( errorMessage );
+            addActionError( getText( errorMessage ) );
         }
         
         repoPurgeConfigs = purgeConfigService.getAllRepositoryPurgeConfigurations();

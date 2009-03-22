@@ -116,7 +116,7 @@ public class LocalRepositoryAction
         
         if ( errorMessage != null )
         {
-            addActionError( errorMessage );
+            addActionError( getText( errorMessage ) );
         }
         
         repositories = repositoryService.getAllLocalRepositories();

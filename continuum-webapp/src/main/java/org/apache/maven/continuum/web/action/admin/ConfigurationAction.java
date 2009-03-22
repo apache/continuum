@@ -127,7 +127,7 @@ public class ConfigurationAction
 
         if ( numberOfAllowedBuildsinParallel <= 0 )
         {
-            addActionError( "configuration.numberOfBuildsInParallel.invalid" );
+            addActionError( getText( "configuration.numberOfBuildsInParallel.invalid" ) );
         }
 
         return INPUT;

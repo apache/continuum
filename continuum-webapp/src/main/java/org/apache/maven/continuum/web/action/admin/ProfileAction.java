@@ -110,7 +110,7 @@ public class ProfileAction
 
         if ( errorMessage != null )
         {
-            addActionError( errorMessage );
+            addActionError( getText( errorMessage ) );
         }
 
         this.profiles = profileService.getAllProfiles();

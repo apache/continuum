@@ -231,7 +231,7 @@ public class ScheduleAction
                 }
                 catch ( ContinuumException e )
                 {
-                    addActionError( "schedule.buildqueues.add.error" );
+                    addActionError( getText( "schedule.buildqueues.add.error" ) );
                     return ERROR;
                 }
                 return SUCCESS;
@@ -244,7 +244,7 @@ public class ScheduleAction
                 }
                 catch ( ContinuumException e )
                 {
-                    addActionError( "schedule.buildqueues.add.error" );
+                    addActionError( getText( "schedule.buildqueues.add.error" ) );
                     return ERROR;
                 }
                 return SUCCESS;
