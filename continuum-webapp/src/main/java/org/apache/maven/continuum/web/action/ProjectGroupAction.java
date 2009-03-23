@@ -19,6 +19,15 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
@@ -44,15 +53,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * ProjectGroupAction:
@@ -164,8 +164,9 @@ public class ProjectGroupAction
 
                 if ( !buildDefinition.isDefaultForProject() )
                 {
-                    String key = StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals()
-                        : buildDefinition.getDescription();
+                    String key =
+                        StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals()
+                                        : buildDefinition.getDescription();
                     buildDefinitions.put( key, Integer.valueOf( buildDefinition.getId() ) );
                 }
             }
@@ -184,13 +185,14 @@ public class ProjectGroupAction
                 int nbAntProjects = 0;
                 int nbShellProjects = 0;
 
-                // get the projects according to build order (first project in the group is the root project)            
+                // get the projects according to build order (first project in the group is the root project)
                 try
                 {
-                    Project rootProject = ( getContinuum().getProjectsInBuildOrder(
-                        getContinuum().getProjectsInGroupWithDependencies( projectGroupId ) ) ).get( 0 );
-                    if ( "maven2".equals( rootProject.getExecutorId() ) ||
-                        "maven-1".equals( rootProject.getExecutorId() ) )
+                    Project rootProject =
+                        ( getContinuum().getProjectsInBuildOrder( getContinuum().getProjectsInGroupWithDependencies(
+                                                                                                                     projectGroupId ) ) ).get( 0 );
+                    if ( "maven2".equals( rootProject.getExecutorId() )
+                        || "maven-1".equals( rootProject.getExecutorId() ) )
                     {
                         url = rootProject.getUrl();
                     }
@@ -310,19 +312,9 @@ public class ProjectGroupAction
         return SUCCESS;
     }
 
-    public String edit()
-        throws ContinuumException, CycleDetectedException
+    private void initialize()
+        throws ContinuumException
     {
-        try
-        {
-            checkModifyProjectGroupAuthorization( getProjectGroupName() );
-        }
-        catch ( AuthorizationRequiredException authzE )
-        {
-            addActionError( authzE.getMessage() );
-            return REQUIRES_AUTHORIZATION;
-        }
-
         try
         {
             checkManageLocalRepositoriesAuthorization();
@@ -334,10 +326,6 @@ public class ProjectGroupAction
         }
 
         projectGroup = getContinuum().getProjectGroupWithProjects( projectGroupId );
-
-        name = projectGroup.getName();
-
-        description = projectGroup.getDescription();
 
         projectList = projectGroup.getProjects();
 
@@ -372,6 +360,29 @@ public class ProjectGroupAction
                 projectGroups.put( new Integer( pg.getId() ), pg.getName() );
             }
         }
+        repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
+    }
+
+    public String edit()
+        throws ContinuumException, CycleDetectedException
+    {
+        try
+        {
+            checkModifyProjectGroupAuthorization( getProjectGroupName() );
+        }
+        catch ( AuthorizationRequiredException authzE )
+        {
+            addActionError( authzE.getMessage() );
+            return REQUIRES_AUTHORIZATION;
+        }
+
+        initialize();
+
+        name = projectGroup.getName();
+
+        description = projectGroup.getDescription();
+
+        projectList = projectGroup.getProjects();
 
         if ( projectGroup.getLocalRepository() != null )
         {
@@ -381,8 +392,6 @@ public class ProjectGroupAction
         {
             repositoryId = -1;
         }
-
-        repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
 
         Collection<Project> projList = getContinuum().getProjectsInGroupWithDependencies( projectGroup.getId() );
         if ( projList != null && projList.size() > 0 )
@@ -415,12 +424,10 @@ public class ProjectGroupAction
             if ( name.equals( "" ) )
             {
                 addActionError( getText( "projectGroup.error.name.required" ) );
-                return INPUT;
             }
             else if ( name.trim().equals( "" ) )
             {
                 addActionError( getText( "projectGroup.error.name.cannot.be.spaces" ) );
-                return INPUT;
             }
             else
             {
@@ -430,9 +437,13 @@ public class ProjectGroupAction
                     if ( name.equals( projectGroup.getName() ) && projectGroup.getId() != projectGroupId )
                     {
                         addActionError( getText( "projectGroup.error.name.already.exists" ) );
-                        return INPUT;
                     }
                 }
+            }
+            if ( hasActionErrors() )
+            {
+                initialize();
+                return INPUT;
             }
         }
 
@@ -442,7 +453,7 @@ public class ProjectGroupAction
         // todo convert everything like to work off of string keys
         if ( !name.equals( projectGroup.getName() ) )
         {
-            //CONTINUUM-1502
+            // CONTINUUM-1502
             name = name.trim();
             try
             {
@@ -503,15 +514,14 @@ public class ProjectGroupAction
                 }
             }
 
-            ProjectGroup newProjectGroup = getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() )
-                ;
+            ProjectGroup newProjectGroup = getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() );
 
             if ( newProjectGroup.getId() != projectGroup.getId() && isAuthorized( newProjectGroup.getName() ) )
             {
                 logger.info( "Moving project " + project.getName() + " to project group " + newProjectGroup.getName() );
                 project.setProjectGroup( newProjectGroup );
 
-                //CONTINUUM-1512
+                // CONTINUUM-1512
                 Collection<BuildResult> results = getContinuum().getBuildResultsForProject( project.getId() );
                 for ( BuildResult br : results )
                 {
@@ -570,8 +580,8 @@ public class ProjectGroupAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        //get the parent of the group by finding the parent project
-        //i.e., the project that doesn't have a parent, or it's parent is not in the group.
+        // get the parent of the group by finding the parent project
+        // i.e., the project that doesn't have a parent, or it's parent is not in the group.
 
         Project parent = null;
 
@@ -602,8 +612,8 @@ public class ProjectGroupAction
                     }
                     else
                     {
-                        //currently, we have no provisions for releasing 2 or more parents
-                        //at the same time, this will be implemented in the future
+                        // currently, we have no provisions for releasing 2 or more parents
+                        // at the same time, this will be implemented in the future
                         addActionError( getText( "projectGroup.release.error.severalParentProjects" ) );
                         return INPUT;
                     }
@@ -648,9 +658,9 @@ public class ProjectGroupAction
 
             if ( parent != null )
             {
-                if ( ( project.getArtifactId().equals( parent.getArtifactId() ) ) &&
-                    ( project.getGroupId().equals( parent.getGroupId() ) ) &&
-                    ( project.getVersion().equals( parent.getVersion() ) ) )
+                if ( ( project.getArtifactId().equals( parent.getArtifactId() ) )
+                    && ( project.getGroupId().equals( parent.getGroupId() ) )
+                    && ( project.getVersion().equals( parent.getVersion() ) ) )
                 {
                     result = true;
                 }
