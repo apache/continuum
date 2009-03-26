@@ -31,7 +31,7 @@ Guide to Install Continuum on Geronimo
     xmlns="http://geronimo.apache.org/xml/ns/j2ee/web-1.1">
     <environment>
         <moduleId>
-            <groupId>org.apache.continuum</artifactId>
+            <groupId>org.apache.continuum</groupId>
             <artifactId>continuum</artifactId>
             <version>1.2</version>
         </moduleId>
