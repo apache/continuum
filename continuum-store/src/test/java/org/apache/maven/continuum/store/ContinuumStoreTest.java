@@ -31,6 +31,7 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
@@ -297,8 +298,13 @@ public class ContinuumStoreTest
     }
 
     public void testAddSchedule()
+        throws ContinuumStoreException
     {
+        BuildQueue buildQueue = buildQueueDao.getAllBuildQueues().get( 0 );
+
         Schedule newSchedule = createTestSchedule( "testAddSchedule", "testAddSchedule desc", 10, "cron test", false );
+        newSchedule.addBuildQueue( buildQueue );
+
         Schedule copy = createTestSchedule( newSchedule );
         scheduleDao.addSchedule( newSchedule );
         copy.setId( newSchedule.getId() );
@@ -306,6 +312,8 @@ public class ContinuumStoreTest
         List schedules = scheduleDao.getAllSchedulesByName();
         Schedule retrievedSchedule = (Schedule) schedules.get( schedules.size() - 1 );
         assertScheduleEquals( copy, retrievedSchedule );
+        assertEquals( "check size of build queues", 1, retrievedSchedule.getBuildQueues().size() );
+        assertBuildQueueEquals( buildQueue, (BuildQueue) retrievedSchedule.getBuildQueues().get( 0 ) );
     }
 
     public void testEditSchedule()
@@ -315,12 +323,18 @@ public class ContinuumStoreTest
         newSchedule.setName( "name1.1" );
         newSchedule.setDescription( "testEditSchedule updated description" );
 
+        assertEquals( "check size of build queues", 2, newSchedule.getBuildQueues().size() );
+        BuildQueue buildQueue1 = (BuildQueue)newSchedule.getBuildQueues().get( 0 );
+        BuildQueue buildQueue2 = (BuildQueue)newSchedule.getBuildQueues().get( 1 );
+
         Schedule copy = createTestSchedule( newSchedule );
         copy.setId( newSchedule.getId() );
         scheduleDao.updateSchedule( newSchedule );
 
         Schedule retrievedSchedule = (Schedule) scheduleDao.getAllSchedulesByName().get( 0 );
         assertScheduleEquals( copy, retrievedSchedule );
+        assertBuildQueueEquals( buildQueue1, (BuildQueue) retrievedSchedule.getBuildQueues().get( 0 ) );
+        assertBuildQueueEquals( buildQueue2, (BuildQueue) retrievedSchedule.getBuildQueues().get( 1 ) );
     }
 
     public void testRemoveSchedule()
@@ -328,7 +342,7 @@ public class ContinuumStoreTest
         Schedule schedule = (Schedule) scheduleDao.getAllSchedulesByName().get( 2 );
 
         // TODO: test if it has any attachments
-
+        assertEquals( "check size of build queues", 0, schedule.getBuildQueues().size() );
         scheduleDao.removeSchedule( schedule );
 
         List schedules = scheduleDao.getAllSchedulesByName();
@@ -337,18 +351,33 @@ public class ContinuumStoreTest
     }
 
     public void testGetAllSchedules()
+        throws ContinuumStoreException
     {
         List schedules = scheduleDao.getAllSchedulesByName();
+        List<BuildQueue> buildQueues = buildQueueDao.getAllBuildQueues();
 
         assertEquals( "check item count", 3, schedules.size() );
+        assertEquals( "check build queues count", 3, buildQueues.size() );
+
+        BuildQueue buildQueue1 = buildQueues.get( 0 );
+        BuildQueue buildQueue2 = buildQueues.get( 1 );
+        BuildQueue buildQueue3 = buildQueues.get( 2 );
 
         // check equality and order
         Schedule schedule = (Schedule) schedules.get( 0 );
         assertScheduleEquals( testSchedule1, schedule );
+        assertEquals( "check size of buildQueues", 2, schedule.getBuildQueues().size() );
+        assertBuildQueueEquals( buildQueue1, (BuildQueue) schedule.getBuildQueues().get( 0 ) );
+        assertBuildQueueEquals( buildQueue2, (BuildQueue) schedule.getBuildQueues().get( 1 ) );
+        
         schedule = (Schedule) schedules.get( 1 );
         assertScheduleEquals( testSchedule2, schedule );
+        assertEquals( "check size of buildQueues", 1, schedule.getBuildQueues().size() );
+        assertBuildQueueEquals( buildQueue3, (BuildQueue) schedule.getBuildQueues().get( 0 ) );
+
         schedule = (Schedule) schedules.get( 2 );
         assertScheduleEquals( testSchedule3, schedule );
+        assertEquals( "check size of buildQueues", 0, schedule.getBuildQueues().size() );
     }
 
     public void testAddProfile()

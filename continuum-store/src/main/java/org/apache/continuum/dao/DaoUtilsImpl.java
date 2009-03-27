@@ -26,6 +26,7 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
@@ -90,6 +91,7 @@ public class DaoUtilsImpl
         PlexusJdoUtils.removeAll( getPersistenceManager(), LocalRepository.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), DirectoryPurgeConfiguration.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Schedule.class );
+        PlexusJdoUtils.removeAll( getPersistenceManager(), BuildQueue.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Profile.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), Installation.class );
         PlexusJdoUtils.removeAll( getPersistenceManager(), ScmResult.class );
