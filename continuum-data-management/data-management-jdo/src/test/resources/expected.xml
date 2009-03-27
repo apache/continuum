@@ -435,6 +435,10 @@
       <description>description1</description>
       <delay>1</delay>
       <cronExpression>cronExpression1</cronExpression>
+      <buildQueues>
+        <buildQueue id="1"></buildQueue>
+        <buildQueue id="2"></buildQueue>
+      </buildQueues>
     </schedule>
     <schedule>
       <id>1</id>
@@ -443,6 +447,9 @@
       <description>description2</description>
       <delay>2</delay>
       <cronExpression>cronExpression2</cronExpression>
+      <buildQueues>
+        <buildQueue id="3"></buildQueue>
+      </buildQueues>
     </schedule>
     <schedule>
       <id>3</id>
@@ -556,4 +563,18 @@
       <releaseGoal>releaseGoal</releaseGoal>
     </continuumReleaseResult>
   </continuumReleaseResults>
+  <buildQueues>
+    <buildQueue>
+      <id>1</id>
+      <name>build queue 1</name>
+    </buildQueue>
+    <buildQueue>
+      <id>2</id>
+      <name>build queue 2</name>
+    </buildQueue>
+    <buildQueue>
+      <id>3</id>
+      <name>build queue 3</name>
+    </buildQueue>
+  </buildQueues>
 </continuumDatabase>

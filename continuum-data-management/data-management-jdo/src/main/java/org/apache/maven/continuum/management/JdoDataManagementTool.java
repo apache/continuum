@@ -20,6 +20,7 @@ package org.apache.maven.continuum.management;
  */
 
 import org.apache.continuum.dao.BuildDefinitionTemplateDao;
+import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.ContinuumReleaseResultDao;
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
@@ -39,6 +40,7 @@ import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.ContinuumDatabase;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -145,6 +147,11 @@ public class JdoDataManagementTool
      */
     private ContinuumReleaseResultDao releaseResultDao;
 
+    /**
+     * @plexus.requirement
+     */
+    private BuildQueueDao buildQueueDao;
+
     protected static final String BUILDS_XML = "builds.xml";
 
     /**
@@ -171,6 +178,10 @@ public class JdoDataManagementTool
         try
         {
             database.setInstallations( installationDao.getAllInstallations() );
+
+            database.setBuildDefinitionTemplates( buildDefinitionTemplateDao.getAllBuildDefinitionTemplate() );
+
+            database.setBuildQueues( buildQueueDao.getAllBuildQueues() );
         }
         catch ( ContinuumStoreException e )
         {
@@ -178,21 +189,11 @@ public class JdoDataManagementTool
         }
         database.setSchedules( scheduleDao.getAllSchedulesByName() );
         database.setProfiles( profileDao.getAllProfilesByName() );
-
         database.setLocalRepositories( localRepositoryDao.getAllLocalRepositories() );
         database.setRepositoryPurgeConfigurations(
             repositoryPurgeConfigurationDao.getAllRepositoryPurgeConfigurations() );
         database.setDirectoryPurgeConfigurations( directoryPurgeConfigurationDao.getAllDirectoryPurgeConfigurations() );
-
         database.setProjectScmRoots( projectScmRootDao.getAllProjectScmRoots() );
-        try
-        {
-            database.setBuildDefinitionTemplates( buildDefinitionTemplateDao.getAllBuildDefinitionTemplate() );
-        }
-        catch ( ContinuumStoreException e )
-        {
-        }
-
         database.setContinuumReleaseResults( releaseResultDao.getAllContinuumReleaseResults() );
 
         ContinuumStaxWriter writer = new ContinuumStaxWriter();
@@ -253,10 +254,17 @@ public class JdoDataManagementTool
 
         PlexusJdoUtils.addObject( pmf.getPersistenceManager(), database.getSystemConfiguration() );
 
+        Map<Integer, BuildQueue> buildQueues = new HashMap<Integer, BuildQueue>();
+        for ( BuildQueue buildQueue : (List<BuildQueue>)database.getBuildQueues() )
+        {
+            buildQueues.put( buildQueue.getId(), buildQueue );
+        }
+
         Map<Integer, Schedule> schedules = new HashMap<Integer, Schedule>();
         for ( Iterator i = database.getSchedules().iterator(); i.hasNext(); )
         {
             Schedule schedule = (Schedule) i.next();
+            schedule.setBuildQueues( getBuildQueuesBySchedule( buildQueues, schedule ) );
 
             schedule = (Schedule) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), schedule );
             schedules.put( Integer.valueOf( schedule.getId() ), schedule );
@@ -441,5 +449,16 @@ public class JdoDataManagementTool
                 def.setProfile( profiles.get( Integer.valueOf( def.getProfile().getId() ) ) );
             }
         }
+    }
+
+    private List<BuildQueue> getBuildQueuesBySchedule( Map<Integer, BuildQueue> allBuildQueues, Schedule schedule )
+    {
+        List<BuildQueue> buildQueues = new ArrayList<BuildQueue>();
+
+        for ( BuildQueue buildQueue : (List<BuildQueue>) schedule.getBuildQueues() )
+        {
+            buildQueues.add( allBuildQueues.get( Integer.valueOf( buildQueue.getId() ) ) );
+        }
+        return buildQueues;
     }
 }
