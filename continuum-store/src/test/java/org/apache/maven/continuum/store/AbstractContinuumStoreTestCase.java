@@ -19,6 +19,7 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.ContinuumReleaseResultDao;
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
@@ -38,6 +39,7 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
@@ -91,6 +93,8 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected ContinuumReleaseResultDao releaseResultDao;
 
+    protected BuildQueueDao buildQueueDao;
+
     protected ProjectGroup defaultProjectGroup;
 
     protected ProjectGroup testProjectGroup2;
@@ -143,6 +147,12 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected ContinuumReleaseResult testContinuumReleaseResult;
 
+    protected BuildQueue testBuildQueue1;
+
+    protected BuildQueue testBuildQueue2;
+
+    protected BuildQueue testBuildQueue3;
+
     private SystemConfiguration systemConfiguration;
 
     @Override
@@ -176,6 +186,8 @@ public abstract class AbstractContinuumStoreTestCase
         projectScmRootDao = (ProjectScmRootDao) lookup( ProjectScmRootDao.class.getName() );
 
         releaseResultDao = (ContinuumReleaseResultDao) lookup( ContinuumReleaseResultDao.class.getName() );
+
+        buildQueueDao = (BuildQueueDao) lookup( BuildQueueDao.class.getName() );
     }
 
     protected void createBuildDatabase( boolean isTestFromDataManagementTool )
@@ -230,6 +242,48 @@ public abstract class AbstractContinuumStoreTestCase
             testLocalRepository3.setId( 3 );
         }
 
+        testBuildQueue1 = createTestBuildQueue( "build queue 1" );
+
+        BuildQueue buildQueue1 = createTestBuildQueue( testBuildQueue1 );
+        if ( addToStore )
+        {
+            buildQueue1 = buildQueueDao.addBuildQueue( buildQueue1 );
+            testBuildQueue1.setId( buildQueue1.getId() );
+        }
+        else
+        {
+            buildQueue1.setId( 1 );
+            testBuildQueue1.setId( 1 );
+        }
+
+        testBuildQueue2 = createTestBuildQueue( "build queue 2" );
+
+        BuildQueue buildQueue2 = createTestBuildQueue( testBuildQueue2 );
+        if ( addToStore )
+        {
+            buildQueue2 = buildQueueDao.addBuildQueue( buildQueue2 );
+            testBuildQueue2.setId( buildQueue2.getId() );
+        }
+        else
+        {
+            buildQueue2.setId( 2 );
+            testBuildQueue2.setId( 2 );
+        }
+
+        testBuildQueue3 = createTestBuildQueue( "build queue 3" );
+
+        BuildQueue buildQueue3 = createTestBuildQueue( testBuildQueue3 );
+        if ( addToStore )
+        {
+            buildQueue3 = buildQueueDao.addBuildQueue( buildQueue3 );
+            testBuildQueue3.setId( buildQueue3.getId() );
+        }
+        else
+        {
+            buildQueue3.setId( 3 );
+            testBuildQueue3.setId( 3 );
+        }
+
         defaultProjectGroup = createTestProjectGroup( "Default Group", "The Default Group",
                                                       "org.apache.maven.test.default", localRepository1 );
 
@@ -244,7 +298,12 @@ public abstract class AbstractContinuumStoreTestCase
                                           "scmUrl2", 1, "url2", "version2", "workingDirectory2" );
 
         testSchedule1 = createTestSchedule( "name1", "description1", 1, "cronExpression1", true );
+        testSchedule1.addBuildQueue( buildQueue1 );
+        testSchedule1.addBuildQueue( buildQueue2 );
+        
         testSchedule2 = createTestSchedule( "name2", "description2", 2, "cronExpression2", true );
+        testSchedule2.addBuildQueue( buildQueue3 );
+
         testSchedule3 = createTestSchedule( "name3", "description3", 3, "cronExpression3", true );
 
         testInstallationJava13 =
@@ -1020,11 +1079,17 @@ public abstract class AbstractContinuumStoreTestCase
     protected static Schedule createTestSchedule( Schedule schedule )
     {
         return createTestSchedule( schedule.getName(), schedule.getDescription(), schedule.getDelay(), schedule
-            .getCronExpression(), schedule.isActive() );
+            .getCronExpression(), schedule.isActive(), schedule.getBuildQueues() );
     }
 
     protected static Schedule createTestSchedule( String name, String description, int delay, String cronExpression,
                                                   boolean active )
+    {
+        return createTestSchedule( name, description, delay, cronExpression, active, null );
+    }
+                                                  
+    protected static Schedule createTestSchedule( String name, String description, int delay, String cronExpression,
+                                                  boolean active, List<BuildQueue> buildQueues )
     {
         Schedule schedule = new Schedule();
         schedule.setActive( active );
@@ -1032,6 +1097,8 @@ public abstract class AbstractContinuumStoreTestCase
         schedule.setDelay( delay );
         schedule.setDescription( description );
         schedule.setName( name );
+        schedule.setBuildQueues( buildQueues );
+
         return schedule;
     }
 
@@ -1521,6 +1588,25 @@ public abstract class AbstractContinuumStoreTestCase
                       actualConfig.getStartTime() );
         assertEquals( "compare continuum release result - endTime", expectedConfig.getEndTime(),
                       actualConfig.getEndTime() );
+    }
+
+    protected static BuildQueue createTestBuildQueue( String name )
+    {
+        BuildQueue buildQueue = new BuildQueue();
+        buildQueue.setName( name );
+
+        return buildQueue;
+    }
+
+    protected static BuildQueue createTestBuildQueue( BuildQueue buildQueue )
+    {
+        return createTestBuildQueue( buildQueue.getName() );
+    }
+
+    protected static void assertBuildQueueEquals( BuildQueue expectedConfig, BuildQueue actualConfig )
+    {
+        assertEquals( "compare build queue - id", expectedConfig.getId(), actualConfig.getId() );
+        assertEquals( "compare build queue - name", expectedConfig.getName(), actualConfig.getName() );
     }
 
     /**
