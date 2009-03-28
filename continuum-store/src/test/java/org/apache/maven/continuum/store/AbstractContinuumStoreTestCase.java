@@ -119,11 +119,15 @@ public abstract class AbstractContinuumStoreTestCase
 
     protected Profile testProfile3;
 
+    protected Profile testProfile4;
+
     protected Installation testInstallationJava13;
 
     protected Installation testInstallationJava14;
 
     protected Installation testInstallationMaven20a3;
+
+    protected Installation testInstallationEnvVar;
 
     protected BuildResult testBuildResult1;
 
@@ -318,6 +322,8 @@ public abstract class AbstractContinuumStoreTestCase
             createTestInstallation( "JDK 1.4", InstallationService.JDK_TYPE, "JAVA_HOME", "/usr/local/java-1.4" );
         testInstallationMaven20a3 = createTestInstallation( "Maven 2.0 alpha 3", InstallationService.MAVEN2_TYPE,
                                                             "M2_HOME", "/usr/local/maven-2.0-alpha-3" );
+        testInstallationEnvVar =
+            createTestInstallation( "Maven Heap Size", InstallationService.ENVVAR_TYPE, "MAVEN_OPTS", "-Xms256m -Xmx256m" );
 
         ProjectNotifier testGroupNotifier1 = createTestNotifier( 1, true, false, true, "type1" );
         ProjectNotifier testGroupNotifier2 = createTestNotifier( 2, false, true, false, "type2" );
@@ -426,12 +432,25 @@ public abstract class AbstractContinuumStoreTestCase
             installationJava13.setInstallationId( 3 );
         }
 
+        Installation installationEnvVar = createTestInstallation( testInstallationEnvVar );
+        if ( addToStore )
+        {
+            installationEnvVar = installationDao.addInstallation( installationEnvVar );
+        }
+        else
+        {
+            installationEnvVar.setInstallationId( 4 );
+        }
+
         testProfile1 =
             createTestProfile( "name1", "description1", 1, true, true, installationJava13, installationMaven20a3 );
         testProfile2 =
             createTestProfile( "name2", "description2", 2, false, true, installationJava14, installationMaven20a3 );
         testProfile3 =
             createTestProfile( "name3", "description3", 3, true, false, installationJava14, installationMaven20a3 );
+        testProfile4 =
+            createTestProfile( "name4", "description4", 4, false, false, installationJava14, installationMaven20a3 );
+        testProfile4.addEnvironmentVariable( installationEnvVar );
 
         Profile profile1 = createTestProfile( testProfile1 );
         if ( addToStore )
@@ -464,6 +483,17 @@ public abstract class AbstractContinuumStoreTestCase
         else
         {
             profile3.setId( 3 );
+        }
+
+        Profile profile4 = createTestProfile( testProfile4 );
+        if ( addToStore )
+        {
+            profile4 = profileDao.addProfile( profile4 );
+            testProfile4.setId( profile4.getId() );
+        }
+        else
+        {
+            profile4.setId( 4 );
         }
 
         testRepoPurgeConfiguration1 =
@@ -1122,8 +1152,6 @@ public abstract class AbstractContinuumStoreTestCase
         return createTestProfile( profile.getName(), profile.getDescription(), profile.getScmMode(), profile
             .isBuildWithoutChanges(), profile.isActive(), profile.getJdk(), profile.getBuilder(),
                                       profile.getEnvironmentVariables() );
-//                                  createTestInstallation( profile.getJdk() ),
-//                                  createTestInstallation( profile.getBuilder() ) );
     }
 
     protected static Profile createTestProfile( String name, String description, int scmMode,

@@ -425,7 +425,7 @@ public class ContinuumStoreTest
         profileDao.removeProfile( profile );
 
         List profiles = profileDao.getAllProfilesByName();
-        assertEquals( "check size", 2, profiles.size() );
+        assertEquals( "check size", 3, profiles.size() );
         assertFalse( "check not there", profiles.contains( profile ) );
     }
 
@@ -433,7 +433,7 @@ public class ContinuumStoreTest
     {
         List profiles = profileDao.getAllProfilesByName();
 
-        assertEquals( "check item count", 3, profiles.size() );
+        assertEquals( "check item count", 4, profiles.size() );
 
         // check equality and order
         Profile profile = (Profile) profiles.get( 0 );
@@ -448,6 +448,13 @@ public class ContinuumStoreTest
         assertProfileEquals( testProfile3, profile );
         assertInstallationEquals( testProfile3.getBuilder(), profile.getBuilder() );
         assertInstallationEquals( testProfile3.getJdk(), profile.getJdk() );
+        profile = (Profile) profiles.get( 3 );
+        assertProfileEquals( testProfile4, profile );
+        assertInstallationEquals( testProfile4.getBuilder(), profile.getBuilder() );
+        assertInstallationEquals( testProfile4.getJdk(), profile.getJdk() );
+        assertEquals( "check env var count", 1, profile.getEnvironmentVariables().size() );
+        assertInstallationEquals( (Installation) testProfile4.getEnvironmentVariables().get( 0 ), 
+                                  (Installation) profile.getEnvironmentVariables().get( 0 ) );
     }
 
     /*
@@ -463,7 +470,7 @@ public class ContinuumStoreTest
     {
         List installations = installationDao.getAllInstallations();
 
-        assertEquals( "check item count", 3, installations.size() );
+        assertEquals( "check item count", 4, installations.size() );
 
         // check equality and order
         Installation installation = (Installation) installations.get( 0 );
@@ -472,6 +479,8 @@ public class ContinuumStoreTest
         assertInstallationEquals( testInstallationJava14, installation );
         installation = (Installation) installations.get( 2 );
         assertInstallationEquals( testInstallationMaven20a3, installation );
+        installation = (Installation) installations.get( 3 );
+        assertInstallationEquals( testInstallationEnvVar, installation );
     }
 
     public void testUpdateInstallation()

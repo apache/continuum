@@ -19,6 +19,27 @@ package org.apache.maven.continuum.management;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManagerFactory;
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.continuum.dao.BuildDefinitionTemplateDao;
 import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.ContinuumReleaseResultDao;
@@ -36,7 +57,6 @@ import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.LocalRepository;
-import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -57,26 +77,6 @@ import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManagerFactory;
-import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 /**
  * JDO implementation the database management tool API.
  * @version $Id$
@@ -86,7 +86,7 @@ public class JdoDataManagementTool
     implements DataManagementTool
 {
     private Logger log = LoggerFactory.getLogger( JdoDataManagementTool.class );
-    
+
     /**
      * @plexus.requirement
      */
@@ -293,7 +293,13 @@ public class JdoDataManagementTool
             {
                 profile.setBuilder( installations.get( profile.getBuilder().getInstallationId() ) );
             }
-
+            List environmentVariables = new ArrayList();
+            for (Iterator envIt = profile.getEnvironmentVariables().listIterator(); envIt.hasNext();){
+                Installation installation = (Installation) envIt.next();
+                environmentVariables.add(installations.get(installation.getInstallationId()));
+                envIt.remove();
+            }
+            profile.setEnvironmentVariables( environmentVariables );
             profile = (Profile) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), profile );
             profiles.put( Integer.valueOf( profile.getId() ), profile );
         }
@@ -320,27 +326,27 @@ public class JdoDataManagementTool
 
                 processBuildDefinitions( project.getBuildDefinitions(), schedules, profiles );
             }
-            
+
             if ( projectGroup.getLocalRepository() != null )
             {
-                projectGroup.setLocalRepository( localRepositories.get( 
+                projectGroup.setLocalRepository( localRepositories.get(
                                                  Integer.valueOf( projectGroup.getLocalRepository().getId() ) ) );
             }
-            
+
             projectGroup = (ProjectGroup) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectGroup );
             projectGroups.put( Integer.valueOf( projectGroup.getId() ), projectGroup );
         }
-        
+
         // create project scm root data (CONTINUUM-2040)
         Map<Integer, ProjectScmRoot> projectScmRoots = new HashMap<Integer, ProjectScmRoot>();
         Set<Integer> keys = projectGroups.keySet();
         int id = 1;
         for( Integer key : keys )
         {
-            ProjectGroup projectGroup = projectGroups.get( key );            
+            ProjectGroup projectGroup = projectGroups.get( key );
             String url = " ";
             try
-            {                   
+            {
                 List<Project> projects =
                     ProjectSorter.getSortedProjects( getProjectsByGroupIdWithDependencies( pmf, projectGroup.getId() ),
                                                      log );
@@ -351,14 +357,14 @@ public class JdoDataManagementTool
                     {
                         url = project.getScmUrl();
                         ProjectScmRoot projectScmRoot = new ProjectScmRoot();
-                        projectScmRoot.setId( id );                        
+                        projectScmRoot.setId( id );
                         projectScmRoot.setProjectGroup( projectGroup );
                         projectScmRoot.setScmRootAddress( url );
                         projectScmRoot.setState( project.getState() );
-                        
-                        projectScmRoot = (ProjectScmRoot) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectScmRoot );                        
+
+                        projectScmRoot = (ProjectScmRoot) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectScmRoot );
                         projectScmRoots.put( Integer.valueOf( projectScmRoot.getId() ), projectScmRoot );
-                        id++;                                                
+                        id++;
                     }
                 }
             }
@@ -374,12 +380,12 @@ public class JdoDataManagementTool
         /*
         for ( RepositoryPurgeConfiguration repoPurge : (List<RepositoryPurgeConfiguration>) database.getRepositoryPurgeConfigurations() )
         {
-            repoPurge.setRepository( localRepositories.get( 
+            repoPurge.setRepository( localRepositories.get(
                                      Integer.valueOf( repoPurge.getRepository().getId() ) ) );
 
             if ( repoPurge.getSchedule() != null )
             {
-                repoPurge.setSchedule( schedules.get( 
+                repoPurge.setSchedule( schedules.get(
                                        Integer.valueOf( repoPurge.getSchedule().getId() ) ) );
             }
 
@@ -399,7 +405,7 @@ public class JdoDataManagementTool
 
         for ( ContinuumReleaseResult releaseResult : (List<ContinuumReleaseResult>) database.getContinuumReleaseResults() )
         {
-            releaseResult.setProjectGroup( projectGroups.get( 
+            releaseResult.setProjectGroup( projectGroups.get(
                                            Integer.valueOf( releaseResult.getProjectGroup().getId() ) ) );
 
             releaseResult =
@@ -414,7 +420,7 @@ public class JdoDataManagementTool
                 (BuildDefinitionTemplate) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), template );
         }
     }
-    
+
     private List<Project> getProjectsByGroupIdWithDependencies( PersistenceManagerFactory pmf, int projectGroupId )
     {
         List<Project> allProjects =
@@ -429,10 +435,10 @@ public class JdoDataManagementTool
                 groupProjects.add( project );
             }
         }
-        
+
         return groupProjects;
     }
-    
+
     private static void processBuildDefinitions( List buildDefinitions, Map<Integer, Schedule> schedules,
                                                  Map<Integer, Profile> profiles )
     {

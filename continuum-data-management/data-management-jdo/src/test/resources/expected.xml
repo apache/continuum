@@ -426,6 +426,13 @@
       <name>Maven 2.0 alpha 3</name>
       <installationId>2</installationId>
     </installation>
+    <installation>
+      <type>envvar</type>
+      <varValue>-Xms256m -Xmx256m</varValue>
+      <varName>MAVEN_OPTS</varName>
+      <name>Maven Heap Size</name>
+      <installationId>4</installationId>
+    </installation>
   </installations>
   <schedules>
     <schedule>
@@ -488,6 +495,17 @@
       <buildWithoutChanges>true</buildWithoutChanges>
       <jdk installationId="1"></jdk>
       <builder installationId="2"></builder>
+    </profile>
+    <profile>
+      <id>4</id>
+      <name>name4</name>
+      <description>description4</description>
+      <scmMode>4</scmMode>
+      <jdk installationId="1"></jdk>
+      <builder installationId="2"></builder>
+      <environmentVariables>
+        <environmentVariable installationId="4"></environmentVariable>
+      </environmentVariables>
     </profile>
   </profiles>
   <localRepositories>
