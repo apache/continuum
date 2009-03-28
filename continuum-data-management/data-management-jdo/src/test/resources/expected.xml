@@ -563,6 +563,16 @@
       <releaseGoal>releaseGoal</releaseGoal>
     </continuumReleaseResult>
   </continuumReleaseResults>
+  <buildDefinitionTemplates>
+    <buildDefinitionTemplate>
+      <id>1</id>
+      <name>template2</name>
+      <type>type2</type>
+      <buildDefinitions>
+        <buildDefinition id="1"></buildDefinition>
+      </buildDefinitions>
+    </buildDefinitionTemplate>
+  </buildDefinitionTemplates>
   <buildQueues>
     <buildQueue>
       <id>1</id>

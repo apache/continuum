@@ -19,6 +19,7 @@ package org.apache.maven.continuum.store;
  * under the License.
  */
 
+import org.apache.continuum.dao.BuildDefinitionTemplateDao;
 import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.ContinuumReleaseResultDao;
 import org.apache.continuum.dao.DaoUtils;
@@ -39,6 +40,7 @@ import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -94,6 +96,8 @@ public abstract class AbstractContinuumStoreTestCase
     protected ContinuumReleaseResultDao releaseResultDao;
 
     protected BuildQueueDao buildQueueDao;
+
+    protected BuildDefinitionTemplateDao buildDefinitionTemplateDao;
 
     protected ProjectGroup defaultProjectGroup;
 
@@ -188,6 +192,8 @@ public abstract class AbstractContinuumStoreTestCase
         releaseResultDao = (ContinuumReleaseResultDao) lookup( ContinuumReleaseResultDao.class.getName() );
 
         buildQueueDao = (BuildQueueDao) lookup( BuildQueueDao.class.getName() );
+
+        buildDefinitionTemplateDao = (BuildDefinitionTemplateDao) lookup( BuildDefinitionTemplateDao.class.getName() );
     }
 
     protected void createBuildDatabase( boolean isTestFromDataManagementTool )
@@ -525,6 +531,15 @@ public abstract class AbstractContinuumStoreTestCase
             createTestBuildDefinition( "arguments13", "buildFile13", "goals13", profile1, schedule2, false, false );
         BuildDefinition testBuildDefinition4 =
             createTestBuildDefinition( null, null, "deploy", null, null, false, false );
+
+        BuildDefinitionTemplate testBuildDefinitionTemplate1 = createTestBuildDefinitionTemplate( "template2", "type2", false );
+        testBuildDefinitionTemplate1.addBuildDefinition( 
+            createTestBuildDefinition( "arguments14", "buildFile14", "goals14", profile1, schedule1, false, false ) );
+
+        if ( addToStore )
+        {
+            buildDefinitionTemplateDao.addBuildDefinitionTemplate( testBuildDefinitionTemplate1 );
+        }
 
         ProjectGroup group = createTestProjectGroup( defaultProjectGroup );
 
@@ -1607,6 +1622,16 @@ public abstract class AbstractContinuumStoreTestCase
     {
         assertEquals( "compare build queue - id", expectedConfig.getId(), actualConfig.getId() );
         assertEquals( "compare build queue - name", expectedConfig.getName(), actualConfig.getName() );
+    }
+
+    protected static BuildDefinitionTemplate createTestBuildDefinitionTemplate( String name, String type, boolean continuumDefault )
+    {
+        BuildDefinitionTemplate template = new BuildDefinitionTemplate();
+        template.setName( name );
+        template.setType( type );
+        template.setContinuumDefault( continuumDefault );
+
+        return template;
     }
 
     /**

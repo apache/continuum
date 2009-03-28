@@ -965,13 +965,13 @@ public class ContinuumStoreTest
         new BuildDefinition().setDefaultForProject( true );
         String arguments = "arguments1.1";
         newBuildDefinition.setArguments( arguments );
-
         BuildDefinition copy = createTestBuildDefinition( newBuildDefinition );
         buildDefinitionDao.storeBuildDefinition( newBuildDefinition );
 
         project = projectDao.getProjectWithAllDetails( testProject1.getId() );
         assertEquals( "check # build defs", 2, project.getBuildDefinitions().size() );
         BuildDefinition retrievedBuildDefinition = (BuildDefinition) project.getBuildDefinitions().get( 0 );
+        
         assertBuildDefinitionEquals( copy, retrievedBuildDefinition );
         assertScheduleEquals( testSchedule1, retrievedBuildDefinition.getSchedule() );
         assertProfileEquals( testProfile2, retrievedBuildDefinition.getProfile() );
@@ -1078,6 +1078,7 @@ public class ContinuumStoreTest
             projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( defaultProjectGroup.getId() );
 
         BuildDefinition newBuildDefinition = (BuildDefinition) projectGroup.getBuildDefinitions().get( 0 );
+
         // If we use "arguments1.1", jpox-rc2 store "arguments11", weird
         String arguments = "arguments1";
         newBuildDefinition.setArguments( arguments );
@@ -1133,7 +1134,7 @@ public class ContinuumStoreTest
         assertTrue( template.isContinuumDefault() );
         assertEquals( 1, template.getBuildDefinitions().size() );
         assertEquals( all + 1, buildDefinitionDao.getAllBuildDefinitions().size() );
-        assertEquals( 1, buildDefinitionTemplateDao.getAllBuildDefinitionTemplate().size() );
+        assertEquals( 2, buildDefinitionTemplateDao.getAllBuildDefinitionTemplate().size() );
 
         template = buildDefinitionTemplateDao
             .getContinuumBuildDefinitionTemplateWithType( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR );
@@ -1141,7 +1142,7 @@ public class ContinuumStoreTest
         assertNotNull( template );
         assertEquals( 1, template.getBuildDefinitions().size() );
 
-        assertEquals( 1, buildDefinitionTemplateDao.getAllBuildDefinitionTemplate().size() );
+        assertEquals( 2, buildDefinitionTemplateDao.getAllBuildDefinitionTemplate().size() );
     }
 
     public void testAddLocalRepository()

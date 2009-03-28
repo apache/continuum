@@ -312,13 +312,13 @@ public class JdoDataManagementTool
             ProjectGroup projectGroup = (ProjectGroup) i.next();
 
             // first, we must map up any schedules, etc.
-            processBuildDefinitions( projectGroup.getBuildDefinitions(), schedules, profiles, localRepositories );
+            processBuildDefinitions( projectGroup.getBuildDefinitions(), schedules, profiles );
 
             for ( Iterator j = projectGroup.getProjects().iterator(); j.hasNext(); )
             {
                 Project project = (Project) j.next();
 
-                processBuildDefinitions( project.getBuildDefinitions(), schedules, profiles, localRepositories );
+                processBuildDefinitions( project.getBuildDefinitions(), schedules, profiles );
             }
             
             if ( projectGroup.getLocalRepository() != null )
@@ -408,6 +408,8 @@ public class JdoDataManagementTool
 
         for ( BuildDefinitionTemplate template : (List<BuildDefinitionTemplate>) database.getBuildDefinitionTemplates() )
         {
+            template.setBuildDefinitions( null );
+
             template = 
                 (BuildDefinitionTemplate) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), template );
         }
@@ -432,8 +434,7 @@ public class JdoDataManagementTool
     }
     
     private static void processBuildDefinitions( List buildDefinitions, Map<Integer, Schedule> schedules,
-                                                 Map<Integer, Profile> profiles,
-                                                 Map<Integer, LocalRepository> localRepositories )
+                                                 Map<Integer, Profile> profiles )
     {
         for ( Iterator i = buildDefinitions.iterator(); i.hasNext(); )
         {
