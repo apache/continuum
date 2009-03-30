@@ -257,6 +257,7 @@ public class JdoDataManagementTool
         Map<Integer, BuildQueue> buildQueues = new HashMap<Integer, BuildQueue>();
         for ( BuildQueue buildQueue : (List<BuildQueue>)database.getBuildQueues() )
         {
+            buildQueue = (BuildQueue) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), buildQueue );
             buildQueues.put( buildQueue.getId(), buildQueue );
         }
 
@@ -408,6 +409,25 @@ public class JdoDataManagementTool
             releaseResult.setProjectGroup( projectGroups.get(
                                            Integer.valueOf( releaseResult.getProjectGroup().getId() ) ) );
 
+            ProjectGroup group = releaseResult.getProjectGroup();
+
+            for ( Project project : (List<Project>) group.getProjects() )
+            {
+                if ( project.getId() == releaseResult.getProject().getId() )
+                {
+                    try
+                    {
+                        Project proj = 
+                            (Project) PlexusJdoUtils.getObjectById( pmf.getPersistenceManager(), Project.class, project.getId(), null );
+                        releaseResult.setProject( proj );
+                    }
+                    catch ( Exception e )
+                    {
+                        throw new DataManagementException( e );
+                    }
+                }
+            }
+
             releaseResult =
                 (ContinuumReleaseResult) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), releaseResult );
         }
@@ -466,6 +486,7 @@ public class JdoDataManagementTool
         {
             buildQueues.add( allBuildQueues.get( Integer.valueOf( buildQueue.getId() ) ) );
         }
+
         return buildQueues;
     }
 }

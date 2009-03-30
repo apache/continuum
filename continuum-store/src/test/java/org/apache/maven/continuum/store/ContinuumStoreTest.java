@@ -372,8 +372,9 @@ public class ContinuumStoreTest
         
         schedule = (Schedule) schedules.get( 1 );
         assertScheduleEquals( testSchedule2, schedule );
-        assertEquals( "check size of buildQueues", 1, schedule.getBuildQueues().size() );
-        assertBuildQueueEquals( buildQueue3, (BuildQueue) schedule.getBuildQueues().get( 0 ) );
+        assertEquals( "check size of buildQueues", 2, schedule.getBuildQueues().size() );
+        assertBuildQueueEquals( buildQueue2, (BuildQueue) schedule.getBuildQueues().get( 0 ) );
+        assertBuildQueueEquals( buildQueue3, (BuildQueue) schedule.getBuildQueues().get( 1 ) );
 
         schedule = (Schedule) schedules.get( 2 );
         assertScheduleEquals( testSchedule3, schedule );

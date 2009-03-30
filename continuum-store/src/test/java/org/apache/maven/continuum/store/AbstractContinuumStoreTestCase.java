@@ -312,6 +312,7 @@ public abstract class AbstractContinuumStoreTestCase
         testSchedule1.addBuildQueue( buildQueue2 );
         
         testSchedule2 = createTestSchedule( "name2", "description2", 2, "cronExpression2", true );
+        testSchedule2.addBuildQueue( buildQueue2 );
         testSchedule2.addBuildQueue( buildQueue3 );
 
         testSchedule3 = createTestSchedule( "name3", "description3", 3, "cronExpression3", true );

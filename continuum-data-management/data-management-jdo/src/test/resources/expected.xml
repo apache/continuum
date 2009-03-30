@@ -455,6 +455,7 @@
       <delay>2</delay>
       <cronExpression>cronExpression2</cronExpression>
       <buildQueues>
+        <buildQueue id="2"></buildQueue>
         <buildQueue id="3"></buildQueue>
       </buildQueues>
     </schedule>
