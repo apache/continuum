@@ -59,12 +59,14 @@
             <ec:column property="startTime" title="releaseResults.startTime" cell="date"/>
             <ec:column property="endTime" title="releaseResults.endTime" cell="date"/>
             <ec:column property="resultCode" title="releaseResults.state">
-              <s:if test="pageScope.result.resultCode == 0">
-                <s:text name="releaseViewResult.success"/>
-              </s:if>
-              <s:else>
-                <s:text name="releaseViewResult.error"/>
-              </s:else>
+              <c:choose>
+                <c:when test="${pageScope.result.resultCode == 0}">
+                  <s:text name="releaseViewResult.success"/>
+                </c:when>
+                <c:otherwise>
+                  <s:text name="releaseViewResult.error"/>
+                </c:otherwise>
+              </c:choose>
             </ec:column>
             <ec:column property="actions" title="&nbsp;">
                <s:url id="viewReleaseResultUrl" action="viewReleaseResult">
