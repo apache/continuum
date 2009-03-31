@@ -19,6 +19,16 @@ package org.apache.maven.continuum;
  * under the License.
  */
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
@@ -26,6 +36,7 @@ import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.initialization.ContinuumInitializer;
 import org.apache.maven.continuum.jdo.MemoryJdoFactory;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -37,15 +48,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -117,7 +119,7 @@ public abstract class AbstractContinuumTest
 
             group.setName( "Default Project Group" );
 
-            group.setGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+            group.setGroupId( ContinuumInitializer.DEFAULT_PROJECT_GROUP_GROUP_ID );
 
             group.setDescription( "Contains all projects that do not have a group of their own" );
 
@@ -131,7 +133,7 @@ public abstract class AbstractContinuumTest
         configurationService.setBuildOutputDirectory( getTestFile( "target/build-output" ) );
 
         configurationService.setWorkingDirectory( getTestFile( "target/working-directory" ) );
-        
+
         configurationService.setReleaseOutputDirectory( getTestFile( "target/release-outpur" ) );
 
         configurationService.setReleaseOutputDirectory( getTestFile( "target/release-outpur" ) );
@@ -142,7 +144,8 @@ public abstract class AbstractContinuumTest
     protected ProjectGroup getDefaultProjectGroup()
         throws ContinuumStoreException
     {
-        return projectGroupDao.getProjectGroupByGroupIdWithProjects( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        return projectGroupDao.getProjectGroupByGroupIdWithProjects(
+            ContinuumInitializer.DEFAULT_PROJECT_GROUP_GROUP_ID );
     }
 
     // ----------------------------------------------------------------------

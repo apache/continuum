@@ -18,6 +18,10 @@
  */
 package org.apache.maven.continuum.builddefinition;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.ContinuumConfigurationException;
 import org.apache.continuum.dao.BuildDefinitionDao;
@@ -38,10 +42,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -576,7 +576,7 @@ public class DefaultBuildDefinitionService
                 return;
             }
             project = projectDao.getProjectWithBuildDetails( project.getId() );
-            List<BuildDefinition> buildDefs = new ArrayList<BuildDefinition>();
+
             for ( Iterator<BuildDefinition> iterator = template.getBuildDefinitions().iterator(); iterator.hasNext(); )
             {
                 BuildDefinition bd = iterator.next();
@@ -605,10 +605,11 @@ public class DefaultBuildDefinitionService
             {
                 return null;
             }
-            List<BuildDefinition> buildDefs = new ArrayList<BuildDefinition>();
+
             for ( Iterator<BuildDefinition> iterator = template.getBuildDefinitions().iterator(); iterator.hasNext(); )
             {
                 BuildDefinition bd = iterator.next();
+                bd.setTemplate( false );
                 bd = buildDefinitionDao.addBuildDefinition( cloneBuildDefinition( bd ) );
                 projectGroup.addBuildDefinition( bd );
             }

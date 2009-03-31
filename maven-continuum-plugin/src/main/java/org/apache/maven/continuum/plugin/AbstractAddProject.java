@@ -119,14 +119,7 @@ public abstract class AbstractAddProject
             }
             else
             {
-                if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( getProjectType() ) )
-                {
-                    getClient().addAntProject( project );
-                }
-                else
-                {
-                    getClient().addShellProject( project );
-                }
+                throw new Exception( "Can't add a project with an empty project group." );
             }
         }
         catch ( Exception e )

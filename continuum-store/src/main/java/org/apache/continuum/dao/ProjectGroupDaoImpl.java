@@ -19,22 +19,26 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
-import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.jdo.PlexusJdoUtils;
-import org.springframework.stereotype.Repository;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+
+import org.apache.maven.continuum.model.project.BuildDefinition;
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
+import org.apache.maven.continuum.store.ContinuumStoreException;
+import org.codehaus.plexus.jdo.PlexusJdoUtils;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -48,7 +52,7 @@ public class ProjectGroupDaoImpl
 {
     /**
      * @plexus.requirement role=org.apache.continuum.dao.ProjectDao"
-     */  
+     */
     @Resource
     private ProjectDao projectDao;
 
@@ -62,7 +66,7 @@ public class ProjectGroupDaoImpl
         ProjectGroup pg = null;
         try
         {
-            pg = getProjectGroupWithProjects( projectGroup.getId() );
+            pg = getProjectGroupWithBuildDetailsByProjectGroupId( projectGroup.getId() );
         }
         catch ( Exception e )
         {
@@ -78,6 +82,35 @@ public class ProjectGroupDaoImpl
             {
                 projectDao.removeProject( p );
             }
+
+            List<BuildDefinition> buildDefs = new ArrayList<BuildDefinition>();
+            Iterator<BuildDefinition> it = pg.getBuildDefinitions().listIterator();
+            boolean template = false;
+            while ( it.hasNext() )
+            {
+                BuildDefinition bd = it.next();
+                if ( bd.isTemplate() )
+                {
+                    template = true;
+                }
+                else
+                {
+                    buildDefs.add( bd );
+                }
+            }
+            if ( template )
+            {
+                try
+                {
+                    pg.setBuildDefinitions( buildDefs );
+                    updateProjectGroup( pg );
+                }
+                catch ( ContinuumStoreException e )
+                {
+                    // Do nothing
+                }
+            }
+
             removeObject( pg );
         }
     }
@@ -158,10 +191,10 @@ public class ProjectGroupDaoImpl
 
     public List<ProjectGroup> getAllProjectGroupsWithTheLot()
     {
-        List fetchGroups = Arrays.asList( new String[]{PROJECT_WITH_BUILDS_FETCH_GROUP,
-            PROJECTGROUP_PROJECTS_FETCH_GROUP, BUILD_RESULT_WITH_DETAILS_FETCH_GROUP,
-            PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP, PROJECT_ALL_DETAILS_FETCH_GROUP,
-            PROJECT_BUILD_DETAILS_FETCH_GROUP} );
+        List fetchGroups = Arrays.asList(
+            new String[]{PROJECT_WITH_BUILDS_FETCH_GROUP, PROJECTGROUP_PROJECTS_FETCH_GROUP,
+                BUILD_RESULT_WITH_DETAILS_FETCH_GROUP, PROJECT_WITH_CHECKOUT_RESULT_FETCH_GROUP,
+                PROJECT_ALL_DETAILS_FETCH_GROUP, PROJECT_BUILD_DETAILS_FETCH_GROUP} );
         return PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), ProjectGroup.class, "name ascending",
                                                      fetchGroups );
     }

@@ -20,20 +20,14 @@ package org.apache.maven.continuum.project.builder.maven;
  */
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.ConnectException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.continuum.model.repository.LocalRepository;
-import org.apache.http.HttpException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -105,8 +99,8 @@ public class MavenTwoContinuumProjectBuilder
     {
         try
         {
-            return buildProjectsFromMetadata( url, username, password, loadRecursiveProjects, buildDefinitionService
-                .getDefaultMavenTwoBuildDefinitionTemplate() );
+            return buildProjectsFromMetadata( url, username, password, loadRecursiveProjects,
+                                              buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate() );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -153,12 +147,12 @@ public class MavenTwoContinuumProjectBuilder
         try
         {
             pomFile = createMetadataFile( result, url, username, password );
-            
+
             if ( result.hasErrors() )
             {
                 return;
             }
-            
+
             mavenProject = builderHelper.getMavenProject( result, pomFile );
 
             if ( result.hasErrors() )
@@ -345,7 +339,7 @@ public class MavenTwoContinuumProjectBuilder
                 if ( StringUtils.isEmpty( buildDefinition.getArguments() ) )
                 {
                     // strange for a mvn build 
-                    log.info( "build definition has empty args" );
+                    log.info( "build definition '" + buildDefinition.getId() + "' has empty args" );
                 }
                 else
                 {

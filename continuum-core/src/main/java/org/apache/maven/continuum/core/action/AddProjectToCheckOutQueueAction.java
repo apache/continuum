@@ -19,13 +19,13 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.util.Map;
+
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -45,12 +45,12 @@ public class AddProjectToCheckOutQueueAction
      * @plexus.requirement
      */
     private ProjectDao projectDao;
-    
+
     /**
      * @plexus.requirement role-hint="parallel"
      */
     private BuildsManager parallelBuildsManager;
-    
+
     @SuppressWarnings("unchecked")
     public void execute( Map context )
         throws Exception
@@ -61,7 +61,7 @@ public class AddProjectToCheckOutQueueAction
             project = projectDao.getProject( getProjectId( context ) );
         }
 
-        BuildDefinition defaultBuildDefinition = ( BuildDefinition ) getBuildDefinition( context );
+        BuildDefinition defaultBuildDefinition = getBuildDefinition( context );
         parallelBuildsManager.checkoutProject( project.getId(), project.getName(),
                                                workingDirectoryService.getWorkingDirectory( project ),
                                                project.getScmUsername(), project.getScmPassword(),

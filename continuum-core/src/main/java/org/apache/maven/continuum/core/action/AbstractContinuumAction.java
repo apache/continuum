@@ -19,6 +19,10 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -27,10 +31,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.codehaus.plexus.action.AbstractAction;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -46,9 +46,9 @@ public abstract class AbstractContinuumAction
     public static final String KEY_PROJECT_ID = "project-id";
 
     public static final String KEY_PROJECT = "project";
-    
+
     public static final String KEY_PROJECTS = "projects";
-    
+
     public static final String KEY_PROJECTS_BUILD_DEFINITIONS_MAP = "projects-build-definitions";
 
     public static final String KEY_BUILD_DEFINITION_TEMPLATE = "build-definition-template";
@@ -80,11 +80,11 @@ public abstract class AbstractContinuumAction
     public static final String KEY_FIRST_RUN = "first-run";
 
     public static final String KEY_PROJECT_RELATIVE_PATH = "project-relative-path";
-    
+
     public static final String KEY_SCM_USE_CREDENTIALS_CACHE = "useCredentialsCache";
-    
+
     public static final String KEY_SCM_USERNAME = "scmUserName";
-    
+
     public static final String KEY_SCM_PASSWORD = "scmUserPassword";
 
     public static final String KEY_SCM_RESULT = "scmResult";
@@ -224,14 +224,14 @@ public abstract class AbstractContinuumAction
 
     public static int getOldBuildId( Map context )
     {
-        return getInteger( context, KEY_OLD_BUILD_ID ); 
+        return getInteger( context, KEY_OLD_BUILD_ID );
     }
-    
+
     public static List<Project> getListOfProjects( Map context )
     {
         return (List<Project>) getObject( context, KEY_PROJECTS );
     }
-    
+
     public static Map<Integer, BuildDefinition> getProjectsBuildDefinitionsMap( Map context )
     {
         return (Map<Integer, BuildDefinition>) getObject( context, KEY_PROJECTS_BUILD_DEFINITIONS_MAP );
@@ -258,25 +258,25 @@ public abstract class AbstractContinuumAction
 
     public static boolean getBoolean( Map context, String key )
     {
-        return ( (Boolean) getObject( context, key ) ).booleanValue();
+        return (Boolean) getObject( context, key );
     }
-    
+
     public static boolean getBoolean( Map context, String key, boolean defaultValue )
     {
-        return ( (Boolean) getObject( context, key, Boolean.valueOf( defaultValue ) ) ).booleanValue();
-    }    
+        return (Boolean) getObject( context, key, Boolean.valueOf( defaultValue ) );
+    }
 
     protected static int getInteger( Map context, String key )
     {
         Object obj = getObject( context, key, null );
-        
+
         if ( obj == null )
         {
             return 0;
         }
         else
         {
-            return ( (Integer) obj ).intValue();
+            return (Integer) obj;
         }
     }
 

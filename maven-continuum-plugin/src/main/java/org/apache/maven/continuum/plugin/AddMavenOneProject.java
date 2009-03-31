@@ -58,7 +58,7 @@ public class AddMavenOneProject
             }
             else
             {
-                getClient().addMavenOneProject( projectUrl );
+                throw new Exception( "Can't add a project with an empty project group." );
             }
         }
         catch ( Exception e )

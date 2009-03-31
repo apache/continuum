@@ -19,6 +19,11 @@ package org.apache.maven.continuum.xmlrpc.client;
  * under the License.
  */
 
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.xmlrpc.release.ContinuumReleaseResult;
 import org.apache.continuum.xmlrpc.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.xmlrpc.repository.LocalRepository;
@@ -44,11 +49,6 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.util.ClientFactory;
-
-import java.net.URL;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -390,12 +390,6 @@ public class ContinuumXmlRpcClient
     // Maven 1.x projects
     // ----------------------------------------------------------------------
 
-    public AddingResult addMavenOneProject( String url )
-        throws Exception
-    {
-        return continuum.addMavenOneProject( url );
-    }
-
     public AddingResult addMavenOneProject( String url, int projectGroupId )
         throws Exception
     {
@@ -406,12 +400,6 @@ public class ContinuumXmlRpcClient
     // Maven ANT projects
     // ----------------------------------------------------------------------
 
-    public ProjectSummary addAntProject( ProjectSummary project )
-        throws Exception
-    {
-        return continuum.addAntProject( project );
-    }
-
     public ProjectSummary addAntProject( ProjectSummary project, int projectGroupId )
         throws Exception
     {
@@ -421,12 +409,6 @@ public class ContinuumXmlRpcClient
     // ----------------------------------------------------------------------
     // Maven Shell projects
     // ----------------------------------------------------------------------
-
-    public ProjectSummary addShellProject( ProjectSummary project )
-        throws Exception
-    {
-        return continuum.addShellProject( project );
-    }
 
     public ProjectSummary addShellProject( ProjectSummary project, int projectGroupId )
         throws Exception
@@ -679,36 +661,22 @@ public class ContinuumXmlRpcClient
         return continuum.getAllLocalRepositories();
     }
 
-    public Map<String, Object> addAntProjectRPC( Map<String, Object> project )
-        throws Exception
-    {
-        return continuum.addAntProjectRPC( project );
-    }
-
     public Map<String, Object> addAntProjectRPC( Map<String, Object> project, int projectGroupId )
         throws Exception
     {
         return continuum.addAntProjectRPC( project, projectGroupId );
     }
 
-    public Map<String, Object> addBuildDefinitionToProjectGroupRPC( int projectGroupId,
-                                                                    Map<String, Object> buildDef )
+    public Map<String, Object> addBuildDefinitionToProjectGroupRPC( int projectGroupId, Map<String, Object> buildDef )
         throws Exception
     {
         return continuum.addBuildDefinitionToProjectGroupRPC( projectGroupId, buildDef );
     }
 
-    public Map<String, Object> addBuildDefinitionToProjectRPC( int projectId,
-                                                               Map<String, Object> buildDef )
+    public Map<String, Object> addBuildDefinitionToProjectRPC( int projectId, Map<String, Object> buildDef )
         throws Exception
     {
         return continuum.addBuildDefinitionToProjectRPC( projectId, buildDef );
-    }
-
-    public Map<String, Object> addMavenOneProjectRPC( String url )
-        throws Exception
-    {
-        return continuum.addMavenOneProjectRPC( url );
     }
 
     public Map<String, Object> addMavenOneProjectRPC( String url, int projectGroupId )
@@ -729,9 +697,7 @@ public class ContinuumXmlRpcClient
         return continuum.addMavenTwoProjectRPC( url, projectGroupId );
     }
 
-    public Map<String, Object> addProjectGroupRPC( String groupName,
-                                                   String groupId,
-                                                   String description )
+    public Map<String, Object> addProjectGroupRPC( String groupName, String groupId, String description )
         throws Exception
     {
         return continuum.addProjectGroupRPC( groupName, groupId, description );
@@ -747,12 +713,6 @@ public class ContinuumXmlRpcClient
         throws Exception
     {
         return continuum.addShellProjectRPC( project, projectGroupId );
-    }
-
-    public Map<String, Object> addShellProjectRPC( Map<String, Object> project )
-        throws Exception
-    {
-        return continuum.addShellProjectRPC( project );
     }
 
     public List<Object> getAllProjectGroupsRPC()
@@ -894,8 +854,7 @@ public class ContinuumXmlRpcClient
         return continuum.updateBuildDefinitionForProjectGroupRPC( projectGroupId, buildDef );
     }
 
-    public Map<String, Object> updateBuildDefinitionForProjectRPC( int projectId,
-                                                                   Map<String, Object> buildDef )
+    public Map<String, Object> updateBuildDefinitionForProjectRPC( int projectId, Map<String, Object> buildDef )
         throws Exception
     {
         return continuum.updateBuildDefinitionForProjectRPC( projectId, buildDef );
@@ -955,8 +914,7 @@ public class ContinuumXmlRpcClient
         return continuum.updateGroupNotifier( projectgroupid, newNotifier );
     }
 
-    public Map<String, Object> updateGroupNotifierRPC( int projectgroupid,
-                                                       Map<String, Object> newNotifier )
+    public Map<String, Object> updateGroupNotifierRPC( int projectgroupid, Map<String, Object> newNotifier )
         throws Exception
     {
         return continuum.updateGroupNotifierRPC( projectgroupid, newNotifier );
@@ -992,8 +950,7 @@ public class ContinuumXmlRpcClient
         return continuum.addGroupNotifier( projectgroupid, newNotifier );
     }
 
-    public Map<String, Object> addGroupNotifierRPC( int projectgroupid,
-                                                    Map<String, Object> newNotifier )
+    public Map<String, Object> addGroupNotifierRPC( int projectgroupid, Map<String, Object> newNotifier )
         throws Exception
     {
         return continuum.addGroupNotifierRPC( projectgroupid, newNotifier );

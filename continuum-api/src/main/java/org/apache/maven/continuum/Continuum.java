@@ -26,8 +26,8 @@ import java.util.Map;
 
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.buildmanager.BuildsManager;
-import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.project.ProjectScmRoot;
+import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.purge.ContinuumPurgeManager;
 import org.apache.continuum.purge.PurgeConfigurationService;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
@@ -61,8 +61,6 @@ public interface Continuum
     // ----------------------------------------------------------------------
     // Project Groups
     // ----------------------------------------------------------------------
-
-    public static final String DEFAULT_PROJECT_GROUP_GROUP_ID = "default";
 
     public ProjectGroup getProjectGroup( int projectGroupId )
         throws ContinuumException;
@@ -106,7 +104,7 @@ public interface Continuum
         throws ContinuumException;
 
     public List<ProjectGroup> getAllProjectGroupsWithRepository( int repositoryId );
-    
+
     // ----------------------------------------------------------------------
     // Project
     // ----------------------------------------------------------------------
@@ -114,11 +112,11 @@ public interface Continuum
     void removeProject( int projectId )
         throws ContinuumException;
 
-    
+
     /**
-     * @deprecated
      * @param projectId
      * @throws ContinuumException
+     * @deprecated
      */
     void checkoutProject( int projectId )
         throws ContinuumException;
@@ -237,17 +235,6 @@ public interface Continuum
     /**
      * Add a project to the list of building projects (ant, shell,...)
      *
-     * @param project    the project to add
-     * @param executorId the id of an {@link org.apache.maven.continuum.execution.ContinuumBuildExecutor}, eg. <code>ant</code> or <code>shell</code>
-     * @return id of the project
-     * @throws ContinuumException
-     */
-    int addProject( Project project, String executorId )
-        throws ContinuumException;
-
-    /**
-     * Add a project to the list of building projects (ant, shell,...)
-     *
      * @param project        the project to add
      * @param executorId     the id of an {@link org.apache.maven.continuum.execution.ContinuumBuildExecutor}, eg. <code>ant</code> or <code>shell</code>
      * @param projectGroupId
@@ -360,27 +347,6 @@ public interface Continuum
                                                               boolean checkProtocol, boolean useCredentialsCache,
                                                               boolean loadRecursiveProjects,
                                                               int buildDefintionTemplateId )
-        throws ContinuumException;
-
-    /**
-     * Add a Maven 1 project to the list of projects.
-     *
-     * @param metadataUrl url of the project.xml
-     * @return a holder with the projects, project groups and errors occurred during the project adding
-     * @throws ContinuumException
-     */
-    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl )
-        throws ContinuumException;
-
-    /**
-     * Add a Maven 1 project to the list of projects.
-     *
-     * @param metadataUrl   url of the project.xml
-     * @param checkProtocol check if the protocol is allowed, use false if the pom is uploaded
-     * @return a holder with the projects, project groups and errors occurred during the project adding
-     * @throws ContinuumException
-     */
-    ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, boolean checkProtocol )
         throws ContinuumException;
 
     /**
@@ -634,7 +600,7 @@ public interface Continuum
     // ----------------------------------------------------------------------
     // Builds Manager
     // ----------------------------------------------------------------------
-    BuildsManager getBuildsManager();    
+    BuildsManager getBuildsManager();
 
     // ----------------------------------------------------------------------
     // Build Queue

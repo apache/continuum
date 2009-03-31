@@ -21,10 +21,8 @@ package org.apache.maven.continuum.web.action;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -64,7 +62,7 @@ public class AddProjectAction
 
     private String projectType;
 
-    private Collection projectGroups;
+    private Collection<ProjectGroup> projectGroups;
 
     private int selectedProjectGroup;
 
@@ -103,6 +101,10 @@ public class AddProjectAction
             if ( !( projectScmUrl.trim().length() > 0 ) )
             {
                 addActionError( getText( "addProject.scmUrl.required" ) );
+            }
+            if ( selectedProjectGroup == 0 )
+            {
+                addActionError( getText( "addProject.projectGroup.required" ) );
             }
             if ( hasActionErrors() )
             {
@@ -147,9 +149,9 @@ public class AddProjectAction
         for ( Project project : getContinuum().getProjects() )
         {
             // CONTINUUM-1445
-            if ( StringUtils.equalsIgnoreCase( project.getName(), projectNameTrim )
-                && StringUtils.equalsIgnoreCase( project.getVersion(), versionTrim )
-                && StringUtils.equalsIgnoreCase( project.getScmUrl(), scmTrim ) )
+            if ( StringUtils.equalsIgnoreCase( project.getName(), projectNameTrim ) &&
+                StringUtils.equalsIgnoreCase( project.getVersion(), versionTrim ) &&
+                StringUtils.equalsIgnoreCase( project.getScmUrl(), scmTrim ) )
             {
                 addActionError( getText( "projectName.already.exist.error" ) );
                 return INPUT;
@@ -210,25 +212,18 @@ public class AddProjectAction
             return REQUIRES_AUTHORIZATION;
         }
 
-        projectGroups = new ArrayList();
+        projectGroups = new ArrayList<ProjectGroup>();
 
-        Collection allProjectGroups = getContinuum().getAllProjectGroups();
+        Collection<ProjectGroup> allProjectGroups = getContinuum().getAllProjectGroups();
 
-        for ( Iterator i = allProjectGroups.iterator(); i.hasNext(); )
+        for ( ProjectGroup pg : allProjectGroups )
         {
-            ProjectGroup pg = (ProjectGroup) i.next();
-
             if ( isAuthorizedToAddProjectToGroup( pg.getName() ) )
             {
                 projectGroups.add( pg );
             }
         }
 
-        if ( !disableGroupSelection )
-        {
-            selectedProjectGroup =
-                getContinuum().getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID ).getId();
-        }
         this.profiles = profileService.getAllProfiles();
         buildDefinitionTemplates = getContinuum().getBuildDefinitionService().getAllBuildDefinitionTemplate();
         return INPUT;
@@ -236,7 +231,7 @@ public class AddProjectAction
 
     private void initializeProjectGroupName()
     {
-        if ( disableGroupSelection == true )
+        if ( disableGroupSelection )
         {
             try
             {
@@ -319,12 +314,12 @@ public class AddProjectAction
         this.projectVersion = projectVersion;
     }
 
-    public Collection getProjectGroups()
+    public Collection<ProjectGroup> getProjectGroups()
     {
         return projectGroups;
     }
 
-    public void setProjectGroups( Collection projectGroups )
+    public void setProjectGroups( Collection<ProjectGroup> projectGroups )
     {
         this.projectGroups = projectGroups;
     }

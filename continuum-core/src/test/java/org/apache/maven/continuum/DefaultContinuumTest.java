@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +35,7 @@ import org.apache.continuum.taskqueue.manager.TaskQueueManager;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
+import org.apache.maven.continuum.initialization.ContinuumInitializer;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
@@ -56,32 +56,32 @@ public class DefaultContinuumTest
     extends AbstractContinuumTest
 {
     protected Logger log = LoggerFactory.getLogger( getClass() );
-    
+
     private Mockery context;
-    
+
     private TaskQueueManager taskQueueManager;
-    
+
     private ProjectDao projectDao;
-    
+
     @Override
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        
+
         context = new JUnit3Mockery();
-        
+
         taskQueueManager = context.mock( TaskQueueManager.class );
-        
+
         projectDao = context.mock( ProjectDao.class );
     }
-    
+
     public void testContinuumConfiguration()
         throws Exception
     {
         lookup( Continuum.ROLE );
     }
-    
+
     public void testAddMavenTwoProjectSet()
         throws Exception
     {
@@ -94,20 +94,19 @@ public class DefaultContinuumTest
         File rootPom = getTestFile( "src/test/resources/projects/continuum/continuum-notifiers/pom.xml" );
 
         assertTrue( rootPom.exists() );
-        
+
         ContinuumUrlValidator validator = (ContinuumUrlValidator) lookup( ContinuumUrlValidator.class, "continuumUrl" );
-        
+
         String fileUrl = rootPom.toURL().toExternalForm();
-        
+
         //assertTrue( validator.validate( fileUrl ) );
-        
-        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( rootPom.toURI().toURL()
-                                                                              .toExternalForm(), -1, true,
-                                                                              false, true, -1 );
+
+        ContinuumProjectBuildingResult result =
+            continuum.addMavenTwoProject( rootPom.toURI().toURL().toExternalForm(), -1, true, false, true, -1 );
 
         assertNotNull( result );
 
-        assertEquals( "result.warnings.size", 0, result.getWarnings().size() );
+        assertEquals( "result.warnings.size" + result.getWarnings(), 0, result.getWarnings().size() );
 
         assertEquals( "result.projects.size", 3, result.getProjects().size() );
 
@@ -115,20 +114,17 @@ public class DefaultContinuumTest
 
         log.info( "number of projects: " + getProjectDao().getAllProjectsByName().size() );
 
-        log.info(
-            "number of project groups: " + getProjectGroupDao().getAllProjectGroupsWithProjects().size() );
+        log.info( "number of project groups: " + getProjectGroupDao().getAllProjectGroupsWithProjects().size() );
 
         assertEquals( "Total project count", projectCount + 3, getProjectDao().getAllProjectsByName().size() );
 
         assertEquals( "Total project group count.", projectGroupCount + 1,
                       getProjectGroupDao().getAllProjectGroupsWithProjects().size() );
 
-        Map projects = new HashMap();
+        Map<String, Project> projects = new HashMap<String, Project>();
 
-        for ( Iterator i = getProjectDao().getAllProjectsByName().iterator(); i.hasNext(); )
+        for ( Project project : getProjectDao().getAllProjectsByName() )
         {
-            Project project = (Project) i.next();
-
             projects.put( project.getName(), project );
 
             // validate project in project group
@@ -252,8 +248,6 @@ public class DefaultContinuumTest
 
     /**
      * todo add another project group to test
-     *
-     * @throws Exception
      */
     public void testProjectGroups()
         throws Exception
@@ -274,7 +268,7 @@ public class DefaultContinuumTest
 
         assertEquals( 1, result.getProjectGroups().size() );
 
-        ProjectGroup projectGroup = (ProjectGroup) result.getProjectGroups().get( 0 );
+        ProjectGroup projectGroup = result.getProjectGroups().get( 0 );
 
         assertEquals( "plexus", projectGroup.getGroupId() );
 
@@ -286,24 +280,23 @@ public class DefaultContinuumTest
         projectGroup = (ProjectGroup) projectGroupList.iterator().next();
 
         assertNotNull( projectGroup );
-        
+
         BuildsManager buildsManager = continuum.getBuildsManager();
-        
+
         List<Project> projects = projectGroup.getProjects();
-        int[] projectIds = new int[ projects.size() ];
-        
+        int[] projectIds = new int[projects.size()];
+
         int idx = 0;
-        for( Project project : projects )
+        for ( Project project : projects )
         {
-            projectIds[ idx ] = project.getId();
+            projectIds[idx] = project.getId();
             idx++;
         }
-        
-        while( buildsManager.isAnyProjectCurrentlyBeingCheckedOut( projectIds ) )
+
+        while ( buildsManager.isAnyProjectCurrentlyBeingCheckedOut( projectIds ) )
         {
-            continue;
         }
-        
+
         continuum.removeProjectGroup( projectGroup.getId() );
 
         projectGroupList = continuum.getAllProjectGroupsWithProjects();
@@ -313,8 +306,6 @@ public class DefaultContinuumTest
 
     /**
      * test the logic for notifiers
-     *
-     * @throws Exception
      */
     public void testProjectAndGroupNotifiers()
         throws Exception
@@ -335,13 +326,12 @@ public class DefaultContinuumTest
 
         assertEquals( 1, result.getProjectGroups().size() );
 
-        ProjectGroup projectGroup = (ProjectGroup) result.getProjectGroups().get( 0 );
+        ProjectGroup projectGroup = result.getProjectGroups().get( 0 );
 
         continuum.addGroupNotifier( projectGroup.getId(), new ProjectNotifier() );
 
-        for ( Iterator i = projectGroup.getProjects().iterator(); i.hasNext(); )
+        for ( Project p : (List<Project>) projectGroup.getProjects() )
         {
-            Project p = (Project) i.next();
             continuum.addNotifier( p.getId(), new ProjectNotifier() );
         }
 
@@ -349,9 +339,8 @@ public class DefaultContinuumTest
 
         assertEquals( 1, projectGroup.getNotifiers().size() );
 
-        for ( Iterator i = projectGroup.getProjects().iterator(); i.hasNext(); )
+        for ( Project p : (List<Project>) projectGroup.getProjects() )
         {
-            Project p = (Project) i.next();
             assertEquals( 2, p.getNotifiers().size() );
         }
     }
@@ -371,8 +360,8 @@ public class DefaultContinuumTest
             //expected, check for twice wrapped exception
             if ( e.getCause() != null )
             {
-                assertFalse( exceptionName + " is wrapped in " + exceptionName, e.getCause().getClass()
-                    .equals( ContinuumException.class ) );
+                assertFalse( exceptionName + " is wrapped in " + exceptionName,
+                             e.getCause().getClass().equals( ContinuumException.class ) );
             }
         }
     }
@@ -381,9 +370,9 @@ public class DefaultContinuumTest
         throws Exception
     {
         Continuum continuum = (Continuum) lookup( Continuum.ROLE );
-        
+
         BuildsManager parallelBuildsManager = continuum.getBuildsManager();
-        
+
         String url = getTestFile( "src/test-projects/project1/pom.xml" ).toURL().toExternalForm();
 
         ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url );
@@ -397,9 +386,9 @@ public class DefaultContinuumTest
         assertEquals( Project.class, projects.get( 0 ).getClass() );
 
         Project project = (Project) projects.get( 0 );
-        
+
         parallelBuildsManager.removeProjectFromCheckoutQueue( project.getId() );
-        
+
         assertFalse( "project still exist on the checkout queue",
                      parallelBuildsManager.isInAnyCheckoutQueue( project.getId() ) );
     }
@@ -411,9 +400,10 @@ public class DefaultContinuumTest
 
         Project project = new Project();
         project.setScmUrl( "scmUrl" );
-        int projectId = continuum.addProject( project, ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR );
-        ProjectGroup defaultProjectGroup = continuum
-            .getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        ProjectGroup defaultProjectGroup =
+            continuum.getProjectGroupByGroupId( ContinuumInitializer.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        int projectId = continuum.addProject( project, ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR,
+                                              defaultProjectGroup.getId() );
         assertEquals( 1, continuum.getProjectGroupWithProjects( defaultProjectGroup.getId() ).getProjects().size() );
         project = continuum.getProjectWithAllDetails( projectId );
         assertNotNull( project );
@@ -422,8 +412,8 @@ public class DefaultContinuumTest
         assertEquals( 4, service.getAllBuildDefinitionTemplate().size() );
         assertEquals( 5, service.getAllBuildDefinitions().size() );
 
-        BuildDefinition buildDef = (BuildDefinition) service.getDefaultAntBuildDefinitionTemplate()
-            .getBuildDefinitions().get( 0 );
+        BuildDefinition buildDef =
+            (BuildDefinition) service.getDefaultAntBuildDefinitionTemplate().getBuildDefinitions().get( 0 );
         buildDef = service.cloneBuildDefinition( buildDef );
         buildDef.setTemplate( false );
         continuum.addBuildDefinitionToProject( project.getId(), buildDef );
@@ -438,24 +428,23 @@ public class DefaultContinuumTest
     {
         Continuum continuum = getContinuum();
         RepositoryService service = (RepositoryService) lookup( RepositoryService.ROLE );
-        
+
         LocalRepository repository = new LocalRepository();
         repository.setName( "defaultRepo" );
         repository.setLocation( getTestFile( "target/default-repository" ).getAbsolutePath() );
         repository = service.addLocalRepository( repository );
-        
+
         ProjectGroup group = new ProjectGroup();
         group.setGroupId( "testGroup" );
         group.setName( "testGroup" );
         group.setLocalRepository( repository );
         continuum.addProjectGroup( group );
-        
-        ProjectGroup retrievedDefaultProjectGroup = continuum
-        .getProjectGroupByGroupId( "testGroup" );
+
+        ProjectGroup retrievedDefaultProjectGroup = continuum.getProjectGroupByGroupId( "testGroup" );
         assertNotNull( retrievedDefaultProjectGroup.getLocalRepository() );
-        
+
         continuum.removeProjectGroup( retrievedDefaultProjectGroup.getId() );
-        
+
         try
         {
             continuum.getProjectGroupByGroupId( "testGroup" );
@@ -465,7 +454,7 @@ public class DefaultContinuumTest
         {
             // should fail. do nothing.
         }
-        
+
         LocalRepository retrievedRepository = service.getLocalRepository( repository.getId() );
         assertNotNull( retrievedRepository );
         assertEquals( repository, retrievedRepository );
@@ -476,14 +465,15 @@ public class DefaultContinuumTest
     {
         Continuum continuum = getContinuum();
 
-        ProjectGroup defaultProjectGroup = continuum.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID );
+        ProjectGroup defaultProjectGroup =
+            continuum.getProjectGroupByGroupId( ContinuumInitializer.DEFAULT_PROJECT_GROUP_GROUP_ID );
 
         assertEquals( 0, continuum.getAllContinuumReleaseResults().size() );
 
         ContinuumReleaseResult releaseResult = new ContinuumReleaseResult();
         releaseResult.setStartTime( System.currentTimeMillis() );
 
-        File logFile = continuum.getConfiguration().getReleaseOutputFile( defaultProjectGroup.getId(), 
+        File logFile = continuum.getConfiguration().getReleaseOutputFile( defaultProjectGroup.getId(),
                                                                           "releases-" + releaseResult.getStartTime() );
         logFile.mkdirs();
 
@@ -495,43 +485,44 @@ public class DefaultContinuumTest
 
         releaseResult = continuum.addContinuumReleaseResult( releaseResult );
 
-        List<ContinuumReleaseResult> releaseResults = continuum.getContinuumReleaseResultsByProjectGroup( defaultProjectGroup.getId() );
+        List<ContinuumReleaseResult> releaseResults =
+            continuum.getContinuumReleaseResultsByProjectGroup( defaultProjectGroup.getId() );
         assertEquals( 1, releaseResults.size() );
         assertEquals( releaseResult, releaseResults.get( 0 ) );
 
         continuum.removeContinuumReleaseResult( releaseResult.getId() );
-        assertEquals( 0 , continuum.getAllContinuumReleaseResults().size() );
+        assertEquals( 0, continuum.getAllContinuumReleaseResults().size() );
         assertFalse( logFile.exists() );
-        assertEquals( defaultProjectGroup, continuum.getProjectGroupByGroupId( Continuum.DEFAULT_PROJECT_GROUP_GROUP_ID ) );
-        
+        assertEquals( defaultProjectGroup,
+                      continuum.getProjectGroupByGroupId( ContinuumInitializer.DEFAULT_PROJECT_GROUP_GROUP_ID ) );
+
     }
-    
+
     public void testBuildProjectWhileProjectIsInReleaseStage()
         throws Exception
     {
-        DefaultContinuum continuum = ( DefaultContinuum ) getContinuum();
-        
+        DefaultContinuum continuum = (DefaultContinuum) getContinuum();
+
         continuum.setTaskQueueManager( taskQueueManager );
-        
+
         continuum.setProjectDao( projectDao );
-        
+
         final Project project = new Project();
         project.setId( 1 );
         project.setName( "Continuum Core" );
         project.setGroupId( "org.apache.continuum" );
         project.setArtifactId( "continuum-core" );
-        
+
         context.checking( new Expectations()
         {
-            {                
+            {
                 one( projectDao ).getProject( 1 );
                 will( returnValue( project ) );
-                
+
                 one( taskQueueManager ).isProjectInReleaseStage( "org.apache.continuum:continuum-core" );
                 will( returnValue( true ) );
-            }
-        });
-        
+            }} );
+
         try
         {
             continuum.buildProject( 1 );
@@ -542,43 +533,42 @@ public class DefaultContinuumTest
             assertEquals( "Project (id=1) is currently in release stage.", e.getMessage() );
         }
     }
-        
+
     public void testBuildProjectGroupWhileAtLeastOneProjectIsInReleaseStage()
         throws Exception
     {
-        DefaultContinuum continuum = ( DefaultContinuum ) getContinuum();
-        
+        DefaultContinuum continuum = (DefaultContinuum) getContinuum();
+
         continuum.setTaskQueueManager( taskQueueManager );
-        
+
         continuum.setProjectDao( projectDao );
-        
+
         final List<Project> projects = new ArrayList<Project>();
-        
+
         Project project = new Project();
         project.setId( 1 );
         project.setName( "Continuum Core" );
         project.setGroupId( "org.apache.continuum" );
         project.setArtifactId( "continuum-core" );
         projects.add( project );
-        
+
         project = new Project();
         project.setId( 2 );
         project.setName( "Continuum API" );
         project.setGroupId( "org.apache.continuum" );
         project.setArtifactId( "continuum-api" );
         projects.add( project );
-        
-        context.checking( new Expectations()  
+
+        context.checking( new Expectations()
         {
             {
                 one( projectDao ).getProjectsInGroup( 1 );
                 will( returnValue( projects ) );
-                
+
                 one( taskQueueManager ).isProjectInReleaseStage( "org.apache.continuum:continuum-core" );
                 will( returnValue( true ) );
-            }
-        });
-        
+            }} );
+
         try
         {
             continuum.buildProjectGroup( 1 );
@@ -590,7 +580,7 @@ public class DefaultContinuumTest
                           e.getMessage() );
         }
     }
-    
+
     private Continuum getContinuum()
         throws Exception
     {
