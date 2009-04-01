@@ -45,7 +45,7 @@ public class MyAccountTest
         setFieldValue( "user.fullName", newFullName );
         setFieldValue( "user.email", newEmail );
         submit();
-        geSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         Assert.assertEquals( "Continuum - Group Summary", getTitle() );
         displayEditDetail();
         assertFieldValue( newFullName, "user.fullName" );

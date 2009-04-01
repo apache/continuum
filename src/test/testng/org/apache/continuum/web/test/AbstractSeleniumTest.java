@@ -48,7 +48,7 @@ public abstract class AbstractSeleniumTest
     /**
      * Initialize selenium an others properties. This method is called from BeforeSuite method of sub-class.
      */
-    public void open(int number)
+    public void open()
         throws Exception
     {
         p = new Properties();
@@ -61,15 +61,17 @@ public abstract class AbstractSeleniumTest
         int seleniumPort = Integer.parseInt( ( p.getProperty( "SELENIUM_PORT" ) ) );
         String seleniumBrowser = p.getProperty( "SELENIUM_BROWSER" );
         final Selenium s = new DefaultSelenium( seleniumHost, seleniumPort, seleniumBrowser, baseUrl );
-        selenium = new ThreadLocal<Selenium>() {
-            protected Selenium initialValue() {
+        selenium = new ThreadLocal<Selenium>()
+        {
+            protected Selenium initialValue()
+            {
                 return s;
             }
         };
-        geSelenium().start();
+        getSelenium().start();
     }
 
-    protected static Selenium geSelenium()
+    protected static Selenium getSelenium()
     {
         return selenium.get();
     }
@@ -80,7 +82,7 @@ public abstract class AbstractSeleniumTest
     public void close()
         throws Exception
     {
-        geSelenium().stop();
+        getSelenium().stop();
     }
 
     // *******************************************************
@@ -90,7 +92,7 @@ public abstract class AbstractSeleniumTest
     public void assertFieldValue( String fieldValue, String fieldName )
     {
         assertElementPresent( fieldName );
-        Assert.assertEquals( fieldValue, geSelenium().getValue( fieldName ) );
+        Assert.assertEquals( fieldValue, getSelenium().getValue( fieldName ) );
     }
 
     public void assertPage( String title )
@@ -100,22 +102,22 @@ public abstract class AbstractSeleniumTest
 
     public String getTitle()
     {
-        return geSelenium().getTitle();
+        return getSelenium().getTitle();
     }
 
     public String getHtmlContent()
     {
-        return geSelenium().getHtmlSource();
+        return getSelenium().getHtmlSource();
     }
 
     public void assertTextPresent( String text )
     {
-        Assert.assertTrue( geSelenium().isTextPresent( text ), "'" + text + "' isn't present." );
+        Assert.assertTrue( getSelenium().isTextPresent( text ), "'" + text + "' isn't present." );
     }
 
     public void assertTextNotPresent( String text )
     {
-        Assert.assertFalse( geSelenium().isTextPresent( text ), "'" + text + "' is present." );
+        Assert.assertFalse( getSelenium().isTextPresent( text ), "'" + text + "' is present." );
     }
 
     public void assertElementPresent( String elementLocator )
@@ -159,7 +161,7 @@ public abstract class AbstractSeleniumTest
 
     public boolean isTextPresent( String text )
     {
-        return geSelenium().isTextPresent( text );
+        return getSelenium().isTextPresent( text );
     }
 
     public boolean isLinkPresent( String text )
@@ -169,27 +171,27 @@ public abstract class AbstractSeleniumTest
 
     public boolean isElementPresent( String locator )
     {
-        return geSelenium().isElementPresent( locator );
+        return getSelenium().isElementPresent( locator );
     }
 
     public void waitPage()
     {
-        geSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
     }
 
     public String getFieldValue( String fieldName )
     {
-        return geSelenium().getValue( fieldName );
+        return getSelenium().getValue( fieldName );
     }
 
     public String getCellValueFromTable( String tableElement, int row, int column )
     {
-        return geSelenium().getTable( tableElement + "." + row + "." + column );
+        return getSelenium().getTable( tableElement + "." + row + "." + column );
     }
 
     public void selectValue( String locator, String value )
     {
-        geSelenium().select( locator, "label=" + value );
+        getSelenium().select( locator, "label=" + value );
     }
 
     public void submit()
@@ -275,7 +277,7 @@ public abstract class AbstractSeleniumTest
     public void clickLinkWithLocator( String locator, boolean wait )
     {
         assertElementPresent( locator );
-        geSelenium().click( locator );
+        getSelenium().click( locator );
         if ( wait )
         {
             waitPage();
@@ -290,27 +292,27 @@ public abstract class AbstractSeleniumTest
         {
             entry = entries.next();
 
-            geSelenium().type( entry.getKey(), entry.getValue() );
+            getSelenium().type( entry.getKey(), entry.getValue() );
         }
     }
 
     public void setFieldValue( String fieldName, String value )
     {
-        geSelenium().type( fieldName, value );
+        getSelenium().type( fieldName, value );
     }
 
     public void checkField( String locator )
     {
-        geSelenium().check( locator );
+        getSelenium().check( locator );
     }
 
     public void uncheckField( String locator )
     {
-        geSelenium().uncheck( locator );
+        getSelenium().uncheck( locator );
     }
 
     public boolean isChecked( String locator )
     {
-        return geSelenium().isChecked( locator );
+        return getSelenium().isChecked( locator );
     }
 }

@@ -49,38 +49,530 @@ public abstract class AbstractContinuumTest
     }
 
     // ////////////////////////////////////
+    // Build Queue
+    // ////////////////////////////////////
+    public void goToBuildQueuePage()
+    {
+        clickLinkWithText( "Build Queue" );
+
+        assertBuildQueuePage();
+    }
+
+    public void assertBuildQueuePage()
+    {
+        // TODO: Bug in title
+        assertPage( "Continumm - Parallel Build Queue" );
+        assertTextPresent( "Continuum - Parallel Build Queue" );
+        assertTextPresent( "Name" );
+        assertTextPresent( "DEFAULT_BUILD_QUEUE" );
+        assertButtonWithValuePresent( "Add" );
+    }
+
+    public void removeBuildQueue( String queueName )
+    {
+        clickLinkWithXPath( "(//a[contains(@href,'deleteBuildQueue.action') and contains(@href, '" + queueName
+            + "')])//img" );
+        assertTextPresent( "Delete Parallel Build Queue" );
+        assertTextPresent( "Are you sure you want to delete the build queue \"" + queueName + "\"?" );
+        assertButtonWithValuePresent( "Delete" );
+        assertButtonWithValuePresent( "Cancel" );
+        clickButtonWithValue( "Delete" );
+        assertBuildQueuePage();
+    }
+
+    public void assertAddBuildQueuePage()
+    {
+        assertPage( "Continuum - Add/Edit Parallel Build Queue" );
+        assertTextPresent( "Continuum - Add/Edit Parallel Build Queue" );
+        assertTextPresent( "Name*" );
+        assertElementPresent( "name" );
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
+    }
+
+    public void addBuildQueue( String name, boolean success )
+    {
+        goToBuildQueuePage();
+        assertBuildQueuePage();
+        submit();
+        assertAddBuildQueuePage();
+        setFieldValue( "name", name );
+        submit();
+        if ( success )
+        {
+            assertBuildQueuePage();
+            assertTextPresent( name );
+        }
+        else
+        {
+            assertAddBuildQueuePage();
+        }
+    }
+
+    public void setMaxBuildQueue( int maxBuildQueue )
+    {
+        goToConfigurationPage();
+        setFieldValue( "numberOfAllowedBuildsinParallel", String.valueOf( maxBuildQueue ) );
+        submit();
+    }
+
+    // ////////////////////////////////////
+    // Purge
+    // ////////////////////////////////////
+
+    public void goToGeneralPurgePage()
+    {
+        clickLinkWithText( "Purge Configurations" );
+        assertGeneralPurgePage();
+    }
+
+    public void assertGeneralPurgePage()
+    {
+        assertPage( "Continuum - Purge Configurations" );
+        assertTextPresent( "Repository Purge Configurations" );
+        assertTextPresent( "Directory Purge Configurations" );
+        assertButtonWithValuePresent( "Add" );
+    }
+
+    public void removeRepositoryPurge( String purgeDescription )
+    {
+        goToGeneralPurgePage();
+        clickLinkWithXPath( "(//a[contains(@href,'removePurgeConfig.action') and contains(@href, '" + purgeDescription
+            + "')])//img" );
+        assertTextPresent( "Delete Purge Configuration" );
+        assertTextPresent( "Are you sure you want to delete Purge Configuration \"" + purgeDescription + "\"?" );
+        assertButtonWithValuePresent( "Delete" );
+        assertButtonWithValuePresent( "Cancel" );
+        clickButtonWithValue( "Delete" );
+        assertGeneralPurgePage();
+    }
+
+    public void removeDirectoryPurge( String purgeDescription )
+    {
+        goToGeneralPurgePage();
+        clickLinkWithXPath( "(//a[contains(@href,'removePurgeConfig.action') and contains(@href, '" + purgeDescription
+            + "')])//img" );
+        assertTextPresent( "Delete Purge Configuration" );
+        assertTextPresent( "Are you sure you want to delete Purge Configuration \"" + purgeDescription + "\"?" );
+        assertButtonWithValuePresent( "Delete" );
+        assertButtonWithValuePresent( "Cancel" );
+        clickButtonWithValue( "Delete" );
+        assertGeneralPurgePage();
+    }
+
+    public void assertAddRepositoryPurgePage()
+    {
+        assertPage( "Continuum - Add/Edit Purge Configuration" );
+        assertTextPresent( "Add/Edit Purge Configuration" );
+        assertTextPresent( "Repository" );
+        assertElementPresent( "repositoryId" );
+        assertTextPresent( "Days Older" );
+        assertElementPresent( "daysOlder" );
+        assertTextPresent( "Retention Count" );
+        assertElementPresent( "retentionCount" );
+        assertElementPresent( "deleteAll" );
+        assertElementPresent( "deleteReleasedSnapshots" );
+        assertElementPresent( "defaultPurgeConfiguration" );
+        assertTextPresent( "Schedule" );
+        assertElementPresent( "scheduleId" );
+        assertTextPresent( "Description" );
+        assertElementPresent( "description" );
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
+    }
+
+    public void assertAddEditDirectoryPurgePage()
+    {
+        assertPage( "Continuum - Add/Edit Purge Configuration" );
+        assertTextPresent( "Add/Edit Purge Configuration" );
+        assertTextPresent( "Directory Type" );
+        assertElementPresent( "directoryType" );
+        assertTextPresent( "Days Older" );
+        assertElementPresent( "daysOlder" );
+        assertTextPresent( "Retention Count" );
+        assertElementPresent( "retentionCount" );
+        assertElementPresent( "deleteAll" );
+        assertElementPresent( "defaultPurgeConfiguration" );
+        assertTextPresent( "Schedule" );
+        assertElementPresent( "scheduleId" );
+        assertTextPresent( "Description" );
+        assertElementPresent( "description" );
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
+    }
+
+    public void goToAddRepositoryPurge()
+    {
+        goToGeneralPurgePage();
+        assertGeneralPurgePage();
+        clickLinkWithXPath( "//preceding::input[@value='repository' and @type='hidden']//following::input[@type='submit']" );
+        assertAddRepositoryPurgePage();
+    }
+
+    public void goToEditRepositoryPurge( String daysOlder, String retentionCount, String description )
+    {
+        goToGeneralPurgePage();
+        assertGeneralPurgePage();
+        String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        assertAddRepositoryPurgePage();
+        assertFieldValue( daysOlder, "daysOlder" );
+        assertFieldValue( retentionCount, "retentionCount" );
+        assertFieldValue( description, "description" );
+    }
+
+    public void goToEditDirectoryPurge( String daysOlder, String retentionCount, String description )
+    {
+        goToGeneralPurgePage();
+        assertGeneralPurgePage();
+        String xPath = "//preceding::td[text()='" + description + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        assertAddEditDirectoryPurgePage();
+        assertFieldValue( daysOlder, "daysOlder" );
+        assertFieldValue( retentionCount, "retentionCount" );
+        assertFieldValue( description, "description" );
+    }
+
+    public void addEditRepositoryPurge( String daysOlder, String retentionCount, String description, boolean success )
+    {
+        setFieldValue( "daysOlder", daysOlder );
+        setFieldValue( "retentionCount", retentionCount );
+        setFieldValue( "description", description );
+        submit();
+        if ( success )
+        {
+            assertGeneralPurgePage();
+        }
+        else
+        {
+            assertAddRepositoryPurgePage();
+        }
+    }
+
+    public void goToAddDirectoryPurge()
+    {
+        goToGeneralPurgePage();
+        assertGeneralPurgePage();
+        clickLinkWithXPath( "//preceding::input[@value='directory' and @type='hidden']//following::input[@type='submit']" );
+        assertAddEditDirectoryPurgePage();
+    }
+
+    public void addEditDirectoryPurge( String daysOlder, String retentionCount, String description, boolean success )
+    {
+        setFieldValue( "daysOlder", daysOlder );
+        setFieldValue( "retentionCount", retentionCount );
+        setFieldValue( "description", description );
+        submit();
+        if ( success )
+        {
+            assertGeneralPurgePage();
+        }
+        else
+        {
+            assertAddEditDirectoryPurgePage();
+        }
+    }
+
+    // ////////////////////////////////////
+    // LocalRepository
+    // ////////////////////////////////////
+    public void goToLocalRepositoryPage()
+    {
+        clickLinkWithText( "Local Repositories" );
+
+        assertLocalRepositoryPage();
+    }
+
+    public void assertLocalRepositoryPage()
+    {
+        assertPage( "Continuum - Local Repositories" );
+        assertTextPresent( "Local Repositories" );
+        assertTextPresent( "Name" );
+        assertTextPresent( "Location" );
+        assertTextPresent( "Layout" );
+        assertImgWithAlt( "Edit" );
+        assertImgWithAlt( "Purge" );
+        assertImgWithAlt( "Delete" );
+        assertButtonWithValuePresent( "Add" );
+    }
+
+    public void assertAddLocalRepositoryPage()
+    {
+        assertPage( "Continuum - Add/Edit Local Repository" );
+        assertTextPresent( "Continuum - Add/Edit Local Repository" );
+        assertTextPresent( "Name" );
+        assertElementPresent( "repository.name" );
+        assertTextPresent( "Location" );
+        assertElementPresent( "repository.location" );
+        assertTextPresent( "Layout" );
+        assertElementPresent( "repository.layout" );
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
+    }
+
+    public void removeLocalRepository( String name )
+    {
+        goToLocalRepositoryPage();
+        String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Delete']";
+        clickLinkWithXPath( xPath );
+        assertTextPresent( "Delete Local Repository" );
+        assertTextPresent( "Are you sure you want to delete Local Repository \"" + name + "\" ?" );
+        assertButtonWithValuePresent( "Delete" );
+        assertButtonWithValuePresent( "Cancel" );
+        clickButtonWithValue( "Delete" );
+        assertLocalRepositoryPage();
+    }
+
+    public void goToAddLocalRepository()
+    {
+        goToLocalRepositoryPage();
+        clickButtonWithValue( "Add" );
+        assertAddLocalRepositoryPage();
+    }
+
+    public void goToEditLocalRepository( String name, String location )
+    {
+        goToLocalRepositoryPage();
+        String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        assertAddLocalRepositoryPage();
+        assertFieldValue( name, "repository.name" );
+        assertFieldValue( location, "repository.location" );
+    }
+
+    public void addEditLocalRepository( String name, String location, boolean success )
+    {
+        setFieldValue( "repository.name", name );
+        setFieldValue( "repository.location", location );
+        submit();
+        if ( success )
+        {
+            assertLocalRepositoryPage();
+        }
+        else
+        {
+            assertAddLocalRepositoryPage();
+        }
+    }
+
+    // ////////////////////////////////////
+    // Schedule
+    // ////////////////////////////////////
+
+    public void goToSchedulePage()
+    {
+        clickLinkWithText( "Schedules" );
+
+        assertSchedulePage();
+    }
+
+    public void goToAddSchedule()
+    {
+        goToSchedulePage();
+        clickButtonWithValue( "Add" );
+        assertAddSchedulePage();
+    }
+
+    public void assertSchedulePage()
+    {
+        assertPage( "Continuum - Schedules" );
+        assertTextPresent( "Schedules" );
+        assertTextPresent( "Name" );
+        assertTextPresent( "Description" );
+        assertTextPresent( "Quiet Period" );
+        assertTextPresent( "Cron Expression" );
+        assertTextPresent( "Max Job Time" );
+        assertTextPresent( "Active" );
+        assertTextPresent( "DEFAULT_SCHEDULE" );
+        assertImgWithAlt( "Edit" );
+        assertImgWithAlt( "Delete" );
+        assertButtonWithValuePresent( "Add" );
+    }
+
+    public void assertAddSchedulePage()
+    {
+        assertPage( "Continuum - Edit Schedule" );
+        assertTextPresent( "Continuum - Edit Schedule" );
+        assertTextPresent( "Name" );
+        assertElementPresent( "name" );
+        assertTextPresent( "Description" );
+        assertElementPresent( "description" );
+        assertTextPresent( "Cron Expression" );
+        assertTextPresent( "Second" );
+        assertElementPresent( "second" );
+        assertTextPresent( "Minute" );
+        assertElementPresent( "minute" );
+        assertTextPresent( "Hour" );
+        assertElementPresent( "hour" );
+        assertTextPresent( "Day of Month" );
+        assertElementPresent( "dayOfMonth" );
+        assertTextPresent( "Month" );
+        assertElementPresent( "month" );
+        assertTextPresent( "Day of Week" );
+        assertElementPresent( "dayOfWeek" );
+        assertTextPresent( "Year [optional]" );
+        assertElementPresent( "year" );
+        assertTextPresent( "Maximum job execution time" );
+        assertElementPresent( "maxJobExecutionTime" );
+        assertTextPresent( "Quiet Period (seconds):" );
+        assertElementPresent( "delay" );
+        assertTextPresent( "Add Build Queue" );
+        assertElementPresent( "availableBuildQueues" );
+        assertElementPresent( "selectedBuildQueues" );
+        assertElementPresent( "active" );
+        assertTextPresent( "Enable/Disable the schedule" );
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
+    }
+
+    public void addEditSchedule( String name, String description, String second, String minute, String hour,
+                                 String dayMonth, String month, String dayWeek, String year, String maxTime,
+                                 String period, boolean success )
+    {
+        setFieldValue( "name", name );
+        setFieldValue( "description", description );
+        setFieldValue( "second", second );
+        setFieldValue( "minute", minute );
+        setFieldValue( "hour", hour );
+        setFieldValue( "dayOfMonth", dayMonth );
+        setFieldValue( "month", month );
+        setFieldValue( "dayOfWeek", dayWeek );
+        setFieldValue( "year", year );
+        setFieldValue( "maxJobExecutionTime", maxTime );
+        setFieldValue( "delay", period );
+        submit();
+        if ( success )
+        {
+            assertSchedulePage();
+        }
+        else
+        {
+            assertAddSchedulePage();
+        }
+    }
+
+    public void goToEditSchedule( String name, String description, String second, String minute, String hour,
+                                  String dayMonth, String month, String dayWeek, String year, String maxTime,
+                                  String period )
+    {
+        goToSchedulePage();
+        String xPath = "//preceding::td[text()='" + name + "']//following::img[@alt='Edit']";
+        clickLinkWithXPath( xPath );
+        assertAddSchedulePage();
+        assertFieldValue( name, "name" );
+        assertFieldValue( description, "description" );
+        assertFieldValue( second, "second" );
+        assertFieldValue( minute, "minute" );
+        assertFieldValue( hour, "hour" );
+        assertFieldValue( dayMonth, "dayOfMonth" );
+        assertFieldValue( month, "month" );
+        assertFieldValue( dayWeek, "dayOfWeek" );
+        assertFieldValue( year, "year" );
+        assertFieldValue( maxTime, "maxJobExecutionTime" );
+        assertFieldValue( period, "delay" );
+    }
+
+    public void removeSchedule( String name )
+    {
+        goToSchedulePage();
+        clickLinkWithXPath( "(//a[contains(@href,'removeSchedule.action') and contains(@href, '" + name + "')])//img" );
+        // TODO: Change Title "Continuum -"
+        assertPage( "Schedule Removal" );
+        assertTextPresent( "Schedule Removal" );
+        assertTextPresent( "Are you sure you want to delete the schedule \"" + name + "\"?" );
+        assertButtonWithValuePresent( "Delete" );
+        assertButtonWithValuePresent( "Cancel" );
+        clickButtonWithValue( "Delete" );
+        assertSchedulePage();
+    }
+
+    // ////////////////////////////////////
     // Configuration
     // ////////////////////////////////////
+
+    public void goToConfigurationPage()
+    {
+        clickLinkWithText( "Configuration" );
+        assertEditConfigurationPage();
+    }
+
     public void assertEditConfigurationPage()
     {
         assertPage( "Continuum - Configuration" );
+        assertTextPresent( "General Configuration " );
         assertTextPresent( "Working Directory" );
         assertElementPresent( "workingDirectory" );
         assertTextPresent( "Build Output Directory" );
         assertElementPresent( "buildOutputDirectory" );
+        assertTextPresent( "Release Output Directory" );
+        assertElementPresent( "releaseOutputDirectory" );
         assertTextPresent( "Deployment Repository Directory" );
         assertElementPresent( "deploymentRepositoryDirectory" );
         assertTextPresent( "Base URL" );
         assertElementPresent( "baseUrl" );
+        assertTextPresent( "Number of Allowed Builds in Parallel" );
+        assertElementPresent( "numberOfAllowedBuildsinParallel" );
+        assertTextPresent( "Enable Distributed Builds" );
+        assertElementPresent( "distributedBuildEnabled" );
+        assertButtonWithValuePresent( "Save" );
+        assertButtonWithValuePresent( "Cancel" );
     }
 
-    public void submitConfigurationPage( String baseUrl, String companyName, String companyLogo, String companyUrl )
+    public void assertEditedConfigurationPage( String working, String buildOutput, String releaseOutput,
+                                               String deploymentRepository, String baseUrl, String numberBuildParallel )
     {
+        assertPage( "Continuum - Configuration" );
+        assertTextPresent( "General Configuration " );
+        assertTextPresent( "Working Directory" );
+        assertElementNotPresent( "workingDirectory" );
+        assertTextPresent( working );
+        assertTextPresent( "Build Output Directory" );
+        assertElementNotPresent( "buildOutputDirectory" );
+        assertTextPresent( buildOutput );
+        assertTextPresent( "Release Output Directory" );
+        assertElementNotPresent( "releaseOutputDirectory" );
+        assertTextPresent( releaseOutput );
+        assertTextPresent( "Deployment Repository Directory" );
+        assertElementNotPresent( "deploymentRepositoryDirectory" );
+        assertTextPresent( deploymentRepository );
+        assertTextPresent( "Base URL" );
+        assertElementNotPresent( "baseUrl" );
+        assertTextPresent( baseUrl );
+        assertTextPresent( "Number of Allowed Builds in Parallel" );
+        assertElementNotPresent( "numberOfAllowedBuildsinParallel" );
+        assertTextPresent( numberBuildParallel );
+        assertTextPresent( "Enable Distributed Builds" );
+        assertElementNotPresent( "distributedBuildEnabled" );
+        assertButtonWithValuePresent( "Edit" );
+
+    }
+
+    public void submitConfiguration( String working, String buildOutput, String releaseOutput,
+                                     String deploymentRepository, String baseUrl, String numberBuildParallel,
+                                     boolean distributed, boolean success )
+    {
+        setFieldValue( "workingDirectory", working );
+        setFieldValue( "buildOutputDirectory", buildOutput );
+        setFieldValue( "releaseOutputDirectory", releaseOutput );
+        setFieldValue( "deploymentRepositoryDirectory", deploymentRepository );
         setFieldValue( "baseUrl", baseUrl );
-        if ( companyName != null )
+        setFieldValue( "numberOfAllowedBuildsinParallel", numberBuildParallel );
+        if ( distributed )
         {
-            setFieldValue( "companyName", companyName );
+            checkField( "distributedBuildEnabled" );
         }
-        if ( companyLogo != null )
+        else
         {
-            setFieldValue( "companyLogo", companyLogo );
-        }
-        if ( companyUrl != null )
-        {
-            setFieldValue( "companyUrl", companyUrl );
+            uncheckField( "distributedBuildEnabled" );
         }
         submit();
-        waitPage();
+        if ( success )
+        {
+            assertEditedConfigurationPage( working, buildOutput, releaseOutput, deploymentRepository, baseUrl,
+                                           numberBuildParallel );
+        }else {
+            assertEditConfigurationPage();
+        }
     }
 
     // ////////////////////////////////////
@@ -281,11 +773,11 @@ public abstract class AbstractContinuumTest
         while ( isElementPresent( "//img[@alt='Building']" ) || isElementPresent( "//img[@alt='Updating']" ) )
         {
             Thread.sleep( 10000 );
-            geSelenium().refresh();
+            getSelenium().refresh();
             waitPage();
             if ( currentIt > maxIt )
             {
-                Assert.fail("Timeout, Can't build project group");
+                Assert.fail( "Timeout, Can't build project group" );
             }
             currentIt++;
         }
@@ -334,14 +826,13 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Project Group Build Definitions of " + projectGroupName + " group" );
     }
 
-    public void assertDeleteBuildDefinitionPage( String description, String goals)
+    public void assertDeleteBuildDefinitionPage( String description, String goals )
     {
-        assertTextPresent( "Are you sure you want to delete the build definition with description \""+description+"\", goals \""+ goals + "\" and id" );
+        assertTextPresent( "Are you sure you want to delete the build definition with description \"" + description
+            + "\", goals \"" + goals + "\" and id" );
         isButtonWithValuePresent( "Cancel" );
         isButtonWithValuePresent( "Delete" );
     }
-
-
 
     public void assertAddEditBuildDefinitionPage()
     {
@@ -367,8 +858,9 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "profileId" );
     }
 
-    public void addEditGroupBuildDefinition( String groupName, String buildFile, String goals, String arguments, String description,
-                                             boolean buildFresh, boolean alwaysBuild, boolean isDefault )
+    public void addEditGroupBuildDefinition( String groupName, String buildFile, String goals, String arguments,
+                                             String description, boolean buildFresh, boolean alwaysBuild,
+                                             boolean isDefault )
     {
         assertAddEditBuildDefinitionPage();
         // Enter values into Add Build Definition fields, and submit
@@ -406,9 +898,12 @@ public abstract class AbstractContinuumTest
         }
 
         submit();
-        if(groupName != null){
+        if ( groupName != null )
+        {
             assertGroupBuildDefinitionPage( groupName );
-        } else {
+        }
+        else
+        {
             assertProjectInformationPage();
         }
     }
@@ -443,7 +938,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Send on Error" );
         assertTextPresent( "Send on Warning" );
         // TODO: Replace On for on
-        assertTextPresent( "Send On SCM Failure" );
+        assertTextPresent( "Send on SCM Failure" );
         assertElementPresent( "address" );
         assertElementPresent( "Cancel" );
     }
@@ -481,7 +976,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Send on Failure" );
         assertTextPresent( "Send on Error" );
         assertTextPresent( "Send on Warning" );
-        assertTextPresent( "Send On SCM Failure" );
+        assertTextPresent( "Send on SCM Failure" );
     }
 
     public void assertAddEditJabberPage()
@@ -508,7 +1003,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Send on Error" );
         assertTextPresent( "Send on Warning" );
         // TODO: Change On for on
-        assertTextPresent( "Send On SCM Failure" );
+        assertTextPresent( "Send on SCM Failure" );
     }
 
     public void assertAddEditMsnPage()
@@ -526,7 +1021,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Send on Failure" );
         assertTextPresent( "Send on Error" );
         assertTextPresent( "Send on Warning" );
-        assertTextPresent( "Send On SCM Failure" );
+        assertTextPresent( "Send on SCM Failure" );
     }
 
     public void assertAddEditWagonPage()
@@ -907,7 +1402,7 @@ public abstract class AbstractContinuumTest
         clickLinkWithText( "Show Project Groups" );
         clickLinkWithText( projectGroupName );
         clickLinkWithText( projectName );
-        geSelenium().click( "addProjectNotifier" );
+        getSelenium().click( "addProjectNotifier" );
         clickLinkWithXPath( "//input[@id='addProjectNotifier_0']" );
 
         assertNotifierPage();
@@ -1034,7 +1529,7 @@ public abstract class AbstractContinuumTest
         // TODO: Improve the condition
         String condition = "selenium.browserbot.getCurrentWindow().document.getElementById('" + ident + "')";
         // 'Continuum - Project Group'
-        geSelenium().waitForCondition( condition, maxWaitTimeInMs );
+        getSelenium().waitForCondition( condition, maxWaitTimeInMs );
     }
 
     /**
@@ -1096,6 +1591,6 @@ public abstract class AbstractContinuumTest
 
         submit();
 
-        geSelenium().waitForCondition( "'' == document.title", maxWaitTimeInMs );
+        getSelenium().waitForCondition( "'' == document.title", maxWaitTimeInMs );
     }
 }

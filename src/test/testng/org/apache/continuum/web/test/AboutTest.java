@@ -39,14 +39,14 @@ public class AboutTest
     public void open()
         throws Exception
     {
-        super.open(1);
+        super.open();
     }
 
     public void displayAboutPage()
     {
-        geSelenium().open( baseUrl + "/about.action" );
-        geSelenium().waitForPageToLoad( maxWaitTimeInMs );
-        Assert.assertEquals( "Continuum - About", geSelenium().getTitle() );
+        getSelenium().open( baseUrl + "/about.action" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        Assert.assertEquals( "Continuum - About", getSelenium().getTitle() );
     }
 
     @Override
