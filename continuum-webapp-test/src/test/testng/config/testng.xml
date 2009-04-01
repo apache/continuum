@@ -45,6 +45,11 @@ under the License.
 				<include name="projectGroup" />
 				<include name="notifier" />
 				<include name="buildDefinition" />
+				<include name="queue" />
+				<include name="purge" />
+				<include name="repository" />
+				<include name="schedule" />
+				<include name="configuration" />
 			</run>
 		</groups>
 

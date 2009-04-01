@@ -41,10 +41,10 @@ public class LoginTest
     public void testWithBadUsername()
     {
         diplayLoginPage();
-        geSelenium().type( "loginForm_username", "badUsername" );
-        geSelenium().type( "loginForm_username", p.getProperty( "ADMIN_PASSWORD" ) );
-        geSelenium().click( "loginForm__login" );
-        geSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        getSelenium().type( "loginForm_username", "badUsername" );
+        getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_PASSWORD" ) );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "You have entered an incorrect username and/or password" );
     }
 
@@ -52,10 +52,10 @@ public class LoginTest
     public void testWithBadPassword()
     {
         diplayLoginPage();
-        geSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
-        geSelenium().type( "loginForm_password", "badPassword" );
-        geSelenium().click( "loginForm__login" );
-        geSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().type( "loginForm_password", "badPassword" );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "You have entered an incorrect username and/or password" );
     }
 
@@ -63,9 +63,9 @@ public class LoginTest
     public void testWithEmptyUsername()
     {
         diplayLoginPage();
-        geSelenium().type( "loginForm_password", "password" );
-        geSelenium().click( "loginForm__login" );
-        geSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        getSelenium().type( "loginForm_password", "password" );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "User Name is required" );
     }
 
@@ -73,9 +73,9 @@ public class LoginTest
     public void testWithEmptyPassword()
     {
         diplayLoginPage();
-        geSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
-        geSelenium().click( "loginForm__login" );
-        geSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "You have entered an incorrect username and/or password" );
     }
 
@@ -83,10 +83,10 @@ public class LoginTest
     public void testWithCorrectUsernamePassword()
     {
         diplayLoginPage();
-        geSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
-        geSelenium().type( "loginForm_password", p.getProperty( "ADMIN_PASSWORD" ) );
-        geSelenium().click( "loginForm__login" );
-        geSelenium().waitForPageToLoad( maxWaitTimeInMs );
+        getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
+        getSelenium().type( "loginForm_password", p.getProperty( "ADMIN_PASSWORD" ) );
+        getSelenium().click( "loginForm__login" );
+        getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         assertTextPresent( "Edit Details" );
         assertTextPresent( "Logout" );
         assertTextPresent( p.getProperty( "ADMIN_USERNAME" ) );
@@ -97,7 +97,7 @@ public class LoginTest
     public void open()
         throws Exception
     {
-        super.open(2);
+        super.open();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class LoginTest
 
     private void diplayLoginPage()
     {
-        geSelenium().open( baseUrl + "/security/login.action" );
+        getSelenium().open( baseUrl + "/security/login.action" );
         waitPage();
     }
 }
