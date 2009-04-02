@@ -22,12 +22,14 @@ package org.apache.maven.continuum.web.action;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.ComparatorUtils;
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
@@ -113,6 +115,9 @@ public class ProjectGroupAction
     private String filterProperty;
 
     private String filterKey;
+    
+    //Default order is by username
+    private String sorterProperty = "username";
 
     private boolean ascending = true;
 
@@ -700,9 +705,13 @@ public class ProjectGroupAction
             logger.error( "Can't get the users list", e );
         }
 
-        if ( !StringUtils.isEmpty( filterKey ) )
+        if ( StringUtils.isNotBlank( filterKey ) )
         {
-            users = findUsers( users, filterProperty, filterKey, ascending );
+            users = findUsers( users, filterProperty, filterKey );
+        }
+        if ( StringUtils.isNotBlank( sorterProperty ) )
+        {
+            sortUsers( users, sorterProperty, ascending );
         }
 
         projectGroupUsers = new ArrayList();
@@ -747,7 +756,7 @@ public class ProjectGroupAction
         }
     }
 
-    private List<User> findUsers( List<User> users, String searchProperty, String searchKey, boolean orderAscending )
+    private List<User> findUsers( List<User> users, String searchProperty, String searchKey)
     {
         List<User> userList = new ArrayList<User>();
         for ( User user : users )
@@ -788,6 +797,37 @@ public class ProjectGroupAction
         }
 
         return userList;
+    }
+    
+    private void sortUsers( List<User> userList, final String sorterProperty, final boolean orderAscending )
+    {
+        Collections.sort( userList, new Comparator<User>()
+        {
+            public int compare( User o1, User o2 )
+            {
+                String value1, value2;
+                if ( "fullName".equals( sorterProperty ) )
+                {
+                    value1 = o1.getFullName();
+                    value2 = o2.getFullName();
+                }
+                else if ( "email".equals( sorterProperty ) )
+                {
+                    value1 = o1.getEmail();
+                    value2 = o2.getEmail();
+                }
+                else
+                {
+                    value1 = o1.getUsername();
+                    value2 = o2.getUsername();
+                }
+                if ( orderAscending )
+                {
+                    return ComparatorUtils.nullLowComparator( null ).compare( value1, value2 );
+                }
+                return ComparatorUtils.nullLowComparator( null ).compare( value2, value1 );
+            }
+        } );
     }
 
     public int getProjectGroupId()
@@ -1046,5 +1086,15 @@ public class ProjectGroupAction
         {
             return false;
         }
+    }
+    
+    public String getSorterProperty()
+    {
+        return sorterProperty;
+    }
+
+    public void setSorterProperty( String sorterProperty )
+    {
+        this.sorterProperty = sorterProperty;
     }
 }
