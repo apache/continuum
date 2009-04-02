@@ -6,13 +6,14 @@ Test with Firefox and Selenium IDE
  * in Selenium IDE, modify the Base URL if necessary (for example, http://localhost:8080/continuum)
  * in Selenium IDE, click the 'Play entire test suite' icon
 
-Run Selenium tests in src/test/java with Maven and Cargo using support for multiple data sources
+Run Selenium tests in src/test/it with Maven and Cargo using support for multiple data sources
  * modify src/test/resources/it.properties as needed
  * mvn clean install
 
-Run Selenium tests in src/test/it with Maven and Cargo with alternate configuration
+Run Selenium tests in src/test/java with Maven and Cargo with alternate configuration
  * modify src/test/resources/it.properties as needed
- * mvn clean install -f it-pom.xml
+ * edit pom.xml and remove <testSourceDirectory>
+ * mvn clean install
  
 Run Selenium tests in src/test/testNG with Maven and testNG
  * Start Continuum
@@ -25,11 +26,6 @@ Run Selenium tests in src/test/testNG with Maven and testNG
 
  After you have run through the lifecycle once to set up the container and webapps, you can re-start it using:
  mvn cargo:start
-
-Run Selenium teests in src/test/pom2 with Maven
- * set TOMCAT_HOME environment variable to location of Tomcat 5.5.x installation
- * modify src/test/resources/it.properties as needed
- * mvn clean install -f pom2.xml
 
 ======= OLD INSTRUCTIONS FOR src/test/it BELOW =======
 
