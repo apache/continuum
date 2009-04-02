@@ -149,10 +149,11 @@
             <s:else>
               <s:a href="javascript:document.forms['sortlist'].submit()"><img src="<s:url value='/images/icon_sortup.gif' includeParams="none"/>" title="<s:text name='sort.ascending'/>" border="0"></s:a> <s:text name="user.username.label"/>
             </s:else>
-            <s:hidden name="ascending">${!ascending}</s:hidden>
+            <s:hidden name="ascending" value="%{!ascending}"/>
             <s:hidden name="projectGroupId" />
-            <s:hidden name="filterProperty" />
-            <s:hidden name="filterKey" />
+            <s:hidden name="sorterProperty" value="username"/>
+            <s:hidden name="filterKey" value="%{filterKey}"/>
+            <s:hidden name="filterProperty" value="%{filterProperty}"/>
           </s:form>
         </th>   
         <th><s:text name="user.fullName.label"/></th>
