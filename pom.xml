@@ -29,6 +29,7 @@ under the License.
   <packaging>pom</packaging>
 
   <build>
+    <testSourceDirectory>src/test/it</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -191,6 +192,12 @@ under the License.
       <groupId>org.openqa.selenium.client-drivers</groupId>
       <artifactId>selenium-java-client-driver</artifactId>
       <version>0.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.4</version>
       <scope>test</scope>
     </dependency>
     
