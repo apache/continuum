@@ -19,10 +19,13 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import com.opensymphony.xwork2.Preparable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
@@ -30,8 +33,6 @@ import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.opensymphony.xwork2.Preparable;
 
 /**
  * @author Nik Gonzalez
@@ -91,7 +92,7 @@ public class ScheduleAction
     private void populateBuildQueues()
         throws ContinuumException
     {
-        List<BuildQueue> buildQueues = null;
+        List<BuildQueue> buildQueues;
         if ( schedule != null )
         {
             buildQueues = schedule.getBuildQueues();
@@ -215,7 +216,7 @@ public class ScheduleAction
             return REQUIRES_AUTHENTICATION;
         }
 
-        if ( ( "".equals( name ) ) || ( name == null ) )
+        if ( StringUtils.isBlank( name ) )
         {
             logger.error( "Can't create schedule. No schedule name was supplied." );
             addActionError( getText( "buildDefinition.noname.save.error.message" ) );
@@ -223,32 +224,45 @@ public class ScheduleAction
         }
         else
         {
-            if ( id == 0 )
+            try
             {
-                try
+                Schedule s = getContinuum().getScheduleByName( name );
+                if ( s != null && id != s.getId() )
                 {
-                    getContinuum().addSchedule( setFields( new Schedule() ) );
-                }
-                catch ( ContinuumException e )
-                {
-                    addActionError( getText( "schedule.buildqueues.add.error" ) );
+                    addActionError( getText( "schedule.name.already.exists" ) );
                     return ERROR;
                 }
-                return SUCCESS;
             }
-            else
+            catch ( ContinuumException e )
             {
-                try
-                {
-                    getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
-                }
-                catch ( ContinuumException e )
-                {
-                    addActionError( getText( "schedule.buildqueues.add.error" ) );
-                    return ERROR;
-                }
-                return SUCCESS;
+                logger.debug( "Unexpected error getting schedule" );
             }
+        }
+        if ( id == 0 )
+        {
+            try
+            {
+                getContinuum().addSchedule( setFields( new Schedule() ) );
+            }
+            catch ( ContinuumException e )
+            {
+                addActionError( getText( "schedule.buildqueues.add.error" ) );
+                return ERROR;
+            }
+            return SUCCESS;
+        }
+        else
+        {
+            try
+            {
+                getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
+            }
+            catch ( ContinuumException e )
+            {
+                addActionError( getText( "schedule.buildqueues.add.error" ) );
+                return ERROR;
+            }
+            return SUCCESS;
         }
     }
 
