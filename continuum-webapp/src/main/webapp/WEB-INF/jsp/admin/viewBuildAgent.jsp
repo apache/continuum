@@ -47,10 +47,10 @@
                   sortable="false"
                   filterable="false">
           <ec:row highlightRow="true">
-            <ec:column property="name" title="Name" style="white-space: nowrap" />
-            <ec:column property="type" title="Type" style="white-space: nowrap" />
-            <ec:column property="varName" title="Env Var Name" style="white-space: nowrap" />
-            <ec:column property="varValue" title="Value/Path" style="white-space: nowrap" />
+            <ec:column property="name" title="viewBuildAgent.installations.name" style="white-space: nowrap" />
+            <ec:column property="type" title="viewBuildAgent.installations.type" style="white-space: nowrap" />
+            <ec:column property="varName" title="viewBuildAgent.installations.varName" style="white-space: nowrap" />
+            <ec:column property="varValue" title="viewBuildAgent.installations.varValue" style="white-space: nowrap" />
           </ec:row>
         </ec:table>        	
       </div>

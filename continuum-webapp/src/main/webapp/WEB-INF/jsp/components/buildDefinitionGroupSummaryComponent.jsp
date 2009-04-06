@@ -126,7 +126,7 @@
   </redback:ifAuthorized>
 
   <c:if test="${not empty projectBuildDefinitionSummaries}">
-  <h3>Project Build Definitions</h3>
+  <h3><s:text name="buildDefinitionSummary.project.section.title"/></h3>
 
   <ec:table items="projectBuildDefinitionSummaries"
             var="buildDefinitionSummary"
@@ -136,7 +136,7 @@
             filterable="false"
             sortable="false">
     <ec:row>
-      <ec:column property="projectName" title="Project">
+      <ec:column property="projectName" title="buildDefinitionSummary.project">
         <s:url id="projectUrl" action="projectView" namespace="/" includeParams="none">
           <s:param name="projectId">${pageScope.buildDefinitionSummary.projectId}</s:param>
         </s:url>

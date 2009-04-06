@@ -45,7 +45,7 @@
                        listKey="id" headerKey="-1" headerValue=""/>
           </table>
         </div>
-        <s:submit/>
+        <s:submit value="%{getText('submit')}"/>
       </s:form>
     </body>
   </s:i18n>

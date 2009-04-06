@@ -37,16 +37,16 @@
               <td>
               <s:if test="listenerSummary.completedPhases.contains( top )">
                 <img src="<s:url value='/images/icon_success_sml.gif' includeParams="none"/>"
-                     alt="Done" title="Done" border="0">
+                     alt="<s:text name="done"/>" title="<s:text name="done"/>" border="0">
               </s:if>
               <s:elseif test="listenerSummary.inProgress.equals( top )">
                 <s:if test="listenerSummary.error == null">
                   <img src="<s:url value='/images/building.gif' includeParams="none"/>"
-                       alt="In Progress" title="In Progress" border="0">
+                       alt="<s:text name="in.progress"/>" title="<s:text name="in.progress"/>" border="0">
                 </s:if>
                 <s:else>
                   <img src="<s:url value='/images/icon_error_sml.gif' includeParams="none"/>"
-                       alt="Error" title="Error" border="0">
+                       alt="<s:text name="error"/>" title="<s:text name="error"/>" border="0">
                 </s:else>
               </s:elseif>
               </td>
@@ -70,14 +70,14 @@
               <s:hidden name="projectId"/>
               <s:hidden name="releaseId"/>
               <s:hidden name="releaseGoal"/>
-              <s:submit value="Rollback Changes"/>
+              <s:submit value="%{getText('rollback')}"/>
             </s:form>
           </td>
           <td>
             <s:form action="releaseCleanup" method="post">
               <s:hidden name="projectId"/>
               <s:hidden name="releaseId"/>
-              <s:submit value="Done"/>
+              <s:submit value="%{getText('done')}"/>
             </s:form>
           </td>
         </tr>

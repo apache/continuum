@@ -66,7 +66,7 @@
           </div>
         </s:else>
       </p>
-      <input type="button" value="Back" onClick="history.go(-1)">
+      <input type="button" value="<s:text name="back"/>" onClick="history.go(-1)">
 
     </body>
   </s:i18n>
