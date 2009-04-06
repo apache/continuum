@@ -25,18 +25,16 @@
     </head>
     <body>
       <h3>
-        <s:text name="releaseProject.section.title">
-          <s:param><s:property value="projectName"/></s:param>
-        </s:text>
+        <s:text name="releaseProject.rollbackWarning.section.title"/>
       </h3>
-      <p>This will revert all changes made by the previous release?</p>
+      <p><s:text name="releaseProject.rollbackWarning"/></p>
       <table>
         <tr>
           <td>
             <s:form action="releaseRollback" method="post">
               <s:hidden name="projectId"/>
               <s:hidden name="releaseId"/>
-              <s:submit value="Rollback Changes"/>
+              <s:submit value="%{getText('rollback')}"/>
             </s:form>
           </td>
           <td>
@@ -44,7 +42,7 @@
               <s:hidden name="projectId"/>
               <s:hidden name="releaseId"/>
               <s:hidden name="releaseGoal"/>
-              <s:submit value="Cancel"/>
+              <s:submit value="%{getText('cancel')}"/>
             </s:form>
           </td>
         </tr>

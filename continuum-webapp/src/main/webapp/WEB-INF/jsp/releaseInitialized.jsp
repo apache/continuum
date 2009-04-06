@@ -27,17 +27,13 @@
     <body>
       <h2><s:text name="releaseInProgress.section.title"/></h2>
       <h3><s:property value="name"/></h3>
-      <p>
-        The release goal is currently initializing...
-      </p>
-      <p>
-        Please wait while the server prepares your project for release.
-      </p>
+      <p><s:text name="releaseInProgress.currently.initializing"/></p>
+      <p><s:text name="releaseInProgress.please.wait"/></p>
       <s:form action="releaseInProgress" method="get">
         <s:hidden name="projectId"/>
         <s:hidden name="releaseId"/>
         <s:hidden name="releaseGoal"/>
-        <s:submit value="Refresh"/>
+        <s:submit value="%{getText('refresh')}"/>
       </s:form>
     </body>
   </s:i18n>

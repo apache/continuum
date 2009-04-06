@@ -74,7 +74,7 @@
            </div>
         </s:iterator>
 
-        <s:submit/>
+        <s:submit value="%{getText('submit')}"/>
       </s:form>
     </body>
   </s:i18n>

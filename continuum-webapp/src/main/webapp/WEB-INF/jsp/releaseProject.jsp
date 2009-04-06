@@ -47,7 +47,7 @@
           <br/>
         </p>
         <input name="projectId" type="hidden" value="<s:property value="projectId"/>"/>
-        <s:submit value="Submit"/>
+        <s:submit value="%{getText('submit')}"/>
       </s:form>
     </body>
   </s:i18n>
