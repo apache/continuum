@@ -31,11 +31,14 @@
             <h3><s:text name="add.m1.project.section.title"/></h3>
                 <div class="axial">
                     <s:form method="post" action="addMavenOneProject.action" name="addMavenOneProject" enctype="multipart/form-data">
-                        <c:if test="${!empty actionErrors}">
+                        <c:if test="${!empty actionErrors || !empty errorMessages}">
                           <div class="errormessage">
                             <s:iterator value="actionErrors">
                               <p><s:property/></p>
                             </s:iterator>
+                            <c:forEach items="${errorMessages}" var="errorMessage">
+                              <p>${errorMessage}</p>
+                            </c:forEach>
                           </div>
                         </c:if>
                         <table>
