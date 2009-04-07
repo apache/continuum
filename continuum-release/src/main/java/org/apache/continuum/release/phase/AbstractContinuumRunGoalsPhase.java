@@ -20,14 +20,17 @@ package org.apache.continuum.release.phase;
  */
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.shared.release.ReleaseExecutionException;
+import org.apache.maven.shared.release.ReleaseFailureException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
+import org.apache.maven.shared.release.env.ReleaseEnvironment;
 import org.apache.maven.shared.release.phase.AbstractRunGoalsPhase;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -68,7 +71,6 @@ public abstract class AbstractContinuumRunGoalsPhase
 
                     executable = ( (ContinuumReleaseDescriptor) releaseDescriptor).getExecutable();
                 }
-
                 shellCommandHelper.executeGoals( determineWorkingDirectory( workingDirectory,
                                                                             releaseDescriptor.getScmRelativePathProjectDirectory() ),
                                                  executable, goals, releaseDescriptor.isInteractive(), additionalArguments, result, 
@@ -84,4 +86,24 @@ public abstract class AbstractContinuumRunGoalsPhase
 
         return result;
     }
+
+	@Override
+	public ReleaseResult execute(ReleaseDescriptor arg0,
+			ReleaseEnvironment arg1, File arg2, String arg3)
+			throws ReleaseExecutionException {
+		return super.execute(arg0, arg1, arg2, arg3);
+	}
+
+	public ReleaseResult execute(ReleaseDescriptor releaseDescriptor,
+			ReleaseEnvironment releaseEnvironment, List reactorProjects)
+			throws ReleaseExecutionException, ReleaseFailureException {
+		
+		return execute(releaseDescriptor, new File(releaseDescriptor.getWorkingDirectory()), releaseDescriptor.getAdditionalArguments());
+	}
+
+	public ReleaseResult simulate(ReleaseDescriptor releaseDescriptor,
+			ReleaseEnvironment releaseEnvironment, List reactorProjects)
+			throws ReleaseExecutionException, ReleaseFailureException {
+		return execute(releaseDescriptor, new File(releaseDescriptor.getWorkingDirectory()), releaseDescriptor.getAdditionalArguments());
+	}
 }

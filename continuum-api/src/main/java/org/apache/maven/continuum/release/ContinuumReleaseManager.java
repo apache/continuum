@@ -76,7 +76,7 @@ public interface ContinuumReleaseManager
 
     /**
      * Perform a release based on a given releaseId
-     *
+     * @deprecated to remove as not used anymore
      * @param releaseId
      * @param buildDirectory
      * @param goals
@@ -89,7 +89,7 @@ public interface ContinuumReleaseManager
 
     /**
      * Perform a release based on a release descriptor received by the Maven Release Plugin.
-     *
+     * @deprecated to remove as not used anymore
      * @param releaseId
      * @param workingDirectory
      * @param buildDirectory
@@ -102,6 +102,22 @@ public interface ContinuumReleaseManager
                   boolean useReleaseProfile, ContinuumReleaseManagerListener listener )
         throws ContinuumReleaseException;
 
+
+    /**
+     * FIXME use a bean to replace such very huge parameter number (ContinuumReleaseRequest)
+     * @param releaseId
+     * @param buildDirectory
+     * @param goals
+     * @param arguments
+     * @param useReleaseProfile
+     * @param listener
+     * @param repository
+     * @throws ContinuumReleaseException
+     */
+    void perform( String releaseId, File buildDirectory, String goals, String arguments, boolean useReleaseProfile,
+                  ContinuumReleaseManagerListener listener, LocalRepository repository )
+        throws ContinuumReleaseException;    
+    
     /**
      * Rollback changes made by a previous release.
      *
@@ -119,9 +135,6 @@ public interface ContinuumReleaseManager
 
     Map getListeners();
 
-    void perform( String releaseId, File buildDirectory, String goals, String arguments, boolean useReleaseProfile,
-                  ContinuumReleaseManagerListener listener, LocalRepository repository )
-        throws ContinuumReleaseException;
 
     /**
      * Clean up the tagname to respect the scm provider policy.

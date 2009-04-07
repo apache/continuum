@@ -19,13 +19,15 @@ package org.apache.maven.continuum.release.executors;
  * under the License.
  */
 
+import java.util.ArrayList;
+
 import org.apache.maven.continuum.release.tasks.PrepareReleaseProjectTask;
 import org.apache.maven.continuum.release.tasks.ReleaseProjectTask;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
+import org.apache.maven.shared.release.env.DefaultReleaseEnvironment;
+import org.apache.maven.shared.release.env.ReleaseEnvironment;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
-
-import java.util.ArrayList;
 
 /**
  * @author Edwin Punzalan
@@ -41,8 +43,12 @@ public class PrepareReleaseTaskExecutor
 
         ReleaseDescriptor descriptor = prepareTask.getDescriptor();
 
-        ReleaseResult result = releaseManager.prepareWithResult( descriptor, settings, new ArrayList(), false, false,
+       
+        ReleaseEnvironment releaseEnvironment = new DefaultReleaseEnvironment();
+        releaseEnvironment.setSettings(settings);
+        ReleaseResult result = releaseManager.prepareWithResult( descriptor, releaseEnvironment, new ArrayList(), false, false,
                                                                  prepareTask.getListener() );
+        
 
         //override to show the actual start time
         result.setStartTime( getStartTime() );

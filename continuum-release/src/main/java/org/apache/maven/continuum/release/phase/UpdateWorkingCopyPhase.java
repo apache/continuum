@@ -32,6 +32,7 @@ import org.apache.maven.shared.release.ReleaseExecutionException;
 import org.apache.maven.shared.release.ReleaseFailureException;
 import org.apache.maven.shared.release.ReleaseResult;
 import org.apache.maven.shared.release.config.ReleaseDescriptor;
+import org.apache.maven.shared.release.env.ReleaseEnvironment;
 import org.apache.maven.shared.release.phase.AbstractReleasePhase;
 import org.apache.maven.shared.release.scm.ReleaseScmCommandException;
 import org.apache.maven.shared.release.scm.ReleaseScmRepositoryException;
@@ -120,4 +121,18 @@ public class UpdateWorkingCopyPhase
     {
         this.copyUpdated = copyUpdated;
     }
+
+	public ReleaseResult execute(ReleaseDescriptor releaseDescriptor,
+			ReleaseEnvironment releaseEnvironment, List reactorProjects)
+			throws ReleaseExecutionException, ReleaseFailureException {
+		return execute(releaseDescriptor, releaseEnvironment.getSettings(),
+				reactorProjects);
+	}
+
+	public ReleaseResult simulate(ReleaseDescriptor releaseDescriptor,
+			ReleaseEnvironment releaseEnvironment, List reactorProjects)
+			throws ReleaseExecutionException, ReleaseFailureException {
+		return execute(releaseDescriptor, releaseEnvironment.getSettings(),
+				reactorProjects);
+	}
 }

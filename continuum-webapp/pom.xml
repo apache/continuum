@@ -464,6 +464,16 @@ under the License.
       <scope>runtime</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.release</groupId>
+      <artifactId>maven-release-manager</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-container-default</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>    
+    <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-notifier-irc</artifactId>
       <scope>runtime</scope>
