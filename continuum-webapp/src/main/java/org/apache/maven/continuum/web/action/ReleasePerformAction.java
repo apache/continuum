@@ -166,6 +166,10 @@ public class ReleasePerformAction
         return SUCCESS;
     }
 
+    /**
+     * FIXME olamy is it really the good place to do that ? should be moved to continuum-release
+     * TODO handle remoteTagging  
+     */
     private void getReleasePluginParameters( String workingDirectory, String pomFilename )
         throws Exception
     {

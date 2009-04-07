@@ -50,6 +50,9 @@ public abstract class AbstractContinuumRunGoalsPhase
      */
     private InstallationService installationService;
 
+    /**
+     * TODO olamy use maven-invoker with an installation (jdk, mvn path, env var)
+     */
     public ReleaseResult execute( ReleaseDescriptor releaseDescriptor, File workingDirectory,
                                   String additionalArguments )
         throws ReleaseExecutionException
