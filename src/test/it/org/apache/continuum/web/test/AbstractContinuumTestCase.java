@@ -64,7 +64,7 @@ public abstract class AbstractContinuumTestCase
 
     public void assertHeader()
     {
-        assertElementPresent( "xpath=//img[@alt='Continuum']" );
+        assertImgWithAlt( "Continuum" );
         assertLinkPresent( "Continuum" );
         assertLinkPresent( "Maven" );
         assertLinkPresent( "Apache" );
@@ -90,7 +90,7 @@ public abstract class AbstractContinuumTestCase
         assertPage( "Continuum - About" );
         assertTextPresent( "About Continuum" );
         assertTextPresent( "Version:" );
-        assertTextPresent( "1.3.2-SNAPSHOT" );
+        assertTextPresent( "1.4.0-SNAPSHOT" );
         assertTextPresent( "Build Number:" );
     }
 
@@ -123,9 +123,8 @@ public abstract class AbstractContinuumTestCase
     //////////////////////////////////////
     public void assertAddProjectPage( String type )
     {
-        String title = type.substring( 0, 1 ).toUpperCase() + type.substring( 1 ).toLowerCase();
-        assertPage( "Continuum - Add" + title + " Project" );
-        assertTextPresent( "Add " + title + " Project" );
+        assertPage( "Continuum - Add " + type + " Project" );
+        assertTextPresent( "Add " + type + " Project" );
         assertTextPresent( "Project Name*:" );
         assertElementPresent( "projectName" );
         assertTextPresent( "Description:" );
@@ -149,12 +148,12 @@ public abstract class AbstractContinuumTestCase
 
     public void assertAddAntProjectPage()
     {
-        assertAddProjectPage( "ant" );
+        assertAddProjectPage( "Ant" );
     }
 
     public void assertAddShellProjectPage()
     {
-        assertAddProjectPage( "shell" );
+        assertAddProjectPage( "Shell" );
     }
     
     //////////////////////////////////////
@@ -659,15 +658,15 @@ public abstract class AbstractContinuumTestCase
         	assertCellValueFromTable( "", tableElement, 0, 6 );
         	assertCellValueFromTable( "", tableElement, 0, 7 );
         	assertCellValueFromTable( "Total", tableElement, 0, 8 );
-        	assertCellValueFromTable( "Default Project Group", tableElement, 1, 0 );
-        	assertCellValueFromTable( "default", tableElement, 1, 1 );
+        	/*assertCellValueFromTable( "Default Project Group", tableElement, 1, 0 );
+        	assertCellValueFromTable( "default", tableElement, 1, 1 );*/
         	assertImgWithAlt( "Build all projects" );
         	assertImgWithAlt( "Release Group" );
         	assertImgWithAlt( "Delete Group" );
-        	assertCellValueFromTable( "0", tableElement, 1, 5 );
+        	/*assertCellValueFromTable( "0", tableElement, 1, 5 );
         	assertCellValueFromTable( "0", tableElement, 1, 6 );
         	assertCellValueFromTable( "0", tableElement, 1, 7 );
-        	assertCellValueFromTable( "0", tableElement, 1, 8 );
+        	assertCellValueFromTable( "0", tableElement, 1, 8 );*/
             
         }
     }
@@ -710,8 +709,8 @@ public abstract class AbstractContinuumTestCase
         assertElementPresent( "release" );
         assertElementPresent( "preferredExecutor" );
         assertButtonWithValuePresent("Add");
-        assertElementPresent( "remove" );
-        assertElementPresent( "cancel" );
+        assertButtonWithValuePresent("Delete Group");
+        assertButtonWithValuePresent("Cancel Group Build");
 
         if ( isTextPresent( "Member Projects" ) )
         {
@@ -940,7 +939,7 @@ public abstract class AbstractContinuumTestCase
         assertTextPresent( "Send on Failure" );
         assertTextPresent( "Send on Error" );
         assertTextPresent( "Send on Warning" );
-        assertTextPresent( "Send On SCM Failure" ); 
+        assertTextPresent( "Send on SCM Failure" ); 
         assertElementPresent( "Cancel" );
     }
 
@@ -1348,18 +1347,18 @@ public abstract class AbstractContinuumTestCase
 
     public void assertAddMavenTwoProjectPage()
     {
-        assertTextPresent( "POM Url*:" );
+        assertTextPresent( "POM Url" );
         assertElementPresent( "m2PomUrl" );
-        assertTextPresent( "Username:" );
+        assertTextPresent( "Username" );
         assertElementPresent( "scmUsername" );
-        assertTextPresent( "Password:" );
+        assertTextPresent( "Password" );
         assertElementPresent( "scmPassword" );
         assertElementPresent( "scmUseCache" );
-        assertTextPresent( "Upload POM:" );
+        assertTextPresent( "Upload POM" );
         assertElementPresent( "m2PomFile" );
-        assertTextPresent( "Project Group:" );
+        assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
-        assertTextPresent( "Build Definition Template:" );
+        assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
     }
 
@@ -1431,18 +1430,19 @@ public abstract class AbstractContinuumTestCase
 
     public void assertAddMavenOneProjectPage()
     {
-        assertTextPresent( "M1 POM Url:" );
+	assertPage( "Continuum - Add Maven 1 Project" );
+        assertTextPresent( "M1 POM Url" );
         assertElementPresent( "m1PomUrl" );
-        assertTextPresent( "Username:" );
+        assertTextPresent( "Username" );
         assertElementPresent( "scmUsername" );
-        assertTextPresent( "Password:" );
+        assertTextPresent( "Password" );
         assertElementPresent( "scmPassword" );
         assertElementPresent( "scmUseCache" );
-        assertTextPresent( "Upload POM:" );
+        assertTextPresent( "Upload POM" );
         assertElementPresent( "m1PomFile" );
-        assertTextPresent( "Project Group:" );
+        assertTextPresent( "Project Group" );
         assertElementPresent( "selectedProjectGroup" );
-        assertTextPresent( "Build Definition Template:" );
+        assertTextPresent( "Build Definition Template" );
         assertElementPresent( "buildDefinitionTemplateId" );
     }
 
@@ -1461,8 +1461,9 @@ public abstract class AbstractContinuumTestCase
             selectValue( "addMavenOneProject_selectedProjectGroup", projectGroup );
         }
 
-        //submit();
         clickButtonWithValue( "Add" );
+	assertTextPresent( "Adding your project is in progress. Please wait .." );
+	waitPage( 100000 );        
 
         if ( validProject )
         {
@@ -1471,7 +1472,7 @@ public abstract class AbstractContinuumTestCase
         else
         {
             assertAddMavenOneProjectPage();
-        }
+	}
     }
 
     //TODO: problem with input type="file", selenium.type(..) does not work,
@@ -1511,7 +1512,7 @@ public abstract class AbstractContinuumTestCase
         assertElementPresent( "edit" );
         clickButtonWithValue( "Edit" );
 
-        assertTextPresent( "Move to Group" );
+        //assertTextPresent( "Move to Group" );
         selectValue( "//select", newProjectGroup );
 
         assertElementPresent( "saveProjectGroup_" );
@@ -1521,32 +1522,6 @@ public abstract class AbstractContinuumTestCase
     public void tearDown()
         throws Exception
     {
-        /* TODO: This causes the browser not closing after each tests. Will repair this one too.
-         * 
-         * login( adminUsername, adminPassword );
-
-        goToProjectGroupsSummaryPage();
-
-        if ( isLinkPresent( TEST_PROJ_GRP_NAME ) )
-        {
-            removeProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
-        }
-        // TODO: clean this up
-        if ( isLinkPresent( "Apache Maven" ) )
-        {
-            removeProjectGroup( "Apache Maven", "org.apache.maven", "Maven is a software project management and comprehension tool. Based on the concept of a project object model (POM), Maven can manage a project's build, reporting and documentation from a central piece of information." );
-        }
-        if ( isLinkPresent( "Maven One Project" ) )
-        {
-            removeProjectGroup( "Maven One Project", "maven-one-project", "This is a sample Maven One Project." );
-        }
-        if ( isLinkPresent( DEFAULT_PROJ_GRP_NAME ) &&
-            "0".equals( getCellValueFromTable( "ec_table", 1, 2 ) ) == false )
-        {
-            removeProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
-            addProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
-        }*/
-
         super.tearDown();
     }
 

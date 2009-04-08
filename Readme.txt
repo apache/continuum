@@ -13,6 +13,7 @@ Run Selenium tests in src/test/it with Maven and Cargo using support for multipl
 Run Selenium tests in src/test/java with Maven and Cargo with alternate configuration
  * modify src/test/resources/it.properties as needed
  * edit pom.xml and remove <testSourceDirectory>
+ * for snapshot version of selenium(1.0-beta-SNAPSHOT), modify settings.xml/pom.xml to point to this repository http://nexus.openqa.org/content/repositories/snapshots 
  * mvn clean install
  
 Run Selenium tests in src/test/testNG with Maven and testNG
