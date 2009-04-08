@@ -34,6 +34,9 @@ import org.codehaus.plexus.redback.system.SecuritySystem;
 import org.codehaus.plexus.redback.system.SecuritySystemConstants;
 import org.codehaus.plexus.util.StringUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * ContinuumActionSupport
  *
@@ -67,6 +70,10 @@ public class ContinuumActionSupport
     private Continuum continuum;
     
     protected SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss aaa z");
+    
+    private Logger logger = LoggerFactory.getLogger( "AuditLog" );
+    
+    private static final char DELIM = ' ';
 
     public void prepare()
         throws Exception
@@ -541,5 +548,39 @@ public class ContinuumActionSupport
     protected ResourceBundle getResourceBundle()
     {
         return getTexts( "localization/Continuum" );
+    }
+    
+    protected String getPrincipal()
+    {
+        String principal = "guest";
+        
+        if ( getSecuritySession() != null )
+        {
+            if ( getSecuritySession().getUser() != null )
+            {
+                principal = (String) getSecuritySession().getUser().getPrincipal();
+            }
+        }
+        else
+        {
+            principal = "unknown-user";
+        }
+        return principal;
+    }
+    
+    /*
+     * resource formats:
+     *   project - {groupId}:{artifactId}
+     *           - {groupId}:{artifactId}:{version} for release prepare/perform
+     *   project group - {group_name}
+     *   build definition - {project_group}:{goals}
+     *   schedule - {name}:(cron)
+     */
+    protected void triggerAuditEvent( String user, String category, String resource, String action )
+    {
+        
+        String msg = category + DELIM + user + DELIM + '\"' + resource + '\"' + DELIM + '\"' + action + '\"';
+        
+        logger.info( msg );
     }    
 }

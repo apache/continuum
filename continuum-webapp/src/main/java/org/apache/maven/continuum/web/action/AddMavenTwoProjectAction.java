@@ -19,12 +19,17 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.List;
+import java.net.URL;
+import java.net.MalformedURLException;
 
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
@@ -58,9 +63,15 @@ public class AddMavenTwoProjectAction
         throws ContinuumException
     {
         ContinuumProjectBuildingResult result = null;
+        
+        String groupId = "";
+        
+        String artifactId = "";
+        
+        String resource = "";
 
         // TODO: remove this part once uploading of an m2 project with modules is supported ( CONTINUUM-1098 )
-        if ( checkProtocol == false )
+        if ( ( checkProtocol == false ) || ( ( checkProtocol == true ) && ( pomUrl.startsWith( FILE_SCHEME ) ) ) )
         {
             MavenXpp3Reader m2pomReader = new MavenXpp3Reader();
 
@@ -80,10 +91,14 @@ public class AddMavenTwoProjectAction
                 }
 
                 Model model = m2pomReader.read( new FileReader( filePath ) );
+                
+                groupId = model.getGroupId();
+                artifactId = model.getArtifactId();
+                resource =  groupId + ":" + artifactId;
 
                 List modules = model.getModules();
 
-                if ( modules != null && modules.size() != 0 )
+                if ( ( checkProtocol == false ) && ( modules != null && modules.size() != 0 ) )
                 {
                     result = new ContinuumProjectBuildingResult();
                     result.addError( ERROR_UPLOADING_M2_PROJECT_WITH_MODULES );
@@ -102,12 +117,49 @@ public class AddMavenTwoProjectAction
                 throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
             }
         }
+        else
+        {
+            if ( ( pomUrl.startsWith( "http" ) ) && ( pomUrl.endsWith( "pom.xml" ) ) )
+            {
+                try
+                {
+                    URL url = new URL( pomUrl );
+                    BufferedReader in = new BufferedReader( new InputStreamReader( url.openStream() ) );
+                    StringBuilder content = new StringBuilder();
+                    String line = in.readLine();
+                    
+                    while ( line != null )
+                    {
+                        content.append( line );
+                        line = in.readLine();
+                    }
+                    in.close();
+                   
+                    if ( content.length() > 0 )
+                    {
+                        groupId = getSubString( content.toString(), "<groupId>", "</groupId>" );
+                        artifactId = getSubString( content.toString(), "<artifactId>", "</artifactId>" );
+                        resource = groupId + ":" + artifactId;
+                    }
+                }
+                catch ( MalformedURLException e )
+                {
+                    addActionError( ERROR_READING_POM_EXCEPTION_MESSAGE );
+                }
+                catch ( IOException e )
+                {
+                    throw new ContinuumException( ERROR_READING_POM_EXCEPTION_MESSAGE, e );
+                }
+            }
+        }
 
         if ( result == null )
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
                                                         !this.isNonRecursiveProject(), this.getBuildDefinitionTemplateId() );
         }
+        
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, resource, AuditLogConstants.ADD_M2_PROJECT );
 
         return result;
     }
@@ -158,6 +210,17 @@ public class AddMavenTwoProjectAction
     public void setNonRecursiveProject( boolean nonRecursiveProject )
     {
         this.nonRecursiveProject = nonRecursiveProject;
+    }
+    
+    private String getSubString( String content, String tagStart, String tagEnd )
+    {
+        String subString = "";
+        
+        int start = content.indexOf( tagStart ) + tagStart.length();
+        int end = content.indexOf( tagEnd );
+        subString = content.substring( start, end );
+        
+        return subString;
     }
 
 }

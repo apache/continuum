@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -139,12 +140,14 @@ public class BuildDefinitionTemplateAction
         {
             buildDefinitionTemplate.setBuildDefinitions( selectedBuildDefinitions );
             this.getContinuum().getBuildDefinitionService().updateBuildDefinitionTemplate( buildDefinitionTemplate );
+            triggerAuditEvent( getPrincipal(), AuditLogConstants.TEMPLATE, buildDefinitionTemplate.getName(), AuditLogConstants.MODIFY_TEMPLATE );
         }
         else
         {
             buildDefinitionTemplate.setBuildDefinitions( selectedBuildDefinitions );
             this.buildDefinitionTemplate = this.getContinuum().getBuildDefinitionService()
                 .addBuildDefinitionTemplate( buildDefinitionTemplate );
+            triggerAuditEvent( getPrincipal(), AuditLogConstants.TEMPLATE, buildDefinitionTemplate.getName(), AuditLogConstants.ADD_TEMPLATE );
         }
 
         return SUCCESS;
@@ -158,6 +161,7 @@ public class BuildDefinitionTemplateAction
             buildDefinitionTemplate =
                 getContinuum().getBuildDefinitionService().getBuildDefinitionTemplate(
                                                                                        this.buildDefinitionTemplate.getId() );
+            triggerAuditEvent( getPrincipal(), AuditLogConstants.TEMPLATE, buildDefinitionTemplate.getName(), AuditLogConstants.REMOVE_TEMPLATE );
             this.getContinuum().getBuildDefinitionService().removeBuildDefinitionTemplate( buildDefinitionTemplate );
         }
         else

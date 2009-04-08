@@ -71,6 +71,7 @@ public class CleanAllPurgeExecutor
             throw new ContinuumPurgeExecutorException( "Error while purging all artifacts or directories in " + path,
                                                        e );
         }
+        triggerAuditEvent( path, ContinuumPurgeConstants.PURGE_REPO_CONTENTS );
     }
 
     private void purgeReleases( String path )
@@ -87,6 +88,7 @@ public class CleanAllPurgeExecutor
             for ( File releaseDir : releasesDir )
             {
                 FileUtils.deleteDirectory( releaseDir );
+                triggerAuditEvent( releaseDir.getName(), ContinuumPurgeConstants.PURGE_DIR_CONTENTS );
             }
         }
         catch ( IOException e )
@@ -109,6 +111,7 @@ public class CleanAllPurgeExecutor
             for ( File projectDir : projectsDir )
             {
                 FileUtils.cleanDirectory( projectDir );
+                triggerAuditEvent( projectDir.getName(), ContinuumPurgeConstants.PURGE_DIR_CONTENTS );
             }
         }
         catch ( IOException e )

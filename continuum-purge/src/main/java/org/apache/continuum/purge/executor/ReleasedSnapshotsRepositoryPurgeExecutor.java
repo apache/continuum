@@ -19,6 +19,7 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.common.utils.VersionComparator;
 import org.apache.maven.archiva.common.utils.VersionUtil;
@@ -106,6 +107,8 @@ public class ReleasedSnapshotsRepositoryPurgeExecutor
                 {
                     versionRef.setVersion( version );
                     repository.deleteVersion( versionRef );
+                    
+                    triggerAuditEvent( VersionedReference.toKey( versionRef ), ContinuumPurgeConstants.PURGE_PROJECT );
 
                     removeMetadata( versionRef );
                 }

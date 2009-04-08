@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -314,6 +315,10 @@ public class BuildDefinitionAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
+        
+        Project proj = getContinuum().getProject( projectId );
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.BUILD_DEFINITION, proj.getGroupId() + ":" +
+                           proj.getArtifactId() + ":" + goals + " " + arguments, AuditLogConstants.ADD_GOAL );
 
         if ( groupBuildView )
         {
@@ -361,6 +366,8 @@ public class BuildDefinitionAction
 
         if ( projectId != 0 )
         {
+            triggerAuditEvent( getPrincipal(), AuditLogConstants.BUILD_DEFINITION, getProjectGroupName() + ":" +
+                               goals + " " + arguments, AuditLogConstants.ADD_GOAL );
             return SUCCESS;
         }
         else
@@ -379,6 +386,10 @@ public class BuildDefinitionAction
             if ( confirmed )
             {
                 getContinuum().removeBuildDefinitionFromProject( projectId, buildDefinitionId );
+                
+                Project proj = getContinuum().getProject( projectId );
+                triggerAuditEvent( getPrincipal(), AuditLogConstants.BUILD_DEFINITION, proj.getGroupId() + ":" +
+                                   proj.getArtifactId() + ":" + goals + " " + arguments, AuditLogConstants.REMOVE_GOAL );
 
                 return SUCCESS;
             }
@@ -407,6 +418,9 @@ public class BuildDefinitionAction
             if ( confirmed )
             {
                 getContinuum().removeBuildDefinitionFromProjectGroup( projectGroupId, buildDefinitionId );
+                
+                triggerAuditEvent( getPrincipal(), AuditLogConstants.BUILD_DEFINITION, getProjectGroupName() + ":" +
+                                   goals + " " + arguments, AuditLogConstants.REMOVE_GOAL );
 
                 return SUCCESS;
             }

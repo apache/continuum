@@ -99,6 +99,7 @@ public class DaysOldDirectoryPurgeExecutor
             {
                 try
                 {
+                    triggerAuditEvent( dir.getName(), ContinuumPurgeConstants.PURGE_DIR_CONTENTS );
                     FileUtils.deleteDirectory( dir );
                     countToPurge--;
                 }
@@ -146,10 +147,12 @@ public class DaysOldDirectoryPurgeExecutor
                     try
                     {
                         FileUtils.deleteDirectory( buildDir );
+                        triggerAuditEvent( buildDir.getName(), ContinuumPurgeConstants.PURGE_DIR_CONTENTS );
                         File logFile = new File( buildDir.getAbsoluteFile() + ".log.txt" );
 
                         if ( logFile.exists() )
                         {
+                            triggerAuditEvent( logFile.getName(), ContinuumPurgeConstants.PURGE_FILE );
                             logFile.delete();
                         }
 

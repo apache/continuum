@@ -25,6 +25,7 @@ import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.web.action.AbstractReleaseAction;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.system.Profile;
@@ -264,6 +265,9 @@ public class ReleasePerformAction
             releaseManager.perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, listener,
                                     repository );
         }
+        
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, project.getGroupId() + ":" +
+                           project.getArtifactId() + ":" + project.getVersion(), AuditLogConstants.PERFORM_RELEASE );
 
         return SUCCESS;
     }

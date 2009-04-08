@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryServiceException;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -154,6 +155,8 @@ public class AddProjectGroupAction
 
             return ERROR;
         }
+        
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, name, AuditLogConstants.ADD_PROJECT_GROUP );
 
         return SUCCESS;
     }

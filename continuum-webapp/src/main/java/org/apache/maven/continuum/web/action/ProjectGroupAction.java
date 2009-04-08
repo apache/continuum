@@ -34,6 +34,7 @@ import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -313,6 +314,8 @@ public class ProjectGroupAction
             name = getProjectGroupName();
             return CONFIRM;
         }
+        
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, getProjectGroupName(), AuditLogConstants.REMOVE_PROJECT_GROUP );
 
         return SUCCESS;
     }
@@ -536,6 +539,8 @@ public class ProjectGroupAction
                 getContinuum().updateProject( project );
             }
         }
+        
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, getProjectGroupName(), AuditLogConstants.MODIFY_PROJECT_GROUP );
 
         return SUCCESS;
     }
@@ -561,6 +566,8 @@ public class ProjectGroupAction
         {
             getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
         }
+        
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, getProjectGroupName(), AuditLogConstants.FORCE_BUILD );
 
         if ( this.isFromSummaryPage() )
         {

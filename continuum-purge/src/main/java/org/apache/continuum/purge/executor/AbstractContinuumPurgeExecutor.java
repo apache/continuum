@@ -20,6 +20,7 @@ package org.apache.continuum.purge.executor;
  */
 
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 import org.apache.maven.archiva.model.ArtifactReference;
 import org.slf4j.Logger;
@@ -37,8 +38,10 @@ import java.util.Set;
 public abstract class AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
-    private Logger log = LoggerFactory.getLogger( AbstractContinuumPurgeExecutor.class );
+    private static final char DELIM = ' ';
     
+    private Logger logger = LoggerFactory.getLogger( "AuditLog" );
+
     public void purge( Set<ArtifactReference> references, RepositoryManagedContent repository )
     {
         if ( references != null && !references.isEmpty() )
@@ -47,7 +50,7 @@ public abstract class AbstractContinuumPurgeExecutor
             {
                 File artifactFile = repository.toFile( reference );
                 artifactFile.delete();
-                log.info( "Purge artifact " + artifactFile.getName() );
+                triggerAuditEvent( artifactFile.getName(), ContinuumPurgeConstants.PURGE_ARTIFACT );
                 purgeSupportFiles( artifactFile, artifactFile.getName() );
                 // purge maven metadata
                 purgeSupportFiles( artifactFile.getParentFile(), "maven-metadata" );
@@ -83,8 +86,15 @@ public abstract class AbstractContinuumPurgeExecutor
             if ( file.exists() && file.isFile() )
             {
                 file.delete();
-                log.info( "Purge support file: " + file.getName() );
+                triggerAuditEvent( file.getName(), ContinuumPurgeConstants.PURGE_FILE );
             }
         }
+    }
+    
+    protected void triggerAuditEvent( String resource, String action )
+    {
+        String msg = ContinuumPurgeConstants.PURGE + DELIM + "<continuum>" + DELIM + '\"' + resource + '\"' + DELIM + '\"' + action + '\"';
+        
+        logger.info( msg );
     }
 }

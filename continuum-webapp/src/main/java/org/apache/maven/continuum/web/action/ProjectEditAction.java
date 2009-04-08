@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -78,6 +79,9 @@ public class ProjectEditAction
         project.setScmTag( scmTag );
 
         getContinuum().updateProject( project );
+        
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, project.getGroupId() + ":" +
+                           project.getArtifactId(), AuditLogConstants.MODIFY_PROJECT );
 
         return SUCCESS;
     }

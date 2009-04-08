@@ -29,6 +29,15 @@
       <param name="ConversionPattern" value="%d [%t] %-5p %c %x - %m%n"/>
     </layout>
   </appender>
+  
+  <appender name="continuumAuditlog" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="${appserver.base}/logs/continuum-audit.log" />
+    <param name="append" value="true" />
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %m%n"/>
+    </layout>
+  </appender>
 
   <appender name="redbackAuditLog" class="org.apache.log4j.DailyRollingFileAppender">
     <param name="file" value="${appserver.base}/logs/continuum-security-audit.log" />
@@ -38,6 +47,11 @@
       <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} - %X{redback.currentUser} - %m%n"/>
     </layout>
   </appender>
+  
+  <logger name="AuditLog">
+    <level value="info" />
+    <appender-ref ref="continuumAuditlog" />
+  </logger>
 
   <logger name="org.codehaus.plexus.redback.struts2.action.AuditEvent" additivity="false">
     <level value="info" />

@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
@@ -243,6 +244,7 @@ public class ScheduleAction
             try
             {
                 getContinuum().addSchedule( setFields( new Schedule() ) );
+                triggerAuditEvent( getPrincipal(), AuditLogConstants.SCHEDULE, getName() + ":" + getCronExpression(), AuditLogConstants.ADD_SCHEDULE );
             }
             catch ( ContinuumException e )
             {
@@ -256,6 +258,7 @@ public class ScheduleAction
             try
             {
                 getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
+                triggerAuditEvent( getPrincipal(), AuditLogConstants.SCHEDULE, getName() + ":" + getCronExpression(), AuditLogConstants.MODIFY_SCHEDULE );
             }
             catch ( ContinuumException e )
             {
@@ -328,6 +331,8 @@ public class ScheduleAction
             addActionError( e.getMessage() );
             return REQUIRES_AUTHENTICATION;
         }
+        
+        String resource = getContinuum().getSchedule( id ).getName() + ":" + getCronExpression();
 
         if ( confirmed )
         {
@@ -349,6 +354,8 @@ public class ScheduleAction
 
             return CONFIRM;
         }
+        
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.SCHEDULE, resource, AuditLogConstants.REMOVE_SCHEDULE );
 
         return SUCCESS;
     }

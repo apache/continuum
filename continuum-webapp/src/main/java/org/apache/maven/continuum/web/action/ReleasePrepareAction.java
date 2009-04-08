@@ -23,6 +23,7 @@ import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.release.distributed.DistributedReleaseUtil;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
 import org.apache.continuum.web.action.AbstractReleaseAction;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.Project;
@@ -342,6 +343,9 @@ public class ReleasePrepareAction
                 releaseManager.prepare( project, getReleaseProperties(), getRelVersionMap(), getDevVersionMap(), listener,
                                         workingDirectory, environments, executable );
         }
+        
+        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, project.getGroupId() + ":" + project.getArtifactId() + ":" +
+                           project.getVersion(), AuditLogConstants.PREPARE_RELEASE );
 
         return SUCCESS;
     }
