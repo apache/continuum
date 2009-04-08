@@ -22,11 +22,11 @@
 <html>
   <s:i18n name="localization.Continuum">
     <head>
-        <title>Schedule Removal</title>
+        <title><s:text name="deleteSchedule.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
-        <h3>Schedule Removal</h3>
+        <h3><s:text name="deleteSchedule.section.title"/></h3>
         <div class="axial">
         <s:form action="removeSchedule" method="post">
           <s:hidden name="id"/>
