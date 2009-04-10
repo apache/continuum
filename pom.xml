@@ -28,6 +28,14 @@ under the License.
   <name>Continuum Webapp Test</name>
   <packaging>pom</packaging>
 
+  <repositories>
+    <repository>
+      <id>openqa-snapshots</id>
+      <url>http://nexus.openqa.org/content/repositories/snapshots</url>
+      <releases><enabled>false</enabled></releases>
+    </repository>
+  </repositories>
+
   <build>
     <testSourceDirectory>src/test/it</testSourceDirectory>
     <plugins>
@@ -60,6 +68,7 @@ under the License.
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>selenium-maven-plugin</artifactId>
+        <version>1.0-rc-1</version>
         <executions>
           <execution>
             <phase>pre-integration-test</phase>
