@@ -157,7 +157,7 @@
           <allowedScheme>http</allowedScheme>
           <allowedScheme>https</allowedScheme>
           <allowedScheme>ftp</allowedScheme>
-          <allowedScheme>file</allowedScheme>
+          <!-- <allowedScheme>file</allowedScheme> -->
         </allowedSchemes>
       </configuration>
     </component>
