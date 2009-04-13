@@ -28,7 +28,9 @@ public class AuditLogConstants
     public static final String TEMPLATE = "BUILD_TEMPLATE";
 
     public static final String BUILD_DEFINITION = "BUILD_DEFINITION";
-    
+
+    public static final String PROJECT_GROUP = "PROJECT_GROUP";
+
     // events
     public static final String FORCE_BUILD = "Forced Project Build";
 

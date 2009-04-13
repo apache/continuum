@@ -82,6 +82,9 @@ public class BuildProjectAction
 
         if ( projectId > 0 )
         {
+            Project proj = getContinuum().getProject( projectId );
+            triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, proj.getGroupId() + ":" + proj.getArtifactId(), AuditLogConstants.FORCE_BUILD );
+
             if ( fromGroupPage == true )
             {
                 return "to_group_page";
@@ -91,9 +94,10 @@ public class BuildProjectAction
                 return "to_project_page";
             }
         }
-        
-        Project proj = getContinuum().getProject( projectId );
-        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, proj.getGroupId() + ":" + proj.getArtifactId(), AuditLogConstants.FORCE_BUILD );
+        else
+        {
+            triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT_GROUP, new Integer( projectGroupId ).toString(), AuditLogConstants.FORCE_BUILD );
+        }
 
         return SUCCESS;
     }
