@@ -19,6 +19,12 @@ package org.apache.maven.continuum.notification.msn;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -36,12 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
@@ -50,7 +50,7 @@ import javax.annotation.Resource;
 public class MsnContinuumNotifier
     extends AbstractContinuumNotifier
 {
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( MsnContinuumNotifier.class );
 
     // ----------------------------------------------------------------------
     // Requirements
@@ -102,7 +102,7 @@ public class MsnContinuumNotifier
 
         ProjectScmRoot projectScmRoot = context.getProjectScmRoot();
 
-        boolean isPrepareBuildComplete = 
+        boolean isPrepareBuildComplete =
             messageId.equals( ContinuumNotificationDispatcher.MESSAGE_ID_PREPARE_BUILD_COMPLETE );
 
         if ( projectScmRoot == null && isPrepareBuildComplete )
@@ -202,9 +202,9 @@ public class MsnContinuumNotifier
         {
             msnClient.login();
 
-            if ( configuration != null && StringUtils.isNotEmpty( (String) configuration.get( ADDRESS_FIELD ) ) )
+            if ( configuration != null && StringUtils.isNotEmpty( configuration.get( ADDRESS_FIELD ) ) )
             {
-                String address = (String) configuration.get( ADDRESS_FIELD );
+                String address = configuration.get( ADDRESS_FIELD );
                 String[] recipients = StringUtils.split( address, "," );
                 for ( String recipient : recipients )
                 {

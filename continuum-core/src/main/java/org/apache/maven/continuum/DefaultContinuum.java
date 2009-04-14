@@ -117,7 +117,7 @@ import org.springframework.beans.BeanUtils;
 public class DefaultContinuum
     implements Continuum, Initializable, Startable
 {
-    private Logger log = LoggerFactory.getLogger( DefaultContinuum.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultContinuum.class );
 
     /**
      * @plexus.requirement
@@ -840,7 +840,7 @@ public class DefaultContinuum
     public void buildProjectGroup( int projectGroupId )
         throws ContinuumException
     {
-        List<BuildDefinition> groupDefaultBDs = null;
+        List<BuildDefinition> groupDefaultBDs;
 
         if ( !isAnyProjectInGroupInReleaseStage( projectGroupId ) )
         {
@@ -1647,7 +1647,7 @@ public class DefaultContinuum
 
             for ( Project project : projects )
             {
-                context = new HashMap();
+                context = new HashMap<String, Object>();
 
                 // CONTINUUM-1953 olamy : attached buildDefs from template here
                 // if no group creation

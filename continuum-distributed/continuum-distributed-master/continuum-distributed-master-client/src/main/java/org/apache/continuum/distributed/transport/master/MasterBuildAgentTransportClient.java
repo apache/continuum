@@ -19,16 +19,16 @@ package org.apache.continuum.distributed.transport.master;
  * under the License.
  */
 
+import com.atlassian.xmlrpc.AuthenticationInfo;
+import com.atlassian.xmlrpc.Binder;
+import com.atlassian.xmlrpc.BindingException;
+import com.atlassian.xmlrpc.DefaultBinder;
+
 import java.net.URL;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.atlassian.xmlrpc.AuthenticationInfo;
-import com.atlassian.xmlrpc.Binder;
-import com.atlassian.xmlrpc.BindingException;
-import com.atlassian.xmlrpc.DefaultBinder;
 
 /**
  * MasterBuildAgentTransportClient
@@ -36,10 +36,10 @@ import com.atlassian.xmlrpc.DefaultBinder;
 public class MasterBuildAgentTransportClient
     implements MasterBuildAgentTransportService
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
-    
+    private static final Logger log = LoggerFactory.getLogger( MasterBuildAgentTransportClient.class );
+
     MasterBuildAgentTransportService master;
-    
+
     public MasterBuildAgentTransportClient( URL serviceUrl )
         throws Exception
     {
@@ -51,23 +51,27 @@ public class MasterBuildAgentTransportClient
     {
         Binder binder = new DefaultBinder();
         AuthenticationInfo authnInfo = new AuthenticationInfo( login, password );
-        
+
         try
         {
             master = binder.bind( MasterBuildAgentTransportService.class, serviceUrl, authnInfo );
         }
         catch ( BindingException e )
         {
-            log.error( "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " + serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e );
-            throw new Exception( "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " + serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e);
+            log.error( "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " +
+                serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e );
+            throw new Exception(
+                "Can't bind service interface " + MasterBuildAgentTransportService.class.getName() + " to " +
+                    serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(),
+                e );
         }
     }
 
     public Boolean returnBuildResult( Map buildResult )
         throws Exception
     {
-        Boolean result = null;
-        
+        Boolean result;
+
         try
         {
             result = master.returnBuildResult( buildResult );
@@ -76,55 +80,55 @@ public class MasterBuildAgentTransportClient
         catch ( Exception e )
         {
             log.error( "Failed to return the build result.", e );
-            throw new Exception( "Failed to return the build result", e);
+            throw new Exception( "Failed to return the build result", e );
         }
-        
+
         return result;
     }
 
     public Boolean ping()
         throws Exception
     {
-        Boolean result = null;
-        
+        Boolean result;
+
         try
         {
             result = master.ping();
-            log.info( "Ping " + ( result.booleanValue() ? "ok" : "failed" ) );
+            log.info( "Ping " + ( result ? "ok" : "failed" ) );
         }
         catch ( Exception e )
         {
             log.info( "Ping error" );
             throw new Exception( "Ping error", e );
         }
-        
+
         return result;
     }
 
     public Boolean prepareBuildFinished( Map prepareBuildResult )
         throws Exception
     {
-        Boolean result = null;
-        
+        Boolean result;
+
         try
         {
             result = master.prepareBuildFinished( prepareBuildResult );
-            log.info(  "Prepare build finished." );
+            log.info( "Prepare build finished." );
         }
         catch ( Exception e )
         {
             log.error( "Failed to finish prepare build" );
             throw new Exception( "Failed to finish prepare build", e );
         }
-        
+
         return result;
     }
 
     public Boolean startProjectBuild( Integer projectId )
         throws Exception
     {
-        Boolean result = null;
-        
+        Boolean result;
+
         try
         {
             result = master.startProjectBuild( projectId );
@@ -142,7 +146,7 @@ public class MasterBuildAgentTransportClient
     public Boolean startPrepareBuild( Map prepareBuildResult )
         throws Exception
     {
-        Boolean result = null;
+        Boolean result;
 
         try
         {
@@ -161,7 +165,7 @@ public class MasterBuildAgentTransportClient
     public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
         throws Exception
     {
-        Map<String, String> result = null;
+        Map<String, String> result;
         try
         {
             result = master.getEnvironments( buildDefinitionId, installationType );
@@ -179,7 +183,7 @@ public class MasterBuildAgentTransportClient
     public Boolean updateProject( Map project )
         throws Exception
     {
-        Boolean result = null;
+        Boolean result;
 
         try
         {
@@ -198,7 +202,7 @@ public class MasterBuildAgentTransportClient
     public Boolean shouldBuild( Map context )
         throws Exception
     {
-        Boolean result = null;
+        Boolean result;
 
         try
         {

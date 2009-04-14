@@ -22,7 +22,6 @@ package org.apache.continuum.distributed.transport.master;
 import java.util.Map;
 
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
-import org.apache.continuum.distributed.transport.master.MasterBuildAgentTransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,9 +31,9 @@ import org.slf4j.LoggerFactory;
 public class MasterBuildAgentTransportServer
     implements MasterBuildAgentTransportService
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( MasterBuildAgentTransportServer.class );
 
-    private DistributedBuildManager distributedBuildManager;
+    private final DistributedBuildManager distributedBuildManager;
 
     public MasterBuildAgentTransportServer( DistributedBuildManager distributedBuildManager )
     {
@@ -53,7 +52,7 @@ public class MasterBuildAgentTransportServer
         throws Exception
     {
         log.info( "Ping ok" );
-        
+
         return Boolean.TRUE;
     }
 
@@ -69,7 +68,7 @@ public class MasterBuildAgentTransportServer
         throws Exception
     {
         log.info( "Start project build." );
-        distributedBuildManager.startProjectBuild( projectId.intValue() );
+        distributedBuildManager.startProjectBuild( projectId );
         return Boolean.TRUE;
     }
 

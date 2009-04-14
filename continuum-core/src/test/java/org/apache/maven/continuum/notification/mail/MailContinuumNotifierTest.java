@@ -51,8 +51,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 public class MailContinuumNotifierTest
     extends AbstractContinuumTest
 {
-
-    protected Logger logger = LoggerFactory.getLogger( getClass() );
+    protected static final Logger logger = LoggerFactory.getLogger( MailContinuumNotifierTest.class );
 
     public void testSuccessfulBuild()
         throws Exception
