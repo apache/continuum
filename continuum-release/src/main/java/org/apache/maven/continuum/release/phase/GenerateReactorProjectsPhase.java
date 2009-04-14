@@ -211,13 +211,32 @@ public class GenerateReactorProjectsPhase
         if ( arguments != null )
         {
             String[] args = arguments.split( " " );
+            boolean shouldContinue = false;
             
             for ( int i = 0; i < args.length; i++ )
             {
                 if ( args[i].contains( "-Dmaven.repo.local=" ) )
                 {
                     localRepository = args[i].substring( args[i].indexOf( "=" ) + 1 );
-                    break;
+
+                    if ( !localRepository.endsWith( "\"" ) )
+                    {
+                        shouldContinue = true;
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if ( shouldContinue )
+                {
+                    localRepository += " " + args[i];
+
+                    if ( args[i].endsWith( "\"" ) )
+                    {
+                        break;
+                    }
                 }
             }
         }
