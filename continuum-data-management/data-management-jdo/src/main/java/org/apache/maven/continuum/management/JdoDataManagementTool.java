@@ -40,6 +40,7 @@ import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildDefinitionTemplateDao;
 import org.apache.continuum.dao.BuildQueueDao;
 import org.apache.continuum.dao.ContinuumReleaseResultDao;
@@ -152,6 +153,11 @@ public class JdoDataManagementTool
      */
     private BuildQueueDao buildQueueDao;
 
+    /**
+     * @plexus.requirement
+     */
+    private BuildDefinitionDao buildDefinitionDao;
+
     protected static final String BUILDS_XML = "builds.xml";
 
     /**
@@ -182,6 +188,8 @@ public class JdoDataManagementTool
             database.setBuildDefinitionTemplates( buildDefinitionTemplateDao.getAllBuildDefinitionTemplate() );
 
             database.setBuildQueues( buildQueueDao.getAllBuildQueues() );
+
+            database.setBuildDefinitions( buildDefinitionDao.getAllBuildDefinitions() );
         }
         catch ( ContinuumStoreException e )
         {
@@ -305,6 +313,23 @@ public class JdoDataManagementTool
             profiles.put( Integer.valueOf( profile.getId() ), profile );
         }
 
+        Map<Integer, BuildDefinition> buildDefinitions = new HashMap<Integer, BuildDefinition>();
+        for ( BuildDefinition buildDefinition : (List<BuildDefinition>) database.getBuildDefinitions() )
+        {
+            if ( buildDefinition.getSchedule() != null )
+            {
+                buildDefinition.setSchedule( schedules.get( Integer.valueOf( buildDefinition.getSchedule().getId() ) ) );
+            }
+
+            if ( buildDefinition.getProfile() != null )
+            {
+                buildDefinition.setProfile( profiles.get( Integer.valueOf( buildDefinition.getProfile().getId() ) ) );
+            }
+
+            buildDefinition = (BuildDefinition) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), buildDefinition );
+            buildDefinitions.put( Integer.valueOf( buildDefinition.getId() ), buildDefinition );
+        }
+
         Map<Integer, LocalRepository> localRepositories = new HashMap<Integer, LocalRepository>();
         for ( LocalRepository localRepository : (List<LocalRepository>) database.getLocalRepositories() )
         {
@@ -318,14 +343,15 @@ public class JdoDataManagementTool
         {
             ProjectGroup projectGroup = (ProjectGroup) i.next();
 
-            // first, we must map up any schedules, etc.
-            processBuildDefinitions( projectGroup.getBuildDefinitions(), schedules, profiles );
+            projectGroup.setBuildDefinitions( processBuildDefinitions( projectGroup.getBuildDefinitions(),
+                                                                       buildDefinitions ) );
 
             for ( Iterator j = projectGroup.getProjects().iterator(); j.hasNext(); )
             {
                 Project project = (Project) j.next();
 
-                processBuildDefinitions( project.getBuildDefinitions(), schedules, profiles );
+                project.setBuildDefinitions( processBuildDefinitions( project.getBuildDefinitions(), 
+                                                                      buildDefinitions ) );
             }
 
             if ( projectGroup.getLocalRepository() != null )
@@ -434,7 +460,7 @@ public class JdoDataManagementTool
 
         for ( BuildDefinitionTemplate template : (List<BuildDefinitionTemplate>) database.getBuildDefinitionTemplates() )
         {
-            template.setBuildDefinitions( null );
+            template.setBuildDefinitions( processBuildDefinitions( template.getBuildDefinitions(), buildDefinitions ) );
 
             template = 
                 (BuildDefinitionTemplate) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), template );
@@ -459,23 +485,17 @@ public class JdoDataManagementTool
         return groupProjects;
     }
 
-    private static void processBuildDefinitions( List buildDefinitions, Map<Integer, Schedule> schedules,
-                                                 Map<Integer, Profile> profiles )
+    private List<BuildDefinition> processBuildDefinitions( List<BuildDefinition> buildDefinitions, 
+                                                 Map<Integer, BuildDefinition> buildDefs )
     {
-        for ( Iterator i = buildDefinitions.iterator(); i.hasNext(); )
+        List<BuildDefinition> buildDefsList = new ArrayList<BuildDefinition>();
+        
+        for ( BuildDefinition buildDefinition : buildDefinitions )
         {
-            BuildDefinition def = (BuildDefinition) i.next();
-
-            if ( def.getSchedule() != null )
-            {
-                def.setSchedule( schedules.get( Integer.valueOf( def.getSchedule().getId() ) ) );
-            }
-
-            if ( def.getProfile() != null )
-            {
-                def.setProfile( profiles.get( Integer.valueOf( def.getProfile().getId() ) ) );
-            }
+            buildDefsList.add( buildDefs.get( Integer.valueOf( buildDefinition.getId() ) ) );
         }
+
+        return buildDefsList;
     }
 
     private List<BuildQueue> getBuildQueuesBySchedule( Map<Integer, BuildQueue> allBuildQueues, Schedule schedule )
