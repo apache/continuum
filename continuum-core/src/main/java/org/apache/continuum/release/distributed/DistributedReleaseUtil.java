@@ -20,6 +20,7 @@ package org.apache.continuum.release.distributed;
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -235,12 +236,12 @@ public class DistributedReleaseUtil
 
     public static boolean getBoolean( Map context, String key )
     {
-        return ( (Boolean) getObject( context, key ) ).booleanValue();
+        return (Boolean) getObject( context, key );
     }
-    
+
     public static boolean getBoolean( Map context, String key, boolean defaultValue )
     {
-        return ( (Boolean) getObject( context, key, Boolean.valueOf( defaultValue ) ) ).booleanValue();
+        return (Boolean) getObject( context, key, defaultValue );
     }
 
     public static List getList( Map context, String key, Object defaultValue )
@@ -253,27 +254,17 @@ public class DistributedReleaseUtil
         }
         else
         {
-            List list = new ArrayList();
+            List<Object> list = new ArrayList<Object>();
 
             if ( obj instanceof Object[] )
             {
                 Object[] objA = (Object[]) obj;
-    
-                for ( Object o : objA )
-                {
-                    if ( o instanceof Map )
-                    {
-                        list.add( (Map) o );
-                    }
-                    else
-                    {
-                        list.add( o );
-                    }
-                }
+
+                list.addAll( Arrays.asList( objA ) );
             }
             else
             {
-                list = (List) obj;
+                list = (List<Object>) obj;
             }
 
             return list;

@@ -23,9 +23,9 @@ import java.io.File;
 
 public class ContinuumAgentBuildExecutionResult
 {
-    private File output;
+    private final File output;
 
-    private int exitCode;
+    private final int exitCode;
 
     public ContinuumAgentBuildExecutionResult( File output, int exitCode )
     {

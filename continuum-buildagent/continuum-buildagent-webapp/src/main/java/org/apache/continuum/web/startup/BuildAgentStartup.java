@@ -13,9 +13,9 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class BuildAgentStartup
     implements ServletContextListener
 {
-    private Logger log = LoggerFactory.getLogger( getClass() );
-    
-    /** 
+    private static final Logger log = LoggerFactory.getLogger( BuildAgentStartup.class );
+
+    /**
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     public void contextDestroyed( ServletContextEvent sce )
@@ -23,30 +23,30 @@ public class BuildAgentStartup
         // nothing to do here
 
     }
-    
-    /** 
+
+    /**
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
     public void contextInitialized( ServletContextEvent sce )
     {
         log.info( "Initializing Build Agent Task Queue Executor" );
 
-        WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext( sce
-            .getServletContext() );
-        
-        TaskQueueExecutor buildAgent = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "build-agent" ) );
+        WebApplicationContext wac =
+            WebApplicationContextUtils.getRequiredWebApplicationContext( sce.getServletContext() );
 
-        TaskQueueExecutor prepareBuildAgent = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "prepare-build-agent" ) );
+        TaskQueueExecutor buildAgent = (TaskQueueExecutor) wac.getBean(
+            PlexusToSpringUtils.buildSpringId( TaskQueueExecutor.class, "build-agent" ) );
 
-        TaskQueueExecutor prepareRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "prepare-release" ) );
+        TaskQueueExecutor prepareBuildAgent = (TaskQueueExecutor) wac.getBean(
+            PlexusToSpringUtils.buildSpringId( TaskQueueExecutor.class, "prepare-build-agent" ) );
 
-        TaskQueueExecutor performRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "perform-release" ) );
+        TaskQueueExecutor prepareRelease = (TaskQueueExecutor) wac.getBean(
+            PlexusToSpringUtils.buildSpringId( TaskQueueExecutor.class, "prepare-release" ) );
 
-        TaskQueueExecutor rollbackRelease = (TaskQueueExecutor) wac.getBean( PlexusToSpringUtils
-            .buildSpringId( TaskQueueExecutor.class, "rollback-release" ) ); 
+        TaskQueueExecutor performRelease = (TaskQueueExecutor) wac.getBean(
+            PlexusToSpringUtils.buildSpringId( TaskQueueExecutor.class, "perform-release" ) );
+
+        TaskQueueExecutor rollbackRelease = (TaskQueueExecutor) wac.getBean(
+            PlexusToSpringUtils.buildSpringId( TaskQueueExecutor.class, "rollback-release" ) );
     }
 }

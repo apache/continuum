@@ -26,17 +26,17 @@ import org.codehaus.plexus.taskqueue.Task;
 public class PrepareBuildProjectsTask
     implements Task
 {
-    private Map<Integer, Integer> projectsBuildDefinitionsMap;
+    private final Map<Integer, Integer> projectsBuildDefinitionsMap;
 
-    private int trigger;
+    private final int trigger;
 
-    private int projectGroupId;
+    private final int projectGroupId;
 
-    private String projectGroupName;
+    private final String projectGroupName;
 
-    private String scmRootAddress;
+    private final String scmRootAddress;
 
-    private int projectScmRootId;
+    private final int projectScmRootId;
 
     public PrepareBuildProjectsTask( Map<Integer, Integer> projectsBuildDefinitionsMap, int trigger, int projectGroupId,
                                      String projectGroupName, String scmRootAddress, int projectScmRootId )
@@ -60,19 +60,9 @@ public class PrepareBuildProjectsTask
         return projectsBuildDefinitionsMap;
     }
 
-    public void setProjectsBuildDefinitionsMap( Map<Integer, Integer> projectsBuildDefinitionsMap )
-    {
-        this.projectsBuildDefinitionsMap = projectsBuildDefinitionsMap;
-    }
-
     public int getTrigger()
     {
         return trigger;
-    }
-
-    public void setTrigger( int trigger )
-    {
-        this.trigger = trigger;
     }
 
     public int getHashCode()
@@ -85,29 +75,14 @@ public class PrepareBuildProjectsTask
         return projectGroupId;
     }
 
-    public void setProjectGroupId( int projectGroupId )
-    {
-        this.projectGroupId = projectGroupId;
-    }
-
     public String getProjectGroupName()
     {
         return projectGroupName;
     }
 
-    public void setProjectGroupName( String projectGroupName )
-    {
-        this.projectGroupName = projectGroupName;
-    }
-
     public String getScmRootAddress()
     {
         return scmRootAddress;
-    }
-
-    public void setScmRootAddress( String scmRootAddress )
-    {
-        this.scmRootAddress = scmRootAddress;
     }
 
     public int hashCode()

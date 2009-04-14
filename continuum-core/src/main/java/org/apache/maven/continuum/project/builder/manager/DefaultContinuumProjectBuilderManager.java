@@ -19,9 +19,9 @@ package org.apache.maven.continuum.project.builder.manager;
  * under the License.
  */
 
-import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
-
 import java.util.Map;
+
+import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -44,7 +44,7 @@ public class DefaultContinuumProjectBuilderManager
     public ContinuumProjectBuilder getProjectBuilder( String id )
         throws ContinuumProjectBuilderManagerException
     {
-        ContinuumProjectBuilder projectBuilder = (ContinuumProjectBuilder) projectBuilders.get( id );
+        ContinuumProjectBuilder projectBuilder = projectBuilders.get( id );
 
         if ( projectBuilder == null )
         {

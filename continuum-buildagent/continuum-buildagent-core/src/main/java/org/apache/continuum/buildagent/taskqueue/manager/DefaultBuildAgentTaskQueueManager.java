@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultBuildAgentTaskQueueManager
     implements BuildAgentTaskQueueManager, Contextualizable
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentTaskQueueManager.class );
 
     /**
      * @plexus.requirement role-hint="build-agent"
@@ -87,14 +87,14 @@ public class DefaultBuildAgentTaskQueueManager
     {
         return buildAgentPrepareBuildQueue;
     }
-    
+
     private void removeProjectsFromBuildQueue()
         throws TaskQueueManagerException
     {
         try
         {
             List<BuildProjectTask> queues = buildAgentBuildQueue.getQueueSnapshot();
-        
+
             if ( queues != null )
             {
                 for ( BuildProjectTask task : queues )
@@ -118,7 +118,7 @@ public class DefaultBuildAgentTaskQueueManager
         throws TaskQueueManagerException
     {
         Task task = getBuildTaskQueueExecutor().getCurrentTask();
-        
+
         if ( task != null )
         {
             if ( task instanceof BuildProjectTask )
@@ -174,7 +174,7 @@ public class DefaultBuildAgentTaskQueueManager
         try
         {
             List<BuildProjectTask> queues = buildAgentBuildQueue.getQueueSnapshot();
-        
+
             if ( queues != null )
             {
                 for ( BuildProjectTask task : queues )
@@ -205,12 +205,13 @@ public class DefaultBuildAgentTaskQueueManager
         try
         {
             List<PrepareBuildProjectsTask> queues = buildAgentPrepareBuildQueue.getQueueSnapshot();
-        
+
             if ( queues != null )
             {
                 for ( PrepareBuildProjectsTask task : queues )
                 {
-                    if ( task.getProjectGroupId() == projectGroupId && task.getTrigger() == trigger && task.getScmRootAddress().equals( scmRootAddress ) )
+                    if ( task.getProjectGroupId() == projectGroupId && task.getTrigger() == trigger &&
+                        task.getScmRootAddress().equals( scmRootAddress ) )
                     {
                         log.info( "projects already in build queue" );
                         return true;

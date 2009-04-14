@@ -27,9 +27,9 @@ import java.io.File;
  */
 public class ContinuumBuildExecutionResult
 {
-    private File output;
+    private final File output;
 
-    private int exitCode;
+    private final int exitCode;
 
     public ContinuumBuildExecutionResult( File output, int exitCode )
     {

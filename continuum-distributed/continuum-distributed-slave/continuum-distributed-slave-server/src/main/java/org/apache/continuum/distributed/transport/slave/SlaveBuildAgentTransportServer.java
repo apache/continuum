@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.continuum.buildagent.ContinuumBuildAgentException;
 import org.apache.continuum.buildagent.ContinuumBuildAgentService;
-import org.apache.continuum.distributed.transport.slave.SlaveBuildAgentTransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,22 +36,22 @@ public class SlaveBuildAgentTransportServer
     private Logger log = LoggerFactory.getLogger( this.getClass() );
 
     private ContinuumBuildAgentService continuumBuildAgentService;
-    
+
     public SlaveBuildAgentTransportServer( ContinuumBuildAgentService continuumBuildAgentService )
     {
         this.continuumBuildAgentService = continuumBuildAgentService;
     }
-    
-    public Boolean buildProjects( List<Map> projectsBuildContext )
+
+    public Boolean buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws Exception
     {
-        Boolean result = Boolean.FALSE;
-        
+        Boolean result;
+
         try
         {
             continuumBuildAgentService.buildProjects( projectsBuildContext );
             result = Boolean.TRUE;
-            
+
             log.info( "Building projects." );
         }
         catch ( ContinuumBuildAgentException e )
@@ -60,14 +59,14 @@ public class SlaveBuildAgentTransportServer
             log.error( "Failed to build projects.", e );
             throw e;
         }
-        
+
         return result;
     }
 
-    public List<Map> getAvailableInstallations()
+    public List<Map<String, String>> getAvailableInstallations()
         throws Exception
     {
-        List<Map> installations = null;
+        List<Map<String, String>> installations;
 
         try
         {
@@ -86,8 +85,8 @@ public class SlaveBuildAgentTransportServer
     public Map getBuildResult( int projectId )
         throws Exception
     {
-        Map buildResult = null;
-        
+        Map buildResult;
+
         try
         {
             buildResult = continuumBuildAgentService.getBuildResult( projectId );
@@ -98,17 +97,17 @@ public class SlaveBuildAgentTransportServer
             log.error( "Failed to get build result for project " + projectId, e );
             throw e;
         }
-        
+
         return buildResult;
     }
 
     public Integer getProjectCurrentlyBuilding()
         throws Exception
     {
-        Integer projectId = new Integer( continuumBuildAgentService.getProjectCurrentlyBuilding() );
-        
-        log.info( "Currently building project " + projectId.intValue() );
-        
+        Integer projectId = continuumBuildAgentService.getProjectCurrentlyBuilding();
+
+        log.info( "Currently building project " + projectId );
+
         return projectId;
     }
 
@@ -116,14 +115,14 @@ public class SlaveBuildAgentTransportServer
         throws Exception
     {
         log.info( "Ping ok" );
-        
+
         return Boolean.TRUE;
     }
 
     public Boolean cancelBuild()
         throws Exception
     {
-        Boolean result = Boolean.FALSE;
+        Boolean result;
 
         try
         {
@@ -145,12 +144,13 @@ public class SlaveBuildAgentTransportServer
     {
         try
         {
-            return continuumBuildAgentService.generateWorkingCopyContent( projectId, directory, baseUrl, imagesBaseUrl );
+            return continuumBuildAgentService.generateWorkingCopyContent( projectId, directory, baseUrl,
+                                                                          imagesBaseUrl );
         }
         catch ( ContinuumBuildAgentException e )
         {
-           log.error( "Failed to generate working copy content", e );
-           throw e;
+            log.error( "Failed to generate working copy content", e );
+            throw e;
         }
     }
 
@@ -196,12 +196,14 @@ public class SlaveBuildAgentTransportServer
         }
     }
 
-    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map environments )
+    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+                                  Map environments )
         throws Exception
     {
         try
         {
-            return continuumBuildAgentService.releasePrepare( project, properties, releaseVersion, developmentVersion, environments );
+            return continuumBuildAgentService.releasePrepare( project, properties, releaseVersion, developmentVersion,
+                                                              environments );
         }
         catch ( ContinuumBuildAgentException e )
         {
@@ -241,7 +243,7 @@ public class SlaveBuildAgentTransportServer
     public Boolean removeListener( String releaseId )
         throws Exception
     {
-        Boolean result = Boolean.FALSE;
+        Boolean result;
 
         try
         {
@@ -271,10 +273,11 @@ public class SlaveBuildAgentTransportServer
         }
     }
 
-    public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+    public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
+                                   Map repository )
         throws Exception
     {
-        Boolean result = Boolean.FALSE;
+        Boolean result;
 
         try
         {
@@ -290,14 +293,16 @@ public class SlaveBuildAgentTransportServer
         return result;
     }
 
-    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl,
-                                         String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
+                                         String scmUrl, String scmUsername, String scmPassword, String scmTag,
+                                         String scmTagBase, Map environments )
         throws Exception
     {
         try
         {
-            return continuumBuildAgentService.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername,
-                                                                     scmPassword, scmTag, scmTagBase, environments );
+            return continuumBuildAgentService.releasePerformFromScm( goals, arguments, useReleaseProfile, repository,
+                                                                     scmUrl, scmUsername, scmPassword, scmTag,
+                                                                     scmTagBase, environments );
         }
         catch ( ContinuumBuildAgentException e )
         {
@@ -323,7 +328,7 @@ public class SlaveBuildAgentTransportServer
     public Boolean releaseRollback( String releaseId, int projectId )
         throws Exception
     {
-        Boolean result = Boolean.FALSE;
+        Boolean result;
 
         try
         {

@@ -14,22 +14,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @plexus.component role="org.codehaus.plexus.action.Action"  
+ * @plexus.component role="org.codehaus.plexus.action.Action"
  * role-hint="update-project-from-agent-working-directory"
  */
 public class UpdateProjectFromWorkingDirectoryAction
     extends AbstractAction
 {
-    private Logger logger = LoggerFactory.getLogger( getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( UpdateProjectFromWorkingDirectoryAction.class );
 
     /**
-    * @plexus.requirement
-    */
+     * @plexus.requirement
+     */
     private BuildAgentBuildExecutorManager buildAgentBuildExecutorManager;
 
     /**
-    * @plexus.requirement
-    */
+     * @plexus.requirement
+     */
     private BuildAgentConfigurationService buildAgentConfigurationService;
 
     public void execute( Map context )
@@ -43,7 +43,8 @@ public class UpdateProjectFromWorkingDirectoryAction
 
         File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() );
 
-        ContinuumAgentBuildExecutor buildExecutor = buildAgentBuildExecutorManager.getBuildExecutor( project.getExecutorId() );
+        ContinuumAgentBuildExecutor buildExecutor =
+            buildAgentBuildExecutorManager.getBuildExecutor( project.getExecutorId() );
 
         buildExecutor.updateProjectFromWorkingDirectory( workingDirectory, project, buildDefinition );
     }

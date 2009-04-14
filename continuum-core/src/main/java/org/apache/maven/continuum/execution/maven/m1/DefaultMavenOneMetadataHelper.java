@@ -19,6 +19,14 @@ package org.apache.maven.continuum.execution.maven.m1;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectDeveloper;
@@ -32,14 +40,6 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -49,7 +49,7 @@ import java.util.Properties;
 public class DefaultMavenOneMetadataHelper
     implements MavenOneMetadataHelper
 {
-    private Logger log = LoggerFactory.getLogger( DefaultMavenOneMetadataHelper.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultMavenOneMetadataHelper.class );
 
     // ----------------------------------------------------------------------
     // MavenOneMetadataHelper Implementation

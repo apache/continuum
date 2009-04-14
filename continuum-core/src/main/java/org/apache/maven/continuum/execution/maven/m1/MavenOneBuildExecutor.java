@@ -19,6 +19,13 @@ package org.apache.maven.continuum.execution.maven.m1;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.continuum.execution.AbstractBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutionResult;
@@ -30,14 +37,8 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
+import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -82,8 +83,8 @@ public class MavenOneBuildExecutor
     public ContinuumBuildExecutionResult build( Project project, BuildDefinition buildDefinition, File buildOutput )
         throws ContinuumBuildExecutorException
     {
-        String executable = getInstallationService().getExecutorConfigurator( InstallationService.MAVEN1_TYPE )
-            .getExecutable();
+        String executable =
+            getInstallationService().getExecutorConfigurator( InstallationService.MAVEN1_TYPE ).getExecutable();
 
         StringBuffer arguments = new StringBuffer();
 
@@ -108,9 +109,10 @@ public class MavenOneBuildExecutor
         LocalRepository repository = project.getProjectGroup().getLocalRepository();
         if ( repository != null )
         {
-            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean(repository.getLocation() ) ).append( "\" " );
+            arguments.append( "\"-Dmaven.repo.local=" ).append( StringUtils.clean( repository.getLocation() ) ).append(
+                "\" " );
         }
-        
+
         arguments.append( StringUtils.clean( buildDefinition.getGoals() ) );
 
         Map<String, String> environments = getEnvironments( buildDefinition );
@@ -174,7 +176,7 @@ public class MavenOneBuildExecutor
 
         try
         {
-            metadataHelper.mapMetadata( projectXmlFile, project );
+            metadataHelper.mapMetadata( new ContinuumProjectBuildingResult(), projectXmlFile, project );
         }
         catch ( MavenOneMetadataHelperException e )
         {

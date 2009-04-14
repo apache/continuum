@@ -19,10 +19,10 @@ package org.apache.maven.continuum.notification.mail;
  * under the License.
  */
 
-import org.apache.maven.continuum.project.ContinuumProjectState;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.apache.maven.continuum.project.ContinuumProjectState;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -30,9 +30,9 @@ import java.util.Date;
  */
 public class FormatterTool
 {
-    private String timestampFormatString;
+    private final String timestampFormatString;
 
-    private ThreadLocal timestampFormat = new ThreadLocal();
+    private ThreadLocal<SimpleDateFormat> timestampFormat = new ThreadLocal<SimpleDateFormat>();
 
     public FormatterTool( String timestampFormatString )
     {
@@ -127,9 +127,9 @@ public class FormatterTool
     //
     // ----------------------------------------------------------------------
 
-    private SimpleDateFormat getSimpleDateFormat( ThreadLocal threadLocal, String format )
+    private SimpleDateFormat getSimpleDateFormat( ThreadLocal<SimpleDateFormat> threadLocal, String format )
     {
-        SimpleDateFormat dateFormat = (SimpleDateFormat) threadLocal.get();
+        SimpleDateFormat dateFormat = threadLocal.get();
 
         if ( dateFormat == null )
         {

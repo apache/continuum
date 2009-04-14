@@ -19,6 +19,10 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
+import java.io.File;
+import java.net.URL;
+import java.util.List;
+
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.maven.m1.MavenOneBuildExecutor;
@@ -33,10 +37,6 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilderException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.net.URL;
-import java.util.Iterator;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -76,8 +76,8 @@ public class MavenOneContinuumProjectBuilder
     {
         try
         {
-            return buildProjectsFromMetadata( url, username, password, recursiveProjects, buildDefinitionService
-                .getDefaultMavenOneBuildDefinitionTemplate() );
+            return buildProjectsFromMetadata( url, username, password, recursiveProjects,
+                                              buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate() );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -111,11 +111,9 @@ public class MavenOneContinuumProjectBuilder
             {
                 return result;
             }
-            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator();
-                  iterator
-                      .hasNext(); )
+            for ( BuildDefinition bd : (List<BuildDefinition>) buildDefinitionTemplate.getBuildDefinitions() )
             {
-                project.addBuildDefinition( iterator.next() );
+                project.addBuildDefinition( bd );
             }
             result.addProject( project, MavenOneBuildExecutor.ID );
         }
@@ -127,11 +125,11 @@ public class MavenOneContinuumProjectBuilder
         }
         finally
         {
-            if ( pomFile != null && pomFile.exists() )
+            if ( pomFile.exists() )
             {
                 pomFile.delete();
             }
-        }        
+        }
 
         ProjectGroup projectGroup = new ProjectGroup();
 

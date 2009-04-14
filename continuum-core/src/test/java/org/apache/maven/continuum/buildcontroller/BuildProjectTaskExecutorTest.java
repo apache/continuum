@@ -19,6 +19,11 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
@@ -34,11 +39,6 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 import org.codehaus.plexus.util.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:kenney@apache.org">Kenney Westerhof</a>
@@ -187,7 +187,7 @@ public class BuildProjectTaskExecutorTest
 
         System.err.println( "Waiting for task to start" );
 
-        Task curTask = null;
+        Task curTask;
 
         // Sleep at most 10 seconds for the task to start
         for ( int i = 0; i < 1000; i++ )
@@ -225,7 +225,7 @@ public class BuildProjectTaskExecutorTest
 
         projectGroup.addBuildDefinition( buildDefinition );
 
-        Map pgContext = new HashMap();
+        Map<String, Object> pgContext = new HashMap<String, Object>();
 
         pgContext.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, project.getWorkingDirectory() );
 
@@ -269,7 +269,7 @@ public class BuildProjectTaskExecutorTest
 
         assertEquals( "#Projectgroups", 1, result.getProjectGroups().size() );
 
-        ProjectGroup pg = (ProjectGroup) result.getProjectGroups().get( 0 );
+        ProjectGroup pg = result.getProjectGroups().get( 0 );
 
         // If the next part fails, remove this code! Then result.getProjects
         // might be empty, and result.projectgroups[0].getProjects contains
@@ -277,7 +277,7 @@ public class BuildProjectTaskExecutorTest
 
         assertEquals( "#Projects in result", 1, result.getProjects().size() );
 
-        Project p = (Project) result.getProjects().get( 0 );
+        Project p = result.getProjects().get( 0 );
 
         pg.addProject( p );
 

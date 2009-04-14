@@ -28,7 +28,6 @@ import org.apache.continuum.buildagent.configuration.BuildAgentConfigurationServ
 import org.apache.continuum.buildagent.utils.ContinuumBuildAgentUtil;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
-import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.scm.ScmException;
@@ -57,7 +56,6 @@ public class CheckoutProjectAction
         throws Exception
     {
         Project project = ContinuumBuildAgentUtil.getProject( context );
-        BuildDefinition buildDefinition = ContinuumBuildAgentUtil.getBuildDefinition( context );
 
         File workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() );
 

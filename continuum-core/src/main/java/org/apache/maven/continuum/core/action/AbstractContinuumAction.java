@@ -30,7 +30,6 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.codehaus.plexus.action.AbstractAction;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -100,20 +99,6 @@ public abstract class AbstractContinuumAction
     public static final String KEY_SCM_RESULT_MAP = "scm-result-map";
 
     // ----------------------------------------------------------------------
-    // Utils
-    // ----------------------------------------------------------------------
-
-    protected String nullIfEmpty( String string )
-    {
-        if ( StringUtils.isEmpty( string ) )
-        {
-            return null;
-        }
-
-        return string;
-    }
-
-    // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
@@ -179,7 +164,7 @@ public abstract class AbstractContinuumAction
 
     public static ScmResult getUpdateScmResult( Map context )
     {
-        return (ScmResult) getObject( context, KEY_UPDATE_SCM_RESULT );
+        return getUpdateScmResult( context, null );
     }
 
     public static ScmResult getUpdateScmResult( Map context, ScmResult defaultValue )
@@ -199,7 +184,7 @@ public abstract class AbstractContinuumAction
 
     public static ScmResult getScmResult( Map context )
     {
-        return (ScmResult) getObject( context, KEY_SCM_RESULT );
+        return getScmResult( context, null );
     }
 
     public static ScmResult getScmResult( Map context, ScmResult defaultValue )
@@ -209,7 +194,7 @@ public abstract class AbstractContinuumAction
 
     public static ScmResult getOldScmResult( Map context )
     {
-        return (ScmResult) getObject( context, KEY_OLD_SCM_RESULT );
+        return getOldScmResult( context, null );
     }
 
     public static ScmResult getOldScmResult( Map context, ScmResult defaultValue )
@@ -263,7 +248,7 @@ public abstract class AbstractContinuumAction
 
     public static boolean getBoolean( Map context, String key, boolean defaultValue )
     {
-        return (Boolean) getObject( context, key, Boolean.valueOf( defaultValue ) );
+        return (Boolean) getObject( context, key, defaultValue );
     }
 
     protected static int getInteger( Map context, String key )

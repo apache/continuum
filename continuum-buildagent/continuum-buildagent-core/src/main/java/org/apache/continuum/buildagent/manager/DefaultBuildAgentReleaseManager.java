@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultBuildAgentReleaseManager
     implements BuildAgentReleaseManager
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentReleaseManager.class );
 
     /**
      * @plexus.requirement
@@ -64,7 +64,8 @@ public class DefaultBuildAgentReleaseManager
      */
     BuildAgentInstallationService buildAgentInstallationService;
 
-    public String releasePrepare( Map projectMap, Map properties, Map releaseVersion, Map developmentVersion, Map<String, String> environments )
+    public String releasePrepare( Map projectMap, Map properties, Map releaseVersion, Map developmentVersion,
+                                  Map<String, String> environments )
         throws ContinuumReleaseException
     {
         Project project = getProject( projectMap );
@@ -75,11 +76,14 @@ public class DefaultBuildAgentReleaseManager
 
         String workingDirectory = buildAgentConfigurationService.getWorkingDirectory( project.getId() ).getPath();
 
-        String executable = buildAgentInstallationService.getExecutorConfigurator( BuildAgentInstallationService.MAVEN2_TYPE ).getExecutable();
+        String executable = buildAgentInstallationService.getExecutorConfigurator(
+            BuildAgentInstallationService.MAVEN2_TYPE ).getExecutable();
 
         if ( environments != null )
         {
-            String m2Home = environments.get( buildAgentInstallationService.getEnvVar( BuildAgentInstallationService.MAVEN2_TYPE ) );
+            String m2Home =
+                environments.get( buildAgentInstallationService.getEnvVar( BuildAgentInstallationService.MAVEN2_TYPE ) )
+                ;
             if ( StringUtils.isNotEmpty( m2Home ) )
             {
                 executable = m2Home + File.separator + "bin" + File.separator + executable;
@@ -103,15 +107,16 @@ public class DefaultBuildAgentReleaseManager
         return (ReleaseResult) releaseManager.getReleaseResults().get( releaseId );
     }
 
-    public Map getListener( String releaseId )
+    public Map<String, Object> getListener( String releaseId )
     {
-        ContinuumReleaseManagerListener listener = (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
+        ContinuumReleaseManagerListener listener =
+            (ContinuumReleaseManagerListener) releaseManager.getListeners().get( releaseId );
 
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
 
         if ( listener != null )
-        { 
-            map.put( ContinuumBuildAgentUtil.KEY_RELEASE_STATE, new Integer( listener.getState() ) );
+        {
+            map.put( ContinuumBuildAgentUtil.KEY_RELEASE_STATE, listener.getState() );
             if ( listener.getPhases() != null )
             {
                 map.put( ContinuumBuildAgentUtil.KEY_RELEASE_PHASES, listener.getPhases() );
@@ -151,7 +156,8 @@ public class DefaultBuildAgentReleaseManager
         return "";
     }
 
-    public void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+    public void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
+                                Map repository )
         throws ContinuumReleaseException
     {
         ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
@@ -166,15 +172,16 @@ public class DefaultBuildAgentReleaseManager
             repo.setLocation( ContinuumBuildAgentUtil.getLocalRepository( repository ) );
         }
 
-        File performDirectory = new File( buildAgentConfigurationService.getWorkingDirectory(),
-                                          "releases-" + System.currentTimeMillis() );
+        File performDirectory =
+            new File( buildAgentConfigurationService.getWorkingDirectory(), "releases-" + System.currentTimeMillis() );
         performDirectory.mkdirs();
 
         releaseManager.perform( releaseId, performDirectory, goals, arguments, useReleaseProfile, listener, repo );
     }
 
-    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, 
-                                         String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map<String, String> environments )
+    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
+                                         String scmUrl, String scmUsername, String scmPassword, String scmTag,
+                                         String scmTagBase, Map<String, String> environments )
         throws ContinuumReleaseException
     {
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
@@ -222,7 +229,8 @@ public class DefaultBuildAgentReleaseManager
     {
         ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
 
-        releaseManager.rollback( releaseId, buildAgentConfigurationService.getWorkingDirectory( projectId ).getPath(), listener );
+        releaseManager.rollback( releaseId, buildAgentConfigurationService.getWorkingDirectory( projectId ).getPath(),
+                                 listener );
 
         //recurse until rollback is finished
         while ( listener.getState() != ContinuumReleaseManagerListener.FINISHED )
@@ -291,7 +299,7 @@ public class DefaultBuildAgentReleaseManager
         }
 
         prop = ContinuumBuildAgentUtil.getScmCommentPrefix( context );
-        if ( StringUtils.isNotBlank( prop ) );
+        if ( StringUtils.isNotBlank( prop ) )
         {
             props.put( "commentPrefix", prop );
         }
@@ -301,7 +309,7 @@ public class DefaultBuildAgentReleaseManager
         {
             props.put( "tag", prop );
         }
-        
+
         prop = ContinuumBuildAgentUtil.getPrepareGoals( context );
         if ( StringUtils.isNotBlank( prop ) )
         {
@@ -334,5 +342,5 @@ public class DefaultBuildAgentReleaseManager
         return props;
     }
 
-    
+
 }

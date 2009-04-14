@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultBuildAgentManager
     implements BuildAgentManager
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentManager.class );
 
     /**
      * @plexus.requirement
@@ -47,14 +47,17 @@ public class DefaultBuildAgentManager
     {
         try
         {
-            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
-                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            MasterBuildAgentTransportClient client =
+                new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
+                ;
             client.startProjectBuild( projectId );
         }
         catch ( MalformedURLException e )
         {
-            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
-            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            log.error(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
         }
         catch ( Exception e )
         {
@@ -68,14 +71,17 @@ public class DefaultBuildAgentManager
     {
         try
         {
-            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
-                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            MasterBuildAgentTransportClient client =
+                new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
+                ;
             client.returnBuildResult( buildResult );
         }
         catch ( MalformedURLException e )
         {
-            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
-            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            log.error(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
         }
         catch ( Exception e )
         {
@@ -89,14 +95,17 @@ public class DefaultBuildAgentManager
     {
         try
         {
-            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
-                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            MasterBuildAgentTransportClient client =
+                new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
+                ;
             return client.getEnvironments( buildDefinitionId, installationType );
         }
         catch ( MalformedURLException e )
         {
-            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
-            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            log.error(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
         }
         catch ( Exception e )
         {
@@ -110,14 +119,17 @@ public class DefaultBuildAgentManager
     {
         try
         {
-            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
-                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            MasterBuildAgentTransportClient client =
+                new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
+                ;
             client.updateProject( project );
         }
         catch ( MalformedURLException e )
         {
-            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
-            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            log.error(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
         }
         catch ( Exception e )
         {
@@ -131,14 +143,17 @@ public class DefaultBuildAgentManager
     {
         try
         {
-            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
-                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            MasterBuildAgentTransportClient client =
+                new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
+                ;
             return client.shouldBuild( context );
         }
         catch ( MalformedURLException e )
         {
-            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
-            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            log.error(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
         }
         catch ( Exception e )
         {
@@ -152,14 +167,17 @@ public class DefaultBuildAgentManager
     {
         try
         {
-            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
-                new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            MasterBuildAgentTransportClient client =
+                new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
+                ;
             client.startPrepareBuild( context );
         }
         catch ( MalformedURLException e )
         {
-            log.error( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
-            throw new ContinuumException( "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'", e );
+            log.error(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException(
+                "Invalid continuum server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'", e );
         }
         catch ( Exception e )
         {
@@ -173,13 +191,15 @@ public class DefaultBuildAgentManager
     {
         try
         {
-            MasterBuildAgentTransportClient client = new MasterBuildAgentTransportClient(
-                 new URL( buildAgentConfigurationService.getContinuumServerUrl() ) );
+            MasterBuildAgentTransportClient client =
+                new MasterBuildAgentTransportClient( new URL( buildAgentConfigurationService.getContinuumServerUrl() ) )
+                ;
             client.prepareBuildFinished( context );
         }
         catch ( MalformedURLException e )
         {
-            throw new ContinuumException( "Invalid Continuum Server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
+            throw new ContinuumException(
+                "Invalid Continuum Server URL '" + buildAgentConfigurationService.getContinuumServerUrl() + "'" );
         }
         catch ( Exception e )
         {

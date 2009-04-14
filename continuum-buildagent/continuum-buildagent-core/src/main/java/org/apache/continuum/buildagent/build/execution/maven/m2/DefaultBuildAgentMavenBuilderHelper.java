@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.artifact.manager.WagonManager;
@@ -81,7 +80,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultBuildAgentMavenBuilderHelper
     implements BuildAgentMavenBuilderHelper, Contextualizable, Initializable
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentMavenBuilderHelper.class );
 
     /**
      * @plexus.requirement
@@ -154,9 +153,8 @@ public class DefaultBuildAgentMavenBuilderHelper
 
                 if ( validationResult != null && validationResult.getMessageCount() > 0 )
                 {
-                    for ( Iterator<String> i = validationResult.getMessages().iterator(); i.hasNext(); )
+                    for ( String valmsg : (List<String>) validationResult.getMessages() )
                     {
-                        String valmsg = i.next();
                         result.addError( ContinuumProjectBuildingResult.ERROR_VALIDATION, valmsg );
                         messages.append( valmsg );
                         messages.append( "\n" );
@@ -702,10 +700,8 @@ public class DefaultBuildAgentMavenBuilderHelper
                                        proxy.getPassword(), proxy.getNonProxyHosts() );
             }
 
-            for ( Iterator<Server> i = settings.getServers().iterator(); i.hasNext(); )
+            for ( Server server : (List<Server>) settings.getServers() )
             {
-                Server server = i.next();
-
                 wagonManager.addAuthenticationInfo( server.getId(), server.getUsername(), server.getPassword(),
                                                     server.getPrivateKey(), server.getPassphrase() );
 
@@ -718,10 +714,8 @@ public class DefaultBuildAgentMavenBuilderHelper
                 }
             }
 
-            for ( Iterator<Mirror> i = settings.getMirrors().iterator(); i.hasNext(); )
+            for ( Mirror mirror : (List<Mirror>) settings.getMirrors() )
             {
-                Mirror mirror = i.next();
-
                 wagonManager.addMirror( mirror.getId(), mirror.getMirrorOf(), mirror.getUrl() );
             }
         }

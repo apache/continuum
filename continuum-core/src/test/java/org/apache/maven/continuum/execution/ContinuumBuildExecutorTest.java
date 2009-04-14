@@ -23,8 +23,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.continuum.utils.shell.ExecutionResult;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.continuum.configuration.ConfigurationService;
@@ -36,12 +34,14 @@ import org.apache.maven.continuum.utils.ChrootJailWorkingDirectoryService;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 
+import junit.framework.TestCase;
+
 public class ContinuumBuildExecutorTest
     extends TestCase
 {
-    protected AbstractBuildExecutor executor = new BuildExecutorStub();
+    protected final AbstractBuildExecutor executor = new BuildExecutorStub();
 
-    private Mockery context = new Mockery();
+    private final Mockery context = new Mockery();
 
     private String toSystemPath( String path )
     {
@@ -123,8 +123,8 @@ public class ContinuumBuildExecutorTest
             super( "stub", true );
         }
 
-        protected String findExecutable( Project project, String executable, String defaultExecutable,
-                                         boolean resolveExecutable, File workingDirectory )
+        protected String findExecutable( String executable, String defaultExecutable, boolean resolveExecutable,
+                                         File workingDirectory )
         {
             return executable;
         }

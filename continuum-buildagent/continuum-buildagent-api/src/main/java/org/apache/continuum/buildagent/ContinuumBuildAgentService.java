@@ -24,18 +24,18 @@ import java.util.Map;
 
 public interface ContinuumBuildAgentService
 {
-    void buildProjects( List<Map> projectsBuildContext )
-        throws ContinuumBuildAgentException;
-    
-    List<Map> getAvailableInstallations()
+    void buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws ContinuumBuildAgentException;
 
-    Map getBuildResult( int projectId )
+    List<Map<String, String>> getAvailableInstallations()
         throws ContinuumBuildAgentException;
-    
+
+    Map<String, Object> getBuildResult( int projectId )
+        throws ContinuumBuildAgentException;
+
     int getProjectCurrentlyBuilding()
         throws ContinuumBuildAgentException;
-    
+
     void cancelBuild()
         throws ContinuumBuildAgentException;
 
@@ -45,19 +45,20 @@ public interface ContinuumBuildAgentService
     String getProjectFileContent( int projectId, String directory, String filename )
         throws ContinuumBuildAgentException;
 
-    Map getReleasePluginParameters( int projectId, String pomFilename )
+    Map<String, Object> getReleasePluginParameters( int projectId, String pomFilename )
         throws ContinuumBuildAgentException;
 
     List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
         throws ContinuumBuildAgentException;
 
-    String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map<String, String> environments )
+    String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+                           Map<String, String> environments )
         throws ContinuumBuildAgentException;
 
-    Map getReleaseResult( String releaseId )
+    Map<String, Object> getReleaseResult( String releaseId )
         throws ContinuumBuildAgentException;
 
-    Map getListener( String releaseId )
+    Map<String, Object> getListener( String releaseId )
         throws ContinuumBuildAgentException;
 
     void removeListener( String releaseId )
@@ -69,8 +70,9 @@ public interface ContinuumBuildAgentService
     void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
         throws ContinuumBuildAgentException;
 
-    String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, String scmUsername, 
-                                  String scmPassword, String scmTag, String scmTagBase, Map<String, String> environments )
+    String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
+                                  String scmUrl, String scmUsername, String scmPassword, String scmTag,
+                                  String scmTagBase, Map<String, String> environments )
         throws ContinuumBuildAgentException;
 
     String releaseCleanup( String releaseId )

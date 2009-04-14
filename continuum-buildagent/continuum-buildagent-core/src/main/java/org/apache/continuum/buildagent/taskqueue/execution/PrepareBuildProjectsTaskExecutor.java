@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 public class PrepareBuildProjectsTaskExecutor
     implements TaskExecutor
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( PrepareBuildProjectsTaskExecutor.class );
 
     /**
      * @plexus.requirement
@@ -351,7 +351,7 @@ public class PrepareBuildProjectsTaskExecutor
     private void performAction( String actionName, BuildContext buildContext )
         throws TaskExecutionException
     {
-        TaskExecutionException exception = null;
+        TaskExecutionException exception;
 
         try
         {
@@ -382,7 +382,7 @@ public class PrepareBuildProjectsTaskExecutor
 
     private void mergeScmResults( BuildContext buildContext )
     {
-        Map context = buildContext.getActionContext();
+        Map<String, Object> context = buildContext.getActionContext();
         ScmResult oldScmResult = ContinuumBuildAgentUtil.getOldScmResult( context, null );
         ScmResult newScmResult = ContinuumBuildAgentUtil.getScmResult( context, null );
 

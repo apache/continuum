@@ -47,24 +47,24 @@ import edu.emory.mathcs.backport.java.util.concurrent.TimeoutException;
 public class ParallelBuildsThreadedTaskQueueExecutor
     implements TaskQueueExecutor, Initializable, Startable
 {
+    private static final Logger log = LoggerFactory.getLogger( ParallelBuildsThreadedTaskQueueExecutor.class );
+
     private static final int SHUTDOWN = 1;
 
     private static final int CANCEL_TASK = 2;
 
-    private Logger log = LoggerFactory.getLogger( getClass() );
-
     /**
-     * @requirement 
+     * @requirement
      */
     private TaskQueue queue;
 
     /**
-     * @requirement 
+     * @requirement
      */
     private TaskExecutor executor;
 
     /**
-     * @configuration 
+     * @configuration
      */
     private String name;
 
@@ -220,8 +220,9 @@ public class ParallelBuildsThreadedTaskQueueExecutor
                 }
                 else
                 {
-                    log.warn( "Task not cancelled (Flags: done: " + future.isDone() + " cancelled: " +
-                        future.isCancelled() + ")" );
+                    log.warn(
+                        "Task not cancelled (Flags: done: " + future.isDone() + " cancelled: " + future.isCancelled() +
+                            ")" );
                 }
             }
             else

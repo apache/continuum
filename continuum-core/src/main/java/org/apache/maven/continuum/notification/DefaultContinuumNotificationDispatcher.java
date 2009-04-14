@@ -19,6 +19,11 @@ package org.apache.maven.continuum.notification;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
@@ -32,11 +37,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -46,7 +46,7 @@ import java.util.Map;
 public class DefaultContinuumNotificationDispatcher
     implements ContinuumNotificationDispatcher
 {
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultContinuumNotificationDispatcher.class );
 
     /**
      * @plexus.requirement
@@ -130,10 +130,10 @@ public class DefaultContinuumNotificationDispatcher
                 projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( project.getProjectGroup().getId() );
 
             Map<String, List<ProjectNotifier>> notifiersMap = new HashMap<String, List<ProjectNotifier>>();
-            
+
             getProjectNotifiers( project, notifiersMap );
             getProjectGroupNotifiers( projectGroup, notifiersMap );
-            
+
             for ( String notifierType : notifiersMap.keySet() )
             {
                 MessageContext context = new MessageContext();
@@ -161,12 +161,12 @@ public class DefaultContinuumNotificationDispatcher
     {
         try
         {
-            ProjectGroup group =
-                projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectScmRoot.getProjectGroup().getId() );
-            
+            ProjectGroup group = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId(
+                projectScmRoot.getProjectGroup().getId() );
+
             Map<String, List<ProjectNotifier>> notifiersMap = new HashMap<String, List<ProjectNotifier>>();
             getProjectGroupNotifiers( group, notifiersMap );
-            
+
             for ( String notifierType : notifiersMap.keySet() )
             {
                 MessageContext context = new MessageContext();
@@ -200,7 +200,7 @@ public class DefaultContinuumNotificationDispatcher
             log.error( "Error while trying to use the " + notifierType + " notifier.", e );
         }
     }
-    
+
     private void getProjectNotifiers( Project project, Map<String, List<ProjectNotifier>> notifiersMap )
     {
         if ( project.getNotifiers() != null )
@@ -226,8 +226,8 @@ public class DefaultContinuumNotificationDispatcher
             }
         }
     }
-    
-    private void getProjectGroupNotifiers( ProjectGroup projectGroup, Map<String, List<ProjectNotifier>>  notifiersMap )
+
+    private void getProjectGroupNotifiers( ProjectGroup projectGroup, Map<String, List<ProjectNotifier>> notifiersMap )
     {
         // perform the project group level notifications
         if ( projectGroup.getNotifiers() != null )

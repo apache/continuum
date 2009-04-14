@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
 public class PrepareBuildProjectsTaskExecutor
     implements TaskExecutor
 {
-    private Logger log = LoggerFactory.getLogger( PrepareBuildProjectsTaskExecutor.class );
+    private static final Logger log = LoggerFactory.getLogger( PrepareBuildProjectsTaskExecutor.class );
 
     /**
      * @plexus.requirement
@@ -74,12 +74,12 @@ public class PrepareBuildProjectsTaskExecutor
      * @plexus.requirement
      */
     private ProjectDao projectDao;
-    
+
     /**
      * @plexus.requirement
      */
     private BuildDefinitionDao buildDefinitionDao;
-    
+
     /**
      * @plexus.requirement
      */
@@ -104,11 +104,11 @@ public class PrepareBuildProjectsTaskExecutor
         throws TaskExecutionException
     {
         PrepareBuildProjectsTask prepareTask = (PrepareBuildProjectsTask) task;
-        
+
         Map<Integer, Integer> projectsBuildDefinitionsMap = prepareTask.getProjectsBuildDefinitionsMap();
         int trigger = prepareTask.getTrigger();
         Set<Integer> projectsId = projectsBuildDefinitionsMap.keySet();
-        Map context = new HashMap();
+        Map<String, Object> context = new HashMap<String, Object>();
         Map<Integer, ScmResult> scmResultMap = new HashMap<Integer, ScmResult>();
 
         try
@@ -116,11 +116,12 @@ public class PrepareBuildProjectsTaskExecutor
             for ( Integer projectId : projectsId )
             {
                 int buildDefinitionId = projectsBuildDefinitionsMap.get( projectId );
-                
+
                 log.info( "Initializing prepare build" );
                 context = initializeContext( projectId, buildDefinitionId );
 
-                log.info( "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
+                log.info(
+                    "Starting prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
                 startPrepareBuild( context );
 
                 if ( !checkProjectScmRoot( context ) )
@@ -153,8 +154,9 @@ public class PrepareBuildProjectsTaskExecutor
                 }
                 finally
                 {
-                    log.info( "Ending prepare build of project: " + AbstractContinuumAction.getProject( context).getName() );
-                    scmResultMap.put( AbstractContinuumAction.getProjectId( context ), 
+                    log.info(
+                        "Ending prepare build of project: " + AbstractContinuumAction.getProject( context ).getName() );
+                    scmResultMap.put( AbstractContinuumAction.getProjectId( context ),
                                       AbstractContinuumAction.getScmResult( context, null ) );
                     endProjectPrepareBuild( context );
                 }
@@ -173,19 +175,19 @@ public class PrepareBuildProjectsTaskExecutor
         }
     }
 
-    private Map initializeContext( int projectId, int buildDefinitionId )
+    private Map<String, Object> initializeContext( int projectId, int buildDefinitionId )
         throws TaskExecutionException
     {
-        Map context = new HashMap();
+        Map<String, Object> context = new HashMap<String, Object>();
 
         try
         {
             Project project = projectDao.getProject( projectId );
             ProjectGroup projectGroup = project.getProjectGroup();
-            
+
             List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( projectGroup.getId() );
             String projectScmUrl = project.getScmUrl();
-            
+
             for ( ProjectScmRoot projectScmRoot : scmRoots )
             {
                 if ( projectScmUrl.contains( projectScmRoot.getScmRootAddress() ) )
@@ -198,17 +200,19 @@ public class PrepareBuildProjectsTaskExecutor
             context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, projectGroup.getId() );
             context.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
             context.put( AbstractContinuumAction.KEY_PROJECT, project );
-    
+
             context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
-            context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinitionDao.getBuildDefinition( buildDefinitionId ) );
+            context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION,
+                         buildDefinitionDao.getBuildDefinition( buildDefinitionId ) );
 
             BuildResult oldBuildResult =
                 buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
 
             if ( oldBuildResult != null )
             {
-                context.put( AbstractContinuumAction.KEY_OLD_SCM_RESULT, 
-                             getOldScmResults( projectId, oldBuildResult.getBuildNumber(), oldBuildResult.getEndTime() ) );
+                context.put( AbstractContinuumAction.KEY_OLD_SCM_RESULT,
+                             getOldScmResults( projectId, oldBuildResult.getBuildNumber(),
+                                               oldBuildResult.getEndTime() ) );
             }
             else
             {
@@ -219,62 +223,58 @@ public class PrepareBuildProjectsTaskExecutor
         {
             throw new TaskExecutionException( "Error initializing pre-build context", e );
         }
-        
+
         return context;
     }
-    
-    private void cleanWorkingDirectory( Map context )
+
+    private void cleanWorkingDirectory( Map<String, Object> context )
         throws TaskExecutionException
     {
         performAction( "clean-working-directory", context );
     }
-    
-    private void updateWorkingDirectory( Map context )
+
+    private void updateWorkingDirectory( Map<String, Object> context )
         throws TaskExecutionException
     {
         performAction( "check-working-directory", context );
-    
+
         boolean workingDirectoryExists =
             AbstractContinuumAction.getBoolean( context, AbstractContinuumAction.KEY_WORKING_DIRECTORY_EXISTS );
-    
+
         ScmResult scmResult;
-    
+
         if ( workingDirectoryExists )
         {
             performAction( "update-working-directory-from-scm", context );
-    
-            scmResult = AbstractContinuumAction.getUpdateScmResult( context, null );
+
+            scmResult = AbstractContinuumAction.getUpdateScmResult( context );
         }
         else
         {
             Project project = AbstractContinuumAction.getProject( context );
-    
+
             context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY,
-                               workingDirectoryService.getWorkingDirectory( project ).getAbsolutePath() );
-    
+                         workingDirectoryService.getWorkingDirectory( project ).getAbsolutePath() );
+
             performAction( "checkout-project", context );
-    
+
             scmResult = AbstractContinuumAction.getCheckoutResult( context, null );
         }
-    
+
         context.put( AbstractContinuumAction.KEY_SCM_RESULT, scmResult );
     }
-    
-    private boolean checkProjectScmRoot( Map context )
+
+    private boolean checkProjectScmRoot( Map<String, Object> context )
         throws TaskExecutionException
     {
         ProjectScmRoot projectScmRoot = AbstractContinuumAction.getProjectScmRoot( context );
-        
+
         // check state of scm root
-        if ( projectScmRoot.getState() == ContinuumProjectState.ERROR )
-        {
-            return false;
-        }
-        
-        return true;
+        return projectScmRoot.getState() != ContinuumProjectState.ERROR;
+
     }
-    
-    private void startPrepareBuild( Map context )
+
+    private void startPrepareBuild( Map<String, Object> context )
         throws TaskExecutionException
     {
         ProjectScmRoot projectScmRoot = AbstractContinuumAction.getProjectScmRoot( context );
@@ -292,17 +292,17 @@ public class PrepareBuildProjectsTaskExecutor
             }
         }
     }
-    
-    private void endPrepareBuild( Map context )
+
+    private void endPrepareBuild( Map<String, Object> context )
         throws TaskExecutionException
     {
         ProjectScmRoot projectScmRoot = AbstractContinuumAction.getProjectScmRoot( context );
-        
+
         if ( projectScmRoot.getState() != ContinuumProjectState.ERROR )
         {
             projectScmRoot.setState( ContinuumProjectState.UPDATED );
             projectScmRoot.setError( null );
-            
+
             try
             {
                 projectScmRootDao.updateProjectScmRoot( projectScmRoot );
@@ -315,21 +315,20 @@ public class PrepareBuildProjectsTaskExecutor
 
         notifierDispatcher.prepareBuildComplete( projectScmRoot );
     }
-    
+
     /**
-     *  @param context
+     * @param context
      * @throws TaskExecutionException
      */
-    private void endProjectPrepareBuild( Map context )
+    private void endProjectPrepareBuild( Map<String, Object> context )
         throws TaskExecutionException
     {
         ScmResult scmResult = AbstractContinuumAction.getScmResult( context, null );
-        Project project = AbstractContinuumAction.getProject( context );
-        
+
         if ( scmResult == null || !scmResult.isSuccess() )
         {
             String error = convertScmResultToError( scmResult );
-            
+
             updateProjectScmRoot( context, error );
         }
     }
@@ -338,7 +337,7 @@ public class PrepareBuildProjectsTaskExecutor
         throws ContinuumStoreException
     {
         List<BuildResult> results = buildResultDao.getBuildResultsForProjectFromId( projectId, startId );
-    
+
         ScmResult res = new ScmResult();
 
         if ( results != null && results.size() > 0 )
@@ -346,11 +345,11 @@ public class PrepareBuildProjectsTaskExecutor
             for ( BuildResult result : results )
             {
                 ScmResult scmResult = result.getScmResult();
-    
+
                 if ( scmResult != null )
                 {
                     List<ChangeSet> changes = scmResult.getChanges();
-    
+
                     if ( changes != null )
                     {
                         for ( ChangeSet changeSet : changes )
@@ -368,7 +367,7 @@ public class PrepareBuildProjectsTaskExecutor
                 }
             }
         }
-    
+
         return res;
     }
 
@@ -377,9 +376,9 @@ public class PrepareBuildProjectsTaskExecutor
      *
      * @param context The build context
      */
-    private void mergeScmResults( Map context )
+    private void mergeScmResults( Map<String, Object> context )
     {
-        ScmResult oldScmResult = AbstractContinuumAction.getOldScmResult( context, null );
+        ScmResult oldScmResult = AbstractContinuumAction.getOldScmResult( context );
         ScmResult newScmResult = AbstractContinuumAction.getScmResult( context, null );
 
         if ( oldScmResult != null )
@@ -406,11 +405,11 @@ public class PrepareBuildProjectsTaskExecutor
             }
         }
     }
-    
-    private void performAction( String actionName, Map context )
+
+    private void performAction( String actionName, Map<String, Object> context )
         throws TaskExecutionException
     {
-        TaskExecutionException exception = null;
+        TaskExecutionException exception;
 
         try
         {
@@ -426,18 +425,18 @@ public class PrepareBuildProjectsTaskExecutor
         {
             exception = new TaskExecutionException( "Error executing action '" + actionName + "'", e );
         }
-        
+
         ScmResult result = new ScmResult();
-        
+
         result.setSuccess( false );
-        
+
         result.setException( ContinuumUtils.throwableToString( exception ) );
-        
+
         context.put( AbstractContinuumAction.KEY_SCM_RESULT, result );
-        
+
         throw exception;
     }
-    
+
     private String convertScmResultToError( ScmResult result )
     {
         String error = "";
@@ -479,19 +478,19 @@ public class PrepareBuildProjectsTaskExecutor
 
         return error;
     }
-    
-    private void updateProjectScmRoot( Map context, String error )
+
+    private void updateProjectScmRoot( Map<String, Object> context, String error )
         throws TaskExecutionException
     {
         ProjectScmRoot projectScmRoot = AbstractContinuumAction.getProjectScmRoot( context );
-        
+
         try
         {
             projectScmRoot.setState( ContinuumProjectState.ERROR );
             projectScmRoot.setError( error );
 
             projectScmRootDao.updateProjectScmRoot( projectScmRoot );
-            
+
             context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
         }
         catch ( ContinuumStoreException e )
@@ -500,13 +499,13 @@ public class PrepareBuildProjectsTaskExecutor
         }
     }
 
-    private void buildProjects( int projectGroupId, Map<Integer, Integer> projectsAndBuildDefinitionsMap, 
-                                int trigger, Map<Integer, ScmResult> scmResultMap )
+    private void buildProjects( int projectGroupId, Map<Integer, Integer> projectsAndBuildDefinitionsMap, int trigger,
+                                Map<Integer, ScmResult> scmResultMap )
         throws TaskExecutionException
     {
         List<Project> projects = projectDao.getProjectsWithDependenciesByGroupId( projectGroupId );
         List<Project> projectList;
-        
+
         try
         {
             projectList = ProjectSorter.getSortedProjects( projects, log );
@@ -521,31 +520,30 @@ public class PrepareBuildProjectsTaskExecutor
 
         for ( Project project : projectList )
         {
-            //boolean shouldBuild = false;
-            int buildDefinitionId = 0;
-            
+            int buildDefinitionId;
+
             if ( projectsAndBuildDefinitionsMap.get( project.getId() ) != null )
             {
-                buildDefinitionId = projectsAndBuildDefinitionsMap.get( project.getId() );                
-                //shouldBuild = true;         
+                buildDefinitionId = projectsAndBuildDefinitionsMap.get( project.getId() );
+
                 try
                 {
                     BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
                     projectsBuildDefinitionsMap.put( project.getId(), buildDefinition );
                     projectsToBeBuilt.add( project );
                 }
-                catch( ContinuumStoreException e )
+                catch ( ContinuumStoreException e )
                 {
                     log.error( "Error while creating build object", e );
                     throw new TaskExecutionException( "Error while creating build object", e );
                 }
             }
-            else if ( project.getState() == ContinuumProjectState.CHECKEDOUT || project.getState() == ContinuumProjectState.NEW ) //check if no build result yet for project
+            else if ( project.getState() == ContinuumProjectState.CHECKEDOUT ||
+                project.getState() == ContinuumProjectState.NEW ) //check if no build result yet for project
             {
                 try
                 {
                     //get default build definition for project
-                    //buildDefinitionId = buildDefinitionDao.getDefaultBuildDefinition( project.getId() ).getId();
                     BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( project.getId() );
                     projectsBuildDefinitionsMap.put( project.getId(), buildDefinition );
                     projectsToBeBuilt.add( project );
@@ -562,10 +560,10 @@ public class PrepareBuildProjectsTaskExecutor
                 }
             }
         }
-        
+
         try
         {
-            Map context = new HashMap();
+            Map<String, Object> context = new HashMap<String, Object>();
             context.put( AbstractContinuumAction.KEY_PROJECTS, projectsToBeBuilt );
             context.put( AbstractContinuumAction.KEY_PROJECTS_BUILD_DEFINITIONS_MAP, projectsBuildDefinitionsMap );
             context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
@@ -576,8 +574,8 @@ public class PrepareBuildProjectsTaskExecutor
         }
         catch ( ActionNotFoundException e )
         {
-           log.error( "Error looking up action 'build-project'" );
-           throw new TaskExecutionException( "Error looking up action 'build-project'", e );
+            log.error( "Error looking up action 'build-project'" );
+            throw new TaskExecutionException( "Error looking up action 'build-project'", e );
         }
         catch ( Exception e )
         {

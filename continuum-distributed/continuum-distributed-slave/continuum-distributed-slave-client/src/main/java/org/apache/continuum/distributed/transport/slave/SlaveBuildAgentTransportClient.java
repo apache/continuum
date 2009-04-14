@@ -19,6 +19,11 @@ package org.apache.continuum.distributed.transport.slave;
  * under the License.
  */
 
+import com.atlassian.xmlrpc.AuthenticationInfo;
+import com.atlassian.xmlrpc.Binder;
+import com.atlassian.xmlrpc.BindingException;
+import com.atlassian.xmlrpc.DefaultBinder;
+
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -26,21 +31,16 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.atlassian.xmlrpc.AuthenticationInfo;
-import com.atlassian.xmlrpc.Binder;
-import com.atlassian.xmlrpc.BindingException;
-import com.atlassian.xmlrpc.DefaultBinder;
-
 /**
  * SlaveBuildAgentTransportClient
  */
 public class SlaveBuildAgentTransportClient
     implements SlaveBuildAgentTransportService
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
-    
+    private static final Logger log = LoggerFactory.getLogger( SlaveBuildAgentTransportClient.class );
+
     private SlaveBuildAgentTransportService slave;
-    
+
     public SlaveBuildAgentTransportClient( URL serviceUrl )
         throws Exception
     {
@@ -52,23 +52,27 @@ public class SlaveBuildAgentTransportClient
     {
         Binder binder = new DefaultBinder();
         AuthenticationInfo authnInfo = new AuthenticationInfo( login, password );
-        
+
         try
         {
             slave = binder.bind( SlaveBuildAgentTransportService.class, serviceUrl, authnInfo );
         }
         catch ( BindingException e )
         {
-            log.error( "Can't bind service interface " + SlaveBuildAgentTransportService.class.getName() + " to " + serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e );
-            throw new Exception( "Can't bind service interface " + SlaveBuildAgentTransportService.class.getName() + " to " + serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e);
+            log.error( "Can't bind service interface " + SlaveBuildAgentTransportService.class.getName() + " to " +
+                serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(), e );
+            throw new Exception(
+                "Can't bind service interface " + SlaveBuildAgentTransportService.class.getName() + " to " +
+                    serviceUrl.toExternalForm() + " using " + authnInfo.getUsername() + ", " + authnInfo.getPassword(),
+                e );
         }
     }
 
-    public Boolean buildProjects( List<Map> projectsBuildContext )
+    public Boolean buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws Exception
     {
-        Boolean result = null;
-        
+        Boolean result;
+
         try
         {
             result = slave.buildProjects( projectsBuildContext );
@@ -79,15 +83,15 @@ public class SlaveBuildAgentTransportClient
             log.error( "Failed to build projects.", e );
             throw new Exception( "Failed to build projects.", e );
         }
-        
+
         return result;
     }
 
-    public List<Map> getAvailableInstallations()
+    public List<Map<String, String>> getAvailableInstallations()
         throws Exception
     {
-        List<Map> installations = null;
-        
+        List<Map<String, String>> installations;
+
         try
         {
             installations = slave.getAvailableInstallations();
@@ -96,17 +100,17 @@ public class SlaveBuildAgentTransportClient
         catch ( Exception e )
         {
             log.error( "Failed to get available installations.", e );
-            throw new Exception( "Failed to get available installations." , e );
+            throw new Exception( "Failed to get available installations.", e );
         }
-        
+
         return installations;
     }
 
     public Map getBuildResult( int projectId )
         throws Exception
     {
-        Map buildResult = null;
-        
+        Map buildResult;
+
         try
         {
             buildResult = slave.getBuildResult( projectId );
@@ -117,15 +121,15 @@ public class SlaveBuildAgentTransportClient
             log.error( "Failed to get build result for project " + projectId, e );
             throw new Exception( "Failed to get build result for project " + projectId, e );
         }
-        
+
         return buildResult;
     }
 
     public Integer getProjectCurrentlyBuilding()
         throws Exception
     {
-        Integer projectId = null;
-        
+        Integer projectId;
+
         try
         {
             projectId = slave.getProjectCurrentlyBuilding();
@@ -136,33 +140,33 @@ public class SlaveBuildAgentTransportClient
             log.error( "Failed to get the currently building project", e );
             throw new Exception( "Failed to get the currently building project", e );
         }
-        
+
         return projectId;
     }
 
     public Boolean ping()
         throws Exception
     {
-        Boolean result = null;
-        
+        Boolean result;
+
         try
         {
             result = slave.ping();
-            log.info( "Ping " + ( result.booleanValue() ? "ok" : "failed" ) );
+            log.info( "Ping " + ( result ? "ok" : "failed" ) );
         }
         catch ( Exception e )
         {
             log.info( "Ping error" );
             throw new Exception( "Ping error", e );
         }
-        
+
         return result;
     }
 
     public Boolean cancelBuild()
         throws Exception
     {
-        Boolean result = null;
+        Boolean result;
 
         try
         {
@@ -181,7 +185,7 @@ public class SlaveBuildAgentTransportClient
     public String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
         throws Exception
     {
-        String result = null;
+        String result;
 
         try
         {
@@ -200,7 +204,7 @@ public class SlaveBuildAgentTransportClient
     public String getProjectFileContent( int projectId, String directory, String filename )
         throws Exception
     {
-        String result = null;
+        String result;
 
         try
         {
@@ -219,12 +223,12 @@ public class SlaveBuildAgentTransportClient
     public Map getReleasePluginParameters( int projectId, String pomFilename )
         throws Exception
     {
-        Map result = null;
+        Map result;
 
         try
         {
             result = slave.getReleasePluginParameters( projectId, pomFilename );
-            log.info(  "Retrieving release plugin parameters" );
+            log.info( "Retrieving release plugin parameters" );
         }
         catch ( Exception e )
         {
@@ -238,7 +242,7 @@ public class SlaveBuildAgentTransportClient
     public List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
         throws Exception
     {
-        List<Map<String, String>> result = null;
+        List<Map<String, String>> result;
 
         try
         {
@@ -254,10 +258,11 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map environments )
+    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+                                  Map environments )
         throws Exception
     {
-        String releaseId = null;
+        String releaseId;
 
         try
         {
@@ -276,7 +281,7 @@ public class SlaveBuildAgentTransportClient
     public Map getReleaseResult( String releaseId )
         throws Exception
     {
-        Map result = null;
+        Map result;
 
         try
         {
@@ -295,7 +300,7 @@ public class SlaveBuildAgentTransportClient
     public Map getListener( String releaseId )
         throws Exception
     {
-        Map result = null;
+        Map result;
 
         try
         {
@@ -314,7 +319,7 @@ public class SlaveBuildAgentTransportClient
     public Boolean removeListener( String releaseId )
         throws Exception
     {
-        Boolean result = null;
+        Boolean result;
 
         try
         {
@@ -334,7 +339,7 @@ public class SlaveBuildAgentTransportClient
     public String getPreparedReleaseName( String releaseId )
         throws Exception
     {
-        String result = null;
+        String result;
 
         try
         {
@@ -350,10 +355,11 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+    public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
+                                   Map repository )
         throws Exception
     {
-        Boolean result = null;
+        Boolean result;
 
         try
         {
@@ -370,16 +376,17 @@ public class SlaveBuildAgentTransportClient
         return result;
     }
 
-    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl,
-                                          String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
+                                         String scmUrl, String scmUsername, String scmPassword, String scmTag,
+                                         String scmTagBase, Map environments )
         throws Exception
     {
-        String result = null;
+        String result;
 
         try
         {
-            result = slave.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername, scmPassword, scmTag,
-                                         scmTagBase, environments);
+            result = slave.releasePerformFromScm( goals, arguments, useReleaseProfile, repository, scmUrl, scmUsername,
+                                                  scmPassword, scmTag, scmTagBase, environments );
             log.info( "Performing release" );
         }
         catch ( Exception e )
@@ -394,7 +401,7 @@ public class SlaveBuildAgentTransportClient
     public String releaseCleanup( String releaseId )
         throws Exception
     {
-        String result = null;
+        String result;
 
         try
         {
@@ -413,7 +420,7 @@ public class SlaveBuildAgentTransportClient
     public Boolean releaseRollback( String releaseId, int projectId )
         throws Exception
     {
-        Boolean result = Boolean.FALSE;
+        Boolean result;
 
         try
         {

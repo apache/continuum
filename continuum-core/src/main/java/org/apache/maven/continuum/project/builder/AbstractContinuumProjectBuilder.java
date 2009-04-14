@@ -19,6 +19,17 @@ package org.apache.maven.continuum.project.builder;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.UnknownHostException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
@@ -27,14 +38,11 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.params.ConnManagerPNames;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.scheme.SocketFactory;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -49,19 +57,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.Socket;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.UnknownHostException;
-
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -72,7 +67,7 @@ public abstract class AbstractContinuumProjectBuilder
 {
     private static final String TMP_DIR = System.getProperty( "java.io.tmpdir" );
 
-    protected Logger log = LoggerFactory.getLogger( AbstractContinuumProjectBuilder.class );
+    protected final Logger log = LoggerFactory.getLogger( getClass() );
 
     private DefaultHttpClient httpClient;
 
@@ -87,7 +82,7 @@ public abstract class AbstractContinuumProjectBuilder
 
         HttpParams params = new BasicHttpParams();
         // TODO put this values to a configuration way ???
-        params.setParameter( ConnManagerPNames.MAX_TOTAL_CONNECTIONS, new Integer( 30 ) );
+        params.setParameter( ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 30 );
         params.setParameter( ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRouteBean( 30 ) );
         HttpProtocolParams.setVersion( params, HttpVersion.HTTP_1_1 );
 
@@ -107,7 +102,7 @@ public abstract class AbstractContinuumProjectBuilder
         }
         log.info( "Downloading " + url );
 
-        InputStream is = null;
+        InputStream is;
 
         if ( metadata.getProtocol().startsWith( "http" ) )
         {
@@ -117,9 +112,9 @@ public abstract class AbstractContinuumProjectBuilder
             // basic auth
             if ( username != null && password != null )
             {
-                httpClient.getCredentialsProvider()
-                    .setCredentials( new AuthScope( uri.getHost(), uri.getPort() ),
-                                     new UsernamePasswordCredentials( username, password ) );
+                httpClient.getCredentialsProvider().setCredentials( new AuthScope( uri.getHost(), uri.getPort() ),
+                                                                    new UsernamePasswordCredentials( username,
+                                                                                                     password ) );
             }
 
             HttpResponse httpResponse = httpClient.execute( httpGet );
@@ -138,8 +133,8 @@ public abstract class AbstractContinuumProjectBuilder
                 default:
                     log.warn( "skip non handled http return code " + res );
             }
-            is = IOUtils.toInputStream( EntityUtils.toString( httpResponse.getEntity(), EntityUtils
-                .getContentCharSet( httpResponse.getEntity() ) ) );
+            is = IOUtils.toInputStream( EntityUtils.toString( httpResponse.getEntity(), EntityUtils.getContentCharSet(
+                httpResponse.getEntity() ) ) );
         }
         else
         {

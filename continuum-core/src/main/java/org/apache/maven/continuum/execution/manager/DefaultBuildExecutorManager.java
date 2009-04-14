@@ -19,14 +19,14 @@ package org.apache.maven.continuum.execution.manager;
  * under the License.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -37,7 +37,7 @@ import java.util.Map;
 public class DefaultBuildExecutorManager
     implements BuildExecutorManager, Initializable
 {
-    private Logger log = LoggerFactory.getLogger( DefaultBuildExecutorManager.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildExecutorManager.class );
 
     /**
      * @plexus.requirement role="org.apache.maven.continuum.execution.ContinuumBuildExecutor"

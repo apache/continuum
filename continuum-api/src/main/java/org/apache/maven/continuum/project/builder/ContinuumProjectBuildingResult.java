@@ -66,8 +66,8 @@ public class ContinuumProjectBuildingResult
 
     public static final String ERROR_MISSING_NOTIFIER_TYPE = "add.project.missing.notifier.type.error";
 
-    public static final String ERROR_MISSING_NOTIFIER_CONFIGURATION =
-        "add.project.missing.notifier.configuration.error";
+    public static final String ERROR_MISSING_NOTIFIER_CONFIGURATION = "add.project.missing.notifier.configuration.error"
+        ;
 
     public static final String ERROR_METADATA_TRANSFER = "add.project.metadata.transfer.error";
 
@@ -83,13 +83,13 @@ public class ContinuumProjectBuildingResult
 
     public static final String ERROR_UNKNOWN = "add.project.unknown.error";
 
-    private List<Project> projects = new ArrayList<Project>();
+    private final List<Project> projects = new ArrayList<Project>();
 
-    private List<ProjectGroup> projectGroups = new ArrayList<ProjectGroup>();
+    private final List<ProjectGroup> projectGroups = new ArrayList<ProjectGroup>();
 
-    private Map<String, String> errors = new HashMap<String, String>();
-    
-    public static final String LS = System.getProperty( "line.separator" );
+    private final Map<String, String> errors = new HashMap<String, String>();
+
+    private static final String LS = System.getProperty( "line.separator" );
 
     public void addProject( Project project )
     {
@@ -184,11 +184,11 @@ public class ContinuumProjectBuildingResult
     {
         return new ArrayList<String>( errors.keySet() );
     }
-    
-    public Map<String,String> getErrorsWithCause()
+
+    public Map<String, String> getErrorsWithCause()
     {
         return errors;
-    }    
+    }
 
     /**
      * Quick check to see if there are any errors.

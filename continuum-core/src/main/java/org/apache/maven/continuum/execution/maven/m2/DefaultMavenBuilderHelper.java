@@ -19,6 +19,12 @@ package org.apache.maven.continuum.execution.maven.m2;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -68,13 +74,6 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -84,7 +83,7 @@ import java.util.List;
 public class DefaultMavenBuilderHelper
     implements MavenBuilderHelper, Contextualizable, Initializable
 {
-    private Logger log = LoggerFactory.getLogger( DefaultMavenBuilderHelper.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultMavenBuilderHelper.class );
 
     /**
      * @plexus.requirement
@@ -114,7 +113,7 @@ public class DefaultMavenBuilderHelper
     private PlexusContainer container;
 
     private LocalRepository repository;
-    
+
     // ----------------------------------------------------------------------
     // MavenBuilderHelper Implementation
     // ----------------------------------------------------------------------
@@ -222,7 +221,7 @@ public class DefaultMavenBuilderHelper
         {
             List<ProjectDeveloper> developers = new ArrayList<ProjectDeveloper>();
 
-            for ( Developer d : (List<Developer>)mavenProject.getDevelopers() )
+            for ( Developer d : (List<Developer>) mavenProject.getDevelopers() )
             {
                 ProjectDeveloper cd = new ProjectDeveloper();
 
@@ -263,7 +262,7 @@ public class DefaultMavenBuilderHelper
 
         List<ProjectDependency> dependencies = new ArrayList<ProjectDependency>();
 
-        for ( Dependency dependency : (List<Dependency>)mavenProject.getDependencies() )
+        for ( Dependency dependency : (List<Dependency>) mavenProject.getDependencies() )
         {
             ProjectDependency cd = new ProjectDependency();
 
@@ -276,7 +275,7 @@ public class DefaultMavenBuilderHelper
             dependencies.add( cd );
         }
 
-        for ( Plugin dependency : (List<Plugin>)mavenProject.getBuildPlugins() )
+        for ( Plugin dependency : (List<Plugin>) mavenProject.getBuildPlugins() )
         {
             ProjectDependency cd = new ProjectDependency();
 
@@ -289,7 +288,7 @@ public class DefaultMavenBuilderHelper
             dependencies.add( cd );
         }
 
-        for ( ReportPlugin dependency : (List<ReportPlugin>)mavenProject.getReportPlugins() )
+        for ( ReportPlugin dependency : (List<ReportPlugin>) mavenProject.getReportPlugins() )
         {
             ProjectDependency cd = new ProjectDependency();
 
@@ -302,7 +301,7 @@ public class DefaultMavenBuilderHelper
             dependencies.add( cd );
         }
 
-        for ( Extension dependency : (List<Extension>)mavenProject.getBuildExtensions() )
+        for ( Extension dependency : (List<Extension>) mavenProject.getBuildExtensions() )
         {
             ProjectDependency cd = new ProjectDependency();
 
@@ -358,7 +357,7 @@ public class DefaultMavenBuilderHelper
             }
         }
 
-        List<ProjectNotifier> notifiers = getNotifiers( result, mavenProject, continuumProject );
+        List<ProjectNotifier> notifiers = getNotifiers( result, mavenProject );
         if ( notifiers != null )
         {
             continuumProject.setNotifiers( notifiers );
@@ -419,9 +418,8 @@ public class DefaultMavenBuilderHelper
 
                 if ( validationResult != null && validationResult.getMessageCount() > 0 )
                 {
-                    for ( Iterator<String> i = validationResult.getMessages().iterator(); i.hasNext(); )
+                    for ( String valmsg : (List<String>) validationResult.getMessages() )
                     {
-                        String valmsg = i.next();
                         result.addError( ContinuumProjectBuildingResult.ERROR_VALIDATION, valmsg );
                         messages.append( valmsg );
                         messages.append( "\n" );
@@ -431,8 +429,7 @@ public class DefaultMavenBuilderHelper
 
             if ( cause instanceof ArtifactNotFoundException )
             {
-                result.addError( ContinuumProjectBuildingResult.ERROR_ARTIFACT_NOT_FOUND,
-                                 ( (ArtifactNotFoundException) cause ).toString() );
+                result.addError( ContinuumProjectBuildingResult.ERROR_ARTIFACT_NOT_FOUND, ( cause ).toString() );
                 return null;
             }
 
@@ -518,14 +515,13 @@ public class DefaultMavenBuilderHelper
         return project.getScm().getConnection();
     }
 
-    private List<ProjectNotifier> getNotifiers( ContinuumProjectBuildingResult result, MavenProject mavenProject,
-                               Project continuumProject )
+    private List<ProjectNotifier> getNotifiers( ContinuumProjectBuildingResult result, MavenProject mavenProject )
     {
         List<ProjectNotifier> notifiers = new ArrayList<ProjectNotifier>();
 
         if ( mavenProject.getCiManagement() != null && mavenProject.getCiManagement().getNotifiers() != null )
         {
-            for ( Notifier projectNotifier : (List<Notifier>)mavenProject.getCiManagement().getNotifiers() )
+            for ( Notifier projectNotifier : (List<Notifier>) mavenProject.getCiManagement().getNotifiers() )
             {
                 ProjectNotifier notifier = new ProjectNotifier();
 
@@ -602,11 +598,9 @@ public class DefaultMavenBuilderHelper
 
         if ( repository != null )
         {
-            return artifactRepositoryFactory.createArtifactRepository( repository.getName(), 
-                                                                       "file://" + repository.getLocation(), 
-                                                                       repositoryLayout,
-                                                                       null, 
-                                                                       null );
+            return artifactRepositoryFactory.createArtifactRepository( repository.getName(),
+                                                                       "file://" + repository.getLocation(),
+                                                                       repositoryLayout, null, null );
         }
         else if ( !( StringUtils.isEmpty( settings.getLocalRepository() ) ) )
         {
@@ -698,8 +692,8 @@ public class DefaultMavenBuilderHelper
 
             for ( Profile profile : profiles )
             {
-                message.append( "\n - " ).append( profile.getId() ).append( " (source: " )
-                    .append( profile.getSource() ).append( ")" );
+                message.append( "\n - " ).append( profile.getId() ).append( " (source: " ).append(
+                    profile.getSource() ).append( ")" );
             }
 
         }
@@ -736,10 +730,8 @@ public class DefaultMavenBuilderHelper
                                        proxy.getPassword(), proxy.getNonProxyHosts() );
             }
 
-            for ( Iterator<Server> i = settings.getServers().iterator(); i.hasNext(); )
+            for ( Server server : (List<Server>) settings.getServers() )
             {
-                Server server = i.next();
-
                 wagonManager.addAuthenticationInfo( server.getId(), server.getUsername(), server.getPassword(),
                                                     server.getPrivateKey(), server.getPassphrase() );
 
@@ -752,10 +744,8 @@ public class DefaultMavenBuilderHelper
                 }
             }
 
-            for ( Iterator<Mirror> i = settings.getMirrors().iterator(); i.hasNext(); )
+            for ( Mirror mirror : (List<Mirror>) settings.getMirrors() )
             {
-                Mirror mirror = i.next();
-
                 wagonManager.addMirror( mirror.getId(), mirror.getMirrorOf(), mirror.getUrl() );
             }
         }
@@ -789,7 +779,7 @@ public class DefaultMavenBuilderHelper
             throw new InitializationException( "Can't initialize '" + getClass().getName() + "'", e );
         }
     }
-    
+
     public void setLocalRepository( LocalRepository repository )
     {
         this.repository = repository;

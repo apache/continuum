@@ -19,6 +19,11 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.utils.ContinuumUtils;
@@ -33,11 +38,6 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -114,7 +114,7 @@ public class ExecuteBuilderContinuumAction
 
         context.put( KEY_BUILD_ID, Integer.toString( buildResult.getId() ) );
 
-        context.put( KEY_CANCELLED, new Boolean( false ) );
+        context.put( KEY_CANCELLED, false );
 
         buildResult = buildResultDao.getBuildResult( buildResult.getId() );
 
@@ -133,10 +133,10 @@ public class ExecuteBuilderContinuumAction
         catch ( ContinuumBuildCancelledException e )
         {
             getLogger().info( "Cancelled build" );
-            
+
             buildResult.setState( ContinuumProjectState.CANCELLED );
-            
-            context.put( KEY_CANCELLED, new Boolean( true ) );
+
+            context.put( KEY_CANCELLED, true );
         }
         catch ( Throwable e )
         {
@@ -156,7 +156,7 @@ public class ExecuteBuilderContinuumAction
 
                 project.setOldState( 0 );
 
-                int buildResultId = getOldBuildId( context ); 
+                int buildResultId = getOldBuildId( context );
 
                 project.setLatestBuildId( buildResultId );
 
@@ -187,9 +187,9 @@ public class ExecuteBuilderContinuumAction
                 // ----------------------------------------------------------------------
                 // Copy over the buildResult result
                 // ----------------------------------------------------------------------
-    
+
                 buildResultDao.updateBuildResult( buildResult );
-    
+
                 buildResult = buildResultDao.getBuildResult( buildResult.getId() );
 
                 notifier.goalsCompleted( project, buildDefinition, buildResult );

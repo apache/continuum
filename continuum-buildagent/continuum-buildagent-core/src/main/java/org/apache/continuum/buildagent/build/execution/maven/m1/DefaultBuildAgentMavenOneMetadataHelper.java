@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultBuildAgentMavenOneMetadataHelper
     implements BuildAgentMavenOneMetadataHelper
 {
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentMavenOneMetadataHelper.class );
 
     public void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project )
         throws BuildAgentMavenOneMetadataHelperException

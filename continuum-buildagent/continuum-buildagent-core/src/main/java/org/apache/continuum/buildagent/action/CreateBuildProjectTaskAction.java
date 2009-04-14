@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public class CreateBuildProjectTaskAction
     extends AbstractAction
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( CreateBuildProjectTaskAction.class );
 
     /**
      * @plexus.requirement
@@ -53,12 +53,10 @@ public class CreateBuildProjectTaskAction
 
         for ( BuildContext buildContext : buildContexts )
         {
-            BuildProjectTask buildProjectTask = new BuildProjectTask( buildContext.getProjectId(),
-                                                                      buildContext.getBuildDefinitionId(),
-                                                                      buildContext.getTrigger(),
-                                                                      buildContext.getProjectName(),
-                                                                      "", 
-                                                                      buildContext.getScmResult() );
+            BuildProjectTask buildProjectTask =
+                new BuildProjectTask( buildContext.getProjectId(), buildContext.getBuildDefinitionId(),
+                                      buildContext.getTrigger(), buildContext.getProjectName(), "",
+                                      buildContext.getScmResult() );
             buildProjectTask.setMaxExecutionTime( buildContext.getMaxExecutionTime() * 1000 );
 
             try
@@ -71,12 +69,14 @@ public class CreateBuildProjectTaskAction
             catch ( TaskQueueException e )
             {
                 log.error( "Error while enqueing build task for project " + buildContext.getProjectId(), e );
-                throw new ContinuumException( "Error while enqueuing build task for project " + buildContext.getProjectId(), e );
+                throw new ContinuumException(
+                    "Error while enqueuing build task for project " + buildContext.getProjectId(), e );
             }
             catch ( TaskQueueManagerException e )
             {
                 log.error( "Error while checking if project " + buildContext.getProjectId() + " is in build queue", e );
-                throw new ContinuumException( "Error while checking if project " + buildContext.getProjectId() + " is in build queue", e );
+                throw new ContinuumException(
+                    "Error while checking if project " + buildContext.getProjectId() + " is in build queue", e );
             }
         }
 
@@ -85,8 +85,8 @@ public class CreateBuildProjectTaskAction
             boolean stop = false;
             while ( !stop )
             {
-                if ( buildAgentTaskQueueManager.getCurrentProjectInBuilding() <= 0 && 
-                               !buildAgentTaskQueueManager.hasBuildTaskInQueue()  )
+                if ( buildAgentTaskQueueManager.getCurrentProjectInBuilding() <= 0 &&
+                    !buildAgentTaskQueueManager.hasBuildTaskInQueue() )
                 {
                     stop = true;
                 }

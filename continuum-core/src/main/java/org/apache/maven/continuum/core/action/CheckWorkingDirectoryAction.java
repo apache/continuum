@@ -19,12 +19,12 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Map;
+
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
-
-import java.io.File;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -61,6 +61,6 @@ public class CheckWorkingDirectoryAction
 
         File[] files = workingDirectory.listFiles();
 
-        context.put( KEY_WORKING_DIRECTORY_EXISTS, Boolean.valueOf( files.length > 0 ) );
+        context.put( KEY_WORKING_DIRECTORY_EXISTS, files.length > 0 );
     }
 }

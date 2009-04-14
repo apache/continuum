@@ -19,6 +19,11 @@ package org.apache.maven.continuum.buildcontroller;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
@@ -50,11 +55,6 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -63,7 +63,7 @@ import java.util.Map;
 public class DefaultBuildController
     implements BuildController
 {
-    private Logger log = LoggerFactory.getLogger( DefaultBuildController.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildController.class );
 
     /**
      * @plexus.requirement
@@ -79,12 +79,12 @@ public class DefaultBuildController
      * @plexus.requirement
      */
     private ProjectDao projectDao;
-    
+
     /**
      * @plexus.requirement
      */
     private ProjectGroupDao projectGroupDao;
-    
+
     /**
      * @plexus.requirement
      */
@@ -132,7 +132,7 @@ public class DefaultBuildController
             log.info( "Error updating from SCM, not building" );
             return;
         }
-        
+
         log.info( "Starting build of " + context.getProject().getName() );
         startBuild( context );
 
@@ -165,7 +165,7 @@ public class DefaultBuildController
 
             context.setCancelled( (Boolean) actionContext.get( AbstractContinuumAction.KEY_CANCELLED ) );
 
-            String s = (String) actionContext.get( AbstractContinuumAction.KEY_BUILD_ID );
+            String s = AbstractContinuumAction.getBuildId( actionContext );
 
             if ( s != null && !context.isCancelled() )
             {
@@ -213,7 +213,7 @@ public class DefaultBuildController
             {
                 try
                 {
-                    String s = (String) context.getActionContext().get( AbstractContinuumAction.KEY_BUILD_ID );
+                    String s = AbstractContinuumAction.getBuildId( context.getActionContext() );
 
                     if ( s != null )
                     {
@@ -328,7 +328,8 @@ public class DefaultBuildController
      * @return
      * @throws TaskExecutionException
      */
-    protected BuildContext initializeBuildContext( int projectId, int buildDefinitionId, int trigger, ScmResult scmResult )
+    protected BuildContext initializeBuildContext( int projectId, int buildDefinitionId, int trigger,
+                                                   ScmResult scmResult )
         throws TaskExecutionException
     {
         BuildContext context = new BuildContext();
@@ -352,7 +353,7 @@ public class DefaultBuildController
 
             context.setOldBuildResult( oldBuildResult );
 
-		    context.setScmResult( scmResult );
+            context.setScmResult( scmResult );
 
             // CONTINUUM-1871 olamy if continuum is killed during building oldBuildResult will have a endTime 0
             // this means all changes since the project has been loaded in continuum will be in memory
@@ -635,7 +636,8 @@ public class DefaultBuildController
                 if ( dependencyProject != null )
                 {
                     List buildResults = buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
-                                                                                           context.getOldBuildResult().getEndTime() );
+                                                                                           context.getOldBuildResult().getEndTime() )
+                        ;
                     if ( buildResults != null && !buildResults.isEmpty() )
                     {
                         log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
@@ -644,14 +646,14 @@ public class DefaultBuildController
                     }
                     else
                     {
-                        log.debug( "Dependency not changed: " + dep.getGroupId() + ":" + dep.getArtifactId() +
-                            ":" + dep.getVersion() );
+                        log.debug( "Dependency not changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
+                            dep.getVersion() );
                     }
                 }
                 else
                 {
-                    log.debug( "Skip non Continuum project: " + dep.getGroupId() + ":" + dep.getArtifactId() +
-                        ":" + dep.getVersion() );
+                    log.debug( "Skip non Continuum project: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
+                        dep.getVersion() );
                 }
             }
 

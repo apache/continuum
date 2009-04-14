@@ -19,6 +19,11 @@ package org.apache.maven.continuum.build.settings;
  * under the License.
  */
 
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
@@ -42,11 +47,6 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @version $Id$
@@ -55,7 +55,7 @@ import java.util.List;
 public class DefaultSchedulesActivator
     implements SchedulesActivator
 {
-    private Logger log = LoggerFactory.getLogger( DefaultSchedulesActivator.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultSchedulesActivator.class );
 
     /**
      * @plexus.requirement
@@ -83,7 +83,7 @@ public class DefaultSchedulesActivator
     private Scheduler scheduler;
 
     //private int delay = 3600;
-    private int delay = 1;
+    private static final int delay = 1;
 
     public void activateSchedules( Continuum continuum )
         throws SchedulesActivationException
@@ -156,7 +156,7 @@ public class DefaultSchedulesActivator
     {
         log.info( "Deactivating schedule " + schedule.getName() );
 
-        unschedule( schedule, continuum );
+        unschedule( schedule );
     }
 
     protected void schedule( Schedule schedule, Continuum continuum, Class jobClass )
@@ -218,7 +218,7 @@ public class DefaultSchedulesActivator
         }
     }
 
-    protected void unschedule( Schedule schedule, Continuum continuum )
+    private void unschedule( Schedule schedule )
         throws SchedulesActivationException
     {
         try
@@ -242,12 +242,8 @@ public class DefaultSchedulesActivator
     {
         List<BuildDefinition> buildDef = buildDefinitionDao.getBuildDefinitionsBySchedule( schedule.getId() );
 
-        if ( buildDef.size() > 0 )
-        {
-            return true;
-        }
+        return buildDef.size() > 0;
 
-        return false;
     }
 
     private boolean isScheduleFromPurgeJob( Schedule schedule )
@@ -257,11 +253,7 @@ public class DefaultSchedulesActivator
         List<DirectoryPurgeConfiguration> dirPurgeConfigs =
             directoryPurgeConfigurationDao.getDirectoryPurgeConfigurationsBySchedule( schedule.getId() );
 
-        if ( repoPurgeConfigs.size() > 0 || dirPurgeConfigs.size() > 0 )
-        {
-            return true;
-        }
+        return repoPurgeConfigs.size() > 0 || dirPurgeConfigs.size() > 0;
 
-        return false;
     }
 }
