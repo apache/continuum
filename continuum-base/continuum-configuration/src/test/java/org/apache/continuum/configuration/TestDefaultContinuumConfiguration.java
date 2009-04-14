@@ -19,14 +19,14 @@ package org.apache.continuum.configuration;
  * under the License.
  */
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -36,9 +36,9 @@ import java.util.List;
 public class TestDefaultContinuumConfiguration
     extends PlexusInSpringTestCase
 {
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( TestDefaultContinuumConfiguration.class );
 
-    private String confFile = "target/test-classes/conf/continuum.xml";
+    private static final String confFile = "target/test-classes/conf/continuum.xml";
 
     @Override
     protected void setUp()

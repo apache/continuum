@@ -19,14 +19,14 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import java.io.File;
+
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -35,9 +35,9 @@ import java.io.File;
 public class ConfigurationServiceTest
     extends PlexusInSpringTestCase
 {
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( ConfigurationServiceTest.class );
 
-    private String confFile = "target/test-classes/conf/continuum.xml";
+    private static final String confFile = "target/test-classes/conf/continuum.xml";
 
     @Override
     protected void setUp()

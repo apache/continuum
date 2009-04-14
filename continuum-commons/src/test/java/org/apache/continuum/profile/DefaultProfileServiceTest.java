@@ -1,5 +1,7 @@
 package org.apache.continuum.profile;
 
+import java.util.List;
+
 import org.apache.continuum.dao.DaoUtils;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.installation.InstallationService;
@@ -7,8 +9,6 @@ import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.profile.AlreadyExistsProfileException;
 import org.apache.maven.continuum.profile.ProfileService;
-
-import java.util.List;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -40,35 +40,35 @@ public class DefaultProfileServiceTest
 
     Installation jdk1;
 
-    String jdk1Name = "jdk1";
+    private static final String jdk1Name = "jdk1";
 
-    Installation jdk2;
+    private Installation jdk2;
 
-    String jdk2Name = "jdk2";
+    private static final String jdk2Name = "jdk2";
 
     Installation mvn205;
 
-    String mvn205Name = "mvn 2.0.5";
+    private static final String mvn205Name = "mvn 2.0.5";
 
     Installation mvn206;
 
-    String mvn206Name = "mvn 2.0.6";
+    private static final String mvn206Name = "mvn 2.0.6";
 
     Profile jdk1mvn205;
 
-    String jdk1mvn205Name = "jdk1 mvn 2.0.5";
+    private static final String jdk1mvn205Name = "jdk1 mvn 2.0.5";
 
     Profile jdk2mvn206;
 
-    String jdk2mvn206Name = "jdk2 mvn 2.0.6";
+    private static final String jdk2mvn206Name = "jdk2 mvn 2.0.6";
 
     Installation mvnOpts1;
 
-    String mvnOpts1Name = "mvnOpts1";
+    private static final String mvnOpts1Name = "mvnOpts1";
 
     Installation mvnOpts2;
 
-    String mvnOpts2Name = "mvnOpts2";
+    private static final String mvnOpts2Name = "mvnOpts2";
 
     protected void setUp()
         throws Exception

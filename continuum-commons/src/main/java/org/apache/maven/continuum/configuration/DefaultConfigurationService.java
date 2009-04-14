@@ -19,6 +19,13 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
@@ -37,13 +44,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @version $Id$
@@ -51,7 +51,7 @@ import javax.annotation.Resource;
 public class DefaultConfigurationService
     implements ConfigurationService
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultConfigurationService.class );
 
     // when adding a requirement, the template in spring-context.xml must be updated CONTINUUM-1207
 
