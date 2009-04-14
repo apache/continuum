@@ -25,8 +25,8 @@
               <buildNumber>1</buildNumber>
               <state>1</state>
               <trigger>1</trigger>
-              <startTime>1164693625928</startTime>
-              <endTime>1164693626928</endTime>
+              <startTime>1239696188773</startTime>
+              <endTime>1239696189773</endTime>
               <error>error1</error>
               <success>true</success>
               <exitCode>1</exitCode>
@@ -38,7 +38,7 @@
                   <change>
                     <author>author1.1</author>
                     <comment>comment1.1</comment>
-                    <date>1164693625935</date>
+                    <date>1239696188774</date>
                     <files>
                       <file>
                         <name>name1.1.1</name>
@@ -57,7 +57,7 @@
                   <change>
                     <author>author1.2</author>
                     <comment>comment1.2</comment>
-                    <date>1164693625936</date>
+                    <date>1239696188774</date>
                     <files>
                       <file>
                         <name>name1.2.1</name>
@@ -82,8 +82,8 @@
               <buildNumber>2</buildNumber>
               <state>2</state>
               <trigger>2</trigger>
-              <startTime>1164693627928</startTime>
-              <endTime>1164693628928</endTime>
+              <startTime>1239696190773</startTime>
+              <endTime>1239696191773</endTime>
               <error>error2</error>
               <exitCode>2</exitCode>
             </buildResult>
@@ -95,7 +95,7 @@
               <change>
                 <author>authorCO1.1</author>
                 <comment>commentCO1.1</comment>
-                <date>1164693625936</date>
+                <date>1239696188774</date>
                 <files>
                   <file>
                     <name>nameCO1.1.1</name>
@@ -114,7 +114,7 @@
               <change>
                 <author>authorCO1.2</author>
                 <comment>commentCO1.2</comment>
-                <date>1164693625936</date>
+                <date>1239696188774</date>
                 <files>
                   <file>
                     <name>nameCO1.2.1</name>
@@ -167,7 +167,7 @@
           </notifiers>
           <buildDefinitions>
             <buildDefinition>
-              <id>1</id>
+              <id>3</id>
               <goals>goals11</goals>
               <arguments>arguments11</arguments>
               <buildFile>buildFile11</buildFile>
@@ -175,7 +175,7 @@
               <profile id="2"></profile>
             </buildDefinition>
             <buildDefinition>
-              <id>2</id>
+              <id>4</id>
               <goals>goals12</goals>
               <arguments>arguments12</arguments>
               <buildFile>buildFile12</buildFile>
@@ -202,8 +202,8 @@
               <buildNumber>3</buildNumber>
               <state>3</state>
               <trigger>3</trigger>
-              <startTime>1164693629928</startTime>
-              <endTime>1164693630928</endTime>
+              <startTime>1239696192773</startTime>
+              <endTime>1239696193773</endTime>
               <error>error3</error>
               <success>true</success>
               <exitCode>3</exitCode>
@@ -215,7 +215,7 @@
                   <change>
                     <author>author3.1</author>
                     <comment>comment3.1</comment>
-                    <date>1164693625936</date>
+                    <date>1239696188774</date>
                     <files>
                       <file>
                         <name>name3.1.1</name>
@@ -234,7 +234,7 @@
                   <change>
                     <author>author3.2</author>
                     <comment>comment3.2</comment>
-                    <date>1164693625936</date>
+                    <date>1239696188774</date>
                     <files>
                       <file>
                         <name>name3.2.1</name>
@@ -302,7 +302,7 @@
           </notifiers>
           <buildDefinitions>
             <buildDefinition>
-              <id>3</id>
+              <id>5</id>
               <goals>goals13</goals>
               <arguments>arguments13</arguments>
               <buildFile>buildFile13</buildFile>
@@ -310,7 +310,7 @@
               <profile id="1"></profile>
             </buildDefinition>
             <buildDefinition>
-              <id>8</id>
+              <id>6</id>
               <goals>deploy</goals>
             </buildDefinition>
           </buildDefinitions>
@@ -341,7 +341,7 @@
       </notifiers>
       <buildDefinitions>
         <buildDefinition>
-          <id>4</id>
+          <id>2</id>
           <goals>goals1</goals>
           <arguments>arguments1</arguments>
           <buildFile>buildFile1</buildFile>
@@ -371,7 +371,7 @@
       </notifiers>
       <buildDefinitions>
         <buildDefinition>
-          <id>5</id>
+          <id>7</id>
           <goals>goals2</goals>
           <arguments>arguments2</arguments>
           <buildFile>buildFile2</buildFile>
@@ -379,7 +379,7 @@
           <profile id="1"></profile>
         </buildDefinition>
         <buildDefinition>
-          <id>6</id>
+          <id>8</id>
           <goals>goals3</goals>
           <arguments>arguments3</arguments>
           <buildFile>buildFile3</buildFile>
@@ -387,7 +387,7 @@
           <profile id="2"></profile>
         </buildDefinition>
         <buildDefinition>
-          <id>7</id>
+          <id>9</id>
           <goals>deploy</goals>
         </buildDefinition>
       </buildDefinitions>
@@ -421,7 +421,7 @@
     </installation>
     <installation>
       <type>maven2</type>
-      <varValue>/usr/local/maven-2.0-alpha-3</varValue>    
+      <varValue>/usr/local/maven-2.0-alpha-3</varValue>
       <varName>M2_HOME</varName>
       <name>Maven 2.0 alpha 3</name>
       <installationId>2</installationId>
@@ -606,4 +606,70 @@
       <name>build queue 3</name>
     </buildQueue>
   </buildQueues>
+  <buildDefinitions>
+    <buildDefinition>
+      <id>1</id>
+      <goals>goals14</goals>
+      <arguments>arguments14</arguments>
+      <buildFile>buildFile14</buildFile>
+      <schedule id="2"></schedule>
+      <profile id="1"></profile>
+    </buildDefinition>
+    <buildDefinition>
+      <id>2</id>
+      <goals>goals1</goals>
+      <arguments>arguments1</arguments>
+      <buildFile>buildFile1</buildFile>
+      <schedule id="1"></schedule>
+      <profile id="1"></profile>
+    </buildDefinition>
+    <buildDefinition>
+      <id>3</id>
+      <goals>goals11</goals>
+      <arguments>arguments11</arguments>
+      <buildFile>buildFile11</buildFile>
+      <schedule id="2"></schedule>
+      <profile id="2"></profile>
+    </buildDefinition>
+    <buildDefinition>
+      <id>4</id>
+      <goals>goals12</goals>
+      <arguments>arguments12</arguments>
+      <buildFile>buildFile12</buildFile>
+      <schedule id="1"></schedule>
+      <profile id="2"></profile>
+    </buildDefinition>
+    <buildDefinition>
+      <id>5</id>
+      <goals>goals13</goals>
+      <arguments>arguments13</arguments>
+      <buildFile>buildFile13</buildFile>
+      <schedule id="1"></schedule>
+      <profile id="1"></profile>
+    </buildDefinition>
+    <buildDefinition>
+      <id>6</id>
+      <goals>deploy</goals>
+    </buildDefinition>
+    <buildDefinition>
+      <id>7</id>
+      <goals>goals2</goals>
+      <arguments>arguments2</arguments>
+      <buildFile>buildFile2</buildFile>
+      <schedule id="2"></schedule>
+      <profile id="1"></profile>
+    </buildDefinition>
+    <buildDefinition>
+      <id>8</id>
+      <goals>goals3</goals>
+      <arguments>arguments3</arguments>
+      <buildFile>buildFile3</buildFile>
+      <schedule id="2"></schedule>
+      <profile id="2"></profile>
+    </buildDefinition>
+    <buildDefinition>
+      <id>9</id>
+      <goals>deploy</goals>
+    </buildDefinition>
+  </buildDefinitions>
 </continuumDatabase>

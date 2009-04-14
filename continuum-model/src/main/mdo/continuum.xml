@@ -128,12 +128,20 @@
         </field>
         <field>
           <name>buildQueues</name>
-          <version>1.3.2</version>
+          <version>1.3.2+</version>
           <association java.init="field">
             <type>BuildQueue</type>
             <multiplicity>*</multiplicity>
           </association>
           <defaultValue>new java.util.ArrayList()</defaultValue>
+        </field>
+        <field>
+          <name>buildDefinitions</name>
+          <version>1.3.3+</version>
+          <association java.init="field">
+            <type>BuildDefinition</type>
+            <multiplicity>*</multiplicity>
+          </association>
         </field>
       </fields>
     </class>
