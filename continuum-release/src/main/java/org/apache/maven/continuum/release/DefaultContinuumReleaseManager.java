@@ -251,7 +251,8 @@ public class DefaultContinuumReleaseManager
 
         if ( repository != null )
         {
-            descriptor.setAdditionalArguments( "\"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
+            descriptor.setAdditionalArguments( descriptor.getAdditionalArguments() + " \"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
+            //descriptor.setAdditionalArguments( "\"-Dmaven.repo.local=" + repository.getLocation() + "\"" );
         }
 
         //other properties
