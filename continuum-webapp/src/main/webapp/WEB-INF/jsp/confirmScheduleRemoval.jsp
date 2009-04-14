@@ -36,7 +36,7 @@
           <div class="warningmessage">
             <p>
               <strong>
-                <s:text name="schedules.confirmation.message">
+                <s:text name="deleteSchedule.confirmation.message">
                   <s:param><s:property value="%{name}"/></s:param>
                 </s:text>
               </strong>

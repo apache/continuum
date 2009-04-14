@@ -82,7 +82,7 @@
       <s:param name="tabName" value="'Summary'"/>
     </s:action>
 
-    <h3><s:text name="projectGroup.information.title"/></h3>
+    <h3><s:text name="projectGroup.information.title"><s:param>${projectGroup.name}</s:param></s:text></h3>
     <div class="axial">
       <table border="1" cellspacing="2" cellpadding="3" width="100%">
         <c1:data label="%{getText('projectGroup.name.label')}" name="projectGroup.name"/>

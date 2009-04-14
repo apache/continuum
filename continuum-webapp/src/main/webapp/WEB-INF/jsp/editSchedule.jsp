@@ -29,7 +29,7 @@
 <body>
 <div class="app">
   <div id="axial" class="h3">
-    <h3><s:text name="editSchedule.page.title"/></h3>
+    <h3><s:text name="editSchedule.section.title"/></h3>
 
     <div class="axial">
       <s:form action="saveSchedule" method="post" validate="true">

@@ -35,7 +35,7 @@
           <jsp:param name="tab" value="view"/>
         </jsp:include>
 
-        <h3><s:text name="projectView.section.title"/></h3>
+        <h3><s:text name="projectView.section.title"><s:param>${project.name}</s:param></s:text></h3>
 
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">
