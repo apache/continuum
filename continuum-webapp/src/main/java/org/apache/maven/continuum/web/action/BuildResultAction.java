@@ -19,11 +19,17 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
 import org.apache.continuum.builder.utils.ContinuumBuildConstant;
+import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -34,12 +40,6 @@ import org.apache.maven.continuum.web.util.StateGenerator;
 import org.apache.struts2.ServletActionContext;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -89,7 +89,8 @@ public class BuildResultAction
         // check if there are surefire results to display
         project = getContinuum().getProject( getProjectId() );
 
-        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() && project.getState() == ContinuumProjectState.BUILDING )
+        if ( getContinuum().getConfiguration().isDistributedBuildEnabled() &&
+            project.getState() == ContinuumProjectState.BUILDING )
         {
             Map<String, Object> map = distributedBuildManager.getBuildResult( project.getId() );
 
@@ -120,19 +121,13 @@ public class BuildResultAction
             File surefireReportsDirectory =
                 getContinuum().getConfiguration().getTestReportsDirectory( buildId, getProjectId() );
             File[] files = surefireReportsDirectory.listFiles();
-            if ( files == null )
-            {
-                hasSurefireResults = false;
-            }
-            else
-            {
-                hasSurefireResults = files.length > 0;
-            }
+            hasSurefireResults = files != null && files.length > 0;
             changeSet = getContinuum().getChangesSinceLastSuccess( getProjectId(), getBuildId() );
 
             buildOutput = getBuildOutputText();
 
-            state = StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
+            state =
+                StateGenerator.generate( buildResult.getState(), ServletActionContext.getRequest().getContextPath() );
 
             this.setCanDelete( this.canRemoveBuildResult( buildResult ) );
         }

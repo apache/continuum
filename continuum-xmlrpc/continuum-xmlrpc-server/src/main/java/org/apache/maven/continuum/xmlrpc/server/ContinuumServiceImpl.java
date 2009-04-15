@@ -80,7 +80,7 @@ import net.sf.dozer.util.mapping.MapperIF;
 public class ContinuumServiceImpl
     extends AbstractContinuumSecureService
 {
-    private static MapperIF mapper = DozerBeanMapperSingletonWrapper.getInstance();
+    private static final MapperIF mapper = DozerBeanMapperSingletonWrapper.getInstance();
 
     /**
      * @plexus.requirement
@@ -1561,29 +1561,24 @@ public class ContinuumServiceImpl
 
         if ( result.hasErrors() )
         {
-            for ( Iterator i = result.getErrors().iterator(); i.hasNext(); )
+            for ( String error : result.getErrors() )
             {
-                String error = (String) i.next();
                 res.addError( error );
             }
         }
 
         if ( result.getProjects() != null )
         {
-            for ( Iterator i = result.getProjects().iterator(); i.hasNext(); )
+            for ( org.apache.maven.continuum.model.project.Project project : result.getProjects() )
             {
-                org.apache.maven.continuum.model.project.Project project =
-                    (org.apache.maven.continuum.model.project.Project) i.next();
                 res.addProject( populateProjectSummary( project ) );
             }
         }
 
         if ( result.getProjectGroups() != null )
         {
-            for ( Iterator i = result.getProjectGroups().iterator(); i.hasNext(); )
+            for ( org.apache.maven.continuum.model.project.ProjectGroup projectGroup : result.getProjectGroups() )
             {
-                org.apache.maven.continuum.model.project.ProjectGroup projectGroup =
-                    (org.apache.maven.continuum.model.project.ProjectGroup) i.next();
                 res.addProjectGroup( populateProjectGroupSummary( projectGroup ) );
             }
         }

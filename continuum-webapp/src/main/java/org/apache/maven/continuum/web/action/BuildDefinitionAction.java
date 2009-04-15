@@ -19,6 +19,12 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
@@ -32,13 +38,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * BuildDefinitionAction:
@@ -72,7 +71,7 @@ public class BuildDefinitionAction
 
     private boolean buildFresh;
 
-    private Map schedules;
+    private Map<Integer, String> schedules;
 
     private List profiles;
 
@@ -105,15 +104,13 @@ public class BuildDefinitionAction
 
         if ( schedules == null )
         {
-            schedules = new HashMap();
+            schedules = new HashMap<Integer, String>();
 
-            Collection allSchedules = getContinuum().getSchedules();
+            Collection<Schedule> allSchedules = getContinuum().getSchedules();
 
-            for ( Iterator i = allSchedules.iterator(); i.hasNext(); )
+            for ( Schedule schedule : allSchedules )
             {
-                Schedule schedule = (Schedule) i.next();
-
-                schedules.put( new Integer( schedule.getId() ), schedule.getName() );
+                schedules.put( schedule.getId(), schedule.getName() );
             }
         }
 
@@ -213,22 +210,23 @@ public class BuildDefinitionAction
                 {
                     if ( ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR.equals( executor ) )
                     {
-                        buildFile = ( (BuildDefinition) buildDefinitionService
-                            .getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions().get( 0 ) )
-                            .getBuildFile();
+                        buildFile =
+                            ( (BuildDefinition) buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate().getBuildDefinitions().get(
+                                0 ) ).getBuildFile();
                         buildDefinitionType = ContinuumBuildExecutorConstants.MAVEN_TWO_BUILD_EXECUTOR;
                     }
                     else if ( ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR.equals( executor ) )
                     {
-                        buildFile = ( (BuildDefinition) buildDefinitionService
-                            .getDefaultMavenOneBuildDefinitionTemplate().getBuildDefinitions().get( 0 ) )
-                            .getBuildFile();
+                        buildFile =
+                            ( (BuildDefinition) buildDefinitionService.getDefaultMavenOneBuildDefinitionTemplate().getBuildDefinitions().get(
+                                0 ) ).getBuildFile();
                         buildDefinitionType = ContinuumBuildExecutorConstants.MAVEN_ONE_BUILD_EXECUTOR;
                     }
                     else if ( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR.equals( executor ) )
                     {
-                        buildFile = ( (BuildDefinition) buildDefinitionService.getDefaultAntBuildDefinitionTemplate()
-                            .getBuildDefinitions().get( 0 ) ).getBuildFile();
+                        buildFile =
+                            ( (BuildDefinition) buildDefinitionService.getDefaultAntBuildDefinitionTemplate().getBuildDefinitions().get(
+                                0 ) ).getBuildFile();
                         buildDefinitionType = ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR;
                     }
                     else
@@ -579,12 +577,12 @@ public class BuildDefinitionAction
         this.buildFresh = buildFresh;
     }
 
-    public Map getSchedules()
+    public Map<Integer, String> getSchedules()
     {
         return schedules;
     }
 
-    public void setSchedules( final Map schedules )
+    public void setSchedules( final Map<Integer, String> schedules )
     {
         this.schedules = schedules;
     }

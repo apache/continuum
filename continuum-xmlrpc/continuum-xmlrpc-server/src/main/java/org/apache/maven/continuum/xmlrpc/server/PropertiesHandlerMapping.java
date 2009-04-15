@@ -44,21 +44,20 @@ public class PropertiesHandlerMapping
     extends PropertyHandlerMapping
     implements Contextualizable
 {
-    private Logger log = LoggerFactory.getLogger( PropertiesHandlerMapping.class );
+    private static final Logger log = LoggerFactory.getLogger( PropertiesHandlerMapping.class );
 
     /**
      * @plexus.requirement role="org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent"
      */
-    private Map xmlrpcComponents;
+    private Map<String, Object> xmlrpcComponents;
 
     private PlexusContainer container;
 
     public void load()
         throws XmlRpcException
     {
-        for ( Iterator i = xmlrpcComponents.keySet().iterator(); i.hasNext(); )
+        for ( String key : xmlrpcComponents.keySet() )
         {
-            String key = (String) i.next();
             Class cl = xmlrpcComponents.get( key ).getClass();
             if ( log.isDebugEnabled() )
             {
@@ -71,9 +70,9 @@ public class PropertiesHandlerMapping
         if ( log.isDebugEnabled() )
         {
             String[] methods = getListMethods();
-            for ( int i = 0; i < methods.length; i++ )
+            for ( String method : methods )
             {
-                log.debug( methods[i] );
+                log.debug( method );
             }
         }
     }

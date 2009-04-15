@@ -19,10 +19,10 @@ package org.apache.continuum.purge.repository.utils;
  * under the License.
  */
 
-import org.codehaus.plexus.util.SelectorUtils;
-
 import java.util.Arrays;
 import java.util.List;
+
+import org.codehaus.plexus.util.SelectorUtils;
 
 /**
  * Codes were taken from Archiva and made some changes.
@@ -33,9 +33,9 @@ public class FileTypes
 
     private List<String> ignoredFileTypePatterns;
 
-    public static final List<String> DEFAULT_EXCLUSIONS = Arrays.asList( "**/maven-metadata.xml",
-                                                                         "**/maven-metadata-*.xml", "**/*.sha1",
-                                                                         "**/*.asc", "**/*.md5", "**/*.pgp" );
+    public static final List<String> DEFAULT_EXCLUSIONS =
+        Arrays.asList( "**/maven-metadata.xml", "**/maven-metadata-*.xml", "**/*.sha1", "**/*.asc", "**/*.md5",
+                       "**/*.pgp" );
 
     public List<String> getIgnoredFileTypePatterns()
     {
@@ -62,7 +62,7 @@ public class FileTypes
             return false;
         }
 
-        for ( String pattern : (List<String>) artifactFileTypePatterns )
+        for ( String pattern : artifactFileTypePatterns )
         {
             if ( SelectorUtils.matchPath( pattern, relativePath, false ) )
             {

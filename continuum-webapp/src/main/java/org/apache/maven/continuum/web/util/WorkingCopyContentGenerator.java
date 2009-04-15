@@ -19,14 +19,14 @@ package org.apache.maven.continuum.web.util;
  * under the License.
  */
 
-import org.codehaus.plexus.util.StringUtils;
-
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -38,7 +38,7 @@ public class WorkingCopyContentGenerator
 
     private String urlParamSeparator;
 
-    private static DecimalFormat decFormatter = new DecimalFormat( "###.##" );
+    private static final DecimalFormat decFormatter = new DecimalFormat( "###.##" );
 
     private static final long KILO = 1024;
 

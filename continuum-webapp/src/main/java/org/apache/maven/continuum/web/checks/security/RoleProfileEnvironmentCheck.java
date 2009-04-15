@@ -42,7 +42,7 @@ import java.util.List;
 public class RoleProfileEnvironmentCheck
     implements EnvironmentCheck
 {
-    private Logger log = LoggerFactory.getLogger( RoleProfileEnvironmentCheck.class );
+    private static final Logger log = LoggerFactory.getLogger( RoleProfileEnvironmentCheck.class );
 
     /**
      * @plexus.requirement role-hint="default"
@@ -60,12 +60,10 @@ public class RoleProfileEnvironmentCheck
         {
             log.info( "Checking roles list." );
 
-            Collection projectGroups = continuum.getAllProjectGroups();
+            Collection<ProjectGroup> projectGroups = continuum.getAllProjectGroups();
 
-            for ( Iterator i = projectGroups.iterator(); i.hasNext(); )
+            for ( ProjectGroup group: projectGroups )
             {
-                ProjectGroup group = (ProjectGroup) i.next();
-
                 // gets the role, making it if it doesn't exist
                 //TODO: use continuum.executeAction( "add-assignable-roles", context ); or something like that to avoid code duplication
                 if ( !roleManager.templatedRoleExists( "project-administrator", group.getName() ) )

@@ -36,13 +36,13 @@ public final class GenerateRecipentNotifier
 
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public static String generate( ProjectNotifier notifier )
     {
         Map configuration = notifier.getConfiguration();
         String recipent = "unknown";
-        if ( ( "mail".equals( notifier.getType() ) ) || ( "msn".equals( notifier.getType() ) )
-            || ( "jabber".equals( notifier.getType() ) ) )
+        if ( ( "mail".equals( notifier.getType() ) ) || ( "msn".equals( notifier.getType() ) ) ||
+            ( "jabber".equals( notifier.getType() ) ) )
         {
             if ( StringUtils.isNotEmpty( (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD ) ) )
             {
@@ -68,9 +68,9 @@ public final class GenerateRecipentNotifier
             recipent = (String) configuration.get( "host" );
             if ( configuration.get( "port" ) != null )
             {
-                recipent = recipent + ":" + (String) configuration.get( "port" );
+                recipent = recipent + ":" + configuration.get( "port" );
             }
-            recipent = recipent + ":" + (String) configuration.get( "channel" );
+            recipent = recipent + ":" + configuration.get( "channel" );
         }
         if ( "wagon".equals( notifier.getType() ) )
         {

@@ -80,11 +80,11 @@ public class BuildProjectAction
 
         if ( projectId > 0 )
         {
-            if ( fromGroupPage == true )
+            if ( fromGroupPage )
             {
                 return "to_group_page";
             }
-            if ( fromProjectPage == true )
+            if ( fromProjectPage )
             {
                 return "to_project_page";
             }

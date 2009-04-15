@@ -33,14 +33,9 @@ import org.jmock.MockObjectTestCase;
 public class ReleasePrepareActionTest
     extends MockObjectTestCase
 {
+    private final ReleasePrepareAction action;
 
-    private ReleasePrepareAction action;
-
-    private Mock continuumMock;
-
-    private Mock securitySessionMock;
-
-    private Mock actionContextMock;
+    private final Mock continuumMock;
 
     public ReleasePrepareActionTest()
     {

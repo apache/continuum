@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public class AddProjectAction
     extends ContinuumActionSupport
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( AddProjectAction.class );
 
     private String projectName;
 

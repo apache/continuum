@@ -19,10 +19,11 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
+import com.opensymphony.xwork2.Preparable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,13 +42,11 @@ import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
 
-import com.opensymphony.xwork2.Preparable;
-
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 16 sept. 07
  * @version $Id$
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="buildDefinitionTemplates"
+ * @since 16 sept. 07
  */
 public class BuildDefinitionTemplateAction
     extends AbstractBuildDefinitionAction
@@ -66,11 +65,11 @@ public class BuildDefinitionTemplateAction
     private Collection<Schedule> schedules;
 
     private List<Profile> profiles;
- 
+
     private List<String> selectedBuildDefinitionIds;
-    
+
     private List<BuildDefinition> buildDefinitions;
-    
+
     // -------------------------------------------------------
     //  Webwork Methods
     // ------------------------------------------------------- 
@@ -107,16 +106,15 @@ public class BuildDefinitionTemplateAction
     public String edit()
         throws Exception
     {
-        this.buildDefinitionTemplate = getContinuum().getBuildDefinitionService()
-            .getBuildDefinitionTemplate( this.buildDefinitionTemplate.getId() );
+        this.buildDefinitionTemplate = getContinuum().getBuildDefinitionService().getBuildDefinitionTemplate(
+            this.buildDefinitionTemplate.getId() );
         this.setBuildDefinitions( getContinuum().getBuildDefinitionService().getAllTemplates() );
         this.selectedBuildDefinitionIds = new ArrayList<String>();
         if ( this.buildDefinitionTemplate.getBuildDefinitions() != null )
         {
-            for ( Iterator<BuildDefinition> iterator = this.buildDefinitionTemplate.getBuildDefinitions().iterator(); iterator
-                .hasNext(); )
+            for ( BuildDefinition bd : (List<BuildDefinition>) buildDefinitionTemplate.getBuildDefinitions() )
             {
-                this.selectedBuildDefinitionIds.add( Integer.toString( iterator.next().getId() ) );
+                this.selectedBuildDefinitionIds.add( Integer.toString( bd.getId() ) );
             }
         }
         List<BuildDefinition> nonUsedBuildDefinitions = new ArrayList<BuildDefinition>();
@@ -143,8 +141,8 @@ public class BuildDefinitionTemplateAction
         else
         {
             buildDefinitionTemplate.setBuildDefinitions( selectedBuildDefinitions );
-            this.buildDefinitionTemplate = this.getContinuum().getBuildDefinitionService()
-                .addBuildDefinitionTemplate( buildDefinitionTemplate );
+            this.buildDefinitionTemplate =
+                this.getContinuum().getBuildDefinitionService().addBuildDefinitionTemplate( buildDefinitionTemplate );
         }
 
         return SUCCESS;
@@ -155,9 +153,8 @@ public class BuildDefinitionTemplateAction
     {
         if ( confirmed )
         {
-            buildDefinitionTemplate =
-                getContinuum().getBuildDefinitionService().getBuildDefinitionTemplate(
-                                                                                       this.buildDefinitionTemplate.getId() );
+            buildDefinitionTemplate = getContinuum().getBuildDefinitionService().getBuildDefinitionTemplate(
+                this.buildDefinitionTemplate.getId() );
             this.getContinuum().getBuildDefinitionService().removeBuildDefinitionTemplate( buildDefinitionTemplate );
         }
         else
@@ -166,7 +163,7 @@ public class BuildDefinitionTemplateAction
         }
         return SUCCESS;
     }
-    
+
     private List<BuildDefinition> getBuildDefinitionsFromSelectedBuildDefinitions()
         throws ContinuumException
     {
@@ -177,8 +174,8 @@ public class BuildDefinitionTemplateAction
         List<BuildDefinition> selectedBuildDefinitions = new ArrayList<BuildDefinition>();
         for ( String selectedBuildDefinitionId : selectedBuildDefinitionIds )
         {
-            BuildDefinition buildDefinition = getContinuum()
-                .getBuildDefinition( Integer.parseInt( selectedBuildDefinitionId ) );
+            BuildDefinition buildDefinition =
+                getContinuum().getBuildDefinition( Integer.parseInt( selectedBuildDefinitionId ) );
             selectedBuildDefinitions.add( buildDefinition );
         }
         return selectedBuildDefinitions;
@@ -192,13 +189,12 @@ public class BuildDefinitionTemplateAction
     {
         return INPUT;
     }
-    
+
     public String editBuildDefinition()
         throws Exception
     {
-        this.buildDefinition = getContinuum().getBuildDefinitionService().getBuildDefinition(
-                                                                                              this.buildDefinition
-                                                                                                  .getId() );
+        this.buildDefinition =
+            getContinuum().getBuildDefinitionService().getBuildDefinition( this.buildDefinition.getId() );
         return SUCCESS;
     }
 
@@ -224,15 +220,15 @@ public class BuildDefinitionTemplateAction
                 buildDefinition.setSchedule( getContinuum().getSchedule( buildDefinition.getSchedule().getId() ) );
             }
         }
-        
-        
+
         if ( this.buildDefinition.getId() > 0 )
         {
             this.getContinuum().getBuildDefinitionService().updateBuildDefinition( buildDefinition );
         }
         else
         {
-            this.buildDefinition = this.getContinuum().getBuildDefinitionService().addBuildDefinition( buildDefinition );
+            this.buildDefinition =
+                this.getContinuum().getBuildDefinitionService().addBuildDefinition( buildDefinition );
         }
 
         return SUCCESS;
@@ -243,14 +239,15 @@ public class BuildDefinitionTemplateAction
     {
         if ( confirmed )
         {
-            buildDefinition = getContinuum().getBuildDefinitionService().getBuildDefinition( this.buildDefinition.getId() );
+            buildDefinition =
+                getContinuum().getBuildDefinitionService().getBuildDefinition( this.buildDefinition.getId() );
             this.getContinuum().getBuildDefinitionService().removeBuildDefinition( buildDefinition );
         }
         else
         {
             return CONFIRM;
         }
-        
+
         return SUCCESS;
     }
 
@@ -274,7 +271,7 @@ public class BuildDefinitionTemplateAction
 
     public BuildDefinitionTemplate getBuildDefinitionTemplate()
     {
-        if (buildDefinitionTemplate == null)
+        if ( buildDefinitionTemplate == null )
         {
             this.buildDefinitionTemplate = new BuildDefinitionTemplate();
         }
@@ -349,7 +346,7 @@ public class BuildDefinitionTemplateAction
     {
         return schedules;
     }
-    
+
     public List<BuildDefinition> getBuildDefinitions()
     {
         return buildDefinitions;

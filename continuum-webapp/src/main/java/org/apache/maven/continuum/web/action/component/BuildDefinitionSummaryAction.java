@@ -20,7 +20,6 @@ package org.apache.maven.continuum.web.action.component;
  */
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.continuum.ContinuumException;
@@ -43,7 +42,7 @@ import org.slf4j.LoggerFactory;
 public class BuildDefinitionSummaryAction
     extends AbstractBuildDefinitionAction
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( BuildDefinitionSummaryAction.class );
 
     private int projectGroupId;
 
@@ -103,9 +102,8 @@ public class BuildDefinitionSummaryAction
 
             checkViewProjectGroupAuthorization( projectGroup.getName() );
 
-            for ( Iterator i = projectGroup.getProjects().iterator(); i.hasNext(); )
+            for ( Project project : (List<Project>) projectGroup.getProjects() )
             {
-                Project project = (Project) i.next();
                 projectBuildDefinitionSummaries.addAll( gatherProjectBuildDefinitionSummaries( project.getId() ) );
 
             }
@@ -154,9 +152,9 @@ public class BuildDefinitionSummaryAction
         List<BuildDefinitionSummary> summaryList = new ArrayList<BuildDefinitionSummary>();
 
         Project project = getContinuum().getProjectWithAllDetails( projectId );
-        for ( Iterator i = project.getBuildDefinitions().iterator(); i.hasNext(); )
+        for ( BuildDefinition bd : (List<BuildDefinition>) project.getBuildDefinitions() )
         {
-            BuildDefinitionSummary bds = generateBuildDefinitionSummary( (BuildDefinition) i.next() );
+            BuildDefinitionSummary bds = generateBuildDefinitionSummary( bd );
             bds.setFrom( "PROJECT" );
             bds.setProjectId( project.getId() );
             bds.setProjectName( project.getName() );
@@ -174,9 +172,9 @@ public class BuildDefinitionSummaryAction
 
         projectGroup = getContinuum().getProjectGroupWithBuildDetails( projectGroupId );
 
-        for ( Iterator i = projectGroup.getBuildDefinitions().iterator(); i.hasNext(); )
+        for ( BuildDefinition bd : (List<BuildDefinition>) projectGroup.getBuildDefinitions() )
         {
-            BuildDefinitionSummary bds = generateBuildDefinitionSummary( (BuildDefinition) i.next() );
+            BuildDefinitionSummary bds = generateBuildDefinitionSummary( bd );
             bds.setFrom( "GROUP" );
             bds.setProjectGroupId( projectGroup.getId() );
 

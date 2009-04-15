@@ -19,11 +19,12 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.Preparable;
+
 import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.Preparable;
 import org.apache.maven.continuum.Continuum;
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
@@ -65,8 +66,8 @@ public class ContinuumActionSupport
      * @plexus.requirement
      */
     private Continuum continuum;
-    
-    protected SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss aaa z");
+
+    protected final SimpleDateFormat dateFormatter = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aaa z" );
 
     public void prepare()
         throws Exception
@@ -461,9 +462,10 @@ public class ContinuumActionSupport
     }
 
     /**
-     * Check if the current user is authorized to manage queues 
-     * 
-     * @throws AuthenticationRequiredException if the user isn't authenticated
+     * Check if the current user is authorized to manage queues
+     *
+     * @throws AuthenticationRequiredException
+     *                                        if the user isn't authenticated
      * @throws AuthorizationRequiredException if the user isn't authorized
      */
     protected void checkManageQueuesAuthorization()
@@ -473,16 +475,16 @@ public class ContinuumActionSupport
         {
             throw new AuthenticationRequiredException( "Authentication required" );
         }
-        
+
         checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_QUEUES );
     }
-    
+
     protected void checkManageLocalRepositoriesAuthorization()
         throws AuthorizationRequiredException
-    {   
+    {
         checkAuthorization( ContinuumRoleConstants.CONTINUUM_MANAGE_REPOSITORIES );
     }
-    
+
     /**
      * Get the security session
      *
@@ -537,9 +539,9 @@ public class ContinuumActionSupport
 
         return true;
     }
-    
+
     protected ResourceBundle getResourceBundle()
     {
         return getTexts( "localization/Continuum" );
-    }    
+    }
 }

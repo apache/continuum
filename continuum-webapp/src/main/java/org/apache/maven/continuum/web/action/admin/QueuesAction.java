@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.builder.distributed.executor.DistributedBuildTaskQueueExecutor;
 import org.apache.continuum.builder.distributed.manager.DistributedBuildManager;
+import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
@@ -42,7 +42,6 @@ import org.apache.maven.continuum.web.action.ContinuumActionSupport;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.DistributedBuildSummary;
-import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
@@ -62,7 +61,7 @@ public class QueuesAction
     extends ContinuumActionSupport
     implements SecureAction
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( QueuesAction.class );
 
     private static final String DISTRIBUTED_BUILD_SUCCESS = "distributed-build-success";
 

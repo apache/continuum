@@ -171,12 +171,12 @@ public class PerformReleaseTaskExecutor
         return reactorProjects;
     }
 
-    private void addModules( List reactorProjects, MavenProject project )
+    private void addModules( List<MavenProject> reactorProjects, MavenProject project )
         throws ContinuumReleaseException
     {
-        for ( Iterator modules = project.getModules().iterator(); modules.hasNext(); )
+        for ( Object o : project.getModules() )
         {
-            String moduleDir = modules.next().toString();
+            String moduleDir = o.toString();
 
             File pomFile = new File( project.getBasedir(), moduleDir + "/pom.xml" );
             System.out.println( pomFile.getAbsolutePath() );

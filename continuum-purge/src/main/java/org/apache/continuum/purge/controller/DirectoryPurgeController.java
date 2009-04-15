@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 public class DirectoryPurgeController
     implements PurgeController
 {
-    private Logger log = LoggerFactory.getLogger( DirectoryPurgeController.class );
+    private static final Logger log = LoggerFactory.getLogger( DirectoryPurgeController.class );
 
     private ContinuumPurgeExecutor purgeExecutor;
 

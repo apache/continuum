@@ -20,6 +20,13 @@ package org.apache.maven.continuum.web.view;
  */
 
 import com.opensymphony.xwork2.ActionContext;
+
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+
 import org.apache.maven.continuum.security.ContinuumRoleConstants;
 import org.apache.maven.continuum.web.model.ProjectSummary;
 import org.apache.struts2.views.util.UrlHelper;
@@ -33,11 +40,6 @@ import org.codehaus.plexus.redback.system.SecuritySystemConstants;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
-import java.util.HashMap;
 
 /**
  * Used in Summary view
@@ -76,15 +78,15 @@ public class BuildCell
             {
                 if ( buildNumber > 0 )
                 {
-                    HashMap params = new HashMap();
+                    HashMap<String, Object> params = new HashMap<String, Object>();
 
-                    params.put( "projectId", new Integer( project.getId() ) );
+                    params.put( "projectId", project.getId() );
 
                     params.put( "projectName", project.getName() );
 
-                    params.put( "buildId", new Integer( project.getBuildInSuccessId() ) );
+                    params.put( "buildId", project.getBuildInSuccessId() );
 
-                    params.put( "projectGroupId", new Integer( project.getProjectGroupId() ) );
+                    params.put( "projectGroupId", project.getProjectGroupId() );
 
                     PageContext pageContext = (PageContext) tableModel.getContext().getContextObject();
 

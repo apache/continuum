@@ -21,14 +21,13 @@ package org.apache.maven.continuum.web.validator;
 
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.validators.ValidatorSupport;
+
 import org.apache.maven.continuum.execution.ExecutorConfigurator;
 import org.apache.maven.continuum.installation.InstallationException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 
 /**
@@ -42,7 +41,7 @@ public class InstallationValidator
 {
     private String fieldName;
 
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( InstallationValidator.class );
 
     /**
      * @plexus.requirement role-hint="default"
@@ -78,8 +77,7 @@ public class InstallationValidator
                 if ( executorConfigurator.getVersionArgument() != null )
                 {
                     // just try to get version infos to validate path is valid
-                    List<String> versionInfos =
-                        installationService.getExecutorConfiguratorVersion( varValue, executorConfigurator, null );
+                    installationService.getExecutorConfiguratorVersion( varValue, executorConfigurator, null );
                 }
             }
         }
@@ -90,7 +88,6 @@ public class InstallationValidator
             addFieldError( "installation.varValue", message );
         }
     }
-
 
     public String getFieldName()
     {

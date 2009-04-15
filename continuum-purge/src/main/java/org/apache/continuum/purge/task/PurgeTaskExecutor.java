@@ -43,8 +43,6 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 public class PurgeTaskExecutor
     implements TaskExecutor, Contextualizable
 {
-    private PurgeController purgeController;
-
     /**
      * @plexus.requirement
      */
@@ -79,7 +77,8 @@ public class PurgeTaskExecutor
                         "Error while executing purge repository task: no repository set" );
                 }
 
-                purgeController = (PurgeController) container.lookup( PurgeController.ROLE, "purge-repository" );
+                PurgeController purgeController =
+                    (PurgeController) container.lookup( PurgeController.ROLE, "purge-repository" );
 
                 purgeController.initializeExecutors( repoPurge );
 
@@ -96,7 +95,8 @@ public class PurgeTaskExecutor
             {
                 DirectoryPurgeConfiguration dirPurge = (DirectoryPurgeConfiguration) purgeConfig;
 
-                purgeController = (PurgeController) container.lookup( PurgeController.ROLE, "purge-directory" );
+                PurgeController purgeController =
+                    (PurgeController) container.lookup( PurgeController.ROLE, "purge-directory" );
 
                 purgeController.initializeExecutors( dirPurge );
 

@@ -19,6 +19,14 @@ package org.apache.continuum.purge;
  * under the License.
  */
 
+import java.io.File;
+import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+
 import org.apache.continuum.dao.DirectoryPurgeConfigurationDao;
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
@@ -29,13 +37,6 @@ import org.apache.maven.continuum.jdo.MemoryJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.jpox.SchemaTool;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import java.io.File;
-import java.net.URL;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author Maria Catherine Tan
@@ -83,10 +84,12 @@ public abstract class AbstractPurgeTest
 
         localRepositoryDao = (LocalRepositoryDao) lookup( LocalRepositoryDao.class.getName() );
 
-        repositoryPurgeConfigurationDao = (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class );
-        
-        directoryPurgeConfigurationDao = (DirectoryPurgeConfigurationDao) lookup( DirectoryPurgeConfigurationDao.class );
-        
+        repositoryPurgeConfigurationDao =
+            (RepositoryPurgeConfigurationDao) lookup( RepositoryPurgeConfigurationDao.class );
+
+        directoryPurgeConfigurationDao =
+            (DirectoryPurgeConfigurationDao) lookup( DirectoryPurgeConfigurationDao.class );
+
         if ( localRepositoryDao.getAllLocalRepositories().size() == 0 )
         {
             createDefaultRepository();
@@ -173,7 +176,6 @@ public abstract class AbstractPurgeTest
     }
 
     protected File getDefaultRepositoryLocation()
-        throws Exception
     {
         File repositoryLocation = getTestFile( TEST_DEFAULT_REPO_DIR );
 
@@ -191,7 +193,7 @@ public abstract class AbstractPurgeTest
 
         if ( !releasesDirectory.exists() )
         {
-            releasesDirectory.mkdir();
+            releasesDirectory.mkdirs();
         }
 
         return releasesDirectory;
@@ -203,7 +205,7 @@ public abstract class AbstractPurgeTest
 
         if ( !buildOutputDir.exists() )
         {
-            buildOutputDir.mkdir();
+            buildOutputDir.mkdirs();
         }
 
         return buildOutputDir;

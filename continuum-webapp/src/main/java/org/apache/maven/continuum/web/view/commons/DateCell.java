@@ -51,7 +51,7 @@ public class DateCell
             {
                 Calendar cal = Calendar.getInstance();
 
-                cal.setTimeInMillis( ( (Long) value ).longValue() );
+                cal.setTimeInMillis( (Long) value );
 
                 value = cal.getTime();
             }

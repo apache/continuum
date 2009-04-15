@@ -63,12 +63,8 @@ public abstract class AbstractContinuumSecureService
      */
     public boolean isAuthenticated()
     {
-        if ( getSecuritySession() == null || !getSecuritySession().isAuthenticated() )
-        {
-            return false;
-        }
+        return !( getSecuritySession() == null || !getSecuritySession().isAuthenticated() );
 
-        return true;
     }
 
     /**

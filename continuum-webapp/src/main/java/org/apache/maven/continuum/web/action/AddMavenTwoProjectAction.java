@@ -60,7 +60,7 @@ public class AddMavenTwoProjectAction
         ContinuumProjectBuildingResult result = null;
 
         // TODO: remove this part once uploading of an m2 project with modules is supported ( CONTINUUM-1098 )
-        if ( checkProtocol == false )
+        if ( !checkProtocol )
         {
             MavenXpp3Reader m2pomReader = new MavenXpp3Reader();
 
@@ -106,16 +106,11 @@ public class AddMavenTwoProjectAction
         if ( result == null )
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
-                                                        !this.isNonRecursiveProject(), this.getBuildDefinitionTemplateId() );
+                                                        !this.isNonRecursiveProject(),
+                                                        this.getBuildDefinitionTemplateId() );
         }
 
         return result;
-    }
-    
-    public String doDefault()
-        throws BuildDefinitionServiceException
-    {
-        return super.doDefault();
     }
 
     /**
@@ -159,5 +154,4 @@ public class AddMavenTwoProjectAction
     {
         this.nonRecursiveProject = nonRecursiveProject;
     }
-
 }

@@ -20,7 +20,6 @@ package org.apache.maven.continuum.web.action;
  */
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.continuum.ContinuumException;
@@ -40,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public class ProjectsListAction
     extends ContinuumActionSupport
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( ProjectsListAction.class );
 
     private List<String> selectedProjects;
 
@@ -143,9 +142,9 @@ public class ProjectsListAction
         if ( selectedProjects != null && !selectedProjects.isEmpty() )
         {
             ArrayList<Project> projectsList = new ArrayList<Project>();
-            for ( Iterator i = selectedProjects.iterator(); i.hasNext(); )
+            for ( String pId : selectedProjects )
             {
-                int projectId = Integer.parseInt( (String) i.next() );
+                int projectId = Integer.parseInt( pId );
                 Project p = getContinuum().getProjectWithAllDetails( projectId );
                 projectsList.add( p );
             }

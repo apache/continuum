@@ -29,7 +29,7 @@ public class PurgeTask
 {
     private int purgeConfigurationId;
 
-    private long timestamp;
+    private final long timestamp;
 
     private long maxExecutionTime;
 

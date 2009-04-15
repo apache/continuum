@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.maven.continuum.ContinuumException;
+import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.codehaus.plexus.util.StringUtils;
@@ -39,11 +40,11 @@ import org.slf4j.LoggerFactory;
 public class BuildResultsListAction
     extends AbstractBuildAction
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( BuildResultsListAction.class );
 
     private Project project;
 
-    private Collection buildResults;
+    private Collection<BuildResult> buildResults;
 
     private Collection<String> selectedBuildResults;
 
@@ -150,7 +151,7 @@ public class BuildResultsListAction
         this.projectId = projectId;
     }
 
-    public Collection getBuildResults()
+    public Collection<BuildResult> getBuildResults()
     {
         return buildResults;
     }
@@ -181,12 +182,12 @@ public class BuildResultsListAction
         return projectGroupName;
     }
 
-    public Collection getSelectedBuildResults()
+    public Collection<String> getSelectedBuildResults()
     {
         return selectedBuildResults;
     }
 
-    public void setSelectedBuildResults( Collection selectedBuildResults )
+    public void setSelectedBuildResults( Collection<String> selectedBuildResults )
     {
         this.selectedBuildResults = selectedBuildResults;
     }
