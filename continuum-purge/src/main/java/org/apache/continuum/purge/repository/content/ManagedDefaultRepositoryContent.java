@@ -19,6 +19,11 @@ package org.apache.continuum.purge.repository.content;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.model.repository.LocalRepository;
@@ -34,11 +39,6 @@ import org.apache.maven.archiva.repository.content.DefaultPathParser;
 import org.apache.maven.archiva.repository.content.PathParser;
 import org.apache.maven.archiva.repository.layout.LayoutException;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Taken from Archiva's ManagedDefaultRepositoryContent and made some few changes.
  *
@@ -49,15 +49,15 @@ import java.util.Set;
 public class ManagedDefaultRepositoryContent
     implements RepositoryManagedContent
 {
-    public static final String MAVEN_METADATA = "maven-metadata.xml";
+    private static final String MAVEN_METADATA = "maven-metadata.xml";
 
-    protected static final char PATH_SEPARATOR = '/';
+    private static final char PATH_SEPARATOR = '/';
 
-    protected static final char GROUP_SEPARATOR = '.';
+    private static final char GROUP_SEPARATOR = '.';
 
-    protected static final char ARTIFACT_SEPARATOR = '-';
+    private static final char ARTIFACT_SEPARATOR = '-';
 
-    private PathParser defaultPathParser = new DefaultPathParser();
+    private final PathParser defaultPathParser = new DefaultPathParser();
 
     /**
      * @plexus.requirement role-hint="file-types"
@@ -112,16 +112,15 @@ public class ManagedDefaultRepositoryContent
         Set<ArtifactReference> foundArtifacts = new HashSet<ArtifactReference>();
 
         // First gather up the versions found as artifacts in the managed repository.
-        File repoFiles[] = repoDir.listFiles();
-        for ( int i = 0; i < repoFiles.length; i++ )
+        for ( File repoFile : repoDir.listFiles() )
         {
-            if ( repoFiles[i].isDirectory() )
+            if ( repoFile.isDirectory() )
             {
                 // Skip it. it's a directory.
                 continue;
             }
 
-            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFiles[i] );
+            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFile );
 
             if ( filetypes.matchesArtifactPattern( relativePath ) )
             {
@@ -155,7 +154,7 @@ public class ManagedDefaultRepositoryContent
      * information.
      *
      * @return the Set of available versions, based on the project reference.
-     * @throws LayoutException
+     * @throws ContentNotFoundException
      * @throws LayoutException
      */
     public Set<String> getVersions( ProjectReference reference )
@@ -188,17 +187,16 @@ public class ManagedDefaultRepositoryContent
         versionRef.setGroupId( reference.getGroupId() );
         versionRef.setArtifactId( reference.getArtifactId() );
 
-        File repoFiles[] = repoDir.listFiles();
-        for ( int i = 0; i < repoFiles.length; i++ )
+        for ( File repoFile : repoDir.listFiles() )
         {
-            if ( !repoFiles[i].isDirectory() )
+            if ( !repoFile.isDirectory() )
             {
                 // Skip it. not a directory.
                 continue;
             }
 
             // Test if dir has an artifact, which proves to us that it is a valid version directory.
-            String version = repoFiles[i].getName();
+            String version = repoFile.getName();
             versionRef.setVersion( version );
 
             if ( hasArtifact( versionRef ) )
@@ -239,16 +237,15 @@ public class ManagedDefaultRepositoryContent
         Set<String> foundVersions = new HashSet<String>();
 
         // First gather up the versions found as artifacts in the managed repository.
-        File repoFiles[] = repoDir.listFiles();
-        for ( int i = 0; i < repoFiles.length; i++ )
+        for ( File repoFile : repoDir.listFiles() )
         {
-            if ( repoFiles[i].isDirectory() )
+            if ( repoFile.isDirectory() )
             {
                 // Skip it. it's a directory.
                 continue;
             }
 
-            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFiles[i] );
+            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFile );
 
             if ( filetypes.matchesDefaultExclusions( relativePath ) )
             {
@@ -337,12 +334,11 @@ public class ManagedDefaultRepositoryContent
     /**
      * Get the first Artifact found in the provided VersionedReference location.
      *
-     * @param managedRepository the repository to search within.
-     * @param reference         the reference to the versioned reference to search within
+     * @param reference the reference to the versioned reference to search within
      * @return the ArtifactReference to the first artifact located within the versioned reference. or null if
      *         no artifact was found within the versioned reference.
      * @throws IOException     if the versioned reference is invalid (example: doesn't exist, or isn't a directory)
-     * @throws LayoutException
+     * @throws LayoutException if the path cannot be converted to an artifact reference.
      */
     private ArtifactReference getFirstArtifact( VersionedReference reference )
         throws LayoutException, IOException
@@ -369,22 +365,19 @@ public class ManagedDefaultRepositoryContent
                 "Unable to gather the list of snapshot versions on a non-directory: " + repoDir.getAbsolutePath() );
         }
 
-        File repoFiles[] = repoDir.listFiles();
-        for ( int i = 0; i < repoFiles.length; i++ )
+        for ( File repoFile : repoDir.listFiles() )
         {
-            if ( repoFiles[i].isDirectory() )
+            if ( repoFile.isDirectory() )
             {
                 // Skip it. it's a directory.
                 continue;
             }
 
-            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFiles[i] );
+            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFile );
 
             if ( filetypes.matchesArtifactPattern( relativePath ) )
             {
-                ArtifactReference artifact = toArtifactReference( relativePath );
-
-                return artifact;
+                return toArtifactReference( relativePath );
             }
         }
 

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 public class TestAction
     extends PlexusActionSupport
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( TestAction.class );
 
     private String testString;
 

@@ -40,8 +40,6 @@ public class NotifierRecipientCell
     {
         ProjectNotifier notifier = (ProjectNotifier) tableModel.getCurrentRowBean();
 
-        String recipient = GenerateRecipentNotifier.generate( notifier );
-
-        return recipient;
+        return GenerateRecipentNotifier.generate( notifier );
     }
 }

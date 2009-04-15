@@ -19,6 +19,12 @@ package org.apache.continuum.purge.repository.content;
  * under the License.
  */
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.purge.repository.utils.FileTypes;
@@ -30,12 +36,6 @@ import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.content.ArtifactExtensionMapping;
 import org.apache.maven.archiva.repository.content.PathParser;
 import org.apache.maven.archiva.repository.layout.LayoutException;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Taken from Archiva's ManagedLegacyRepositoryContent and made some few changes
@@ -338,8 +338,8 @@ public class ManagedLegacyRepositoryContent
             throw new IllegalArgumentException( "Artifact reference cannot be null" );
         }
 
-        return toPath( reference.getGroupId(), reference.getArtifactId(), reference.getVersion(), reference
-            .getClassifier(), reference.getType() );
+        return toPath( reference.getGroupId(), reference.getArtifactId(), reference.getVersion(),
+                       reference.getClassifier(), reference.getType() );
     }
 
     public void setRepository( LocalRepository repo )
@@ -380,16 +380,15 @@ public class ManagedLegacyRepositoryContent
 
     private void getRelatedArtifacts( File typeDir, ArtifactReference reference, Set<ArtifactReference> foundArtifacts )
     {
-        File repoFiles[] = typeDir.listFiles();
-        for ( int i = 0; i < repoFiles.length; i++ )
+        for ( File repoFile : typeDir.listFiles() )
         {
-            if ( repoFiles[i].isDirectory() )
+            if ( repoFile.isDirectory() )
             {
                 // Skip it. it's a directory.
                 continue;
             }
 
-            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFiles[i] );
+            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFile );
 
             if ( filetypes.matchesArtifactPattern( relativePath ) )
             {
@@ -412,16 +411,15 @@ public class ManagedLegacyRepositoryContent
 
     private void getVersionedVersions( File typeDir, VersionedReference reference, Set<String> foundVersions )
     {
-        File repoFiles[] = typeDir.listFiles();
-        for ( int i = 0; i < repoFiles.length; i++ )
+        for ( File repoFile : typeDir.listFiles() )
         {
-            if ( repoFiles[i].isDirectory() )
+            if ( repoFile.isDirectory() )
             {
                 // Skip it. it's a directory.
                 continue;
             }
 
-            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFiles[i] );
+            String relativePath = PathUtil.getRelative( repository.getLocation(), repoFile );
 
             if ( filetypes.matchesArtifactPattern( relativePath ) )
             {
@@ -447,7 +445,7 @@ public class ManagedLegacyRepositoryContent
         StringBuffer path = new StringBuffer();
 
         path.append( groupId ).append( PATH_SEPARATOR );
-        path.append( getDirectory( classifier, type ) ).append( PATH_SEPARATOR );
+        path.append( getDirectory( type ) ).append( PATH_SEPARATOR );
 
         if ( version != null )
         {
@@ -464,9 +462,9 @@ public class ManagedLegacyRepositoryContent
         return path.toString();
     }
 
-    private String getDirectory( String classifier, String type )
+    private String getDirectory( String type )
     {
-        String dirname = (String) typeToDirectoryMap.get( type );
+        String dirname = typeToDirectoryMap.get( type );
 
         if ( dirname != null )
         {

@@ -21,7 +21,7 @@ package org.apache.maven.continuum.web.view;
 
 import com.opensymphony.xwork2.ActionContext;
 
-import org.apache.continuum.model.project.ProjectScmRoot;
+import java.util.HashMap;
 
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -40,8 +40,6 @@ import org.codehaus.plexus.redback.system.SecuritySystemConstants;
 import org.extremecomponents.table.bean.Column;
 import org.extremecomponents.table.cell.DisplayCell;
 import org.extremecomponents.table.core.TableModel;
-
-import java.util.HashMap;
 
 /**
  * Used in Summary view
@@ -70,10 +68,11 @@ public class StateCell
                 case ContinuumProjectState.UPDATING:
                 case ContinuumProjectState.CHECKING_OUT:
                 {
-                    String state = StateGenerator.generate( project.getState(), tableModel.getContext().getContextPath() );
+                    String state =
+                        StateGenerator.generate( project.getState(), tableModel.getContext().getContextPath() );
 
-                    if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) 
-                         && project.getState() != ContinuumProjectState.UPDATING )
+                    if ( project.getLatestBuildId() != -1 && !StateGenerator.NEW.equals( state ) &&
+                        project.getState() != ContinuumProjectState.UPDATING )
                     {
                         if ( isAuthorized( project.getProjectGroupName() ) )
                         {
@@ -96,7 +95,7 @@ public class StateCell
                 }
             }
         }
-        else 
+        else
         {
             ProjectScmRoot projectScmRoot = (ProjectScmRoot) tableModel.getCurrentRowBean();
 
@@ -106,13 +105,13 @@ public class StateCell
                 case ContinuumProjectState.UPDATED:
                 case ContinuumProjectState.ERROR:
                 {
-                    String state = StateGenerator.generate( projectScmRoot.getState(), 
-                                                            tableModel.getContext().getContextPath() );
-                    
+                    String state =
+                        StateGenerator.generate( projectScmRoot.getState(), tableModel.getContext().getContextPath() );
+
                     if ( !StateGenerator.NEW.equals( state ) )
                     {
                         if ( isAuthorized( projectScmRoot.getProjectGroup().getName() ) &&
-                             projectScmRoot.getState() == ContinuumProjectState.ERROR )
+                            projectScmRoot.getState() == ContinuumProjectState.ERROR )
                         {
                             return createActionLink( "scmResult", projectScmRoot, state );
                         }
@@ -137,31 +136,31 @@ public class StateCell
 
     private static String createActionLink( String action, ProjectSummary project, String state )
     {
-        HashMap params = new HashMap();
+        HashMap<String, Object> params = new HashMap<String, Object>();
 
-        params.put( "projectId", new Integer( project.getId() ) );
+        params.put( "projectId", project.getId() );
 
         params.put( "projectName", project.getName() );
 
-        params.put( "buildId", new Integer( project.getLatestBuildId() ) );
+        params.put( "buildId", project.getLatestBuildId() );
 
-        params.put( "projectGroupId", new Integer( project.getProjectGroupId() ) );
+        params.put( "projectGroupId", project.getProjectGroupId() );
 
         String url = UrlHelper.buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
                                          ServletActionContext.getResponse(), params );
 
         return "<a href=\"" + url + "\">" + state + "</a>";
     }
-    
+
     private static String createActionLink( String action, ProjectScmRoot scmRoot, String state )
     {
-        HashMap params = new HashMap();
+        HashMap<String, Object> params = new HashMap<String, Object>();
 
-        params.put( "projectGroupId", new Integer( scmRoot.getProjectGroup().getId() ) );
+        params.put( "projectGroupId", scmRoot.getProjectGroup().getId() );
 
-        params.put( "projectScmRootId", new Integer( scmRoot.getId() ) );
+        params.put( "projectScmRootId", scmRoot.getId() );
 
-        String url = UrlHelper.buildUrl( "/" + action + ".action", ServletActionContext.getRequest(), 
+        String url = UrlHelper.buildUrl( "/" + action + ".action", ServletActionContext.getRequest(),
                                          ServletActionContext.getResponse(), params );
 
         return "<a href=\"" + url + "\">" + state + "</a>";

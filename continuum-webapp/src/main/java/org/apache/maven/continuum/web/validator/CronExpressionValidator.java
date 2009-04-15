@@ -19,7 +19,6 @@ package org.apache.maven.continuum.web.validator;
  * under the License.
  */
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.ValidatorContext;
 import com.opensymphony.xwork2.validator.validators.ValidatorSupport;
@@ -42,8 +41,9 @@ public class CronExpressionValidator
         String dayOfWeek = (String) getFieldValue( "dayOfWeek", object );
         String year = (String) getFieldValue( "year", object );
 
-        String cronExpression = ( second + " " + minute + " " + hour + " " + dayOfMonth + " " + month + " " +
-            dayOfWeek + " " + year ).trim();
+        String cronExpression =
+            ( second + " " + minute + " " + hour + " " + dayOfMonth + " " + month + " " + dayOfWeek + " " +
+                year ).trim();
 
         org.codehaus.plexus.scheduler.CronExpressionValidator validator =
             new org.codehaus.plexus.scheduler.CronExpressionValidator();
@@ -54,7 +54,6 @@ public class CronExpressionValidator
         {
             // FIXME i18n
             ctxt.addActionError( "Invalid cron expression value(s)" );
-            return;
         }
     }
 

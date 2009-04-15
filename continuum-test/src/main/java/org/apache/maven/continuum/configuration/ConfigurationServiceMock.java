@@ -19,16 +19,16 @@ package org.apache.maven.continuum.configuration;
  * under the License.
  */
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.configuration.BuildAgentConfiguration;
 import org.apache.continuum.configuration.BuildAgentGroupConfiguration;
 import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Mock class for testing WagonContinuumNotifier's call to ConfigurationService.getBuildOutputFile()
@@ -38,7 +38,7 @@ import java.util.Map;
 public class ConfigurationServiceMock
     implements ConfigurationService
 {
-    private String basedir;
+    private final String basedir;
 
     public ConfigurationServiceMock()
     {
@@ -238,7 +238,7 @@ public class ConfigurationServiceMock
             throw new ConfigurationException(
                 "Could not make the release output directory: " + "'" + dir.getAbsolutePath() + "'." );
         }
-    
+
         return new File( dir, releaseName + ".log.txt" );
     }
 
@@ -255,15 +255,15 @@ public class ConfigurationServiceMock
     {
         return 1;
     }
-    
+
     public void setNumberOfBuildsInParallel( int num )
     {
-        
+
     }
 
     public void addBuildAgent( BuildAgentConfiguration buildAgent )
         throws ConfigurationException
-    {    
+    {
     }
 
     public List<BuildAgentConfiguration> getBuildAgents()
@@ -277,7 +277,7 @@ public class ConfigurationServiceMock
     }
 
     public void removeBuildAgent( BuildAgentConfiguration buildAgent )
-    {   
+    {
     }
 
     public void setDistributedBuildEnabled( boolean distributedBuildEnabled )
@@ -323,7 +323,7 @@ public class ConfigurationServiceMock
         return null;
     }
 
-    public BuildAgentConfiguration getBuildAgent(String url)
+    public BuildAgentConfiguration getBuildAgent( String url )
     {
         return null;
     }

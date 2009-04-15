@@ -41,15 +41,16 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
- * @todo consider folding some of this into Maven SCM itself
- * 
  * @version $Id$
+ * @todo consider folding some of this into Maven SCM itself
  */
 @Service("continuumScm")
 public class DefaultContinuumScm
     implements ContinuumScm
 {
-    /** The Maven SCM manager to use. */
+    /**
+     * The Maven SCM manager to use.
+     */
     @Resource
     private ScmManager scmManager;
 
@@ -109,8 +110,9 @@ public class DefaultContinuumScm
         if ( !workingDirectory.exists() )
         {
             // TODO: maybe we could check it out - it seems we currently rely on Continuum figuring this out
-            throw new IllegalStateException( "The working directory for the project doesn't exist " + "("
-                + workingDirectory.getAbsolutePath() + ")." );
+            throw new IllegalStateException(
+                "The working directory for the project doesn't exist " + "(" + workingDirectory.getAbsolutePath() +
+                    ")." );
         }
 
         ScmRepository repository = getScmRepository( configuration );
@@ -159,10 +161,11 @@ public class DefaultContinuumScm
 
     /**
      * Create a Maven SCM repository for obtaining the checkout from.
-     * 
-     * @param scmUrl the SCM URL to obtain the checkout from
-     * @param useCredentialsCache whether to allow the use of cached credentials for SVN
+     *
+     * @param configuration the configuration for the working copy and SCM
      * @return the repository created
+     * @throws NoSuchScmProviderException
+     * @throws ScmRepositoryException
      */
     private ScmRepository getScmRepository( ContinuumScmConfiguration configuration )
         throws ScmRepositoryException, NoSuchScmProviderException

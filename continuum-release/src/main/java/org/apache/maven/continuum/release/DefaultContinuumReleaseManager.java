@@ -19,6 +19,11 @@ package org.apache.maven.continuum.release;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.release.config.ContinuumReleaseDescriptor;
@@ -36,11 +41,6 @@ import org.apache.maven.shared.release.config.ReleaseDescriptorStoreException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
-
-import java.io.File;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author Jason van Zyl
@@ -107,7 +107,8 @@ public class DefaultContinuumReleaseManager
         String releaseId = project.getGroupId() + ":" + project.getArtifactId();
 
         ReleaseDescriptor descriptor =
-            getReleaseDescriptor( project, releaseProperties, relVersions, devVersions, environments, workingDirectory, executable );
+            getReleaseDescriptor( project, releaseProperties, relVersions, devVersions, environments, workingDirectory,
+                                  executable );
 
         getListeners().put( releaseId, listener );
 
@@ -225,7 +226,7 @@ public class DefaultContinuumReleaseManager
                                                     String executable )
     {
         ContinuumReleaseDescriptor descriptor = new ContinuumReleaseDescriptor();
-        
+
         //release properties from the project
         descriptor.setWorkingDirectory( workingDirectory );
         descriptor.setScmSourceUrl( project.getScmUrl() );

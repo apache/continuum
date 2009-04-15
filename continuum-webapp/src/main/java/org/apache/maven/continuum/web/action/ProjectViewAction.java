@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public class ProjectViewAction
     extends ContinuumActionSupport
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( ProjectViewAction.class );
 
     private Project project;
 
@@ -45,15 +45,10 @@ public class ProjectViewAction
 
     private String lastBuildDateTime;
 
-    /**
-     * Target {@link ProjectGroup} to view.
-     */
-    private ProjectGroup projectGroup;
-
     public String execute()
         throws ContinuumException
     {
-        projectGroup = getProjectGroup();
+        ProjectGroup projectGroup = getProjectGroup();
 
         try
         {

@@ -19,6 +19,9 @@ package org.apache.maven.continuum.xmlrpc.server;
  * under the License.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory;
@@ -33,10 +36,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
@@ -45,23 +44,22 @@ import java.util.Map;
 public class ConfiguredBeanProcessorFactory
     implements RequestProcessorFactoryFactory, Initializable, Contextualizable
 {
-    private Logger log = LoggerFactory.getLogger( ConfiguredBeanProcessorFactory.class );
+    private static final Logger log = LoggerFactory.getLogger( ConfiguredBeanProcessorFactory.class );
 
     /**
      * @plexus.requirement role="org.apache.maven.continuum.xmlrpc.server.ContinuumXmlRpcComponent"
      */
-    private Map xmlrpcComponents;
+    private Map<String, Object> xmlrpcComponents;
 
-    private Map componentsMapping = new HashMap();
+    private Map<String, String> componentsMapping = new HashMap<String, String>();
 
     PlexusContainer container;
 
     public void initialize()
         throws InitializationException
     {
-        for ( Iterator i = xmlrpcComponents.keySet().iterator(); i.hasNext(); )
+        for ( String key : xmlrpcComponents.keySet() )
         {
-            String key = (String) i.next();
             String className = xmlrpcComponents.get( key ).getClass().getName();
             componentsMapping.put( className, key );
         }
@@ -112,7 +110,7 @@ public class ConfiguredBeanProcessorFactory
 
     private String getComponentKey( Class cls )
     {
-        return (String) componentsMapping.get( cls.getName() );
+        return componentsMapping.get( cls.getName() );
     }
 
     private Object getComponent( Class cls )

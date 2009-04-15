@@ -19,19 +19,19 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.comparator.LastModifiedFileComparator;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.continuum.purge.ContinuumPurgeConstants;
-import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.comparator.LastModifiedFileComparator;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.continuum.purge.ContinuumPurgeConstants;
+import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 
 /**
  * @author Maria Catherine Tan
@@ -40,11 +40,11 @@ public class DaysOldDirectoryPurgeExecutor
     extends AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
-    private int daysOlder;
+    private final int daysOlder;
 
-    private int retentionCount;
+    private final int retentionCount;
 
-    private String directoryType;
+    private final String directoryType;
 
     public DaysOldDirectoryPurgeExecutor( int daysOlder, int retentionCount, String directoryType )
     {

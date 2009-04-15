@@ -223,7 +223,7 @@ public class ProjectGroupDaoImpl
 
             query.setFilter( "this.localRepository.id == repositoryId" );
 
-            List result = (List) query.execute( new Integer( repositoryId ) );
+            List result = (List) query.execute( repositoryId );
 
             return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
         }

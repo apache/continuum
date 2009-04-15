@@ -45,7 +45,6 @@ import org.apache.maven.continuum.xmlrpc.project.Schedule;
 import org.apache.maven.continuum.xmlrpc.system.Installation;
 import org.apache.maven.continuum.xmlrpc.system.Profile;
 import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
-import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.client.util.ClientFactory;
@@ -57,22 +56,22 @@ import org.apache.xmlrpc.client.util.ClientFactory;
 public class ContinuumXmlRpcClient
     implements ContinuumService
 {
-    private ContinuumService continuum;
+    private final ContinuumService continuum;
 
-    private static Hashtable statusMap;
+    private static Hashtable<Integer, String> statusMap;
 
     static
     {
-        statusMap = new Hashtable();
-        statusMap.put( new Integer( ContinuumProjectState.NEW ), "New" );
-        statusMap.put( new Integer( ContinuumProjectState.CHECKEDOUT ), "New" );
-        statusMap.put( new Integer( ContinuumProjectState.OK ), "OK" );
-        statusMap.put( new Integer( ContinuumProjectState.FAILED ), "Failed" );
-        statusMap.put( new Integer( ContinuumProjectState.ERROR ), "Error" );
-        statusMap.put( new Integer( ContinuumProjectState.BUILDING ), "Building" );
-        statusMap.put( new Integer( ContinuumProjectState.CHECKING_OUT ), "Checking out" );
-        statusMap.put( new Integer( ContinuumProjectState.UPDATING ), "Updating" );
-        statusMap.put( new Integer( ContinuumProjectState.WARNING ), "Warning" );
+        statusMap = new Hashtable<Integer, String>();
+        statusMap.put( ContinuumProjectState.NEW, "New" );
+        statusMap.put( ContinuumProjectState.CHECKEDOUT, "New" );
+        statusMap.put( ContinuumProjectState.OK, "OK" );
+        statusMap.put( ContinuumProjectState.FAILED, "Failed" );
+        statusMap.put( ContinuumProjectState.ERROR, "Error" );
+        statusMap.put( ContinuumProjectState.BUILDING, "Building" );
+        statusMap.put( ContinuumProjectState.CHECKING_OUT, "Checking out" );
+        statusMap.put( ContinuumProjectState.UPDATING, "Updating" );
+        statusMap.put( ContinuumProjectState.WARNING, "Warning" );
     }
 
     public ContinuumXmlRpcClient( URL serviceUrl )
@@ -325,13 +324,13 @@ public class ContinuumXmlRpcClient
     }
 
     public int buildGroup( int projectGroupId )
-        throws Exception, XmlRpcException
+        throws Exception
     {
         return continuum.buildGroup( projectGroupId );
     }
 
     public int buildGroup( int projectGroupId, int buildDefinitionId )
-        throws Exception, XmlRpcException
+        throws Exception
     {
         return continuum.buildGroup( projectGroupId, buildDefinitionId );
     }
@@ -359,7 +358,7 @@ public class ContinuumXmlRpcClient
     }
 
     public int removeBuildResult( BuildResult br )
-        throws Exception, XmlRpcException
+        throws Exception
     {
         return continuum.removeBuildResult( br );
     }
@@ -492,7 +491,7 @@ public class ContinuumXmlRpcClient
 
     public String getProjectStatusAsString( int status )
     {
-        return (String) statusMap.get( new Integer( status ) );
+        return statusMap.get( new Integer( status ) );
     }
 
     // ----------------------------------------------------------------------

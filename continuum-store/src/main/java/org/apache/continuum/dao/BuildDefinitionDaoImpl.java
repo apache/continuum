@@ -19,6 +19,18 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -30,17 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
@@ -51,7 +52,7 @@ public class BuildDefinitionDaoImpl
     extends AbstractDao
     implements BuildDefinitionDao
 {
-    private Logger log = LoggerFactory.getLogger( BuildDefinitionDaoImpl.class );
+    private static final Logger log = LoggerFactory.getLogger( BuildDefinitionDaoImpl.class );
 
     /**
      * @plexus.requirement role="org.apache.continuum.dao.ProjectDao"

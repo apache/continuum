@@ -30,43 +30,44 @@ import org.apache.maven.scm.repository.ScmRepositoryException;
 
 /**
  * Component that manages SCM interactions and checkouts within Continuum.
- * 
+ *
  * @version $Id$
  */
 public interface ContinuumScm
 {
     /**
      * Check out a working copy for a project.
-     * 
+     *
      * @param configuration the configuration for the working copy and SCM
      * @return the result of the check out
-     * @throws IOException if there is a problem writing to the working copy location
+     * @throws IOException                if there is a problem writing to the working copy location
      * @throws NoSuchScmProviderException if there is a problem with the configuration
-     * @throws ScmRepositoryException if there is a problem with the configuration
-     * @throws ScmException if there is a problem checking out
+     * @throws ScmRepositoryException     if there is a problem with the configuration
+     * @throws ScmException               if there is a problem checking out
      */
     CheckOutScmResult checkout( ContinuumScmConfiguration configuration )
         throws IOException, ScmRepositoryException, NoSuchScmProviderException, ScmException;
 
     /**
      * Update a working copy for a project.
-     * 
-     * @param configuration the configuration for the working copy and SCM
+     *
+     * @param config the configuration for the working copy and SCM
      * @return the result of the update
      * @throws NoSuchScmProviderException if there is a problem with the configuration
-     * @throws ScmRepositoryException if there is a problem with the configuration
-     * @throws ScmException if there is a problem updating
+     * @throws ScmRepositoryException     if there is a problem with the configuration
+     * @throws ScmException               if there is a problem updating
      */
     UpdateScmResult update( ContinuumScmConfiguration config )
         throws ScmRepositoryException, NoSuchScmProviderException, ScmException;
 
     /**
      * Get change log for a project
-     * @param config
+     *
+     * @param config the configuration for the working copy and SCM
      * @return the result of the change log
-     * @throws ScmRepositoryException if there is a problem with the configuration
+     * @throws ScmRepositoryException     if there is a problem with the configuration
      * @throws NoSuchScmProviderException if there is a problem with the configuration
-     * @throws ScmException if there is a problem getting the change log
+     * @throws ScmException               if there is a problem getting the change log
      */
     ChangeLogScmResult changeLog( ContinuumScmConfiguration config )
         throws ScmRepositoryException, NoSuchScmProviderException, ScmException;

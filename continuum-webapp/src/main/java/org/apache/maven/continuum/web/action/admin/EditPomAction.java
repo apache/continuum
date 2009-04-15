@@ -55,11 +55,6 @@ public class EditPomAction
     private MavenAppConfiguration appConfiguration;
 
     /**
-     * The configuration.
-     */
-    private Configuration configuration;
-
-    /**
      * @plexus.requirement
      */
     private CompanyPomHandler companyPomHandler;
@@ -99,7 +94,7 @@ public class EditPomAction
     public void prepare()
         throws ProjectBuildingException, ArtifactMetadataRetrievalException, SettingsConfigurationException
     {
-        configuration = appConfiguration.getConfiguration();
+        Configuration configuration = appConfiguration.getConfiguration();
 
         CompanyPom companyPom = configuration.getCompanyPom();
         companyModel = companyPomHandler.getCompanyPomModel( companyPom, helper.getLocalRepository() );

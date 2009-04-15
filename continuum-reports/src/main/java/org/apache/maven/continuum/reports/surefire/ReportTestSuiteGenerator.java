@@ -23,45 +23,50 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 12 nov. 07
  * @version $Id$
+ * @since 12 nov. 07
  */
 public interface ReportTestSuiteGenerator
 {
 
     /**
      * @param directory directory containing surefire tests files
-     * @param includes file types to include
-     * @param excludes file types to exclude
+     * @param includes  file types to include
+     * @param excludes  file types to exclude
      * @return List of {@link ReportTestSuite}
      * @throws ReportTestSuiteGeneratorException
+     *
      */
     List<ReportTestSuite> generateReports( File directory, List<String> includes, List<String> excludes )
         throws ReportTestSuiteGeneratorException;
-    
+
     /**
      * Use generateReports with default includes *.xml and default excludes *.txt
+     *
      * @param directory directory containing surefire tests files
      * @return List of {@link ReportTestSuite}
      * @throws ReportTestSuiteGeneratorException
+     *
      */
     List<ReportTestSuite> generateReports( File directory )
-        throws ReportTestSuiteGeneratorException;  
-    
+        throws ReportTestSuiteGeneratorException;
+
     /**
      * @param buildId
      * @param projectId
      * @return List of {@link ReportTestSuite}
      * @throws ReportTestSuiteGeneratorException
+     *
      */
     List<ReportTestSuite> generateReports( int buildId, int projectId )
         throws ReportTestSuiteGeneratorException;
-    
+
     /**
      * @param buildId
      * @param projectId
-     * @return List of {@link TestResult}
+     * @return List of {@link ReportTestResult}
      * @throws ReportTestSuiteGeneratorException
+     *
      */
     ReportTestResult generateReportTestResult( int buildId, int projectId )
         throws ReportTestSuiteGeneratorException;

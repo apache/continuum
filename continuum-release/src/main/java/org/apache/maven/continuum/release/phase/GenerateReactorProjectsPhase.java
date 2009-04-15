@@ -19,6 +19,11 @@ package org.apache.maven.continuum.release.phase;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
@@ -47,12 +52,6 @@ import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Generate the reactor projects
@@ -113,15 +112,15 @@ public class GenerateReactorProjectsPhase
     private List getReactorProjects( ReleaseDescriptor descriptor )
         throws ContinuumReleaseException
     {
-        List reactorProjects = new ArrayList();
+        List<MavenProject> reactorProjects = new ArrayList<MavenProject>();
 
         MavenProject project;
         try
         {
             ArtifactRepository repository = getLocalRepository( descriptor.getAdditionalArguments() );
 
-            project = projectBuilder.buildWithDependencies( getProjectDescriptorFile( descriptor ),
-                                                            repository, getProfileManager( getSettings() ) );
+            project = projectBuilder.buildWithDependencies( getProjectDescriptorFile( descriptor ), repository,
+                                                            getProfileManager( getSettings() ) );
 
             reactorProjects.add( project );
 
@@ -156,20 +155,19 @@ public class GenerateReactorProjectsPhase
         return reactorProjects;
     }
 
-    private void addModules( List reactorProjects, MavenProject project, ArtifactRepository repository )
+    private void addModules( List<MavenProject> reactorProjects, MavenProject project, ArtifactRepository repository )
         throws ContinuumReleaseException
     {
-        for ( Iterator modules = project.getModules().iterator(); modules.hasNext(); )
+        for ( Object o : project.getModules() )
         {
-            String moduleDir = modules.next().toString();
+            String moduleDir = o.toString();
 
             File pomFile = new File( project.getBasedir(), moduleDir + "/pom.xml" );
 
             try
             {
-                MavenProject reactorProject = projectBuilder.buildWithDependencies( pomFile, repository,
-                                                                                    getProfileManager(
-                                                                                        getSettings() ) );
+                MavenProject reactorProject =
+                    projectBuilder.buildWithDependencies( pomFile, repository, getProfileManager( getSettings() ) );
 
                 reactorProjects.add( reactorProject );
 
@@ -211,13 +209,14 @@ public class GenerateReactorProjectsPhase
         if ( arguments != null )
         {
             String[] args = arguments.split( " " );
+
             boolean shouldContinue = false;
-            
-            for ( int i = 0; i < args.length; i++ )
+ 
+            for ( String arg : args )
             {
-                if ( args[i].contains( "-Dmaven.repo.local=" ) )
+                if ( arg.contains( "-Dmaven.repo.local=" ) )
                 {
-                    localRepository = args[i].substring( args[i].indexOf( "=" ) + 1 );
+                    localRepository = arg.substring( arg.indexOf( "=" ) + 1 );
 
                     if ( !localRepository.endsWith( "\"" ) )
                     {
@@ -231,9 +230,9 @@ public class GenerateReactorProjectsPhase
                 }
                 else if ( shouldContinue )
                 {
-                    localRepository += " " + args[i];
+                    localRepository += " " + arg;
 
-                    if ( args[i].endsWith( "\"" ) )
+                    if ( arg.endsWith( "\"" ) )
                     {
                         break;
                     }

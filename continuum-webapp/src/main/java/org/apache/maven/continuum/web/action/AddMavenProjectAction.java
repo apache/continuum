@@ -27,7 +27,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +65,7 @@ public abstract class AddMavenProjectAction
 
     private String scmPassword;
 
-    private Collection projectGroups;
+    private Collection<ProjectGroup> projectGroups;
 
     private String projectGroupName;
 
@@ -81,11 +80,11 @@ public abstract class AddMavenProjectAction
     private List<BuildDefinitionTemplate> buildDefinitionTemplates;
 
     private int buildDefinitionTemplateId;
-    
+
     private List<String> errorMessages = new ArrayList<String>();
 
     private HttpServletRequest httpServletRequest;
-    
+
     public String execute()
         throws ContinuumException, BuildDefinitionServiceException
     {
@@ -120,7 +119,7 @@ public abstract class AddMavenProjectAction
                     String encoding = this.httpServletRequest.getCharacterEncoding();
                     if ( StringUtils.isEmpty( encoding ) )
                     {
-                         encoding = System.getProperty( "file.encoding" );
+                        encoding = System.getProperty( "file.encoding" );
                     }
 
                     String encodedUsername = URLEncoder.encode( scmUsername, encoding );
@@ -128,8 +127,8 @@ public abstract class AddMavenProjectAction
 
                     StringBuffer urlBuffer = new StringBuffer();
                     urlBuffer.append( url.getProtocol() ).append( "://" );
-                    urlBuffer.append( encodedUsername ).append( ':' ).append( encodedPassword ).append( '@' )
-                        .append( url.getHost() );
+                    urlBuffer.append( encodedUsername ).append( ':' ).append( encodedPassword ).append( '@' ).append(
+                        url.getHost() );
                     if ( url.getPort() != -1 )
                     {
                         urlBuffer.append( ":" ).append( url.getPort() );
@@ -153,7 +152,7 @@ public abstract class AddMavenProjectAction
                 addActionError( getText( "add.project.unknown.error" ) );
                 return doDefault();
             }
-            
+
         }
         else
         {
@@ -194,7 +193,7 @@ public abstract class AddMavenProjectAction
             for ( String key : result.getErrors() )
             {
                 String cause = result.getErrorsWithCause().get( key );
-                String msg = getText( key, new String[] { cause } );
+                String msg = getText( key, new String[]{cause} );
 
                 // olamy : weird getText(key, String[]) must do that something like bla bla {0}
                 // here an ugly hack for CONTINUUM-1675
@@ -224,7 +223,7 @@ public abstract class AddMavenProjectAction
 
         if ( result.getProjectGroups() != null && !result.getProjectGroups().isEmpty() )
         {
-            this.setProjectGroupId( ( (ProjectGroup) result.getProjectGroups().get( 0 ) ).getId() );
+            this.setProjectGroupId( ( result.getProjectGroups().get( 0 ) ).getId() );
             return "projectGroupSummary";
         }
 
@@ -271,17 +270,16 @@ public abstract class AddMavenProjectAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
-        Collection allProjectGroups = getContinuum().getAllProjectGroups();
-        projectGroups = new ArrayList();
+        Collection<ProjectGroup> allProjectGroups = getContinuum().getAllProjectGroups();
+        projectGroups = new ArrayList<ProjectGroup>();
 
         ProjectGroup defaultGroup = new ProjectGroup();
         defaultGroup.setId( DEFINED_BY_POM_GROUP_ID );
         defaultGroup.setName( "Defined by POM" );
         projectGroups.add( defaultGroup );
 
-        for ( Iterator i = allProjectGroups.iterator(); i.hasNext(); )
+        for ( ProjectGroup pg : allProjectGroups )
         {
-            ProjectGroup pg = (ProjectGroup) i.next();
             if ( isAuthorizedToAddProjectToGroup( pg.getName() ) )
             {
                 projectGroups.add( pg );
@@ -295,7 +293,7 @@ public abstract class AddMavenProjectAction
 
     private void initializeProjectGroupName()
     {
-        if ( disableGroupSelection == true && selectedProjectGroup != DEFINED_BY_POM_GROUP_ID )
+        if ( disableGroupSelection && selectedProjectGroup != DEFINED_BY_POM_GROUP_ID )
         {
             try
             {

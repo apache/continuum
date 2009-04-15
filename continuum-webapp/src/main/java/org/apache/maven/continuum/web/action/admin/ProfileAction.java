@@ -53,7 +53,7 @@ public class ProfileAction
     extends ContinuumActionSupport
     implements Preparable, SecureAction
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( ProfileAction.class );
 
     /**
      * @plexus.requirement role-hint="default"

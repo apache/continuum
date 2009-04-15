@@ -1,5 +1,8 @@
 package org.apache.maven.continuum.xmlrpc.server;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcHandler;
 import org.apache.xmlrpc.XmlRpcRequest;
@@ -11,9 +14,6 @@ import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -52,7 +52,7 @@ public class ContinuumXmlRpcMetaDataHandler
 
     private final String methodHelp;
 
-    private PlexusContainer container;
+    private final PlexusContainer container;
 
     /**
      * Creates a new instance.
@@ -109,9 +109,8 @@ public class ContinuumXmlRpcMetaDataHandler
             args[j] = pRequest.getParameter( j );
         }
         Object instance = getInstance( pRequest );
-        for ( int i = 0; i < methods.length; i++ )
+        for ( MethodData methodData : methods )
         {
-            MethodData methodData = methods[i];
             TypeConverter[] converters = methodData.typeConverters;
             if ( args.length == converters.length )
             {

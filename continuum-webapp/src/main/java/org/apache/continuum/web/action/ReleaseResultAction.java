@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 public class ReleaseResultAction
     extends ContinuumConfirmAction
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( ReleaseResultAction.class );
 
     private int projectGroupId;
 

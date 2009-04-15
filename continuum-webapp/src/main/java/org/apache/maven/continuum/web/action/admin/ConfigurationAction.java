@@ -19,6 +19,8 @@ package org.apache.maven.continuum.web.action.admin;
  * under the License.
  */
 
+import com.opensymphony.xwork2.Preparable;
+
 import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,8 +40,6 @@ import org.codehaus.redback.integration.interceptor.SecureActionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.opensymphony.xwork2.Preparable;
-
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
@@ -49,7 +49,7 @@ public class ConfigurationAction
     extends ContinuumActionSupport
     implements Preparable, SecureAction
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( ConfigurationAction.class );
 
     private String workingDirectory;
 
@@ -113,7 +113,7 @@ public class ConfigurationAction
         }
 
         String requireRelease = ServletActionContext.getRequest().getParameter( "requireReleaseOutput" );
-        setRequireReleaseOutput( new Boolean( requireRelease ) );
+        setRequireReleaseOutput( Boolean.valueOf( requireRelease ) );
 
         distributedBuildEnabled = configuration.isDistributedBuildEnabled();
     }

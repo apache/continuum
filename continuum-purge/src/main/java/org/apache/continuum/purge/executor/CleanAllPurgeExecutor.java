@@ -19,15 +19,15 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.continuum.purge.ContinuumPurgeConstants;
-import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
-import org.codehaus.plexus.util.FileUtils;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.continuum.purge.ContinuumPurgeConstants;
+import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
+import org.codehaus.plexus.util.FileUtils;
 
 /**
  * @author Maria Catherine Tan
@@ -35,7 +35,7 @@ import java.io.IOException;
 public class CleanAllPurgeExecutor
     extends AbstractContinuumPurgeExecutor
 {
-    private String purgeType;
+    private final String purgeType;
 
     public CleanAllPurgeExecutor( String purgeType )
     {

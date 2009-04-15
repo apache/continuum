@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 public class NotifierSummaryAction
     extends ContinuumActionSupport
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( NotifierSummaryAction.class );
 
     /**
      * Identifier for the {@link ProjectGroup} for which the Notifier summary

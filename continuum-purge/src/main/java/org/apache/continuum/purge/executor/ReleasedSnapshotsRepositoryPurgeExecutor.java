@@ -19,6 +19,11 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.common.utils.VersionComparator;
@@ -29,11 +34,6 @@ import org.apache.maven.archiva.model.VersionedReference;
 import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.layout.LayoutException;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Codes were taken from Archiva's CleanupReleasedSnapshotsRepositoryPurge and just made some few changes
  *
@@ -42,7 +42,7 @@ import java.util.List;
 public class ReleasedSnapshotsRepositoryPurgeExecutor
     extends AbstractContinuumPurgeExecutor
 {
-    private RepositoryManagedContent repository;
+    private final RepositoryManagedContent repository;
 
     public ReleasedSnapshotsRepositoryPurgeExecutor( RepositoryManagedContent repository )
     {

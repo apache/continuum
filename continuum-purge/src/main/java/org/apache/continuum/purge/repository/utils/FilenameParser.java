@@ -19,10 +19,10 @@ package org.apache.continuum.purge.repository.utils;
  * under the License.
  */
 
-import org.apache.maven.archiva.common.utils.VersionUtil;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.maven.archiva.common.utils.VersionUtil;
 
 /**
  * Codes were taken from Archiva's FilenameParser
@@ -42,7 +42,7 @@ public class FilenameParser
 
     private static final Pattern section = Pattern.compile( "([^-]*)" );
 
-    private Matcher matcher;
+    private final Matcher matcher;
 
     public FilenameParser( String filename )
     {

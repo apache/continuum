@@ -63,7 +63,7 @@ public class DirectoryPurgeConfigurationDaoImpl
 
             query.setFilter( "this.schedule.id == scheduleId" );
 
-            List result = (List) query.execute( new Integer( scheduleId ) );
+            List result = (List) query.execute( scheduleId );
 
             return result == null ? Collections.EMPTY_LIST : (List) pm.detachCopyAll( result );
         }

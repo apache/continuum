@@ -44,7 +44,7 @@ public class ScheduleAction
     extends ContinuumConfirmAction
     implements Preparable
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( ScheduleAction.class );
 
     private int id;
 

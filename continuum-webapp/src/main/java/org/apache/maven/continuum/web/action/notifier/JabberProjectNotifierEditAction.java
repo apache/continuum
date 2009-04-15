@@ -19,12 +19,12 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Action that edits a {@link ProjectNotifier} of type 'Jabber' from the
@@ -70,14 +70,14 @@ public class JabberProjectNotifierEditAction
 
         address = (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
 
-        sslConnection = Boolean.valueOf( (String) configuration.get( "sslConnection" ) ).booleanValue();
+        sslConnection = Boolean.valueOf( (String) configuration.get( "sslConnection" ) );
 
-        group = Boolean.valueOf( (String) configuration.get( "isGroup" ) ).booleanValue();
+        group = Boolean.valueOf( (String) configuration.get( "isGroup" ) );
     }
 
     protected void setNotifierConfiguration( ProjectNotifier notifier )
     {
-        HashMap configuration = new HashMap();
+        HashMap<String, String> configuration = new HashMap<String, String>();
 
         configuration.put( "host", host );
 

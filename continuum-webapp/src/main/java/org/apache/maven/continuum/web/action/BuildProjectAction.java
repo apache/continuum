@@ -85,11 +85,11 @@ public class BuildProjectAction
             Project proj = getContinuum().getProject( projectId );
             triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, proj.getGroupId() + ":" + proj.getArtifactId(), AuditLogConstants.FORCE_BUILD );
 
-            if ( fromGroupPage == true )
+            if ( fromGroupPage )
             {
                 return "to_group_page";
             }
-            if ( fromProjectPage == true )
+            if ( fromProjectPage )
             {
                 return "to_project_page";
             }

@@ -1,3 +1,4 @@
+package org.apache.maven.continuum.reports.surefire;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,15 +17,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.continuum.reports.surefire;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -32,6 +25,14 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -57,7 +58,7 @@ public class ReportTestSuite
 
     private float timeElapsed;
 
-    private NumberFormat numberFormat = NumberFormat.getInstance();
+    private final NumberFormat numberFormat = NumberFormat.getInstance();
 
     /**
      * @noinspection StringBufferField
@@ -139,7 +140,7 @@ public class ReportTestSuite
 
                 String timeAsString = attributes.getValue( "time" );
 
-                Number time = new Integer( 0 );
+                Number time = 0;
 
                 if ( timeAsString != null )
                 {

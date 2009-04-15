@@ -19,7 +19,6 @@ package org.apache.continuum.scm.manager.spring;
  * under the License.
  */
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.scm.provider.ScmProvider;
@@ -35,9 +34,9 @@ import org.springframework.context.ApplicationContextAware;
  * </p>
  * <p>
  * <code>&lt;bean id="scmProviders" class="org.apache.continuum.scm.manager.spring.ScmManagerFactoryBean"/>
- </code>
+ * </code>
  * </p>
- * 
+ *
  * @author Carlos Sanchez <carlos@apache.org>
  * @version $Id$
  */
@@ -45,15 +44,16 @@ public class ScmProviderFactoryBean
     implements FactoryBean, ApplicationContextAware
 {
     private ApplicationContext applicationContext;
-   
+
     /**
-     * FIXME : change how we find scm implementations 
+     * FIXME : change how we find scm implementations
+     *
      * @see org.springframework.beans.factory.FactoryBean#getObject()
      */
     public Object getObject()
         throws Exception
     {
-        Map<String, ScmProvider> providers = new HashMap<String, ScmProvider>();
+        Map<String, ScmProvider> providers;
         /*
          olamy : comment the pure spring use because we have a duplicate between cvs java and cvs native
           
@@ -78,7 +78,8 @@ public class ScmProviderFactoryBean
             }
             providers.put( provider.getScmType(), provider );
         }*/
-        providers =  PlexusToSpringUtils.lookupMap(PlexusToSpringUtils.buildSpringId( ScmProvider.class ), applicationContext );
+        providers =
+            PlexusToSpringUtils.lookupMap( PlexusToSpringUtils.buildSpringId( ScmProvider.class ), applicationContext );
         return providers;
     }
 

@@ -19,16 +19,16 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
 import org.apache.continuum.model.repository.RepositoryPurgeConfiguration;
 import org.apache.continuum.purge.AbstractPurgeTest;
 import org.apache.continuum.purge.task.PurgeTask;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Maria Catherine Tan
@@ -42,7 +42,7 @@ public abstract class AbstractPurgeExecutorTest
 
     private static final String[] metadata_extensions = new String[]{".xml", ".xml.sha1", ".xml.md5"};
 
-    public static final String TEST_MAVEN_METADATA = "maven-metadata-central";
+    private static final String TEST_MAVEN_METADATA = "maven-metadata-central";
 
     private RepositoryPurgeConfiguration repoConfig;
 
@@ -187,14 +187,13 @@ public abstract class AbstractPurgeExecutorTest
 
         if ( recurse )
         {
-            File[] contents = dir.listFiles();
-            for ( int i = 0; i < contents.length; i++ )
+            for ( File content : dir.listFiles() )
             {
-                contents[i].setLastModified( lastModified );
+                content.setLastModified( lastModified );
 
-                if ( contents[i].list() != null && contents[i].list().length > 0 )
+                if ( content.list() != null && content.list().length > 0 )
                 {
-                    setLastModified( contents[i].getAbsolutePath(), lastModified, true );
+                    setLastModified( content.getAbsolutePath(), lastModified, true );
                 }
             }
         }
@@ -300,9 +299,9 @@ public abstract class AbstractPurgeExecutorTest
 
         String[] folders = new String[]{"1", "releases-4234729018", "", "releases-1234567809", "releases-1234567890"};
 
-        for ( int i = 0; i < folders.length; i++ )
+        for ( String folder : folders )
         {
-            File dir = new File( repoPath, folders[i] );
+            File dir = new File( repoPath, folder );
             dir.mkdir();
         }
     }
@@ -350,25 +349,25 @@ public abstract class AbstractPurgeExecutorTest
             versionDir.mkdirs();
 
             // create maven-metadata* files
-            for ( int i = 0; i < metadata_extensions.length; i++ )
+            for ( String metadata_extension : metadata_extensions )
             {
-                File metadata = new File( versionDir.getParentFile().getAbsolutePath(),
-                                          TEST_MAVEN_METADATA + metadata_extensions[i] );
+                File metadata =
+                    new File( versionDir.getParentFile().getAbsolutePath(), TEST_MAVEN_METADATA + metadata_extension );
                 metadata.createNewFile();
             }
         }
 
         for ( String version : versions )
         {
-            for ( int i = 0; i < jar_extensions.length; i++ )
+            for ( String jar_extension : jar_extensions )
             {
-                File file = new File( versionDir.getAbsolutePath(), artifactId + "-" + version + jar_extensions[i] );
+                File file = new File( versionDir.getAbsolutePath(), artifactId + "-" + version + jar_extension );
                 file.createNewFile();
             }
 
-            for ( int i = 0; i < pom_extensions.length; i++ )
+            for ( String pom_extension : pom_extensions )
             {
-                File file = new File( versionDir.getAbsolutePath(), artifactId + "-" + version + pom_extensions[i] );
+                File file = new File( versionDir.getAbsolutePath(), artifactId + "-" + version + pom_extension );
                 file.createNewFile();
             }
         }

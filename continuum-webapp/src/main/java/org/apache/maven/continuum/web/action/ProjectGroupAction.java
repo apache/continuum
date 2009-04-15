@@ -67,9 +67,9 @@ import org.slf4j.LoggerFactory;
 public class ProjectGroupAction
     extends ContinuumConfirmAction
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( ProjectGroupAction.class );
 
-    private final static Map FILTER_CRITERIA = new HashMap();
+    private static final Map<String, String> FILTER_CRITERIA = new HashMap<String, String>();
 
     static
     {
@@ -103,20 +103,20 @@ public class ProjectGroupAction
 
     private Map projects = new HashMap();
 
-    private Map projectGroups = new HashMap();
+    private Map<Integer, String> projectGroups = new HashMap<Integer, String>();
 
     private boolean confirmed;
 
     private boolean projectInCOQueue = false;
 
-    private Collection projectList;
+    private Collection<Project> projectList;
 
-    private List projectGroupUsers;
+    private List<ProjectGroupUserBean> projectGroupUsers;
 
     private String filterProperty;
 
     private String filterKey;
-    
+
     //Default order is by username
     private String sorterProperty = "username";
 
@@ -170,10 +170,9 @@ public class ProjectGroupAction
 
                 if ( !buildDefinition.isDefaultForProject() )
                 {
-                    String key =
-                        StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals()
-                                        : buildDefinition.getDescription();
-                    buildDefinitions.put( key, Integer.valueOf( buildDefinition.getId() ) );
+                    String key = StringUtils.isEmpty( buildDefinition.getDescription() ) ? buildDefinition.getGoals()
+                        : buildDefinition.getDescription();
+                    buildDefinitions.put( key, buildDefinition.getId() );
                 }
             }
         }
@@ -194,11 +193,10 @@ public class ProjectGroupAction
                 // get the projects according to build order (first project in the group is the root project)
                 try
                 {
-                    Project rootProject =
-                        ( getContinuum().getProjectsInBuildOrder( getContinuum().getProjectsInGroupWithDependencies(
-                                                                                                                     projectGroupId ) ) ).get( 0 );
-                    if ( "maven2".equals( rootProject.getExecutorId() )
-                        || "maven-1".equals( rootProject.getExecutorId() ) )
+                    Project rootProject = ( getContinuum().getProjectsInBuildOrder(
+                        getContinuum().getProjectsInGroupWithDependencies( projectGroupId ) ) ).get( 0 );
+                    if ( "maven2".equals( rootProject.getExecutorId() ) ||
+                        "maven-1".equals( rootProject.getExecutorId() ) )
                     {
                         url = rootProject.getUrl();
                     }
@@ -339,11 +337,8 @@ public class ProjectGroupAction
 
         if ( projectList != null )
         {
-            Iterator proj = projectList.iterator();
-
-            while ( proj.hasNext() )
+            for ( Project p : projectList )
             {
-                Project p = (Project) proj.next();
                 try
                 {
                     if ( parallelBuildsManager.isInAnyCheckoutQueue( p.getId() ) )
@@ -355,17 +350,15 @@ public class ProjectGroupAction
                 {
                     throw new ContinuumException( e.getMessage(), e );
                 }
-                projects.put( p, new Integer( p.getProjectGroup().getId() ) );
+                projects.put( p, p.getProjectGroup().getId() );
             }
         }
 
-        Iterator proj_group = getContinuum().getAllProjectGroupsWithProjects().iterator();
-        while ( proj_group.hasNext() )
+        for ( ProjectGroup pg : getContinuum().getAllProjectGroupsWithProjects() )
         {
-            ProjectGroup pg = (ProjectGroup) proj_group.next();
             if ( isAuthorized( projectGroup.getName() ) )
             {
-                projectGroups.put( new Integer( pg.getId() ), pg.getName() );
+                projectGroups.put( pg.getId(), pg.getName() );
             }
         }
         repositories = getContinuum().getRepositoryService().getAllLocalRepositories();
@@ -522,7 +515,7 @@ public class ProjectGroupAction
                 }
             }
 
-            ProjectGroup newProjectGroup = getContinuum().getProjectGroupWithProjects( new Integer( id[0] ).intValue() );
+            ProjectGroup newProjectGroup = getContinuum().getProjectGroupWithProjects( new Integer( id[0] ) );
 
             if ( newProjectGroup.getId() != projectGroup.getId() && isAuthorized( newProjectGroup.getName() ) )
             {
@@ -605,12 +598,8 @@ public class ProjectGroupAction
 
         if ( projectList != null )
         {
-            Iterator proj = projectList.iterator();
-
-            while ( proj.hasNext() )
+            for ( Project p : projectList )
             {
-                Project p = (Project) proj.next();
-
                 if ( p.getState() != ContinuumProjectState.OK )
                 {
                     allBuildsOk = false;
@@ -657,22 +646,18 @@ public class ProjectGroupAction
         }
     }
 
-    private boolean isParentInProjectGroup( ProjectDependency parent, Collection projectsInGroup )
+    private boolean isParentInProjectGroup( ProjectDependency parent, Collection<Project> projectsInGroup )
         throws ContinuumException
     {
         boolean result = false;
 
-        Iterator projectsIterator = projectsInGroup.iterator();
-
-        while ( projectsIterator.hasNext() )
+        for ( Project project : projectsInGroup )
         {
-            Project project = (Project) projectsIterator.next();
-
             if ( parent != null )
             {
-                if ( ( project.getArtifactId().equals( parent.getArtifactId() ) )
-                    && ( project.getGroupId().equals( parent.getGroupId() ) )
-                    && ( project.getVersion().equals( parent.getVersion() ) ) )
+                if ( ( project.getArtifactId().equals( parent.getArtifactId() ) ) &&
+                    ( project.getGroupId().equals( parent.getGroupId() ) ) &&
+                    ( project.getVersion().equals( parent.getVersion() ) ) )
                 {
                     result = true;
                 }
@@ -721,7 +706,7 @@ public class ProjectGroupAction
             sortUsers( users, sorterProperty, ascending );
         }
 
-        projectGroupUsers = new ArrayList();
+        projectGroupUsers = new ArrayList<ProjectGroupUserBean>();
 
         if ( users == null )
         {
@@ -738,12 +723,10 @@ public class ProjectGroupAction
 
             try
             {
-                Collection effectiveRoles = rbac.getEffectivelyAssignedRoles( user.getUsername() );
+                Collection<Role> effectiveRoles = rbac.getEffectivelyAssignedRoles( user.getUsername() );
 
-                for ( Iterator j = effectiveRoles.iterator(); j.hasNext(); )
+                for ( Role role : effectiveRoles )
                 {
-                    Role role = (Role) j.next();
-
                     if ( role.getName().indexOf( projectGroup.getName() ) > -1 )
                     {
                         pgUser.setRoles( effectiveRoles );
@@ -763,7 +746,7 @@ public class ProjectGroupAction
         }
     }
 
-    private List<User> findUsers( List<User> users, String searchProperty, String searchKey)
+    private List<User> findUsers( List<User> users, String searchProperty, String searchKey )
     {
         List<User> userList = new ArrayList<User>();
         for ( User user : users )
@@ -805,7 +788,7 @@ public class ProjectGroupAction
 
         return userList;
     }
-    
+
     private void sortUsers( List<User> userList, final String sorterProperty, final boolean orderAscending )
     {
         Collections.sort( userList, new Comparator<User>()
@@ -902,7 +885,7 @@ public class ProjectGroupAction
         return projectGroups;
     }
 
-    public void setProjectGroups( Map projectGroups )
+    public void setProjectGroups( Map<Integer, String> projectGroups )
     {
         this.projectGroups = projectGroups;
     }
@@ -1094,7 +1077,7 @@ public class ProjectGroupAction
             return false;
         }
     }
-    
+
     public String getSorterProperty()
     {
         return sorterProperty;

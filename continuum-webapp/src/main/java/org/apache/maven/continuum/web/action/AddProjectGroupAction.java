@@ -19,7 +19,8 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.util.Iterator;
+import com.opensymphony.xwork2.Validateable;
+
 import java.util.List;
 
 import org.apache.continuum.model.repository.LocalRepository;
@@ -31,8 +32,6 @@ import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.opensymphony.xwork2.Validateable;
-
 /**
  * @author Henry Isidro <hisidro@exist.com>
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="addProjectGroup"
@@ -41,7 +40,7 @@ public class AddProjectGroupAction
     extends ContinuumActionSupport
     implements Validateable
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( AddProjectGroupAction.class );
 
     private String name;
 
@@ -74,10 +73,8 @@ public class AddProjectGroupAction
         }
         else if ( name != null && !name.equals( "" ) )
         {
-            Iterator iterator = getContinuum().getAllProjectGroups().iterator();
-            while ( iterator.hasNext() )
+            for ( ProjectGroup projectGroup : getContinuum().getAllProjectGroups() )
             {
-                ProjectGroup projectGroup = (ProjectGroup) iterator.next();
                 if ( name.equals( projectGroup.getName() ) )
                 {
                     addActionError( getText( "projectGroup.error.name.already.exists" ) );

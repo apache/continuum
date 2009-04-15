@@ -19,16 +19,16 @@ package org.apache.continuum.purge.executor;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Set;
+
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 import org.apache.maven.archiva.model.ArtifactReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Set;
 
 /**
  * Some codes were taken from Archiva.
@@ -39,7 +39,7 @@ public abstract class AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
     private static final char DELIM = ' ';
-    
+
     private Logger logger = LoggerFactory.getLogger( "AuditLog" );
 
     public void purge( Set<ArtifactReference> references, RepositoryManagedContent repository )

@@ -50,7 +50,7 @@ public class BuildAgentAction
     extends ContinuumConfirmAction
     implements SecureAction
 {
-    private Logger logger = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger logger = LoggerFactory.getLogger( BuildAgentAction.class );
 
     /**
      * @plexus.requirement

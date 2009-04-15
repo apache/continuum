@@ -115,7 +115,7 @@ public class DefaultPurgeConfigurationService
     public DirectoryPurgeConfiguration addDirectoryPurgeConfiguration( DirectoryPurgeConfiguration dirPurge )
         throws PurgeConfigurationServiceException
     {
-        DirectoryPurgeConfiguration dirPurgeConfig = null;
+        DirectoryPurgeConfiguration dirPurgeConfig;
 
         try
         {
@@ -132,7 +132,7 @@ public class DefaultPurgeConfigurationService
     public RepositoryPurgeConfiguration addRepositoryPurgeConfiguration( RepositoryPurgeConfiguration repoPurge )
         throws PurgeConfigurationServiceException
     {
-        RepositoryPurgeConfiguration repoPurgeConfig = null;
+        RepositoryPurgeConfiguration repoPurgeConfig;
 
         try
         {
