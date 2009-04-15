@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 public class CheckOutTaskExecutor
     implements TaskExecutor
 {
-    private Logger log = LoggerFactory.getLogger( CheckOutTaskExecutor.class );
+    private static final Logger log = LoggerFactory.getLogger( CheckOutTaskExecutor.class );
 
     /**
      * @plexus.requirement

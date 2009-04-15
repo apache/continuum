@@ -32,7 +32,7 @@ public class FormatterTool
 {
     private final String timestampFormatString;
 
-    private ThreadLocal<SimpleDateFormat> timestampFormat = new ThreadLocal<SimpleDateFormat>();
+    private final ThreadLocal<SimpleDateFormat> timestampFormat = new ThreadLocal<SimpleDateFormat>();
 
     public FormatterTool( String timestampFormatString )
     {

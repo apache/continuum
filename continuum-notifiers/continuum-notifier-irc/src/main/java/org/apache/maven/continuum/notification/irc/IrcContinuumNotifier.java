@@ -62,7 +62,7 @@ public class IrcContinuumNotifier
     extends AbstractContinuumNotifier
     implements Disposable
 {
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( IrcContinuumNotifier.class );
 
     // ----------------------------------------------------------------------
     // Requirements
