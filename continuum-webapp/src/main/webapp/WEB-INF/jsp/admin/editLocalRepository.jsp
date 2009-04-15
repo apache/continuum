@@ -28,7 +28,7 @@
 <body>
 <div class="app">
   <div id="axial" class="h3">
-    <h3><s:text name="repository.page.title"/></h3>
+    <h3><s:text name="repository.section.title"/></h3>
 
     <div class="axial">
       <s:form action="saveRepository" method="post" validate="true">
