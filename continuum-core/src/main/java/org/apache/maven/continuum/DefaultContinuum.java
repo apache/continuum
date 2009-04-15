@@ -92,14 +92,9 @@ import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.ContinuumUrlValidator;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.action.Action;
 import org.codehaus.plexus.action.ActionManager;
 import org.codehaus.plexus.action.ActionNotFoundException;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Startable;
@@ -120,7 +115,7 @@ import org.springframework.beans.BeanUtils;
  * @plexus.component role="org.apache.maven.continuum.Continuum" role-hint="default"
  */
 public class DefaultContinuum
-    implements Continuum, Contextualizable, Initializable, Startable
+    implements Continuum, Initializable, Startable
 {
     private Logger log = LoggerFactory.getLogger( DefaultContinuum.class );
 
@@ -227,8 +222,6 @@ public class DefaultContinuum
      * @plexus.requirement
      */
     private BuildExecutorManager executorManager;
-
-    private PlexusContainer container;
 
     /**
      * @plexus.requirement role-hint="continuumUrl"
@@ -2559,12 +2552,6 @@ public class DefaultContinuum
     // --------------------------------
     //  Plexus Lifecycle
     // --------------------------------
-    public void contextualize( Context context )
-        throws ContextException
-    {
-        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
-    }
-
     public void start()
         throws StartingException
     {
@@ -2991,7 +2978,7 @@ public class DefaultContinuum
         {
             Properties properties = new Properties();
 
-            String name = "META-INF/maven/org.apache.maven.continuum/continuum-core/pom.properties";
+            String name = "META-INF/maven/org.apache.continuum/continuum-core/pom.properties";
 
             InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream( name );
 
