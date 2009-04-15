@@ -19,6 +19,16 @@ package org.apache.maven.continuum.notification.mail;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
+
 import org.apache.continuum.notification.mail.MockJavaMailSender;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -33,15 +43,6 @@ import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
-
-import javax.mail.Address;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -194,7 +195,7 @@ public class MailContinuumNotifierTest
 
         List<MimeMessage> mails = mailSender.getReceivedEmails();
 
-        MimeMessage mailMessage = (MimeMessage) mails.get( 0 );
+        MimeMessage mailMessage = mails.get( 0 );
 
         // ----------------------------------------------------------------------
         //

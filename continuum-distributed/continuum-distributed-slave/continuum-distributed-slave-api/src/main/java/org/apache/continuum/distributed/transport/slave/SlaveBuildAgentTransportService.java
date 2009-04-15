@@ -1,9 +1,9 @@
 package org.apache.continuum.distributed.transport.slave;
 
+import com.atlassian.xmlrpc.ServiceObject;
+
 import java.util.List;
 import java.util.Map;
-
-import com.atlassian.xmlrpc.ServiceObject;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,20 +27,26 @@ import com.atlassian.xmlrpc.ServiceObject;
 /**
  * SlaveBuildAgentTransportService
  */
-@ServiceObject( "SlaveBuildAgentTransportService" )
+@ServiceObject("SlaveBuildAgentTransportService")
 public interface SlaveBuildAgentTransportService
 {
-    public Boolean buildProjects( List<Map> projectsBuildContext ) throws Exception;
-    
-    public Map getBuildResult( int projectId ) throws Exception;
-    
-    public Integer getProjectCurrentlyBuilding() throws Exception;
-    
-    public List<Map> getAvailableInstallations() throws Exception;
-    
-    public Boolean ping() throws Exception;
+    public Boolean buildProjects( List<Map<String, Object>> projectsBuildContext )
+        throws Exception;
 
-    public Boolean cancelBuild() throws Exception;
+    public Map getBuildResult( int projectId )
+        throws Exception;
+
+    public Integer getProjectCurrentlyBuilding()
+        throws Exception;
+
+    public List<Map<String, String>> getAvailableInstallations()
+        throws Exception;
+
+    public Boolean ping()
+        throws Exception;
+
+    public Boolean cancelBuild()
+        throws Exception;
 
     public String generateWorkingCopyContent( int projectId, String directory, String baseUrl, String imagesBaseUrl )
         throws Exception;
@@ -54,7 +60,8 @@ public interface SlaveBuildAgentTransportService
     public List<Map<String, String>> processProject( int projectId, String pomFilename, boolean autoVersionSubmodules )
         throws Exception;
 
-    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map environments )
+    public String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+                                  Map environments )
         throws Exception;
 
     public Map getReleaseResult( String releaseId )
@@ -69,11 +76,13 @@ public interface SlaveBuildAgentTransportService
     public String getPreparedReleaseName( String releaseId )
         throws Exception;
 
-    public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
+    public Boolean releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile,
+                                   Map repository )
         throws Exception;
 
-    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, 
-                                         String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+    public String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
+                                         String scmUrl, String scmUsername, String scmPassword, String scmTag,
+                                         String scmTagBase, Map environments )
         throws Exception;
 
     public String releaseCleanup( String releaseId )

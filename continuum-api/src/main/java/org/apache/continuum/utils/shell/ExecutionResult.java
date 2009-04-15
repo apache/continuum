@@ -25,7 +25,7 @@ package org.apache.continuum.utils.shell;
  */
 public class ExecutionResult
 {
-    private int exitCode;
+    private final int exitCode;
 
     public ExecutionResult( int exitCode )
     {

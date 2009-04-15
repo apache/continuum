@@ -30,22 +30,21 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 26 sept. 2008
  * @version $Id$
+ * @since 26 sept. 2008
  */
 public class MockJavaMailSender
     extends JavaMailSenderImpl
     implements JavaMailSender
 {
+    private final List<MimeMessage> receivedEmails = new ArrayList<MimeMessage>();
 
-    List<MimeMessage> receivedEmails = new ArrayList<MimeMessage>();
-    
     /**
-     * 
+     *
      */
     public MockJavaMailSender()
     {
-       
+
     }
 
     @Override
@@ -54,7 +53,7 @@ public class MockJavaMailSender
     {
         receivedEmails.add( mimeMessage );
     }
-    
+
     public List<MimeMessage> getReceivedEmails()
     {
         return receivedEmails;

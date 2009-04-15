@@ -27,8 +27,6 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
-import org.apache.continuum.taskqueue.BuildProjectTask;
-import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.taskqueue.Task;
@@ -48,6 +46,8 @@ import org.slf4j.LoggerFactory;
 public class DefaultOverallBuildQueue
     implements OverallBuildQueue
 {
+    private static final Logger log = LoggerFactory.getLogger( DefaultOverallBuildQueue.class );
+
     @Resource
     private BuildDefinitionDao buildDefinitionDao;
 
@@ -58,8 +58,6 @@ public class DefaultOverallBuildQueue
     private int id;
 
     private String name;
-
-    private Logger log = LoggerFactory.getLogger( DefaultOverallBuildQueue.class );
 
     public int getId()
     {

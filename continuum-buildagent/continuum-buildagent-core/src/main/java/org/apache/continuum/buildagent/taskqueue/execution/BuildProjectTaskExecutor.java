@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
 public class BuildProjectTaskExecutor
     implements TaskExecutor
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( BuildProjectTaskExecutor.class );
 
     /**
      * @plexus.requirement
@@ -124,8 +124,6 @@ public class BuildProjectTaskExecutor
 
         try
         {
-            Map actionContext = context.getActionContext();
-
             try
             {
                 performAction( "update-project-from-agent-working-directory", context );
@@ -398,7 +396,7 @@ public class BuildProjectTaskExecutor
     private boolean shouldBuild( BuildContext context )
         throws TaskExecutionException
     {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, context.getProjectId() );
         map.put( ContinuumBuildAgentUtil.KEY_BUILD_DEFINITION_ID, context.getBuildDefinitionId() );
         map.put( ContinuumBuildAgentUtil.KEY_TRIGGER, context.getTrigger() );
@@ -422,7 +420,7 @@ public class BuildProjectTaskExecutor
 
     private List getScmChanges( ScmResult scmResult )
     {
-        List scmChanges = new ArrayList();
+        List<Map<String, Object>> scmChanges = new ArrayList<Map<String, Object>>();
 
         if ( scmResult != null && scmResult.getChanges() != null )
         {
@@ -430,7 +428,7 @@ public class BuildProjectTaskExecutor
             {
                 ChangeSet changeSet = (ChangeSet) obj;
 
-                Map map = new HashMap();
+                Map<String, Object> map = new HashMap<String, Object>();
                 if ( StringUtils.isNotEmpty( changeSet.getAuthor() ) )
                 {
                     map.put( ContinuumBuildAgentUtil.KEY_CHANGESET_AUTHOR, changeSet.getAuthor() );
@@ -459,15 +457,15 @@ public class BuildProjectTaskExecutor
         return scmChanges;
     }
 
-    private List<Map> getScmChangeFiles( List<ChangeFile> files )
+    private List<Map<String, String>> getScmChangeFiles( List<ChangeFile> files )
     {
-        List<Map> scmChangeFiles = new ArrayList<Map>();
+        List<Map<String, String>> scmChangeFiles = new ArrayList<Map<String, String>>();
 
         if ( files != null )
         {
             for ( ChangeFile changeFile : files )
             {
-                Map map = new HashMap();
+                Map<String, String> map = new HashMap<String, String>();
 
                 if ( StringUtils.isNotEmpty( changeFile.getName() ) )
                 {
@@ -502,7 +500,7 @@ public class BuildProjectTaskExecutor
     private Map getMavenProject( BuildContext context )
         throws TaskExecutionException
     {
-        Map mavenProject = new HashMap();
+        Map<String, Object> mavenProject = new HashMap<String, Object>();
 
         try
         {

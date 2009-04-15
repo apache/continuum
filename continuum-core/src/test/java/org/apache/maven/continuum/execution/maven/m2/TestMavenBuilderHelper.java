@@ -29,14 +29,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 6 juin 2008
  * @version $Id$
+ * @since 6 juin 2008
  */
 public class TestMavenBuilderHelper
     extends AbstractContinuumTest
 {
-    
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( TestMavenBuilderHelper.class );
 
     public void testgetMavenProject()
         throws Exception
@@ -54,7 +53,7 @@ public class TestMavenBuilderHelper
         assertTrue( project.getDependencies().isEmpty() );
         assertTrue( result.getErrors().isEmpty() );
     }
-    
+
     public void testgetMavenProjectMissingDeps()
         throws Exception
     {
@@ -68,7 +67,5 @@ public class TestMavenBuilderHelper
         log.info( "errorAsString " + errorsAsString );
         assertTrue( errorsAsString.contains( "ghd:non-exists:pom:2.6.267676-beta-754-alpha-95" ) );
         log.info( "errors " + result.getErrors() );
-
-    }    
-    
+    }
 }

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultBuildAgentConfigurationService
     implements BuildAgentConfigurationService
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentConfigurationService.class );
 
     @Resource
     private BuildAgentConfiguration buildAgentConfiguration;
@@ -80,7 +80,7 @@ public class DefaultBuildAgentConfigurationService
         throws BuildAgentConfigurationException
     {
         File file = getBuildOutputFile( projectId );
-    
+
         try
         {
             if ( file.exists() )
@@ -95,7 +95,7 @@ public class DefaultBuildAgentConfigurationService
         catch ( IOException e )
         {
             log.warn( "Error reading build output for project '" + projectId + "'.", e );
-    
+
             return null;
         }
     }
@@ -107,8 +107,8 @@ public class DefaultBuildAgentConfigurationService
 
         if ( !dir.exists() && !dir.mkdirs() )
         {
-            throw new BuildAgentConfigurationException( 
-                      "Could not make the build output directory: " + "'" + dir.getAbsolutePath() + "'." );
+            throw new BuildAgentConfigurationException(
+                "Could not make the build output directory: " + "'" + dir.getAbsolutePath() + "'." );
         }
 
         return new File( dir, "build.log.txt" );

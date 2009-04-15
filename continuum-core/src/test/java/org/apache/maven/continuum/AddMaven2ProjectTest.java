@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public class AddMaven2ProjectTest
     extends AbstractContinuumTest
 {
-    protected Logger log = LoggerFactory.getLogger( getClass() );
+    protected final Logger log = LoggerFactory.getLogger( getClass() );
 
     protected BuildDefinitionTemplate bdt;
 

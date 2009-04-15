@@ -28,12 +28,13 @@ public interface BuildAgentReleaseManager
 {
     String ROLE = BuildAgentReleaseManager.class.getName();
 
-    String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion, Map<String, String> environments )
+    String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+                           Map<String, String> environments )
         throws ContinuumReleaseException;
 
     ReleaseResult getReleaseResult( String releaseId );
 
-    Map getListener( String releaseId );
+    Map<String, Object> getListener( String releaseId );
 
     void removeListener( String releaseId );
 
@@ -42,8 +43,9 @@ public interface BuildAgentReleaseManager
     void releasePerform( String releaseId, String goals, String arguments, boolean useReleaseProfile, Map repository )
         throws ContinuumReleaseException;
 
-    String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository, String scmUrl, String scmUsername, 
-                                String scmPassword, String scmTag, String scmTagBase, Map<String, String> environments )
+    String releasePerformFromScm( String goals, String arguments, boolean useReleaseProfile, Map repository,
+                                  String scmUrl, String scmUsername, String scmPassword, String scmTag,
+                                  String scmTagBase, Map<String, String> environments )
         throws ContinuumReleaseException;
 
     String releaseCleanup( String releaseId );

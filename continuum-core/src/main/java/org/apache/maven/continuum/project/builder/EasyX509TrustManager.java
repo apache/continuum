@@ -34,14 +34,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author olamy
- * @since 1.2.3
  * @version $Id$
+ * @since 1.2.3
  */
-public class EasyX509TrustManager implements X509TrustManager
+public class EasyX509TrustManager
+    implements X509TrustManager
 {
-    private X509TrustManager standardTrustManager = null;
+    private static final Logger log = LoggerFactory.getLogger( EasyX509TrustManager.class );
 
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private X509TrustManager standardTrustManager = null;
 
     /**
      * Constructor for EasyX509TrustManager.

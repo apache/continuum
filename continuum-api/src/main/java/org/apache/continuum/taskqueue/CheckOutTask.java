@@ -19,9 +19,9 @@ package org.apache.continuum.taskqueue;
  * under the License.
  */
 
-import org.codehaus.plexus.taskqueue.Task;
-
 import java.io.File;
+
+import org.codehaus.plexus.taskqueue.Task;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -30,26 +30,27 @@ import java.io.File;
 public class CheckOutTask
     implements Task
 {
-    private int projectId;
+    private final int projectId;
 
-    private File workingDirectory;
-    
-    private String projectName;
-    
-    private String scmUserName;
+    private final File workingDirectory;
 
-    private String scmPassword;
+    private final String projectName;
 
-    public CheckOutTask( int projectId, File workingDirectory, String projectName, String scmUserName, String scmPassword )
+    private final String scmUserName;
+
+    private final String scmPassword;
+
+    public CheckOutTask( int projectId, File workingDirectory, String projectName, String scmUserName,
+                         String scmPassword )
     {
         this.projectId = projectId;
 
         this.workingDirectory = workingDirectory;
-        
+
         this.projectName = projectName;
-        
+
         this.scmUserName = scmUserName;
-        
+
         this.scmPassword = scmPassword;
     }
 
@@ -72,8 +73,8 @@ public class CheckOutTask
     {
         return projectName;
     }
-    
-    
+
+
     public String getScmUserName()
     {
         return scmUserName;
@@ -83,10 +84,10 @@ public class CheckOutTask
     {
         return scmPassword;
     }
-    
-    
+
+
     public int getHashCode()
     {
         return this.hashCode();
-    }    
+    }
 }

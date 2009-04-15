@@ -63,7 +63,6 @@ import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
@@ -85,7 +84,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultDistributedBuildManager
     implements DistributedBuildManager, Contextualizable, Initializable
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultDistributedBuildManager.class );
 
     /**
      * @plexus.requirement
@@ -497,7 +496,7 @@ public class DefaultDistributedBuildManager
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
 
-            List<Map> installationsList = client.getAvailableInstallations();
+            List<Map<String, String>> installationsList = client.getAvailableInstallations();
 
             for ( Map context : installationsList )
             {

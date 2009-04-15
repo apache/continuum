@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -573,27 +574,17 @@ public class ContinuumBuildAgentUtil
         }
         else
         {
-            List list = new ArrayList();
+            List<Object> list = new ArrayList<Object>();
 
             if ( obj instanceof Object[] )
             {
                 Object[] objA = (Object[]) obj;
 
-                for ( Object o : objA )
-                {
-                    if ( o instanceof Map )
-                    {
-                        list.add( (Map) o );
-                    }
-                    else
-                    {
-                        list.add( o );
-                    }
-                }
+                list.addAll( Arrays.asList( objA ) );
             }
             else
             {
-                list = (List) obj;
+                list = (List<Object>) obj;
             }
 
             return list;
@@ -744,9 +735,9 @@ public class ContinuumBuildAgentUtil
         return result;
     }
 
-    private static List<Map> getScmChanges( ScmResult scmResult )
+    private static List<Map<String, Object>> getScmChanges( ScmResult scmResult )
     {
-        List<Map> scmChanges = new ArrayList<Map>();
+        List<Map<String, Object>> scmChanges = new ArrayList<Map<String, Object>>();
 
         List<ChangeSet> changes = scmResult.getChanges();
 
@@ -754,7 +745,7 @@ public class ContinuumBuildAgentUtil
         {
             for ( ChangeSet cs : changes )
             {
-                Map changeSet = new HashMap();
+                Map<String, Object> changeSet = new HashMap<String, Object>();
 
                 if ( StringUtils.isNotEmpty( cs.getAuthor() ) )
                 {
@@ -785,15 +776,15 @@ public class ContinuumBuildAgentUtil
         return scmChanges;
     }
 
-    private static List getChangeFiles( List<ChangeFile> changeFiles )
+    private static List<Map<String, String>> getChangeFiles( List<ChangeFile> changeFiles )
     {
-        List<Map> files = new ArrayList<Map>();
+        List<Map<String, String>> files = new ArrayList<Map<String, String>>();
 
         if ( changeFiles != null )
         {
             for ( ChangeFile file : changeFiles )
             {
-                Map changeFile = new HashMap();
+                Map<String, String> changeFile = new HashMap<String, String>();
                 if ( StringUtils.isNotEmpty( file.getName() ) )
                 {
                     changeFile.put( ContinuumBuildAgentUtil.KEY_CHANGEFILE_NAME, file.getName() );

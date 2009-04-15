@@ -19,6 +19,12 @@ package org.apache.maven.continuum.project.builder.maven;
  * under the License.
  */
 
+import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
@@ -33,12 +39,6 @@ import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -46,21 +46,7 @@ import java.util.List;
 public class MavenTwoContinuumProjectBuilderTest
     extends AbstractContinuumTest
 {
-
-    private Logger logger = Logger.getLogger( getClass() );
-
-    /*
-    protected String getConfigurationName( String subname )
-        throws Exception
-    {
-        return super.getConfigurationName( subname );
-    }
-    */
-
-    protected String getCustomConfigurationName()
-    {
-        return "plexus.xml";
-    }
+    private static final Logger logger = Logger.getLogger( MavenTwoContinuumProjectBuilderTest.class );
 
     public void testGetEmailAddressWhenTypeIsSetToEmail()
         throws Exception

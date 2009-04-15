@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class DistributedBuildProjectTaskExecutorDeferred
     implements TaskExecutor
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DistributedBuildProjectTaskExecutorDeferred.class );
 
     /**
      * @plexus.requirement

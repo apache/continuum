@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultTaskQueueManager
     implements TaskQueueManager, Contextualizable
 {
-    private Logger log = LoggerFactory.getLogger( DefaultTaskQueueManager.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultTaskQueueManager.class );
 
     /**
      * @plexus.requirement role-hint="distributed-build-project"

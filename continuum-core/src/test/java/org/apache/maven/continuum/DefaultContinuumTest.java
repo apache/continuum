@@ -41,7 +41,6 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
-import org.apache.maven.continuum.utils.ContinuumUrlValidator;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit3.JUnit3Mockery;
@@ -55,7 +54,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultContinuumTest
     extends AbstractContinuumTest
 {
-    protected Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultContinuumTest.class );
 
     private Mockery context;
 
@@ -95,18 +94,12 @@ public class DefaultContinuumTest
 
         assertTrue( rootPom.exists() );
 
-        ContinuumUrlValidator validator = (ContinuumUrlValidator) lookup( ContinuumUrlValidator.class, "continuumUrl" );
-
-        String fileUrl = rootPom.toURL().toExternalForm();
-
-        //assertTrue( validator.validate( fileUrl ) );
-
         ContinuumProjectBuildingResult result =
             continuum.addMavenTwoProject( rootPom.toURI().toURL().toExternalForm(), -1, true, false, true, -1 );
 
         assertNotNull( result );
 
-        assertEquals( "result.warnings.size" + result.getWarnings(), 0, result.getWarnings().size() );
+        assertEquals( "result.warnings.size" + result.getErrors(), 0, result.getErrors().size() );
 
         assertEquals( "result.projects.size", 3, result.getProjects().size() );
 

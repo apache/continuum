@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultDistributedReleaseManager
     implements DistributedReleaseManager
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultDistributedReleaseManager.class );
 
     public final String PREPARED_RELEASES_FILENAME = "prepared-releases.xml";
 
@@ -78,7 +78,7 @@ public class DefaultDistributedReleaseManager
      */
     ConfigurationService configurationService;
 
-    private Map<String, Map> releasesInProgress;
+    private Map<String, Map<String, Object>> releasesInProgress;
 
     public Map getReleasePluginParameters( int projectId, String pomFilename )
         throws ContinuumReleaseException, BuildAgentConfigurationException
@@ -99,8 +99,8 @@ public class DefaultDistributedReleaseManager
         }
         catch ( MalformedURLException e )
         {
-           log.error( "Invalid build agent url " + buildAgentUrl ); 
-           throw new ContinuumReleaseException( "Invalid build agent url " + buildAgentUrl );
+            log.error( "Invalid build agent url " + buildAgentUrl );
+            throw new ContinuumReleaseException( "Invalid build agent url " + buildAgentUrl );
         }
         catch ( Exception e )
         {
@@ -138,7 +138,7 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    public String releasePrepare( Project project, Properties releaseProperties, Map<String, String> releaseVersion, 
+    public String releasePrepare( Project project, Properties releaseProperties, Map<String, String> releaseVersion,
                                   Map<String, String> developmentVersion, Map<String, String> environments )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
@@ -154,8 +154,9 @@ public class DefaultDistributedReleaseManager
         try
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-            String releaseId = client.releasePrepare( createProjectMap( project ), createPropertiesMap( releaseProperties ),
-                                                      releaseVersion, developmentVersion, environments );
+            String releaseId =
+                client.releasePrepare( createProjectMap( project ), createPropertiesMap( releaseProperties ),
+                                       releaseVersion, developmentVersion, environments );
 
             addReleasePrepare( releaseId, buildAgentUrl, releaseVersion.get( releaseId ) );
 
@@ -292,8 +293,8 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    public void releasePerform( int projectId, String releaseId, String goals, String arguments, boolean useReleaseProfile, 
-                                LocalRepository repository )
+    public void releasePerform( int projectId, String releaseId, String goals, String arguments,
+                                boolean useReleaseProfile, LocalRepository repository )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         String buildAgentUrl = getBuildAgentUrl( releaseId );
@@ -313,7 +314,7 @@ public class DefaultDistributedReleaseManager
             arguments = "";
         }
 
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
 
         if ( repository != null )
         {
@@ -321,7 +322,7 @@ public class DefaultDistributedReleaseManager
             map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_NAME, repository.getName() );
             map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY_LAYOUT, repository.getLayout() );
         }
-        
+
         try
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
@@ -341,8 +342,9 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    public void releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile, LocalRepository repository, 
-                                       String scmUrl, String scmUsername, String scmPassword, String scmTag, String scmTagBase, Map environments )
+    public void releasePerformFromScm( int projectId, String goals, String arguments, boolean useReleaseProfile,
+                                       LocalRepository repository, String scmUrl, String scmUsername,
+                                       String scmPassword, String scmTag, String scmTagBase, Map environments )
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( projectId );
@@ -364,7 +366,7 @@ public class DefaultDistributedReleaseManager
             arguments = "";
         }
 
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
 
         if ( repository != null )
         {
@@ -376,8 +378,9 @@ public class DefaultDistributedReleaseManager
         try
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-            String releaseId = client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl, scmUsername, scmPassword,
-                                                             scmTag, scmTagBase, environments );
+            String releaseId =
+                client.releasePerformFromScm( goals, arguments, useReleaseProfile, map, scmUrl, scmUsername,
+                                              scmPassword, scmTag, scmTagBase, environments );
 
             addReleaseInProgress( releaseId, "perform", projectId );
         }
@@ -454,8 +457,8 @@ public class DefaultDistributedReleaseManager
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
         List<Map> releases = new ArrayList<Map>();
-        Map<String, Map> releasesMap = new HashMap<String, Map>();
-        
+        Map<String, Map<String, Object>> releasesMap = new HashMap<String, Map<String, Object>>();
+
         if ( releasesInProgress != null && !releasesInProgress.isEmpty() )
         {
             for ( String releaseId : releasesInProgress.keySet() )
@@ -471,12 +474,13 @@ public class DefaultDistributedReleaseManager
 
                     try
                     {
-                        SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
+                        SlaveBuildAgentTransportClient client =
+                            new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
                         Map map = client.getListener( releaseId );
 
                         if ( map != null && !map.isEmpty() )
                         {
-                            Map release = releasesInProgress.get( releaseId );
+                            Map<String, Object> release = releasesInProgress.get( releaseId );
                             release.put( DistributedReleaseUtil.KEY_RELEASE_ID, releaseId );
                             release.put( DistributedReleaseUtil.KEY_BUILD_AGENT_URL, buildAgentUrl );
 
@@ -506,15 +510,16 @@ public class DefaultDistributedReleaseManager
 
     private Map createProjectMap( Project project )
     {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
 
-        map.put( DistributedReleaseUtil.KEY_PROJECT_ID, new Integer( project.getId() ) );
+        map.put( DistributedReleaseUtil.KEY_PROJECT_ID, project.getId() );
         map.put( DistributedReleaseUtil.KEY_GROUP_ID, project.getGroupId() );
         map.put( DistributedReleaseUtil.KEY_ARTIFACT_ID, project.getArtifactId() );
         map.put( DistributedReleaseUtil.KEY_SCM_URL, project.getScmUrl() );
         if ( project.getProjectGroup().getLocalRepository() != null )
         {
-            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY, project.getProjectGroup().getLocalRepository().getLocation() );
+            map.put( DistributedReleaseUtil.KEY_LOCAL_REPOSITORY,
+                     project.getProjectGroup().getLocalRepository().getLocation() );
         }
 
         return map;
@@ -522,7 +527,7 @@ public class DefaultDistributedReleaseManager
 
     private Map createPropertiesMap( Properties properties )
     {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
 
         String prop = properties.getProperty( "username" );
         if ( prop != null )
@@ -598,7 +603,7 @@ public class DefaultDistributedReleaseManager
             {
                 ContinuumPrepareReleasesModelXpp3Reader reader = new ContinuumPrepareReleasesModelXpp3Reader();
                 PreparedReleaseModel model = reader.read( new InputStreamReader( new FileInputStream( file ) ) );
-    
+
                 return model.getPreparedReleases();
             }
             catch ( IOException e )
@@ -637,20 +642,20 @@ public class DefaultDistributedReleaseManager
         {
             preparedReleases = new ArrayList<PreparedRelease>();
         }
-        else 
+        else
         {
             boolean found = false;
 
             for ( PreparedRelease preparedRelease : preparedReleases )
             {
-                if ( preparedRelease.getReleaseId().equals( release.getReleaseId() ) && 
-                     preparedRelease.getReleaseName().equals( release.getReleaseName() ) )
+                if ( preparedRelease.getReleaseId().equals( release.getReleaseId() ) &&
+                    preparedRelease.getReleaseName().equals( release.getReleaseName() ) )
                 {
                     preparedRelease.setBuildAgentUrl( release.getBuildAgentUrl() );
                     found = true;
                 }
             }
-            
+
             if ( !found )
             {
                 preparedReleases.add( release );
@@ -676,10 +681,10 @@ public class DefaultDistributedReleaseManager
     {
         if ( releasesInProgress == null )
         {
-            releasesInProgress = new HashMap<String, Map>();
+            releasesInProgress = new HashMap<String, Map<String, Object>>();
         }
 
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put( DistributedReleaseUtil.KEY_RELEASE_GOAL, releaseType );
         map.put( DistributedReleaseUtil.KEY_PROJECT_ID, projectId );
 
@@ -715,8 +720,8 @@ public class DefaultDistributedReleaseManager
 
     private File getPreparedReleasesFile()
     {
-        return new File( System.getProperty( "appserver.base" ) + File.separator + "conf" + File.separator
-                         + PREPARED_RELEASES_FILENAME );
+        return new File( System.getProperty( "appserver.base" ) + File.separator + "conf" + File.separator +
+            PREPARED_RELEASES_FILENAME );
     }
 
     private boolean checkBuildAgent( String buildAgentUrl )

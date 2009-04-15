@@ -19,7 +19,6 @@
 package org.apache.maven.continuum.builddefinition;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
@@ -53,7 +52,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultBuildDefinitionService
     implements BuildDefinitionService, Initializable
 {
-    private Logger log = LoggerFactory.getLogger( DefaultBuildDefinitionService.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildDefinitionService.class );
 
     /**
      * @plexus.configuration default-value=""
@@ -577,9 +576,8 @@ public class DefaultBuildDefinitionService
             }
             project = projectDao.getProjectWithBuildDetails( project.getId() );
 
-            for ( Iterator<BuildDefinition> iterator = template.getBuildDefinitions().iterator(); iterator.hasNext(); )
+            for ( BuildDefinition bd : (List<BuildDefinition>) template.getBuildDefinitions() )
             {
-                BuildDefinition bd = iterator.next();
                 bd = cloneBuildDefinition( bd );
                 bd.setTemplate( false );
                 bd = buildDefinitionDao.addBuildDefinition( bd );
@@ -606,9 +604,8 @@ public class DefaultBuildDefinitionService
                 return null;
             }
 
-            for ( Iterator<BuildDefinition> iterator = template.getBuildDefinitions().iterator(); iterator.hasNext(); )
+            for ( BuildDefinition bd : (List<BuildDefinition>) template.getBuildDefinitions() )
             {
-                BuildDefinition bd = iterator.next();
                 bd.setTemplate( false );
                 bd = buildDefinitionDao.addBuildDefinition( cloneBuildDefinition( bd ) );
                 projectGroup.addBuildDefinition( bd );

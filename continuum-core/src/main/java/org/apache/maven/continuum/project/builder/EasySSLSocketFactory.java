@@ -39,24 +39,25 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This socket factory will create ssl socket that accepts self signed certificate
+ *
  * @author olamy
- * @since 1.2.3
  * @version $Id$
+ * @since 1.2.3
  */
 public class EasySSLSocketFactory
     implements SocketFactory, LayeredSocketFactory
 {
-
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( EasySSLSocketFactory.class );
 
     private SSLContext sslcontext = null;
 
-    private static SSLContext createEasySSLContext() throws IOException
+    private static SSLContext createEasySSLContext()
+        throws IOException
     {
         try
         {
             SSLContext context = SSLContext.getInstance( "SSL" );
-            context.init( null, new TrustManager[] { new EasyX509TrustManager( null ) }, null );
+            context.init( null, new TrustManager[]{new EasyX509TrustManager( null )}, null );
             return context;
         }
         catch ( Exception e )
@@ -66,7 +67,8 @@ public class EasySSLSocketFactory
         }
     }
 
-    private SSLContext getSSLContext()  throws IOException
+    private SSLContext getSSLContext()
+        throws IOException
     {
         if ( this.sslcontext == null )
         {
@@ -75,10 +77,11 @@ public class EasySSLSocketFactory
         return this.sslcontext;
     }
 
-    /** 
+    /**
      * @see org.apache.http.conn.scheme.SocketFactory#connectSocket(java.net.Socket, java.lang.String, int, java.net.InetAddress, int, org.apache.http.params.HttpParams)
      */
-    public Socket connectSocket( Socket sock, String host, int port, InetAddress localAddress, int localPort, HttpParams params )
+    public Socket connectSocket( Socket sock, String host, int port, InetAddress localAddress, int localPort,
+                                 HttpParams params )
         throws IOException, UnknownHostException, ConnectTimeoutException
     {
         int connTimeout = HttpConnectionParams.getConnectionTimeout( params );
@@ -104,20 +107,20 @@ public class EasySSLSocketFactory
 
     }
 
-    /** 
+    /**
      * @see org.apache.http.conn.scheme.SocketFactory#createSocket()
      */
     public Socket createSocket()
         throws IOException
     {
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
         {
             log.debug( "create socket" );
         }
         return getSSLContext().getSocketFactory().createSocket();
     }
 
-    /** 
+    /**
      * @see org.apache.http.conn.scheme.SocketFactory#isSecure(java.net.Socket)
      */
     public boolean isSecure( Socket socket )
@@ -126,16 +129,16 @@ public class EasySSLSocketFactory
         return true;
     }
 
-    /** 
+    /**
      * @see org.apache.http.conn.scheme.LayeredSocketFactory#createSocket(java.net.Socket, java.lang.String, int, boolean)
      */
     public Socket createSocket( Socket socket, String host, int port, boolean autoClose )
         throws IOException, UnknownHostException
     {
-        if (log.isDebugEnabled())
+        if ( log.isDebugEnabled() )
         {
             log.debug( "create socket host " + host + ", port " + port );
-        }        
+        }
         return getSSLContext().getSocketFactory().createSocket();
     }
 
@@ -144,7 +147,7 @@ public class EasySSLSocketFactory
     //  Both Object.equals() and Object.hashCode() must be overridden 
     //  for the correct operation of some connection managers
     // -------------------------------------------------------------------
-    
+
     public boolean equals( Object obj )
     {
         return ( ( obj != null ) && obj.getClass().equals( EasySSLSocketFactory.class ) );
@@ -154,8 +157,6 @@ public class EasySSLSocketFactory
     {
         return EasySSLSocketFactory.class.hashCode();
     }
-
-
 
 
 }

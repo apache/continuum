@@ -19,11 +19,6 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
@@ -34,9 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DistributedBuildProjectTaskExecutorOverall
-    implements TaskExecutor, Contextualizable
+    implements TaskExecutor
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DistributedBuildProjectTaskExecutorOverall.class );
 
     /**
      * @plexus.requirement
@@ -63,8 +58,6 @@ public class DistributedBuildProjectTaskExecutorOverall
      */
     private TaskQueue deferredTaskQueue;
 
-    PlexusContainer container;
-
     public void executeTask( Task task )
         throws TaskExecutionException
     {
@@ -74,7 +67,7 @@ public class DistributedBuildProjectTaskExecutorOverall
 
             Map<String, DistributedBuildTaskQueueExecutor> executors = buildManager.getTaskQueueExecutors();
 
-            DistributedBuildTaskQueueExecutor executor =  filterExecutors( agentGroup, executors );
+            DistributedBuildTaskQueueExecutor executor = filterExecutors( agentGroup, executors );
             if ( executor != null )
             {
                 log.info( "delegating task to build agent task queue executor: " + executor.getBuildAgentUrl() );
@@ -99,7 +92,8 @@ public class DistributedBuildProjectTaskExecutorOverall
         }
     }
 
-    private DistributedBuildTaskQueueExecutor filterExecutors( Map<String, DistributedBuildTaskQueueExecutor> executors )
+    private DistributedBuildTaskQueueExecutor filterExecutors(
+        Map<String, DistributedBuildTaskQueueExecutor> executors )
     {
         // return the first non-busy taskqueue executor
         for ( String url : executors.keySet() )
@@ -112,10 +106,7 @@ public class DistributedBuildProjectTaskExecutorOverall
         // else return the first executor
         if ( !executors.isEmpty() )
         {
-            for ( String url : executors.keySet() )
-            {
-                return executors.get( url );
-            }
+            return executors.values().iterator().next();
         }
         return null;
     }
@@ -199,14 +190,5 @@ public class DistributedBuildProjectTaskExecutorOverall
         log.info( "profile build agent group is null" );
 
         return null;
-    }
-
-    // --------------------------------
-    // Plexus Lifecycle
-    // --------------------------------
-    public void contextualize( Context context )
-        throws ContextException
-    {
-        container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
 }

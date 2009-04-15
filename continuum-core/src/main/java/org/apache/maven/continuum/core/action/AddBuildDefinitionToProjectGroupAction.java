@@ -19,13 +19,13 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * AddBuildDefinitionToProjectAction:
@@ -52,10 +52,8 @@ public class AddBuildDefinitionToProjectGroupAction
         BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( map );
         if ( buildDefinitionTemplate != null )
         {
-            for ( Iterator<BuildDefinition> iterator = buildDefinitionTemplate.getBuildDefinitions().iterator();
-                  iterator.hasNext(); )
+            for ( BuildDefinition buildDefinition : (List<BuildDefinition>) buildDefinitionTemplate.getBuildDefinitions() )
             {
-                BuildDefinition buildDefinition = iterator.next();
                 resolveDefaultBuildDefinitionsForProjectGroup( buildDefinition, projectGroup );
 
                 projectGroup.addBuildDefinition( buildDefinition );

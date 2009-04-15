@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractBuildExecutor
     implements ContinuumAgentBuildExecutor, Initializable
 {
-    protected Logger log = LoggerFactory.getLogger( getClass() );
+    protected static final Logger log = LoggerFactory.getLogger( AbstractBuildExecutor.class );
 
     /**
      * @plexus.requirement
@@ -88,7 +88,7 @@ public abstract class AbstractBuildExecutor
     //
     // ----------------------------------------------------------------------
 
-    private String id;
+    private final String id;
 
     private boolean resolveExecutable;
 
@@ -317,7 +317,7 @@ public abstract class AbstractBuildExecutor
     protected void updateProject( Project project )
         throws ContinuumAgentBuildExecutorException
     {
-        Map projectMap = new HashMap();
+        Map<String, Object> projectMap = new HashMap<String, Object>();
 
         projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, project.getId() );
         projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, project.getVersion() );
@@ -380,15 +380,15 @@ public abstract class AbstractBuildExecutor
         }
     }
 
-    protected List<Map> getProjectDevelopers( List<ProjectDeveloper> developers )
+    protected List<Map<String, String>> getProjectDevelopers( List<ProjectDeveloper> developers )
     {
-        List<Map> pDevelopers = new ArrayList<Map>();
+        List<Map<String, String>> pDevelopers = new ArrayList<Map<String, String>>();
 
         if ( developers != null )
         {
             for ( ProjectDeveloper developer : developers )
             {
-                Map map = new HashMap();
+                Map<String, String> map = new HashMap<String, String>();
                 map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_NAME, developer.getName() );
                 map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, developer.getEmail() );
                 map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_SCMID, developer.getScmId() );
@@ -399,9 +399,9 @@ public abstract class AbstractBuildExecutor
         return pDevelopers;
     }
 
-    protected Map getProjectParent( ProjectDependency parent )
+    protected Map<String, Object> getProjectParent( ProjectDependency parent )
     {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
 
         if ( parent != null )
         {
@@ -412,15 +412,15 @@ public abstract class AbstractBuildExecutor
         return map;
     }
 
-    protected List<Map> getProjectDependencies( List<ProjectDependency> dependencies )
+    protected List<Map<String, Object>> getProjectDependencies( List<ProjectDependency> dependencies )
     {
-        List<Map> pDependencies = new ArrayList<Map>();
+        List<Map<String, Object>> pDependencies = new ArrayList<Map<String, Object>>();
 
         if ( dependencies != null )
         {
             for ( ProjectDependency dependency : dependencies )
             {
-                Map map = new HashMap();
+                Map<String, Object> map = new HashMap<String, Object>();
                 map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, dependency.getGroupId() );
                 map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, dependency.getArtifactId() );
                 if ( StringUtils.isNotBlank( dependency.getVersion() ) )
@@ -438,15 +438,16 @@ public abstract class AbstractBuildExecutor
         return pDependencies;
     }
 
-    protected List<Map> getProjectNotifiers( List<ProjectNotifier> notifiers )
+    //TODO: Check the content of this method, it always return an empty list
+    protected List<Map<String, Object>> getProjectNotifiers( List<ProjectNotifier> notifiers )
     {
-        List<Map> pNotifiers = new ArrayList<Map>();
+        List<Map<String, Object>> pNotifiers = new ArrayList<Map<String, Object>>();
 
         if ( notifiers != null )
         {
             for ( ProjectNotifier notifier : notifiers )
             {
-                Map map = new HashMap();
+                Map<String, Object> map = new HashMap<String, Object>();
 
                 if ( notifier.getConfiguration() != null )
                 {

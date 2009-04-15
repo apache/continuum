@@ -19,6 +19,8 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.ScheduleDao;
 import org.apache.maven.continuum.ContinuumException;
@@ -29,8 +31,6 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
-
-import java.util.List;
 
 /**
  * AbstractBuildDefinitionContinuumAction:
@@ -148,8 +148,8 @@ public abstract class AbstractBuildDefinitionContinuumAction
      * @param buildDefinition
      * @throws ContinuumException
      */
-    protected BuildDefinition updateBuildDefinitionInList( List<BuildDefinition> buildDefinitions,
-                                                           BuildDefinition buildDefinition )
+    protected void updateBuildDefinitionInList( List<BuildDefinition> buildDefinitions,
+                                                BuildDefinition buildDefinition )
         throws ContinuumException
     {
         try
@@ -202,8 +202,6 @@ public abstract class AbstractBuildDefinitionContinuumAction
                 storedDefinition.setAlwaysBuild( buildDefinition.isAlwaysBuild() );
 
                 buildDefinitionDao.storeBuildDefinition( storedDefinition );
-
-                return storedDefinition;
             }
             else
             {

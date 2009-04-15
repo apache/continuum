@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
 public class DistributedBuildProjectTaskExecutor
     implements DistributedBuildTaskExecutor
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DistributedBuildProjectTaskExecutor.class );
 
     private String buildAgentUrl;
 
@@ -105,9 +105,9 @@ public class DistributedBuildProjectTaskExecutor
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
 
             log.info( "initializing buildContext" );
-            List buildContext = initializeBuildContext( prepareBuildTask.getProjectsBuildDefinitionsMap(),
-                                                        prepareBuildTask.getTrigger(),
-                                                        prepareBuildTask.getScmRootAddress() );
+            List<Map<String, Object>> buildContext =
+                initializeBuildContext( prepareBuildTask.getProjectsBuildDefinitionsMap(),
+                                        prepareBuildTask.getTrigger(), prepareBuildTask.getScmRootAddress() );
 
             startTime = System.currentTimeMillis();
             client.buildProjects( buildContext );
@@ -126,11 +126,11 @@ public class DistributedBuildProjectTaskExecutor
         }
     }
 
-    private List initializeBuildContext( Map<Integer, Integer> projectsAndBuildDefinitions, int trigger,
-                                         String scmRootAddress )
+    private List<Map<String, Object>> initializeBuildContext( Map<Integer, Integer> projectsAndBuildDefinitions,
+                                                              int trigger, String scmRootAddress )
         throws ContinuumException
     {
-        List buildContext = new ArrayList();
+        List<Map<String, Object>> buildContext = new ArrayList<Map<String, Object>>();
         List<Project> projects = new ArrayList<Project>();
 
         try
@@ -156,7 +156,7 @@ public class DistributedBuildProjectTaskExecutor
                 BuildDefinition buildDef = buildDefinitionDao.getBuildDefinition( buildDefinitionId );
                 BuildResult buildResult = buildResultDao.getLatestBuildResultForProject( project.getId() );
 
-                Map context = new HashMap();
+                Map<String, Object> context = new HashMap<String, Object>();
 
                 context.put( ContinuumBuildConstant.KEY_PROJECT_GROUP_ID, project.getProjectGroup().getId() );
                 context.put( ContinuumBuildConstant.KEY_PROJECT_GROUP_NAME, project.getProjectGroup().getName() );
@@ -303,9 +303,9 @@ public class DistributedBuildProjectTaskExecutor
         return scmChanges;
     }
 
-    private List getScmChanges( ScmResult scmResult )
+    private List<Map<String, Object>> getScmChanges( ScmResult scmResult )
     {
-        List scmChanges = new ArrayList();
+        List<Map<String, Object>> scmChanges = new ArrayList<Map<String, Object>>();
 
         if ( scmResult != null && scmResult.getChanges() != null )
         {
@@ -313,7 +313,7 @@ public class DistributedBuildProjectTaskExecutor
             {
                 ChangeSet changeSet = (ChangeSet) obj;
 
-                Map map = new HashMap();
+                Map<String, Object> map = new HashMap<String, Object>();
                 if ( StringUtils.isNotEmpty( changeSet.getAuthor() ) )
                 {
                     map.put( ContinuumBuildConstant.KEY_CHANGESET_AUTHOR, changeSet.getAuthor() );
@@ -342,15 +342,15 @@ public class DistributedBuildProjectTaskExecutor
         return scmChanges;
     }
 
-    private List<Map> getScmChangeFiles( List<ChangeFile> files )
+    private List<Map<String, String>> getScmChangeFiles( List<ChangeFile> files )
     {
-        List<Map> scmChangeFiles = new ArrayList<Map>();
+        List<Map<String, String>> scmChangeFiles = new ArrayList<Map<String, String>>();
 
         if ( files != null )
         {
             for ( ChangeFile changeFile : files )
             {
-                Map map = new HashMap();
+                Map<String, String> map = new HashMap<String, String>();
 
                 if ( StringUtils.isNotEmpty( changeFile.getName() ) )
                 {

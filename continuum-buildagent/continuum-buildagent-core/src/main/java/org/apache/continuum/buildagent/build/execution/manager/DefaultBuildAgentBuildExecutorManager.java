@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultBuildAgentBuildExecutorManager
     implements BuildAgentBuildExecutorManager
 {
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentBuildExecutorManager.class );
 
     /**
      * @plexus.requirement role="org.apache.continuum.buildagent.build.execution.ContinuumAgentBuildExecutor"

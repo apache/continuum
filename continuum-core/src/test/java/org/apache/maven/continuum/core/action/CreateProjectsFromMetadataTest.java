@@ -42,30 +42,28 @@ public class CreateProjectsFromMetadataTest
 
     private CreateProjectsFromMetadataAction action;
 
-    private Mock projectBuilderManagerMock, projectBuilder, mavenSettingsBuilderMock;
-
     protected void setUp()
         throws Exception
     {
         action = new CreateProjectsFromMetadataAction();
         action.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "" ) );
-        projectBuilderManagerMock = mock( ContinuumProjectBuilderManager.class );
-        mavenSettingsBuilderMock = mock( MavenSettingsBuilder.class );
+        Mock projectBuilderManagerMock = mock( ContinuumProjectBuilderManager.class );
+        Mock mavenSettingsBuilderMock = mock( MavenSettingsBuilder.class );
         action.setProjectBuilderManager( (ContinuumProjectBuilderManager) projectBuilderManagerMock.proxy() );
         action.setMavenSettingsBuilder( (MavenSettingsBuilder) mavenSettingsBuilderMock.proxy() );
         action.setUrlValidator( new ContinuumUrlValidator() );
-        projectBuilder = mock( ContinuumProjectBuilder.class );
+        Mock projectBuilder = mock( ContinuumProjectBuilder.class );
 
-        projectBuilderManagerMock.expects( once() ).method( "getProjectBuilder" )
-            .will( returnValue( projectBuilder.proxy() ) );
-        projectBuilder.expects( once() ).method( "buildProjectsFromMetadata" )
-            .will( returnValue( new ContinuumProjectBuildingResult() ) );
+        projectBuilderManagerMock.expects( once() ).method( "getProjectBuilder" ).will(
+            returnValue( projectBuilder.proxy() ) );
+        projectBuilder.expects( once() ).method( "buildProjectsFromMetadata" ).will(
+            returnValue( new ContinuumProjectBuildingResult() ) );
 
-        projectBuilder.expects( once() ).method( "getDefaultBuildDefinitionTemplate" )
-            .will( returnValue( getDefaultBuildDefinitionTemplate() ) );
+        projectBuilder.expects( once() ).method( "getDefaultBuildDefinitionTemplate" ).will(
+            returnValue( getDefaultBuildDefinitionTemplate() ) );
 
         mavenSettingsBuilderMock.expects( once() ).method( "buildSettings" ).will( returnValue( new Settings() ) );
-        
+
     }
 
     private BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()
@@ -87,7 +85,7 @@ public class CreateProjectsFromMetadataTest
         bdt.addBuildDefinition( bd );
         return bdt;
     }
-    
+
     @SuppressWarnings("unchecked")
     public void testExecuteWithNonRecursiveMode()
         throws Exception
@@ -96,34 +94,37 @@ public class CreateProjectsFromMetadataTest
         context.put( CreateProjectsFromMetadataAction.KEY_URL,
                      "http://svn.apache.org/repos/asf/maven/continuum/trunk/pom.xml" );
         context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
-        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, new Boolean( true ) );
+        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, true );
 
-        
         action.execute( context );
 
-        ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context
-            .get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
+        ContinuumProjectBuildingResult result =
+            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT )
+            ;
 
-        assertFalse( "Should not have errors but had " + result.getErrorsAsString() +
-            " (this test requires internet access)", result.hasErrors() );
+        assertFalse(
+            "Should not have errors but had " + result.getErrorsAsString() + " (this test requires internet access)",
+            result.hasErrors() );
     }
 
     public void testExecuteWithRecursiveMode()
         throws Exception
     {
-        Map context = new HashMap();
+        Map<String, Object> context = new HashMap<String, Object>();
         context.put( CreateProjectsFromMetadataAction.KEY_URL,
                      "http://svn.apache.org/repos/asf/maven/archiva/trunk/pom.xml" );
         context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
-        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, new Boolean( false ) );
+        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, false );
 
         action.execute( context );
 
-        ContinuumProjectBuildingResult result = (ContinuumProjectBuildingResult) context
-            .get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT );
+        ContinuumProjectBuildingResult result =
+            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT )
+            ;
 
-        assertFalse( "Should not have errors but had " + result.getErrorsAsString() +
-            " (this test requires internet access)", result.hasErrors() );
+        assertFalse(
+            "Should not have errors but had " + result.getErrorsAsString() + " (this test requires internet access)",
+            result.hasErrors() );
     }
 
 }

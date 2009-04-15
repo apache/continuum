@@ -49,7 +49,7 @@ public class ThreadedDistributedBuildTaskQueueExecutor
 
     private static final int CANCEL_TASK = 2;
 
-    private Logger log = LoggerFactory.getLogger( this.getClass() );
+    private static final Logger log = LoggerFactory.getLogger( ThreadedDistributedBuildTaskQueueExecutor.class );
 
     /**
      * @requirement

@@ -27,15 +27,16 @@ import org.codehaus.plexus.taskqueue.Task;
 public class PrepareBuildProjectsTask
     implements Task
 {
-    private List<BuildContext> buildContexts;
+    private final List<BuildContext> buildContexts;
 
-    private int trigger;
+    private final int trigger;
 
-    private int projectGroupId;
+    private final int projectGroupId;
 
-    private String scmRootAddress;
+    private final String scmRootAddress;
 
-    public PrepareBuildProjectsTask( List<BuildContext> buildContexts, int trigger, int projectGroupId, String scmRootAddress )
+    public PrepareBuildProjectsTask( List<BuildContext> buildContexts, int trigger, int projectGroupId,
+                                     String scmRootAddress )
     {
         this.buildContexts = buildContexts;
         this.trigger = trigger;

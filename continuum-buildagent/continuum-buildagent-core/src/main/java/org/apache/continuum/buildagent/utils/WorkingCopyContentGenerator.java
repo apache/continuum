@@ -14,11 +14,11 @@ import org.codehaus.plexus.util.StringUtils;
  */
 public class WorkingCopyContentGenerator
 {
+    private static final DecimalFormat decFormatter = new DecimalFormat( "###.##" );
+
     private File basedir;
 
     private String urlParamSeparator;
-
-    private static DecimalFormat decFormatter = new DecimalFormat( "###.##" );
 
     private static final long KILO = 1024;
 

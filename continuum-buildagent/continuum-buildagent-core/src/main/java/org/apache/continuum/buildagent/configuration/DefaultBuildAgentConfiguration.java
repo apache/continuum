@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultBuildAgentConfiguration
     implements BuildAgentConfiguration
 {
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultBuildAgentConfiguration.class );
 
     private File configurationFile;
 

@@ -19,6 +19,8 @@ package org.apache.continuum.repository;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.continuum.dao.LocalRepositoryDao;
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.RepositoryPurgeConfigurationDao;
@@ -32,8 +34,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 /**
  * DefaultRepositoryService
  *
@@ -45,7 +45,7 @@ import java.util.List;
 public class DefaultRepositoryService
     implements RepositoryService
 {
-    private Logger log = LoggerFactory.getLogger( DefaultRepositoryService.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultRepositoryService.class );
 
     /**
      * @plexus.requirement
@@ -81,7 +81,7 @@ public class DefaultRepositoryService
                 {
                     throw new RepositoryServiceException( "Local repository name must be unique" );
                 }
-                
+
                 if ( repo.getLocation().equals( localRepository.getLocation() ) )
                 {
                     throw new RepositoryServiceException( "Local repository location must be unique" );

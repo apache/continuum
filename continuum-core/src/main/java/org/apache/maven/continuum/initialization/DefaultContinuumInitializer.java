@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultContinuumInitializer
     implements ContinuumInitializer
 {
-    private Logger log = LoggerFactory.getLogger( DefaultContinuumInitializer.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultContinuumInitializer.class );
 
     // ----------------------------------------------------------------------
     //  Requirements

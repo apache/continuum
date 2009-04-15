@@ -19,6 +19,13 @@ package org.apache.maven.continuum.execution;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.continuum.utils.shell.ExecutionResult;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.artifact.Artifact;
@@ -38,13 +45,6 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -52,8 +52,8 @@ import java.util.Properties;
 public abstract class AbstractBuildExecutor
     implements ContinuumBuildExecutor, Initializable
 {
-    protected Logger log = LoggerFactory.getLogger( getClass() );
-    
+    protected final Logger log = LoggerFactory.getLogger( getClass() );
+
     private static final String SUDO_EXECUTABLE = "sudo";
 
     private static final String CHROOT_EXECUTABLE = "chroot";
@@ -96,7 +96,7 @@ public abstract class AbstractBuildExecutor
     //
     // ----------------------------------------------------------------------
 
-    private String id;
+    private final String id;
 
     private boolean resolveExecutable;
 
@@ -185,8 +185,8 @@ public abstract class AbstractBuildExecutor
      * @param defaultExecutable
      * @return The executable path
      */
-    protected String findExecutable( Project project, String executable, String defaultExecutable,
-                                     boolean resolveExecutable, File workingDirectory )
+    protected String findExecutable( String executable, String defaultExecutable, boolean resolveExecutable,
+                                   File workingDirectory )
     {
         // ----------------------------------------------------------------------
         // If we're not searching the path for the executable, prefix the
@@ -246,8 +246,7 @@ public abstract class AbstractBuildExecutor
 
         File workingDirectory = getWorkingDirectory( project );
 
-        String actualExecutable =
-            findExecutable( project, executable, defaultExecutable, resolveExecutable, workingDirectory );
+        String actualExecutable = findExecutable( executable, defaultExecutable, resolveExecutable, workingDirectory );
 
         // ----------------------------------------------------------------------
         // Execute the build
@@ -276,9 +275,9 @@ public abstract class AbstractBuildExecutor
                 workingDirectory = chrootJailDirectory; // not really used but must exist
             }
 
-            ExecutionResult result = getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable,
-                                                                                  arguments, output, project.getId(),
-                                                                                  environments );
+            ExecutionResult result =
+                getShellCommandHelper().executeShellCommand( workingDirectory, actualExecutable, arguments, output,
+                                                             project.getId(), environments );
 
             log.info( "Exit code: " + result.getExitCode() );
 
@@ -299,8 +298,9 @@ public abstract class AbstractBuildExecutor
         }
         catch ( Exception e )
         {
-            throw new ContinuumBuildExecutorException( "Error while executing shell command. " +
-                "The most common error is that '" + executable + "' " + "is not in your path.", e );
+            throw new ContinuumBuildExecutorException(
+                "Error while executing shell command. " + "The most common error is that '" + executable + "' " +
+                    "is not in your path.", e );
         }
     }
 
@@ -408,7 +408,8 @@ public abstract class AbstractBuildExecutor
         getShellCommandHelper().killProcess( project.getId() );
     }
 
-    public List<Artifact> getDeployableArtifacts( Project project, File workingDirectory, BuildDefinition buildDefinition )
+    public List<Artifact> getDeployableArtifacts( Project project, File workingDirectory,
+                                                  BuildDefinition buildDefinition )
         throws ContinuumBuildExecutorException
     {
         // Not supported by this builder

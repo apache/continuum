@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.maven.shared.release.ReleaseResult;
@@ -47,7 +46,7 @@ import org.springframework.stereotype.Service;
 public class DefaultShellCommandHelper
     implements ShellCommandHelper
 {
-    private Logger log = LoggerFactory.getLogger( DefaultShellCommandHelper.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultShellCommandHelper.class );
 
     // ----------------------------------------------------------------------
     // ShellCommandHelper Implementation

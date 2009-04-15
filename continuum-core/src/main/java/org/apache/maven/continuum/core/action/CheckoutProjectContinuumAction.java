@@ -19,6 +19,11 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.scm.ContinuumScm;
@@ -29,18 +34,12 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.apache.maven.continuum.store.ContinuumObjectNotFoundException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.scm.ScmException;
 import org.apache.maven.scm.command.checkout.CheckOutScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -71,7 +70,7 @@ public class CheckoutProjectContinuumAction
     private ProjectDao projectDao;
 
     public void execute( Map context )
-        throws ContinuumObjectNotFoundException, ContinuumStoreException
+        throws ContinuumStoreException
     {
         Project project = projectDao.getProject( getProject( context ).getId() );
 

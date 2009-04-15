@@ -30,22 +30,22 @@ import org.codehaus.plexus.taskqueue.Task;
  */
 public class BuildProjectTask
     implements Task, Serializable
-{    
-	private static final long serialVersionUID = 3647734422022017812L;
+{
+    private static final long serialVersionUID = 3647734422022017812L;
 
-	private int projectId;
+    private final int projectId;
 
-    private int buildDefinitionId;
+    private final int buildDefinitionId;
 
-    private long timestamp;
+    private final long timestamp;
 
-    private int trigger;
+    private final int trigger;
 
     private long maxExecutionTime;
-    
-    private String projectName;
-    
-    private String buildDefinitionLabel;
+
+    private final String projectName;
+
+    private final String buildDefinitionLabel;
 
     private ScmResult scmResult;
 
@@ -61,7 +61,7 @@ public class BuildProjectTask
         this.trigger = trigger;
 
         this.projectName = projectName;
-        
+
         this.buildDefinitionLabel = buildDefinitionLabel;
 
         this.scmResult = scmResult;
@@ -100,12 +100,12 @@ public class BuildProjectTask
     public String getProjectName()
     {
         return projectName;
-    }    
-    
+    }
+
     public String getBuildDefinitionLabel()
     {
         return buildDefinitionLabel;
-    }    
+    }
 
     public ScmResult getScmResult()
     {
@@ -127,18 +127,18 @@ public class BuildProjectTask
             return false;
         }
         BuildProjectTask buildProjectTask = (BuildProjectTask) obj;
-        return buildProjectTask.getBuildDefinitionId() == this.getBuildDefinitionId()
-            && buildProjectTask.getProjectId() == this.getProjectId()
-            && buildProjectTask.getTrigger() == this.getTrigger();
+        return buildProjectTask.getBuildDefinitionId() == this.getBuildDefinitionId() &&
+            buildProjectTask.getProjectId() == this.getProjectId() &&
+            buildProjectTask.getTrigger() == this.getTrigger();
     }
 
     public int hashCode()
     {
         return this.getBuildDefinitionId() + this.getProjectId() + this.getTrigger();
     }
-    
+
     public int getHashCode()
     {
         return this.hashCode();
-    }    
+    }
 }
