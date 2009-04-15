@@ -189,7 +189,7 @@ public class JdoDataManagementTool
 
             database.setBuildQueues( buildQueueDao.getAllBuildQueues() );
 
-            database.setBuildDefinitions( buildDefinitionDao.getAllBuildDefinitions() );
+            database.setBuildDefinitions( buildDefinitionDao.getAllTemplates() );
         }
         catch ( ContinuumStoreException e )
         {
@@ -343,15 +343,14 @@ public class JdoDataManagementTool
         {
             ProjectGroup projectGroup = (ProjectGroup) i.next();
 
-            projectGroup.setBuildDefinitions( processBuildDefinitions( projectGroup.getBuildDefinitions(),
-                                                                       buildDefinitions ) );
+            // first, we must map up any schedules, etc.
+            processBuildDefinitions( projectGroup.getBuildDefinitions(), schedules, profiles );
 
             for ( Iterator j = projectGroup.getProjects().iterator(); j.hasNext(); )
             {
                 Project project = (Project) j.next();
 
-                project.setBuildDefinitions( processBuildDefinitions( project.getBuildDefinitions(), 
-                                                                      buildDefinitions ) );
+                processBuildDefinitions( project.getBuildDefinitions(), schedules, profiles );
             }
 
             if ( projectGroup.getLocalRepository() != null )
@@ -483,6 +482,25 @@ public class JdoDataManagementTool
         }
 
         return groupProjects;
+    }
+
+    private static void processBuildDefinitions( List buildDefinitions, Map<Integer, Schedule> schedules,
+                                                 Map<Integer, Profile> profiles )
+    {
+        for ( Iterator i = buildDefinitions.iterator(); i.hasNext(); )
+        {
+            BuildDefinition def = (BuildDefinition) i.next();
+
+            if ( def.getSchedule() != null )
+            {
+                def.setSchedule( schedules.get( Integer.valueOf( def.getSchedule().getId() ) ) );
+            }
+
+            if ( def.getProfile() != null )
+            {
+                def.setProfile( profiles.get( Integer.valueOf( def.getProfile().getId() ) ) );
+            }
+        }
     }
 
     private List<BuildDefinition> processBuildDefinitions( List<BuildDefinition> buildDefinitions, 

@@ -25,8 +25,8 @@
               <buildNumber>1</buildNumber>
               <state>1</state>
               <trigger>1</trigger>
-              <startTime>1239696188773</startTime>
-              <endTime>1239696189773</endTime>
+              <startTime>1239794961904</startTime>
+              <endTime>1239794962904</endTime>
               <error>error1</error>
               <success>true</success>
               <exitCode>1</exitCode>
@@ -38,7 +38,7 @@
                   <change>
                     <author>author1.1</author>
                     <comment>comment1.1</comment>
-                    <date>1239696188774</date>
+                    <date>1239794961904</date>
                     <files>
                       <file>
                         <name>name1.1.1</name>
@@ -57,7 +57,7 @@
                   <change>
                     <author>author1.2</author>
                     <comment>comment1.2</comment>
-                    <date>1239696188774</date>
+                    <date>1239794961904</date>
                     <files>
                       <file>
                         <name>name1.2.1</name>
@@ -82,8 +82,8 @@
               <buildNumber>2</buildNumber>
               <state>2</state>
               <trigger>2</trigger>
-              <startTime>1239696190773</startTime>
-              <endTime>1239696191773</endTime>
+              <startTime>1239794963904</startTime>
+              <endTime>1239794964904</endTime>
               <error>error2</error>
               <exitCode>2</exitCode>
             </buildResult>
@@ -95,7 +95,7 @@
               <change>
                 <author>authorCO1.1</author>
                 <comment>commentCO1.1</comment>
-                <date>1239696188774</date>
+                <date>1239794961904</date>
                 <files>
                   <file>
                     <name>nameCO1.1.1</name>
@@ -114,7 +114,7 @@
               <change>
                 <author>authorCO1.2</author>
                 <comment>commentCO1.2</comment>
-                <date>1239696188774</date>
+                <date>1239794961904</date>
                 <files>
                   <file>
                     <name>nameCO1.2.1</name>
@@ -155,7 +155,7 @@
           <projectGroup id="1"></projectGroup>
           <notifiers>
             <notifier>
-              <id>3</id>
+              <id>1</id>
               <type>type11</type>
               <recipientType>11</recipientType>
               <sendOnSuccess>false</sendOnSuccess>
@@ -202,8 +202,8 @@
               <buildNumber>3</buildNumber>
               <state>3</state>
               <trigger>3</trigger>
-              <startTime>1239696192773</startTime>
-              <endTime>1239696193773</endTime>
+              <startTime>1239794965904</startTime>
+              <endTime>1239794966904</endTime>
               <error>error3</error>
               <success>true</success>
               <exitCode>3</exitCode>
@@ -215,7 +215,7 @@
                   <change>
                     <author>author3.1</author>
                     <comment>comment3.1</comment>
-                    <date>1239696188774</date>
+                    <date>1239794961904</date>
                     <files>
                       <file>
                         <name>name3.1.1</name>
@@ -234,7 +234,7 @@
                   <change>
                     <author>author3.2</author>
                     <comment>comment3.2</comment>
-                    <date>1239696188774</date>
+                    <date>1239794961904</date>
                     <files>
                       <file>
                         <name>name3.2.1</name>
@@ -278,7 +278,7 @@
           <projectGroup id="1"></projectGroup>
           <notifiers>
             <notifier>
-              <id>4</id>
+              <id>2</id>
               <type>type12</type>
               <recipientType>12</recipientType>
               <sendOnFailure>false</sendOnFailure>
@@ -289,7 +289,7 @@
               </configuration>
             </notifier>
             <notifier>
-              <id>5</id>
+              <id>3</id>
               <type>type13</type>
               <recipientType>13</recipientType>
               <sendOnSuccess>false</sendOnSuccess>
@@ -318,7 +318,7 @@
       </projects>
       <notifiers>
         <notifier>
-          <id>1</id>
+          <id>4</id>
           <type>type1</type>
           <recipientType>1</recipientType>
           <sendOnFailure>false</sendOnFailure>
@@ -328,7 +328,7 @@
           </configuration>
         </notifier>
         <notifier>
-          <id>2</id>
+          <id>5</id>
           <type>type2</type>
           <recipientType>2</recipientType>
           <sendOnSuccess>false</sendOnSuccess>
@@ -614,62 +614,7 @@
       <buildFile>buildFile14</buildFile>
       <schedule id="2"></schedule>
       <profile id="1"></profile>
-    </buildDefinition>
-    <buildDefinition>
-      <id>2</id>
-      <goals>goals1</goals>
-      <arguments>arguments1</arguments>
-      <buildFile>buildFile1</buildFile>
-      <schedule id="1"></schedule>
-      <profile id="1"></profile>
-    </buildDefinition>
-    <buildDefinition>
-      <id>3</id>
-      <goals>goals11</goals>
-      <arguments>arguments11</arguments>
-      <buildFile>buildFile11</buildFile>
-      <schedule id="2"></schedule>
-      <profile id="2"></profile>
-    </buildDefinition>
-    <buildDefinition>
-      <id>4</id>
-      <goals>goals12</goals>
-      <arguments>arguments12</arguments>
-      <buildFile>buildFile12</buildFile>
-      <schedule id="1"></schedule>
-      <profile id="2"></profile>
-    </buildDefinition>
-    <buildDefinition>
-      <id>5</id>
-      <goals>goals13</goals>
-      <arguments>arguments13</arguments>
-      <buildFile>buildFile13</buildFile>
-      <schedule id="1"></schedule>
-      <profile id="1"></profile>
-    </buildDefinition>
-    <buildDefinition>
-      <id>6</id>
-      <goals>deploy</goals>
-    </buildDefinition>
-    <buildDefinition>
-      <id>7</id>
-      <goals>goals2</goals>
-      <arguments>arguments2</arguments>
-      <buildFile>buildFile2</buildFile>
-      <schedule id="2"></schedule>
-      <profile id="1"></profile>
-    </buildDefinition>
-    <buildDefinition>
-      <id>8</id>
-      <goals>goals3</goals>
-      <arguments>arguments3</arguments>
-      <buildFile>buildFile3</buildFile>
-      <schedule id="2"></schedule>
-      <profile id="2"></profile>
-    </buildDefinition>
-    <buildDefinition>
-      <id>9</id>
-      <goals>deploy</goals>
+      <template>true</template>
     </buildDefinition>
   </buildDefinitions>
 </continuumDatabase>

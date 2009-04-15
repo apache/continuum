@@ -562,10 +562,12 @@ public abstract class AbstractContinuumStoreTestCase
             createTestBuildDefinition( "arguments13", "buildFile13", "goals13", profile1, schedule2, false, false );
         BuildDefinition testBuildDefinition4 =
             createTestBuildDefinition( null, null, "deploy", null, null, false, false );
-
+        BuildDefinition testBuildDefinition5 =
+            createTestBuildDefinition( "arguments14", "buildFile14", "goals14", profile1, schedule1, false, false );
+        testBuildDefinition5.setTemplate( true );
+            
         BuildDefinitionTemplate testBuildDefinitionTemplate1 = createTestBuildDefinitionTemplate( "template2", "type2", false );
-        testBuildDefinitionTemplate1.addBuildDefinition( 
-            createTestBuildDefinition( "arguments14", "buildFile14", "goals14", profile1, schedule1, false, false ) );
+        testBuildDefinitionTemplate1.addBuildDefinition( testBuildDefinition5 );
 
         if ( addToStore )
         {
