@@ -62,7 +62,7 @@ import org.springframework.stereotype.Service;
 public class DefaultInstallationService
     implements InstallationService, Initializable
 {
-    private Logger log = LoggerFactory.getLogger( DefaultInstallationService.class );
+    private static final Logger log = LoggerFactory.getLogger( DefaultInstallationService.class );
 
     @Resource
     private InstallationDao installationDao;
@@ -454,8 +454,9 @@ public class DefaultInstallationService
         List<Installation> all = getAllInstallations();
         for ( Installation install : all )
         {
-            if ( org.apache.commons.lang.StringUtils.equals( installation.getName(), install.getName() )
-                && ( installation.getInstallationId() == 0 || installation.getInstallationId() != install.getInstallationId() ) )
+            if ( org.apache.commons.lang.StringUtils.equals( installation.getName(), install.getName() ) &&
+                ( installation.getInstallationId() == 0 ||
+                    installation.getInstallationId() != install.getInstallationId() ) )
             {
                 return true;
             }

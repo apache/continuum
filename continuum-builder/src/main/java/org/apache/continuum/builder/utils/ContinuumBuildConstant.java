@@ -20,6 +20,7 @@ package org.apache.continuum.builder.utils;
  */
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class ContinuumBuildConstant
     public static final String KEY_PROJECT_GROUP_ID = "project-group-id";
 
     public static final String KEY_PROJECT_GROUP_NAME = "project-group-name";
-    
+
     public static final String KEY_SCM_ROOT_ADDRESS = "scm-root-address";
 
     public static final String KEY_SCM_ERROR = "scm-error";
@@ -339,7 +340,7 @@ public class ContinuumBuildConstant
 
     public static String getGroupId( Map context )
     {
-        return getString( context, KEY_GROUP_ID);
+        return getString( context, KEY_GROUP_ID );
     }
 
     public static String getArtifactId( Map context )
@@ -350,7 +351,7 @@ public class ContinuumBuildConstant
     public static String getVersion( Map context )
     {
         return getString( context, KEY_PROJECT_VERSION );
-        
+
     }
 
     public static String getProjectName( Map context )
@@ -514,33 +515,26 @@ public class ContinuumBuildConstant
     protected static boolean getBoolean( Map context, String key )
     {
         Object obj = getObject( context, key, null );
-        
-        if ( obj == null )
-        {
-            return false;
-        }
-        else
-        {
-            return ( (Boolean) obj ).booleanValue();
-        }
+
+        return obj != null && (Boolean) obj;
     }
-    
+
     protected static boolean getBoolean( Map context, String key, boolean defaultValue )
     {
-        return ( (Boolean) getObject( context, key, Boolean.valueOf( defaultValue ) ) ).booleanValue();
-    }    
+        return (Boolean) getObject( context, key, defaultValue );
+    }
 
     protected static int getInteger( Map context, String key )
     {
         Object obj = getObject( context, key, null );
-        
+
         if ( obj == null )
         {
             return 0;
         }
         else
         {
-            return ( (Integer) obj ).intValue();
+            return (Integer) obj;
         }
     }
 
@@ -554,7 +548,7 @@ public class ContinuumBuildConstant
         }
         else
         {
-            return (Date)obj;
+            return (Date) obj;
         }
     }
 
@@ -568,20 +562,10 @@ public class ContinuumBuildConstant
         }
         else
         {
-            List list = new ArrayList();
+            List<Object> list = new ArrayList<Object>();
             Object[] objA = (Object[]) obj;
 
-            for ( Object o : objA )
-            {
-                if ( o instanceof Map )
-                {
-                    list.add( (Map) o );
-                }
-                else
-                {
-                    list.add( o );
-                }
-            }
+            list.addAll( Arrays.asList( objA ) );
 
             return list;
         }

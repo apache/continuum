@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultContinuumConfiguration
     implements ContinuumConfiguration
 {
-    private Logger log = LoggerFactory.getLogger( getClass() );
+    private static final Logger log = LoggerFactory.getLogger( DefaultContinuumConfiguration.class );
 
     private File configurationFile;
 
