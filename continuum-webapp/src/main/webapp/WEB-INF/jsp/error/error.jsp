@@ -21,8 +21,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
+<s:i18n name="localization.Continuum">
 <head>
-  <title>Error Occurred</title>
+  <title><s:text name="errorOccured.page.title"/></title>
   <s:head />
   <script language=javascript type='text/javascript'>
     <!--
@@ -58,7 +59,7 @@
 
 <body>
   <div id="h3">
-    <h3>Error Occurred</h3>
+    <h3><s:text name="errorOccured.section.title"/></h3>
 
     <div class="errormessage">
       <s:property value="exception"/>
@@ -71,4 +72,5 @@
     </div>
   </div>
 </body>
+</s:i18n>
 </html>
