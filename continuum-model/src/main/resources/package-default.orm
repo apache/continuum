@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE orm PUBLIC
+    "-//Sun Microsystems, Inc.//DTD Java Data Objects Mapping Metadata 2.0//EN"
+    "http://java.sun.com/dtd/jdo_orm_2_0.dtd">
+<orm>
+  <package name="org.apache.maven.continuum.model.project">
+    <class name="ProjectNotifier">
+      <field name="sendOnScmFailure" null-value="default">
+        <column jdbc-type="CHAR" default-value="N" />
+      </field>
+    </class>
+  </package>
+  <package name="org.apache.maven.continuum.model.system">
+    <class name="SystemConfiguration">
+      <field name="distributedBuildEnabled" null-value="default">
+        <column jdbc-type="CHAR" default-value="N" />
+      </field>
+    </class>
+  </package>
+</orm>

@@ -227,11 +227,12 @@
         <persistenceManagerFactoryClass>org.jpox.PersistenceManagerFactoryImpl</persistenceManagerFactoryClass>
 
         <otherProperties>
-          <!-- uncomment this property for mssql support - CONTINUUM-697 -->
-          <!-- property>
+          <property>
             <name>javax.jdo.option.Mapping</name>
-            <value>mssql</value>
-          </property -->
+            <value>default</value>
+            <!-- change this property for mssql support - CONTINUUM-697 -->
+            <!-- value>mssql</value -->
+          </property>
           <property>
             <name>org.jpox.autoCreateSchema</name>
             <value>true</value>
