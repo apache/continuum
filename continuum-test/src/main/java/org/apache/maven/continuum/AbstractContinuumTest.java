@@ -210,7 +210,7 @@ public abstract class AbstractContinuumTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/META-INF/package.jdo" )}, new URL[]{}, null,
+        SchemaTool.createSchemaTables( new URL[]{getClass().getResource( "/package.jdo" )}, new URL[]{}, null,
                                        false, null );
 
         // ----------------------------------------------------------------------
