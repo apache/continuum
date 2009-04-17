@@ -320,9 +320,30 @@ public abstract class AbstractBuildExecutor
         Map<String, Object> projectMap = new HashMap<String, Object>();
 
         projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_ID, project.getId() );
-        projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, project.getVersion() );
-        projectMap.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, project.getArtifactId() );
-        projectMap.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, project.getGroupId() );
+        if ( StringUtils.isNotEmpty( project.getVersion() ) )
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, project.getVersion() );
+        }
+        else
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, "" );
+        }
+        if ( StringUtils.isNotEmpty( project.getArtifactId() ) )
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, project.getArtifactId() );
+        }
+        else
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, "" );
+        }
+        if ( StringUtils.isNotEmpty( project.getGroupId() ) )
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, project.getGroupId() );
+        }
+        else
+        {
+            projectMap.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, "" );
+        }
         if ( StringUtils.isNotEmpty( project.getName() ) )
         {
             projectMap.put( ContinuumBuildAgentUtil.KEY_PROJECT_NAME, project.getName() );
@@ -390,8 +411,22 @@ public abstract class AbstractBuildExecutor
             {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_NAME, developer.getName() );
-                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, developer.getEmail() );
-                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_SCMID, developer.getScmId() );
+                if ( StringUtils.isNotEmpty( developer.getEmail() ) )
+                {
+                	map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, developer.getEmail() );
+                }
+                else
+                {
+                	map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_EMAIL, "" );
+                }
+                if ( StringUtils.isNotEmpty( developer.getScmId() ) )
+                {
+                	map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_SCMID, developer.getScmId() );
+                }
+                else
+                {
+                    map.put( ContinuumBuildAgentUtil.KEY_PROJECT_DEVELOPER_SCMID, "" );
+                }
 
                 pDevelopers.add( map );
             }
@@ -405,9 +440,30 @@ public abstract class AbstractBuildExecutor
 
         if ( parent != null )
         {
-            map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, parent.getGroupId() );
-            map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, parent.getArtifactId() );
-            map.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, parent.getVersion() );
+            if ( StringUtils.isNotEmpty( parent.getGroupId() ) )
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, parent.getGroupId() );
+            }
+            else
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_GROUP_ID, "" );
+            }
+            if ( StringUtils.isNotEmpty( parent.getArtifactId() ) )
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, parent.getArtifactId() );
+            }
+            else
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_ARTIFACT_ID, "" );
+            }
+            if ( StringUtils.isNotEmpty( parent.getVersion() ) )
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, parent.getVersion() );
+            }
+            else
+            {
+                map.put( ContinuumBuildAgentUtil.KEY_PROJECT_VERSION, "" );
+            }
         }
         return map;
     }
@@ -455,7 +511,7 @@ public abstract class AbstractBuildExecutor
                 }
                 else
                 {
-
+                    map.put( ContinuumBuildAgentUtil.KEY_NOTIFIER_CONFIGURATION, "" );
                 }
                 if ( StringUtils.isNotBlank( notifier.getType() ) )
                 {
