@@ -35,11 +35,6 @@
       <url>scpexe://people.apache.org/www/continuum.apache.org/docs/${project.version}</url>
     </site>
   </distributionManagement>
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/continuum/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/continuum/trunk/</developerConnection>
-    <url>http://svn.apache.org/viewvc/continuum/trunk/</url>
-  </scm>
     <build>
     <plugins>
       <plugin>
