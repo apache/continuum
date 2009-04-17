@@ -21,23 +21,23 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
+<s:i18n name="localization.Continuum">
 <head>
-  <title>Authorization Error</title>
+  <title><s:text name="authorizationError.page.title"/></title>
 </head>
 
 <body>
   <div id="h3">
-    <h3>Authorization Error</h3>
+    <h3><s:text name="authorizationError.section.title"/></h3>
     <div class="errors">
       <s:if test="hasActionErrors()">
         <s:actionerror/>
       </s:if>
-
       <s:else>
-        You are not authorized to access this page.
-        Please contact your administrator to be granted the appropriate permissions.
+        <s:text name="authorizationError.not.authorized"/>
       </s:else>
     </div>
   </div>
 </body>
+</s:i18n>
 </html>

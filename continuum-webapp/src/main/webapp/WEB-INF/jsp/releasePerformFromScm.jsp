@@ -22,12 +22,12 @@
 <html>
   <s:i18n name="localization.Continuum">
     <head>
-        <title><s:text name="releaseProject.page.title"/></title>
+        <title><s:text name="releasePerformFromScm.page.title"/></title>
     </head>
     <body>
-      <h2>Perform Project Release</h2>
+      <h2><s:text name="releasePerformFromScm.section.title"/></h2>
       <s:form action="releasePerformFromScm" method="post" validate="true">
-        <h3>Release Perform Parameters</h3>
+        <h3><s:text name="releasePerformFromScm.parameters.section.title"/></h3>
         <s:hidden name="projectId"/>
         <div class="axial">
           <table border="1" cellspacing="2" cellpadding="3" width="100%">

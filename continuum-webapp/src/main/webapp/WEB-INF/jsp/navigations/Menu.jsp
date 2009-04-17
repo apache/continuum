@@ -25,7 +25,7 @@
 <s:i18n name="localization.Continuum">
 <div id="navcolumn">
   <div id="projectmenu" class="toolgroup">
-    <div class="label">Continuum</div>
+    <div class="label"><s:text name="menu.continuum"/></div>
     <div>
       <div class="body">
         <s:url id="aboutUrl" action="about" namespace="/" includeParams="none"/>
