@@ -47,9 +47,6 @@ under the License.
             <goals>
               <goal>jpox-jdo-mapping</goal>
             </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/classes/META-INF</outputDirectory>
-            </configuration>
           </execution>
           <execution>
             <id>jpox-jdo-mapping-replication</id>
@@ -57,7 +54,6 @@ under the License.
               <goal>jpox-jdo-mapping</goal>
             </goals>
             <configuration>
-              <outputDirectory>${basedir}/target/classes/META-INF</outputDirectory>
               <replicationParameters>true</replicationParameters>
             </configuration>
           </execution>
