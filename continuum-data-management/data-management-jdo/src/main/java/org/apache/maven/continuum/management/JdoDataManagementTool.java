@@ -344,13 +344,15 @@ public class JdoDataManagementTool
             ProjectGroup projectGroup = (ProjectGroup) i.next();
 
             // first, we must map up any schedules, etc.
-            processBuildDefinitions( projectGroup.getBuildDefinitions(), schedules, profiles );
+            projectGroup.setBuildDefinitions( processBuildDefinitions( projectGroup.getBuildDefinitions(), 
+                                                                       schedules, profiles, buildDefinitions ) );
 
             for ( Iterator j = projectGroup.getProjects().iterator(); j.hasNext(); )
             {
                 Project project = (Project) j.next();
 
-                processBuildDefinitions( project.getBuildDefinitions(), schedules, profiles );
+                project.setBuildDefinitions( processBuildDefinitions( project.getBuildDefinitions(), 
+                                                                      schedules, profiles, buildDefinitions ) );
             }
 
             if ( projectGroup.getLocalRepository() != null )
@@ -484,27 +486,40 @@ public class JdoDataManagementTool
         return groupProjects;
     }
 
-    private static void processBuildDefinitions( List buildDefinitions, Map<Integer, Schedule> schedules,
-                                                 Map<Integer, Profile> profiles )
+    private List<BuildDefinition> processBuildDefinitions( List<BuildDefinition> buildDefinitions, 
+                                                           Map<Integer, Schedule> schedules,
+                                                           Map<Integer, Profile> profiles, 
+                                                           Map<Integer, BuildDefinition> buildDefs )
     {
-        for ( Iterator i = buildDefinitions.iterator(); i.hasNext(); )
+        List<BuildDefinition> buildDefsList = new ArrayList<BuildDefinition>();
+
+        for ( BuildDefinition def : buildDefinitions )
         {
-            BuildDefinition def = (BuildDefinition) i.next();
-
-            if ( def.getSchedule() != null )
+            if ( buildDefs.get( Integer.valueOf( def.getId() ) ) != null )
             {
-                def.setSchedule( schedules.get( Integer.valueOf( def.getSchedule().getId() ) ) );
+                buildDefsList.add( buildDefs.get( Integer.valueOf( def.getId() ) ) );
             }
-
-            if ( def.getProfile() != null )
+            else
             {
-                def.setProfile( profiles.get( Integer.valueOf( def.getProfile().getId() ) ) );
+                if ( def.getSchedule() != null )
+                {
+                    def.setSchedule( schedules.get( Integer.valueOf( def.getSchedule().getId() ) ) );
+                }
+    
+                if ( def.getProfile() != null )
+                {
+                    def.setProfile( profiles.get( Integer.valueOf( def.getProfile().getId() ) ) );
+                }
+
+                buildDefsList.add( def );
             }
         }
+
+        return buildDefsList;
     }
 
     private List<BuildDefinition> processBuildDefinitions( List<BuildDefinition> buildDefinitions, 
-                                                 Map<Integer, BuildDefinition> buildDefs )
+                                                           Map<Integer, BuildDefinition> buildDefs )
     {
         List<BuildDefinition> buildDefsList = new ArrayList<BuildDefinition>();
         
