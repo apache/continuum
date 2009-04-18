@@ -38,10 +38,8 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractContinuumPurgeExecutor
     implements ContinuumPurgeExecutor
 {
-    private static final char DELIM = ' ';
-
-    private Logger logger = LoggerFactory.getLogger( "AuditLog" );
-
+    private Logger log = LoggerFactory.getLogger( AbstractContinuumPurgeExecutor.class );
+    
     public void purge( Set<ArtifactReference> references, RepositoryManagedContent repository )
     {
         if ( references != null && !references.isEmpty() )
@@ -50,7 +48,7 @@ public abstract class AbstractContinuumPurgeExecutor
             {
                 File artifactFile = repository.toFile( reference );
                 artifactFile.delete();
-                triggerAuditEvent( artifactFile.getName(), ContinuumPurgeConstants.PURGE_ARTIFACT );
+                log.info( ContinuumPurgeConstants.PURGE_ARTIFACT + " - " + artifactFile.getName() );
                 purgeSupportFiles( artifactFile, artifactFile.getName() );
                 // purge maven metadata
                 purgeSupportFiles( artifactFile.getParentFile(), "maven-metadata" );
@@ -86,15 +84,8 @@ public abstract class AbstractContinuumPurgeExecutor
             if ( file.exists() && file.isFile() )
             {
                 file.delete();
-                triggerAuditEvent( file.getName(), ContinuumPurgeConstants.PURGE_FILE );
+                log.info( ContinuumPurgeConstants.PURGE_FILE + " - " + file.getName() );
             }
         }
-    }
-    
-    protected void triggerAuditEvent( String resource, String action )
-    {
-        String msg = ContinuumPurgeConstants.PURGE + DELIM + "<continuum>" + DELIM + '\"' + resource + '\"' + DELIM + '\"' + action + '\"';
-        
-        logger.info( msg );
     }
 }

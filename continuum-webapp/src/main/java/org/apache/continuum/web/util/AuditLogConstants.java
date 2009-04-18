@@ -19,6 +19,11 @@ package org.apache.continuum.web.util;
  * under the License.
  */
 
+/**
+ * @author Jevica Arianne B. Zurbano
+ * @version $Id: AuditLogConstants.java
+ * @since 09 apr 09
+ */
 public class AuditLogConstants
 {
     public static final String PROJECT = "PROJECT";
@@ -45,6 +50,8 @@ public class AuditLogConstants
     public static final String ROLLBACK_RELEASE = "Rollback Project Release";
 
     public static final String ADD_M2_PROJECT = "Added M2 Project";
+
+    public static final String ADD_PROJECT = "Added Project";
 
     public static final String MODIFY_PROJECT = "Modified Project";
 

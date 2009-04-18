@@ -29,12 +29,17 @@ import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 import org.codehaus.plexus.util.FileUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Maria Catherine Tan
  */
 public class CleanAllPurgeExecutor
     extends AbstractContinuumPurgeExecutor
 {
+    private Logger log = LoggerFactory.getLogger( CleanAllPurgeExecutor.class );
+    
     private final String purgeType;
 
     public CleanAllPurgeExecutor( String purgeType )
@@ -71,7 +76,7 @@ public class CleanAllPurgeExecutor
             throw new ContinuumPurgeExecutorException( "Error while purging all artifacts or directories in " + path,
                                                        e );
         }
-        triggerAuditEvent( path, ContinuumPurgeConstants.PURGE_REPO_CONTENTS );
+        log.info( ContinuumPurgeConstants.PURGE_REPO_CONTENTS + " - " + path );
     }
 
     private void purgeReleases( String path )
@@ -88,7 +93,7 @@ public class CleanAllPurgeExecutor
             for ( File releaseDir : releasesDir )
             {
                 FileUtils.deleteDirectory( releaseDir );
-                triggerAuditEvent( releaseDir.getName(), ContinuumPurgeConstants.PURGE_DIR_CONTENTS );
+                log.info( ContinuumPurgeConstants.PURGE_DIR_CONTENTS + " - " + releaseDir.getName() );
             }
         }
         catch ( IOException e )
@@ -111,7 +116,7 @@ public class CleanAllPurgeExecutor
             for ( File projectDir : projectsDir )
             {
                 FileUtils.cleanDirectory( projectDir );
-                triggerAuditEvent( projectDir.getName(), ContinuumPurgeConstants.PURGE_DIR_CONTENTS );
+                log.info( ContinuumPurgeConstants.PURGE_DIR_CONTENTS + " - " + projectDir.getName() );
             }
         }
         catch ( IOException e )

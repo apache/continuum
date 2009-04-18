@@ -34,6 +34,7 @@ import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.repository.LocalRepository;
+import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
@@ -313,7 +314,10 @@ public class ProjectGroupAction
             return CONFIRM;
         }
         
-        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, getProjectGroupName(), AuditLogConstants.REMOVE_PROJECT_GROUP );
+        AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.REMOVE_PROJECT_GROUP );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         return SUCCESS;
     }
@@ -533,7 +537,10 @@ public class ProjectGroupAction
             }
         }
         
-        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, getProjectGroupName(), AuditLogConstants.MODIFY_PROJECT_GROUP );
+        AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.MODIFY_PROJECT_GROUP );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         return SUCCESS;
     }
@@ -560,7 +567,10 @@ public class ProjectGroupAction
             getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
         }
         
-        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, getProjectGroupName(), AuditLogConstants.FORCE_BUILD );
+        AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.FORCE_BUILD );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         if ( this.isFromSummaryPage() )
         {

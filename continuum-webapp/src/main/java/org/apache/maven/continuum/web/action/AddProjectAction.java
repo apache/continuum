@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -188,6 +190,11 @@ public class AddProjectAction
             this.setProjectGroupId( this.getSelectedProjectGroup() );
             return "projectGroupSummary";
         }
+        
+        AuditLog event = new AuditLog( projectNameTrim, AuditLogConstants.ADD_PROJECT );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         return SUCCESS;
     }

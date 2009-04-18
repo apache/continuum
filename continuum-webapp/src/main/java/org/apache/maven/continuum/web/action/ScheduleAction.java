@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildQueue;
@@ -239,12 +240,16 @@ public class ScheduleAction
                 logger.debug( "Unexpected error getting schedule" );
             }
         }
+        AuditLog event = null;
         if ( id == 0 )
         {
             try
             {
                 getContinuum().addSchedule( setFields( new Schedule() ) );
-                triggerAuditEvent( getPrincipal(), AuditLogConstants.SCHEDULE, getName() + ":" + getCronExpression(), AuditLogConstants.ADD_SCHEDULE );
+                event = new AuditLog( getName(), AuditLogConstants.ADD_SCHEDULE );
+                event.setCategory( AuditLogConstants.SCHEDULE );
+                event.setCurrentUser( getPrincipal() );
+                event.log();
             }
             catch ( ContinuumException e )
             {
@@ -258,7 +263,10 @@ public class ScheduleAction
             try
             {
                 getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
-                triggerAuditEvent( getPrincipal(), AuditLogConstants.SCHEDULE, getName() + ":" + getCronExpression(), AuditLogConstants.MODIFY_SCHEDULE );
+                event = new AuditLog( getName(), AuditLogConstants.MODIFY_SCHEDULE );
+                event.setCategory( AuditLogConstants.SCHEDULE );
+                event.setCurrentUser( getPrincipal() );
+                event.log();
             }
             catch ( ContinuumException e )
             {
@@ -332,8 +340,6 @@ public class ScheduleAction
             return REQUIRES_AUTHENTICATION;
         }
         
-        String resource = getContinuum().getSchedule( id ).getName() + ":" + getCronExpression();
-
         if ( confirmed )
         {
             try
@@ -355,7 +361,10 @@ public class ScheduleAction
             return CONFIRM;
         }
         
-        triggerAuditEvent( getPrincipal(), AuditLogConstants.SCHEDULE, resource, AuditLogConstants.REMOVE_SCHEDULE );
+        AuditLog event = new AuditLog( name, AuditLogConstants.REMOVE_SCHEDULE );
+        event.setCategory( AuditLogConstants.SCHEDULE );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         return SUCCESS;
     }

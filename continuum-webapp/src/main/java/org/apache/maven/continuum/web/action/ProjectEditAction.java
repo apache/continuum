@@ -19,6 +19,7 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
+import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
@@ -80,8 +81,11 @@ public class ProjectEditAction
 
         getContinuum().updateProject( project );
         
-        triggerAuditEvent( getPrincipal(), AuditLogConstants.PROJECT, project.getGroupId() + ":" +
-                           project.getArtifactId(), AuditLogConstants.MODIFY_PROJECT );
+        String resource = project.getGroupId() + ":" + project.getArtifactId();
+        AuditLog event = new AuditLog( resource, AuditLogConstants.MODIFY_PROJECT );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         return SUCCESS;
     }
