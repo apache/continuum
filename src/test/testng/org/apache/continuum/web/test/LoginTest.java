@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractContinuumTest;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -36,11 +37,11 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "login" } )
 public class LoginTest
-    extends AbstractSeleniumTest
+    extends AbstractContinuumTest
 {
     public void testWithBadUsername()
     {
-        diplayLoginPage();
+        goToLoginPage();
         getSelenium().type( "loginForm_username", "badUsername" );
         getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_PASSWORD" ) );
         getSelenium().click( "loginForm__login" );
@@ -51,7 +52,7 @@ public class LoginTest
     @Test( dependsOnMethods = { "testWithBadUsername" }, alwaysRun = true )
     public void testWithBadPassword()
     {
-        diplayLoginPage();
+        goToLoginPage();
         getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
         getSelenium().type( "loginForm_password", "badPassword" );
         getSelenium().click( "loginForm__login" );
@@ -62,7 +63,7 @@ public class LoginTest
     @Test( dependsOnMethods = { "testWithBadPassword" }, alwaysRun = true )
     public void testWithEmptyUsername()
     {
-        diplayLoginPage();
+        goToLoginPage();
         getSelenium().type( "loginForm_password", "password" );
         getSelenium().click( "loginForm__login" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
@@ -72,7 +73,7 @@ public class LoginTest
     @Test( dependsOnMethods = { "testWithEmptyUsername" }, alwaysRun = true )
     public void testWithEmptyPassword()
     {
-        diplayLoginPage();
+        goToLoginPage();
         getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
         getSelenium().click( "loginForm__login" );
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
@@ -82,7 +83,7 @@ public class LoginTest
     @Test( groups = { "loginSuccess" }, dependsOnMethods = { "testWithEmptyPassword" }, alwaysRun = true )
     public void testWithCorrectUsernamePassword()
     {
-        diplayLoginPage();
+        goToLoginPage();
         getSelenium().type( "loginForm_username", p.getProperty( "ADMIN_USERNAME" ) );
         getSelenium().type( "loginForm_password", p.getProperty( "ADMIN_PASSWORD" ) );
         getSelenium().click( "loginForm__login" );
@@ -106,11 +107,5 @@ public class LoginTest
         throws Exception
     {
         super.close();
-    }
-
-    private void diplayLoginPage()
-    {
-        getSelenium().open( baseUrl + "/security/login.action" );
-        waitPage();
     }
 }

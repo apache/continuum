@@ -19,23 +19,49 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractContinuumTest;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**
  * Based on AboutTest of Wendy Smoak test.
- *
+ * 
  * @author José Morales Martínez
  * @version $Id$
  */
 @Test( groups = { "about" }, alwaysRun = true )
 public class AboutTest
-    extends AbstractSeleniumTest
+    extends AbstractContinuumTest
 {
+    @BeforeSuite
+    public void initializeContinuum()
+        throws Exception
+    {
+        super.open();
+        getSelenium().open( baseUrl );
+        String title = getSelenium().getTitle();
+        if ( title.equals( "Create Admin User" ) )
+        {
+            assertCreateAdmin();
+            String fullname = p.getProperty( "ADMIN_FULLNAME" );
+            String username = p.getProperty( "ADMIN_USERNAME" );
+            String mail = p.getProperty( "ADMIN_MAIL" );
+            String password = p.getProperty( "ADMIN_PASSWORD" );
+            submitAdminData( fullname, mail, password );            
+            assertLoginPage();
+            submitUserData( username, password, false, true );
+            assertAutenticatedPage( username );
+            assertEditConfigurationPage();
+            submit();
+            clickLinkWithText( "Logout" );
+        }
+        super.close();
+    }
 
-    @BeforeTest(groups = { "about" })
+    @BeforeTest( groups = { "about" } )
     public void open()
         throws Exception
     {
@@ -50,7 +76,7 @@ public class AboutTest
     }
 
     @Override
-    @AfterTest(groups = { "about" })
+    @AfterTest( groups = { "about" } )
     public void close()
         throws Exception
     {

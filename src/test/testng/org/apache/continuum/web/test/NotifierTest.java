@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractNotifierTest;
 import org.testng.annotations.Test;
 
 /**
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "notifier" }, dependsOnMethods = { "testAddMavenTwoProject" } )
 public class NotifierTest
-    extends AbstractContinuumTest
+    extends AbstractNotifierTest
 {
     public void testAddValidMailProjectNotifier()
         throws Exception
@@ -595,6 +596,9 @@ public class NotifierTest
         goToProjectInformationPage( TEST_PROJ_GRP_NAME, M2_PROJ_GRP_NAME );
         // Delete
         clickLinkWithXPath( "(//a[contains(@href,'deleteProjectNotifier') and contains(@href,'mail')])//img" );
+        assertButtonWithValuePresent( "Delete" );
+        assertButtonWithValuePresent( "Cancel" );
+        clickButtonWithValue( "Delete" );
         assertProjectInformationPage();
     }
 }

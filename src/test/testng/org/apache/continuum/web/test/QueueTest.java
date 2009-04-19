@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractBuildQueueTest;
 import org.testng.annotations.Test;
 
 /**
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "queue" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
 public class QueueTest
-    extends AbstractContinuumTest
+    extends AbstractBuildQueueTest
 {
 
     public void testAddBuildQueue()

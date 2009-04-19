@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
@@ -166,7 +167,7 @@ public class BuildDefinitionTest
         assertGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME );
     }
 
-    @Test( dependsOnMethods = { "testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup" } )
+    @Test( dependsOnMethods = { "testMoveProject" } )
     public void testAddNotDefautltProjectBuildDefinition()
         throws Exception
     {

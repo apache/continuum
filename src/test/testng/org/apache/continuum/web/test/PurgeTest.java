@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractPurgeTest;
 import org.testng.annotations.Test;
 
 /**
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "purge" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
 public class PurgeTest
-    extends AbstractContinuumTest
+    extends AbstractPurgeTest
 {
     public void testAddRepositoryPurge()
     {
@@ -106,7 +107,4 @@ public class PurgeTest
         String PURGE_DIRECTORY_DESCRIPTION = p.getProperty( "PURGE_DIRECTORY_DESCRIPTION" );
         removeDirectoryPurge( PURGE_DIRECTORY_DESCRIPTION );
     }
-    /*
-     * public void testPurge(){ goToGeneralPurgePage(); clickImgWithAlt( "Purge" ); assertGeneralPurgePage(); }
-     */
 }

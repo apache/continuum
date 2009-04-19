@@ -20,7 +20,7 @@ under the License.
 -->
 
 <suite name="ContinuumTest" verbose="1">
-	<test name="BasicTest">
+	<test name="BasicTest" enabled="true">
 		<!--
 			Groups are divided into the unit tests. The order will be described
 			in the annotations of each type of test.
@@ -30,29 +30,34 @@ under the License.
 				<include name="about" />
 			</run>
 		</groups>
-
 		<packages>
 			<package name="org.apache.continuum.web.test" />
 		</packages>
 	</test>
-	<test name="AdminTest">
-
+	<test name="AdminTest" enabled="true">
 		<groups>
 			<run>
 				<include name="login" />
+				<include name="mavenTwoProject"/>								
+				<include name="projectGroup" />				
+                <include name="mavenOneProject" />
+                <!--
+                <include name="antProject" />
+                <include name="shellProject" />
+                -->
+                <include name="buildDefinition" />
+                <include name="notifier" />
+				<include name="schedule" />
 				<include name="myAccount" />
-				<include name="mavenTwoProject"/>
-				<include name="projectGroup" />
-				<include name="notifier" />
-				<include name="buildDefinition" />
 				<include name="queue" />
 				<include name="purge" />
 				<include name="repository" />
-				<include name="schedule" />
 				<include name="configuration" />
+				<include name="installation" />
+				<include name="buildEnvironment" />
+				<include name="buildDefinitionTemplate" />
 			</run>
 		</groups>
-
 		<packages>
 			<package name="org.apache.continuum.web.test" />
 		</packages>

@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
@@ -64,21 +65,19 @@ public class ProjectGroupTest
         String DEFAULT_PROJ_GRP_NAME = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
         String DEFAULT_PROJ_GRP_ID = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
         String DEFAULT_PROJ_GRP_DESCRIPTION = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        
 
         // move the project of the test project group to the default project group
         moveProjectToProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION,
-                                   DEFAULT_PROJ_GRP_NAME );
-        showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
-        assertTextNotPresent( "Member Projects" );
+                                   M2_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_NAME );
         showProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
         assertTextPresent( "Member Projects" );
-        // Restore project to test test project group
+        // Restore project to test project group
         moveProjectToProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION,
-                                   TEST_PROJ_GRP_NAME );
+                                   M2_PROJ_GRP_NAME, TEST_PROJ_GRP_NAME );
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
         assertTextPresent( "Member Projects" );
-        showProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
-        assertTextNotPresent( "Member Projects" );
     }
 
     public void testAddProjectGroupWithEmptyString()
@@ -124,22 +123,19 @@ public class ProjectGroupTest
         String TEST2_PROJ_GRP_NAME = p.getProperty( "TEST2_PROJ_GRP_NAME" );
         String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
         String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
-
-        // TODO: BUG: Operations Result is a blank page
-        //editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, "",
-        //                  TEST2_PROJ_GRP_DESCRIPTION + "_2" );
-        //assertTextPresent( "Project Group Name required." );
+        editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, " ",
+                          TEST2_PROJ_GRP_DESCRIPTION);
+        assertTextPresent( "Project Group Name cannot contain spaces only" );
     }
 
-    @Test( dependsOnMethods = { "testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup" } )
+    @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
     public void testProjectGroupAllBuildSuccess()
         throws Exception
-    {
-        String TEST_PROJ_GRP_NAME = p.getProperty( "TEST_PROJ_GRP_NAME" );
-        String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
-        String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
-
-        buildProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
+    {        
+        String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
+        String M2_PROJ_GRP_ID = p.getProperty( "M2_PROJ_GRP_ID" );
+        String M2_PROJ_GRP_DESCRIPTION = p.getProperty( "M2_PROJ_GRP_DESCRIPTION" );
+        buildProjectGroup( M2_PROJ_GRP_NAME, M2_PROJ_GRP_ID, M2_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME );
         clickButtonWithValue( "Release" );
         assertReleaseSuccess();
     }

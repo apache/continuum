@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
@@ -38,6 +39,7 @@ public class MavenTwoProjectTest
         String M2_POM_URL = p.getProperty( "M2_POM_URL" );
         String M2_POM_USERNAME = p.getProperty( "M2_POM_USERNAME" );
         String M2_POM_PASSWORD = p.getProperty( "M2_POM_PASSWORD" );
+        
         String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = p.getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = p.getProperty( "M2_PROJ_GRP_DESCRIPTION" );
