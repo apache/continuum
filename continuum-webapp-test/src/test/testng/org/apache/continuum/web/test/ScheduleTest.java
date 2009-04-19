@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractScheduleTest;
 import org.testng.annotations.Test;
 
 /**
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "schedule" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
 public class ScheduleTest
-    extends AbstractContinuumTest
+    extends AbstractScheduleTest
 {
     public void testAddSchedule()
     {
@@ -60,7 +61,6 @@ public class ScheduleTest
     @Test( dependsOnMethods = { "testAddSchedule" } )
     public void testAddDuplicatedSchedule()
     {
-        // TODO: Wait for schedule.buildqueues.add.error
         String SCHEDULE_NAME = p.getProperty( "SCHEDULE_NAME" );
         String SCHEDULE_DESCRIPTION = p.getProperty( "SCHEDULE_DESCRIPTION" );
         String SCHEDULE_EXPR_SECOND = p.getProperty( "SCHEDULE_EXPR_SECOND" );
@@ -76,7 +76,7 @@ public class ScheduleTest
         addEditSchedule( SCHEDULE_NAME, SCHEDULE_DESCRIPTION, SCHEDULE_EXPR_SECOND, SCHEDULE_EXPR_MINUTE,
                          SCHEDULE_EXPR_HOUR, SCHEDULE_EXPR_DAY_MONTH, SCHEDULE_EXPR_MONTH, SCHEDULE_EXPR_DAY_WEEK,
                          SCHEDULE_EXPR_YEAR, SCHEDULE_MAX_TIME, SCHEDULE_PERIOD, false );
-        assertTextPresent( "schedule.buildqueues.add.error" );
+        assertTextPresent( "A Schedule with the same name already exists" );
     }
 
     @Test( dependsOnMethods = { "testAddDuplicatedSchedule" } )

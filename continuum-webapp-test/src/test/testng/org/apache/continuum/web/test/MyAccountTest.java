@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractSeleniumTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -40,27 +41,21 @@ public class MyAccountTest
     public void testMyAccountEdit()
         throws Exception
     {
-        displayEditDetail();
+        clickLinkWithText( "Edit Details");
         String email = getFieldValue( "user.email" );
         setFieldValue( "user.fullName", newFullName );
         setFieldValue( "user.email", newEmail );
         submit();
         getSelenium().waitForPageToLoad( maxWaitTimeInMs );
         Assert.assertEquals( "Continuum - Group Summary", getTitle() );
-        displayEditDetail();
+        clickLinkWithText( "Edit Details");
         assertFieldValue( newFullName, "user.fullName" );
         assertFieldValue( newEmail, "user.email" );
         setFieldValue( "user.fullName", p.getProperty( "ADMIN_USERNAME" ) );
         setFieldValue( "user.email", email );
         submit();
-        displayEditDetail();
+        clickLinkWithText( "Edit Details");
         assertFieldValue( p.getProperty( "ADMIN_USERNAME" ), "user.fullName" );
         assertFieldValue( email, "user.email" );
     }
-
-    private void displayEditDetail()
-    {
-        clickLinkWithText( "Edit Details", true );
-    }
-    // TODO: Validate required values
 }

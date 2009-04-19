@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractConfigurationTest;
 import org.testng.annotations.Test;
 
 /**
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "configuration" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
 public class ConfigurationTest
-    extends AbstractContinuumTest
+    extends AbstractConfigurationTest
 {
     private String WORKING_DIRECTORY;
 

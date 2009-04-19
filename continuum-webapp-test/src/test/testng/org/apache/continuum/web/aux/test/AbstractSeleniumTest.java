@@ -1,4 +1,4 @@
-package org.apache.continuum.web.test;
+package org.apache.continuum.web.aux.test;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +19,9 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
@@ -31,7 +33,7 @@ import com.thoughtworks.selenium.Selenium;
 
 /**
  * Based on AbstractSeleniumTestCase of Emmanuel Venisse test.
- *
+ * 
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -194,6 +196,22 @@ public abstract class AbstractSeleniumTest
         getSelenium().select( locator, "label=" + value );
     }
 
+    public void assertOptionPresent( String selectField, String[] options )
+    {
+        assertElementPresent( selectField );
+        String[] optionsPresent = getSelenium().getSelectOptions( selectField );
+        List<String> expected = Arrays.asList( options );
+        List<String> present = Arrays.asList( optionsPresent );
+        Assert.assertTrue( present.containsAll( expected ), "Options expected are not included in present options" );
+    }
+
+    public void assertSelectedValue( String value, String fieldName )
+    {
+        assertElementPresent( fieldName );
+        String optionsPresent = getSelenium().getSelectedLabel( value );
+        Assert.assertEquals( optionsPresent, value );
+    }
+
     public void submit()
     {
         clickLinkWithXPath( "//input[@type='submit']" );
@@ -202,6 +220,11 @@ public abstract class AbstractSeleniumTest
     public void assertButtonWithValuePresent( String text )
     {
         Assert.assertTrue( isButtonWithValuePresent( text ), "'" + text + "' button isn't present" );
+    }
+
+    public void assertButtonWithIdPresent( String id )
+    {
+        Assert.assertTrue( isButtonWithIdPresent( id ), "'Button with id =" + id + "' isn't present" );
     }
 
     public void assertButtonWithValueNotPresent( String text )
@@ -213,6 +236,11 @@ public abstract class AbstractSeleniumTest
     {
         return isElementPresent( "//button[@value='" + text + "']" )
             || isElementPresent( "//input[@value='" + text + "']" );
+    }
+
+    public boolean isButtonWithIdPresent( String text )
+    {
+        return isElementPresent( "//button[@id='" + text + "']" ) || isElementPresent( "//input[@id='" + text + "']" );
     }
 
     public void clickButtonWithValue( String text )
@@ -314,5 +342,15 @@ public abstract class AbstractSeleniumTest
     public boolean isChecked( String locator )
     {
         return getSelenium().isChecked( locator );
+    }
+
+    public void assertIsChecked( String locator )
+    {
+        Assert.assertTrue( getSelenium().isChecked( locator ) );
+    }
+
+    public void assertIsNotChecked( String locator )
+    {
+        Assert.assertFalse( getSelenium().isChecked( locator ) );
     }
 }

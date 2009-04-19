@@ -19,6 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
+import org.apache.continuum.web.aux.test.AbstractLocalRepositoryTest;
 import org.testng.annotations.Test;
 
 /**
@@ -27,7 +28,7 @@ import org.testng.annotations.Test;
  */
 @Test( groups = { "repository" }, dependsOnMethods = { "testWithCorrectUsernamePassword" } )
 public class LocalRepositoriesTest
-    extends AbstractContinuumTest
+    extends AbstractLocalRepositoryTest
 {
     public void testAddLocalRepository()
     {
@@ -45,7 +46,7 @@ public class LocalRepositoriesTest
         assertTextPresent( "You must define a local repository directory." );
     }
 
-    @Test(dependsOnMethods = {"testAddLocalRepository"})
+    @Test( dependsOnMethods = { "testAddLocalRepository" } )
     public void testAddDuplicatedLocalRepository()
     {
         String LOCAL_REPOSITORY_NAME = p.getProperty( "LOCAL_REPOSITORY_NAME" );
@@ -56,7 +57,7 @@ public class LocalRepositoriesTest
         assertTextPresent( "Local repository location must be unique" );
     }
 
-    @Test(dependsOnMethods = {"testAddDuplicatedLocalRepository"})
+    @Test( dependsOnMethods = { "testAddDuplicatedLocalRepository" } )
     public void testEditLocalRepository()
     {
         String LOCAL_REPOSITORY_NAME = p.getProperty( "LOCAL_REPOSITORY_NAME" );
@@ -69,7 +70,7 @@ public class LocalRepositoriesTest
         addEditLocalRepository( LOCAL_REPOSITORY_NAME, LOCAL_REPOSITORY_LOCATION, true );
     }
 
-    @Test(dependsOnMethods = {"testEditLocalRepository"})
+    @Test( dependsOnMethods = { "testEditLocalRepository" } )
     public void testDeleteLocalRepository()
     {
         String LOCAL_REPOSITORY_NAME = p.getProperty( "LOCAL_REPOSITORY_NAME" );
