@@ -43,6 +43,7 @@ public class WagonProjectNotifierEditAction
     protected void initConfiguration( Map configuration )
     {
         url = (String) configuration.get( "url" );
+        id = (String) configuration.get( "id" );
     }
 
     protected void setNotifierConfiguration( ProjectNotifier notifier )
