@@ -240,15 +240,16 @@ public class ScheduleAction
                 logger.debug( "Unexpected error getting schedule" );
             }
         }
-        AuditLog event = null;
+        
+        AuditLog event = new AuditLog( getName(), AuditLogConstants.ADD_SCHEDULE );
+        event.setCategory( AuditLogConstants.SCHEDULE );
+        event.setCurrentUser( getPrincipal() );
+        
         if ( id == 0 )
         {
             try
             {
                 getContinuum().addSchedule( setFields( new Schedule() ) );
-                event = new AuditLog( getName(), AuditLogConstants.ADD_SCHEDULE );
-                event.setCategory( AuditLogConstants.SCHEDULE );
-                event.setCurrentUser( getPrincipal() );
                 event.log();
             }
             catch ( ContinuumException e )
@@ -263,9 +264,7 @@ public class ScheduleAction
             try
             {
                 getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
-                event = new AuditLog( getName(), AuditLogConstants.MODIFY_SCHEDULE );
-                event.setCategory( AuditLogConstants.SCHEDULE );
-                event.setCurrentUser( getPrincipal() );
+                event.setAction( AuditLogConstants.MODIFY_SCHEDULE );
                 event.log();
             }
             catch ( ContinuumException e )

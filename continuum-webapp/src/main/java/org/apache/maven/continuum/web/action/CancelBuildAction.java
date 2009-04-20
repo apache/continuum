@@ -109,10 +109,8 @@ public class CancelBuildAction
             int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
             if ( index > 0 )
             {
-                getContinuum().getBuildsManager().cancelBuild( projectsId[index] );
-
                 int projId = projectsId[index];
-                getContinuum().getBuildsManager().cancelBuild( projectsId[index] );
+                getContinuum().getBuildsManager().cancelBuild( projId );
                 
                 AuditLog event = new AuditLog( "Project id=" + projId, AuditLogConstants.CANCEL_BUILD );
                 event.setCategory( AuditLogConstants.PROJECT );
