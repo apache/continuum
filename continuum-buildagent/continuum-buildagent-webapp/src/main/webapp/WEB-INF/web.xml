@@ -5,15 +5,6 @@
 <web-app>
   <display-name>Continuum Distributed Build Transport Tests</display-name>
   
-  <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
-  
-  <listener>
-    <!-- TODO: some Spring technique for this? -->
-  	<listener-class>org.apache.continuum.web.startup.BuildAgentStartup</listener-class>
-  </listener>
-  
   <context-param>
     <param-name>contextClass</param-name>
     <param-value>org.codehaus.plexus.spring.PlexusWebApplicationContext</param-value>
@@ -28,6 +19,15 @@
       classpath*:/META-INF/plexus/application.xml
     </param-value>
   </context-param>
+  
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <listener>
+    <!-- TODO: some Spring technique for this? -->
+  	<listener-class>org.apache.continuum.web.startup.BuildAgentStartup</listener-class>
+  </listener>
   
   <servlet>
     <servlet-name>SlaveXmlRpcServlet</servlet-name>
