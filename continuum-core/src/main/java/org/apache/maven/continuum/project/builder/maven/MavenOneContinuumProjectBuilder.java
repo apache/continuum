@@ -113,7 +113,9 @@ public class MavenOneContinuumProjectBuilder
             }
             for ( BuildDefinition bd : (List<BuildDefinition>) buildDefinitionTemplate.getBuildDefinitions() )
             {
-                project.addBuildDefinition( bd );
+                BuildDefinition cloneBuildDefinition = buildDefinitionService.cloneBuildDefinition( bd );
+                cloneBuildDefinition.setTemplate( false );
+                project.addBuildDefinition( cloneBuildDefinition );
             }
             result.addProject( project, MavenOneBuildExecutor.ID );
         }
