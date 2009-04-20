@@ -80,9 +80,9 @@ public class DefaultOverallBuildQueue
     }
 
     /**
-     * @see OverallBuildQueue#addToCheckoutQueue(Task)
+     * @see OverallBuildQueue#addToCheckoutQueue(CheckOutTask)
      */
-    public void addToCheckoutQueue( Task checkoutTask )
+    public void addToCheckoutQueue( CheckOutTask checkoutTask )
         throws TaskQueueException
     {
         getCheckoutQueue().put( checkoutTask );
@@ -91,10 +91,10 @@ public class DefaultOverallBuildQueue
     /**
      * @see OverallBuildQueue#addToCheckoutQueue(List)
      */
-    public void addToCheckoutQueue( List<Task> checkoutTasks )
+    public void addToCheckoutQueue( List<CheckOutTask> checkoutTasks )
         throws TaskQueueException
     {
-        for ( Task checkoutTask : checkoutTasks )
+        for ( CheckOutTask checkoutTask : checkoutTasks )
         {
             getCheckoutQueue().put( checkoutTask );
         }
@@ -194,9 +194,9 @@ public class DefaultOverallBuildQueue
     }
 
     /**
-     * @see OverallBuildQueue#addToBuildQueue(Task)
+     * @see OverallBuildQueue#addToBuildQueue(BuildProjectTask)
      */
-    public void addToBuildQueue( Task buildTask )
+    public void addToBuildQueue( BuildProjectTask buildTask )
         throws TaskQueueException
     {
         getBuildQueue().put( buildTask );
@@ -205,10 +205,10 @@ public class DefaultOverallBuildQueue
     /**
      * @see OverallBuildQueue#addToBuildQueue(List)
      */
-    public void addToBuildQueue( List<Task> buildTasks )
+    public void addToBuildQueue( List<BuildProjectTask> buildTasks )
         throws TaskQueueException
     {
-        for ( Task buildTask : buildTasks )
+        for ( BuildProjectTask buildTask : buildTasks )
         {
             getBuildQueue().put( buildTask );
         }
@@ -217,7 +217,7 @@ public class DefaultOverallBuildQueue
     /**
      * @see OverallBuildQueue#getProjectsInBuildQueue()
      */
-    public List<Task> getProjectsInBuildQueue()
+    public List<BuildProjectTask> getProjectsInBuildQueue()
         throws TaskQueueException
     {
         return getBuildQueue().getQueueSnapshot();
@@ -238,11 +238,10 @@ public class DefaultOverallBuildQueue
     public boolean isInBuildQueue( int projectId, int buildDefinitionId )
         throws TaskQueueException
     {
-        List<Task> queue = getProjectsInBuildQueue();
-        for ( Task task : queue )
+        List<BuildProjectTask> queue = getProjectsInBuildQueue();
+        for ( BuildProjectTask buildTask : queue )
         {
-            BuildProjectTask buildTask = (BuildProjectTask) task;
-            if ( task != null )
+            if ( buildTask != null )
             {
                 if ( buildDefinitionId < 0 )
                 {
@@ -367,14 +366,13 @@ public class DefaultOverallBuildQueue
         {
             return false;
         }
-        List<Task> queue = getProjectsInBuildQueue();
+        List<BuildProjectTask> queue = getProjectsInBuildQueue();
 
         List<BuildProjectTask> tasks = new ArrayList<BuildProjectTask>();
 
-        for ( Task task : queue )
+        for ( BuildProjectTask buildTask : queue )
         {
-            BuildProjectTask buildTask = (BuildProjectTask) task;
-            if ( task != null )
+            if ( buildTask != null )
             {
                 if ( ArrayUtils.contains( projectIds, buildTask.getProjectId() ) )
                 {
@@ -397,14 +395,13 @@ public class DefaultOverallBuildQueue
     public boolean removeProjectFromBuildQueue( int projectId )
         throws TaskQueueException
     {
-        List<Task> queue = getProjectsInBuildQueue();
+        List<BuildProjectTask> queue = getProjectsInBuildQueue();
 
-        for ( Task task : queue )
+        for ( BuildProjectTask buildTask : queue )
         {
-            BuildProjectTask buildTask = (BuildProjectTask) task;
-            if ( task != null && buildTask.getProjectId() == projectId )
+            if ( buildTask != null && buildTask.getProjectId() == projectId )
             {
-                return getBuildQueue().remove( task );
+                return getBuildQueue().remove( buildTask );
             }
         }
         return false;
@@ -416,8 +413,8 @@ public class DefaultOverallBuildQueue
     public void removeProjectsFromBuildQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueException
     {
-        List<Task> queue = getProjectsInBuildQueue();
-        for ( Task task : queue )
+        List<BuildProjectTask> queue = getProjectsInBuildQueue();
+        for ( BuildProjectTask task : queue )
         {
             if ( ArrayUtils.contains( hashCodes, task.hashCode() ) )
             {

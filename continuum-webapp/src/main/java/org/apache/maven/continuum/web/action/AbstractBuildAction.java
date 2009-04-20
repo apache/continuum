@@ -25,32 +25,32 @@ import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.project.ContinuumProjectState;
-import org.codehaus.plexus.taskqueue.Task;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 5 oct. 07
  * @version $Id$
+ * @since 5 oct. 07
  */
 public abstract class AbstractBuildAction
     extends ContinuumConfirmAction
-{    
+{
     private int projectId;
-    
+
     private boolean canDelete = true;
-    
-    protected boolean canRemoveBuildResult(BuildResult buildResult)
+
+    protected boolean canRemoveBuildResult( BuildResult buildResult )
         throws BuildManagerException
     {
-        Map<String, Task> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
+        Map<String, BuildProjectTask> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
         Set<String> keySet = currentBuilds.keySet();
-        for( String key : keySet )
+        for ( String key : keySet )
         {
-            BuildProjectTask buildProjectTask = (BuildProjectTask) currentBuilds.get( key );
+            BuildProjectTask buildProjectTask = currentBuilds.get( key );
             if ( buildProjectTask != null && buildResult != null )
             {
-                return !( buildResult.getState() == ContinuumProjectState.BUILDING && ( buildProjectTask
-                    .getBuildDefinitionId() == buildResult.getBuildDefinition().getId() && buildProjectTask.getProjectId() == this.getProjectId() ) );
+                return !( buildResult.getState() == ContinuumProjectState.BUILDING &&
+                    ( buildProjectTask.getBuildDefinitionId() == buildResult.getBuildDefinition().getId() &&
+                        buildProjectTask.getProjectId() == this.getProjectId() ) );
             }
         }
         return true;

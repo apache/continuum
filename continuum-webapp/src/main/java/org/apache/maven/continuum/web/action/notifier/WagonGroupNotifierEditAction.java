@@ -19,11 +19,11 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.model.project.ProjectNotifier;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
 
 /**
  * Action that edits a {@link ProjectNotifier} of type 'Wagon' from the
@@ -40,15 +40,15 @@ public class WagonGroupNotifierEditAction
 
     private String id;
 
-    protected void initConfiguration( Map configuration )
+    protected void initConfiguration( Map<String, String> configuration )
     {
-        url = (String) configuration.get( "url" );
-        id = (String) configuration.get( "id" );
+        url = configuration.get( "url" );
+        id = configuration.get( "id" );
     }
 
     protected void setNotifierConfiguration( ProjectNotifier notifier )
     {
-        HashMap configuration = new HashMap();
+        HashMap<String, String> configuration = new HashMap<String, String>();
 
         configuration.put( "url", url );
 

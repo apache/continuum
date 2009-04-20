@@ -19,13 +19,13 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Action that edits a {@link ProjectNotifier} of type 'Mail' from the
@@ -43,17 +43,16 @@ public class MailProjectNotifierEditAction
 
     private boolean committers;
 
-    protected void initConfiguration( Map configuration )
+    protected void initConfiguration( Map<String, String> configuration )
     {
-        if ( StringUtils.isNotEmpty( (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD ) ) )
+        if ( StringUtils.isNotEmpty( configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD ) ) )
         {
-            address = (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
+            address = configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
         }
 
-        if ( StringUtils.isNotEmpty( (String) configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) ) )
+        if ( StringUtils.isNotEmpty( configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) ) )
         {
-            committers =
-                Boolean.parseBoolean( (String) configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) );
+            committers = Boolean.parseBoolean( configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) );
         }
     }
 

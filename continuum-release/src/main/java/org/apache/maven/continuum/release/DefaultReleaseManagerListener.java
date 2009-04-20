@@ -19,11 +19,11 @@ package org.apache.maven.continuum.release;
  * under the License.
  */
 
-import org.apache.maven.shared.release.ReleaseManagerListener;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.maven.shared.release.ReleaseManagerListener;
 
 /**
  * @author Edwin Punzalan
@@ -38,7 +38,7 @@ public class DefaultReleaseManagerListener
 
     private String inProgress;
 
-    private List phases;
+    private List<String> phases;
 
     private String error;
 
@@ -81,7 +81,7 @@ public class DefaultReleaseManagerListener
         goalEnd();
     }
 
-    public List getCompletedPhases()
+    public List<String> getCompletedPhases()
     {
         return completedPhases;
     }
@@ -91,7 +91,7 @@ public class DefaultReleaseManagerListener
         return inProgress;
     }
 
-    public List getPhases()
+    public List<String> getPhases()
     {
         return phases;
     }

@@ -21,98 +21,98 @@ package org.apache.continuum.taskqueue;
 
 import java.util.List;
 
-import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueue;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor;
 
 /**
- * 
  * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  */
 public interface OverallBuildQueue
-{       
+{
     /**
      * Returns the id of the "overall" build queue
-     * 
+     *
      * @return
      */
     int getId();
-    
+
     void setId( int id );
-    
+
     /**
      * Returns the name of the "overall" build queue
+     *
      * @return
      */
     String getName();
-    
+
     void setName( String name );
-    
+
     /* Checkout Queue */
-    
+
     /**
      * Returns the checkout queue.
-     * 
+     *
      * @return
      */
     TaskQueue getCheckoutQueue();
 
     /**
      * Add checkout task to checkout queue.
-     * 
+     *
      * @param checkoutTask
      * @throws TaskQueueException TODO
      */
-    void addToCheckoutQueue( Task checkoutTask )
+    void addToCheckoutQueue( CheckOutTask checkoutTask )
         throws TaskQueueException;
-    
-   /**
-    * Add checkout tasks to checkout queue.
-    * 
-    * @param checkoutTasks
-    * @throws TaskQueueException TODO
-    */
-    void addToCheckoutQueue( List<Task> checkoutTasks )
+
+    /**
+     * Add checkout tasks to checkout queue.
+     *
+     * @param checkoutTasks
+     * @throws TaskQueueException TODO
+     */
+    void addToCheckoutQueue( List<CheckOutTask> checkoutTasks )
         throws TaskQueueException;
 
     /**
      * Get all checkout tasks in checkout queue.
-     * 
+     *
      * @return
      * @throws TaskQueueException TODO
      */
-    List /* CheckOutTask */getProjectsInCheckoutQueue()
+    List<CheckOutTask> getProjectsInCheckoutQueue()
         throws TaskQueueException;
 
     /**
      * Check if the project is in the checkout queue.
-     * 
+     *
      * @param projectId
      * @return
      * @throws TaskQueueException TODO
      */
     boolean isInCheckoutQueue( int projectId )
         throws TaskQueueException;
-    
+
     /**
      * Cancel checkout of project.
-     * 
+     *
      * @param projectId
      * @throws TaskQueueException
      */
     void cancelCheckoutTask( int projectId )
         throws TaskQueueException;
-    
+
     /**
      * Cancel current checkout.
+     *
      * @return TODO
      */
     boolean cancelCurrentCheckout();
 
     /**
      * Remove project from checkout queue.
-     * 
+     *
      * @param projectId
      * @return
      * @throws TaskQueueException TODO
@@ -122,7 +122,7 @@ public interface OverallBuildQueue
 
     /**
      * Remove the specified projects in the checkout queue.
-     * 
+     *
      * @param projectId
      * @return
      * @throws TaskQueueException TODO
@@ -131,7 +131,6 @@ public interface OverallBuildQueue
         throws TaskQueueException;
 
     /**
-     * 
      * @param hashCodes
      * @throws TaskQueueException TODO
      */
@@ -142,41 +141,41 @@ public interface OverallBuildQueue
 
     /**
      * Returns the build queue.
-     * 
+     *
      * @return
      */
     TaskQueue getBuildQueue();
 
     /**
      * Add the build task to the build queue.
-     * 
+     *
      * @param buildTask
      * @throws Exception
      */
-    void addToBuildQueue( Task buildTask )
+    void addToBuildQueue( BuildProjectTask buildTask )
         throws TaskQueueException;
-    
+
     /**
      * Add the build tasks to the build queue.
-     * 
+     *
      * @param buildTasks
      * @throws TaskQueueException TODO
      */
-    void addToBuildQueue( List<Task> buildTasks )
+    void addToBuildQueue( List<BuildProjectTask> buildTasks )
         throws TaskQueueException;
 
     /**
      * Returns the build tasks in the build queue.
-     * 
+     *
      * @return
      * @throws TaskQueueException TODO
      */
-    List<Task> getProjectsInBuildQueue()
+    List<BuildProjectTask> getProjectsInBuildQueue()
         throws TaskQueueException;
 
     /**
      * Checks if the specified project is in the build queue.
-     * 
+     *
      * @param projectId
      * @return
      * @throws TaskQueueException TODO
@@ -186,7 +185,7 @@ public interface OverallBuildQueue
 
     /**
      * Checks if the specified project with the specified build definition is in the build queue.
-     * 
+     *
      * @param projectId
      * @param buildDefinitionId
      * @return
@@ -197,21 +196,21 @@ public interface OverallBuildQueue
 
     /**
      * Cancel the build task of the corresponding project.
-     * 
+     *
      * @param projectId
      */
     void cancelBuildTask( int projectId );
 
     /**
      * Cancel the current build.
-     * 
+     *
      * @return
      */
     boolean cancelCurrentBuild();
 
     /**
      * Remove the project matching the specified id, name, build definition and trigger from the build queue.
-     * 
+     *
      * @param projectId
      * @param buildDefinitionId
      * @param trigger
@@ -224,7 +223,7 @@ public interface OverallBuildQueue
 
     /**
      * Remove the specified project from the build queue.
-     * 
+     *
      * @param projectId
      * @return
      * @throws TaskQueueException TODO
@@ -234,7 +233,7 @@ public interface OverallBuildQueue
 
     /**
      * Remove the specified projects from the build queue.
-     * 
+     *
      * @param projectIds
      * @return
      * @throws TaskQueueException TODO
@@ -244,23 +243,23 @@ public interface OverallBuildQueue
 
     /**
      * Remove the projects matching the specified hashcodes from the build queue.
-     * 
+     *
      * @param hashCodes
      * @throws TaskQueueException TODO
      */
     void removeProjectsFromBuildQueueWithHashCodes( int[] hashCodes )
         throws TaskQueueException;
-    
+
     /**
      * Returns the build task queue executor used.
-     * 
+     *
      * @return
      */
     TaskQueueExecutor getBuildTaskQueueExecutor();
-    
+
     /**
      * Returns the checkout task queue executor used.
-     * 
+     *
      * @return
      */
     TaskQueueExecutor getCheckoutTaskQueueExecutor();

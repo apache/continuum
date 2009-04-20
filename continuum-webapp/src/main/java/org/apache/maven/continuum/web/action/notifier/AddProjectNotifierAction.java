@@ -140,7 +140,7 @@ public class AddProjectNotifierAction
      * Sets the identifier for the Project to be edited for
      * project notifiers.
      *
-     * @param projectId
+     * @param projectId The project id to set.
      */
     public void setProjectId( int projectId )
     {

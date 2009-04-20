@@ -19,12 +19,12 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.notification.AbstractContinuumNotifier;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Action that edits a {@link ProjectNotifier} of type 'MSN' from the
@@ -43,18 +43,18 @@ public class MsnGroupNotifierEditAction
 
     private String address;
 
-    protected void initConfiguration( Map configuration )
+    protected void initConfiguration( Map<String, String> configuration )
     {
-        login = (String) configuration.get( "login" );
+        login = configuration.get( "login" );
 
-        password = (String) configuration.get( "password" );
+        password = configuration.get( "password" );
 
-        address = (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
+        address = configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
     }
 
     protected void setNotifierConfiguration( ProjectNotifier notifier )
     {
-        HashMap configuration = new HashMap();
+        HashMap<String, String> configuration = new HashMap<String, String>();
 
         configuration.put( "login", login );
 

@@ -120,7 +120,7 @@ public class ParallelBuildsManager
             buildDefinitionLabel = buildDefinition.getGoals();
         }
 
-        Task buildTask =
+        BuildProjectTask buildTask =
             new BuildProjectTask( projectId, buildDefinition.getId(), trigger, projectName, buildDefinitionLabel,
                                   scmResult );
         try
@@ -468,11 +468,11 @@ public class ParallelBuildsManager
     {
         for ( int projectId : projectIds )
         {
-            Map<String, Task> checkouts = getCurrentCheckouts();
+            Map<String, CheckOutTask> checkouts = getCurrentCheckouts();
             Set<String> keySet = checkouts.keySet();
             for ( String key : keySet )
             {
-                CheckOutTask task = (CheckOutTask) checkouts.get( key );
+                CheckOutTask task = checkouts.get( key );
                 if ( task.getProjectId() == projectId )
                 {
                     return true;
@@ -801,7 +801,7 @@ public class ParallelBuildsManager
     public void removeOverallBuildQueue( int overallBuildQueueId )
         throws BuildManagerException
     {
-        List<Task> tasks;
+        List<BuildProjectTask> tasks;
         List<CheckOutTask> checkoutTasks;
 
         synchronized ( overallBuildQueues )
@@ -851,9 +851,8 @@ public class ParallelBuildsManager
             log.info( "Removed overall build queue '" + overallBuildQueueId + "' from build queues map." );
         }
 
-        for ( Task task : tasks )
+        for ( BuildProjectTask buildTask : tasks )
         {
-            BuildProjectTask buildTask = (BuildProjectTask) task;
             try
             {
                 BuildDefinition buildDefinition =
@@ -891,17 +890,18 @@ public class ParallelBuildsManager
     /**
      * @see BuildsManager#getCurrentBuilds()
      */
-    public Map<String, Task> getCurrentBuilds()
+    public Map<String, BuildProjectTask> getCurrentBuilds()
         throws BuildManagerException
     {
         synchronized ( overallBuildQueues )
         {
-            Map<String, Task> currentBuilds = new HashMap<String, Task>();
+            Map<String, BuildProjectTask> currentBuilds = new HashMap<String, BuildProjectTask>();
             Set<Integer> keys = overallBuildQueues.keySet();
             for ( Integer key : keys )
             {
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
-                Task task = overallBuildQueue.getBuildTaskQueueExecutor().getCurrentTask();
+                BuildProjectTask task =
+                    (BuildProjectTask) overallBuildQueue.getBuildTaskQueueExecutor().getCurrentTask();
                 if ( task != null )
                 {
                     currentBuilds.put( overallBuildQueue.getName(), task );
@@ -914,17 +914,17 @@ public class ParallelBuildsManager
     /**
      * @see BuildsManager#getCurrentCheckouts()
      */
-    public Map<String, Task> getCurrentCheckouts()
+    public Map<String, CheckOutTask> getCurrentCheckouts()
         throws BuildManagerException
     {
         synchronized ( overallBuildQueues )
         {
-            Map<String, Task> currentCheckouts = new HashMap<String, Task>();
+            Map<String, CheckOutTask> currentCheckouts = new HashMap<String, CheckOutTask>();
             Set<Integer> keys = overallBuildQueues.keySet();
             for ( Integer key : keys )
             {
                 OverallBuildQueue overallBuildQueue = overallBuildQueues.get( key );
-                Task task = overallBuildQueue.getCheckoutTaskQueueExecutor().getCurrentTask();
+                CheckOutTask task = (CheckOutTask) overallBuildQueue.getCheckoutTaskQueueExecutor().getCurrentTask();
                 if ( task != null )
                 {
                     currentCheckouts.put( overallBuildQueue.getName(), task );
@@ -937,12 +937,12 @@ public class ParallelBuildsManager
     /**
      * @see BuildsManager#getProjectsInBuildQueues()
      */
-    public Map<String, List<Task>> getProjectsInBuildQueues()
+    public Map<String, List<BuildProjectTask>> getProjectsInBuildQueues()
         throws BuildManagerException
     {
         synchronized ( overallBuildQueues )
         {
-            Map<String, List<Task>> queuedBuilds = new HashMap<String, List<Task>>();
+            Map<String, List<BuildProjectTask>> queuedBuilds = new HashMap<String, List<BuildProjectTask>>();
             Set<Integer> keySet = overallBuildQueues.keySet();
             for ( Integer key : keySet )
             {
@@ -965,12 +965,12 @@ public class ParallelBuildsManager
     /**
      * @see BuildsManager#getProjectsInCheckoutQueues()
      */
-    public Map<String, List<Task>> getProjectsInCheckoutQueues()
+    public Map<String, List<CheckOutTask>> getProjectsInCheckoutQueues()
         throws BuildManagerException
     {
         synchronized ( overallBuildQueues )
         {
-            Map<String, List<Task>> queuedCheckouts = new HashMap<String, List<Task>>();
+            Map<String, List<CheckOutTask>> queuedCheckouts = new HashMap<String, List<CheckOutTask>>();
             Set<Integer> keySet = overallBuildQueues.keySet();
             for ( Integer key : keySet )
             {
