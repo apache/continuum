@@ -19,11 +19,11 @@ package org.apache.maven.continuum.web.action.notifier;
  * under the License.
  */
 
-import org.apache.maven.continuum.model.project.ProjectGroup;
-import org.apache.maven.continuum.model.project.ProjectNotifier;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.apache.maven.continuum.model.project.ProjectNotifier;
 
 /**
  * Action that edits a {@link ProjectNotifier} of type 'IRC' from the
@@ -55,36 +55,36 @@ public class IrcGroupNotifierEditAction
 
     private boolean ssl = false;
 
-    protected void initConfiguration( Map configuration )
+    protected void initConfiguration( Map<String, String> configuration )
     {
-        host = (String) configuration.get( "host" );
+        host = configuration.get( "host" );
 
         if ( configuration.get( "port" ) != null )
         {
-            port = Integer.parseInt( (String) configuration.get( "port" ) );
+            port = Integer.parseInt( configuration.get( "port" ) );
         }
 
-        channel = (String) configuration.get( "channel" );
+        channel = configuration.get( "channel" );
 
-        nick = (String) configuration.get( "nick" );
+        nick = configuration.get( "nick" );
 
-        alternateNick = (String) configuration.get( "alternateNick" );
+        alternateNick = configuration.get( "alternateNick" );
 
-        username = (String) configuration.get( "username" );
+        username = configuration.get( "username" );
 
-        fullName = (String) configuration.get( "fullName" );
+        fullName = configuration.get( "fullName" );
 
-        password = (String) configuration.get( "password" );
+        password = configuration.get( "password" );
 
         if ( configuration.get( "ssl" ) != null )
         {
-            ssl = Boolean.parseBoolean( (String) configuration.get( "ssl" ) );
+            ssl = Boolean.parseBoolean( configuration.get( "ssl" ) );
         }
     }
 
     protected void setNotifierConfiguration( ProjectNotifier notifier )
     {
-        HashMap configuration = new HashMap();
+        HashMap<String, String> configuration = new HashMap<String, String>();
 
         configuration.put( "host", host );
 

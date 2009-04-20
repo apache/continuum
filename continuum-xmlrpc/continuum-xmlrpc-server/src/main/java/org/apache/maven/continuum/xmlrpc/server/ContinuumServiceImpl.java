@@ -66,7 +66,6 @@ import org.apache.maven.continuum.xmlrpc.system.SystemConfiguration;
 import org.codehaus.plexus.redback.authorization.AuthorizationException;
 import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
-import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.util.StringUtils;
 
 import net.sf.dozer.util.mapping.DozerBeanMapperSingletonWrapper;
@@ -1029,17 +1028,18 @@ public class ContinuumServiceImpl
     {
         try
         {
-            Map<String, List<Task>> buildTasks = parallelBuildsManager.getProjectsInBuildQueues();
+            Map<String, List<org.apache.continuum.taskqueue.BuildProjectTask>> buildTasks =
+                parallelBuildsManager.getProjectsInBuildQueues();
             Set<String> keys = buildTasks.keySet();
             List<org.apache.continuum.taskqueue.BuildProjectTask> convertedTasks =
                 new ArrayList<org.apache.continuum.taskqueue.BuildProjectTask>();
 
             for ( String key : keys )
             {
-                List<Task> tasks = buildTasks.get( key );
-                for ( Task task : tasks )
+                List<org.apache.continuum.taskqueue.BuildProjectTask> tasks = buildTasks.get( key );
+                for ( org.apache.continuum.taskqueue.BuildProjectTask task : tasks )
                 {
-                    convertedTasks.add( (org.apache.continuum.taskqueue.BuildProjectTask) task );
+                    convertedTasks.add( task );
                 }
             }
 

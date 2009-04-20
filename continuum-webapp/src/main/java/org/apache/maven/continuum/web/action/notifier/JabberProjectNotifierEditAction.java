@@ -53,26 +53,26 @@ public class JabberProjectNotifierEditAction
 
     private boolean group;
 
-    protected void initConfiguration( Map configuration )
+    protected void initConfiguration( Map<String, String> configuration )
     {
-        host = (String) configuration.get( "host" );
+        host = configuration.get( "host" );
 
         if ( configuration.get( "port" ) != null )
         {
-            port = Integer.parseInt( (String) configuration.get( "port" ) );
+            port = Integer.parseInt( configuration.get( "port" ) );
         }
 
-        login = (String) configuration.get( "login" );
+        login = configuration.get( "login" );
 
-        password = (String) configuration.get( "password" );
+        password = configuration.get( "password" );
 
-        domainName = (String) configuration.get( "domainName" );
+        domainName = configuration.get( "domainName" );
 
-        address = (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
+        address = configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
 
-        sslConnection = Boolean.valueOf( (String) configuration.get( "sslConnection" ) );
+        sslConnection = Boolean.valueOf( configuration.get( "sslConnection" ) );
 
-        group = Boolean.valueOf( (String) configuration.get( "isGroup" ) );
+        group = Boolean.valueOf( configuration.get( "isGroup" ) );
     }
 
     protected void setNotifierConfiguration( ProjectNotifier notifier )

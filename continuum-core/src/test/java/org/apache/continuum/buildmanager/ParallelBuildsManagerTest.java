@@ -201,7 +201,7 @@ public class ParallelBuildsManagerTest
         context.checking( new Expectations()
         {
             {
-                one( overallBuildQueue ).addToBuildQueue( with( any( Task.class ) ) );
+                one( overallBuildQueue ).addToBuildQueue( with( any( BuildProjectTask.class ) ) );
             }} );
     }
 
@@ -249,7 +249,7 @@ public class ParallelBuildsManagerTest
         context.checking( new Expectations()
         {
             {
-                one( overallBuildQueue ).addToCheckoutQueue( with( any( Task.class ) ) );
+                one( overallBuildQueue ).addToCheckoutQueue( with( any( CheckOutTask.class ) ) );
             }} );
     }
 
@@ -682,7 +682,7 @@ public class ParallelBuildsManagerTest
         final TaskQueueExecutor buildQueueExecutor = context.mock( TaskQueueExecutor.class, "build-queue-executor" );
         final Task buildTask = new BuildProjectTask( 1, 1, 1, "continuum-project-test-1", "BUILD_DEF", null );
 
-        final List<Task> buildTasks = new ArrayList<Task>();
+        final List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
         buildTasks.add( new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null ) );
 
         final List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
@@ -749,7 +749,7 @@ public class ParallelBuildsManagerTest
                 exactly( 2 ).of( overallBuildQueue ).getName();
                 will( returnValue( ConfigurationService.DEFAULT_BUILD_QUEUE_NAME ) );
 
-                one( overallBuildQueue ).addToBuildQueue( with( any( Task.class ) ) );
+                one( overallBuildQueue ).addToBuildQueue( with( any( BuildProjectTask.class ) ) );
             }} );
 
         buildsManager.buildProject( 1, buildDef, "continuum-project-test-1", 1, null );

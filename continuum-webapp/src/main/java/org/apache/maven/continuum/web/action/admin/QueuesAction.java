@@ -43,7 +43,6 @@ import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.model.DistributedBuildSummary;
 import org.codehaus.plexus.redback.rbac.Resource;
-import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
@@ -243,11 +242,11 @@ public class QueuesAction
             try
             {
                 // current builds
-                Map<String, Task> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
+                Map<String, BuildProjectTask> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
                 Set<String> keySet = currentBuilds.keySet();
                 for ( String key : keySet )
                 {
-                    BuildProjectTask buildTask = (BuildProjectTask) currentBuilds.get( key );
+                    BuildProjectTask buildTask = currentBuilds.get( key );
                     currentBuildProjectTasks.put( key, buildTask );
                 }
             }
@@ -260,15 +259,15 @@ public class QueuesAction
             try
             {
                 // queued builds
-                Map<String, List<Task>> builds = getContinuum().getBuildsManager().getProjectsInBuildQueues();
+                Map<String, List<BuildProjectTask>> builds =
+                    getContinuum().getBuildsManager().getProjectsInBuildQueues();
                 Set<String> keySet = builds.keySet();
                 for ( String key : keySet )
                 {
                     List<BuildProjectTask> buildTasks = new ArrayList<BuildProjectTask>();
-                    for ( Task task : builds.get( key ) )
+                    for ( BuildProjectTask task : builds.get( key ) )
                     {
-                        BuildProjectTask buildTask = (BuildProjectTask) task;
-                        buildTasks.add( buildTask );
+                        buildTasks.add( task );
                     }
                     buildsInQueue.put( key, buildTasks );
                 }
@@ -282,11 +281,11 @@ public class QueuesAction
             try
             {
                 // current checkouts
-                Map<String, Task> currentCheckouts = getContinuum().getBuildsManager().getCurrentCheckouts();
+                Map<String, CheckOutTask> currentCheckouts = getContinuum().getBuildsManager().getCurrentCheckouts();
                 Set<String> keySet = currentCheckouts.keySet();
                 for ( String key : keySet )
                 {
-                    CheckOutTask checkoutTask = (CheckOutTask) currentCheckouts.get( key );
+                    CheckOutTask checkoutTask = currentCheckouts.get( key );
                     currentCheckoutTasks.put( key, checkoutTask );
                 }
             }
@@ -299,15 +298,15 @@ public class QueuesAction
             try
             {
                 // queued checkouts
-                Map<String, List<Task>> checkouts = getContinuum().getBuildsManager().getProjectsInCheckoutQueues();
+                Map<String, List<CheckOutTask>> checkouts =
+                    getContinuum().getBuildsManager().getProjectsInCheckoutQueues();
                 Set<String> keySet = checkouts.keySet();
                 for ( String key : keySet )
                 {
                     List<CheckOutTask> checkoutTasks = new ArrayList<CheckOutTask>();
-                    for ( Task task : checkouts.get( key ) )
+                    for ( CheckOutTask task : checkouts.get( key ) )
                     {
-                        CheckOutTask checkoutTask = (CheckOutTask) task;
-                        checkoutTasks.add( checkoutTask );
+                        checkoutTasks.add( task );
                     }
                     checkoutsInQueue.put( key, checkoutTasks );
                 }
@@ -496,24 +495,25 @@ public class QueuesAction
     private boolean cancelCheckout( int projectId )
         throws BuildManagerException
     {
-        Map<String, Task> tasks = getContinuum().getBuildsManager().getCurrentCheckouts();
+        Map<String, CheckOutTask> tasks = getContinuum().getBuildsManager().getCurrentCheckouts();
         if ( tasks != null )
         {
             Set<String> keySet = tasks.keySet();
             for ( String key : keySet )
             {
-                Task task = tasks.get( key );
-                if ( task != null && task instanceof CheckOutTask )
+                CheckOutTask task = tasks.get( key );
+                if ( task != null )
                 {
-                    if ( ( (CheckOutTask) task ).getProjectId() == projectId )
+                    if ( task.getProjectId() == projectId )
                     {
                         logger.info( "Cancelling checkout for project " + projectId );
                         return getContinuum().getBuildsManager().cancelCheckout( projectId );
                     }
                     else
                     {
-                        logger.warn( "Current task is not for the given projectId (" + projectId + "): " +
-                            ( (CheckOutTask) task ).getProjectId() + "; not cancelling checkout" );
+                        logger.warn(
+                            "Current task is not for the given projectId (" + projectId + "): " + task.getProjectId() +
+                                "; not cancelling checkout" );
                     }
                 }
             }

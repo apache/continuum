@@ -25,8 +25,6 @@ import java.util.List;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.taskqueueexecutor.ParallelBuildsThreadedTaskQueueExecutor;
-import org.apache.continuum.taskqueue.BuildProjectTask;
-import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.taskqueue.Task;
@@ -38,9 +36,8 @@ import org.jmock.lib.legacy.ClassImposteriser;
 
 /**
  * DefaultOverallBuildQueueTest
- * 
- * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  *
+ * @author <a href="mailto:oching@apache.org">Maria Odea Ching</a>
  */
 public class DefaultOverallBuildQueueTest
     extends PlexusInSpringTestCase
@@ -85,7 +82,7 @@ public class DefaultOverallBuildQueueTest
     public void testAddToCheckoutQueue()
         throws Exception
     {
-        final Task checkoutTask =
+        final CheckOutTask checkoutTask =
             new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
                               "dummy", "dummypass" );
         final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
@@ -97,8 +94,7 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( checkoutQueue ) );
 
                 one( checkoutQueue ).put( checkoutTask );
-            }
-        } );
+            }} );
 
         overallQueue.addToCheckoutQueue( checkoutTask );
         context.assertIsSatisfied();
@@ -109,8 +105,9 @@ public class DefaultOverallBuildQueueTest
     {
         final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ),
-                                     "continuum-project-test-1", "dummy", "dummypass" ) );
+        tasks.add(
+            new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
+                              "dummy", "dummypass" ) );
 
         context.checking( new Expectations()
         {
@@ -120,8 +117,7 @@ public class DefaultOverallBuildQueueTest
 
                 one( checkoutQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }
-        } );
+            }} );
 
         List<CheckOutTask> returnedTasks = overallQueue.getProjectsInCheckoutQueue();
         context.assertIsSatisfied();
@@ -135,8 +131,9 @@ public class DefaultOverallBuildQueueTest
     {
         final TaskQueue checkoutQueue = context.mock( TaskQueue.class, "checkout-queue" );
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add( new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ),
-                                     "continuum-project-test-1", "dummy", "dummypass" ) );
+        tasks.add(
+            new CheckOutTask( 1, new File( getBasedir(), "/target/test-working-dir/1" ), "continuum-project-test-1",
+                              "dummy", "dummypass" ) );
 
         context.checking( new Expectations()
         {
@@ -146,8 +143,7 @@ public class DefaultOverallBuildQueueTest
 
                 one( checkoutQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }
-        } );
+            }} );
 
         assertTrue( overallQueue.isInCheckoutQueue( 1 ) );
         context.assertIsSatisfied();
@@ -176,8 +172,7 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( checkoutQueue ) );
 
                 one( checkoutQueue ).remove( checkoutTask );
-            }
-        } );
+            }} );
 
         overallQueue.removeProjectFromCheckoutQueue( 1 );
         context.assertIsSatisfied();
@@ -188,7 +183,8 @@ public class DefaultOverallBuildQueueTest
     public void testAddToBuildQueue()
         throws Exception
     {
-        final Task buildTask = new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null );
+        final BuildProjectTask buildTask =
+            new BuildProjectTask( 2, 1, 1, "continuum-project-test-2", "BUILD_DEF", null );
         final TaskQueue buildQueue = context.mock( TaskQueue.class, "build-queue" );
 
         context.checking( new Expectations()
@@ -198,8 +194,7 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildQueue ) );
 
                 one( buildQueue ).put( buildTask );
-            }
-        } );
+            }} );
 
         overallQueue.addToBuildQueue( buildTask );
         context.assertIsSatisfied();
@@ -220,10 +215,9 @@ public class DefaultOverallBuildQueueTest
 
                 one( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }
-        } );
+            }} );
 
-        List<Task> returnedTasks = overallQueue.getProjectsInBuildQueue();
+        List<BuildProjectTask> returnedTasks = overallQueue.getProjectsInBuildQueue();
         context.assertIsSatisfied();
 
         assertNotNull( returnedTasks );
@@ -245,8 +239,7 @@ public class DefaultOverallBuildQueueTest
 
                 one( buildQueue ).getQueueSnapshot();
                 will( returnValue( tasks ) );
-            }
-        } );
+            }} );
 
         assertTrue( overallQueue.isInBuildQueue( 2 ) );
         context.assertIsSatisfied();
@@ -264,8 +257,7 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildTask ) );
 
                 one( buildTaskQueueExecutor ).cancelTask( buildTask );
-            }
-        } );
+            }} );
 
         overallQueue.cancelBuildTask( 2 );
         context.assertIsSatisfied();
@@ -283,8 +275,7 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildTask ) );
 
                 one( buildTaskQueueExecutor ).cancelTask( buildTask );
-            }
-        } );
+            }} );
 
         overallQueue.cancelCurrentBuild();
         context.assertIsSatisfied();
@@ -309,8 +300,7 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildQueue ) );
 
                 one( buildQueue ).remove( with( any( Task.class ) ) );
-            }
-        } );
+            }} );
 
         overallQueue.removeProjectFromBuildQueue( 1, 1, 1, "continuum-project-test-1" );
         context.assertIsSatisfied();
@@ -338,8 +328,7 @@ public class DefaultOverallBuildQueueTest
                 will( returnValue( buildQueue ) );
 
                 one( buildQueue ).remove( buildTask );
-            }
-        } );
+            }} );
 
         overallQueue.removeProjectFromBuildQueue( 1 );
         context.assertIsSatisfied();

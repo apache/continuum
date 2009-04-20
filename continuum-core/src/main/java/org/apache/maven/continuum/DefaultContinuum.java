@@ -1222,12 +1222,12 @@ public class DefaultContinuum
 
     public ContinuumProjectBuildingResult addMavenOneProject( String metadataUrl, int projectGroupId,
                                                               boolean checkProtocol, boolean useCredentialsCache,
-                                                              int buildDefintionTemplateId )
+                                                              int buildDefinitionTemplateId )
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, MavenOneContinuumProjectBuilder.ID, projectGroupId,
                                                        checkProtocol, useCredentialsCache, true,
-                                                       buildDefintionTemplateId );
+                                                       buildDefinitionTemplateId );
     }
 
     // ----------------------------------------------------------------------
@@ -1304,12 +1304,12 @@ public class DefaultContinuum
 
     public ContinuumProjectBuildingResult addMavenTwoProject( String metadataUrl, int projectGroupId,
                                                               boolean checkProtocol, boolean useCredentialsCache,
-                                                              boolean recursiveProjects, int buildDefintionTemplateId )
+                                                              boolean recursiveProjects, int buildDefinitionTemplateId )
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID, projectGroupId,
                                                        checkProtocol, useCredentialsCache, recursiveProjects,
-                                                       buildDefintionTemplateId );
+                                                       buildDefinitionTemplateId );
     }
 
     // ----------------------------------------------------------------------
@@ -1325,19 +1325,19 @@ public class DefaultContinuum
     /**
      * @see org.apache.maven.continuum.Continuum#addProject(org.apache.maven.continuum.model.project.Project, java.lang.String, int, int)
      */
-    public int addProject( Project project, String executorId, int groupId, int buildDefintionTemplateId )
+    public int addProject( Project project, String executorId, int groupId, int buildDefinitionTemplateId )
         throws ContinuumException
     {
         project.setExecutorId( executorId );
 
-        return executeAddProjectFromScmActivity( project, groupId, buildDefintionTemplateId );
+        return executeAddProjectFromScmActivity( project, groupId, buildDefinitionTemplateId );
     }
 
     // ----------------------------------------------------------------------
     // Activities. These should end up as workflows in werkflow
     // ----------------------------------------------------------------------
 
-    private int executeAddProjectFromScmActivity( Project project, int groupId, int buildDefintionTemplateId )
+    private int executeAddProjectFromScmActivity( Project project, int groupId, int buildDefinitionTemplateId )
         throws ContinuumException
     {
         String executorId = project.getExecutorId();
@@ -1371,25 +1371,25 @@ public class DefaultContinuum
 
             if ( executorId.equalsIgnoreCase( ContinuumBuildExecutorConstants.ANT_BUILD_EXECUTOR ) )
             {
-                if ( buildDefintionTemplateId <= 0 )
+                if ( buildDefinitionTemplateId <= 0 )
                 {
                     bdt = buildDefinitionService.getDefaultAntBuildDefinitionTemplate();
                 }
                 else
                 {
-                    bdt = buildDefinitionService.getBuildDefinitionTemplate( buildDefintionTemplateId );
+                    bdt = buildDefinitionService.getBuildDefinitionTemplate( buildDefinitionTemplateId );
                 }
             }
             else
             {
                 //shell default
-                if ( buildDefintionTemplateId <= 0 )
+                if ( buildDefinitionTemplateId <= 0 )
                 {
                     bdt = buildDefinitionService.getDefaultShellBuildDefinitionTemplate();
                 }
                 else
                 {
-                    bdt = buildDefinitionService.getBuildDefinitionTemplate( buildDefintionTemplateId );
+                    bdt = buildDefinitionService.getBuildDefinitionTemplate( buildDefinitionTemplateId );
                 }
             }
 
@@ -1419,11 +1419,11 @@ public class DefaultContinuum
                                                                                    String projectBuilderId,
                                                                                    int projectGroupId,
                                                                                    boolean checkProtocol,
-                                                                                   int buildDefintionTemplateId )
+                                                                                   int buildDefinitionTemplateId )
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol,
-                                                       false, false, buildDefintionTemplateId );
+                                                       false, false, buildDefinitionTemplateId );
     }
 
 
@@ -1433,7 +1433,7 @@ public class DefaultContinuum
                                                                                      boolean checkProtocol,
                                                                                      boolean useCredentialsCache,
                                                                                      boolean loadRecursiveProjects,
-                                                                                     int buildDefintionTemplateId,
+                                                                                     int buildDefinitionTemplateId,
                                                                                      boolean addAssignableRoles )
         throws ContinuumException
     {
@@ -1460,12 +1460,12 @@ public class DefaultContinuum
         context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
 
         // CreateProjectsFromMetadataAction will check null and use default
-        if ( buildDefintionTemplateId > 0 )
+        if ( buildDefinitionTemplateId > 0 )
         {
             try
             {
                 context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_TEMPLATE,
-                             buildDefinitionService.getBuildDefinitionTemplate( buildDefintionTemplateId ) );
+                             buildDefinitionService.getBuildDefinitionTemplate( buildDefinitionTemplateId ) );
             }
             catch ( BuildDefinitionServiceException e )
             {
@@ -1611,9 +1611,9 @@ public class DefaultContinuum
 
                 // CONTINUUM-1953 olamy : attached buildDefs from template here
                 // if no group creation
-                if ( !projectGroupCreation && buildDefintionTemplateId > 0 )
+                if ( !projectGroupCreation && buildDefinitionTemplateId > 0 )
                 {
-                    buildDefinitionService.addTemplateInProject( buildDefintionTemplateId,
+                    buildDefinitionService.addTemplateInProject( buildDefinitionTemplateId,
                                                                  projectDao.getProject( project.getId() ) );
                 }
 
@@ -1688,12 +1688,12 @@ public class DefaultContinuum
                                                                                      boolean checkProtocol,
                                                                                      boolean useCredentialsCache,
                                                                                      boolean loadRecursiveProjects,
-                                                                                     int buildDefintionTemplateId )
+                                                                                     int buildDefinitionTemplateId )
         throws ContinuumException
     {
         return executeAddProjectsFromMetadataActivity( metadataUrl, projectBuilderId, projectGroupId, checkProtocol,
                                                        useCredentialsCache, loadRecursiveProjects,
-                                                       buildDefintionTemplateId, true );
+                                                       buildDefinitionTemplateId, true );
     }
 
     // ----------------------------------------------------------------------

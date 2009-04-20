@@ -183,15 +183,15 @@ public class DefaultTaskQueueManager
     {
         try
         {
-            Map<String, Task> currentBuilds = buildsManager.getCurrentBuilds();
+            Map<String, BuildProjectTask> currentBuilds = buildsManager.getCurrentBuilds();
             Set<String> keys = currentBuilds.keySet();
 
             for ( String key : keys )
             {
-                Task task = currentBuilds.get( key );
-                if ( task != null && task instanceof BuildProjectTask )
+                BuildProjectTask task = currentBuilds.get( key );
+                if ( task != null )
                 {
-                    int projectId = ( (BuildProjectTask) task ).getProjectId();
+                    int projectId = task.getProjectId();
 
                     Project project = projectDao.getProject( projectId );
                     LocalRepository repository = project.getProjectGroup().getLocalRepository();

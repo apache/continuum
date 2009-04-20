@@ -35,7 +35,6 @@ import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -217,18 +216,15 @@ public class CancelBuildAction
     protected int getCurrentProjectIdBuilding()
         throws ContinuumException, BuildManagerException
     {
-        Map<String, Task> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
+        Map<String, BuildProjectTask> currentBuilds = getContinuum().getBuildsManager().getCurrentBuilds();
         Set<String> keySet = currentBuilds.keySet();
 
         for ( String key : keySet )
         {
-            Task task = currentBuilds.get( key );
+            BuildProjectTask task = currentBuilds.get( key );
             if ( task != null )
             {
-                if ( task instanceof BuildProjectTask )
-                {
-                    return ( (BuildProjectTask) task ).getProjectId();
-                }
+                return task.getProjectId();
             }
         }
         return -1;
