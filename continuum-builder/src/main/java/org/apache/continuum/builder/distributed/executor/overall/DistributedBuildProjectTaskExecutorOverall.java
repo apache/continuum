@@ -159,14 +159,7 @@ public class DistributedBuildProjectTaskExecutorOverall
                 projects.add( projectDao.getProjectWithDependencies( projectId ) );
             }
 
-            try
-            {
-                projects = ProjectSorter.getSortedProjects( projects, null );
-            }
-            catch ( CycleDetectedException e )
-            {
-                log.info( "Cycle Detected" );
-            }
+            projects = ProjectSorter.getSortedProjects( projects, null );
 
             int buildDefinitionId = projectsAndBuildDefinitions.get( projects.get( 0 ).getId() );
             BuildDefinition buildDefinition = buildDefinitionDao.getBuildDefinition( buildDefinitionId );

@@ -50,7 +50,6 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,14 +140,7 @@ public class DistributedBuildProjectTaskExecutor
                 projects.add( project );
             }
 
-            try
-            {
-                projects = ProjectSorter.getSortedProjects( projects, null );
-            }
-            catch ( CycleDetectedException e )
-            {
-                log.info( "Cycle Detected" );
-            }
+            projects = ProjectSorter.getSortedProjects( projects, null );
 
             for ( Project project : projects )
             {

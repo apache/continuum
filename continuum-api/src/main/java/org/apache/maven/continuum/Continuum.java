@@ -47,7 +47,6 @@ import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.profile.ProfileService;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.continuum.release.ContinuumReleaseManager;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
@@ -153,17 +152,15 @@ public interface Continuum
     // ----------------------------------------------------------------------
 
     List<Project> getProjectsInBuildOrder()
-        throws CycleDetectedException, ContinuumException;
+        throws ContinuumException;
 
     /**
      * take a collection of projects and sort for order
      *
      * @param projects
      * @return
-     * @throws CycleDetectedException
      */
-    List<Project> getProjectsInBuildOrder( Collection<Project> projects )
-        throws CycleDetectedException;
+    List<Project> getProjectsInBuildOrder( Collection<Project> projects );
 
     void buildProjects()
         throws ContinuumException;

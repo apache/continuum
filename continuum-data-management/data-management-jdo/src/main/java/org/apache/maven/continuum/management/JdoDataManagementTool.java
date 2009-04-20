@@ -373,35 +373,25 @@ public class JdoDataManagementTool
         {
             ProjectGroup projectGroup = projectGroups.get( key );
             String url = " ";
-            try
+            List<Project> projects =
+                ProjectSorter.getSortedProjects( getProjectsByGroupIdWithDependencies( pmf, projectGroup.getId() ),
+                                                 log );
+            for ( Iterator j = projects.iterator(); j.hasNext(); )
             {
-                List<Project> projects =
-                    ProjectSorter.getSortedProjects( getProjectsByGroupIdWithDependencies( pmf, projectGroup.getId() ),
-                                                     log );
-                for ( Iterator j = projects.iterator(); j.hasNext(); )
+                Project project = (Project) j.next();
+                if ( !project.getScmUrl().trim().startsWith( url ) )
                 {
-                    Project project = (Project) j.next();
-                    if ( !project.getScmUrl().trim().startsWith( url ) )
-                    {
-                        url = project.getScmUrl();
-                        ProjectScmRoot projectScmRoot = new ProjectScmRoot();
-                        projectScmRoot.setId( id );
-                        projectScmRoot.setProjectGroup( projectGroup );
-                        projectScmRoot.setScmRootAddress( url );
-                        projectScmRoot.setState( project.getState() );
+                    url = project.getScmUrl();
+                    ProjectScmRoot projectScmRoot = new ProjectScmRoot();
+                    projectScmRoot.setId( id );
+                    projectScmRoot.setProjectGroup( projectGroup );
+                    projectScmRoot.setScmRootAddress( url );
+                    projectScmRoot.setState( project.getState() );
 
-                        projectScmRoot = (ProjectScmRoot) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectScmRoot );
-                        projectScmRoots.put( Integer.valueOf( projectScmRoot.getId() ), projectScmRoot );
-                        id++;
-                    }
+                    projectScmRoot = (ProjectScmRoot) PlexusJdoUtils.addObject( pmf.getPersistenceManager(), projectScmRoot );
+                    projectScmRoots.put( Integer.valueOf( projectScmRoot.getId() ), projectScmRoot );
+                    id++;
                 }
-            }
-            catch ( CycleDetectedException e )
-            {
-                //skip
-                log.info( "Skipping group '" + projectGroup.getGroupId() +
-                    "' when creating ProjectScmRoot data. Cycle detected: " + e.getMessage() );
-                continue;
             }
         }
 

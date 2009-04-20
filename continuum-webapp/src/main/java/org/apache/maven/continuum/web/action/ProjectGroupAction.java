@@ -54,7 +54,6 @@ import org.codehaus.plexus.redback.role.RoleManager;
 import org.codehaus.plexus.redback.role.RoleManagerException;
 import org.codehaus.plexus.redback.users.User;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,20 +190,12 @@ public class ProjectGroupAction
                 int nbAntProjects = 0;
                 int nbShellProjects = 0;
 
-                // get the projects according to build order (first project in the group is the root project)
-                try
+                Project rootProject = ( getContinuum().getProjectsInBuildOrder(
+                    getContinuum().getProjectsInGroupWithDependencies( projectGroupId ) ) ).get( 0 );
+                if ( "maven2".equals( rootProject.getExecutorId() ) ||
+                    "maven-1".equals( rootProject.getExecutorId() ) )
                 {
-                    Project rootProject = ( getContinuum().getProjectsInBuildOrder(
-                        getContinuum().getProjectsInGroupWithDependencies( projectGroupId ) ) ).get( 0 );
-                    if ( "maven2".equals( rootProject.getExecutorId() ) ||
-                        "maven-1".equals( rootProject.getExecutorId() ) )
-                    {
-                        url = rootProject.getUrl();
-                    }
-                }
-                catch ( CycleDetectedException e )
-                {
-                    // ignore. url won't be displayed if null
+                    url = rootProject.getUrl();
                 }
 
                 for ( Object o : projectGroup.getProjects() )
@@ -369,7 +360,7 @@ public class ProjectGroupAction
     }
 
     public String edit()
-        throws ContinuumException, CycleDetectedException
+        throws ContinuumException
     {
         try
         {
