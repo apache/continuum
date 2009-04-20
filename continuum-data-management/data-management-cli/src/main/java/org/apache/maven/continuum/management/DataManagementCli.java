@@ -354,20 +354,22 @@ public class DataManagementCli
         
         Settings settings = getSettings( container );
         List<String> profileIds = settings.getActiveProfiles();
-        List<Profile> profiles = settings.getProfiles();
         Map<String, Profile> profilesAsMap = settings.getProfilesAsMap();
         if ( profileIds != null && !profileIds.isEmpty() )
         {
             for ( String profileId : profileIds )
             {
                 Profile profile = profilesAsMap.get( profileId );
-                List<Repository> repos = profile.getRepositories();
-                if ( repos != null && !repos.isEmpty() )
+                if ( profile != null )
                 {
-                    for ( Repository repo : repos )
+                    List<Repository> repos = profile.getRepositories();
+                    if ( repos != null && !repos.isEmpty() )
                     {
-                        remoteRepositories.add( factory.createArtifactRepository( repo.getId(), repo
-                            .getUrl(), layout, null, null ) );
+                        for ( Repository repo : repos )
+                        {
+                            remoteRepositories.add( factory.createArtifactRepository( repo.getId(), repo.getUrl(),
+                                                                                      layout, null, null ) );
+                        }
                     }
                 }
             }
