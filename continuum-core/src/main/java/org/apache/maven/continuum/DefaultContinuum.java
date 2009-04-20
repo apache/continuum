@@ -103,7 +103,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.StoppingException;
 import org.codehaus.plexus.taskqueue.TaskQueueException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -785,18 +784,7 @@ public class DefaultContinuum
     public void buildProjects( int trigger )
         throws ContinuumException
     {
-        Collection<Project> projectsList;
-
-        try
-        {
-            projectsList = getProjectsInBuildOrder();
-        }
-        catch ( CycleDetectedException e )
-        {
-            log.warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
-
-            projectsList = getProjects();
-        }
+        Collection<Project> projectsList = getProjectsInBuildOrder();
 
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projectsList );
 
@@ -813,18 +801,7 @@ public class DefaultContinuum
     public void buildProjects( int trigger, int buildDefinitionId )
         throws ContinuumException
     {
-        Collection<Project> projectsList;
-
-        try
-        {
-            projectsList = getProjectsInBuildOrder();
-        }
-        catch ( CycleDetectedException e )
-        {
-            log.warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
-
-            projectsList = getProjects();
-        }
+        Collection<Project> projectsList = getProjectsInBuildOrder();
 
         Collection<Project> filteredProjectsList = getProjectsNotInReleaseStage( projectsList );
 
@@ -886,17 +863,8 @@ public class DefaultContinuum
         {
             Collection<Project> projectsList;
 
-            try
-            {
-                projectsList =
-                    getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
-            }
-            catch ( CycleDetectedException e )
-            {
-                log.warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
-
-                projectsList = getProjects();
-            }
+            projectsList =
+                getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
 
             prepareBuildProjects( projectsList, bds, checkDefaultBuildDefinitionForProject,
                                   ContinuumProjectState.TRIGGER_FORCED );
@@ -934,12 +902,6 @@ public class DefaultContinuum
         catch ( ContinuumStoreException e )
         {
             throw new ContinuumException( "Can't get project list for schedule " + schedule.getName(), e );
-        }
-        catch ( CycleDetectedException e )
-        {
-            log.warn( "Cycle detected while sorting projects for building, falling back to unsorted build." );
-
-            projectsList = getProjects();
         }
 
         Map<ProjectScmRoot, Map<Integer, Integer>> map = new HashMap<ProjectScmRoot, Map<Integer, Integer>>();
@@ -1205,7 +1167,7 @@ public class DefaultContinuum
     // ----------------------------------------------------------------------
 
     public List<Project> getProjectsInBuildOrder()
-        throws CycleDetectedException, ContinuumException
+        throws ContinuumException
     {
         return getProjectsInBuildOrder( getProjectsWithDependencies() );
     }
@@ -1215,10 +1177,8 @@ public class DefaultContinuum
      *
      * @param projects
      * @return
-     * @throws CycleDetectedException
      */
     public List<Project> getProjectsInBuildOrder( Collection<Project> projects )
-        throws CycleDetectedException
     {
         if ( projects == null || projects.isEmpty() )
         {
@@ -3480,15 +3440,8 @@ public class DefaultContinuum
     {
         List<Project> projectsList;
 
-        try
-        {
-            projectsList =
-                getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroup.getId() ) );
-        }
-        catch ( CycleDetectedException e )
-        {
-            throw new ContinuumException( "Error while retrieving projects", e );
-        }
+        projectsList =
+            getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroup.getId() ) );
 
         String url = "";
 

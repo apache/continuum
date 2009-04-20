@@ -19,18 +19,18 @@ package org.apache.continuum.utils;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.dag.DAG;
 import org.codehaus.plexus.util.dag.TopologicalSorter;
 import org.slf4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Sort projects by dependencies.
@@ -57,7 +57,6 @@ public class ProjectSorter
      * </ul>
      */
     public static List<Project> getSortedProjects( Collection<Project> projects, Logger logger )
-        throws CycleDetectedException
     {
         DAG dag = new DAG();
 
@@ -90,7 +89,14 @@ public class ProjectSorter
 
                 if ( dag.getVertex( dependencyId ) != null )
                 {
-                    dag.addEdge( id, dependencyId );
+                    try
+                    {
+                        dag.addEdge( id, dependencyId );
+                    }
+                    catch ( CycleDetectedException e )
+                    {
+                        logger.warn( "Ignore cycle detected in project dependencies: " + e.getMessage() );
+                    }
                 }
             }
 
@@ -108,7 +114,14 @@ public class ProjectSorter
                     {
                         dag.removeEdge( parentId, id );
                     }
-                    dag.addEdge( id, parentId );
+                    try
+                    {
+                        dag.addEdge( id, parentId );
+                    }
+                    catch ( CycleDetectedException e )
+                    {
+                        logger.warn( "Ignore cycle detected in project parent: " + e.getMessage() );
+                    }
                 }
             }
         }

@@ -506,14 +506,7 @@ public class PrepareBuildProjectsTaskExecutor
         List<Project> projects = projectDao.getProjectsWithDependenciesByGroupId( projectGroupId );
         List<Project> projectList;
 
-        try
-        {
-            projectList = ProjectSorter.getSortedProjects( projects, log );
-        }
-        catch ( CycleDetectedException e )
-        {
-            projectList = projectDao.getAllProjectsByName();
-        }
+        projectList = ProjectSorter.getSortedProjects( projects, log );
 
         List<Project> projectsToBeBuilt = new ArrayList<Project>();
         Map<Integer, BuildDefinition> projectsBuildDefinitionsMap = new HashMap<Integer, BuildDefinition>();

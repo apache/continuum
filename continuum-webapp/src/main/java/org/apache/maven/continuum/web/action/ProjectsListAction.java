@@ -149,15 +149,7 @@ public class ProjectsListAction
                 projectsList.add( p );
             }
 
-            List<Project> sortedProjects;
-            try
-            {
-                sortedProjects = getContinuum().getProjectsInBuildOrder( projectsList );
-            }
-            catch ( CycleDetectedException e )
-            {
-                sortedProjects = projectsList;
-            }
+            List<Project> sortedProjects = getContinuum().getProjectsInBuildOrder( projectsList );
 
             if ( this.getBuildDefinitionId() <= 0 )
             {
