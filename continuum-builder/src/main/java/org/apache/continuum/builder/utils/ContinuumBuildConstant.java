@@ -474,7 +474,7 @@ public class ContinuumBuildConstant
         return getMap( context, KEY_MAVEN_PROJECT );
     }
 
-    public static List getProjectModules( Map context )
+    public static List<String> getProjectModules( Map context )
     {
         return getList( context, KEY_PROJECT_MODULES );
     }

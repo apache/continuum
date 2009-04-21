@@ -192,8 +192,7 @@ public class ProjectGroupAction
 
                 Project rootProject = ( getContinuum().getProjectsInBuildOrder(
                     getContinuum().getProjectsInGroupWithDependencies( projectGroupId ) ) ).get( 0 );
-                if ( "maven2".equals( rootProject.getExecutorId() ) ||
-                    "maven-1".equals( rootProject.getExecutorId() ) )
+                if ( "maven2".equals( rootProject.getExecutorId() ) || "maven-1".equals( rootProject.getExecutorId() ) )
                 {
                     url = rootProject.getUrl();
                 }
@@ -906,7 +905,7 @@ public class ProjectGroupAction
         return projectList;
     }
 
-    public List getProjectGroupUsers()
+    public List<ProjectGroupUserBean> getProjectGroupUsers()
     {
         return projectGroupUsers;
     }

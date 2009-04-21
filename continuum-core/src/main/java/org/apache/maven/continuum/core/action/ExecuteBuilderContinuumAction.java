@@ -35,6 +35,7 @@ import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.notification.ContinuumNotificationDispatcher;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -88,7 +89,7 @@ public class ExecuteBuilderContinuumAction
 
         ScmResult scmResult = getScmResult( context );
 
-        List updatedDependencies = getUpdatedDependencies( context );
+        List<ProjectDependency> updatedDependencies = getUpdatedDependencies( context );
 
         ContinuumBuildExecutor buildExecutor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
 

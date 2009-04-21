@@ -418,7 +418,7 @@ public class BuildProjectTaskExecutor
         }
     }
 
-    private List getScmChanges( ScmResult scmResult )
+    private List<Map<String, Object>> getScmChanges( ScmResult scmResult )
     {
         List<Map<String, Object>> scmChanges = new ArrayList<Map<String, Object>>();
 

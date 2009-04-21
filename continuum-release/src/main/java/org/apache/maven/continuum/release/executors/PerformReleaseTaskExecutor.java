@@ -19,6 +19,10 @@ package org.apache.maven.continuum.release.executors;
  * under the License.
  */
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
@@ -46,11 +50,6 @@ import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * @author Edwin Punzalan
  * @version $Id$
@@ -67,7 +66,7 @@ public class PerformReleaseTaskExecutor
     private ProfileManager profileManager;
 
     private PlexusContainer container;
-    
+
     private LocalRepository repository;
 
     public void execute( ReleaseProjectTask task )
@@ -81,10 +80,10 @@ public class PerformReleaseTaskExecutor
         descriptor.setUseReleaseProfile( performTask.isUseReleaseProfile() );
         descriptor.setPerformGoals( performTask.getGoals() );
         descriptor.setCheckoutDirectory( performTask.getBuildDirectory().getAbsolutePath() );
-        
+
         repository = performTask.getLocalRepository();
-        
-        List reactorProjects = getReactorProjects( performTask );
+
+        List<MavenProject> reactorProjects = getReactorProjects( performTask );
 
         ReleaseResult result = releaseManager.performWithResult( descriptor, settings, reactorProjects, listener );
 

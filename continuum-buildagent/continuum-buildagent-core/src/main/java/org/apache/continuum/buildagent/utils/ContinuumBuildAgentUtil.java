@@ -382,7 +382,7 @@ public class ContinuumBuildAgentUtil
         return getInteger( context, KEY_BUILD_NUMBER );
     }
 
-    public static List getOldScmChanges( Map context )
+    public static List<Map<String, Object>> getOldScmChanges( Map context )
     {
         return getList( context, KEY_OLD_SCM_CHANGES );
     }

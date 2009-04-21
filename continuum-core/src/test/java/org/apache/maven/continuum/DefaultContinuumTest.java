@@ -147,13 +147,13 @@ public class DefaultContinuumTest
 
         assertNotNull( result );
 
-        List projects = result.getProjects();
+        List<Project> projects = result.getProjects();
 
         assertEquals( 1, projects.size() );
 
         assertEquals( Project.class, projects.get( 0 ).getClass() );
 
-        Project project = (Project) projects.get( 0 );
+        Project project = projects.get( 0 );
 
         // reattach
         project = continuum.getProject( project.getId() );
@@ -176,13 +176,13 @@ public class DefaultContinuumTest
 
         assertNotNull( result );
 
-        List projects = result.getProjects();
+        List<Project> projects = result.getProjects();
 
         assertEquals( 1, projects.size() );
 
         assertEquals( Project.class, projects.get( 0 ).getClass() );
 
-        Project project = (Project) projects.get( 0 );
+        Project project = projects.get( 0 );
 
         // reattach
         project = continuum.getProject( project.getId() );
@@ -191,13 +191,13 @@ public class DefaultContinuumTest
 
         projectGroup = getProjectGroupDao().getProjectGroupWithBuildDetailsByProjectGroupId( projectGroup.getId() );
 
-        List buildDefs = projectGroup.getBuildDefinitions();
+        List<BuildDefinition> buildDefs = projectGroup.getBuildDefinitions();
 
         assertTrue( "missing project group build definition", !buildDefs.isEmpty() );
 
         assertTrue( "more then one project group build definition on add project", buildDefs.size() == 1 );
 
-        BuildDefinition pgbd = (BuildDefinition) buildDefs.get( 0 );
+        BuildDefinition pgbd = buildDefs.get( 0 );
 
         pgbd.setGoals( "foo" );
 
@@ -372,13 +372,13 @@ public class DefaultContinuumTest
 
         assertNotNull( result );
 
-        List projects = result.getProjects();
+        List<Project> projects = result.getProjects();
 
         assertEquals( 1, projects.size() );
 
         assertEquals( Project.class, projects.get( 0 ).getClass() );
 
-        Project project = (Project) projects.get( 0 );
+        Project project = projects.get( 0 );
 
         parallelBuildsManager.removeProjectFromCheckoutQueue( project.getId() );
 
