@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.continuum.buildagent.model.Installation;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,7 +120,7 @@ public class DefaultBuildAgentConfigurationService
         return generalBuildAgentConfiguration.getContinuumServerUrl();
     }
 
-    public List getAvailableInstallations()
+    public List<Installation> getAvailableInstallations()
     {
         return generalBuildAgentConfiguration.getInstallations();
     }

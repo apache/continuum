@@ -73,7 +73,7 @@ public class BuildDefinitionAction
 
     private Map<Integer, String> schedules;
 
-    private List profiles;
+    private List<Profile> profiles;
 
     private boolean groupBuildDefinition = false;
 
@@ -146,11 +146,11 @@ public class BuildDefinitionAction
                 }
                 else
                 {
-                    List projects = getContinuum().getProjectGroupWithProjects( projectGroupId ).getProjects();
+                    List<Project> projects = getContinuum().getProjectGroupWithProjects( projectGroupId ).getProjects();
 
                     if ( projects.size() > 0 )
                     {
-                        Project project = (Project) projects.get( 0 );
+                        Project project = projects.get( 0 );
                         executor = project.getExecutorId();
                     }
                 }
@@ -199,10 +199,10 @@ public class BuildDefinitionAction
                 else
                 {
                     checkAddGroupBuildDefinitionAuthorization( getProjectGroupName() );
-                    List bds = getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
+                    List<BuildDefinition> bds = getContinuum().getBuildDefinitionsForProjectGroup( projectGroupId );
                     if ( bds != null && !bds.isEmpty() )
                     {
-                        preDefinedBuildFile = ( (BuildDefinition) bds.get( 0 ) ).getBuildFile();
+                        preDefinedBuildFile = bds.get( 0 ).getBuildFile();
                     }
                 }
 
@@ -587,12 +587,12 @@ public class BuildDefinitionAction
         this.schedules = schedules;
     }
 
-    public List getProfiles()
+    public List<Profile> getProfiles()
     {
         return profiles;
     }
 
-    public void setProfiles( final List profiles )
+    public void setProfiles( final List<Profile> profiles )
     {
         this.profiles = profiles;
     }

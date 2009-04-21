@@ -221,7 +221,7 @@ public class BuildDefinitionSummaryAction
         this.projectGroupName = projectGroupName;
     }
 
-    public List getProjectBuildDefinitionSummaries()
+    public List<BuildDefinitionSummary> getProjectBuildDefinitionSummaries()
     {
         return projectBuildDefinitionSummaries;
     }

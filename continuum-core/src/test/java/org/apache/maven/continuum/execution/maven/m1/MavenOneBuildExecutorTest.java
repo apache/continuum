@@ -19,16 +19,16 @@ package org.apache.maven.continuum.execution.maven.m1;
  * under the License.
  */
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.codehaus.plexus.util.FileUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -94,7 +94,7 @@ public class MavenOneBuildExecutorTest
 
         notifier.setFrom( ProjectNotifier.FROM_USER );
 
-        List notifiers = new ArrayList();
+        List<ProjectNotifier> notifiers = new ArrayList<ProjectNotifier>();
 
         notifiers.add( notifier );
 
@@ -214,7 +214,7 @@ public class MavenOneBuildExecutorTest
 
         notifier.setFrom( ProjectNotifier.FROM_USER );
 
-        List notifiers = new ArrayList();
+        List<ProjectNotifier> notifiers = new ArrayList<ProjectNotifier>();
 
         notifiers.add( notifier );
 
@@ -296,7 +296,7 @@ public class MavenOneBuildExecutorTest
 
         notifier.setFrom( ProjectNotifier.FROM_USER );
 
-        List notifiers = new ArrayList();
+        List<ProjectNotifier> notifiers = new ArrayList<ProjectNotifier>();
 
         notifiers.add( notifier );
 

@@ -34,6 +34,7 @@ import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.util.StateGenerator;
@@ -61,7 +62,7 @@ public class BuildResultAction
 
     private int buildId;
 
-    private List changeSet;
+    private List<ChangeSet> changeSet;
 
     private boolean hasSurefireResults;
 
@@ -203,7 +204,7 @@ public class BuildResultAction
         return buildResult;
     }
 
-    public List getChangesSinceLastSuccess()
+    public List<ChangeSet> getChangesSinceLastSuccess()
     {
         return changeSet;
     }

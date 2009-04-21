@@ -176,7 +176,7 @@ public class DefaultInstallationService
     {
         try
         {
-            List installations = installationDao.getAllInstallations();
+            List<Installation> installations = installationDao.getAllInstallations();
             return installations == null ? Collections.EMPTY_LIST : installations;
         }
         catch ( ContinuumStoreException e )

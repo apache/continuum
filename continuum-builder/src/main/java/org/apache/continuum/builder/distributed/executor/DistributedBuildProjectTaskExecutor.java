@@ -276,10 +276,10 @@ public class DistributedBuildProjectTaskExecutor
         }
     }
 
-    private List getOldScmChanges( int projectId, int buildDefinitionId )
+    private List<Map<String, Object>> getOldScmChanges( int projectId, int buildDefinitionId )
         throws ContinuumStoreException
     {
-        List scmChanges = new ArrayList();
+        List<Map<String, Object>> scmChanges = new ArrayList<Map<String, Object>>();
 
         BuildResult oldBuildResult =
             buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );

@@ -635,9 +635,9 @@ public class DefaultBuildController
 
                 if ( dependencyProject != null )
                 {
-                    List buildResults = buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
-                                                                                           context.getOldBuildResult().getEndTime() )
-                        ;
+                    List<BuildResult> buildResults =
+                        buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
+                                                                           context.getOldBuildResult().getEndTime() );
                     if ( buildResults != null && !buildResults.isEmpty() )
                     {
                         log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +

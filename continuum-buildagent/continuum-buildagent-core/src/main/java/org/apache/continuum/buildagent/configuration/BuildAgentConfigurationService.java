@@ -22,6 +22,8 @@ package org.apache.continuum.buildagent.configuration;
 import java.io.File;
 import java.util.List;
 
+import org.apache.continuum.buildagent.model.Installation;
+
 public interface BuildAgentConfigurationService
 {
     String ROLE = BuildAgentConfigurationService.class.getName();
@@ -42,5 +44,5 @@ public interface BuildAgentConfigurationService
     File getBuildOutputFile( int projectId )
         throws BuildAgentConfigurationException;
 
-    List getAvailableInstallations();
+    List<Installation> getAvailableInstallations();
 }

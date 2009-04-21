@@ -1035,9 +1035,9 @@ public class DefaultDistributedBuildManager
 
                 if ( dependencyProject != null )
                 {
-                    List buildResults = buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
-                                                                                           oldBuildResult.getEndTime() )
-                        ;
+                    List<BuildResult> buildResults =
+                        buildResultDao.getBuildResultsInSuccessForProject( dependencyProject.getId(),
+                                                                           oldBuildResult.getEndTime() );
                     if ( buildResults != null && !buildResults.isEmpty() )
                     {
                         log.debug( "Dependency changed: " + dep.getGroupId() + ":" + dep.getArtifactId() + ":" +
