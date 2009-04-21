@@ -46,6 +46,9 @@ public class BuildDefinitionSummaryAction
     private String projectGroupName;
 
     private int projectId;
+    
+    // Allow dont remove default group build definition in project list 
+    private int defaultGroupDefinitionId;
 
     private ProjectGroup projectGroup;
 
@@ -139,6 +142,9 @@ public class BuildDefinitionSummaryAction
         {
             for ( BuildDefinitionSummary bds : groupBuildDefinitionSummaries )
             {
+                if (bds.isIsDefault()){
+                    defaultGroupDefinitionId = bds.getId();
+                }
                 bds.setIsDefault( false );
             }
         }
@@ -252,5 +258,10 @@ public class BuildDefinitionSummaryAction
     public void setProjectGroup( ProjectGroup projectGroup )
     {
         this.projectGroup = projectGroup;
+    }
+
+    public int getDefaultGroupDefinitionId()
+    {
+        return defaultGroupDefinitionId;
     }
 }

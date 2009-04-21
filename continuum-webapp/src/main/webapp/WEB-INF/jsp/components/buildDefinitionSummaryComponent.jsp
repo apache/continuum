@@ -110,7 +110,7 @@
         </ww:if>
         <ww:else>
           <redback:ifAuthorized permission="continuum-remove-group-build-definition" resource="${projectGroupName}">
-            <ww:if test="${pageScope.buildDefinitionSummary.isDefault == true}">
+            <ww:if test="${buildDefinitionSummary.id == defaultGroupDefinitionId || buildDefinitionSummary.isDefault == true}">
               <img src="<ww:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<ww:text name='delete'/>" title="<ww:text name='delete'/>" border="0">
             </ww:if>
             <ww:else> 
