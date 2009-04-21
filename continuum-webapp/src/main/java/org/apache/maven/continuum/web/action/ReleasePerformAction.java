@@ -126,7 +126,7 @@ public class ReleasePerformAction
             List<String> args = new ArrayList<String>();
             args.add( e.getMessage() );
 
-            addActionError( getText( "releasePerform.input.error", args ) ) ;
+            addActionError( getText( "distributedBuild.releasePerform.input.error", args ) ) ;
             return ERROR;
         }
 
@@ -160,7 +160,7 @@ public class ReleasePerformAction
             List<String> args = new ArrayList<String>();
             args.add( e.getMessage() );
 
-            addActionError( getText( "releasePerform.input.error", args ) ) ;
+            addActionError( getText( "distributedBuild.releasePerform.input.error", args ) ) ;
             return ERROR;
         }
 
@@ -248,7 +248,7 @@ public class ReleasePerformAction
                 List<String> args = new ArrayList<String>();
                 args.add( e.getMessage() );
 
-                addActionError( getText( "releasePerform.release.error", args ) );
+                addActionError( getText( "distributedBuild.releasePerform.release.error", args ) );
                 return ERROR;
             }
         }
@@ -304,7 +304,7 @@ public class ReleasePerformAction
                 List<String> args = new ArrayList<String>();
                 args.add( e.getMessage() );
 
-                addActionError( getText( "releasePerform.release.error", args ) );
+                addActionError( getText( "distributedBuild.releasePerform.release.error", args ) );
                 return ERROR;
             }
 
