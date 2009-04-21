@@ -176,17 +176,28 @@ public class ReleasePrepareAction
                 List<String> args = new ArrayList<String>();
                 args.add( e.getMessage() );
 
-                addActionError( getText( "releasePrepare.input.error", args ) );
+                addActionError( getText( "distributedBuild.releasePrepare.input.error", args ) );
                 return ERROR;
             }
         }
         else
         {
-            String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
-    
-            getReleasePluginParameters( workingDirectory, "pom.xml" );
-    
-            processProject( workingDirectory, "pom.xml" );
+            try
+            {
+                String workingDirectory = getContinuum().getWorkingDirectory( project.getId() ).getPath();
+        
+                getReleasePluginParameters( workingDirectory, "pom.xml" );
+        
+                processProject( workingDirectory, "pom.xml" );
+            }
+            catch ( Exception e )
+            {   
+                List<String> args = new ArrayList<String>();
+                args.add( e.getMessage() );
+
+                addActionError( getText( "releasePrepare.input.error", args ) );
+                return ERROR;
+            }
         }
 
         profiles = this.getContinuum().getProfileService().getAllProfiles();
@@ -314,7 +325,7 @@ public class ReleasePrepareAction
                 List<String> args = new ArrayList<String>();
                 args.add( e.getMessage() );
 
-                addActionError( getText( "releasePrepare.release.error", args ) );
+                addActionError( getText( "distributedBuild.releasePrepare.release.error", args ) );
                 return ERROR;
             }
         }
