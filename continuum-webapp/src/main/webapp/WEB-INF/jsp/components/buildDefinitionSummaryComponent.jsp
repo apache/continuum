@@ -113,13 +113,20 @@
           </c:when>
           <c:otherwise>
             <redback:ifAuthorized permission="continuum-remove-group-build-definition" resource="${projectGroupName}">
-              <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
-                <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
-                <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
-                <s:param name="groupBuildDefinition">true</s:param>
-                <s:param name="confirmed" value="false"/>
-              </s:url>
-              <s:a href="%{removeUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
+              <c:choose>              
+                <c:when test="${buildDefinitionSummary.id == defaultGroupDefinitionId}">                
+                  <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
+                </c:when>
+                <c:otherwise>
+                  <s:url id="removeUrl" action="removeGroupBuildDefinition" namespace="/">
+                    <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
+                    <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+                    <s:param name="groupBuildDefinition">true</s:param>
+                    <s:param name="confirmed" value="false"/>
+                  </s:url>
+                  <s:a href="%{removeUrl}"><img src="<s:url value='/images/delete.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0"></s:a>
+                </c:otherwise>
+              </c:choose>
             </redback:ifAuthorized>
             <redback:elseAuthorized>
               <img src="<s:url value='/images/delete_disabled.gif' includeParams="none"/>" alt="<s:text name='delete'/>" title="<s:text name='delete'/>" border="0" />
