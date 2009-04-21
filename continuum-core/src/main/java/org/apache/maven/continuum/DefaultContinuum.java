@@ -208,11 +208,6 @@ public class DefaultContinuum
     private ContinuumReleaseManager releaseManager;
 
     /**
-     * @plexus.configuration default-value="${plexus.home}/temp"
-     */
-    private String workingDirectory;
-
-    /**
      * @plexus.requirement
      */
     private WorkingDirectoryService workingDirectoryService;
@@ -2401,25 +2396,6 @@ public class DefaultContinuum
     {
         log.info( "Initializing Continuum." );
 
-        File wdFile = new File( workingDirectory );
-
-        if ( wdFile.exists() )
-        {
-            if ( !wdFile.isDirectory() )
-            {
-                throw new InitializationException(
-                    "The specified working directory isn't a directory: " + "'" + wdFile.getAbsolutePath() + "'." );
-            }
-        }
-        else
-        {
-            if ( !wdFile.mkdirs() )
-            {
-                throw new InitializationException(
-                    "Could not making the working directory: " + "'" + wdFile.getAbsolutePath() + "'." );
-            }
-        }
-
         log.info( "Showing all groups:" );
         try
         {
@@ -2773,7 +2749,7 @@ public class DefaultContinuum
 
     public String getWorkingDirectory()
     {
-        return workingDirectory;
+        return configurationService.getWorkingDirectory().getAbsolutePath();
     }
 
     public Project getProjectWithCheckoutResult( int projectId )
