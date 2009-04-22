@@ -31,17 +31,14 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-xmlrpc-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-xmlrpc-client</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.cli-parser</groupId>
       <artifactId>cli</artifactId>
-      <version>7</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -73,7 +70,6 @@ under the License.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.1</version>
         <configuration>
           <descriptor>src/assembly/app.xml</descriptor>
           <archive>

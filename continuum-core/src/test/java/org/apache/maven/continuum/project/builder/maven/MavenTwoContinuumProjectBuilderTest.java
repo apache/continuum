@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionService;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -38,6 +37,8 @@ import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
@@ -46,7 +47,7 @@ import org.codehaus.plexus.util.StringUtils;
 public class MavenTwoContinuumProjectBuilderTest
     extends AbstractContinuumTest
 {
-    private static final Logger logger = Logger.getLogger( MavenTwoContinuumProjectBuilderTest.class );
+    private static final Logger logger = LoggerFactory.getLogger( MavenTwoContinuumProjectBuilderTest.class );
 
     public void testGetEmailAddressWhenTypeIsSetToEmail()
         throws Exception
@@ -359,6 +360,7 @@ public class MavenTwoContinuumProjectBuilderTest
         ContinuumProjectBuildingResult result;
 
         result = projectBuilder.buildProjectsFromMetadata( url, null, null, false, bdt );
+        assertFalse( result.hasErrors() );
 
         assertEquals( 5, service.getAllBuildDefinitionTemplate().size() );
 

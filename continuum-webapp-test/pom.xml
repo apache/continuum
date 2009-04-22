@@ -25,7 +25,7 @@ under the License.
     <version>1.3.3-SNAPSHOT</version>
   </parent>
   <artifactId>continuum-webapp-test</artifactId>
-  <name>Continuum Webapp Test</name>
+  <name>Continuum :: Webapp Tests</name>
   <packaging>pom</packaging>
 
   <build>
@@ -177,12 +177,6 @@ under the License.
   </build>
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.openqa.selenium.client-drivers</groupId>
       <artifactId>selenium-java-client-driver</artifactId>
       <scope>test</scope>
@@ -198,7 +192,6 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-webapp</artifactId>
-      <version>${project.version}</version>
       <type>war</type>
     </dependency>
 
@@ -206,17 +199,14 @@ under the License.
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.1.3.1</version>
     </dependency>
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
-      <version>1.4</version>
     </dependency>
     <dependency>
       <groupId>javax.activation</groupId>
       <artifactId>activation</artifactId>
-      <version>1.1</version>
     </dependency>
   </dependencies>
 

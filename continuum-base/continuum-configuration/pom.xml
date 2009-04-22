@@ -84,36 +84,22 @@ under the License.
     </dependency>      
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
+      <artifactId>slf4j-simple</artifactId>
       <scope>test</scope>
-    </dependency>   
+    </dependency>      
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <version>${spring.version}</version>
-    </dependency>       
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>      
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-spring</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-test</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency> <!-- added since depMgt doesn't override imported dependencies -->
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus.registry</groupId>
-      <artifactId>plexus-registry-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus.registry</groupId>
-      <artifactId>plexus-registry-commons</artifactId>
-      <scope>runtime</scope>
-    </dependency>        
   </dependencies>
 </project>

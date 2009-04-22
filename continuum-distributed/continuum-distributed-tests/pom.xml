@@ -21,30 +21,28 @@
   <parent>
     <artifactId>continuum-distributed</artifactId>
     <groupId>org.apache.continuum</groupId>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.3.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.continuum</groupId>
-  <artifactId>continuum-distributed-build-transport-tests</artifactId>
+  <artifactId>continuum-distributed-tests</artifactId>
   <packaging>war</packaging>
   <name>Continuum :: Distributed Build :: Transport :: Tests</name>
-  <url>http://continuum.apache.org</url>
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-distributed-build-transport-slave-server</artifactId>
+      <artifactId>continuum-distributed-slave-server</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-distributed-build-transport-slave-client</artifactId>
+      <artifactId>continuum-distributed-slave-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-distributed-build-transport-master-server</artifactId>
+      <artifactId>continuum-distributed-master-server</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-distributed-build-transport-master-client</artifactId>
+      <artifactId>continuum-distributed-master-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -53,8 +51,13 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
-      <version>2.5.4</version>
     </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>2.4</version>
+      <scope>provided</scope>
+    </dependency>      
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -69,12 +72,6 @@
       <artifactId>slf4j-log4j12</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>2.4</version>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
   
   <build>
@@ -83,7 +80,6 @@
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
-        <version>6.1.11</version>
         <configuration>
           <scanIntervalSeconds>10</scanIntervalSeconds>
           <contextPath>/</contextPath>
@@ -127,7 +123,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.4.3</version>
         <configuration>
           <skip>true</skip>
         </configuration>

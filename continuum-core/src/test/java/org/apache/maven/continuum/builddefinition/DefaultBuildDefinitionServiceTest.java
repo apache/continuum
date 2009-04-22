@@ -21,12 +21,13 @@ package org.apache.maven.continuum.builddefinition;
 import java.util.List;
 
 import org.apache.continuum.dao.DaoUtils;
-import org.apache.log4j.Logger;
 import org.apache.maven.continuum.AbstractContinuumTest;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -36,7 +37,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 public class DefaultBuildDefinitionServiceTest
     extends AbstractContinuumTest
 {
-    private static final Logger logger = Logger.getLogger( DefaultBuildDefinitionServiceTest.class );
+    private static final Logger logger = LoggerFactory.getLogger( DefaultBuildDefinitionServiceTest.class );
 
     private Project project;
 

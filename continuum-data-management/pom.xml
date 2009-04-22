@@ -31,13 +31,14 @@ under the License.
   <artifactId>continuum-data-management</artifactId>
   <name>Continuum :: Data Management :: Parent</name>
   <modules>
-    <module>data-management-cli</module>
     <module>data-management-api</module>
     <module>continuum-legacy</module>
     <module>data-management-jdo</module>
     <!-- TODO: move to redback data management -->
     <module>redback-legacy</module>
     <module>data-management-redback-jdo</module>
+    <!-- Must come after the above since we are not using dependencies to control build order -->
+    <module>data-management-cli</module>
   </modules>
   <build>
     <plugins>

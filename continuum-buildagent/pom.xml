@@ -25,7 +25,6 @@ under the License.
     <version>1.3.3-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.apache.continuum</groupId>
   <artifactId>continuum-buildagent</artifactId>
   <packaging>pom</packaging>
   <name>Continuum :: Distributed Build :: Build Agent</name>

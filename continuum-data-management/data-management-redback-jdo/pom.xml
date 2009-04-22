@@ -33,8 +33,26 @@
       <artifactId>data-management-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>javax.jdo</groupId>
+      <artifactId>jdo2-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-jdo2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus.security</groupId>
+      <artifactId>plexus-security-authorization-rbac-model</artifactId>
+      <version>1.0-alpha-5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus.security</groupId>
+      <artifactId>plexus-security-user-management-api</artifactId>
+      <version>1.0-alpha-5</version>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -43,6 +61,22 @@
     <dependency>
       <groupId>org.codehaus.redback</groupId>
       <artifactId>redback-data-management</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.redback</groupId>
+      <artifactId>redback-rbac-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.redback</groupId>
+      <artifactId>redback-users-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.redback</groupId>
+      <artifactId>redback-keys-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>stax</groupId>
+      <artifactId>stax-api</artifactId>
     </dependency>
   </dependencies>
 </project>
