@@ -22,6 +22,8 @@ package org.apache.maven.continuum.web.action;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -78,6 +80,12 @@ public class ProjectEditAction
         project.setScmTag( scmTag );
 
         getContinuum().updateProject( project );
+        
+        String resource = project.getGroupId() + ":" + project.getArtifactId();
+        AuditLog event = new AuditLog( resource, AuditLogConstants.MODIFY_PROJECT );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         return SUCCESS;
     }

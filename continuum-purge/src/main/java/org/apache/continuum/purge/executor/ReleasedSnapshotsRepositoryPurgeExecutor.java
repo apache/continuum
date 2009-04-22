@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
+import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.maven.archiva.common.utils.VersionComparator;
 import org.apache.maven.archiva.common.utils.VersionUtil;
 import org.apache.maven.archiva.model.ArtifactReference;
@@ -32,6 +33,9 @@ import org.apache.maven.archiva.model.ProjectReference;
 import org.apache.maven.archiva.model.VersionedReference;
 import org.apache.maven.archiva.repository.ContentNotFoundException;
 import org.apache.maven.archiva.repository.layout.LayoutException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Codes were taken from Archiva's CleanupReleasedSnapshotsRepositoryPurge and just made some few changes
@@ -42,6 +46,8 @@ public class ReleasedSnapshotsRepositoryPurgeExecutor
     extends AbstractContinuumPurgeExecutor
 {
     private final RepositoryManagedContent repository;
+    
+    private Logger log = LoggerFactory.getLogger( ReleasedSnapshotsRepositoryPurgeExecutor.class );
 
     public ReleasedSnapshotsRepositoryPurgeExecutor( RepositoryManagedContent repository )
     {
@@ -106,6 +112,8 @@ public class ReleasedSnapshotsRepositoryPurgeExecutor
                 {
                     versionRef.setVersion( version );
                     repository.deleteVersion( versionRef );
+                    
+                    log.info( ContinuumPurgeConstants.PURGE_PROJECT + " - " + VersionedReference.toKey( versionRef ) );
 
                     removeMetadata( versionRef );
                 }

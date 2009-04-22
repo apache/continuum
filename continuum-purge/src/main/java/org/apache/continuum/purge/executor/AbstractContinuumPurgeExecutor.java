@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Set;
 
+import org.apache.continuum.purge.ContinuumPurgeConstants;
 import org.apache.continuum.purge.repository.content.RepositoryManagedContent;
 import org.apache.maven.archiva.consumers.core.repository.ArtifactFilenameFilter;
 import org.apache.maven.archiva.model.ArtifactReference;
@@ -47,7 +48,7 @@ public abstract class AbstractContinuumPurgeExecutor
             {
                 File artifactFile = repository.toFile( reference );
                 artifactFile.delete();
-                log.info( "Purge artifact " + artifactFile.getName() );
+                log.info( ContinuumPurgeConstants.PURGE_ARTIFACT + " - " + artifactFile.getName() );
                 purgeSupportFiles( artifactFile, artifactFile.getName() );
                 // purge maven metadata
                 purgeSupportFiles( artifactFile.getParentFile(), "maven-metadata" );
@@ -83,7 +84,7 @@ public abstract class AbstractContinuumPurgeExecutor
             if ( file.exists() && file.isFile() )
             {
                 file.delete();
-                log.info( "Purge support file: " + file.getName() );
+                log.info( ContinuumPurgeConstants.PURGE_FILE + " - " + file.getName() );
             }
         }
     }

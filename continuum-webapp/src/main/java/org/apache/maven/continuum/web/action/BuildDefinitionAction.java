@@ -37,6 +37,8 @@ import org.apache.maven.continuum.profile.ProfileException;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
 import org.apache.maven.continuum.web.exception.ContinuumActionException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -312,6 +314,12 @@ public class BuildDefinitionAction
             addActionError( authzE.getMessage() );
             return REQUIRES_AUTHORIZATION;
         }
+        
+        String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+        AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
+        event.setCategory( AuditLogConstants.BUILD_DEFINITION );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         if ( groupBuildView )
         {
@@ -359,6 +367,12 @@ public class BuildDefinitionAction
 
         if ( projectId != 0 )
         {
+            String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+            AuditLog event = new AuditLog( resource, AuditLogConstants.ADD_GOAL );
+            event.setCategory( AuditLogConstants.BUILD_DEFINITION );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
+            
             return SUCCESS;
         }
         else
@@ -377,6 +391,12 @@ public class BuildDefinitionAction
             if ( confirmed )
             {
                 getContinuum().removeBuildDefinitionFromProject( projectId, buildDefinitionId );
+                
+                String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+                AuditLog event = new AuditLog( resource, AuditLogConstants.REMOVE_GOAL );
+                event.setCategory( AuditLogConstants.BUILD_DEFINITION );
+                event.setCurrentUser( getPrincipal() );
+                event.log();
 
                 return SUCCESS;
             }
@@ -405,6 +425,12 @@ public class BuildDefinitionAction
             if ( confirmed )
             {
                 getContinuum().removeBuildDefinitionFromProjectGroup( projectGroupId, buildDefinitionId );
+                
+                String resource = getProjectGroupName() + ":" +  goals + " " + arguments;
+                AuditLog event = new AuditLog( resource, AuditLogConstants.REMOVE_GOAL );
+                event.setCategory( AuditLogConstants.BUILD_DEFINITION );
+                event.setCurrentUser( getPrincipal() );
+                event.log();
 
                 return SUCCESS;
             }

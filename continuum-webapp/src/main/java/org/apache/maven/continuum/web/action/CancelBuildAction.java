@@ -30,6 +30,8 @@ import org.apache.continuum.buildmanager.BuildManagerException;
 import org.apache.continuum.buildmanager.BuildsManager;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.BuildProjectTask;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
@@ -65,6 +67,11 @@ public class CancelBuildAction
             BuildsManager buildsManager = getContinuum().getBuildsManager();
 
             buildsManager.cancelBuild( projectId );
+            
+            AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.CANCEL_BUILD );
+            event.setCategory( AuditLogConstants.PROJECT );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
         }
         catch ( AuthorizationRequiredException e )
         {
@@ -101,7 +108,14 @@ public class CancelBuildAction
             int index = ArrayUtils.indexOf( projectsId, getCurrentProjectIdBuilding() );
             if ( index > 0 )
             {
-                getContinuum().getBuildsManager().cancelBuild( projectsId[index] );
+                int projId = projectsId[index];
+                
+                getContinuum().getBuildsManager().cancelBuild( projId );
+	            
+  	            AuditLog event = new AuditLog( "Project id=" + projId, AuditLogConstants.CANCEL_BUILD );
+                event.setCategory( AuditLogConstants.PROJECT );
+                event.setCurrentUser( getPrincipal() );
+                event.log();
             }
 
         }

@@ -23,6 +23,8 @@ import com.opensymphony.xwork2.Validateable;
 
 import java.util.List;
 
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.continuum.model.repository.LocalRepository;
 import org.apache.continuum.repository.RepositoryServiceException;
 import org.apache.maven.continuum.ContinuumException;
@@ -151,6 +153,11 @@ public class AddProjectGroupAction
 
             return ERROR;
         }
+        
+        AuditLog event = new AuditLog( name, AuditLogConstants.ADD_PROJECT_GROUP );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         return SUCCESS;
     }

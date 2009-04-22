@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
@@ -133,16 +135,24 @@ public class BuildDefinitionTemplateAction
         throws Exception
     {
         List<BuildDefinition> selectedBuildDefinitions = getBuildDefinitionsFromSelectedBuildDefinitions();
+        
+        AuditLog event = new AuditLog( buildDefinitionTemplate.getName(), AuditLogConstants.ADD_TEMPLATE );
+        event.setCategory( AuditLogConstants.TEMPLATE );
+        event.setCurrentUser( getPrincipal() );
+
         if ( this.buildDefinitionTemplate.getId() > 0 )
         {
             buildDefinitionTemplate.setBuildDefinitions( selectedBuildDefinitions );
             this.getContinuum().getBuildDefinitionService().updateBuildDefinitionTemplate( buildDefinitionTemplate );
+            event.setAction( AuditLogConstants.MODIFY_TEMPLATE );
+            event.log();
         }
         else
         {
             buildDefinitionTemplate.setBuildDefinitions( selectedBuildDefinitions );
             this.buildDefinitionTemplate =
                 this.getContinuum().getBuildDefinitionService().addBuildDefinitionTemplate( buildDefinitionTemplate );
+            event.log();
         }
 
         return SUCCESS;
@@ -155,6 +165,12 @@ public class BuildDefinitionTemplateAction
         {
             buildDefinitionTemplate = getContinuum().getBuildDefinitionService().getBuildDefinitionTemplate(
                 this.buildDefinitionTemplate.getId() );
+
+            AuditLog event = new AuditLog( buildDefinitionTemplate.getName(), AuditLogConstants.REMOVE_TEMPLATE );
+            event.setCategory( AuditLogConstants.TEMPLATE );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
+
             this.getContinuum().getBuildDefinitionService().removeBuildDefinitionTemplate( buildDefinitionTemplate );
         }
         else

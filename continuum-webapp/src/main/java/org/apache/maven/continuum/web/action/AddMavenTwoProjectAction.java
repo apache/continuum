@@ -25,6 +25,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
@@ -109,6 +111,11 @@ public class AddMavenTwoProjectAction
                                                         !this.isNonRecursiveProject(),
                                                         this.getBuildDefinitionTemplateId() );
         }
+        
+        AuditLog event = new AuditLog( pomUrl, AuditLogConstants.ADD_M2_PROJECT );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         return result;
     }

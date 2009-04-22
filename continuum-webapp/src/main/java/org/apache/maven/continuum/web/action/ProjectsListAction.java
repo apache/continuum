@@ -22,6 +22,8 @@ package org.apache.maven.continuum.web.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
@@ -97,7 +99,10 @@ public class ProjectsListAction
 
                 try
                 {
-                    logger.info( "Removing Project with id=" + projectId );
+                    AuditLog event = new AuditLog( "Project id=" + selectedProject, AuditLogConstants.REMOVE_PROJECT );
+                    event.setCategory( AuditLogConstants.PROJECT );
+                    event.setCurrentUser( getPrincipal() );
+                    event.log();
 
                     getContinuum().removeProject( projectId );
                 }

@@ -544,4 +544,22 @@ public class ContinuumActionSupport
     {
         return getTexts( "localization/Continuum" );
     }
+    
+    protected String getPrincipal()
+    {
+        String principal = "guest";
+        
+        if ( getSecuritySession() != null )
+        {
+            if ( getSecuritySession().getUser() != null )
+            {
+                principal = (String) getSecuritySession().getUser().getPrincipal();
+            }
+        }
+        else
+        {
+            principal = "unknown-user";
+        }
+        return principal;
+     }
 }

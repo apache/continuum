@@ -21,6 +21,8 @@ package org.apache.maven.continuum.web.action;
 
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -77,9 +79,16 @@ public class BuildProjectAction
                 getContinuum().buildProjects();
             }
         }
+        
+        AuditLog event = new AuditLog( AuditLogConstants.FORCE_BUILD );
+        event.setCurrentUser( getPrincipal() );
 
         if ( projectId > 0 )
         {
+            event.setResource( "Project id=" + projectId );
+            event.setCategory( AuditLogConstants.PROJECT );
+            event.log();
+
             if ( fromGroupPage )
             {
                 return "to_group_page";
@@ -88,6 +97,12 @@ public class BuildProjectAction
             {
                 return "to_project_page";
             }
+        }
+        else
+        {
+            event.setResource( "Project Group id=" + projectGroupId );
+            event.setCategory( AuditLogConstants.PROJECT_GROUP );
+            event.log();
         }
 
         return SUCCESS;

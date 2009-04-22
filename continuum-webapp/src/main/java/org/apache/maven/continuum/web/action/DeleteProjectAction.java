@@ -22,6 +22,8 @@ package org.apache.maven.continuum.web.action;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -50,6 +52,11 @@ public class DeleteProjectAction
         {
             return REQUIRES_AUTHORIZATION;
         }
+        
+        AuditLog event = new AuditLog( "Project id=" + projectId, AuditLogConstants.REMOVE_PROJECT );
+        event.setCurrentUser( getPrincipal() );
+        event.setCategory( AuditLogConstants.PROJECT );
+        event.log();
 
         getContinuum().removeProject( projectId );
 

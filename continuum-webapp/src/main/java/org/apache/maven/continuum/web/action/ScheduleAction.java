@@ -31,6 +31,8 @@ import org.apache.maven.continuum.model.project.BuildQueue;
 import org.apache.maven.continuum.model.project.Schedule;
 import org.apache.maven.continuum.web.exception.AuthenticationRequiredException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -238,11 +240,17 @@ public class ScheduleAction
                 logger.debug( "Unexpected error getting schedule" );
             }
         }
+        
+        AuditLog event = new AuditLog( getName(), AuditLogConstants.ADD_SCHEDULE );
+        event.setCategory( AuditLogConstants.SCHEDULE );
+        event.setCurrentUser( getPrincipal() );
+
         if ( id == 0 )
         {
             try
             {
                 getContinuum().addSchedule( setFields( new Schedule() ) );
+                event.log();
             }
             catch ( ContinuumException e )
             {
@@ -256,6 +264,8 @@ public class ScheduleAction
             try
             {
                 getContinuum().updateSchedule( setFields( getContinuum().getSchedule( id ) ) );
+                event.setAction( AuditLogConstants.MODIFY_SCHEDULE );
+                event.log();
             }
             catch ( ContinuumException e )
             {
@@ -349,6 +359,11 @@ public class ScheduleAction
 
             return CONFIRM;
         }
+        
+        AuditLog event = new AuditLog( name, AuditLogConstants.REMOVE_SCHEDULE );
+        event.setCategory( AuditLogConstants.SCHEDULE );
+        event.setCurrentUser( getPrincipal() );
+        event.log();
 
         return SUCCESS;
     }

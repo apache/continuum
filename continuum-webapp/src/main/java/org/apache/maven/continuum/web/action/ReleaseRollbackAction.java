@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.apache.continuum.configuration.BuildAgentConfigurationException;
 import org.apache.continuum.release.distributed.manager.DistributedReleaseManager;
+import org.apache.continuum.web.util.AuditLog;
+import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.continuum.model.project.Project;
@@ -105,6 +107,11 @@ public class ReleaseRollbackAction
                     //do nothing
                 }
             }
+            String resource = project.getGroupId() + ":" + project.getArtifactId() + ":" + project.getVersion();
+            AuditLog event = new AuditLog( resource, AuditLogConstants.ROLLBACK_RELEASE );
+            event.setCategory( AuditLogConstants.PROJECT );
+            event.setCurrentUser( getPrincipal() );
+            event.log();
     
             releaseManager.getPreparedReleases().remove( releaseId );
         }
