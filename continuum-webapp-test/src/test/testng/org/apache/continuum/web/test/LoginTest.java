@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractContinuumTest;
+import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  */
 /**
  * Based on LoginTest of Emmanuel Venisse test.
- *
+ * 
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -92,7 +92,6 @@ public class LoginTest
         assertTextPresent( "Logout" );
         assertTextPresent( p.getProperty( "ADMIN_USERNAME" ) );
     }
-
 
     @BeforeTest
     public void open()

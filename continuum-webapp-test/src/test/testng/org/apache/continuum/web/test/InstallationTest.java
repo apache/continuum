@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractInstallationTest;
+import org.apache.continuum.web.test.parent.AbstractInstallationTest;
 import org.testng.annotations.Test;
 
 /**
@@ -44,7 +44,7 @@ public class InstallationTest
         String INTALLA_TOOL_MAVEN_PATH = p.getProperty( "INTALLA_TOOL_MAVEN_PATH" );
         goToAddInstallationTool();
         addInstallation( INTALLA_TOOL_MAVEN_NAME, "Maven 2", INTALLA_TOOL_MAVEN_PATH, true, true, true );
-        //TODO: Validate build envirotment
+        // TODO: Validate build envirotment
     }
 
     public void testAddInstallationVariableWithBuildEnvirotment()
@@ -54,7 +54,7 @@ public class InstallationTest
         String INSTALL_VAR_PATH = p.getProperty( "INSTALL_VAR_PATH" );
         goToAddInstallationVariable();
         addInstallation( INSTALL_VAR_NAME, INSTALL_VAR_VARIABLE_NAME, INSTALL_VAR_PATH, true, false, true );
-        //TODO: Validate build envirotment
+        // TODO: Validate build envirotment
     }
 
     public void testAddInstallationVariableWithoutBuildEnvirotment()

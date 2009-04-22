@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractContinuumTest;
+import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeSuite;
@@ -50,7 +50,7 @@ public class AboutTest
             String username = p.getProperty( "ADMIN_USERNAME" );
             String mail = p.getProperty( "ADMIN_MAIL" );
             String password = p.getProperty( "ADMIN_PASSWORD" );
-            submitAdminData( fullname, mail, password );            
+            submitAdminData( fullname, mail, password );
             assertLoginPage();
             submitUserData( username, password, false, true );
             assertAutenticatedPage( username );

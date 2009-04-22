@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractBuildDefinitionTemplateTest;
+import org.apache.continuum.web.test.parent.AbstractBuildDefinitionTemplateTest;
 import org.testng.annotations.Test;
 
 /**
@@ -57,8 +57,8 @@ public class BuildDefinitionTemplateTest
             "Default Maven 1 Build Definition" } );
         addEditTemplate( newName, new String[] { "Default Shell Build Definition" },
                          new String[] { "Default Maven 2 Build Definition" }, true );
-        goToEditTemplate( newName, new String[] { "Default Maven 1 Build Definition",
-            "Default Shell Build Definition" } );
+        goToEditTemplate( newName,
+                          new String[] { "Default Maven 1 Build Definition", "Default Shell Build Definition" } );
         addEditTemplate( TEMPLATE_NAME, new String[] { "Default Maven 2 Build Definition" },
                          new String[] { "Default Shell Build Definition" }, true );
     }
@@ -99,7 +99,7 @@ public class BuildDefinitionTemplateTest
         String TEMPLATE_BUILD_GOALS = p.getProperty( "TEMPLATE_BUILD_GOALS" );
         String TEMPLATE_BUILD_ARGUMENTS = p.getProperty( "TEMPLATE_BUILD_ARGUMENTS" );
         String TEMPLATE_BUILD_DESCRIPTION = p.getProperty( "TEMPLATE_BUILD_DESCRIPTION" );
-        goToEditBuildDefinitionTemplate(TEMPLATE_BUILD_DESCRIPTION);
+        goToEditBuildDefinitionTemplate( TEMPLATE_BUILD_DESCRIPTION );
         addEditBuildDefinitionTemplate( TEMPLATE_BUILD_POM_NAME, TEMPLATE_BUILD_GOALS, TEMPLATE_BUILD_ARGUMENTS,
                                         TEMPLATE_BUILD_DESCRIPTION, false, false, false, true );
     }

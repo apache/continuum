@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractConfigurationTest;
+import org.apache.continuum.web.test.parent.AbstractConfigurationTest;
 import org.testng.annotations.Test;
 
 /**

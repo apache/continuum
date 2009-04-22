@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractPurgeTest;
+import org.apache.continuum.web.test.parent.AbstractPurgeTest;
 import org.testng.annotations.Test;
 
 /**
