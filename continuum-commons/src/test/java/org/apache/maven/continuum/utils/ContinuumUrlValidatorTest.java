@@ -136,7 +136,7 @@ public class ContinuumUrlValidatorTest
     public void testValidateFile()
         throws Exception
     {
-        File rootPom = getTestFile( "src/test/resources/log4j.xml" );
+        File rootPom = getTestFile( "src/test/resources/META-INF/continuum/continuum-configuration.xml" );
         assertTrue( rootPom.exists() );
         assertTrue( getContinuumUrlValidator().validate( rootPom.toURL().toExternalForm() ) );
     }

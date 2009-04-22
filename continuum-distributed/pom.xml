@@ -32,33 +32,4 @@ under the License.
     <module>continuum-distributed-slave</module>
     <!-- <module>continuum-distributed-tests</module> -->
   </modules>
-  <dependencies>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.5.0</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>1.2_Java1.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>easymock</groupId>
-      <artifactId>easymockclassextension</artifactId>
-      <version>1.2</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
 </project>

@@ -30,8 +30,7 @@ under the License.
   <dependencies>
     <dependency>
       <groupId>com.atlassian.xmlrpc</groupId>
-      <artifactId>atlassian-xmlrpc-binder-server-spring</artifactId>
-      <version>0.8.2</version>
+      <artifactId>atlassian-xmlrpc-binder-annotations</artifactId>
     </dependency>
   </dependencies>
 </project>

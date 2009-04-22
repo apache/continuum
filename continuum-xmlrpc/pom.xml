@@ -29,8 +29,8 @@ under the License.
   <packaging>pom</packaging>
   <modules>
     <module>continuum-xmlrpc-api</module>
-    <module>continuum-xmlrpc-backup</module>
     <module>continuum-xmlrpc-client</module>
+    <module>continuum-xmlrpc-backup</module>
     <module>continuum-xmlrpc-server</module>
   </modules>
 </project>

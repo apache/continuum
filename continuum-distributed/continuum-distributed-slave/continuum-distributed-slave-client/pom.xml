@@ -35,11 +35,10 @@ under the License.
     <dependency>
       <groupId>com.atlassian.xmlrpc</groupId>
       <artifactId>atlassian-xmlrpc-binder</artifactId>
-      <version>0.8.2</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-buildagent-api</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
   </dependencies>
 </project>

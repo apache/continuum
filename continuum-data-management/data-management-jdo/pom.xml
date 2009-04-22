@@ -29,8 +29,30 @@
   <name>Continuum :: Data Management :: JDO</name>
   <dependencies>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>data-management-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.jdo</groupId>
+      <artifactId>jdo2-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-spring</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -51,6 +73,10 @@
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-commons</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>stax</groupId>
+      <artifactId>stax-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -78,12 +104,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>1.5.0</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <scope>test</scope>
@@ -91,30 +111,16 @@
     <dependency>
       <groupId>stax</groupId>
       <artifactId>stax</artifactId>
-      <version>1.1.1-dev</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>xmlbeans</groupId>
-          <artifactId>xmlbeans-jsr173-api</artifactId>
-        </exclusion>
-      </exclusions>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>xmlunit</groupId>
       <artifactId>xmlunit</artifactId>
-      <version>1.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>jdom</groupId>
       <artifactId>jdom</artifactId>
-      <version>1.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

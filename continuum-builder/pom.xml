@@ -27,7 +27,6 @@ under the License.
   </parent>
   <artifactId>continuum-builder</artifactId>
   <name>Continuum :: Builder</name>
-  <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -45,30 +44,35 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-commons</artifactId>
+      <artifactId>continuum-model</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-store</artifactId>
+      <artifactId>continuum-commons</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-distributed-slave-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <scope>test</scope>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-component-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-test</artifactId>
-      <scope>test</scope>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-taskqueue</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <scope>test</scope>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>backport-util-concurrent</groupId>
+      <artifactId>backport-util-concurrent</artifactId>
     </dependency>
   </dependencies>
 </project>

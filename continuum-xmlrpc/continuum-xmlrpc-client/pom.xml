@@ -31,12 +31,10 @@ under the License.
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-xmlrpc-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.xmlrpc</groupId>
       <artifactId>xmlrpc-client</artifactId>
-      <version>3.1</version>
     </dependency>
   </dependencies>
   <build>
@@ -53,12 +51,18 @@ under the License.
                  also adding the project build directory -->
             <classpath />
             <argument>org.apache.maven.continuum.xmlrpc.client.SampleClient</argument>
-            <argument>http://localhost:8080/continuum/xmlrpc</argument>
-            <argument>admin</argument>
-            <argument>admin123</argument>
+            <argument>${url}/xmlrpc</argument>
+            <argument>${username}</argument>
+            <argument>${password}</argument>
           </arguments>
         </configuration>
       </plugin>
     </plugins>
   </build>
+  <properties>
+    <url>http://localhost:${port}/continuum</url>
+    <port>8080</port>
+    <username>admin</username>
+    <password>admin123</password>
+  </properties>
 </project>

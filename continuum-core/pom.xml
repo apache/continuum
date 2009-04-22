@@ -28,6 +28,15 @@ under the License.
   <name>Continuum :: Core</name>
   <dependencies>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-quartz</artifactId>
     </dependency>
@@ -38,6 +47,10 @@ under the License.
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-settings</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact-manager</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -70,13 +83,6 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-command-line</artifactId>
-      <version>1.0-alpha-2</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-container-default</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -87,10 +93,6 @@ under the License.
       <artifactId>maven-artifact</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-provider-api</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.maven.scm</groupId>
       <artifactId>maven-scm-api</artifactId>
     </dependency>
@@ -99,27 +101,16 @@ under the License.
       <artifactId>maven-project</artifactId> 
     </dependency>
     <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-jdo2</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
     </dependency>    
     <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+    </dependency>    
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-action</artifactId>
-      <version>1.0-alpha-6</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-container-default</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -130,20 +121,32 @@ under the License.
       <artifactId>jpox</artifactId>
     </dependency>
     <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>backport-util-concurrent</groupId>
+      <artifactId>backport-util-concurrent</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>quartz</groupId>
+      <artifactId>quartz</artifactId>
+    </dependency>
+    <dependency>
       <groupId>javax.annotation</groupId>
       <artifactId>jsr250-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-store</artifactId>
+      <artifactId>continuum-model</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-release</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-security</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -158,30 +161,61 @@ under the License.
       <artifactId>continuum-purge</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.archiva</groupId>
-      <artifactId>archiva-common</artifactId>
-      <version>${archiva.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.archiva</groupId>
-      <artifactId>archiva-repository-layer</artifactId>
-      <version>${archiva.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context-support</artifactId>
     </dependency>    
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4</version>
-      <scope>provided</scope>
-    </dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>    
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>    
     <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-builder</artifactId>
     </dependency>    
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-distributed-slave-client</artifactId>
+    </dependency>    
+    <dependency>
+      <groupId>velocity</groupId>
+      <artifactId>velocity</artifactId>      
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.release</groupId>
+      <artifactId>maven-release-manager</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+    </dependency>    
+    <!-- contains redback-core.xml that is needed to instantiate some test classes -->
+    <dependency>
+      <groupId>org.codehaus.redback</groupId>
+      <artifactId>redback-struts2-integration</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- contains redback.xml that is needed to pass some test classes -->
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-security</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- A test that goes way too deep into the stack requires this -->
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-http-lightweight</artifactId>
+      <scope>test</scope>
+    </dependency>
     <!-- === Testing Dependencies === -->
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
@@ -191,15 +225,6 @@ under the License.
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-test</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-security</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-configuration</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.scm</groupId>
@@ -212,30 +237,8 @@ under the License.
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>
-      <version>1.0.b2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <version>2.6.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.redback</groupId>
-      <artifactId>redback-struts2-integration</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.codehaus.redback</groupId>
       <artifactId>redback-rbac-memory</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-slf4j-logging</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -244,38 +247,30 @@ under the License.
       <scope>test</scope>
     </dependency>  
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <scope>test</scope>
-    </dependency>  
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>jmock</groupId>
-      <artifactId>jmock</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.jmock</groupId>
       <artifactId>jmock-junit3</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.jmock</groupId>
-      <artifactId>jmock-legacy</artifactId>
-      <scope>test</scope>
-    </dependency>
+    <!-- dependency of jmock3 -->
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib-nodep</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- dependency of jmock3 -->
     <dependency>
       <groupId>org.objenesis</groupId>
-      <artifactId>objenesis</artifactId>    
+      <artifactId>objenesis</artifactId>  
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jmock</groupId>
+      <artifactId>jmock</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jmock</groupId>
+      <artifactId>jmock</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

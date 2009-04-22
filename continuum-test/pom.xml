@@ -30,7 +30,10 @@ under the License.
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.jdo</groupId>
+      <artifactId>jdo2-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -38,7 +41,11 @@ under the License.
     </dependency>
     <dependency>
       <groupId>jpox</groupId>
-      <artifactId>jpox-enhancer</artifactId>
+      <artifactId>jpox</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-model</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
@@ -47,13 +54,6 @@ under the License.
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-spring</artifactId>
-      <scope>compile</scope>
     </dependency>    
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.5.0</version>
-      <scope>runtime</scope>
-    </dependency>
   </dependencies>
 </project>

@@ -29,6 +29,10 @@ under the License.
 
   <dependencies>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-xmlrpc-api</artifactId>
     </dependency>
@@ -41,12 +45,44 @@ under the License.
       <artifactId>continuum-security</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-model</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.redback</groupId>
       <artifactId>redback-rbac-role-manager</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.redback</groupId>
+      <artifactId>redback-users-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.redback</groupId>
+      <artifactId>redback-authorization-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.redback</groupId>
+      <artifactId>redback-authentication-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.redback</groupId>
+      <artifactId>redback-policy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.redback</groupId>
       <artifactId>redback-system</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-classworlds</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-component-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -55,13 +91,22 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.apache.xmlrpc</groupId>
+      <artifactId>xmlrpc-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xmlrpc</groupId>
       <artifactId>xmlrpc-server</artifactId>
-      <version>3.1</version>
     </dependency>
     <dependency>
       <groupId>net.sf.dozer</groupId>
       <artifactId>dozer</artifactId>
       <version>4.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

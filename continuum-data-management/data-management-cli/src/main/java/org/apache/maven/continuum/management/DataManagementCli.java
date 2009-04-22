@@ -36,6 +36,8 @@ import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.artifact.resolver.DebugResolutionListener;
+import org.apache.maven.artifact.resolver.ResolutionListener;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ExcludesArtifactFilter;
 import org.apache.maven.settings.MavenSettingsBuilder;
@@ -162,6 +164,7 @@ public class DataManagementCli
         else
         {
             Logger.getRootLogger().setLevel( Level.INFO );
+            Logger.getLogger( "JPOX" ).setLevel( Level.WARN );
         }
 
         if ( command.buildsJdbcUrl != null )
@@ -218,6 +221,7 @@ public class DataManagementCli
                     !"continuum-legacy".equals( id ) && !"continuum-model".equals( id ) &&
                     !"redback-legacy".equals( id ) )
                 {
+                    LOGGER.debug( "[IDE Help] Adding '" + id + "' as an exclusion and using one from classpath" );
                     exclusions.add( "org.apache.continuum:" + id );
                     jars.add( new File( url.getPath() ) );
                 }
@@ -226,6 +230,7 @@ public class DataManagementCli
             // Sometimes finds its way into the IDE. Make sure it is loaded in the extra classloader too
             if ( urlEF.contains( "jpox-enhancer" ) )
             {
+                LOGGER.debug( "[IDE Help] Adding 'jpox-enhancer' as an exclusion and using one from classpath" );
                 jars.add( new File( url.getPath() ) );
             }
         }
@@ -237,11 +242,13 @@ public class DataManagementCli
             {
                 if ( a.getVersion().equals( databaseFormat.getJpoxVersion() ) )
                 {
+                    LOGGER.debug( "Adding artifact: " + a.getFile() );
                     jars.add( a.getFile() );
                 }
             }
             else if ( filter.include( a ) )
             {
+                LOGGER.debug( "Adding artifact: " + a.getFile() );
                 jars.add( a.getFile() );
             }
         }
@@ -393,16 +400,26 @@ public class DataManagementCli
         exclusions.add( "org.apache.continuum:data-management-api" );
         exclusions.add( "org.codehaus.plexus:plexus-component-api" );
         exclusions.add( "org.codehaus.plexus:plexus-container-default" );
-        exclusions.add( "stax:stax-api" );
+        exclusions.add( "org.slf4j:slf4j-api" );
         exclusions.add( "log4j:log4j" );
 
         ArtifactFilter filter = new ExcludesArtifactFilter( exclusions );
 
+        List<? extends ResolutionListener> listeners;
+        if ( LOGGER.isDebugEnabled() )
+        {
+            listeners = Collections.singletonList( new DebugResolutionListener( container.getLogger() ) );
+        }
+        else
+        {
+            listeners = Collections.emptyList();
+        }
+
         ArtifactMetadataSource source =
             (ArtifactMetadataSource) container.lookup( ArtifactMetadataSource.ROLE, "maven" );
-        ArtifactResolutionResult result = resolver.resolveTransitively( Collections.singleton( artifact ),
-                                                                        dummyArtifact, localRepository,
-                                                                        remoteRepositories, source, filter );
+        ArtifactResolutionResult result =
+            resolver.resolveTransitively( Collections.singleton( artifact ), dummyArtifact, Collections.emptyMap(),
+                                          localRepository, remoteRepositories, source, filter, listeners );
 
         return result.getArtifacts();
     }

@@ -36,5 +36,9 @@ under the License.
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-buildagent-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
   </dependencies>
 </project>

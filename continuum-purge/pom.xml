@@ -28,66 +28,92 @@ under the License.
   <name>Continuum :: Purge System</name>
   <dependencies>
     <dependency>
+      <groupId>jpox</groupId>
+      <artifactId>jpox</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-store</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.continuum</groupId>
       <artifactId>continuum-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-commons</artifactId>
+      <artifactId>continuum-model</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.continuum</groupId>
-      <artifactId>continuum-release</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.jdo</groupId>
+      <artifactId>jdo2-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-jdo2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-spring</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-component-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-taskqueue</artifactId>
     </dependency>
-	<dependency>
+    <dependency>
+      <groupId>org.apache.archiva</groupId>
+      <artifactId>archiva-model</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.archiva</groupId>
       <artifactId>archiva-common</artifactId>
-      <version>${archiva.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.archiva</groupId>
       <artifactId>archiva-core-consumers</artifactId>
-      <version>${archiva.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.archiva</groupId>
-          <artifactId>archiva-database</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.archiva</groupId>
-          <artifactId>archiva-configuration</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.archiva</groupId>
-          <artifactId>archiva-indexer</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.archiva</groupId>
-          <artifactId>archiva-consumer-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.archiva</groupId>
-          <artifactId>archiva-repository-layer</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.archiva</groupId>
       <artifactId>archiva-repository-layer</artifactId>
-      <version>${archiva.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.archiva</groupId>
-          <artifactId>archiva-configuration</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     
     <!-- === Testing Dependencies === -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
@@ -121,10 +147,5 @@ under the License.
         </executions>
       </plugin>
     </plugins>
-    <testResources>
-      <testResource>
-        <directory>src/test/resources</directory>
-      </testResource>
-    </testResources>
   </build>
 </project>

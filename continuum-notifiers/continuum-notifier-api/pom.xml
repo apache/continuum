@@ -30,14 +30,14 @@ under the License.
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-	</dependency>
-  <dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-context-support</artifactId>
-  </dependency>      
-  <dependency>
-    <groupId>javax.annotation</groupId>
-    <artifactId>jsr250-api</artifactId>
-  </dependency>      	
+    </dependency>
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-model</artifactId>
+    </dependency>      
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>jsr250-api</artifactId>
+    </dependency>        
   </dependencies>
 </project>
