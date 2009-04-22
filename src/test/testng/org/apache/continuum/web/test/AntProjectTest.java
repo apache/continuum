@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractContinuumTest;
+import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 public class AntProjectTest
     extends AbstractContinuumTest
 {
-    @Test(dependsOnMethods = {"testAddProjectGroup"})
+    @Test( dependsOnMethods = { "testAddProjectGroup" } )
     public void testAddAntProject()
         throws Exception
     {
@@ -62,7 +62,7 @@ public class AntProjectTest
         assertTextPresent( "SCM Url is required and cannot contain null or spaces only" );
     }
 
-    @Test(dependsOnMethods = {"testAddAntProject"})
+    @Test( dependsOnMethods = { "testAddAntProject" } )
     public void testAddDupliedAntProject()
         throws Exception
     {

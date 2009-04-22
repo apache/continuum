@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractBuildEnvironmentTest;
+import org.apache.continuum.web.test.parent.AbstractBuildEnvironmentTest;
 import org.testng.annotations.Test;
 
 /**
@@ -69,7 +69,7 @@ public class BuildEnvironmentTest
         String newName = "new_name";
         goToEditBuildEnvironment( BUIL_ENV_NAME );
         editBuildEnvironment( newName, new String[] {}, true );
-        //TODO: ADD INSTALLATIONS TO ENVIROTMENT
+        // TODO: ADD INSTALLATIONS TO ENVIROTMENT
         goToEditBuildEnvironment( newName );
         editBuildEnvironment( BUIL_ENV_NAME, new String[] {}, true );
     }

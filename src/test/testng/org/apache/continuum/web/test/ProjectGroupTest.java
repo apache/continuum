@@ -19,12 +19,12 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractContinuumTest;
+import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
  * Based on ProjectGroupTest of Emmanuel Venisse test.
- *
+ * 
  * @author José Morales Martínez
  * @version $Id$
  */
@@ -40,7 +40,7 @@ public class ProjectGroupTest
         String TEST_PROJ_GRP_ID = p.getProperty( "TEST_PROJ_GRP_ID" );
         String TEST_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST_PROJ_GRP_DESCRIPTION" );
 
-        addProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, true);
+        addProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, true );
         showProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION );
     }
 
@@ -51,8 +51,8 @@ public class ProjectGroupTest
         String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
         String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
 
-        addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, true);
-        showProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION);
+        addProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, true );
+        showProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
     }
 
     @Test( dependsOnMethods = { "testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup" } )
@@ -66,11 +66,10 @@ public class ProjectGroupTest
         String DEFAULT_PROJ_GRP_ID = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
         String DEFAULT_PROJ_GRP_DESCRIPTION = p.getProperty( "DEFAULT_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
-        
 
         // move the project of the test project group to the default project group
-        moveProjectToProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION,
-                                   M2_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_NAME );
+        moveProjectToProjectGroup( TEST_PROJ_GRP_NAME, TEST_PROJ_GRP_ID, TEST_PROJ_GRP_DESCRIPTION, M2_PROJ_GRP_NAME,
+                                   DEFAULT_PROJ_GRP_NAME );
         showProjectGroup( DEFAULT_PROJ_GRP_NAME, DEFAULT_PROJ_GRP_ID, DEFAULT_PROJ_GRP_DESCRIPTION );
         assertTextPresent( "Member Projects" );
         // Restore project to test project group
@@ -83,7 +82,7 @@ public class ProjectGroupTest
     public void testAddProjectGroupWithEmptyString()
         throws Exception
     {
-        addProjectGroup( "", "", "", false);
+        addProjectGroup( "", "", "", false );
         assertTextPresent( "Project Group Name is required." );
         assertTextPresent( "Project Group ID is required." );
     }
@@ -91,7 +90,7 @@ public class ProjectGroupTest
     public void testAddProjectGroupWithWhitespaceString()
         throws Exception
     {
-        addProjectGroup( " ", " ", " ", false);
+        addProjectGroup( " ", " ", " ", false );
         assertTextPresent( "Project Group Name cannot contain spaces only." );
         assertTextPresent( "Project Group ID cannot contain spaces only." );
     }
@@ -111,7 +110,8 @@ public class ProjectGroupTest
                           sNewProjectDescription );
         assertProjectGroupSummaryPage( sNewProjectName, TEST2_PROJ_GRP_ID, sNewProjectDescription );
 
-        editProjectGroup( sNewProjectName, TEST2_PROJ_GRP_ID, sNewProjectDescription, TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_DESCRIPTION);
+        editProjectGroup( sNewProjectName, TEST2_PROJ_GRP_ID, sNewProjectDescription, TEST2_PROJ_GRP_NAME,
+                          TEST2_PROJ_GRP_DESCRIPTION );
         assertProjectGroupSummaryPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
     }
 
@@ -124,14 +124,14 @@ public class ProjectGroupTest
         String TEST2_PROJ_GRP_ID = p.getProperty( "TEST2_PROJ_GRP_ID" );
         String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         editProjectGroup( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION, " ",
-                          TEST2_PROJ_GRP_DESCRIPTION);
+                          TEST2_PROJ_GRP_DESCRIPTION );
         assertTextPresent( "Project Group Name cannot contain spaces only" );
     }
 
     @Test( dependsOnMethods = { "testAddMavenTwoProject" } )
     public void testProjectGroupAllBuildSuccess()
         throws Exception
-    {        
+    {
         String M2_PROJ_GRP_NAME = p.getProperty( "M2_PROJ_GRP_NAME" );
         String M2_PROJ_GRP_ID = p.getProperty( "M2_PROJ_GRP_ID" );
         String M2_PROJ_GRP_DESCRIPTION = p.getProperty( "M2_PROJ_GRP_DESCRIPTION" );

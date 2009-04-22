@@ -1,4 +1,4 @@
-package org.apache.continuum.web.aux.test;
+package org.apache.continuum.web.test.parent;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -227,7 +227,7 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Group Actions" );
         assertElementPresent( "build" );
         assertElementPresent( "edit" );
-        //assertElementPresent( "remove" );
+        // assertElementPresent( "remove" );
 
         assertTextPresent( "Project Group Scm Root" );
 
@@ -320,7 +320,7 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "Cancel" );
     }
 
-    public void buildProjectGroup( String projectGroupName, String groupId, String description, String projectName)
+    public void buildProjectGroup( String projectGroupName, String groupId, String description, String projectName )
         throws Exception
     {
         int currentIt = 1;
@@ -354,7 +354,7 @@ public abstract class AbstractContinuumTest
         assertElementPresent( "goal" );
         assertElementPresent( "preparedReleaseId" );
         assertButtonWithValuePresent( "Submit" );
-        }
+    }
 
     public void addValidM2ProjectFromProjectGroup( String projectGroupName, String groupId, String description,
                                                    String m2PomUrl )
@@ -518,14 +518,15 @@ public abstract class AbstractContinuumTest
         assertTextPresent( "Developers" );
     }
 
-    public void moveProjectToProjectGroup( String groupName, String groupId, String groupDescription, String projectName, String newProjectGroup )
+    public void moveProjectToProjectGroup( String groupName, String groupId, String groupDescription,
+                                           String projectName, String newProjectGroup )
         throws Exception
     {
         showProjectGroup( groupName, groupId, groupDescription );
         clickButtonWithValue( "Edit" );
 
         assertTextPresent( "Move to Group" );
-        String xPath = "//preceding::th/label[contains(text(),'"+ projectName+"')]//following::select";
+        String xPath = "//preceding::th/label[contains(text(),'" + projectName + "')]//following::select";
         selectValue( xPath, newProjectGroup );
         clickButtonWithValue( "Save" );
         assertProjectGroupSummaryPage( groupName, groupId, groupDescription );

@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractScheduleTest;
+import org.apache.continuum.web.test.parent.AbstractScheduleTest;
 import org.testng.annotations.Test;
 
 /**

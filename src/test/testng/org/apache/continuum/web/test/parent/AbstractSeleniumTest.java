@@ -1,4 +1,4 @@
-package org.apache.continuum.web.aux.test;
+package org.apache.continuum.web.test.parent;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

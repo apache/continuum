@@ -1,4 +1,4 @@
-package org.apache.continuum.web.aux.test;
+package org.apache.continuum.web.test.parent;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -18,7 +18,6 @@ package org.apache.continuum.web.aux.test;
  * specific language governing permissions and limitations
  * under the License.
  */
-
 
 /**
  * @author José Morales Martínez
@@ -49,7 +48,7 @@ public abstract class AbstractBuildDefinitionTemplateTest
         String[] options =
             new String[] { "--- Available Build Definitions ---", "Default Ant Build Definition",
                 "Default Maven 1 Build Definition", "Default Maven 2 Build Definition",
-                "Default Shell Build Definition"};
+                "Default Shell Build Definition" };
         assertAddEditTemplatePage( options, null );
     }
 

@@ -19,7 +19,7 @@ package org.apache.continuum.web.test;
  * under the License.
  */
 
-import org.apache.continuum.web.aux.test.AbstractContinuumTest;
+import org.apache.continuum.web.test.parent.AbstractContinuumTest;
 import org.testng.annotations.Test;
 
 /**
@@ -61,7 +61,7 @@ public class ShellProjectTest
         assertTextPresent( "SCM Url is required and cannot contain null or spaces only" );
     }
 
-    @Test(dependsOnMethods = {"testAddShellProject"})
+    @Test( dependsOnMethods = { "testAddShellProject" } )
     public void testAddDupliedShellProject()
         throws Exception
     {
