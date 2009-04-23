@@ -19,14 +19,13 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Map;
+
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
-import org.apache.maven.shared.model.fileset.FileSet;
-import org.apache.maven.shared.model.fileset.util.FileSetManager;
-
-import java.io.File;
-import java.util.Map;
+import org.codehaus.plexus.util.FileUtils;
 
 /**
  * @author Jesse McConnell <jmcconnell@apache.org>
@@ -56,13 +55,7 @@ public class CleanWorkingDirectoryAction
 
         if ( workingDirectory.exists() )
         {
-            FileSetManager fileSetManager = new FileSetManager();
-            FileSet fileSet = new FileSet();
-            fileSet.setDirectory( workingDirectory.getPath() );
-            fileSet.addInclude( "**/**" );
-            // TODO : this with a configuration option somewhere ?
-            fileSet.setFollowSymlinks( false );
-            fileSetManager.delete( fileSet );
+            FileUtils.deleteDirectory( workingDirectory );
         }
     }
 }
