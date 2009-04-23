@@ -112,7 +112,18 @@ public class AddMavenTwoProjectAction
                                                         this.getBuildDefinitionTemplateId() );
         }
         
-        AuditLog event = new AuditLog( pomUrl, AuditLogConstants.ADD_M2_PROJECT );
+        String projectUrl = pomUrl;
+        
+        if ( projectUrl.indexOf( "@" ) > 0 )
+        {
+            // remove scm credentials from the url
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.append( projectUrl.substring( 0, projectUrl.indexOf( "://" ) + 3 ) );
+            urlBuilder.append( projectUrl.substring( projectUrl.indexOf( "@" ) + 1 ) );
+            projectUrl = urlBuilder.toString();
+        }
+        
+        AuditLog event = new AuditLog( projectUrl, AuditLogConstants.ADD_M2_PROJECT );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
         event.log();
