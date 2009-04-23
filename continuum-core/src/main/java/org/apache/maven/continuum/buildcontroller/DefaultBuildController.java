@@ -145,7 +145,7 @@ public class DefaultBuildController
                 return;
             }
 
-            Map actionContext = context.getActionContext();
+            Map<String, Object> actionContext = context.getActionContext();
 
             try
             {
@@ -369,7 +369,7 @@ public class DefaultBuildController
             throw new TaskExecutionException( "Error initializing the build context", e );
         }
 
-        Map actionContext = context.getActionContext();
+        Map<String, Object> actionContext = context.getActionContext();
 
         actionContext.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
 
@@ -396,8 +396,8 @@ public class DefaultBuildController
     private void performAction( String actionName, BuildContext context )
         throws TaskExecutionException
     {
-        String error = null;
-        TaskExecutionException exception = null;
+        String error;
+        TaskExecutionException exception;
 
         try
         {
@@ -744,5 +744,4 @@ public class DefaultBuildController
 
         return false;
     }
-
 }

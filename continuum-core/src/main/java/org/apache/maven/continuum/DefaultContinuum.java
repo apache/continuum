@@ -858,8 +858,7 @@ public class DefaultContinuum
         {
             Collection<Project> projectsList;
 
-            projectsList =
-                getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
+            projectsList = getProjectsInBuildOrder( projectDao.getProjectsWithDependenciesByGroupId( projectGroupId ) );
 
             prepareBuildProjects( projectsList, bds, checkDefaultBuildDefinitionForProject,
                                   ContinuumProjectState.TRIGGER_FORCED );
@@ -869,9 +868,9 @@ public class DefaultContinuum
     /**
      * takes a given schedule and determines which projects need to build
      * <p/>
-     * The build order is determined by the
+     * The build order is determined by the dependencies
      *
-     * @param schedule
+     * @param schedule The schedule
      * @throws ContinuumException
      */
     public void buildProjects( Schedule schedule )
@@ -879,7 +878,7 @@ public class DefaultContinuum
     {
         Collection<Project> projectsList;
 
-        Map projectsMap = null;
+        Map projectsMap;
 
         try
         {
