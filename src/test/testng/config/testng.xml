@@ -41,10 +41,8 @@ under the License.
 				<include name="mavenTwoProject"/>								
 				<include name="projectGroup" />				
                 <include name="mavenOneProject" />
-                <!--
                 <include name="antProject" />
                 <include name="shellProject" />
-                -->
                 <include name="buildDefinition" />
                 <include name="notifier" />
 				<include name="schedule" />
