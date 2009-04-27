@@ -572,17 +572,16 @@ public abstract class AbstractContinuumTest
             selectValue( "addMavenTwoProject_selectedProjectGroup", projectGroup );
         }
         submit();
-        String ident;
+        String title;
         if ( success )
         {
-            ident = "projectGroupSummary";
+            title = "Continuum - Project Group";
         }
         else
         {
-            ident = "addMavenTwoProject";
+            title = "Continuum - Add Maven 2 Project";
         }
-        String condition = "selenium.browserbot.getCurrentWindow().document.getElementById('" + ident + "')";
-        getSelenium().waitForCondition( condition, maxWaitTimeInMs );
+        waitAddProject( title );
     }
 
     /**
@@ -637,6 +636,7 @@ public abstract class AbstractContinuumTest
 
     public void addMavenOneProject( String pomUrl, String username, String password, String projectGroup,
                                     String buildTemplate, boolean success )
+        throws Exception
     {
         setFieldValue( "m1PomUrl", pomUrl );
         setFieldValue( "scmUsername", username );
@@ -651,17 +651,16 @@ public abstract class AbstractContinuumTest
             selectValue( "selectedProjectGroup", projectGroup );
         }
         submit();
-        String ident;
+        String title;
         if ( success )
         {
-            ident = "projectGroupSummary";
+            title = "Continuum - Project Group";
         }
         else
         {
-            ident = "addMavenOneProject";
+            title = "Continuum - Add Maven 1 Project";
         }
-        String condition = "selenium.browserbot.getCurrentWindow().document.getElementById('" + ident + "')";
-        getSelenium().waitForCondition( condition, maxWaitTimeInMs );
+        waitAddProject( title );
     }
 
     // ////////////////////////////////////
@@ -716,6 +715,7 @@ public abstract class AbstractContinuumTest
     public void addProject( String name, String description, String version, String scmUrl, String scmUser,
                             String scmPassword, String scmTag, boolean useCache, String projectGroup,
                             String buildTemplate, boolean success )
+        throws Exception
     {
         setFieldValue( "projectName", name );
         setFieldValue( "projectDescription", description );
@@ -737,16 +737,26 @@ public abstract class AbstractContinuumTest
             selectValue( "selectedProjectGroup", projectGroup );
         }
         submit();
-        String ident;
+        String title;
         if ( success )
         {
-            ident = "projectGroupSummary";
+            title = "Continuum - Project Group";
         }
         else
         {
-            ident = "addProject";
+            title = "Continuum - Add ";
         }
-        String condition = "selenium.browserbot.getCurrentWindow().document.getElementById('" + ident + "')";
+        waitAddProject( title );
+    }
+
+    private void waitAddProject( String title )
+        throws Exception
+    {
+        Thread.sleep( 100 );
+        String condition = "selenium.browserbot.getCurrentWindow().document.title != ''";
         getSelenium().waitForCondition( condition, maxWaitTimeInMs );
+        Thread.sleep( 1000 );
+        String t = getTitle();
+        Assert.assertTrue( t.contains( title ) );
     }
 }

@@ -51,8 +51,6 @@ public class AboutTest
             String mail = p.getProperty( "ADMIN_MAIL" );
             String password = p.getProperty( "ADMIN_PASSWORD" );
             submitAdminData( fullname, mail, password );
-            assertLoginPage();
-            submitUserData( username, password, false, true );
             assertAutenticatedPage( username );
             assertEditConfigurationPage();
             submit();
