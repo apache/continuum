@@ -112,16 +112,7 @@ public class AddMavenTwoProjectAction
                                                         this.getBuildDefinitionTemplateId() );
         }
         
-        String projectUrl = pomUrl;
-        
-        if ( projectUrl.indexOf( "@" ) > 0 )
-        {
-            // remove scm credentials from the url
-            StringBuilder urlBuilder = new StringBuilder();
-            urlBuilder.append( projectUrl.substring( 0, projectUrl.indexOf( "://" ) + 3 ) );
-            urlBuilder.append( projectUrl.substring( projectUrl.indexOf( "@" ) + 1 ) );
-            projectUrl = urlBuilder.toString();
-        }
+        String projectUrl = hidePasswordInUrl( pomUrl );
         
         AuditLog event = new AuditLog( projectUrl, AuditLogConstants.ADD_M2_PROJECT );
         event.setCategory( AuditLogConstants.PROJECT );
@@ -171,5 +162,33 @@ public class AddMavenTwoProjectAction
     public void setNonRecursiveProject( boolean nonRecursiveProject )
     {
         this.nonRecursiveProject = nonRecursiveProject;
+    }
+    
+    private String hidePasswordInUrl( String pomUrl )
+    {
+        String projectUrl = pomUrl;
+        
+        int idx = projectUrl.indexOf( "@" );
+        
+        if ( idx > 0 )
+        {
+            int pwdIndex = projectUrl.lastIndexOf( ":" );
+            
+            if ( ( pwdIndex > 0 ) && ( pwdIndex > projectUrl.indexOf( "://" ) ) )
+            {
+                String password = projectUrl.substring( pwdIndex, idx + 1 );
+                
+                String newPwd = "@";
+                
+                if ( ( password.length() ) > 2 )
+                {
+                    newPwd = ":*****@";
+                }
+                
+                projectUrl = projectUrl.replace( password, newPwd );
+            }
+        }
+        
+        return projectUrl;
     }
 }
