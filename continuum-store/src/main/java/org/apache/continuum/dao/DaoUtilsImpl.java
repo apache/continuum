@@ -178,11 +178,11 @@ public class DaoUtilsImpl
             for ( Iterator i = projectGroupSource.keySet().iterator(); i.hasNext(); )
             {
                 Integer projectGroupId = (Integer) i.next();
-                List projectsInGroup = projectDao.getProjectsInGroup( projectGroupId );
+                List<Project> projectsInGroup = projectDao.getProjectsInGroup( projectGroupId );
 
-                for ( Iterator j = projectsInGroup.iterator(); j.hasNext(); )
+                for ( Project p : projectsInGroup )
                 {
-                    Integer projectId = ( (Project) j.next() ).getId();
+                    Integer projectId = p.getId();
                     if ( !aggregate.keySet().contains( projectId ) )
                     {
                         aggregate.put( projectId, projectGroupSource.get( projectGroupId ) );

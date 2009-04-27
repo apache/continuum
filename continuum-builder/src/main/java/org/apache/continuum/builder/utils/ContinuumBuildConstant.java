@@ -179,132 +179,132 @@ public class ContinuumBuildConstant
 
     public static final String KEY_MAX_JOB_EXEC_TIME = "max-job-exec-time";
 
-    public static int getProjectId( Map context )
+    public static int getProjectId( Map<String, Object> context )
     {
         return getInteger( context, KEY_PROJECT_ID );
     }
 
-    public static int getBuildDefinitionId( Map context )
+    public static int getBuildDefinitionId( Map<String, Object> context )
     {
         return getInteger( context, KEY_BUILD_DEFINITION_ID );
     }
 
-    public static String getBuildError( Map context )
+    public static String getBuildError( Map<String, Object> context )
     {
         return getString( context, KEY_BUILD_ERROR );
     }
 
-    public static int getTrigger( Map context )
+    public static int getTrigger( Map<String, Object> context )
     {
         return getInteger( context, KEY_TRIGGER );
     }
 
-    public static long getStartTime( Map context )
+    public static long getStartTime( Map<String, Object> context )
     {
         return new Long( getString( context, KEY_START_TIME ) );
     }
 
-    public static long getEndTime( Map context )
+    public static long getEndTime( Map<String, Object> context )
     {
         return new Long( getString( context, KEY_END_TIME ) );
     }
 
-    public static int getBuildExitCode( Map context )
+    public static int getBuildExitCode( Map<String, Object> context )
     {
         return getInteger( context, KEY_BUILD_EXIT_CODE );
     }
 
-    public static int getBuildState( Map context )
+    public static int getBuildState( Map<String, Object> context )
     {
         return getInteger( context, KEY_BUILD_STATE );
     }
 
-    public static String getScmCommandLine( Map context )
+    public static String getScmCommandLine( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_COMMAND_LINE );
     }
 
-    public static String getScmCommandOutput( Map context )
+    public static String getScmCommandOutput( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_COMMAND_OUTPUT );
     }
 
-    public static String getScmException( Map context )
+    public static String getScmException( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_EXCEPTION );
     }
 
-    public static String getScmProviderMessage( Map context )
+    public static String getScmProviderMessage( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_PROVIDER_MESSAGE );
     }
 
-    public static boolean isScmSuccess( Map context )
+    public static boolean isScmSuccess( Map<String, Object> context )
     {
         return getBoolean( context, KEY_SCM_SUCCESS );
     }
 
-    public static int getProjectGroupId( Map context )
+    public static int getProjectGroupId( Map<String, Object> context )
     {
         return getInteger( context, KEY_PROJECT_GROUP_ID );
     }
 
-    public static String getScmRootAddress( Map context )
+    public static String getScmRootAddress( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_ROOT_ADDRESS );
     }
 
-    public static String getScmError( Map context )
+    public static String getScmError( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_ERROR );
     }
 
-    public static String getBuildOutput( Map context )
+    public static String getBuildOutput( Map<String, Object> context )
     {
         return getString( context, KEY_BUILD_OUTPUT );
     }
 
-    public static BuildResult getBuildResult( Map context, Object defaultValue )
+    public static BuildResult getBuildResult( Map<String, Object> context, Object defaultValue )
     {
         return (BuildResult) getObject( context, KEY_BUILD_RESULT, defaultValue );
     }
 
-    public static String getInstallationName( Map context )
+    public static String getInstallationName( Map<String, Object> context )
     {
         return getString( context, KEY_INSTALLATION_NAME );
     }
 
-    public static String getInstallationType( Map context )
+    public static String getInstallationType( Map<String, Object> context )
     {
         return getString( context, KEY_INSTALLATION_TYPE );
     }
 
-    public static String getInstallationVarValue( Map context )
+    public static String getInstallationVarValue( Map<String, Object> context )
     {
         return getString( context, KEY_INSTALLATION_VAR_VALUE );
     }
 
-    public static String getInstallationVarName( Map context )
+    public static String getInstallationVarName( Map<String, Object> context )
     {
         return getString( context, KEY_INSTALLATION_VAR_NAME );
     }
 
-    public static List getScmChanges( Map context )
+    public static List getScmChanges( Map<String, Object> context )
     {
         return getList( context, KEY_SCM_CHANGES );
     }
 
-    public static String getChangeSetAuthor( Map context )
+    public static String getChangeSetAuthor( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGESET_AUTHOR );
     }
 
-    public static String getChangeSetComment( Map context )
+    public static String getChangeSetComment( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGESET_COMMENT );
     }
 
-    public static long getChangeSetDate( Map context )
+    public static long getChangeSetDate( Map<String, Object> context )
     {
         Date date = getDate( context, KEY_CHANGESET_DATE );
 
@@ -318,173 +318,173 @@ public class ContinuumBuildConstant
         }
     }
 
-    public static List getChangeSetFiles( Map context )
+    public static List getChangeSetFiles( Map<String, Object> context )
     {
         return getList( context, KEY_CHANGESET_FILES );
     }
 
-    public static String getChangeFileName( Map context )
+    public static String getChangeFileName( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGEFILE_NAME );
     }
 
-    public static String getChangeFileRevision( Map context )
+    public static String getChangeFileRevision( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGEFILE_REVISION );
     }
 
-    public static String getChangeFileStatus( Map context )
+    public static String getChangeFileStatus( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGEFILE_STATUS );
     }
 
-    public static String getGroupId( Map context )
+    public static String getGroupId( Map<String, Object> context )
     {
         return getString( context, KEY_GROUP_ID );
     }
 
-    public static String getArtifactId( Map context )
+    public static String getArtifactId( Map<String, Object> context )
     {
         return getString( context, KEY_ARTIFACT_ID );
     }
 
-    public static String getVersion( Map context )
+    public static String getVersion( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_VERSION );
 
     }
 
-    public static String getProjectName( Map context )
+    public static String getProjectName( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_NAME );
     }
 
-    public static String getProjectDescription( Map context )
+    public static String getProjectDescription( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_DESCRIPTION );
     }
 
-    public static String getProjectUrl( Map context )
+    public static String getProjectUrl( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_URL );
     }
 
-    public static String getScmUrl( Map context )
+    public static String getScmUrl( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_URL );
     }
 
-    public static String getScmTag( Map context )
+    public static String getScmTag( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_TAG );
     }
 
-    public static Map getProjectParent( Map context )
+    public static Map getProjectParent( Map<String, Object> context )
     {
         return getMap( context, KEY_PROJECT_PARENT );
     }
 
-    public static List getProjectDevelopers( Map context )
+    public static List getProjectDevelopers( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_DEVELOPERS );
     }
 
-    public static String getDeveloperName( Map context )
+    public static String getDeveloperName( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_DEVELOPER_NAME );
     }
 
-    public static String getDeveloperEmail( Map context )
+    public static String getDeveloperEmail( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_DEVELOPER_EMAIL );
     }
 
-    public static String getDeveloperScmId( Map context )
+    public static String getDeveloperScmId( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_DEVELOPER_SCMID );
     }
 
-    public static List getProjectDependencies( Map context )
+    public static List getProjectDependencies( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_DEPENDENCIES );
     }
 
-    public static List getProjectNotifiers( Map context )
+    public static List getProjectNotifiers( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_NOTIFIERS );
     }
 
-    public static Map getNotifierConfiguration( Map context )
+    public static Map getNotifierConfiguration( Map<String, Object> context )
     {
         return getMap( context, KEY_NOTIFIER_CONFIGURATION );
     }
 
-    public static int getNotifierFrom( Map context )
+    public static int getNotifierFrom( Map<String, Object> context )
     {
         return getInteger( context, KEY_NOTIFIER_FROM );
     }
 
-    public static int getNotifierRecipientType( Map context )
+    public static int getNotifierRecipientType( Map<String, Object> context )
     {
         return getInteger( context, KEY_NOTIFIER_RECIPIENT_TYPE );
     }
 
-    public static String getNotifierType( Map context )
+    public static String getNotifierType( Map<String, Object> context )
     {
         return getString( context, KEY_NOTIFIER_TYPE );
     }
 
-    public static boolean isNotifierEnabled( Map context )
+    public static boolean isNotifierEnabled( Map<String, Object> context )
     {
         return getBoolean( context, KEY_NOTIFIER_ENABLED );
     }
 
-    public static boolean isNotifierSendOnError( Map context )
+    public static boolean isNotifierSendOnError( Map<String, Object> context )
     {
         return getBoolean( context, KEY_NOTIFIER_SEND_ON_ERROR );
     }
 
-    public static boolean isNotifierSendOnFailure( Map context )
+    public static boolean isNotifierSendOnFailure( Map<String, Object> context )
     {
         return getBoolean( context, KEY_NOTIFIER_SEND_ON_FAILURE );
     }
 
-    public static boolean isNotifierSendOnScmFailure( Map context )
+    public static boolean isNotifierSendOnScmFailure( Map<String, Object> context )
     {
         return getBoolean( context, KEY_NOTIFIER_SEND_ON_SCMFAILURE );
     }
 
-    public static boolean isNotifierSendOnSuccess( Map context )
+    public static boolean isNotifierSendOnSuccess( Map<String, Object> context )
     {
         return getBoolean( context, KEY_NOTIFIER_SEND_ON_SUCCESS );
     }
 
-    public static boolean isNotifierSendOnWarning( Map context )
+    public static boolean isNotifierSendOnWarning( Map<String, Object> context )
     {
         return getBoolean( context, KEY_NOTIFIER_SEND_ON_WARNING );
     }
 
-    public static Map getScmResult( Map context )
+    public static Map getScmResult( Map<String, Object> context )
     {
         return getMap( context, KEY_SCM_RESULT );
     }
 
-    public static Map getMavenProject( Map context )
+    public static Map getMavenProject( Map<String, Object> context )
     {
         return getMap( context, KEY_MAVEN_PROJECT );
     }
 
-    public static List<String> getProjectModules( Map context )
+    public static List<String> getProjectModules( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_MODULES );
     }
 
-    public static Date getLatestUpdateDate( Map context )
+    public static Date getLatestUpdateDate( Map<String, Object> context )
     {
         return getDate( context, KEY_LATEST_UPDATE_DATE );
     }
 
-    public static String getBuildAgentUrl( Map context )
+    public static String getBuildAgentUrl( Map<String, Object> context )
     {
         return getString( context, KEY_BUILD_AGENT_URL );
     }
@@ -493,7 +493,7 @@ public class ContinuumBuildConstant
     //
     // ----------------------------------------------------------------------
 
-    protected static String getString( Map context, String key )
+    protected static String getString( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -507,24 +507,24 @@ public class ContinuumBuildConstant
         }
     }
 
-    protected static String getString( Map context, String key, String defaultValue )
+    protected static String getString( Map<String, Object> context, String key, String defaultValue )
     {
         return (String) getObject( context, key, defaultValue );
     }
 
-    protected static boolean getBoolean( Map context, String key )
+    protected static boolean getBoolean( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
         return obj != null && (Boolean) obj;
     }
 
-    protected static boolean getBoolean( Map context, String key, boolean defaultValue )
+    protected static boolean getBoolean( Map<String, Object> context, String key, boolean defaultValue )
     {
         return (Boolean) getObject( context, key, defaultValue );
     }
 
-    protected static int getInteger( Map context, String key )
+    protected static int getInteger( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -538,7 +538,7 @@ public class ContinuumBuildConstant
         }
     }
 
-    protected static Date getDate( Map context, String key )
+    protected static Date getDate( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -552,7 +552,7 @@ public class ContinuumBuildConstant
         }
     }
 
-    protected static List getList( Map context, String key )
+    protected static List getList( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -571,7 +571,7 @@ public class ContinuumBuildConstant
         }
     }
 
-    protected static Map getMap( Map context, String key )
+    protected static Map getMap( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -585,7 +585,7 @@ public class ContinuumBuildConstant
         }
     }
 
-    protected static Object getObject( Map context, String key )
+    protected static Object getObject( Map<String, Object> context, String key )
     {
         if ( !context.containsKey( key ) )
         {
@@ -602,7 +602,7 @@ public class ContinuumBuildConstant
         return value;
     }
 
-    protected static Object getObject( Map context, String key, Object defaultValue )
+    protected static Object getObject( Map<String, Object> context, String key, Object defaultValue )
     {
         Object value = context.get( key );
 

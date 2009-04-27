@@ -27,6 +27,7 @@ import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectDependency;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.scm.ScmResult;
 import org.codehaus.plexus.action.AbstractAction;
@@ -102,127 +103,128 @@ public abstract class AbstractContinuumAction
     //
     // ----------------------------------------------------------------------
 
-    public static int getProjectId( Map context )
+    public static int getProjectId( Map<String, Object> context )
     {
         return getInteger( context, KEY_PROJECT_ID );
     }
 
-    public static Project getProject( Map context )
+    public static Project getProject( Map<String, Object> context )
     {
         return (Project) getObject( context, KEY_PROJECT );
     }
 
-    public static int getProjectGroupId( Map context )
+    public static int getProjectGroupId( Map<String, Object> context )
     {
         return getInteger( context, KEY_PROJECT_GROUP_ID );
     }
 
-    public static BuildDefinitionTemplate getBuildDefinitionTemplate( Map context )
+    public static BuildDefinitionTemplate getBuildDefinitionTemplate( Map<String, Object> context )
     {
         return (BuildDefinitionTemplate) getObject( context, KEY_BUILD_DEFINITION_TEMPLATE, null );
     }
 
-    public static BuildDefinition getBuildDefinition( Map context )
+    public static BuildDefinition getBuildDefinition( Map<String, Object> context )
     {
         return (BuildDefinition) getObject( context, KEY_BUILD_DEFINITION, null );
     }
 
-    public static int getBuildDefinitionId( Map context )
+    public static int getBuildDefinitionId( Map<String, Object> context )
     {
         return getInteger( context, KEY_BUILD_DEFINITION_ID );
     }
 
-    public static String getBuildId( Map context )
+    public static String getBuildId( Map<String, Object> context )
     {
         return getString( context, KEY_BUILD_ID );
     }
 
-    public static int getTrigger( Map context )
+    public static int getTrigger( Map<String, Object> context )
     {
         return getInteger( context, KEY_TRIGGER );
     }
 
-    public static Project getUnvalidatedProject( Map context )
+    public static Project getUnvalidatedProject( Map<String, Object> context )
     {
         return (Project) getObject( context, KEY_UNVALIDATED_PROJECT );
     }
 
-    public static ProjectGroup getUnvalidatedProjectGroup( Map context )
+    public static ProjectGroup getUnvalidatedProjectGroup( Map<String, Object> context )
     {
         return (ProjectGroup) getObject( context, KEY_UNVALIDATED_PROJECT_GROUP );
     }
 
-    public static File getWorkingDirectory( Map context )
+    public static File getWorkingDirectory( Map<String, Object> context )
     {
         return new File( getString( context, KEY_WORKING_DIRECTORY ) );
     }
 
-    public static ScmResult getCheckoutResult( Map context, Object defaultValue )
+    public static ScmResult getCheckoutResult( Map<String, Object> context, Object defaultValue )
     {
         return (ScmResult) getObject( context, KEY_CHECKOUT_SCM_RESULT, defaultValue );
     }
 
-    public static ScmResult getUpdateScmResult( Map context )
+    public static ScmResult getUpdateScmResult( Map<String, Object> context )
     {
         return getUpdateScmResult( context, null );
     }
 
-    public static ScmResult getUpdateScmResult( Map context, ScmResult defaultValue )
+    public static ScmResult getUpdateScmResult( Map<String, Object> context, ScmResult defaultValue )
     {
         return (ScmResult) getObject( context, KEY_UPDATE_SCM_RESULT, defaultValue );
     }
 
-    public static List getUpdatedDependencies( Map context )
+    public static List<ProjectDependency> getUpdatedDependencies( Map<String, Object> context )
     {
         return getUpdatedDependencies( context, null );
     }
 
-    public static List getUpdatedDependencies( Map context, List defaultValue )
+    public static List<ProjectDependency> getUpdatedDependencies( Map<String, Object> context,
+                                                                  List<ProjectDependency> defaultValue )
     {
-        return (List) getObject( context, KEY_UPDATE_DEPENDENCIES, defaultValue );
+        return (List<ProjectDependency>) getObject( context, KEY_UPDATE_DEPENDENCIES, defaultValue );
     }
 
-    public static ScmResult getScmResult( Map context )
+    public static ScmResult getScmResult( Map<String, Object> context )
     {
         return getScmResult( context, null );
     }
 
-    public static ScmResult getScmResult( Map context, ScmResult defaultValue )
+    public static ScmResult getScmResult( Map<String, Object> context, ScmResult defaultValue )
     {
         return (ScmResult) getObject( context, KEY_SCM_RESULT, defaultValue );
     }
 
-    public static ScmResult getOldScmResult( Map context )
+    public static ScmResult getOldScmResult( Map<String, Object> context )
     {
         return getOldScmResult( context, null );
     }
 
-    public static ScmResult getOldScmResult( Map context, ScmResult defaultValue )
+    public static ScmResult getOldScmResult( Map<String, Object> context, ScmResult defaultValue )
     {
         return (ScmResult) getObject( context, KEY_OLD_SCM_RESULT, defaultValue );
     }
 
-    public static ProjectScmRoot getProjectScmRoot( Map context )
+    public static ProjectScmRoot getProjectScmRoot( Map<String, Object> context )
     {
         return (ProjectScmRoot) getObject( context, KEY_PROJECT_SCM_ROOT );
     }
 
-    public static int getOldBuildId( Map context )
+    public static int getOldBuildId( Map<String, Object> context )
     {
         return getInteger( context, KEY_OLD_BUILD_ID );
     }
 
-    public static List<Project> getListOfProjects( Map context )
+    public static List<Project> getListOfProjects( Map<String, Object> context )
     {
         return (List<Project>) getObject( context, KEY_PROJECTS );
     }
 
-    public static Map<Integer, BuildDefinition> getProjectsBuildDefinitionsMap( Map context )
+    public static Map<Integer, BuildDefinition> getProjectsBuildDefinitionsMap( Map<String, Object> context )
     {
         return (Map<Integer, BuildDefinition>) getObject( context, KEY_PROJECTS_BUILD_DEFINITIONS_MAP );
     }
 
-    public static Map<Integer, ScmResult> getScmResultMap( Map context )
+    public static Map<Integer, ScmResult> getScmResultMap( Map<String, Object> context )
     {
         return (Map<Integer, ScmResult>) getObject( context, KEY_SCM_RESULT_MAP );
     }
@@ -231,27 +233,27 @@ public abstract class AbstractContinuumAction
     //
     // ----------------------------------------------------------------------
 
-    protected static String getString( Map context, String key )
+    protected static String getString( Map<String, Object> context, String key )
     {
         return (String) getObject( context, key );
     }
 
-    protected static String getString( Map context, String key, String defaultValue )
+    protected static String getString( Map<String, Object> context, String key, String defaultValue )
     {
         return (String) getObject( context, key, defaultValue );
     }
 
-    public static boolean getBoolean( Map context, String key )
+    public static boolean getBoolean( Map<String, Object> context, String key )
     {
         return (Boolean) getObject( context, key );
     }
 
-    public static boolean getBoolean( Map context, String key, boolean defaultValue )
+    public static boolean getBoolean( Map<String, Object> context, String key, boolean defaultValue )
     {
         return (Boolean) getObject( context, key, defaultValue );
     }
 
-    protected static int getInteger( Map context, String key )
+    protected static int getInteger( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -265,7 +267,7 @@ public abstract class AbstractContinuumAction
         }
     }
 
-    protected static Object getObject( Map context, String key )
+    protected static Object getObject( Map<String, Object> context, String key )
     {
         if ( !context.containsKey( key ) )
         {
@@ -282,7 +284,7 @@ public abstract class AbstractContinuumAction
         return value;
     }
 
-    protected static Object getObject( Map context, String key, Object defaultValue )
+    protected static Object getObject( Map<String, Object> context, String key, Object defaultValue )
     {
         Object value = context.get( key );
 

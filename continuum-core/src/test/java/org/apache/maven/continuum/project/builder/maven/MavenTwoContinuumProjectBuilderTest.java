@@ -391,11 +391,11 @@ public class MavenTwoContinuumProjectBuilderTest
         assertEquals( 0, projectGroup.getProjects().size() );
     }
 
-    private void assertDependency( String dep, String proj, Map projects )
+    private void assertDependency( String dep, String proj, Map<String, Project> projects )
     {
-        Project p = (Project) projects.get( proj );
+        Project p = projects.get( proj );
 
-        Project dependency = (Project) projects.get( dep );
+        Project dependency = projects.get( dep );
 
         assertNotNull( p );
 
@@ -419,12 +419,12 @@ public class MavenTwoContinuumProjectBuilderTest
     //
     // ----------------------------------------------------------------------
 
-    private Project getProject( String name, Map projects )
+    private Project getProject( String name, Map<String, Project> projects )
     {
-        return (Project) projects.get( name );
+        return projects.get( name );
     }
 
-    private void assertMavenTwoProject( String name, Map projects )
+    private void assertMavenTwoProject( String name, Map<String, Project> projects )
     {
         Project project = getProject( name, projects );
 
@@ -437,7 +437,7 @@ public class MavenTwoContinuumProjectBuilderTest
         assertTrue( project.getScmUrl().startsWith( scmUrl ) );
     }
 
-    private void assertScmUrl( String name, Map projects, String scmUrl )
+    private void assertScmUrl( String name, Map<String, Project> projects, String scmUrl )
     {
         assertMavenTwoProject( name, projects );
 

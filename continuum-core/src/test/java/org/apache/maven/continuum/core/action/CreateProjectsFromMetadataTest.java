@@ -90,7 +90,7 @@ public class CreateProjectsFromMetadataTest
     public void testExecuteWithNonRecursiveMode()
         throws Exception
     {
-        Map context = new HashMap();
+        Map<String, Object> context = new HashMap<String, Object>();
         context.put( CreateProjectsFromMetadataAction.KEY_URL,
                      "http://svn.apache.org/repos/asf/maven/continuum/trunk/pom.xml" );
         context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, "id" );
