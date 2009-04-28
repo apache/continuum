@@ -39,18 +39,18 @@ public final class GenerateRecipentNotifier
     @SuppressWarnings("unchecked")
     public static String generate( ProjectNotifier notifier )
     {
-        Map configuration = notifier.getConfiguration();
+        Map<String, String> configuration = notifier.getConfiguration();
         String recipent = "unknown";
         if ( ( "mail".equals( notifier.getType() ) ) || ( "msn".equals( notifier.getType() ) ) ||
             ( "jabber".equals( notifier.getType() ) ) )
         {
-            if ( StringUtils.isNotEmpty( (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD ) ) )
+            if ( StringUtils.isNotEmpty( configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD ) ) )
             {
-                recipent = (String) configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
+                recipent = configuration.get( AbstractContinuumNotifier.ADDRESS_FIELD );
             }
-            if ( StringUtils.isNotEmpty( (String) configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) ) )
+            if ( StringUtils.isNotEmpty( configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) ) )
             {
-                if ( Boolean.parseBoolean( (String) configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) ) )
+                if ( Boolean.parseBoolean( configuration.get( AbstractContinuumNotifier.COMMITTER_FIELD ) ) )
                 {
                     if ( "unknown".equals( recipent ) )
                     {
@@ -65,7 +65,7 @@ public final class GenerateRecipentNotifier
         }
         if ( "irc".equals( notifier.getType() ) )
         {
-            recipent = (String) configuration.get( "host" );
+            recipent = configuration.get( "host" );
             if ( configuration.get( "port" ) != null )
             {
                 recipent = recipent + ":" + configuration.get( "port" );
@@ -74,7 +74,7 @@ public final class GenerateRecipentNotifier
         }
         if ( "wagon".equals( notifier.getType() ) )
         {
-            recipent = (String) configuration.get( "url" );
+            recipent = configuration.get( "url" );
         }
         return recipent;
     }

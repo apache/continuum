@@ -878,7 +878,7 @@ public class DefaultContinuum
     {
         Collection<Project> projectsList;
 
-        Map projectsMap;
+        Map<Integer, Object> projectsMap;
 
         try
         {
@@ -2595,7 +2595,7 @@ public class DefaultContinuum
     // Workflow
     // ----------------------------------------------------------------------
 
-    protected void executeAction( String actionName, Map context )
+    protected void executeAction( String actionName, Map<String, Object> context )
         throws ContinuumException
     {
         try

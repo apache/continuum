@@ -229,21 +229,21 @@ public class MsnContinuumNotifier
         }
     }
 
-    private String getUsername( Map configuration )
+    private String getUsername( Map<String, String> configuration )
     {
         if ( configuration.containsKey( "login" ) )
         {
-            return (String) configuration.get( "login" );
+            return configuration.get( "login" );
         }
 
         return fromAddress;
     }
 
-    private String getPassword( Map configuration )
+    private String getPassword( Map<String, String> configuration )
     {
         if ( configuration.containsKey( "password" ) )
         {
-            return (String) configuration.get( "password" );
+            return configuration.get( "password" );
         }
 
         return fromPassword;

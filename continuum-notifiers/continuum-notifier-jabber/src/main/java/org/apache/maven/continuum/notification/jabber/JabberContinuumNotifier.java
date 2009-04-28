@@ -260,17 +260,17 @@ public class JabberContinuumNotifier
         }
     }
 
-    private String getHost( Map configuration )
+    private String getHost( Map<String, String> configuration )
     {
         if ( configuration.containsKey( "host" ) )
         {
-            return (String) configuration.get( "host" );
+            return configuration.get( "host" );
         }
         else
         {
             if ( configuration.containsKey( "address" ) )
             {
-                String username = (String) configuration.get( "address" );
+                String username = configuration.get( "address" );
 
                 if ( username.indexOf( "@" ) > 0 )
                 {
@@ -282,13 +282,13 @@ public class JabberContinuumNotifier
         return host;
     }
 
-    private int getPort( Map configuration )
+    private int getPort( Map<String, String> configuration )
     {
         if ( configuration.containsKey( "port" ) )
         {
             try
             {
-                return Integer.parseInt( (String) configuration.get( "port" ) );
+                return Integer.parseInt( configuration.get( "port" ) );
             }
             catch ( NumberFormatException e )
             {
@@ -310,11 +310,11 @@ public class JabberContinuumNotifier
         }
     }
 
-    private String getUsername( Map configuration )
+    private String getUsername( Map<String, String> configuration )
     {
         if ( configuration.containsKey( "login" ) )
         {
-            String username = (String) configuration.get( "login" );
+            String username = configuration.get( "login" );
 
             if ( username.indexOf( "@" ) > 0 )
             {
@@ -327,39 +327,39 @@ public class JabberContinuumNotifier
         return fromAddress;
     }
 
-    private String getPassword( Map configuration )
+    private String getPassword( Map<String, String> configuration )
     {
         if ( configuration.containsKey( "password" ) )
         {
-            return (String) configuration.get( "password" );
+            return configuration.get( "password" );
         }
 
         return fromPassword;
     }
 
-    private boolean isSslConnection( Map configuration )
+    private boolean isSslConnection( Map<String, String> configuration )
     {
         if ( configuration.containsKey( "sslConnection" ) )
         {
-            return convertBoolean( (String) configuration.get( "sslConnection" ) );
+            return convertBoolean( configuration.get( "sslConnection" ) );
         }
 
         return sslConnection;
     }
 
-    private String getImDomainName( Map configuration )
+    private String getImDomainName( Map<String, String> configuration )
     {
         if ( configuration.containsKey( "domainName" ) )
         {
-            return (String) configuration.get( "domainName" );
+            return configuration.get( "domainName" );
         }
 
         return imDomainName;
     }
 
-    private boolean isGroup( Map configuration )
+    private boolean isGroup( Map<String, String> configuration )
     {
-        return configuration.containsKey( "isGroup" ) && convertBoolean( (String) configuration.get( "isGroup" ) );
+        return configuration.containsKey( "isGroup" ) && convertBoolean( configuration.get( "isGroup" ) );
     }
 
     private boolean convertBoolean( String value )

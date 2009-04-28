@@ -138,7 +138,7 @@ public class DefaultBuildAgentManager
         }
     }
 
-    public boolean shouldBuild( Map context )
+    public boolean shouldBuild( Map<String, Object> context )
         throws ContinuumException
     {
         try
@@ -162,7 +162,7 @@ public class DefaultBuildAgentManager
         }
     }
 
-    public void startPrepareBuild( Map context )
+    public void startPrepareBuild( Map<String, Object> context )
         throws ContinuumException
     {
         try
@@ -186,7 +186,7 @@ public class DefaultBuildAgentManager
         }
     }
 
-    public void endPrepareBuild( Map context )
+    public void endPrepareBuild( Map<String, Object> context )
         throws ContinuumException
     {
         try

@@ -19,9 +19,9 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
-import org.apache.maven.continuum.store.ContinuumStoreException;
-
 import java.util.Map;
+
+import org.apache.maven.continuum.store.ContinuumStoreException;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -33,12 +33,12 @@ public interface DaoUtils
 
     void eraseDatabase();
 
-    Map<Integer, Integer> getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    Map<Integer, Object> getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException;
 
-    Map<Integer, Integer> getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    Map<Integer, Object> getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException;
 
-    Map<Integer, Integer> getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+    Map<Integer, Object> getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
         throws ContinuumStoreException;
 }

@@ -64,7 +64,8 @@ public class DefaultBuildAgentReleaseManager
      */
     BuildAgentInstallationService buildAgentInstallationService;
 
-    public String releasePrepare( Map projectMap, Map properties, Map releaseVersion, Map developmentVersion,
+    public String releasePrepare( Map<String, Object> projectMap, Map<String, Object> properties,
+                                  Map<String, String> releaseVersion, Map<String, String> developmentVersion,
                                   Map<String, String> environments )
         throws ContinuumReleaseException
     {
@@ -248,7 +249,7 @@ public class DefaultBuildAgentReleaseManager
         releaseManager.getPreparedReleases().remove( releaseId );
     }
 
-    private Project getProject( Map context )
+    private Project getProject( Map<String, Object> context )
     {
         Project project = new Project();
 
@@ -276,7 +277,7 @@ public class DefaultBuildAgentReleaseManager
         return project;
     }
 
-    private Properties getReleaseProperties( Map context )
+    private Properties getReleaseProperties( Map<String, Object> context )
     {
         Properties props = new Properties();
 

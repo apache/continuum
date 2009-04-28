@@ -289,7 +289,7 @@ public class ContinuumBuildConstant
         return getString( context, KEY_INSTALLATION_VAR_NAME );
     }
 
-    public static List getScmChanges( Map<String, Object> context )
+    public static List<Map> getScmChanges( Map<String, Object> context )
     {
         return getList( context, KEY_SCM_CHANGES );
     }
@@ -318,7 +318,7 @@ public class ContinuumBuildConstant
         }
     }
 
-    public static List getChangeSetFiles( Map<String, Object> context )
+    public static List<Map> getChangeSetFiles( Map<String, Object> context )
     {
         return getList( context, KEY_CHANGESET_FILES );
     }
@@ -384,7 +384,7 @@ public class ContinuumBuildConstant
         return getMap( context, KEY_PROJECT_PARENT );
     }
 
-    public static List getProjectDevelopers( Map<String, Object> context )
+    public static List<Map> getProjectDevelopers( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_DEVELOPERS );
     }
@@ -404,12 +404,12 @@ public class ContinuumBuildConstant
         return getString( context, KEY_PROJECT_DEVELOPER_SCMID );
     }
 
-    public static List getProjectDependencies( Map<String, Object> context )
+    public static List<Map> getProjectDependencies( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_DEPENDENCIES );
     }
 
-    public static List getProjectNotifiers( Map<String, Object> context )
+    public static List<Map> getProjectNotifiers( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_NOTIFIERS );
     }

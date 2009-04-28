@@ -303,7 +303,7 @@ public class ProjectGroupAction
             name = getProjectGroupName();
             return CONFIRM;
         }
-        
+
         AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.REMOVE_PROJECT_GROUP );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
@@ -526,7 +526,7 @@ public class ProjectGroupAction
                 getContinuum().updateProject( project );
             }
         }
-        
+
         AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.MODIFY_PROJECT_GROUP );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
@@ -556,7 +556,7 @@ public class ProjectGroupAction
         {
             getContinuum().buildProjectGroupWithBuildDefinition( projectGroupId, buildDefinitionId );
         }
-        
+
         AuditLog event = new AuditLog( getProjectGroupName(), AuditLogConstants.FORCE_BUILD );
         event.setCategory( AuditLogConstants.PROJECT );
         event.setCurrentUser( getPrincipal() );
@@ -880,7 +880,7 @@ public class ProjectGroupAction
         this.projects = projects;
     }
 
-    public Map getProjectGroups()
+    public Map<Integer, String> getProjectGroups()
     {
         return projectGroups;
     }
@@ -900,7 +900,7 @@ public class ProjectGroupAction
         this.projectInCOQueue = projectInQueue;
     }
 
-    public Collection getProjectList()
+    public Collection<Project> getProjectList()
     {
         return projectList;
     }
@@ -940,7 +940,7 @@ public class ProjectGroupAction
         this.filterProperty = filterProperty;
     }
 
-    public Map getCriteria()
+    public Map<String, String> getCriteria()
     {
         return FILTER_CRITERIA;
     }

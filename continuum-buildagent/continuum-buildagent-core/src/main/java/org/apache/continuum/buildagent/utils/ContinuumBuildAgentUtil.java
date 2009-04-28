@@ -247,157 +247,157 @@ public class ContinuumBuildAgentUtil
 
     public static final String KEY_LOCAL_REPOSITORY_LAYOUT = "repo-layout";
 
-    public static Integer getProjectId( Map context )
+    public static Integer getProjectId( Map<String, Object> context )
     {
         return getInteger( context, KEY_PROJECT_ID );
     }
 
-    public static String getProjectName( Map context )
+    public static String getProjectName( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_NAME );
     }
 
-    public static Integer getProjectState( Map context )
+    public static Integer getProjectState( Map<String, Object> context )
     {
         return getInteger( context, KEY_PROJECT_STATE );
     }
 
-    public static Integer getBuildDefinitionId( Map context )
+    public static Integer getBuildDefinitionId( Map<String, Object> context )
     {
         return getInteger( context, KEY_BUILD_DEFINITION_ID );
     }
 
-    public static String getBuildFile( Map context )
+    public static String getBuildFile( Map<String, Object> context )
     {
         return getString( context, KEY_BUILD_FILE );
     }
 
-    public static String getExecutorId( Map context )
+    public static String getExecutorId( Map<String, Object> context )
     {
         return getString( context, KEY_EXECUTOR_ID );
     }
 
-    public static String getGoals( Map context )
+    public static String getGoals( Map<String, Object> context )
     {
         return getString( context, KEY_GOALS );
     }
 
-    public static String getArguments( Map context )
+    public static String getArguments( Map<String, Object> context )
     {
         return getString( context, KEY_ARGUMENTS );
     }
 
-    public static String getScmUrl( Map context )
+    public static String getScmUrl( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_URL );
     }
 
-    public static String getScmUsername( Map context )
+    public static String getScmUsername( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_USERNAME, "" );
     }
 
-    public static String getScmPassword( Map context )
+    public static String getScmPassword( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_PASSWORD, "" );
     }
 
-    public static boolean isBuildFresh( Map context )
+    public static boolean isBuildFresh( Map<String, Object> context )
     {
         return getBoolean( context, KEY_BUILD_FRESH );
     }
 
-    public static int getProjectGroupId( Map context )
+    public static int getProjectGroupId( Map<String, Object> context )
     {
         return getInteger( context, KEY_PROJECT_GROUP_ID );
     }
 
-    public static String getScmRootAddress( Map context )
+    public static String getScmRootAddress( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_ROOT_ADDRESS );
     }
 
-    public static int getScmRootState( Map context )
+    public static int getScmRootState( Map<String, Object> context )
     {
         return getInteger( context, KEY_SCM_ROOT_STATE );
     }
 
-    public static Project getProject( Map context )
+    public static Project getProject( Map<String, Object> context )
     {
         return (Project) getObject( context, KEY_PROJECT );
     }
 
-    public static BuildDefinition getBuildDefinition( Map context )
+    public static BuildDefinition getBuildDefinition( Map<String, Object> context )
     {
         return (BuildDefinition) getObject( context, KEY_BUILD_DEFINITION );
     }
 
-    public static ScmResult getCheckoutScmResult( Map context, Object defaultValue )
+    public static ScmResult getCheckoutScmResult( Map<String, Object> context, Object defaultValue )
     {
         return (ScmResult) getObject( context, KEY_CHECKOUT_SCM_RESULT, defaultValue );
     }
 
-    public static ScmResult getUpdateScmResult( Map context, Object defaultValue )
+    public static ScmResult getUpdateScmResult( Map<String, Object> context, Object defaultValue )
     {
         return (ScmResult) getObject( context, KEY_UPDATE_SCM_RESULT, defaultValue );
     }
 
-    public static ScmResult getScmResult( Map context, Object defaultValue )
+    public static ScmResult getScmResult( Map<String, Object> context, Object defaultValue )
     {
         return (ScmResult) getObject( context, KEY_SCM_RESULT, defaultValue );
     }
 
-    public static int getTrigger( Map context )
+    public static int getTrigger( Map<String, Object> context )
     {
         return getInteger( context, KEY_TRIGGER );
     }
 
-    public static BuildResult getBuildResult( Map context, Object defaultValue )
+    public static BuildResult getBuildResult( Map<String, Object> context, Object defaultValue )
     {
-        return (BuildResult) getObject( context, KEY_BUILD_RESULT );
+        return (BuildResult) getObject( context, KEY_BUILD_RESULT, defaultValue );
     }
 
-    public static Map<String, String> getEnvironments( Map context )
+    public static Map<String, String> getEnvironments( Map<String, Object> context )
     {
         return (Map<String, String>) getObject( context, KEY_ENVIRONMENTS );
     }
 
-    public static String getLocalRepository( Map context )
+    public static String getLocalRepository( Map<String, Object> context )
     {
         return getString( context, KEY_LOCAL_REPOSITORY, "" );
     }
 
-    public static String getProjectVersion( Map context )
+    public static String getProjectVersion( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_VERSION );
     }
 
-    public static String getProjectGroupName( Map context )
+    public static String getProjectGroupName( Map<String, Object> context )
     {
         return getString( context, KEY_PROJECT_GROUP_NAME );
     }
 
-    public static int getBuildNumber( Map context )
+    public static int getBuildNumber( Map<String, Object> context )
     {
         return getInteger( context, KEY_BUILD_NUMBER );
     }
 
-    public static List<Map<String, Object>> getOldScmChanges( Map context )
+    public static List<Map<String, Object>> getOldScmChanges( Map<String, Object> context )
     {
         return getList( context, KEY_OLD_SCM_CHANGES );
     }
 
-    public static String getChangeSetAuthor( Map context )
+    public static String getChangeSetAuthor( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGESET_AUTHOR );
     }
 
-    public static String getChangeSetComment( Map context )
+    public static String getChangeSetComment( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGESET_COMMENT );
     }
 
-    public static long getChangeSetDate( Map context )
+    public static long getChangeSetDate( Map<String, Object> context )
     {
         Date date = getDate( context, KEY_CHANGESET_DATE );
 
@@ -411,117 +411,117 @@ public class ContinuumBuildAgentUtil
         }
     }
 
-    public static List getChangeSetFiles( Map context )
+    public static List getChangeSetFiles( Map<String, Object> context )
     {
         return getList( context, KEY_CHANGESET_FILES );
     }
 
-    public static String getChangeFileName( Map context )
+    public static String getChangeFileName( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGEFILE_NAME );
     }
 
-    public static String getChangeFileRevision( Map context )
+    public static String getChangeFileRevision( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGEFILE_REVISION );
     }
 
-    public static String getChangeFileStatus( Map context )
+    public static String getChangeFileStatus( Map<String, Object> context )
     {
         return getString( context, KEY_CHANGEFILE_STATUS );
     }
 
-    public static ScmResult getOldScmResult( Map context, ScmResult defaultValue )
+    public static ScmResult getOldScmResult( Map<String, Object> context, ScmResult defaultValue )
     {
         return (ScmResult) getObject( context, KEY_OLD_SCM_RESULT, defaultValue );
     }
 
-    public static List getScmChanges( Map context )
+    public static List getScmChanges( Map<String, Object> context )
     {
         return getList( context, KEY_SCM_CHANGES );
     }
 
-    public static Date getLatestUpdateDate( Map context )
+    public static Date getLatestUpdateDate( Map<String, Object> context )
     {
         return getDate( context, KEY_LATEST_UPDATE_DATE );
     }
 
-    public static String getBuildAgentUrl( Map context )
+    public static String getBuildAgentUrl( Map<String, Object> context )
     {
         return getString( context, KEY_BUILD_AGENT_URL );
     }
 
-    public static String getGroupId( Map context )
+    public static String getGroupId( Map<String, Object> context )
     {
         return getString( context, KEY_GROUP_ID );
     }
 
-    public static String getArtifactId( Map context )
+    public static String getArtifactId( Map<String, Object> context )
     {
         return getString( context, KEY_ARTIFACT_ID );
     }
 
-    public static Map getReleaseVersion( Map context )
+    public static Map getReleaseVersion( Map<String, Object> context )
     {
         return getMap( context, KEY_RELEASE_VERSION );
     }
 
-    public static Map getDevelopmentVersion( Map context )
+    public static Map getDevelopmentVersion( Map<String, Object> context )
     {
         return getMap( context, KEY_DEVELOPMENT_VERSION );
     }
 
-    public static String getScmTagBase( Map context )
+    public static String getScmTagBase( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_TAGBASE, "" );
     }
 
-    public static String getScmCommentPrefix( Map context )
+    public static String getScmCommentPrefix( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_COMMENT_PREFIX, "" );
     }
 
-    public static String getScmTag( Map context )
+    public static String getScmTag( Map<String, Object> context )
     {
         return getString( context, KEY_SCM_TAG, "" );
     }
 
-    public static String getPrepareGoals( Map context )
+    public static String getPrepareGoals( Map<String, Object> context )
     {
         return getString( context, KEY_PREPARE_GOALS, "" );
     }
 
-    public static String getUseEditMode( Map context )
+    public static String getUseEditMode( Map<String, Object> context )
     {
         return getString( context, KEY_USE_EDIT_MODE, "" );
     }
 
-    public static String getAddSchema( Map context )
+    public static String getAddSchema( Map<String, Object> context )
     {
         return getString( context, KEY_ADD_SCHEMA, "" );
     }
 
-    public static String getAutoVersionSubmodules( Map context )
+    public static String getAutoVersionSubmodules( Map<String, Object> context )
     {
         return getString( context, KEY_AUTO_VERSION_SUBMODULES, "" );
     }
 
-    public static List getBuildContexts( Map context )
+    public static List getBuildContexts( Map<String, Object> context )
     {
         return getList( context, KEY_BUILD_CONTEXTS );
     }
 
-    public static int getMaxExecutionTime( Map context )
+    public static int getMaxExecutionTime( Map<String, Object> context )
     {
         return getInteger( context, KEY_MAX_JOB_EXEC_TIME );
     }
 
-    public static String getLocalRepositoryName( Map context )
+    public static String getLocalRepositoryName( Map<String, Object> context )
     {
         return getString( context, KEY_LOCAL_REPOSITORY_NAME, "" );
     }
 
-    public static String getLocalRepositoryLayout( Map context )
+    public static String getLocalRepositoryLayout( Map<String, Object> context )
     {
         return getString( context, KEY_LOCAL_REPOSITORY_LAYOUT, "" );
     }
@@ -530,27 +530,27 @@ public class ContinuumBuildAgentUtil
     //
     // ----------------------------------------------------------------------
 
-    public static String getString( Map context, String key )
+    public static String getString( Map<String, Object> context, String key )
     {
         return (String) getObject( context, key );
     }
 
-    public static String getString( Map context, String key, String defaultValue )
+    public static String getString( Map<String, Object> context, String key, String defaultValue )
     {
         return (String) getObject( context, key, defaultValue );
     }
 
-    public static boolean getBoolean( Map context, String key )
+    public static boolean getBoolean( Map<String, Object> context, String key )
     {
         return (Boolean) getObject( context, key );
     }
 
-    public static boolean getBoolean( Map context, String key, boolean defaultValue )
+    public static boolean getBoolean( Map<String, Object> context, String key, boolean defaultValue )
     {
         return (Boolean) getObject( context, key, defaultValue );
     }
 
-    public static int getInteger( Map context, String key )
+    public static int getInteger( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -564,7 +564,7 @@ public class ContinuumBuildAgentUtil
         }
     }
 
-    public static List getList( Map context, String key )
+    public static List getList( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -591,7 +591,7 @@ public class ContinuumBuildAgentUtil
         }
     }
 
-    public static Date getDate( Map context, String key )
+    public static Date getDate( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -605,7 +605,7 @@ public class ContinuumBuildAgentUtil
         }
     }
 
-    protected static Map getMap( Map context, String key )
+    protected static Map getMap( Map<String, Object> context, String key )
     {
         Object obj = getObject( context, key, null );
 
@@ -619,7 +619,7 @@ public class ContinuumBuildAgentUtil
         }
     }
 
-    protected static Object getObject( Map context, String key )
+    protected static Object getObject( Map<String, Object> context, String key )
     {
         if ( !context.containsKey( key ) )
         {
@@ -636,7 +636,7 @@ public class ContinuumBuildAgentUtil
         return value;
     }
 
-    protected static Object getObject( Map context, String key, Object defaultValue )
+    protected static Object getObject( Map<String, Object> context, String key, Object defaultValue )
     {
         Object value = context.get( key );
 

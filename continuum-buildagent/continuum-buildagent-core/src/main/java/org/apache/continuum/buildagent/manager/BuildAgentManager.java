@@ -27,24 +27,24 @@ public interface BuildAgentManager
 {
     String ROLE = BuildAgentManager.class.getName();
 
-    void returnBuildResult( Map result )
+    void returnBuildResult( Map<String, Object> result )
         throws ContinuumException;
-    
+
     void startProjectBuild( int projectId )
         throws ContinuumException;
 
     Map<String, String> getEnvironments( int buildDefinitionId, String installationType )
         throws ContinuumException;
 
-    void updateProject( Map project )
+    void updateProject( Map<String, Object> project )
         throws ContinuumException;
 
-    boolean shouldBuild( Map context )
+    boolean shouldBuild( Map<String, Object> context )
         throws ContinuumException;
 
-    void startPrepareBuild( Map context )
+    void startPrepareBuild( Map<String, Object> context )
         throws ContinuumException;
 
-    void endPrepareBuild( Map context )
+    void endPrepareBuild( Map<String, Object> context )
         throws ContinuumException;
 }
