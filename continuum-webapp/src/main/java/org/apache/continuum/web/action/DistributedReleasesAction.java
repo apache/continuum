@@ -13,6 +13,7 @@ import org.codehaus.plexus.redback.rbac.Resource;
 import org.codehaus.redback.integration.interceptor.SecureAction;
 import org.codehaus.redback.integration.interceptor.SecureActionBundle;
 import org.codehaus.redback.integration.interceptor.SecureActionException;
+
 /**
  * @plexus.component role="com.opensymphony.xwork2.Action" role-hint="distributedRelease"
  */
@@ -27,11 +28,11 @@ public class DistributedReleasesAction
     {
         DistributedReleaseManager releaseManager = getContinuum().getDistributedReleaseManager();
 
-        List<Map> releases = releaseManager.getAllReleasesInProgress();
+        List<Map<String, Object>> releases = releaseManager.getAllReleasesInProgress();
 
         releasesSummary = new ArrayList<DistributedReleaseSummary>();
 
-        for ( Map release : releases )
+        for ( Map<String, Object> release : releases )
         {
             DistributedReleaseSummary summary = new DistributedReleaseSummary();
             summary.setReleaseId( DistributedReleaseUtil.getReleaseId( release ) );
@@ -54,7 +55,7 @@ public class DistributedReleasesAction
     {
         this.releasesSummary = releasesSummary;
     }
-    
+
     public SecureActionBundle getSecureActionBundle()
         throws SecureActionException
     {

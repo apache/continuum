@@ -34,21 +34,21 @@ public interface DistributedBuildManager
     void cancelDistributedBuild( String buildAgentUrl, int projectGroupId, String scmRootAddress )
         throws ContinuumException;
 
-    void updateBuildResult( Map context )
+    void updateBuildResult( Map<String, Object> context )
         throws ContinuumException;
 
-    void prepareBuildFinished( Map context )
+    void prepareBuildFinished( Map<String, Object> context )
         throws ContinuumException;
 
     void startProjectBuild( int projectId )
         throws ContinuumException;
 
-    void startPrepareBuild( Map context )
+    void startPrepareBuild( Map<String, Object> context )
         throws ContinuumException;
 
     void reload()
         throws ContinuumException;
-    
+
     void removeAgentFromTaskQueueExecutor( String buildAgentUrl )
         throws ContinuumException;
 
@@ -65,10 +65,10 @@ public interface DistributedBuildManager
     Map<String, String> getEnvironments( int buildDefinitionId, String installationType )
         throws ContinuumException;
 
-    void updateProject( Map context )
+    void updateProject( Map<String, Object> context )
         throws ContinuumException;
 
-    boolean shouldBuild( Map context );
+    boolean shouldBuild( Map<String, Object> context );
 
     Map<String, DistributedBuildTaskQueueExecutor> getTaskQueueExecutors();
 

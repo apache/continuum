@@ -189,7 +189,7 @@ public class DefaultDistributedReleaseManager
         try
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
-            Map result = client.getReleaseResult( releaseId );
+            Map<String, Object> result = client.getReleaseResult( releaseId );
 
             ReleaseResult releaseResult = new ReleaseResult();
             releaseResult.setStartTime( DistributedReleaseUtil.getStartTime( result ) );
@@ -453,10 +453,10 @@ public class DefaultDistributedReleaseManager
         }
     }
 
-    public List<Map> getAllReleasesInProgress()
+    public List<Map<String, Object>> getAllReleasesInProgress()
         throws ContinuumReleaseException, BuildAgentConfigurationException
     {
-        List<Map> releases = new ArrayList<Map>();
+        List<Map<String, Object>> releases = new ArrayList<Map<String, Object>>();
         Map<String, Map<String, Object>> releasesMap = new HashMap<String, Map<String, Object>>();
 
         if ( releasesInProgress != null && !releasesInProgress.isEmpty() )
@@ -525,7 +525,7 @@ public class DefaultDistributedReleaseManager
         return map;
     }
 
-    private Map createPropertiesMap( Properties properties )
+    private Map<String, String> createPropertiesMap( Properties properties )
     {
         Map<String, String> map = new HashMap<String, String>();
 

@@ -1,8 +1,8 @@
 package org.apache.continuum.distributed.transport.master;
 
-import java.util.Map;
-
 import com.atlassian.xmlrpc.ServiceObject;
+
+import java.util.Map;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -26,22 +26,30 @@ import com.atlassian.xmlrpc.ServiceObject;
 /**
  * MasterBuildAgentTransportService
  */
-@ServiceObject( "MasterBuildAgentTransportService" )
+@ServiceObject("MasterBuildAgentTransportService")
 public interface MasterBuildAgentTransportService
 {
-    public Boolean returnBuildResult( Map buildResult ) throws Exception;
+    public Boolean returnBuildResult( Map<String, Object> buildResult )
+        throws Exception;
 
-    public Boolean startProjectBuild( Integer projectId ) throws Exception;
+    public Boolean startProjectBuild( Integer projectId )
+        throws Exception;
 
-    public Boolean prepareBuildFinished( Map prepareBuildResult ) throws Exception; 
+    public Boolean prepareBuildFinished( Map<String, Object> prepareBuildResult )
+        throws Exception;
 
-    public Boolean startPrepareBuild( Map prepareBuildResult ) throws Exception;
+    public Boolean startPrepareBuild( Map<String, Object> prepareBuildResult )
+        throws Exception;
 
-    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType ) throws Exception;
+    public Map<String, String> getEnvironments( Integer buildDefinitionId, String installationType )
+        throws Exception;
 
-    public Boolean updateProject( Map project ) throws Exception;
+    public Boolean updateProject( Map<String, Object> project )
+        throws Exception;
 
-    public Boolean ping() throws Exception;
+    public Boolean ping()
+        throws Exception;
 
-    public Boolean shouldBuild( Map context ) throws Exception;
+    public Boolean shouldBuild( Map<String, Object> context )
+        throws Exception;
 }

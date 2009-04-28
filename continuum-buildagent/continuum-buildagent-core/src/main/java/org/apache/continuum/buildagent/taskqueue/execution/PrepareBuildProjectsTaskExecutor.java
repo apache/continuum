@@ -178,7 +178,7 @@ public class PrepareBuildProjectsTaskExecutor
         buildContext.setActionContext( actionContext );
     }
 
-    private boolean checkProjectScmRoot( Map context )
+    private boolean checkProjectScmRoot( Map<String, Object> context )
     {
         return !( context != null &&
             ContinuumBuildAgentUtil.getScmRootState( context ) == ContinuumProjectState.ERROR );
@@ -260,7 +260,7 @@ public class PrepareBuildProjectsTaskExecutor
         }
     }
 
-    private void endPrepareBuild( Map context )
+    private void endPrepareBuild( Map<String, Object> context )
         throws TaskExecutionException
     {
         if ( context != null )
@@ -414,7 +414,7 @@ public class PrepareBuildProjectsTaskExecutor
     private void buildProjects( List<BuildContext> buildContexts )
         throws TaskExecutionException
     {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put( ContinuumBuildAgentUtil.KEY_BUILD_CONTEXTS, buildContexts );
 
         BuildContext context = new BuildContext();

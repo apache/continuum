@@ -40,7 +40,7 @@ public class MasterBuildAgentTransportServer
         this.distributedBuildManager = distributedBuildManager;
     }
 
-    public Boolean returnBuildResult( Map buildResult )
+    public Boolean returnBuildResult( Map<String, Object> buildResult )
         throws Exception
     {
         log.info( "Build result returned." );
@@ -56,7 +56,7 @@ public class MasterBuildAgentTransportServer
         return Boolean.TRUE;
     }
 
-    public Boolean prepareBuildFinished( Map prepareBuildResult )
+    public Boolean prepareBuildFinished( Map<String, Object> prepareBuildResult )
         throws Exception
     {
         log.info( "Prepare build finished." );
@@ -72,7 +72,7 @@ public class MasterBuildAgentTransportServer
         return Boolean.TRUE;
     }
 
-    public Boolean startPrepareBuild( Map prepareBuildResult )
+    public Boolean startPrepareBuild( Map<String, Object> prepareBuildResult )
         throws Exception
     {
         log.info( "Start prepare build." );
@@ -87,7 +87,7 @@ public class MasterBuildAgentTransportServer
         return distributedBuildManager.getEnvironments( buildDefinitionId, installationType );
     }
 
-    public Boolean updateProject( Map project )
+    public Boolean updateProject( Map<String, Object> project )
         throws Exception
     {
         log.info( "Start updating project" );
@@ -95,7 +95,7 @@ public class MasterBuildAgentTransportServer
         return Boolean.TRUE;
     }
 
-    public Boolean shouldBuild( Map context )
+    public Boolean shouldBuild( Map<String, Object> context )
         throws Exception
     {
         log.info( "Checking if project should build" );

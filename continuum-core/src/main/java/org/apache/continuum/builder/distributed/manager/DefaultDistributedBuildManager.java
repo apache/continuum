@@ -343,7 +343,7 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public void updateBuildResult( Map context )
+    public void updateBuildResult( Map<String, Object> context )
         throws ContinuumException
     {
         try
@@ -435,7 +435,7 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public void prepareBuildFinished( Map context )
+    public void prepareBuildFinished( Map<String, Object> context )
         throws ContinuumException
     {
         int projectGroupId = ContinuumBuildConstant.getProjectGroupId( context );
@@ -532,7 +532,7 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    public void startPrepareBuild( Map context )
+    public void startPrepareBuild( Map<String, Object> context )
         throws ContinuumException
     {
         try
@@ -639,7 +639,7 @@ public class DefaultDistributedBuildManager
         return envVars;
     }
 
-    public void updateProject( Map context )
+    public void updateProject( Map<String, Object> context )
         throws ContinuumException
     {
         try
@@ -758,7 +758,7 @@ public class DefaultDistributedBuildManager
         return "";
     }
 
-    public boolean shouldBuild( Map context )
+    public boolean shouldBuild( Map<String, Object> context )
     {
         try
         {
@@ -998,7 +998,7 @@ public class DefaultDistributedBuildManager
         return true;
     }
 
-    private List<ProjectDependency> getModifiedDependencies( BuildResult oldBuildResult, Map context )
+    private List<ProjectDependency> getModifiedDependencies( BuildResult oldBuildResult, Map<String, Object> context )
         throws ContinuumException
     {
         if ( oldBuildResult == null )
@@ -1088,7 +1088,7 @@ public class DefaultDistributedBuildManager
         return null;
     }
 
-    private BuildResult convertMapToBuildResult( Map context )
+    private BuildResult convertMapToBuildResult( Map<String, Object> context )
     {
         BuildResult buildResult = new BuildResult();
 
@@ -1138,7 +1138,7 @@ public class DefaultDistributedBuildManager
         return envVars;
     }
 
-    private List<ChangeSet> getScmChanges( Map context )
+    private List<ChangeSet> getScmChanges( Map<String, Object> context )
     {
         List<ChangeSet> changes = new ArrayList<ChangeSet>();
         List<Map> scmChanges = ContinuumBuildConstant.getScmChanges( context );
@@ -1159,7 +1159,7 @@ public class DefaultDistributedBuildManager
         return changes;
     }
 
-    private void setChangeFiles( ChangeSet changeSet, Map context )
+    private void setChangeFiles( ChangeSet changeSet, Map<String, Object> context )
     {
         List<Map> changeFiles = ContinuumBuildConstant.getChangeSetFiles( context );
 
@@ -1177,7 +1177,7 @@ public class DefaultDistributedBuildManager
         }
     }
 
-    private ProjectDependency getProjectParent( Map context )
+    private ProjectDependency getProjectParent( Map<String, Object> context )
     {
         Map map = ContinuumBuildConstant.getProjectParent( context );
 
@@ -1194,7 +1194,7 @@ public class DefaultDistributedBuildManager
         return null;
     }
 
-    private List<ProjectDependency> getProjectDependencies( Map context )
+    private List<ProjectDependency> getProjectDependencies( Map<String, Object> context )
     {
         List<ProjectDependency> projectDependencies = new ArrayList<ProjectDependency>();
 
@@ -1215,7 +1215,7 @@ public class DefaultDistributedBuildManager
         return projectDependencies;
     }
 
-    private List<ProjectDeveloper> getProjectDevelopers( Map context )
+    private List<ProjectDeveloper> getProjectDevelopers( Map<String, Object> context )
     {
         List<ProjectDeveloper> projectDevelopers = new ArrayList<ProjectDeveloper>();
 
@@ -1236,7 +1236,7 @@ public class DefaultDistributedBuildManager
         return projectDevelopers;
     }
 
-    private List<ProjectNotifier> getProjectNotifiers( Map context )
+    private List<ProjectNotifier> getProjectNotifiers( Map<String, Object> context )
     {
         List<ProjectNotifier> projectNotifiers = new ArrayList<ProjectNotifier>();
 
@@ -1264,7 +1264,7 @@ public class DefaultDistributedBuildManager
         return projectNotifiers;
     }
 
-    private ScmResult getScmResult( Map context )
+    private ScmResult getScmResult( Map<String, Object> context )
     {
         Map map = ContinuumBuildConstant.getScmResult( context );
 
@@ -1284,7 +1284,7 @@ public class DefaultDistributedBuildManager
         return null;
     }
 
-    private String getMavenProjectVersion( Map context )
+    private String getMavenProjectVersion( Map<String, Object> context )
     {
         Map map = ContinuumBuildConstant.getMavenProject( context );
 
@@ -1296,7 +1296,7 @@ public class DefaultDistributedBuildManager
         return null;
     }
 
-    private List<String> getMavenProjectModules( Map context )
+    private List<String> getMavenProjectModules( Map<String, Object> context )
     {
         Map map = ContinuumBuildConstant.getMavenProject( context );
 

@@ -278,7 +278,7 @@ public class SlaveBuildAgentTransportClient
         return releaseId;
     }
 
-    public Map getReleaseResult( String releaseId )
+    public Map<String, Object> getReleaseResult( String releaseId )
         throws Exception
     {
         Map result;

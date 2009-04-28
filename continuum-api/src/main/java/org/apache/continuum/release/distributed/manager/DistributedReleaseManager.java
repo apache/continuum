@@ -66,6 +66,6 @@ public interface DistributedReleaseManager
     String releaseCleanup( String releaseId )
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 
-    List<Map> getAllReleasesInProgress()
+    List<Map<String, Object>> getAllReleasesInProgress()
         throws ContinuumReleaseException, BuildAgentConfigurationException;
 }

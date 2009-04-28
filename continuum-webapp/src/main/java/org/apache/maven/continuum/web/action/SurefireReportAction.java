@@ -19,10 +19,8 @@ package org.apache.maven.continuum.web.action;
  * under the License.
  */
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +33,6 @@ import org.apache.maven.continuum.reports.surefire.ReportTestSuite;
 import org.apache.maven.continuum.reports.surefire.ReportTestSuiteGenerator;
 import org.apache.maven.continuum.reports.surefire.ReportTestSuiteGeneratorException;
 import org.apache.maven.continuum.web.exception.AuthorizationRequiredException;
-import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author Edwin Punzalan
@@ -49,18 +45,18 @@ public class SurefireReportAction
 {
     /**
      * @plexus.requirement
-     */    
+     */
     private ReportTestSuiteGenerator reportTestSuiteGenerator;
-    
+
     private int buildId;
 
     private int projectId;
 
-    private List testSuites;
+    private List<ReportTestSuite> testSuites;
 
-    private List testSummaryList;
+    private List<ReportTest> testSummaryList;
 
-    private List testPackageList;
+    private List<ReportTest> testPackageList;
 
     private String projectName;
 
@@ -89,7 +85,7 @@ public class SurefireReportAction
         return SUCCESS;
     }
 
-    private void getSummary( List suiteList )
+    private void getSummary( List<ReportTestSuite> suiteList )
     {
         int totalTests = 0;
 
@@ -99,11 +95,8 @@ public class SurefireReportAction
 
         float totalTime = 0.0f;
 
-        for ( Iterator suites = suiteList.iterator(); suites.hasNext(); )
+        for ( ReportTestSuite suite : suiteList )
         {
-
-            ReportTestSuite suite = (ReportTestSuite) suites.next();
-
             totalTests += suite.getNumberOfTests();
 
             totalErrors += suite.getNumberOfErrors();
@@ -124,11 +117,11 @@ public class SurefireReportAction
 
     private void getDetails( List<ReportTestSuite> suiteList )
     {
-        Map testsByPackage = new LinkedHashMap();
+        Map<String, ReportTest> testsByPackage = new LinkedHashMap<String, ReportTest>();
 
         for ( ReportTestSuite suite : suiteList )
         {
-            ReportTest report = (ReportTest) testsByPackage.get( suite.getPackageName() );
+            ReportTest report = testsByPackage.get( suite.getPackageName() );
 
             if ( report == null )
             {
@@ -158,7 +151,7 @@ public class SurefireReportAction
             testsByPackage.put( suite.getPackageName(), report );
         }
 
-        testPackageList = new ArrayList( testsByPackage.values() );
+        testPackageList = new ArrayList<ReportTest>( testsByPackage.values() );
     }
 
     public int getBuildId()
@@ -186,27 +179,12 @@ public class SurefireReportAction
         this.projectId = projectId;
     }
 
-    private String[] getIncludedFiles( File directory, String includes, String excludes )
-    {
-        DirectoryScanner scanner = new DirectoryScanner();
-
-        scanner.setBasedir( directory );
-
-        scanner.setIncludes( StringUtils.split( includes, "," ) );
-
-        scanner.setExcludes( StringUtils.split( excludes, "," ) );
-
-        scanner.scan();
-
-        return scanner.getIncludedFiles();
-    }
-
-    public List getTestSuites()
+    public List<ReportTestSuite> getTestSuites()
     {
         return testSuites;
     }
 
-    public void setTestSuites( List testSuites )
+    public void setTestSuites( List<ReportTestSuite> testSuites )
     {
         this.testSuites = testSuites;
     }
@@ -221,22 +199,22 @@ public class SurefireReportAction
         this.projectName = projectName;
     }
 
-    public List getTestSummaryList()
+    public List<ReportTest> getTestSummaryList()
     {
         return testSummaryList;
     }
 
-    public void setTestSummaryList( List testSummaryList )
+    public void setTestSummaryList( List<ReportTest> testSummaryList )
     {
         this.testSummaryList = testSummaryList;
     }
 
-    public List getTestPackageList()
+    public List<ReportTest> getTestPackageList()
     {
         return testPackageList;
     }
 
-    public void setTestPackageList( List testPackageList )
+    public void setTestPackageList( List<ReportTest> testPackageList )
     {
         this.testPackageList = testPackageList;
     }

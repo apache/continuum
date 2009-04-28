@@ -82,10 +82,10 @@ public class SlaveBuildAgentTransportServer
         return installations;
     }
 
-    public Map getBuildResult( int projectId )
+    public Map<String, Object> getBuildResult( int projectId )
         throws Exception
     {
-        Map buildResult;
+        Map<String, Object> buildResult;
 
         try
         {
@@ -212,7 +212,7 @@ public class SlaveBuildAgentTransportServer
         }
     }
 
-    public Map getListener( String releaseId )
+    public Map<String, Object> getListener( String releaseId )
         throws Exception
     {
         try
@@ -226,7 +226,7 @@ public class SlaveBuildAgentTransportServer
         }
     }
 
-    public Map getReleaseResult( String releaseId )
+    public Map<String, Object> getReleaseResult( String releaseId )
         throws Exception
     {
         try

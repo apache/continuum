@@ -28,7 +28,8 @@ public interface BuildAgentReleaseManager
 {
     String ROLE = BuildAgentReleaseManager.class.getName();
 
-    String releasePrepare( Map project, Map properties, Map releaseVersion, Map developmentVersion,
+    String releasePrepare( Map<String, Object> project, Map<String, Object> properties,
+                           Map<String, String> releaseVersion, Map<String, String> developmentVersion,
                            Map<String, String> environments )
         throws ContinuumReleaseException;
 

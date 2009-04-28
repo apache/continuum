@@ -19,6 +19,20 @@ package org.apache.continuum.dao;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.jdo.Extent;
+import javax.jdo.JDOUserException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.model.release.ContinuumReleaseResult;
 import org.apache.continuum.model.repository.DirectoryPurgeConfiguration;
@@ -43,19 +57,6 @@ import org.apache.maven.continuum.model.system.SystemConfiguration;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.springframework.stereotype.Repository;
-
-import javax.annotation.Resource;
-import javax.jdo.Extent;
-import javax.jdo.JDOUserException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -156,13 +157,13 @@ public class DaoUtilsImpl
      *
      * @todo Move to a better place
      */
-    public Map<Integer, Integer> getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
+    public Map<Integer, Object> getAggregatedProjectIdsAndBuildDefinitionIdsBySchedule( int scheduleId )
         throws ContinuumStoreException
     {
-        Map<Integer, Integer> projectSource = getProjectIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
-        Map<Integer, Integer> projectGroupSource = getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
+        Map<Integer, Object> projectSource = getProjectIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
+        Map<Integer, Object> projectGroupSource = getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( scheduleId );
 
-        Map<Integer, Integer> aggregate = new HashMap<Integer, Integer>();
+        Map<Integer, Object> aggregate = new HashMap<Integer, Object>();
 
         // start out by checking if we have projects with this scheduleId
         if ( projectSource != null )
@@ -199,7 +200,7 @@ public class DaoUtilsImpl
      * @throws ContinuumStoreException
      * @todo Move to a better place
      */
-    public Map<Integer, Integer> getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    public Map<Integer, Object> getProjectIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();
@@ -273,7 +274,7 @@ public class DaoUtilsImpl
      * @throws ContinuumStoreException
      * @todo Move to a better place
      */
-    public Map<Integer, Integer> getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
+    public Map<Integer, Object> getProjectGroupIdsAndBuildDefinitionsIdsBySchedule( int scheduleId )
         throws ContinuumStoreException
     {
         PersistenceManager pm = getPersistenceManager();

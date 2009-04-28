@@ -64,7 +64,7 @@ public interface SlaveBuildAgentTransportService
                                   Map environments )
         throws Exception;
 
-    public Map getReleaseResult( String releaseId )
+    public Map<String, Object> getReleaseResult( String releaseId )
         throws Exception;
 
     public Map getListener( String releaseId )
