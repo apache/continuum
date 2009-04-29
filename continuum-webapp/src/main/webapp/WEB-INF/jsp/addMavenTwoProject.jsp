@@ -82,6 +82,7 @@
                             </c:otherwise>
                             </c:choose>
                             <s:checkbox label="%{getText('add.m2.project.nonRecursiveProject')}" name="nonRecursiveProject" />
+                            <s:checkbox label="%{getText('add.m2.project.checkoutInSingleDirectory')}" name="checkoutInSingleDirectory" />
                             <s:select label="%{getText('add.m2.project.buildDefinitionTemplate')}" name="buildDefinitionTemplateId"
                                        list="buildDefinitionTemplates" listKey="id" listValue="name" headerKey="-1" 
                                        headerValue="%{getText('add.m2.project.defaultBuildDefinition')}"/> 

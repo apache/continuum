@@ -95,7 +95,7 @@ public class DefaultContinuumTest
         assertTrue( rootPom.exists() );
 
         ContinuumProjectBuildingResult result =
-            continuum.addMavenTwoProject( rootPom.toURI().toURL().toExternalForm(), -1, true, false, true, -1 );
+            continuum.addMavenTwoProject( rootPom.toURI().toURL().toExternalForm(), -1, true, false, true, -1, false );
 
         assertNotNull( result );
 
@@ -128,8 +128,64 @@ public class DefaultContinuumTest
         assertTrue( "no irc notifier", projects.containsKey( "Continuum IRC Notifier" ) );
 
         assertTrue( "no jabber notifier", projects.containsKey( "Continuum Jabber Notifier" ) );
+    }
+    
+    // handle flat multi-module projects
+    public void testAddMavenTwoProjectSetInSingleDirectory()
+        throws Exception
+    {   
+        Continuum continuum = (Continuum) lookup( Continuum.ROLE );
+        
+        String url = getTestFile( "src/test-projects/flat-multi-module/parent-project/pom.xml" ).toURL().toExternalForm();
 
+        ContinuumProjectBuildingResult result = continuum.addMavenTwoProject( url, -1, true, false, true, -1, true );
 
+        assertNotNull( result );
+
+        List<Project> projects = result.getProjects();
+
+        assertEquals( 3, projects.size() );        
+        
+        Map<String, Project> projectsMap = new HashMap<String, Project>();
+
+        for ( Project project : getProjectDao().getAllProjectsByName() )
+        {
+            projectsMap.put( project.getName(), project );
+
+            // validate project in project group
+            assertTrue( "project not in project group",
+                        getProjectGroupDao().getProjectGroupByProjectId( project.getId() ) != null );
+        }
+        
+        assertTrue( "no module-a", projectsMap.containsKey( "module-a" ) );
+        
+        assertTrue( "no module-b", projectsMap.containsKey( "module-b" ) );
+        
+        // check if the modules were checked out in the same directory as the parent
+        ConfigurationService configurationService = ( ConfigurationService ) lookup( "configurationService" );
+        
+        File workingDir = configurationService.getWorkingDirectory();
+        
+        Project parentProject = getProjectDao().getProjectByName( "parent-project" );
+        
+        File checkoutDir = new File( workingDir, String.valueOf( parentProject.getId() ) );
+        
+        for( long delay = 0; delay <= 999999999; delay++ )
+        {
+            // wait while the project has been checked out
+        }
+        
+        assertTrue( "checkout directory of project 'parent-project' does not exist." , checkoutDir.exists() );
+        
+        assertFalse( "module-a should not have been checked out as a separate project.",
+                    new File( workingDir, String.valueOf( getProjectDao().getProjectByName( "module-a" ).getId() ) ).exists() );
+        
+        assertFalse( "module-b should not have been checked out as a separate project.",
+                    new File( workingDir, String.valueOf( getProjectDao().getProjectByName( "module-b" ).getId() ) ).exists() );
+        
+        assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-a" ).exists() );
+        
+        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-b" ).exists() );        
     }
 
     public void testUpdateMavenTwoProject()

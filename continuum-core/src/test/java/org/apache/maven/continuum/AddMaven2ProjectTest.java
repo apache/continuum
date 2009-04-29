@@ -91,7 +91,7 @@ public class AddMaven2ProjectTest
         ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject(
                                                                                    rootPom.toURI().toURL()
                                                                                        .toExternalForm(), pg.getId(),
-                                                                                   true, false, false, bdt.getId() );
+                                                                                   true, false, false, bdt.getId(), false );
         assertNotNull( result );
 
         assertEquals( 1, result.getProjects().size() );
@@ -118,7 +118,7 @@ public class AddMaven2ProjectTest
         ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject(
                                                                                    rootPom.toURI().toURL()
                                                                                        .toExternalForm(), -1, true,
-                                                                                   false, true, bdt.getId() );
+                                                                                   false, true, bdt.getId(), false );
         assertNotNull( result );
 
         assertEquals( 1, result.getProjects().size() );
@@ -154,7 +154,7 @@ public class AddMaven2ProjectTest
         ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject(
                                                                                    rootPom.toURI().toURL()
                                                                                        .toExternalForm(), -1, true,
-                                                                                   false, true, -1 );
+                                                                                   false, true, -1, false );
         assertNotNull( result );
 
         assertEquals( 1, result.getProjects().size() );
@@ -202,7 +202,7 @@ public class AddMaven2ProjectTest
         ContinuumProjectBuildingResult result = getContinuum().addMavenTwoProject(
                                                                                    rootPom.toURI().toURL()
                                                                                        .toExternalForm(), pg.getId(),
-                                                                                   true, false, false, -1 );
+                                                                                   true, false, false, -1, false );
         assertNotNull( result );
 
         assertEquals( 1, result.getProjects().size() );

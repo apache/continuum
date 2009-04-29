@@ -35,12 +35,12 @@ public interface ContinuumProjectBuilder
         throws ContinuumProjectBuilderException;
 
     ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
-                                                              boolean recursiveProjects )
+                                                              boolean recursiveProjects, boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException;
 
     ContinuumProjectBuildingResult buildProjectsFromMetadata( URL url, String username, String password,
                                                               boolean recursiveProjects,
-                                                              BuildDefinitionTemplate buildDefinitionTemplate )
+                                                              BuildDefinitionTemplate buildDefinitionTemplate, boolean checkoutInSingleDirectory )
         throws ContinuumProjectBuilderException;
 
     BuildDefinitionTemplate getDefaultBuildDefinitionTemplate()

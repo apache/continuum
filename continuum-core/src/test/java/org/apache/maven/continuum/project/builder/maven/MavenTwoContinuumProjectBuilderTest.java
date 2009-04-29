@@ -21,6 +21,7 @@ package org.apache.maven.continuum.project.builder.maven;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuilder;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
+import org.codehaus.plexus.spring.PlexusInSpringTestCase;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -359,7 +361,7 @@ public class MavenTwoContinuumProjectBuilderTest
 
         ContinuumProjectBuildingResult result;
 
-        result = projectBuilder.buildProjectsFromMetadata( url, null, null, false, bdt );
+        result = projectBuilder.buildProjectsFromMetadata( url, null, null, false, bdt, false );
         assertFalse( result.hasErrors() );
 
         assertEquals( 5, service.getAllBuildDefinitionTemplate().size() );
@@ -390,7 +392,43 @@ public class MavenTwoContinuumProjectBuilderTest
 
         assertEquals( 0, projectGroup.getProjects().size() );
     }
+    
+    public void testCreateProjectWithFlatStructure()
+        throws Exception
+    {
+        ContinuumProjectBuilder projectBuilder =
+            (ContinuumProjectBuilder) lookup( ContinuumProjectBuilder.ROLE, MavenTwoContinuumProjectBuilder.ID );
 
+        URL url =
+            new URL( "file://" + PlexusInSpringTestCase.getBasedir() +
+                "/src/test-projects/flat-multi-module/parent-project/pom.xml" );
+
+        ContinuumProjectBuildingResult result = projectBuilder.buildProjectsFromMetadata( url, null, null, true, true );
+        
+        Project rootProject = result.getRootProject();
+        assertEquals( "Incorrect root project", "parent-project", rootProject.getArtifactId() );
+        
+        List<Project> projects = result.getProjects();
+        for( Project project : projects )
+        {
+            if( project.getName().equals( "parent-project" ) )
+            {
+                assertEquals( "Incorrect scm url for parent-project",
+                              "scm:local:src/test-projects:flat-multi-module/parent-project", project.getScmUrl() );
+            }
+            else if( project.getName().equals( "module-a" ) )
+            {
+                assertEquals( "Incorrect scm url for parent-project",
+                              "scm:local:src/test-projects:flat-multi-module/module-a", project.getScmUrl() );
+            }
+            else
+            {
+                assertEquals( "Incorrect scm url for parent-project",
+                              "scm:local:src/test-projects:flat-multi-module/module-b", project.getScmUrl() );
+            }   
+        }
+    }
+    
     private void assertDependency( String dep, String proj, Map<String, Project> projects )
     {
         Project p = projects.get( proj );

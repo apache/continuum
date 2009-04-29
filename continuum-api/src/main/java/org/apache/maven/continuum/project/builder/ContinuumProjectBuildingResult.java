@@ -90,7 +90,11 @@ public class ContinuumProjectBuildingResult
     private final Map<String, String> errors = new HashMap<String, String>();
 
     private static final String LS = System.getProperty( "line.separator" );
-
+    
+    private String modulePath;
+    
+    private Project rootProject;
+    
     public void addProject( Project project )
     {
         projects.add( project );
@@ -219,5 +223,25 @@ public class ContinuumProjectBuildingResult
             message.append( LS );
         }
         return message.toString();
+    }
+
+    public String getModulePath()
+    {
+        return modulePath;
+    }
+
+    public void setModulePath( String modulePath )
+    {
+        this.modulePath = modulePath;
+    }
+
+    public Project getRootProject()
+    {
+        return rootProject;
+    }
+
+    public void setRootProject( Project rootProject )
+    {
+        this.rootProject = rootProject;
     }
 }

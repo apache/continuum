@@ -76,13 +76,13 @@ public class CreateProjectsFromMetadataAction
      */
     private ContinuumUrlValidator urlValidator;    
 
-    public static final String KEY_URL = "url";
-
     public static final String KEY_PROJECT_BUILDER_ID = "builderId";
 
     public static final String KEY_PROJECT_BUILDING_RESULT = "projectBuildingResult";
 
     public static final String KEY_LOAD_RECURSIVE_PROJECTS = "loadRecursiveProjects";
+    
+    public static final String KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY = "checkoutProjectsInSingleDirectory";
 
     public void execute( Map context )
         throws ContinuumException, ContinuumProjectBuilderManagerException, ContinuumProjectBuilderException
@@ -90,6 +90,8 @@ public class CreateProjectsFromMetadataAction
         String projectBuilderId = getString( context, KEY_PROJECT_BUILDER_ID );
 
         boolean loadRecursiveProjects = getBoolean( context, KEY_LOAD_RECURSIVE_PROJECTS );
+        
+        boolean checkoutProjectsInSingleDirectory = getBoolean( context, KEY_CHECKOUT_PROJECTS_IN_SINGLE_DIRECTORY );
 
         String curl = getString( context, KEY_URL );
 
@@ -111,7 +113,7 @@ public class CreateProjectsFromMetadataAction
                 url = new URL( curl );
 
                 result = projectBuilder.buildProjectsFromMetadata( url, null, null, loadRecursiveProjects,
-                                                                   buildDefinitionTemplate );
+                                                                   buildDefinitionTemplate, checkoutProjectsInSingleDirectory );
 
             }
             else
@@ -150,7 +152,7 @@ public class CreateProjectsFromMetadataAction
                 {
 
                     result = projectBuilder.buildProjectsFromMetadata( url, username, password, loadRecursiveProjects,
-                                                                       buildDefinitionTemplate );
+                                                                       buildDefinitionTemplate, checkoutProjectsInSingleDirectory );
 
                 }
                 else
@@ -164,7 +166,7 @@ public class CreateProjectsFromMetadataAction
             if ( result.getProjects() != null )
             {
                 String scmRootUrl = getScmRootUrl( result.getProjects() );
-         
+                
                 if ( scmRootUrl == null || scmRootUrl.equals( "" ) )
                 {
                     if ( curl.indexOf( "pom.xml" ) > 0 )

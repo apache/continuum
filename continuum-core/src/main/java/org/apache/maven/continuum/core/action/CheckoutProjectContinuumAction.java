@@ -97,8 +97,10 @@ public class CheckoutProjectContinuumAction
         {
             String scmUserName = getString( context, KEY_SCM_USERNAME, project.getScmUsername() );
             String scmPassword = getString( context, KEY_SCM_PASSWORD, project.getScmPassword() );
+            String scmRootUrl = getString( context, KEY_URL, project.getScmUrl() );
+            
             ContinuumScmConfiguration config =
-                createScmConfiguration( project, workingDirectory, scmUserName, scmPassword );
+                createScmConfiguration( project, workingDirectory, scmUserName, scmPassword, scmRootUrl );
 
             String tag = config.getTag();
             getLogger().info(
@@ -197,10 +199,10 @@ public class CheckoutProjectContinuumAction
     }
 
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory,
-                                                              String scmUserName, String scmPassword )
+                                                              String scmUserName, String scmPassword, String scmRootUrl )
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
-        config.setUrl( project.getScmUrl() );
+        config.setUrl( scmRootUrl );
         config.setUsername( scmUserName );
         config.setPassword( scmPassword );
         config.setUseCredentialsCache( project.isScmUseCache() );

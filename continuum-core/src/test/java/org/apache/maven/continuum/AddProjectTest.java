@@ -38,7 +38,7 @@ public class AddProjectTest
         
         ContinuumProjectBuildingResult result = continuum
             .executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
-                                                     getDefaultProjectGroup().getId(), false, true, false, -1, false );
+                                                     getDefaultProjectGroup().getId(), false, true, false, -1, false, false );
         assertEquals( 1, result.getProjects().size() );
         
         // read the project from store
@@ -56,7 +56,7 @@ public class AddProjectTest
 
         ContinuumProjectBuildingResult result = continuum
             .executeAddProjectsFromMetadataActivity( metadataUrl, MavenTwoContinuumProjectBuilder.ID,
-                                                     getDefaultProjectGroup().getId(), false, false, false, -1, false );
+                                                     getDefaultProjectGroup().getId(), false, false, false, -1, false, false );
         assertEquals( 1, result.getProjects().size() );
 
         // read the project from store

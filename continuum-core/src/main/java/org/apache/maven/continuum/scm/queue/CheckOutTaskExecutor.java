@@ -93,8 +93,8 @@ public class CheckOutTaskExecutor
 
         context.put( AbstractContinuumAction.KEY_SCM_USERNAME, task.getScmUserName() );
 
-        context.put( AbstractContinuumAction.KEY_SCM_PASSWORD, task.getScmPassword() );
-
+        context.put( AbstractContinuumAction.KEY_URL, task.getScmRootUrl() );
+        
         try
         {
             actionManager.lookup( "checkout-project" ).execute( context );

@@ -98,6 +98,8 @@ public abstract class AbstractContinuumAction
     public static final String KEY_CANCELLED = "cancelled";
 
     public static final String KEY_SCM_RESULT_MAP = "scm-result-map";
+    
+    public static final String KEY_URL = "url";
 
     // ----------------------------------------------------------------------
     //
@@ -228,17 +230,17 @@ public abstract class AbstractContinuumAction
     {
         return (Map<Integer, ScmResult>) getObject( context, KEY_SCM_RESULT_MAP );
     }
-
+    
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
-    protected static String getString( Map<String, Object> context, String key )
+    public static String getString( Map<String, Object> context, String key )
     {
         return (String) getObject( context, key );
     }
 
-    protected static String getString( Map<String, Object> context, String key, String defaultValue )
+    public static String getString( Map<String, Object> context, String key, String defaultValue )
     {
         return (String) getObject( context, key, defaultValue );
     }

@@ -28,7 +28,6 @@ import java.util.List;
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
-import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -54,6 +53,8 @@ public class AddMavenTwoProjectAction
     public static final String FILE_SCHEME = "file:/";
 
     private boolean nonRecursiveProject;
+    
+    private boolean checkoutInSingleDirectory;
 
     protected ContinuumProjectBuildingResult doExecute( String pomUrl, int selectedProjectGroup, boolean checkProtocol,
                                                         boolean scmUseCache )
@@ -109,7 +110,7 @@ public class AddMavenTwoProjectAction
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,
                                                         !this.isNonRecursiveProject(),
-                                                        this.getBuildDefinitionTemplateId() );
+                                                        this.getBuildDefinitionTemplateId(), this.isCheckoutInSingleDirectory() );
         }
         
         String projectUrl = hidePasswordInUrl( pomUrl );
@@ -162,6 +163,16 @@ public class AddMavenTwoProjectAction
     public void setNonRecursiveProject( boolean nonRecursiveProject )
     {
         this.nonRecursiveProject = nonRecursiveProject;
+    }
+
+    public boolean isCheckoutInSingleDirectory()
+    {
+        return checkoutInSingleDirectory;
+    }
+
+    public void setCheckoutInSingleDirectory( boolean checkoutInSingleDirectory )
+    {
+        this.checkoutInSingleDirectory = checkoutInSingleDirectory;
     }
     
     private String hidePasswordInUrl( String pomUrl )
