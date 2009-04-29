@@ -82,95 +82,6 @@ under the License.
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.cargo</groupId>
-        <artifactId>cargo-maven2-plugin</artifactId>
-        <version>1.0</version>
-        <executions>
-          <execution>
-            <id>start-container</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>start</goal>
-            </goals>
-            <configuration>
-              <wait>false</wait>
-            </configuration>
-          </execution>
-          <execution>
-            <id>stop-container</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>stop</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <container>
-            <containerId>${container.name}</containerId>
-            <zipUrlInstaller>
-              <url>${container.url}</url>
-              <installDir>${project.build.directory}/installs/${container.name}</installDir>
-            </zipUrlInstaller>
-            <log>${project.build.directory}/logs/${container.name}.log</log>
-            <output>${project.build.directory}/logs/${container.name}.out</output>
-            <timeout>600000</timeout>
-            <systemProperties>
-              <appserver.base>${project.build.directory}</appserver.base>
-              <derby.system.home>${project.build.directory}</derby.system.home>
-            </systemProperties>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.derby</groupId>
-                <artifactId>derby</artifactId>
-              </dependency>
-              <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
-              </dependency>
-              <dependency>
-                <groupId>javax.activation</groupId>
-                <artifactId>activation</artifactId>
-              </dependency>
-            </dependencies>
-          </container>
-          <configuration>
-            <home>${project.build.directory}/${container.name}</home>
-            <type>standalone</type>
-            <properties>
-              <cargo.servlet.port>9595</cargo.servlet.port>
-              <cargo.datasource.datasource.users>
-                cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
-                cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true|
-                cargo.datasource.jndi=jdbc/users|
-                cargo.datasource.username=sa
-              </cargo.datasource.datasource.users>
-              <cargo.datasource.datasource.builds>
-                cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
-                cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/builds;create=true|
-                cargo.datasource.jndi=jdbc/continuum|
-                cargo.datasource.username=sa
-              </cargo.datasource.datasource.builds>
-              <cargo.resource.resource.mail>
-                cargo.resource.name=mail/Session|
-                cargo.resource.type=javax.mail.Session|
-                cargo.resource.factory=org.apache.naming.factory.MailSessionFactory|
-                cargo.resource.parameters=mail.smtp.host=localhost
-              </cargo.resource.resource.mail>
-            </properties>
-            <deployables>
-              <deployable>
-                <groupId>${project.goupId}</groupId>
-                <artifactId>continuum-webapp</artifactId>
-                <type>war</type>
-                <properties>
-                  <context>continuum</context>
-                </properties>
-              </deployable>
-            </deployables>
-          </configuration>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <executions>
@@ -180,6 +91,14 @@ under the License.
             <goals>
               <goal>test</goal>
             </goals>
+            <configuration>
+              <systemProperties>
+                <property>
+                  <name>browser</name>
+                  <value>${browser}</value>
+                </property>
+              </systemProperties>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -189,13 +108,14 @@ under the License.
     <dependency>
       <groupId>org.openqa.selenium.client-drivers</groupId>
       <artifactId>selenium-java-client-driver</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.openqa.selenium.client-drivers</groupId>
-      <artifactId>selenium-java-client-driver</artifactId>
       <version>1.0-beta-SNAPSHOT</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -228,9 +148,112 @@ under the License.
 
   <profiles>
     <profile>
+      <id>create-container</id>
+      <activation>
+        <property>
+          <name>!container</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>1.0</version>
+            <executions>
+              <execution>
+                <id>start-container</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>start</goal>
+                </goals>
+                <configuration>
+                  <wait>false</wait>
+                </configuration>
+              </execution>
+              <execution>
+                <id>stop-container</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <container>
+                <containerId>${container.name}</containerId>
+                <zipUrlInstaller>
+                  <url>${container.url}</url>
+                  <installDir>${project.build.directory}/installs/${container.name}</installDir>
+                </zipUrlInstaller>
+                <log>${project.build.directory}/logs/${container.name}.log</log>
+                <output>${project.build.directory}/logs/${container.name}.out</output>
+                <timeout>600000</timeout>
+                <systemProperties>
+                  <appserver.base>${project.build.directory}</appserver.base>
+                  <derby.system.home>${project.build.directory}</derby.system.home>
+                </systemProperties>
+                <dependencies>
+                  <dependency>
+                    <groupId>org.apache.derby</groupId>
+                    <artifactId>derby</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>javax.mail</groupId>
+                    <artifactId>mail</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                  </dependency>
+                </dependencies>
+              </container>
+              <configuration>
+                <home>${project.build.directory}/${container.name}</home>
+                <type>standalone</type>
+                <properties>
+                  <cargo.servlet.port>9595</cargo.servlet.port>
+                  <cargo.datasource.datasource.users>
+                    cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
+                    cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true|
+                    cargo.datasource.jndi=jdbc/users|
+                    cargo.datasource.username=sa
+                  </cargo.datasource.datasource.users>
+                  <cargo.datasource.datasource.builds>
+                    cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
+                    cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/builds;create=true|
+                    cargo.datasource.jndi=jdbc/continuum|
+                    cargo.datasource.username=sa
+                  </cargo.datasource.datasource.builds>
+                  <cargo.resource.resource.mail>
+                    cargo.resource.name=mail/Session|
+                    cargo.resource.type=javax.mail.Session|
+                    cargo.resource.factory=org.apache.naming.factory.MailSessionFactory|
+                    cargo.resource.parameters=mail.smtp.host=localhost
+                  </cargo.resource.resource.mail>
+                </properties>
+                <deployables>
+                  <deployable>
+                    <groupId>${project.goupId}</groupId>
+                    <artifactId>continuum-webapp</artifactId>
+                    <type>war</type>
+                    <properties>
+                      <context>continuum</context>
+                    </properties>
+                  </deployable>
+                </deployables>
+              </configuration>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>tomcat5x</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>!container</name>
+        </property>
       </activation>
       <properties>
         <container.name>tomcat5x</container.name>
@@ -239,9 +262,21 @@ under the License.
       </properties>
     </profile>
     <profile>
+      <id>existing-container</id>
+      <activation>
+        <property>
+          <name>container</name>
+          <value>existing</value>
+        </property>
+      </activation>
+      <!-- edit src/test/resources/it.properties as needed -->
+    </profile>
+    <profile>
       <id>firefox</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>!browser</name>
+        </property>
       </activation>
       <properties>
         <browser>*firefox</browser>
@@ -249,12 +284,36 @@ under the License.
     </profile>
     <profile>
       <id>iexplore</id>
+      <activation>
+        <property>
+          <name>browser</name>
+          <value>iexplore</value>
+        </property>
+      </activation>
       <properties>
         <browser>*iexplore</browser>
       </properties>
     </profile>
     <profile>
+      <id>safari</id>
+      <activation>
+        <property>
+          <name>browser</name>
+          <value>safari</value>
+        </property>
+      </activation>
+      <properties>
+        <browser>*safari</browser>
+      </properties>
+    </profile>
+    <profile>
       <id>otherbrowser</id>
+      <activation>
+        <property>
+          <name>browser</name>
+          <value>other</value>
+        </property>
+      </activation>
       <properties>
         <browser>*custom ${browserPath}</browser>
       </properties>
