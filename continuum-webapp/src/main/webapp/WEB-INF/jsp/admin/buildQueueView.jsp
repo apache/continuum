@@ -45,7 +45,7 @@
                 <th>&nbsp;</th>
               </tr>
               <c:forEach var="element" items="${currentBuildProjectTasks}">
-                <tr>              
+                <tr>
                   <td width="20%">${element.key}</td>
                   <td width="20%">
                     <s:url id="viewUrl" action="buildResults">
@@ -73,12 +73,12 @@
               <s:text name="buildQueue.no.currentTaks" />
             </s:else>
           </table>
-        </div>  
+        </div>
         
         <div id="h3">
           <h3>
             <s:text name="buildQueue.section.title"/>
-          </h3>   
+          </h3>
           <table width="100%">
             <s:if test="%{buildsInQueue != null}">
             <tbody>
@@ -93,10 +93,12 @@
               </tr>
               <c:forEach var="element" items="${buildsInQueue}">
                 <c:forEach var="buildTask" items="${element.value}">
-                  <tr>                                    
+                  <tr>
                     <td width="1%">
                       <redback:ifAuthorized permission="continuum-manage-queues">
-                        <input type="checkbox" name="selectedBuildTaskHashCodes" value="${buildTask.hashCode}" />                                      
+                        <ec:column alias="selectedBuildTaskHashCodes" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
+                          <input type="checkbox" name="selectedBuildTaskHashCodes" value="${buildTask.hashCode}" />
+                        </ec:column>
                       </redback:ifAuthorized>
                     </td>
                   	<td width="29%">${element.key}</td>
@@ -119,8 +121,8 @@
                       </redback:ifAuthorized>
                       <redback:elseAuthorized>
                         <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
-                      </redback:elseAuthorized>               
-                    </td>                                    
+                      </redback:elseAuthorized>
+                    </td>
                   </tr>
                 </c:forEach>
               </c:forEach>
@@ -130,7 +132,7 @@
               <s:text name="buildQueue.empty"/>
             </s:else>
           </table>
-        </div>   
+        </div>
         <c:if test="${not empty buildsInQueue}">
           <div class="functnbar3">
             <table>
@@ -138,19 +140,19 @@
                 <tr>
                   <td>
                     <input type="submit" value="<s:text name="buildQueue.removeEntries"/>"
-                           onclick="$('removeForm').action='removeBuildQueueEntries!removeBuildEntries.action';$('removeForm').submit();" /> 
+                           onclick="$('removeForm').action='removeBuildQueueEntries!removeBuildEntries.action';$('removeForm').submit();" />
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </c:if> 
+        </c:if>
                 
         <!-- checkout queue -->
         <div id="h3">
           <h3>
             <s:text name="checkoutQueue.currentTask.section.title"/>
-          </h3>  
+          </h3>
           <table width="100%">
             <s:if test="%{currentCheckoutTasks != null}">
             <tbody>
@@ -177,7 +179,7 @@
                   </redback:ifAuthorized>
                   <redback:elseAuthorized>
                     <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
-                  </redback:elseAuthorized>              
+                  </redback:elseAuthorized>
                   </td>
                 </tr>
               </c:forEach>
@@ -187,12 +189,12 @@
               <s:text name="checkoutQueue.no.currentTaks" />
             </s:else>
           </table>
-        </div>    
+        </div>
         
         <div id="h3">
           <h3>
             <s:text name="checkoutQueue.section.title"/>
-          </h3>   
+          </h3>
           <table width="100%">
             <s:if test="%{checkoutsInQueue != null}">
             <tbody>
@@ -209,7 +211,9 @@
                   <tr>
                     <td width="1%">
                       <redback:ifAuthorized permission="continuum-manage-queues">
-                        <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="${checkoutTask.hashCode}" />                                      
+                        <ec:column alias="selectedCheckOutTaskHashCodes" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
+                          <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="${checkoutTask.hashCode}" />
+                        </ec:column>
                       </redback:ifAuthorized>
                     </td>
                   	<td width="29%">${element.key}</td>
@@ -228,8 +232,8 @@
                       </redback:ifAuthorized>
                       <redback:elseAuthorized>
                         <img src="<s:url value='/images/cancelbuild_disabled.gif' includeParams="none"/>" alt="<s:text name='cancel'/>" title="<s:text name='cancel'/>" border="0">
-                      </redback:elseAuthorized>             
-                    </td>                                    
+                      </redback:elseAuthorized>
+                    </td>
                   </tr>
                 </c:forEach>
               </c:forEach>
@@ -239,7 +243,7 @@
               <s:text name="checkoutQueue.no.currentTaks" />
             </s:else>
           </table>
-        </div>    
+        </div>
         <c:if test="${not empty checkoutsInQueue}">
           <div class="functnbar3">
             <table>
