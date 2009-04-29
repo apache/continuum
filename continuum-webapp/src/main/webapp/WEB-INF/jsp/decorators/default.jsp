@@ -32,7 +32,6 @@
   <link rel="stylesheet" type="text/css" href="<s:url value="/css/extremecomponents.css" includeParams="none"/>" media="screen"/>
   <link rel="shortcut icon" href="<s:url value="/favicon.ico" includeParams="none"/>" type="image/x-icon"/>
   <script type="text/javascript" src="<s:url value="/js/prototype.js" includeParams="none"/>"></script>
-  <s:head/>
   <decorator:head/>
 </head>
 
