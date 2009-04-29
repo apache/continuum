@@ -33,7 +33,7 @@ public interface SlaveBuildAgentTransportService
     public Boolean buildProjects( List<Map<String, Object>> projectsBuildContext )
         throws Exception;
 
-    public Map getBuildResult( int projectId )
+    public Map<String, Object> getBuildResult( int projectId )
         throws Exception;
 
     public Integer getProjectCurrentlyBuilding()

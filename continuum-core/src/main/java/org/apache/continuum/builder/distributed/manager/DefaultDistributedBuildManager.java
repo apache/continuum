@@ -569,7 +569,7 @@ public class DefaultDistributedBuildManager
         {
             SlaveBuildAgentTransportClient client = new SlaveBuildAgentTransportClient( new URL( buildAgentUrl ) );
 
-            Map result = client.getBuildResult( projectId );
+            Map<String, Object> result = client.getBuildResult( projectId );
 
             if ( result != null )
             {
@@ -1141,11 +1141,11 @@ public class DefaultDistributedBuildManager
     private List<ChangeSet> getScmChanges( Map<String, Object> context )
     {
         List<ChangeSet> changes = new ArrayList<ChangeSet>();
-        List<Map> scmChanges = ContinuumBuildConstant.getScmChanges( context );
+        List<Map<String, Object>> scmChanges = ContinuumBuildConstant.getScmChanges( context );
 
         if ( scmChanges != null )
         {
-            for ( Map map : scmChanges )
+            for ( Map<String, Object> map : scmChanges )
             {
                 ChangeSet changeSet = new ChangeSet();
                 changeSet.setAuthor( ContinuumBuildConstant.getChangeSetAuthor( map ) );
@@ -1161,11 +1161,11 @@ public class DefaultDistributedBuildManager
 
     private void setChangeFiles( ChangeSet changeSet, Map<String, Object> context )
     {
-        List<Map> changeFiles = ContinuumBuildConstant.getChangeSetFiles( context );
+        List<Map<String, Object>> changeFiles = ContinuumBuildConstant.getChangeSetFiles( context );
 
         if ( changeFiles != null )
         {
-            for ( Map map : changeFiles )
+            for ( Map<String, Object> map : changeFiles )
             {
                 ChangeFile changeFile = new ChangeFile();
                 changeFile.setName( ContinuumBuildConstant.getChangeFileName( map ) );
@@ -1179,7 +1179,7 @@ public class DefaultDistributedBuildManager
 
     private ProjectDependency getProjectParent( Map<String, Object> context )
     {
-        Map map = ContinuumBuildConstant.getProjectParent( context );
+        Map<String, Object> map = ContinuumBuildConstant.getProjectParent( context );
 
         if ( map != null && map.size() > 0 )
         {
@@ -1198,11 +1198,11 @@ public class DefaultDistributedBuildManager
     {
         List<ProjectDependency> projectDependencies = new ArrayList<ProjectDependency>();
 
-        List<Map> dependencies = ContinuumBuildConstant.getProjectDependencies( context );
+        List<Map<String, Object>> dependencies = ContinuumBuildConstant.getProjectDependencies( context );
 
         if ( dependencies != null )
         {
-            for ( Map map : dependencies )
+            for ( Map<String, Object> map : dependencies )
             {
                 ProjectDependency dependency = new ProjectDependency();
                 dependency.setGroupId( ContinuumBuildConstant.getGroupId( map ) );
@@ -1219,11 +1219,11 @@ public class DefaultDistributedBuildManager
     {
         List<ProjectDeveloper> projectDevelopers = new ArrayList<ProjectDeveloper>();
 
-        List<Map> developers = ContinuumBuildConstant.getProjectDevelopers( context );
+        List<Map<String, Object>> developers = ContinuumBuildConstant.getProjectDevelopers( context );
 
         if ( developers != null )
         {
-            for ( Map map : developers )
+            for ( Map<String, Object> map : developers )
             {
                 ProjectDeveloper developer = new ProjectDeveloper();
                 developer.setName( ContinuumBuildConstant.getDeveloperName( map ) );
@@ -1240,11 +1240,11 @@ public class DefaultDistributedBuildManager
     {
         List<ProjectNotifier> projectNotifiers = new ArrayList<ProjectNotifier>();
 
-        List<Map> notifiers = ContinuumBuildConstant.getProjectNotifiers( context );
+        List<Map<String, Object>> notifiers = ContinuumBuildConstant.getProjectNotifiers( context );
 
         if ( notifiers != null )
         {
-            for ( Map map : notifiers )
+            for ( Map<String, Object> map : notifiers )
             {
                 ProjectNotifier notifier = new ProjectNotifier();
                 notifier.setConfiguration( ContinuumBuildConstant.getNotifierConfiguration( map ) );
@@ -1266,7 +1266,7 @@ public class DefaultDistributedBuildManager
 
     private ScmResult getScmResult( Map<String, Object> context )
     {
-        Map map = ContinuumBuildConstant.getScmResult( context );
+        Map<String, Object> map = ContinuumBuildConstant.getScmResult( context );
 
         if ( !map.isEmpty() )
         {
@@ -1286,7 +1286,7 @@ public class DefaultDistributedBuildManager
 
     private String getMavenProjectVersion( Map<String, Object> context )
     {
-        Map map = ContinuumBuildConstant.getMavenProject( context );
+        Map<String, Object> map = ContinuumBuildConstant.getMavenProject( context );
 
         if ( !map.isEmpty() )
         {
@@ -1298,7 +1298,7 @@ public class DefaultDistributedBuildManager
 
     private List<String> getMavenProjectModules( Map<String, Object> context )
     {
-        Map map = ContinuumBuildConstant.getMavenProject( context );
+        Map<String, Object> map = ContinuumBuildConstant.getMavenProject( context );
 
         if ( !map.isEmpty() )
         {

@@ -289,7 +289,7 @@ public class ContinuumBuildConstant
         return getString( context, KEY_INSTALLATION_VAR_NAME );
     }
 
-    public static List<Map> getScmChanges( Map<String, Object> context )
+    public static List<Map<String, Object>> getScmChanges( Map<String, Object> context )
     {
         return getList( context, KEY_SCM_CHANGES );
     }
@@ -318,7 +318,7 @@ public class ContinuumBuildConstant
         }
     }
 
-    public static List<Map> getChangeSetFiles( Map<String, Object> context )
+    public static List<Map<String, Object>> getChangeSetFiles( Map<String, Object> context )
     {
         return getList( context, KEY_CHANGESET_FILES );
     }
@@ -379,12 +379,12 @@ public class ContinuumBuildConstant
         return getString( context, KEY_SCM_TAG );
     }
 
-    public static Map getProjectParent( Map<String, Object> context )
+    public static Map<String, Object> getProjectParent( Map<String, Object> context )
     {
         return getMap( context, KEY_PROJECT_PARENT );
     }
 
-    public static List<Map> getProjectDevelopers( Map<String, Object> context )
+    public static List<Map<String, Object>> getProjectDevelopers( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_DEVELOPERS );
     }
@@ -404,12 +404,12 @@ public class ContinuumBuildConstant
         return getString( context, KEY_PROJECT_DEVELOPER_SCMID );
     }
 
-    public static List<Map> getProjectDependencies( Map<String, Object> context )
+    public static List<Map<String, Object>> getProjectDependencies( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_DEPENDENCIES );
     }
 
-    public static List<Map> getProjectNotifiers( Map<String, Object> context )
+    public static List<Map<String, Object>> getProjectNotifiers( Map<String, Object> context )
     {
         return getList( context, KEY_PROJECT_NOTIFIERS );
     }
@@ -464,12 +464,12 @@ public class ContinuumBuildConstant
         return getBoolean( context, KEY_NOTIFIER_SEND_ON_WARNING );
     }
 
-    public static Map getScmResult( Map<String, Object> context )
+    public static Map<String, Object> getScmResult( Map<String, Object> context )
     {
         return getMap( context, KEY_SCM_RESULT );
     }
 
-    public static Map getMavenProject( Map<String, Object> context )
+    public static Map<String, Object> getMavenProject( Map<String, Object> context )
     {
         return getMap( context, KEY_MAVEN_PROJECT );
     }
