@@ -1,0 +1,43 @@
+ ------
+ Local Repository
+ ------
+ 
+Local Repository
+
+	Click the <<Local Repositories>> link under the <<Administration>> section
+
+[../images/localrepositories.png] Local Repositories
+
+	You will see all the local repositories that have been created.
+	
+	To display:
+	
+[../images/localrepositories-view.png]
+	
+	In this screen you can add/edit/delete/purge a local repository. 
+	
+	You can purge a repository if it has a default {{{purgeConfiguration.html} Purge Configuration}}, otherwise the purge icon is disabled.
+
+[../images/disabled_purgenow.gif] disabled purge icon
+
+
+* Adding / Editing a Local Repository
+
+	All fields are mandatory. 
+	
+	* Name: must be a unique repository name.
+	
+	* Location: must be the absolute path of a unique repository location.
+	
+	* Layout: "default" or "legacy". Default layout is for maven2, while legacy layout is for maven1.
+
+[../images/localrepository-add.png]
+	
+	Adding a local repository will automatically create a default {{{purgeConfiguration.html} Purge Configuration}} for that repository.
+
+* Default
+
+~~ TODO:  Needs to be updated if CONTINUUM-1966 is implemented to allowe editing the local repo.
+
+    The default local repository location comes from the settings of the user running Continuum.  The location cannot be
+    edited within Continuum, but can be changed by specifying it in <<<~/.m2/settings.xml>>>.

@@ -1,0 +1,52 @@
+ ------
+ Jabber Notification
+ ------
+ Olivier Lamy
+ ------
+ Nov 19 2007
+ ------
+
+Wagon Notification
+
+  [[1]] Under Notifiers from the Project Information page, click Add.
+  
+  [[2]] On the Add Notifier form select Wagon from the pull-down menu and click Submit.
+  
+  [[3]] On the next page, enter the Project Site URL.
+  
+  It must be a Wagon URL like the URL used in <<<distributionManagement>>>. For the Webdav protocol,
+  you can use <<<dav:[http_url]>>> or <<<file:///path_to_the_directory>>> if you want to copy it locally
+  with the file protocol.
+  
+  [[4]] Enter the ServerId. This should match the value of the <<<\<id\>>>> in the server configuration found in
+  <<<settings.xml>>>. Sample configuration follows:
+
++------+
+  <server>
+    <username>admin</username>
+    <password>admin123</password>
+    <id>continuum.site</id>
+  </server>
++------+
+
+  Using the server configuration in <<<[user_home]/.m2/settings.xml>>> is a workaround
+  for user authentication using the wagon notifier.
+
+  The <<<\<username\>>>> and <<<\<password\>>>> should be set to the user account that has the <<Site
+  Producer>> and <<Site Observer>> roles.
+  
+[../../images/notifier-wagon-add.png] Add Wagon Notifier
+  
+  [[5]] Select the “Send on ...” options you want.
+  
+  [[6]] Click Save. The Wagon notifier you just added will be listed under Notifiers on the Project
+  Information page along with the other notifiers you may have set up prior to this.
+  
+  []
+  
+  The file protocol will create <<<buildresult.txt>>> file locally in the location specified in the
+  Wagon Notifier configuration. If you used the Webdav protocol, a <<<buildresult.txt>>> file will
+  be copied to your disk, relative to where you told it to be placed when you set up the Wagon
+  notifier.
+  
+  You can also view the <<<buildresult.txt>>> file from a browser at the Project Site URL you specified.

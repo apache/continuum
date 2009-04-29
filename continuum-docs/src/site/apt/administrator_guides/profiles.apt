@@ -1,0 +1,68 @@
+ ------
+ Continuum :: Build Environment
+ ------
+ Olivier Lamy
+ ------
+ Oct 17 2007
+ ------
+
+Build Environment
+
+~~%{toc|section=0}
+
+* Goal
+
+  The main goal is to compile/test sources against the targeted jvm, mvn/maven version, ant version and to add defined
+  envvar (MAVEN_OPTS, ANT_OPTS ...).  This is now possible at the build definition level (in 1.1).
+
+* Setup Build Environments/Installations
+
+** {Creating a Build Environment}
+
+  From the menu, choose the 'Build Environments' entry
+
+[../images/buildenv-menu.png] Build Environment Menu
+
+  Enter a name
+
+[../images/buildenv-add.png] Add Build Environment
+
+** {Attach Build Agent Group to a Build Environment}
+
+  The list box contains all available Build Agent Groups. The list box will only be visible if Distributed Builds is enabled in the {{{configuration.html}General Configuration}} Page
+
+[../images/profile-build-agent-group.png] Add Build Agent Group to Build Environment
+
+** {Attach JDK to a Build Environment}
+
+  The list box contains all available installations (jdk, mvn etc..). The installation's type is automatically recognized.
+  In the modification mode of a build environment, adding an already attached type will override the existing one.
+
+[../images/buildenv-setup-jdk.png] Add JDK to Build Environment
+
+** {Link Build Environment to Build Definition}
+
+  The list box contains all availables installations (jdk, mvn etc..). The installation's type is automatically recognized.
+  In the modification mode of a build environment, adding an already attached type will override the existing one.
+
+[../images/buildenv-in-builddef.png] Setup Build Environment
+
+** {Installations used in Notification mail}
+
+  The notification mail contains the following informations :
+
+  * Java Home version : coming from $JAVA_HOME/bin/java -version.
+
+  * Builder version : coming from builder used version arg (mvn  used -v, ant use -version).
+
+  []
+
++-------------------------------+
+  Java Home version : 
+          java version "1.4.2_06"
+          Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.2_06-b03)
+          Java HotSpot(TM) Client VM (build 1.4.2_06-b03, mixed mode)
+        
+  Builder version :
+          Maven version: 2.0.5 
++-------------------------------+

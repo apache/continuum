@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.apache.maven.continuum.project.builder.maven.MavenTwoContinuumProjectBuilderTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.234 sec

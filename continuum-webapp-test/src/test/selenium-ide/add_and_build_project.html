@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>add_and_build_project.html</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">add_and_build_project.html</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/continuum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Show Project Groups</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addProjectGroup</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addProjectGroup_name</td>
+	<td>Continuum Sandbox</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addProjectGroup_groupId</td>
+	<td>org.apache.continuum.sandbox</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addProjectGroup_description</td>
+	<td>Continuum Sandbox Example Projects</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addProjectGroup_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Continuum Sandbox</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Add']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>addMavenTwoProject_m2PomUrl</td>
+	<td>http://svn.apache.org/repos/asf/continuum/sandbox/simple-example/pom.xml</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='addMavenTwoProject_']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Continuum Simple Example Project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>build</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Continuum Simple Example Project</td>
+	<td></td>
+</tr>
+<!--View the builds tab and wait for results.  This usually times out and continues, so...-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Builds</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Result</td>
+	<td></td>
+</tr>
+<!--Switch to project info and back to builds since there is no link to refresh this page-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Project Information</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Builds</td>
+	<td></td>
+</tr>
+<!--Wait for results again-->
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Result</td>
+	<td></td>
+</tr>
+<!--View the result and verify that the build was successful-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Result</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>BUILD SUCCESSFUL</td>
+	<td></td>
+</tr>
+<!--Delete the build result (TODO: why is this named delete-project?)-->
+<tr>
+	<td>clickAndWait</td>
+	<td>delete-project</td>
+	<td></td>
+</tr>
+<!--Confirm deletion of build result (TODO: this needs a name or id)-->
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@id='']</td>
+	<td></td>
+</tr>
+<!--Clean up by deleting the project group we added-->
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Project Group Summary</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>removeProjectGroup_</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>Continuum Sandbox</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

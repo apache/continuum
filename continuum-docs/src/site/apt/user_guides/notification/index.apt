@@ -1,0 +1,58 @@
+ ------
+ Notification
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+ ------
+
+Managing Notification
+
+  Notifiers can be attached to a Maven project by adding them to the pom in the {{{http://maven.apache.org/pom.html#Continuous_Integration_Management}ciManagement section}}.
+  
++-------------------------------+
+  
+  <ciManagement>
+    <system>continuum</system>
+    <url>http://127.0.0.1:8080/continuum</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnSuccess>false</sendOnSuccess>
+        <sendOnWarning>false</sendOnWarning>
+        <configuration>
+          <address>continuum@127.0.0.1</address>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>  
+  
++-------------------------------+  
+
+  Or they can be added to a Project Group with the Notifiers link:
+  
+[../../images/notifiers-link-project-group.png] Notifiers Link  
+  
+  Or to a project with the Add button on the Edit Project page:
+  
+[../../images/notifiers-button-project.png] Notifier Button 
+
+  Here you select between Notifier implementations provided with Continuum:
+
+[../../images/notifiers-type-choice.png] Notifier Type Choice
+
+  You have the following choices:
+  
+  * {{{mail.html}Mail}}
+  
+  * {{{irc.html}IRC}}
+  
+  * {{{jabber.html}Jabber}}
+  
+  * {{{msn.html}MSN}}
+  
+  * {{{wagon.html}Wagon}}
+    
+   

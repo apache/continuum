@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE orm PUBLIC
+    "-//Sun Microsystems, Inc.//DTD Java Data Objects Mapping Metadata 2.0//EN"
+    "http://java.sun.com/dtd/jdo_orm_2_0.dtd">
+<orm>
+  <package name="org.apache.maven.continuum.model.project">
+    <class name="ProjectGroup">
+      <field name="description">
+        <column length="4000" jdbc-type="VARCHAR"/>
+      </field>
+    </class>
+    <class name="Project">
+      <field name="description">
+        <column length="4000" jdbc-type="VARCHAR"/>
+      </field>
+    </class>
+    <class name="BuildResult">
+      <field name="error">
+        <column length="4000" jdbc-type="VARCHAR"/>
+      </field>
+    </class>
+  </package>
+  <package name="org.apache.maven.continuum.model.scm">
+    <class name="ScmResult">
+      <field name="exception">
+        <column name="exceptionstring" length="4000" jdbc-type="VARCHAR"/>
+      </field>
+    </class>
+    <class name="ChangeSet">
+      <field name="comment">
+        <column name="changecomment" length="4000" jdbc-type="VARCHAR"/>
+      </field>
+    </class>
+  </package>
+  <package name="org.apache.continuum.model.project">
+    <class name="ProjectScmRoot">
+      <field name="error">
+        <column length="4000" jdbc-type="VARCHAR"/>
+      </field>
+    </class>
+  </package>
+</orm>

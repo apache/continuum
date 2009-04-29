@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>add_and_delete_user</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">add_and_delete_user</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/continuum/groupSummary.action</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Users</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>usercreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_username</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_fullName</td>
+	<td>Test User</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_email</td>
+	<td>test@example.com</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userCreateForm_user_confirmPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userCreateForm_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>addRolesToUser_submitRolesButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>loginForm_username</td>
+	<td>test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>loginForm_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>loginForm__login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Change Password</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>passwordForm_existingPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>passwordForm_newPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>passwordForm_newPasswordConfirm</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>passwordForm__submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>cannot match</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>passwordForm_existingPassword</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>passwordForm_newPassword</td>
+	<td>test1234</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>passwordForm_newPasswordConfirm</td>
+	<td>test1234</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>passwordForm__submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Project Groups</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Logout</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>loginForm_username</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>loginForm_password</td>
+	<td>test123</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>loginForm__login</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Users</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//table[@id='ec_table']/tbody[2]/tr[3]/td[7]/a/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>userdelete_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>List of Users</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>Test User</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

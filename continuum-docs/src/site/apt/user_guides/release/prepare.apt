@@ -1,0 +1,31 @@
+ ------
+ Preparing for Release
+ ------
+
+Prepare for Release
+
+ Navigate to the Project Group Summary and click the Release button or icon.
+
+[../../images/release-project-group-summary.png] Release
+
+ Choose "Prepare project for release" and click "Submit"
+
+[../../images/release-choose-prepare-goal.png] Release
+
+ Complete the form, providing the scm tag name, etc.
+
+ Check the 'Use edit mode' checkbox if you are using a SCM system that requires you to obtain a lock before editing.
+
+ Click Submit.
+
+[../../images/release-prepare-parameters.png] Release Prepare parameters
+
+ Wait for the process to complete, then click Done.
+
+[../../images/release-prepare-executing.png]
+
+ You will be returned to this page to make another selection
+
+[../../images/release-choose-perform-goal.png]
+
+ To view the release prepare results, refer to {{{release_results.html}Release Results Management}}.

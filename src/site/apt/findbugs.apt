@@ -1,0 +1,33 @@
+ ---------
+ FindBugs Bug Detector Reports
+ ---------
+
+FindBugs Bug Detector Reports
+
+  Want to help find and fix bugs in Continuum?
+
+  A FindBugs report is available for each module in the Continuum build.
+  Visit the links below to view the reports.  For infomation on interpreting the results,
+  visit the {{{http://findbugs.sourceforge.net/}FindBugs project website}}.
+
+  You can also install FindBugs and launch the GUI with <<<findbugs -project [filename].fbp>>>.
+  FindBugs project files are currently available in the -core and -release modules
+  as well as at the top level for a consolidated view.  You must run 'mvn pacakge' prior
+  to launching the FindBugs GUI, so that the jar will be present in the target directory.
+
++------+
+cd /path/to/continuum-all/continuum/continuum-core
+mvn package
+findbugs -project continuum-core.fbp
++------+
+
+  (A future version of the FindBugs Maven plugin should have the ability
+  to launch the GUI from any module with <<<mvn findbugs:gui>>>.)
+
+* FindBugs Reports
+
+ * {{{continuum-core/findbugs.html}Continuum Core}}
+
+ * {{{continuum-release/findbugs.html}Continuum Release}}
+
+ * ...

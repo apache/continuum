@@ -1,0 +1,30 @@
+ ------
+ Shutdown Continuum
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 5 2007
+ ------
+
+Shutdown Continuum
+
+    Shutting down Continuum while a project is building or queued is NOT recommended. The build queues page should be used to cancel any currently running and queued builds before shutting down.
+
+* Queues view
+
+    From the menu, choose the 'Queues' link
+
+[../images/queues-menu.png] Queues
+
+    Then you'll get the Queues page
+
+[../images/queues-view.png] Queues
+
+    In this page you can see the current build, projects in the build queue, the current checkout and projects in the checkout queue.
+    For each line, you can cancel the process
+
+* Shutdown
+
+    To shutdown Continuum, the queue must be empty, so when you want to shutdown, you can either wait until all builds are complete or cancel them.
+
+    If you don't want to have new projects added in the build queue before you shutdown Continuum, you can disable all schedules. You'll need to re-enable them on the next startup. (In the future, you'll have an action to automate the disable/enable schedules process.)

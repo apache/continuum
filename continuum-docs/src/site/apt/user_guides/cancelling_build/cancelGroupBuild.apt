@@ -1,0 +1,15 @@
+ ------
+ Cancelling Project Group Build
+ ------
+ Maria Catherine Tan
+ ------
+ Jan 16 2009
+ ------
+
+Cancelling Project Group Build
+
+    This will cancel all builds of the project group and will also remove the projects from the build queue.
+
+    In the Project Group Summary page, click the
+
+[../../images/cancel-group-build.png] Cancel Group Build Button

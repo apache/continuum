@@ -1,0 +1,17 @@
+ ------
+ User's Guides
+ ------
+
+User's Guides
+
+ * {{{building_project/index.html}Building Projects}}
+
+ * {{{cancelling_build/index.html}Cancelling Builds}}
+
+ * {{{managing_builddef/index.html}Managing Build Definitions}}
+
+ * {{{managing_project/index.html}Managing Projects}}
+
+ * {{{notification/index.html}Notifications}}
+
+ * {{{release/index.html}Releasing Projects}}

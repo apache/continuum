@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<continuum-configuration>
+  <baseUrl>http://test</baseUrl>
+  <buildOutputDirectory>myBuildOutputDir</buildOutputDirectory>
+  <buildAgents>
+    <buildAgent>
+      <url>http://buildagent/xmlrpc</url>
+      <description>linux</description>
+      <enabled>true</enabled>
+    </buildAgent>
+  </buildAgents>
+  <buildAgentGroups>
+    <buildAgentGroup>
+      <name>group-agent-1</name>
+      <buildAgents>
+        <buildAgent>
+          <url>http://buildagent/xmlrpc</url>
+          <description>linux</description>
+          <enabled>true</enabled>
+        </buildAgent>
+      </buildAgents>
+    </buildAgentGroup>
+  </buildAgentGroups>
+</continuum-configuration>

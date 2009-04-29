@@ -1,0 +1,353 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<component-set>
+  <components>
+    <component>
+      <role>org.apache.maven.continuum.release.ContinuumReleaseManager</role>
+      <role-hint>default</role-hint>
+      <implementation>org.apache.maven.continuum.release.DefaultContinuumReleaseManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.shared.release.config.ReleaseDescriptorStore</role>
+          <role-hint>continuum-release-properties</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>prepare-release</role-hint>
+          <field-name>prepareReleaseQueue</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>perform-release</role-hint>
+          <field-name>performReleaseQueue</field-name>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>rollback-release</role-hint>
+          <field-name>rollbackReleaseQueue</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.scm.manager.ScmManager</role>
+        </requirement>
+      </requirements>
+    </component>
+
+    <!--
+     |
+     | Prepare Release Project Task Queue
+     |
+     |-->
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+      <role-hint>prepare-release</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
+      <lifecycle-handler>plexus-configurable</lifecycle-handler>
+      <configuration>
+        <task-entry-evaluators>
+        </task-entry-evaluators>
+        <task-exit-evaluators>
+        </task-exit-evaluators>
+        <task-viability-evaluators>
+        </task-viability-evaluators>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+      <role-hint>prepare-release</role-hint>
+      <implementation>org.apache.maven.continuum.release.executors.PrepareReleaseTaskExecutor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.release.ContinuumReleaseManager</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.shared.release.ReleaseManager</role>
+          <role-hint>continuum</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.settings.MavenSettingsBuilder</role>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
+      <role-hint>prepare-release</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+          <role-hint>prepare-release</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>prepare-release</role-hint>
+        </requirement>
+      </requirements>
+      <configuration>
+        <name>prepare-release</name>
+      </configuration>
+    </component>
+
+    <!--
+     |
+     | Perform Release Project Task Queue
+     |
+     |-->
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+      <role-hint>perform-release</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
+      <lifecycle-handler>plexus-configurable</lifecycle-handler>
+      <configuration>
+        <task-entry-evaluators>
+        </task-entry-evaluators>
+        <task-exit-evaluators>
+        </task-exit-evaluators>
+        <task-viability-evaluators>
+        </task-viability-evaluators>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+      <role-hint>perform-release</role-hint>
+      <implementation>org.apache.maven.continuum.release.executors.PerformReleaseTaskExecutor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.release.ContinuumReleaseManager</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.shared.release.ReleaseManager</role>
+          <role-hint>continuum</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.project.MavenProjectBuilder</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.settings.MavenSettingsBuilder</role>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
+      <role-hint>perform-release</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+          <role-hint>perform-release</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>perform-release</role-hint>
+        </requirement>
+      </requirements>
+      <configuration>
+        <name>perform-release</name>
+      </configuration>
+    </component>
+
+    <!--
+     |
+     | Rollback Release Project Task Queue
+     |
+     |-->
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+      <role-hint>rollback-release</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.DefaultTaskQueue</implementation>
+      <lifecycle-handler>plexus-configurable</lifecycle-handler>
+      <configuration>
+        <task-entry-evaluators>
+        </task-entry-evaluators>
+        <task-exit-evaluators>
+        </task-exit-evaluators>
+        <task-viability-evaluators>
+        </task-viability-evaluators>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+      <role-hint>rollback-release</role-hint>
+      <implementation>org.apache.maven.continuum.release.executors.RollbackReleaseTaskExecutor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.continuum.release.ContinuumReleaseManager</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.shared.release.ReleaseManager</role>
+          <role-hint>continuum</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.settings.MavenSettingsBuilder</role>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.codehaus.plexus.taskqueue.execution.TaskQueueExecutor</role>
+      <role-hint>rollback-release</role-hint>
+      <implementation>org.codehaus.plexus.taskqueue.execution.ThreadedTaskQueueExecutor</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.execution.TaskExecutor</role>
+          <role-hint>rollback-release</role-hint>
+        </requirement>
+        <requirement>
+          <role>org.codehaus.plexus.taskqueue.TaskQueue</role>
+          <role-hint>rollback-release</role-hint>
+        </requirement>
+      </requirements>
+      <configuration>
+        <name>rollback-release</name>
+      </configuration>
+    </component>
+
+    <!--
+     | Override Release Manager components
+     |-->
+    <component>
+      <role>org.apache.maven.shared.release.ReleaseManager</role>
+      <role-hint>continuum</role-hint>
+      <implementation>org.apache.maven.shared.release.DefaultReleaseManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.shared.release.phase.ReleasePhase</role>
+          <field-name>releasePhases</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.shared.release.config.ReleaseDescriptorStore</role>
+          <role-hint>continuum-release-properties</role-hint>
+          <field-name>configStore</field-name>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.shared.release.scm.ScmRepositoryConfigurator</role>
+        </requirement>
+      </requirements>
+      <configuration>
+        <preparePhases>
+          <phase>update-working-copy</phase>
+          <phase>generate-reactor-projects</phase>
+          <phase>check-poms</phase>
+          <phase>scm-check-modifications</phase>
+          <phase>check-dependency-snapshots</phase>
+          <phase>create-backup-poms</phase>
+          <phase>map-release-versions</phase>
+          <phase>input-variables</phase>
+          <phase>map-development-versions</phase>
+          <phase>rewrite-poms-for-release</phase>
+          <phase>generate-release-poms</phase>
+          <phase>run-release-prepare-goals</phase>
+          <phase>scm-commit-release</phase>
+          <phase>scm-tag</phase>
+          <phase>rewrite-poms-for-development</phase>
+          <phase>remove-release-poms</phase>
+          <phase>scm-commit-development</phase>
+          <phase>end-release</phase>
+        </preparePhases>
+        <performPhases>
+          <phase>verify-completed-prepare-phases</phase>
+          <phase>checkout-project-from-scm</phase>
+          <phase>run-release-perform-goals</phase>
+        </performPhases>
+        <rollbackPhases>
+          <phase>generate-reactor-projects</phase>
+          <phase>restore-backup-poms</phase>
+          <phase>scm-commit-rollback</phase>
+          <phase>remove-scm-tag</phase>
+        </rollbackPhases>
+      </configuration>
+    </component>
+    <component>
+      <role>org.apache.maven.shared.release.phase.ReleasePhase</role>
+      <role-hint>update-working-copy</role-hint>
+      <implementation>org.apache.maven.continuum.release.phase.UpdateWorkingCopyPhase</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.shared.release.scm.ScmRepositoryConfigurator</role>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>org.apache.maven.shared.release.phase.ReleasePhase</role>
+      <role-hint>generate-reactor-projects</role-hint>
+      <implementation>org.apache.maven.continuum.release.phase.GenerateReactorProjectsPhase</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.project.MavenProjectBuilder</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.settings.MavenSettingsBuilder</role>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>org.apache.maven.shared.release.phase.ReleasePhase</role>
+      <role-hint>run-release-prepare-goals</role-hint>
+      <implementation>org.apache.continuum.release.phase.RunPrepareGoalsPhase</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.continuum.utils.shell.ShellCommandHelper</role>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>org.apache.maven.shared.release.phase.ReleasePhase</role>
+      <role-hint>run-release-perform-goals</role-hint>
+      <implementation>org.apache.continuum.release.phase.RunPerformGoalsPhase</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.continuum.utils.shell.ShellCommandHelper</role>
+        </requirement>
+      </requirements>
+    </component>
+    
+    <!-- This needs to be removed once we can upgrade maven-project to 2.1-SNAPSHOT or later. -->
+    <component>
+      <role>org.apache.maven.artifact.metadata.ArtifactMetadataSource</role>
+      <role-hint>default</role-hint>
+      <implementation>org.apache.maven.project.artifact.MavenMetadataSource</implementation>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.project.MavenProjectBuilder</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.artifact.factory.ArtifactFactory</role>
+        </requirement>
+        <requirement>
+          <role>org.apache.maven.artifact.repository.metadata.RepositoryMetadataManager</role>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>org.apache.maven.shared.release.config.ReleaseDescriptorStore</role>
+      <role-hint>continuum-release-properties</role-hint>
+      <implementation>org.apache.continuum.release.config.ContinuumPropertiesReleaseDescriptorStore</implementation>
+    </component>
+  </components>
+
+</component-set>

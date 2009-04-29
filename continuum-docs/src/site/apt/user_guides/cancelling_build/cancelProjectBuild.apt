@@ -1,0 +1,15 @@
+ ------
+ Cancelling Project Build
+ ------
+ Maria Catherine Tan
+ ------
+ Jan 16 2009
+ ------
+
+Cancelling Project Build
+
+    This will cancel the build of the selected project.
+
+    To cancel build for project, click the
+
+[../../images/cancelbuild.gif] Cancel Button of the project on the Project Group Summary page or on the Queues page.

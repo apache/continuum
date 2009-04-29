@@ -1,0 +1,26 @@
+ ------
+ Queue Managing
+ ------
+ Maria Catherine Tan
+ ------
+ June 02 2008
+ ------
+
+Managing Queues
+
+	Click the <<Queues>> link under the <<Administration>> section
+
+[../images/queues.png] Queues
+
+  To display :
+  
+[../images/queues-view.png] Queues View  
+	
+	You must have a <<"Manage Continuum Queues">> role for you to:
+
+    [[1]] Cancel current checkouts, current builds, queued checkouts and queued builds by clicking the  
+
+[../images/cancelbuild.gif] cancel build icon.
+  
+    [[2]] Cancel multiple queued tasks by selecting the corresponding checkboxes of the checkouts or builds you want to cancel and
+    then click the <<Cancel Entries>> button.

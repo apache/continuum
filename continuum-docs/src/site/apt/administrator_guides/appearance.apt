@@ -1,0 +1,53 @@
+ ------
+ Appearance Configuration
+ ------
+ Olivier Lamy
+ ------
+ Nov 13 2007
+ ------
+ 
+Configure Appearance
+ 
+~~%{toc|section=0}
+ 
+* {Banner}
+
+  You can configure the right logo of the banner including title and link on the image.
+  You have to add some information in a pom (like a company pom) (coming from org.apache:apache in this example) :
+  
++----------------------------+
+  <organization>
+    <name>The Apache Software Foundation</name>
+    <url>http://www.apache.org/</url>
+  </organization>
+  <properties>
+    <organization.logo>http://www.apache.org/images/asf_logo_wide.gif</organization.logo>
+  </properties>
++----------------------------+  
+
+  From the menu, choose the 'Appearance' entry :
+  
+[../images/configure-appearance.png] Appearance
+
+  Use the 'Select a Company POM' link :
+  
+[../images/select-company-pom.png] 'Select a Company POM'   
+
+  The result will be displayed (using org.apache:apache in this example) :
+  
+[../images/selected-company-pom.png] 'Selected a Company POM'  
+
+  Note : the pom is searched in central repository and the repositories available for the active profiles from your <<<${user.home}/.m2/settings.xml>>> 
+ 
+* {Footer}
+ 
+  You can configure the footer by putting your own html content in the 'Appearance' entry of the menu.
+ 
+[../images/configuration-footer.png] 'Configure footer'
+
+  The default value is :
+    
++----------------------------+
+<div class="xright">Copyright &copy; 2005-${currentYear}&nbsp;The Apache Software Foundation</div> <div class="clear"><hr/></div> 
++----------------------------+      
+ 

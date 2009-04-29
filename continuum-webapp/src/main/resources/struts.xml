@@ -1,0 +1,1193 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE filebu
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd"> 
+
+<struts>
+  <include file="struts-default.xml"/>
+
+  <!-- Include plexus-security xwork configurations. -->
+  <include file="struts-security.xml"/>
+
+
+  <package name="default" extends="struts-default">
+
+    <interceptors>
+      <interceptor name="continuumConfigurationCheck" class="forceContinuumConfigurationInterceptor"/>
+      <interceptor name="redbackForceAdminUser" class="redbackForceAdminUserInterceptor"/>
+      <interceptor name="redbackSecureActions" class="redbackSecureActionInterceptor"/>
+      <interceptor name="redbackAutoLogin" class="redbackAutoLoginInterceptor"/>
+      <interceptor name="redbackPolicyEnforcement" class="redbackPolicyEnforcementInterceptor"/>
+      <interceptor name="redbackEnvironmentChecker" class="redbackEnvironmentCheckInterceptor"/>
+      
+      <interceptor-stack name="configuredContinuumStack">
+        <interceptor-ref name="redbackEnvironmentChecker"/>
+        <interceptor-ref name="redbackForceAdminUser"/>
+        <interceptor-ref name="redbackAutoLogin"/>
+        <interceptor-ref name="defaultStack"/>
+        <interceptor-ref name="redbackSecureActions"/>
+        <interceptor-ref name="redbackPolicyEnforcement"/>
+        <interceptor-ref name="continuumConfigurationCheck"/>
+        <interceptor-ref name="validation">
+          <param name="excludeMethods">input,back,cancel,browse,edit</param>
+        </interceptor-ref>
+        <interceptor-ref name="workflow">
+          <param name="excludeMethods">input,back,cancel,browse,edit</param>
+        </interceptor-ref>
+      </interceptor-stack>
+
+      <interceptor-stack name="unconfiguredContinuumStack">
+        <interceptor-ref name="redbackEnvironmentChecker"/>
+        <interceptor-ref name="redbackForceAdminUser"/>
+        <interceptor-ref name="redbackAutoLogin"/>
+        <interceptor-ref name="defaultStack"/>
+        <interceptor-ref name="redbackPolicyEnforcement"/>
+        <interceptor-ref name="redbackSecureActions"/>
+        <interceptor-ref name="validation">
+          <param name="excludeMethods">input,back,cancel,browse,edit</param>
+        </interceptor-ref>
+        <interceptor-ref name="workflow">
+          <param name="excludeMethods">input,back,cancel,browse,edit</param>
+        </interceptor-ref>
+      </interceptor-stack>
+    </interceptors>
+
+    <default-interceptor-ref name="configuredContinuumStack"/>
+
+    <global-results>
+
+      <result name="error">/WEB-INF/jsp/error/error.jsp</result>
+      <result name="internal-error">/WEB-INF/jsp/error/error.jsp</result>
+      <result name="internalError" type="redirect">/WEB-INF/jsp/error/error.jsp</result>
+      <result name="requires-authorization">/WEB-INF/jsp/error/authorizationError.jsp</result>
+
+
+      <result name="continuum-configuration-required" type="redirect-action">
+        <param name="actionName">configuration</param>
+        <param name="namespace">/admin</param>
+        <param name="method">input</param>
+      </result>
+
+      <!-- The following security-* result names arrive from the plexus-security package -->
+      <result name="security-login-success" type="redirect-action">
+        <param name="actionName">groupSummary</param>
+        <param name="namespace">/</param>
+      </result>
+      <result name="security-login-cancel" type="redirect-action">
+        <param name="actionName">groupSummary</param>
+        <param name="namespace">/</param>
+      </result>
+      <result name="security-login-locked" type="redirect-action">
+        <param name="actionName">groupSummary</param>
+        <param name="namespace">/</param>
+        <param name="infoMessage">Account Locked</param>
+      </result>
+      <result name="security-logout" type="redirect-action">
+        <param name="actionName">groupSummary</param>
+        <param name="namespace">/</param>
+      </result>
+      <result name="requires-authentication" type="redirect-action">
+        <param name="actionName">login</param>
+        <param name="namespace">/security</param>
+      </result>
+      <result name="security-register-success" type="redirect-action">
+        <param name="actionName">groupSummary</param>
+        <param name="namespace">/security</param>
+      </result>
+      <result name="security-register-cancel" type="redirect-action">
+        <param name="actionName">groupSummary</param>
+        <param name="namespace">/</param>
+      </result>
+      <result name="security-account-success" type="redirect-action">
+        <param name="actionName">groupSummary</param>
+        <param name="namespace">/</param>
+      </result>
+      <result name="security-account-cancel" type="redirect-action">
+        <param name="actionName">login</param>
+        <param name="namespace">/security</param>
+      </result>
+      <result name="security-admin-user-created" type="redirect-action">
+        <param name="actionName">login</param>
+        <param name="namespace">/security</param>
+      </result>
+      <result name="security-admin-user-needed" type="redirect-action">
+        <param name="actionName">addadmin</param>
+        <param name="namespace">/security</param>
+      </result>
+      <result name="security-must-change-password" type="redirect-action">
+        <param name="actionName">password</param>
+        <param name="namespace">/security</param>
+      </result>
+    </global-results>
+
+    <global-exception-mappings>
+      <exception-mapping exception="org.apache.maven.continuum.initialization.ContinuumInitializationException"
+                         result="continuumInitialization"/>
+      <exception-mapping exception="java.lang.Exception" result="error"/>
+    </global-exception-mappings>
+
+    <!-- This is the redirection facility for plexus-security,
+             allowing plexus-security to call out from its own set of actions
+             into the application webapp, using global result names. -->
+    <action name="redbackRedirect" class="redback-redirect" method="redirect">
+      <result type="redirect-action">groupSummary</result>
+    </action>
+
+    <action name="about" class="about">
+      <result name="success">/WEB-INF/jsp/about.jsp</result>
+    </action>
+
+
+    <action name="companyInfo" class="companyInfo">
+      <result name="success">/WEB-INF/jsp/components/companyLogo.jsp</result>
+      <interceptor-ref name="basicStack" />
+    </action>
+    
+    <action name="bottom" class="bottom">
+      <result name="success">/WEB-INF/jsp/navigations/DefaultBottom.jsp</result>
+      <interceptor-ref name="basicStack" />
+    </action>    
+    
+
+    <action name="groupSummary" class="groupSummary">
+      <result name="success">/WEB-INF/jsp/groupSummary.jsp</result>
+    </action>
+
+    <action name="addMavenTwoProjectInput" class="addMavenTwoProject">
+      <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
+    </action>        
+    
+    <action name="addMavenTwoProject" class="addMavenTwoProject">
+      <interceptor-ref name="configuredContinuumStack"/>
+      <interceptor-ref name="fileUpload"/>
+      <interceptor-ref name="execAndWait">
+        <param name="delay">200</param>
+        <param name="delaySleepInterval">50</param>
+      </interceptor-ref> 
+      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>     
+      <result name="input">/WEB-INF/jsp/addMavenTwoProject.jsp</result>
+      <result name="success" type="chain">groupSummary</result>
+      <result name="projectGroupSummary" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
+    <action name="addMavenOneProjectInput" class="addMavenOneProject">
+      <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
+    </action>    
+    
+    <action name="addMavenOneProject" class="addMavenOneProject">
+      <interceptor-ref name="configuredContinuumStack"/>
+      <interceptor-ref name="execAndWait"/>
+      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>      
+      <result name="input">/WEB-INF/jsp/addMavenOneProject.jsp</result>
+      <result name="success" type="chain">groupSummary</result>
+      <result name="projectGroupSummary" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
+    <action name="addProjectInput" class="addProject" method="input">
+      <result name="input">/WEB-INF/jsp/addProject.jsp</result>
+    </action>
+
+    <action name="addProject" class="addProject" method="add">
+      <interceptor-ref name="configuredContinuumStack"/>
+      <interceptor-ref name="execAndWait"/>
+      <result name="wait">/WEB-INF/jsp/navigations/wait.jsp</result>      
+      <result name="input" type="chain">addProjectInput</result>
+      <result name="success" type="chain">groupSummary</result>
+      <result name="projectGroupSummary" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
+    <action name="deleteProject" class="deleteProject">
+      <result name="delete">/WEB-INF/jsp/deleteProject.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
+    <action name="ProjectsList" class="projects">
+      <result name="confirmRemove">/WEB-INF/jsp/confirmDeleteProjects.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
+    <action name="buildProject" class="buildProject">
+      <result name="success" type="chain">groupSummary</result>
+      <result name="to_group_page" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+      <result name="to_project_page" type="chain">projectView</result>
+    </action>
+
+    <action name="projectView" class="projectView">
+      <result name="success">/WEB-INF/jsp/projectView.jsp</result>
+    </action>
+
+    <action name="projectEdit" class="projectEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/projectEdit.jsp</result>
+    </action>
+
+    <action name="projectSave" class="projectEdit" method="save">
+      <result name="input">/WEB-INF/jsp/projectEdit.jsp</result>
+      <result name="success" type="chain">projectView</result>
+    </action>
+
+    <!--
+    * build definition actions
+    -->
+    <action name="buildDefinition" class="buildDefinition" method="input">
+      <result name="success">/WEB-INF/jsp/buildDefinitionEdit.jsp</result>
+    </action>
+
+    <action name="saveBuildDefinition" class="buildDefinition" method="saveBuildDefinition">
+      <result name="input">/WEB-INF/jsp/buildDefinitionEdit.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectView</param>
+        <param name="projectId">${projectId}</param>
+      </result>
+      <result name="success_group" type="chain">projectGroupBuildDefinition</result>
+    </action>
+
+    <action name="saveProjectBuildDefinition" class="buildDefinition" method="saveToProject">
+      <result name="input">/WEB-INF/jsp/buildDefinitionEdit.jsp</result>
+      <result name="success" type="chain">projectView</result>
+    </action>
+
+    <action name="removeProjectBuildDefinition" class="buildDefinition" method="removeFromProject">
+      <result name="confirm">/WEB-INF/jsp/deleteBuildDefinition.jsp</result>
+      <result name="success" type="chain">projectView</result>
+    </action>
+
+    <action name="saveGroupBuildDefinition" class="buildDefinition" method="saveToGroup">
+      <result name="success" type="chain">projectGroupBuildDefinition</result>
+    </action>
+
+    <action name="removeGroupBuildDefinition" class="buildDefinition" method="removeFromProjectGroup">
+      <result name="confirm">/WEB-INF/jsp/confirmBuildDefinitionRemoval.jsp</result>
+      <result name="success" type="chain">projectGroupBuildDefinition</result>
+    </action>
+
+
+    <!--
+    * project group actions
+    -->
+    <action name="projectGroupSummary" class="projectGroup" method="summary">
+      <result name="success">/WEB-INF/jsp/projectGroupSummary.jsp</result>
+    </action>
+
+    <action name="projectGroupMembers" class="projectGroup" method="members">
+      <result name="success">/WEB-INF/jsp/projectGroupMembers.jsp</result>
+    </action>
+
+    <action name="projectGroupBuildDefinition" class="projectGroup" method="buildDefinitions">
+      <result name="success">/WEB-INF/jsp/projectGroupBuildDefinition.jsp</result>
+    </action>
+
+    <action name="projectGroupNotifier" class="projectGroup" method="notifiers">
+      <result name="success">/WEB-INF/jsp/projectGroupNotifier.jsp</result>
+    </action>
+
+    <action name="buildProjectGroup" class="projectGroup" method="build">
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+      <result name="to_summary_page" type="chain">groupSummary</result>
+    </action>
+
+    <action name="removeProjectGroup" class="projectGroup" method="remove">
+      <result name="confirm">/WEB-INF/jsp/confirmGroupRemoval.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">groupSummary</param>
+      </result>
+    </action>
+    
+    <action name="releaseProjectGroup" class="projectGroup" method="release">
+      <result name="input" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">releasePromptGoal</param>
+        <param name="projectId">${releaseProjectId}</param>
+      </result>
+    </action>
+
+    <action name="addProjectGroup" class="addProjectGroup">
+      <result name="input">/WEB-INF/jsp/projectGroupAdd.jsp</result>
+      <result name="success" type="redirect-action">groupSummary</result>
+    </action>
+
+    <action name="editProjectGroup" class="projectGroup" method="edit">
+      <result name="success">/WEB-INF/jsp/projectGroupEdit.jsp</result>
+    </action>
+
+    <action name="saveProjectGroup" class="projectGroup" method="save">
+      <result name="input">/WEB-INF/jsp/projectGroupEdit.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
+    <!--
+    *  build results, test reporting, working copy actions
+    -->
+    <action name="buildResults" class="buildResults">
+      <result name="success">/WEB-INF/jsp/buildResults.jsp</result>
+    </action>
+    
+    <action name="removeBuildResults" class="buildResults" method="remove">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildResults</param>
+        <param name="projectId">${projectId}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/confirmBuildResultsRemoval.jsp</result>
+    </action>
+
+    <action name="buildResult" class="buildResult">
+      <result name="success">/WEB-INF/jsp/buildResult.jsp</result>
+      <result name="error" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+    
+    <action name="buildOutputText" class="buildResult">
+      <result name="success" type="stream">
+        <param name="inputName">buildOutputInputStream</param>
+        <param name="contentDisposition">attachment; filename="build-output.txt"</param>
+      </result>
+    </action>    
+    
+    <action name="removeBuildResult" class="buildResult" method="remove">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildResults</param>
+        <param name="projectId">${projectId}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/confirmBuildResultsRemoval.jsp</result>
+    </action>
+
+    <action name="surefireReport" class="surefireReport">
+      <result name="success">/WEB-INF/jsp/surefireReport.jsp</result>
+    </action>
+
+    <action name="workingCopy" class="workingCopy">
+      <result name="success">/WEB-INF/jsp/workingCopy.jsp</result>
+      <result name="stream" type="stream">
+        <param name="contentType">application/octet-stream</param>
+        <param name="contentDisposition">filename="${downloadFilename}"</param>
+        <param name="contentLength">${fileLength}</param>
+      </result>
+    </action>
+    
+    <action name="workingCopyFileText" class="workingCopy">
+      <result name="success" type="stream">
+        <param name="contentType">application/octet-stream</param>
+        <param name="contentDisposition">filename="${downloadFilename}"</param>
+        <param name="contentLength">${fileLength}</param>
+      </result>
+    </action>
+
+    <action name="scmResult" class="scmResult">
+      <result name="success">/WEB-INF/jsp/scmResult.jsp</result>
+    </action>
+    
+    <!--
+    * schedule actions
+    -->
+    <action name="schedules" class="schedule" method="summary">
+      <result name="success">/WEB-INF/jsp/schedules.jsp</result>
+    </action>
+
+    <action name="schedule" class="schedule" method="input">
+      <result name="success">/WEB-INF/jsp/editSchedule.jsp</result>
+    </action>
+
+    <action name="saveSchedule" class="schedule" method="save">
+      <result name="input">/WEB-INF/jsp/editSchedule.jsp</result>
+      <result name="success" type="chain">schedules</result>
+      <result name="error" type="chain">schedule</result>
+    </action>
+    <action name="removeSchedule" class="schedule" method="remove">
+      <result name="confirm">/WEB-INF/jsp/confirmScheduleRemoval.jsp</result>
+      <result name="success" type="chain">schedules</result>
+      <result name="error" type="chain">schedule</result>
+    </action>
+
+    <action name="cancelBuild" class="cancelBuild">
+      <result name="success" type="chain">buildResults</result>
+    </action>
+    
+    <action name="cancelBuilds" class="cancelBuild" method="cancelBuilds">
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>    
+
+    <action name="cancelGroupBuild" class="cancelBuild" method="cancelGroupBuild">
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
+    <!--
+    - continuum release
+    -->
+    <action name="releasePromptGoal" class="releaseProject" method="promptReleaseGoal">
+      <result name="success">/WEB-INF/jsp/releaseProject.jsp</result>
+      <result name="releaseOutputDir-required" type="redirect-action">
+        <param name="actionName">configuration</param>
+        <param name="namespace">/admin</param>
+        <param name="method">input</param>
+        <param name="requireReleaseOutput">true</param>
+      </result>
+    </action>
+
+    <action name="releaseProject" class="releaseProject">
+      <result name="prepareRelease" type="redirect-action">
+        <param name="actionName">releasePrepareInput</param>
+        <param name="projectId">${projectId}</param>
+      </result>
+      <result name="performRelease" type="redirect-action">
+        <param name="actionName">releasePerformInput</param>
+        <param name="projectId">${projectId}</param>
+        <param name="releaseId">${preparedReleaseId}</param>
+      </result>
+      <result name="performReleaseFromScm" type="redirect-action">
+        <param name="actionName">releasePerformFromScmInput</param>
+        <param name="projectId">${projectId}</param>
+      </result>
+    </action>
+
+    <action name="releasePrepareInput" class="releasePrepare" method="input">
+      <result name="success">/WEB-INF/jsp/releasePrepare.jsp</result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="releasePrepare" class="releasePrepare">
+      <result name="input" type="chain">releasePrepareInput</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">releaseInProgress</param>
+        <param name="releaseId">${releaseId}</param>
+        <param name="projectId">${projectId}</param>
+        <param name="releaseGoal">prepare</param>
+      </result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="releasePerformInput" class="releasePerform" method="input">
+      <result name="success">/WEB-INF/jsp/releasePerform.jsp</result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="releasePerform" class="releasePerform">
+      <result name="input" type="chain">releasePerformInput</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">releaseInProgress</param>
+        <param name="releaseId">${releaseId}</param>
+        <param name="projectId">${projectId}</param>
+        <param name="releaseGoal">perform</param>
+      </result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="releasePerformFromScmInput" class="releasePerform" method="inputFromScm">
+      <result name="success">/WEB-INF/jsp/releasePerformFromScm.jsp</result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="releasePerformFromScm" class="releasePerform" method="executeFromScm">
+      <result name="input">/WEB-INF/jsp/releasePerformFromScm.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">releaseInProgress</param>
+        <param name="projectId">${projectId}</param>
+        <param name="releaseId">${releaseId}</param>
+        <param name="releaseGoal">perform</param>
+      </result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="releaseInProgress" class="releaseInProgress">
+      <result name="initialized">/WEB-INF/jsp/releaseInitialized.jsp</result>
+      <result name="inProgress">/WEB-INF/jsp/releaseInProgress.jsp</result>
+      <result name="success">/WEB-INF/jsp/releaseFinished.jsp</result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="releaseRollbackWarning" class="releaseRollback" method="warn">
+      <result>/WEB-INF/jsp/releaseRollbackWarning.jsp</result>
+    </action>
+
+    <action name="releaseRollback" class="releaseRollback">
+      <result name="success" type="redirect-action">
+        <param name="actionName">releaseCleanup</param>
+        <param name="projectId">${projectId}</param>
+        <param name="releaseId">${releaseId}</param>
+      </result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="releaseCleanup" class="releaseCleanup">
+      <result name="prepareFinished" type="chain">releasePromptGoal</result>
+      <result name="performFinished" type="redirect-action">
+        <param name="actionName">projectGroupSummary</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="releaseViewResult" class="releaseInProgress" method="viewResult">
+      <result name="success">/WEB-INF/jsp/releaseViewResult.jsp</result>
+      <result name="error">/WEB-INF/jsp/error/releaseError.jsp</result>
+    </action>
+
+    <action name="viewReleaseResult" class="releaseResult" method="viewResult">
+      <result name="success">/WEB-INF/jsp/releaseViewResult.jsp</result>
+    </action>
+
+    <action name="projectGroupReleaseResults" class="releaseResult" method="list">
+      <result name="success">/WEB-INF/jsp/projectGroupReleaseResults.jsp</result>
+    </action>
+
+    <action name="removeReleaseResults" class="releaseResult" method="remove">
+      <result name="confirm">/WEB-INF/jsp/confirmReleaseResultsRemoval.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">projectGroupReleaseResults</param>
+        <param name="projectGroupId">${projectGroupId}</param>
+      </result>
+    </action>
+
+    <action name="viewReleases" class="distributedRelease" method="list">
+      <result name="success">/WEB-INF/jsp/releases.jsp</result>
+    </action>
+  </package>
+
+  <!--
+  |
+  | admin actions
+  |
+  | administrative secured actions ought to be placed in here so there is a clear seperation between secured
+  | actions and others
+  |
+  -->
+  <package name="admin" extends="default">
+
+    <action name="configuration" class="configuration">
+      <interceptor-ref name="unconfiguredContinuumStack"/>
+      <result name="input">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/configuration.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/configurationEdit.jsp</result>
+    </action>
+
+    <action name="configureAppearance" class="configureAppearance" method="input">
+      <result name="input">/WEB-INF/jsp/admin/appearance.jsp</result>
+    </action>
+    
+    <action name="saveFooter" class="configureFooter" method="saveFooter">
+      <result name="input">/WEB-INF/jsp/admin/appearance.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/appearance.jsp</result>
+    </action>    
+      
+    <action name="editAppearance" class="configureAppearance" method="input">
+      <result name="input">/WEB-INF/jsp/admin/editAppearance.jsp</result>
+    </action>
+
+    <action name="saveAppearance" class="configureAppearance">
+      <result name="input">/WEB-INF/jsp/admin/editAppearance.jsp</result>
+      <result type="redirect-action">
+        <param name="actionName">configureAppearance</param>
+        <param name="namespace">/admin</param>
+      </result>
+    </action>
+
+    <action name="editCompanyPom" class="editPom" method="input">
+      <result name="input">/WEB-INF/jsp/admin/editPom.jsp</result>
+    </action>
+
+    <action name="saveCompanyPom" class="editPom">
+      <result name="input">/WEB-INF/jsp/admin/editPom.jsp</result>
+      <result type="redirect-action">
+        <param name="actionName">configureAppearance</param>
+        <param name="namespace">/admin</param>
+      </result>
+    </action>
+      
+    <!--
+       Build Environment actions
+    -->      
+      
+    <action name="buildEnvList" class="profileAdministration" method="list">
+      <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
+    </action>   
+      
+    <action name="addBuildEnv" class="profileAdministration">
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>   
+    </action>
+        
+    <action name="editBuildEnv" class="profileAdministration">
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
+    </action>
+      
+    <action name="deleteBuildEnv" class="profileAdministration" method="delete">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildEnvList</param>
+        <param name="namespace">/admin</param>
+        <param name="method">list</param>
+      </result>
+      <result name="error" type="redirect-action">
+        <param name="actionName">buildEnvList</param>
+        <param name="namespace">/admin</param>
+        <param name="method">list</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+    </action>      
+    
+    <action name="confirmDeleteBuildEnv" class="profileAdministration" method="confirmDelete">
+      <result name="success">/WEB-INF/jsp/admin/confirmDeleteBuildEnv.jsp</result>
+    </action>  
+      
+    <action name="saveBuildEnv" class="profileAdministration" method="save">
+      <result name="success">/WEB-INF/jsp/admin/profilesList.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>
+      <result name="editProfile">/WEB-INF/jsp/admin/editProfile.jsp</result>
+    </action>
+      
+    <action name="addInstallationBuildEnv" class="profileAdministration" method="addInstallation">
+      <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>        
+    </action>  
+    
+    <action name="removeBuildEnvInstallation" class="profileAdministration" method="removeInstallation">
+      <result name="success">/WEB-INF/jsp/admin/editProfile.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editProfile.jsp</result>        
+    </action>
+      
+    <!--
+       Installation actions 
+    -->  
+    <action name="installationsTypeChoice" class="installation" method="listTypes">
+      <result name="success">/WEB-INF/jsp/admin/installationsTypeChoice.jsp</result>
+    </action>
+    
+    <action name="installationsList" class="installation" method="list">
+      <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
+    </action>        
+      
+    <action name="editInstallation" class="installation" method="edit">
+      <result name="success">/WEB-INF/jsp/admin/editInstallation.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>    
+    </action>
+      
+    <action name="saveInstallation" class="installation" method="save">
+      <result name="input">/WEB-INF/jsp/admin/editInstallation.jsp</result>
+      <result name="success" type="redirect-action">installationsList</result>
+    </action> 
+    
+    <action name="deleteInstallation" class="installation" method="delete">
+      <result name="input">/WEB-INF/jsp/admin/installationsList.jsp</result>
+      <result name="success">/WEB-INF/jsp/admin/installationsList.jsp</result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteInstallation.jsp</result>
+    </action>  
+    
+    <!--addBuildEnv
+       Build Definitions Templates actions 
+    -->  
+    <action name="buildDefinitionTemplates" class="buildDefinitionTemplates" method="summary">
+      <result name="success">/WEB-INF/jsp/admin/buildDefinitionTemplateSummary.jsp</result>
+    </action>
+    
+    <action name="buildDefinitionTemplate" class="buildDefinitionTemplates" method="input">
+      <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+    </action>
+    
+    <action name="editBuildDefinitionTemplate" class="buildDefinitionTemplates" method="edit">
+      <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+    </action>
+
+    <action name="deleteDefinitionTemplate" class="buildDefinitionTemplates" method="delete">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildDefinitionTemplates.action</param>        
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionTemplate.jsp</result>
+    </action>
+    
+    <action name="saveBuildDefinitionTemplate" class="buildDefinitionTemplates" method="save">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildDefinitionTemplates.action</param>
+      </result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionTemplate.jsp</result>
+    </action>
+    
+    <action name="editBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="editBuildDefinition">
+      <result name="success">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+    </action>
+    
+    <action name="saveBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="saveBuildDefinition">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildDefinitionTemplates.action</param>
+      </result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+    </action>
+
+    <action name="buildDefinitionAsTemplate" class="buildDefinitionTemplates" method="saveBuildDefinition">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildDefinitionTemplates.action</param>
+      </result>
+      <result name="input">/WEB-INF/jsp/admin/editBuildDefinitionAsTemplate.jsp</result>
+    </action>
+              
+    <action name="deleteBuildDefinitionAsTemplate" class="buildDefinitionTemplates" method="deleteBuildDefinition">
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildDefinitionTemplates.action</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildDefinitionAsTemplate.jsp</result>
+    </action>
+    
+    <action name="displayQueues" class="queues" method="display">
+      <result name="success">/WEB-INF/jsp/admin/buildQueueView.jsp</result>
+      <result name="distributed-build-success">/WEB-INF/jsp/admin/viewDistributedBuilds.jsp</result>
+    </action>
+    
+    <action name="removeBuildQueueEntry" class="queues" method="remove">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action>   
+    
+    <action name="removeBuildQueueEntries" class="queues" method="removeBuildEntries">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action>    
+    
+    <action name="cancelCurrentBuildTask" class="queues" method="cancelCurrent">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action> 
+    
+    <action name="removeCheckoutQueueEntry" class="queues" method="removeCheckout">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action>
+    
+    <action name="cancelCurrentQueueTask" class="queues" method="cancelCurrentCheckout">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action>    
+    
+    <action name="removeCheckoutQueueEntries" class="queues" method="removeCheckoutEntries">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>      
+    </action>    
+    
+    <action name="cancelDistributedBuild" class="queues" method="cancelDistributedBuild">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
+
+    <action name="removeDistributedBuildEntries" class="queues" method="removeDistributedBuildEntries">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
+    
+    <action name="removeDistributedBuildEntry" class="queues" method="removeDistributedBuildEntry">
+      <result name="success" type="redirect-action">
+        <param name="actionName">displayQueues</param>
+      </result>
+    </action>
+    
+    <!--
+    * Build Queue (Parallel Builds)
+    -->
+    
+    <action name="buildQueueList" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="list">
+      <result name="success">/WEB-INF/jsp/admin/parallelbuilds.jsp</result>
+    </action>
+    
+    <action name="addBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction">
+      <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result> 
+    </action>
+    
+    <action name="saveBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="save">
+      <result name="input">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editParallelBuilds.jsp</result>
+      <result name="success" type="redirect-action">buildQueueList</result>
+    </action> 
+    
+    <action name="deleteBuildQueue" class="org.apache.maven.continuum.web.action.admin.BuildQueueAction" method="delete">
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildQueue.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildQueueList</param>
+      </result>    
+    </action>  
+            
+    <!--
+    * Local Repository actions
+    -->
+    
+    <action name="repositoryList" class="localRepository" method="list">
+      <result name="success">/WEB-INF/jsp/admin/localRepositoriesList.jsp</result>
+    </action>
+    
+    <action name="editRepository" class="localRepository" method="input">
+      <result name="error">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
+    </action>
+    
+    <action name="saveRepository" class="localRepository" method="save">
+      <result name="error">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editLocalRepository.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+      </result>
+    </action>
+    
+    <action name="removeRepository" class="localRepository" method="remove">
+      <result name="error" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteLocalRepository.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+      </result>
+    </action>
+    
+    <action name="purgeRepository" class="localRepository" method="doPurge">
+      <result name="success" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+      </result>
+      <result name="error" type="redirect-action">
+        <param name="actionName">repositoryList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+    </action>
+    
+    <!--
+    * Purge actions
+    -->
+    
+    <action name="purgeConfigList" class="purgeConfiguration" method="list">
+      <result name="success">/WEB-INF/jsp/admin/purgeConfigurationsList.jsp</result>
+    </action>
+    
+    <action name="editPurgeConfig" class="purgeConfiguration" method="input">
+      <result name="error">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
+      <result name="input">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
+    </action>
+    
+    <action name="savePurgeConfig" class="purgeConfiguration" method="save">
+      <result name="input">/WEB-INF/jsp/admin/editPurgeConfiguration.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+      </result>
+    </action>
+    
+    <action name="removePurgeConfig" class="purgeConfiguration" method="remove">
+      <result name="error" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeletePurgeConfiguration.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+      </result>
+    </action>
+    
+    <action name="doPurge" class="purgeConfiguration" method="purge">
+      <result name="success" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+      </result>
+      <result name="error" type="redirect-action">
+        <param name="actionName">purgeConfigList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+    </action>
+    
+    <action name="buildAgentList" class="buildAgent" method="list">
+      <result name="success">/WEB-INF/jsp/admin/buildAgentsList.jsp</result>
+    </action>
+    
+    <action name="editBuildAgent" class="buildAgent" method="input">
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+    </action>
+    
+    <action name="saveBuildAgent" class="buildAgent" method="save">
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgent.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+      </result>
+    </action>
+    
+    <action name="deleteBuildAgent" class="buildAgent" method="delete">
+      <result name="error" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildAgent.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+      </result>
+    </action>
+    
+    <action name="viewBuildAgent" class="buildAgent" method="view">
+      <result name="success">/WEB-INF/jsp/admin/viewBuildAgent.jsp</result>
+    </action>
+
+    <action name="deleteBuildAgentGroup" class="buildAgent" method="deleteGroup">
+      <result name="error" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+        <param name="errorMessage">${message}</param>
+      </result>
+      <result name="confirm">/WEB-INF/jsp/admin/confirmDeleteBuildAgentGroup.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+      </result>
+    </action>
+
+    <action name="editBuildAgentGroup" class="buildAgent" method="inputGroup">
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
+    </action>
+
+    <action name="saveBuildAgentGroup" class="buildAgent" method="saveGroup">
+      <result name="input">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
+      <result name="error">/WEB-INF/jsp/admin/editBuildAgentGroup.jsp</result>
+      <result name="success" type="redirect-action">
+        <param name="actionName">buildAgentList</param>
+      </result>
+    </action>
+
+  </package>
+
+  <package name="component" extends="default">
+    <!--
+    * component actions
+    -->
+    <action name="buildDefinitionSummary" class="buildDefinitionSummary" method="summarizeForProject">
+      <result name="success">/WEB-INF/jsp/components/buildDefinitionSummaryComponent.jsp</result>
+      <result name="error">/WEB-INF/jsp/components/failureComponent.jsp</result>
+    </action>
+
+    <action name="groupBuildDefinitionSummary" class="buildDefinitionSummary" method="summarizeForGroup">
+      <result name="success">/WEB-INF/jsp/components/buildDefinitionGroupSummaryComponent.jsp</result>
+      <result name="error">/WEB-INF/jsp/components/failureComponent.jsp</result>
+    </action>
+
+    <action name="projectGroupTab" class="continuumTab">
+      <result name="input">/WEB-INF/jsp/components/projectGroupTabComponent.jsp</result>
+      <result name="success">/WEB-INF/jsp/components/projectGroupTabComponent.jsp</result>
+      <result name="error">/WEB-INF/jsp/components/failureComponent.jsp</result>
+    </action>
+
+    <action name="projectSummary" class="summary">
+      <result name="input">/WEB-INF/jsp/components/projectSummaryComponent.jsp</result>
+      <result name="success">/WEB-INF/jsp/components/projectSummaryComponent.jsp</result>
+      <result name="error">/WEB-INF/jsp/components/failureComponent.jsp</result>
+    </action>
+
+    <action name="projectNotifierSummary" class="notifierSummary" method="summarizeForProject">
+      <result name="success">/WEB-INF/jsp/components/projectNotifierSummaryComponent.jsp</result>
+      <result name="error">/WEB-INF/jsp/components/failureComponent.jsp</result>
+    </action>
+
+    <action name="projectGroupNotifierSummary" class="notifierSummary" method="summarizeForProjectGroup">
+      <result name="success">/WEB-INF/jsp/components/projectGroupNotifierSummaryComponent.jsp</result>
+      <result name="error">/WEB-INF/jsp/components/failureComponent.jsp</result>
+    </action>
+
+  </package>
+
+  <package name="notifier" extends="default">
+    <!--
+    * notifier actions :: Project
+    -->
+    <action name="deleteProjectNotifier" class="deleteProjectNotifier">
+      <result name="delete">/WEB-INF/jsp/notifier/deleteNotifier.jsp</result>
+      <result name="success" type="chain">projectView</result>
+      <result name="to_group_page" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="addProjectNotifier" class="addProjectNotifier" method="doDefault">
+      <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
+      <result name="mail_input">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
+      <result name="irc_input">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>
+      <result name="msn_input">/WEB-INF/jsp/notifier/notifierMsn.jsp</result>
+      <result name="jabber_input">/WEB-INF/jsp/notifier/notifierJabber.jsp</result>
+      <result name="wagon_input">/WEB-INF/jsp/notifier/notifierWagon.jsp</result>
+    </action>
+
+    <action name="editProjectNotifier" class="addProjectNotifier">
+      <result name="mail_input" type="chain">mailProjectNotifierEdit</result>
+      <result name="irc_input" type="chain">ircProjectNotifierEdit</result>
+      <result name="msn_input" type="chain">msnProjectNotifierEdit</result>
+      <result name="jabber_input" type="chain">jabberProjectNotifierEdit</result>
+      <result name="wagon_input" type="chain">wagonProjectNotifierEdit</result>
+    </action>
+
+    <action name="mailProjectNotifierEdit" class="mailProjectNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
+    </action>
+
+    <action name="mailProjectNotifierSave" class="mailProjectNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
+      <result name="success" type="chain">projectView</result>
+      <result name="to_group_page" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="ircProjectNotifierEdit" class="ircProjectNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>
+    </action>
+
+    <action name="ircProjectNotifierSave" class="ircProjectNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>
+      <result name="success" type="chain">projectView</result>
+      <result name="to_group_page" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="jabberProjectNotifierEdit" class="jabberProjectNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierJabber.jsp</result>
+    </action>
+
+    <action name="jabberProjectNotifierSave" class="jabberProjectNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierJabber.jsp</result>
+      <result name="success" type="chain">projectView</result>
+      <result name="to_group_page" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="msnProjectNotifierEdit" class="msnProjectNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierMsn.jsp</result>
+    </action>
+
+    <action name="msnProjectNotifierSave" class="msnProjectNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierMsn.jsp</result>
+      <result name="success" type="chain">projectView</result>
+      <result name="to_group_page" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="wagonProjectNotifierEdit" class="wagonProjectNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierWagon.jsp</result>
+    </action>
+
+    <action name="wagonProjectNotifierSave" class="wagonProjectNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierWagon.jsp</result>
+      <result name="success" type="chain">projectView</result>
+      <result name="to_group_page" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <!--
+    * notifier actions :: Project Group
+    -->
+
+    <action name="deleteProjectGroupNotifier" class="deleteGroupNotifier">
+      <result name="delete">/WEB-INF/jsp/notifier/deleteNotifier.jsp</result>
+      <result name="success" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="addProjectGroupNotifier" class="addGroupNotifier" method="doDefault">
+      <result name="input">/WEB-INF/jsp/notifier/notifierSelectType.jsp</result>
+      <result name="mail_input">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
+      <result name="irc_input">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>
+      <result name="msn_input">/WEB-INF/jsp/notifier/notifierMsn.jsp</result>
+      <result name="jabber_input">/WEB-INF/jsp/notifier/notifierJabber.jsp</result>
+      <result name="wagon_input">/WEB-INF/jsp/notifier/notifierWagon.jsp</result>
+    </action>
+
+    <action name="editProjectGroupNotifier" class="addGroupNotifier">
+      <result name="mail_input" type="chain">mailProjectGroupNotifierEdit</result>
+      <result name="irc_input" type="chain">ircProjectGroupNotifierEdit</result>
+      <result name="msn_input" type="chain">msnProjectGroupNotifierEdit</result>
+      <result name="jabber_input" type="chain">jabberProjectGroupNotifierEdit</result>
+      <result name="wagon_input" type="chain">wagonProjectGroupNotifierEdit</result>
+    </action>
+
+    <action name="mailProjectGroupNotifierEdit" class="mailGroupNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
+    </action>
+
+    <action name="mailProjectGroupNotifierSave" class="mailGroupNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierMail.jsp</result>
+      <result name="success" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="ircProjectGroupNotifierEdit" class="ircGroupNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>
+    </action>
+
+    <action name="ircProjectGroupNotifierSave" class="ircGroupNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierIrc.jsp</result>
+      <result name="success" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="jabberProjectGroupNotifierEdit" class="jabberGroupNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierJabber.jsp</result>
+    </action>
+
+    <action name="jabberProjectGroupNotifierSave" class="jabberGroupNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierJabber.jsp</result>
+      <result name="success" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="msnProjectGroupNotifierEdit" class="msnGroupNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierMsn.jsp</result>
+    </action>
+
+    <action name="msnProjectGroupNotifierSave" class="msnGroupNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierMsn.jsp</result>
+      <result name="success" type="chain">projectGroupNotifier</result>
+    </action>
+
+    <action name="wagonProjectGroupNotifierEdit" class="wagonGroupNotifierEdit" method="edit">
+      <result name="success">/WEB-INF/jsp/notifier/notifierWagon.jsp</result>
+    </action>
+
+    <action name="wagonProjectGroupNotifierSave" class="wagonGroupNotifierEdit" method="save">
+      <result name="input">/WEB-INF/jsp/notifier/notifierWagon.jsp</result>
+      <result name="success" type="chain">projectGroupNotifier</result>
+    </action>
+    
+  </package>
+</struts>

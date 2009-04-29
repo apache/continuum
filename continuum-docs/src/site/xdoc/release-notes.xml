@@ -1,0 +1,171 @@
+<document>
+  <properties>
+    <title>Release Notes</title>
+  </properties>  
+<body>
+
+  <h2>Apache Continuum 1.3.2 Release Notes</h2>
+  
+  <p>The Apache Continuum team is pleased to announce Apache Continuum 1.3.2.</p>
+
+  <p>Apache Continuum 1.3.2 includes the following new features:</p>
+
+  <p><b>Scm Comment Prefix for Release Prepare</b> -- Ability to configure the scm comment prefix through the web UI for release prepare.</p>
+
+  <p><b>Build Agent Group</b> -- Build agents can now be assigned to a specific project build.</p>
+
+  <p>To learn more about how the Continuum dev team versions releases, see our
+      <a href="http://continuum.apache.org/development/release.html">release guidelines</a>.</p>  
+
+  <h2>Release Notes - Continuum - Version 1.3.2</h2>
+
+  <h2>        Sub-task
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1499'>CONTINUUM-1499</a>] -         Translate to Brazilian Portuguese
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2057'>CONTINUUM-2057</a>] -         Update Project From Working Copy
+  </li>
+  </ul>
+    
+  <h2>        Bug
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1503'>CONTINUUM-1503</a>] -         scm release tag default should match what the release plugin uses
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1504'>CONTINUUM-1504</a>] -         when autoVersionSubmodules=true is defined in the pom for the release plugin, the release prepare screen should not show or allow changing of   child project versions
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1505'>CONTINUUM-1505</a>] -         release perform page does not use defaults specified in pom for release plugin for goals and useReleaseProfile
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1887'>CONTINUUM-1887</a>] -         Release rollback hangs when the release failed at the scm-check-modifications phase
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1909'>CONTINUUM-1909</a>] -         login and password ignored in checkout operation
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1918'>CONTINUUM-1918</a>] -         Username and Password should be optional on project release form (Subversion projects)
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1972'>CONTINUUM-1972</a>] -         Error attempting to delete project group
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2015'>CONTINUUM-2015</a>] -         Deleting Purge Configuration doesn't ask for confirmation upon deletion
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2038'>CONTINUUM-2038</a>] -         Some dojo js files are missing
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2047'>CONTINUUM-2047</a>] -         Can't edit or delete PROJECT build Definition
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2048'>CONTINUUM-2048</a>] -         Parallel Build Queue Name accepts null value
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2050'>CONTINUUM-2050</a>] -         Available Templates has &quot;false&quot; on top of delete icon
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2053'>CONTINUUM-2053</a>] -         Problem with french characters
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2055'>CONTINUUM-2055</a>] -         link to data management cli broken in migration doc
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2058'>CONTINUUM-2058</a>] -         Editing an Installation , page dont change
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2059'>CONTINUUM-2059</a>] -         Dont validate envirotment name when create installation with 'Create a Build Environment Installation with the name'
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2064'>CONTINUUM-2064</a>] -         Default Build Enviroment List don't show installations
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2065'>CONTINUUM-2065</a>] -         Wrong content in Other Changes Since Last Success section of build results
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2067'>CONTINUUM-2067</a>] -         Error while deleting project caused by SCM RESULT dependency foreign key constraint violation
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2072'>CONTINUUM-2072</a>] -         Take care of the platform's default encoding when building continuum
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2077'>CONTINUUM-2077</a>] -         Project Scm Root is not deleted even when you delete the projects.
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2090'>CONTINUUM-2090</a>] -         Stack Overflow error when preparing project for release
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2102'>CONTINUUM-2102</a>] -         Unable to configure subject line for email notifications
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2107'>CONTINUUM-2107</a>] -         Send on SCM Failure is duplicated on the Add/Edit Mail Notifier page
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2112'>CONTINUUM-2112</a>] -         Incorrect title page of Add/Edit Parallel Build Queue
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2118'>CONTINUUM-2118</a>] -         update code that checks isLocked() to also check isPasswordChangeRequired() as well
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2120'>CONTINUUM-2120</a>] -         Unable to build project after scm error
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2124'>CONTINUUM-2124</a>] -         NPE when building Shell or Ant project
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2126'>CONTINUUM-2126</a>] -         Edit Project Group moving a project to other project group fail
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2129'>CONTINUUM-2129</a>] -         ClassNotFoundException when using the XML-RPC client
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2130'>CONTINUUM-2130</a>] -         Unable to notify latest committers only
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2134'>CONTINUUM-2134</a>] -         Deleting a project group-level notifier with recipient latest committers prompts Are you sure you want to delete the mail notifier with recipient &quot;&quot;? 
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2135'>CONTINUUM-2135</a>] -         Missing confirmation when deleting a project-level notifier from the group-level Notifiers tab
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2139'>CONTINUUM-2139</a>] -         Creating a Mail notifier incorrectly allows only spaces in the email address
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2140'>CONTINUUM-2140</a>] -         Some continuum objects are missing during backup/restore
+  </li>
+  </ul>
+    
+  <h2>        Improvement
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1321'>CONTINUUM-1321</a>] -         Improve error message when perform release fails due to missing distributionManagement
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1726'>CONTINUUM-1726</a>] -         Project description (as given in POM) should be visible
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-1823'>CONTINUUM-1823</a>] -         Fewer notifications when Subversion server is unreachable 
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2005'>CONTINUUM-2005</a>] -         Go the &quot;Project Build tab&quot; from the &quot;Build Queue&quot; page
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2020'>CONTINUUM-2020</a>] -         Remove the local repository column from the project groups page
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2027'>CONTINUUM-2027</a>] -         The i18n patch for zh_CN
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2028'>CONTINUUM-2028</a>] -         Continuum release prepare should use maven-release-plugin scmCommentPrefix configuration in pom
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2042'>CONTINUUM-2042</a>] -         Ability to control which projects build on which agents
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2043'>CONTINUUM-2043</a>] -         Release should happen on a build agent rather than on the master
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2051'>CONTINUUM-2051</a>] -         Add  confirmation upon deletion in Parallel Build Queue 
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2052'>CONTINUUM-2052</a>] -         Delete Confirmation Pages for Installation, Build Definition Templates
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2061'>CONTINUUM-2061</a>] -         Typo on Project Groups's message prompts
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2070'>CONTINUUM-2070</a>] -         add a check if project should build or not
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2087'>CONTINUUM-2087</a>] -         Viewing of working copy from build agent
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2109'>CONTINUUM-2109</a>] -         [Roles] Change continuum-manage-purging and continuum-manage-repositories user role names to Continuum Manage Purging and Continuum Manage Local Repositories
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2125'>CONTINUUM-2125</a>] -         add security audit log
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2127'>CONTINUUM-2127</a>] -         Configuration for Distributed Build should be visible only if Distributed Build is enabled
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2136'>CONTINUUM-2136</a>] -         Show error message when build agent is removed or disabled
+  </li>
+  </ul>
+    
+  <h2>        New Feature
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2054'>CONTINUUM-2054</a>] -         Ability to configure the scm comment prefix through the web UI for release prepare
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2068'>CONTINUUM-2068</a>] -         Build Agent group functionality
+  </li>
+  </ul>
+    
+  <h2>        Task
+  </h2>
+  <ul>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2116'>CONTINUUM-2116</a>] -         Upgrade to Redback 1.2 release
+  </li>
+  <li>[<a href='http://jira.codehaus.org/browse/CONTINUUM-2137'>CONTINUUM-2137</a>] -         Update documentation for new Build Agent Group functionality
+  </li>
+  </ul>
+
+Have Fun !
+<br/><br/>
+--<br/>
+The Apache Continuum Team  
+
+</body>
+</document>

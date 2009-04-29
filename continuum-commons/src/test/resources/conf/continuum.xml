@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<continuum-configuration>
+  <baseUrl>http://test</baseUrl>
+  <buildOutputDirectory>target/myBuildOutputDir</buildOutputDirectory>
+  <buildAgents>
+    <buildAgent>
+      <url>http://buildagent/xmlrpc</url>
+      <description>linux</description>
+      <enabled>true</enabled>
+    </buildAgent>
+  </buildAgents>
+  <distributedBuildEnabled>true</distributedBuildEnabled>
+</continuum-configuration>

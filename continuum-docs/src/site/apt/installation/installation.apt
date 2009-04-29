@@ -1,0 +1,23 @@
+ ------
+ Continuum Installation
+ ------
+ Emmanuel Venisse
+ ------
+ Oct 3 2007
+ ------
+
+Continuum Installation
+
+    In this section, you'll find all information about Continuum installation:
+
+    * {{{standalone.html}Standalone}}
+
+    * {{{tomcat.html}Tomcat}}
+
+    * {{{jboss.html}JBoss}}
+
+    * {{{jetty.html}Jetty}}
+
+    * {{{geronimo.html}Geronimo}}
+
+    * {{{glassfish.html}GlassFish}}

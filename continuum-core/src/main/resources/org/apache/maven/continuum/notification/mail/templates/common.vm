@@ -1,0 +1,209 @@
+#*
+ * Copyright 2004-2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *#
+#macro( shellBuildResult )
+Online report : $reportUrl
+
+#if ( $build )
+Build statistics:
+  State: $formatter.formatProjectState( $build.state )
+#if ( $previousBuild )
+  Previous State: $formatter.formatProjectState( $previousBuild.state )
+#else
+  Previous Build: No previous build.
+#end
+  Started at: $formatter.formatTimestamp( $build.startTime )
+  Finished at: $formatter.formatTimestamp( $build.endTime )
+  Total time: $formatter.formatInterval( $build.startTime, $build.endTime )
+  Build Trigger: $formatter.formatTrigger( $build.trigger )
+  Build Number: $build.buildNumber
+  Exit code: $build.exitCode
+  Building machine hostname: $buildHost
+  Operating system : $osName
+  Java Home version : 
+    #foreach ( $javaHomeInformation in $javaHomeInformations )
+      $javaHomeInformation
+    #end  
+    
+  Builder version :
+    #foreach ( $builderVersion in $builderVersions )
+      $builderVersion
+    #end    
+
+#if ( $build.scmResult )
+****************************************************************************
+SCM Changes:
+****************************************************************************
+#if ( $build.scmResult.changes.size() == 0 )
+No files changed
+
+#else
+#foreach ( $changeSet in $build.scmResult.changes )
+#if ($changeSet.author)
+#set($author = $changeSet.author)
+#else
+#set($author = "no author")
+#end
+#set($date = $formatter.formatTimestamp($changeSet.date))
+#if (!$date)
+#set($date = "no date")
+#end
+#if ($changeSet.comment)
+#set($comment = $formatter.trim($changeSet.comment))
+#else
+#set($comment = "no comment")
+#end
+Changed: $author @ $date
+Comment: $comment
+Files changed:
+#foreach ( $file in $changeSet.files )
+  $!file.name (#if ($file.revision) $file.revision #else no revision #end)
+#end
+
+#end
+#end
+#end
+#if ( $changesSinceLastSuccess && $changesSinceLastSuccess.changes )
+****************************************************************************
+SCM Changes since last success:
+****************************************************************************
+#if ( $changesSinceLastSuccess.changes.size() == 0 )
+No files changed
+
+#else
+#foreach ( $changeSet in $changesSinceLastSuccess )
+#if ($changeSet.author)
+#set($author = $changeSet.author)
+#else
+#set($author = "no author")
+#end
+#set($date = $formatter.formatTimestamp($changeSet.date))
+#if (!$date)
+#set($date = "no date")
+#end
+#if ($changeSet.comment)
+#set($comment = $formatter.trim($changeSet.comment))
+#else
+#set($comment = "no comment")
+#end
+Changed: $author @ $date
+Comment: $comment
+Files changed:
+#foreach ( $file in $changeSet.files )
+  $!file.name (#if ($file.revision) $file.revision #else no revision #end)
+#end
+
+#end
+#end
+#end
+#if ( $build.modifiedDependencies )
+****************************************************************************
+Dependencies Changes:
+****************************************************************************
+#if ( $build.modifiedDependencies.size() == 0 )
+No dependencies changed
+
+#else
+#foreach ( $dep in $build.modifiedDependencies )
+$dep.groupId:$dep.artifactId:$dep.version
+
+#end
+#end
+#end
+
+#if ( $build.buildDefinition )
+****************************************************************************
+Build Definition:
+****************************************************************************
+#if ( $build.buildDefinition.type )
+#if ( $build.buildDefinition.type == 'ant' )
+Ant build filename: $build.buildDefinition.buildFile   
+Goals: $build.buildDefinition.goals 
+#elseif ( $build.buildDefinition.type == 'shell' )
+shell: $build.buildDefinition.buildFile   
+#else
+POM filename: $build.buildDefinition.buildFile
+Goals: $build.buildDefinition.goals   
+#end
+#else
+POM filename: $build.buildDefinition.buildFile
+Goals: $build.buildDefinition.goals   
+#end
+Arguments: $build.buildDefinition.arguments
+Build Fresh: $build.buildDefinition.buildFresh
+Always Build: $build.buildDefinition.alwaysBuild
+Default Build Definition: $build.buildDefinition.defaultForProject
+Schedule: $build.buildDefinition.schedule.name
+#if ( $build.buildDefinition.profile )
+Profile Name: $build.buildDefinition.profile.name
+#end
+#if ( $build.buildDefinition.description )
+Description: $build.buildDefinition.description
+#end
+#end
+
+#if ( $testResult )
+****************************************************************************
+Test Summary:
+****************************************************************************
+Tests: $testResult.testCount
+Failures: $testResult.failureCount
+Errors: $testResult.errorCount
+#if( $testResult.testCount != 0)
+#set( $successRate = (($testResult.testCount - ( $testResult.failureCount + $testResult.errorCount)) * 100) / $testResult.testCount)
+Success Rate: $successRate
+#end
+Total time: $testResult.totalTime
+
+#end
+#if ( $build.state == 4 )
+****************************************************************************
+Build Error:
+****************************************************************************
+$build.error
+
+#end
+#if ( $includeTestSummary )
+#if ( $testResult && $testResult.failureCount > 0 )
+****************************************************************************
+Test Failures:
+****************************************************************************
+
+#foreach( $suite in $testResult.suiteResults )
+#if ( $suite.numberOfFailures > 0)
+$suite.name
+  #foreach( $failure in $suite.reportFailures )
+  $failure.testName :
+  $failure.type
+  $failure.exception
+
+  #end
+#end
+#end
+#end
+#end
+#end
+
+#if ( $includeOutput )
+#if ( $buildOutput && $buildOutput != "" )
+****************************************************************************
+Output:
+****************************************************************************
+$buildOutput
+****************************************************************************
+#end
+#end
+
+#end ## #macro( shellBuildResult )
