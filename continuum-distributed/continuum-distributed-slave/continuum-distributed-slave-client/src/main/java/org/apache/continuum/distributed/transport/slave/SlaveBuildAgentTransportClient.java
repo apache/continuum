@@ -106,10 +106,10 @@ public class SlaveBuildAgentTransportClient
         return installations;
     }
 
-    public Map getBuildResult( int projectId )
+    public Map<String, Object> getBuildResult( int projectId )
         throws Exception
     {
-        Map buildResult;
+        Map<String, Object> buildResult;
 
         try
         {
