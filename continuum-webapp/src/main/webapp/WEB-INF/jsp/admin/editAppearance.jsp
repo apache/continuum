@@ -22,7 +22,6 @@
 <s:i18n name="localization.Continuum">
 <head>
   <title><s:text name="appearance.page.title"/></title>
-  <s:head/>
 </head>
 
 <body>
