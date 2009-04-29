@@ -20,6 +20,7 @@ package org.apache.maven.continuum.core.action;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -100,6 +101,8 @@ public abstract class AbstractContinuumAction
     public static final String KEY_SCM_RESULT_MAP = "scm-result-map";
     
     public static final String KEY_URL = "url";
+    
+    public static final String KEY_PROJECTS_UNDER_ROOT_PROJECT = "projects-under-root-project";
 
     // ----------------------------------------------------------------------
     //
@@ -230,6 +233,12 @@ public abstract class AbstractContinuumAction
     {
         return (Map<Integer, ScmResult>) getObject( context, KEY_SCM_RESULT_MAP );
     }
+    
+    public static List<Integer> getListOfProjectsUnderRootProject( Map<String, Object> context )
+    {
+        return (List<Integer>) getObject( context, KEY_PROJECTS_UNDER_ROOT_PROJECT, new ArrayList<Integer>() );
+    }
+    
     
     // ----------------------------------------------------------------------
     //

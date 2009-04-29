@@ -201,6 +201,6 @@ public class CreateProjectsFromMetadataTest
             "Should not have errors but had " + result.getErrorsAsString() + " (this test requires internet access)",
             result.hasErrors() );
         assertEquals( "Incorrect SCM Root Url for flat multi-module project.",
-                      "scm:local:src/test-projects:flat-multi-module/", context.get( AbstractContinuumAction.KEY_URL ) );
+                      "scm:local:src/test-projects:flat-multi-module/", context.get( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT ) );
     }
 }

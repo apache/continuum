@@ -93,11 +93,13 @@ public class CheckoutProjectContinuumAction
 
         ScmResult result;
 
+        List<Integer> subProjects = getListOfProjectsUnderRootProject( context );
+        
         try
         {
             String scmUserName = getString( context, KEY_SCM_USERNAME, project.getScmUsername() );
             String scmPassword = getString( context, KEY_SCM_PASSWORD, project.getScmPassword() );
-            String scmRootUrl = getString( context, KEY_URL, project.getScmUrl() );
+            String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT, project.getScmUrl() );            
             
             ContinuumScmConfiguration config =
                 createScmConfiguration( project, workingDirectory, scmUserName, scmPassword, scmRootUrl );
@@ -108,12 +110,13 @@ public class CheckoutProjectContinuumAction
                     workingDirectory + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." ) );
 
             CheckOutScmResult checkoutResult = scm.checkout( config );
+            
             if ( StringUtils.isNotEmpty( checkoutResult.getRelativePathProjectDirectory() ) )
             {
                 context.put( AbstractContinuumAction.KEY_PROJECT_RELATIVE_PATH,
                              checkoutResult.getRelativePathProjectDirectory() );
             }
-
+            
             if ( !checkoutResult.isSuccess() )
             {
                 // TODO: is it more appropriate to return this in the converted result so that it can be presented to
@@ -186,11 +189,22 @@ public class CheckoutProjectContinuumAction
             }
 
             project = projectDao.getProject( project.getId() );
-
+            
             project.setState( ContinuumProjectState.CHECKEDOUT );
 
             projectDao.updateProject( project );
-
+            
+            // update state of sub-projects 
+            // if multi-module project was checked out in a single directory, subProjects must not be null            
+            for( Integer id : subProjects )
+            {
+                Project subProject = projectDao.getProject( id.intValue() );
+                if( subProject != null )
+                {
+                    subProject.setState( ContinuumProjectState.CHECKEDOUT );
+                    projectDao.updateProject( subProject );                    
+                }
+            }
             notifier.checkoutComplete( project, buildDefinition );
         }
 

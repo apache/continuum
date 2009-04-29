@@ -40,6 +40,7 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.project.ProjectNotifier;
+import org.apache.maven.continuum.project.ContinuumProjectState;
 import org.apache.maven.continuum.project.builder.ContinuumProjectBuildingResult;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
@@ -144,7 +145,11 @@ public class DefaultContinuumTest
 
         List<Project> projects = result.getProjects();
 
-        assertEquals( 3, projects.size() );        
+        assertEquals( 3, projects.size() );     
+        
+        Project rootProject = result.getRootProject();
+        
+        assertNotNull( rootProject );
         
         Map<String, Project> projectsMap = new HashMap<String, Project>();
 
@@ -185,7 +190,16 @@ public class DefaultContinuumTest
         
         assertTrue( "module-a was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-a" ).exists() );
         
-        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-b" ).exists() );        
+        assertTrue( "module-b was not checked out in the same directory as it's parent.", new File( checkoutDir, "module-b" ).exists() );
+        
+        // assert project state 
+        assertEquals( "state of 'parent-project' should have been updated.", ContinuumProjectState.CHECKEDOUT, parentProject.getState() );
+        
+        assertEquals( "state of 'module-a' should have been updated.", ContinuumProjectState.CHECKEDOUT,
+                      getProjectDao().getProjectByName( "module-a" ).getState() );
+        
+        assertEquals( "state of 'module-b' should have been updated.", ContinuumProjectState.CHECKEDOUT,
+                      getProjectDao().getProjectByName( "module-b" ).getState() );        
     }
 
     public void testUpdateMavenTwoProject()

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -178,8 +179,8 @@ public class CreateProjectsFromMetadataAction
                         scmRootUrl = curl;
                     }
                 }
-
-                context.put( KEY_URL, scmRootUrl );
+                
+                context.put( KEY_PROJECT_SCM_ROOT, scmRootUrl );
             }
         }
         catch ( MalformedURLException e )

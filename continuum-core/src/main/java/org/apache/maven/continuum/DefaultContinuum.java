@@ -1552,7 +1552,7 @@ public class DefaultContinuum
 
             projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
 
-            String url = (String) context.get( AbstractContinuumAction.KEY_URL );
+            String url = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, null );
 
             projectScmRoot = getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
             
@@ -1617,11 +1617,27 @@ public class DefaultContinuum
              
                 if( project != null )
                 {
-                    String scmRootUrl = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_URL );
+                    String scmRootUrl = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT );
                     
                     context = new HashMap<String, Object>();
+
+                    context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, scmRootUrl );
                     
-                    context.put( AbstractContinuumAction.KEY_URL, scmRootUrl );
+                    Project rootProject = result.getRootProject();
+                    
+                    if( rootProject != null )
+                    {   
+                        List<Integer> subProjects = new ArrayList<Integer>();
+                        for( Project subProject : projects )
+                        {
+                            if( subProject.getId() != rootProject.getId() )
+                            {
+                                subProjects.add( new Integer( subProject.getId() ) );
+                            }
+                        }
+
+                        context.put( AbstractContinuumAction.KEY_PROJECTS_UNDER_ROOT_PROJECT, subProjects );
+                    }
                     
                     addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context, projectGroupCreation,
                                                scmUserName, scmPassword, project );    

@@ -91,10 +91,11 @@ public interface BuildsManager
      * @param scmUsername
      * @param scmPassword
      * @param defaultBuildDefinition
+     * @param subProjects TODO
      * @throws BuildManagerException
      */
     void checkoutProject( int projectId, String projectName, File workingDirectory, String scmRootUrl,
-                          String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition )
+                          String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition, List<Integer> subProjects )
         throws BuildManagerException;
 
     /**
