@@ -1,0 +1,324 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.continuum</groupId>
+    <artifactId>continuum</artifactId>
+    <version>1.4.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>continuum-webapp-test</artifactId>
+  <name>Continuum :: Webapp Tests</name>
+  <packaging>pom</packaging>
+
+  <repositories>
+    <repository>
+      <id>openqa-snapshots</id>
+      <url>http://nexus.openqa.org/content/repositories/snapshots</url>
+      <releases><enabled>false</enabled></releases>
+    </repository>
+  </repositories>
+
+  <build>
+    <testSourceDirectory>src/test/it</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+          <verbose>true</verbose>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>testResources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>selenium-maven-plugin</artifactId>
+        <version>1.0-rc-1</version>
+        <executions>
+          <execution>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start-server</goal>
+            </goals>
+            <configuration>
+              <background>true</background>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>integration-tests</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <systemProperties>
+                <property>
+                  <name>browser</name>
+                  <value>${browser}</value>
+                </property>
+              </systemProperties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.openqa.selenium.client-drivers</groupId>
+      <artifactId>selenium-java-client-driver</artifactId>
+      <version>1.0-beta-SNAPSHOT</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.4</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- deployables -->
+    <dependency>
+      <groupId>org.apache.continuum</groupId>
+      <artifactId>continuum-webapp</artifactId>
+      <type>war</type>
+    </dependency>
+
+    <!-- container dependencies -->
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>create-container</id>
+      <activation>
+        <property>
+          <name>!container</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-maven2-plugin</artifactId>
+            <version>1.0</version>
+            <executions>
+              <execution>
+                <id>start-container</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>start</goal>
+                </goals>
+                <configuration>
+                  <wait>false</wait>
+                </configuration>
+              </execution>
+              <execution>
+                <id>stop-container</id>
+                <phase>post-integration-test</phase>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <container>
+                <containerId>${container.name}</containerId>
+                <zipUrlInstaller>
+                  <url>${container.url}</url>
+                  <installDir>${project.build.directory}/installs/${container.name}</installDir>
+                </zipUrlInstaller>
+                <log>${project.build.directory}/logs/${container.name}.log</log>
+                <output>${project.build.directory}/logs/${container.name}.out</output>
+                <timeout>600000</timeout>
+                <systemProperties>
+                  <appserver.base>${project.build.directory}</appserver.base>
+                  <derby.system.home>${project.build.directory}</derby.system.home>
+                </systemProperties>
+                <dependencies>
+                  <dependency>
+                    <groupId>org.apache.derby</groupId>
+                    <artifactId>derby</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>javax.mail</groupId>
+                    <artifactId>mail</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                  </dependency>
+                </dependencies>
+              </container>
+              <configuration>
+                <home>${project.build.directory}/${container.name}</home>
+                <type>standalone</type>
+                <properties>
+                  <cargo.servlet.port>9595</cargo.servlet.port>
+                  <cargo.datasource.datasource.users>
+                    cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
+                    cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/users;create=true|
+                    cargo.datasource.jndi=jdbc/users|
+                    cargo.datasource.username=sa
+                  </cargo.datasource.datasource.users>
+                  <cargo.datasource.datasource.builds>
+                    cargo.datasource.driver=org.apache.derby.jdbc.EmbeddedDriver|
+                    cargo.datasource.url=jdbc:derby:${project.build.directory}/databases/${container.name}/builds;create=true|
+                    cargo.datasource.jndi=jdbc/continuum|
+                    cargo.datasource.username=sa
+                  </cargo.datasource.datasource.builds>
+                  <cargo.resource.resource.mail>
+                    cargo.resource.name=mail/Session|
+                    cargo.resource.type=javax.mail.Session|
+                    cargo.resource.factory=org.apache.naming.factory.MailSessionFactory|
+                    cargo.resource.parameters=mail.smtp.host=localhost
+                  </cargo.resource.resource.mail>
+                </properties>
+                <deployables>
+                  <deployable>
+                    <groupId>${project.goupId}</groupId>
+                    <artifactId>continuum-webapp</artifactId>
+                    <type>war</type>
+                    <properties>
+                      <context>continuum</context>
+                    </properties>
+                  </deployable>
+                </deployables>
+              </configuration>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>tomcat5x</id>
+      <activation>
+        <property>
+          <name>!container</name>
+        </property>
+      </activation>
+      <properties>
+        <container.name>tomcat5x</container.name>
+        <container.url>http://apache.mirrors.redwire.net/tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip
+        </container.url>
+      </properties>
+    </profile>
+    <profile>
+      <id>existing-container</id>
+      <activation>
+        <property>
+          <name>container</name>
+          <value>existing</value>
+        </property>
+      </activation>
+      <!-- edit src/test/resources/it.properties as needed -->
+    </profile>
+    <profile>
+      <id>firefox</id>
+      <activation>
+        <property>
+          <name>!browser</name>
+        </property>
+      </activation>
+      <properties>
+        <browser>*firefox</browser>
+      </properties>
+    </profile>
+    <profile>
+      <id>iexplore</id>
+      <activation>
+        <property>
+          <name>browser</name>
+          <value>iexplore</value>
+        </property>
+      </activation>
+      <properties>
+        <browser>*iexplore</browser>
+      </properties>
+    </profile>
+    <profile>
+      <id>safari</id>
+      <activation>
+        <property>
+          <name>browser</name>
+          <value>safari</value>
+        </property>
+      </activation>
+      <properties>
+        <browser>*safari</browser>
+      </properties>
+    </profile>
+    <profile>
+      <id>otherbrowser</id>
+      <activation>
+        <property>
+          <name>browser</name>
+          <value>other</value>
+        </property>
+      </activation>
+      <properties>
+        <browser>*custom ${browserPath}</browser>
+      </properties>
+    </profile>
+
+  </profiles>
+
+</project>
