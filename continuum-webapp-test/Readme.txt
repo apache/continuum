@@ -11,6 +11,16 @@ Run Selenium tests in src/test/testNG with Maven, TestNG and Cargo
  * modify src/test/resources/testng.properties as needed
  * mvn clean install
 
+Run Selenium tests against an existing Continuum instance
+  * modify src/test/resources/testng.properties as needed
+  * mvn clean install -Dexisting-container
+
+  (This skips the Cargo plugin configuration that starts a container with the Continuum webapp deployed)
+
+Run Selenium tests in an alternate browser
+  * modify src/test/resources/testng.properties as needed
+  * mvn clean install -Dbrowser=iexplore  (or -Dbrowser=safari or -Dbrowser=other -DbrowserPath=/path/to/browser)
+
 Run Selenium tests in src/test/it with Maven, JUnit and Cargo
  * modify src/test/resources/it.properties as needed
  * mvn clean install -f junit-pom.xml
@@ -20,12 +30,6 @@ Run Selenium tests in src/test/java with Maven and JUnit
  * edit pom.xml and remove <testSourceDirectory>
  * for snapshot version of selenium(1.0-beta-SNAPSHOT), modify settings.xml/pom.xml to point to this repository http://nexus.openqa.org/content/repositories/snapshots 
  * mvn clean install -f junit-pom.xml
-
-Run Selenium tests against an existing Continuum instance
-  * modify src/test/resources/it.properties as needed
-  * mvn clean install -f junit-pom.xml -Dexisting-container
-
-  (This skips the Cargo plugin configuration that starts a container with the Continuum webapp deployed)
 
  Note that this does not install anything, it simply runs through the lifecycle including the integration test phases.
  More properly it would be 'mvn clean post-integration-test', but install is much shorter to type. :)
