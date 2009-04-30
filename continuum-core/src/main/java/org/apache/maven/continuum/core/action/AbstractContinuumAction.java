@@ -138,6 +138,11 @@ public abstract class AbstractContinuumAction
         return getString( context, KEY_BUILD_ID );
     }
 
+    public static String getBuildId( Map<String, Object> context, String defaultValue )
+    {
+        return getString( context, KEY_BUILD_ID, defaultValue );
+    }
+
     public static int getTrigger( Map<String, Object> context )
     {
         return getInteger( context, KEY_TRIGGER );

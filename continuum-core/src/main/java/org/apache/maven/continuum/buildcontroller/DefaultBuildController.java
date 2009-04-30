@@ -165,7 +165,7 @@ public class DefaultBuildController
 
             context.setCancelled( (Boolean) actionContext.get( AbstractContinuumAction.KEY_CANCELLED ) );
 
-            String s = AbstractContinuumAction.getBuildId( actionContext );
+            String s = AbstractContinuumAction.getBuildId( actionContext, null );
 
             if ( s != null && !context.isCancelled() )
             {
@@ -213,19 +213,14 @@ public class DefaultBuildController
             {
                 try
                 {
-                    String s = AbstractContinuumAction.getBuildId( context.getActionContext() );
+                    String s = AbstractContinuumAction.getBuildId( context.getActionContext(), null );
 
                     if ( s != null )
                     {
                         BuildResult buildResult = buildResultDao.getBuildResult( Integer.valueOf( s ) );
                         project.setState( buildResult.getState() );
+                        projectDao.updateProject( project );
                     }
-                    else
-                    {
-                        project.setState( ContinuumProjectState.ERROR );
-                    }
-
-                    projectDao.updateProject( project );
                 }
                 catch ( ContinuumStoreException e )
                 {
