@@ -93,7 +93,7 @@ public class CheckoutProjectContinuumAction
 
         ScmResult result;
 
-        List<Integer> subProjects = getListOfProjectsUnderRootProject( context );
+        List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithSimilarScmRoot( context );
         
         try
         {
@@ -195,14 +195,14 @@ public class CheckoutProjectContinuumAction
             projectDao.updateProject( project );
             
             // update state of sub-projects 
-            // if multi-module project was checked out in a single directory, subProjects must not be null            
-            for( Integer id : subProjects )
+            // if multi-module project was checked out in a single directory, these must not be null            
+            for( Project projectWithSimilarScmRoot : projectsWithSimilarScmRoot )
             {
-                Project subProject = projectDao.getProject( id.intValue() );
-                if( subProject != null )
+                projectWithSimilarScmRoot = projectDao.getProject( projectWithSimilarScmRoot.getId() );
+                if( projectWithSimilarScmRoot != null && projectWithSimilarScmRoot.getId() != project.getId() )
                 {
-                    subProject.setState( ContinuumProjectState.CHECKEDOUT );
-                    projectDao.updateProject( subProject );                    
+                    projectWithSimilarScmRoot.setState( ContinuumProjectState.CHECKEDOUT );
+                    projectDao.updateProject( projectWithSimilarScmRoot );                    
                 }
             }
             notifier.checkoutComplete( project, buildDefinition );

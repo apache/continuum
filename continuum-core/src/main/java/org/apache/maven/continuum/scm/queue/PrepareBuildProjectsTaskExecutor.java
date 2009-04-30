@@ -187,11 +187,13 @@ public class PrepareBuildProjectsTaskExecutor
 
             List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( projectGroup.getId() );
             String projectScmUrl = project.getScmUrl();
-
+            String projectScmRootAddress = "";
+            
             for ( ProjectScmRoot projectScmRoot : scmRoots )
             {
+                projectScmRootAddress = projectScmRoot.getScmRootAddress();
                 if ( projectScmUrl.contains( projectScmRoot.getScmRootAddress() ) )
-                {
+                {                    
                     context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
                     break;
                 }
@@ -205,6 +207,19 @@ public class PrepareBuildProjectsTaskExecutor
             context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION,
                          buildDefinitionDao.getBuildDefinition( buildDefinitionId ) );
 
+          //TODO: deng - put all projects in group with the same scm root in the context! 
+            //  this, together with the project scm root, will be used to determine the working dir            
+            List<Project> projectsInGroup = projectGroup.getProjects();
+            List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();            
+            for( Project projectInGroup : projectsInGroup )
+            {
+                if( projectInGroup.getScmUrl().contains( projectScmRootAddress ) )
+                {
+                    projectsWithCommonScmRoot.add( projectInGroup );
+                }
+            }            
+            context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_SIMILAR_SCM_ROOT, projectsWithCommonScmRoot );
+            
             BuildResult oldBuildResult =
                 buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
 

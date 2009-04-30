@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -985,6 +987,8 @@ public class DefaultContinuum
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
         projectsBuildDefinitionsMap.put( projectId, buildDef.getId() );
 
+        // TODO: deng - projects under the same root project should be queued in the same checkout & build queue!
+        //   - not sure where this should be fixed
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
         prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(),
                               scmRoot.getProjectGroup().getId(), scmRoot.getId() );
@@ -1627,16 +1631,13 @@ public class DefaultContinuum
                     
                     if( rootProject != null )
                     {   
-                        List<Integer> subProjects = new ArrayList<Integer>();
-                        for( Project subProject : projects )
+                        List<Project> projectsWithSimilarScmRoot = new ArrayList<Project>();
+                        for( Project projectWithSimilarScmRoot : projects )
                         {
-                            if( subProject.getId() != rootProject.getId() )
-                            {
-                                subProjects.add( new Integer( subProject.getId() ) );
-                            }
+                            projectsWithSimilarScmRoot.add( projectWithSimilarScmRoot );                            
                         }
 
-                        context.put( AbstractContinuumAction.KEY_PROJECTS_UNDER_ROOT_PROJECT, subProjects );
+                        context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_SIMILAR_SCM_ROOT, projectsWithSimilarScmRoot );
                     }
                     
                     addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context, projectGroupCreation,
@@ -3387,14 +3388,16 @@ public class DefaultContinuum
 
                 ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
 
+                // TODO: deng - do we still need a projectsAndBuildDefinitionsMap? All multi-module projects
+                //    are now checked out in a single directory so once they are built
                 Map<Integer, Integer> projectsAndBuildDefinitionsMap = map.get( scmRoot );
 
                 if ( projectsAndBuildDefinitionsMap == null )
                 {
                     projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
                 }
-
-                projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
+                
+                projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                
 
                 map.put( scmRoot, projectsAndBuildDefinitionsMap );
             }

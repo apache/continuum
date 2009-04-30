@@ -95,7 +95,7 @@ public interface BuildsManager
      * @throws BuildManagerException
      */
     void checkoutProject( int projectId, String projectName, File workingDirectory, String scmRootUrl,
-                          String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition, List<Integer> subProjects )
+                          String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition, List<Project> subProjects )
         throws BuildManagerException;
 
     /**

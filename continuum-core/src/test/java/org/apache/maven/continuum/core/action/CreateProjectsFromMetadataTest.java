@@ -149,7 +149,6 @@ public class CreateProjectsFromMetadataTest
             result.hasErrors() );
     }
     
-    // TODO: deng --> should this work with non-recursive mode?    
     public void testExecuteWithCheckoutProjectsInSingleDirectory()
         throws Exception
     {   

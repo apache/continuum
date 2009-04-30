@@ -21,6 +21,7 @@ package org.apache.maven.continuum.core.action;
 
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
 import org.apache.continuum.utils.ContinuumUtils;
@@ -103,12 +104,22 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
         }
 
+        // TODO: deng - should the update be from the scm root url? if so, then it seems that not all the projects within
+        //      the same scm root should update! maybe only the root project? OR all projects sharing the same scm 
+        //      root must update from the scm root! (second option is more sensible)
+        
         try
         {
             notifier.checkoutStarted( project, buildDefinition );
 
+            List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithSimilarScmRoot( context );
+            ProjectScmRoot projectScmRoot = getProjectScmRoot( context );
+
             // TODO: not sure why this is different to the context, but it all needs to change
-            File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
+            //File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
+            File workingDirectory =
+                workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(),
+                                                             projectsWithSimilarScmRoot );
             ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
             config.setLatestUpdateDate( latestUpdateDate );
             String tag = config.getTag();

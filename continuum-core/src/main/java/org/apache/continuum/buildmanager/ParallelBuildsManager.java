@@ -370,7 +370,7 @@ public class ParallelBuildsManager
      * @see BuildsManager#checkoutProject(int, String, File, String, String, String, BuildDefinition, List)
      */
     public void checkoutProject( int projectId, String projectName, File workingDirectory, String scmRootUrl,
-                                 String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition, List<Integer> subProjects )
+                                 String scmUsername, String scmPassword, BuildDefinition defaultBuildDefinition, List<Project> subProjects )
         throws BuildManagerException
     {
         try

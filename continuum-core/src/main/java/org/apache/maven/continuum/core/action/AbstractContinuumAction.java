@@ -102,7 +102,7 @@ public abstract class AbstractContinuumAction
     
     public static final String KEY_URL = "url";
     
-    public static final String KEY_PROJECTS_UNDER_ROOT_PROJECT = "projects-under-root-project";
+    public static final String KEY_PROJECTS_IN_GROUP_WITH_SIMILAR_SCM_ROOT = "projects-in-group-with-similar-scm-root";
 
     // ----------------------------------------------------------------------
     //
@@ -234,9 +234,9 @@ public abstract class AbstractContinuumAction
         return (Map<Integer, ScmResult>) getObject( context, KEY_SCM_RESULT_MAP );
     }
     
-    public static List<Integer> getListOfProjectsUnderRootProject( Map<String, Object> context )
+    public static List<Project> getListOfProjectsInGroupWithSimilarScmRoot( Map<String, Object> context )
     {
-        return (List<Integer>) getObject( context, KEY_PROJECTS_UNDER_ROOT_PROJECT, new ArrayList<Integer>() );
+        return (List<Project>) getObject( context, KEY_PROJECTS_IN_GROUP_WITH_SIMILAR_SCM_ROOT, new ArrayList<Integer>() );
     }
     
     
