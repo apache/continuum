@@ -21,9 +21,11 @@ package org.apache.maven.continuum.utils;
 
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -54,15 +56,52 @@ public class DefaultWorkingDirectoryService
 
     public File getWorkingDirectory( Project project )
     {
+        return getWorkingDirectory( project, null, null );
+    }
+    
+    /**
+     * 
+     * @param project
+     * @param projectScmRoot
+     * @param projects projects under the same projectScmRoot
+     * @return
+     */
+    public File getWorkingDirectory( Project project, String projectScmRoot, List<Project> projects )
+    {
 //        TODO: Enable, this is what we really want
 //        ContinuumProjectGroup projectGroup = project.getProjectGroup();
 //
 //        return new File( projectGroup.getWorkingDirectory(),
 //                         project.getPath() );
-
-        if ( project.getWorkingDirectory() == null )
-        {
-            project.setWorkingDirectory( Integer.toString( project.getId() ) );
+        
+        if ( project.getWorkingDirectory() == null || "".equals( project.getWorkingDirectory() ) )
+        {   
+            if( projectScmRoot == null || "".equals( projectScmRoot ) )
+            {
+                project.setWorkingDirectory( Integer.toString( project.getId() ) );
+            }
+            else
+            {
+                if( projects != null && !projects.isEmpty() )
+                {
+                    // the root project should have the lowest id since it's always added first
+                    Project rootProject = projects.get( 0 );
+                    for( Project projectUnderScmRoot : projects )
+                    {
+                        if( projectUnderScmRoot.getId() < rootProject.getId() )
+                        {
+                            rootProject = projectUnderScmRoot;
+                        }
+                    }
+                    
+                    // determine the path
+                    String projectScmUrl = project.getScmUrl();                    
+                    int indexDiff = StringUtils.differenceAt( projectScmUrl, projectScmRoot );
+                    
+                    String pathToProject = projectScmUrl.substring( indexDiff );      
+                    project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + pathToProject );
+                }
+            }
         }
 
         File workDir;
@@ -86,8 +125,20 @@ public class DefaultWorkingDirectoryService
         }
         else
         {
-            workDir = new File( getConfigurationService().getWorkingDirectory(), project.getWorkingDirectory() );
+            File baseWorkingDir = getConfigurationService().getWorkingDirectory();            
+            
+            // windows path
+            if( baseWorkingDir.getPath().indexOf( '\\' ) != -1 )
+            {
+                project.setWorkingDirectory( project.getWorkingDirectory().replace( '/', '\\' ) );
+                workDir = new File( baseWorkingDir.getPath() + "\\" + project.getWorkingDirectory() );
+            }
+            else
+            {
+                workDir = new File( baseWorkingDir, project.getWorkingDirectory() );
+            }            
         }
+        
         return workDir;
     }
 }
