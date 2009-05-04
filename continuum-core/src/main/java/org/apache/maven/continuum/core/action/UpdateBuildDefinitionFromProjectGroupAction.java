@@ -19,11 +19,11 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.util.Map;
+
 import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.ProjectGroup;
-
-import java.util.Map;
 
 /**
  * AddBuildDefinitionToProjectAction:
@@ -41,11 +41,11 @@ public class UpdateBuildDefinitionFromProjectGroupAction
      */
     private ProjectGroupDao projectGroupDao;
 
-    public void execute( Map map )
+    public void execute( Map context )
         throws Exception
     {
-        BuildDefinition buildDefinition = getBuildDefinition( map );
-        int projectGroupId = getProjectGroupId( map );
+        BuildDefinition buildDefinition = getBuildDefinition( context );
+        int projectGroupId = getProjectGroupId( context );
 
         ProjectGroup projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
 
@@ -53,6 +53,6 @@ public class UpdateBuildDefinitionFromProjectGroupAction
 
         updateBuildDefinitionInList( projectGroup.getBuildDefinitions(), buildDefinition );
 
-        map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
+        AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
     }
 }

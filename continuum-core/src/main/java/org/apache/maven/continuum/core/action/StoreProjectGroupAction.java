@@ -51,6 +51,6 @@ public class StoreProjectGroupAction
 
         projectGroup = projectGroupDao.addProjectGroup( projectGroup );
 
-        context.put( KEY_PROJECT_GROUP_ID, projectGroup.getId() );
+        AbstractContinuumAction.setProjectGroupId( context, projectGroup.getId() );
     }
 }

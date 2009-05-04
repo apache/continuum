@@ -227,9 +227,9 @@ public class BuildProjectTaskExecutorTest
 
         Map<String, Object> pgContext = new HashMap<String, Object>();
 
-        pgContext.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, project.getWorkingDirectory() );
+        AbstractContinuumAction.setWorkingDirectory( pgContext, project.getWorkingDirectory() );
 
-        pgContext.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, projectGroup );
+        AbstractContinuumAction.setUnvalidatedProjectGroup( pgContext, projectGroup );
 
         actionManager.lookup( "validate-project-group" ).execute( pgContext );
 

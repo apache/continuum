@@ -36,6 +36,8 @@ import org.apache.maven.continuum.store.ContinuumStoreException;
 public class StoreProjectAction
     extends AbstractContinuumAction
 {
+    private static final String KEY_SCM_USE_CREDENTIALS_CACHE = "useCredentialsCache";
+
     /**
      * @plexus.requirement
      */
@@ -52,7 +54,7 @@ public class StoreProjectAction
         //
         // ----------------------------------------------------------------------
 
-        boolean useCredentialsCache = getBoolean( context, KEY_SCM_USE_CREDENTIALS_CACHE, false );
+        boolean useCredentialsCache = isUseScmCredentialsCache( context, false );
         // CONTINUUM-1605 don't store username/password
         if ( !useCredentialsCache )
         {
@@ -65,7 +67,7 @@ public class StoreProjectAction
 
         projectGroupDao.updateProjectGroup( projectGroup );
 
-        context.put( KEY_PROJECT_ID, project.getId() );
+        setProjectId( context, project.getId() );
 
         // ----------------------------------------------------------------------
         // Set the working directory
@@ -85,5 +87,15 @@ public class StoreProjectAction
         project.setWorkingDirectory( projectWorkingDirectory.getAbsolutePath() );
 */
 //        store.updateProject( project );
+    }
+
+    public static boolean isUseScmCredentialsCache( Map<String, Object> context, boolean defaultValue )
+    {
+        return getBoolean( context, KEY_SCM_USE_CREDENTIALS_CACHE, defaultValue );
+    }
+
+    public static void setUseScmCredentialsCache( Map<String, Object> context, boolean useScmCredentialsCache )
+    {
+        context.put( KEY_SCM_USE_CREDENTIALS_CACHE, useScmCredentialsCache );
     }
 }

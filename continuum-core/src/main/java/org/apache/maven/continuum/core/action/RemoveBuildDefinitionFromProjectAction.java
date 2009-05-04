@@ -19,11 +19,11 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.util.Map;
+
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
-
-import java.util.Map;
 
 /**
  * AddBuildDefinitionToProjectAction:
@@ -41,11 +41,11 @@ public class RemoveBuildDefinitionFromProjectAction
      */
     private ProjectDao projectDao;
 
-    public void execute( Map map )
+    public void execute( Map context )
         throws Exception
     {
-        BuildDefinition buildDefinition = getBuildDefinition( map );
-        int projectId = getProjectId( map );
+        BuildDefinition buildDefinition = getBuildDefinition( context );
+        int projectId = getProjectId( context );
 
         Project project = projectDao.getProjectWithAllDetails( projectId );
 

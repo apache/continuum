@@ -35,6 +35,8 @@ import org.apache.maven.continuum.utils.WorkingDirectoryService;
 public class CheckWorkingDirectoryAction
     extends AbstractContinuumAction
 {
+    private static final String KEY_WORKING_DIRECTORY_EXISTS = "working-directory-exists";
+
     /**
      * @plexus.requirement
      */
@@ -54,13 +56,23 @@ public class CheckWorkingDirectoryAction
 
         if ( !workingDirectory.exists() )
         {
-            context.put( KEY_WORKING_DIRECTORY_EXISTS, Boolean.FALSE );
+            setWorkingDirectoryExist( context, false );
 
             return;
         }
 
         File[] files = workingDirectory.listFiles();
 
-        context.put( KEY_WORKING_DIRECTORY_EXISTS, files.length > 0 );
+        setWorkingDirectoryExist( context, files.length > 0 );
+    }
+
+    public static boolean isWorkingDirectoryExist( Map<String, Object> context )
+    {
+        return getBoolean( context, KEY_WORKING_DIRECTORY_EXISTS );
+    }
+
+    private static void setWorkingDirectoryExist( Map<String, Object> context, boolean exists )
+    {
+        context.put( KEY_WORKING_DIRECTORY_EXISTS, exists );
     }
 }

@@ -34,6 +34,9 @@ import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.continuum.utils.ProjectSorter;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
+import org.apache.maven.continuum.core.action.CheckWorkingDirectoryAction;
+import org.apache.maven.continuum.core.action.CheckoutProjectContinuumAction;
+import org.apache.maven.continuum.core.action.UpdateWorkingDirectoryFromScmContinuumAction;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
@@ -50,7 +53,6 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,31 +194,31 @@ public class PrepareBuildProjectsTaskExecutor
             {
                 if ( projectScmUrl.contains( projectScmRoot.getScmRootAddress() ) )
                 {
-                    context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
+                    AbstractContinuumAction.setProjectScmRoot( context, projectScmRoot );
                     break;
                 }
             }
 
-            context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, projectGroup.getId() );
-            context.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
-            context.put( AbstractContinuumAction.KEY_PROJECT, project );
+            AbstractContinuumAction.setProjectGroupId( context, projectGroup.getId() );
+            AbstractContinuumAction.setProjectId( context, projectId );
+            AbstractContinuumAction.setProject( context, project );
 
-            context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
-            context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION,
-                         buildDefinitionDao.getBuildDefinition( buildDefinitionId ) );
+            AbstractContinuumAction.setBuildDefinitionId( context, buildDefinitionId );
+            AbstractContinuumAction.setBuildDefinition( context,
+                                                        buildDefinitionDao.getBuildDefinition( buildDefinitionId ) );
 
             BuildResult oldBuildResult =
                 buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
 
             if ( oldBuildResult != null )
             {
-                context.put( AbstractContinuumAction.KEY_OLD_SCM_RESULT,
-                             getOldScmResults( projectId, oldBuildResult.getBuildNumber(),
-                                               oldBuildResult.getEndTime() ) );
+                AbstractContinuumAction.setOldScmResult( context,
+                                                         getOldScmResults( projectId, oldBuildResult.getBuildNumber(),
+                                                                           oldBuildResult.getEndTime() ) );
             }
             else
             {
-                context.put( AbstractContinuumAction.KEY_OLD_SCM_RESULT, null );
+                AbstractContinuumAction.setOldScmResult( context, null );
             }
         }
         catch ( ContinuumStoreException e )
@@ -238,8 +240,7 @@ public class PrepareBuildProjectsTaskExecutor
     {
         performAction( "check-working-directory", context );
 
-        boolean workingDirectoryExists =
-            AbstractContinuumAction.getBoolean( context, AbstractContinuumAction.KEY_WORKING_DIRECTORY_EXISTS );
+        boolean workingDirectoryExists = CheckWorkingDirectoryAction.isWorkingDirectoryExist( context );
 
         ScmResult scmResult;
 
@@ -247,21 +248,21 @@ public class PrepareBuildProjectsTaskExecutor
         {
             performAction( "update-working-directory-from-scm", context );
 
-            scmResult = AbstractContinuumAction.getUpdateScmResult( context );
+            scmResult = UpdateWorkingDirectoryFromScmContinuumAction.getUpdateScmResult( context );
         }
         else
         {
             Project project = AbstractContinuumAction.getProject( context );
 
-            context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY,
-                         workingDirectoryService.getWorkingDirectory( project ).getAbsolutePath() );
+            AbstractContinuumAction.setWorkingDirectory( context, workingDirectoryService.getWorkingDirectory(
+                project ).getAbsolutePath() );
 
             performAction( "checkout-project", context );
 
-            scmResult = AbstractContinuumAction.getCheckoutResult( context, null );
+            scmResult = CheckoutProjectContinuumAction.getCheckoutResult( context, null );
         }
 
-        context.put( AbstractContinuumAction.KEY_SCM_RESULT, scmResult );
+        AbstractContinuumAction.setScmResult( context, scmResult );
     }
 
     private boolean checkProjectScmRoot( Map<String, Object> context )
@@ -385,7 +386,7 @@ public class PrepareBuildProjectsTaskExecutor
         {
             if ( newScmResult == null )
             {
-                context.put( AbstractContinuumAction.KEY_SCM_RESULT, oldScmResult );
+                AbstractContinuumAction.setScmResult( context, oldScmResult );
             }
             else
             {
@@ -432,7 +433,7 @@ public class PrepareBuildProjectsTaskExecutor
 
         result.setException( ContinuumUtils.throwableToString( exception ) );
 
-        context.put( AbstractContinuumAction.KEY_SCM_RESULT, result );
+        AbstractContinuumAction.setScmResult( context, result );
 
         throw exception;
     }
@@ -491,7 +492,7 @@ public class PrepareBuildProjectsTaskExecutor
 
             projectScmRootDao.updateProjectScmRoot( projectScmRoot );
 
-            context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
+            AbstractContinuumAction.setProjectScmRoot( context, projectScmRoot );
         }
         catch ( ContinuumStoreException e )
         {
@@ -557,10 +558,10 @@ public class PrepareBuildProjectsTaskExecutor
         try
         {
             Map<String, Object> context = new HashMap<String, Object>();
-            context.put( AbstractContinuumAction.KEY_PROJECTS, projectsToBeBuilt );
-            context.put( AbstractContinuumAction.KEY_PROJECTS_BUILD_DEFINITIONS_MAP, projectsBuildDefinitionsMap );
-            context.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
-            context.put( AbstractContinuumAction.KEY_SCM_RESULT_MAP, scmResultMap );
+            AbstractContinuumAction.setListOfProjects( context, projectsToBeBuilt );
+            AbstractContinuumAction.setProjectsBuildDefinitionsMap( context, projectsBuildDefinitionsMap );
+            AbstractContinuumAction.setTrigger( context, trigger );
+            AbstractContinuumAction.setScmResultMap( context, scmResultMap );
 
             log.info( "Performing action create-build-project-task" );
             actionManager.lookup( "create-build-project-task" ).execute( context );

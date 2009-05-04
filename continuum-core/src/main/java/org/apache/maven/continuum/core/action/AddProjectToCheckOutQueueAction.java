@@ -55,7 +55,7 @@ public class AddProjectToCheckOutQueueAction
     public void execute( Map context )
         throws Exception
     {
-        Project project = (Project) getObject( context, KEY_PROJECT, null );
+        Project project = getProject( context, null );
         if ( project == null )
         {
             project = projectDao.getProject( getProjectId( context ) );

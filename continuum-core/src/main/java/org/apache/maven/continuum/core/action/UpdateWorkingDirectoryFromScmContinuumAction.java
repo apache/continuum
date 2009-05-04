@@ -19,6 +19,12 @@ package org.apache.maven.continuum.core.action;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
 import org.apache.continuum.scm.ContinuumScm;
@@ -40,12 +46,6 @@ import org.apache.maven.scm.command.update.UpdateScmResult;
 import org.apache.maven.scm.manager.NoSuchScmProviderException;
 import org.apache.maven.scm.repository.ScmRepositoryException;
 
-import java.io.File;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -54,6 +54,8 @@ import java.util.Map;
 public class UpdateWorkingDirectoryFromScmContinuumAction
     extends AbstractContinuumAction
 {
+    private static final String KEY_UPDATE_SCM_RESULT = "update-result";
+
     /**
      * @plexus.requirement
      */
@@ -112,8 +114,9 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
             config.setLatestUpdateDate( latestUpdateDate );
             String tag = config.getTag();
-            String msg = project.getName() + "', id: '" + project.getId() + "' to '" +
-                workingDirectory.getAbsolutePath() + "'" + ( tag != null ? " with branch/tag " + tag + "." : "." );
+            String msg =
+                project.getName() + "', id: '" + project.getId() + "' to '" + workingDirectory.getAbsolutePath() + "'" +
+                    ( tag != null ? " with branch/tag " + tag + "." : "." );
             getLogger().info( "Updating project: " + msg );
             scmResult = scm.update( config );
 
@@ -140,8 +143,8 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             result.setSuccess( false );
 
             result.setProviderMessage( e.getMessage() + ": " + getValidationMessages( e ) );
-            
-            getLogger().error( e.getMessage(), e);
+
+            getLogger().error( e.getMessage(), e );
         }
         catch ( NoSuchScmProviderException e )
         {
@@ -151,8 +154,8 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             result.setSuccess( false );
 
             result.setProviderMessage( e.getMessage() );
-            
-            getLogger().error( e.getMessage(), e);
+
+            getLogger().error( e.getMessage(), e );
         }
         catch ( ScmException e )
         {
@@ -161,8 +164,8 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             result.setSuccess( false );
 
             result.setException( ContinuumUtils.throwableMessagesToString( e ) );
-            
-            getLogger().error( e.getMessage(), e);
+
+            getLogger().error( e.getMessage(), e );
         }
         finally
         {
@@ -178,15 +181,15 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             //}
             //catch ( Exception e )
             //{
-                // nasty nasty, but we're in finally, so just sacrifice the state to keep the original exception
+            // nasty nasty, but we're in finally, so just sacrifice the state to keep the original exception
             //    getLogger().error( e.getMessage(), e );
             //}
 
             notifier.checkoutComplete( project, buildDefinition );
         }
-        
+
         context.put( KEY_UPDATE_SCM_RESULT, result );
-        context.put( KEY_PROJECT, project );
+        AbstractContinuumAction.setProject( context, project );
     }
 
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )
@@ -307,7 +310,7 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
 
         return cmd;
     }
-    
+
     private String getValidationMessages( ScmRepositoryException ex )
     {
         List<String> messages = ex.getValidationMessages();
@@ -327,5 +330,15 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             }
         }
         return message.toString();
+    }
+
+    public static ScmResult getUpdateScmResult( Map<String, Object> context )
+    {
+        return getUpdateScmResult( context, null );
+    }
+
+    public static ScmResult getUpdateScmResult( Map<String, Object> context, ScmResult defaultValue )
+    {
+        return (ScmResult) getObject( context, KEY_UPDATE_SCM_RESULT, defaultValue );
     }
 }

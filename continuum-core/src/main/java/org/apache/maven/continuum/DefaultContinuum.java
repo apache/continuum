@@ -66,7 +66,9 @@ import org.apache.maven.continuum.configuration.ConfigurationException;
 import org.apache.maven.continuum.configuration.ConfigurationLoadingException;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
+import org.apache.maven.continuum.core.action.CheckoutProjectContinuumAction;
 import org.apache.maven.continuum.core.action.CreateProjectsFromMetadataAction;
+import org.apache.maven.continuum.core.action.StoreProjectAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.initialization.ContinuumInitializationException;
@@ -413,7 +415,7 @@ public class DefaultContinuum
             log.info( "Remove project group " + projectGroup.getName() + "(" + projectGroup.getId() + ")" );
 
             Map<String, Object> context = new HashMap<String, Object>();
-            context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, projectGroup.getId() );
+            AbstractContinuumAction.setProjectGroupId( context, projectGroup.getId() );
             executeAction( "remove-assignable-roles", context );
 
             projectGroupDao.removeProjectGroup( projectGroup );
@@ -451,7 +453,7 @@ public class DefaultContinuum
                                                                                  buildDefinitionService.getDefaultMavenTwoBuildDefinitionTemplate() );
 
                 Map<String, Object> context = new HashMap<String, Object>();
-                context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, new_pg.getId() );
+                AbstractContinuumAction.setProjectGroupId( context, new_pg.getId() );
                 executeAction( "add-assignable-roles", context );
 
                 log.info( "Added new project group: " + new_pg.getName() );
@@ -691,12 +693,12 @@ public class DefaultContinuum
     {
         Map<String, Object> context = new HashMap<String, Object>();
 
-        context.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
+        AbstractContinuumAction.setProjectId( context, projectId );
 
         try
         {
             BuildDefinition buildDefinition = buildDefinitionDao.getDefaultBuildDefinition( projectId );
-            context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
+            AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
 
             executeAction( "add-project-to-checkout-queue", context );
         }
@@ -1347,13 +1349,13 @@ public class DefaultContinuum
         //
         // ----------------------------------------------------------------------
 
-        context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
+        AbstractContinuumAction.setWorkingDirectory( context, getWorkingDirectory() );
 
-        context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT, project );
+        AbstractContinuumAction.setUnvalidatedProject( context, project );
 
-        context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, projectGroup );
+        AbstractContinuumAction.setUnvalidatedProjectGroup( context, projectGroup );
 
-        context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, projectGroup.getId() );
+        AbstractContinuumAction.setProjectGroupId( context, projectGroup.getId() );
 
         executeAction( "validate-project", context );
 
@@ -1388,7 +1390,7 @@ public class DefaultContinuum
             }
 
             buildDefinitionService.addTemplateInProject( bdt.getId(), getProject(
-                (Integer) context.get( AbstractContinuumAction.KEY_PROJECT_ID ) ) );
+                AbstractContinuumAction.getProjectId( context ) ) );
         }
         catch ( BuildDefinitionServiceException e )
         {
@@ -1398,15 +1400,16 @@ public class DefaultContinuum
         if ( !configurationService.isDistributedBuildEnabled() )
         {
             // used by BuildManager to determine on which build queue will the project be put
-            context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, getProjectWithBuildDetails(
-                (Integer) context.get( AbstractContinuumAction.KEY_PROJECT_ID ) ).getBuildDefinitions().get( 0 ) );
+            BuildDefinition bd = (BuildDefinition) getProjectWithBuildDetails(
+                AbstractContinuumAction.getProjectId( context ) ).getBuildDefinitions().get( 0 );
+            AbstractContinuumAction.setBuildDefinition( context, bd );
 
             executeAction( "add-project-to-checkout-queue", context );
         }
 
         executeAction( "add-assignable-roles", context );
 
-        return (Integer) context.get( AbstractContinuumAction.KEY_PROJECT_ID );
+        return AbstractContinuumAction.getProjectId( context );
     }
 
     private ContinuumProjectBuildingResult executeAddProjectsFromMetadataActivity( String metadataUrl,
@@ -1443,23 +1446,24 @@ public class DefaultContinuum
 
         Map<String, Object> context = new HashMap<String, Object>();
 
-        context.put( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDER_ID, projectBuilderId );
+        CreateProjectsFromMetadataAction.setProjectBuilderId( context, projectBuilderId );
 
-        context.put( CreateProjectsFromMetadataAction.KEY_URL, metadataUrl );
+        CreateProjectsFromMetadataAction.setUrl( context, metadataUrl );
 
-        context.put( CreateProjectsFromMetadataAction.KEY_LOAD_RECURSIVE_PROJECTS, loadRecursiveProjects );
+        CreateProjectsFromMetadataAction.setLoadRecursiveProject( context, loadRecursiveProjects );
 
-        context.put( CreateProjectsFromMetadataAction.KEY_SCM_USE_CREDENTIALS_CACHE, useCredentialsCache );
+        StoreProjectAction.setUseScmCredentialsCache( context, useCredentialsCache );
 
-        context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
+        AbstractContinuumAction.setWorkingDirectory( context, getWorkingDirectory() );
 
         // CreateProjectsFromMetadataAction will check null and use default
         if ( buildDefinitionTemplateId > 0 )
         {
             try
             {
-                context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_TEMPLATE,
-                             buildDefinitionService.getBuildDefinitionTemplate( buildDefinitionTemplateId ) );
+                AbstractContinuumAction.setBuildDefinitionTemplate( context,
+                                                                    buildDefinitionService.getBuildDefinitionTemplate(
+                                                                        buildDefinitionTemplateId ) );
             }
             catch ( BuildDefinitionServiceException e )
             {
@@ -1472,9 +1476,7 @@ public class DefaultContinuum
 
         executeAction( "create-projects-from-metadata", context );
 
-        ContinuumProjectBuildingResult result =
-            (ContinuumProjectBuildingResult) context.get( CreateProjectsFromMetadataAction.KEY_PROJECT_BUILDING_RESULT )
-            ;
+        ContinuumProjectBuildingResult result = CreateProjectsFromMetadataAction.getProjectBuildingResult( context );
 
         if ( log.isInfoEnabled() )
         {
@@ -1534,9 +1536,9 @@ public class DefaultContinuum
 
                     Map<String, Object> pgContext = new HashMap<String, Object>();
 
-                    pgContext.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY, getWorkingDirectory() );
+                    AbstractContinuumAction.setWorkingDirectory( pgContext, getWorkingDirectory() );
 
-                    pgContext.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT_GROUP, projectGroup );
+                    AbstractContinuumAction.setUnvalidatedProjectGroup( pgContext, projectGroup );
 
                     executeAction( "validate-project-group", pgContext );
 
@@ -1550,7 +1552,7 @@ public class DefaultContinuum
 
             projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
 
-            String url = (String) context.get( CreateProjectsFromMetadataAction.KEY_URL );
+            String url = CreateProjectsFromMetadataAction.getUrl( context );
 
             projectScmRoot = getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
 
@@ -1611,28 +1613,28 @@ public class DefaultContinuum
                                                                  projectDao.getProject( project.getId() ) );
                 }
 
-                context.put( AbstractContinuumAction.KEY_UNVALIDATED_PROJECT, project );
+                AbstractContinuumAction.setUnvalidatedProject( context, project );
                 //
                 //            executeAction( "validate-project", context );
                 //
                 //            executeAction( "store-project", context );
                 //
-                context.put( AbstractContinuumAction.KEY_PROJECT_ID, project.getId() );
+                AbstractContinuumAction.setProjectId( context, project.getId() );
 
                 if ( !StringUtils.isEmpty( scmUserName ) )
                 {
                     project.setScmUsername( scmUserName );
-                    context.put( AbstractContinuumAction.KEY_SCM_USERNAME, scmUserName );
+                    CheckoutProjectContinuumAction.setScmUsername( context, scmUserName );
                 }
                 if ( !StringUtils.isEmpty( scmPassword ) )
                 {
                     project.setScmPassword( scmPassword );
-                    context.put( AbstractContinuumAction.KEY_SCM_PASSWORD, scmPassword );
+                    CheckoutProjectContinuumAction.setScmPassword( context, scmPassword );
                 }
                 // FIXME
                 // olamy  : read again the project to have values because store.updateProjectGroup( projectGroup );
                 // remove object data -> we don't display the project name in the build queue
-                context.put( AbstractContinuumAction.KEY_PROJECT, projectDao.getProject( project.getId() ) );
+                AbstractContinuumAction.setProject( context, projectDao.getProject( project.getId() ) );
 
                 BuildDefinition defaultBuildDefinition = null;
                 if ( projectBuilderId.equals( MavenTwoContinuumProjectBuilder.ID ) )
@@ -1649,7 +1651,7 @@ public class DefaultContinuum
                 }
 
                 // used by BuildManager to determine on which build queue will the project be put
-                context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, defaultBuildDefinition );
+                AbstractContinuumAction.setBuildDefinition( context, defaultBuildDefinition );
 
                 if ( !configurationService.isDistributedBuildEnabled() )
                 {
@@ -1667,7 +1669,7 @@ public class DefaultContinuum
             throw new ContinuumException( "Error adding projects from modules", e );
         }
 
-        context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, projectGroup.getId() );
+        AbstractContinuumAction.setProjectGroupId( context, projectGroup.getId() );
         // add the relevent security administration roles for this project
         if ( addAssignableRoles )
         {
@@ -2006,12 +2008,12 @@ public class DefaultContinuum
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
 
-        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
-        context.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
+        AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
+        AbstractContinuumAction.setProjectId( context, projectId );
 
         executeAction( "add-build-definition-to-project", context );
 
-        return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
+        return AbstractContinuumAction.getBuildDefinition( context );
     }
 
     public void removeBuildDefinitionFromProject( int projectId, int buildDefinitionId )
@@ -2019,8 +2021,8 @@ public class DefaultContinuum
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
 
-        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, getBuildDefinition( buildDefinitionId ) );
-        context.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
+        AbstractContinuumAction.setBuildDefinition( context, getBuildDefinition( buildDefinitionId ) );
+        AbstractContinuumAction.setProjectId( context, projectId );
 
         executeAction( "remove-build-definition-from-project", context );
     }
@@ -2030,12 +2032,12 @@ public class DefaultContinuum
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
 
-        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
-        context.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
+        AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
+        AbstractContinuumAction.setProjectId( context, projectId );
 
         executeAction( "update-build-definition-from-project", context );
 
-        return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
+        return AbstractContinuumAction.getBuildDefinition( context );
     }
 
     public BuildDefinition addBuildDefinitionToProjectGroup( int projectGroupId, BuildDefinition buildDefinition )
@@ -2043,12 +2045,12 @@ public class DefaultContinuum
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
 
-        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
-        context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, projectGroupId );
+        AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
+        AbstractContinuumAction.setProjectGroupId( context, projectGroupId );
 
         executeAction( "add-build-definition-to-project-group", context );
 
-        return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
+        return AbstractContinuumAction.getBuildDefinition( context );
     }
 
     public void removeBuildDefinitionFromProjectGroup( int projectGroupId, int buildDefinitionId )
@@ -2056,8 +2058,8 @@ public class DefaultContinuum
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
 
-        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, getBuildDefinition( buildDefinitionId ) );
-        context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, projectGroupId );
+        AbstractContinuumAction.setBuildDefinition( context, getBuildDefinition( buildDefinitionId ) );
+        AbstractContinuumAction.setProjectGroupId( context, projectGroupId );
 
         executeAction( "remove-build-definition-from-project-group", context );
     }
@@ -2067,12 +2069,12 @@ public class DefaultContinuum
     {
         HashMap<String, Object> context = new HashMap<String, Object>();
 
-        context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
-        context.put( AbstractContinuumAction.KEY_PROJECT_GROUP_ID, projectGroupId );
+        AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
+        AbstractContinuumAction.setProjectGroupId( context, projectGroupId );
 
         executeAction( "update-build-definition-from-project-group", context );
 
-        return (BuildDefinition) context.get( AbstractContinuumAction.KEY_BUILD_DEFINITION );
+        return AbstractContinuumAction.getBuildDefinition( context );
     }
 
     public void removeBuildDefinition( int projectId, int buildDefinitionId )
