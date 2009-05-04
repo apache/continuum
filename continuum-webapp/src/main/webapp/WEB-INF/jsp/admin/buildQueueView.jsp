@@ -96,9 +96,7 @@
                   <tr>
                     <td width="1%">
                       <redback:ifAuthorized permission="continuum-manage-queues">
-                        <ec:column alias="selectedBuildTaskHashCodes" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
                           <input type="checkbox" name="selectedBuildTaskHashCodes" value="${buildTask.hashCode}" />
-                        </ec:column>
                       </redback:ifAuthorized>
                     </td>
                   	<td width="29%">${element.key}</td>
@@ -211,9 +209,7 @@
                   <tr>
                     <td width="1%">
                       <redback:ifAuthorized permission="continuum-manage-queues">
-                        <ec:column alias="selectedCheckOutTaskHashCodes" title=" " style="width:5px" filterable="false" sortable="false" headerCell="selectAll">
                           <input type="checkbox" name="selectedCheckOutTaskHashCodes" value="${checkoutTask.hashCode}" />
-                        </ec:column>
                       </redback:ifAuthorized>
                     </td>
                   	<td width="29%">${element.key}</td>
