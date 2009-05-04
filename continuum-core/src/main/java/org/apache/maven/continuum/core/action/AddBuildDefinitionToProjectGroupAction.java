@@ -44,12 +44,12 @@ public class AddBuildDefinitionToProjectGroupAction
     private ProjectGroupDao projectGroupDao;
 
 
-    public void execute( Map map )
+    public void execute( Map context )
         throws Exception
     {
-        int projectGroupId = getProjectGroupId( map );
+        int projectGroupId = getProjectGroupId( context );
         ProjectGroup projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
-        BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( map );
+        BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( context );
         if ( buildDefinitionTemplate != null )
         {
             for ( BuildDefinition buildDefinition : (List<BuildDefinition>) buildDefinitionTemplate.getBuildDefinitions() )
@@ -63,7 +63,7 @@ public class AddBuildDefinitionToProjectGroupAction
         }
         else
         {
-            BuildDefinition buildDefinition = getBuildDefinition( map );
+            BuildDefinition buildDefinition = getBuildDefinition( context );
 
             resolveDefaultBuildDefinitionsForProjectGroup( buildDefinition, projectGroup );
 

@@ -50,28 +50,27 @@ public class CreateBuildProjectTaskAction
      * @plexus.requirement
      */
     private ProjectDao projectDao;
-    
+
     /**
      * @plexus.requirement role-hint="parallel"
      */
     private BuildsManager parallelBuildsManager;
-    
+
     public synchronized void execute( Map context )
         throws Exception
     {
         List<Project> projects = AbstractContinuumAction.getListOfProjects( context );
         Map<Integer, BuildDefinition> projectsBuildDefinitionsMap =
             AbstractContinuumAction.getProjectsBuildDefinitionsMap( context );
-        Map<Integer, ScmResult> scmResultMap = 
-            AbstractContinuumAction.getScmResultMap( context );
+        Map<Integer, ScmResult> scmResultMap = AbstractContinuumAction.getScmResultMap( context );
         List<Project> projectsToBeBuilt = new ArrayList<Project>();
         int trigger = AbstractContinuumAction.getTrigger( context );
-        
+
         // update state of each project first
-        for( Project project : projects )
-        {   
+        for ( Project project : projects )
+        {
             BuildDefinition buildDefinition = projectsBuildDefinitionsMap.get( project.getId() );
-            
+
             if ( parallelBuildsManager.isInAnyBuildQueue( project.getId(), buildDefinition.getId() ) )
             {
                 return;
@@ -81,12 +80,13 @@ public class CreateBuildProjectTaskAction
             {
                 parallelBuildsManager.removeProjectFromCheckoutQueue( project.getId() );
             }
-            
+
             try
             {
                 if ( project.getState() != ContinuumProjectState.NEW &&
                     project.getState() != ContinuumProjectState.CHECKEDOUT &&
-                    project.getState() != ContinuumProjectState.OK && project.getState() != ContinuumProjectState.FAILED &&
+                    project.getState() != ContinuumProjectState.OK &&
+                    project.getState() != ContinuumProjectState.FAILED &&
                     project.getState() != ContinuumProjectState.ERROR )
                 {
                     ContinuumBuildExecutor executor = executorManager.getBuildExecutor( project.getExecutorId() );
@@ -118,7 +118,7 @@ public class CreateBuildProjectTaskAction
                     project = projectDao.getProject( project.getId() );
                 }
 
-                projectsToBeBuilt.add( project );                                
+                projectsToBeBuilt.add( project );
             }
             catch ( ContinuumStoreException e )
             {
@@ -126,7 +126,7 @@ public class CreateBuildProjectTaskAction
                 //throw new ContinuumException( "Error while creating build object.", e );
             }
         }
-        
-        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, trigger, scmResultMap );      
+
+        parallelBuildsManager.buildProjects( projectsToBeBuilt, projectsBuildDefinitionsMap, trigger, scmResultMap );
     }
 }

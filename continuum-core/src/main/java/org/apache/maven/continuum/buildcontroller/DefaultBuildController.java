@@ -32,6 +32,7 @@ import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.utils.ContinuumUtils;
 import org.apache.maven.continuum.core.action.AbstractContinuumAction;
+import org.apache.maven.continuum.core.action.ExecuteBuilderContinuumAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
@@ -163,7 +164,7 @@ public class DefaultBuildController
 
             performAction( "deploy-artifact", context );
 
-            context.setCancelled( (Boolean) actionContext.get( AbstractContinuumAction.KEY_CANCELLED ) );
+            context.setCancelled( ExecuteBuilderContinuumAction.isCancelled( actionContext ) );
 
             String s = AbstractContinuumAction.getBuildId( actionContext, null );
 
@@ -366,23 +367,21 @@ public class DefaultBuildController
 
         Map<String, Object> actionContext = context.getActionContext();
 
-        actionContext.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
+        AbstractContinuumAction.setProjectId( actionContext, projectId );
 
-        actionContext.put( AbstractContinuumAction.KEY_PROJECT, context.getProject() );
+        AbstractContinuumAction.setProject( actionContext, context.getProject() );
 
-        actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION_ID, buildDefinitionId );
+        AbstractContinuumAction.setBuildDefinitionId( actionContext, buildDefinitionId );
 
-        actionContext.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, context.getBuildDefinition() );
+        AbstractContinuumAction.setBuildDefinition( actionContext, context.getBuildDefinition() );
 
-        actionContext.put( AbstractContinuumAction.KEY_TRIGGER, trigger );
+        AbstractContinuumAction.setTrigger( actionContext, trigger );
 
-        actionContext.put( AbstractContinuumAction.KEY_FIRST_RUN, context.getOldBuildResult() == null );
-
-        actionContext.put( AbstractContinuumAction.KEY_SCM_RESULT, context.getScmResult() );
+        AbstractContinuumAction.setScmResult( actionContext, context.getScmResult() );
 
         if ( context.getOldBuildResult() != null )
         {
-            actionContext.put( AbstractContinuumAction.KEY_OLD_BUILD_ID, context.getOldBuildResult().getId() );
+            AbstractContinuumAction.setOldBuildId( actionContext, context.getOldBuildResult().getId() );
         }
 
         return context;
@@ -653,7 +652,7 @@ public class DefaultBuildController
             }
 
             context.setModifiedDependencies( modifiedDependencies );
-            context.getActionContext().put( AbstractContinuumAction.KEY_UPDATE_DEPENDENCIES, modifiedDependencies );
+            AbstractContinuumAction.setUpdatedDependencies( context.getActionContext(), modifiedDependencies );
         }
         catch ( ContinuumStoreException e )
         {

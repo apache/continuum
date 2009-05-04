@@ -39,13 +39,13 @@ public class AddBuildDefinitionToProjectAction
      */
     private ProjectDao projectDao;
 
-    public void execute( Map map )
+    public void execute( Map context )
         throws Exception
     {
-        int projectId = getProjectId( map );
+        int projectId = getProjectId( context );
         Project project = projectDao.getProjectWithAllDetails( projectId );
 
-        BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( map );
+        BuildDefinitionTemplate buildDefinitionTemplate = getBuildDefinitionTemplate( context );
 
         if ( buildDefinitionTemplate != null )
         {
@@ -58,19 +58,19 @@ public class AddBuildDefinitionToProjectAction
                 projectDao.updateProject( project );
                 if ( buildDefinition.isDefaultForProject() )
                 {
-                    map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
+                    AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
                 }
             }
         }
         else
         {
-            BuildDefinition buildDefinition = getBuildDefinition( map );
+            BuildDefinition buildDefinition = getBuildDefinition( context );
             resolveDefaultBuildDefinitionsForProject( buildDefinition, project );
 
             project.addBuildDefinition( buildDefinition );
 
             projectDao.updateProject( project );
-            map.put( AbstractContinuumAction.KEY_BUILD_DEFINITION, buildDefinition );
+            AbstractContinuumAction.setBuildDefinition( context, buildDefinition );
         }
 
     }
