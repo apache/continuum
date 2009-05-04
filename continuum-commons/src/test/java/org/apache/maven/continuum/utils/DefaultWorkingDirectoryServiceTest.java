@@ -100,7 +100,7 @@ public class DefaultWorkingDirectoryServiceTest
         context.checking( new Expectations()
         {
             {
-                one( configurationService ).getWorkingDirectory();
+                exactly( 2 ).of( configurationService ).getWorkingDirectory();
                 will( returnValue( unixBaseWorkingDirectory ) );
                 
                 one( configurationService ).getWorkingDirectory();
@@ -114,6 +114,15 @@ public class DefaultWorkingDirectoryServiceTest
         
         assertEquals( "Incorrect working directory for multi-module project", "/target/working-directory/6/module-a",
                       projectWorkingDirectory.getPath() );
+        
+        // test if separator is appended at the end of the scm root url
+        projectWorkingDirectory =
+            workingDirectoryService.getWorkingDirectory( project, "scm:local:src/test-projects:flat-multi-module/",
+                                                         projects );
+        
+        assertEquals( "Incorrect working directory for multi-module project", "/target/working-directory/6/module-a",
+                      projectWorkingDirectory.getPath() );
+        
             
         project.setWorkingDirectory( null );
         
@@ -123,7 +132,7 @@ public class DefaultWorkingDirectoryServiceTest
                                                          projects );
         
         assertEquals( "Incorrect working directory for multi-module project", "c:\\target\\working-directory\\6\\module-a",
-                      projectWorkingDirectory.getPath() );
+                      projectWorkingDirectory.getPath() );        
 
     }
     

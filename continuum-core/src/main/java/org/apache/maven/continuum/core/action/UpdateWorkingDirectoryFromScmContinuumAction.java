@@ -120,7 +120,8 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
             File workingDirectory =
                 workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(),
                                                              projectsWithSimilarScmRoot );
-            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory );
+            
+            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, projectScmRoot.getScmRootAddress() );
             config.setLatestUpdateDate( latestUpdateDate );
             String tag = config.getTag();
             String msg = project.getName() + "', id: '" + project.getId() + "' to '" +
@@ -200,10 +201,17 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         context.put( KEY_PROJECT, project );
     }
 
-    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory )
+    private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory, String scmRootUrl )
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
-        config.setUrl( project.getScmUrl() );
+        if( scmRootUrl != null && !"".equals( scmRootUrl ) )
+        {
+            config.setUrl( scmRootUrl );
+        }
+        else
+        {
+            config.setUrl( project.getScmUrl() );
+        }
         config.setUsername( project.getScmUsername() );
         config.setPassword( project.getScmPassword() );
         config.setUseCredentialsCache( project.isScmUseCache() );

@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.ProjectGroupDao;
 import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.taskqueue.PrepareBuildProjectsTask;
@@ -99,6 +100,11 @@ public class PrepareBuildProjectsTaskExecutor
      * @plexus.requirement
      */
     private ContinuumNotificationDispatcher notifierDispatcher;
+    
+    /**
+     * @plexus.requirement
+     */
+    private ProjectGroupDao projectGroupDao;
 
     public void executeTask( Task task )
         throws TaskExecutionException
@@ -209,7 +215,8 @@ public class PrepareBuildProjectsTaskExecutor
 
           //TODO: deng - put all projects in group with the same scm root in the context! 
             //  this, together with the project scm root, will be used to determine the working dir            
-            List<Project> projectsInGroup = projectGroup.getProjects();
+            List<Project> projectsInGroup =
+                projectGroupDao.getProjectGroupWithProjects( projectGroup.getId() ).getProjects(); 
             List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();            
             for( Project projectInGroup : projectsInGroup )
             {

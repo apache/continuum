@@ -99,7 +99,14 @@ public class DefaultWorkingDirectoryService
                     int indexDiff = StringUtils.differenceAt( projectScmUrl, projectScmRoot );
                     
                     String pathToProject = projectScmUrl.substring( indexDiff );      
-                    project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + pathToProject );
+                    if( pathToProject.startsWith( "\\" ) || pathToProject.startsWith( "/" ) )
+                    {
+                        project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + pathToProject );
+                    }
+                    else
+                    {
+                        project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + "/" + pathToProject );
+                    }
                 }
             }
         }
