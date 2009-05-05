@@ -112,14 +112,14 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
             notifier.checkoutStarted( project, buildDefinition );
 
-            List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+            List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
             ProjectScmRoot projectScmRoot = getProjectScmRoot( context );
 
             // TODO: not sure why this is different to the context, but it all needs to change
             //File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
             File workingDirectory =
                 workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(),
-                                                             projectsWithSimilarScmRoot );
+                                                             projectsWithCommonScmRoot );
             
             ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, projectScmRoot.getScmRootAddress() );
             config.setLatestUpdateDate( latestUpdateDate );

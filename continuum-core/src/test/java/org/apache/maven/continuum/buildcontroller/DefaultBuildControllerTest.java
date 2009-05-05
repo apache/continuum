@@ -21,7 +21,9 @@ package org.apache.maven.continuum.buildcontroller;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.BuildResultDao;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.AbstractContinuumTest;
+import org.apache.maven.continuum.core.action.AbstractContinuumAction;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
@@ -36,6 +38,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class DefaultBuildControllerTest
     extends AbstractContinuumTest
@@ -138,6 +141,13 @@ public class DefaultBuildControllerTest
         oldBuildResult.setEndTime( Calendar.getInstance().getTimeInMillis() + ( hourOfLastExecution * 3600000 ) );
         context.setOldBuildResult( oldBuildResult );
         context.setScmResult( new ScmResult() );
+        
+        Map<String, Object> actionContext = context.getActionContext();
+        ProjectScmRoot projectScmRoot = new ProjectScmRoot();
+        projectScmRoot.setId( 1 );
+        projectScmRoot.setScmRootAddress( "scm:local:src/test-projects:flat-multi-module" );
+        actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
+        
         return context;
     }
 

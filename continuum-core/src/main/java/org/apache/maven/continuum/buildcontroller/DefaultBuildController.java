@@ -39,6 +39,7 @@ import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildResult;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.model.project.ProjectDependency;
+import org.apache.maven.continuum.model.project.ProjectGroup;
 import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
 import org.apache.maven.continuum.model.scm.ScmResult;
@@ -338,6 +339,8 @@ public class DefaultBuildController
 
         context.setTrigger( trigger );
 
+        Map<String, Object> actionContext = context.getActionContext();
+        
         try
         {
             Project project = projectDao.getProject( projectId );
@@ -354,6 +357,37 @@ public class DefaultBuildController
             context.setOldBuildResult( oldBuildResult );
 
             context.setScmResult( scmResult );
+            
+            // CONTINUUM-2193
+            ProjectGroup projectGroup = project.getProjectGroup();
+            List<ProjectScmRoot> scmRoots = projectScmRootDao.getProjectScmRootByProjectGroup( projectGroup.getId() );
+            String projectScmUrl = project.getScmUrl();
+            String projectScmRootAddress = "";
+            
+            for ( ProjectScmRoot projectScmRoot : scmRoots )
+            {
+                projectScmRootAddress = projectScmRoot.getScmRootAddress();
+                if ( projectScmUrl.contains( projectScmRoot.getScmRootAddress() ) )
+                {                    
+                    actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
+                    break;
+                }
+            }
+            
+            if( project.isCheckedOutInSingleDirectory() )
+            {
+                List<Project> projectsInGroup =
+                    projectGroupDao.getProjectGroupWithProjects( projectGroup.getId() ).getProjects(); 
+                List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();            
+                for( Project projectInGroup : projectsInGroup )
+                {
+                    if( projectInGroup.getScmUrl().contains( projectScmRootAddress ) )
+                    {
+                        projectsWithCommonScmRoot.add( projectInGroup );
+                    }
+                }            
+                actionContext.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, projectsWithCommonScmRoot );
+            }
 
             // CONTINUUM-1871 olamy if continuum is killed during building oldBuildResult will have a endTime 0
             // this means all changes since the project has been loaded in continuum will be in memory
@@ -369,8 +403,6 @@ public class DefaultBuildController
             throw new TaskExecutionException( "Error initializing the build context", e );
         }
 
-        Map<String, Object> actionContext = context.getActionContext();
-
         actionContext.put( AbstractContinuumAction.KEY_PROJECT_ID, projectId );
 
         actionContext.put( AbstractContinuumAction.KEY_PROJECT, context.getProject() );
@@ -384,7 +416,7 @@ public class DefaultBuildController
         actionContext.put( AbstractContinuumAction.KEY_FIRST_RUN, context.getOldBuildResult() == null );
 
         actionContext.put( AbstractContinuumAction.KEY_SCM_RESULT, context.getScmResult() );
-
+        
         if ( context.getOldBuildResult() != null )
         {
             actionContext.put( AbstractContinuumAction.KEY_OLD_BUILD_ID, context.getOldBuildResult().getId() );
@@ -524,9 +556,13 @@ public class DefaultBuildController
             try
             {
                 ContinuumBuildExecutor executor = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
-                shouldBuild = executor.shouldBuild( context.getScmResult().getChanges(), project,
-                                                    workingDirectoryService.getWorkingDirectory( project ),
-                                                    context.getBuildDefinition() );
+                
+                Map<String, Object> actionContext = context.getActionContext();                
+                List<Project> projectsWithCommonScmRoot = AbstractContinuumAction.getListOfProjectsInGroupWithCommonScmRoot( actionContext );
+                ProjectScmRoot projectScmRoot = AbstractContinuumAction.getProjectScmRoot( actionContext );
+
+                shouldBuild = executor.shouldBuild( context.getScmResult().getChanges(), project, 
+                       workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(), projectsWithCommonScmRoot ), context.getBuildDefinition() );                
             }
             catch ( Exception e )
             {

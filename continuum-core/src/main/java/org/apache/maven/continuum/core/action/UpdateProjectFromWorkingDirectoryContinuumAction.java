@@ -21,6 +21,7 @@ package org.apache.maven.continuum.core.action;
 
 import org.apache.continuum.dao.BuildDefinitionDao;
 import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutor;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
@@ -30,6 +31,8 @@ import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,8 +81,11 @@ public class UpdateProjectFromWorkingDirectoryContinuumAction
 
         ContinuumBuildExecutor builder = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
 
-        builder.updateProjectFromCheckOut( workingDirectoryService.getWorkingDirectory( project ), project,
-                                           buildDefinition );
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+        ProjectScmRoot projectScmRoot = getProjectScmRoot( context );
+        
+        builder.updateProjectFromCheckOut( workingDirectoryService.getWorkingDirectory( project, 
+                        projectScmRoot.getScmRootAddress(), projectsWithCommonScmRoot ), project, buildDefinition );
 
         // ----------------------------------------------------------------------
         // Store the new descriptor
