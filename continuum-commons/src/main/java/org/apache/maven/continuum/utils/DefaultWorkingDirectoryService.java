@@ -22,6 +22,8 @@ package org.apache.maven.continuum.utils;
 import org.apache.maven.continuum.configuration.ConfigurationService;
 import org.apache.maven.continuum.model.project.Project;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -39,6 +41,8 @@ public class DefaultWorkingDirectoryService
 {
     @Resource
     private ConfigurationService configurationService;
+    
+    private static final Logger log = LoggerFactory.getLogger( DefaultWorkingDirectoryService.class );
 
     public void setConfigurationService( ConfigurationService configurationService )
     {
@@ -76,11 +80,7 @@ public class DefaultWorkingDirectoryService
         
         if ( project.getWorkingDirectory() == null || "".equals( project.getWorkingDirectory() ) )
         {   
-            if( !project.isCheckedOutInSingleDirectory() )
-            {
-                project.setWorkingDirectory( Integer.toString( project.getId() ) );
-            }
-            else
+            if ( project.isCheckedOutInSingleDirectory() && projectScmRoot != null && !"".equals( projectScmRoot ) )
             {
                 Project rootProject = project;
                 if( projects != null )
@@ -96,7 +96,7 @@ public class DefaultWorkingDirectoryService
                 }                
                 
              // determine the path
-                String projectScmUrl = project.getScmUrl();                    
+                String projectScmUrl = project.getScmUrl();
                 int indexDiff = StringUtils.differenceAt( projectScmUrl, projectScmRoot );
                 
                 String pathToProject = projectScmUrl.substring( indexDiff );      
@@ -107,7 +107,11 @@ public class DefaultWorkingDirectoryService
                 else
                 {
                     project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + "/" + pathToProject );
-                }
+                }                
+            }
+            else
+            {
+                project.setWorkingDirectory( Integer.toString( project.getId() ) );
             }
         }
 
