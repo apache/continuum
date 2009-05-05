@@ -1636,7 +1636,7 @@ public class DefaultContinuum
                             projectsWithSimilarScmRoot.add( projectWithSimilarScmRoot );                            
                         }
 
-                        context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_SIMILAR_SCM_ROOT, projectsWithSimilarScmRoot );
+                        context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, projectsWithSimilarScmRoot );
                     }
                     
                     addProjectToCheckoutQueue( projectBuilderId, buildDefinitionTemplateId, context, projectGroupCreation,
@@ -3357,22 +3357,29 @@ public class DefaultContinuum
             // TODO: deng - do we still need a projects and build definitions map?
             //    consider migrated multi-module projects which were checked out in separate directories!
             //    how would they be affected by these changes?
-            Set<Integer> keys = projectsAndBuildDefinitionsMap.keySet();
-            if( keys != null && !keys.isEmpty() )
-            {                
-                for( Integer key : keys )
-                {
-                    if( key.intValue() > projectId )
+            if( project.isCheckedOutInSingleDirectory() )
+            {
+                Set<Integer> keys = projectsAndBuildDefinitionsMap.keySet();
+                if( keys != null && !keys.isEmpty() )
+                {                
+                    for( Integer key : keys )
                     {
-                        projectsAndBuildDefinitionsMap.put( projectId, buildDefId );
-                        map.put( scmRoot, projectsAndBuildDefinitionsMap );
-                    }
-                } 
+                        if( key.intValue() > projectId )
+                        {
+                            projectsAndBuildDefinitionsMap.put( projectId, buildDefId );
+                            map.put( scmRoot, projectsAndBuildDefinitionsMap );
+                        }
+                    } 
+                }
+                else
+                {
+                    projectsAndBuildDefinitionsMap.put( projectId, buildDefId );                    
+                    map.put( scmRoot, projectsAndBuildDefinitionsMap );
+                }
             }
             else
             {
-                projectsAndBuildDefinitionsMap.put( projectId, buildDefId );
-                
+                projectsAndBuildDefinitionsMap.put( projectId, buildDefId );                
                 map.put( scmRoot, projectsAndBuildDefinitionsMap );
             }   
         }
@@ -3417,28 +3424,31 @@ public class DefaultContinuum
                 //    are now checked out in a single directory so once they are built
                 //    consider migrated multi-module projects which were checked out in separate directories!
                 //    how would they be affected by these changes?
-                Set<Integer> keys = projectsAndBuildDefinitionsMap.keySet();
-                if( keys != null && !keys.isEmpty() )
-                {                
-                    for( Integer key : keys )
-                    {
-                        if( key.intValue() > projectId )
+                if( project.isCheckedOutInSingleDirectory() )
+                {
+                    Set<Integer> keys = projectsAndBuildDefinitionsMap.keySet();
+                    if( keys != null && !keys.isEmpty() )
+                    {                
+                        for( Integer key : keys )
                         {
-                            projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
-                            map.put( scmRoot, projectsAndBuildDefinitionsMap );
-                        }
-                    } 
+                            if( key.intValue() > projectId )
+                            {
+                                projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
+                                map.put( scmRoot, projectsAndBuildDefinitionsMap );
+                            }
+                        } 
+                    }
+                    else
+                    {
+                        projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                    
+                        map.put( scmRoot, projectsAndBuildDefinitionsMap );
+                    }
                 }
                 else
                 {
-                    projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
-                    
+                    projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                    
                     map.put( scmRoot, projectsAndBuildDefinitionsMap );
                 }   
-                
-                /*projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                
-
-                map.put( scmRoot, projectsAndBuildDefinitionsMap );*/
             }
             catch ( BuildManagerException e )
             {
@@ -3464,10 +3474,6 @@ public class DefaultContinuum
         throws ContinuumException
     {
         ProjectGroup group = getProjectGroup( projectGroupId );
-
-        // TODO: [deng] there should be a check somewhere that if the project was checked out in a 
-        //   single directory, then only the root project should be added in the projectsBuildDefinitionsMap!
-        //   --> only the root url will be updated!
         
         try
         {

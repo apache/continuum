@@ -76,16 +76,16 @@ public class DefaultWorkingDirectoryService
         
         if ( project.getWorkingDirectory() == null || "".equals( project.getWorkingDirectory() ) )
         {   
-            if( projectScmRoot == null || "".equals( projectScmRoot ) )
+            if( !project.isCheckedOutInSingleDirectory() )
             {
                 project.setWorkingDirectory( Integer.toString( project.getId() ) );
             }
             else
             {
-                if( projects != null && !projects.isEmpty() )
+                Project rootProject = project;
+                if( projects != null )
                 {
-                    // the root project should have the lowest id since it's always added first
-                    Project rootProject = projects.get( 0 );
+                    // the root project should have the lowest id since it's always added first                    
                     for( Project projectUnderScmRoot : projects )
                     {
                         if( projectUnderScmRoot.getId() < rootProject.getId() )
@@ -93,20 +93,20 @@ public class DefaultWorkingDirectoryService
                             rootProject = projectUnderScmRoot;
                         }
                     }
-                    
-                    // determine the path
-                    String projectScmUrl = project.getScmUrl();                    
-                    int indexDiff = StringUtils.differenceAt( projectScmUrl, projectScmRoot );
-                    
-                    String pathToProject = projectScmUrl.substring( indexDiff );      
-                    if( pathToProject.startsWith( "\\" ) || pathToProject.startsWith( "/" ) )
-                    {
-                        project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + pathToProject );
-                    }
-                    else
-                    {
-                        project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + "/" + pathToProject );
-                    }
+                }                
+                
+             // determine the path
+                String projectScmUrl = project.getScmUrl();                    
+                int indexDiff = StringUtils.differenceAt( projectScmUrl, projectScmRoot );
+                
+                String pathToProject = projectScmUrl.substring( indexDiff );      
+                if( pathToProject.startsWith( "\\" ) || pathToProject.startsWith( "/" ) )
+                {
+                    project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + pathToProject );
+                }
+                else
+                {
+                    project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + "/" + pathToProject );
                 }
             }
         }

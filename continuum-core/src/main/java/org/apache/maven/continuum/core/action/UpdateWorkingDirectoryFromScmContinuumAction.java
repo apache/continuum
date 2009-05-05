@@ -112,7 +112,7 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
             notifier.checkoutStarted( project, buildDefinition );
 
-            List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithSimilarScmRoot( context );
+            List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
             ProjectScmRoot projectScmRoot = getProjectScmRoot( context );
 
             // TODO: not sure why this is different to the context, but it all needs to change
@@ -204,7 +204,8 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
     private ContinuumScmConfiguration createScmConfiguration( Project project, File workingDirectory, String scmRootUrl )
     {
         ContinuumScmConfiguration config = new ContinuumScmConfiguration();
-        if( scmRootUrl != null && !"".equals( scmRootUrl ) )
+        
+        if( project.isCheckedOutInSingleDirectory() && scmRootUrl!= null && !"".equals( scmRootUrl ) )
         {
             config.setUrl( scmRootUrl );
         }
@@ -212,6 +213,7 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
             config.setUrl( project.getScmUrl() );
         }
+        
         config.setUsername( project.getScmUsername() );
         config.setPassword( project.getScmPassword() );
         config.setUseCredentialsCache( project.isScmUseCache() );

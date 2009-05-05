@@ -31,6 +31,9 @@ import javax.annotation.Resource;
 import org.apache.continuum.buildqueue.BuildQueueService;
 import org.apache.continuum.buildqueue.BuildQueueServiceException;
 import org.apache.continuum.dao.BuildDefinitionDao;
+import org.apache.continuum.dao.ProjectDao;
+import org.apache.continuum.dao.ProjectGroupDao;
+import org.apache.continuum.dao.ProjectScmRootDao;
 import org.apache.continuum.taskqueue.BuildProjectTask;
 import org.apache.continuum.taskqueue.CheckOutTask;
 import org.apache.continuum.taskqueue.OverallBuildQueue;
@@ -89,7 +92,16 @@ public class ParallelBuildsManager
     private BuildQueueService buildQueueService;
 
     private PlexusContainer container;
-
+    
+    @Resource
+    private ProjectDao projectDao;
+    
+    @Resource
+    private ProjectGroupDao projectGroupDao;
+    
+    @Resource
+    private ProjectScmRootDao projectScmRootDao;
+    
     /**
      * @see BuildsManager#buildProject(int, BuildDefinition, String, int, ScmResult)
      */
@@ -112,7 +124,7 @@ public class ParallelBuildsManager
         }
 
         OverallBuildQueue overallBuildQueue =
-            getOverallBuildQueue( BUILD_QUEUE, buildDefinition.getSchedule().getBuildQueues() );
+            getOverallBuildQueue( BUILD_QUEUE, buildDefinition.getSchedule().getBuildQueues(), null );
 
         String buildDefinitionLabel = buildDefinition.getDescription();
         if ( StringUtils.isEmpty( buildDefinitionLabel ) )
@@ -164,7 +176,7 @@ public class ParallelBuildsManager
         {
             BuildDefinition buildDef = projectsBuildDefinitionsMap.get( firstProjectId );
             OverallBuildQueue overallBuildQueue =
-                getOverallBuildQueue( BUILD_QUEUE, buildDef.getSchedule().getBuildQueues() );
+                getOverallBuildQueue( BUILD_QUEUE, buildDef.getSchedule().getBuildQueues(), null );
 
             if ( overallBuildQueue != null )
             {
@@ -388,7 +400,7 @@ public class ParallelBuildsManager
         }
 
         OverallBuildQueue overallBuildQueue =
-            getOverallBuildQueue( CHECKOUT_QUEUE, defaultBuildDefinition.getSchedule().getBuildQueues() );
+            getOverallBuildQueue( CHECKOUT_QUEUE, defaultBuildDefinition.getSchedule().getBuildQueues(), null );
         CheckOutTask checkoutTask =
             new CheckOutTask( projectId, workingDirectory, projectName, scmUsername, scmPassword, scmRootUrl, subProjects );
         try
@@ -1108,7 +1120,7 @@ public class ParallelBuildsManager
     }
 
     // get overall queue where project will be queued
-    private OverallBuildQueue getOverallBuildQueue( int typeOfQueue, List<BuildQueue> buildQueues )
+    private OverallBuildQueue getOverallBuildQueue( int typeOfQueue, List<BuildQueue> buildQueues, Project project )
         throws BuildManagerException
     {
         OverallBuildQueue whereToBeQueued = null;
@@ -1119,59 +1131,20 @@ public class ParallelBuildsManager
                 throw new BuildManagerException( "No build queues configured." );
             }
 
-            int size = 0;
-            int idx = 0;
-            int allowedBuilds = configurationService.getNumberOfBuildsInParallel();
+         // TODO: deng - flat multi-modules
+            // - check whether the requested queue is a checkout queue or a build queue
+            //   * proceed with the succeeding steps only when requested queue is a build queue 
+            // - check if project is checked out in a single directory and if true:
+            //   * get the build queue where a project with a common scm root is queued
+            //   * queue the project there
 
-            try
+            if( project != null && project.isCheckedOutInSingleDirectory() && typeOfQueue == BUILD_QUEUE )
             {
-                int count = 1;
-                for ( BuildQueue buildQueue : buildQueues )
-                {
-                    if ( count <= allowedBuilds )
-                    {
-                        OverallBuildQueue overallBuildQueue = overallBuildQueues.get( buildQueue.getId() );
-                        if ( overallBuildQueue != null )
-                        {
-                            TaskQueue taskQueue = null;
-                            if ( typeOfQueue == BUILD_QUEUE )
-                            {
-                                taskQueue = overallBuildQueue.getBuildQueue();
-                            }
-                            else if ( typeOfQueue == CHECKOUT_QUEUE )
-                            {
-                                taskQueue = overallBuildQueue.getCheckoutQueue();
-                            }
-
-                            if ( idx == 0 )
-                            {
-                                size = taskQueue.getQueueSnapshot().size();
-                                whereToBeQueued = overallBuildQueue;
-                            }
-
-                            if ( taskQueue.getQueueSnapshot().size() < size )
-                            {
-                                whereToBeQueued = overallBuildQueue;
-                                size = taskQueue.getQueueSnapshot().size();
-                            }
-
-                            idx++;
-                        }
-                        else
-                        {
-                            log.error( "Build queue not found." );
-                        }
-                        count++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                
             }
-            catch ( TaskQueueException e )
+            else
             {
-                throw new BuildManagerException( "Error occurred while retrieving task quueue: " + e.getMessage() );
+                whereToBeQueued = getOverallBuildQueue( typeOfQueue, buildQueues );
             }
         }
 
@@ -1192,6 +1165,67 @@ public class ParallelBuildsManager
         return whereToBeQueued;
     }
 
+    private OverallBuildQueue getOverallBuildQueue( int typeOfQueue, List<BuildQueue> buildQueues )
+        throws BuildManagerException
+    {
+        OverallBuildQueue whereToBeQueued = null;
+        
+        try
+        {     
+            int size = 0;
+            int idx = 0;
+            int allowedBuilds = configurationService.getNumberOfBuildsInParallel();
+            int count = 1;
+            for ( BuildQueue buildQueue : buildQueues )
+            {
+                if ( count <= allowedBuilds )
+                {
+                    OverallBuildQueue overallBuildQueue = overallBuildQueues.get( buildQueue.getId() );
+                    if ( overallBuildQueue != null )
+                    {
+                        TaskQueue taskQueue = null;
+                        if ( typeOfQueue == BUILD_QUEUE )
+                        {
+                            taskQueue = overallBuildQueue.getBuildQueue();
+                        }
+                        else if ( typeOfQueue == CHECKOUT_QUEUE )
+                        {
+                            taskQueue = overallBuildQueue.getCheckoutQueue();
+                        }
+   
+                        if ( idx == 0 )
+                        {
+                            size = taskQueue.getQueueSnapshot().size();
+                            whereToBeQueued = overallBuildQueue;
+                        }
+   
+                        if ( taskQueue.getQueueSnapshot().size() < size )
+                        {
+                            whereToBeQueued = overallBuildQueue;
+                            size = taskQueue.getQueueSnapshot().size();
+                        }
+   
+                        idx++;
+                    }
+                    else
+                    {
+                        log.error( "Build queue not found." );
+                    }
+                    count++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        catch ( TaskQueueException e )
+        {
+            throw new BuildManagerException( "Error occurred while retrieving task quueue: " + e.getMessage() );
+        }
+        return whereToBeQueued;
+    }
+    
     public void contextualize( Context context )
         throws ContextException
     {

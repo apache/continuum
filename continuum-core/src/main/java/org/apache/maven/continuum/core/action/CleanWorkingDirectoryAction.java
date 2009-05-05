@@ -53,11 +53,13 @@ public class CleanWorkingDirectoryAction
         throws Exception
     {
         Project project = projectDao.getProject( getProjectId( context ) );
-        List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithSimilarScmRoot( context );
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
         ProjectScmRoot projectScmRoot = getProjectScmRoot( context ); 
 
         //File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
-        File workingDirectory = workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(), projectsWithSimilarScmRoot );
+        File workingDirectory =
+            workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(),
+                                                         projectsWithCommonScmRoot );
 
         if ( workingDirectory.exists() )
         {

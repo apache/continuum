@@ -72,6 +72,7 @@ public class DefaultWorkingDirectoryServiceTest
         project.setArtifactId( "module-a" );
         project.setVersion( "1.0-SNAPSHOT" );
         project.setScmUrl( "scm:local:src/test-projects:flat-multi-module/module-a" );
+        project.setCheckedOutInSingleDirectory( true );
         
         projects.add( project );
         
@@ -81,6 +82,7 @@ public class DefaultWorkingDirectoryServiceTest
         otherProject.setArtifactId( "module-b" );
         otherProject.setVersion( "1.0-SNAPSHOT" );
         otherProject.setScmUrl( "scm:local:src/test-projects:flat-multi-module/module-b" );
+        otherProject.setCheckedOutInSingleDirectory( true );
         
         projects.add( otherProject );
         
@@ -90,6 +92,7 @@ public class DefaultWorkingDirectoryServiceTest
         otherProject.setArtifactId( "parent-project" );
         otherProject.setVersion( "1.0-SNAPSHOT" );
         otherProject.setScmUrl( "scm:local:src/test-projects:flat-multi-module/parent-project" );
+        otherProject.setCheckedOutInSingleDirectory( true );
         
         projects.add( otherProject );
                 

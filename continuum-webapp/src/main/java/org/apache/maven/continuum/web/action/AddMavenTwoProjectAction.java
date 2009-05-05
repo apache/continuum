@@ -106,6 +106,12 @@ public class AddMavenTwoProjectAction
             }
         }
 
+        // force set checkoutInCingleDirectory to false if adding the project as non-recursive
+        if( this.isNonRecursiveProject() )
+        {
+            this.setCheckoutInSingleDirectory( false );
+        }
+        
         if ( result == null )
         {
             result = getContinuum().addMavenTwoProject( pomUrl, selectedProjectGroup, checkProtocol, scmUseCache,

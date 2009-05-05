@@ -213,19 +213,20 @@ public class PrepareBuildProjectsTaskExecutor
             context.put( AbstractContinuumAction.KEY_BUILD_DEFINITION,
                          buildDefinitionDao.getBuildDefinition( buildDefinitionId ) );
 
-          //TODO: deng - put all projects in group with the same scm root in the context! 
-            //  this, together with the project scm root, will be used to determine the working dir            
-            List<Project> projectsInGroup =
-                projectGroupDao.getProjectGroupWithProjects( projectGroup.getId() ).getProjects(); 
-            List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();            
-            for( Project projectInGroup : projectsInGroup )
+            if( project.isCheckedOutInSingleDirectory() )
             {
-                if( projectInGroup.getScmUrl().contains( projectScmRootAddress ) )
+                List<Project> projectsInGroup =
+                    projectGroupDao.getProjectGroupWithProjects( projectGroup.getId() ).getProjects(); 
+                List<Project> projectsWithCommonScmRoot = new ArrayList<Project>();            
+                for( Project projectInGroup : projectsInGroup )
                 {
-                    projectsWithCommonScmRoot.add( projectInGroup );
-                }
-            }            
-            context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_SIMILAR_SCM_ROOT, projectsWithCommonScmRoot );
+                    if( projectInGroup.getScmUrl().contains( projectScmRootAddress ) )
+                    {
+                        projectsWithCommonScmRoot.add( projectInGroup );
+                    }
+                }            
+                context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, projectsWithCommonScmRoot );
+            }
             
             BuildResult oldBuildResult =
                 buildResultDao.getLatestBuildResultForBuildDefinition( projectId, buildDefinitionId );
@@ -293,7 +294,6 @@ public class PrepareBuildProjectsTaskExecutor
 
         // check state of scm root
         return projectScmRoot.getState() != ContinuumProjectState.ERROR;
-
     }
 
     private void startPrepareBuild( Map<String, Object> context )
@@ -536,7 +536,7 @@ public class PrepareBuildProjectsTaskExecutor
         for ( Project project : projectList )
         {
             int buildDefinitionId;
-
+            
             if ( projectsAndBuildDefinitionsMap.get( project.getId() ) != null )
             {
                 buildDefinitionId = projectsAndBuildDefinitionsMap.get( project.getId() );
@@ -573,7 +573,7 @@ public class PrepareBuildProjectsTaskExecutor
                     log.error( e.getMessage(), e );
                     throw new TaskExecutionException( "Error executing action 'build-project'", e );
                 }
-            }
+            }            
         }
 
         try

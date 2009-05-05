@@ -93,7 +93,7 @@ public class CheckoutProjectContinuumAction
 
         ScmResult result;
 
-        List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithSimilarScmRoot( context );
+        List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
         
         try
         {

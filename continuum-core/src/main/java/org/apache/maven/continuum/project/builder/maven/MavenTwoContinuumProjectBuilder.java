@@ -254,6 +254,8 @@ public class MavenTwoContinuumProjectBuilder
                 }
             }
 
+            continuumProject.setCheckedOutInSingleDirectory( checkoutInSingleDirectory );
+            
             builderHelper.mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, groupPom );
 
             if ( result.hasErrors() )

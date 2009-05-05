@@ -51,10 +51,9 @@ public class CheckWorkingDirectoryAction
         throws Exception
     {
         Project project = projectDao.getProject( getProjectId( context ) );
-        List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithSimilarScmRoot( context );
+        List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
         ProjectScmRoot projectScmRoot = getProjectScmRoot( context );
-
-       // File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
+       
         File workingDirectory =
             workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(),
                                                          projectsWithSimilarScmRoot );

@@ -67,6 +67,6 @@ public class AddProjectToCheckOutQueueAction
         parallelBuildsManager.checkoutProject( project.getId(), project.getName(),
                                                workingDirectoryService.getWorkingDirectory( project ),
                                                scmRootUrl, project.getScmUsername(),
-                                               project.getScmPassword(), defaultBuildDefinition, getListOfProjectsInGroupWithSimilarScmRoot( context ) );
+                                               project.getScmPassword(), defaultBuildDefinition, getListOfProjectsInGroupWithCommonScmRoot( context ) );
     }
 }
