@@ -140,13 +140,15 @@ public class BuildDefinitionSummaryAction
             }
         }
 
-        if ( containsDefaultBDForProject )
+        for ( BuildDefinitionSummary bds : groupBuildDefinitionSummaries )
         {
-            for ( BuildDefinitionSummary bds : groupBuildDefinitionSummaries )
+            if ( bds.isIsDefault() )
             {
-                if (bds.isIsDefault()){
-                    defaultGroupDefinitionId = bds.getId();
-                }
+                defaultGroupDefinitionId = bds.getId();
+            }
+        
+            if ( containsDefaultBDForProject )
+            {
                 bds.setIsDefault( false );
             }
         }
