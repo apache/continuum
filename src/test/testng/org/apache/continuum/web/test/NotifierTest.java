@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author José Morales Martínez
  * @version $Id$
  */
-@Test( groups = { "notifier" }, dependsOnMethods = { "testAddMavenTwoProject" } )
+@Test( groups = { "notifier" }, dependsOnMethods = { "testAddMavenTwoProjectFromRemoteSourceToNonDefaultProjectGroup" } )
 public class NotifierTest
     extends AbstractNotifierTest
 {
