@@ -180,7 +180,7 @@ public class CreateProjectsFromMetadataAction
                     }
                 }
                 
-                context.put( KEY_PROJECT_SCM_ROOT, scmRootUrl );
+                context.put( KEY_PROJECT_SCM_ROOT_URL, scmRootUrl );
             }
         }
         catch ( MalformedURLException e )

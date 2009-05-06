@@ -21,7 +21,6 @@ package org.apache.maven.continuum.core.action;
 
 import org.apache.continuum.dao.BuildResultDao;
 import org.apache.continuum.dao.ProjectDao;
-import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.continuum.scm.ContinuumScm;
 import org.apache.continuum.scm.ContinuumScmConfiguration;
 import org.apache.continuum.utils.ContinuumUtils;
@@ -54,7 +53,7 @@ import java.util.Map;
  */
 public class UpdateWorkingDirectoryFromScmContinuumAction
     extends AbstractContinuumAction
-{
+{                                                                  
     /**
      * @plexus.requirement
      */
@@ -112,16 +111,15 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         {
             notifier.checkoutStarted( project, buildDefinition );
 
-            List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
-            ProjectScmRoot projectScmRoot = getProjectScmRoot( context );
+            List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );           
+            String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
 
-            // TODO: not sure why this is different to the context, but it all needs to change
-            //File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
+            // TODO: not sure why this is different to the context, but it all needs to change            
             File workingDirectory =
-                workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(),
+                workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
                                                              projectsWithCommonScmRoot );
             
-            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, projectScmRoot.getScmRootAddress() );
+            ContinuumScmConfiguration config = createScmConfiguration( project, workingDirectory, projectScmRootUrl );
             config.setLatestUpdateDate( latestUpdateDate );
             String tag = config.getTag();
             String msg = project.getName() + "', id: '" + project.getId() + "' to '" +

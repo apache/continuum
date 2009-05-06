@@ -20,7 +20,6 @@ package org.apache.maven.continuum.core.action;
  */
 
 import org.apache.continuum.dao.ProjectDao;
-import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 import org.apache.maven.shared.model.fileset.FileSet;
@@ -53,12 +52,11 @@ public class CleanWorkingDirectoryAction
         throws Exception
     {
         Project project = projectDao.getProject( getProjectId( context ) );
-        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
-        ProjectScmRoot projectScmRoot = getProjectScmRoot( context ); 
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );        
+        String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, null );
 
-        //File workingDirectory = workingDirectoryService.getWorkingDirectory( project );
         File workingDirectory =
-            workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(),
+            workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
                                                          projectsWithCommonScmRoot );
 
         if ( workingDirectory.exists() )

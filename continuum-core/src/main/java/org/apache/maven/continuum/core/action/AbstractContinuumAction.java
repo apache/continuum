@@ -93,6 +93,13 @@ public abstract class AbstractContinuumAction
     public static final String KEY_OLD_SCM_RESULT = "old-scmResult";
 
     public static final String KEY_PROJECT_SCM_ROOT = "projectScmRoot";
+    
+    /**
+     * SCM root url. Used in these actions add-project-to-checkout-queue, checkout-project, clean-working-directory,
+     *      create-projects-from-metadata, update-project-from-working-directory, 
+     *      update-working-directory-from-scm
+     */
+    public static final String KEY_PROJECT_SCM_ROOT_URL = "projectScmRootUrl";
 
     public static final String KEY_OLD_BUILD_ID = "old-buildResult-id";
 
@@ -100,8 +107,14 @@ public abstract class AbstractContinuumAction
 
     public static final String KEY_SCM_RESULT_MAP = "scm-result-map";
     
+    /**
+     * Metadata url for adding projects.
+     */
     public static final String KEY_URL = "url";
     
+    /**
+     * List of projects in a project group with a common scm root url.
+     */
     public static final String KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT = "projects-in-group-with-common-scm-root";
 
     // ----------------------------------------------------------------------

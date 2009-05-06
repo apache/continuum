@@ -81,7 +81,7 @@ public class DefaultWorkingDirectoryService
         if ( project.getWorkingDirectory() == null || "".equals( project.getWorkingDirectory() ) )
         {   
             if ( project.isCheckedOutInSingleDirectory() && projectScmRoot != null && !"".equals( projectScmRoot ) )
-            {
+            {                
                 Project rootProject = project;
                 if( projects != null )
                 {
@@ -98,8 +98,13 @@ public class DefaultWorkingDirectoryService
              // determine the path
                 String projectScmUrl = project.getScmUrl();
                 int indexDiff = StringUtils.differenceAt( projectScmUrl, projectScmRoot );
+                                
+                String pathToProject = "";
+                if( indexDiff != -1 )
+                {
+                    pathToProject = projectScmUrl.substring( indexDiff );
+                }
                 
-                String pathToProject = projectScmUrl.substring( indexDiff );      
                 if( pathToProject.startsWith( "\\" ) || pathToProject.startsWith( "/" ) )
                 {
                     project.setWorkingDirectory( Integer.toString( rootProject.getId() ) + pathToProject );
@@ -117,6 +122,7 @@ public class DefaultWorkingDirectoryService
 
         File workDir;
         File projectWorkingDirectory = new File( project.getWorkingDirectory() );
+        
         if ( projectWorkingDirectory.isAbsolute() )
         {
             // clean the project working directory path if it's a subdirectory of the global working directory

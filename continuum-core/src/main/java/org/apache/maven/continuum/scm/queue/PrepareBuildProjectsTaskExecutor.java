@@ -51,7 +51,6 @@ import org.codehaus.plexus.taskqueue.Task;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutionException;
 import org.codehaus.plexus.taskqueue.execution.TaskExecutor;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -201,6 +200,7 @@ public class PrepareBuildProjectsTaskExecutor
                 if ( projectScmUrl.contains( projectScmRoot.getScmRootAddress() ) )
                 {                    
                     context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
+                    context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, projectScmRootAddress );
                     break;
                 }
             }

@@ -61,7 +61,7 @@ public class AddProjectToCheckOutQueueAction
             project = projectDao.getProject( getProjectId( context ) );
         }
 
-        String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT, null );
+        String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, null );
         
         BuildDefinition defaultBuildDefinition = getBuildDefinition( context );
         parallelBuildsManager.checkoutProject( project.getId(), project.getName(),

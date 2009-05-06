@@ -369,7 +369,7 @@ public class DefaultBuildController
                 projectScmRootAddress = projectScmRoot.getScmRootAddress();
                 if ( projectScmUrl.contains( projectScmRoot.getScmRootAddress() ) )
                 {                    
-                    actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, projectScmRoot );
+                    actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, projectScmRoot.getScmRootAddress() );
                     break;
                 }
             }

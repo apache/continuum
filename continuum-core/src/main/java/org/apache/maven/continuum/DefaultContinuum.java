@@ -1555,7 +1555,7 @@ public class DefaultContinuum
 
             projectGroup = projectGroupDao.getProjectGroupWithBuildDetailsByProjectGroupId( projectGroupId );
 
-            String url = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, null );
+            String url = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, null );
 
             projectScmRoot = getProjectScmRootByProjectGroupAndScmRootAddress( projectGroup.getId(), url );
             
@@ -1620,11 +1620,11 @@ public class DefaultContinuum
              
                 if( project != null )
                 {
-                    String scmRootUrl = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT );
+                    String scmRootUrl = AbstractContinuumAction.getString( context, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, null );
                     
                     context = new HashMap<String, Object>();
 
-                    context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, scmRootUrl );
+                    context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, scmRootUrl );
                     
                     Project rootProject = result.getRootProject();
                     

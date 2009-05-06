@@ -58,43 +58,35 @@ public class DefaultWorkingDirectoryServiceTest
         workingDirectoryService.setConfigurationService( configurationService );
     }
     
-    public void testGetWorkingDirectoryOfSingleCheckoutMultiModules()
-        throws Exception
+    private Project createProject( int id, String groupId, String artifactId, String version, String scmUrl,
+                                   boolean checkedOutInSingleDirectory )
     {
-        ProjectGroup pGroup = new ProjectGroup();
-        pGroup.setId( 1 );
+        Project project = new Project();        
+        project.setId( id );
+        project.setGroupId( groupId );
+        project.setArtifactId( artifactId );
+        project.setVersion( version );
+        project.setScmUrl( scmUrl );
+        project.setCheckedOutInSingleDirectory( checkedOutInSingleDirectory );
         
+        return project;
+    }
+    
+    public void testGetWorkingDirectoryOfSingleCheckoutFlatMultiModules()
+        throws Exception
+    {        
         List<Project> projects = new ArrayList<Project>();
         
-        Project project = new Project();        
-        project.setId( 7 );
-        project.setGroupId( "org.apache.continuum" );
-        project.setArtifactId( "module-a" );
-        project.setVersion( "1.0-SNAPSHOT" );
-        project.setScmUrl( "scm:local:src/test-projects:flat-multi-module/module-a" );
-        project.setCheckedOutInSingleDirectory( true );
+        Project project = createProject( 7, "org.apache.continuum", "module-a", "1.0-SNAPSHOT",
+                                         "scm:local:src/test-projects:flat-multi-module/module-a", true );
         
         projects.add( project );
         
-        Project otherProject = new Project();        
-        otherProject.setId( 8 );
-        otherProject.setGroupId( "org.apache.continuum" );
-        otherProject.setArtifactId( "module-b" );
-        otherProject.setVersion( "1.0-SNAPSHOT" );
-        otherProject.setScmUrl( "scm:local:src/test-projects:flat-multi-module/module-b" );
-        otherProject.setCheckedOutInSingleDirectory( true );
-        
-        projects.add( otherProject );
-        
-        otherProject = new Project();        
-        otherProject.setId( 6 );
-        otherProject.setGroupId( "org.apache.continuum" );
-        otherProject.setArtifactId( "parent-project" );
-        otherProject.setVersion( "1.0-SNAPSHOT" );
-        otherProject.setScmUrl( "scm:local:src/test-projects:flat-multi-module/parent-project" );
-        otherProject.setCheckedOutInSingleDirectory( true );
-        
-        projects.add( otherProject );
+        projects.add( createProject( 8, "org.apache.continuum", "module-b", "1.0-SNAPSHOT",
+                                     "scm:local:src/test-projects:flat-multi-module/module-b", true ) );
+                
+        projects.add( createProject( 6, "org.apache.continuum", "parent-project", "1.0-SNAPSHOT",
+                                     "scm:local:src/test-projects:flat-multi-module/parent-project", true ) );
                 
         final File unixBaseWorkingDirectory = new File( "/target/working-directory" );        
      
@@ -115,7 +107,7 @@ public class DefaultWorkingDirectoryServiceTest
             workingDirectoryService.getWorkingDirectory( project, "scm:local:src/test-projects:flat-multi-module",
                                                          projects );
         
-        assertEquals( "Incorrect working directory for multi-module project", "/target/working-directory/6/module-a",
+        assertEquals( "Incorrect working directory for flat multi-module project", "/target/working-directory/6/module-a",
                       projectWorkingDirectory.getPath() );
         
         // test if separator is appended at the end of the scm root url
@@ -123,7 +115,7 @@ public class DefaultWorkingDirectoryServiceTest
             workingDirectoryService.getWorkingDirectory( project, "scm:local:src/test-projects:flat-multi-module/",
                                                          projects );
         
-        assertEquals( "Incorrect working directory for multi-module project", "/target/working-directory/6/module-a",
+        assertEquals( "Incorrect working directory for flat multi-module project", "/target/working-directory/6/module-a",
                       projectWorkingDirectory.getPath() );
         
             
@@ -134,10 +126,85 @@ public class DefaultWorkingDirectoryServiceTest
             workingDirectoryService.getWorkingDirectory( project, "scm:local:src/test-projects:flat-multi-module",
                                                          projects );
         
-        assertEquals( "Incorrect working directory for multi-module project", "c:\\target\\working-directory\\6\\module-a",
+        assertEquals( "Incorrect working directory for flat multi-module project", "c:\\target\\working-directory\\6\\module-a",
                       projectWorkingDirectory.getPath() );        
-
     }
-    
-    
+
+    public void testGetWorkingDirectoryOfSingleCheckoutRegularMultiModules()
+        throws Exception
+    {       
+        List<Project> projects = new ArrayList<Project>();
+        
+        Project project = createProject( 10, "org.apache.continuum", "module-a", "1.0-SNAPSHOT",
+                                         "scm:local:src/test-projects:regular-multi-module/module-a", true );
+        
+        projects.add( project );
+        
+        projects.add( createProject( 11, "org.apache.continuum", "module-b", "1.0-SNAPSHOT",
+                                     "scm:local:src/test-projects:regular-multi-module/module-b", true ) );
+                
+        projects.add( createProject( 9, "org.apache.continuum", "parent-project", "1.0-SNAPSHOT",
+                                     "scm:local:src/test-projects:regular-multi-module/", true ) );
+                
+        final File unixBaseWorkingDirectory = new File( "/target/working-directory" );        
+     
+        final File windowsBaseWorkingDirectory = new File( "c:\\target\\working-directory" );
+        
+        context.checking( new Expectations()
+        {
+            {
+                exactly( 2 ).of( configurationService ).getWorkingDirectory();
+                will( returnValue( unixBaseWorkingDirectory ) );
+                
+                one( configurationService ).getWorkingDirectory();
+                will( returnValue( windowsBaseWorkingDirectory ) );
+            }} );
+        
+     // test if unix path
+        File projectWorkingDirectory =
+            workingDirectoryService.getWorkingDirectory( project, "scm:local:src/test-projects:regular-multi-module",
+                                                         projects );
+        
+        assertEquals( "Incorrect working directory for regular multi-module project", "/target/working-directory/9/module-a",
+                      projectWorkingDirectory.getPath() );
+        
+        // test if separator is appended at the end of the scm root url
+        projectWorkingDirectory =
+            workingDirectoryService.getWorkingDirectory( project, "scm:local:src/test-projects:regular-multi-module/",
+                                                         projects );
+        
+        assertEquals( "Incorrect working directory for regular multi-module project", "/target/working-directory/9/module-a",
+                      projectWorkingDirectory.getPath() );
+        
+            
+        project.setWorkingDirectory( null );
+        
+     // test if windows path
+        projectWorkingDirectory =
+            workingDirectoryService.getWorkingDirectory( project, "scm:local:src/test-projects:regular-multi-module",
+                                                         projects );
+        
+        assertEquals( "Incorrect working directory for regular multi-module project", "c:\\target\\working-directory\\9\\module-a",
+                      projectWorkingDirectory.getPath() );
+        
+        project.setWorkingDirectory( null );
+        
+     // test generated path of parent project
+        project = createProject( 9, "org.apache.continuum", "parent-project", "1.0-SNAPSHOT",
+                       "scm:local:src/test-projects:regular-multi-module", true );
+        
+        context.checking( new Expectations()
+        {
+            {
+                one( configurationService ).getWorkingDirectory();
+                will( returnValue( unixBaseWorkingDirectory ) );                
+            }} );
+        
+        projectWorkingDirectory =
+            workingDirectoryService.getWorkingDirectory( project, "scm:local:src/test-projects:regular-multi-module",
+                                                         projects );
+        
+        assertEquals( "Incorrect working directory for regular multi-module project", "/target/working-directory/9",
+                      projectWorkingDirectory.getPath() );
+    }    
 }

@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.continuum.dao.ProjectDao;
-import org.apache.continuum.model.project.ProjectScmRoot;
 import org.apache.maven.continuum.model.project.Project;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
@@ -36,7 +35,7 @@ import org.apache.maven.continuum.utils.WorkingDirectoryService;
  */
 public class CheckWorkingDirectoryAction
     extends AbstractContinuumAction
-{
+{   
     /**
      * @plexus.requirement
      */
@@ -51,13 +50,13 @@ public class CheckWorkingDirectoryAction
         throws Exception
     {
         Project project = projectDao.getProject( getProjectId( context ) );
-        List<Project> projectsWithSimilarScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
-        ProjectScmRoot projectScmRoot = getProjectScmRoot( context );
+        List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+        String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
        
         File workingDirectory =
-            workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(),
-                                                         projectsWithSimilarScmRoot );
-
+            workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl,
+                                                         projectsWithCommonScmRoot );
+        
         if ( !workingDirectory.exists() )
         {
             context.put( KEY_WORKING_DIRECTORY_EXISTS, Boolean.FALSE );

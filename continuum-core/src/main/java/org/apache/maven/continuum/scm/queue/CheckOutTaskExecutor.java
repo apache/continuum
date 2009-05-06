@@ -93,7 +93,7 @@ public class CheckOutTaskExecutor
 
         context.put( AbstractContinuumAction.KEY_SCM_USERNAME, task.getScmUserName() );
 
-        context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT, task.getScmRootUrl() );
+        context.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, task.getScmRootUrl() );
 
         context.put( AbstractContinuumAction.KEY_PROJECTS_IN_GROUP_WITH_COMMON_SCM_ROOT, task.getProjectsWithSimilarScmRoot() );
         

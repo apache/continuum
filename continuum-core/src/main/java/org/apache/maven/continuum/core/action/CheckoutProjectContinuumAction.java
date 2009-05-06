@@ -99,7 +99,7 @@ public class CheckoutProjectContinuumAction
         {
             String scmUserName = getString( context, KEY_SCM_USERNAME, project.getScmUsername() );
             String scmPassword = getString( context, KEY_SCM_PASSWORD, project.getScmPassword() );
-            String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT, project.getScmUrl() );            
+            String scmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );            
             
             ContinuumScmConfiguration config =
                 createScmConfiguration( project, workingDirectory, scmUserName, scmPassword, scmRootUrl );
