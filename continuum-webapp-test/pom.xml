@@ -213,7 +213,7 @@ under the License.
                 <containerId>${container.name}</containerId>
                 <zipUrlInstaller>
                   <url>${container.url}</url>
-                  <installDir>${project.build.directory}/installs/${container.name}</installDir>
+                  <installDir>${cargo.installs.directory}/${container.name}</installDir>
                 </zipUrlInstaller>
                 <log>${project.build.directory}/logs/${container.name}.log</log>
                 <output>${project.build.directory}/logs/${container.name}.out</output>
@@ -286,8 +286,7 @@ under the License.
       </activation>
       <properties>
         <container.name>tomcat5x</container.name>
-        <container.url>http://apache.mirrors.redwire.net/tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip
-        </container.url>
+        <container.url>http://apache.mirrors.redwire.net/tomcat/tomcat-5/v5.5.27/bin/apache-tomcat-5.5.27.zip</container.url>
       </properties>
     </profile>
     <profile>
@@ -348,5 +347,7 @@ under the License.
       </properties>
     </profile>
   </profiles>
-
+  <properties>
+    <cargo.installs.directory>${basedir}/installs</cargo.installs.directory>
+  </properties>
 </project>
