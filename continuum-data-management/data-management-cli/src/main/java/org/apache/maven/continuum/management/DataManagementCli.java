@@ -166,25 +166,34 @@ public class DataManagementCli
             Logger.getRootLogger().setLevel( Level.INFO );
             Logger.getLogger( "JPOX" ).setLevel( Level.WARN );
         }
+        
+        if ( command.settings != null && !command.settings.isFile() )
+        {
+            System.err.println( command.settings + " not exists or is not a file." );
+            Args.usage( command );
+            return;
+        }
 
         if ( command.buildsJdbcUrl != null )
         {
             LOGGER.info( "Processing Continuum database..." );
             processDatabase( databaseType, databaseFormat, mode, command.buildsJdbcUrl, command.directory,
-                             databaseFormat.getContinuumToolRoleHint(), "data-management-jdo", "continuum" );
+                             command.settings, databaseFormat.getContinuumToolRoleHint(), "data-management-jdo",
+                             "continuum" );
         }
 
         if ( command.usersJdbcUrl != null )
         {
             LOGGER.info( "Processing Redback database..." );
             processDatabase( databaseType, databaseFormat, mode, command.usersJdbcUrl, command.directory,
-                             databaseFormat.getRedbackToolRoleHint(), "data-management-redback-jdo", "redback" );
+                             command.settings, databaseFormat.getRedbackToolRoleHint(), "data-management-redback-jdo",
+                             "redback" );
         }
     }
 
     private static void processDatabase( SupportedDatabase databaseType, DatabaseFormat databaseFormat,
-                                         OperationMode mode, String jdbcUrl, File directory, String toolRoleHint,
-                                         String managementArtifactId, String configRoleHint )
+                                         OperationMode mode, String jdbcUrl, File directory, File setting,
+                                         String toolRoleHint, String managementArtifactId, String configRoleHint )
         throws PlexusContainerException, ComponentLookupException, ComponentLifecycleException,
         ArtifactNotFoundException, ArtifactResolutionException, IOException
     {
@@ -195,14 +204,16 @@ public class DataManagementCli
 
         DefaultPlexusContainer container = new DefaultPlexusContainer();
 
-        initializeWagon( container );
+        initializeWagon( container, setting );
 
         List<Artifact> artifacts = new ArrayList<Artifact>();
         artifacts.addAll(
-            downloadArtifact( container, params.getGroupId(), params.getArtifactId(), params.getVersion() ) );
+            downloadArtifact( container, params.getGroupId(), params.getArtifactId(),
+                                            params.getVersion(), setting ) );
         artifacts.addAll(
-            downloadArtifact( container, "org.apache.continuum", managementArtifactId, applicationVersion ) );
-        artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion() ) );
+            downloadArtifact( container, "org.apache.continuum", managementArtifactId,
+                                            applicationVersion, setting ) );
+        artifacts.addAll( downloadArtifact( container, "jpox", "jpox", databaseFormat.getJpoxVersion(), setting ) );
 
         List<File> jars = new ArrayList<File>();
 
@@ -281,12 +292,12 @@ public class DataManagementCli
         Thread.currentThread().setContextClassLoader( oldLoader );
     }
 
-    private static void initializeWagon( DefaultPlexusContainer container )
+    private static void initializeWagon( DefaultPlexusContainer container, File setting )
         throws ComponentLookupException, ComponentLifecycleException, IOException
     {
         WagonManager wagonManager = (WagonManager) container.lookup( WagonManager.ROLE );
 
-        Settings settings = getSettings( container );
+        Settings settings = getSettings( container, setting );
 
         try
         {
@@ -342,7 +353,7 @@ public class DataManagementCli
     }
 
     private static Collection<Artifact> downloadArtifact( PlexusContainer container, String groupId, String artifactId,
-                                                          String version )
+                                                          String version, File setting )
         throws ComponentLookupException, ArtifactNotFoundException, ArtifactResolutionException, IOException
     {
         ArtifactRepositoryFactory factory =
@@ -352,14 +363,14 @@ public class DataManagementCli
             (DefaultRepositoryLayout) container.lookup( ArtifactRepositoryLayout.ROLE, "default" );
 
         ArtifactRepository localRepository =
-            factory.createArtifactRepository( "local", getLocalRepositoryURL( container ), layout, null, null );
+            factory.createArtifactRepository( "local", getLocalRepositoryURL( container, setting ), layout, null, null );
 
         List<ArtifactRepository> remoteRepositories = new ArrayList<ArtifactRepository>();
         remoteRepositories.add(
             factory.createArtifactRepository( "central", "http://repo1.maven.org/maven2", layout, null, null ) );
         //Load extra repositories from active profile
         
-        Settings settings = getSettings( container );
+        Settings settings = getSettings( container, setting );
         List<String> profileIds = settings.getActiveProfiles();
         Map<String, Profile> profilesAsMap = settings.getProfilesAsMap();
         if ( profileIds != null && !profileIds.isEmpty() )
@@ -424,29 +435,43 @@ public class DataManagementCli
         return result.getArtifacts();
     }
 
-    private static String getLocalRepositoryURL( PlexusContainer container )
+    private static String getLocalRepositoryURL( PlexusContainer container, File setting )
         throws ComponentLookupException, IOException
     {
+        String repositoryPath;
         File settingsFile = new File( System.getProperty( "user.home" ), ".m2/settings.xml" );
-        if ( !settingsFile.exists() )
+        if ( setting != null )
         {
-            return new File( System.getProperty( "user.home" ), ".m2/repository" ).toURL().toString();
+            Settings settings = getSettings( container, setting );
+            repositoryPath = new File( settings.getLocalRepository() ).toURL().toString();
+        }
+        else if ( !settingsFile.exists() )
+        {
+            repositoryPath = new File( System.getProperty( "user.home" ), ".m2/repository" ).toURL().toString();
         }
         else
         {
-            Settings settings = getSettings( container );
-            return new File( settings.getLocalRepository() ).toURL().toString();
+            Settings settings = getSettings( container, null );
+            repositoryPath = new File( settings.getLocalRepository() ).toURL().toString();
         }
+        return repositoryPath;
     }
 
-    private static Settings getSettings( PlexusContainer container )
+    private static Settings getSettings( PlexusContainer container, File setting )
         throws ComponentLookupException, IOException
     {
         MavenSettingsBuilder mavenSettingsBuilder =
             (MavenSettingsBuilder) container.lookup( MavenSettingsBuilder.class.getName() );
         try
         {
-            return mavenSettingsBuilder.buildSettings( false );
+            if ( setting != null )
+            {
+                return mavenSettingsBuilder.buildSettings( setting, false );
+            }
+            else
+            {
+                return mavenSettingsBuilder.buildSettings( false );
+            }
         }
         catch ( XmlPullParserException e )
         {
@@ -538,6 +563,9 @@ public class DataManagementCli
             description = "Turn on debugging information. Default is off.",
             value = "debug")
         private boolean debug;
+        
+        @Argument( description = "Alternate path for the user settings file", value = "settings", required = false, alias = "s" )
+        private File settings;
     }
 
     private enum OperationMode
