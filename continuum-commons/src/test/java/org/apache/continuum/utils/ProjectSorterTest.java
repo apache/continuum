@@ -19,13 +19,14 @@ package org.apache.continuum.utils;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.maven.continuum.model.project.Project;
-import org.apache.maven.continuum.model.project.ProjectDependency;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.project.ProjectDependency;
+
+import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:jmcconnell@apache.org">Jesse McConnell</a>
@@ -37,8 +38,6 @@ public class ProjectSorterTest
 
     /**
      * test basic three project tree (really a line in this case)
-     *
-     * @throws Exception
      */
     public void testBasicNestedProjectStructure()
         throws Exception
@@ -69,11 +68,45 @@ public class ProjectSorterTest
         assertEquals( c2.getArtifactId(), p3.getArtifactId() );
     }
 
+    public void testNestedProjectStructureWithoutModulesDefinedInParentPom()
+        throws Exception
+    {
+        Project top = getNewProject( "top" );
+
+        Project war1 = getNewProject( "war1" );
+        war1.setParent( generateProjectDependency( top ) );
+
+        Project war2 = getNewProject( "war2" );
+        war2.setParent( generateProjectDependency( top ) );
+
+        Project ear1 = getNewProject( "ear1" );
+        ear1.setParent( generateProjectDependency( top ) );
+        List<ProjectDependency> deps = new ArrayList<ProjectDependency>();
+        deps.add( generateProjectDependency( war1 ) );
+        deps.add( generateProjectDependency( war2 ) );
+        ear1.setDependencies( deps );
+
+        List<Project> list = new ArrayList<Project>();
+
+        // We add projects in a random order to really check the project orter
+        list.add( top );
+        list.add( ear1 );
+        list.add( war1 );
+        list.add( war2 );
+
+        List<Project> sortedList = ProjectSorter.getSortedProjects( list, null );
+
+        assertNotNull( sortedList );
+
+        Project p1 = sortedList.get( 0 ); //top project must be the first
+        assertEquals( top.getArtifactId(), p1.getArtifactId() );
+        Project p4 = sortedList.get( 3 ); //ear1 project must be the latest
+        assertEquals( ear1.getArtifactId(), p4.getArtifactId() );
+    }
+
     /**
      * test one of the child projects not having the artifactId or groupId empty and working off the
      * name instead
-     *
-     * @throws Exception
      */
     public void testIncompleteNestedProjectStructure()
         throws Exception
@@ -102,14 +135,13 @@ public class ProjectSorterTest
         assertEquals( c1.getArtifactId(), p2.getArtifactId() );
         Project p3 = sortedList.get( 2 );
         assertEquals( c2.getArtifactId(), p3.getArtifactId() );
-
     }
 
     /**
      * project sorter can work with name replacing the artifactid and groupId
      *
-     * @param projectId
-     * @return
+     * @param projectId The project id
+     * @return The generated Project
      */
     private Project getIncompleteProject( String projectId )
     {
