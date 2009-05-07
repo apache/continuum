@@ -3424,7 +3424,7 @@ public class DefaultContinuum
 
         for ( Project project : projectsList )
         {
-            if ( !project.getScmUrl().startsWith( url ) )
+            if ( StringUtils.isEmpty( url ) || !project.getScmUrl().startsWith( url ) )
             {
                 // this is a root
                 url = project.getScmUrl();
