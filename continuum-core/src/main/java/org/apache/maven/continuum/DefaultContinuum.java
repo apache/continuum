@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -3353,35 +3352,9 @@ public class DefaultContinuum
             {
                 projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
             }
-
-            // TODO: deng - do we still need a projects and build definitions map?
-            //    consider migrated multi-module projects which were checked out in separate directories!
-            //    how would they be affected by these changes?
-            if( project.isCheckedOutInSingleDirectory() )
-            {
-                Set<Integer> keys = projectsAndBuildDefinitionsMap.keySet();
-                if( keys != null && !keys.isEmpty() )
-                {                
-                    for( Integer key : keys )
-                    {
-                        if( key.intValue() > projectId )
-                        {
-                            projectsAndBuildDefinitionsMap.put( projectId, buildDefId );
-                            map.put( scmRoot, projectsAndBuildDefinitionsMap );
-                        }
-                    } 
-                }
-                else
-                {
-                    projectsAndBuildDefinitionsMap.put( projectId, buildDefId );                    
-                    map.put( scmRoot, projectsAndBuildDefinitionsMap );
-                }
-            }
-            else
-            {
-                projectsAndBuildDefinitionsMap.put( projectId, buildDefId );                
-                map.put( scmRoot, projectsAndBuildDefinitionsMap );
-            }   
+            
+            projectsAndBuildDefinitionsMap.put( projectId, buildDefId );                
+            map.put( scmRoot, projectsAndBuildDefinitionsMap );
         }
 
         prepareBuildProjects( map, trigger );
@@ -3418,37 +3391,9 @@ public class DefaultContinuum
                 {
                     projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
                 }
-                
-             // TODO: deng - do we still need a projects and build definitions map?
-                // All multi-module projects
-                //    are now checked out in a single directory so once they are built
-                //    consider migrated multi-module projects which were checked out in separate directories!
-                //    how would they be affected by these changes?
-                if( project.isCheckedOutInSingleDirectory() )
-                {
-                    Set<Integer> keys = projectsAndBuildDefinitionsMap.keySet();
-                    if( keys != null && !keys.isEmpty() )
-                    {                
-                        for( Integer key : keys )
-                        {
-                            if( key.intValue() > projectId )
-                            {
-                                projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
-                                map.put( scmRoot, projectsAndBuildDefinitionsMap );
-                            }
-                        } 
-                    }
-                    else
-                    {
-                        projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                    
-                        map.put( scmRoot, projectsAndBuildDefinitionsMap );
-                    }
-                }
-                else
-                {
-                    projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                    
-                    map.put( scmRoot, projectsAndBuildDefinitionsMap );
-                }   
+             
+                projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                    
+                map.put( scmRoot, projectsAndBuildDefinitionsMap );                
             }
             catch ( BuildManagerException e )
             {
