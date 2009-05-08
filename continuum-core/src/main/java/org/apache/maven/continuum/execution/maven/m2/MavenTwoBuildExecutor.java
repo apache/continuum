@@ -335,7 +335,7 @@ public class MavenTwoBuildExecutor
     }
 
     @Override
-    public void backupTestFiles( Project project, int buildId )
+    public void backupTestFiles( Project project, int buildId, String projectScmRootUrl, List<Project> projectsWithCommonScmRoot )
     {
         File backupDirectory = null;
         try
@@ -350,7 +350,7 @@ public class MavenTwoBuildExecutor
         {
             log.info( "error on surefire backup directory creation skip backup " + e.getMessage(), e );
         }
-        backupTestFiles( getWorkingDirectory( project ), backupDirectory );
+        backupTestFiles( getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ), backupDirectory );
     }
 
     private void backupTestFiles( File workingDir, File backupDirectory )

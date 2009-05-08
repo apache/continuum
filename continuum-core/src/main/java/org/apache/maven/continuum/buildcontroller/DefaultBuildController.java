@@ -369,7 +369,7 @@ public class DefaultBuildController
                 projectScmRootAddress = projectScmRoot.getScmRootAddress();
                 if ( projectScmUrl.contains( projectScmRoot.getScmRootAddress() ) )
                 {                    
-                    actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, projectScmRoot.getScmRootAddress() );
+                    actionContext.put( AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, projectScmRoot.getScmRootAddress() );                    
                     break;
                 }
             }
@@ -559,10 +559,10 @@ public class DefaultBuildController
                 
                 Map<String, Object> actionContext = context.getActionContext();                
                 List<Project> projectsWithCommonScmRoot = AbstractContinuumAction.getListOfProjectsInGroupWithCommonScmRoot( actionContext );
-                ProjectScmRoot projectScmRoot = AbstractContinuumAction.getProjectScmRoot( actionContext );
+                String projectScmRootUrl = AbstractContinuumAction.getString( actionContext, AbstractContinuumAction.KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
 
                 shouldBuild = executor.shouldBuild( context.getScmResult().getChanges(), project, 
-                       workingDirectoryService.getWorkingDirectory( project, projectScmRoot.getScmRootAddress(), projectsWithCommonScmRoot ), context.getBuildDefinition() );                
+                       workingDirectoryService.getWorkingDirectory( project, projectScmRootUrl, projectsWithCommonScmRoot ), context.getBuildDefinition() );                
             }
             catch ( Exception e )
             {

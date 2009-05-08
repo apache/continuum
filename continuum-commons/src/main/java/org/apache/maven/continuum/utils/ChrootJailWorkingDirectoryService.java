@@ -76,6 +76,6 @@ public class ChrootJailWorkingDirectoryService
     
     public File getWorkingDirectory( Project project, String projectScmRoot, List<Project> projects )
     {
-        return null;
+        return getWorkingDirectory( project );
     }
 }

@@ -196,13 +196,13 @@ public class CheckoutProjectContinuumAction
             
             // update state of sub-projects 
             // if multi-module project was checked out in a single directory, these must not be null            
-            for( Project projectWithSimilarScmRoot : projectsWithSimilarScmRoot )
+            for( Project projectWithCommonScmRoot : projectsWithSimilarScmRoot )
             {
-                projectWithSimilarScmRoot = projectDao.getProject( projectWithSimilarScmRoot.getId() );
-                if( projectWithSimilarScmRoot != null && projectWithSimilarScmRoot.getId() != project.getId() )
+                projectWithCommonScmRoot = projectDao.getProject( projectWithCommonScmRoot.getId() );
+                if( projectWithCommonScmRoot != null && projectWithCommonScmRoot.getId() != project.getId() )
                 {
-                    projectWithSimilarScmRoot.setState( ContinuumProjectState.CHECKEDOUT );
-                    projectDao.updateProject( projectWithSimilarScmRoot );                    
+                    projectWithCommonScmRoot.setState( ContinuumProjectState.CHECKEDOUT );
+                    projectDao.updateProject( projectWithCommonScmRoot );                    
                 }
             }
             notifier.checkoutComplete( project, buildDefinition );

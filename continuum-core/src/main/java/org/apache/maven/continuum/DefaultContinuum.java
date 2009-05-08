@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -3353,8 +3354,31 @@ public class DefaultContinuum
                 projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
             }
             
-            projectsAndBuildDefinitionsMap.put( projectId, buildDefId );                
-            map.put( scmRoot, projectsAndBuildDefinitionsMap );
+            if( project.isCheckedOutInSingleDirectory() )
+            {
+                Set<Integer> keys = projectsAndBuildDefinitionsMap.keySet();
+                if( keys != null && !keys.isEmpty() )
+                {                
+                    for( Integer key : keys )
+                    {
+                        if( key.intValue() > projectId )
+                        {
+                            projectsAndBuildDefinitionsMap.put( projectId, buildDefId );
+                            map.put( scmRoot, projectsAndBuildDefinitionsMap );
+                        }
+                    } 
+                }
+                else
+                {
+                    projectsAndBuildDefinitionsMap.put( projectId, buildDefId );                    
+                    map.put( scmRoot, projectsAndBuildDefinitionsMap );
+                }
+            }
+            else
+            {
+                projectsAndBuildDefinitionsMap.put( projectId, buildDefId );                    
+                map.put( scmRoot, projectsAndBuildDefinitionsMap );
+            }
         }
 
         prepareBuildProjects( map, trigger );
@@ -3392,8 +3416,31 @@ public class DefaultContinuum
                     projectsAndBuildDefinitionsMap = new HashMap<Integer, Integer>();
                 }
              
-                projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                    
-                map.put( scmRoot, projectsAndBuildDefinitionsMap );                
+                if( project.isCheckedOutInSingleDirectory() )
+                {
+                    Set<Integer> keys = projectsAndBuildDefinitionsMap.keySet();
+                    if( keys != null && !keys.isEmpty() )
+                    {                
+                        for( Integer key : keys )
+                        {
+                            if( key.intValue() > projectId )
+                            {
+                                projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );
+                                map.put( scmRoot, projectsAndBuildDefinitionsMap );
+                            }
+                        } 
+                    }
+                    else
+                    {
+                        projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                    
+                        map.put( scmRoot, projectsAndBuildDefinitionsMap );
+                    }
+                }
+                else
+                {
+                    projectsAndBuildDefinitionsMap.put( projectId, buildDefinitionId );                    
+                    map.put( scmRoot, projectsAndBuildDefinitionsMap );
+                }   
             }
             catch ( BuildManagerException e )
             {

@@ -103,9 +103,12 @@ public class DeployArtifactContinuumAction
             {
                 BuildDefinition buildDefinition = getBuildDefinition( context );
 
+                String projectScmRootUrl = getString( context, KEY_PROJECT_SCM_ROOT_URL, project.getScmUrl() );
+                List<Project> projectsWithCommonScmRoot = getListOfProjectsInGroupWithCommonScmRoot( context );
+                
                 List<Artifact> artifacts = buildExecutor.getDeployableArtifacts( project,
-                                                                       workingDirectoryService.getWorkingDirectory(
-                                                                           project ), buildDefinition );
+                                           workingDirectoryService.getWorkingDirectory(
+                                               project, projectScmRootUrl, projectsWithCommonScmRoot ), buildDefinition );
 
                 LocalRepository repository = project.getProjectGroup().getLocalRepository();
                 

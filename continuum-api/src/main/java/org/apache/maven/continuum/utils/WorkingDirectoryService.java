@@ -34,5 +34,5 @@ public interface WorkingDirectoryService
 
     File getWorkingDirectory( Project project );
     
-    File getWorkingDirectory( Project project, String projectScmRoot, List<Project> projects );
+    File getWorkingDirectory( Project project, String projectScmRootUrl, List<Project> projects );
 }

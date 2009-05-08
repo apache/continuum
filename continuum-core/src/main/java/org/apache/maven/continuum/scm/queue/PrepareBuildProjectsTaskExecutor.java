@@ -278,7 +278,7 @@ public class PrepareBuildProjectsTaskExecutor
 
             context.put( AbstractContinuumAction.KEY_WORKING_DIRECTORY,
                          workingDirectoryService.getWorkingDirectory( project ).getAbsolutePath() );
-
+            
             performAction( "checkout-project", context );
 
             scmResult = AbstractContinuumAction.getCheckoutResult( context, null );
@@ -554,7 +554,7 @@ public class PrepareBuildProjectsTaskExecutor
                 }
             }
             else if ( project.getState() == ContinuumProjectState.CHECKEDOUT ||
-                project.getState() == ContinuumProjectState.NEW ) //check if no build result yet for project
+                project.getState() == ContinuumProjectState.NEW || project.isCheckedOutInSingleDirectory() ) //check if no build result yet for project
             {
                 try
                 {
