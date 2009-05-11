@@ -22,6 +22,7 @@ package org.apache.maven.continuum.execution;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -29,10 +30,13 @@ import java.util.Properties;
 import org.apache.continuum.utils.shell.ExecutionResult;
 import org.apache.continuum.utils.shell.ShellCommandHelper;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionUpdatePolicyConstants;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ChangeFile;
 import org.apache.maven.continuum.model.scm.ChangeSet;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.apache.maven.continuum.project.ContinuumProjectState;
@@ -395,6 +399,42 @@ public abstract class AbstractBuildExecutor
         }
 
         return relPath + File.separator + buildFile;
+    }
+    
+    protected boolean isDescriptionUpdated( BuildDefinition buildDefinition, ScmResult scmResult, Project project )
+    {
+        boolean update = true;
+        if ( buildDefinition != null && scmResult != null )
+        {
+            int policy = buildDefinition.getUpdatePolicy();
+            if ( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_NEVER == policy )
+            {
+                update = false;
+            }
+            else if ( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ONLY_FOR_NEW_POM == policy )
+            {
+                update = pomUpdated( buildDefinition.getBuildFile(), scmResult, project );
+            }
+        }
+        return update;
+    }
+
+    private boolean pomUpdated( String buildFile, ScmResult scmResult, Project project )
+    {
+        String filename = project.getScmUrl() + "/" + buildFile;
+        for ( Iterator changeIt = scmResult.getChanges().listIterator(); changeIt.hasNext(); )
+        {
+            ChangeSet change = (ChangeSet) changeIt.next();
+            for ( Iterator fileIt = change.getFiles().listIterator(); fileIt.hasNext(); )
+            {
+                ChangeFile changeFile = (ChangeFile) fileIt.next();
+                if ( filename.endsWith( changeFile.getName() ) )
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isBuilding( Project project )

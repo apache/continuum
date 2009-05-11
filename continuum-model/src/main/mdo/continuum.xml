@@ -1025,7 +1025,13 @@
           <description>
             true if this buildDefinition is a template
           </description>
-        </field>        
+        </field>
+        <field jpox.null-value="default">
+          <name>updatePolicy</name>
+          <version>1.4.0</version>
+          <type>int</type>
+          <defaultValue>0</defaultValue>
+        </field>
       </fields>
     </class>
     <class>

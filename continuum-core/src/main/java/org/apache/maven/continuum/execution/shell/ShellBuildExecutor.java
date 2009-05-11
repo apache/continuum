@@ -27,6 +27,7 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.installation.InstallationService;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.model.system.Installation;
 import org.apache.maven.continuum.model.system.Profile;
 import org.codehaus.plexus.util.StringUtils;
@@ -99,7 +100,8 @@ public class ShellBuildExecutor
 
     }
 
-    public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition )
+    public void updateProjectFromCheckOut( File workingDirectory, Project project, BuildDefinition buildDefinition,
+                                           ScmResult scmResult )
         throws ContinuumBuildExecutorException
     {
     }

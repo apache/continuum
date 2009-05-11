@@ -105,7 +105,7 @@ public class MavenOneContinuumProjectBuilder
 
         try
         {
-            metadataHelper.mapMetadata( result, pomFile, project );
+            metadataHelper.mapMetadata( result, pomFile, project, true);
 
             if ( result.hasErrors() )
             {

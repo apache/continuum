@@ -29,6 +29,7 @@ import org.apache.maven.continuum.execution.ContinuumBuildExecutorException;
 import org.apache.maven.continuum.execution.manager.BuildExecutorManager;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.Project;
+import org.apache.maven.continuum.model.scm.ScmResult;
 import org.apache.maven.continuum.store.ContinuumStoreException;
 import org.apache.maven.continuum.utils.WorkingDirectoryService;
 
@@ -78,8 +79,9 @@ public class UpdateProjectFromWorkingDirectoryContinuumAction
 
         ContinuumBuildExecutor builder = buildExecutorManager.getBuildExecutor( project.getExecutorId() );
 
+        ScmResult scmResult = (ScmResult) context.get( "scmResult" );
         builder.updateProjectFromCheckOut( workingDirectoryService.getWorkingDirectory( project ), project,
-                                           buildDefinition );
+                                           buildDefinition, scmResult );
 
         // ----------------------------------------------------------------------
         // Store the new descriptor

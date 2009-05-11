@@ -195,6 +195,7 @@ public class DefaultBuildDefinitionService
             storedBuildDefinition.setProfile( buildDefinition.getProfile() );
             storedBuildDefinition.setSchedule( buildDefinition.getSchedule() );
             storedBuildDefinition.setType( buildDefinition.getType() );
+            storedBuildDefinition.setUpdatePolicy( buildDefinition.getUpdatePolicy() );
             buildDefinitionDao.storeBuildDefinition( storedBuildDefinition );
         }
         catch ( ContinuumStoreException e )
@@ -248,6 +249,7 @@ public class DefaultBuildDefinitionService
         cloned.setSchedule( buildDefinition.getSchedule() );
         cloned.setType( buildDefinition.getType() );
         cloned.setTemplate( buildDefinition.isTemplate() );
+        cloned.setUpdatePolicy( buildDefinition.getUpdatePolicy() );
         return cloned;
     }
 

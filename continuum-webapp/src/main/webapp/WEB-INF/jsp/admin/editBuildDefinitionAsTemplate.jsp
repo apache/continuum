@@ -79,6 +79,9 @@
                                  listKey="id" headerKey="-1" headerValue=""/>
                     </s:else>
                     <s:select label="%{getText('buildDefinition.type.label')}" name="buildDefinition.type" list="buildDefinitionTypes"/>
+                    <s:if test="buildDefinition.type != 'ant' || buildDefinition.type != 'shell'">
+                        <s:select label="%{getText('buildDefinition.updatePolicy.label')}" name="buildDefinition.updatePolicy" list="buildDefinitionUpdatePolicies"/>
+                    </s:if>
                     <s:textfield label="%{getText('buildDefinition.description.label')}" name="buildDefinition.description" required="true"/>
                   </tbody>
                 </table>

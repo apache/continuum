@@ -238,8 +238,8 @@ public class MavenTwoContinuumProjectBuilder
                     continuumProject.setScmPassword( password );
                 }
             }
-
-            builderHelper.mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, groupPom );
+            // New project
+            builderHelper.mapMavenProjectToContinuumProject( result, mavenProject, continuumProject, true);
 
             if ( result.hasErrors() )
             {

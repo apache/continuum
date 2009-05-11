@@ -24,13 +24,16 @@ import com.opensymphony.xwork2.Preparable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.continuum.web.util.AuditLog;
 import org.apache.continuum.web.util.AuditLogConstants;
 import org.apache.maven.continuum.ContinuumException;
 import org.apache.maven.continuum.builddefinition.BuildDefinitionServiceException;
+import org.apache.maven.continuum.builddefinition.BuildDefinitionUpdatePolicyConstants;
 import org.apache.maven.continuum.execution.ContinuumBuildExecutorConstants;
 import org.apache.maven.continuum.model.project.BuildDefinition;
 import org.apache.maven.continuum.model.project.BuildDefinitionTemplate;
@@ -71,6 +74,8 @@ public class BuildDefinitionTemplateAction
     private List<String> selectedBuildDefinitionIds;
 
     private List<BuildDefinition> buildDefinitions;
+    
+    private Map<Integer, String> buildDefinitionUpdatePolicies;
 
     // -------------------------------------------------------
     //  Webwork Methods
@@ -88,6 +93,14 @@ public class BuildDefinitionTemplateAction
         this.setSchedules( getContinuum().getSchedules() );
         this.setProfiles( getContinuum().getProfileService().getAllProfiles() );
         this.setBuildDefinitions( getContinuum().getBuildDefinitionService().getAllTemplates() );
+        buildDefinitionUpdatePolicies = new HashMap<Integer, String>();
+        String text = getText( "buildDefinition.updatePolicy.always" );
+        buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ALWAYS, text );
+        text = getText( "buildDefinition.updatePolicy.never" );
+        buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_NEVER, text );
+        text = getText( "buildDefinition.updatePolicy.newPom" );
+        buildDefinitionUpdatePolicies.put( BuildDefinitionUpdatePolicyConstants.UPDATE_DESCRIPTION_ONLY_FOR_NEW_POM,
+                                           text );
     }
 
     public String input()
@@ -381,6 +394,11 @@ public class BuildDefinitionTemplateAction
     public void setSelectedBuildDefinitionIds( List<String> selectedBuildDefinitionIds )
     {
         this.selectedBuildDefinitionIds = selectedBuildDefinitionIds;
+    }
+
+    public Map<Integer, String> getBuildDefinitionUpdatePolicies()
+    {
+        return buildDefinitionUpdatePolicies;
     }
 
 }

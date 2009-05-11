@@ -79,6 +79,9 @@
                     <s:select label="%{getText('buildDefinition.profile.label')}" name="profileId" list="profiles" listValue="name"
                                listKey="id" headerKey="-1" headerValue=""/>
                     <s:select label="%{getText('buildDefinition.type.label')}" name="buildDefinitionType" list="buildDefinitionTypes"/>
+                    <s:if test="executor != 'ant' || executor != 'shell'">
+                        <s:select label="%{getText('buildDefinition.updatePolicy.label')}" name="updatePolicy" list="buildDefinitionUpdatePolicies"/>
+                    </s:if>
                     <s:textfield label="%{getText('buildDefinition.description.label')}" name="description" />
                   </tbody>
                 </table>

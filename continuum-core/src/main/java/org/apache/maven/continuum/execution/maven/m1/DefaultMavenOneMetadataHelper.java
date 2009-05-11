@@ -61,10 +61,10 @@ public class DefaultMavenOneMetadataHelper
     public void mapMetadata( File metadata, Project project )
         throws MavenOneMetadataHelperException
     {
-        mapMetadata( new ContinuumProjectBuildingResult(), metadata, project );
+        mapMetadata( new ContinuumProjectBuildingResult(), metadata, project, true );
     }
 
-    public void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project )
+    public void mapMetadata( ContinuumProjectBuildingResult result, File metadata, Project project, boolean updateDefinition )
         throws MavenOneMetadataHelperException
     {
         Xpp3Dom mavenProject;
@@ -348,10 +348,13 @@ public class DefaultMavenOneMetadataHelper
         project.setGroupId( groupId );
 
         project.setArtifactId( artifactId );
+        
+        if ( updateDefinition )
+        {
+            project.setVersion( version );
 
-        project.setVersion( version );
-
-        project.setName( name );
+            project.setName( name );
+        }
 
         if ( StringUtils.isEmpty( shortDescription ) )
         {

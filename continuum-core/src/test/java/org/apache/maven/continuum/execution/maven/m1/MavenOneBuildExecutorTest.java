@@ -106,7 +106,7 @@ public class MavenOneBuildExecutorTest
         //
         // ----------------------------------------------------------------------
 
-        executor.updateProjectFromCheckOut( checkOut, project, null );
+        executor.updateProjectFromCheckOut( checkOut, project, null, null );
 
         // ----------------------------------------------------------------------
         //
@@ -151,7 +151,7 @@ public class MavenOneBuildExecutorTest
         //
         // ----------------------------------------------------------------------
 
-        executor.updateProjectFromCheckOut( checkOut, project, null );
+        executor.updateProjectFromCheckOut( checkOut, project, null, null );
 
         // ----------------------------------------------------------------------
         //
@@ -171,7 +171,7 @@ public class MavenOneBuildExecutorTest
         // Updating a new time to prevent duplicated notifiers
         // ----------------------------------------------------------------------
 
-        executor.updateProjectFromCheckOut( checkOut, project, null );
+        executor.updateProjectFromCheckOut( checkOut, project, null, null );
 
         // ----------------------------------------------------------------------
         //
@@ -226,7 +226,7 @@ public class MavenOneBuildExecutorTest
         //
         // ----------------------------------------------------------------------
 
-        executor.updateProjectFromCheckOut( checkOut, project, null );
+        executor.updateProjectFromCheckOut( checkOut, project, null, null );
 
         // ----------------------------------------------------------------------
         //
@@ -250,7 +250,7 @@ public class MavenOneBuildExecutorTest
         // Updating a new time to prevent duplicated notifiers
         // ----------------------------------------------------------------------
 
-        executor.updateProjectFromCheckOut( checkOut, project, null );
+        executor.updateProjectFromCheckOut( checkOut, project, null, null );
 
         // ----------------------------------------------------------------------
         //
@@ -308,7 +308,7 @@ public class MavenOneBuildExecutorTest
         //
         // ----------------------------------------------------------------------
 
-        executor.updateProjectFromCheckOut( checkOut, project, null );
+        executor.updateProjectFromCheckOut( checkOut, project, null, null );
 
         // ----------------------------------------------------------------------
         //
@@ -328,7 +328,7 @@ public class MavenOneBuildExecutorTest
         // Updating a new time to prevent duplicated notifiers
         // ----------------------------------------------------------------------
 
-        executor.updateProjectFromCheckOut( checkOut, project, null );
+        executor.updateProjectFromCheckOut( checkOut, project, null, null );
 
         // ----------------------------------------------------------------------
         //
