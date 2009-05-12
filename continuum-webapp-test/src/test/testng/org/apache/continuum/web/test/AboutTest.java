@@ -53,10 +53,27 @@ public class AboutTest
             submitAdminData( fullname, mail, password );
             assertAutenticatedPage( username );
             assertEditConfigurationPage();
-            submit();
+            postAdminUserCreation();
             clickLinkWithText( "Logout" );
         }
         super.close();
+    }
+    
+    private void postAdminUserCreation()
+    {
+        if ( getTitle().endsWith( "Continuum - Configuration" ) )
+        {
+            String workingDir = getFieldValue( "configuration_workingDirectory" );
+            String buildOutputDir = getFieldValue( "configuration_buildOutputDirectory" );
+            String releaseOutputDir = getFieldValue( "configuration_releaseOutputDirectory" );
+            String locationDir = "target/data";
+            String data = "data";
+            setFieldValue( "workingDirectory", workingDir.replaceFirst( data, locationDir ) );
+            setFieldValue( "buildOutputDirectory", buildOutputDir.replaceFirst( data, locationDir ) );
+            setFieldValue( "releaseOutputDirectory", releaseOutputDir.replaceFirst( data, locationDir ) );
+            setFieldValue( "baseUrl", baseUrl );
+            submit();
+        }
     }
 
     @BeforeTest( groups = { "about" } )

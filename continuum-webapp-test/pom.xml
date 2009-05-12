@@ -368,6 +368,6 @@ under the License.
     </profile>
   </profiles>
   <properties>
-    <cargo.installs.directory>${basedir}/installs</cargo.installs.directory>
+    <cargo.installs.directory>${basedir}/target/installs</cargo.installs.directory>
   </properties>
 </project>
