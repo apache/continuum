@@ -103,6 +103,10 @@ public class BuildProjectAction
             event.setResource( "Project Group id=" + projectGroupId );
             event.setCategory( AuditLogConstants.PROJECT_GROUP );
             event.log();
+            if ( fromGroupPage )
+            {
+                return "to_group_page";
+            }
         }
 
         return SUCCESS;
