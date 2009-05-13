@@ -112,16 +112,16 @@ under the License.
 
   <repositories>
     <repository>
-      <id>openqa-snapshots</id>
-      <url>http://nexus.openqa.org/content/repositories/snapshots</url>
-      <releases><enabled>false</enabled></releases>
+      <id>openqa</id>
+      <url>http://nexus.openqa.org/content/repositories/releases</url>
+      <snapshots><enabled>false</enabled></snapshots>
     </repository>
   </repositories>
   <pluginRepositories>
     <pluginRepository>
-      <id>openqa-snapshots</id>
-      <url>http://nexus.openqa.org/content/repositories/snapshots</url>
-      <releases><enabled>false</enabled></releases>
+      <id>openqa</id>
+      <url>http://nexus.openqa.org/content/repositories/releases</url>
+      <snapshots><enabled>false</enabled></snapshots>
     </pluginRepository>
   </pluginRepositories>
 	
