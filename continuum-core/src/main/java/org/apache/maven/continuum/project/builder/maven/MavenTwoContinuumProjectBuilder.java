@@ -156,19 +156,6 @@ public class MavenTwoContinuumProjectBuilder
             }
 
             mavenProject = builderHelper.getMavenProject( result, pomFile );
-                        
-            if( !mavenProject.getModules().isEmpty() && checkoutInSingleDirectory )
-            {   
-                String module = ( String ) mavenProject.getModules().get( 0 );
-                StringUtils.replace( module, '/', '\\' );
-                
-                // confirm project is a flat multi-module project!
-                if( module.indexOf( '\\' ) != 0 )
-                {
-                    String modulePath = StringUtils.substring( module, module.lastIndexOf( '\\' ) + 1 );
-                    result.setModulePath( modulePath );
-                }
-            }
             
             if ( result.hasErrors() )
             {
@@ -346,28 +333,15 @@ public class MavenTwoContinuumProjectBuilder
                         String baseUrl = "";
                         for( int j = 1; j <= depth; j++ )
                         {
-                            if( scmUrl.endsWith( "/" ) )
-                            {
-                                String trimmedScmUrl = StringUtils.chompLast( new String( scmUrl ), "/" );
-                                baseUrl = StringUtils.substring( trimmedScmUrl, 0, trimmedScmUrl.lastIndexOf( '/' ) );
-                            }
-                            else
-                            {
-                                baseUrl = StringUtils.substring( scmUrl, 0, scmUrl.lastIndexOf( '/' ) );
-                            }
+                            scmUrl = StringUtils.chompLast( new String( scmUrl ), "/" );
+                            baseUrl = StringUtils.substring( scmUrl, 0, scmUrl.lastIndexOf( '/' ) );                            
                         }
                         moduleScmUrl = baseUrl + "/" + StringUtils.substring( modulePath, modulePath.lastIndexOf( '/' ) + 1 );
                     }
                     else
                     {
-                        if ( scmUrl.endsWith( "/" ) )
-                        {
-                            moduleScmUrl = scmUrl + module;
-                        }
-                        else
-                        {
-                            moduleScmUrl = scmUrl + "/" + module;
-                        }
+                        scmUrl = StringUtils.chompLast( scmUrl, "/" );
+                        moduleScmUrl = scmUrl + "/" + module;
                     }
                     // we are in recursive loading mode
                     readModules( moduleUrl, result, false, username, password, moduleScmUrl, true,
