@@ -66,6 +66,7 @@
           <s:url id="buildUrl" action="buildProject" namespace="/">
             <s:param name="projectGroupId">${pageScope.buildDefinitionSummary.projectGroupId}</s:param>
             <s:param name="buildDefinitionId">${pageScope.buildDefinitionSummary.id}</s:param>
+            <s:param name="fromGroupPage" value="true"/>
           </s:url>
           <s:a href="%{buildUrl}"><img src="<s:url value='/images/buildnow.gif' includeParams="none"/>" alt="<s:text name='build'/>" title="<s:text name='build'/>" border="0"></s:a>
         </redback:ifAuthorized>
