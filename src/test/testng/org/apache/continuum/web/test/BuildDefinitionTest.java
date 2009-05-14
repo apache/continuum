@@ -89,7 +89,7 @@ public class BuildDefinitionTest
         String TEST2_PROJ_GRP_DESCRIPTION = p.getProperty( "TEST2_PROJ_GRP_DESCRIPTION" );
         goToGroupBuildDefinitionPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
         clickImgWithAlt( "Build" );
-        assertProjectGroupsSummaryPage();
+        assertProjectGroupSummaryPage( TEST2_PROJ_GRP_NAME, TEST2_PROJ_GRP_ID, TEST2_PROJ_GRP_DESCRIPTION );
     }
 
     @Test( dependsOnMethods = { "testAddProjectGroup2" } )
