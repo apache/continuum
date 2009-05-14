@@ -92,9 +92,7 @@ public class ReleaseRollbackAction
             ContinuumReleaseManagerListener listener = new DefaultReleaseManagerListener();
     
             Project project = getContinuum().getProject( projectId );
-    
-            // TODO: deng - this also needs to be updated! the workingDirectoryService called should be
-            //      the one with the 3 params
+            
             releaseManager.rollback( releaseId, workingDirectoryService.getWorkingDirectory( project ).getPath(), listener );
     
             //recurse until rollback is finished

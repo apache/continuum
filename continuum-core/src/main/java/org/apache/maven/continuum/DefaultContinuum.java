@@ -986,8 +986,6 @@ public class DefaultContinuum
         Map<Integer, Integer> projectsBuildDefinitionsMap = new HashMap<Integer, Integer>();
         projectsBuildDefinitionsMap.put( projectId, buildDef.getId() );
 
-        // TODO: deng - projects under the same root project should be queued in the same checkout & build queue!
-        //   - not sure where this should be fixed
         ProjectScmRoot scmRoot = getProjectScmRootByProject( projectId );
         prepareBuildProjects( projectsBuildDefinitionsMap, trigger, scmRoot.getScmRootAddress(),
                               scmRoot.getProjectGroup().getId(), scmRoot.getId() );

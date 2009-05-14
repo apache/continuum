@@ -102,10 +102,6 @@ public class UpdateWorkingDirectoryFromScmContinuumAction
         catch ( Exception e )
         {
         }
-
-        // TODO: deng - should the update be from the scm root url? if so, then it seems that not all the projects within
-        //      the same scm root should update! maybe only the root project? OR all projects sharing the same scm 
-        //      root must update from the scm root! (second option is more sensible)
         
         try
         {
