@@ -46,7 +46,7 @@ public class ProjectSorter
     }
 
     /**
-     * Sort a list of projects.
+     * Sort a list of projects, discarding duplicates.
      * <ul>
      * <li>collect all the vertices for the projects that we want to build.</li>
      * <li>iterate through the deps of each project and if that dep is within
@@ -68,7 +68,7 @@ public class ProjectSorter
 
             if ( dag.getVertex( id ) != null )
             {
-                logger.warn( "Project '" + id + "' is duplicated in the reactor" );
+                logger.warn( "Project '" + id + "' is duplicated in the reactor and will be discarded" );
             }
 
             dag.addVertex( id );
